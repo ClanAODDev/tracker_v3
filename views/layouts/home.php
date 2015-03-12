@@ -16,16 +16,26 @@
 		</div>
 	</div>
 
+
+	<!-- main division list -->
 	<div class='row'>
 		<div class='col-md-12'>
 			<div class='panel panel-default'>
 				<div class='panel-heading'><i class='fa fa-gamepad fa-lg pull-right text-muted'></i> <strong>Gaming Divisions</strong></div>
 				<div class='list-group'>
-					{$main_game_list}
+					<?php foreach ($divisions as $division) : ?>
+						<a href='divisions/<?php echo $division->short_name ?>' class='list-group-item' style='padding-bottom: 18px;'>
+							<span class='pull-left' style='margin-right: 20px; vertical-align: middle;'><img src='assets/images/game_icons/large/<?php echo $division->short_name ?>.png' /></span>
+							<h4 class='list-group-item-heading'><strong><?php echo $division->full_name ?></strong></h4>
+							<p class='list-group-item-text text-muted'><?php echo $division->description ?></p>
+						</a>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>
 	</div>
+
+
 
 	<?php if ($user->role == 0) : ?>
 
@@ -45,13 +55,11 @@
 
 			<div class='col-md-5'>
 				<div class='panel panel-primary'>
-					<div class='panel-heading'><strong>{$roleName} Quick Tools</strong></div>
+					<div class='panel-heading'><strong><?php echo getUserRoleName($user->role); ?> Quick Tools</strong></div>
 					<div class='list-group'>
 						{$tools}
 					</div>
 				</div>
-
-
 
 
 				<?php if ($user->role == 1) : ?>
@@ -84,18 +92,18 @@
 				<?php endif; ?>
 
 
-				</div>
-
-
-				// announcements
-				<div class='col-md-7'>
-					{$posts}
-				</div>
-
-
-
 			</div>
 
-		<?php endif; ?>
 
-	</div>
+			// announcements
+			<div class='col-md-7'>
+				{$posts}
+			</div>
+
+
+
+		</div>
+
+	<?php endif; ?>
+
+</div>
