@@ -16,20 +16,20 @@ class Application {
 	
 	public function save($params = array()) {
 		if (!empty($params)) $this->load($params);
-		Flight::advising()->using(get_called_class())->save($this);
+		Flight::aod()->using(get_called_class())->save($this);
 	}
 	
 	public static function find($params) {
-		return Flight::advising()->using(get_called_class())->find($params);
+		return Flight::aod()->using(get_called_class())->find($params);
 	}
 	
 	public static function find_each($params) {
-		$results = Flight::advising()->using(get_called_class())->find($params);
+		$results = Flight::aod()->using(get_called_class())->find($params);
 		return is_object($results) ? array($results) : $results;
 	}
 	
 	public static function fetch_all() {
-		$results = Flight::advising()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->find();
+		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->find();
 		return is_object($results) ? array($results) : $results;
 	} 
 	
@@ -37,7 +37,7 @@ class Application {
 		$object = new static();
 		if (property_exists(get_called_class(), 'created_at')) $object->created_at = timestamp();
 		$object->save($params);
-		$object->id = Flight::advising()->insert_id;
+		$object->id = Flight::aod()->insert_id;
 		return $object;
 	}
 	

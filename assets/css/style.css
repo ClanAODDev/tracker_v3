@@ -51,7 +51,7 @@
  }
 
  body {
-  background: #fcfcfc url("/public/images/hl-bg.jpg") 50% no-repeat fixed;
+  background: #fcfcfc url("../images/hl-bg.jpg") 50% no-repeat fixed;
 }
 
 .danger {
@@ -315,11 +315,11 @@ h2.pull-right {
   padding-top: 10px;
 }
 .striped-bg {
-  background-image: url('/public/images/bg_stripe.png');
+  background-image: url('assets/images/bg_stripe.png');
 }
 
 .trans-striped-bg {
-  background-image: url('/public/images/trans_bg_stripe.png');
+  background-image: url('assets/images/trans_bg_stripe.png');
 }
 
 .date-data {

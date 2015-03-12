@@ -5,8 +5,8 @@ require_once 'functions.php';
 
 session_start();
 
-$_SESSION['User'] = User::login($_SERVER['WRAP_USERID']);
-
+$_SESSION['userid'] = 31832;
+$_SESSION['username'] = 'guybrush';
 
 if (get_magic_quotes_gpc()) {
   $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);

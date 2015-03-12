@@ -14,10 +14,8 @@ Flight::set('root_dir', dirname(__FILE__));
 Flight::set('base_url', '/tracker-v2/');
 
 // Set database credentials
-define('DB_HOST', '');
+define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
 Flight::register('aod', 'Database', array('aod'));
-
-?>

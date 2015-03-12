@@ -1,15 +1,25 @@
 <?php
 
+// maintenance mode
+// Flight::route('*', array('ApplicationController', '_unavailable'));
+
 if (empty($_SERVER['user_id'])) {
 
-	Flight::route('/login', array('UserController', '_login'));
+// if (1+1 == 5) {
+
+	Flight::route('/', array('UserController', '_login'));
 	Flight::route('/register', array('UserController', '_register'));
 
 } else {
 
 	// user views
-	Flight::route('/', array('UserController', '_index'));
-	Flight::route('/help', array('UserController', '_help'));
+	Flight::route('/', array('ApplicationController', '_index'));
+	
+
+	// POSTS
+	Flight::route('POST /do/login', array('UserController', '_doLogin'));
+
+/*	Flight::route('/help', array('UserController', '_help'));
 	Flight::route('/logout', array('UserController', '_logout'));
 	Flight::route('/settings', array('UserController', '_settings'));
 
@@ -29,8 +39,8 @@ if (empty($_SERVER['user_id'])) {
 
 	// admin
 	Flight::route('/admin', array('AdminController', '_show'));
-
+*/
 }
 
-
-
+// 404 redirect
+Flight::map('notFound', array('ApplicationController', '_404'));
