@@ -16,7 +16,7 @@ if (empty($_SESSION['userid'])) {
 	// user views
 	Flight::route('/', array('ApplicationController', '_index'));
 	Flight::route('/logout', array('UserController', '_doLogout'));
-	Flight::route('/help', array('UserController', '_help'));
+	Flight::route('/help', array('ApplicationController', '_help'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));

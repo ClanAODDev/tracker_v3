@@ -16,6 +16,8 @@
 </head>
 <body>
 
+
+
 	<!-- modal for ajax dialogs -->
 	<div class="modal viewPanel fade">
 		<div class="modal-dialog">
@@ -59,11 +61,13 @@
 									<li class="divider"></li>
 									<li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
 									<li><a href="http://www.clanaod.net/forums/member.php?u=<?php echo $_SESSION['userid']; ?>" target="_blank"> Forum profile</a></li>
-									<li> <a href="/help" role="button">Help</a> </li>
+									<li> <a href="help/" role="button">Help</a> </li>
 									<li class="divider"></li>
 									<li><a href="#" data-toggle="pill" class="logout-btn"><i class="fa fa-lock pull-right"></i> Logout</a></li>
 								</ul>
 							</li>						
+
+
 
 
 							<!-- showing tools if squad leader or above -->
@@ -83,6 +87,8 @@
 							<?php endif; ?>
 
 
+
+
 							<!-- supported divisions -->
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Divisions <span class="caret"></span></a>
@@ -91,12 +97,14 @@
 								<ul class="dropdown-menu" role="menu">
 									<?php foreach ($divisions as $division) : ?>
 
-										<li><a href='/divisions/<?php echo $division->short_name ?>'><img src='assets/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
+										<li><a href='divisions/<?php echo $division->short_name ?>'><img src='assets/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
 
 									<?php endforeach; ?>
 								</ul>
 
 							</li>
+
+
 
 
 							<!-- notifications -->
@@ -208,7 +216,6 @@
 	<script src="assets/js/libraries/jquery.bootstrap.wizard.min.js"></script>
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/main.js"></script>
-
 </body>
 </html>
 

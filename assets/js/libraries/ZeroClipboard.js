@@ -271,7 +271,7 @@
     // var jsDir = _getDirPathOfUrl(_getCurrentScriptUrl()) || _getUnanimousScriptParentDir() || "";
 
     // hardcoding swf location for aod recruiting tool purposes
-    return '/public/swf/' + "ZeroClipboard.swf";
+    return 'assets/swf/' + "ZeroClipboard.swf";
   };
   /**
  * Keep track of if the page is framed (in an `iframe`). This can never change.

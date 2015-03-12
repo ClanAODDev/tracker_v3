@@ -254,7 +254,7 @@ $(function() {
 
         "oTableTools": {
             "sRowSelect": "multi",
-            "sSwfPath": "/public/swf/copy_csv_xls_pdf.swf",
+            "sSwfPath": "assets/swf/copy_csv_xls_pdf.swf",
             "aButtons": [{
 
                 "sExtends": "text",
@@ -385,14 +385,8 @@ function member_search() {
 var client = new ZeroClipboard($('.copy-button'));
 
 client.on("ready", function(readyEvent) {
-    // alert( "ZeroClipboard SWF is ready!" );
-
     client.on("aftercopy", function(event) {
-        // `this` === `client`
-        // `event.target` === the element that was clicked
-        // event.target.style.display = "none";
         alert("Copied text to clipboard");
-        // : " + event.data["text/plain"]
     });
 });
 
@@ -428,3 +422,39 @@ function ucwords(str) {
             return $1.toUpperCase();
         });
 }
+
+
+
+/**
+ * help section
+ */
+
+/* activate sidebar */
+$('#sidebar').affix({
+    offset: {
+        top: 235
+    }
+});
+
+/* activate scrollspy menu */
+var $body = $(document.body);
+var navHeight = $('.navbar').outerHeight(true) + 10;
+
+$body.scrollspy({
+    target: '#leftCol',
+    offset: navHeight
+});
+
+/* smooth scrolling sections */
+$('a[href*=#]:not([href=#])').click(function() {
+    if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+        var target = $(this.hash);
+        target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+        if (target.length) {
+            $('html,body').animate({
+                scrollTop: target.offset().top - 50
+            }, 1000);
+            return false;
+        }
+    }
+});
