@@ -1,6 +1,6 @@
 <?php
 
-class Member extends User {
+class Member extends Application {
 
 	public $id;
 	public $forum_name;
@@ -9,7 +9,6 @@ class Member extends User {
 	public $battlelog_id;	
 	public $platoon_id;
 	public $rank_id;
-	public $platoon_id;
 	public $position_id;
 	public $squad_leader_id;
 	public $status_id;
@@ -26,13 +25,13 @@ class Member extends User {
 	static $name_field = 'forum_name';
 
 	public static function find($forum_name) {
-		return self::find(strtolower($forum_name));
+		$params = Flight::aod()->sql("SELECT * FROM member WHERE `forum_name`='{$forum_name}'")->one();
+		return $params;
 	}
 
-
-	public static function avatar($type = "thumb")
+	public static function avatar($mid, $type = "thumb")
 	{
-		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$this->member_id}";
+		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$mid}";
 		$unknown   = "/public/images/blank_avatar.jpg";
 		list($width, $height) = getimagesize($forum_img);
 

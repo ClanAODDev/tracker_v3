@@ -3,11 +3,10 @@
 // maintenance mode
 // Flight::route('*', array('ApplicationController', '_unavailable'));
 
-if (empty($_SERVER['user_id'])) {
+if (empty($_SERVER['userid'])) {
 
-// if (1+1 == 5) {
-
-	Flight::route('/', array('UserController', '_login'));
+	Flight::route('/', array('ApplicationController', '_index'));
+	// Flight::route('/', array('UserController', '_login'));
 	Flight::route('/register', array('UserController', '_register'));
 
 } else {

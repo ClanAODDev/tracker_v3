@@ -55,7 +55,7 @@
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
-									<li><a href="/member/<?php echo $_SESSION['userid']; ?>"><?php echo $_SESSION['username']; ?><span class="pull-right"><?php echo $user->avatar; ?></span></a></li>
+									<li><a href="member/<?php echo $_SESSION['userid']; ?>"><?php echo ucwords($_SESSION['username']); ?><span class="pull-right"><?php echo Member::avatar($_SESSION['userid']) ?></span></a></li>
 									<li class="divider"></li>
 									<li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
 									<li><a href="http://www.clanaod.net/forums/member.php?u=<?php echo $_SESSION['userid']; ?>" target="_blank"> Forum profile</a></li>
@@ -65,146 +65,152 @@
 								</ul>
 							</li>						
 
-							<?php //if (User::role > 0): ?>
 
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
+							<!-- showing tools if squad leader or above -->
+							<?php if ($user->role > 0): $roleName = getUserRoleName($user->role); ?>
 
-								<ul class="dropdown-menu" role="menu">
-									<?php 
-										/*$roleName = getUserRoleName($userRole);
-										echo "<li class='disabled'><a href='#' disabled>{$roleName}</a></li><li class='divider'></li>";
-										foreach (build_user_tools($userRole) as $tool) { 
-											echo "<li><a href='{$tool['link']}' class='{$tool['class']}'>{$tool['title']}</a></li>";
-										} */?>
-									</ul>
-
-								</li>
-
-								<?php // endif; ?>
-
+								<!-- user tools -->
 								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Divisions <span class="caret"></span></a>
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
 									<ul class="dropdown-menu" role="menu">
-										<?php // echo $game_list ?>								
+										<li class='disabled'><a href='#' disabled><?php echo $roleName ?></a></li><li class='divider'></li>
+										<?php foreach ($tools as $tool) : ?>
+											<li><a href="<?php echo $tool->tool_path ?>" class="<?php echo $tool->class ?>"><?php echo $tool->tool_name ?></a></li>
+										<?php endforeach; ?>
 									</ul>
 								</li>
 
+							<?php endif; ?>
 
 
-								<li class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-										<span class="count">100+</span> Notifications <span class="caret"></span>
-									</a>
-									<div class="popup dropdown-menu">
-										<ul class="activity">
-											<li>
-												<i class="fa fa-clock-o fa-2x text-danger"></i>
-												<div>You have <a href="#">3 recruits</a> awaiting promotion!
-													<span>14 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-angle-double-up fa-2x text-success"></i>
-												<div>
-													<a href="#">CupOHemlock</a> promoted <a href="#">GinaLou</a> to Master Super General
-													<span>14 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-user fa-2x text-success"></i>
-												<div><a href="#">31drew31</a> added <a href="#">Rct Jonesgirl</a> to <a href="#">Platoon 1</a>
-													<span>About 2 hours ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-comment text-primary fa-2x"></i>
-												<div>
-													<a href="#">Redguard</a> posted a <a href="#">comment</a> on Platoon 2's <a href="#">notes</a>
-													<span>5 minutes ago</span>
-												</div>
-											</li>
+							<!-- supported divisions -->
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Divisions <span class="caret"></span></a>
 
-											<li>
-												<i class="fa fa-flag fa-2x text-danger"></i>
-												<div><a href="#">Guybrush</a> removed <a href="#">JoeSchmoe</a> from <a href="#">Platoon 2</a>
-													<span>About 7 hours ago</span>
-												</div>
-											</li>
+								
+								<ul class="dropdown-menu" role="menu">
+									<?php foreach ($divisions as $division) : ?>
 
-											<li>
-												<i class="fa fa-angle-double-up fa-2x text-success"></i>
-												<div>
-													<a href="#">CupOHemlock</a> promoted <a href="#">GinaLou</a> to Master Super General
-													<span>14 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-comment text-primary fa-2x"></i>
-												<div>
-													<a href="#">Redguard</a> posted a <a href="#">comment</a> on Platoon 2's <a href="#">discussion feed</a>
-													<span>35 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-flag fa-2x text-danger"></i>
-												<div><a href="#">Guybrush</a> removed <a href="#">JoeSchmoe</a> from <a href="#">Platoon 2</a>
-													<span>About 2 hours ago</span>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</li>
-							</ul>
-						</div>
+										<li><a href='/divisions/<?php echo $division->short_name ?>'><img src='/public/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
+
+									<?php endforeach; ?>
+								</ul>
+
+							</li>
 
 
-					<?php else: ?>
+							<!-- notifications -->
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+									<span class="count">100+</span> Notifications <span class="caret"></span>
+								</a>
+								<div class="popup dropdown-menu">
+									<ul class="activity">
+										<li>
+											<i class="fa fa-clock-o fa-2x text-danger"></i>
+											<div>You have <a href="#">3 recruits</a> awaiting promotion!
+												<span>14 minutes ago</span>
+											</div>
+										</li>
+										<li>
+											<i class="fa fa-angle-double-up fa-2x text-success"></i>
+											<div>
+												<a href="#">CupOHemlock</a> promoted <a href="#">GinaLou</a> to Master Super General
+												<span>14 minutes ago</span>
+											</div>
+										</li>
+										<li>
+											<i class="fa fa-user fa-2x text-success"></i>
+											<div><a href="#">31drew31</a> added <a href="#">Rct Jonesgirl</a> to <a href="#">Platoon 1</a>
+												<span>About 2 hours ago</span>
+											</div>
+										</li>
+										<li>
+											<i class="fa fa-comment text-primary fa-2x"></i>
+											<div>
+												<a href="#">Redguard</a> posted a <a href="#">comment</a> on Platoon 2's <a href="#">notes</a>
+												<span>5 minutes ago</span>
+											</div>
+										</li>
 
-						<div class="navbar-collapse collapse">
-							<ul class="nav navbar-nav navbar-right">
-								<li class="navbar-text text-muted">Not logged in</li>
-							</ul>
-						</div>
+										<li>
+											<i class="fa fa-flag fa-2x text-danger"></i>
+											<div><a href="#">Guybrush</a> removed <a href="#">JoeSchmoe</a> from <a href="#">Platoon 2</a>
+												<span>About 7 hours ago</span>
+											</div>
+										</li>
 
-					<?php endif; ?>		
-
-					<div class='container row'  style='position: absolute; margin-top: 10px;'>
-						<div class='alert-box'></div>
+										<li>
+											<i class="fa fa-angle-double-up fa-2x text-success"></i>
+											<div>
+												<a href="#">CupOHemlock</a> promoted <a href="#">GinaLou</a> to Master Super General
+												<span>14 minutes ago</span>
+											</div>
+										</li>
+										<li>
+											<i class="fa fa-comment text-primary fa-2x"></i>
+											<div>
+												<a href="#">Redguard</a> posted a <a href="#">comment</a> on Platoon 2's <a href="#">discussion feed</a>
+												<span>35 minutes ago</span>
+											</div>
+										</li>
+										<li>
+											<i class="fa fa-flag fa-2x text-danger"></i>
+											<div><a href="#">Guybrush</a> removed <a href="#">JoeSchmoe</a> from <a href="#">Platoon 2</a>
+												<span>About 2 hours ago</span>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
 					</div>
+
+
+				<?php else: ?>
+
+					<div class="navbar-collapse collapse">
+						<ul class="nav navbar-nav navbar-right">
+							<li class="navbar-text text-muted">Not logged in</li>
+						</ul>
+					</div>
+
+				<?php endif; ?>		
+
+				<div class='container row'  style='position: absolute; margin-top: 10px;'>
+					<div class='alert-box'></div>
 				</div>
 			</div>
-
-			<!-- content -->
-
-			<?php echo($content); ?>
-
-
-			<div class="margin-top-50"></div>
-			<div id="push"></div>
 		</div>
 
-		<div id="footer" class="navbar navbar-default">
-			<div class="container">
-				<small class="text-muted col-xs-6">Copright &copy; Angels of Death <span class="hidden-xs">2005-2015. All rights reserved.</span><br /><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google Chrome</strong></a></span></small>
-				<small class="text-muted col-xs-6 text-right userList"><img src="https://aod.sitespot.com/public/images/loading_2.gif" style="background: transparent;" /> Loading users...</small>
-			</div>
+		<!-- content -->
+		<?php echo $content; ?>
+
+		<div class="margin-top-50"></div>
+		<div id="push"></div>
+	</div>
+
+	<div id="footer" class="navbar navbar-default">
+		<div class="container">
+			<small class="text-muted col-xs-6">Copright &copy; Angels of Death <span class="hidden-xs">2005-2015. All rights reserved.</span><br /><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google Chrome</strong></a></span></small>
+			<small class="text-muted col-xs-6 text-right userList"><img src="https://aod.sitespot.com/public/images/loading_2.gif" style="background: transparent;" /> Loading users...</small>
 		</div>
+	</div>
 
-		<script src="assets/js/libraries/jquery-2.1.1.min.js"></script>
-		<script src="assets/js/libraries/jquery-ui.min.js"></script>
-		<script src="assets/js/libraries/jquery.easing.min.js"></script>
-		<script src="assets/js/libraries/jquery.powertip.min.js"></script>
-		<script src="assets/js/libraries/bootstrap.min.js"></script>
-		<script src="assets/js/libraries/jquery.dataTables.min.js"></script>
-		<script src="assets/js/libraries/dataTables.bootstrap.js"></script>
-		<script src="assets/js/libraries/dataTables.tableTools.min.js"></script>
-		<script src="assets/js/libraries/jquery.bootstrap.wizard.min.js"></script>
-		<script src="assets/js/libraries/ZeroClipboard.js"></script>
-		<script src="assets/js/main.js"></script>
+	<script src="assets/js/libraries/jquery-2.1.1.min.js"></script>
+	<script src="assets/js/libraries/jquery-ui.min.js"></script>
+	<script src="assets/js/libraries/jquery.easing.min.js"></script>
+	<script src="assets/js/libraries/jquery.powertip.min.js"></script>
+	<script src="assets/js/libraries/bootstrap.min.js"></script>
+	<script src="assets/js/libraries/jquery.dataTables.min.js"></script>
+	<script src="assets/js/libraries/dataTables.bootstrap.js"></script>
+	<script src="assets/js/libraries/dataTables.tableTools.min.js"></script>
+	<script src="assets/js/libraries/jquery.bootstrap.wizard.min.js"></script>
+	<script src="assets/js/libraries/ZeroClipboard.js"></script>
+	<script src="assets/js/main.js"></script>
 
-	</body>
-	</html>
+</body>
+</html>
 
 
 

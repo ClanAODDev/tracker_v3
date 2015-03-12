@@ -12,23 +12,17 @@ class Tool extends Application {
 	public $disabled;
 
 	static $table = 'user_tools';
+	static $id_field = 'id';
 
-
-	public static function buildUserTools() {
-
-        try {
-            $query = "SELECT tool_name as title, tool_descr as descr, tool_path as link, icon, class, disabled FROM user_tools WHERE role_id <= :role";
-            $query = $pdo->prepare($query);
-            $query->bindParam(':role', $role);
-            $query->execute();
-            $query = $query->fetchAll();
-        }
-
-        catch (PDOException $e) {
-            return "ERROR:" . $e->getMessage();
-        }
-  
+	/**
+	 * Fetches user tools based on role
+	 * @param  int $role role of user (role_id)
+	 * @return array     array of tools
+	 */
+	public static function getToolsByRole($role) {
+		return self::find(array("role_id <=" => $role));
 	}
+
 
 
 

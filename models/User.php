@@ -27,12 +27,12 @@ class User extends Application {
 	}
 
 	public static function find($forum_name) {
-		return self::find(strtolower($forum_name));
+		$params = Flight::aod()->sql("SELECT * FROM users WHERE `username`='{$forum_name}'")->one();
+		return (object) $params;
 	}
 
-	public static function exists($forum_name)
-	{
-		$count = count(self::find(strtolower($forum_name)));
+	public static function exists($forum_name)	{
+		$count = Flight::aod()->sql("SELECT count(*) FROM users WHERE `username`='{$forum_name}'")->one();
 		if ($count > 0) { return true; } else {	return false; }
 	}
 
