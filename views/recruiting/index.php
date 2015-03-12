@@ -1,7 +1,7 @@
 <div class='container fade-in'>
 	
 	<ul class='breadcrumb'>
-		<li><a href='/'>Home</a></li>
+		<li><a href='./'>Home</a></li>
 		<li class='active'>Recruiting</li>
 	</ul>
 	<div class='clearfix margin-top-20'></div>
@@ -36,7 +36,7 @@
 
 			</div>
 			<div class='col-xs-6 text-center'>
-				<a href='/recruiting/new-member' class='recruit-init nounderline'><button type='button' class='btn btn-block btn-success tool' title='For brand new AOD members'>Add new member</button></a>
+				<a href='recruiting/new-member' class='recruit-init nounderline'><button type='button' class='btn btn-block btn-success tool' title='For brand new AOD members'>Add new member</button></a>
 
 			</div>
 		</div>
