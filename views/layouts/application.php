@@ -91,7 +91,7 @@
 								<ul class="dropdown-menu" role="menu">
 									<?php foreach ($divisions as $division) : ?>
 
-										<li><a href='/divisions/<?php echo $division->short_name ?>'><img src='/public/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
+										<li><a href='/divisions/<?php echo $division->short_name ?>'><img src='assets/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
 
 									<?php endforeach; ?>
 								</ul>
