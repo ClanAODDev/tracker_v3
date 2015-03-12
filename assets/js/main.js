@@ -107,19 +107,19 @@ $(function() {
      */
     $('.logout-btn').click(function(e) {
         e.preventDefault();
-        window.location.href = "/logout";
+        window.location.href = "logout";
     });
     $('.settings-btn').click(function(e) {
         e.preventDefault();
-        window.location.href = "/user/settings";
+        window.location.href = "user/settings";
     });
     $('.profile-btn').click(function(e) {
         e.preventDefault();
-        window.location.href = "/user/profile";
+        window.location.href = "user/profile";
     });
     $('.messages-btn').click(function(e) {
         e.preventDefault();
-        window.location.href = "/user/messages";
+        window.location.href = "user/messages";
     });
 
 

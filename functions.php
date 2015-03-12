@@ -28,3 +28,43 @@ function getUserRoleName($role)
     }
     return $role;
 }
+
+/**
+ * password hash generation
+ */
+function hasher($info, $encdata = false)
+{
+    $strength = "10";
+    
+    //if encrypted data is passed, check it against input ($info) 
+    if ($encdata) {
+        if (substr($encdata, 0, 60) == crypt($info, "$2a$" . $strength . "$" . substr($encdata, 60))) {
+            return true;
+            
+        } else {
+            return false;
+        }
+    } else {
+
+        //make a salt and hash it with input, and add salt to end 
+        $salt = "";
+        for ($i = 0; $i < 22; $i++) {
+            $salt .= substr("./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", mt_rand(0, 63), 1);
+        }
+        //return 82 char string (60 char hash & 22 char salt) 
+        return crypt($info, "$2a$" . $strength . "$" . $salt) . $salt;
+        
+    }
+}
+
+
+function forceEndSession()
+{
+    $_SESSION = array();
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+    }
+    
+    session_destroy();
+}

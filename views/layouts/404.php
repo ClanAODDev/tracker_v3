@@ -9,7 +9,7 @@
 		THAT PAGE DOESN'T EXIST... OR YOU DON'T HAVE ACCESS TO IT
 	</div> <!-- / .error-text -->
 	<div class="margin-top-50"></div>
-	<a href="./" class="btn btn-large btn-info"><i class="icon-home icon-white"></i> Take Me Home</a>
+	<a href="./" class="btn btn-large btn-info"><i class="fa fa-home"></i> Take Me Home</a>
 
 </div>
 

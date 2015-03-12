@@ -5,42 +5,47 @@ class UserController {
 	public static function _login() {
 		Flight::render('layouts/login', array(''), 'content');
 		Flight::render('layouts/application');
-	}
+	} 
 
 	public static function _register() {
 		Flight::render('layouts/register', array(''), 'content');
 		Flight::render('layouts/application');
 	}
 
-	public static function _logout() {
+	public static function _doLogout() {
 		forceEndSession();
-		header('Location: /');
+		Flight::redirect('./');
 	}
 
 	public static function _doLogin() {
-		$data = NULL;
 		$user = trim(htmlspecialchars($_POST['user']));
 		$pass = $_POST['password'];
-		if (!self::userExists($user)) { 
-			$data['error'] = true;
+
+		if (!User::exists($user)) { 
+			$error = true;
 		} else {
-			$id = self::validatePassword($pass, $user);
+			$id = User::validatePassword($pass, $user);
+
 			if (!$id) {
-				$data['error'] = true;    
+				$error = true; 
+
 			} else {
-				session_start();
 				// updateLoggedInTime($user);  
 				$_SESSION['loggedIn'] = true;
-				$_SESSION['user_id'] = $id;
+				$_SESSION['userid'] = $id;
+				$_SESSION['username'] = $user;
 			}
 		}
 
-		if (!is_null($data['error'])) {
-			header('Location: /error/invalid-login');
+		if (isset($error)) {
+			Flight::redirect('/invalid-login');
 		} else {
-			header('Location: /');
+			Flight::redirect('./');
 		}
 	}
+
+
+
 
 }
 

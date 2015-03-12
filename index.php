@@ -5,10 +5,6 @@ require_once 'functions.php';
 
 session_start();
 
-$_SESSION['userid'] = 31832;
-$_SESSION['username'] = 'guybrush';
-$_SESSION['loggedIn'] = true;
-
 if (get_magic_quotes_gpc()) {
   $process = array(&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);
   while (list($key, $val) = each($process)) {

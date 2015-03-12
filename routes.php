@@ -2,24 +2,26 @@
 
 // maintenance mode
 // Flight::route('*', array('ApplicationController', '_unavailable'));
+// 
 
-if (empty($_SERVER['userid'])) {
+if (empty($_SESSION['userid'])) {
 
-	Flight::route('/', array('ApplicationController', '_index'));
-	// Flight::route('/', array('UserController', '_login'));
+	Flight::route('/', array('UserController', '_login'));
 	Flight::route('/register', array('UserController', '_register'));
+	Flight::route('POST /do/login', array('UserController', '_doLogin'));
+	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
 
 } else {
 
 	// user views
 	Flight::route('/', array('ApplicationController', '_index'));
+	Flight::route('/logout', array('UserController', '_doLogout'));
 	
 
-	// POSTS
-	Flight::route('POST /do/login', array('UserController', '_doLogin'));
+
 
 /*	Flight::route('/help', array('UserController', '_help'));
-	Flight::route('/logout', array('UserController', '_logout'));
+	
 	Flight::route('/settings', array('UserController', '_settings'));
 
 	// view screens
