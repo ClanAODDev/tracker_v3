@@ -7,15 +7,9 @@ class ApplicationController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::getToolsByRole($user->role);
 		$divisions = Division::find_all();
-		Flight::render('home', array(''), 'content');
-		Flight::render('layouts/application', 
-			array(
-				'user' => $user, 
-				'member' => $member,
-				'tools' => $tools,
-				'divisions' => $divisions
-				)
-			);
+		$division = Division::find($member->game_id);
+		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
 	public static function _invalidLogin() {

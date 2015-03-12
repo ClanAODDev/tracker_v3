@@ -18,4 +18,9 @@ class Division extends Application {
 	public static function find_all() {
 		return self::fetch_all();
 	}
+
+	public static function find($id) {
+		$params = Flight::aod()->sql("SELECT * FROM games WHERE `id`='{$id}'")->one();
+		return (object) $params;
+	}
 }

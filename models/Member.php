@@ -26,7 +26,7 @@ class Member extends Application {
 
 	public static function find($forum_name) {
 		$params = Flight::aod()->sql("SELECT * FROM member WHERE `forum_name`='{$forum_name}'")->one();
-		return $params;
+		return (object) $params;
 	}
 
 	public static function avatar($mid, $type = "thumb")
