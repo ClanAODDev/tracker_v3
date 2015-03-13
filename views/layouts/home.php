@@ -10,10 +10,12 @@
 		</div> 
 	</div>
 
-	<!-- alerts -->
+	<!-- alerts and important notifications -->
 	<div class='row'>
 		<div class='col-md-12'>
-			{$obligAlerts}
+			<?php if (count($notifications)) : ?>
+				<?php foreach($notifications as $notification) { echo $notification; } ?>
+			<?php endif; ?>
 			<?php if (count($alerts)) : ?>
 				<?php foreach($alerts as $alert) : ?>
 					<div data-id="<?php echo $alert->id; ?>" data-user="<?php echo $user->id; ?>" class="alert-dismissable alert alert-<?php echo $alert->type; ?> fade in" role="alert">

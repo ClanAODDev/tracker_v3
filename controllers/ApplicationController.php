@@ -9,7 +9,8 @@ class ApplicationController {
 		$divisions = Division::find_all();
 		$division = Division::find($member->game_id);
 		$alerts = Alert::find_all($user->id);
-		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division, 'divisions' => $divisions, 'alerts' => $alerts), 'content');
+		$notifications = new Notification($member);
+		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division, 'divisions' => $divisions, 'alerts' => $alerts, 'notifications' => $notifications->all), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 

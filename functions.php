@@ -1,6 +1,4 @@
 <?php
-/* silence is golden */
-
 
 /**
  * converts role id into real string
