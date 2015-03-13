@@ -35,7 +35,7 @@
 			</div>
 		</div>
 
-		{$posts}
+		<?php echo $posts_list ?>
 
 	<?php else : ?>
 

@@ -9,7 +9,7 @@ class ApplicationController {
 		$divisions = Division::find_all();
 		$division = Division::find($member->game_id);
 		$alerts = Alert::find_all($user->id);
-		$notifications = new Notification($member);
+		$notifications = new Notification($user, $member);
 		$posts = Post::find_all($user->role);
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
