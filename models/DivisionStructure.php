@@ -2,7 +2,7 @@
 /**
  * Handles generation of division structure based on division
  */
-class DivisionStructureController {
+class DivisionStructure {
 	public static function _generate($game=2) {
 
     	// colors
