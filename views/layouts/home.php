@@ -13,37 +13,14 @@
 	<!-- alerts and important notifications -->
 	<div class='row'>
 		<div class='col-md-12'>
-			<?php if (count($notifications)) : ?>
-				<?php foreach($notifications as $notification) { echo $notification; } ?>
-			<?php endif; ?>
-			<?php if (count($alerts)) : ?>
-				<?php foreach($alerts as $alert) : ?>
-					<div data-id="<?php echo $alert->id; ?>" data-user="<?php echo $user->id; ?>" class="alert-dismissable alert alert-<?php echo $alert->type; ?> fade in" role="alert">
-						<button type="button" class="close" data-dismiss="alert">
-							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-						</button>
-						<?php echo $alert->content; ?>
-					</div>
-				<?php endforeach; ?>
-			<?php endif; ?>
+			<?php echo $notifications_list ?>
 		</div>
 	</div>
 
 	<!-- main division list -->
 	<div class='row'>
 		<div class='col-md-12'>
-			<div class='panel panel-default'>
-				<div class='panel-heading'><i class='fa fa-gamepad fa-lg pull-right text-muted'></i> <strong>Gaming Divisions</strong></div>
-				<div class='list-group'>
-					<?php foreach ($divisions as $division) : ?>
-						<a href='divisions/<?php echo $division->short_name ?>' class='list-group-item' style='padding-bottom: 18px;'>
-							<span class='pull-left' style='margin-right: 20px; vertical-align: middle;'><img src='assets/images/game_icons/large/<?php echo $division->short_name ?>.png' /></span>
-							<h4 class='list-group-item-heading'><strong><?php echo $division->full_name ?></strong></h4>
-							<p class='list-group-item-text text-muted'><?php echo $division->description ?></p>
-						</a>
-					<?php endforeach; ?>
-				</div>
-			</div>
+			<?php echo $divisions_list ?>
 		</div>
 	</div>
 
@@ -65,22 +42,8 @@
 		<!-- quick tools and personnel view-->
 		<div class='row'>
 			<div class='col-md-5'>
-				<div class='panel panel-primary'>
-					<div class='panel-heading'><strong><?php echo getUserRoleName($user->role); ?> Quick Tools</strong></div>
-					<div class='list-group'>
-						<?php if (count($tools)) : ?>
-							<?php foreach($tools as $tool) : ?>
-								<a href='<?php echo $tool->tool_path ?>' class='list-group-item <?php echo $tool->class ?>'>
-									<h4 class='pull-right text-muted'><i class='fa fa-<?php echo $tool->icon ?> fa-lg'></i></h4>
-									<h4 class='list-group-item-heading'><strong><?php echo $tool->tool_name ?></strong></h4>
-									<p class='list-group-item-text text-muted'><?php echo $tool->tool_descr ?></p>
-								</a>			
-							<?php endforeach; ?>				
-						<?php else : ?>
-							<li class='list-group-item'>No tools currently available to you</li>
-						<?php endif; ?>
-					</div>
-				</div>
+
+				<?php echo $main_tools ?>
 
 				<?php if ($user->role == 1) : ?>
 
@@ -114,17 +77,7 @@
 
 			<!-- posts visible to leadership -->
 			<div class='col-md-7'>
-				<?php if (count($posts)) : ?>
-					<?php foreach($posts as $post) : ?>
-						<div class='panel panel-default'>
-							<div class='panel-heading'><?php echo Member::avatar($post->forum_id) .  $post->title; ?></div>
-							<div class='panel-body'><?php echo $post->content ?></div>
-							<div class='panel-footer text-muted text-right'>
-								<small>Posted <?php echo date("Y-m-d", strtotime($post->date)); ?> by <a href='/member/{$authorId}'><?php echo Member::findForumName($post->forum_id) ?></a></small>
-							</div>
-						</div>
-					<?php endforeach; ?>
-				<?php endif; ?>
+				<?php echo $posts_list ?>
 			</div>
 		</div>
 
