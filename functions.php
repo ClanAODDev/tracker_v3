@@ -57,7 +57,6 @@ function hasher($info, $encdata = false)
     }
 }
 
-
 function forceEndSession()
 {
     $_SESSION = array();
@@ -67,4 +66,13 @@ function forceEndSession()
     }
     
     session_destroy();
+}
+
+function arrayToObject($d) {
+    if (is_array($d)) {
+        return (object) array_map(__FUNCTION__, $d);
+    }
+    else {
+        return $d;
+    }
 }

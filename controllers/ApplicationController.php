@@ -8,7 +8,8 @@ class ApplicationController {
 		$tools = Tool::getToolsByRole($user->role);
 		$divisions = Division::find_all();
 		$division = Division::find($member->game_id);
-		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division, 'divisions' => $divisions), 'content');
+		$alerts = Alert::find_all($user->id);
+		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division, 'divisions' => $divisions, 'alerts' => $alerts), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 

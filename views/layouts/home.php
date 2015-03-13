@@ -1,4 +1,5 @@
 <div class='container fade-in margin-top-20'>
+	<!-- welcome area and help button -->
 	<div class='row tour-intro'>
 		<div class='col-md-12'>
 			<div class='jumbotron striped-bg'>
@@ -6,16 +7,25 @@
 				<p>This is the activity tracker for the <?php echo $division->full_name ?> division! Visit the help section for more information.</p>
 				<p><a class='btn btn-primary btn-lg' href='help' role='button'>Learn more <i class='fa fa-arrow-right'></i></a></p>
 			</div>
-		</div> <!-- end col -->
-	</div> <!-- end end row -->
+		</div> 
+	</div>
 
+	<!-- alerts -->
 	<div class='row'>
 		<div class='col-md-12'>
 			{$obligAlerts}
-			{$alerts_list}
+			<?php if (count($alerts)) : ?>
+				<?php foreach($alerts as $alert) : ?>
+					<div data-id="<?php echo $alert->id; ?>" data-user="<?php echo $user->id; ?>" class="alert-dismissable alert alert-<?php echo $alert->type; ?> fade in" role="alert">
+						<button type="button" class="close" data-dismiss="alert">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<?php echo $alert->content; ?>
+					</div>
+				<?php endforeach; ?>
+			<?php endif; ?>
 		</div>
 	</div>
-
 
 	<!-- main division list -->
 	<div class='row'>
@@ -35,10 +45,9 @@
 		</div>
 	</div>
 
-
-
 	<?php if ($user->role == 0) : ?>
 
+		<!-- posts visible to users / non-leadership -->
 		<div class='panel panel-info'>
 			<div class='panel-heading'>Welcome to the activity tracker!</div>
 			<div class='panel-body'>
@@ -51,8 +60,8 @@
 
 	<?php else : ?>
 
+		<!-- quick tools and personnel view-->
 		<div class='row'>
-
 			<div class='col-md-5'>
 				<div class='panel panel-primary'>
 					<div class='panel-heading'><strong><?php echo getUserRoleName($user->role); ?> Quick Tools</strong></div>
@@ -60,7 +69,6 @@
 						{$tools}
 					</div>
 				</div>
-
 
 				<?php if ($user->role == 1) : ?>
 
@@ -90,12 +98,9 @@
 					</div>
 
 				<?php endif; ?>
-
-
 			</div>
 
-
-			// announcements
+			<!-- posts visible to leadership -->
 			<div class='col-md-7'>
 				{$posts}
 			</div>
