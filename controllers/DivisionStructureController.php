@@ -36,7 +36,7 @@ class DivisionStructureController {
 
 	    $out .= "\r\n\r\n[center][size=5][color={$div_name_color}][b][i][u]Division Leaders[/u][/i][/b][/color][/size][/center]\r\n";
 	    $out .= "[center][size=4]";
-	    $divleaders = get_division_ldrs($game);
+	    $divleaders = findDivisionLeaders($game);
 
 	    foreach ($divleaders as $leader) {
 	    	$aod_url = "[url=" . CLANAOD . $leader['forum_id'] . "]";
@@ -52,7 +52,7 @@ class DivisionStructureController {
 	     * ---------------------------
 	     */
 
-	    $genSgts = get_general_sergeants($game);
+	    $genSgts = findGeneralSergeants($game);
 	    $out .= "[center][size=3][color={$platoon_pos_color}]General Sergeants[/color]\r\n";
 	    foreach ($genSgts as $sgt) {
 	    	$aod_url = "[url=" . CLANAOD . $sgt['forum_id'] . "]";
@@ -71,7 +71,7 @@ class DivisionStructureController {
 
 	    $out .= "\r\n\r\n[table='width: 1100']";
 
-	    $platoons = get_platoons($game);
+	    $platoons = Platoon::find_all($game);
 	    foreach ($platoons as $platoon) {
 	    	if ($i == 1) {
 	    		$out .= "[tr]";
@@ -84,7 +84,7 @@ class DivisionStructureController {
 	    	$out .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon['platoon_name']}[/size][/i]\r\n\r\n";
 
         	// platoon leader
-	    	$leader = get_member($platoon['leader_id']);
+	    	$leader = Platoon::findLeader($platoon['leader_id']);
 	    	$aod_url = "[url=" . CLANAOD . $leader['member_id'] . "]";
 	    	$bl_url = "[url=" . BATTLELOG . $leader['battlelog_name']. "]";
 	    	$out .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader['rank']} {$leader['forum_name']}[/color][/size][/url]{$bl_url}  {$bf4_icon}[/url]\r\n\r\n";

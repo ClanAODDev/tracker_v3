@@ -20,7 +20,20 @@ class Division extends Application {
 	}
 
 	public static function find($id) {
-		$params = Flight::aod()->sql("SELECT * FROM games WHERE `id`='{$id}'")->one();
+		$sql = "SELECT * FROM games WHERE `id`='{$id}'";
+		$params = Flight::aod()->sql($sql)->one();
+		return (object) $params;
+	}
+
+	public static function findDivisionLeaders($gid) {
+		$sql = "SELECT member.id, member.member_id, member.forum_name, rank.abbr, member.battlelog_name, position.desc FROM member LEFT JOIN rank on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE position_id IN (1,2) AND member.game_id = {$gid}";
+		$params = Flight::aod()->sql($sql)->many();
+		return (object) $params;
+	}
+
+	public static function findGeneralSergeants($gid) {
+		$sql = "SELECT member.id, member.member_id as forum_id, member.forum_name, rank.abbr as rank, position.desc as position_desc, member.battlelog_name FROM member LEFT JOIN rank on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE position_id = 3 AND member.game_id = {$gid}";
+		$params = Flight::aod()->sql($sql)->many();
 		return (object) $params;
 	}
 }

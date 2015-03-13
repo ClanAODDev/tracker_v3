@@ -29,7 +29,12 @@ class Member extends Application {
 		return (object) $params;
 	}
 
-	public static function find_forum_name($mid) {
+	public static function findById($mid) {
+		$params = Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$mid}")->one();
+		return (object) $params;
+	}
+
+	public static function findForumName($mid) {
 		$params = Flight::aod()->sql("SELECT forum_name FROM member WHERE `member_id`={$mid}")->one();
 		return $params['forum_name'];
 	}
