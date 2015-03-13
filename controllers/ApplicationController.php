@@ -5,19 +5,20 @@ class ApplicationController {
 	public static function _index() {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
-		$tools = Tool::getToolsByRole($user->role);
+		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::find($member->game_id);
 		$alerts = Alert::find_all($user->id);
 		$notifications = new Notification($member);
-		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division, 'divisions' => $divisions, 'alerts' => $alerts, 'notifications' => $notifications->all), 'content');
+		$posts = Post::find_all($user->role);
+		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division, 'divisions' => $divisions, 'alerts' => $alerts, 'notifications' => $notifications->all, 'tools' => $tools, 'posts' => $posts), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
 	public static function _help() {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
-		$tools = Tool::getToolsByRole($user->role);
+		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::find($member->game_id);
 		Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division), 'content');

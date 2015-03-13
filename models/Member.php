@@ -29,6 +29,11 @@ class Member extends Application {
 		return (object) $params;
 	}
 
+	public static function find_forum_name($mid) {
+		$params = Flight::aod()->sql("SELECT forum_name FROM member WHERE `member_id`={$mid}")->one();
+		return $params['forum_name'];
+	}
+
 	public static function avatar($mid, $type = "thumb")
 	{
 		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$mid}";

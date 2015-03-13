@@ -15,6 +15,7 @@
 
 </head>
 <body>
+<!-- you checkin out my body? -->
 
 	<!-- modal for ajax dialogs -->
 	<div class="modal viewPanel fade">

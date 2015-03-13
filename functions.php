@@ -75,7 +75,6 @@ function arrayToObject($d) {
     }
 }
 
-
 function objectToArray($d) {
     if (is_object($d)) {
         $d = get_object_vars($d);

@@ -19,11 +19,8 @@ class Tool extends Application {
 	 * @param  int $role role of user (role_id)
 	 * @return array     array of tools
 	 */
-	public static function getToolsByRole($role) {
-		return self::find(array("role_id <=" => $role));
+	public static function find_all($role) {
+		return self::find(array("role_id <=" => $role, 'disabled' => 0));
 	}
-
-
-
 
 }
