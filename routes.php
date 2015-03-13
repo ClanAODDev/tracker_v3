@@ -17,6 +17,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/', array('ApplicationController', '_index'));
 	Flight::route('/logout', array('UserController', '_doLogout'));
 	Flight::route('/help', array('ApplicationController', '_help'));
+	Flight::route('/recruiting', array('RecruitingController', '_index'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
@@ -32,7 +33,6 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/manage/loas', array('DivisionController', '_manage_loas'));
 
 	// recruiting
-	Flight::route('/recruiting', array('RecruitingController', '_show_main'));
 	Flight::route('/recruiting/new-member', array('RecruitingController', '_add_new_member'));
 
 	// admin

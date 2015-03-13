@@ -68,8 +68,7 @@
 							</li>						
 
 
-
-
+							
 							<!-- showing tools if squad leader or above -->
 							<?php if ($user->role > 0): $roleName = getUserRoleName($user->role); ?>
 
@@ -88,6 +87,9 @@
 
 
 
+
+
+							
 
 							<!-- supported divisions -->
 							<li class="dropdown">
