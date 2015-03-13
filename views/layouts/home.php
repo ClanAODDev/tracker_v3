@@ -4,7 +4,7 @@
 			<div class='jumbotron striped-bg'>
 				<h1>Hello, <strong><?php echo $member->forum_name ?></strong>!</h1>
 				<p>This is the activity tracker for the <?php echo $division->full_name ?> division! Visit the help section for more information.</p>
-				<p><a class='btn btn-primary btn-lg' href='/help' role='button'>Learn more <i class='fa fa-arrow-right'></i></a></p>
+				<p><a class='btn btn-primary btn-lg' href='help' role='button'>Learn more <i class='fa fa-arrow-right'></i></a></p>
 			</div>
 		</div> <!-- end col -->
 	</div> <!-- end end row -->

@@ -16,8 +16,6 @@
 </head>
 <body>
 
-
-
 	<!-- modal for ajax dialogs -->
 	<div class="modal viewPanel fade">
 		<div class="modal-dialog">
