@@ -15,4 +15,15 @@ class Squad {
 		return arrayToObject($params);
 	}
 
+	public static function count($mid) {
+		$sql = "SELECT count(*) as count FROM `member` WHERE member.squad_leader_id = {$mid} AND (member.status_id = 1 OR member.status_id = 999) AND member.position_id = 6";
+		$params = Flight::aod()->sql($sql)->one();
+		return $params['count'];
+	}
+
+
+
 }
+
+
+

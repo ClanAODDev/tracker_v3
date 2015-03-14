@@ -1,20 +1,17 @@
 <?php if ($user->role == 1) : ?><!-- if squad leader -->
-
-	<div class='panel panel-default'>
-		<div class='panel-heading'><strong> Your Squad</strong> {$squadCount}<span class='pull-right text-muted'>Last seen</span></div>
-
-		<div class='list-group' id='squad'>
-			<?php if (count($squad)) : ?>
+	<?php if (Squad::count($member->member_id)) : ?>
+		<div class='panel panel-default'>
+			<div class='panel-heading'><strong> Your Squad</strong> (<?php echo Squad::count($member->member_id); ?>)<span class='pull-right text-muted'>Last seen</span></div>
+			<div class='list-group' id='squad'>
 				<?php foreach($squad as $member) : ?>
-					<a href='/member/<?php echo $member->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $member->member_id ?>' style='margin-right: 10px; display: none;'><?php echo $member->rank ?> <?php echo $member->forum_name ?><small class='pull-right text-{$status}'><?php echo $member->last_seen ?></small></a>
+					<a href='member/<?php echo $member->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $member->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $member->rank ?> <?php echo $member->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></small></a>
 				<?php endforeach; ?>				
-			<?php else : ?>
-				<p class='list-group-item'>It looks like you don't have any squad members assigned to you.</p>
-			<?php endif; ?>
+			</div>
+			<div class='panel-footer'>
+				<button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
+			</div>
 		</div>
-		<div class='panel-footer'><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div></div>
-	</div>
-
+	<?php endif; ?>
 	
 <?php elseif ($user->role == 2) : ?><!-- if platoon leader -->
 
