@@ -11,8 +11,11 @@ class ApplicationController {
 		$alerts = Alert::find_all($user->id);
 		$notifications = new Notification($user, $member);
 		$posts = Post::find_all($user->role);
+		$squad = Squad::find($member->member_id);
+		$platoon = Platoon::find($member->platoon_id);
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
+		Flight::render('member/personnel', array('squad' => $squad, 'platoon' => $platoon), 'personnel');
 		Flight::render('application/divisions', array('divisions' => $divisions), 'divisions_list');
 		Flight::render('user/notifications', array('notifications' => $notifications->all, 'alerts' => $alerts), 'notifications_list');
 		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division), 'content');

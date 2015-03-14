@@ -1,6 +1,6 @@
 <?php
 
-class Platoon extends Division {
+class Platoon extends Application {
 
 	public $id;
 	public $number;

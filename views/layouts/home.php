@@ -39,43 +39,12 @@
 
 	<?php else : ?>
 
-		<!-- quick tools and personnel view-->
+		<!-- quick tools and personnel view, posts-->
 		<div class='row'>
 			<div class='col-md-5'>
-
 				<?php echo $main_tools ?>
-
-				<?php if ($user->role == 1) : ?>
-
-					<div class='panel panel-default'>
-						<div class='panel-heading'><strong> Your Squad</strong> {$squadCount}<span class='pull-right text-muted'>Last seen</span></div>
-
-						<div class='list-group' id='squad'>
-							{$my_squad}
-
-						</div>
-						<div class='panel-footer'><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div></div>
-					</div>
-
-				<?php elseif ($user->role == 2) : ?>
-
-					// platoon
-
-					<div class='panel panel-default'>
-						<div class='panel-heading'><strong> Your Platoon</strong> {$platoonCount}<span class='pull-right text-muted'>Last seen</span></div>
-
-						<div class='list-group' id='squads'>
-
-							{$my_platoon}
-
-						</div>
-						<div class='panel-footer'><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div></div>
-					</div>
-
-				<?php endif; ?>
+				<?php echo $personnel ?>
 			</div>
-
-			<!-- posts visible to leadership -->
 			<div class='col-md-7'>
 				<?php echo $posts_list ?>
 			</div>
