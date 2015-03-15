@@ -17,11 +17,11 @@
 	<div class='row'>
 		<div class='col-md-3' id='helpNav'>
 			<ul class='nav nav-stacked' id='sidebar'>
-				<li><a href='#sec0' class='helpScroll'>Section 0</a></li>
-				<li><a href='#sec1' class='helpScroll'>Section 1</a></li>
-				<li><a href='#sec2' class='helpScroll'>Section 2</a></li>
-				<li><a href='#sec3' class='helpScroll'>Section 3</a></li>
-				<li><a href='#sec4' class='helpScroll'>Section 4</a></li>
+				<li><a href='<?php echo $_SERVER['REQUEST_URI']; ?>#sec0' class='helpScroll'>Section 0</a></li>
+				<li><a href='<?php echo $_SERVER['REQUEST_URI']; ?>#sec1' class='helpScroll'>Section 1</a></li>
+				<li><a href='<?php echo $_SERVER['REQUEST_URI']; ?>#sec2' class='helpScroll'>Section 2</a></li>
+				<li><a href='<?php echo $_SERVER['REQUEST_URI']; ?>#sec3' class='helpScroll'>Section 3</a></li>
+				<li><a href='<?php echo $_SERVER['REQUEST_URI']; ?>#sec4' class='helpScroll'>Section 4</a></li>
 			</ul>
 		</div>
 
