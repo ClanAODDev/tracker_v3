@@ -430,7 +430,7 @@ function ucwords(str) {
  */
 
 /* activate sidebar */
-$('#sidebar').affix({
+$('#helpNav #sidebar').affix({
     offset: {
         top: 235
     }
@@ -441,12 +441,12 @@ var $body = $(document.body);
 var navHeight = $('.navbar').outerHeight(true) + 10;
 
 $body.scrollspy({
-    target: '#leftCol',
+    target: '#helpNav',
     offset: navHeight
 });
 
 /* smooth scrolling sections */
-$('a[href*=#]:not([href=#])').click(function() {
+$('.helpScroll').click(function() {
     if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
         var target = $(this.hash);
         target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');

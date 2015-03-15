@@ -15,13 +15,13 @@
 	<p>If you find mistakes or typos, please let us know!</p>
 
 	<div class='row'>
-		<div class='col-md-3' id='leftCol'>
+		<div class='col-md-3' id='helpNav'>
 			<ul class='nav nav-stacked' id='sidebar'>
-				<li><a href='help/#sec0'>Section 0</a></li>
-				<li><a href='help/#sec1'>Section 1</a></li>
-				<li><a href='help/#sec2'>Section 2</a></li>
-				<li><a href='help/#sec3'>Section 3</a></li>
-				<li><a href='help/#sec4'>Section 4</a></li>
+				<li><a href='#sec0' class='helpScroll'>Section 0</a></li>
+				<li><a href='#sec1' class='helpScroll'>Section 1</a></li>
+				<li><a href='#sec2' class='helpScroll'>Section 2</a></li>
+				<li><a href='#sec3' class='helpScroll'>Section 3</a></li>
+				<li><a href='#sec4' class='helpScroll'>Section 4</a></li>
 			</ul>
 		</div>
 
