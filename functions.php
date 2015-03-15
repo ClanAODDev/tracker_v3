@@ -55,6 +55,10 @@ function hasher($info, $encdata = false)
     }
 }
 
+/**
+ * force destruction of session and all cookies (logout)
+ * @return null
+ */
 function forceEndSession()
 {
     $_SESSION = array();
@@ -66,6 +70,11 @@ function forceEndSession()
     session_destroy();
 }
 
+/**
+ * helper function -- array->object
+ * @param  array $d 
+ * @return object    
+ */
 function arrayToObject($d) {
     if (is_array($d)) {
         return (object) array_map(__FUNCTION__, $d);
@@ -75,6 +84,11 @@ function arrayToObject($d) {
     }
 }
 
+/**
+ * helper function -- object->array
+ * @param  object $d 
+ * @return array
+ */
 function objectToArray($d) {
     if (is_object($d)) {
         $d = get_object_vars($d);
@@ -89,7 +103,11 @@ function objectToArray($d) {
     }
 }
 
-
+/**
+ * returns human readable time in past (2 seconds ago, 12 hours ago etc)
+ * @param  int $ptime date
+ * @return string        
+ */
 function formatTime($ptime)
 {
     $etime = time() - $ptime;
@@ -124,7 +142,11 @@ function formatTime($ptime)
     }
 }
 
-
+/**
+ * class name for last_seen column (inactivity)
+ * @param  timestamp $last_seen 
+ * @return string            
+ */
 function inactiveClass($last_seen) {
     if (strtotime($last_seen) < strtotime('-30 days')) {
         $status = 'danger';
@@ -135,3 +157,56 @@ function inactiveClass($last_seen) {
     }
     return $status;
 }
+
+/**
+ * convert single digit to word
+ */
+function singledigitToWord($number)
+{
+    switch ($number) {
+        case 0:
+        $word = "zero";
+        break;
+        case 1:
+        $word = "one";
+        break;
+        case 2:
+        $word = "two";
+        break;
+        case 3:
+        $word = "three";
+        break;
+        case 4:
+        $word = "four";
+        break;
+        case 5:
+        $word = "five";
+        break;
+        case 6:
+        $word = "six";
+        break;
+        case 7:
+        $word = "seven";
+        break;
+        case 8:
+        $word = "eight";
+        break;
+        case 9:
+        $word = "nine";
+        break;
+    }
+    return $word;
+}
+
+/*
+function getPercentageColor($pct)
+{
+    if ($pct >= PERCENTAGE_CUTOFF_GREEN) {
+        $percent_class = "success";
+    } else if ($pct >= PERCENTAGE_CUTOFF_AMBER) {
+        $percent_class = "warning";
+    } else {
+        $percent_class = "danger";
+    }
+    return $percent_class;
+}*/

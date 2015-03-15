@@ -1,25 +1,55 @@
 <?php if ($user->role == 1) : ?><!-- if squad leader -->
+
 	<?php if (Squad::count($member->member_id)) : ?>
 		<div class='panel panel-default'>
 			<div class='panel-heading'><strong> Your Squad</strong> (<?php echo Squad::count($member->member_id); ?>)<span class='pull-right text-muted'>Last seen</span></div>
 			<div class='list-group' id='squad'>
-				<?php foreach($squad as $member) : ?>
-					<a href='member/<?php echo $member->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $member->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $member->rank ?> <?php echo $member->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></small></a>
+				<?php foreach($squad as $player) : ?>
+					<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'><?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
 				<?php endforeach; ?>				
 			</div>
 			<div class='panel-footer'>
 				<button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
 			</div>
 		</div>
+
 	<?php endif; ?>
 	
 <?php elseif ($user->role == 2) : ?><!-- if platoon leader -->
 
 	<div class='panel panel-default'>
-		<div class='panel-heading'><strong> Your Platoon</strong> {$platoonCount}<span class='pull-right text-muted'>Last seen</span></div>
-
+		<div class='panel-heading'><strong> Your Platoon</strong> (<?php echo Platoon::countPlatoon($member->platoon_id); ?>)<span class='pull-right text-muted'>Last seen</span></div>
 		<div class='list-group' id='squads'>
-			{$my_platoon}
+			<?php if (count(Platoon::countSquadLeaders($member->platoon_id))) : $i = 0;	?>
+
+				<!-- get squad leaders-->
+				<?php foreach(Platoon::SquadLeaders($member->platoon_id) as $player) :?>
+					<a href='#collapseSquad_<?php echo $i; ?>' data-toggle='collapse' class='list-group-item active accordion-toggle' data-parent='#squads'>
+						<?php echo $player->abbr ?> <?php echo $player->forum_name ?> (<?php echo Squad::count($player->member_id); ?>)
+					</a>
+
+					<!-- get squad members -->
+					<div class='squad-group collapse' id='collapseSquad_<?php echo $i; ?>'>
+						
+						<?php foreach(Squad::find($player->member_id) as $player) : ?>
+							<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'><?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
+						<?php endforeach; ?>
+					</div>
+
+					<?php $i++; ?>
+				<?php endforeach;  ?>
+
+				<!-- get general population -->
+				<a href='#collapseSquad_<?php echo $i; ?>' data-toggle='collapse' class='list-group-item active accordion-toggle' data-parent='#squads'>General Population (<?php echo Platoon::countGeneralPop($member->platoon_id); ?>)</a>
+				<div class='squad-group collapse' id='collapseSquad_<?php echo $i; ?>'>
+
+					<?php foreach($genPop as $player) : ?>
+						<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'><?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
+					<?php endforeach; ?>
+
+				</div>
+
+			<?php endif; ?>
 		</div>
 		<div class='panel-footer'><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div></div>
 	</div>
@@ -28,34 +58,41 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- 
-// squad leader personnel view
-if ($userRole == 1) {
-$squad_members = get_my_squad($forumId);
-$squadCount = ($squad_members) ? "(" . count($squad_members) . ")" : NULL;
-if ($squad_members) {
-foreach ($squad_members as $squad_member) {
-$name = ucwords($squad_member['forum_name']);
-$id = $squad_member['member_id'];
-$rank = $squad_member['rank'];
-$last_seen = formatTime(strtotime($squad_member['last_activity']));
 
-// visual cue for inactive squad members
-if (strtotime($last_seen) < strtotime('-30 days')) {
-$status = 'danger';
-} else if (strtotime($last_seen) < strtotime('-14 days')) {
-$status = 'warning';
-} else {
-$status = 'muted';
-}
 
-$my_squad .= "
-<a href='/member/{$id}' class='list-group-item'><input type='checkbox' data-id='{$id}' style='margin-right: 10px; display: none;'>{$rank} {$name}<small class='pull-right text-{$status}'>{$last_seen}</small></a>
-";
-}
-} else {
-$my_squad .= "<div class='panel-body'>Unfortunately it looks like you don't have any squad members!</div>";
-}
+
+
+
+
+
 
 
 // platoon leader personnel view
