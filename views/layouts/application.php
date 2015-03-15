@@ -15,7 +15,7 @@
 
 </head>
 <body>
-<!-- you checkin out my body? -->
+	<!-- you checkin out my body? -->
 
 	<!-- modal for ajax dialogs -->
 	<div class="modal viewPanel fade">
@@ -53,60 +53,6 @@
 						</form>
 
 						<ul class="nav navbar-nav navbar-left">
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="member/<?php echo $member->member_id; ?>"><?php echo ucwords($_SESSION['username']); ?><span class="pull-right"><?php echo Member::avatar($member->member_id) ?></span></a></li>
-									<li class="divider"></li>
-									<li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
-									<li><a href="http://www.clanaod.net/forums/member.php?u=<?php echo $_SESSION['userid']; ?>" target="_blank"> Forum profile</a></li>
-									<li> <a href="help/" role="button">Help</a> </li>
-									<li class="divider"></li>
-									<li><a href="#" data-toggle="pill" class="logout-btn"><i class="fa fa-lock pull-right"></i> Logout</a></li>
-								</ul>
-							</li>						
-
-
-							
-							<!-- showing tools if squad leader or above -->
-							<?php if ($user->role > 0): $roleName = getUserRoleName($user->role); ?>
-
-								<!-- user tools -->
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
-									<ul class="dropdown-menu" role="menu">
-										<li class='disabled'><a href='#' disabled><?php echo $roleName ?></a></li><li class='divider'></li>
-										<?php foreach ($tools as $tool) : ?>
-											<li><a href="<?php echo $tool->tool_path ?>" class="<?php echo $tool->class ?>"><?php echo $tool->tool_name ?></a></li>
-										<?php endforeach; ?>
-									</ul>
-								</li>
-
-							<?php endif; ?>
-
-
-
-
-
-							
-
-							<!-- supported divisions -->
-							<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Divisions <span class="caret"></span></a>
-
-								
-								<ul class="dropdown-menu" role="menu">
-									<?php foreach ($divisions as $division) : ?>
-
-										<li><a href='divisions/<?php echo $division->short_name ?>'><img src='assets/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
-
-									<?php endforeach; ?>
-								</ul>
-
-							</li>
-
-
-
 
 							<!-- notifications -->
 							<li class="dropdown">
@@ -172,6 +118,66 @@
 									</ul>
 								</div>
 							</li>
+
+
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
+
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="member/<?php echo $member->member_id; ?>"><?php echo ucwords($_SESSION['username']); ?><span class="pull-right"><?php echo Member::avatar($member->member_id) ?></span></a></li>
+									<li class="divider"></li>
+									<li class='disabled'><a href='#' disabled>Role: <?php echo getUserRoleName($user->role); ?></a></li><li class='divider'></li>
+									<li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
+									<li><a href="http://www.clanaod.net/forums/member.php?u=<?php echo $_SESSION['userid']; ?>" target="_blank"> Forum profile</a></li>
+									<li> <a href="help/" role="button">Help</a> </li>
+									<li class="divider"></li>
+									<li><a href="#" data-toggle="pill" class="logout-btn"><i class="fa fa-lock pull-right"></i> Logout</a></li>
+								</ul>
+							</li>						
+
+
+							
+							<!-- showing tools if squad leader or above -->
+							<?php if ($user->role > 0): ?>
+
+								<!-- user tools -->
+								<li class="dropdown multi-level">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
+									<ul class="dropdown-menu" role="menu">
+										<li class="dropdown-submenu">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
+											<ul class="dropdown-menu">
+												<li><a href="#">Action</a></li>
+												<li class="dropdown-submenu">
+													<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
+												</li>
+											</ul>
+										</li>
+										<li class='divider'></li>
+										<?php foreach ($tools as $tool) : ?>
+											<li><a href="<?php echo $tool->tool_path ?>" class="<?php echo $tool->class ?>"><?php echo $tool->tool_name ?></a></li>
+										<?php endforeach; ?>
+										
+									</ul>
+								</li>
+
+							<?php endif; ?>
+
+							<!-- supported divisions -->
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Divisions <span class="caret"></span></a>
+
+								
+								<ul class="dropdown-menu" role="menu">
+									<?php foreach ($divisions as $division) : ?>
+
+										<li><a href='divisions/<?php echo $division->short_name ?>'><img src='assets/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
+
+									<?php endforeach; ?>
+								</ul>
+
+							</li>
+
 						</ul>
 					</div>
 
@@ -217,6 +223,12 @@
 	<script src="assets/js/libraries/jquery.bootstrap.wizard.min.js"></script>
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/main.js"></script>
+
+	<!-- js dependency -->
+	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>
+		<script src="assets/js/<?php echo $js ?>.js"></script>
+	<?php endif; ?>
+	
 </body>
 </html>
 
