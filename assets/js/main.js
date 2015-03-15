@@ -364,8 +364,8 @@ function setCookie(cname, cvalue, exdays) {
 function member_search() {
     if ($('#member-search').val()) {
         $.ajax({
-            url: '/application/ajax/member_search.php',
-            type: 'get',
+            url: 'do/search-members',
+            type: 'POST',
             data: {
                 name: $('input#member-search').val()
             },

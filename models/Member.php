@@ -29,6 +29,11 @@ class Member extends Application {
 		return (object) $params;
 	}
 
+	public static function search($name) {
+		$params = Flight::aod()->sql("SELECT * FROM member WHERE `forum_name` LIKE '%{$name}%' ORDER BY member.rank_id DESC LIMIT 25")->many();
+		return $params;
+	}
+
 	public static function findById($mid) {
 		$params = Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$mid}")->one();
 		return (object) $params;
@@ -52,7 +57,7 @@ class Member extends Application {
 		}
 
 	}
-	
 }
+
 
 
