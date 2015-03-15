@@ -22,12 +22,12 @@ class UserController {
 		$pass = $_POST['password'];
 
 		if (!User::exists($user)) { 
-			$error = true;
+			$invalid_login = true;
 		} else {
 			$id = User::validatePassword($pass, $user);
 
 			if (!$id) {
-				$error = true; 
+				$invalid_login = true; 
 
 			} else {
 				// updateLoggedInTime($user);  
@@ -37,7 +37,7 @@ class UserController {
 			}
 		}
 
-		if (isset($error)) {
+		if (isset($invalid_login)) {
 			Flight::redirect('/invalid-login');
 		} else {
 			Flight::redirect('./');
