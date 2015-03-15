@@ -33,6 +33,12 @@ class ApplicationController {
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
+	public static function _doSearch() {
+		$name = trim($_POST['name']);
+		$results = Member::search($name);
+		Flight::render('member/search', array('results' => $results));
+	}
+
 	public static function _invalidLogin() {
 		Flight::render('errors/invalid_login', array(), 'content');
 		Flight::render('errors/application');

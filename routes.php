@@ -18,7 +18,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/logout', array('UserController', '_doLogout'));
 	Flight::route('/help', array('ApplicationController', '_help'));
 	Flight::route('/recruiting', array('RecruitingController', '_index'));
-	Flight::route('POST /do/search-members', array('MemberController', '_doSearch'));
+	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
