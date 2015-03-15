@@ -18,7 +18,7 @@ function getUserRoleName($role)
         $role = "Platoon Leader";
         break;
         case 3:
-        $role = "Division Commander";
+        $role = "Command Staff";
         break;
         case 4:
         $role = "Administrator";
