@@ -26,6 +26,11 @@ class User extends Application {
 		return false;
 	}
 
+	public static function isDev($id) {
+		$params = Flight::aod()->sql("SELECT developer FROM users WHERE id = {$id} LIMIT 1")->one();
+		return ($params['developer'] == 1) ? true : false;
+	}
+
 	public static function find($id) {
 		$params = Flight::aod()->sql("SELECT * FROM users WHERE `id`='{$id}'")->one();
 		return (object) $params;

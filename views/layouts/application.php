@@ -144,20 +144,21 @@
 								<li class="dropdown multi-level">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
 									<ul class="dropdown-menu" role="menu">
-										<li class="dropdown-submenu">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
-											<ul class="dropdown-menu">
-												<li><a href="#">Action</a></li>
-												<li class="dropdown-submenu">
-													<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-												</li>
-											</ul>
-										</li>
-										<li class='divider'></li>
+										<?php if ($user->role > 2 || User::isDev($user->id)) : ?>
+											<li class="dropdown-submenu">
+												<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
+												<ul class="dropdown-menu">
+													<li><a href="#">Report</a></li>
+													<li><a href="#">Report</a></li>
+													<li><a href="#">Report</a></li>
+													<li><a href="#">Report</a></li>
+												</ul>
+											</li>
+											<li class='divider'></li>
+										<?php endif; ?>
 										<?php foreach ($tools as $tool) : ?>
 											<li><a href="<?php echo $tool->tool_path ?>" class="<?php echo $tool->class ?>"><?php echo $tool->tool_name ?></a></li>
 										<?php endforeach; ?>
-										
 									</ul>
 								</li>
 
@@ -228,7 +229,7 @@
 	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>
 		<script src="assets/js/<?php echo $js ?>.js"></script>
 	<?php endif; ?>
-	
+
 </body>
 </html>
 
