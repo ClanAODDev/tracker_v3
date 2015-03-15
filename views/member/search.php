@@ -3,6 +3,6 @@
 <?php else : ?>
 	<?php $results = arrayToObject($results); ?>
 	<?php foreach($results as $member) : ?>
-		<a href='/member/<?php echo $member->member_id ?>' class='list-group-item'><strong><?php echo ucwords($member->forum_name) ?></strong></a>	
+		<a href='member/<?php echo $member->member_id ?>' class='list-group-item'><strong><?php echo ucwords($member->forum_name) ?></strong></a>	
 	<?php endforeach; ?>
 <?php endif; ?>
