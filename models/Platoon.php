@@ -32,7 +32,7 @@ class Platoon extends Application {
 		$sql = "SELECT member.id, last_activity, rank.abbr, member_id, forum_name, platoon.name, member.battlelog_name FROM member LEFT JOIN platoon ON platoon.id = member.platoon_id LEFT JOIN rank ON rank.id = member.rank_id WHERE position_id = 5 AND platoon_id = {$pid}";
 
 		if ($order_by_rank) {
-			$sql .= " ORDER BY member.rank_id DESC, member.forum_name ASC ";
+			$sql .= " ORDER BY member.join_date ASC, member.rank_id DESC, member.forum_name ASC ";
 		} else {
 			$sql .= "  ORDER BY platoon.id, forum_name";
 		}
