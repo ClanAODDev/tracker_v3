@@ -20,15 +20,12 @@ class UserController {
 	public static function _doLogin() {
 		$user = trim(htmlspecialchars($_POST['user']));
 		$pass = $_POST['password'];
-
 		if (!User::exists($user)) { 
 			$invalid_login = true;
 		} else {
 			$id = User::validatePassword($pass, $user);
-
 			if (!$id) {
 				$invalid_login = true; 
-
 			} else {
 				// updateLoggedInTime($user);  
 				$_SESSION['loggedIn'] = true;
@@ -36,15 +33,12 @@ class UserController {
 				$_SESSION['username'] = $user;
 			}
 		}
-
 		if (isset($invalid_login)) {
 			Flight::redirect('/invalid-login');
 		} else {
 			Flight::redirect('./');
 		}
 	}
-
-
 
 
 }

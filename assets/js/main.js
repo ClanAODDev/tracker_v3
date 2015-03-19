@@ -122,34 +122,6 @@ $(function() {
         window.location.href = "user/messages";
     });
 
-
-    /*$('#login').submit(function(e) {
-        e.preventDefault();
-
-        $.post("/application/ajax/login.php",
-            $(this).serialize(),
-            function(data) {
-                if (data['success'] === true) {
-                    $('.login-btn').removeClass('btn-primary').addClass('btn-success').text('Success!');
-                    $('.msg').fadeOut();
-
-                    setTimeout(function() {
-                        window.location.href = "/";
-                    }, 1000);
-
-                } else if (data['success'] === false) {
-                    $('#login-panel').addClass('has-error');
-                    $('.msg').addClass('alert alert-danger').html("<i class=\"fa fa-times-circle\"></i> <small>" + data['message'] + "</small>");
-                    $('.msg').effect("bounce");
-
-
-                }
-            }, "json");
-
-    });
-
-*/
-
     $('#register').submit(function(e) {
         e.preventDefault();
 
@@ -316,11 +288,8 @@ $(function() {
 
     // update users online
     (function() {
-        var active_count = readCookie('active_count');
-        if (active_count < 31) {
-
             setTimeout(function() {
-                $.post("/application/ajax/online_users.php", function(list) {
+                $.post("do/online-list", function(list) {
                     $(".userList").html(list);
                     $('.tool-user').powerTip({
                         placement: 'n'
@@ -328,15 +297,8 @@ $(function() {
                 })
 
             }, 2500)
-
-
-        } else {
-            $(".userList").html('<i class="fa fa-clock-o"></i> Idle. No longer refreshing.');
-            clearTimeout(arguments.callee);
-        }
         setTimeout(arguments.callee, 30000);
     }())
-
 });
 
 function formatNumber(num) {

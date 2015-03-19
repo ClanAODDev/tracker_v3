@@ -14,6 +14,11 @@ class ApplicationController {
 		$squad = Squad::find($member->member_id);
 		$platoon = Platoon::find($member->platoon_id);
 		$genPop = Platoon::GeneralPop($member->platoon_id);
+
+		if (isset($_SESSION['loggedIn'])) {
+			User::updateActivityStatus($user->id);
+		}
+
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
 		Flight::render('member/personnel', array('member' => $member, 'squad' => $squad, 'platoon' => $platoon, 'genPop' => $genPop), 'personnel');
@@ -31,6 +36,16 @@ class ApplicationController {
 		$division = Division::find($member->game_id);
 		Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
 		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+	}
+
+	public static function _doUsersOnline() {
+		if (isset($_SESSION['loggedIn'])) {
+			$user = User::find($_SESSION['userid']);
+			$member = Member::find($_SESSION['username']); 
+			Flight::render('user/online_list', array('user' => $user, 'member' => $member));
+		} else {
+			Flight::render('user/online_list');
+		}		
 	}
 
 	public static function _doSearch() {

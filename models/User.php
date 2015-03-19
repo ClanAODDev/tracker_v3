@@ -36,6 +36,11 @@ class User extends Application {
 		return (object) $params;
 	}
 
+	public static function onlineList() {
+		$params = Flight::aod()->sql("SELECT member.id, member.member_id, username, role, idle FROM users LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
+		return $params;
+	}
+
 	public static function exists($forum_name)	{
 		$count = Flight::aod()->sql("SELECT count(*) FROM users WHERE `username`='{$forum_name}'")->one();
 		if ($count > 0) { return true; } else {	return false; }
@@ -55,8 +60,10 @@ class User extends Application {
 		} else {
 			return false;
 		}
-
-
 	}
+
+	public static function updateActivityStatus($id)	{
+        $params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
+    }
 
 }

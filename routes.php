@@ -10,6 +10,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/register', array('UserController', '_register'));
 	Flight::route('POST /do/login', array('UserController', '_doLogin'));
 	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
+	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 
 } else {
 
@@ -19,6 +20,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/help', array('ApplicationController', '_help'));
 	Flight::route('/recruiting', array('RecruitingController', '_index'));
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
+	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));

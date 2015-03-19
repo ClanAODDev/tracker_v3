@@ -210,3 +210,70 @@ function getPercentageColor($pct)
     }
     return $percent_class;
 }*/
+
+
+/**
+ * colors for users online list
+ * @param  string $user user's name
+ * @param  int $level role level
+ * @return string combined role string
+ */
+function userColor($user, $level)
+{
+
+    switch ($level) {
+        case 99:
+        $span = "<span class='text-muted tool-user idling' title='Idle'>" . $user . "</span>";
+        break;
+        case 4:
+        $span = "<span class='text-danger tool-user' title='Clan Admin'>" . $user . "</span>";
+        break;
+        case 3:
+        $span = "<span class='text-warning tool-user' title='Command Staff'>" . $user . "</span>";
+        break;
+        case 2:
+        $span = "<span class='text-info tool-user' title='Platoon Leader'>" . $user . "</span>";
+        break;
+        case 1:
+        $span = "<span class='text-primary tool-user' title='Squad Leader'>" . $user . "</span>";
+        break;
+        default:
+        $span = "<span class='text-muted tool-user' title='User'>" . $user . "</span>";
+        break;
+    }
+    
+    return $span;
+}
+
+
+/**
+ * colors for member tables
+ * @param  string $user user's name
+ * @param  int $level role level
+ * @return string combined role string
+ */
+function memberColor($user, $level)
+{
+
+    switch ($level) {
+        case 3:
+        case 8:
+        $span = "<span class='text-danger tool' title='Administrator'><i class='fa fa-shield '></i> " . $user . "</span>";
+        break;
+        case 2:
+        case 1:
+        $span = "<span class='text-warning tool' title='Command Staff'><i class='fa fa-shield '></i> " . $user . "</span>";
+        break;
+        case 4:
+        $span = "<span class='text-info tool' title='Platoon Leader'><i class='fa fa-shield '></i> " . $user . "</span>";
+        break;
+        case 5:
+        $span = "<span class='text-primary tool' title='Squad Leader'><i class='fa fa-shield '></i> " . $user . "</span>";
+        break;
+        default:
+        $span = $user;
+        break;
+    }
+    
+    return $span;
+}
