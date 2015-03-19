@@ -1,7 +1,6 @@
 <?php
 
 class ApplicationController {
-
 	public static function _index() {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);

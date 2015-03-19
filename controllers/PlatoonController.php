@@ -1,14 +1,10 @@
 <?php
 
-class Platoon extends Application {
-
-	public $id;
-	public $number;
-	public $name;
-	public $game_id;
-	public $leader_id;
-
-	static $table = "platoon";
-	static $id_field = "id";
-	
+class PlatoonController extends Application {
+	public static function _main() {
+		
+	}
+	public static function _create() {}
+	public static function _modify() {}
+	public static function _delete() {}	
 }

@@ -1,8 +1,7 @@
 <?php
-class RecruitingController
-{
-	public static function _index()
-	{
+
+class RecruitingController {
+	public static function _index() {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
