@@ -16,7 +16,7 @@ if (isset($user)) {
 
 			foreach ($online_users as $user) {
 				$id = $user->member_id;
-				$string = userColor(ucwords($user->username), $user->role);
+				$string = userColor(ucwords($user->username), $user->role, $user->last_seen);
 				$usersArray[] = "<a href='/member/{$id}'>{$string}</a>";
 			}
 

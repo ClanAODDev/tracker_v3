@@ -218,27 +218,29 @@ function getPercentageColor($pct)
  * @param  int $level role level
  * @return string combined role string
  */
-function userColor($user, $level)
+function userColor($user, $level, $last_seen)
 {
+
+    $last_seen = formatTime(strtotime($last_seen));
 
     switch ($level) {
         case 99:
-        $span = "<span class='text-muted tool-user idling' title='Idle'>" . $user . "</span>";
+        $span = "<span class='text-muted tool-user idling' title='Last active: {$last_seen}'>" . $user . "</span>";
         break;
         case 4:
-        $span = "<span class='text-danger tool-user' title='Clan Admin'>" . $user . "</span>";
+        $span = "<span class='text-danger tool-user' title='Last active: {$last_seen}'>" . $user . "</span>";
         break;
         case 3:
-        $span = "<span class='text-warning tool-user' title='Command Staff'>" . $user . "</span>";
+        $span = "<span class='text-warning tool-user' title='Last active: {$last_seen}'>" . $user . "</span>";
         break;
         case 2:
-        $span = "<span class='text-info tool-user' title='Platoon Leader'>" . $user . "</span>";
+        $span = "<span class='text-info tool-user' title='Last active: {$last_seen}'>" . $user . "</span>";
         break;
         case 1:
-        $span = "<span class='text-primary tool-user' title='Squad Leader'>" . $user . "</span>";
+        $span = "<span class='text-primary tool-user' title='Last active: {$last_seen}'>" . $user . "</span>";
         break;
         default:
-        $span = "<span class='text-muted tool-user' title='User'>" . $user . "</span>";
+        $span = "<span class='text-muted tool-user' title='Last active: {$last_seen}'>" . $user . "</span>";
         break;
     }
     
