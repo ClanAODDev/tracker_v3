@@ -56,6 +56,32 @@ function hasher($info, $encdata = false)
 }
 
 /**
+ * generates a human readable number suffix
+ * @param  int $n 
+ * @return string    
+ */
+function ordSuffix($n)
+{
+    $str = "$n";
+    $t   = $n > 9 ? substr($str, -2, 1) : 0;
+    $u   = substr($str, -1);
+    if ($t == 1) {
+        return $str . 'th';
+    } else {
+        switch ($u) {
+            case 1:
+            return $str . 'st';
+            case 2:
+            return $str . 'nd';
+            case 3:
+            return $str . 'rd';
+            default:
+            return $str . 'th';
+        }
+    }
+}
+
+/**
  * force destruction of session and all cookies (logout)
  * @return null
  */

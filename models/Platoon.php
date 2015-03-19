@@ -12,7 +12,7 @@ class Platoon extends Application {
 	static $table = "platoon";
 
 	public static function find_all($gid) {
-		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name, rank.abbr FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.game_id = {$gid} ORDER BY number";
+		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name as leader_name, rank.abbr as leader_rank FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.game_id = {$gid} ORDER BY number";
 		$params = Flight::aod()->sql($sql)->many();
 		return arrayToObject($params);
 	}

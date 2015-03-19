@@ -1,4 +1,5 @@
 <?php
 
-class MemberController {
+class MemberController extends Application {
+	
 }
