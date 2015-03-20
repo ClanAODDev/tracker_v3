@@ -16,7 +16,9 @@ class Division extends Application {
 	static $name_field = 'short_name';
 
 	public static function find_all() {
-		return self::fetch_all();
+		$sql = "SELECT * FROM games";
+		$params = Flight::aod()->sql($sql)->many();
+		return arrayToObject($params);
 	}
 
 	public static function find($id) {

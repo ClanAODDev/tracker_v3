@@ -1,4 +1,4 @@
-<?php if (!empty(objectToArray($division)) === true) : ?>
+<?php if (count($division)) : ?>
 
 	<div class='container fade-in'>
 		<ul class='breadcrumb'>
