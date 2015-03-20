@@ -19,12 +19,16 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/logout', array('UserController', '_doLogout'));
 	Flight::route('/help', array('ApplicationController', '_help'));
 	Flight::route('/recruiting', array('RecruitingController', '_index'));
-	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
-	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
+
 
 	// view
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
+
+	// updates
+	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
+	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
+	Flight::route('POST /do/update-alert', array('ApplicationController', '_doUpdateAlert'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));

@@ -49,13 +49,13 @@ $(function() {
     })
 
 
-    $(".alert").alert()
+    $(".alert").alert();
 
     $('.alert').bind('closed.bs.alert', function() {
         var id = $(this).data('id'),
             user = $(this).data('user');
 
-        $.post("/application/ajax/update_alert.php", {
+        $.post("do/update-alert", {
             id: id,
             user: user
         });

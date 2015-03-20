@@ -16,10 +16,10 @@ class Alert extends Application {
 	 * @return array array of alerts
 	 */
 	public static function find_all($user) {
-		$sql = "SELECT DISTINCT * FROM `alerts` WHERE `start_date` < CURRENT_TIMESTAMP AND `end_date` > CURRENT_TIMESTAMP AND NOT EXISTS (SELECT * FROM `alerts_status` WHERE `alert_id` = 'alerts.id' AND `user_id` = {$user})";
+		$sql = "SELECT DISTINCT * FROM alerts WHERE start_date < CURRENT_TIMESTAMP AND end_date > CURRENT_TIMESTAMP AND NOT EXISTS ( SELECT * FROM alerts_status WHERE alert_id = alerts.id AND user_id = {$user} )";
 		$params = Flight::aod()->sql($sql)->many();
+		echo(Flight::aod()->last_query);
 		return arrayToObject($params);
 	}
-
 
 }
