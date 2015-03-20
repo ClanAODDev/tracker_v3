@@ -15,8 +15,5 @@ class AlertStatus extends Application {
 		$alert->user_id = $params['user'];
 		$alert->read_date = date('Y-m-d H:i:s');
 		Flight::aod()->save($alert);
-
-		echo Flight::aod()->last_query;
-		die;
 	}
 }
