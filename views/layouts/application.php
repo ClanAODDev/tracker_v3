@@ -225,7 +225,6 @@
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/main.js"></script>
 
-	<!-- js dependency -->
 	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>
 		<script src="assets/js/<?php echo $js ?>.js"></script>
 	<?php endif; ?>
