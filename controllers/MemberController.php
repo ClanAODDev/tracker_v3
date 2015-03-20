@@ -1,6 +1,6 @@
 <?php
 
-class MemberController extends Application {
+class MemberController {
 	public static function _main() {
 		
 	}

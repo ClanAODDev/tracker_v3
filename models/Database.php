@@ -3,7 +3,7 @@
 class Database extends Sparrow {
   
   static $type = 'pdomysql';
-  
+
   public function __construct($database) {
     $config = [
     'type' => self::$type,

@@ -1,6 +1,6 @@
 <?php
 
-class AdminController extends Application {
+class AdminController {
 	public static function _main() {
 		
 	}

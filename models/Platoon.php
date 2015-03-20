@@ -11,14 +11,14 @@ class Platoon extends Application {
 	static $id_field = "id";
 	static $table = "platoon";
 
-	public static function find_all($gid) {
-		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name as leader_name, rank.abbr as leader_rank FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.game_id = {$gid} ORDER BY number";
+	public static function find_all($game_id) {
+		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name as leader_name, rank.abbr as leader_rank FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.game_id = {$game_id} ORDER BY number";
 		$params = Flight::aod()->sql($sql)->many();
 		return arrayToObject($params);
 	}
 
-	public static function findById($id) {
-		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name, rank.abbr FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.id = {$id}";
+	public static function findById($platoon_id) {
+		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name, rank.abbr FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return arrayToObject($params);
 	}
@@ -28,8 +28,8 @@ class Platoon extends Application {
 		return arrayToObject($params);
 	}
 
-	public static function SquadLeaders($pid, $order_by_rank = false) {
-		$sql = "SELECT member.id, last_activity, rank.abbr, member_id, forum_name, platoon.name, member.battlelog_name FROM member LEFT JOIN platoon ON platoon.id = member.platoon_id LEFT JOIN rank ON rank.id = member.rank_id WHERE position_id = 5 AND platoon_id = {$pid}";
+	public static function SquadLeaders($platoon_id, $order_by_rank = false) {
+		$sql = "SELECT member.id, last_activity, rank.abbr, member_id, forum_name, platoon.name, member.battlelog_name FROM member LEFT JOIN platoon ON platoon.id = member.platoon_id LEFT JOIN rank ON rank.id = member.rank_id WHERE position_id = 5 AND platoon_id = {$platoon_id}";
 
 		if ($order_by_rank) {
 			$sql .= " ORDER BY member.join_date ASC, member.rank_id DESC, member.forum_name ASC ";
@@ -39,11 +39,16 @@ class Platoon extends Application {
 
 		$params = Flight::aod()->sql($sql)->many();
 		return arrayToObject($params);
-
 	}
 
-	public static function GeneralPop($pid, $order_by_rank = false) {
-		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, member.rank_id, rank.abbr as rank FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$pid}";
+	public static function members($platoon_id) {
+		$sql = "SELECT member.id, member.forum_name, member.member_id,  position.desc as position_desc, position.id as position_id, member.battlelog_name, member.bf4db_id, member.rank_id, rank.abbr as rank, join_date, last_forum_login, last_forum_post, last_activity, forum_posts FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id} AND position_id NOT IN (3,2,1) ORDER BY member.rank_id DESC";
+		$params = Flight::aod()->sql($sql)->many();
+		return $params;
+	}
+
+	public static function GeneralPop($platoon_id, $order_by_rank = false) {
+		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, member.rank_id, rank.abbr as rank FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
 
 		if ($order_by_rank) {
 			$sql .= " ORDER BY member.rank_id DESC, member.join_date ASC ";
@@ -55,33 +60,44 @@ class Platoon extends Application {
 		return arrayToObject($params);
 	}
 
-	public static function countSquadLeaders($pid) {
-		$sql = "SELECT count(*) as count FROM member WHERE position_id = 5 AND platoon_id = {$pid}";
+	public static function countSquadLeaders($platoon_id) {
+		$sql = "SELECT count(*) as count FROM member WHERE position_id = 5 AND platoon_id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
 
-	public static function countSquadMembers($pid) {
-		$sql = "SELECT count(*) as count FROM member WHERE position_id = 6 AND platoon_id = {$pid}";
+	public static function countSquadMembers($platoon_id) {
+		$sql = "SELECT count(*) as count FROM member WHERE position_id = 6 AND platoon_id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
 
-	public static function countGeneralPop($pid) {
-		$sql = "SELECT count(*) as count FROM member WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$pid}";
+	public static function countGeneralPop($platoon_id) {
+		$sql = "SELECT count(*) as count FROM member WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
 
-	public static function countPlatoon($pid) {
-		$genPopCount = self::countGeneralPop($pid);
-		$squadLeaderCount = self::countSquadLeaders($pid);
-		$squadMemberCount = self::countSquadMembers($pid);
-		$total = $genPopCount + $squadLeaderCount + $squadMemberCount + 1;
-		return $total;
+	public static function countPlatoon($platoon_id) {
+		return count(self::members($platoon_id));
 	}
 
+	public static function get_id_from_number($platoon_number, $division) {
+		$sql = "SELECT id FROM platoon WHERE number = {$platoon_number} AND game_id = {$division}";
+		$params = Flight::aod()->sql($sql)->one(); 
+		return $params['id'];
+	}
 
+	public static function get_number_from_id($platoon_id) 	{
+		$sql = "SELECT number FROM platoon WHERE id = {$platoon_id}";
+		$params = Flight::aod()->sql($sql)->one();
+		return $params['number'];
+	}
 
+	public static function memberIdsList($platoon_id) {
+		$sql = "SELECT member_id FROM member WHERE platoon_id = {$platoon_id}";
+		$params = Flight::aod()->sql($sql)->many();
+		foreach ($params as $member) { $memberIds[] = $member['member_id']; }
+		return $memberIds;
+	}
 }
-

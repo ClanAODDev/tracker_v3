@@ -23,14 +23,15 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 
 	// view
-	Flight::route('/divisions/[A-Z][a-z]+', array('DivisionController', '_index'));
+	Flight::route('/divisions/@div', array('DivisionController', '_index'));
+	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
 
 	// view screens
 	Flight::route('/member/[0-9]+', array('MemberController', '_profile'));
-	Flight::route('/platoon/[0-9]+', array('PlatoonController', '_show'));
+	
 	
 
 	// manage

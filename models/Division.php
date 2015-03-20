@@ -25,6 +25,12 @@ class Division extends Application {
 		return (object) $params;
 	}
 
+	public static function find_by_name($short_name) {
+		$sql = "SELECT * FROM games WHERE `short_name`='{$short_name}'";
+		$params = Flight::aod()->sql($sql)->one();
+		return (object) $params;
+	}
+
 	public static function findDivisionLeaders($gid) {
 		$sql = "SELECT member.id, member.member_id, member.forum_name, rank.abbr as rank, member.battlelog_name, position.desc as position_desc FROM member LEFT JOIN rank on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE position_id IN (1,2) AND member.game_id = {$gid}";
 		$params = Flight::aod()->sql($sql)->many();
