@@ -1,4 +1,4 @@
-<?php if (!empty(objectToArray($division))) : ?>
+<?php if (!empty(objectToArray($division)) === true) : ?>
 
 	<div class='container fade-in'>
 		<ul class='breadcrumb'>
