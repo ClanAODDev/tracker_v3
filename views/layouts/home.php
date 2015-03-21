@@ -1,4 +1,4 @@
-<div class='container fade-in margin-top-20'>
+<div class='container margin-top-20'>
 	<!-- welcome area and help button -->
 	<div class='row tour-intro'>
 		<div class='col-md-12'>

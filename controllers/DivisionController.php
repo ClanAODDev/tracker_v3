@@ -12,7 +12,7 @@ class DivisionController {
 		
 		Flight::render('division/statistics', array(), 'statistics');
 		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders, 'platoons' => $platoons), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 	}
 
 	public static function _create() {}
