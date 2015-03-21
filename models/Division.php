@@ -11,20 +11,20 @@ class Division extends Application {
 	public $division_structure_thread;
 	public $welcome_forum;
 
-	static $table = 'divisions';
+	static $table = 'games';
 	static $id_field = 'id';
 	static $name_field = 'short_name';
 
 	public static function find_all() {
-		$sql = "SELECT * FROM games";
-		$params = Flight::aod()->sql($sql)->many();
-		return arrayToObject($params);
+		return self::fetch_all();
 	}
 
 	public static function find($id) {
 		$sql = "SELECT * FROM games WHERE `id`='{$id}'";
 		$params = Flight::aod()->sql($sql)->one();
 		return (object) $params;
+
+		// return self::find($id);
 	}
 
 	public static function find_by_name($short_name) {
