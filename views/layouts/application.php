@@ -166,14 +166,21 @@
 							<?php endif; ?>
 
 							<!-- supported divisions -->
-							<li class="dropdown">
+							<li class="dropdown multi-level">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Divisions <span class="caret"></span></a>
 
 								
 								<ul class="dropdown-menu" role="menu">
 									<?php foreach ($divisions as $division) : ?>
 
-										<li><a href='divisions/<?php echo $division->short_name ?>'><img src='assets/images/game_icons/tiny/<?php echo $division->short_name ?>.png' class='pull-right' /><?php echo $division->full_name ?></a></li>
+										<li class="dropdown-submenu"><a href='divisions/<?php echo $division->short_name ?>'><?php echo $division->full_name ?></a>
+											<ul class="dropdown-menu">
+												
+												<?php foreach ($platoons as $platoonLink) : ?>
+													<li><a href="divisions/<?php echo $division->short_name ?>/<?php echo $platoonLink->number ?>"><?php echo $platoonLink->name; ?></a></li>
+												<?php endforeach; ?>	
+											</ul>
+										</li>
 
 									<?php endforeach; ?>
 								</ul>

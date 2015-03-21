@@ -33,18 +33,18 @@ class Member extends Application {
 		return $params;
 	}
 
-	public static function findById($mid) {
+	public static function findById($member_id) {
 		return (object) self::find($mid);
 	}
 
-	public static function findForumName($mid) {
-		$params = Flight::aod()->sql("SELECT forum_name FROM member WHERE `member_id`={$mid}")->one();
+	public static function findForumName($member_id) {
+		$params = Flight::aod()->sql("SELECT forum_name FROM member WHERE `member_id`={$member_id}")->one();
 		return $params['forum_name'];
 	}
 
-	public static function avatar($mid, $type = "thumb")
+	public static function avatar($member_id, $type = "thumb")
 	{
-		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$mid}";
+		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$member_id}";
 		$unknown   = "assets/images/icons/tiny/tracker.png";
 		list($width, $height) = getimagesize($forum_img);
 

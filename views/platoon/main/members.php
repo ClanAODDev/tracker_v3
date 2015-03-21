@@ -20,35 +20,17 @@
 		<tbody>
 
 			<?php foreach ($members as $member) : ?>
-
-
-<!-- 				
-$total_games = count_total_games($row['member_id'], $first_date_in_range, $last_date_in_range);
-$aod_games = count_aod_games($row['member_id'], $first_date_in_range, $last_date_in_range);
-$percent_aod = ($aod_games > 0 ) ? (($aod_games)/($total_games))*100 : NULL;
-$percent_aod = number_format((float)$percent_aod, 2, '.', '');
-$overall_aod_games[] = $aod_games;
-$overall_aod_percent[] = $percent_aod;
-$rank = $row['rank'];
-$joindate = date("M Y", strtotime($row['join_date']));
-$lastActive = formatTime(strtotime($row['last_activity']));
-$status = lastSeenColored($lastActive); -->
-
 				<tr data-id='<?php echo $member->member_id; ?>'>
 					<td><em><?php echo memberColor(ucwords($member->forum_name), $member->position_id); ?></em></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo $member->rank ?></td>
-
 					<td class='text-center hidden-xs hidden-sm'><?php echo date('M Y', strtotime($member->join_date)); ?></td>
-					<td class='text-center text-{$status}'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
-
-					<td class='text-center'>{$aod_games}</td>
-					<td class='text-center'>{$total_games}</td>
-
+					<td class='text-center text-<?php echo lastSeenColored($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
+					<td class='text-center'><?php echo Activity::findPlayerAODGames($member->member_id, $bdate, $edate); ?></td>
+					<td class='text-center'><?php echo Activity::findPlayerGames($member->member_id, $bdate, $edate); ?></td>
 					<td class='text-center col-hidden'><?php echo $member->rank_id ?></td>
 					<td class='text-center col-hidden'><?php echo $member->last_activity ?></td>
 				</tr>
 			<?php endforeach; ?>
-
 
 		</tbody>
 	</table>

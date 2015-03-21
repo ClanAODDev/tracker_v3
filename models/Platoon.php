@@ -47,6 +47,36 @@ class Platoon extends Application {
 		return $params;
 	}
 
+	public static function gameStats($platoon_id, $bdate, $edate) {
+		$members = self::memberIdsList($platoon_id);
+		$total = Activity::findTotalGamesByArray($members, $bdate, $edate);
+		$AOD = Activity::findTotalAODGamesByArray($members, $bdate, $edate);
+		return array('pct' => (array_sum($AOD) / array_sum($total))*100, 'total' => array_sum($total), 'AOD' => array_sum($AOD));
+	}
+
+/*
+	public static function countAODGames($platoon_id, $bdate, $edate) {
+		$members = self::memberIdsList($platoon_id);
+		foreach ($members as $member) {
+			$info = Activity::findPlayerAODGames($member, $bdate, $edate);
+			foreach ($info as $count) {
+				$total[] = $count;
+			}
+		}
+		return array_sum($total);
+	}
+
+	public static function countAllGames($platoon_id, $bdate, $edate) {
+		$members = self::memberIdsList($platoon_id);
+		foreach ($members as $member) {
+			$info = Activity::findPlayerGames($member, $bdate, $edate);
+			foreach ($info as $count) {
+				$total[] = $count;
+			}
+		}
+		return array_sum($total);
+	}*/
+
 	public static function GeneralPop($platoon_id, $order_by_rank = false) {
 		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, member.rank_id, rank.abbr as rank FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
 
@@ -95,9 +125,9 @@ class Platoon extends Application {
 	}
 
 	public static function memberIdsList($platoon_id) {
-		$sql = "SELECT member_id FROM member WHERE platoon_id = {$platoon_id}";
+		$sql = "SELECT member_id FROM member WHERE platoon_id = {$platoon_id} AND status_id IN (1, 999)";
 		$params = Flight::aod()->sql($sql)->many();
-		foreach ($params as $member) { $memberIds[] = $member['member_id']; }
+		foreach ($params as $member) { $memberIds[] = intval($member['member_id']); }
 		return $memberIds;
 	}
 }

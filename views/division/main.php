@@ -1,6 +1,6 @@
 <?php if (count($division)) : ?>
 
-	<div class='container fade-in'>
+	<div class='container'>
 		<ul class='breadcrumb'>
 			<li><a href='./'>Home</a></li>
 			<li class='active'><?php echo $division->full_name; ?></li>

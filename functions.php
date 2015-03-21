@@ -168,6 +168,31 @@ function formatTime($ptime)
     }
 }
 
+function lastSeenFlag($last_seen)
+{
+    if (strtotime($last_seen) < strtotime('-30 days')) {
+        $status = "<i class='fa fa-flag text-danger'></i>";
+    } else if (strtotime($last_seen) < strtotime('-14 days')) {
+        $status = "<i class='fa fa-flag text-warning'></i>";
+    } else {
+        $status = NULL;
+    }
+    return $status;
+}
+
+function lastSeenColored($last_seen)
+{
+    if (strtotime($last_seen) < strtotime('-30 days')) {
+        $status = 'danger';
+    } else if (strtotime($last_seen) < strtotime('-14 days')) {
+        $status = 'warning';
+    } else {
+        $status = 'default';
+    }
+    return $status;
+}
+
+
 /**
  * class name for last_seen column (inactivity)
  * @param  timestamp $last_seen 
@@ -304,4 +329,9 @@ function memberColor($user, $level)
     }
     
     return $span;
+}
+
+
+function average($array) {
+ return array_sum($array) / count($array);
 }

@@ -11,6 +11,7 @@ class ApplicationController {
 		$notifications = new Notification($user, $member);
 		$posts = Post::find_all($user->role);
 		$squad = Squad::find($member->member_id);
+		$platoons = Platoon::find_all($member->game_id);
 		$platoon = Platoon::find($member->platoon_id);
 		$genPop = Platoon::GeneralPop($member->platoon_id);
 
@@ -24,7 +25,7 @@ class ApplicationController {
 		Flight::render('application/divisions', array('divisions' => $divisions), 'divisions_list');
 		Flight::render('user/notifications', array('notifications' => $notifications->all, 'alerts' => $alerts), 'notifications_list');
 		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 	}
 
 	public static function _help() {

@@ -6,28 +6,34 @@ class PlatoonController {
 		$division = Division::findByName(strtolower($div));
 		$platoonId = Platoon::get_id_from_number($plt, $division->id);
 
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
-		$tools = Tool::find_all($user->role);
-		$divisions = Division::find_all();
-		$platoon = Platoon::findById(intval($platoonId));
-		$members = arrayToObject(Platoon::members($platoonId));
+		if (!is_null($platoonId)) {
 
-		$memberIdList = Platoon::memberIdsList($platoonId);
+			$user = User::find($_SESSION['userid']);
+			$member = Member::find($_SESSION['username']);
+			$tools = Tool::find_all($user->role);
+			$divisions = Division::find_all();
+			$platoons = Platoon::find_all($member->game_id);
+			$platoon = Platoon::findById(intval($platoonId));
+			$members = arrayToObject(Platoon::members($platoonId));
 
-		$right_now = new DateTime("now");
-		$first_date_in_range = date("Y-m-d", strtotime("now - 30 days"));
-		$last_date_in_range = date("Y-m-d", strtotime("now"));
+			$memberIdList = Platoon::memberIdsList($platoonId);
 
-		$overall_aod_percent = array();
-		$overall_aod_games = array();
-		$platoonPm = array();
+			$right_now = new DateTime("now");
+			$bdate = date("Y-m-d", strtotime("now - 30 days"));
+			$edate = date("Y-m-d", strtotime("now"));
 
-		Flight::render('platoon/main/statistics', array('platoon' => $platoon), 'statistics');
-		Flight::render('platoon/main/members', array('members' => $members, 'js' => 'platoon'), 'membersTable');
-		Flight::render('platoon/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'platoon' => $platoon, 'memberIdList' => $memberIdList, 'plt' => $plt, 'div' => $division->id, 'members' => $members), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
-		
+			$gameStats = arrayToObject(Platoon::gameStats($platoonId, $bdate, $edate));
+
+			Flight::render('platoon/main/statistics', array('platoon' => $platoon, 'gameStats' => $gameStats), 'statistics');
+			Flight::render('platoon/main/members', array('members' => $members, 'js' => 'platoon', 'bdate' => $bdate, 'edate' => $edate), 'membersTable');
+			Flight::render('platoon/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'platoon' => $platoon, 'memberIdList' => $memberIdList, 'plt' => $plt, 'div' => $division->id, 'members' => $members, 'platoonId' => $platoonId), 'content');
+			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
+
+		} else {
+
+			Flight::redirect('404/', 404); 
+
+		}
 	}
 
 	public static function _create() {}

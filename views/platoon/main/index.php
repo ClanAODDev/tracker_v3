@@ -1,25 +1,21 @@
+<?php if ($user->role == 1 && $platoonId == $user_platoon) : ?>
 
-<?php if ($platoon_id = Platoon::get_id_from_number($plt, $div)) : ?>
-	
+	$squad_members = get_my_squad($forumId);
+	$squadCount = ($squad_members) ? "(" . count($squad_members) . ")" : NULL;
 
-	<?php if ($user->role == 1 && $platoon_id == $user_platoon) : ?>
+	if ($squad_members) {
 
-		$squad_members = get_my_squad($forumId);
-		$squadCount = ($squad_members) ? "(" . count($squad_members) . ")" : NULL;
+	foreach ($squad_members as $squad_member) {
+	$name = ucwords($squad_member['forum_name']);
+	$id = $squad_member['member_id'];
+	$rank = $squad_member['rank'];
+	$last_seen = formatTime(strtotime($squad_member['last_activity']));
 
-		if ($squad_members) {
-
-		foreach ($squad_members as $squad_member) {
-		$name = ucwords($squad_member['forum_name']);
-		$id = $squad_member['member_id'];
-		$rank = $squad_member['rank'];
-		$last_seen = formatTime(strtotime($squad_member['last_activity']));
-
-		// visual cue for inactive squad members
-		if (strtotime($last_seen) < strtotime('-30 days')) {
-		$status = 'danger';
-	} else if (strtotime($last_seen) < strtotime('-14 days')) {
-	$status = 'warning';
+	// visual cue for inactive squad members
+	if (strtotime($last_seen) < strtotime('-30 days')) {
+	$status = 'danger';
+} else if (strtotime($last_seen) < strtotime('-14 days')) {
+$status = 'warning';
 } else {
 $status = 'muted';
 }
@@ -62,10 +58,10 @@ $overall_aod_percent = array_diff($overall_aod_percent, array('0.00'));
 $overall_aod_percent = array_sum($overall_aod_percent) / count($overall_aod_percent);
 $overall_aod_games = array_sum($overall_aod_games);
 
- -->
+-->
 
 
-<div class='container fade-in'>
+<div class='container'>
 	
 	<ul class='breadcrumb'>
 		<li><a href='./'>Home</a></li>
@@ -102,11 +98,3 @@ $overall_aod_games = array_sum($overall_aod_games);
 		</div>
 	</div>
 </div>
-
-<!-- if platoon not found -->
-<?php else : ?>
-
-	<?php header('Location: /404/'); ?>
-
-<?php endif; ?>
-
