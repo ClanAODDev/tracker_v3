@@ -6,7 +6,7 @@ class ApplicationController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$division = Division::find($member->game_id);
+		$division = Division::findById(intval($member->game_id));
 		$alerts = Alert::find_all($user->id);
 		$notifications = new Notification($user, $member);
 		$posts = Post::find_all($user->role);
@@ -32,7 +32,7 @@ class ApplicationController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$division = Division::find($member->game_id);
+		$division = Division::findById(intval($member->game_id));
 		Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
 		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}

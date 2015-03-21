@@ -19,18 +19,12 @@ class Division extends Application {
 		return self::fetch_all();
 	}
 
-	public static function find($id) {
-		$sql = "SELECT * FROM games WHERE `id`='{$id}'";
-		$params = Flight::aod()->sql($sql)->one();
-		return (object) $params;
-
-		// return self::find($id);
+	public static function findById($id) {
+		return (object) self::find($id);
 	}
 
-	public static function find_by_name($short_name) {
-		$sql = "SELECT * FROM games WHERE `short_name`='{$short_name}'";
-		$params = Flight::aod()->sql($sql)->one();
-		return (object) $params;
+	public static function findByName($short_name) {
+		return (object) self::find($short_name);
 	}
 
 	public static function findDivisionLeaders($gid) {

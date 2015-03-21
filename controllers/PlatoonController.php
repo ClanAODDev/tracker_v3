@@ -3,14 +3,14 @@
 class PlatoonController {
 
 	public static function _index($div, $plt) {
-		$division = Division::find_by_name(strtolower($div));
+		$division = Division::findByName(strtolower($div));
 		$platoonId = Platoon::get_id_from_number($plt, $division->id);
 
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$platoon = Platoon::findById($platoonId);
+		$platoon = Platoon::findById(intval($platoonId));
 		$members = arrayToObject(Platoon::members($platoonId));
 
 		$memberIdList = Platoon::memberIdsList($platoonId);

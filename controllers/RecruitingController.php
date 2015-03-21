@@ -6,7 +6,7 @@ class RecruitingController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$division = Division::find($member->game_id);
+		$division = Division::findById(intval($member->game_id));
 		Flight::render('recruiting/index', array(), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}

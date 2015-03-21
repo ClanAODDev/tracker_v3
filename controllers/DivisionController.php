@@ -6,7 +6,7 @@ class DivisionController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$division = Division::find_by_name(strtolower($div));
+		$division = Division::findByName(strtolower($div));
 		$platoons = Platoon::find_all($member->game_id);
 		$division_leaders = Division::findDivisionLeaders($member->game_id);
 		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders, 'platoons' => $platoons), 'content');
