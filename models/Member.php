@@ -45,7 +45,7 @@ class Member extends Application {
 	public static function avatar($mid, $type = "thumb")
 	{
 		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$mid}";
-		$unknown   = "assets/images/blank_avatar.jpg";
+		$unknown   = "assets/images/icons/tiny/tracker.png";
 		list($width, $height) = getimagesize($forum_img);
 
 		if ($width > 10 && $height > 10) {
