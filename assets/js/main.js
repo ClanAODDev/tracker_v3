@@ -1,5 +1,10 @@
 $(function() {
 
+    $("#searchclear").click(function() {
+        $("#member-search").val('');
+        $('#member-search-results').empty();
+    });
+
     $("#pm-checked").click(function(event) {
         event.preventDefault();
         var searchIDs = $("#squads input:checkbox:checked, #squad input:checkbox:checked").map(function() {
@@ -53,7 +58,7 @@ $(function() {
 
     $('.alert').bind('closed.bs.alert', function() {
         var id = $(this).data('id'),
-            user = $(this).data('user');
+        user = $(this).data('user');
 
         $.post("do/update-alert", {
             id: id,
@@ -102,24 +107,24 @@ $(function() {
     /**
      * navigation links for user cp
      */
-    $('.logout-btn').click(function(e) {
+     $('.logout-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "logout";
     });
-    $('.settings-btn').click(function(e) {
+     $('.settings-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "user/settings";
     });
-    $('.profile-btn').click(function(e) {
+     $('.profile-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "user/profile";
     });
-    $('.messages-btn').click(function(e) {
+     $('.messages-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "user/messages";
     });
 
-    $('#register').submit(function(e) {
+     $('#register').submit(function(e) {
         e.preventDefault();
 
         $.post("/application/ajax/register.php",
@@ -144,9 +149,9 @@ $(function() {
     });
 
 
-    $('.fade-in').fadeIn('slow');
+     $('.fade-in').fadeIn('slow');
 
-    $('.count-animated').each(function() {
+     $('.count-animated').each(function() {
         var $this = $(this);
         jQuery({
             Counter: 0
@@ -165,23 +170,23 @@ $(function() {
         });
     });
 
-    $('.follow-tool').powerTip({
+     $('.follow-tool').powerTip({
         followMouse: true
     });
 
-    $('.tool').powerTip({
+     $('.tool').powerTip({
         placement: 'n'
     });
 
-    $('.tool-s').powerTip({
+     $('.tool-s').powerTip({
         placement: 's'
     });
 
-    $('.tool-e').powerTip({
+     $('.tool-e').powerTip({
         placement: 'e'
     });
 
-    $('.tool-ne').powerTip({
+     $('.tool-ne').powerTip({
         placement: 'ne'
     });
 
@@ -245,16 +250,16 @@ function member_search() {
  * ZeroClipboard support
  */
 
-var client = new ZeroClipboard($('.copy-button'));
+ var client = new ZeroClipboard($('.copy-button'));
 
-client.on("ready", function(readyEvent) {
+ client.on("ready", function(readyEvent) {
     client.on("aftercopy", function(event) {
         alert("Copied text to clipboard");
     });
 });
 
 
-function windowOpener(url, name, args) {
+ function windowOpener(url, name, args) {
 
     if (typeof(popupWin) != "object" || popupWin.closed) {
         popupWin = window.open(url, name, args);
@@ -281,7 +286,7 @@ function selectText(containerid) {
 
 function ucwords(str) {
     return (str + '')
-        .replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function($1) {
-            return $1.toUpperCase();
-        });
+    .replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function($1) {
+        return $1.toUpperCase();
+    });
 }

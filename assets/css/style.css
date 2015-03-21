@@ -565,6 +565,18 @@ h2.pull-right {
   background-color: rgba(0, 0, 0, 0.80);
 }
 
+#searchclear {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 19px;
+    cursor: pointer;
+    color: #ccc;
+}
+
 .activity {
   max-height: 182px;
   overflow-y: auto;
