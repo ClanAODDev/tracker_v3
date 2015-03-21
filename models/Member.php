@@ -24,9 +24,8 @@ class Member extends Application {
 	static $id_field = 'id';
 	static $name_field = 'forum_name';
 
-	public static function find($forum_name) {
-		$params = Flight::aod()->sql("SELECT * FROM member WHERE `forum_name`='{$forum_name}'")->one();
-		return (object) $params;
+	public static function findByName($forum_name) {
+		return (object) self::find($forum_name);
 	}
 
 	public static function search($name) {
@@ -35,8 +34,7 @@ class Member extends Application {
 	}
 
 	public static function findById($mid) {
-		$params = Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$mid}")->one();
-		return (object) $params;
+		return (object) self::find($mid);
 	}
 
 	public static function findForumName($mid) {
