@@ -577,6 +577,10 @@ h2.pull-right {
     color: #ccc;
 }
 
+#searchclear:hover {
+  opacity: .5;
+}
+
 .activity {
   max-height: 182px;
   overflow-y: auto;
