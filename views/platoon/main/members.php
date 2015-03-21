@@ -34,7 +34,7 @@ $joindate = date("M Y", strtotime($row['join_date']));
 $lastActive = formatTime(strtotime($row['last_activity']));
 $status = lastSeenColored($lastActive); -->
 
-				<tr data-id='{$row['member_id']}'>
+				<tr data-id='<?php echo $member->member_id; ?>'>
 					<td><em><?php echo memberColor(ucwords($member->forum_name), $member->position_id); ?></em></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo $member->rank ?></td>
 

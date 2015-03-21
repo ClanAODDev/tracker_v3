@@ -24,7 +24,7 @@ class PlatoonController {
 		$platoonPm = array();
 
 		Flight::render('platoon/main/statistics', array('platoon' => $platoon), 'statistics');
-		Flight::render('platoon/main/members', array('members' => $members), 'membersTable');
+		Flight::render('platoon/main/members', array('members' => $members, 'js' => 'platoon'), 'membersTable');
 		Flight::render('platoon/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'platoon' => $platoon, 'memberIdList' => $memberIdList, 'plt' => $plt, 'div' => $division->id, 'members' => $members), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 		
