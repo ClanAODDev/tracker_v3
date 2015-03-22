@@ -56,7 +56,7 @@ class ApplicationController {
 
 	public static function _invalidLogin() {
 		Flight::render('errors/invalid_login', array(), 'content');
-		Flight::render('errors/application');
+		Flight::render('layouts/application');
 	}
 
 	public static function _unavailable() {
