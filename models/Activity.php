@@ -57,9 +57,4 @@ class Activity extends Application {
 		return arrayToObject(Flight::aod()->sql($sql)->many());
 	}
 
-/*	public static function findPlatoonGames($params) {
-		foreach($params as $player) {
-
-		}*/
-
-	}
+}
