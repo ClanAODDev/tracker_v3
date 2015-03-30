@@ -34,8 +34,9 @@ class ApplicationController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
+		$platoons = Platoon::find_all($member->game_id);
 		Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
-		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 	}
 
 	public static function _doUsersOnline() {
@@ -56,7 +57,7 @@ class ApplicationController {
 
 	public static function _invalidLogin() {
 		Flight::render('errors/invalid_login', array(), 'content');
-		Flight::render('errors/application');
+		Flight::render('layouts/application');
 	}
 
 	public static function _unavailable() {

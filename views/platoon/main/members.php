@@ -20,7 +20,7 @@
 		<tbody>
 
 			<?php foreach ($members as $member) : ?>
-				<tr data-id='<?php echo $member->member_id; ?>'>
+				<tr title='Click to view profile' data-id='<?php echo $member->member_id; ?>'>
 					<td><em><?php echo memberColor(ucwords($member->forum_name), $member->position_id); ?></em></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo $member->rank ?></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo date('M Y', strtotime($member->join_date)); ?></td>
