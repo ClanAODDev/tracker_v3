@@ -72,7 +72,7 @@ class ApplicationController {
 
 	public static function _doUpdateAlert() {
 		$params = array('id' => $_POST['id'], 'user' => $_POST['user']);
-		AlertStatus::insert($params);
+		AlertStatus::create($params);
 	}
 
 }

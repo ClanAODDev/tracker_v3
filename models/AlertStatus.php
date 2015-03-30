@@ -9,11 +9,11 @@ class AlertStatus extends Application {
 	static $table = "alerts_status";
 	static $id_field = "id";
 
-	public static function insert($params) {
+	public static function create($params) {
 		$alert = new self();
 		$alert->alert_id = $params['id'];
 		$alert->user_id = $params['user'];
 		$alert->read_date = date('Y-m-d H:i:s');
-		Flight::aod()->save($alert);
+		$alert->save();
 	}
-}
+} 
