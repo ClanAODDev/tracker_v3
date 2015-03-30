@@ -1,7 +1,7 @@
 <?php
 
-require_once 'config.php';
-require_once 'functions.php';
+require_once 'application/config.php';
+require_once 'application/functions.php';
 
 session_start();
 
@@ -21,5 +21,5 @@ if (get_magic_quotes_gpc()) {
   unset($process);
 }
 
-require_once 'routes.php';
+require_once 'application/routes.php';
 Flight::start();

@@ -1,7 +1,7 @@
 <?php
 
 date_default_timezone_set('America/New_York');
-require_once 'application/flight/Flight.php';
+require_once 'flight/Flight.php';
 
 // Autoload models and controllers
 Flight::path('models');
