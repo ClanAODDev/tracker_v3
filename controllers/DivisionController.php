@@ -12,7 +12,7 @@ class DivisionController {
 		$division_leaders = Division::findDivisionLeaders($member->game_id);
 
 		$topListMonthly = Activity::topList30DaysByDivision(intval($division->id));
-		$topListToday = Activity::topListTodayByDivision($division->id);
+		$topListToday = Activity::topListTodayByDivision(intval($division->id));
 
 		Flight::render('division/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday), 'statistics');
 		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders, 'platoons' => $platoons), 'content');
