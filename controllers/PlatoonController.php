@@ -18,7 +18,6 @@ class PlatoonController {
 
 			$memberIdList = Platoon::memberIdsList($platoonId);
 
-			$right_now = new DateTime("now");
 			$bdate = date("Y-m-d", strtotime("now - 30 days"));
 			$edate = date("Y-m-d", strtotime("now"));
 
