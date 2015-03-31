@@ -31,6 +31,34 @@ class User extends Application {
 		return ($params['developer'] == 1) ? true : false;
 	}
 
+
+
+	public static function canEdit($mid, $user, $member)
+	{
+
+		$sql = "SELECT id, platoon_id, squad_leader_id, game_id FROM member WHERE member_id = {$mid}";
+		$player = arrayToObject(Flight::aod()->sql($sql)->one());
+
+    	// is the user the assigned squad leader?
+		if (($user->role == 1) && ($member->member_id == $player->squad_leader_id)) {
+			return true;
+        // is the user the platoon leader of the user?
+		} else if (($user->role == 2) && ($member->platoon_id == $player->platoon_id)) {
+			return true;
+        // is the user the division leader of the user?
+		} else if (($user->role == 3) && ($member->game_id == $player->game_id)) {
+			return true;
+        // is the user a dev or clan administrator?        
+		} else if (self::isDev($user->id)) {
+			return true;
+        // is the user editing someone of a lesser role, or himself?
+		} else if ($mid == $member->member_id) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static function find($id) {
 		$params = Flight::aod()->sql("SELECT * FROM users WHERE `id`='{$id}'")->one();
 		return (object) $params;
@@ -63,7 +91,7 @@ class User extends Application {
 	}
 
 	public static function updateActivityStatus($id)	{
-        $params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
-    }
+		$params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
+	}
 
 }

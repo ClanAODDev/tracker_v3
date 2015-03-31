@@ -24,6 +24,7 @@ if (empty($_SESSION['userid'])) {
 	// view
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
+	Flight::route('/member/@id', array('MemberController', '_profile'));
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
