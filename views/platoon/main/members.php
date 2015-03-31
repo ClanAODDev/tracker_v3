@@ -25,8 +25,8 @@
 					<td class='text-center hidden-xs hidden-sm'><?php echo $member->rank ?></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo date('M Y', strtotime($member->join_date)); ?></td>
 					<td class='text-center text-<?php echo lastSeenColored($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
-					<td class='text-center'><?php echo Activity::findPlayerAODGames($member->member_id, $bdate, $edate); ?></td>
-					<td class='text-center'><?php echo Activity::findPlayerGames($member->member_id, $bdate, $edate); ?></td>
+					<td class='text-center'><?php echo Activity::countPlayerAODGames($member->member_id, $bdate, $edate); ?></td>
+					<td class='text-center'><?php echo Activity::countPlayerGames($member->member_id, $bdate, $edate); ?></td>
 					<td class='text-center col-hidden'><?php echo $member->rank_id ?></td>
 					<td class='text-center col-hidden'><?php echo $member->last_activity ?></td>
 				</tr>

@@ -41,8 +41,23 @@
 					<li class='list-group-item text-right'><span class='pull-left'><strong>Division: </strong></span> <span class='text-muted'><?php echo $divisionInfo->full_name ?></span></li>
 					<?php echo $platoonInfo->item ?>
 					<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo $memberInfo->position ?></span></li>
-					{$squad_leader_item}
-					{$recruiter}
+					<?php $squadleader = ($memberInfo->squad_leader_id != 0) ? $memberInfo->squad_leader_id : NULL; ?>
+					
+					<?php if (!is_null($squadleader)) : ?>
+						<a href="member/<?php echo $squadleader ?>" class="list-group-item text-right">
+							<span class='pull-left'><strong>Squad Leader: </strong></span> 
+							<span class='text-muted'><?php echo Member::findForumName($squadleader) ?></a></span>
+						</a>
+					<?php endif; ?>
+
+					<?php $recruiter = ($memberInfo->recruiter != "0") ? $memberInfo->recruiter : NULL; ?>
+					<?php if (!is_null($recruiter) && $recruiter !== $memberInfo->recruiter) : ?>
+						<a href="member/<?php echo $recruiter ?>" class="list-group-item text-right">
+							<span class='pull-left'><strong>Recruiter: </strong></span> 
+							<span class='text-muted'><?php echo Member::findForumName($recruiter) ?></a></span>
+						</a>
+					<?php endif; ?>
+					
 				</ul>
 			</div>
 
@@ -59,9 +74,15 @@
 				<div class='panel-heading'>
 					<strong>Gaming Profiles</strong>
 				</div>
-				{$forums}
-				{$battlelog}
-				{$bf4db}
+
+				<a target='_blank' href='<?php echo CLANAOD . $memberInfo->member_id ?>' class='list-group-item'>AOD Forum <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+
+				<?php if ($memberInfo->battlelog_name !== "0") : ?>
+					<a target="_blank" href="<?php echo BATTLELOG . $memberInfo->battlelog_name ?>" class="list-group-item">Battlelog <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+				<?php endif; ?>
+
+				<a target='_blank' href='<?php echo BF4DB . $memberInfo->bf4db_id ?>' class='list-group-item'>BF4DB <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+
 			</div>
 
 		</div>
@@ -82,14 +103,24 @@
 			</div>
 
 			<div class='panel panel-primary'>
-				<div class='panel-heading'><strong>BF4 Server Activity</strong> ({$count_all_games} games in 30 days)<span class='pull-right'> Last {$maxGames} games</span></div>
-				<table class='table table-striped table-hover'>
-					<tbody>
-						{$games}
-					</tbody>
-				</table>
 
+				<div class='panel-heading'><strong>Server Activity</strong> ({$count_all_games} games in 30 days)<span class='pull-right'> Last {$maxGames} games</span></div>
+				<?php if (count($games)) : ?>
+					<table class='table table-striped table-hover'>
+						<tbody>
+							<?php foreach ($games as $game) : ?>
+								<tr>
+									<td><?php echo $game->server ?></td>
+									<td class='text-muted'><?php echo formatTime(strtotime($game->datetime)); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php else: ?>
+					<li class='list-group-item text-muted'>Either this player has no recorded games or the data sync has not yet stored any data for this player. It's also possible that this player only plays Battlefield:Hardline, which is not currently yet being synced.</li>
+				<?php endif; ?>
 			</div>
-		</div>
-	</div>
-</div>
+
+		</div><!-- end right side -->
+	</div><!-- end row -->
+</div><!-- end container -->

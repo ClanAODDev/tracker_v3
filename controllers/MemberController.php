@@ -16,6 +16,13 @@ class MemberController {
 		$divisionInfo = Division::findById(intval($memberInfo->game_id));
 		$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
 
+		// game data
+		$bdate = date("Y-m-d", strtotime("now - 30 days"));
+		$edate = date("Y-m-d", strtotime("now"));
+		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
+		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
+		$allGames = Activity::findAllGames($memberInfo->member_id);
+
 		// member alerts
 		if ($memberInfo->status_id == 999) {
 			$alerts = Member::isPending();
@@ -33,7 +40,7 @@ class MemberController {
 		}
 
 
-		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'alerts' => $alerts), 'content');
+		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'alerts' => $alerts, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames), 'content');
 
 		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 		
