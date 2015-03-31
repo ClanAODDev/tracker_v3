@@ -14,6 +14,7 @@ class Platoon extends Application {
 	public static function find_all($game_id) {
 		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name as leader_name, rank.abbr as leader_rank FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.game_id = {$game_id} ORDER BY number";
 		$params = Flight::aod()->sql($sql)->many();
+
 		return arrayToObject($params);
 	}
 
@@ -58,7 +59,7 @@ class Platoon extends Application {
 	public static function countAODGames($platoon_id, $bdate, $edate) {
 		$members = self::memberIdsList($platoon_id);
 		foreach ($members as $member) {
-			$info = Activity::findPlayerAODGames($member, $bdate, $edate);
+			$info = Activity::countPlayerAODGames($member, $bdate, $edate);
 			foreach ($info as $count) {
 				$total[] = $count;
 			}
@@ -69,7 +70,7 @@ class Platoon extends Application {
 	public static function countAllGames($platoon_id, $bdate, $edate) {
 		$members = self::memberIdsList($platoon_id);
 		foreach ($members as $member) {
-			$info = Activity::findPlayerGames($member, $bdate, $edate);
+			$info = Activity::countPlayerGames($member, $bdate, $edate);
 			foreach ($info as $count) {
 				$total[] = $count;
 			}
