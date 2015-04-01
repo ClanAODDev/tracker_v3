@@ -94,4 +94,51 @@ class User extends Application {
 		$params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
 	}
 
+
+	/**
+	 * determines what user has permission to update
+	 * @param  int $role User's role
+	 * @return array       Array of values to determine field visibility
+	 */
+	public static function canUpdate($role) {
+
+		switch ($role) {
+			case 1:
+			$allowPltAssignmentEdit = false;
+			$allowSqdAssignmentEdit = false;
+			$allowPosAssignmentEdit = false;
+			break;
+
+			case 2:
+			$allowPltAssignmentEdit = false;
+			$allowSqdAssignmentEdit = true;
+			$allowPosAssignmentEdit = true;
+			break;
+
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			$allowPltAssignmentEdit = true;
+			$allowSqdAssignmentEdit = true;
+			$allowPosAssignmentEdit = true;
+			break;
+		}
+
+		// allow developers to see all fields regardless of role
+		if (self::isDev($_SESSION['userid'])) {
+			$allowPltAssignmentEdit = true;
+			$allowSqdAssignmentEdit = true;
+			$allowPosAssignmentEdit = true;
+		}
+
+		// if assignment editing is allowed, show fields
+		$pltField = ($allowPltAssignmentEdit) ? "block" : "none";
+		$sqdField = ($allowSqdAssignmentEdit) ? "block" : "none";
+		$posField = ($allowPosAssignmentEdit) ? "block" : "none";
+
+		return (object) array( 'pltField' => $pltField,  'sqdField' => $sqdField, 'posField' => $posField );
+	}
+
+
 }

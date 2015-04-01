@@ -31,6 +31,9 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 	Flight::route('POST /do/update-alert', array('ApplicationController', '_doUpdateAlert'));
 
+	// edit
+	Flight::route('POST /edit/member', array('MemberController', '_edit'));
+
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
 

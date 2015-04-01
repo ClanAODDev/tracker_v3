@@ -10,18 +10,18 @@
 
 	<div class='page-header vertical-align'>
 		<div class='col-xs-1 hidden-sm hidden-xs'><?php echo Member::avatar($memberInfo->member_id, 'large'); ?></div>
+
 		<div class='col-xs-7'>
 			<h2><strong><?php echo $memberInfo->rank . " " . $memberInfo->forum_name; ?></strong><br /><a class='btn btn-default btn-xs popup-link' href='<?php echo PRIVMSG . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-comment'></i> Send PM</a><a class='btn btn-default btn-xs popup-link' href='<?php echo EMAIL . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-envelope'></i> Send Email</a></h2>
 		</div>			
+
 		<div class='col-xs-4'>
-
-
 			<?php if (User::canEdit($memberInfo->member_id, $user, $member)) : ?>
 				<div class='btn-group pull-right' data-member-id='<?php echo $memberInfo->member_id ?>'>
 					<button type='button' class='btn btn-default edit-member'>Edit</button>
 					<button type='button' class='btn btn-default disabled'>Promote</button>
-					<?php if ($user->role == 2 && $member->rank_id == 9) : ?>
-						<button type='button' class='btn btn-danger disabled'>Remove From AOD</button>
+					<?php if ($user->role == 2 && $member->rank_id == 9 && $memberInfo->status_id != 4) : ?>
+						<button type="button" class="btn btn-danger disabled"><i class="fa fa-trash-o fa-lg"></i> Remove From AOD</button>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>

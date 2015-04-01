@@ -39,11 +39,22 @@ class MemberController {
 			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 		}
 
-
 		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'alerts' => $alerts, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames), 'content');
 
 		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 		
+	}
+
+	public static function _edit() {
+
+		$user = User::find($_SESSION['userid']);
+		$member = Member::profileData($_POST['member_id']);
+		$platoons = Platoon::find_all($member->game_id);
+		$squadleadersArray = Platoon::SquadLeaders($member->game_id);
+		$positionsArray = Position::find_all();
+
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+
 	}
 
 	public static function _modify() {}
