@@ -144,7 +144,7 @@ $(function() {
     });
 
 
-    $('.fade-in').fadeIn('slow');
+    $('.fade-in').delay(1000).fadeIn('slow');
 
     $('.count-animated').each(function() {
         var $this = $(this);

@@ -14,11 +14,27 @@ class Application {
 		}
 	}
 	
-	public function save($params = array()) {
+/*	public function save($params = array()) {
 		if (!empty($params)) $this->load($params);
 		Flight::aod()->using(get_called_class())->save($this);
-	}
+	}*/
 	
+	public function save($params = array()) {
+		$fields = NULL;
+		if (!empty($params)) {
+			$this->load($params);
+			if (array_key_exists("id", $params)) {
+				$fields = array_keys($params);
+				unset($fields['id']);
+			}
+		}
+		Flight::aod()->using(get_called_class())->save($this, $fields);
+		if (!array_key_exists("id", $params)) {
+			$this->id = Flight::aod()->insert_id;
+		}
+	}
+
+
 	public static function find($params) {
 		return Flight::aod()->using(get_called_class())->find($params);
 	}
@@ -52,5 +68,5 @@ class Application {
 		$object->save($params);
 		return $object;
 	}
-	
+		
 }

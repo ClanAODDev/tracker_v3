@@ -8,6 +8,7 @@
 	<div class='modal-body' style='overflow-y: scroll; max-height: 400px;'>
 		<div class='message alert' style='display: none;'></div>
 
+		<input type='hidden' id='uid' name='uid' value='<?php echo $member->id ?>' />
 		<input type='hidden' id='cur_plt' name='cur_plt' value='<?php echo $member->platoon_id ?>' />
 		<input type='hidden' id='cur_sqd' name='cur_sqd' value='<?php echo $member->squad_leader_id ?>' />
 		<input type='hidden' id='cur_pos' name='cur_pos' value='<?php echo $member->position_id ?>' />

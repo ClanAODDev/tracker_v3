@@ -12,7 +12,7 @@ $(function() {
     $("#edit-form").submit(function(event) {
         event.preventDefault();
 
-        $("#edit-form :submit").html("Loading").attr('class', 'btn btn-block btn-default disabled');
+        $("#edit-form :submit").html("<img src='assets/images/loading.gif' /> Validating battlelog name...").attr('class', 'btn btn-block btn-default disabled');
 
         var uid = $("#uid").val(),
             mid = $("#member_id").val(),
@@ -30,7 +30,7 @@ $(function() {
 
 function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter) {
     setTimeout(function() {
-        $.post("/application/ajax/update_member.php", {
+        $.post("do/update-member", {
                 uid: uid,
                 mid: mid,
                 fname: fname,

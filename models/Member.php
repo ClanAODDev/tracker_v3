@@ -84,7 +84,65 @@ class Member extends Application {
 	public static function isInactive($last_activity) {
 		$wng_last_activity = str_replace(" ago", "", formatTime($last_activity));
 		return "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle'></i> Player has not logged into the forums in {$wng_last_activity}!</div>";
-		
+	}
+
+	public static function modify($params) {
+
+		$member = new self();
+		foreach ($params as $key=>$value) {
+			$member->$key = $value;
+		}
+
+		$member->update($params);
+	}
+
+	public static function getBf4dbId($user) {
+		$url = "http://bf4db.com/players?name={$user}";
+		$ch = curl_init();
+		$timeout = 5;
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+		$html = curl_exec($ch);
+		curl_close($ch);
+		$regexp = "/<a href=\"\/players\/(\d*)\" class=\"personaName-medium\">" . $user . "<\/a>/iU";
+		if (preg_match_all($regexp, $html, $matches)) {
+			$len = count($matches[0]);
+			for ($i = 0; $i < $len; $i++) {
+				$id = $matches[1][$i];
+			}
+		}
+		if (isset($id)): return $id; else: return false; endif;
+	}
+
+	/**
+	 * fetch battlelog persona id (bf4, bfh)
+	 * @param  string $battlelogName player's battlelog / ingame name
+	 * @return array                 error code, id if successful, error message if failed
+	 */
+	public static function getBattlelogId($battlelogName) {
+		// check for bf4 entry
+		$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
+		$headers = get_headers($url); 
+		if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) { 
+			// check for hardline entry
+			$url = "http://api.bfhstats.com/api/playerInfo?plat=pc&name={$battlelogName}";
+			$headers = get_headers($url);
+			if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) { 
+				$result = array('error' => true, 'message' => 'Player not found, or BF Stats server down.');
+			} else {
+				$json = file_get_contents($url);
+				$data = json_decode($json);
+				$personaId = $data->player->id;
+				$result = array('error' => false, 'id' => $personaId);
+			}
+		} else {
+			$json = file_get_contents($url);
+			$data = json_decode($json);
+			$personaId = $data->player->id;
+			$result = array('error' => false, 'id' => $personaId);
+		}
+		return $result;
 	}
 
 }

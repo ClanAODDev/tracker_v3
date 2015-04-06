@@ -57,6 +57,39 @@ class MemberController {
 
 	}
 
+	public static function _doUpdateMember() {
+
+		$user = User::find($_SESSION['userid']);
+		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
+		$member = Member::profileData($params['member_id']);
+
+		// post values based on role since we can't be sure 
+		// a hidden form element wasn't tampered with
+		if ($user->role > 1 || User::isDev($user->id)) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
+		if ($user->role > 2 || User::isDev($user->id)) {	$params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
+
+
+		// only continue if we have permission to edit the user
+		if (User::canEdit($params['member_id'], $user, $member) == true) {
+
+			// attempt to fetch battlelog id from bf stats (bf4 or hardline)
+			$battlelogId = Member::getBattlelogId($params['battlelog_name']);
+			if (!$battlelogId['error']) {
+				$params = array_merge($params, array("battlelog_id" => $battlelogId['id']));
+				$result = Member::modify($params);
+				$data = array('success' => true, 'message' => "Member information updated!");
+			} else {
+				$data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => false);
+			}
+
+		} else {
+			$data = array('success' => false, 'message' => 'You do not have permission to modify this player.');
+		}
+
+		// print out a pretty response
+		echo(json_encode($data));
+	}
+
 	public static function _modify() {}
 	public static function _delete() {}
 
