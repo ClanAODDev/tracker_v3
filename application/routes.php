@@ -24,11 +24,16 @@ if (empty($_SESSION['userid'])) {
 	// view
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
+	Flight::route('/member/@id', array('MemberController', '_profile'));
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 	Flight::route('POST /do/update-alert', array('ApplicationController', '_doUpdateAlert'));
+	Flight::route('POST /do/update-member', array('MemberController', '_doUpdateMember'));
+
+	// edit
+	Flight::route('POST /edit/member', array('MemberController', '_edit'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));

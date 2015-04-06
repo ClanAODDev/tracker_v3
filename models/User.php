@@ -31,6 +31,34 @@ class User extends Application {
 		return ($params['developer'] == 1) ? true : false;
 	}
 
+
+
+	public static function canEdit($mid, $user, $member)
+	{
+
+		$sql = "SELECT id, platoon_id, squad_leader_id, game_id FROM member WHERE member_id = {$mid}";
+		$player = arrayToObject(Flight::aod()->sql($sql)->one());
+
+    	// is the user the assigned squad leader?
+		if (($user->role == 1) && ($member->member_id == $player->squad_leader_id)) {
+			return true;
+        // is the user the platoon leader of the user?
+		} else if (($user->role == 2) && ($member->platoon_id == $player->platoon_id)) {
+			return true;
+        // is the user the division leader of the user?
+		} else if (($user->role == 3) && ($member->game_id == $player->game_id)) {
+			return true;
+        // is the user a dev or clan administrator?        
+		} else if (self::isDev($user->id)) {
+			return true;
+        // is the user editing someone of a lesser role, or himself?
+		} else if ($mid == $member->member_id) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static function find($id) {
 		$params = Flight::aod()->sql("SELECT * FROM users WHERE `id`='{$id}'")->one();
 		return (object) $params;
@@ -63,7 +91,54 @@ class User extends Application {
 	}
 
 	public static function updateActivityStatus($id)	{
-        $params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
-    }
+		$params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
+	}
+
+
+	/**
+	 * determines what user has permission to update
+	 * @param  int $role User's role
+	 * @return array       Array of values to determine field visibility
+	 */
+	public static function canUpdate($role) {
+
+		switch ($role) {
+			case 1:
+			$allowPltAssignmentEdit = false;
+			$allowSqdAssignmentEdit = false;
+			$allowPosAssignmentEdit = false;
+			break;
+
+			case 2:
+			$allowPltAssignmentEdit = false;
+			$allowSqdAssignmentEdit = true;
+			$allowPosAssignmentEdit = true;
+			break;
+
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			$allowPltAssignmentEdit = true;
+			$allowSqdAssignmentEdit = true;
+			$allowPosAssignmentEdit = true;
+			break;
+		}
+
+		// allow developers to see all fields regardless of role
+		if (self::isDev($_SESSION['userid'])) {
+			$allowPltAssignmentEdit = true;
+			$allowSqdAssignmentEdit = true;
+			$allowPosAssignmentEdit = true;
+		}
+
+		// if assignment editing is allowed, show fields
+		$pltField = ($allowPltAssignmentEdit) ? "block" : "none";
+		$sqdField = ($allowSqdAssignmentEdit) ? "block" : "none";
+		$posField = ($allowPosAssignmentEdit) ? "block" : "none";
+
+		return (object) array( 'pltField' => $pltField,  'sqdField' => $sqdField, 'posField' => $posField );
+	}
+
 
 }

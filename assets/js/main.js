@@ -75,8 +75,8 @@ $(function() {
     $(".edit-member").click(function() {
         var member_id = $(this).parent().attr('data-member-id');
 
-        $(".viewPanel .viewer").load("/application/ajax/ajax-view-member.php", {
-            id: member_id
+        $(".viewPanel .viewer").load("edit/member/", {
+            member_id: member_id
         });
         $(".viewPanel").modal();
     });
@@ -144,7 +144,7 @@ $(function() {
     });
 
 
-    $('.fade-in').fadeIn('slow');
+    $('.fade-in').delay(1000).fadeIn('slow');
 
     $('.count-animated').each(function() {
         var $this = $(this);

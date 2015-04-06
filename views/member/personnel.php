@@ -23,7 +23,7 @@
 			<?php if (count(Platoon::countSquadLeaders($member->platoon_id))) : $i = 0;	?>
 
 				<!-- get squad leaders-->
-				<?php foreach(Platoon::SquadLeaders($member->platoon_id) as $player) :?>
+				<?php foreach(Platoon::SquadLeaders($member->game_id, $member->platoon_id) as $player) :?>
 					<a href='#collapseSquad_<?php echo $i; ?>' data-toggle='collapse' class='list-group-item active accordion-toggle' data-parent='#squads'>
 						<?php echo $player->abbr ?> <?php echo $player->forum_name ?> <span class="badge"><?php echo Squad::count($player->member_id); ?></span>
 					</a>

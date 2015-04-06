@@ -1,6 +1,7 @@
 <?php
 
 class DivisionController {
+	
 	public static function _index($div) {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
@@ -11,8 +12,8 @@ class DivisionController {
 		$division_leaders = Division::findDivisionLeaders($member->game_id);
 
 		$topListMonthly = Activity::topList30DaysByDivision(intval($division->id));
-		$topListToday = Activity::topListTodayByDivision($division->id);
-		
+		$topListToday = Activity::topListTodayByDivision(intval($division->id));
+
 		Flight::render('division/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday), 'statistics');
 		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders, 'platoons' => $platoons), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons, 'js' => 'division'));

@@ -52,4 +52,10 @@ class Division extends Application {
 		return arrayToObject($params);
 
 	}
+
+	public static function countSquadLeaders($game_id) {
+		$sql = "SELECT count(*) as count FROM member WHERE position_id = 5 AND game_id = {$game_id}";
+		$params =  Flight::aod()->sql($sql)->one();
+		return $params['count'];
+	}
 }
