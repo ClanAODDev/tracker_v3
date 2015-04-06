@@ -32,3 +32,6 @@ define('PERCENTAGE_CUTOFF_GREEN', 75);
 define('PERCENTAGE_CUTOFF_AMBER', 50);
 define('INACTIVE_MIN', 0);
 define('INACTIVE_MAX', 25);
+
+// global settings
+define('MAX_GAMES_ON_PROFILE', 25);

@@ -249,7 +249,7 @@ function singledigitToWord($number)
     return $word;
 }
 
-/*
+
 function getPercentageColor($pct)
 {
     if ($pct >= PERCENTAGE_CUTOFF_GREEN) {
@@ -260,7 +260,7 @@ function getPercentageColor($pct)
         $percent_class = "danger";
     }
     return $percent_class;
-}*/
+}
 
 
 /**
