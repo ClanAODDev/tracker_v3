@@ -22,24 +22,14 @@ class MemberController {
 		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
 		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
 		$allGames = Activity::findAllGames($memberInfo->member_id);
-
-		// member alerts
-		if ($memberInfo->status_id == 999) {
-			$alerts = Member::isPending();
-		} else if ($memberInfo->status_id == 4) {
-			$alerts = Member::isRemoved();
-		}
-
-		if (strtotime($memberInfo->last_activity) < strtotime('-30 days')) {
-			$alerts .= Member::isInactive(strtotime($memberInfo->last_activity));
-		}
+		$pctAod = $countAODGames * 100 / $countTotalGames;
 
 		if ($platoonInfo->id != 0) {
 			$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
 			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 		}
 
-		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'alerts' => $alerts, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames), 'content');
+		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'content');
 
 		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 		

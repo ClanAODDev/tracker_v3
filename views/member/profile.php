@@ -28,7 +28,16 @@
 		</div>
 	</div>
 
-	<?php echo $alerts ?>
+
+	<?php if ($memberInfo->status_id == 4) : ?>
+		<div class='alert alert-danger'><i class='fa fa-times-circle'></i> This remember is currently removed from the division and will not appear on the division structure until he is re-recruited and his member status is approved on the forums.</div>
+	<?php elseif ($memberInfo->status_id == 999) : ?>
+		<div class='alert alert-warning'><i class='fa fa-exclamation-triangle'></i> This member is pending, and will not have any forum specific information until their member status has been approved.</div>
+	<?php endif; ?>
+
+	<?php if (Member::isOnLeave($memberInfo->member_id)) : ?>
+		<div class='alert alert-warning'><i class='fa fa-clock-o fa-lg'></i>  This player currently has a leave of absence in place. <a class="alert-link" href="manage/leaves-of-absence">Manage LOAs</a></div>
+	<?php endif; ?>
 
 
 	<div class='row margin-top-20'>
@@ -42,7 +51,7 @@
 					<?php echo $platoonInfo->item ?>
 					<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo $memberInfo->position ?></span></li>
 					<?php $squadleader = ($memberInfo->squad_leader_id != 0) ? $memberInfo->squad_leader_id : NULL; ?>
-					
+
 					<?php if (!is_null($squadleader)) : ?>
 						<a href="member/<?php echo $squadleader ?>" class="list-group-item text-right">
 							<span class='pull-left'><strong>Squad Leader: </strong></span> 
@@ -57,7 +66,7 @@
 							<span class='text-muted'><?php echo Member::findForumName($recruiter) ?></a></span>
 						</a>
 					<?php endif; ?>
-					
+
 				</ul>
 			</div>
 
@@ -92,11 +101,11 @@
 			{$loaStatus}
 
 			<div class='panel panel-info'>
-				<div class='panel-heading'><strong>AOD Participation</strong><span class='badge pull-right'>{$aod_games} Games</span></div>
+				<div class='panel-heading'><strong>AOD Participation</strong><span class='badge pull-right'><?php echo $aodGames ?> Games</span></div>
 				<div class='panel-body'>
-					<div class='progress text-center follow-tool' title='<small><center>{$aod_games} of {$count_all_games}<br />{$percent_aod}%</center></small>' style='width: 100%; margin: 0 auto; height: 30px; vertical-align:middle;'>
-						<div class='progress-bar progress-bar-" . getPercentageColor($percent_aod) . " progress-bar-striped active' role='progressbar' aria-valuenow='72' aria-valuemin='0' aria-valuemax='50' style='width: ". $percent_aod . "%'>
-							<span style='display: none;'>{$percent_aod}%</span>
+					<div class='progress text-center follow-tool' title='<small><center><?php echo $aodGames ?> of <?php echo $totalGames ?><br /><?php echo $pctAod ?>%</center></small>' style='width: 100%; margin: 0 auto; height: 30px; vertical-align:middle;'>
+						<div class='progress-bar progress-bar-<?php echo getPercentageColor($pctAod); ?> progress-bar-striped active' role='progressbar' aria-valuenow='72' aria-valuemin='0' aria-valuemax='50' style='width: <?php echo $pctAod ?>%'>
+							<span style='display: none;'><?php echo $pctAod; ?>%</span>
 						</div>
 					</div>
 				</div>
@@ -104,7 +113,7 @@
 
 			<div class='panel panel-primary'>
 
-				<div class='panel-heading'><strong>Server Activity</strong> ({$count_all_games} games in 30 days)<span class='pull-right'> Last {$maxGames} games</span></div>
+				<div class='panel-heading'><strong>Server Activity</strong> (<?php echo $totalGames ?> games in 30 days)<span class='pull-right'> Last <?php echo MAX_GAMES_ON_PROFILE ?> games</span></div>
 				<?php if (count($games)) : ?>
 					<table class='table table-striped table-hover'>
 						<tbody>

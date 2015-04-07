@@ -37,17 +37,17 @@ class Member extends Application {
 		return (object) self::find($userId);
 	}
 
-	public static function findByMemberId($memberId) {
-		return (object) Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$memberId}")->one();
+	public static function findByMemberId($member_id) {
+		return (object) Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$member_id}")->one();
 	}
 
-	public static function profileData($memberId) {
+	public static function profileData($member_id) {
 		return (object) Flight::aod()->sql("SELECT member.id, rank.abbr as rank, position.desc as position, forum_name, member_id, battlelog_name, bf4db_id, rank_id, platoon_id, position_id, squad_leader_id, status_id, game_id, join_date, recruiter, last_forum_login, last_activity, member.game_id, last_forum_post, forum_posts, status.desc FROM member 
 			LEFT JOIN users ON users.username = member.forum_name 
 			LEFT JOIN games ON games.id = member.game_id
 			LEFT JOIN position ON position.id = member.position_id
 			LEFT JOIN rank ON rank.id = member.rank_id
-			LEFT JOIN status ON status.id = member.status_id WHERE member.member_id = {$memberId}")->one();
+			LEFT JOIN status ON status.id = member.status_id WHERE member.member_id = {$member_id}")->one();
 	}
 
 	public static function findForumName($member_id) {
@@ -55,9 +55,9 @@ class Member extends Application {
 		return $params['forum_name'];
 	}
 
-	public static function avatar($memberId, $type = "thumb")
+	public static function avatar($member_id, $type = "thumb")
 	{
-		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$memberId}";
+		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$member_id}";
 		$unknown   = "assets/images/blank_avatar.jpg";
 		list($width, $height) = getimagesize($forum_img);
 
@@ -69,21 +69,13 @@ class Member extends Application {
 
 	}
 
-	public static function isPending() {
-		return "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle'></i> This member is pending, and will not have any forum specific information until their member status has been approved.</div>";
-	}
-
-	public static function isRemoved() {
-		return "<div class='alert alert-danger'><i class='fa fa-times-circle'></i> This remember is currently removed from the division and will not appear on the division structure until he is re-recruited and his member status is approved on the forums.</div>";
-	}
-
-	public static function isOnLOA() {
-		return "<div class='alert alert-warning'><i class='fa fa-clock-o fa-lg'></i>  This player currently has a leave of absence in place.</div>";
-	}
-
-	public static function isInactive($last_activity) {
-		$wng_last_activity = str_replace(" ago", "", formatTime($last_activity));
-		return "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle'></i> Player has not logged into the forums in {$wng_last_activity}!</div>";
+	public static function isOnLeave($member_id) {
+		$params = Flight::aod()->sql("SELECT * FROM loa WHERE `member_id`={$member_id}")->one();
+		if (count($params)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static function modify($params) {
