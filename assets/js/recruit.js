@@ -31,6 +31,8 @@ $(function() {
                     return false;
                 }
 
+                $(".message").html("<img src='assets/images/loading_2.gif' /> " + "Validating member data. Please wait...").show();
+
                 // grab values since we know they exist
                 var forumName = $('#forumname').val(),
                     battlelog = $('#battlelog').val(),
@@ -57,41 +59,43 @@ $(function() {
 
                 // post member data to db
                 var flag = 0;
-                alert('Fetching BF4DB ID. Browser may freeze momentarily...');
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/application/ajax/store_member.php',
-                    data: {
-                        name: forumName,
-                        battlelog: battlelog,
-                        member_id: member_id,
-                        platoon: platoon,
-                        squadLdr: squadLdr
-                    },
-                    dataType: 'json',
-                    async: false,
-                    success: function(response) {
-                        if (response.success === false) {
-                            flag = 0;
-                            message = response.message;
-                            if (response.battlelog === true) {
-                                $(".battlelog-group").addClass('has-error');
-                            } else if (response.memberExists === true) {
-                                $(".memberid-group").addClass('has-error');
+                if (!confirm("Battlelog name will now be validated. Are you sure you wish to proceed?\r\nScreen may temporarily freeze!")) {
+                    return false;
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'do/validate-member',
+                        data: {
+                            // forum_name: forumName,
+                            battlelog_name: battlelog,
+                            member_id: member_id,
+                            // platoon_id: platoon,
+                            // squad_leader_id: squadLdr
+                        },
+                        dataType: 'json',
+                        async: false,
+                        success: function(response) {
+                            if (response.success === false) {
+                                flag = 0;
+                                message = response.message;
+                                if (response.battlelog === true) {
+                                    $(".battlelog-group").addClass('has-error');
+                                } else if (response.memberExists === true) {
+                                    $(".memberid-group").addClass('has-error');
+                                }
+                            } else {
+                                flag = 1;
                             }
-                        } else {
-                            flag = 1;
                         }
-                    }
-                });
+                    });
+                }
 
                 // have to declare a flag so it's not undefined...
                 if (flag == 0) {
                     $(".message").html("<i class='fa fa-times'></i> " + message).effect('bounce');
                     return false;
                 } else {
-                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Your new recruit has been added to the database!</div>").delay(2000).fadeOut();
+                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Recruit data has been validated and a battlelog ID was retrieved!</div>").delay(3000).fadeOut();
                     return true;
                 }
 
@@ -203,10 +207,11 @@ function loadThreadCheck() {
         $(".search-subject").html("<p class='text-muted'>Searching threads for posts by: <code>" + ucwords(player) + "</code></p>");
     }
 
-    $(".thread-results").html('<img src="/public/images/loading.gif " class="margin-top-20" />');
+    $(".thread-results").html('<img src="assets/images/loading.gif " class="margin-top-20" />');
 
     $.ajax({
-        url: "/application/ajax/recruit_thread_check.php",
+        url: "do/check-division-threads",
+        type: 'POST',
         data: {
             player: player,
             game: game

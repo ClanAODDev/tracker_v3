@@ -1,4 +1,4 @@
-<div class="page-404 fade-in">	
+<div class="page-404">	
 
 	<div class="error-code">404</div>
 

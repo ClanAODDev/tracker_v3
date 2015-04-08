@@ -144,7 +144,7 @@ $(function() {
     });
 
 
-    $('.fade-in').delay(1000).fadeIn('slow');
+    $('.fade-in').delay(1000).slideDown('swing');
 
     $('.count-animated').each(function() {
         var $this = $(this);

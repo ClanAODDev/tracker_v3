@@ -19,7 +19,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/logout', array('UserController', '_doLogout'));
 	Flight::route('/help', array('ApplicationController', '_help'));
 	Flight::route('/recruiting', array('RecruitingController', '_index'));
-
+	Flight::route('/recruiting/new-member', array('RecruitingController', '_addNewMember'));
 
 	// view
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
@@ -31,9 +31,13 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 	Flight::route('POST /do/update-alert', array('ApplicationController', '_doUpdateAlert'));
 	Flight::route('POST /do/update-member', array('MemberController', '_doUpdateMember'));
+	Flight::route('POST /do/validate-member', array('MemberController', '_doValidateMember'));
 
-	// edit
+	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
+
+	// GETs
+	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
@@ -49,7 +53,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/manage/loas', array('DivisionController', '_manage_loas'));
 
 	// recruiting
-	Flight::route('/recruiting/new-member', array('RecruitingController', '_add_new_member'));
+	
 
 	// admin
 	Flight::route('/admin', array('AdminController', '_show'));

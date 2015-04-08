@@ -44,7 +44,7 @@ function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruite
             function(data) {
                 $("#edit-form :submit").html("Submit Info").attr('class', 'btn btn-block btn-success');
                 if (data.success === false) {
-                    if (data.battlelog === false) {
+                    if (data.battlelog === true) {
                         $("#edit-form .battlelog-group").addClass("has-error");
                     }
                     $("#edit-form .message").html(data.message).addClass("alert-danger").show();

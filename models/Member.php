@@ -28,6 +28,15 @@ class Member extends Application {
 		return (object) self::find($forum_name);
 	}
 
+	public static function exists($member_id) {
+		$params = self::find(array('member_id' => $member_id));
+		if (count($params)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static function search($name) {
 		$params = Flight::aod()->sql("SELECT * FROM member WHERE `forum_name` LIKE '%{$name}%' ORDER BY member.rank_id DESC LIMIT 25")->many();
 		return $params;
@@ -38,7 +47,7 @@ class Member extends Application {
 	}
 
 	public static function findByMemberId($member_id) {
-		return (object) Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$member_id}")->one();
+		return (object) self::find(array('member_id' => $member_id));
 	}
 
 	public static function profileData($member_id) {
@@ -76,6 +85,25 @@ class Member extends Application {
 		} else {
 			return false;
 		}
+	}
+
+	public static function isFlaggedForInactivity($member_id) {
+		$params = Flight::aod()->sql("SELECT * FROM inactive_flagged WHERE `member_id`={$member_id}")->one();
+		if (count($params)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function create($params) {
+
+		$member = new self();
+		foreach ($params as $key=>$value) {
+			$member->$key = $value;
+		}
+
+		$member->save($params);
 	}
 
 	public static function modify($params) {

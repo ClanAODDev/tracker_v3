@@ -1,0 +1,291 @@
+<?php $allowEdit = User::canUpdate($user->role); ?>
+
+<div class='container'>
+	
+	<ul class='breadcrumb'>
+		<li><a href='./'>Home</a></li>
+		<li><a href='recruiting/'>Recruiting</a></li>
+		<li class='active'>Add New Member</li>
+	</ul>
+	<div class='page-header'>
+		<h1><strong>Recruiting</strong> <small>Add New Member <span class='text-warning'></span></small><button class="pull-right btn btn-danger"><i class="fa fa-user-times fa-lg"></i> Cancel Recruit Process</button></h1>
+	</div>
+
+	<div id='rootwizard'>
+
+		<!-- necessary for step functionality -->
+
+		<div class='navbar guide-nav centered-pills' style='display: <?php echo (User::isDev($user->id)) ? block : none; ?>'>
+			<div class='navbar-inner'>
+				<ul>
+					<li class='slide1'><a href='#tab1' data-toggle='tab'>Recruit Introduction</a></li>
+					<li class='slide2'><a href='#tab2' data-toggle='tab'>Add Member Information</a></li>
+					<li class='slide3'><a href='#tab3' data-toggle='tab'>Recruit Thread Completion</a></li>
+					<li class='slide4'><a href='#tab4' data-toggle='tab'>Final Steps</a></li>
+					<li class='slide5'><a href='#tab5' data-toggle='tab'>Dreaded Paperwork</a></li>
+					<li class='slide6'><a href='#tab6' data-toggle='tab'>Complete</a></li>
+				</ul>
+			</div>
+		</div>
+		
+
+		<div class='progress striped-bg'>
+			<div class='bar progress-bar progress-bar-rct progress-bar-striped progress-bar-success active' ></div>
+		</div>
+
+
+		<div class='panel panel-default'>
+			<div class='panel-heading tab-title'>
+				<strong></strong><span class='pull-right text-muted'><?php echo $division->full_name ?> Division</span>
+			</div>
+
+			<div class='panel-body'>
+
+				<form class='form-horizontal' id='new-recruit'>
+
+					<input type='hidden' value='<?php echo $division->id ?>' id='game' name='game' />
+
+					<div class='tab-content'>
+
+						<!-- // tab 1 - introduction -->
+
+
+						<div class='tab-pane' id='tab1'>
+							<div class='col-xs-12'>
+								<p>At this point, you have already established a potential recruit. The next step is to get him or her through AOD's recruiting process, and added to our division structure. If you have not already, you need to get your recruit into Teamspeak. Your relationship to your new recruit is vital and begins with the first impression. Get to know them and make them feel welcome. This will make a huge difference down the road.</p>
+
+								<p class="margin-top-20 lead">Vital items to discuss:
+									<hr />
+									
+									<ul>
+										<li>You must <strong>be in Teamspeak</strong> whenever you're ingame.</li>
+										<li>You must <strong>login to the forums</strong> at least once a month.</li>
+										<li>You should strive to <strong>be a contributing member</strong> of the clan. This includes helping us populate the server, and staying loyal to our servers whenever possible.</li>
+										<li>You must <strong>show respect</strong> to other members as well as all other public players.</li>
+									</ul>
+
+								</p>
+
+								<p class="margin-top-50 lead"><strong>AOD</strong> Quick Info</p>
+								<hr />
+
+								<p><a class='popup-link'  href='http://www.clanaod.net/forums/showthread.php?t=97502'><button type='button' class='btn btn-primary'>Teamspeak Server Information</button></a> <a href='http://www.teamspeak.com/?page=downloads&gclid=CJakz7CwwcMCFRQQ7AodsDsASA' target='_blank'><button type='button' class='tool btn btn-primary' title='Right click to copy link'>TS3 Client Download</button></a>  <a href='http://www.clanaod.net/forums/showthread.php?t=72805' target='_blank' class='popup-link'><button type='button' class='tool btn btn-primary' title='Recruitment Process Thread'>Recruitment Process Thread</button></a></p>
+
+							</div>
+						</div>
+
+
+						<!-- // tab 2 - member information form -->
+
+						<div class='tab-pane' id='tab2'>
+
+							<div class='col-sm-6'>
+								<p class='margin-top-20'>Does your new recruit have a forum account? They will need one for you to complete this section. Please fill out and check the form completely for accuracy once this has been done. </p>
+								<p class='text-warning'><strong>Battlelog name will be validated during this step. Your screen may freeze temporarily while this is done. Do not close the window.</strong></p>
+							</div>
+							<div class='col-sm-6 well'>
+								<div class='form-group memberid-group'>
+									<label for='member_id' class='col-sm-3 control-label'>Forum ID</label>
+									<div class='col-sm-9'>
+										<input type='text' class='form-control' placeholder='12345' id='member_id' name='member_id' tabindex='1'>
+									</div>
+								</div>
+
+								<div class='form-group forumname-group'>
+									<label for='forumname' class='col-sm-3 control-label'>Forum Name</label>
+									<div class='col-sm-9'>
+										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='forumname' name='forumname' tabindex='2'>
+									</div>
+								</div>
+
+								<div class='form-group battlelog-group'>
+									<label for='battlelog' class='col-sm-3 control-label'>Battlelog Name</label>
+									<div class='col-sm-9'>
+										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='battlelog' name='battlelog' tabindex='3'>
+									</div>
+								</div>
+
+								<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
+									<label for='platoon' class='col-sm-3 control-label'>Platoon</label>
+									<div class='col-sm-9'>
+										<select name='platoon' id='platoon' class='form-control'>
+											<?php foreach($platoons as $platoon) : ?>
+												<option value='<?php echo $platoon->id ?>'><?php echo $platoon->name ?></option>
+											<?php endforeach; ?> 
+										</select>
+									</div>
+								</div>
+
+								<div class='form-group squadldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
+									<label for='squadldr' class='col-sm-3 control-label'>Squad Leader</label>
+									<div class='col-sm-9'>
+										<select name='squadLdr' id='squadLdr' class='form-control'>
+											<?php foreach($squadLeaders as $squadLeader) : ?>
+												<option value='<?php echo $squadLeader->member_id ?>'><?php echo $squadLeader->forum_name . " - " . $squadLeader->platoon_name ?></option>
+											<?php endforeach; ?>
+											<option value='0' selected>None (Gen Pop)</option>
+
+										</select>
+									</div>
+								</div>
+
+								<div class='text-center message text-danger'></div>
+							</div>
+
+						</div>
+
+
+						<!-- // tab 3 - Recruiting thread status check -->
+
+
+						<div class='tab-pane' id='tab3'>
+							<div class='col-sm-6'>
+
+								<p class='margin-top-20'>Listed are the recruiting threads required for each of your division's members to read and understand. The status indicates whether or not your new recruit has made a post in each of those threads (checking last 5 pages of a thread ensures we don't miss a post).</p><p>Use the 'copy' button next to each link to copy the link to your clipboard, and be sure to take the time to explain each of these threads, hitting the high (important) notes. Ensure each thread is completed (and that they understand them), before continuing.</p>
+
+							</div>
+							<div class='col-sm-6 well'>
+
+								<div class='search-subject text-center'></div>
+								<div class='thread-results text-center'></div>
+
+							</div>
+						</div>
+
+
+						<!-- // tab 4 - Final steps with recruit -->
+
+
+						<div class='tab-pane' id='tab4'>
+
+							<p>Now, you are ready to finalize your new recruit and take care of the paperwork associated with each new recruit. <strong>Be sure to ask</strong> if there are any questions or concerns your recruit may have. You should also remind him/her that <strong>you will be their squad leader</strong> and can come to you if they have any issues in the relative future.</p><p>Your next steps should include:</p>
+							<ul>
+								<li>Having them adjust their forum (AOD Member Info) profile settings</li>
+								<li>Changing their name on Teamspeak <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></li>
+								<li>Accepting or inviting them into the BF4 platoon on Battlelog</li>
+								<li>Introducing them to the other members in the division</li>
+							</ul>
+
+						</div>
+
+
+						<!-- // tab 5 - forum integration actions -->
+
+
+						<div class='tab-pane' id='tab5'>
+
+							<div class='col-md-12'>
+
+								<div role='tabpanel'>
+
+									<ul class='nav nav-tabs' role='tablist'>
+										<li role='presentation' class='active'><a href='#division-post' aria-controls='division-post' role='tab' data-toggle='tab'><span class='badge'>1</span> Post to division structure</a></li>
+										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>2</span> Post Welcome thread</a></li>
+										<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>3</span> Send Welcome PM</a></li>
+										<li role='presentation'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>4</span> Request new member status</a></li>
+									</ul>
+
+									<div class='tab-content'>
+										<div role='tabpanel' class='tab-pane active' id='division-post'>
+											<div class='row margin-top-20'>
+
+												<div class='col-md-6'>
+													<p>A division structure post needs to be made so that your new recruit can be added to the forum thread in addition to being tracked here. The box to the right shows what your division structure post should look like, including the information you have provided.</p>
+													<p>Click the copy button to copy the contents of the box to your clipboard. Then follow the division structure link to make your post.</p>
+													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/showthread.php?t=<?php echo $division->division_structure_thread ?>' class='text-center'><button type='button' class='btn btn-primary'>Open Division Structure</button></a></p>
+												</div>
+
+												<div class='col-md-6'>
+													<div class='well code'>
+														<button type='button' class='division-code-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
+														<code class='post-code'></code>
+													</div>
+												</div>
+
+											</div>
+										</div>
+
+
+										<div role='tabpanel' class='tab-pane' id='welcome-post'>
+											<div class='row margin-top-20'>
+												<div class='col-md-12'>
+													<p>A welcome thread is created for each new recruit. It serves multiple purposes: It makes the recruit feel welcome. This is very important., It gives everyone a chance to know who is new in the division, which includes people from other divisions and even the leadership. and lastly, if you do nothing else on our forums, say hi to the new members.</p>
+
+													<p>It also wouldn't hurt to let your new recruit know you made a new post for them, so they can introduce themselves to everyone.</p>
+
+													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/newthread.php?do=newthread&f=<?php echo $division->welcome_forum ?>' class='text-center'><button type='button' class='btn btn-primary'>Create welcome thread</button></a></p>
+												</div>
+
+											</div>
+										</div>
+
+										<div role='tabpanel' class='tab-pane' id='welcome-pm'>
+											<div class='row margin-top-20'>
+												<div class='col-md-6'>
+													<p>In addition to your discussion with your new recruit, it's always a good idea to recap. For this reason, we like to send follow-up PMs to our new members summarizing what we went over in case they have any questions. It's also a good way to start a conversation with them on the forums, and generally a good way to close things up.</p>
+													<p>Click the copy button to copy the contents of the box to your clipboard. Then follow the link to send a PM to your recruit.</p>
+													<p class='margin-top-20'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u=' class='text-center pm-link'><button type='button' class='btn btn-primary'>Send Forum PM</button></a></p>
+												</div>
+
+												<div class='col-md-6'>
+													<div class='well code'>
+														<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
+														<code class='welcome-code'></code>
+													</div>
+												</div>
+
+											</div>
+										</div>
+
+
+										<div role='tabpanel' class='tab-pane' id='member-request'>
+											<div class='row margin-top-20'>
+												<div class='col-md-8'>
+													<p>Finally, a request must be made so your new recruit can be set as an AOD member on the forums, and be able to see all the hidden content specifically for our division.</p>
+													<p>You will need to copy the member id to the right, and use it in the form that appears using the button below.</p>
+													<p>Keep in mind that you do not have to enter a name into the member status request if their name doesn't need to change. You need only enter the member id.</p>
+													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/misc.php?do=form&fid=39' class='text-center' target='_blank'><button type='button' class='btn btn-primary'>Submit Request</button></a></p>
+												</div>
+												<div class='col-md-4 well'>
+													<p><strong>Forum User ID</strong>:</p>
+													<button type='button' class='member-status-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button>
+													<code class='final_member_id'></code>
+												</div>
+
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- // tab 6 - completion -->
+
+
+						<div class='tab-pane text-center' id='tab6'>
+							<div class='alert alert-success'><i class='fa fa-check'></i> You have successfully completed <span class='player-name'>NaN</span>'s recruiting process! </div><p><strong>Don't forget to mark your recruit's division application \"
+							completed\" if they submitted one <a href='http://www.clanaod.net/forums/forumdisplay.php?f=457'>in the forums</a></strong>.</p><a href='/' class='btn btn-info'>Go back home</a>
+						</div>
+
+					</div>	
+				</form>
+			</div>
+
+
+			<div class='panel-footer'>
+				<ul class='pager wizard'>
+					<li class='btn btn-default previous first' style='display:none;'>First</li>
+					<li class='btn btn-primary pull-left previous'> <i class="fa fa-arrow-left"></i> Previous</li>
+					<li class='btn btn-default next last' style='display:none;'>Last</li>
+
+					<li class='btn btn-primary pull-right next'>Continue <i class="fa fa-arrow-right"></i></li>
+
+				</ul>
+			</div>
+
+		</div><!-- end panel -->
+	</div><!-- end root wizard -->
+</div><!-- end container -->

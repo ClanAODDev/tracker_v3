@@ -22,15 +22,16 @@ class MemberController {
 		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
 		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
 		$allGames = Activity::findAllGames($memberInfo->member_id);
-		$pctAod = $countAODGames * 100 / $countTotalGames;
+		$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
 
 		if ($platoonInfo->id != 0) {
 			$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
 			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 		}
 
+		Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
+		Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
 		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'content');
-
 		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 		
 	}
@@ -40,7 +41,8 @@ class MemberController {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::profileData($_POST['member_id']);
 		$platoons = Platoon::find_all($member->game_id);
-		$squadleadersArray = Platoon::SquadLeaders($member->game_id);
+		$platoon_id = (($user->role >= 2) && (!User::isDev($user->id))) ? $member->platoon_id : false; 
+		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
 
 		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
@@ -69,7 +71,7 @@ class MemberController {
 				$result = Member::modify($params);
 				$data = array('success' => true, 'message' => "Member information updated!");
 			} else {
-				$data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => false);
+				$data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => true);
 			}
 
 		} else {
@@ -79,6 +81,24 @@ class MemberController {
 		// print out a pretty response
 		echo(json_encode($data));
 	}
+
+	public static function _doValidateMember() {
+		// attempt to fetch battlelog id from bf stats (bf4 or hardline)
+		// $battlelogId = Member::getBattlelogId($_POST['battlelog_name']);
+		
+		if (Member::exists($_POST['member_id'])) {
+			$data = array('success' => false, 'message' => 'A member already exists with that member id', 'memberExists' => true);
+			// } else if ($battlelogId['error']) {
+			// $data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => true);
+		} else { //, 'battlelog_id' => $battlelogId
+			$data = array('success' => true);
+		}
+
+		echo(json_encode($data));
+	}
+
+	public static function _doAddMember() {}
+
 
 	public static function _modify() {}
 	public static function _delete() {}
