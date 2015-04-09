@@ -135,11 +135,6 @@ class Member extends Application {
 		if (isset($id)): return $id; else: return false; endif;
 	}
 
-	/**
-	 * fetch battlelog persona id (bf4, bfh)
-	 * @param  string $battlelogName player's battlelog / ingame name
-	 * @return array                 error code, id if successful, error message if failed
-	 */
 	public static function getBattlelogId($battlelogName) {
 		// check for bf4 entry
 		$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
@@ -163,6 +158,54 @@ class Member extends Application {
 			$result = array('error' => false, 'id' => $personaId);
 		}
 		return $result;
+	}
+
+	function download_bl_reports($personaId) {
+
+		$agent = random_user_agent();
+
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"Accept-language: en\r\n" .
+				"Cookie: foo=bar\r\n" .
+				"User-Agent: {$agent}\r\n"
+				)
+			);
+
+		$context = stream_context_create($options);
+
+    	// http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/302422941/2048/1/
+		$url = "http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/{$personaId}/2048/1/";
+		$json = file_get_contents($url, false, $context);
+		$data = json_decode($json);
+
+		$reports = $data->data->gameReports;
+
+		return $reports;
+	}
+
+	function parse_battlelog_reports($personaId) {
+
+		$reports = download_bl_reports($personaId);
+
+		$monthAgo = strtotime('-30 days'); 
+		$arrayReports = array();
+		$i = 1;
+
+		foreach ($reports as $report) {
+			$unix_date = $report->createdAt;
+			$date = DateTime::createFromFormat('U', $unix_date)->format('M d');
+
+			$arrayReports[$i]['reportId'] = $report->gameReportId;
+			$arrayReports[$i]['serverName'] = $report->name;
+			$arrayReports[$i]['map'] = $report->map;
+			$arrayReports[$i]['date'] = $date;
+
+			$i++;
+		}
+
+		return $arrayReports;
 	}
 
 }
