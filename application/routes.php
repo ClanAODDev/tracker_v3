@@ -39,6 +39,11 @@ if (empty($_SESSION['userid'])) {
 	// GETs
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
 
+
+	// crontab
+	Flight::route('/update/bf4-server-activity', array('CrontabController', '_doBf4Update'));
+	Flight::route('/update/bfh-server-activity', array('CrontabController', '_doBfhUpdate'));
+
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
 

@@ -160,9 +160,9 @@ class Member extends Application {
 		return $result;
 	}
 
-	function download_bl_reports($personaId) {
+	function download_bl_reports($personaId, $game) {
 
-		$agent = random_user_agent();
+		$agent = random_uagent();
 
 		$options = array(
 			'http'=>array(
@@ -175,8 +175,14 @@ class Member extends Application {
 
 		$context = stream_context_create($options);
 
-    	// http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/302422941/2048/1/
-		$url = "http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/{$personaId}/2048/1/";
+    	switch ($game) {
+    		case 'bf4':
+    		$url = "http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/{$personaId}/2048/1/";
+    		break;
+    		case 'bfh':
+    		$url = "http://battlelog.battlefield.com/bfh/warsawbattlereportspopulate/{$personaId}/8192/1/";
+    	}
+
 		$json = file_get_contents($url, false, $context);
 		$data = json_decode($json);
 
@@ -185,9 +191,9 @@ class Member extends Application {
 		return $reports;
 	}
 
-	function parse_battlelog_reports($personaId) {
+	function parse_battlelog_reports($personaId, $game) {
 
-		$reports = download_bl_reports($personaId);
+		$reports = self::download_bl_reports($personaId, $game);
 
 		$monthAgo = strtotime('-30 days'); 
 		$arrayReports = array();
