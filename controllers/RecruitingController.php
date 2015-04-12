@@ -27,10 +27,14 @@ class RecruitingController {
 	}
 
 	public static function _doDivisionThreadCheck() {
-		$player = trim($_POST['player']);
-		$member = Member::find($_SESSION['username']);
-		$gameThreads = DivisionThread::find_all($member->game_id);
-		Flight::render('recruiting/thread_check', array('js' => 'check_threads', 'gameThreads' => $gameThreads, 'player' => $player));
+		if (!empty($_POST['player'])) {
+			$player = trim($_POST['player']);
+			$member = Member::find($_SESSION['username']);
+			$gameThreads = DivisionThread::find_all($member->game_id);
+			Flight::render('recruiting/thread_check', array('js' => 'check_threads', 'gameThreads' => $gameThreads, 'player' => $player));
+		} else {
+			echo "<span class='text-muted'>A valid player was not provided!</span>";
+		}
 	} 
 
 }

@@ -15,15 +15,15 @@
 
 		<!-- necessary for step functionality -->
 
-		<div class='navbar guide-nav centered-pills' style='display: <?php echo (User::isDev($user->id)) ? block : none; ?>'>
+		<div class='navbar guide-nav centered-pills' style='display: <?php echo (User::isDev($user->id)) ? "block" : "none"; ?>'>
 			<div class='navbar-inner'>
 				<ul>
 					<li class='slide1'><a href='#tab1' data-toggle='tab'>Recruit Introduction</a></li>
 					<li class='slide2'><a href='#tab2' data-toggle='tab'>Add Member Information</a></li>
 					<li class='slide3'><a href='#tab3' data-toggle='tab'>Recruit Thread Completion</a></li>
-					<li class='slide4'><a href='#tab4' data-toggle='tab'>Final Steps</a></li>
+					<li class='slide4'><a href='#tab4' data-toggle='tab'>Finish with Recruit</a></li>
 					<li class='slide5'><a href='#tab5' data-toggle='tab'>Dreaded Paperwork</a></li>
-					<li class='slide6'><a href='#tab6' data-toggle='tab'>Complete</a></li>
+					<li class='slide6'><a href='#tab6' data-toggle='tab'>Add to division</a></li>
 				</ul>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
 
 							<div class='col-sm-6'>
 								<p class='margin-top-20'>Does your new recruit have a forum account? They will need one for you to complete this section. Please fill out and check the form completely for accuracy once this has been done. </p>
-								<p class='text-warning'><strong>Battlelog name will be validated during this step. Your screen may freeze temporarily while this is done. Do not close the window.</strong></p>
+								<p class='text-warning'><strong>Be certain the Battlelog name is correct. If it is not valid, server activity will not be available for your new recruit.</strong></p>
 							</div>
 							<div class='col-sm-6 well'>
 								<div class='form-group memberid-group'>
@@ -141,7 +141,7 @@
 						<div class='tab-pane' id='tab3'>
 							<div class='col-sm-6'>
 
-								<p class='margin-top-20'>Listed are the recruiting threads required for each of your division's members to read and understand. The status indicates whether or not your new recruit has made a post in each of those threads (checking last 5 pages of a thread ensures we don't miss a post).</p><p>Use the 'copy' button next to each link to copy the link to your clipboard, and be sure to take the time to explain each of these threads, hitting the high (important) notes. Ensure each thread is completed (and that they understand them), before continuing.</p>
+								<p class='margin-top-20'>Listed are the recruiting threads required for each of your division's members to read and respond to. The status indicates whether or not your new recruit has made a post in each of those threads (<em>checking last 5 pages of a thread ensures we don't miss a post</em>).</p><p>Use the 'copy' button next to each link to copy the link to your clipboard, and be sure to take the time to explain each of these threads, hitting the high (important) notes. Ensure each thread is completed (and that they understand them), before continuing.</p>
 
 							</div>
 							<div class='col-sm-6 well'>
@@ -265,9 +265,12 @@
 						<!-- // tab 6 - completion -->
 
 
-						<div class='tab-pane text-center' id='tab6'>
-							<div class='alert alert-success'><i class='fa fa-check'></i> You have successfully completed <span class='player-name'>NaN</span>'s recruiting process! </div><p><strong>Don't forget to mark your recruit's division application \"
-							completed\" if they submitted one <a href='http://www.clanaod.net/forums/forumdisplay.php?f=457'>in the forums</a></strong>.</p><a href='/' class='btn btn-info'>Go back home</a>
+						<div class='tab-pane' id='tab6'>
+							<p>If you have successfully completed all steps of the recruitment process, you are now ready to add the new recruit to the division. Click the button below to submit the new member's information.</p>
+							<p>Keep in mind that new members will appear as "pending" until their membership status in AOD is approved by a MSgt or above. This generally takes around 24 hours or less. New members will also not have any recent server actvity information. After a few days, this information will have had time to update in the tracker.</p>
+							<p class="text-center margin-top-50">
+								<button class="btn btn-success btn-lg" id="storePlayer"><i class="fa fa-user-plus fa-lg"></i> Add member to division</button>
+							</p>
 						</div>
 
 					</div>	

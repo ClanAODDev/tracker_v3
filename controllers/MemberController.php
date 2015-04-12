@@ -83,21 +83,20 @@ class MemberController {
 	}
 
 	public static function _doValidateMember() {
-		// attempt to fetch battlelog id from bf stats (bf4 or hardline)
-		// $battlelogId = Member::getBattlelogId($_POST['battlelog_name']);
-		
+
 		if (Member::exists($_POST['member_id'])) {
-			$data = array('success' => false, 'message' => 'A member already exists with that member id', 'memberExists' => true);
-			// } else if ($battlelogId['error']) {
-			// $data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => true);
-		} else { //, 'battlelog_id' => $battlelogId
+			$data = array('success' => false, 'message' => 'A division member already exists with that member id', 'memberExists' => true);
+		} else {
 			$data = array('success' => true);
 		}
-
 		echo(json_encode($data));
 	}
 
-	public static function _doAddMember() {}
+
+
+	public static function _doAddMember() {
+		$params = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'platoon_id'=>$_POST['platoon'], 'squad_leader_id'=>$_POST['squad_leader'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game']);
+	}
 
 
 	public static function _modify() {}

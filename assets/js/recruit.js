@@ -16,6 +16,12 @@ $(function() {
 
             if (index == 2) {
 
+                var forumName = $('#forumname').val(),
+                    battlelog = $('#battlelog').val(),
+                    platoon = $('#platoon').val(),
+                    squadLdr = $('#squadLdr').val(),
+                    member_id = $('#member_id').val();
+
                 $(".progress-bar").attr("class", "bar progress-bar progress-bar-striped progress-bar-warning active");
 
                 // Validate fields
@@ -31,17 +37,9 @@ $(function() {
                     return false;
                 }
 
-                $(".message").html("<img src='assets/images/loading_2.gif' /> " + "Validating member data. Please wait...").show();
-
-                // grab values since we know they exist
-                var forumName = $('#forumname').val(),
-                    battlelog = $('#battlelog').val(),
-                    platoon = $('#platoon').val(),
-                    squadLdr = $('#squadLdr').val(),
-                    member_id = $('#member_id').val();
 
                 if (/\D/.test(member_id)) {
-                    $(".message").html("<i class='fa fa-times'></i> Member id must be a number.").effect("bounce");
+                    $(".message").html("<i class='fa fa-times'></i> Forum member id must be a number.").effect("bounce");
                     return false;
                 }
 
@@ -59,43 +57,34 @@ $(function() {
 
                 // post member data to db
                 var flag = 0;
-                if (!confirm("Battlelog name will now be validated. Are you sure you wish to proceed?\r\nScreen may temporarily freeze!")) {
-                    return false;
-                } else {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'do/validate-member',
-                        data: {
-                            // forum_name: forumName,
-                            battlelog_name: battlelog,
-                            member_id: member_id,
-                            // platoon_id: platoon,
-                            // squad_leader_id: squadLdr
-                        },
-                        dataType: 'json',
-                        async: false,
-                        success: function(response) {
-                            if (response.success === false) {
-                                flag = 0;
-                                message = response.message;
-                                if (response.battlelog === true) {
-                                    $(".battlelog-group").addClass('has-error');
-                                } else if (response.memberExists === true) {
-                                    $(".memberid-group").addClass('has-error');
-                                }
-                            } else {
-                                flag = 1;
+                $.ajax({
+                    type: 'POST',
+                    url: 'do/validate-member',
+                    data: {
+                        member_id: member_id
+                    },
+                    dataType: 'json',
+                    async: false,
+                    success: function(response) {
+                        if (response.success === false) {
+                            flag = 0;
+                            message = response.message;
+                            if (response.memberExists === true) {
+                                $(".memberid-group").addClass('has-error');
                             }
+                        } else {
+                            flag = 1;
                         }
-                    });
-                }
+                    }
+                });
+
 
                 // have to declare a flag so it's not undefined...
                 if (flag == 0) {
                     $(".message").html("<i class='fa fa-times'></i> " + message).effect('bounce');
                     return false;
                 } else {
-                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Recruit data has been validated and a battlelog ID was retrieved!</div>").delay(3000).fadeOut();
+                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Recruit data has been validated!</div>").delay(3000).fadeOut();
                     return true;
                 }
 
@@ -144,7 +133,7 @@ $(function() {
                     $(".tab-title strong").html("\"Dreaded Paperwork\"")
                     break;
                 case 5:
-                    $(".tab-title strong").html("Recruitment Complete")
+                    $(".tab-title strong").html("Add New Recruit to Division")
                     break;
             }
 
@@ -155,6 +144,20 @@ $(function() {
                 width: $percent + '%'
             });
         }
+    });
+
+    $("#storePlayer").click(function(event) {
+
+        event.preventDefault();
+
+        // grab values since we know they exist
+        var forum_name = $('#forumname').val(),
+            battlelog_name = $('#battlelog').val(),
+            platoon = $('#platoon').val(),
+            squad_leader = $('#squadLdr').val(),
+            member_id = $('#member_id').val();
+
+        alert(forum_name + battlelog_name + platoon + squad_leader + member_id);
     });
 });
 
@@ -231,5 +234,35 @@ function loadThreadCheck() {
         });
 
 
+    });
+}
+
+
+
+function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game) {
+    $.ajax({
+        type: 'POST',
+        url: 'do/store-member',
+        data: {
+            member_id: member_id,
+            forum_name: forum_name,
+            platoon_id: platoon,
+            squad_leader_id: squad_leader,
+            battlelog_name: battlelog_name,
+            game_id: game
+        },
+        dataType: 'json',
+        async: false,
+        success: function(response) {
+            if (response.success === false) {
+                message = response.message;
+                if (response.memberExists === true) {
+                    $(".memberid-group").addClass('has-error');
+                }
+            } else {
+                flag = 1;
+                // success
+            }
+        }
     });
 }
