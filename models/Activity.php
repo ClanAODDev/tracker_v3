@@ -7,9 +7,12 @@ class Activity extends Application {
 	public $server;
 	public $datetime;
 	public $hash;
+	public $game;
+	public $map_name;
+	public $report_id;
 
 	static $table = 'activity';
-	static $id_field = 'member_id';
+	static $id_field = 'id';
 	static $name_field = 'server';
 
 	public static function findAllGames($member_id, $limit=MAX_GAMES_ON_PROFILE) {
@@ -21,6 +24,20 @@ class Activity extends Application {
 		$sql = "SELECT count(*) as count FROM activity WHERE member_id = {$member_id} AND datetime between '{$bdate}' AND '{$edate}'";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
+	}
+
+	public static function newActivity($reports, $game, $member_id, $id) {
+		foreach ($reports as $report) {
+			$activity = new self();
+			$activity->member_id = $member_id;
+			$activity->server = $report->serverName;
+			$activity->datetime = $report->date;
+			$activity->map_name = $report->map;
+			$activity->hash = hash("sha256", $member_id.$report->date);
+			$activity->game = $game;
+			$activity->report_id = $report->reportId;
+			Flight::aod()->save($activity);
+		}
 	}
 
 	public static function countPlayerAODGames($member_id, $bdate, $edate) {

@@ -18,4 +18,14 @@ class Crontab extends Application {
 		return (object) self::find($name);
 	}
 
+	public static function modify($params) {
+
+		$crontab = new self();
+		foreach ($params as $key=>$value) {
+			$crontab->$key = $value;
+		}
+
+		$crontab->update($params);
+	}
+
 }

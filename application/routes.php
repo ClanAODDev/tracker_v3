@@ -12,6 +12,10 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 
+	// crontab
+	Flight::route('/update/bf4-server-activity', array('CrontabController', '_doBf4Update'));
+	Flight::route('/update/bfh-server-activity', array('CrontabController', '_doBfhUpdate'));
+
 } else {
 
 	// user views
@@ -40,9 +44,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
 
 
-	// crontab
-	Flight::route('/update/bf4-server-activity', array('CrontabController', '_doBf4Update'));
-	Flight::route('/update/bfh-server-activity', array('CrontabController', '_doBfhUpdate'));
+
 
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));

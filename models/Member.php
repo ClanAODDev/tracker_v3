@@ -19,6 +19,7 @@ class Member extends Application {
 	public $last_forum_post;
 	public $forum_posts;
 	public $recruiter;
+	public $games;
 
 	static $table = 'member';
 	static $id_field = 'id';
@@ -160,7 +161,7 @@ class Member extends Application {
 		return $result;
 	}
 
-	function download_bl_reports($personaId, $game) {
+	public static function download_bl_reports($personaId, $game) {
 
 		$agent = random_uagent();
 
@@ -175,13 +176,13 @@ class Member extends Application {
 
 		$context = stream_context_create($options);
 
-    	switch ($game) {
-    		case 'bf4':
-    		$url = "http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/{$personaId}/2048/1/";
-    		break;
-    		case 'bfh':
-    		$url = "http://battlelog.battlefield.com/bfh/warsawbattlereportspopulate/{$personaId}/8192/1/";
-    	}
+		switch ($game) {
+			case 'bf4':
+			$url = "http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/{$personaId}/2048/1/";
+			break;
+			case 'bfh':
+			$url = "http://battlelog.battlefield.com/bfh/warsawbattlereportspopulate/{$personaId}/8192/1/";
+		}
 
 		$json = file_get_contents($url, false, $context);
 		$data = json_decode($json);
@@ -191,24 +192,24 @@ class Member extends Application {
 		return $reports;
 	}
 
-	function parse_battlelog_reports($personaId, $game) {
+	public static function parse_battlelog_reports($personaId, $game) {
 
 		$reports = self::download_bl_reports($personaId, $game);
-
-		$monthAgo = strtotime('-30 days'); 
 		$arrayReports = array();
 		$i = 1;
 
-		foreach ($reports as $report) {
-			$unix_date = $report->createdAt;
-			$date = DateTime::createFromFormat('U', $unix_date)->format('M d');
-
-			$arrayReports[$i]['reportId'] = $report->gameReportId;
-			$arrayReports[$i]['serverName'] = $report->name;
-			$arrayReports[$i]['map'] = $report->map;
-			$arrayReports[$i]['date'] = $date;
-
-			$i++;
+		if (!is_null(($reports))) {
+			foreach ($reports as $report) {
+				$unix_date = $report->createdAt;
+				$date = DateTime::createFromFormat('U', $unix_date)->format('Y-m-d H:i:s');
+				if ( strtotime($date) > strtotime('-90 days') ) {
+					$arrayReports[$i]['reportId'] = $report->gameReportId;
+					$arrayReports[$i]['serverName'] = $report->name;
+					$arrayReports[$i]['map'] = $report->map;
+					$arrayReports[$i]['date'] = $date;
+					$i++;
+				}
+			}
 		}
 
 		return $arrayReports;

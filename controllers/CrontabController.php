@@ -15,17 +15,17 @@ class CrontabController {
 	 * @return null
 	 */
 	public static function _doBf4Update() {
-
 		$next_player = Crontab::find("bf4_next_player")->value;
 		$sql = "SELECT member_id, battlelog_id FROM member WHERE id = {$next_player} AND status_id = 1";
 		$params = Flight::aod()->sql($sql)->one();
 		if (empty($params)) {
-			echo "No member with this ID: {$next_player}\n";
+			Crontab::modify(array("id" => 1, "value" => $next_player+1));
+			self::_doBf4Update();
 		} else {
-			var_dump(Member::parse_battlelog_reports($params['battlelog_id'], 'bf4'));
+			$reports = Member::parse_battlelog_reports($params['battlelog_id'], 'bf4');
+			Activity::newActivity(arrayToObject($reports), "bf4", $params['member_id'], $next_player);
+			Crontab::modify(array("id" => 1, "value" => $next_player+1));
 		}
-
-		
 	}
 
 	/**
@@ -33,16 +33,17 @@ class CrontabController {
 	 * @return null 
 	 */
 	public static function _doBfhUpdate() {
-
 		$next_player = Crontab::find("bfh_next_player")->value;
 		$sql = "SELECT member_id, battlelog_id FROM member WHERE id = {$next_player} AND status_id = 1";
 		$params = Flight::aod()->sql($sql)->one();
 		if (empty($params)) {
-			echo "No member with this ID: {$next_player}\n";
+			Crontab::modify(array("id" => 2, "value" => $next_player+1));
+			self::_doBfhUpdate();
 		} else {
-			var_dump(Member::parse_battlelog_reports($params['battlelog_id'], 'bfh'));
+			$reports = Member::parse_battlelog_reports($params['battlelog_id'], 'bfh');
+			Activity::newActivity(arrayToObject($reports), "bfh", $params['member_id'], $next_player);
+			Crontab::modify(array("id" => 2, "value" => $next_player+1));
 		}
-
 	}
 
 	/**
@@ -52,7 +53,7 @@ class CrontabController {
 	 */
 	public static function _doBattlelogIdUpdate() {
 
-		$next_player = Crontab::find("battlelog_next_player")->value;
+		
 	}
-	
+
 }
