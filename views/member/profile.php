@@ -66,7 +66,7 @@
 						</tbody>
 					</table>
 				<?php else: ?>
-					<li class='list-group-item text-muted'>Either this player has no recorded games or the data sync has not yet stored any data for this player. It's also possible that this player only plays Battlefield:Hardline, which is not currently yet being synced.</li>
+					<li class='list-group-item text-muted'>No information currently available for this player.</li>
 				<?php endif; ?>
 			</div>
 
