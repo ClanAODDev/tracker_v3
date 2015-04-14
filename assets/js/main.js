@@ -81,6 +81,11 @@ $(function() {
         $(".viewPanel").modal();
     });
 
+    $("#removeMember").click(function(e) {
+        e.preventDefault();
+        windowOpener("http://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=" + $(this).parent().attr('data-member-id'), "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
+    });
+
 
     $(".divGenerator").click(function() {
         $(".viewPanel .viewer").load("/application/vendor/division-structure/index.php");
