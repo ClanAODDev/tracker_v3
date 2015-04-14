@@ -1,5 +1,5 @@
 window.onbeforeunload = function() {
-    return "You are in the recruitment process! Are you sure you want to refresh? You may lose any data entered.";
+    return "You are in the recruitment process! If you have not finished with your recruitment, you may lose your data if you leave the page.";
 }
 
 
@@ -248,11 +248,14 @@ function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_nam
         dataType: 'json',
         async: false,
         success: function(response) {
+            message = response.message;
             if (response.success === false) {
-                message = response.message;
                 $("#storePlayer").html("<i class='fa fa-times'></i> " + message).attr("class", "btn btn-danger");
             } else {
-                $("#storePlayer").html("Success!").attr("class", "btn btn-success");
+                $("#storePlayer").html("<i class='fa fa-check'></i> " + message).attr("class", "btn btn-success disabled").delay(1000).fadeOut();
+                $(".alert-box").attr("style", "display: block;").empty();
+                 $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> " + ucwords(forum_name) + " has been successfully added to the division!</div>").delay(3000).fadeOut();
+                 $("#storePlayer").after("<br /><br /><a href='./' class='btn btn-info'>Go Home</a>");
                 // success
             }
         }

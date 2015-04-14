@@ -124,22 +124,18 @@ class Member extends Application {
 	}
 
 	public static function create($params) {
-
 		$member = new self();
 		foreach ($params as $key=>$value) {
 			$member->$key = $value;
 		}
-
 		$member->save($params);
 	}
 
 	public static function modify($params) {
-
 		$member = new self();
 		foreach ($params as $key=>$value) {
 			$member->$key = $value;
 		}
-
 		$member->update($params);
 	}
 

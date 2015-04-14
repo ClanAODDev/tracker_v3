@@ -49,7 +49,6 @@ class MemberController {
 
 	}
 
-
 	public static function _doUpdateMember() {
 
 		$user = User::find($_SESSION['userid']);
@@ -91,12 +90,22 @@ class MemberController {
 			$data = array('success' => true);
 		}
 		echo(json_encode($data));
-
 	}
 
 	public static function _doAddMember() {
-		$params = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'platoon_id'=>$_POST['platoon_id'], 'squad_leader_id'=>$_POST['squad_leader_id'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id']);
-		$data = array('success' => false, 'message' => "Something went wrong.");
+
+		$user = User::find($_SESSION['userid']);
+		$member = Member::find($_SESSION['username']);
+
+		$params = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$_POST['squad_leader_id'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'bf4db_id'=>0, 'rank_id'=>1, 'battlelog_id'=>0);
+
+		$platoon_id = ($user->role >= 3 || User::isDev($user->id)) ? $_POST['platoon_id'] : $member->platoon_id;
+		$squad_leader_id = ($user->role >= 2 || User::isDev($user->id)) ? $_POST['squad_leader_id'] : $member->member_id;
+		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev($user->id)) ) ? 7 : 6;
+		$params = array_merge($params, array('platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id));
+
+		Member::create($params);
+		$data = array('success' => true, 'message' => "Member successfully added!");
 		echo(json_encode($data));
 	}
 
@@ -118,7 +127,28 @@ class MemberController {
 	}
 
 
-	public static function _modify() {}
-	public static function _delete() {}
+	// api stuff
+	
+	public static function _getMemberData($game) {
+		$membersQ = "SELECT battlelog_name, forum_name FROM member WHERE status_id = 1 AND game_id = {$game} ORDER BY forum_name ASC";
+		$ptmembersQ = "SELECT battlelog_name, forum_name FROM part_timers WHERE game_id = {$game} ORDER BY forum_name ASC";
+
+
+		$members = arrayToObject(Flight::aod()->sql($membersQ)->many());
+		$partTimers = arrayToObject(Flight::aod()->sql($ptmembersQ)->many());
+
+		$out = "<h1>Member list</h1><hr />";
+
+		foreach ($members as $member) {
+			$out .= "{$member->forum_name} - {$member->battlelog_name} <br />";
+		}
+
+		$out .= "<h1>Partimers list</h1><hr />";
+
+		foreach($partTimers as $member) {
+			$out .= "{$member->forum_name} - {$member->battlelog_name} <br />";
+		}
+		echo $out;
+	}
 
 }
