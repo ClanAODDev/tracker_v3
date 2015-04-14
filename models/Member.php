@@ -7,6 +7,7 @@ class Member extends Application {
 	public $member_id;
 	public $bf4db_id;
 	public $battlelog_id;	
+	public $battlelog_name;	
 	public $platoon_id;
 	public $rank_id;
 	public $position_id;
@@ -36,6 +37,10 @@ class Member extends Application {
 		} else {
 			return false;
 		}
+	}
+
+	public static function findAll($game_id) {
+		return self::find(array('game_id' => $game_id, 'status_id' => 1));
 	}
 
 	public static function search($name) {
@@ -95,6 +100,27 @@ class Member extends Application {
 		} else {
 			return false;
 		}
+	}
+
+	public static function findInactives($id, $type, $flagged=false) {
+		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, inactive_flagged.flagged_by, member.squad_leader_id, member.forum_posts, member.join_date FROM `member` LEFT JOIN `rank` ON member.rank_id = rank.id  LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND ";
+
+		switch ($type) {
+			case "sqd": $args = "member.squad_leader_id = {$id}"; break;
+			case "plt": $args = "member.platoon_id = {$id}"; break;
+			case "div": $args = "member.game_id = {$id}"; break;
+			default: $args = "member.game_id = {$id}"; break;
+		}
+
+		if ($flagged) {
+			$sql .= "(member.member_id IN (SELECT member_id FROM inactive_flagged)) AND ";
+			$sql .= $args . " ORDER BY inactive_flagged.flagged_by";
+		} else {
+			$sql .= "(member.member_id NOT IN (SELECT member_id FROM inactive_flagged)) AND ";
+			$sql .= $args . " ORDER BY member.last_activity ASC";
+		}
+
+		return Flight::aod()->sql($sql)->many();
 	}
 
 	public static function create($params) {

@@ -25,6 +25,9 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/recruiting', array('RecruitingController', '_index'));
 	Flight::route('/recruiting/new-member', array('RecruitingController', '_addNewMember'));
 
+	// manage
+	Flight::route('/manage/inactive-members', array('DivisionController', '_manage_inactives'));
+
 	// view
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
@@ -37,6 +40,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/update-member', array('MemberController', '_doUpdateMember'));
 	Flight::route('POST /do/validate-member', array('MemberController', '_doValidateMember'));
 	Flight::route('POST /do/add-member', array('MemberController', '_doAddMember'));
+	Flight::route('POST /do/update-flag', array('MemberController', '_doUpdateFlag'));
 
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
@@ -56,12 +60,10 @@ if (empty($_SESSION['userid'])) {
 	
 
 	// manage
-	Flight::route('/manage/inactive', array('DivisionController', '_manage_inactives'));
+	
 	Flight::route('/manage/division', array('DivisionController', '_manage_division'));
 	Flight::route('/manage/loas', array('DivisionController', '_manage_loas'));
 
-	// recruiting
-	
 
 	// admin
 	Flight::route('/admin', array('AdminController', '_show'));

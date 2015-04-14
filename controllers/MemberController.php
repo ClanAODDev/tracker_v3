@@ -49,6 +49,7 @@ class MemberController {
 
 	}
 
+
 	public static function _doUpdateMember() {
 
 		$user = User::find($_SESSION['userid']);
@@ -90,13 +91,29 @@ class MemberController {
 			$data = array('success' => true);
 		}
 		echo(json_encode($data));
+
 	}
-
-
 
 	public static function _doAddMember() {
 		$params = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'platoon_id'=>$_POST['platoon_id'], 'squad_leader_id'=>$_POST['squad_leader_id'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id']);
 		$data = array('success' => false, 'message' => "Something went wrong.");
+		echo(json_encode($data));
+	}
+
+	public static function _doUpdateFlag() {
+
+		$action = $_POST['action'];
+		$member_flagged = $_POST['id'];
+		$flagged_by = $_POST['member_id'];
+
+		if ($action == 1) {
+			InactiveFlagged::add($member_flagged, $flagged_by);
+			$data = array('success' => true, 'message' => 'Member {$member_flagged} flagged for removal.');
+		} else {
+			InactiveFlagged::remove($member_flagged);
+			$data = array('success' => true, 'message' => 'Member {$member_flagged} no longer flagged for removal.');
+		}
+
 		echo(json_encode($data));
 	}
 
