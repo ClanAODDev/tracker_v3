@@ -147,23 +147,19 @@ $(function() {
     });
 
     $("#storePlayer").click(function(event) {
-
         event.preventDefault();
-
-        // grab values since we know they exist
         var forum_name = $('#forumname').val(),
             battlelog_name = $('#battlelog').val(),
             platoon = $('#platoon').val(),
             squad_leader = $('#squadLdr').val(),
+            game = $('#game').val(),
             member_id = $('#member_id').val();
-
-        alert(forum_name + battlelog_name + platoon + squad_leader + member_id);
+        storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game);
     });
 });
 
 
 function loadThreadCheck() {
-
 
     // setting these here since we know we have them
     var player = $('#forumname').val(),
@@ -228,21 +224,19 @@ function loadThreadCheck() {
 
     .done(function(html) {
         $(".thread-results ").empty().prepend(html);
-
         $('.tool').powerTip({
             placement: 'n'
         });
-
-
     });
 }
 
-
-
 function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game) {
+
+    $("#storePlayer").html("Submitting player data...").attr("class", "btn btn-info disabled");
+
     $.ajax({
         type: 'POST',
-        url: 'do/store-member',
+        url: 'do/add-member',
         data: {
             member_id: member_id,
             forum_name: forum_name,
@@ -256,11 +250,9 @@ function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_nam
         success: function(response) {
             if (response.success === false) {
                 message = response.message;
-                if (response.memberExists === true) {
-                    $(".memberid-group").addClass('has-error');
-                }
+                $("#storePlayer").html("<i class='fa fa-user-times'></i> " + message).attr("class", "btn btn-danger");
             } else {
-                flag = 1;
+                $("#storePlayer").html("Success!").attr("class", "btn btn-success");
                 // success
             }
         }
