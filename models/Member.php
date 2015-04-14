@@ -7,6 +7,7 @@ class Member extends Application {
 	public $member_id;
 	public $bf4db_id;
 	public $battlelog_id;	
+	public $battlelog_name;	
 	public $platoon_id;
 	public $rank_id;
 	public $position_id;
@@ -19,6 +20,7 @@ class Member extends Application {
 	public $last_forum_post;
 	public $forum_posts;
 	public $recruiter;
+	public $games;
 
 	static $table = 'member';
 	static $id_field = 'id';
@@ -26,6 +28,19 @@ class Member extends Application {
 
 	public static function findByName($forum_name) {
 		return (object) self::find($forum_name);
+	}
+
+	public static function exists($member_id) {
+		$params = self::find(array('member_id' => $member_id));
+		if (count($params)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function findAll($game_id) {
+		return self::find(array('game_id' => $game_id, 'status_id' => 1));
 	}
 
 	public static function search($name) {
@@ -37,17 +52,17 @@ class Member extends Application {
 		return (object) self::find($userId);
 	}
 
-	public static function findByMemberId($memberId) {
-		return (object) Flight::aod()->sql("SELECT * FROM member WHERE `member_id`={$memberId}")->one();
+	public static function findByMemberId($member_id) {
+		return (object) self::find(array('member_id' => $member_id));
 	}
 
-	public static function profileData($memberId) {
+	public static function profileData($member_id) {
 		return (object) Flight::aod()->sql("SELECT member.id, rank.abbr as rank, position.desc as position, forum_name, member_id, battlelog_name, bf4db_id, rank_id, platoon_id, position_id, squad_leader_id, status_id, game_id, join_date, recruiter, last_forum_login, last_activity, member.game_id, last_forum_post, forum_posts, status.desc FROM member 
 			LEFT JOIN users ON users.username = member.forum_name 
 			LEFT JOIN games ON games.id = member.game_id
 			LEFT JOIN position ON position.id = member.position_id
 			LEFT JOIN rank ON rank.id = member.rank_id
-			LEFT JOIN status ON status.id = member.status_id WHERE member.member_id = {$memberId}")->one();
+			LEFT JOIN status ON status.id = member.status_id WHERE member.member_id = {$member_id}")->one();
 	}
 
 	public static function findForumName($member_id) {
@@ -55,9 +70,9 @@ class Member extends Application {
 		return $params['forum_name'];
 	}
 
-	public static function avatar($memberId, $type = "thumb")
+	public static function avatar($member_id, $type = "thumb")
 	{
-		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$memberId}";
+		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$member_id}";
 		$unknown   = "assets/images/blank_avatar.jpg";
 		list($width, $height) = getimagesize($forum_img);
 
@@ -69,21 +84,53 @@ class Member extends Application {
 
 	}
 
-	public static function isPending() {
-		return "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle'></i> This member is pending, and will not have any forum specific information until their member status has been approved.</div>";
+	public static function isOnLeave($member_id) {
+		$params = Flight::aod()->sql("SELECT * FROM loa WHERE `member_id`={$member_id}")->one();
+		if (count($params)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public static function isRemoved() {
-		return "<div class='alert alert-danger'><i class='fa fa-times-circle'></i> This remember is currently removed from the division and will not appear on the division structure until he is re-recruited and his member status is approved on the forums.</div>";
+	public static function isFlaggedForInactivity($member_id) {
+		$params = Flight::aod()->sql("SELECT * FROM inactive_flagged WHERE `member_id`={$member_id}")->one();
+		if (count($params)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public static function isOnLOA() {
-		return "<div class='alert alert-warning'><i class='fa fa-clock-o fa-lg'></i>  This player currently has a leave of absence in place.</div>";
+	public static function findInactives($id, $type, $flagged=false) {
+		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, inactive_flagged.flagged_by, member.squad_leader_id, member.forum_posts, member.join_date FROM `member` LEFT JOIN `rank` ON member.rank_id = rank.id  LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND ";
+
+		switch ($type) {
+			case "sqd": $args = "member.squad_leader_id = {$id}"; break;
+			case "plt": $args = "member.platoon_id = {$id}"; break;
+			case "div": $args = "member.game_id = {$id}"; break;
+			default: $args = "member.game_id = {$id}"; break;
+		}
+
+		if ($flagged) {
+			$sql .= "(member.member_id IN (SELECT member_id FROM inactive_flagged)) AND ";
+			$sql .= $args . " ORDER BY inactive_flagged.flagged_by";
+		} else {
+			$sql .= "(member.member_id NOT IN (SELECT member_id FROM inactive_flagged)) AND ";
+			$sql .= $args . " ORDER BY member.last_activity ASC";
+		}
+
+		return Flight::aod()->sql($sql)->many();
 	}
 
-	public static function isInactive($last_activity) {
-		$wng_last_activity = str_replace(" ago", "", formatTime($last_activity));
-		return "<div class='alert alert-warning'><i class='fa fa-exclamation-triangle'></i> Player has not logged into the forums in {$wng_last_activity}!</div>";
+	public static function create($params) {
+
+		$member = new self();
+		foreach ($params as $key=>$value) {
+			$member->$key = $value;
+		}
+
+		$member->save($params);
 	}
 
 	public static function modify($params) {
@@ -115,11 +162,6 @@ class Member extends Application {
 		if (isset($id)): return $id; else: return false; endif;
 	}
 
-	/**
-	 * fetch battlelog persona id (bf4, bfh)
-	 * @param  string $battlelogName player's battlelog / ingame name
-	 * @return array                 error code, id if successful, error message if failed
-	 */
 	public static function getBattlelogId($battlelogName) {
 		// check for bf4 entry
 		$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
@@ -143,6 +185,60 @@ class Member extends Application {
 			$result = array('error' => false, 'id' => $personaId);
 		}
 		return $result;
+	}
+
+	public static function download_bl_reports($personaId, $game) {
+
+		$agent = random_uagent();
+
+		$options = array(
+			'http'=>array(
+				'method'=>"GET",
+				'header'=>"Accept-language: en\r\n" .
+				"Cookie: foo=bar\r\n" .
+				"User-Agent: {$agent}\r\n"
+				)
+			);
+
+		$context = stream_context_create($options);
+
+		switch ($game) {
+			case 'bf4':
+			$url = "http://battlelog.battlefield.com/bf4/warsawbattlereportspopulate/{$personaId}/2048/1/";
+			break;
+			case 'bfh':
+			$url = "http://battlelog.battlefield.com/bfh/warsawbattlereportspopulate/{$personaId}/8192/1/";
+		}
+
+		$json = file_get_contents($url, false, $context);
+		$data = json_decode($json);
+
+		$reports = $data->data->gameReports;
+
+		return $reports;
+	}
+
+	public static function parse_battlelog_reports($personaId, $game) {
+
+		$reports = self::download_bl_reports($personaId, $game);
+		$arrayReports = array();
+		$i = 1;
+
+		if (!is_null(($reports))) {
+			foreach ($reports as $report) {
+				$unix_date = $report->createdAt;
+				$date = DateTime::createFromFormat('U', $unix_date)->format('Y-m-d H:i:s');
+				if ( strtotime($date) > strtotime('-90 days') ) {
+					$arrayReports[$i]['reportId'] = $report->gameReportId;
+					$arrayReports[$i]['serverName'] = $report->name;
+					$arrayReports[$i]['map'] = $report->map;
+					$arrayReports[$i]['date'] = $date;
+					$i++;
+				}
+			}
+		}
+
+		return $arrayReports;
 	}
 
 }

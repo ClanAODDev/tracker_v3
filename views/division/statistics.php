@@ -1,7 +1,7 @@
 <div class='row col-md-12 margin-top-50'>
 
 	<div class='page-header'>
-		<h3>Division Statistics</h3>
+		<h3><i class="fa fa-tachometer fa-lg"></i> Division Statistics</h3>
 	</div>
 </div>
 

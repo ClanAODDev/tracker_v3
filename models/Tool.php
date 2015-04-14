@@ -20,7 +20,7 @@ class Tool extends Application {
 	 * @return array     array of tools
 	 */
 	public static function find_all($role) {
-		return self::find(array("role_id <=" => $role, 'disabled' => 0));
+		return self::find(array("role_id <=" => $role));
 	}
 
 }

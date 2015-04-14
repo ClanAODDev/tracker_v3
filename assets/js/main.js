@@ -81,6 +81,13 @@ $(function() {
         $(".viewPanel").modal();
     });
 
+    $(".removeMember").click(function(e) {
+        e.preventDefault();
+        if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
+            windowOpener($(this).attr("href") + $(this).parent().attr('data-member-id'), "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
+        }
+    });
+
 
     $(".divGenerator").click(function() {
         $(".viewPanel .viewer").load("/application/vendor/division-structure/index.php");
@@ -144,7 +151,7 @@ $(function() {
     });
 
 
-    $('.fade-in').delay(1000).fadeIn('slow');
+    $('.fade-in').delay(1000).slideDown('swing');
 
     $('.count-animated').each(function() {
         var $this = $(this);

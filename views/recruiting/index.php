@@ -1,4 +1,4 @@
-<div class='container fade-in'>
+<div class='container'>
 	
 	<ul class='breadcrumb'>
 		<li><a href='./'>Home</a></li>

@@ -16,6 +16,12 @@ $(function() {
 
             if (index == 2) {
 
+                var forumName = $('#forumname').val(),
+                    battlelog = $('#battlelog').val(),
+                    platoon = $('#platoon').val(),
+                    squadLdr = $('#squadLdr').val(),
+                    member_id = $('#member_id').val();
+
                 $(".progress-bar").attr("class", "bar progress-bar progress-bar-striped progress-bar-warning active");
 
                 // Validate fields
@@ -31,15 +37,9 @@ $(function() {
                     return false;
                 }
 
-                // grab values since we know they exist
-                var forumName = $('#forumname').val(),
-                    battlelog = $('#battlelog').val(),
-                    platoon = $('#platoon').val(),
-                    squadLdr = $('#squadLdr').val(),
-                    member_id = $('#member_id').val();
 
                 if (/\D/.test(member_id)) {
-                    $(".message").html("<i class='fa fa-times'></i> Member id must be a number.").effect("bounce");
+                    $(".message").html("<i class='fa fa-times'></i> Forum member id must be a number.").effect("bounce");
                     return false;
                 }
 
@@ -57,17 +57,11 @@ $(function() {
 
                 // post member data to db
                 var flag = 0;
-                alert('Fetching BF4DB ID. Browser may freeze momentarily...');
-
                 $.ajax({
                     type: 'POST',
-                    url: '/application/ajax/store_member.php',
+                    url: 'do/validate-member',
                     data: {
-                        name: forumName,
-                        battlelog: battlelog,
-                        member_id: member_id,
-                        platoon: platoon,
-                        squadLdr: squadLdr
+                        member_id: member_id
                     },
                     dataType: 'json',
                     async: false,
@@ -75,9 +69,7 @@ $(function() {
                         if (response.success === false) {
                             flag = 0;
                             message = response.message;
-                            if (response.battlelog === true) {
-                                $(".battlelog-group").addClass('has-error');
-                            } else if (response.memberExists === true) {
+                            if (response.memberExists === true) {
                                 $(".memberid-group").addClass('has-error');
                             }
                         } else {
@@ -86,12 +78,13 @@ $(function() {
                     }
                 });
 
+
                 // have to declare a flag so it's not undefined...
                 if (flag == 0) {
                     $(".message").html("<i class='fa fa-times'></i> " + message).effect('bounce');
                     return false;
                 } else {
-                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Your new recruit has been added to the database!</div>").delay(2000).fadeOut();
+                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Recruit data has been validated!</div>").delay(3000).fadeOut();
                     return true;
                 }
 
@@ -140,7 +133,7 @@ $(function() {
                     $(".tab-title strong").html("\"Dreaded Paperwork\"")
                     break;
                 case 5:
-                    $(".tab-title strong").html("Recruitment Complete")
+                    $(".tab-title strong").html("Add New Recruit to Division")
                     break;
             }
 
@@ -152,11 +145,21 @@ $(function() {
             });
         }
     });
+
+    $("#storePlayer").click(function(event) {
+        event.preventDefault();
+        var forum_name = $('#forumname').val(),
+            battlelog_name = $('#battlelog').val(),
+            platoon = $('#platoon').val(),
+            squad_leader = $('#squadLdr').val(),
+            game = $('#game').val(),
+            member_id = $('#member_id').val();
+        storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game);
+    });
 });
 
 
 function loadThreadCheck() {
-
 
     // setting these here since we know we have them
     var player = $('#forumname').val(),
@@ -203,10 +206,11 @@ function loadThreadCheck() {
         $(".search-subject").html("<p class='text-muted'>Searching threads for posts by: <code>" + ucwords(player) + "</code></p>");
     }
 
-    $(".thread-results").html('<img src="/public/images/loading.gif " class="margin-top-20" />');
+    $(".thread-results").html('<img src="assets/images/loading.gif " class="margin-top-20" />');
 
     $.ajax({
-        url: "/application/ajax/recruit_thread_check.php",
+        url: "do/check-division-threads",
+        type: 'POST',
         data: {
             player: player,
             game: game
@@ -220,11 +224,37 @@ function loadThreadCheck() {
 
     .done(function(html) {
         $(".thread-results ").empty().prepend(html);
-
         $('.tool').powerTip({
             placement: 'n'
         });
+    });
+}
 
+function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game) {
 
+    $("#storePlayer").html("Submitting player data...").attr("class", "btn btn-info disabled");
+
+    $.ajax({
+        type: 'POST',
+        url: 'do/add-member',
+        data: {
+            member_id: member_id,
+            forum_name: forum_name,
+            platoon_id: platoon,
+            squad_leader_id: squad_leader,
+            battlelog_name: battlelog_name,
+            game_id: game
+        },
+        dataType: 'json',
+        async: false,
+        success: function(response) {
+            if (response.success === false) {
+                message = response.message;
+                $("#storePlayer").html("<i class='fa fa-times'></i> " + message).attr("class", "btn btn-danger");
+            } else {
+                $("#storePlayer").html("Success!").attr("class", "btn btn-success");
+                // success
+            }
+        }
     });
 }

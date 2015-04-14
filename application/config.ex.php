@@ -26,9 +26,13 @@ define('BATTLEREPORT', 'http://battlelog.battlefield.com/bf4/battlereport/show/1
 define('BF4DB', 'http://bf4db.com/players/');
 define('PRIVMSG', 'http://www.clanaod.net/forums/private.php?do=newpm&u=');
 define('EMAIL', 'http://www.clanaod.net/forums/sendmessage.php?do=mailmember&u=');
+define('REMOVE', 'http://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=');
 
 // defines for BF4 division activity status display
 define('PERCENTAGE_CUTOFF_GREEN', 75);
 define('PERCENTAGE_CUTOFF_AMBER', 50);
 define('INACTIVE_MIN', 0);
 define('INACTIVE_MAX', 25);
+
+// global settings
+define('MAX_GAMES_ON_PROFILE', 25);

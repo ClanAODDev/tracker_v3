@@ -53,33 +53,27 @@ $(function() {
 
             }
 
-
+            var member_id = $("#member_id").val();
 
             $.ajax({
 
                 type: 'POST',
-                url: '/application/ajax/update_flagged.php',
+                url: 'do/update-flag',
                 data: {
                     action: action,
-                    id: itemMoved
+                    id: itemMoved,
+                    member_id: member_id
                 },
 
                 dataType: 'json',
-
                 success: function(response) {
-
                     if (response.success === false) {
-
                         message = response.message;
                         $(".alert-box").stop().html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + message + "</div>").effect('highlight').delay(1000).fadeOut();
                     } else {
-
                         message = "Player " + itemMoved + context;
                         $(".alert-box").stop().html("<div class='alert alert-success'><i class='fa fa-check'></i> " + message + "</div>").effect('highlight').delay(1000).fadeOut();
                     }
-
-
-
                 },
 
                 // fail: function()

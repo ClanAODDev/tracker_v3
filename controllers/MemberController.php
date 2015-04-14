@@ -22,25 +22,16 @@ class MemberController {
 		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
 		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
 		$allGames = Activity::findAllGames($memberInfo->member_id);
-
-		// member alerts
-		if ($memberInfo->status_id == 999) {
-			$alerts = Member::isPending();
-		} else if ($memberInfo->status_id == 4) {
-			$alerts = Member::isRemoved();
-		}
-
-		if (strtotime($memberInfo->last_activity) < strtotime('-30 days')) {
-			$alerts .= Member::isInactive(strtotime($memberInfo->last_activity));
-		}
+		$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
 
 		if ($platoonInfo->id != 0) {
 			$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
 			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 		}
 
-		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'alerts' => $alerts, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames), 'content');
-
+		Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
+		Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
+		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'content');
 		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
 		
 	}
@@ -50,12 +41,14 @@ class MemberController {
 		$user = User::find($_SESSION['userid']);
 		$member = Member::profileData($_POST['member_id']);
 		$platoons = Platoon::find_all($member->game_id);
-		$squadleadersArray = Platoon::SquadLeaders($member->game_id);
+		$platoon_id = (($user->role >= 2) && (!User::isDev($user->id))) ? $member->platoon_id : false; 
+		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
 
 		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
 
 	}
+
 
 	public static function _doUpdateMember() {
 
@@ -79,7 +72,7 @@ class MemberController {
 				$result = Member::modify($params);
 				$data = array('success' => true, 'message' => "Member information updated!");
 			} else {
-				$data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => false);
+				$data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => true);
 			}
 
 		} else {
@@ -89,6 +82,41 @@ class MemberController {
 		// print out a pretty response
 		echo(json_encode($data));
 	}
+
+	public static function _doValidateMember() {
+
+		if (Member::exists($_POST['member_id'])) {
+			$data = array('success' => false, 'message' => 'A division member already exists with that member id', 'memberExists' => true);
+		} else {
+			$data = array('success' => true);
+		}
+		echo(json_encode($data));
+
+	}
+
+	public static function _doAddMember() {
+		$params = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'platoon_id'=>$_POST['platoon_id'], 'squad_leader_id'=>$_POST['squad_leader_id'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id']);
+		$data = array('success' => false, 'message' => "Something went wrong.");
+		echo(json_encode($data));
+	}
+
+	public static function _doUpdateFlag() {
+
+		$action = $_POST['action'];
+		$member_flagged = $_POST['id'];
+		$flagged_by = $_POST['member_id'];
+
+		if ($action == 1) {
+			InactiveFlagged::add($member_flagged, $flagged_by);
+			$data = array('success' => true, 'message' => 'Member {$member_flagged} flagged for removal.');
+		} else {
+			InactiveFlagged::remove($member_flagged);
+			$data = array('success' => true, 'message' => 'Member {$member_flagged} no longer flagged for removal.');
+		}
+
+		echo(json_encode($data));
+	}
+
 
 	public static function _modify() {}
 	public static function _delete() {}

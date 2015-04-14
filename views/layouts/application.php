@@ -158,7 +158,8 @@
 											<li class='divider'></li>
 										<?php endif; ?>
 										<?php foreach ($tools as $tool) : ?>
-											<li><a href="<?php echo $tool->tool_path ?>" class="<?php echo $tool->class ?>"><?php echo $tool->tool_name ?></a></li>
+											<?php $disabled = ($tool->disabled) ? "disabled" : null; ?>
+											<li><a href="<?php echo $tool->tool_path ?>" class="<?php echo $tool->class . " " . $disabled ?>"><?php echo $tool->tool_name ?></a></li>
 										<?php endforeach; ?>
 									</ul>
 								</li>
