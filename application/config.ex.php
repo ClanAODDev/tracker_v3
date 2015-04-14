@@ -26,6 +26,7 @@ define('BATTLEREPORT', 'http://battlelog.battlefield.com/bf4/battlereport/show/1
 define('BF4DB', 'http://bf4db.com/players/');
 define('PRIVMSG', 'http://www.clanaod.net/forums/private.php?do=newpm&u=');
 define('EMAIL', 'http://www.clanaod.net/forums/sendmessage.php?do=mailmember&u=');
+define('REMOVE', 'http://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=');
 
 // defines for BF4 division activity status display
 define('PERCENTAGE_CUTOFF_GREEN', 75);
