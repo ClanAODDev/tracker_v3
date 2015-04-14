@@ -81,9 +81,11 @@ $(function() {
         $(".viewPanel").modal();
     });
 
-    $("#removeMember").click(function(e) {
+    $(".removeMember").click(function(e) {
         e.preventDefault();
-        windowOpener("http://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=" + $(this).parent().attr('data-member-id'), "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
+        if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
+            windowOpener($(this).attr("href") + $(this).parent().attr('data-member-id'), "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
+        }
     });
 
 

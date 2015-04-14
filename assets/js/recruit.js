@@ -250,7 +250,7 @@ function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_nam
         success: function(response) {
             if (response.success === false) {
                 message = response.message;
-                $("#storePlayer").html("<i class='fa fa-user-times'></i> " + message).attr("class", "btn btn-danger");
+                $("#storePlayer").html("<i class='fa fa-times'></i> " + message).attr("class", "btn btn-danger");
             } else {
                 $("#storePlayer").html("Success!").attr("class", "btn btn-success");
                 // success
