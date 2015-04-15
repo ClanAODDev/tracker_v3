@@ -32,9 +32,13 @@
 							<div class='panel-heading'><i class='fa fa-trash-o fa-lg'></i> Members flagged for removal <span class='flagCount pull-right badge'><?php echo $flaggedCount ?></span></div>
 							<ul class='sortable striped-bg' id='flagged-inactives' style='overflow-y: auto; max-height: 193px;'>
 
-								<?php $flagged_copy = "[SIZE=3]Members flagged for removal ({$flaggedCount})[/SIZE]\r\n\r\n[list]"; ?>
+								<?php $flaggedCopy = "[SIZE=2]Members flagged for removal ({$flaggedCount})[/SIZE][hr][/hr][table=\"width: 500\"]"; ?>
+								<?php $flaggedCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][/tr]"; ?>
+
 								<?php foreach ($flagged as $player) : ?>
-									<?php $flagged_copy .= "[*]{$player->forum_name} - " . CLANAOD . "{$player->member_id} - " . BATTLELOG . "{$player->battlelog_name}"; ?>
+																		
+									<?php $flaggedCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][/tr]"; ?>
+									
 
 									<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
 										<div class='col-xs-1'><img src='assets/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
@@ -53,10 +57,10 @@
 									</li>
 
 								<?php endforeach; ?>
-								<?php $flagged_copy .= "[/list]"; ?>
+								<?php $flaggedCopy .= "[/table]"; ?>
 
 							</ul>
-							<div class='panel-footer clearfix'><button type='button' class='copy-button btn btn-default tool pull-right' title='Copy to clipboard' data-clipboard-text='<?php echo $flagged_copy ?>'><i class='fa fa-copy'></i> Copy player list</button>
+							<div class='panel-footer clearfix'><button type='button' class='copy-button btn btn-default tool pull-right' title='Copy to clipboard' data-clipboard-text='<?php echo $flaggedCopy ?>'><i class='fa fa-copy'></i> Copy player list</button>
 							</div>
 						</div>
 					</div>
@@ -83,8 +87,15 @@
 						<div class='panel-heading'><i class='fa fa-clock-o fa-lg'></i> Your inactive members <span class='inactiveCount pull-right badge'><?php echo $inactiveCount ?></span></div>
 						<ul class='sortable inactive-list striped-bg' id='inactives' style='overflow-y: auto; max-height: 193px;'>
 							<?php $inactive_ids = array(); ?>
+
+							<?php $inactiveCopy = "[SIZE=3]Inactive members ({$inactiveCount})[/SIZE][hr][/hr][table=\"width: 700\"]"; ?>
+								<?php $inactiveCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][td][b]Last Seen[/b][/td][td][b]Platoon[/b][/td][/tr]"; ?>
+
 							<?php foreach ($inactives as $player) : ?>
 								<?php $inactive_ids[] = $player->member_id; ?>
+
+								<?php $inactiveCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][td]" . formatTime(strtotime($player->last_activity)) . "[/td][td]" . ordSuffix($player->plt_number) . " Platoon[/td][/tr]"; ?>
+
 								<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
 									<div class='col-xs-1'><img src='/public/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
 									<div class='col-xs-2'><?php echo $player->rank ?> <?php echo $player->forum_name ?></div>
@@ -96,10 +107,12 @@
 
 							<?php endforeach; ?>
 
+							<?php $inactiveCopy .= "[/table]"; ?>
+
 							<?php $inactive_ids = implode("&u[]=", $inactive_ids); ?>
 
 						</ul>
-						<div class='panel-footer clearfix'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u[]=<?php echo $inactive_ids ?>' class='mass-pm-btn pull-right popup-link btn btn-default'><i class='fa fa-users'></i> Mass PM Players</a></div>
+						<div class='panel-footer clearfix'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u[]=<?php echo $inactive_ids ?>' class='mass-pm-btn pull-right popup-link btn btn-default'><i class='fa fa-users'></i> Mass PM Players</a> <button type='button' class='copy-button btn btn-default tool pull-right' title='Copy to clipboard' data-clipboard-text='<?php echo $inactiveCopy ?>'><i class='fa fa-copy'></i> Copy player list</button></div>
 					</div>
 				</div>
 			</div>

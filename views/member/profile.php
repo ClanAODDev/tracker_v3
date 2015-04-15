@@ -21,7 +21,7 @@
 					<button type='button' class='btn btn-info edit-member'><i class="fa fa-pencil fa-lg"></i> <span class="hidden-sm hidden-xs">Edit Profile</span></button>
 					<button type='button' class='btn btn-success'><i class="fa fa-user-plus fa-lg"></i> <span class="hidden-sm hidden-xs">Promote</span></button>
 					<?php if ($user->role >= 2 && $member->rank_id >= 9 && $memberInfo->status_id != 4) : ?>
-						<a href="# <?php echo REMOVE . $player->member_id ?>" title="Remove player from AOD" class='removeMember btn btn-danger'><i class='fa fa-trash fa-lg'></i> <span class="hidden-sm hidden-xs">Remove from AOD</span></a>
+						<a href="<?php echo REMOVE . $player->member_id ?>" title="Remove player from AOD" class='removeMember btn btn-danger'><i class='fa fa-trash fa-lg'></i> <span class="hidden-sm hidden-xs">Remove from AOD</span></a>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
