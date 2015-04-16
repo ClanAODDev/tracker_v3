@@ -52,8 +52,27 @@ class CrontabController {
 	 * @return string If a player cannot be found, an error log will generate
 	 */
 	public static function _doBattlelogIdUpdate() {
-
-		
+		$members = array();
+		$battlelog_names = objectToArray(Member::find(array('status_id' => 1, 'battlelog_name !%' => 0, 'battlelog_id' => 0)));
+		$countNames = count($battlelog_names);
+		echo "Fetched battlelog names. ({$countNames})<br /><br />";
+		foreach ($battlelog_names as $row) {
+			$battlelog_id = Member::getBattlelogId($row['battlelog_name']);
+			if (!$battlelog_id['error']) {
+				$sql = "UPDATE member SET battlelog_id = {$battlelog_id['id']} WHERE battlelog_name = '{$row['battlelog_name']}'";
+				Flight::aod()->sql($sql)->one();
+				echo "Added ID {$battlelog_id['id']} to {$row['battlelog_name']}<br />";
+			} else {
+				echo "ERROR: {$row['battlelog_name']} - {$battlelog_id['message']}<br />";
+			}
+		}
+		echo "done syncing battlelog ids.";
 	}
+
+	public static function _doArchUpdate($game) {
+		echo(ArchUpdater::run($game));
+	}
+
+
 
 }

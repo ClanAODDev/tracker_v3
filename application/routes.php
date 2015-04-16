@@ -15,8 +15,14 @@ if (empty($_SESSION['userid'])) {
 	// crontab
 	Flight::route('/update/bf4-server-activity', array('CrontabController', '_doBf4Update'));
 	Flight::route('/update/bfh-server-activity', array('CrontabController', '_doBfhUpdate'));
+	Flight::route('/update/battlelog-ids', array('CrontabController', '_doBattlelogIdUpdate'));
+	Flight::route('/update/@game/arch-sync', array('CrontabController', '_doArchUpdate'));
 
 } else {
+
+	// api stuff
+	Flight::route('/get/member-data/division/@game', array('MemberController', '_getMemberData'));
+	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
 
 	// user views
 	Flight::route('/', array('ApplicationController', '_index'));
@@ -45,7 +51,7 @@ if (empty($_SESSION['userid'])) {
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
 
-	// GETs
+	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
 
 

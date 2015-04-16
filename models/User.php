@@ -65,7 +65,7 @@ class User extends Application {
 	}
 
 	public static function onlineList() {
-		$params = Flight::aod()->sql("SELECT member.id, member.member_id, username, last_seen, role, idle FROM users LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
+		$params = Flight::aod()->sql("SELECT member.id, member.member_id, users.username, users.last_seen, users.role, users.idle FROM users LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
 		return $params;
 	}
 

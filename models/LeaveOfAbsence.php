@@ -13,6 +13,10 @@ class LeaveOfAbsence extends Application {
 	static $table = 'loa';
 	static $id_field = 'member_id';
 
+	public static function findAll($game_id) {
+		return self::find(array('game_id' => $game_id));
+	}
+
 	/**
 	 * count number of expired leaves of absence
 	 * @param  int $gid user's division id (game_id)

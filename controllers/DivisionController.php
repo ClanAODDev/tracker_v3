@@ -40,7 +40,7 @@ class DivisionController {
 
 		$inactives = Member::findInactives($id, $type);
 		$inactiveCount = (count($inactives)) ? count($inactives) : 0;
-		
+
 		Flight::render('manage/inactive_members', array('member' => $member, 'user' => $user, 'inactives' => arrayToObject($inactives), 'flagged' => arrayToObject($flagged_inactives), 'flaggedCount' => $flaggedCount, 'inactiveCount' => $inactiveCount), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons, 'js' => 'manage'));
 
@@ -49,5 +49,11 @@ class DivisionController {
 	public static function _create() {}
 	public static function _modify() {}
 	public static function _delete() {}
+
+	public static function _generateDivisionStructure() {
+		$member = Member::find($_SESSION['username']);
+		$division_structure = DivisionStructure::generate($member);
+	    Flight::render('modals/division_structure', array('division_structure' => $division_structure));
+	}
 
 }

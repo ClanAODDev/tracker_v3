@@ -44,7 +44,7 @@ class Member extends Application {
 	}
 
 	public static function search($name) {
-		$params = Flight::aod()->sql("SELECT * FROM member WHERE `forum_name` LIKE '%{$name}%' ORDER BY member.rank_id DESC LIMIT 25")->many();
+		$params = Flight::aod()->sql("SELECT * FROM member LEFT JOIN rank ON member.rank_id = rank.id WHERE `forum_name` LIKE '%{$name}%' OR `battlelog_name` LIKE '%{$name}%' ORDER BY member.rank_id DESC LIMIT 25")->many();
 		return $params;
 	}
 
@@ -103,7 +103,7 @@ class Member extends Application {
 	}
 
 	public static function findInactives($id, $type, $flagged=false) {
-		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, inactive_flagged.flagged_by, member.squad_leader_id, member.forum_posts, member.join_date FROM `member` LEFT JOIN `rank` ON member.rank_id = rank.id  LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND ";
+		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, inactive_flagged.flagged_by, member.squad_leader_id, member.forum_posts, member.join_date, platoon.number as plt_number, platoon.name as plt_name FROM `member` LEFT JOIN `rank` ON member.rank_id = rank.id  LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id LEFT JOIN platoon on member.platoon_id = platoon.id WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND ";
 
 		switch ($type) {
 			case "sqd": $args = "member.squad_leader_id = {$id}"; break;
@@ -124,22 +124,18 @@ class Member extends Application {
 	}
 
 	public static function create($params) {
-
 		$member = new self();
 		foreach ($params as $key=>$value) {
 			$member->$key = $value;
 		}
-
 		$member->save($params);
 	}
 
 	public static function modify($params) {
-
 		$member = new self();
 		foreach ($params as $key=>$value) {
 			$member->$key = $value;
 		}
-
 		$member->update($params);
 	}
 

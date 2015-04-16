@@ -337,6 +337,7 @@ a[disabled] { pointer-events: none; }
   z-index: 1;
   overflow-x: hidden;
   max-height: 300px;
+  width: 190px;
 }
 
 .copy-link, .copy-button-rct, .copy-button {
