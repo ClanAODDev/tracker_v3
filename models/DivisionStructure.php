@@ -80,7 +80,7 @@ class DivisionStructure {
 	    	}
 
 	    	$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->platoon_name}[/size][/i]\r\n\r\n";
-	    	
+
         	// platoon leader
 	    	$leader = Member::findByMemberId($platoon->leader_id);
 	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
@@ -137,6 +137,7 @@ class DivisionStructure {
 
 	        $i++;
 	    }
+	    
     	// end last platoon
 	    $division_structure .= "[/tr][/table]\r\n\r\n";
 

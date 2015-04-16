@@ -15,6 +15,8 @@ if (empty($_SESSION['userid'])) {
 	// crontab
 	Flight::route('/update/bf4-server-activity', array('CrontabController', '_doBf4Update'));
 	Flight::route('/update/bfh-server-activity', array('CrontabController', '_doBfhUpdate'));
+	Flight::route('/update/battlelog-ids', array('CrontabController', '_doBattlelogIdUpdate'));
+	Flight::route('/update/@game/arch-sync', array('CrontabController', '_doArchUpdate'));
 
 } else {
 

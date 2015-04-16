@@ -333,7 +333,7 @@ function memberColor($user, $level)
 
 
 function average($array) {
- return array_sum($array) / count($array);
+   return array_sum($array) / count($array);
 }
 
 
@@ -378,4 +378,33 @@ function curl_last_url( /*resource*/ $ch, /*int*/ &$maxredirect = null)
         curl_setopt($ch, CURLOPT_URL, $newurl);
     }
     return $newurl;
+}
+
+
+/**
+ * converts textual status to a usable id
+ * @param  string $status text based status
+ * @return [type]         [description]
+ */
+function convertStatus($status)
+{
+
+    $status = (stristr($status, "LOA")) ? "LOA" : $status;
+    
+    switch ($status) {
+
+        case "Active":
+        $id = 1;
+        break;
+        case "On Leave":
+        case "Missing in Action":
+        case "LOA":
+        $id = 3;
+        break;
+        case "Retired":
+        $id = 4;
+        break;
+
+    }
+    return $id;
 }
