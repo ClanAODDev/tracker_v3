@@ -29,14 +29,17 @@
 	</div>
 
 	<div class='row margin-top-20'>
-		<div class='col-md-3'>
+		<div class='col-md-4'>
 
 			<?php echo $member_data ?>
+			<?php if ($user->role >= 1) : ?>
+				<?php echo $sl_personnel ?>
+			<?php endif; ?>
 
 		</div>
 		<!--/end left side bar-->
 
-		<div class='col-md-9'>
+		<div class='col-md-8'>
 			
 			<?php echo $alerts ?>
 

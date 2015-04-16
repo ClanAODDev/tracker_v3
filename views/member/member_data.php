@@ -45,6 +45,6 @@
 		<a target="_blank" href="<?php echo BATTLELOG . $memberInfo->battlelog_name ?>" class="list-group-item">Battlelog <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
 	<?php endif; ?>
 
-	<a target='_blank' href='<?php echo BF4DB . $memberInfo->bf4db_id ?>' class='list-group-item'>BF4DB <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+	<!-- <a target='_blank' href='<?php //echo BF4DB . $memberInfo->bf4db_id ?>' class='list-group-item'>BF4DB <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a> -->
 
 </div>
