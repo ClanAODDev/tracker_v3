@@ -29,7 +29,7 @@
 				<div class='row flagged-section'>
 					<div class='col-md-12'>
 						<div class='panel panel-danger'>
-							<div class='panel-heading'><i class='fa fa-trash-o fa-lg'></i> Members flagged for removal <span class='flagCount pull-right badge'><?php echo $flaggedCount ?></span></div>
+							<div class='panel-heading'><i class='fa fa-trash-o fa-lg'></i> Members flagged for removal <span class='flagCount pull-right badge'><?php echo $flaggedCount ?> Members</span></div>
 							<ul class='sortable striped-bg' id='flagged-inactives' style='overflow-y: auto; max-height: 193px;'>
 
 								<?php $flaggedCopy = "[SIZE=2]Members flagged for removal ({$flaggedCount})[/SIZE][hr][/hr][table=\"width: 500\"]"; ?>
@@ -44,7 +44,7 @@
 										<div class='col-xs-1'><img src='assets/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
 										<div class='col-xs-2'><?php echo $player->rank ?> <?php echo $player->forum_name ?></div>
 										<div class='col-xs-3 text-muted text-center'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></div>
-										<div class='col-xs-3 removed-by text-center text-muted'>Flagged by <?php echo $player->flagged_by ?></div>
+										<div class='col-xs-3 removed-by text-center text-muted'>Flagged by <?php echo Member::findForumName($player->flagged_by); ?></div>
 										<div class='col-xs-3 actions btn-group'>
 											<span class='pull-right'>
 												<a href='http://www.clanaod.net/forums/private.php?do=newpm&u=<?php echo $player->member_id ?>' class='popup-link btn btn-default btn-xs'><i class='fa fa-comment'></i> PM</a> 
@@ -84,7 +84,7 @@
 				<div class='col-md-12'>
 
 					<div class='panel panel-info'>
-						<div class='panel-heading'><i class='fa fa-clock-o fa-lg'></i> Your inactive members <span class='inactiveCount pull-right badge'><?php echo $inactiveCount ?></span></div>
+						<div class='panel-heading'><i class='fa fa-clock-o fa-lg'></i> Your inactive members <span class='inactiveCount pull-right badge'><?php echo $inactiveCount ?> Members</span></div>
 						<ul class='sortable inactive-list striped-bg' id='inactives' style='overflow-y: auto; max-height: 193px;'>
 							<?php $inactive_ids = array(); ?>
 
@@ -100,7 +100,7 @@
 									<div class='col-xs-1'><img src='/public/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
 									<div class='col-xs-2'><?php echo $player->rank ?> <?php echo $player->forum_name ?></div>
 									<div class='col-xs-3 text-muted text-center'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></div>
-									<div class='col-xs-3 removed-by text-center text-muted'></div>
+									<div class='col-xs-3 removed-by text-center text-muted'><?php echo $player->plt_name ?></div>
 									<div class='col-xs-3 actions btn-group'><span class='pull-right'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u=<?php echo $player->member_id ?>' class='popup-link btn btn-default btn-xs'><i class='fa fa-comment'></i> PM</a> <button class='btn btn-default btn-xs view-profile'><i class='fa fa-user'></i> View Profile</button></span> 
 									</div>
 								</li>
