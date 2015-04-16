@@ -90,7 +90,7 @@ $(function() {
 
 
     $(".divGenerator").click(function() {
-        $(".viewPanel .viewer").load("/application/vendor/division-structure/index.php");
+        $(".viewPanel .viewer").load("get/division-structure");
         $(".viewPanel").modal();
     });
 

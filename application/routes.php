@@ -20,6 +20,7 @@ if (empty($_SESSION['userid'])) {
 
 	// api stuff
 	Flight::route('/get/member-data/division/@game', array('MemberController', '_getMemberData'));
+	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
 
 	// user views
 	Flight::route('/', array('ApplicationController', '_index'));
