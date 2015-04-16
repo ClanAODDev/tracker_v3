@@ -1,6 +1,6 @@
 <?php
 
-require 'lib.php');
+require 'lib.php';
 
 $members = array();
 
