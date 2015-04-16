@@ -55,24 +55,28 @@
 
 				<div class='panel-heading'><strong>BF Server Activity</strong> (<?php echo $totalGames ?> games in 30 days)<span class='pull-right'> Last <?php echo MAX_GAMES_ON_PROFILE ?> games</span></div>
 				<?php if (count($games)) : ?>
+					
 
 					<?php foreach ($games as $game) : ?>
-						<li class="list-group-item clearfix">
+						<a class="list-group-item clearfix" href="<?php echo generate_report_link($game->game_id, $game->report_id); ?>" target="_blank">
 							<span class="pull-right">
-								<?php if (isset($game->map_name)) : ?><img src='assets/images/maps/<?php echo strtolower($game->map_name); ?>.jpg' title="<?php echo $game->map_name ?>" style="width: 90px;"/>
+
+								<?php if (!is_null($game->map_name)) : ?>
+									<img src='assets/images/maps/<?php echo strtolower($game->map_name); ?>.jpg' title="<?php echo $game->map_name ?>" style="width: 90px;"/>
 								<?php endif; ?>
 							</span>
+							<?php if ($game->game_id != 2) : ?>
+								<span class="pull-left" style="margin-right: 20px;"><img src="assets/images/game_icons/medium/<?php echo $game->game_id ?>.png"/></span>
 
-							
-
-							<span class="pull-left" style="margin-right: 20px;"><img src="assets/images/game_icons/medium/<?php echo $game->game_id ?>.png"/></span>
+							<?php endif; ?>
 							<span class="pull-left">
-								<a href="<?php echo generate_report_link($game->game_id, $game->report_id); ?>" target="_blank"><?php echo $game->server ?></a><br /><span class="text-muted">Played <?php echo formatTime(strtotime($game->datetime)); ?></span>
+								<?php echo $game->server ?><br /><span class="text-muted">Played <?php echo formatTime(strtotime($game->datetime)); ?></span>
 							</span>
-						</li>
+						</a>
 
 
 					<?php endforeach; ?>
+					
 
 
 				<?php else: ?>
