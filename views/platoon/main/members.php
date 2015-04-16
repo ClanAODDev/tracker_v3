@@ -23,7 +23,7 @@
 				<tr title='Click to view profile' data-id='<?php echo $member->member_id; ?>'>
 					<td><em><?php echo memberColor(ucwords($member->forum_name), $member->position_id); ?></em></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo $member->rank ?></td>
-					<td class='text-center hidden-xs hidden-sm'><?php echo date('M Y', strtotime($member->join_date)); ?></td>
+					<td class='text-center hidden-xs hidden-sm'><?php echo date('m-d-y', strtotime($member->join_date)); ?></td>
 					<td class='text-center text-<?php echo lastSeenColored($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
 					<td class='text-center'><?php echo Activity::countPlayerAODGames($member->member_id, $bdate, $edate); ?></td>
 					<td class='text-center'><?php echo Activity::countPlayerGames($member->member_id, $bdate, $edate); ?></td>
