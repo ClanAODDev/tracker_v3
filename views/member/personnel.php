@@ -5,7 +5,7 @@
 			<div class='panel-heading'><strong> Your Squad</strong> <span class="pull-right"><?php echo Squad::count($member->member_id); ?> members</span></div>
 			<div class='list-group' id='squad'>
 				<?php foreach($squad as $player) : ?>
-					<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'><?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
+					<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
 				<?php endforeach; ?>				
 			</div>
 			<div class='panel-footer'>

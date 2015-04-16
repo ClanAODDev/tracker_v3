@@ -79,13 +79,13 @@ class DivisionStructure {
 	    		$division_structure .= "[td]";
 	    	}
 
-	    	$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->platoon_name}[/size][/i]\r\n\r\n";
+	    	$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->name}[/size][/i]\r\n\r\n";
 
         	// platoon leader
-	    	$leader = Member::findByMemberId($platoon->leader_id);
+	    	$leader = Member::profileData($platoon->leader_id);
 	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 	    	$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]";
-	    	$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank_abbr} {$leader->forum_name}[/color][/size][/url] {$bl_url}{$bf4_icon}[/url]\r\n\r\n";
+	    	$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank} {$leader->forum_name}[/color][/size][/url] {$bl_url}{$bf4_icon}[/url]\r\n\r\n";
 
        		// squad leaders
 	    	$squadleaders = Platoon::SquadLeaders($member->game_id, $platoon->id, true);
@@ -129,7 +129,7 @@ class DivisionStructure {
 	        foreach ($genpop as $player) {
 	        	$bl_url = "[url=" . BATTLELOG . $player->battlelog_name. "]";
 	        	$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
-	        	$division_structure .= "{$aod_url}{$player->abbr} {$player->forum_name}[/url] {$bl_url}{$bf4_icon}[/url]\r\n";
+	        	$division_structure .= "{$aod_url}{$player->rank} {$player->forum_name}[/url] {$bl_url}{$bf4_icon}[/url]\r\n";
 	        }
 
 	        $division_structure .= "[/size]";

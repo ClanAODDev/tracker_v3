@@ -57,6 +57,7 @@ class MemberController {
 	public static function _doUpdateMember() {
 
 		$user = User::find($_SESSION['userid']);
+		$respMember = Member::findByName($_SESSION['username']);
 		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
 		$member = Member::profileData($params['member_id']);
 
@@ -69,15 +70,13 @@ class MemberController {
 		// only continue if we have permission to edit the user
 		if (User::canEdit($params['member_id'], $user, $member) == true) {
 
-			// attempt to fetch battlelog id from bf stats (bf4 or hardline)
-			$battlelogId = Member::getBattlelogId($params['battlelog_name']);
-			if (!$battlelogId['error']) {
-				$params = array_merge($params, array("battlelog_id" => $battlelogId['id']));
-				$result = Member::modify($params);
-				$data = array('success' => true, 'message' => "Member information updated!");
-			} else {
-				$data = array('success' => false, 'message' => 'Battlelog name invalid', 'battlelog' => true);
-			}
+			// log
+			$action = array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id);
+			UserAction::create($action);
+
+			$result = Member::modify($params);
+			$data = array('success' => true, 'message' => "Member information updated!");
+			
 
 		} else {
 			$data = array('success' => false, 'message' => 'You do not have permission to modify this player.');
@@ -109,6 +108,11 @@ class MemberController {
 		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev($user->id)) ) ? 7 : 6;
 		$params = array_merge($params, array('platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id));
 
+		
+		// log
+		$action = array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$params['member_id']);
+		UserAction::create($action);
+
 		Member::create($params);
 		$data = array('success' => true, 'message' => "Member successfully added!");
 		echo(json_encode($data));
@@ -121,9 +125,19 @@ class MemberController {
 		$flagged_by = $_POST['member_id'];
 
 		if ($action == 1) {
+
+			// log
+			$action = array('type_id'=>4,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged);
+			UserAction::create($action);
+
 			InactiveFlagged::add($member_flagged, $flagged_by);
 			$data = array('success' => true, 'message' => 'Member {$member_flagged} flagged for removal.');
 		} else {
+
+			// log
+			$action = array('type_id'=>6,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged);
+			UserAction::create($action);
+
 			InactiveFlagged::remove($member_flagged);
 			$data = array('success' => true, 'message' => 'Member {$member_flagged} no longer flagged for removal.');
 		}
