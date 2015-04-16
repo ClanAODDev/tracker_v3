@@ -3,6 +3,7 @@
 require 'lib.php';
 
 $division = "battlefield";
+$linebreak = "\r\n";
 
 if ($division) {
 
