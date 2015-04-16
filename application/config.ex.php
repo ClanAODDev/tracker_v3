@@ -28,6 +28,8 @@ define('PRIVMSG', 'http://www.clanaod.net/forums/private.php?do=newpm&u=');
 define('EMAIL', 'http://www.clanaod.net/forums/sendmessage.php?do=mailmember&u=');
 define('REMOVE', 'http://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=');
 
+
+
 // defines for BF4 division activity status display
 define('PERCENTAGE_CUTOFF_GREEN', 75);
 define('PERCENTAGE_CUTOFF_AMBER', 50);

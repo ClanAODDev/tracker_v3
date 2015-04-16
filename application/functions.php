@@ -381,30 +381,6 @@ function curl_last_url( /*resource*/ $ch, /*int*/ &$maxredirect = null)
 }
 
 
-/**
- * converts textual status to a usable id
- * @param  string $status text based status
- * @return [type]         [description]
- */
-function convertStatus($status)
-{
-
-    $status = (stristr($status, "LOA")) ? "LOA" : $status;
-    
-    switch ($status) {
-
-        case "Active":
-        $id = 1;
-        break;
-        case "On Leave":
-        case "Missing in Action":
-        case "LOA":
-        $id = 3;
-        break;
-        case "Retired":
-        $id = 4;
-        break;
-
-    }
-    return $id;
+function generate_report_link($game, $id) {
+    return "http://battlelog.battlefield.com/{$game}/battlereport/show/1/{$id}";
 }
