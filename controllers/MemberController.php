@@ -29,6 +29,11 @@ class MemberController {
 			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 		}
 
+		// if squad leader, show recruits
+		if ($memberInfo->position_id == 5) {
+			Flight::render('member/sl-personnel', array('member' => $memberInfo), 'sl_personnel');
+		}
+
 		Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
 		Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
 		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'division' => $division, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'content');
