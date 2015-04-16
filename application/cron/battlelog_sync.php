@@ -10,29 +10,31 @@ if (dbConnect()) {
 		$query->execute();
 		$battlelog_names = $query->fetchAll();
 		$countNames = count($battlelog_names);
-		echo "Fetched battlelog names. ({$countNames})<br /><br />";
+		echo date("Y-m-d H:i:s") . " - Fetched battlelog names. ({$countNames})\r\n";
+
+
+		foreach ($battlelog_names as $row) {
+
+			$battlelog_id = getBattlelogId($row['battlelog_name']);
+			$query = $pdo->prepare("UPDATE member SET battlelog_id = :battlelog_id WHERE battlelog_name = :battlelog_name");
+
+			if (!$battlelog_id['error']) {
+				try {
+					$query->bindParam(':battlelog_id', $battlelog_id['id']);
+					$query->bindParam(':battlelog_name', $row['battlelog_name']);
+					$query->execute();
+					echo "Added ID {$battlelog_id['id']} to {$row['battlelog_name']}\r\n";
+				} catch (PDOException $e) {
+					echo "ERROR: " . $e->getMessage();			
+				}
+			} else {
+				echo "ERROR: {$row['battlelog_name']} - {$battlelog_id['message']}\r\n";
+			}
+		}
+		echo date("Y-m-d H:i:s") . " - done syncing battlelog ids.\r\n\r\n\r\n";
+
 
 	} catch (PDOException $e) {
 		echo "ERROR: " . $e->getMessage();			
 	}
-
-	foreach ($battlelog_names as $row) {
-
-		$battlelog_id = get_battlelog_id($row['battlelog_name']);
-		$query = $pdo->prepare("UPDATE member SET battlelog_id = :battlelog_id WHERE battlelog_name = :battlelog_name");
-
-		if (!$battlelog_id['error']) {
-			try {
-				$query->bindParam(':battlelog_id', $battlelog_id['id']);
-				$query->bindParam(':battlelog_name', $row['battlelog_name']);
-				$query->execute();
-				echo "Added ID {$battlelog_id['id']} to {$row['battlelog_name']}<br />";
-			} catch (PDOException $e) {
-				echo "ERROR: " . $e->getMessage();			
-			}
-		} else {
-			echo "ERROR: {$row['battlelog_name']} - {$battlelog_id['message']}<br />";
-		}
-	}
-	echo "done syncing battlelog ids.";
 }
