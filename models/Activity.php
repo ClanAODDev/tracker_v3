@@ -7,7 +7,7 @@ class Activity extends Application {
 	public $server;
 	public $datetime;
 	public $hash;
-	public $game;
+	public $game_id;
 	public $map_name;
 	public $report_id;
 
@@ -34,7 +34,7 @@ class Activity extends Application {
 			$activity->datetime = $report->date;
 			$activity->map_name = $report->map;
 			$activity->hash = hash("sha256", $member_id.$report->date);
-			$activity->game = $game;
+			$activity->game_id = $game;
 			$activity->report_id = $report->reportId;
 			Flight::aod()->save($activity);
 		}
