@@ -1,16 +1,8 @@
 <?php
 
-require 'lib.php');
+require 'lib.php';
 
-$division = "";
-
-if (isset($argv)) {
-	$division = $argv[1];
-	$linebreak = "\r\n";
-} else if (isset($_GET['division'])) {
-	$division = $_GET['division'];
-	$linebreak = "<br />";
-}
+$division = "battlefield";
 
 if ($division) {
 
