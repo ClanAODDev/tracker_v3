@@ -25,7 +25,7 @@ $(function() {
         placeholder: "ui-state-highlight",
         receive: function(event, ui) {
 
-            itemMoved = $(ui.item).attr('data-member-id');
+            itemMoved = $(ui.item).attr('data-player-id');
             targetList = $(this).attr('id');
 
             if (targetList == "flagged-inactives") {

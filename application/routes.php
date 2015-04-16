@@ -2,7 +2,6 @@
 
 // maintenance mode
 // Flight::route('*', array('ApplicationController', '_unavailable'));
-// 
 
 if (empty($_SESSION['userid'])) {
 
@@ -11,12 +10,6 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/login', array('UserController', '_doLogin'));
 	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
-
-	// crontab
-	Flight::route('/update/bf4-server-activity', array('CrontabController', '_doBf4Update'));
-	Flight::route('/update/bfh-server-activity', array('CrontabController', '_doBfhUpdate'));
-	Flight::route('/update/battlelog-ids', array('CrontabController', '_doBattlelogIdUpdate'));
-	Flight::route('/update/@game/arch-sync', array('CrontabController', '_doArchUpdate'));
 
 } else {
 
