@@ -15,7 +15,7 @@
 		<?php endif; ?>
 
 		<?php $recruiter = ($memberInfo->recruiter != "0") ? $memberInfo->recruiter : NULL; ?>
-		<?php if (!is_null($recruiter) && $recruiter !== $memberInfo->recruiter) : ?>
+		<?php if (!is_null($recruiter)) : ?>
 			<a href="member/<?php echo $recruiter ?>" class="list-group-item text-right">
 				<span class='pull-left'><strong>Recruiter: </strong></span> 
 				<span class='text-muted'><?php echo Member::findForumName($recruiter) ?></a></span>
