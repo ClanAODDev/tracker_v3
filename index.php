@@ -24,3 +24,7 @@ if (get_magic_quotes_gpc()) {
 
 require_once 'application/routes.php';
 Flight::start();
+
+if (isset($_SESSION['loggedIn'])) {
+  User::updateActivityStatus($user->id);
+}

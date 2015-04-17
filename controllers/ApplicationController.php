@@ -4,6 +4,7 @@ class ApplicationController {
 
 	public static function _index() {
 
+
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
@@ -16,10 +17,6 @@ class ApplicationController {
 		$platoons = Platoon::find_all($member->game_id);
 		$platoon = Platoon::find($member->platoon_id);
 		$genPop = Platoon::GeneralPop($member->platoon_id);
-
-		if (isset($_SESSION['loggedIn'])) {
-			User::updateActivityStatus($user->id);
-		}
 
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
