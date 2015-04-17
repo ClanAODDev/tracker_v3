@@ -58,4 +58,8 @@ class Division extends Application {
 		$params =  Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
+
+	public static function _create() {}
+	public static function _modify() {}
+	public static function _delete() {}
 }
