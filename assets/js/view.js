@@ -12,7 +12,7 @@ $(function() {
     $("#edit-form").submit(function(event) {
         event.preventDefault();
 
-        $("#edit-form :submit").html("<img src='assets/images/loading.gif' /> Validating battlelog name...").attr('class', 'btn btn-block btn-default disabled');
+        $("#edit-form :submit").html("<img src='assets/images/loading.gif' /> Updating profile information...").attr('class', 'btn btn-block btn-default disabled');
 
         var uid = $("#uid").val(),
             mid = $("#member_id").val(),
