@@ -46,14 +46,14 @@ class DivisionController {
 
 	}
 
-	public static function _create() {}
-	public static function _modify() {}
-	public static function _delete() {}
+	public static function _manage_loas() {
+		
+	}
 
 	public static function _generateDivisionStructure() {
 		$member = Member::find($_SESSION['username']);
 		$division_structure = DivisionStructure::generate($member);
-	    Flight::render('modals/division_structure', array('division_structure' => $division_structure));
+		Flight::render('modals/division_structure', array('division_structure' => $division_structure));
 	}
 
 }
