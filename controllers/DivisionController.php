@@ -47,6 +47,16 @@ class DivisionController {
 	}
 
 	public static function _manage_loas() {
+
+		$user = User::find($_SESSION['userid']);
+		$member = Member::find($_SESSION['username']);
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+		$division = Division::findByName(strtolower($div));
+		$platoons = Platoon::find_all($member->game_id);
+
+		Flight::render('manage/inactive_members', array('member' => $member, 'user' => $user, 'inactives' => arrayToObject($inactives), 'flagged' => arrayToObject($flagged_inactives), 'flaggedCount' => $flaggedCount, 'inactiveCount' => $inactiveCount), 'content');
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons, 'js' => 'manage'));
 		
 	}
 
