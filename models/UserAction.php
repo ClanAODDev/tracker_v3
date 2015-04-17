@@ -37,4 +37,11 @@ class UserAction extends Application {
 		//echo Flight::aod()->last_query;
 	}
 
+	public static function findAll() {
+		//$sql = "SELECT user_actions.date, user_actions.user_id, user_actions.target_id, actions.verbage FROM user_actions LEFT JOIN actions ON user_actions.type_id = actions.id"
+		return Flight::aod()->from(self::$table)
+		->join('actions', array('actions.id' => 'user_actions.type_id'))
+		->select(array('date','user_id', 'target_id', 'verbage'))->many();
+	}
+
 }
