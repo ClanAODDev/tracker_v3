@@ -91,7 +91,16 @@ class User extends Application {
 	}
 
 	public static function updateActivityStatus($id)	{
-		$params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
+		//$params = Flight::aod()->sql("UPDATE `users` SET `last_seen` = CURRENT_TIMESTAMP() WHERE `id` = '{$id}'")->one();
+		//return self::modify(array('id'=>$id, 'last_seen'=>CURRENT_TIMESTAMP))->sql();
+		//return self::where(array('id'=>$id))->update(array('last_seen'=>CURRENT_TIMESTAMP()))->sql();
+		
+		//var_dump($_SESSION['userid']);die;
+
+		return Flight::aod()->from(self::$table)
+		->where(array('id' => $id))
+		->update(array('last_seen' => date('Y-m-d H:i:s')))
+		->one();
 	}
 
 
@@ -138,6 +147,14 @@ class User extends Application {
 		$posField = ($allowPosAssignmentEdit) ? "block" : "none";
 
 		return (object) array( 'pltField' => $pltField,  'sqdField' => $sqdField, 'posField' => $posField );
+	}
+
+	public static function modify($params) {
+		$user = new self();
+		foreach ($params as $key=>$value) {
+			$user->$key = $value;
+		}
+		$user->update($params);
 	}
 
 

@@ -3,6 +3,8 @@
 // maintenance mode
 // Flight::route('*', array('ApplicationController', '_unavailable'));
 
+
+
 if (empty($_SESSION['userid'])) {
 
 	Flight::route('/', array('UserController', '_login'));
@@ -67,6 +69,11 @@ if (empty($_SESSION['userid'])) {
 	// admin
 	Flight::route('/admin', array('AdminController', '_show'));
 */
+
+	// update user activity
+	if (isset($_SESSION['userid'])) {
+		User::updateActivityStatus($_SESSION['userid']);
+	}
 }
 
 // 404 redirect

@@ -1,6 +1,6 @@
 <?php if ($member->position_id == 5) : ?><!-- if squad leader -->
 	<?php if (Squad::count($member->member_id)) : ?>
-		<div class='panel panel-default'>
+		<div class='panel panel-primary'>
 			<div class='panel-heading'><strong><?php echo $member->forum_name ?>'s Squad</strong> <span class="pull-right"><?php echo Squad::count($member->member_id); ?> members</span></div>
 			<div class='list-group' id='squad'>
 				<?php foreach(Squad::find($member->member_id) as $player) : ?>
