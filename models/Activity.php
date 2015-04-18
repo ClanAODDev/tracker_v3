@@ -17,7 +17,7 @@ class Activity extends Application {
 
 	public static function findAllGames($member_id, $limit=MAX_GAMES_ON_PROFILE) {
 		$sql = "SELECT * FROM activity WHERE member_id = {$member_id} ORDER BY datetime DESC LIMIT {$limit}";
-		return arrayToObject(Flight::aod()->sql($sql)->many());
+		return Flight::aod()->sql($sql)->many();
 	}
 
 	public static function countPlayerGames($member_id, $bdate, $edate) {

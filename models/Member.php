@@ -66,12 +66,17 @@ class Member extends Application {
 	}
 
 	public static function findForumName($member_id) {
-		$params = Flight::aod()->sql("SELECT forum_name FROM member WHERE `member_id`={$member_id}")->one();
-		return $params['forum_name'];
+		$params = Flight::aod()->from(self::$table)
+		->where(array('member_id' => $member_id))
+		->select('forum_name')->one();
+		return ucwords($params['forum_name']);
 	}
 
 	public static function findRecruits($member_id) {
-		return self::find(array('recruiter' => $member_id));
+		return Flight::aod()->from(self::$table)
+		->where(array('recruiter' => $member_id))
+		->join('rank', array('rank.id' => 'member.rank_id'))
+		->select()->many();
 	}
 
 	public static function avatar($member_id, $type = "thumb")
