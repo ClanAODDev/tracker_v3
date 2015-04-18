@@ -154,7 +154,9 @@ $(function() {
             squad_leader = $('#squadLdr').val(),
             game = $('#game').val(),
             member_id = $('#member_id').val();
-        storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game);
+        if (member_id != "") {
+            storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, game);
+        }
     });
 });
 
@@ -254,8 +256,8 @@ function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_nam
             } else {
                 $("#storePlayer").html("<i class='fa fa-check'></i> " + message).attr("class", "btn btn-success disabled").delay(1000).fadeOut();
                 $(".alert-box").attr("style", "display: block;").empty();
-                 $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> " + ucwords(forum_name) + " has been successfully added to the division!</div>").delay(3000).fadeOut();
-                 $("#storePlayer").after("<br /><br /><a href='./' class='btn btn-info'>Go Home</a>");
+                $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> " + ucwords(forum_name) + " has been successfully added to the division!</div>").delay(3000).fadeOut();
+                $("#storePlayer").after("<br /><br /><a href='./' class='btn btn-info'>Go Home</a>");
                 // success
             }
         }
