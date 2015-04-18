@@ -14,8 +14,7 @@
 	<div class='panel-heading'><strong>BF Server Activity</strong> (<?php echo $totalGames ?> games in 30 days)<span class='pull-right'> Last <?php echo MAX_GAMES_ON_PROFILE ?> games</span></div>
 
 	<?php if ($totalGames > 0) : ?>
-
-
+		<?php $games = arrayToObject($games); ?>
 		<?php foreach ($games as $game) : ?>
 			<a class="list-group-item clearfix" href="<?php echo generate_report_link($game->game_id, $game->report_id); ?>" target="_blank">
 				<span class="pull-right">
