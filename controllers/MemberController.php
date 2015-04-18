@@ -17,8 +17,8 @@ class MemberController {
 		$recruits = Member::findRecruits($memberInfo->member_id);
 
 		// game data
-		$bdate = date("Y-m-d", strtotime("now - 30 days"));
-		$edate = date("Y-m-d", strtotime("now"));
+		$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
+		$edate = date("Y-m-d", strtotime("tomorrow"));
 		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
 		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
 		$allGames = Activity::findAllGames($memberInfo->member_id);
