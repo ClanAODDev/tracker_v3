@@ -62,7 +62,9 @@
 							<?php echo $sl_personnel ?>
 						</div>
 					<?php endif; ?>
-					<div role="tabpanel" class="tab-pane" id="recruits">...</div>
+					<div role="tabpanel" class="tab-pane" id="recruits">
+						<?php echo $recruits ?>
+					</div>
 					<div role="tabpanel" class="tab-pane" id="history">...</div>
 				</div>
 

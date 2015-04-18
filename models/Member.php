@@ -70,6 +70,10 @@ class Member extends Application {
 		return $params['forum_name'];
 	}
 
+	public static function findRecruits($member_id) {
+		return self::find(array('recruiter' => $member_id));
+	}
+
 	public static function avatar($member_id, $type = "thumb")
 	{
 		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$member_id}";

@@ -14,6 +14,7 @@ class MemberController {
 		$memberInfo = Member::profileData(intval($id));
 		$divisionInfo = Division::findById(intval($memberInfo->game_id));
 		$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
+		$recruits = Member::findRecruits($memberInfo->member_id);
 
 		// game data
 		$bdate = date("Y-m-d", strtotime("now - 30 days"));
@@ -34,6 +35,8 @@ class MemberController {
 		}
 
 		Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
+
+		Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
 
 		Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
 
