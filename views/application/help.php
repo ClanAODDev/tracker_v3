@@ -31,8 +31,7 @@
 			<p>At Bootply we like to build simple Bootstrap templates that utilize the code Bootstap CSS without a lot of customization. Sure you can find a lot of Bootstrap themes and inspiration, but these templates tend to be heavy on customization.</p>
 
 			<hr>
-			<p>Rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia cor magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. </p>
-
+			<p>
 			<h2 id='sec1'>Content</h2>
 			<div class="embed-responsive embed-responsive-4by3">
 				<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/QAXekTvVucc" frameborder="0" allowfullscreen></iframe>

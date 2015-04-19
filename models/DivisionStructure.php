@@ -67,7 +67,7 @@ class DivisionStructure {
 	     * ---------platoons----------
 	     */
 
-	    $division_structure .= "\r\n\r\n[table='width: 1200']";
+	    $division_structure .= "\r\n\r\n[table='width: 1300']";
 	    $platoons = Platoon::find_all($member->game_id);
 
 	    foreach ($platoons as $platoon) {
