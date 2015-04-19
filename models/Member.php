@@ -5,7 +5,6 @@ class Member extends Application {
 	public $id;
 	public $forum_name;
 	public $member_id;
-	public $bf4db_id;
 	public $battlelog_id;	
 	public $battlelog_name;	
 	public $platoon_id;
@@ -57,7 +56,7 @@ class Member extends Application {
 	}
 
 	public static function profileData($member_id) {
-		return (object) Flight::aod()->sql("SELECT member.id, rank.abbr as rank, position.desc as position, forum_name, member_id, battlelog_name, bf4db_id, rank_id, platoon_id, position_id, squad_leader_id, status_id, game_id, join_date, recruiter, last_forum_login, last_activity, member.game_id, last_forum_post, forum_posts, status.desc FROM member 
+		return (object) Flight::aod()->sql("SELECT member.id, rank.abbr as rank, position.desc as position, forum_name, member_id, battlelog_name, rank_id, platoon_id, position_id, squad_leader_id, status_id, game_id, join_date, recruiter, last_forum_login, last_activity, member.game_id, last_forum_post, forum_posts, status.desc FROM member 
 			LEFT JOIN users ON users.username = member.forum_name 
 			LEFT JOIN games ON games.id = member.game_id
 			LEFT JOIN position ON position.id = member.position_id
@@ -113,7 +112,7 @@ class Member extends Application {
 	}
 
 	public static function findInactives($id, $type, $flagged=false) {
-		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.bf4db_id, inactive_flagged.flagged_by, member.squad_leader_id, member.forum_posts, member.join_date, platoon.number as plt_number, platoon.name as plt_name FROM `member` LEFT JOIN `rank` ON member.rank_id = rank.id  LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id LEFT JOIN platoon on member.platoon_id = platoon.id WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND ";
+		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, inactive_flagged.flagged_by, member.squad_leader_id, member.forum_posts, member.join_date, platoon.number as plt_number, platoon.name as plt_name FROM `member` LEFT JOIN `rank` ON member.rank_id = rank.id  LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id LEFT JOIN platoon on member.platoon_id = platoon.id WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND ";
 
 		switch ($type) {
 			case "sqd": $args = "member.squad_leader_id = {$id}"; break;
