@@ -43,6 +43,7 @@
 				<?php else : ?>
 					<option>No platoons exist.</option>
 				<?php endif; ?>
+				<option value='0' selected>None (General Sergeant or Division Leader)</option>
 			</select>
 		</div>
 

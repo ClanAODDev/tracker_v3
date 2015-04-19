@@ -14,7 +14,6 @@ class Platoon extends Application {
 	public static function find_all($game_id) {
 		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name as leader_name, rank.abbr as leader_rank FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.game_id = {$game_id} ORDER BY number";
 		$params = Flight::aod()->sql($sql)->many();
-
 		return arrayToObject($params);
 	}
 
@@ -51,7 +50,7 @@ class Platoon extends Application {
 	}
 
 	public static function members($platoon_id) {
-		$sql = "SELECT member.id, member.forum_name, member.member_id,  position.desc as position_desc, position.id as position_id, member.battlelog_name, member.bf4db_id, member.rank_id, rank.abbr as rank, join_date, last_forum_login, last_forum_post, last_activity, forum_posts FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id} AND position_id NOT IN (3,2,1) ORDER BY member.rank_id DESC";
+		$sql = "SELECT member.id, member.forum_name, member.member_id,  position.desc as position_desc, position.id as position_id, member.battlelog_name, member.rank_id, rank.abbr as rank, join_date, last_forum_login, last_forum_post, last_activity, forum_posts FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id} AND position_id NOT IN (3,2,1) ORDER BY member.rank_id DESC";
 		$params = Flight::aod()->sql($sql)->many();
 		return $params;
 	}
@@ -60,7 +59,11 @@ class Platoon extends Application {
 		$members = self::memberIdsList($platoon_id);
 		$total = Activity::findTotalGamesByArray($members, $bdate, $edate);
 		$AOD = Activity::findTotalAODGamesByArray($members, $bdate, $edate);
-		return array('pct' => (array_sum($AOD) / array_sum($total))*100, 'total' => array_sum($total), 'AOD' => array_sum($AOD));
+		return array(
+			'pct' => round(array_sum($AOD) / array_sum($total)*100),
+			'total' => array_sum($total), 
+			'AOD' => array_sum($AOD)
+			);
 	}
 
 

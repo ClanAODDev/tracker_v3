@@ -73,10 +73,6 @@
 
         });
 
-        /*        $('#members-table tbody').on('click', 'tr', function() {
-            console.log(table.row(this).data());
-        });*/
-
         $("#members-table_paginate").addClass('text-center');
         $("#members-table_filter input").appendTo("#playerFilter").removeClass('input-sm');
         $("#playerFilter input").attr({
