@@ -27,6 +27,39 @@ function getUserRoleName($role)
     return $role;
 }
 
+function activityIcon($type) {
+    switch ($type) {
+        case 1:
+        $icon = "user-plus text-success";
+        break;
+        case 2:
+        $icon = "user-times text-danger";
+        break;
+        case 3:
+        $icon = "pencil-square-o text-info";
+        break;
+        case 4:
+        $icon = "flag text-danger";
+        break;
+        case 5:
+        $icon = "cog";
+        break;
+        case 6:
+        $icon = "flag text-warning";
+        break;
+        case 7:
+        $icon = "thumbs-o-up text-success";
+        break;
+        case 8:
+        $icon = "thumbs-o-down text-danger";
+        break;
+        case 9:
+        $icon = "user-times text-danger";
+        break;
+    }
+    return $icon;
+}
+
 /**
  * password hash generation
  */
@@ -333,7 +366,7 @@ function memberColor($user, $level)
 
 
 function average($array) {
-   return array_sum($array) / count($array);
+ return array_sum($array) / count($array);
 }
 
 

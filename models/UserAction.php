@@ -38,10 +38,42 @@ class UserAction extends Application {
 	}
 
 	public static function findAll() {
-		//$sql = "SELECT user_actions.date, user_actions.user_id, user_actions.target_id, actions.verbage FROM user_actions LEFT JOIN actions ON user_actions.type_id = actions.id"
-		return Flight::aod()->from(self::$table)
-		->join('actions', array('actions.id' => 'user_actions.type_id'))
-		->select(array('date','user_id', 'target_id', 'verbage'))->many();
+		return arrayToObject(Flight::aod()->from(self::$table)
+			->limit(10)
+			->join('actions', array('actions.id' => 'user_actions.type_id'))
+			->select(array('date','user_id', 'type_id', 'target_id', 'verbage'))->many());
+	}
+
+	public static function humanize($type_id, $target_id, $user_id, $verbage) {
+
+		$user = "<a href='member/{$user_id}'>" . Member::findForumName($user_id) . "</a>";
+		$player = "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>";
+		switch ($type_id) {
+			case 1:
+			$text = "{$user} {$verbage} {$player} into the division";
+			break;
+			case 2: 
+			$text = "{$user} {$verbage} {$player} from the division";
+			break;
+			case 3: 
+			$text = "{$user} {$verbage} {$player}'s profile information";
+			break;
+			case 4: 
+			$text = "{$player} was {$verbage} by {$user}";
+			break;
+			case 5: 
+			$text = "{$user} {$verbage}";
+			break;
+			case 6: 
+			$text = "{$player} was {$verbage} by {$user}";
+			break;
+			case 7: 
+			case 8:
+			case 9:
+			$text = "{$user} {$verbage} for {$player}";
+			break;
+		}
+		return $text;
 	}
 
 }

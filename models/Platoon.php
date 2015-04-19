@@ -40,7 +40,7 @@ class Platoon extends Application {
 		}
 
 		if ($order_by_rank) {
-			$sql .= " ORDER BY member.join_date ASC, member.rank_id DESC, member.forum_name ASC ";
+			$sql .= " ORDER BY member.rank_id DESC, member.forum_name ASC ";
 		} else {
 			$sql .= " ORDER BY platoon.id, forum_name";
 		}

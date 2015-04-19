@@ -11,7 +11,7 @@ $(function() {
 
     $(".view-profile").click(function() {
         var userId = $(this).closest('.list-group-item').attr('data-user-id');
-        location.href = "/member/" + userId;
+        location.href = "member/" + userId;
     });
 
     var itemMoved, targetplatoon, sourcePlatoon, action = null;

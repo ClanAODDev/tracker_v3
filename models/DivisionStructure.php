@@ -72,6 +72,8 @@ class DivisionStructure {
 
 	    foreach ($platoons as $platoon) {
 
+	    	$countMembers = Platoon::countPlatoon($platoon->id);
+
 	    	if ($i == 1) {
 	    		$division_structure .= "[tr]";
 	    		$division_structure .= "[td]";
@@ -79,7 +81,7 @@ class DivisionStructure {
 	    		$division_structure .= "[td]";
 	    	}
 
-	    	$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->name}[/size][/i]\r\n\r\n";
+	    	$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->name} [/size][/i]\r\n\r\n";
 
         	// platoon leader
 	    	$leader = Member::profileData($platoon->leader_id);

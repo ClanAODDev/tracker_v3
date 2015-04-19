@@ -57,64 +57,21 @@
 
 							<?php if ($user->role >= 1) : ?>
 
+
+
 								<li class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" href="#">Activity <span class="caret"></span></a>
 									<div class="popup dropdown-menu">
 										<ul class="activity">
-											<li>
-												<i class="fa fa-clock-o fa-2x text-danger"></i>
-												<div>You have <a href="#">3 recruits</a> awaiting promotion!
-													<span>14 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-angle-double-up fa-2x text-success"></i>
-												<div>
-													<a href="#">CupOHemlock</a> promoted <a href="#">GinaLou</a> to Master Super General
-													<span>14 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-user fa-2x text-success"></i>
-												<div><a href="#">31drew31</a> added <a href="#">Rct Jonesgirl</a> to <a href="#">Platoon 1</a>
-													<span>About 2 hours ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-comment text-primary fa-2x"></i>
-												<div>
-													<a href="#">Redguard</a> posted a <a href="#">comment</a> on Platoon 2's <a href="#">notes</a>
-													<span>5 minutes ago</span>
-												</div>
-											</li>
-
-											<li>
-												<i class="fa fa-flag fa-2x text-danger"></i>
-												<div><a href="#">Guybrush</a> removed <a href="#">JoeSchmoe</a> from <a href="#">Platoon 2</a>
-													<span>About 7 hours ago</span>
-												</div>
-											</li>
-
-											<li>
-												<i class="fa fa-angle-double-up fa-2x text-success"></i>
-												<div>
-													<a href="#">CupOHemlock</a> promoted <a href="#">GinaLou</a> to Master Super General
-													<span>14 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-comment text-primary fa-2x"></i>
-												<div>
-													<a href="#">Redguard</a> posted a <a href="#">comment</a> on Platoon 2's <a href="#">discussion feed</a>
-													<span>35 minutes ago</span>
-												</div>
-											</li>
-											<li>
-												<i class="fa fa-flag fa-2x text-danger"></i>
-												<div><a href="#">Guybrush</a> removed <a href="#">JoeSchmoe</a> from <a href="#">Platoon 2</a>
-													<span>About 2 hours ago</span>
-												</div>
-											</li>
+											<?php foreach(UserAction::findAll() as $action) : ?>
+												<li>
+													<i class="fa fa-<?php echo activityIcon($action->type_id); ?> fa-2x"></i>
+													<div>
+														<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
+														<span><?php echo formatTime(strtotime($action->date)); ?></span>
+													</div>
+												</li>
+											<?php endforeach; ?>
 										</ul>
 									</div>
 								</li>
