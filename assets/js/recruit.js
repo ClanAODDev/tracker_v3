@@ -67,10 +67,8 @@ $(function() {
                     async: false,
                     success: function(response) {
                         if (response.success === false) {
-                            flag = 0;
-                            message = response.message;
                             if (response.memberExists === true) {
-                                $(".memberid-group").addClass('has-error');
+                                flag = 0;
                             }
                         } else {
                             flag = 1;
@@ -81,11 +79,12 @@ $(function() {
 
                 // have to declare a flag so it's not undefined...
                 if (flag == 0) {
-                    $(".message").html("<i class='fa fa-times'></i> " + message).effect('bounce');
-                    return false;
-                } else {
-                    $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> Recruit data has been validated!</div>").delay(3000).fadeOut();
-                    return true;
+                    $(".memberid-group").addClass('has-error');
+                    if (confirm("You have entered a member id which already exists. If you are recruiting a player who was previously an AOD member, you can continue. If not, press cancel and verify the forum member id is correct")) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
 
                 $(".progress-bar").attr("class", "bar progress-bar progress-bar-striped progress-bar-warning active");
