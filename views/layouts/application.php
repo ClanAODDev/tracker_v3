@@ -129,6 +129,7 @@
 
 								<ul class="dropdown-menu" role="menu">
 									<?php foreach ($divisions as $division) : ?>
+										<?php $platoons = Platoon::find_all($division->id); ?>
 
 										<li class="dropdown-submenu"><a href='divisions/<?php echo $division->short_name ?>'><?php echo $division->full_name ?></a>
 											<ul class="dropdown-menu">

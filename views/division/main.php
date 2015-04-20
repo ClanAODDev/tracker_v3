@@ -17,7 +17,7 @@
 				<div class='panel panel-primary'>
 					<div class='panel-heading'>Currently Active Platoons</div>
 					<div class='list-group'>
-
+						<?php $platoons = Platoon::find_all($division->id); ?>
 						<?php if (count($platoons)) : ?>
 							<?php foreach ($platoons as $platoon) : ?>
 								<a href='divisions/<?php echo $division->short_name; ?>/<?php echo $platoon->number; ?>' class='list-group-item'>

@@ -8,10 +8,9 @@ class MemberController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$platoons = Platoon::find_all($member->game_id);
 
 		// profile data
-		$memberInfo = Member::profileData(intval($id));
+		$memberInfo = Member::profileData($id);
 		$divisionInfo = Division::findById(intval($memberInfo->game_id));
 		$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
 		$recruits = Member::findRecruits($memberInfo->member_id);
@@ -35,18 +34,12 @@ class MemberController {
 		}
 
 		Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
-
 		Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
-
 		Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
-
 		Flight::render('member/activity', array('totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'activity');
-
 		Flight::render('member/history', array(), 'history');
-
 		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'content');
-
-		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
+		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 		
 	}
 
@@ -59,7 +52,7 @@ class MemberController {
 		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
 
 	}
 
@@ -116,26 +109,16 @@ class MemberController {
 		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$_POST['squad_leader_id'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
 
 		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
-		
-		
 
 		if (Member::exists($_POST['member_id'])) {
-
 			Member::modify($existingParams);
-
-			// log action
 			$action = array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
 			UserAction::create($action);
-			
 			$data = array('success' => true, 'message' => "Existing member successfully updated!");
 		} else {
-
 			Member::create($newParams);
-
-			// log action
 			$action = array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
 			UserAction::create($action);
-
 			$data = array('success' => true, 'message' => "Member successfully added!");
 		}
 		

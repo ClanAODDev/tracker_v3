@@ -40,5 +40,31 @@ class UserController {
 		}
 	}
 
+	public static function _doRegister() {
+		$user = $_POST['user'];
+		$pass = $_POST['password'];
+		$passVerify = $_POST['passVerify'];
+		$email = $_POST['email'];
+
+		if (stristr($user, 'aod_')) {
+			$data['success'] = false;
+			$data['message'] = "Please do not use 'AOD_' in your username";
+		} else if ($pass != $passVerify) {
+			$data['success'] = false;
+			$data['message'] = "Passwords must match.";
+		} else if (User::exists($user)) {
+			$data['success'] = false;
+			$data['message'] = "That username has already been used.";
+		} else {
+			$params = array('username' => $user, 'email' => $email, 'credential' => $pass);
+			User::create($params);
+			$data['success'] = true;
+			$data['message'] = "Your account was created!";
+		}
+
+		echo json_encode($data);
+		exit;
+	}
+
 }
 

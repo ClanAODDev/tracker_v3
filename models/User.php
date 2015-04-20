@@ -31,8 +31,6 @@ class User extends Application {
 		return ($params['developer'] == 1) ? true : false;
 	}
 
-
-
 	public static function canEdit($mid, $user, $member)
 	{
 
@@ -70,8 +68,8 @@ class User extends Application {
 	}
 
 	public static function exists($forum_name)	{
-		$count = Flight::aod()->sql("SELECT count(*) FROM users WHERE `username`='{$forum_name}'")->one();
-		if ($count > 0) { return true; } else {	return false; }
+		$count = Flight::aod()->sql("SELECT count(*) as count FROM users WHERE `username`='{$forum_name}'")->one();
+		if ($count['count'] > 0) { return true; } else {	return false; }
 	}
 
 	public static function validatePassword($pass, $user)
@@ -102,7 +100,6 @@ class User extends Application {
 		->update(array('last_seen' => date('Y-m-d H:i:s')))
 		->one();
 	}
-
 
 	/**
 	 * determines what user has permission to update
@@ -155,6 +152,20 @@ class User extends Application {
 			$user->$key = $value;
 		}
 		$user->update($params);
+	}
+
+	public static function create($params) {
+		$data = array(
+			'credential'=>hasher($params['credential']),
+			'username'=>$params['username'],
+			'email'=>$params['email'],
+			'date_joined'=>date("Y-m-d H:i:s"),
+			'ip'=>$_SERVER['REMOTE_ADDR']
+			);
+
+		Flight::aod()->from(self::$table)->insert($data)->one();
+		//return Flight::aod()->insert_id;
+
 	}
 
 

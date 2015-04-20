@@ -160,7 +160,7 @@
 
 							<p>Now, you are ready to finalize your new recruit and take care of the paperwork associated with each new recruit. <strong>Be sure to ask</strong> if there are any questions or concerns your recruit may have. You should also remind him/her that <strong>you will be their squad leader</strong> and can come to you if they have any issues in the relative future.</p><p>Perform these final steps to complete the recruitment:</p>
 
-							<fieldset id="checkArray" style="margin-left: 20px;">
+							<fieldset id="checkArray">
 								<div class="checkbox">
 									<label><input type="checkbox" value="" name="chk[]">Have them adjust their forum (AOD Member Info) profile settings</label>
 								</div>
@@ -168,12 +168,18 @@
 									<label><input type="checkbox" value="" name="chk[]">Have them change their name on Teamspeak: <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></label>
 								</div>
 								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Accept or invite them into the Battlelog platoon on Battlelog (<strong>And make sure they accept!</strong>)</label>
+									<label><input type="checkbox" value="" name="chk[]">Accept or invite them into the Battlelog platoon (<em>And make sure they accept!</em>)</label>
+								</div>
+								<div class="checkbox">
+									<label><input type="checkbox" value="" name="chk[]">Give them the "AOD Member" server group permission on TeamSpeak</label>
 								</div>
 								<div class="checkbox">
 									<label><input type="checkbox" value="" name="chk[]">Introduce them to the other members in the division</label>
 								</div>
 							</fieldset>
+							<div class="margin-top-20">
+							<p class="text-muted">Note: All steps must be marked complete in order to continue.</p>
+							</div>
 						</div>
 
 

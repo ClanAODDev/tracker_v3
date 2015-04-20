@@ -10,6 +10,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/', array('UserController', '_login'));
 	Flight::route('/register', array('UserController', '_register'));
 	Flight::route('POST /do/login', array('UserController', '_doLogin'));
+	Flight::route('POST /do/register', array('UserController', '_doRegister'));
 	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 

@@ -8,15 +8,14 @@ class DivisionController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
-		$platoons = Platoon::find_all($member->game_id);
-		$division_leaders = Division::findDivisionLeaders($member->game_id);
+		$division_leaders = Division::findDivisionLeaders($division->id);
 
-		$topListMonthly = Activity::topList30DaysByDivision(intval($division->id));
-		$topListToday = Activity::topListTodayByDivision(intval($division->id));
+		$topListMonthly = Activity::topList30DaysByDivision($division->id);
+		$topListToday = Activity::topListTodayByDivision($division->id);
 
 		Flight::render('division/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday), 'statistics');
-		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders, 'platoons' => $platoons), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons, 'js' => 'division'));
+		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders), 'content');
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'division'));
 	}
 
 	public static function _manage_inactives() {
@@ -25,7 +24,6 @@ class DivisionController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
-		$platoons = Platoon::find_all($member->game_id);
 
 		switch ($user->role) {
 			case User::isDev($user->id): $type = "div"; $id = $member->game_id; break;
@@ -42,7 +40,7 @@ class DivisionController {
 		$inactiveCount = (count($inactives)) ? count($inactives) : 0;
 
 		Flight::render('manage/inactive_members', array('member' => $member, 'user' => $user, 'inactives' => arrayToObject($inactives), 'flagged' => arrayToObject($flagged_inactives), 'flaggedCount' => $flaggedCount, 'inactiveCount' => $inactiveCount), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons, 'js' => 'manage'));
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
 
 	}
 
@@ -53,10 +51,9 @@ class DivisionController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
-		$platoons = Platoon::find_all($member->game_id);
 
 		Flight::render('manage/inactive_members', array('member' => $member, 'user' => $user, 'inactives' => arrayToObject($inactives), 'flagged' => arrayToObject($flagged_inactives), 'flaggedCount' => $flaggedCount, 'inactiveCount' => $inactiveCount), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons, 'js' => 'manage'));
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
 		
 	}
 
