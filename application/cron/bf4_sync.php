@@ -26,8 +26,8 @@ if (dbConnect()) {
 		} else {
 
 			$reports = parse_battlelog_reports($params['battlelog_id'], 'bf4');
-			newActivity($reports, "bf4", $params['member_id'], $next_player['value']);
-			$pdo->prepare("UPDATE crontab SET value = {$next_player['value']}+1 WHERE name = 'bf4_next_player'")->execute(); 
+			newActivity($reports, "bf4", $params['member_id'], $next_player);
+			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = 'bf4_next_player'")->execute(); 
 
 		}
 
