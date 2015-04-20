@@ -31,8 +31,6 @@
 					<?php echo $game->server ?><br /><span class="text-muted">Played <?php echo formatTime(strtotime($game->datetime)); ?></span>
 				</span>
 			</a>
-
-
 		<?php endforeach; ?>
 
 
