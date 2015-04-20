@@ -60,8 +60,13 @@ class Division extends Application {
 	}
 
 	public static function recruitsThisMonth($game_id) {
-		$sql = "SELECT count(*) as count, member.forum_name, join_date FROM member WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND member.status_id = 1 AND member.game_id = {$game_id}";
-		$params = Flight::aod()->sql($sql)->one();
+		$sql = "SELECT count(*) as count, member.forum_name, join_date FROM member WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND member.game_id = {$game_id}";
+		return arrayToObject(Flight::aod()->sql($sql)->one());
+	}
+
+	public static function totalCount($game_id) {
+		$sql = "SELECT count(*) as count FROM member WHERE member.game_id = {$game_id} AND status_id IN (1,2,3,999)";
+		return arrayToObject(Flight::aod()->sql($sql)->one());
 	}
 
 	public static function _create() {}

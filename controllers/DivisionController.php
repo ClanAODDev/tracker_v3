@@ -13,7 +13,11 @@ class DivisionController {
 		$topListMonthly = Activity::topList30DaysByDivision($division->id);
 		$topListToday = Activity::topListTodayByDivision($division->id);
 
-		Flight::render('division/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday), 'statistics');
+		$personnelData = new stdClass();
+		$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
+		$personnelData->totalCount = Division::totalCount($division->id)->count;
+
+		Flight::render('division/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday, 'personnelData' => $personnelData), 'statistics');
 		Flight::render('division/main', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'division'));
 	}

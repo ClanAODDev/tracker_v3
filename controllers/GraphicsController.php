@@ -36,8 +36,11 @@ class GraphicsController {
 		$num_col_2   = 300;
 		$name_col_2  = 320;
 
-		$total_percent_x = 590;
-		$total_percent_y = 160;
+		$total_count_x = 639;
+		$total_count_y = 110;
+
+		$recruits_x = 639;
+		$recruits_y = 205;
 
 		/**
 		 * get data
@@ -61,7 +64,7 @@ class GraphicsController {
 		     */
 
     		// date
-		    imagettftext($im, 6, 0, 715, 240, $darkGrey, $tinyfont, strtoupper($dateText));    
+		    // imagettftext($im, 6, 0, 715, 240, $darkGrey, $tinyfont, strtoupper($dateText));    
 
     		// daily stats
 		    $y = 65;
@@ -109,8 +112,15 @@ class GraphicsController {
 
     		// total aod games stat
 
-		    $total = Activity::toplistMonthlyAODTotal();
-		    imagettftext($im, 48, 0, $total_percent_x, $total_percent_y, $white, $bigfont, $total . "%");
+		    $personnel = new stdClass();
+		    $personnel->recruitsThisMonth = Division::recruitsThisMonth($division)->count;
+		    $personnel->totalCount = Division::totalCount($division)->count;
+
+
+		    $personnel->recruitsThisMonth = sprintf('%03d', $personnel->recruitsThisMonth);
+
+		    imagettftext($im, 36, 0, $total_count_x, $total_count_y, $white, $bigfont, $personnel->totalCount);
+		    imagettftext($im, 36, 0, $recruits_x, $recruits_y, $white, $bigfont, $personnel->recruitsThisMonth);
 
 		}
 		catch (Exception $e) {
