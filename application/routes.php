@@ -14,9 +14,6 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 
-	// graphics
-	Flight::route('/stats/top10/@division/division.png', array('GraphicsController', '_generateDivisionTop10'));
-
 } else {
 
 	// api stuff
@@ -82,3 +79,6 @@ if (empty($_SESSION['userid'])) {
 
 // 404 redirect
 Flight::map('notFound', array('ApplicationController', '_404'));
+
+// graphics
+Flight::route('/stats/top10/@division/division.png', array('GraphicsController', '_generateDivisionTop10'));
