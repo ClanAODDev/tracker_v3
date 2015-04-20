@@ -3,8 +3,6 @@
 // maintenance mode
 // Flight::route('*', array('ApplicationController', '_unavailable'));
 
-
-
 if (empty($_SESSION['userid'])) {
 
 	Flight::route('/', array('UserController', '_login'));
@@ -50,9 +48,6 @@ if (empty($_SESSION['userid'])) {
 	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
 
-
-
-
 	/*	
 	Flight::route('/settings', array('UserController', '_settings'));
 
@@ -69,7 +64,7 @@ if (empty($_SESSION['userid'])) {
 
 	// admin
 	Flight::route('/admin', array('AdminController', '_show'));
-*/
+	*/
 
 	// update user activity
 	if (isset($_SESSION['userid'])) {

@@ -20,11 +20,11 @@
 				<span class="pull-right">
 
 					<?php if (!is_null($game->map_name)) : ?>
-						<img src='assets/images/maps/<?php echo strtolower($game->map_name); ?>.jpg' title="<?php echo $game->map_name ?>" style="width: 90px;"/>
+						<img src='assets/images/maps/<?php echo strtolower($game->map_name); ?>.jpg' class="img-thumbnail" title="<?php echo $game->map_name ?>" style="width: 90px;"/>
 					<?php endif; ?>
 				</span>
 				<?php if ($game->game_id != 2) : ?>
-					<span class="pull-left" style="margin-right: 20px;"><img src="assets/images/game_icons/medium/<?php echo $game->game_id ?>.png"/></span>
+					<span class="pull-left" style="margin-right: 20px;"><img class="img-thumbnail"  src="assets/images/game_icons/medium/<?php echo $game->game_id ?>.png"/></span>
 
 				<?php endif; ?>
 				<span class="pull-left">

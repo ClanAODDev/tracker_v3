@@ -15,6 +15,10 @@ class DivisionStructure {
 		$platoon_num_color = "#FF0000";
 		$platoon_pos_color = "#40E0D0";
 
+		// widths
+		$players_width = 1300;
+		$info_width = 1200;
+
     	// misc settings
 		$min_num_squad_leaders = 2;
 
@@ -26,7 +30,7 @@ class DivisionStructure {
 		$bfh_icon = "[img]http://i.imgur.com/L51wBk8.png[/img]";
 
     	// header
-		$division_structure = "[table='width: 1100']";
+		$division_structure = "[table='width: {$info_width}']";
 		$division_structure .= "[tr][td]";
 
     	// banner
@@ -67,7 +71,7 @@ class DivisionStructure {
 	     * ---------platoons----------
 	     */
 
-	    $division_structure .= "\r\n\r\n[table='width: 1300']";
+	    $division_structure .= "\r\n\r\n[table='width: {$players_width}']";
 	    $platoons = Platoon::find_all($member->game_id);
 
 	    foreach ($platoons as $platoon) {
@@ -149,10 +153,10 @@ class DivisionStructure {
 	    
 	    $i = 1;
 
-	    $division_structure .= "\r\n[table='width: 1000']";
+	    $division_structure .= "\r\n[table='width: {$info_width}']";
 	    $division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Part Time Members[/b][/color][/size][/center][/td][/tr]";
 	    $division_structure .= "[/table]\r\n\r\n";
-	    $division_structure .= "[table='width: 1000']";
+	    $division_structure .= "[table='width: {$info_width}']";
 	    $division_structure .= "[tr][td]";
 
 	    $partTimers = PartTime::findAll($member->game_id);
@@ -175,10 +179,10 @@ class DivisionStructure {
 
 	    $i = 1;
 
-	    $division_structure .= "\r\n[table='width: 1000']";
+	    $division_structure .= "\r\n[table='width: {$info_width}']";
 	    $division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
 	    $division_structure .= "[/table]\r\n\r\n";
-	    $division_structure .= "[table='width: 1000']";
+	    $division_structure .= "[table='width: {$info_width}']";
 	    $division_structure .= "[tr][td][center]";
 	    $loas = LeaveOfAbsence::findAll($member->game_id);
 	    foreach ($loas as $player) {
