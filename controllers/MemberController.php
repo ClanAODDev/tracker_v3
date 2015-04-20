@@ -42,6 +42,8 @@ class MemberController {
 
 		Flight::render('member/activity', array('totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'activity');
 
+		Flight::render('member/history', array(), 'history');
+
 		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'content');
 
 		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'platoons' => $platoons));
@@ -96,7 +98,7 @@ class MemberController {
 	public static function _doValidateMember() {
 
 		if (Member::exists($_POST['member_id'])) {
-			$data = array('success' => false, 'message' => 'A division member already exists with that member id', 'memberExists' => true);
+			$data = array('success' => false, 'memberExists' => true);
 		} else {
 			$data = array('success' => true);
 		}
@@ -107,21 +109,36 @@ class MemberController {
 
 		$user = User::find($_SESSION['userid']);
 		$member = Member::find($_SESSION['username']);
-
-		$params = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$_POST['squad_leader_id'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'bf4db_id'=>0, 'rank_id'=>1, 'battlelog_id'=>0);
-
 		$platoon_id = ($user->role >= 3 || User::isDev($user->id)) ? $_POST['platoon_id'] : $member->platoon_id;
 		$squad_leader_id = ($user->role >= 2 || User::isDev($user->id)) ? $_POST['squad_leader_id'] : $member->member_id;
 		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev($user->id)) ) ? 7 : 6;
-		$params = array_merge($params, array('platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id));
 
+		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$_POST['squad_leader_id'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
+
+		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
 		
-		// log
-		$action = array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$params['member_id']);
-		UserAction::create($action);
+		
 
-		Member::create($params);
-		$data = array('success' => true, 'message' => "Member successfully added!");
+		if (Member::exists($_POST['member_id'])) {
+
+			Member::modify($existingParams);
+
+			// log action
+			$action = array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
+			UserAction::create($action);
+			
+			$data = array('success' => true, 'message' => "Existing member successfully updated!");
+		} else {
+
+			Member::create($newParams);
+
+			// log action
+			$action = array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
+			UserAction::create($action);
+
+			$data = array('success' => true, 'message' => "Member successfully added!");
+		}
+		
 		echo(json_encode($data));
 	}
 
