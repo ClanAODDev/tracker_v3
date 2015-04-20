@@ -40,6 +40,7 @@ class UserAction extends Application {
 	public static function findAll() {
 		return arrayToObject(Flight::aod()->from(self::$table)
 			->limit(10)
+			->sortDesc('date')
 			->join('actions', array('actions.id' => 'user_actions.type_id'))
 			->select(array('date','user_id', 'type_id', 'target_id', 'verbage'))->many());
 	}
