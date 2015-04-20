@@ -65,7 +65,9 @@
 					<div role="tabpanel" class="tab-pane" id="recruits">
 						<?php echo $recruits ?>
 					</div>
-					<div role="tabpanel" class="tab-pane" id="history">...</div>
+					<div role="tabpanel" class="tab-pane" id="history">
+						<?php echo $history ?>
+					</div>
 				</div>
 
 			</div>
