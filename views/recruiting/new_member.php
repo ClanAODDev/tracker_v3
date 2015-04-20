@@ -158,14 +158,22 @@
 
 						<div class='tab-pane' id='tab4'>
 
-							<p>Now, you are ready to finalize your new recruit and take care of the paperwork associated with each new recruit. <strong>Be sure to ask</strong> if there are any questions or concerns your recruit may have. You should also remind him/her that <strong>you will be their squad leader</strong> and can come to you if they have any issues in the relative future.</p><p>Your next steps should include:</p>
-							<ul>
-								<li>Having them adjust their forum (AOD Member Info) profile settings</li>
-								<li>Changing their name on Teamspeak <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></li>
-								<li>Accepting or inviting them into the BF4 platoon on Battlelog</li>
-								<li>Introducing them to the other members in the division</li>
-							</ul>
+							<p>Now, you are ready to finalize your new recruit and take care of the paperwork associated with each new recruit. <strong>Be sure to ask</strong> if there are any questions or concerns your recruit may have. You should also remind him/her that <strong>you will be their squad leader</strong> and can come to you if they have any issues in the relative future.</p><p>Perform these final steps to complete the recruitment:</p>
 
+							<fieldset id="checkArray" style="margin-left: 20px;">
+								<div class="checkbox">
+									<label><input type="checkbox" value="" name="chk[]">Have them adjust their forum (AOD Member Info) profile settings</label>
+								</div>
+								<div class="checkbox">
+									<label><input type="checkbox" value="" name="chk[]">Have them change their name on Teamspeak: <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></label>
+								</div>
+								<div class="checkbox">
+									<label><input type="checkbox" value="" name="chk[]">Accept or invite them into the Battlelog platoon on Battlelog (<strong>And make sure they accept!</strong>)</label>
+								</div>
+								<div class="checkbox">
+									<label><input type="checkbox" value="" name="chk[]">Introduce them to the other members in the division</label>
+								</div>
+							</fieldset>
 						</div>
 
 
@@ -179,14 +187,14 @@
 								<div role='tabpanel'>
 
 									<ul class='nav nav-tabs' role='tablist'>
-										<li role='presentation' class='active'><a href='#division-post' aria-controls='division-post' role='tab' data-toggle='tab'><span class='badge'>1</span> Post to division structure</a></li>
-										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>2</span> Post Welcome thread</a></li>
+										<li role='presentation' class='active'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>1</span> Request new member status</a></li>
+										<li role='presentation'><a href='#division-post' aria-controls='division-post' role='tab' data-toggle='tab'><span class='badge'>2</span> Post to division structure</a></li>
 										<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>3</span> Send Welcome PM</a></li>
-										<li role='presentation'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>4</span> Request new member status</a></li>
+										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>4</span> Post Welcome thread</a></li>
 									</ul>
 
 									<div class='tab-content'>
-										<div role='tabpanel' class='tab-pane active' id='division-post'>
+										<div role='tabpanel' class='tab-pane' id='division-post'>
 											<div class='row margin-top-20'>
 
 												<div class='col-md-6'>
@@ -200,20 +208,6 @@
 														<button type='button' class='division-code-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
 														<code class='post-code'></code>
 													</div>
-												</div>
-
-											</div>
-										</div>
-
-
-										<div role='tabpanel' class='tab-pane' id='welcome-post'>
-											<div class='row margin-top-20'>
-												<div class='col-md-12'>
-													<p>A welcome thread is created for each new recruit. It serves multiple purposes: It makes the recruit feel welcome. This is very important., It gives everyone a chance to know who is new in the division, which includes people from other divisions and even the leadership. and lastly, if you do nothing else on our forums, say hi to the new members.</p>
-
-													<p>It also wouldn't hurt to let your new recruit know you made a new post for them, so they can introduce themselves to everyone.</p>
-
-													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/newthread.php?do=newthread&f=<?php echo $division->welcome_forum ?>' class='text-center'><button type='button' class='btn btn-primary'>Create welcome thread</button></a></p>
 												</div>
 
 											</div>
@@ -238,10 +232,10 @@
 										</div>
 
 
-										<div role='tabpanel' class='tab-pane' id='member-request'>
+										<div role='tabpanel' class='tab-pane active' id='member-request'>
 											<div class='row margin-top-20'>
 												<div class='col-md-8'>
-													<p>Finally, a request must be made so your new recruit can be set as an AOD member on the forums, and be able to see all the hidden content specifically for our division.</p>
+													<p>A request must be made so your new recruit can be set as an AOD member on the forums, and be able to see all the hidden content specifically for our division.</p>
 													<p>You will need to copy the member id to the right, and use it in the form that appears using the button below.</p>
 													<p>Keep in mind that you do not have to enter a name into the member status request if their name doesn't need to change. You need only enter the member id.</p>
 													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/misc.php?do=form&fid=39' class='text-center' target='_blank'><button type='button' class='btn btn-primary'>Submit Request</button></a></p>
@@ -254,6 +248,20 @@
 
 											</div>
 										</div>
+
+										<div role='tabpanel' class='tab-pane' id='welcome-post'>
+											<div class='row margin-top-20'>
+												<div class='col-md-12'>
+													<p>A welcome thread is created for each new recruit. It serves multiple purposes: It makes the recruit feel welcome. This is very important., It gives everyone a chance to know who is new in the division, which includes people from other divisions and even the leadership. and lastly, if you do nothing else on our forums, say hi to the new members.</p>
+
+													<p>It also wouldn't hurt to let your new recruit know you made a new post for them, so they can introduce themselves to everyone.</p>
+
+													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/newthread.php?do=newthread&f=<?php echo $division->welcome_forum ?>' class='text-center'><button type='button' class='btn btn-primary'>Create welcome thread</button></a></p>
+												</div>
+
+											</div>
+										</div>
+
 
 
 									</div>
