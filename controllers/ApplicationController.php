@@ -15,7 +15,6 @@ class ApplicationController {
 		$squad = Squad::find($member->member_id);
 		$platoon = Platoon::find($member->platoon_id);
 		$genPop = Platoon::GeneralPop($member->platoon_id);
-		
 
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');

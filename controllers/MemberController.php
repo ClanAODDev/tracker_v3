@@ -11,8 +11,8 @@ class MemberController {
 
 		// profile data
 		$memberInfo = Member::profileData($id);
-		$divisionInfo = Division::findById(intval($memberInfo->game_id));
-		$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
+		$divisionInfo = Division::findById($memberInfo->game_id);
+		$platoonInfo = Platoon::findById($memberInfo->platoon_id);
 		$recruits = Member::findRecruits($memberInfo->member_id);
 
 		// game data
