@@ -194,9 +194,9 @@ $(function() {
         placement: 'ne'
     });
 
-/*
 
-    // update users online
+
+/*    // update users online
     (function() {
         setTimeout(function() {
             $.post("do/online-list", function(list) {
@@ -208,9 +208,9 @@ $(function() {
 
         }, 2500)
         setTimeout(arguments.callee, 30000);
-    }())
+    }())*/
 });
-*/
+
 function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
