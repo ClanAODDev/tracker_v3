@@ -8,11 +8,12 @@ class MemberController {
 		$member = Member::find($_SESSION['username']);
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
+		$platoons = Platoon::find_all($member->game_id);
 
 		// profile data
-		$memberInfo = Member::profileData($id);
-		$divisionInfo = Division::findById($memberInfo->game_id);
-		$platoonInfo = Platoon::findById($memberInfo->platoon_id);
+		$memberInfo = Member::profileData(intval($id));
+		$divisionInfo = Division::findById(intval($memberInfo->game_id));
+		$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
 		$recruits = Member::findRecruits($memberInfo->member_id);
 
 		// game data
@@ -52,7 +53,7 @@ class MemberController {
 		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
 
 	}
 
