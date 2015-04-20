@@ -56,6 +56,9 @@ function activityIcon($type) {
         case 9:
         $icon = "user-times text-danger";
         break;
+        case 10:
+        $icon = "refresh text-success";
+        break;
     }
     return $icon;
 }
