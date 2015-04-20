@@ -194,7 +194,7 @@ $(function() {
         placement: 'ne'
     });
 
-
+/*
 
     // update users online
     (function() {
@@ -210,7 +210,7 @@ $(function() {
         setTimeout(arguments.callee, 30000);
     }())
 });
-
+*/
 function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 }
