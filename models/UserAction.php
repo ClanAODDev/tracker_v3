@@ -72,6 +72,9 @@ class UserAction extends Application {
 			case 9:
 			$text = "{$user} {$verbage} for {$player}";
 			break;
+			case 10:
+			$text = "{$user} {$verbage} former member {$player} back into the division";
+			break;
 		}
 		return $text;
 	}
