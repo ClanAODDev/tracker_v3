@@ -73,7 +73,7 @@ class GraphicsController {
 
 		    foreach ($daily as $player) {
 		    	$y    = $y + 20;
-		    	$name = strtoupper($player->forum_name);
+		    	$name = strtoupper($player->rank) . " " . strtoupper($player->forum_name);
         		// number
 		    	imagettftext($im, 6, 0, $num_col_1, $y, $orange, $tinyfont, "{$i}.");
        			// name
@@ -96,7 +96,7 @@ class GraphicsController {
 
 		    foreach ($monthly as $player) {
 		    	$y    = $y + 20;
-		    	$name = strtoupper($player->forum_name);
+		    	$name = strtoupper($player->rank) . " " . strtoupper($player->forum_name);
         		// number
 		    	imagettftext($im, 6, 0, $num_col_2, $y, $orange, $tinyfont, "{$i}.");
         		// name
