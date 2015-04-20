@@ -79,6 +79,12 @@ class Activity extends Application {
 		return arrayToObject(Flight::aod()->sql($sql)->many());
 	}
 
+	public static function toplistMonthlyAODTotal() {
+		$sql = "SELECT round((SELECT count(*) FROM activity WHERE (server LIKE '%AOD%') AND activity.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 30 day) AND CURRENT_TIMESTAMP) / count(*)*100, 1) as pct FROM activity WHERE activity.datetime BETWEEN DATE_SUB( NOW(), INTERVAL 30 day ) AND CURRENT_TIMESTAMP";
+		$params = Flight::aod()->sql($sql)->one();
+		return $params['pct'];
+	}
+
 	public static function cleanUpActivity() {
 		Flight::aod()->sql("DELETE FROM activity WHERE datetime < (NOW() - INTERVAL 90 DAY)");
 	}

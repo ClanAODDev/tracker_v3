@@ -14,6 +14,9 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/invalid-login', array('ApplicationController', '_invalidLogin'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
 
+	// graphics
+	Flight::route('/stats/top10/@division/division.png', array('GraphicsController', '_generateDivisionTop10'));
+
 } else {
 
 	// api stuff
