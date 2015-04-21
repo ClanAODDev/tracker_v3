@@ -119,14 +119,23 @@ if ($division) {
 			if (count($removals)) {
 				$removalIds = implode($removals, ", ");
 
-				$query = $pdo->prepare("UPDATE member SET status_id = 4 WHERE member_id IN ({$removalIds}) AND game_id = :gid");
-				$query->execute(array(':gid' => $requested_division));
+				try {
+					$query = $pdo->prepare("UPDATE member SET status_id = 4 WHERE member_id IN ({$removalIds}) AND game_id = :gid");
+					$query->execute(array(':gid' => $requested_division));
+				} catch (PDOException $e) {
+					echo "ERROR: " . $e->getMessage();			
+				}
+				
 				echo date('Y-m-d h:i:s A') . " - Updated the following member ids to 'removed': " . $removalIds . "{$linebreak}";
 			}
 
 			echo date('Y-m-d h:i:s A') . " - sync done. {$linebreak}";
 
-			$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'arch_sync'")->execute();
+			try {
+				$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'arch_sync'")->execute();
+			} catch (PDOException $e) {
+				echo "ERROR: " . $e->getMessage();			
+			}
 
 		} else {
 			echo date('Y-m-d h:i:s A') . " - Error: Column count has changed. Parser needs to be updated.{$linebreak}";
