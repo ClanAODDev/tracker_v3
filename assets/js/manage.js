@@ -21,9 +21,8 @@ $(function() {
     $(".removeMember").click(function(e) {
         e.preventDefault();
         if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
-            $(this).closest(".list-group-item").remove();
             windowOpener($(this).attr("href") + $(this).parent().attr('data-member-id'), "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
-
+            $(this).closest(".list-group-item").remove();
         }
     });
 
@@ -43,7 +42,7 @@ $(function() {
                 context = " flagged for removal.";
 
                 var flagCount = parseInt($(".flagCount").text()) + 1,
-                inactiveCount = parseInt($(".inactiveCount").text()) - 1;
+                    inactiveCount = parseInt($(".inactiveCount").text()) - 1;
 
                 $(".flagCount").text(flagCount);
                 $(".inactiveCount").text(inactiveCount);
@@ -55,7 +54,7 @@ $(function() {
                 action = 0;
 
                 var flagCount = parseInt($(".flagCount").text()) - 1,
-                inactiveCount = parseInt($(".inactiveCount").text()) + 1;
+                    inactiveCount = parseInt($(".inactiveCount").text()) + 1;
 
                 $(".flagCount").text(flagCount);
                 $(".inactiveCount").text(inactiveCount);
@@ -123,7 +122,7 @@ $(function() {
 
     $(".view-pending-loa").click(function() {
         var id = $(this).closest('tr').attr('data-id'),
-        comment = $(this).closest('tr').attr('data-comment');
+            comment = $(this).closest('tr').attr('data-comment');
 
         $(".viewPanel .viewer").html(view_pending_loa);
         $(".modal #comment").html(comment);
@@ -140,7 +139,7 @@ $(function() {
         e.preventDefault();
 
         var url = "/application/ajax/update_loa.php",
-        id = $('.modal').attr('data-id');
+            id = $('.modal').attr('data-id');
 
         $.ajax({
             type: "POST",
@@ -177,7 +176,7 @@ $(function() {
         e.preventDefault();
 
         var url = "/application/ajax/update_loa.php",
-        id = $('.modal').attr('data-id');
+            id = $('.modal').attr('data-id');
 
         $.ajax({
             type: "POST",
@@ -213,8 +212,8 @@ $(function() {
 
     $('#loas').delegate(".view-active-loa", "click", function(e) {
         var id = $(this).closest('tr').attr('data-id'),
-        comment = $(this).closest('tr').attr('data-comment'),
-        approval = $(this).closest('tr').attr('data-approval');
+            comment = $(this).closest('tr').attr('data-comment'),
+            approval = $(this).closest('tr').attr('data-approval');
 
         $(".viewPanel .viewer").html(view_active_loa);
         $(".modal #comment").html(comment);
@@ -239,44 +238,44 @@ $(function() {
         $(".viewPanel .viewer").html(revoke_confirm);
 
         var url = "/application/ajax/update_loa.php",
-        id = $('.modal').attr('data-id');
+            id = $('.modal').attr('data-id');
 
         $('.modal').modal({
             backdrop: 'static',
             keyboard: false
         })
-        .one('click', '#delete', function(e) {
-            $.ajax({
-                type: "POST",
-                url: url,
-                dataType: 'json',
-                data: {
-                    remove: true,
-                    id: id
-                },
+            .one('click', '#delete', function(e) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: 'json',
+                    data: {
+                        remove: true,
+                        id: id
+                    },
 
-                success: function(data) {
-                    if (data.success) {
-                        $('*[data-id="' + id + '"]').effect('highlight').hide("fade", {
-                            direction: "out"
-                        }, "slow");
-                        $(".loa-alerts").attr('class', 'alert alert-success loa-alerts').html("<i class='fa fa-check fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
+                    success: function(data) {
+                        if (data.success) {
+                            $('*[data-id="' + id + '"]').effect('highlight').hide("fade", {
+                                direction: "out"
+                            }, "slow");
+                            $(".loa-alerts").attr('class', 'alert alert-success loa-alerts').html("<i class='fa fa-check fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
 
-                        $('.modal').modal('hide');
+                            $('.modal').modal('hide');
 
-                    } else {
-                        $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
-                        $('.modal').modal('hide');
+                        } else {
+                            $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
+                            $('.modal').modal('hide');
+                        }
                     }
-                }
+                });
             });
-});
 
-})
-
+    })
 
 
-var add_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Request Leave of Absence</h4></div><div class='modal-body'><strong>Reason for request</strong>: <textarea class='form-control' style='resize:vertical; min-height: 100px;' id='comment' name='comment' class='comment' placeholder='Provide an explanation for your leave of absence request' required /></div><div class='modal-footer'><div class='btn-group'> <button type='button' data-dismiss='modal' class='btn'>Cancel</button> <button type='button' id='submit' class='btn btn-success'>Submit</button> </div></div></div></div>";
+
+    var add_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Request Leave of Absence</h4></div><div class='modal-body'><strong>Reason for request</strong>: <textarea class='form-control' style='resize:vertical; min-height: 100px;' id='comment' name='comment' class='comment' placeholder='Provide an explanation for your leave of absence request' required /></div><div class='modal-footer'><div class='btn-group'> <button type='button' data-dismiss='modal' class='btn'>Cancel</button> <button type='button' id='submit' class='btn btn-success'>Submit</button> </div></div></div></div>";
 
 
     // LOA ADD
@@ -291,43 +290,43 @@ var add_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><but
             backdrop: 'static',
             keyboard: false
         })
-        .one('click', '#submit', function(e) {
+            .one('click', '#submit', function(e) {
 
-            var comment = $(".modal #comment").val();
+                var comment = $(".modal #comment").val();
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                dataType: 'json',
-                data: $("#loa-update").serialize() + "&comment=" + comment,
-                success: function(data) {
-                    if (data.success) {
-                        var $newRow = $("<tr data-id='" + data.id + "'><td>" + data.name + "</td><td>" + data.reason + "</td><td>" + data.date + "</td><td class='text-center'><h4><span class='label bg-warning'><i class='fa fa-check fa-lg' title='Pending'></i> Pending</span></h4></td></tr>");
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: 'json',
+                    data: $("#loa-update").serialize() + "&comment=" + comment,
+                    success: function(data) {
+                        if (data.success) {
+                            var $newRow = $("<tr data-id='" + data.id + "'><td>" + data.name + "</td><td>" + data.reason + "</td><td>" + data.date + "</td><td class='text-center'><h4><span class='label bg-warning'><i class='fa fa-check fa-lg' title='Pending'></i> Pending</span></h4></td></tr>");
 
-                        $("#loas tbody tr:last").after($newRow);
-                        $newRow.effect("highlight", {}, 3000);
-                        $('#loa-update')[0].reset();
+                            $("#loas tbody tr:last").after($newRow);
+                            $newRow.effect("highlight", {}, 3000);
+                            $('#loa-update')[0].reset();
 
-                        $('.modal').modal('hide');
+                            $('.modal').modal('hide');
 
-                    } else {
-                        $('.modal').modal('hide');
-                        $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
+                        } else {
+                            $('.modal').modal('hide');
+                            $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
 
+                        }
                     }
-                }
+                });
+                return false;
+
             });
-return false;
 
-});
-
-});
+    });
 
 
-$("#datepicker").datepicker({
-    changeMonth: true,
-    changeYear: true
-});
+    $("#datepicker").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
 
 
 

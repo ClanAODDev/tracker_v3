@@ -50,7 +50,7 @@
 												<a href='http://www.clanaod.net/forums/private.php?do=newpm&u=<?php echo $player->member_id ?>' class='popup-link btn btn-default btn-xs'><i class='fa fa-comment'></i> PM</a> 
 												<button class='btn btn-default btn-xs view-profile'><i class='fa fa-user'></i> View Profile</button>
 												<?php if ($user->role >= 2 && $member->rank_id >= 9) : ?>
-													<a href="# <?php echo REMOVE . $player->member_id ?>" title="Remove player from AOD" class='removeMember btn btn-danger btn-xs'><i class='fa fa-times'></i> Remove</a>
+													<a href="<?php echo REMOVE ?>" title="Remove player from AOD" class='removeMember btn btn-danger btn-xs'><i class='fa fa-times'></i> Remove</a>
 												<? endif; ?> 
 											</span> 
 										</div>
