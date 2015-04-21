@@ -24,6 +24,8 @@ if (dbConnect()) {
 					$query->bindParam(':battlelog_name', $row['battlelog_name']);
 					$query->execute();
 					echo "Added ID {$battlelog_id['id']} to {$row['battlelog_name']}\r\n";
+
+					$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'battlelog_sync'")->execute();
 				} catch (PDOException $e) {
 					echo "ERROR: " . $e->getMessage();			
 				}

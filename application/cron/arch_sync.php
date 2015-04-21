@@ -94,8 +94,7 @@ if ($division) {
 								':last_post' => $lastpost,
 								':forum_posts' => $postcount
 								)
-							)
-						; 
+							); 
 
 					} catch (PDOException $e) {
 						echo "ERROR: " . $e->getMessage();			
@@ -126,6 +125,8 @@ if ($division) {
 			}
 
 			echo date('Y-m-d h:i:s A') . " - sync done. {$linebreak}";
+
+			$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'arch_sync'")->execute();
 
 		} else {
 			echo date('Y-m-d h:i:s A') . " - Error: Column count has changed. Parser needs to be updated.{$linebreak}";
