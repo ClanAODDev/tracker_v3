@@ -1,7 +1,7 @@
 <?php if (count($recruits)) : $rctCount = count($recruits); ?>
 	<?php $recruits = arrayToObject($recruits); ?>
 	<div class='panel panel-primary'>
-		<div class='panel-heading'><strong><?php echo $member->forum_name ?>'s Recruiting History</strong> <span class="pull-right"><?php echo $rctCount ?> members</span></div>
+		<div class='panel-heading'><strong><?php echo $memberInfo->forum_name ?>'s Recruiting History</strong> <span class="pull-right"><?php echo $rctCount ?> members</span></div>
 		<div class='list-group'>
 			<?php foreach ($recruits as $player) : ?>
 				<a href="member/<?php echo $player->member_id ?>" class="list-group-item clearfix">
