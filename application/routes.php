@@ -27,6 +27,7 @@ if (empty($_SESSION['userid'])) {
 
 	// manage
 	Flight::route('/manage/inactive-members', array('DivisionController', '_manage_inactives'));
+	Flight::route('/manage/leaves-of-absence', array('DivisionController', '_manage_loas'));
 
 	// view
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
