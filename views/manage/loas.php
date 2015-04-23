@@ -27,11 +27,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach (LeaveOfAbsence::find_pending() as $player) : ?>
-
-						<tr data-id='{$player->member_id}' data-comment='{$comment}'>
-							<td>{$player->forum_name}</td> 
-							<td><?php echo htmlentities($player->comment, ENT_QUOTES); ?></td>
+					<?php $pendingLoas = LeaveOfAbsence::find_pending($division->id); ?>
+					
+					<?php foreach ($pendingLoas as $player) : ?>
+						<tr data-id='<?php echo $player->member_id ?>' data-comment='<?php echo $player->comment ?>'>
+							<td><?php echo Member::findForumName($player->member_id); ?></td> 
+							<td><?php echo $player->reason; ?></td>
 							<td><?php echo date("M d, Y", strtotime($player->date_end)); ?></td>
 							<td class='text-center' style='vertical-align: middle;'><h4><span class='label bg-warning'><i class='fa fa-clock-o' title='Pending'></i> Pending</span></h4></td>
 
@@ -39,9 +40,8 @@
 								<td class='text-center loa-actions' style='opacity: .2;'><button class='btn btn-default btn-block view-pending-loa' title='Review LOA'>Review LOA</button></td>
 							<?php endif; ?>
 						</tr>
-					</tbody>
-
-				<?php endforeach; ?>
+					<?php endforeach; ?>
+				</tbody>
 			</table>
 		</div>
 	<?php endif; ?>

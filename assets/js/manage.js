@@ -138,7 +138,7 @@ $(function() {
 
         e.preventDefault();
 
-        var url = "/application/ajax/update_loa.php",
+        var url = "do/update-loa",
             id = $('.modal').attr('data-id');
 
         $.ajax({
@@ -175,7 +175,7 @@ $(function() {
 
         e.preventDefault();
 
-        var url = "/application/ajax/update_loa.php",
+        var url = "do/update-loa",
             id = $('.modal').attr('data-id');
 
         $.ajax({
@@ -237,7 +237,7 @@ $(function() {
 
         $(".viewPanel .viewer").html(revoke_confirm);
 
-        var url = "/application/ajax/update_loa.php",
+        var url = "do/update-loa",
             id = $('.modal').attr('data-id');
 
         $('.modal').modal({
@@ -282,7 +282,7 @@ $(function() {
     $("#loa-update").submit(function(e) {
         e.preventDefault();
 
-        var url = "/application/ajax/update_loa.php";
+        var url = "do/update-loa";
 
         $(".viewPanel .viewer").html(add_loa);
 

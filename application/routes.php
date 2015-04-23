@@ -42,6 +42,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/validate-member', array('MemberController', '_doValidateMember'));
 	Flight::route('POST /do/add-member', array('MemberController', '_doAddMember'));
 	Flight::route('POST /do/update-flag', array('MemberController', '_doUpdateFlag'));
+	Flight::route('POST /do/update-loa', array('DivisionController', '_updateLoa'));
 
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
