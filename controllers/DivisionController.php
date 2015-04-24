@@ -73,56 +73,47 @@ class DivisionController {
 		$id = $_POST['id'];
 
 		if (isset($_POST['remove'])) {
+
 			if ($user->role < 2) {
 				$data = array('success' => false, 'message' => "You are not authorized to perform that action.");
 			} else {
-				if ( $revoked = ( LeaveOfAbsence::remove($id) ) ) {
-					if ( $revoked['success'] == false ) {
-						$data = array('success' => false, 'message' => $revoked['message']);
-					} else {
-						$data = array('success' => true, 'message' => "Leave of absence successfully removed.");
-					}
-				}
+				$revoked = LeaveOfAbsence::remove($id);
+				$data = array('success' => true, 'message' => "Leave of absence successfully removed.");
 			}
+
 		} else if (isset($_POST['approve'])) {
+
 			if ($user->role < 2) {
 				$data = array('success' => false, 'message' => "You are not authorized to perform that action.");
 			} else {
-				// is LOA member id the same as user member id?
 				if ($member_id != $id) {
-					if ( $approved = LeaveOfAbsence::approve($id, $member_id) ) {
-						$data = array('success' => true, 'message' => "Leave of absence successfully approved.");
-					} else {
-						$data = array('success' => false, 'message' => $loa['message']);
-					}
+					$approved = LeaveOfAbsence::approve($id, $member_id);
+					$data = array('success' => true, 'message' => "Leave of absence successfully approved.");
 				} else {
 					$data = array('success' => false, 'message' => 'You can\'t approve your own leave of absence!');
 				}
 			}
+
 		} else {
-			$data = NULL;
+
 			$date = date('Y-m-d', strtotime($_POST['date']));
 			$reason = $_POST['reason'];
 			$comment = htmlentities($_POST['comment'], ENT_QUOTES);
 			$name = Member::findForumName($id);
+
 			if ($name != false) {
 				if (strtotime($date) > strtotime('now')) {
-					if ( $loa = ( LeaveOfAbsence::add($id, $date, $reason, $comment) ) ) {
-						if ( $loa['success'] == false ) {
-							$data = array('success' => false, 'message' => $loa['message']);
-						} else {
-							$data = array('success' => true, 'Request successfully submitted!', 'id' => $id, 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
-						}
-					} else {
-						$data = array('success' => false, 'message' => $loa['message']);
-					}
+					LeaveOfAbsence::add($id, $date, $reason, $comment);
+					$data = array('success' => true, 'Request successfully submitted!', 'id' => $id, 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
 				} else {
 					$data = array('success' => false, 'message' => "Date cannot be before today's date.");
 				}
 			} else {
 				$data = array('success' => false, 'message' => 'Invalid member id');
 			}
+			
 		}
+
 		echo json_encode($data);
 	}
 

@@ -39,23 +39,9 @@ class LeaveOfAbsence extends Application {
 
 	public static function add($member_id, $date, $reason, $comment) {
 		$member = Member::profileData($member_id);
-
-		try {
-
-			$sql = "INSERT INTO loa ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
-			Flight::aod()->sql($sql)->one();
-		}
-
-		catch (PDOException $e) {
-			if ($e->errorInfo[1] == 1062) {
-				return array('success' => false, 'message' => 'Member already has an LOA!');
-			} else {
-				return array('success' => false, 'message' => $e->getMessage());
-			}
-
-		}
+		$sql = "INSERT INTO loa ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
+		Flight::aod()->sql($sql)->one();
 		return array('success' => true);
-		
 	}
 
 	public static function remove($member_id) {
