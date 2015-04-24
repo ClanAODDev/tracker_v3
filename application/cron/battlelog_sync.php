@@ -5,7 +5,7 @@ require 'lib.php';
 $members = array();
 
 if (dbConnect()) {
-	$query = $pdo->prepare(" SELECT battlelog_name FROM member WHERE status_id = 1 AND battlelog_name != '0' AND battlelog_id = '0' ");
+	$query = $pdo->prepare(" SELECT battlelog_name FROM member WHERE status_id IN (1,999) AND battlelog_name != '0' AND battlelog_id = '0' ");
 	try {
 		$query->execute();
 		$battlelog_names = $query->fetchAll();
