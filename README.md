@@ -1,5 +1,5 @@
 # ![logo](http://aodwebhost.site.nfoservers.com/tracker-dev/assets/images/icons/small/tracker.png) AOD Division Tracker
-A division tracking tool for user, member management. Intended to scale to support multiple divisions with multiple formats, and flexibility with locality. 
+A division tracking tool for user, member management. Built with the intention to scale to support multiple divisions with multiple formats, and flexibility with locality. 
 
 ## Vendors
 This tracking tool makes use of two specific packages: 
