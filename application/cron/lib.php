@@ -72,7 +72,9 @@ function newActivity($reports, $game, $member_id, $id) {
 			try {
 				$hash = 
 				$sql = "INSERT IGNORE INTO activity (member_id, server, datetime, hash, game_id, map_name, report_id) VALUES (:member, :serverName, :date, :hash, :game, :map, :report)";
-				$pdo->prepare($sql)->execute(array(
+				
+				$pdo->prepare($sql)
+				->execute(array(
 					':member' => $member_id, 
 					':serverName' => $report['serverName'], 
 					':date' => $report['date'],
