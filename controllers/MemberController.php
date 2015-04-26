@@ -54,7 +54,7 @@ class MemberController {
 		$positionsArray = Position::find_all();
 		$games_played = $member->games;
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray, 'bf4' => $bf4, 'bfh' => $bfh));
 
 	}
 
@@ -63,6 +63,10 @@ class MemberController {
 		$user = User::find($_SESSION['userid']);
 		$respMember = Member::findByName($_SESSION['username']);
 		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
+		$games = $_POST['games_played'];
+		foreach ($games as $game) {
+		$params = array_merge($params, array($game => 1));
+		}
 		$member = Member::profileData($params['member_id']);
 
 		// post values based on role since we can't be sure 
