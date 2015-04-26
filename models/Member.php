@@ -38,6 +38,10 @@ class Member extends Application {
 		}
 	}
 
+	public static function findId($member_id) {
+		return self::find(array('member_id' => $member_id))->id;
+	}
+
 	public static function findAll($game_id) {
 		return self::find(array('game_id' => $game_id, 'status_id' => 1));
 	}

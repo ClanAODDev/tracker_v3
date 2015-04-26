@@ -111,7 +111,10 @@ class MemberController {
 
 		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
 
+
+
 		if (Member::exists($_POST['member_id'])) {
+			$existingParams = array_merge($existingParams, array('id' => Member::findId($_POST['member_id'])));
 			Member::modify($existingParams);
 			$action = array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
 			UserAction::create($action);
