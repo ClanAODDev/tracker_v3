@@ -34,8 +34,11 @@
 
 								<?php $flaggedCopy = "[SIZE=2]Members flagged for removal ({$flaggedCount})[/SIZE][hr][/hr][table=\"width: 500\"]"; ?>
 								<?php $flaggedCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][/tr]"; ?>
+								<?php $flagged_ids = array(); ?>
 
 								<?php foreach ($flagged as $player) : ?>
+
+									<?php $flagged_ids[] = $player->member_id; ?>
 																		
 									<?php $flaggedCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][/tr]"; ?>
 									
@@ -58,9 +61,10 @@
 
 								<?php endforeach; ?>
 								<?php $flaggedCopy .= "[/table]"; ?>
+								<?php $flagged_ids = implode("&u[]=", $flagged_ids); ?>
 
 							</ul>
-							<div class='panel-footer clearfix'><button type='button' class='copy-button btn btn-default tool pull-right' title='Copy to clipboard' data-clipboard-text='<?php echo $flaggedCopy ?>'><i class='fa fa-copy'></i> Copy player list</button>
+							<div class='panel-footer clearfix'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u[]=<?php echo $flagged_ids ?>' class='mass-pm-btn pull-right popup-link btn btn-default'><i class='fa fa-users'></i> Mass PM Players</a> <button type='button' class='copy-button btn btn-default tool pull-right' title='Copy to clipboard' data-clipboard-text='<?php echo $flaggedCopy ?>'><i class='fa fa-copy'></i> Copy player list</button>
 							</div>
 						</div>
 					</div>
