@@ -16,7 +16,7 @@ class UserAction extends Application {
 	 * ------------------------
 	 *  id | description
 	 * ------------------------
-	 * 	1  |  add a new recruit
+	 *  1  |  add a new recruit
 	 *  2  |  remove a member
 	 *  3  |  update a member
 	 *  4  |  flag an inactive member
