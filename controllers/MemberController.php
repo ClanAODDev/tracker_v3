@@ -63,16 +63,18 @@ class MemberController {
 		$user = User::find($_SESSION['userid']);
 		$respMember = Member::findByName($_SESSION['username']);
 		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
+		
 		$games = $_POST['games_played'];
 		foreach ($games as $game) {
-		$params = array_merge($params, array($game => 1));
+			$params = array_merge($params, array($game => 1));
 		}
+		
 		$member = Member::profileData($params['member_id']);
 
 		// post values based on role since we can't be sure 
 		// a hidden form element wasn't tampered with
 		if ($user->role > 1 || User::isDev($user->id)) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
-		if ($user->role > 2 || User::isDev($user->id)) {	$params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
+		if ($user->role > 2 || User::isDev($user->id)) { $params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
 
 
 		// only continue if we have permission to edit the user
