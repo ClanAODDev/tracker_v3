@@ -84,8 +84,8 @@ $(function() {
     $(".removeMember").click(function(e) {
         e.preventDefault();
         if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
-            var member = $(this).parent().attr('data-member-id'),
-                user = $(this).parent().attr('data-user-id');
+            var member = $(this).closest('li').attr('data-player-id'),
+                user = $(this).closest('li').attr('data-user-id');
             windowOpener($(this).attr("href") + member, "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
         }
     });
@@ -196,7 +196,7 @@ $(function() {
 
 
 
-/*    // update users online
+    /*    // update users online
     (function() {
         setTimeout(function() {
             $.post("do/online-list", function(list) {
