@@ -79,18 +79,16 @@ class Member extends Application {
 		->select()->many();
 	}
 
-	public static function avatar($member_id, $type = "thumb")
-	{
-		$forum_img = "http://www.clanaod.net/forums/image.php?type={$type}&u={$member_id}";
+	public static function avatar($email, $type = "thumb") {
+		$forum_img = self::GetGravatarUrl($email);
 		$unknown   = "assets/images/blank_avatar.jpg";
-		list($width, $height) = getimagesize($forum_img);
+		return "<img src='{$forum_img}' class='img-thumbnail avatar-{$type}' />";
+	}
 
-		if ($width > 10 && $height > 10) {
-			return "<img src='{$forum_img}' class='img-thumbnail avatar-{$type}' />";
-		} else {
-			return "<img src='{$unknown}' class='img-thumbnail avatar-{$type}' />";
-		}
-
+	public static function GetGravatarUrl( $email, $size = 128, $type = 'identicon', $rating = 'pg' ) {
+		$gravatar = sprintf( 'http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
+			md5( $email ), $type, $size, $rating );
+		return $gravatar;
 	}
 
 	public static function isOnLeave($member_id) {
