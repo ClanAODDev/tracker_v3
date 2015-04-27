@@ -1,5 +1,24 @@
 $(function() {
 
+    $(".send-pm").click(function(e) {
+        e.preventDefault();
+        var members = $(this).attr('data-members');
+        var intArray = members.split(",").map(Number).filter(Boolean);
+        var windows = Math.ceil(intArray.length / 20);
+        var randomNum = Math.random();
+        var pm_url = "http://google.com/"
+
+        if (windows > 1) {
+            var i = 0;
+            if (confirm("Note about forum PM limitation")) {
+                // open dialog and generate PM buttons to handle rows of "20's" 
+            }
+        }
+
+        //memberPm(intArray);
+        //console.log(intArray);
+    })
+
     $("#searchclear").click(function() {
         $("#member-search").val('');
         $('#member-search-results').empty();
@@ -293,4 +312,28 @@ function ucwords(str) {
         .replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function($1) {
             return $1.toUpperCase();
         });
+}
+
+
+function memberPm(members) {
+
+    var y = members.length,
+        x = Math.ceil(y / 20),
+        names = [];
+
+    // iterate windows
+    for (w = 0; w < x; w++) {
+
+        // iterate members
+        for (i = w * 20; i < w * 20 + 20; i++) {
+            if (i >= y) {
+                break;
+            } else {
+                names.push(members[i])
+            }
+        }
+
+        alert(names);
+        names = [];
+    }
 }
