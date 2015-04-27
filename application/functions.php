@@ -1,5 +1,7 @@
 <?php
 
+require_once 'uagent.php';
+
 /**
  * converts role id into real string
  * @param  int $role role id (aod.members)

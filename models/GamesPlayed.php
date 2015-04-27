@@ -3,8 +3,8 @@
 class GamesPlayed extends Application {
 
 	public $id;
-	public $bf4;
-	public $bfh;
+	public $member_id;
+	public $subgame_id;
 
 	static $id_field = 'id';
 	static $table = 'games_played';
