@@ -2,8 +2,13 @@
 
 require 'lib.php';
 
-$division = "battlefield";
-$linebreak = "\r\n";
+if (isset($argv)) {
+	$division = $argv[1];
+	$linebreak = "\r\n";
+} else if (isset($_GET['division'])) {
+	$division = $_GET['division'];
+	$linebreak = "<br />";
+}
 
 if ($division) {
 
