@@ -2,11 +2,10 @@ $(function() {
 
     $(".send-pm").click(function(e) {
         e.preventDefault();
-        var members = $(this).attr('data-members');
-        var intArray = members.split(",").map(Number).filter(Boolean);
-        var windows = Math.ceil(intArray.length / 20);
-        var randomNum = Math.random();
-        var pm_url = "http://google.com/"
+        var members = $(this).attr('data-members'),
+            intArray = members.split(",").map(Number).filter(Boolean),
+            windows = Math.ceil(intArray.length / 20),
+            randomNum = Math.random();
 
         if (windows > 1) {
             var i = 0;
