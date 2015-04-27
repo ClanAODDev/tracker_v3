@@ -4,8 +4,8 @@ class MemberController {
 
 	public static function _profile($id) {
 
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$platoons = Platoon::find_all($member->game_id);
@@ -46,28 +46,35 @@ class MemberController {
 
 	public static function _edit() {
 
-		$user = User::find($_SESSION['userid']);
+		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::profileData($_POST['member_id']);
 		$platoons = Platoon::find_all($member->game_id);
 		$platoon_id = (($user->role >= 2) && (!User::isDev($user->id))) ? $member->platoon_id : false; 
 		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
+		$games_played = $member->games;
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray, 'bf4' => $bf4, 'bfh' => $bfh));
 
 	}
 
 	public static function _doUpdateMember() {
 
-		$user = User::find($_SESSION['userid']);
+		$user = User::find(intval($_SESSION['userid']));
 		$respMember = Member::findByName($_SESSION['username']);
 		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
+		
+		$games = $_POST['games_played'];
+		foreach ($games as $game) {
+			$params = array_merge($params, array($game => 1));
+		}
+		
 		$member = Member::profileData($params['member_id']);
 
 		// post values based on role since we can't be sure 
 		// a hidden form element wasn't tampered with
 		if ($user->role > 1 || User::isDev($user->id)) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
-		if ($user->role > 2 || User::isDev($user->id)) {	$params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
+		if ($user->role > 2 || User::isDev($user->id)) { $params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
 
 
 		// only continue if we have permission to edit the user
@@ -101,11 +108,12 @@ class MemberController {
 
 	public static function _doAddMember() {
 
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$platoon_id = ($user->role >= 3 || User::isDev($user->id)) ? $_POST['platoon_id'] : $member->platoon_id;
 		$squad_leader_id = ($user->role >= 2 || User::isDev($user->id)) ? $_POST['squad_leader_id'] : $member->member_id;
 		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev($user->id)) ) ? 7 : 6;
+		$games = (!empty($games)) ? arrayToObject($_POST['played_games']) : NULL;
 
 		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
 

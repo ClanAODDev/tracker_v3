@@ -85,28 +85,28 @@
 							</div>
 							<div class='col-sm-6 well'>
 								<div class='form-group memberid-group'>
-									<label for='member_id' class='col-sm-3 control-label'>Forum ID</label>
+									<label for='member_id' class='col-sm-3 control-label'><strong>Forum ID</strong></label>
 									<div class='col-sm-9'>
 										<input type='text' class='form-control' placeholder='12345' id='member_id' name='member_id' tabindex='1'>
 									</div>
 								</div>
 
 								<div class='form-group forumname-group'>
-									<label for='forumname' class='col-sm-3 control-label'>Forum Name</label>
+									<label for='forumname' class='col-sm-3 control-label'><strong>Forum Name</strong></label>
 									<div class='col-sm-9'>
 										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='forumname' name='forumname' tabindex='2'>
 									</div>
 								</div>
 
 								<div class='form-group battlelog-group'>
-									<label for='battlelog' class='col-sm-3 control-label'>Battlelog Name</label>
+									<label for='battlelog' class='col-sm-3 control-label'><strong>Battlelog Name</strong></label>
 									<div class='col-sm-9'>
 										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='battlelog' name='battlelog' tabindex='3'>
 									</div>
 								</div>
 
 								<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
-									<label for='platoon' class='col-sm-3 control-label'>Platoon</label>
+									<label for='platoon' class='col-sm-3 control-label'><strong>Platoon</strong></label>
 									<div class='col-sm-9'>
 										<select name='platoon' id='platoon' class='form-control'>
 											<?php foreach($platoons as $platoon) : ?>
@@ -117,7 +117,7 @@
 								</div>
 
 								<div class='form-group squadldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
-									<label for='squadldr' class='col-sm-3 control-label'>Squad Leader</label>
+									<label for='squadldr' class='col-sm-3 control-label'><strong>Squad Leader</strong></label>
 									<div class='col-sm-9'>
 										<select name='squadLdr' id='squadLdr' class='form-control'>
 											<?php foreach($squadLeaders as $squadLeader) : ?>
@@ -128,6 +128,18 @@
 										</select>
 									</div>
 								</div>
+
+								<div class="form-group game-group">
+								<label for='platoon' class='col-sm-3 control-label'><strong>Games Played</strong></label>
+									<div class='col-sm-9'>
+										<label class="checkbox-inline">
+											<input type="checkbox" name="games" value="bf4" checked="checked"> <img src="assets/images/game_icons/tiny/bf4.png" /> Battlefield 4
+										</label>
+										<label class="checkbox-inline">
+											<input type="checkbox" name="games" value="bfh" checked="checked"> <img src="assets/images/game_icons/tiny/bfh.png" /> Battlefield: Hardline
+										</label>
+									</div>
+								</div> 
 
 								<div class='text-center message text-danger'></div>
 							</div>
@@ -178,7 +190,7 @@
 								</div>
 							</fieldset>
 							<div class="margin-top-20">
-							<p class="text-muted">Note: All steps must be marked complete in order to continue.</p>
+								<p class="text-muted">Note: All steps must be marked complete in order to continue.</p>
 							</div>
 						</div>
 

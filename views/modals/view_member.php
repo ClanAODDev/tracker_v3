@@ -68,6 +68,17 @@
 			</select>
 		</div>
 
+		<div class="form-group game-group">
+			<label for='platoon' class='control-label'>Games Played</label><br />
+				<label class="checkbox-inline">
+					<input type="checkbox" name="games" value="bf4" checked="checked"> <img src="assets/images/game_icons/tiny/bf4.png" /> Battlefield 4
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" name="games" value="bfh" checked="checked"> <img src="assets/images/game_icons/tiny/bfh.png" /> Battlefield: Hardline
+				</label>
+			</div>
+		</div> 
+
 	</div>
 	<div class='modal-footer'>
 		<button type='submit' class='btn btn-block btn-success'>Save Info</button> 

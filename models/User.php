@@ -56,12 +56,7 @@ class User extends Application {
 			return false;
 		}
 	}
-
-	public static function find($id) {
-		$params = Flight::aod()->sql("SELECT * FROM users WHERE `id`='{$id}'")->one();
-		return (object) $params;
-	}
-
+ 
 	public static function onlineList() {
 		$params = Flight::aod()->sql("SELECT member.member_id, users.username, users.last_seen, users.role, users.idle FROM users LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
 		return $params;
@@ -75,11 +70,12 @@ class User extends Application {
 	public static function validatePassword($pass, $user)
 	{
 		$user = strtolower($user);
-		$params = Flight::aod()->sql("SELECT id, credential FROM `users` WHERE `username`='{$user}'")->one();
+		$params = self::find($user);
+		$member = Member::find($user);
 
 		if (!empty($params)) {
-			if ($pass == hasher($pass, $params['credential'])) {
-				return $params['id'];
+			if ($pass == hasher($pass, $params->credential)) {
+				return array('userid'=>$params->id, 'memberid'=>$member->id);
 			} else {
 				return false;
 			}

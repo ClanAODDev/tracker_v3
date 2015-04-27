@@ -4,8 +4,9 @@ class ApplicationController {
 
 	public static function _index() {
 		
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		//var_dump(Flight::aod()->last_query);die;
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
@@ -26,8 +27,8 @@ class ApplicationController {
 	}
 
 	public static function _help() {
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
@@ -39,8 +40,8 @@ class ApplicationController {
 
 	public static function _doUsersOnline() {
 		if (isset($_SESSION['loggedIn'])) {
-			$user = User::find($_SESSION['userid']);
-			$member = Member::find($_SESSION['username']); 
+			$user = User::find(intval($_SESSION['userid']));
+			$member = Member::find(intval($_SESSION['memberid'])); 
 			Flight::render('user/online_list', array('user' => $user, 'member' => $member));
 		} else {
 			Flight::render('user/online_list');

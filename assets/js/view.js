@@ -23,7 +23,12 @@ $(function() {
             recruiter = $("#recruiter").val(),
             position = $("#position").val();
 
-        updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter);
+        var played_games = [];
+        $.each($("input[name='games']:checked"), function() {
+            played_games.push($(this).val());
+        });
+
+        updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games);
     });
 
 });
@@ -38,7 +43,8 @@ function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruite
                 platoon: platoon,
                 squad: sqdldr,
                 position: position,
-                recruiter: recruiter
+                recruiter: recruiter,
+                played_games: played_games
             },
 
             function(data) {

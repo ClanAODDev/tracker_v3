@@ -92,7 +92,7 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
 
 								<ul class="dropdown-menu" role="menu">
-									<li><a href="member/<?php echo $member->member_id; ?>"><?php echo ucwords($_SESSION['username']); ?><span class="pull-right"><?php echo Member::avatar($member->member_id) ?></span></a></li>
+									<li><a href="member/<?php echo $member->member_id; ?>"><?php echo ucwords($member->forum_name); ?><span class="pull-right"><?php echo Member::avatar($member->member_id) ?></span></a></li>
 									<li class="divider"></li>
 									<li class='disabled'><a href='#' disabled>Role: <?php echo getUserRoleName($user->role); ?></a></li><li class='divider'></li>
 									<li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
