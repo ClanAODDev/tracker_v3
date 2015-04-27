@@ -110,11 +110,6 @@ function _doBattlelogIdUpdate() {
 	echo "done syncing battlelog ids.";
 }
 
-function _doArchUpdate($game) {
-	echo(ArchUpdater::run($game));
-}
-
-
 function parse_battlelog_reports($personaId, $game) {
 
 	$reports = download_bl_reports($personaId, $game);
