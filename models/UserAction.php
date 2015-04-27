@@ -16,7 +16,7 @@ class UserAction extends Application {
 	 * ------------------------
 	 *  id | description
 	 * ------------------------
-	 * 	1  |  add a new recruit
+	 *  1  |  add a new recruit
 	 *  2  |  remove a member
 	 *  3  |  update a member
 	 *  4  |  flag an inactive member
@@ -75,11 +75,13 @@ class UserAction extends Application {
 	}
 
 	public static function findAll() {
-		return arrayToObject(Flight::aod()->from(self::$table)
+		return arrayToObject(Flight::aod()
+			->from(self::$table)
 			->limit(10)
 			->sortDesc('date')
 			->join('actions', array('actions.id' => 'user_actions.type_id'))
-			->select(array('date','user_id', 'type_id', 'target_id', 'verbage'))->many());
+			->select(array('date','user_id', 'type_id', 'target_id', 'verbage'))->many()
+		);
 	}
 
 	public static function humanize($type_id, $target_id, $user_id, $verbage) {
