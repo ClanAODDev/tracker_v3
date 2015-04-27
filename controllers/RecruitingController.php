@@ -3,8 +3,8 @@
 class RecruitingController {
 
 	public static function _index() {
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
@@ -13,8 +13,8 @@ class RecruitingController {
 	}
 
 	public static function _addNewMember() {
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
@@ -28,7 +28,7 @@ class RecruitingController {
 	public static function _doDivisionThreadCheck() {
 		if (!empty($_POST['player'])) {
 			$player = trim($_POST['player']);
-			$member = Member::find($_SESSION['username']);
+			$member = Member::find(intval($_SESSION['memberid']));
 			$gameThreads = DivisionThread::find_all($member->game_id);
 			Flight::render('recruiting/thread_check', array('js' => 'check_threads', 'gameThreads' => $gameThreads, 'player' => $player));
 		} else {

@@ -23,14 +23,14 @@ class UserController {
 		if (!User::exists($user)) { 
 			$invalid_login = true;
 		} else {
-			$id = User::validatePassword($pass, $user);
-			if (!$id) {
+			$params = User::validatePassword($pass, $user);
+			if (empty($params)) {
 				$invalid_login = true; 
 			} else {
 				// updateLoggedInTime($user);  
 				$_SESSION['loggedIn'] = true;
-				$_SESSION['userid'] = $id;
-				$_SESSION['username'] = $user;
+				$_SESSION['userid'] = $params['userid'];
+				$_SESSION['memberid'] = $params['memberid'];
 			}
 		}
 		if (isset($invalid_login)) {

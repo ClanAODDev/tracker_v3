@@ -3,8 +3,8 @@
 class DivisionController {
 	
 	public static function _index($div) {
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
@@ -23,8 +23,8 @@ class DivisionController {
 	}
 
 	public static function _manage_inactives() {
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
@@ -50,8 +50,8 @@ class DivisionController {
 
 	public static function _manage_loas() {
 
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
@@ -62,14 +62,14 @@ class DivisionController {
 	}
 
 	public static function _generateDivisionStructure() {
-		$member = Member::find($_SESSION['username']);
+		$member = Member::find(intval($_SESSION['memberid']));
 		$division_structure = DivisionStructure::generate($member);
 		Flight::render('modals/division_structure', array('division_structure' => $division_structure));
 	}
 
 	public static function _updateLoa() {
 
-		$user = User::find($_SESSION['userid']);
+		$user = User::find(intval($_SESSION['userid']));
 		$id = $_POST['id'];
 
 		if (isset($_POST['remove'])) {

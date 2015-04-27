@@ -8,8 +8,8 @@ class PlatoonController {
 
 		if (!is_null($platoonId)) {
 
-			$user = User::find($_SESSION['userid']);
-			$member = Member::find($_SESSION['username']);
+			$user = User::find(intval($_SESSION['userid']));
+			$member = Member::find(intval($_SESSION['memberid']));
 			$tools = Tool::find_all($user->role);
 			$divisions = Division::find_all();
 			$platoon = Platoon::findById($platoonId);

@@ -1,4 +1,4 @@
-<div class="container login-form fade-in" style="z-index: 5;">
+<div class="container login-form" style="z-index: 5;">
 	<div class="panel panel-primary" id="login-panel">
 		<div class="panel-heading text-left"><small><strong>AOD</strong> Member Login<i class="fa fa-user pull-right fa-2x"></i></small></div>
 		<div class="panel-body">

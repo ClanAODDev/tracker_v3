@@ -4,8 +4,8 @@ class MemberController {
 
 	public static function _profile($id) {
 
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$platoons = Platoon::find_all($member->game_id);
@@ -46,7 +46,7 @@ class MemberController {
 
 	public static function _edit() {
 
-		$user = User::find($_SESSION['userid']);
+		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::profileData($_POST['member_id']);
 		$platoons = Platoon::find_all($member->game_id);
 		$platoon_id = (($user->role >= 2) && (!User::isDev($user->id))) ? $member->platoon_id : false; 
@@ -60,7 +60,7 @@ class MemberController {
 
 	public static function _doUpdateMember() {
 
-		$user = User::find($_SESSION['userid']);
+		$user = User::find(intval($_SESSION['userid']));
 		$respMember = Member::findByName($_SESSION['username']);
 		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
 		
@@ -108,8 +108,8 @@ class MemberController {
 
 	public static function _doAddMember() {
 
-		$user = User::find($_SESSION['userid']);
-		$member = Member::find($_SESSION['username']);
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
 		$platoon_id = ($user->role >= 3 || User::isDev($user->id)) ? $_POST['platoon_id'] : $member->platoon_id;
 		$squad_leader_id = ($user->role >= 2 || User::isDev($user->id)) ? $_POST['squad_leader_id'] : $member->member_id;
 		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev($user->id)) ) ? 7 : 6;
