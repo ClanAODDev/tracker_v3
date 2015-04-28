@@ -12,6 +12,12 @@ class DivisionThread extends Application {
 		return self::find_each(array("game_id" => $game_id, "|game_id" => 0));
 	}
 
+	/**
+	 * checks rules threads for a player's post
+	 * @param  string $player player name
+	 * @param  string $thread url to be dug
+	 * @return boolean        true if an instance found, false if not
+	 */
 	public static function checkForPost($player, $thread)
 	{
 		$ch = curl_init();

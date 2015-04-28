@@ -10,7 +10,7 @@ class PartTime extends Application {
 	static $name = 'forum_name';
 	static $table = 'part_timers';
 
-	public static function findAll($game_id) {
+	public static function find_all($game_id) {
 		return self::find(array('game_id' => $game_id));
 	}
 

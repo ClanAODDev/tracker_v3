@@ -45,7 +45,7 @@ class DivisionStructure {
 
 	    $division_leaders = Division::findDivisionLeaders($member->game_id);
 	    foreach ($division_leaders as $leader) {
-	    	$aod_url = "[url=" . CLANAOD . $leader->forum_id . "]";
+	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 	    	$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]";
 	    	$division_structure .= "{$aod_url}[color={$division_leaders_color}]{$leader->rank} {$leader->forum_name}[/url] {$bl_url}{$bf4_icon}[/url][/color] - {$leader->position_desc}\r\n";
 	    }
@@ -159,7 +159,7 @@ class DivisionStructure {
 	    $division_structure .= "[table='width: {$info_width}']";
 	    $division_structure .= "[tr][td]";
 
-	    $partTimers = PartTime::findAll($member->game_id);
+	    $partTimers = PartTime::find_all($member->game_id);
 
 	    foreach ($partTimers as $player) {
 	    	if ($i % 10 == 0) {
@@ -184,14 +184,14 @@ class DivisionStructure {
 	    $division_structure .= "[/table]\r\n\r\n";
 	    $division_structure .= "[table='width: {$info_width}']";
 	    $division_structure .= "[tr][td][center]";
-	    $loas = LeaveOfAbsence::findAll($member->game_id);
+	    $loas = LeaveOfAbsence::find_all($member->game_id);
 	    foreach ($loas as $player) {
 	    	if ($i % 10 == 0) {
 	    		$division_structure .= "[/td][td]";
 	    	}
 	    	$date_end = date("M d, Y", strtotime($player->date_end));
 	    	$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
-	    	$division_structure .= "{$aod_url}{$player->rank} " . Member::findForumName($player->member_id) . "[/url] -- {$date_end} -- {$player->reason}\r\n";
+	    	$division_structure .= "{$aod_url}" . Member::findForumName($player->member_id) . "[/url] -- {$date_end} -- {$player->reason}\r\n";
 	    	$i++;
 	    }
 	    $division_structure .= "[/center][/td]";

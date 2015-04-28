@@ -42,7 +42,7 @@ class Member extends Application {
 		return self::find(array('member_id' => $member_id))->id;
 	}
 
-	public static function findAll($game_id) {
+	public static function find_all($game_id) {
 		return self::find(array('game_id' => $game_id, 'status_id' => 1));
 	}
 
@@ -72,6 +72,8 @@ class Member extends Application {
 		$params = Flight::aod()->from(self::$table)
 		->where(array('member_id' => $member_id))
 		->select('forum_name')->one();
+
+		//var_dump(Flight::aod()->last_query);die;
 		return ucwords($params['forum_name']);
 	}
 

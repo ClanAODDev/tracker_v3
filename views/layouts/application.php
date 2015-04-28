@@ -37,6 +37,15 @@
 		</div>
 	</div>
 
+		<!-- modal for ajax dialogs -->
+	<div class="modal viewPanel-lg fade">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="viewer fadeIn animate"></div>
+			</div>
+		</div>
+	</div>
+
 	<div id="wrap">
 		<div class="push-top"></div>
 
@@ -74,7 +83,7 @@
 									<a class="dropdown-toggle" data-toggle="dropdown" href="#">Activity <span class="caret"></span></a>
 									<div class="popup dropdown-menu">
 										<ul class="activity">
-											<?php foreach(UserAction::findAll() as $action) : ?>
+											<?php foreach(UserAction::find_all() as $action) : ?>
 												<li>
 													<i class="fa fa-<?php echo activityIcon($action->type_id); ?> fa-2x"></i>
 													<div>

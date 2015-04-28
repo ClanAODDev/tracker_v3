@@ -21,10 +21,10 @@ class MemberController {
 		$edate = date("Y-m-d", strtotime("tomorrow"));
 		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
 		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
-		$allGames = Activity::findAllGames($memberInfo->member_id);
+		$allGames = Activity::find_allGames($memberInfo->member_id);
 		$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
 
-		if ($platoonInfo->id != 0) {
+		if (property_exists($platoonInfo, 'id')) {
 			$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
 			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 		}
@@ -52,8 +52,9 @@ class MemberController {
 		$platoon_id = (($user->role >= 2) && (!User::isDev($user->id))) ? $member->platoon_id : false; 
 		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
+		$memberGames = MemberGame::get($member->id);
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'memberGames' => $memberGames, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
 
 	}
 

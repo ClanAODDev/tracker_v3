@@ -11,12 +11,12 @@ class Division extends Application {
 	public $division_structure_thread;
 	public $welcome_forum;
 
-	static $table = 'games';
+	static $table = 'divisions';
 	static $id_field = 'id';
 	static $name_field = 'short_name';
 
 	public static function find_all() {
-		return Division::fetch_all();
+		return self::fetch_all();
 	}
 
 	public static function findById($id) {

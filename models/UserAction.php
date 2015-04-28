@@ -74,7 +74,7 @@ class UserAction extends Application {
 		return $icon;
 	}
 
-	public static function findAll() {
+	public static function find_all() {
 		return arrayToObject(Flight::aod()
 			->from(self::$table)
 			->limit(10)

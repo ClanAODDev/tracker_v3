@@ -3,18 +3,18 @@
 	<ul class='list-group'>
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Status: </strong></span> <span class='text-muted'><?php echo $memberInfo->desc ?></span></li>
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Division: </strong></span> <span class='text-muted'><?php echo $divisionInfo->full_name ?></span></li>
-		<?php echo $platoonInfo->item ?>
+		<?php echo (property_exists($platoonInfo, 'item')) ? $platoonInfo->item : NULL; ?>
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo $memberInfo->position ?></span></li>
-		<?php $squadleader = ($memberInfo->squad_leader_id != 0) ? $memberInfo->squad_leader_id : NULL; ?>
+		<?php $squadleader = (property_exists($memberInfo, 'squad_leader_id')) ? $memberInfo->squad_leader_id : NULL; ?>
 
-		<?php if (!is_null($squadleader)) : ?>
+		<?php if ($squadleader != 0) : ?>
 			<a href="member/<?php echo $squadleader ?>" class="list-group-item text-right">
 				<span class='pull-left'><strong>Squad Leader: </strong></span> 
 				<span class='text-muted'><?php echo Member::findForumName($squadleader) ?></a></span>
 			</a>
 		<?php endif; ?>
 
-		<?php $recruiter = ($memberInfo->recruiter != "0") ? $memberInfo->recruiter : NULL; ?>
+		<?php $recruiter = ($memberInfo->recruiter != 0) ? $memberInfo->recruiter : NULL; ?>
 		<?php if (!is_null($recruiter)) : ?>
 			<a href="member/<?php echo $recruiter ?>" class="list-group-item text-right">
 				<span class='pull-left'><strong>Recruiter: </strong></span> 

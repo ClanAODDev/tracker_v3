@@ -15,7 +15,7 @@ class Activity extends Application {
 	static $id_field = 'id';
 	static $name_field = 'server';
 
-	public static function findAllGames($member_id, $limit=MAX_GAMES_ON_PROFILE) {
+	public static function find_allGames($member_id, $limit=MAX_GAMES_ON_PROFILE) {
 		$sql = "SELECT * FROM activity WHERE member_id = {$member_id} ORDER BY datetime DESC LIMIT {$limit}";
 		return Flight::aod()->sql($sql)->many();
 	}

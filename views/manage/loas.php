@@ -61,7 +61,7 @@
 			<tbody>
 
 				<?php if (count(LeaveOfAbsence::count_active($division->id))) : ?>
-					<?php foreach (LeaveOfAbsence::findAll($division->id) as $player) : ?>
+					<?php foreach (LeaveOfAbsence::find_all($division->id) as $player) : ?>
 
 
 						<?php $expired = ( strtotime(date("M d, Y", strtotime($player->date_end))) < strtotime('now')) ? true : false; ?>

@@ -3,7 +3,7 @@
 	<ul class='breadcrumb'>
 		<li><a href='./'>Home</a></li>
 		<li><a href='divisions/<?php echo $divisionInfo->short_name; ?>'><?php echo $divisionInfo->full_name; ?></a></li>
-		<?php echo $platoonInfo->link ?>
+		<?php echo (property_exists($platoonInfo, 'link')) ? $platoonInfo->link : NULL; ?>
 		<li class='active'><?php echo $memberInfo->forum_name; ?></li>
 	</ul>
 

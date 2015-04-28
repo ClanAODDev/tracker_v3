@@ -93,10 +93,10 @@ $(function() {
     $(".edit-member").click(function() {
         var member_id = $(this).parent().attr('data-member-id');
 
-        $(".viewPanel .viewer").load("edit/member/", {
+        $(".viewPanel-lg .viewer").load("edit/member/", {
             member_id: member_id
         });
-        $(".viewPanel").modal();
+        $(".viewPanel-lg").modal();
     });
 
     $(".removeMember").click(function(e) {
