@@ -9,6 +9,7 @@ class Application {
 	
 	public function load($params) {
 		foreach ($params as $key => $value) {
+			if ($value == " ") continue;
 			if (is_array($value)) $value = json_encode($value);
 			$this->$key = $value;
 		}
@@ -28,31 +29,38 @@ class Application {
 			$this->id = Flight::aod()->insert_id;
 		}
 	}
-
+	
+	public function to_json() {
+		return json_encode($this);
+	}
+	
 	public static function find($params) {
+		if (is_numeric($params)) $params = (int) $params;
 		return Flight::aod()->using(get_called_class())->find($params);
 	}
 	
 	public static function find_each($params) {
 		$results = Flight::aod()->using(get_called_class())->find($params);
-		return is_object($results) ? array($results) : $results;
+		return is_array($results) ? $results : array($results);
+	}
+	
+	public static function sql_find($sql) {
+		return Flight::aod()->using(get_called_class())->sql($sql)->find();
+	}
+	
+	public static function fetch_active() {
+		return self::find_each(array('active' => 1));
 	}
 	
 	public static function fetch_all() {
-		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->find();
-		return is_object($results) ? array($results) : $results;
-	} 
-
-	public static function count_all() {
-		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->count();
-		return is_object($results) ? array($results) : $results;
-	} 
+		$results = Flight::aod()->using(get_called_class())->select();
+		return is_array($results) ? $results : array($results);
+	}
 	
 	public static function create($params) {
 		$object = new static();
 		if (property_exists(get_called_class(), 'created_at')) $object->created_at = timestamp();
 		$object->save($params);
-		$object->id = Flight::aod()->insert_id;
 		return $object;
 	}
 	
@@ -62,5 +70,5 @@ class Application {
 		$object->save($params);
 		return $object;
 	}
-		
+	
 }
