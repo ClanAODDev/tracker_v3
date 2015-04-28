@@ -27,7 +27,6 @@ class DivisionController {
 		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
-		$division = Division::findByName(strtolower($div));
 
 		switch ($user->role) {
 			case User::isDev($user->id): $type = "div"; $id = $member->game_id; break;

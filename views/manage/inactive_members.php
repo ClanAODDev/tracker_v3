@@ -39,13 +39,13 @@
 								<?php foreach ($flagged as $player) : ?>
 
 									<?php $flagged_ids[] = $player->member_id; ?>
-																		
+
 									<?php $flaggedCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][/tr]"; ?>
 									
 
 									<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
 										<div class='col-xs-1'><img src='assets/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
-										<div class='col-xs-2'><?php echo $player->rank ?> <?php echo $player->forum_name ?></div>
+										<div class='col-xs-2'><?php echo $player->forum_name ?></div>
 										<div class='col-xs-3 text-muted text-center'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></div>
 										<div class='col-xs-3 removed-by text-center text-muted'>Flagged by <?php echo Member::findForumName($player->flagged_by); ?></div>
 										<div class='col-xs-3 actions btn-group'>
@@ -54,7 +54,7 @@
 												<button class='btn btn-default btn-xs view-profile'><i class='fa fa-user'></i> View Profile</button>
 												<?php if ($user->role >= 2 && $member->rank_id >= 9) : ?>
 													<a href="<?php echo REMOVE ?>" title="Remove player from AOD" class='removeMember btn btn-danger btn-xs'><i class='fa fa-times'></i> Remove</a>
-												<? endif; ?> 
+												<?php endif; ?> 
 											</span> 
 										</div>
 									</li>
@@ -93,7 +93,7 @@
 							<?php $inactive_ids = array(); ?>
 
 							<?php $inactiveCopy = "[SIZE=3]Inactive members ({$inactiveCount})[/SIZE][hr][/hr][table=\"width: 700\"]"; ?>
-								<?php $inactiveCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][td][b]Last Seen[/b][/td][td][b]Platoon[/b][/td][/tr]"; ?>
+							<?php $inactiveCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][td][b]Last Seen[/b][/td][td][b]Platoon[/b][/td][/tr]"; ?>
 
 							<?php foreach ($inactives as $player) : ?>
 								<?php $inactive_ids[] = $player->member_id; ?>
@@ -102,7 +102,7 @@
 
 								<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
 									<div class='col-xs-1'><img src='/public/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
-									<div class='col-xs-2'><?php echo $player->rank ?> <?php echo $player->forum_name ?></div>
+									<div class='col-xs-2'><?php echo $player->forum_name ?></div>
 									<div class='col-xs-3 text-muted text-center'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></div>
 									<div class='col-xs-3 removed-by text-center text-muted'><?php echo $player->plt_name ?></div>
 									<div class='col-xs-3 actions btn-group'><span class='pull-right'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u=<?php echo $player->member_id ?>' class='popup-link btn btn-default btn-xs'><i class='fa fa-comment'></i> PM</a> <button class='btn btn-default btn-xs view-profile'><i class='fa fa-user'></i> View Profile</button></span> 
