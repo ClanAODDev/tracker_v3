@@ -1,13 +1,13 @@
 <?php
 
-class MemberHandle extends Application {
-	
+class Handles extends Application {
 	public $id;
-	public $member_id;
 	public $handle_type;
+	public $handle_profile_url;
 
 	static $id_field = 'id';
-	static $table_name = 'member_handles';
+	static $name_field = 'handle_type';
+	static $table_name = 'handles';
 
 	public static function create($params) {
 		$handle = new self();
@@ -26,5 +26,4 @@ class MemberHandle extends Application {
 	}
 
 	public static function delete($id) {}
-
 }
