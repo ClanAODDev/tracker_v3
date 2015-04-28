@@ -139,6 +139,7 @@
 
 
 								<ul class="dropdown-menu" role="menu">
+
 									<?php foreach ($divisions as $division) : ?>
 										<?php $platoons = Platoon::find_all($division->id); ?>
 
@@ -199,6 +200,7 @@
 	<script src="assets/js/libraries/dataTables.bootstrap.js"></script>
 	<script src="assets/js/libraries/dataTables.tableTools.min.js"></script>
 	<script src="assets/js/libraries/jquery.bootstrap.wizard.min.js"></script>
+	<script src="assets/js/libraries/bootstrap-multiselect.js"></script>
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/main.js"></script>
 

@@ -1,5 +1,7 @@
 $(function() {
 
+    $('#games').multiselect();
+
     // auto select values
     var sqdldr = $("#cur_sqd").val(),
         plt = $("#cur_plt").val(),

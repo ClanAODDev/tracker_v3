@@ -130,14 +130,12 @@
 								</div>
 
 								<div class="form-group game-group">
-								<label for='platoon' class='col-sm-3 control-label'><strong>Games Played</strong></label>
+									<label for='platoon' class='col-sm-3 control-label'><strong>Games Played</strong></label>
 									<div class='col-sm-9'>
-										<label class="checkbox-inline">
-											<input type="checkbox" name="games" value="bf4" checked="checked"> <img src="assets/images/game_icons/tiny/bf4.png" /> Battlefield 4
-										</label>
-										<label class="checkbox-inline">
-											<input type="checkbox" name="games" value="bfh" checked="checked"> <img src="assets/images/game_icons/tiny/bfh.png" /> Battlefield: Hardline
-										</label>
+										<select id="games" multiple="multiple">
+											<option value="bf4">Battlefield 4</option>
+											<option value="bfh">Battlefield: Hardline</option>
+										</select>
 									</div>
 								</div> 
 

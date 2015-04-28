@@ -53,9 +53,14 @@ class Application {
 	}
 	
 	public static function fetch_all() {
-		$results = Flight::aod()->using(get_called_class())->select();
-		return is_array($results) ? $results : array($results);
-	}
+		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->find();
+		return is_object($results) ? array($results) : $results;
+	} 
+
+	public static function count_all() {
+		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->count();
+		return is_object($results) ? array($results) : $results;
+	} 
 	
 	public static function create($params) {
 		$object = new static();

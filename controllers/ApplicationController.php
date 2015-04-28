@@ -6,7 +6,6 @@ class ApplicationController {
 		
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
-		//var_dump(Flight::aod()->last_query);die;
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));

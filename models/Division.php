@@ -16,7 +16,7 @@ class Division extends Application {
 	static $name_field = 'short_name';
 
 	public static function find_all() {
-		return self::fetch_all();
+		return Division::fetch_all();
 	}
 
 	public static function findById($id) {
