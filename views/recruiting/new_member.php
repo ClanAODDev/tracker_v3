@@ -129,15 +129,20 @@
 									</div>
 								</div>
 
-								<div class="form-group game-group">
-									<label for='platoon' class='col-sm-3 control-label'><strong>Games Played</strong></label>
-									<div class='col-sm-9'>
-										<select id="games" multiple="multiple">
-											<option value="bf4">Battlefield 4</option>
-											<option value="bfh">Battlefield: Hardline</option>
-										</select>
+
+								<?php if (count(SubGame::count($member->game_id))): ?>
+									<div class="form-group game-group">
+										<label for='platoon' class='col-sm-3 control-label'><strong>Games Played</strong></label>
+										<div class='col-sm-9'>
+											<select id="games" multiple="multiple">
+												<?php foreach (SubGame::get($member->game_id) as $game): ?>
+													<option value="<?php echo $game->id ?>"><?php echo $game->full_name ?></option>
+												<?php endforeach; ?>
+											</select>
+										</div>
 									</div>
-								</div> 
+								<?php endif; ?>
+
 
 								<div class='text-center message text-danger'></div>
 							</div>

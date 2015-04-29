@@ -25,17 +25,16 @@ $(function() {
             recruiter = $("#recruiter").val(),
             position = $("#position").val();
 
-        var played_games = [];
-        $.each($("input[name='games']:checked"), function() {
-            played_games.push($(this).val());
-        });
+        var played_games = $("#games option:selected").map(function() {
+            return $(this).val();
+        }).get();
 
         updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games);
     });
 
 });
 
-function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter) {
+function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games) {
     setTimeout(function() {
         $.post("do/update-member", {
                 uid: uid,

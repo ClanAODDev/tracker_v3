@@ -72,10 +72,9 @@
 			<div class="form-group game-group">
 				<label for='platoon' class='control-label'>Games Played</label><br />
 				<select id="games" multiple="multiple">
-
 					<?php foreach (SubGame::get($member->game_id) as $game): ?>
 						<?php $selected = (MemberGame::plays($member->id, $game->id)) ? "selected='selected'" : ""; ?> 
-						<option value="<?php echo $game->short_name ?>" <?php echo $selected ?>><?php echo $game->full_name ?></option>
+						<option value="<?php echo $game->id ?>" <?php echo $selected ?>><?php echo $game->full_name ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>

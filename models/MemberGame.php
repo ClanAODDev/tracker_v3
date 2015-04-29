@@ -18,13 +18,12 @@ class MemberGame extends Application {
 		return is_object($params) ? true : false;
 	}
 
-	public static function add($params) {
+	public static function add($member_id, $game_id) {
 		$game = new self();
-		$game->id = $params->id;
-		foreach ($params->games as $game) {
-			$game->$key = $value;
-		}
-		$game->save($params);
+		$game->member_id = $member_id;
+		$game->subgame_id = $game_id;
+		$game->save();
+		var_dump(Flight::aod()->last_query);die;
 	}
 
 	public static function delete($params) {
@@ -33,3 +32,6 @@ class MemberGame extends Application {
 	}
 
 }
+
+
+// problem currently is that there is no way to delete entries that are added, is this needed?

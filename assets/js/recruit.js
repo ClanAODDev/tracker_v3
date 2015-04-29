@@ -8,16 +8,6 @@ $(function() {
 
     $('#games').multiselect();
 
-/*    $('#btnSelected').click(function() {
-        var selected = $("#lstFruits option:selected");
-        var message = "";
-        selected.each(function() {
-            message += $(this).text() + " " + $(this).val() + "\n";
-        });
-        alert(message);
-    });*/
-
-
     $(".progress-bar-rct").attr("class", "bar progress-bar progress-bar-striped progress-bar-danger active");
 
     $('#rootwizard').bootstrapWizard({
@@ -258,6 +248,10 @@ function loadThreadCheck() {
 }
 
 function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, division, played_games) {
+
+    var played_games = $("#games option:selected").map(function() {
+        return $(this).val();
+    }).get();
 
     $("#storePlayer").html("Submitting player data...").attr("class", "btn btn-info disabled");
 
