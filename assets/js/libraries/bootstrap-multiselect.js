@@ -291,7 +291,7 @@
             buttonClass: 'btn btn-default btn-block',
             inheritClass: false,
             buttonWidth: 'auto',
-            buttonContainer: '<div class="btn-group btn-block" />',
+            buttonContainer: '<div class="btn-group btn-block multidrop" />',
             dropRight: false,
             selectedClass: 'active',
             // Maximum height of the dropdown menu.
