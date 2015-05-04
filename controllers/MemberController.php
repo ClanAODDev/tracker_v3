@@ -76,8 +76,11 @@ class MemberController {
 		if (User::canEdit($params['member_id'], $user, $member) == true) {
 
 			// log
-			$action = array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id);
-			UserAction::create($action);
+			// don't log if user edits their own profile
+			if ($respMember->member_id != $member->member_id) {
+				$action = array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id);
+				UserAction::create($action);
+			}
 
 			if (isset($_POST['played_games'])) {
 				$games = $_POST['played_games'];
