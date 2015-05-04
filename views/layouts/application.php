@@ -37,7 +37,6 @@
 
 	<div id="wrap">
 		<div class="push-top"></div>
-
 		<div class="navbar navbar-default navbar-nav navbar-fixed-top" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
@@ -51,9 +50,7 @@
 				</div>
 
 				<?php if (User::isLoggedIn()): ?>
-
 					<div class="navbar-collapse collapse">
-
 						<form class="navbar-form navbar-right" role="search">
 							<div class="form-group has-feedback">
 								<input type='text' class='form-control' id='member-search' placeholder='Search for a player...' />
@@ -63,11 +60,7 @@
 						</form>
 
 						<ul class="nav navbar-nav navbar-left">
-
 							<?php if ($user->role >= 1) : ?>
-
-
-
 								<li class="dropdown">
 									<a class="dropdown-toggle" data-toggle="dropdown" href="#">Activity <span class="caret"></span></a>
 									<div class="popup dropdown-menu">
@@ -101,8 +94,6 @@
 								</ul>
 							</li>						
 
-
-
 							<!-- showing tools if squad leader or above -->
 							<?php if ($user->role > 0): ?>
 
@@ -128,7 +119,6 @@
 										<?php endforeach; ?>
 									</ul>
 								</li>
-
 							<?php endif; ?>
 
 							<!-- supported divisions -->
@@ -137,10 +127,8 @@
 
 
 								<ul class="dropdown-menu" role="menu">
-
 									<?php foreach ($divisions as $division) : ?>
 										<?php $platoons = Platoon::find_all($division->id); ?>
-
 										<li class="dropdown-submenu"><a href='divisions/<?php echo $division->short_name ?>'><?php echo $division->full_name ?></a>
 											<ul class="dropdown-menu">
 
@@ -149,12 +137,9 @@
 												<?php endforeach; ?>	
 											</ul>
 										</li>
-
 									<?php endforeach; ?>
 								</ul>
-
 							</li>
-
 						</ul>
 					</div>
 
@@ -185,7 +170,6 @@
 	<div id="footer" class="navbar navbar-default">
 		<div class="container">
 			<small class="text-muted col-xs-6">Copright &copy; Angels of Death <span class="hidden-xs">2005-2015. All rights reserved.</span><br /><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google Chrome</strong></a></span></small>
-			<!-- <small class="text-muted col-xs-6 text-right userList"><img src="assets/images/loading_2.gif" style="background: transparent;" /> Loading users...</small> -->
 		</div>
 	</div>
 
