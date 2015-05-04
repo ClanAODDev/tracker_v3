@@ -183,7 +183,7 @@
 									<label><input type="checkbox" value="" name="chk[]">Have them change their name on Teamspeak: <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></label>
 								</div>
 								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Accept or invite them into the Battlelog platoon (<em>And make sure they accept!</em>)</label>
+									<label><input type="checkbox" value="" name="chk[]">Accept or invite them into ONE Battlelog platoon (<strong>And don't forget to have them adjust their ingame tags if necessary!</strong>)</label>
 								</div>
 								<div class="checkbox">
 									<label><input type="checkbox" value="" name="chk[]">Give them the "AOD Member" server group permission on TeamSpeak</label>
