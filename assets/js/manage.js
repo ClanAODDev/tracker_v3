@@ -14,8 +14,6 @@ $(function() {
 
     var itemMoved, targetplatoon, sourcePlatoon, action = null;
 
-    console.log('request received');
-
     $(".sortable").sortable({
 
         revert: true,
@@ -111,13 +109,15 @@ $(function() {
     var view_pending_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Review Leave of Absence</h4></div><div class='modal-body'><strong>Reason for request</strong>: <textarea class='form-control' style='resize:vertical; min-height: 200px;' id='comment' class='comment' /></div><div class='modal-footer'><div class='btn-group'><button type='button' class='btn btn-success approve-loa-btn'>Approve</button> <button type='button' class='btn btn-danger deny-loa-btn'>Deny</button><button type='button' data-dismiss='modal' class='btn'>Close</button></div></div></div></div>";
 
     $(".view-pending-loa").click(function() {
-        var id = $(this).closest('tr').attr('data-id'),
+        var id = $(this).closest('tr').attr('data-member-id'),
+            loa_id = $(this).closest('tr').attr('data-loa-id'),
             comment = $(this).closest('tr').attr('data-comment');
 
         $(".viewPanel .viewer").html(view_pending_loa);
         $(".modal #comment").html(comment);
 
-        $(".modal").attr('data-id', id).modal();
+        $(".modal").attr('data-member-id', id).modal();
+        $(".modal").attr('data-loa-id', loa_id).modal();
     })
 
 
@@ -129,7 +129,8 @@ $(function() {
         e.preventDefault();
 
         var url = "do/update-loa",
-            id = $('.modal').attr('data-id');
+            member_id = $('.modal').attr('data-member-id'),
+            loa_id = $('.modal').attr('data-loa-id');
 
         $.ajax({
             type: "POST",
@@ -137,7 +138,8 @@ $(function() {
             dataType: 'json',
             data: {
                 remove: true,
-                id: id
+                member_id: member_id,
+                loa_id: loa_id
             },
 
             success: function(data) {
@@ -145,7 +147,7 @@ $(function() {
 
                     $('.modal').modal('hide');
 
-                    $('*[data-id="' + id + '"]').effect('highlight').hide("fade", {
+                    $('*[data-loa-id="' + loa_id + '"]').effect('highlight').hide("fade", {
                         direction: "out"
                     }, "slow");
                     $(".loa-alerts").attr('class', 'alert alert-success loa-alerts').html("<i class='fa fa-check fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
@@ -166,7 +168,10 @@ $(function() {
         e.preventDefault();
 
         var url = "do/update-loa",
-            id = $('.modal').attr('data-id');
+            member_id = $('.modal').attr('data-member-id'),
+            loa_id = $('.modal').attr('data-loa-id');
+
+
 
         $.ajax({
             type: "POST",
@@ -174,7 +179,8 @@ $(function() {
             dataType: 'json',
             data: {
                 approve: true,
-                id: id
+                member_id: member_id,
+                loa_id: loa_id
             },
 
             success: function(data) {
@@ -182,7 +188,7 @@ $(function() {
 
                     $('.modal').modal('hide');
 
-                    $('*[data-id="' + id + '"]').effect('highlight').hide("fade", {
+                    $('*[data-loa-id="' + loa_id + '"]').effect('highlight').hide("fade", {
                         direction: "out"
                     }, "slow");
                     $(".loa-alerts").attr('class', 'alert alert-success loa-alerts').html("<i class='fa fa-check fa-lg'></i> " + data.message).show().delay(2000).fadeOut();
@@ -201,25 +207,25 @@ $(function() {
     // active view loa
 
     $('#loas').delegate(".view-active-loa", "click", function(e) {
-        var id = $(this).closest('tr').attr('data-id'),
+        var id = $(this).closest('tr').attr('data-loa-id'),
+            member_id = $(this).closest('tr').attr('data-member-id'),
             comment = $(this).closest('tr').attr('data-comment'),
             approval = $(this).closest('tr').attr('data-approval');
 
         $(".viewPanel .viewer").html(view_active_loa);
         $(".modal #comment").html(comment);
         $(".modal #approval").val(approval);
-        $(".modal").attr('data-id', id).modal();
+
+        $(".modal").attr('data-loa-id', id).modal();
+        $(".modal").attr('data-member-id', member_id).modal();
 
     })
 
 
     var view_active_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Review Leave of Absence</h4></div><div class='modal-body'><p><strong>Approved by</strong>: <input class='form-control' id='approval' /></p><p><strong>Reason for request</strong>: <textarea class='form-control' style='resize:vertical; min-height: 200px;' id='comment' class='comment' /></p></div><div class='modal-footer'> <div class='btn-group'> <button type='button' class='btn btn-primary pm-btn'>PM Player</button><button type='button' class='btn btn-danger revoke-loa-btn'>Revoke</button>  <button type='button' data-dismiss='modal' class='btn'>Close</button></div></div></div></div>";
 
-
-
     // revoke LOA
     var revoke_confirm = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Confirm revoke leave of absence</h4></div><div class='modal-body'><p>Once a player's LOA is revoked, their status must be updated on the forums. Additionally, if this is a revocation, the member should be flagged for removal.</p></div><div class='modal-footer'> <div class='btn-group'><button type='button' data-dismiss='modal' class='btn btn-primary' id='delete'>Revoke LOA</button> <button type='button' data-dismiss='modal' class='btn'>Cancel</button></div></div></div></div>";
-
 
     $(".modal").delegate(".revoke-loa-btn", "click", function(e) {
 
@@ -228,7 +234,8 @@ $(function() {
         $(".viewPanel .viewer").html(revoke_confirm);
 
         var url = "do/update-loa",
-            id = $('.modal').attr('data-id');
+            loa_id = $('.modal').attr('data-loa-id'),
+            member_id = $('.modal').attr('data-member-id');
 
         $('.modal').modal({
             backdrop: 'static',
@@ -241,12 +248,13 @@ $(function() {
                     dataType: 'json',
                     data: {
                         remove: true,
-                        id: id
+                        loa_id: loa_id,
+                        member_id: member_id
                     },
 
                     success: function(data) {
                         if (data.success) {
-                            $('*[data-id="' + id + '"]').effect('highlight').hide("fade", {
+                            $('*[data-loa-id="' + loa_id + '"]').effect('highlight').hide("fade", {
                                 direction: "out"
                             }, "slow");
                             $(".loa-alerts").attr('class', 'alert alert-success loa-alerts').html("<i class='fa fa-check fa-lg'></i> " + data.message).show().delay(2000).fadeOut();

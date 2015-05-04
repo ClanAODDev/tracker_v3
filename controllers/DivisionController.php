@@ -62,35 +62,36 @@ class DivisionController {
 
 	public static function _generateDivisionStructure() {
 		$member = Member::find(intval($_SESSION['memberid']));
-		$division_structure = DivisionStructure::generate($member);
+		$division_structure = DivisionStructure::generate($member->game_id);
 		Flight::render('modals/division_structure', array('division_structure' => $division_structure));
 	}
 
 	public static function _updateLoa() {
 
 		$user = User::find(intval($_SESSION['userid']));
-		$id = $_POST['id'];
+		$member = Member::find(intval($_SESSION['memberid']));
+
+		//var_dump($member);die;
 
 		if (isset($_POST['remove'])) {
+			$loa_id = $_POST['loa_id'];
 
 			if ($user->role < 2) {
 				$data = array('success' => false, 'message' => "You are not authorized to perform that action.");
 			} else {
-				$revoked = LeaveOfAbsence::remove($id);
+				$revoked = LeaveOfAbsence::delete($loa_id);
 				$data = array('success' => true, 'message' => "Leave of absence successfully removed.");
 			}
 
 		} else if (isset($_POST['approve'])) {
 
+			$loa_id = $_POST['loa_id'];
+
 			if ($user->role < 2) {
 				$data = array('success' => false, 'message' => "You are not authorized to perform that action.");
 			} else {
-				if ($member_id != $id) {
-					$approved = LeaveOfAbsence::approve($id, $member_id);
-					$data = array('success' => true, 'message' => "Leave of absence successfully approved.");
-				} else {
-					$data = array('success' => false, 'message' => 'You can\'t approve your own leave of absence!');
-				}
+				$approved = LeaveOfAbsence::approve($loa_id, $member->member_id);
+				$data = array('success' => true, 'message' => "Leave of absence successfully approved.");
 			}
 
 		} else {
@@ -98,12 +99,14 @@ class DivisionController {
 			$date = date('Y-m-d', strtotime($_POST['date']));
 			$reason = $_POST['reason'];
 			$comment = htmlentities($_POST['comment'], ENT_QUOTES);
-			$name = Member::findForumName($id);
+			$name = Member::findForumName($_POST['id']);
+
 
 			if ($name != false) {
 				if (strtotime($date) > strtotime('now')) {
-					LeaveOfAbsence::add($id, $date, $reason, $comment);
-					$data = array('success' => true, 'Request successfully submitted!', 'id' => $id, 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
+					LeaveOfAbsence::add($_POST['id'], $date, $reason, $comment, $member->game_id);
+					$data = array('success' => true, 'Request successfully submitted!', 'id' => $_POST[
+						'id'], 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
 				} else {
 					$data = array('success' => false, 'message' => "Date cannot be before today's date.");
 				}

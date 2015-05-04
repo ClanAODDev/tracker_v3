@@ -81,13 +81,11 @@ class MemberController {
 
 			$games = $_POST['played_games'];
 			foreach ($games as $game) {
-				MemberGame::add($params['id'], $member->game_id);
+				MemberGame::add($member->id, $game);
 			}
 
-
 			$result = Member::modify($params);
-			$data = array('success' => true, 'message' => "Member information updated!");
-			
+			$data = array('success' => true, 'message' => "Member information updated!");			
 
 		} else {
 			$data = array('success' => false, 'message' => 'You do not have permission to modify this player.');
@@ -119,22 +117,30 @@ class MemberController {
 
 		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
 
-		$games = $_POST['played_games'];
-		foreach ($games as $game) {
-			MemberGame::add($params['id'], $member->game_id);
-		}
-
 		if (Member::exists($_POST['member_id'])) {
+
 			$existingParams = array_merge($existingParams, array('id' => Member::findId($_POST['member_id'])));
 			Member::modify($existingParams);
+			$insert_id = Flight::aod()->insert_id;
 			$action = array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
+
 			UserAction::create($action);
 			$data = array('success' => true, 'message' => "Existing member successfully updated!");
+
 		} else {
+
 			Member::create($newParams);
+			$insert_id = Flight::aod()->insert_id;
 			$action = array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
+
 			UserAction::create($action);
 			$data = array('success' => true, 'message' => "Member successfully added!");
+
+		}
+
+		$games = $_POST['played_games'];
+		foreach ($games as $game) {
+			MemberGame::add($insert_id, $game);
 		}
 		
 		echo(json_encode($data));

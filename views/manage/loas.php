@@ -30,7 +30,7 @@
 					<?php $pendingLoas = LeaveOfAbsence::find_pending($division->id); ?>
 					
 					<?php foreach ($pendingLoas as $player) : ?>
-						<tr data-id='<?php echo $player->member_id ?>' data-comment='<?php echo $player->comment ?>'>
+						<tr data-member-id='<?php echo $player->member_id ?>' data-loa-id='<?php echo $player->id ?>' data-comment='<?php echo $player->comment ?>'>
 							<td><?php echo Member::findForumName($player->member_id); ?></td> 
 							<td><?php echo $player->reason; ?></td>
 							<td><?php echo date("M d, Y", strtotime($player->date_end)); ?></td>
@@ -69,7 +69,7 @@
 						<?php $date_end = date("M d, Y", strtotime($player->date_end)); ?>
 						<?php $approved_by = (!empty($player->approved_by)) ? Member::findForumName($player->approved_by) : "Not available"; ?>
 
-						<tr data-id='<?php echo $player->member_id ?>' data-approval='<?php echo $approved_by ?>' data-comment='<?php echo $comment ?>'>
+						<tr data-member-id='<?php echo $player->member_id ?>' data-loa-id='<?php echo $player->id ?>' data-approval='<?php echo $approved_by ?>' data-comment='<?php echo $comment ?>'>
 							<td><?php echo Member::findForumName($player->member_id); ?></td> 
 							<td><?php echo $player->reason ?></td>
 							<td>
