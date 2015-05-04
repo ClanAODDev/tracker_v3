@@ -170,9 +170,6 @@ $(function() {
 
     });
 
-
-    $('.fade-in').delay(1000).slideDown('swing');
-
     $('.count-animated').each(function() {
         var $this = $(this);
         jQuery({
