@@ -2,7 +2,7 @@
 
 <div class='modal-header'>
 	<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button>
-	<h4 class='modal-title'>Editing <?php echo $member->rank . " " . $member->forum_name ?></h4>
+	<h4 class='modal-title'>Editing <strong><?php echo $member->rank . " " . $member->forum_name ?></strong></h4>
 </div>
 <form id='edit-form'>
 	<div class='modal-body' style='overflow-y: scroll; max-height: 400px;'>
@@ -16,10 +16,10 @@
 
 		<div class="tabbable">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#profile" data-toggle="tab">Member Profile</a></li>
-				<li><a href="#gameinfo" data-toggle="tab">Game Info</a></li>
-				<li><a href="#divinfo" data-toggle="tab">Division Info</a></li>
-				<li><a href="#aliasinfo" data-toggle="tab">Aliases</a></li>
+				<li class="active"><a href="#profile" data-toggle="tab"><i class="fa fa-user text-muted fa-lg"></i> Member Profile</a></li>
+				<li><a href="#gameinfo" data-toggle="tab"><i class="fa fa-gamepad text-muted fa-lg"></i> Game Info</a></li>
+				<li><a href="#divinfo" data-toggle="tab"><i class="fa fa-cog text-muted fa-lg"></i> Division Info</a></li>
+				<li><a href="#aliasinfo" data-toggle="tab"><i class="fa fa-users text-muted fa-lg"></i> Aliases</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="profile">
@@ -112,7 +112,7 @@
 
 </div>
 <div class='modal-footer'>
-	<button type='submit' class='btn btn-block btn-success'>Save Info</button> 
+	<button type='button' class='btn btn-default' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>Cancel</span></button><button type='submit' class='btn btn-success'>Save Info</button> 
 </form>
 </div>
 

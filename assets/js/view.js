@@ -14,7 +14,8 @@ $(function() {
     $("#edit-form").submit(function(event) {
         event.preventDefault();
 
-        $("#edit-form :submit").html("<img src='assets/images/loading.gif' /> Updating profile information...").attr('class', 'btn btn-block btn-default disabled');
+        $("#edit-form .message").html("Updating member information. Please wait...").addClass("alert-info").show();
+        $("#edit-form :submit").html("Saving...").attr('class', 'btn btn-default disabled');
 
         var uid = $("#uid").val(),
             mid = $("#member_id").val(),
@@ -49,7 +50,7 @@ function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruite
             },
 
             function(data) {
-                $("#edit-form :submit").html("Submit Info").attr('class', 'btn btn-block btn-success');
+                $("#edit-form :submit").html("Submit Info").attr('class', 'btn btn-success');
                 if (data.success === false) {
                     if (data.battlelog === true) {
                         $("#edit-form .battlelog-group").addClass("has-error");
@@ -58,7 +59,7 @@ function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruite
 
                     return false;
                 } else {
-                    $("#edit-form .message").show().html(data.message).removeClass("alert-danger").addClass('alert-success').delay(1000).fadeOut();
+                    $("#edit-form .message").show().html(data.message).removeClass("alert-danger alert-info").addClass('alert-success').delay(1000).fadeOut();
                     $(".has-error").removeClass("has-error");
                 }
 
