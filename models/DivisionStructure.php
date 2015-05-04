@@ -192,7 +192,7 @@ class DivisionStructure {
 	    	$date_end = date("M d, Y", strtotime($player->date_end));
 	    	$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 	    	$profile = Member::findByMemberId($player->member_id);
-	    	$division_structure .= "{$aod_url}" . Member::findForumName($profile->id) . "[/url] -- {$date_end} -- {$player->reason}\r\n";
+	    	$division_structure .= "{$aod_url}" . Member::findForumName($profile->member_id) . "[/url] -- {$date_end} -- {$player->reason}\r\n";
 	    	$i++;
 	    }
 	    $division_structure .= "[/center][/td]";
