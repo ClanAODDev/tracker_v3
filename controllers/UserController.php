@@ -46,6 +46,8 @@ class UserController {
 		$passVerify = $_POST['passVerify'];
 		$email = $_POST['email'];
 
+		$memberObj = Member::findByName($user);
+
 		if (stristr($user, 'aod_')) {
 			$data['success'] = false;
 			$data['message'] = "Please do not use 'AOD_' in your username";
@@ -55,6 +57,9 @@ class UserController {
 		} else if (User::exists($user)) {
 			$data['success'] = false;
 			$data['message'] = "That username has already been used.";
+		} else if (!property_exists($memberObj, 'id')) {
+			$data['success'] = false;
+			$data['message'] = "No AOD member exists with that forum name.";
 		} else {
 			$params = array('username' => $user, 'email' => $email, 'credential' => $pass);
 			User::create($params);
