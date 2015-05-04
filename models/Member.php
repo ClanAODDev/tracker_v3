@@ -19,7 +19,6 @@ class Member extends Application {
 	public $last_forum_post;
 	public $forum_posts;
 	public $recruiter;
-	public $games;
 
 	static $table = 'member';
 	static $id_field = 'id';
