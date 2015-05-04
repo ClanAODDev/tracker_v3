@@ -79,9 +79,11 @@ class MemberController {
 			$action = array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id);
 			UserAction::create($action);
 
-			$games = $_POST['played_games'];
-			foreach ($games as $game) {
-				MemberGame::add($member->id, $game);
+			if (isset($_POST['played_games'])) {
+				$games = $_POST['played_games'];
+				foreach ($games as $game) {
+					MemberGame::add($member->id, $game);
+				}
 			}
 
 			$result = Member::modify($params);
@@ -138,11 +140,13 @@ class MemberController {
 
 		}
 
-		$games = $_POST['played_games'];
-		foreach ($games as $game) {
-			MemberGame::add($insert_id, $game);
+		if (isset($_POST['played_games'])) {
+			$games = $_POST['played_games'];
+			foreach ($games as $game) {
+				MemberGame::add($insert_id, $game);
+			}
 		}
-		
+
 		echo(json_encode($data));
 	}
 
