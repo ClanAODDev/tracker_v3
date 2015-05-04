@@ -1,4 +1,4 @@
-<div class='container register-form fade-in' style='z-index: 5;'>
+<div class='container register-form' style='z-index: 5;'>
 	<div class='panel panel-primary' id='register-panel'>
 		<div class='panel-heading text-left'><small><strong>AOD</strong> Leader Registration<i class='fa fa-user pull-right fa-2x'></i></small></div>
 		<div class='panel-body'>
