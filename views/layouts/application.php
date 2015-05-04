@@ -26,19 +26,8 @@
 
 </head>
 <body>
-	<!-- you checkin out my body? -->
 
-	<!-- modal for ajax dialogs -->
 	<div class="modal viewPanel fade">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="viewer fadeIn animate"></div>
-			</div>
-		</div>
-	</div>
-
-		<!-- modal for ajax dialogs -->
-	<div class="modal viewPanel-lg fade">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="viewer fadeIn animate"></div>

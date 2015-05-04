@@ -35,7 +35,6 @@ class UserAction extends Application {
 			$UserAction->$key = $value;
 		}
 		$UserAction->save($params);
-		//echo Flight::aod()->last_query;
 	}
 
 	public static function activityIcon($type) {
@@ -85,7 +84,6 @@ class UserAction extends Application {
 	}
 
 	public static function humanize($type_id, $target_id, $user_id, $verbage) {
-
 		$user = "<a href='member/{$user_id}'>" . Member::findForumName($user_id) . "</a>";
 		$player = "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>";
 		switch ($type_id) {

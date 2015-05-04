@@ -23,7 +23,6 @@ class MemberGame extends Application {
 		$game->member_id = $member_id;
 		$game->subgame_id = $game_id;
 		$game->save();
-		var_dump(Flight::aod()->last_query);die;
 	}
 
 	public static function delete($params) {

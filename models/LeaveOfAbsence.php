@@ -2,6 +2,7 @@
 
 class LeaveOfAbsence extends Application {
 
+	public $id;
 	public $member_id;
 	public $date_end;
 	public $reason;
@@ -11,7 +12,7 @@ class LeaveOfAbsence extends Application {
 	public $game_id;
 
 	static $table = 'loa';
-	static $id_field = 'member_id';
+	static $id_field = 'id';
 
 	public static function find_all($game_id) {
 		return self::find_each(array('game_id' => $game_id, 'approved' => 1));
@@ -44,25 +45,15 @@ class LeaveOfAbsence extends Application {
 		return array('success' => true);
 	}
 
-	public static function remove($member_id) {
-		global $pdo;
-		if (dbConnect()) {
-			try {
-				$query = $pdo->prepare("DELETE FROM loa WHERE member_id = :mid LIMIT 1");
-				$query->execute(array(':mid' => $mid));
-			}
-			catch (PDOException $e) {
-				return array('success' => false, 'message' => $e->getMessage());
-			}
-		} 
+	public static function delete($loa_id) {
+		$loa = self::find($loa_id);
+		Flight::aod()->remove($loa);
 		return array('success' => true);
-
 	}
 
-	public static function approve($member_id, $approvingId) {
+	public static function approve($loa_id, $approvingId) {
 		try {
-			self::modify(array('member_id'=>$member_id, 'approved'=>1, 'approved_by'=>$approvingId));        
-			var_dump(Flight::aod()->last_query);die;
+			self::modify(array('id'=>$loa_id, 'approved'=>1, 'approved_by'=>$approvingId));        
 		}
 		catch (PDOException $e) {
 			return array('success' => false, 'message' => $e->getMessage());

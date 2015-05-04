@@ -16,7 +16,7 @@
 				<p>Ready to start a new recruit? To make things easier, you should have a couple items handy. Make sure you have them copied somewhere so you don't get backed up later:</p>
 
 				<dl class='dl-horizontal'>
-					<dt>AOD Forum ID</dt><dd>The forum member id of the new recruit</dd>
+					<dt>AOD Forum ID</dt><dd>The forum member id of the new recruit (<a href="http://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate" class="popup-link">Search newest forum members</a>)</dd>
 					<dt>AOD Forum Name</dt><dd>The username (without AOD_) of the recruit</dd>
 					<dt>Battlelog Name</dt><dd>The battlelog name of the recruit (should be the same as the forum name)</dd>
 				</dl>

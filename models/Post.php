@@ -3,7 +3,7 @@
 class Post extends Application {
 
 	public $id;
-	public $forum_id;
+	public $member_id;
 	public $title;
 	public $content;
 	public $date;
@@ -22,7 +22,6 @@ class Post extends Application {
 	 * @return array     array of all posts
 	 */
 	public static function find_all($role) {
-		$sql = "SELECT * FROM `posts` WHERE `visibility` <= {$role} ORDER BY pinned DESC, date DESC LIMIT 5";
-		return arrayToObject(Flight::aod()->using('Post')->sql($sql)->find());
+		return self::find(array('visibility <=' => $role));
 	}
 }
