@@ -101,7 +101,6 @@ class DivisionController {
 			$comment = htmlentities($_POST['comment'], ENT_QUOTES);
 			$name = Member::findForumName($_POST['id']);
 
-
 			if ($name != false) {
 				if (strtotime($date) > strtotime('now')) {
 					LeaveOfAbsence::add($_POST['id'], $date, $reason, $comment, $member->game_id);
@@ -111,7 +110,7 @@ class DivisionController {
 					$data = array('success' => false, 'message' => "Date cannot be before today's date.");
 				}
 			} else {
-				$data = array('success' => false, 'message' => 'Invalid member id');
+				$data = array('success' => false, 'message' => 'The member id you provided appears to be invalid.');
 			}
 			
 		}
