@@ -1,4 +1,4 @@
-<?php if (count($posts)) : ?>
+<?php if (count($posts)) : $posts = arrayToObject($posts);?>
 	<?php foreach($posts as $post) : ?>
 		<?php $member_id = Member::findById($post->member_id)->member_id; ?>
 		<?php $member = Member::profileData($member_id); ?>

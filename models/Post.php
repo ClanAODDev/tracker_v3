@@ -22,6 +22,9 @@ class Post extends Application {
 	 * @return array     array of all posts
 	 */
 	public static function find_all($role) {
-		return self::find(array('visibility <=' => $role));
+		return Flight::aod()->from(self::$table)
+		->sortDesc(array('date'))
+		->where(array('visibility <=' => $role))
+		->select()->many();
 	}
 }
