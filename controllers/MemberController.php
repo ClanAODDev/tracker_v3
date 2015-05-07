@@ -12,35 +12,42 @@ class MemberController {
 
 		// profile data
 		$memberInfo = Member::profileData(intval($id));
-		$divisionInfo = Division::findById(intval($memberInfo->game_id));
-		$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
-		$recruits = Member::findRecruits($memberInfo->member_id);
 
-		// game data
-		$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
-		$edate = date("Y-m-d", strtotime("tomorrow"));
-		$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
-		$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
-		$allGames = Activity::find_allGames($memberInfo->member_id);
-		$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
+		if (property_exists($memberInfo, 'id')) {
 
-		if (property_exists($platoonInfo, 'id')) {
-			$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
-			$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
+			$divisionInfo = Division::findById(intval($memberInfo->game_id));
+			$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
+			$recruits = Member::findRecruits($memberInfo->member_id);
+
+			// game data
+			$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
+			$edate = date("Y-m-d", strtotime("tomorrow"));
+			$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
+			$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
+			$allGames = Activity::find_allGames($memberInfo->member_id);
+			$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
+
+			if (property_exists($platoonInfo, 'id')) {
+				$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
+				$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
+			}
+
+			// if squad leader, show recruits
+			if ($memberInfo->position_id == 5) {
+				Flight::render('member/sl-personnel', array('member' => $memberInfo), 'sl_personnel');
+			}
+
+			Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
+			Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
+			Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
+			Flight::render('member/activity', array('totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'activity');
+			Flight::render('member/history', array(), 'history');
+			Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'content');
+			Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+
+		} else {
+			Flight::redirect('/404', 401);
 		}
-
-		// if squad leader, show recruits
-		if ($memberInfo->position_id == 5) {
-			Flight::render('member/sl-personnel', array('member' => $memberInfo), 'sl_personnel');
-		}
-
-		Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
-		Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
-		Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
-		Flight::render('member/activity', array('totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'activity');
-		Flight::render('member/history', array(), 'history');
-		Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'content');
-		Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 		
 	}
 
