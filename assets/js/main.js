@@ -100,8 +100,8 @@ $(function() {
     $(".removeMember").click(function(e) {
         e.preventDefault();
         if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
-            var member = $(this).closest('li').attr('data-member-id'),
-                user = $(this).closest('li').attr('data-user-id');
+            var member = $(this).closest('li').attr('data-member-id');
+            if (member == undefined) { member = $(this).closest('.btn-group').attr('data-member-id'); }
             windowOpener($(this).attr("href") + member, "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
         }
     });
