@@ -18,6 +18,7 @@ class MemberController {
 			$divisionInfo = Division::findById(intval($memberInfo->game_id));
 			$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
 			$recruits = Member::findRecruits($memberInfo->member_id);
+			$gamesPlayed = MemberGame::get($memberInfo->id);
 
 			// game data
 			$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
@@ -42,7 +43,7 @@ class MemberController {
 			Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
 			Flight::render('member/activity', array('totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'activity');
 			Flight::render('member/history', array(), 'history');
-			Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'content');
+			Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'gamesPlayed' => $gamesPlayed), 'content');
 			Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 
 		} else {

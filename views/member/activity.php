@@ -36,6 +36,6 @@
 
 
 	<?php else: ?>
-		<li class='list-group-item text-muted'>No information currently available for this player. Please ensure that game activity is not hidden by the user.</li>
+		<li class='list-group-item text-muted'>No information currently available for this player, or player has not played any games in the past 30 days. Please ensure that game activity is not hidden by the user.</li>
 	<?php endif; ?>
 </div>
