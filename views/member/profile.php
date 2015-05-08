@@ -17,7 +17,7 @@
 					<span class="games_played">
 						<?php if (count($gamesPlayed)): $gamesPlayed = arrayToObject($gamesPlayed);?>
 							<?php foreach($gamesPlayed as $game): ?>
-								<sup><img title="<?php echo $game->full_name ?>" src="assets/images/game_icons/tiny/<?php echo $game->short_name ?>.png" /></sup>
+								<sup><img class="img-circle" title="<?php echo $game->full_name ?>" src="assets/images/game_icons/tiny/<?php echo $game->short_name ?>.png" /></sup>
 							<?php endforeach; ?>					
 						<?php endif; ?>
 					</span>
