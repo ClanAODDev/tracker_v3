@@ -3,7 +3,7 @@
 	<h4 class="modal-title" id="myModalLabel"><strong>Generate</strong> Division Structure</h4>
 </div>
 <div class="modal-body">
-	<p>This tool generates a copy of the bb-code skeleton for the division structure of the Battlefield division. It is up-to-date with all of the most recent changes on the forums at this time.</p>
+	<p>This tool generates a copy of the bb-code skeleton for a division structure thread. It is up-to-date with all of the most recent changes on the forums at this time.</p>
 	<pre class='well code' id='div-gen'><?php echo $division_structure; ?></pre>
 </div>
 <div class="modal-footer">	
