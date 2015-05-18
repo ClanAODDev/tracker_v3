@@ -79,7 +79,6 @@ $(function() {
                     }
                 });
 
-
                 // have to declare a flag so it's not undefined...
                 if (flag == 0) {
                     $(".memberid-group").addClass('has-error');
