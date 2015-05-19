@@ -1,6 +1,8 @@
 $(function() {
 
-    $('#games').multiselect();
+    $('#games').multiselect({
+        includeSelectAllOption: true
+    });
 
     // auto select values
     var sqdldr = $("#cur_sqd").val(),
