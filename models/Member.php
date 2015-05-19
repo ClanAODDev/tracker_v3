@@ -41,6 +41,10 @@ class Member extends Application {
 		return self::find(array('member_id' => $member_id))->id;
 	}
 
+	public static function findMemberId($id) {
+		return self::find($id)->member_id;
+	}
+
 	public static function find_all($game_id) {
 		return self::find(array('game_id' => $game_id, 'status_id' => 1));
 	}
@@ -137,6 +141,12 @@ class Member extends Application {
 			$member->$key = $value;
 		}
 		$member->save($params);
+	}
+
+	public static function kickFromAod($id) {
+		$member = self::find(array('member_id' => $id));
+		$member->status_id = 4;
+		$member->save();
 	}
 
 	public static function modify($params) {

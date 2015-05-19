@@ -83,11 +83,9 @@ class MemberController {
 		// only continue if we have permission to edit the user
 		if (User::canEdit($params['member_id'], $user, $member) == true) {
 
-			// log
 			// don't log if user edits their own profile
 			if ($respMember->member_id != $member->member_id) {
-				$action = array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id);
-				UserAction::create($action);
+				UserAction::create(array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id));
 			}
 
 			if (isset($_POST['played_games'])) {
@@ -135,18 +133,14 @@ class MemberController {
 			$existingParams = array_merge($existingParams, array('id' => Member::findId($_POST['member_id'])));
 			Member::modify($existingParams);
 			$insert_id = Flight::aod()->insert_id;
-			$action = array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
-
-			UserAction::create($action);
+			UserAction::create(array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']));
 			$data = array('success' => true, 'message' => "Existing member successfully updated!");
 
 		} else {
 
 			Member::create($newParams);
 			$insert_id = Flight::aod()->insert_id;
-			$action = array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']);
-
-			UserAction::create($action);
+			UserAction::create(array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']));
 			$data = array('success' => true, 'message' => "Member successfully added!");
 
 		}
@@ -169,23 +163,25 @@ class MemberController {
 
 		if ($action == 1) {
 
-			// log
-			$action = array('type_id'=>4,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged);
-			UserAction::create($action);
-
 			InactiveFlagged::add($member_flagged, $flagged_by);
 			$data = array('success' => true, 'message' => 'Member {$member_flagged} flagged for removal.');
-		} else {
+			UserAction::create(array('type_id'=>4,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged));
 
-			// log
-			$action = array('type_id'=>6,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged);
-			UserAction::create($action);
+		} else {
 
 			InactiveFlagged::remove($member_flagged);
 			$data = array('success' => true, 'message' => 'Member {$member_flagged} no longer flagged for removal.');
+			UserAction::create(array('type_id'=>6,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged));
 		}
 
 		echo(json_encode($data));
+	}
+
+	public static function _doKickFromAod() {
+		$user = Member::findMemberId($_SESSION['memberid']);
+		$id = $_POST['id'];
+		Member::kickFromAod($id);
+		UserAction::create(array('type_id'=>2,'date'=>date("Y-m-d H:i:s"),'user_id'=>$user,'target_id'=>$id));
 	}
 
 
