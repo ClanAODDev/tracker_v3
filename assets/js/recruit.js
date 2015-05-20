@@ -6,7 +6,10 @@ window.onbeforeunload = function() {
 
 $(function() {
 
-    $('#games').multiselect();
+    $('#games').multiselect({
+        includeSelectAllOption: true,
+        allSelectedText: 'All games selected'
+    });
 
     $(".progress-bar-rct").attr("class", "bar progress-bar progress-bar-striped progress-bar-danger active");
 
@@ -40,10 +43,17 @@ $(function() {
                     return false;
                 }
 
-
                 if (/\D/.test(member_id)) {
                     $(".message").html("<i class='fa fa-times'></i> Forum member id must be a number.").effect("bounce");
                     return false;
+                }
+
+                // force selection of a game if the dropdown exists
+                if ($('#games').length) {
+                    if ($('#games option:selected').length < 1) {
+                        $(".message").html("<i class='fa fa-times'></i> At least one game must be selected").effect("bounce");
+                        return false;
+                    }
                 }
 
                 // no errors, so clear any error states

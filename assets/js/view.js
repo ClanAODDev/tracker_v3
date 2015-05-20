@@ -1,7 +1,8 @@
 $(function() {
 
     $('#games').multiselect({
-        includeSelectAllOption: true
+        includeSelectAllOption: true,
+        allSelectedText: 'All games selected'
     });
 
     // auto select values
