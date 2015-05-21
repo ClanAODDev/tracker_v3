@@ -34,7 +34,3 @@ define('INACTIVE_MAX', 25);
 
 // global settings
 define('MAX_GAMES_ON_PROFILE', 25);
-
-//gitHub username and password
-define('GITHUBUSER', '');
-define('GITHUBPASS', '');
