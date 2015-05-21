@@ -180,7 +180,7 @@
 									<label><input type="checkbox" value="" name="chk[]">Have them adjust their forum (<a class="popup-link" href="http://www.clanaod.net/forums/sarcoth_profilemod.php">Forum &raquo; Settings &raquo; Edit AOD Member Info</a>) profile settings</label>
 								</div>
 								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Request (optional) that they enable email notifications of new private messages. <abbr title="Allows us to contact them when they become inactive">Why?</abbr></label>
+									<label><input type="checkbox" value="" name="chk[]">Request (optional) that they enable email notifications of new private messages on the forums. <abbr title="Allows us to contact them when they become inactive">Why?</abbr></label>
 								</div>
 								<div class="checkbox">
 									<label><input type="checkbox" value="" name="chk[]">Have them change their name on Teamspeak: <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></label>
