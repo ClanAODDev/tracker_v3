@@ -129,7 +129,7 @@ class Member extends Application {
 			$sql .= $args . " ORDER BY inactive_flagged.flagged_by";
 		} else {
 			$sql .= "(member.member_id NOT IN (SELECT member_id FROM inactive_flagged)) AND ";
-			$sql .= $args . " ORDER BY member.last_activity ASC";
+			$sql .= $args . " ORDER BY member.platoon_id, member.last_activity ASC";
 		}
 
 		return Flight::aod()->sql($sql)->many();
