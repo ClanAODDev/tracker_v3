@@ -6,6 +6,9 @@ window.onbeforeunload = function() {
 
 $(function() {
 
+
+  $('[data-toggle="popover"]').popover();
+
     $('#games').multiselect({
         includeSelectAllOption: true,
         allSelectedText: 'All games selected'
