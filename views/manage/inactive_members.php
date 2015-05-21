@@ -43,7 +43,7 @@
 									<?php $flaggedCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][/tr]"; ?>
 									
 
-									<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-member-id='<?php echo $player->member_id ?>'>
+									<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
 										<div class='col-xs-1'><img src='assets/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
 										<div class='col-xs-2'><?php echo $player->forum_name ?></div>
 										<div class='col-xs-3 text-muted text-center'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></div>
