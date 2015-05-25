@@ -20,12 +20,12 @@
 				<?php endif; ?>
 
 			</h2>
-		
+
 		</div>
 
-		<div class="row col-xs-12">
-			<p><?php echo $division->description; ?></p><hr>
-		</div>
+		
+		<p><?php echo $division->description; ?></p><hr>
+		
 
 		<div class='row'>
 			<div class='col-md-8'>
