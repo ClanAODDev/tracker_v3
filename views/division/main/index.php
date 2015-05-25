@@ -7,22 +7,24 @@
 		</ul>
 
 		<div class='page-header'>
-			<div class="col-xs-7">
-				<h2><strong><img src='assets/images/game_icons/large/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong></h2>
-			</div>
+			
+			<h2>
 
-			<div class="col-xs-5">
+				<strong><img src='assets/images/game_icons/large/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong>
+
 				<?php if ($user->role >= 3 || User::isDev($user->id)) : ?>
 					<div class="btn-group pull-right">
 						<a class="btn btn-default edit-div" href="#" target="_blank"><i class="fa fa-pencil"></i> Edit Division</a>
 						<a class="btn btn-default create-div" href="#" target="_blank"><i class="fa fa-plus-square"></i> Create Division</a>
 					</div>
 				<?php endif; ?>
-			</div>
 
-			<div class="col-xs-12">
-				<p><?php echo $division->description; ?></p><hr>
-			</div>
+			</h2>
+		
+		</div>
+
+		<div class="row col-xs-12">
+			<p><?php echo $division->description; ?></p><hr>
 		</div>
 
 		<div class='row'>
