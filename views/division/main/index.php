@@ -7,10 +7,25 @@
 		</ul>
 
 		<div class='page-header'>
-			<h2><strong><img src='assets/images/game_icons/large/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong></h2>
+			
+			<h2>
+
+				<strong><img src='assets/images/game_icons/large/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong>
+
+				<?php if ($user->role >= 3 || User::isDev($user->id)) : ?>
+					<div class="btn-group pull-right">
+						<a class="btn btn-default edit-div" href="#" target="_blank"><i class="fa fa-pencil"></i> Edit Division</a>
+						<a class="btn btn-default create-div" href="#" target="_blank"><i class="fa fa-plus-square"></i> Create Division</a>
+					</div>
+				<?php endif; ?>
+
+			</h2>
+
 		</div>
 
+		
 		<p><?php echo $division->description; ?></p><hr>
+		
 
 		<div class='row'>
 			<div class='col-md-8'>
