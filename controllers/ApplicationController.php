@@ -68,10 +68,13 @@ class ApplicationController {
 		Flight::render('errors/main');
 	}
 
-
 	public static function _doUpdateAlert() {
 		$params = array('id' => $_POST['id'], 'user' => $_POST['user']);
 		AlertStatus::create($params);
 	}
 
+//	public static function _pullIssues() {
+//		$issues =  GET /repos/owner/repo/issues;
+//		Flight::render('manage/manageIssues', array('issues' => $issues));
+//	}
 }
