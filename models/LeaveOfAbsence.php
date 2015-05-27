@@ -14,6 +14,10 @@ class LeaveOfAbsence extends Application {
 	static $table = 'loa';
 	static $id_field = 'id';
 
+	public static function findById($id) {
+		return self::find($id);
+	}
+
 	public static function find_all($game_id) {
 		return self::find_each(array('game_id' => $game_id, 'approved' => 1));
 	}

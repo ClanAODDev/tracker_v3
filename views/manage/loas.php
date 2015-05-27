@@ -13,6 +13,8 @@
 		<div class='alert alert-info'><p><i class='fa fa-exclamation-triangle'></i> Your division has <?php echo LeaveOfAbsence::count_expired($division->id); ?> expired leaves of absence which need to be handled.</p></div>
 	<?php endif; ?>
 
+	<div class='alert hide loa-alerts'></div>
+
 	<?php if (LeaveOfAbsence::count_pending($division->id) && $user->role >= 1)  : ?>
 
 		<div class='panel panel-primary margin-top-20' id='pending-loas'>
@@ -46,7 +48,7 @@
 		</div>
 	<?php endif; ?>
 
-	<div class='alert hide loa-alerts'></div>
+	
 	<div class='panel panel-primary margin-top-20' id='active-loas'>
 		<div class='panel-heading'>Approved Leaves of Absence</div>
 		<table class='table table-striped table-hover' id='loas'>

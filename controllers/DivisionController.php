@@ -71,28 +71,33 @@ class DivisionController {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 
-		//var_dump($member);die;
-
-		if (isset($_POST['remove'])) {
-			$loa_id = $_POST['loa_id'];
+		if (isset($_POST['remove']) || isset($_POST['approve'])) {
 
 			if ($user->role < 2) {
 				$data = array('success' => false, 'message' => "You are not authorized to perform that action.");
 			} else {
-				$revoked = LeaveOfAbsence::delete($loa_id);
-				$data = array('success' => true, 'message' => "Leave of absence successfully removed.");
-			}
 
-		} else if (isset($_POST['approve'])) {
+				$loa = (isset($_POST['loa_id'])) ? LeaveOfAbsence::findById($_POST['loa_id']) : NULL;
 
-			$loa_id = $_POST['loa_id'];
+				if (isset($_POST['remove'])) {
 
-			if ($user->role < 2) {
-				$data = array('success' => false, 'message' => "You are not authorized to perform that action.");
-			} else {
-				$approved = LeaveOfAbsence::approve($loa_id, $member->member_id);
-				$data = array('success' => true, 'message' => "Leave of absence successfully approved.");
-			}
+					$revoked = LeaveOfAbsence::delete($loa->id);
+					UserAction::create(array('type_id'=>8,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$loa->member_id));
+					$data = array('success' => true, 'message' => "Leave of absence successfully removed.");
+
+				} else if (isset($_POST['approve'])) {
+
+					if ($member->member_id == $loa->member_id) {
+						$data = array('success' => false, 'message' => "You can't approve your own leave of absence!.");
+					} else {
+
+						$approved = LeaveOfAbsence::approve($loa->id, $member->member_id);
+						UserAction::create(array('type_id'=>7,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$loa->member_id));
+						$data = array('success' => true, 'message' => "Leave of absence successfully approved.");
+					}
+
+				}
+			} 
 
 		} else {
 
@@ -112,7 +117,7 @@ class DivisionController {
 			} else {
 				$data = array('success' => false, 'message' => 'The member id you provided appears to be invalid.');
 			}
-			
+
 		}
 
 		echo json_encode($data);
