@@ -26,6 +26,7 @@ class UserAction extends Application {
 	 *  8  |  Deny an loa
 	 *  9  |  Revoke an loa
 	 *  10 |  recruit former member
+	 *  11 |  request an loa
 	 *  ----------------------- 
 	 */
 
