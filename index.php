@@ -1,6 +1,6 @@
 <?php
 
-require_once 'application/config.ex.php';
+require_once 'application/config.php';
 require_once 'application/functions.php';
 
 session_start();
