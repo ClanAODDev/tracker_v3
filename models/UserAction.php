@@ -99,7 +99,8 @@ class UserAction extends Application {
 			case 4: 
 			$text = "{$player} was {$verbage} by {$user}";
 			break;
-			case 5: 
+			case 5:
+			case 11:
 			$text = "{$user} {$verbage}";
 			break;
 			case 6: 

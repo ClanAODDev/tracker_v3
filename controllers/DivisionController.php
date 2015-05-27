@@ -109,6 +109,7 @@ class DivisionController {
 			if ($name != false) {
 				if (strtotime($date) > strtotime('now')) {
 					LeaveOfAbsence::add($_POST['id'], $date, $reason, $comment, $member->game_id);
+					UserAction::create(array('type_id'=>11,'date'=>date("Y-m-d H:i:s"),'user_id'=>$_POST['id']));
 					$data = array('success' => true, 'Request successfully submitted!', 'id' => $_POST[
 						'id'], 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
 				} else {
