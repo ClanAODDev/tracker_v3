@@ -71,7 +71,7 @@ class UserAction extends Application {
 			$icon = "refresh text-success";
 			break;
 			case 11:
-			$icon = "fa fa-question-circle";
+			$icon = "question-circle";
 			break;
 		}
 		return $icon;
