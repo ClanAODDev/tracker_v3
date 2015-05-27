@@ -36,5 +36,5 @@ define('INACTIVE_MAX', 25);
 define('MAX_GAMES_ON_PROFILE', 25);
 
 // gitHub username and password
-define('GITHUB_USER', '');
-define('GITHUB_PASS', '');
+define('GITHUB_USER', 'clanAOD');
+define('GITHUB_PASS', 'aodclan');

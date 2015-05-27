@@ -1,4 +1,2 @@
-<?php 
-		$issues = GET /issues;
-		var_dump($issues);
-?>
+<?php foreach ($issues as $issue) ?>
+	<li> $issue </li>
