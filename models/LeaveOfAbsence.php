@@ -56,13 +56,7 @@ class LeaveOfAbsence extends Application {
 	}
 
 	public static function approve($loa_id, $approvingId) {
-		try {
-			self::modify(array('id'=>$loa_id, 'approved'=>1, 'approved_by'=>$approvingId));        
-		}
-		catch (PDOException $e) {
-			return array('success' => false, 'message' => $e->getMessage());
-		}
-
+		self::modify(array('id'=>$loa_id, 'approved'=>1, 'approved_by'=>$approvingId));        
 		return array('success' => true);
 	}
 
