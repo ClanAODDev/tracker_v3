@@ -3,9 +3,9 @@ $(function() {
     $(".send-pm").click(function(e) {
         e.preventDefault();
         var members = $(this).attr('data-members'),
-            intArray = members.split(",").map(Number).filter(Boolean),
-            windows = Math.ceil(intArray.length / 20),
-            randomNum = Math.random();
+        intArray = members.split(",").map(Number).filter(Boolean),
+        windows = Math.ceil(intArray.length / 20),
+        randomNum = Math.random();
 
         if (windows > 1) {
             var i = 0;
@@ -74,7 +74,7 @@ $(function() {
 
     $('.alert').bind('closed.bs.alert', function() {
         var id = $(this).data('id'),
-            user = $(this).data('user');
+        user = $(this).data('user');
 
         $.post("do/update-alert", {
             id: id,
@@ -104,8 +104,8 @@ $(function() {
 
             if (member == undefined) {
                 member = $(this).closest('.btn-group').attr('data-player-id');
+            } else {
                 $(this).closest('.list-group-item').remove();
-
             }
 
             $.post("do/remove-member", {
@@ -136,24 +136,24 @@ $(function() {
     /**
      * navigation links for user cp
      */
-    $('.logout-btn').click(function(e) {
+     $('.logout-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "logout";
     });
-    $('.settings-btn').click(function(e) {
+     $('.settings-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "user/settings";
     });
-    $('.profile-btn').click(function(e) {
+     $('.profile-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "user/profile";
     });
-    $('.messages-btn').click(function(e) {
+     $('.messages-btn').click(function(e) {
         e.preventDefault();
         window.location.href = "user/messages";
     });
 
-    $('#register').submit(function(e) {
+     $('#register').submit(function(e) {
         e.preventDefault();
 
         $.post("do/register",
@@ -177,7 +177,7 @@ $(function() {
 
     });
 
-    $('.count-animated').each(function() {
+     $('.count-animated').each(function() {
         var $this = $(this);
         jQuery({
             Counter: 0
@@ -196,27 +196,27 @@ $(function() {
         });
     });
 
-    $('.follow-tool').powerTip({
+     $('.follow-tool').powerTip({
         followMouse: true
     });
 
-    $('.tool').powerTip({
+     $('.tool').powerTip({
         placement: 'n'
     });
 
-    $('.tool-s').powerTip({
+     $('.tool-s').powerTip({
         placement: 's'
     });
 
-    $('.tool-e').powerTip({
+     $('.tool-e').powerTip({
         placement: 'e'
     });
 
-    $('.tool-ne').powerTip({
+     $('.tool-ne').powerTip({
         placement: 'ne'
     });
 
-});
+ });
 
 function formatNumber(num) {
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
@@ -261,16 +261,16 @@ function member_search() {
  * ZeroClipboard support
  */
 
-var client = new ZeroClipboard($('.copy-button'));
+ var client = new ZeroClipboard($('.copy-button'));
 
-client.on("ready", function(readyEvent) {
+ client.on("ready", function(readyEvent) {
     client.on("aftercopy", function(event) {
         alert("Copied text to clipboard");
     });
 });
 
 
-function windowOpener(url, name, args) {
+ function windowOpener(url, name, args) {
 
     if (typeof(popupWin) != "object" || popupWin.closed) {
         popupWin = window.open(url, name, args);
@@ -297,17 +297,17 @@ function selectText(containerid) {
 
 function ucwords(str) {
     return (str + '')
-        .replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function($1) {
-            return $1.toUpperCase();
-        });
+    .replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function($1) {
+        return $1.toUpperCase();
+    });
 }
 
 
 function memberPm(members) {
 
     var y = members.length,
-        x = Math.ceil(y / 20),
-        names = [];
+    x = Math.ceil(y / 20),
+    names = [];
 
     // iterate windows
     for (w = 0; w < x; w++) {
