@@ -2,7 +2,7 @@
 	class GitHub {
 		private $owner = 'flashadvocate';
 		private $repo = 'Division-Tracker';
-		public static function client() {
+		private function client() {
 				$client = new GitHubClient();
 				$client->setCredentials(GITHUB_USER, GITHUB_PASS);
 				$client->setPageSize(1);
