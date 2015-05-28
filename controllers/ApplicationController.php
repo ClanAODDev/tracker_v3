@@ -15,7 +15,7 @@ class ApplicationController {
 		$squad = Squad::find($member->member_id);
 		$platoon = Platoon::find($member->platoon_id);
 		$genPop = Platoon::GeneralPop($member->platoon_id);
-		$issues = GitHub::getIssues();
+		$gitHub = GitHub::client();
 
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
@@ -75,6 +75,7 @@ class ApplicationController {
 	}
 
 	public static function _gitIssues() {
+		$issues = GitHub::getIssues();
 		Flight::render('gitHub/issues', array('issues' => $issues)); 
 	}
 }
