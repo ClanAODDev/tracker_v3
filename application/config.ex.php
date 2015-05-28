@@ -2,6 +2,7 @@
 
 date_default_timezone_set('America/New_York');
 require_once 'flight/Flight.php';
+require_once 'vendor/github/GitHubClient.php';
 
 // Autoload models and controllers
 Flight::path('models');
