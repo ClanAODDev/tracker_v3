@@ -67,7 +67,7 @@
 										<ul class="activity">
 											<?php foreach(UserAction::find_all() as $action) : ?>
 												<li>
-													<i class="fa fa-<?php echo activityIcon($action->type_id); ?> fa-2x"></i>
+													<i class="fa fa-<?php echo UserAction::activityIcon($action->type_id); ?> fa-2x"></i>
 													<div>
 														<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
 														<span><?php echo formatTime(strtotime($action->date)); ?></span>

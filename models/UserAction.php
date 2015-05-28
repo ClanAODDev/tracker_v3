@@ -89,7 +89,7 @@ class UserAction extends Application {
 
 	public static function humanize($type_id, $target_id, $user_id, $verbage) {
 		$user = "<a href='member/{$user_id}'>" . Member::findForumName($user_id) . "</a>";
-		$player = "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>";
+		$player = (!is_null($target_id)) ? "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>" : NULL;
 		switch ($type_id) {
 			case 1:
 			$text = "{$user} {$verbage} {$player} into the division";
