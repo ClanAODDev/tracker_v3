@@ -101,8 +101,16 @@ $(function() {
         e.preventDefault();
         if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
             var member = $(this).closest('li').attr('data-player-id');
-            if (member == undefined) { member = $(this).closest('.btn-group').attr('data-player-id'); }
-            $.post( "do/remove-member", { id: member } );
+
+            if (member == undefined) {
+                member = $(this).closest('.btn-group').attr('data-player-id');
+                $(this).closest('.list-group-item').remove();
+
+            }
+
+            $.post("do/remove-member", {
+                id: member
+            });
             windowOpener($(this).attr("href") + member, "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
         }
     });
