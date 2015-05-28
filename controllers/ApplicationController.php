@@ -37,6 +37,18 @@ class ApplicationController {
 		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
+	public static function _gitIssues() {
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+		$division = Division::findById(intval($member->game_id));
+		$platoons = Platoon::find_all($member->game_id);
+		$issues = GitHub::getIssues();
+		Flight::render('issues/index', array('issues' => $issues), 'content'); 
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+	}
+
 	public static function _doUsersOnline() {
 		if (isset($_SESSION['loggedIn'])) {
 			$user = User::find(intval($_SESSION['userid']));
@@ -73,8 +85,4 @@ class ApplicationController {
 		AlertStatus::create($params);
 	}
 
-	public static function _gitIssues() {
-		$issues = GitHub::getIssues();
-		Flight::render('gitHub/issues', array('issues' => $issues)); 
-	}
 }

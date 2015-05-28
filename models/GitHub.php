@@ -1,16 +1,20 @@
 <?php
 	class GitHub {
-		private $owner = 'flashadvocate';
-		private $repo = 'Division-Tracker';
-		private function client() {
+
+		private static $owner = 'flashadvocate';
+		private static $repo = 'Division-Tracker';
+
+		private static function client() {
 				$client = new GitHubClient();
 				$client->setCredentials(GITHUB_USER, GITHUB_PASS);
 				$client->setPageSize(1);
 				return $client;
 		}
-		public function getIssues() {
-			$git = $this->client();
-			return $git->issues->listIssues($this->owner, $this->repo);
+
+		public static function getIssues() {
+			$git = self::client();
+			return $git->issues->listIssues(self::$owner, self::$repo);
 		}
+		
 	}
 ?>
