@@ -1,9 +1,9 @@
-<link href='assets/css/jquery-ui-smooth.css' rel='stylesheet'>
 <div class='container'>
 	<ul class='breadcrumb'>
 		<li><a href='./'>Home</a></li>
 		<li class='active'>Add New Issue</li>
 	</ul>
+</div>
 
 <div class='panel panel-default margin-top-20'>
 
@@ -20,6 +20,4 @@
 			</tbody>
 		</table>
 		<link href='assets/css/jquery-ui-smooth.css' rel='stylesheet'>
-		</div>
-	</div>
 </div>
