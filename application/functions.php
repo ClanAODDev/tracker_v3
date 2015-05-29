@@ -386,9 +386,3 @@ function curl_last_url( /*resource*/ $ch, /*int*/ &$maxredirect = null)
 function generate_report_link($game, $id) {
     return "http://battlelog.battlefield.com/{$game}/battlereport/show/1/{$id}";
 }
-
-function gitHubAPI() {
-    $client = new GithubClient();
-    return $client;
-};
-
