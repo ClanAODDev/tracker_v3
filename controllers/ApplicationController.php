@@ -49,6 +49,18 @@ class ApplicationController {
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
+	public static function _doSubmitIssues() {
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+		$division = Division::findById(intval($member->game_id));
+		$platoons = Platoon::find_all($member->game_id);
+		$client = GitHub::client();
+		Flight::render('issues/add', array('client' => $client), 'content'); 
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+	}
+
 	public static function _doUsersOnline() {
 		if (isset($_SESSION['loggedIn'])) {
 			$user = User::find(intval($_SESSION['userid']));

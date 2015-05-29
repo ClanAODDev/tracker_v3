@@ -16,8 +16,10 @@
 
 			<?php foreach($issues as $issue): ?>
 
-				<div class="list-group-item"><?php echo ucwords($issue->getTitle()); ?></div>
-				
+				<div class="list-group-item"><strong><?php echo ucwords($issue->getTitle()); ?></strong>
+					<div class"list-group-item-text text-muted"><?php echo ucwords($issue->getBody()); ?> </div>
+				</div>
+								
 			<?php endforeach; ?>
 
 		<?php endif; ?>
