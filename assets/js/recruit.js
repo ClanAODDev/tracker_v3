@@ -1,13 +1,15 @@
-window.onbeforeunload = function() {
-    return "You are in the recruitment process! If you have not finished with your recruitment, you may lose your data if you leave the page.";
-}
-
-
-
 $(function() {
 
+    // warn before leaving recruiting process before completion
+    $(window).bind('beforeunload', function(e) {
+        if ($('#tab6 button.disabled').length < 1) {
+            return "You are in the recruitment process. If you have not finished with your recruitment, you may lose your data if you leave the page.";;
+        }
+    });
 
-  $('[data-toggle="popover"]').popover();
+
+
+    $('[data-toggle="popover"]').popover();
 
     $('#games').multiselect({
         includeSelectAllOption: true,
