@@ -1,4 +1,4 @@
-<div class="page-404 fade-in">	
+<div class="page-404">	
 	<div class="error-code margin-top-50">Oops</div>
 	<div class="error-text">
 		The credentials you provided were invalid
