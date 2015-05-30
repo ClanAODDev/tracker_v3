@@ -11,6 +11,7 @@ class GithubController {
 		$platoons = Platoon::find_all($member->game_id);
 		$issues = GitHub::getIssues();
 		Flight::render('issues/index', array('issues' => $issues), 'content'); 
+		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
 	public static function _addIssue() {
