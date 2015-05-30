@@ -15,6 +15,10 @@
 			$git = self::client();
 			return $git->issues->listIssues(self::$owner, self::$repo);
 		}
+
+		public static function createIssue($title, $body) {
+			$git = self::client();
+			$git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
+		}
 		
 	}
-?>
