@@ -17,7 +17,6 @@ class GitHubUser extends GitHubObject
 			'avatar_url' => 'string',
 			'gravatar_id' => 'string',
 			'url' => 'string',
-			'html_url' => 'string',
 		));
 	}
 	
@@ -46,11 +45,6 @@ class GitHubUser extends GitHubObject
 	 */
 	protected $url;
 
-	/**
-	 * @var string
-	 */
-	protected $html_url;
-	
 	/**
 	 * @return string
 	 */
@@ -89,14 +83,6 @@ class GitHubUser extends GitHubObject
 	public function getUrl()
 	{
 		return $this->url;
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getHtmlUrl()
-	{
-		return $this->html_url;
 	}
 
 }

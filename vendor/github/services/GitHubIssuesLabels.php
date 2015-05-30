@@ -36,14 +36,11 @@ class GitHubIssuesLabels extends GitHubService
 	 * Create a label
 	 * 
 	 */
-	public function createLabel($owner, $repo, $name, $color)
+	public function createLabel($owner, $repo, $name)
 	{
-		$data = array(
-			'name' => $name,
-			'color' => $color
-		);
-
-		return $this->client->request("/repos/$owner/$repo/labels", 'POST', json_encode($data), 201, 'GitHubLabel');
+		$data = array();
+		
+		return $this->client->request("/repos/$owner/$repo/labels/$name", 'DELETE', $data, 204, '');
 	}
 	
 	/**
@@ -64,9 +61,9 @@ class GitHubIssuesLabels extends GitHubService
 	 */
 	public function addLabelsToAnIssue($owner, $repo, $number, $name)
 	{
-		$data = array($name);
-
-		return $this->client->request("/repos/$owner/$repo/issues/$number/labels", 'POST', json_encode($data), 200, '');
+		$data = array();
+		
+		return $this->client->request("/repos/$owner/$repo/issues/$number/labels/$name", 'DELETE', $data, 204, '');
 	}
 	
 	/**
