@@ -5,7 +5,7 @@
 	<h4 class='modal-title'>Editing <strong><?php echo $member->rank . " " . $member->forum_name ?></strong></h4>
 </div>
 <form id='edit-form'>
-	<div class='modal-body' style='overflow-y: scroll; max-height: 400px;'>
+	<div class='modal-body' style='overflow-y: scroll; min-height: 350px;'>
 
 		<div class='message alert' style='display: none;'></div>
 
