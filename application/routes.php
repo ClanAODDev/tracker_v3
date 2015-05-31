@@ -32,7 +32,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
-	Flight::route('/issues', array('ApplicationController', '_gitIssues'));
+	Flight::route('/issues', array('GithubController', '_index'));
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));

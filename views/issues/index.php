@@ -10,19 +10,26 @@
 		</h2>
 	</div>
 
-	<div class="list-group">
+	<?php if (count($issues)): ?>
+		<?php foreach($issues as $issue): ?>
+			<div class="panel panel-default">
 
-		<?php if (count($issues)): ?>
-
-			<?php foreach($issues as $issue): ?>
-
-				<div class="list-group-item"><strong><?php echo ucwords($issue->getTitle()); ?></strong>
-					<div class"list-group-item-text text-muted"><?php echo ucwords($issue->getBody()); ?> </div>
+				<div class="panel-heading">
+					<a href="./issues/<?php echo $issue->getNumber(); ?>"><strong><?php echo ucwords($issue->getTitle()); ?></strong></a> &mdash;
+					<small class="comment-count"><i class="fa fa-comment text-muted"></i> <?php echo $issue->getComments() ?></small>
+					<span class="pull-right"> <?php echo Github::convertState($issue->getState()); ?></span>
 				</div>
-								
-			<?php endforeach; ?>
 
-		<?php endif; ?>
+				<div class="panel-body">
+					<span class="text-muted"><?php echo excerpt($issue->getBody(), 30); ?></span>
+				</div>
 
-	</div>
+				<div class="panel-footer">
+					<span class="text-muted">Lat updated <?php echo formatTime(strtotime($issue->getUpdatedAt())); ?></span>
+				</div>
+
+			</div>
+		<?php endforeach; ?>
+	<?php endif; ?>
+
 </div>

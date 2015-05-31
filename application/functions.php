@@ -335,7 +335,7 @@ function memberColor($user, $level)
 
 
 function average($array) {
- return array_sum($array) / count($array);
+   return array_sum($array) / count($array);
 }
 
 
@@ -385,4 +385,14 @@ function curl_last_url( /*resource*/ $ch, /*int*/ &$maxredirect = null)
 
 function generate_report_link($game, $id) {
     return "http://battlelog.battlefield.com/{$game}/battlereport/show/1/{$id}";
+}
+
+
+function excerpt($text, $limit) {
+  if (str_word_count($text, 0) > $limit) {
+      $words = str_word_count($text, 2);
+      $pos = array_keys($words);
+      $text = substr($text, 0, $pos[$limit]) . '...';
+  }
+  return $text;
 }
