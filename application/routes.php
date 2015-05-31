@@ -16,7 +16,6 @@ if (empty($_SESSION['userid'])) {
 
 	// api stuff
 	Flight::route('/get/member-data/division/@game', array('MemberController', '_getMemberData'));
-	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
 
 	// user views
 	Flight::route('/', array('ApplicationController', '_index'));
@@ -33,7 +32,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
-	Flight::route('/issues', array('ApplicationController', '_gitIssues'));
+	Flight::route('/issues', array('GithubController', '_index'));
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
@@ -48,6 +47,8 @@ if (empty($_SESSION['userid'])) {
 
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
+	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
+	Flight::route('/issues/add-issue', array('GithubController', '_addIssue'));
 
 	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
