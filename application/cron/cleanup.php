@@ -22,6 +22,9 @@ if (dbConnect()) {
 		// cleans up activity belonging to an ex-member
 		$pdo->prepare("DELETE FROM activity WHERE member_id IN (SELECT member_id FROM member WHERE status_id = 4)")->execute();
 
+		// cleans up member games, deleting entries for non-members
+		$pdo->prepare("DELETE FROM member_games WHERE member_id NOT IN (SELECT member.id FROM member WHERE status_id = 1, 999, 3)")->execute();
+
 	} catch (PDOException $e) {
 		echo "ERROR: " . $e->getMessage();			
 	}
