@@ -33,6 +33,9 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
 	Flight::route('/issues', array('GithubController', '_index'));
+	Flight::route('/issues/open', array('GithubController', '_index'));
+	Flight::route('/issues/closed', array('GithubController', '_closedIssues'));
+	Flight::route('/issues/@id', array('GithubController', '_view'));
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
@@ -48,7 +51,7 @@ if (empty($_SESSION['userid'])) {
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
 	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
-	Flight::route('/issues/add-issue', array('GithubController', '_addIssue'));
+	Flight::route('/issues/add-issue', array('GithubController', '_createIssue'));
 
 	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
