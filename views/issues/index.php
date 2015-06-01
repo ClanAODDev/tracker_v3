@@ -28,8 +28,7 @@
 				</div>
 
 				<div class="panel-body">
-					<?php $body = $issue->getBody(); ?>
-					<small class="text-muted"><?php echo (!empty($body)) ? excerpt($body, 30) : "No description"; ?></small>
+					<small class="text-muted"><?php echo ($issue->getBody()) ? excerpt($issue->getBody(), 30) : "No description"; ?></small>
 				</div>
 
 			</div>
