@@ -27,9 +27,10 @@
 					<small class="pull-right text-muted"> Lat updated <?php echo formatTime(strtotime($issue->getUpdatedAt())); ?></small>
 				</div>
 
-					<div class="panel-body">
-						<small class="text-muted"><?php echo (!($issue->getBody())) ? excerpt($issue->getBody(), 30) : "No description"; ?></small>
-					</div>
+				<div class="panel-body">
+					<?php $body = $issue->getBody(); ?>
+					<small class="text-muted"><?php echo (!empty($body)) ? excerpt($body, 30) : "No description"; ?></small>
+				</div>
 
 			</div>
 		<?php endforeach; ?>
