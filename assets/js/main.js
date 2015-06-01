@@ -25,7 +25,7 @@ $(function() {
     // bug report / issue creation
     $(".create-issue").click(function(e) {
         e.preventDefault();
-        $(".viewPanel .viewer").load("issues/add-issue/");
+        $(".viewPanel .viewer").load("create/issue/");
         $(".viewPanel").modal();
 
     });

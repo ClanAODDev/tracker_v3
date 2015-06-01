@@ -10,7 +10,7 @@
 		
 		<input type='hidden' name='user' value='<?php echo $user->id ?>'></input>
 		<div class="form-group">
-			<input type='text' class='form-control' name='title' placeholder='Title' required></input>
+			<input type='text' class='form-control' name='title' placeholder='Issue title' required></input>
 		</div>
 		<div class="form-group">
 			<input type='text' class='form-control' name='link' placeholder='Link where problem occurred' required></input>

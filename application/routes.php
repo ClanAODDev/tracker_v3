@@ -51,7 +51,7 @@ if (empty($_SESSION['userid'])) {
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
 	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
-	Flight::route('/issues/add-issue', array('GithubController', '_createIssue'));
+	Flight::route('/create/issue', array('GithubController', '_createIssue'));
 
 	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
