@@ -16,16 +16,16 @@
 			<div class="panel panel-default">
 
 				<div class="panel-heading">
-					<a href="./issues/<?php echo $issue->getNumber(); ?>"><strong><?php echo ucwords($issue->getTitle()); ?></strong></a> &mdash;
-					<small class="comment-count"><i class="fa fa-comment text-muted"></i> <?php echo $issue->getComments() ?></small>
+					<a href="./issues/<?php echo $issue->getNumber(); ?>"><strong><?php echo ucwords($issue->getTitle()); ?></strong></a>
+					<?php if ($issue->getComments()): ?>
+						<small class="comment-count text-muted"> &mdash; <i class="fa fa-comment"></i> <?php echo $issue->getComments() ?></small>
+					<?php endif; ?>
 					<small class="pull-right text-muted"> Lat updated <?php echo formatTime(strtotime($issue->getUpdatedAt())); ?></small>
 				</div>
 
-				<?php if (!empty($issue->getBody())): ?>
-					<div class="panel-body">
-						<small class="text-muted"><?php echo excerpt($issue->getBody(), 30); ?></small>
-					</div>
-				<?php endif; ?>
+				<div class="panel-body">
+					<small class="text-muted"><?php echo ($issue->getBody()) ? excerpt($issue->getBody(), 30) : "No description"; ?></small>
+				</div>
 
 			</div>
 		<?php endforeach; ?>
