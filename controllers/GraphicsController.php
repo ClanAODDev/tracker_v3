@@ -4,6 +4,7 @@ class GraphicsController {
 	
 	public static function _generateDivisionTop10($division) {
 
+		$division = Division::findByName($division)->id;
 
 		// error_reporting(E_ALL);
 		// ini_set('display_errors', 1);
