@@ -151,7 +151,9 @@
 									<li class="divider"></li>
 									<li><a href="issues">View Open Issues</a></li>
 									<li><a href="issues/closed">View Closed Issues</a></li>
+									<?php if ($user->developer > 0): ?>
 									<li class="disabled"><a href="issues">View Developer Issues</a></li>
+									<?php endif; ?>
 								</ul>
 							</li>		
 
