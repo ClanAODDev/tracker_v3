@@ -44,4 +44,16 @@ class GithubController {
 		Github::createIssue($title, $body);
 	}
 
+	public static function _devIssues() {
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+		$division = Division::findById(intval($member->game_id));
+		$platoons = Platoon::find_all($member->game_id);
+		$dev_issues = GitHub::getDevIssues();
+		Flight::render('issues/dev', array('dev_issue' => $dev_issues), 'content'); 
+		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+	}
+
 }

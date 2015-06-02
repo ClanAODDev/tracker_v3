@@ -41,6 +41,12 @@ class GitHub {
 		return $git->issues->listAllIssues(true, "all", "closed", "client", "updated");
 	}
 
+	public static function getDevIssues() {
+		$git = self::client();
+
+		return $git->issues->listAllIssues(true, "all", "open", "dev", "updated");
+	}
+
 	public static function createIssue($title, $body) {
 		$git = self::client();
 		$git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
