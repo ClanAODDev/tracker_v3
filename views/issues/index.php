@@ -17,21 +17,17 @@
 
 	<?php if (count($open_issues)): ?>
 		<?php foreach($open_issues as $issue): ?>
-			<div class="panel panel-default">
+			<a class="list-group-item" href="./issues/<?php echo $issue->getNumber(); ?>">
 
-				<div class="panel-heading">
-					<a href="./issues/<?php echo $issue->getNumber(); ?>"><strong><?php echo ucwords($issue->getTitle()); ?></strong></a>
-					<?php if ($issue->getComments()): ?>
-						<small class="comment-count text-muted"> &mdash; <i class="fa fa-comment"></i> <?php echo $issue->getComments() ?></small>
-					<?php endif; ?>
-					<small class="pull-right text-muted"> Lat updated <?php echo formatTime(strtotime($issue->getUpdatedAt())); ?></small>
-				</div>
+				<span class="text-muted">#<?php echo ucwords($issue->getNumber()); ?> </span>
 
-				<div class="panel-body">
-					<small class="text-muted"><?php echo ($issue->getBody()) ? excerpt($issue->getBody(), 30) : "No description"; ?></small>
-				</div>
+				<strong><?php echo ucwords($issue->getTitle()); ?></strong>
 
-			</div>
+				<?php if ($issue->getComments()): ?>
+					<span class="badge"><i class="fa fa-comment"></i> <?php echo $issue->getComments() ?></span>
+				<?php endif; ?>
+
+			</a>
 		<?php endforeach; ?>
 	<?php endif; ?>
 	<div class="clear" style="height: 25px;"></div>
