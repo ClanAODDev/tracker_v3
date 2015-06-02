@@ -35,8 +35,9 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/issues', array('GithubController', '_index'));
 	Flight::route('/issues/open', array('GithubController', '_index'));
 	Flight::route('/issues/closed', array('GithubController', '_closedIssues'));
-	Flight::route('/issues/@id', array('GithubController', '_view'));
 	Flight::route('/issues/dev', array('GithubController', '_devIssues'));
+	Flight::route('/issues/@id', array('GithubController', '_view'));
+
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
