@@ -151,7 +151,7 @@
 									<li class="divider"></li>
 									<li><a href="issues">View Open Issues</a></li>
 									<li><a href="issues/closed">View Closed Issues</a></li>
-									<?php if ($user->developer > 0): ?>
+									<?php if ($user->developer > 0 || $user->role > 2): ?>
 									<li><a href="issues/dev">View Developer Issues</a></li>
 									<?php endif; ?>
 								</ul>

@@ -49,7 +49,14 @@ class GitHub {
 
 	public static function createIssue($title, $body) {
 		$git = self::client();
+
 		$git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
+	}
+
+	public static function getSelectIssue($id) {
+		$git = self::client();
+
+		$git->issues->getIssue(self::$owner, self::$repo, $id);
 	}
 
 	public static function convertState($state) {
