@@ -2,15 +2,35 @@
 
 class GithubController {
 	
-	public static function _index() {
+	public static function _index($filter) {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
-		$open_issues = GitHub::getOpenIssues();
-		Flight::render('issues/index', array('open_issues' => $open_issues), 'content'); 
+
+		$filter = $filter ?: "open";
+
+		switch ($filter) {
+			case "open":
+			$issues = GitHub::getOpenIssues();
+			break;
+			case "closed":
+			$issues = GitHub::getClosedIssues();
+			break;
+			case "dev" && ($user->role > 2 || User::isDev()):
+			$issues = GitHub::getDevIssues();
+			break;
+			default:
+			$issues = GitHub::getOpenIssues();
+			$filter = "open";
+			break;
+		}
+
+		Flight::render('issues/issues', array('issues' => $issues, 'filter' => $filter), 'issuesList');
+		Flight::render('issues/filters', array('filters' => $filter, 'user' => $user), 'filters');
+		Flight::render('issues/index', array('issues' => $issues), 'content'); 
 		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 

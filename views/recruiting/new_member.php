@@ -15,7 +15,7 @@
 
 		<!-- necessary for step functionality -->
 
-		<div class='navbar guide-nav centered-pills' style='display: <?php echo (User::isDev($user->id)) ? "block" : "none"; ?>'>
+		<div class='navbar guide-nav centered-pills' style='display: <?php echo (User::isDev()) ? "block" : "none"; ?>'>
 			<div class='navbar-inner'>
 				<ul>
 					<li class='slide1'><a href='#tab1' data-toggle='tab'>Recruit Introduction</a></li>

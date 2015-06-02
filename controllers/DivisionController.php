@@ -29,7 +29,7 @@ class DivisionController {
 		$divisions = Division::find_all();
 
 		switch ($user->role) {
-			case User::isDev($user->id): $type = "div"; $id = $member->game_id; break;
+			case User::isDev(): $type = "div"; $id = $member->game_id; break;
 			case 1: $type = "sqd"; $id = $member->member_id; break;
 			case 2:
 			case 3: $type = "div";  $id = $member->game_id; break;

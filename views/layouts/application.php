@@ -101,7 +101,7 @@
 								<li class="dropdown multi-level">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
 									<ul class="dropdown-menu" role="menu">
-										<?php if ($user->role > 2 || User::isDev($user->id)) : ?>
+										<?php if ($user->role > 2 || User::isDev()) : ?>
 											<li class="dropdown-submenu">
 												<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
 												<ul class="dropdown-menu">

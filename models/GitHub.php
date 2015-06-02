@@ -31,31 +31,26 @@ class GitHub {
 
 	public static function getOpenIssues() {
 		$git = self::client();
-
 		return $git->issues->listAllIssues(true, "all", "open", "client", "updated");
 	}
 
 	public static function getClosedIssues() {
 		$git = self::client();
-
 		return $git->issues->listAllIssues(true, "all", "closed", "client", "updated");
 	}
 
 	public static function getDevIssues() {
 		$git = self::client();
-
 		return $git->issues->listAllIssues(true, "all", "open", "dev", "updated");
 	}
 
 	public static function createIssue($title, $body) {
 		$git = self::client();
-
 		$git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
 	}
 
 	public static function getSelectIssue($id) {
 		$git = self::client();
-
 		$git->issues->getIssue(self::$owner, self::$repo, $id);
 	}
 
