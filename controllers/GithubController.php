@@ -19,14 +19,8 @@ class GithubController {
 			case "closed":
 			$issues = GitHub::getClosedIssues();
 			break;
-			case "dev":
-			if($user->role > 2 || User::isDev()) {
-				$issues = GitHub::getDevIssues();
-			}
-			else {
-				$issues= GitHub::getOpenIssues();
-				$filter = "open";
-			}
+			case "dev" && ($user->role > 2 || User::isDev()):
+			$issues = GitHub::getDevIssues();
 			break;
 			default:
 			$issues = GitHub::getOpenIssues();
