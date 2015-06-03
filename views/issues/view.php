@@ -13,6 +13,5 @@
 		<h3><?php echo ucwords($selectIssue->getTitle()); ?></h3>
 		<h4><small><?php echo "This issue was opened on " . substr($selectIssue->getCreatedAt(), 0, 10); ?></small></h4>
 		<h4><small><?php echo "This issue was last edited on " . substr($selectIssue->getUpdatedAt(), 0, 10);?></small></h4>
-		<?php var_dump($comments);?>
 	<div class="clear" style="height: 25px;"></div>
 </div>

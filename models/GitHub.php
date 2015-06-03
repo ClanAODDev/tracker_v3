@@ -62,7 +62,7 @@ class GitHub {
 	public static function getComments($id) {
 		$git = self::client();
 
-		return $git->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
+		return $git->issues->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
 	}
 
 	public static function convertState($state) {
