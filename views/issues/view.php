@@ -6,12 +6,13 @@
 	</ul>
 
 	<div class='page-header'>
-		<h2>
-			<strong>Issue Tracker</strong><br><small>Issue Number <?php echo $id ?></small>
-		</h2>
+		<h2><strong>Issue Number <?php echo $id ?></strong></h2>
 	</div>
 		<h3><?php echo ucwords($selectIssue->getTitle()); ?></h3>
 		<h4><small><?php echo "This issue was opened on " . substr($selectIssue->getCreatedAt(), 0, 10); ?></small></h4>
 		<h4><small><?php echo "This issue was last edited on " . substr($selectIssue->getUpdatedAt(), 0, 10);?></small></h4>
+		<?php foreach($comments as $comment){
+		var_dump($comment->listCommentsOnPullRequest());
+		} ?>
 	<div class="clear" style="height: 25px;"></div>
 </div>
