@@ -9,7 +9,7 @@
 					
 					<strong><?php echo ucwords($issue->getTitle()); ?></strong>
 					<?php if ($issue->getComments()): ?>
-						<span class="badge"><i class="fa fa-comment"></i> <?php echo $issue->getComments() ?></span>
+						<span class="badge"><?php echo $issue->getComments() ?> <i class="fa fa-comment"></i></span>
 					<?php endif; ?>
 				</a>
 			<?php endforeach; ?>
