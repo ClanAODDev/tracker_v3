@@ -12,7 +12,7 @@
 
 				<strong><img src='assets/images/game_icons/large/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong>
 
-				<?php if ($user->role >= 3 || User::isDev($user->id)) : ?>
+				<?php if ($user->role >= 3 || User::isDev()) : ?>
 					<div class="btn-group pull-right">
 						<a class="btn btn-default edit-div disabled" href="#" target="_blank"><i class="fa fa-pencil"></i> <span class="hidden-xs hidden-sm">Edit Division</span></a>
 						<a class="btn btn-default create-div disabled" href="#" target="_blank"><i class="fa fa-plus-square"></i> <span class="hidden-xs hidden-sm">Create Division</span></a>

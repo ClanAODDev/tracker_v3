@@ -32,10 +32,8 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
-	Flight::route('/issues', array('GithubController', '_index'));
-	Flight::route('/issues/open', array('GithubController', '_index'));
-	Flight::route('/issues/closed', array('GithubController', '_closedIssues'));
-	Flight::route('/issues/dev', array('GithubController', '_devIssues'));
+
+	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));
 	Flight::route('/issues/@id', array('GithubController', '_view'));
 
 

@@ -26,7 +26,8 @@ class User extends Application {
 		return false;
 	}
 
-	public static function isDev($id) {
+	public static function isDev() {
+		$id = $_SESSION['userid'];
 		$params = Flight::aod()->sql("SELECT developer FROM users WHERE id = {$id} LIMIT 1")->one();
 		return ($params['developer'] == 1) ? true : false;
 	}
@@ -47,7 +48,7 @@ class User extends Application {
 		} else if (($user->role == 3) && ($member->game_id == $player->game_id)) {
 			return true;
         // is the user a dev or clan administrator?        
-		} else if (self::isDev($user->id)) {
+		} else if (self::isDev()) {
 			return true;
         // is the user editing someone of a lesser role, or himself?
 		} else if ($mid == $member->member_id) {
@@ -122,7 +123,7 @@ class User extends Application {
 		}
 
 		// allow developers to see all fields regardless of role
-		if (self::isDev($_SESSION['userid'])) {
+		if (self::isDev()) {
 			$allowPltAssignmentEdit = true;
 			$allowSqdAssignmentEdit = true;
 			$allowPosAssignmentEdit = true;
