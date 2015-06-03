@@ -59,10 +59,18 @@ class GitHub {
 		return $git->issues->getIssue(self::$owner, self::$repo, $id);
 	}
 
+	public static function getLabelsOnIssue($id) {
+		$git = self::client();
+
+		return $git->issues->labels->listLabelsOnAnIssue(self::$owner, self::$repo, $id);
+	}
+
 	public static function getComments($id) {
 		$git = self::client();
 
-		return $git->issues->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
+		$comments = $git->issues->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
+
+		return $comments;
 	}
 
 	public static function convertState($state) {
