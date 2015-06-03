@@ -4,7 +4,7 @@
 	<?php if (count($issues)): ?>
 		<div class="list-group">
 		<?php foreach($issues as $issue): ?>
-				<a class="list-group-item" href="./issues/<?php echo $issue->getNumber(); ?>">
+				<a class="list-group-item" href="./issues/view/<?php echo $issue->getNumber(); ?>">
 					<span class="text-muted">#<?php echo ucwords($issue->getNumber()); ?> </span>
 					
 					<strong><?php echo ucwords($issue->getTitle()); ?></strong>
