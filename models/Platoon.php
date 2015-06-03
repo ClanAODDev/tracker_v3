@@ -33,7 +33,7 @@ class Platoon extends Application {
 	}
 
 	public static function SquadLeaders($game_id, $platoon_id = false, $order_by_rank = false) {
-		$sql = "SELECT last_activity, rank.abbr, member_id, forum_name, platoon.name as platoon_name, member.battlelog_name FROM member LEFT JOIN platoon ON platoon.id = member.platoon_id LEFT JOIN rank ON rank.id = member.rank_id WHERE member.position_id = 5 AND member.game_id = {$game_id}";
+		$sql = "SELECT member.id, last_activity, rank.abbr, member_id, forum_name, platoon.name as platoon_name, member.battlelog_name FROM member LEFT JOIN platoon ON platoon.id = member.platoon_id LEFT JOIN rank ON rank.id = member.rank_id WHERE member.position_id = 5 AND member.game_id = {$game_id}";
 
 		if ($platoon_id) {
 			$sql .= " AND platoon_id = {$platoon_id} ";
@@ -68,7 +68,7 @@ class Platoon extends Application {
 
 
 	public static function GeneralPop($platoon_id, $order_by_rank = false) {
-		$sql = "SELECT member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.rank_id, rank.abbr as rank FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
+		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.rank_id, rank.abbr as rank FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
 
 		if ($order_by_rank) {
 			$sql .= " ORDER BY member.rank_id DESC, member.join_date ASC ";

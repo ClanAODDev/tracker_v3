@@ -16,6 +16,13 @@ class MemberGame extends Application {
 		->select()->many();
 	}
 
+	public static function getGamesPlayed($member_id) {
+		return Flight::aod()->from(self::$table)
+		->where(array('member_id' => $member_id))
+		->join('subgames', array('subgames.id' => self::$table.'.subgame_id'))
+		->select('subgames.short_name')->many();
+	}
+
 	public static function plays($member_id, $game) {
 		$params = self::find(array('member_id' => $member_id, 'subgame_id' => $game));
 		return is_object($params) ? true : false;

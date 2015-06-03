@@ -335,7 +335,7 @@ function memberColor($user, $level)
 
 
 function average($array) {
-   return array_sum($array) / count($array);
+ return array_sum($array) / count($array);
 }
 
 
@@ -395,4 +395,24 @@ function excerpt($text, $limit) {
       $text = substr($text, 0, $pos[$limit]) . '...';
   }
   return $text;
+}
+
+/**
+ * mini icons for division structure
+ * @param  strng $game bf3,bf4,bfh
+ * @return string      image of icon
+ */
+function convertIcon($game) {
+    switch ($game) {
+        case "bf3":
+        $img = " [img]http://i.imgur.com/SIy4iVy.png[/img]";
+        break;
+        case "bf4":
+        $img = " [img]http://i.imgur.com/WjKYT85.png[/img]";
+        break;
+        case "bfh":
+        $img = " [img]http://i.imgur.com/sF5IBfy.png[/img]";
+        break;
+    }
+    return $img;
 }

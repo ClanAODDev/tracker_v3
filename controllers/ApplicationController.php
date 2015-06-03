@@ -3,7 +3,7 @@
 class ApplicationController {
 
 	public static function _index() {
-		
+
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
@@ -32,7 +32,7 @@ class ApplicationController {
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
-		
+
 		Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
 		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
