@@ -34,7 +34,8 @@ class GithubController {
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
 		$issue = GitHub::getSelectIssue($id);
-		Flight::render('issues/id_issue', array('selectIssue' => $issue, 'id' => $id), 'content'); 
+		$comments = GitHub::getComments($id);
+		Flight::render('issues/view', array('selectIssue' => $issue, 'id' => $id, 'comments' => $comments), 'content'); 
 		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 

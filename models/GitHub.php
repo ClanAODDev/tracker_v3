@@ -50,13 +50,19 @@ class GitHub {
 	public static function createIssue($title, $body) {
 		$git = self::client();
 
-		$git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
+		return $git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
 	}
 
 	public static function getSelectIssue($id) {
 		$git = self::client();
 
-		$git->issues->getIssue(self::$owner, self::$repo, $id);
+		return $git->issues->getIssue(self::$owner, self::$repo, $id);
+	}
+
+	public static function getComments($id) {
+		$git = self::client();
+
+		return $git->comment->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
 	}
 
 	public static function convertState($state) {
