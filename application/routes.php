@@ -33,8 +33,9 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
 
-	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));
 	Flight::route('/issues/view/@id', array('GithubController', '_view'));
+	Flight::route('/issues/@filter | /issues', array('GithubController', '_index'));
+	
 
 
 	// updates

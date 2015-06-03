@@ -2,7 +2,7 @@
 
 class GithubController {
 	
-	public static function _index($filter) {
+	public static function _index($filter="open") {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$tools = Tool::find_all($user->role);
@@ -16,15 +16,18 @@ class GithubController {
 			case "open":
 			$issues = GitHub::getOpenIssues();
 			break;
+
 			case "closed":
 			$issues = GitHub::getClosedIssues();
 			break;
+
 			case "dev" && ($user->role > 2 || User::isDev()):
 			$issues = GitHub::getDevIssues();
 			break;
+
 			default:
 			$issues = GitHub::getOpenIssues();
-			$filter = "open";
+			$filter = "Open";
 			break;
 		}
 
