@@ -59,7 +59,8 @@ class GithubController {
 		$issue = GitHub::getSelectIssue($id);
 		$labels = GitHub::getLabelsOnIssue($id);
 		$comments = GitHub::getComments($id);
-		Flight::render('issues/view', array('selectIssue' => $issue, 'labels' => $labels, 'id' => $id, 'comments' => $comments, 'user' => $user), 'content'); 
+		$dev_issues = GitHub::getDevIssues();
+		Flight::render('issues/view', array('dev_issues' => $dev_issues, 'selectIssue' => $issue, 'labels' => $labels, 'id' => $id, 'comments' => $comments, 'user' => $user), 'content'); 
 		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
