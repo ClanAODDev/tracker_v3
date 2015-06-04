@@ -59,6 +59,12 @@ class GitHub {
 		return $git->issues->getIssue(self::$owner, self::$repo, $id);
 	}
 
+	public static function getAssignee($id) {
+		$git = self::client();
+
+		return $git->issues->getIssue(self::$owner, self::$repo, $id);
+	}
+
 	public static function getLabelsOnIssue($id) {
 		$git = self::client();
 

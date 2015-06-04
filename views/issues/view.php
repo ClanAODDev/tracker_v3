@@ -7,6 +7,7 @@
 	}
 ?>
 <?php switch ($filter):
+	// If the issue is dev and if the user is a dev or co/xo then they can view the issue
 		case "dev" && ($user->role > 2 || User::isDev()): ?>
 		<div class='container'>
 			<ul class='breadcrumb'>
@@ -22,8 +23,10 @@
 			<h4><small><?php echo "This issue was last edited on " . substr($selectIssue->getUpdatedAt(), 0, 10);?></small></h4>
 			<h3>Labels</h3>
 				<?php foreach($labels as $label): ?>
-					<h4 text-color="<?php $label->getColor() ?>"><?php echo $label->getName()?></h4>
+					<h4><?php echo $label->getName();?></h4>
 				<?php endforeach; ?>
+			<h3>Assigned Developer</h3>
+				<h4><?php echo $assignee->getAssignee()->getLogin(); ?></h4>
 			<h3>Comments</h3>
 				<?php foreach($comments as $comment): ?>
 					<h4><?php echo $comment->getBody(); ?></h4>
@@ -33,6 +36,8 @@
 		</div>
 		<?php break; ?>
 
+
+	<!-- If the issue is not dev, anyone can view -->
 		<?php case "open": ?>
 		<div class='container'>
 			<ul class='breadcrumb'>
@@ -50,6 +55,8 @@
 				<?php foreach($labels as $label): ?>
 					<h4 text-color="<?php $label->getColor() ?>"><?php echo $label->getName()?>
 				<?php endforeach; ?>
+			<h3>Assigned Developer</h3>
+				<h4><?php echo $assignee->getAssignee()->getLogin(); ?></h4>
 			<h3>Comments</h3>
 				<?php foreach($comments as $comment): ?>
 					<h4><?php echo $comment->getBody(); ?></h4>
@@ -59,6 +66,9 @@
 		</div>;
 		<?php break; ?>
 
+
+
+	<!-- Deault, they cannot view it -->
 		<?php default: ?>
 		<div class='container'>
 			<ul class='breadcrumb'>
