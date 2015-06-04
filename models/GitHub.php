@@ -31,52 +31,37 @@ class GitHub {
 
 	public static function getOpenIssues() {
 		$git = self::client();
-
 		return $git->issues->listAllIssues(true, "all", "open", "client", "updated");
 	}
 
 	public static function getClosedIssues() {
 		$git = self::client();
-
 		return $git->issues->listAllIssues(true, "all", "closed", "client", "updated");
 	}
 
 	public static function getDevIssues() {
 		$git = self::client();
-
 		return $git->issues->listAllIssues(true, "all", "open", "dev", "updated");
 	}
 
 	public static function createIssue($title, $body) {
 		$git = self::client();
-
 		return $git->issues->createAnIssue(self::$owner, self::$repo, $title, $body);
 	}
 
-	public static function getSelectIssue($id) {
+	public static function getIssue($id) {
 		$git = self::client();
-
-		return $git->issues->getIssue(self::$owner, self::$repo, $id);
+		return $issue = $git->issues->getIssue(self::$owner, self::$repo, $id);
 	}
 
-	public static function getAssignee($id) {
+	public static function getLabels($id) {
 		$git = self::client();
-
-		return $git->issues->getIssue(self::$owner, self::$repo, $id);
-	}
-
-	public static function getLabelsOnIssue($id) {
-		$git = self::client();
-
 		return $git->issues->labels->listLabelsOnAnIssue(self::$owner, self::$repo, $id);
 	}
 
 	public static function getComments($id) {
 		$git = self::client();
-
-		$comments = $git->issues->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
-
-		return $comments;
+		return $git->issues->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
 	}
 
 	public static function convertState($state) {

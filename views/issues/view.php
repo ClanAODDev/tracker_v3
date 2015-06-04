@@ -1,85 +1,36 @@
-<!-- Check to see if issue is a dev issue -->
-<?php $filter="open"; ?>
-<?php foreach($dev_issues as $issue) {
-		if($issue->getNumber() == $id) {
-			$filter = "dev";
-		}
-	}
-?>
-<?php switch ($filter):
-	// If the issue is dev and if the user is a dev or co/xo then they can view the issue
-		case "dev" && ($user->role > 2 || User::isDev()): ?>
-		<div class='container'>
-			<ul class='breadcrumb'>
-				<li><a href='./'>Home</a></li>
-				<li><a href='./issues'>Issue Tracker</a></li>
-				<li class='active'>Issue <?php echo $id ?></li>
-			</ul>
-		<div class='page-header'>
-			<h2><strong>Issue Number <?php echo $id ?></strong></h2>
-		</div>
-			<h3><?php echo ucwords($selectIssue->getTitle()); ?></h3>
-			<h4><small><?php echo "This issue was opened on " . substr($selectIssue->getCreatedAt(), 0, 10); ?></small></h4>
-			<h4><small><?php echo "This issue was last edited on " . substr($selectIssue->getUpdatedAt(), 0, 10);?></small></h4>
-			<h3>Labels</h3>
-				<?php foreach($labels as $label): ?>
-					<h4><?php echo $label->getName();?></h4>
-				<?php endforeach; ?>
-			<h3>Assigned Developer</h3>
-				<h4><?php echo $assignee->getAssignee()->getLogin(); ?></h4>
-			<h3>Comments</h3>
-				<?php foreach($comments as $comment): ?>
-					<h4><?php echo $comment->getBody(); ?></h4>
-					<br>		
-				<?php endforeach; ?>
-		<div class="clear" style="height: 25px;"></div>
-		</div>
-		<?php break; ?>
+<div class='container'>
+
+	<ul class='breadcrumb'>
+		<li><a href='./'>Home</a></li>
+		<li><a href='./issues'>Issue Tracker</a></li>
+		<li class='active'>Issue #<?php echo $issue->getNumber() ?></li>
+	</ul>
+
+	<div class='page-header'>
+		<h2><strong>Issue Number <?php echo $issue->getTitle(); ?></strong></h2>
+	</div>
+
+	<h4><small><?php echo "This issue was opened on " . substr($issue->getCreatedAt(), 0, 10); ?></small></h4>
+	<h4><small><?php echo "This issue was last edited on " . substr($issue->getUpdatedAt(), 0, 10);?></small></h4>
+
+	<p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p>
+
+	<?php if (!empty($issue->getAssignee())): ?>
+		<h3>Assigned Developer</h3>
+		<p><?php echo $issue->getAssignee()->getLogin(); ?></p>
+	<?php endif; ?>
+
+	<h3>Comments</h3>
+	<?php if (count($comments)): ?>
+
+		<?php foreach($comments as $comment): ?>
+			<p><?php echo $comment->getBody(); ?></p>		
+		<?php endforeach; ?>
+
+	<?php else: ?>
+		<p>There are no comments for this issue.</p>
+	<?php endif; ?>
+
+</div>
 
 
-	<!-- If the issue is not dev, anyone can view -->
-		<?php case "open": ?>
-		<div class='container'>
-			<ul class='breadcrumb'>
-				<li><a href='./'>Home</a></li>
-				<li><a href='./issues'>Issue Tracker</a></li>
-				<li class='active'>Issue <?php echo $id ?></li>
-			</ul>
-		<div class='page-header'>
-			<h2><strong>Issue Number <?php echo $id ?></strong></h2>
-		</div>
-			<h3><?php echo ucwords($selectIssue->getTitle()); ?></h3>
-			<h4><small><?php echo "This issue was opened on " . substr($selectIssue->getCreatedAt(), 0, 10); ?></small></h4>
-			<h4><small><?php echo "This issue was last edited on " . substr($selectIssue->getUpdatedAt(), 0, 10);?></small></h4>
-			<h3>Labels</h3>
-				<?php foreach($labels as $label): ?>
-					<h4 text-color="<?php $label->getColor() ?>"><?php echo $label->getName()?>
-				<?php endforeach; ?>
-			<h3>Assigned Developer</h3>
-				<h4><?php echo $assignee->getAssignee()->getLogin(); ?></h4>
-			<h3>Comments</h3>
-				<?php foreach($comments as $comment): ?>
-					<h4><?php echo $comment->getBody(); ?></h4>
-					<br>		
-				<?php endforeach; ?>
-		<div class="clear" style="height: 25px;"></div>
-		</div>;
-		<?php break; ?>
-
-
-
-	<!-- Deault, they cannot view it -->
-		<?php default: ?>
-		<div class='container'>
-			<ul class='breadcrumb'>
-				<li><a href='./'>Home</a></li>
-				<li><a href='./issues'>Issue Tracker</a></li>
-				<li class='active'>Issue <?php echo $id ?></li>
-			</ul>
-		<div class='page-header'>
-			<h2><strong>Issue Number <?php echo $id ?> Is Not Available</strong></h2>
-		</div>
-		<div class="clear" style="height: 25px;"></div>
-		</div>
-		<?php break; ?>
-<?php endswitch; ?>
