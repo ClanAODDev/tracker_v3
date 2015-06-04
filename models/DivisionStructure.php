@@ -52,7 +52,7 @@ class DivisionStructure {
 	    	$games = self::getIcons(MemberGame::getGamesPlayed($leader->id));
 	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 	    	$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]{$games}[/url]";
-	    	$division_structure .= "{$aod_url}[color={$division_leaders_color}]{$leader->rank} {$leader->forum_name}[/url]{$bl_url}[/color] - {$leader->position_desc}\r\n";
+	    	$division_structure .= "{$aod_url}[color={$division_leaders_color}]{$leader->rank} {$leader->forum_name}[/url] {$bl_url}[/color] - {$leader->position_desc}\r\n";
 	    }
 
 	    $division_structure .= "[/size][/center]\r\n\r\n";
@@ -201,7 +201,10 @@ class DivisionStructure {
 			if ($i % 10 == 0) {
 				$division_structure .= "[/td][td]";
 			}
-			$date_end = date("M d, Y", strtotime($player->date_end));
+
+			$date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end)); 
+			
+
 			$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 			$profile = Member::findByMemberId($player->member_id);
 			$division_structure .= "{$aod_url}" . Member::findForumName($profile->member_id) . "[/url] -- {$date_end} -- {$player->reason}\r\n";
