@@ -50,8 +50,13 @@ class GitHub {
 	}
 
 	public static function getIssue($id) {
-		$git = self::client();
-		return $issue = $git->issues->getIssue(self::$owner, self::$repo, $id);
+		try {
+			$git = self::client();
+			$issue = $git->issues->getIssue(self::$owner, self::$repo, $id);
+			return $issue;
+		} catch(GitHubClientException $e) {
+			return false;
+		}
 	}
 
 	public static function getLabels($id) {

@@ -50,17 +50,20 @@ class GithubController {
 	}
 
 	public static function _view($id) {
-		$issue = GitHub::getIssue($id);
-		$user = User::find(intval($_SESSION['userid']));
-		$member = Member::find(intval($_SESSION['memberid']));
-		$tools = Tool::find_all($user->role);
-		$divisions = Division::find_all();
-		$division = Division::findById(intval($member->game_id));
-		$platoons = Platoon::find_all($member->game_id);
-		$labels = GitHub::getLabels($id);
-		$comments = GitHub::getComments($id);
-		Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
-		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+		if ($issue = GitHub::getIssue($id)) {
+			$user = User::find(intval($_SESSION['userid']));
+			$member = Member::find(intval($_SESSION['memberid']));
+			$tools = Tool::find_all($user->role);
+			$divisions = Division::find_all();
+			$division = Division::findById(intval($member->game_id));
+			$platoons = Platoon::find_all($member->game_id);
+			$labels = GitHub::getLabels($id);
+			$comments = GitHub::getComments($id);
+			Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
+			Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+		} else {
+			Flight::redirect('/404', 404);
+		}
 	}
 
 	public static function _createIssue() {
