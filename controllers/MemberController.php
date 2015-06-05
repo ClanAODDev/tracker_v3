@@ -47,7 +47,7 @@ class MemberController {
 			Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 
 		} else {
-			Flight::redirect('/404', 401);
+			Flight::redirect('/404', 404);
 		}
 		
 	}
