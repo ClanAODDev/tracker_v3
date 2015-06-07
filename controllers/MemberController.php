@@ -91,7 +91,10 @@ class MemberController {
 			if (isset($_POST['played_games'])) {
 				$games = $_POST['played_games'];
 				foreach ($games as $game) {
-					MemberGame::add($member->id, $game);
+					$params = new stdClass();
+					$params->member_id = $member->id;
+					$params->game_id = $game;
+					MemberGame::add($params);
 				}
 			}
 

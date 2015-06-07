@@ -1,13 +1,17 @@
 <?php
 
-class Handles extends Application {
+class Handle extends Application {
 	public $id;
 	public $handle_type;
 	public $handle_profile_url;
 
 	static $id_field = 'id';
 	static $name_field = 'handle_type';
-	static $table_name = 'handles';
+	static $table = 'handles';
+
+	public static function find_all() {
+		return self::fetch_all();
+	}
 
 	public static function create($params) {
 		$handle = new self();

@@ -28,10 +28,10 @@ class MemberGame extends Application {
 		return is_object($params) ? true : false;
 	}
 
-	public static function add($member_id, $game_id) {
+	public static function add($params) {
 		$game = new self();
-		$game->member_id = $member_id;
-		$game->subgame_id = $game_id;
+		$game->member_id = $params->member_id;
+		$game->subgame_id = $params->game_id;
 		$game->save();
 	}
 
