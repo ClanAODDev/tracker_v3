@@ -31,9 +31,4 @@
 		<p>There are no comments for this issue.</p>
 	<?php endif; ?>
 
-	<?php /* <?php if($user->role > 2 || User::isDev()): ?>
-		<h3>Would you like to close this issue?</h3>
-		<h4><small>Click <a href='./close'>here</a> to close this issue</small></h4>
-	<?php endif; ?> */ ?>
-
 </div>
