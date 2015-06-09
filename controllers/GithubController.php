@@ -59,7 +59,17 @@ class GithubController {
 			$platoons = Platoon::find_all($member->game_id);
 			$labels = GitHub::getLabels($id);
 			$comments = GitHub::getComments($id);
-			Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
+			foreach($labels as $label) {
+				if($label->getName() === "dev" && ($user->role > 2 || User::isDev())) {
+					Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
+				}
+				elseif($label->getName() === "dev" && !($user->role > 2 || User::isDev())) {
+					Flight::render('issues/notAvailable', array('id' => $id), 'content');
+				}
+				elseif($label->getName() === "client") {
+					Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
+				}
+			}
 			Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 		} else {
 			Flight::redirect('/404', 404);

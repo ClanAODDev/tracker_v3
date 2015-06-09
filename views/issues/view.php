@@ -7,7 +7,7 @@
 	</ul>
 
 	<div class='page-header'>
-		<h2><strong><?php echo $issue->getTitle(); ?></strong><small>#<?php echo $issue->getNumber(); ?></small></h2>
+		<h2><strong><?php echo $issue->getTitle(); ?></strong><br><small>#<?php echo $issue->getNumber(); ?></small></h2>
 	</div>
 
 	<h4><small><?php echo "This issue was opened on " . substr($issue->getCreatedAt(), 0, 10); ?></small></h4>
@@ -31,6 +31,9 @@
 		<p>There are no comments for this issue.</p>
 	<?php endif; ?>
 
+	<?php /* <?php if($user->role > 2 || User::isDev()): ?>
+		<h3>Would you like to close this issue?</h3>
+		<h4><small>Click <a href='./close'>here</a> to close this issue</small></h4>
+	<?php endif; ?> */ ?>
+
 </div>
-
-
