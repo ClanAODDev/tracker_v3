@@ -318,6 +318,40 @@ $(function() {
 
     });
 
+    //ADD ISSUE
+    $("#submit-issue").submit(function(e) {
+        e.preventDefault();
+
+        var url = "/do/issue-submit";
+
+        $('.modal').modal({
+            backdrop: 'static',
+            keyboard: false
+        })
+            e.one('click', '#submit', function() {
+
+                var comment = $(".modal #comment").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: 'json',
+                    data: $("#submit-issue").serialize() + "&comment=" + comment,
+                    success: function(data){
+                        if(data.success) {
+
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                });
+                return false;
+            });
+    });
+
+
 
     $("#datepicker").datepicker({
         changeMonth: true,

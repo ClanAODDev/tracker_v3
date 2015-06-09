@@ -48,6 +48,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/update-flag', array('MemberController', '_doUpdateFlag'));
 	Flight::route('POST /do/update-loa', array('DivisionController', '_updateLoa'));
 	Flight::route('POST /do/remove-member', array('MemberController', '_doKickFromAod'));
+	Flight::route('POST /do/issue-submit', array('GithubController', '_doSubmitIssue'));
 
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));

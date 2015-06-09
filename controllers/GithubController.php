@@ -87,7 +87,7 @@ class GithubController {
 		$link = $_POST['link'];
 		$body = $_POST['body'];
 		$body .= "\r\n\r\nLink to problem area: {$link}";
-		Github::createIssue($title, $body);
+		$success = Github::createIssue($title, $body);
 	}
 
 	public static function _devIssues() {
