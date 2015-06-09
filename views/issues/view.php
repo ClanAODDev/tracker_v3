@@ -7,7 +7,7 @@
 	</ul>
 
 	<div class='page-header'>
-		<h2><strong>Issue Number <?php echo $issue->getTitle(); ?></strong></h2>
+		<h2><strong><?php echo $issue->getTitle(); ?></strong><small>#<?php echo $issue->getNumber(); ?></small></h2>
 	</div>
 
 	<h4><small><?php echo "This issue was opened on " . substr($issue->getCreatedAt(), 0, 10); ?></small></h4>
