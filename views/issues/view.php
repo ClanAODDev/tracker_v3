@@ -15,7 +15,7 @@
 
 	<p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p>
 
-	<?php if (!empty($issue->getAssignee())): ?>
+	<?php if ($issue->getAssignee()): ?>
 		<h3>Assigned Developer</h3>
 		<p><?php echo $issue->getAssignee()->getLogin(); ?></p>
 	<?php endif; ?>
