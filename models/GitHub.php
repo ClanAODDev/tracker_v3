@@ -45,9 +45,14 @@ class GitHub {
 	}
 
 	public static function createIssue($title, $body) {
-		$git = self::client();
-		$body = $body . 
-		$git->issues->createAnIssue(self::$owner, self::$repo, $title, $body, null, null, array("client"));
+		try {
+			$git = self::client();
+			$issue = $git->issues->createAnIssue(self::$owner, self::$repo, $title, $body, null, null, array("client"));
+			return $issue;
+		} catch(GitHubClientException $e) {
+			return $e->getMessage();
+		}
+		
 	}
 
 	public static function getIssue($id) {

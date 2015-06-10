@@ -50,44 +50,47 @@ class GithubController {
 	}
 
 	public static function _view($id) {
+
 		if ($issue = GitHub::getIssue($id)) {
+
 			$user = User::find(intval($_SESSION['userid']));
 			$member = Member::find(intval($_SESSION['memberid']));
 			$tools = Tool::find_all($user->role);
 			$divisions = Division::find_all();
 			$division = Division::findById(intval($member->game_id));
 			$platoons = Platoon::find_all($member->game_id);
-			$labels = GitHub::getLabels($id);
 			$comments = GitHub::getComments($id);
+
+			// not sure if I am a big fan of doing it this way as
+			// looping through the labels significantly increases the 
+			// page load time. We need to find a better way to do this.
+			// For now, let's leave this check out, presently it's causing
+			// problems with issues that should be working
+
+			/*  
 			foreach($labels as $label) {
 				if($label->getName() === "dev" && ($user->role > 2 || User::isDev())) {
 					Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
-				}
-				elseif($label->getName() === "dev" && !($user->role > 2 || User::isDev())) {
+				} elseif($label->getName() === "dev" && !($user->role > 2 || User::isDev())) {
 					Flight::render('issues/notAvailable', array('id' => $id), 'content');
-				}
-				elseif($label->getName() === "client") {
+				} elseif($label->getName() === "client") {
 					Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
 				}
 			}
+			*/
+
+			Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
 			Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+
 		} else {
+
 			Flight::redirect('/404', 404);
+
 		}
 	}
 
 	public static function _createIssue() {
-		$user = User::find(intval($_SESSION['userid']));
-		Flight::render('modals/create_issue', array('user' => $user)); 
-	}
-
-	public static function _doSubmitIssue() {
-		$user = $_POST['user'];
-		$title = $_POST['title'];
-		$link = $_POST['link'];
-		$body = $_POST['body'];
-		$body .= "\r\n\r\nLink to problem area: {$link}";
-		$success = Github::createIssue($title, $body);
+		Flight::render('modals/create_issue'); 
 	}
 
 	public static function _devIssues() {
@@ -100,6 +103,22 @@ class GithubController {
 		$dev_issues = GitHub::getDevIssues();
 		Flight::render('issues/dev', array('dev_issue' => $dev_issues), 'content'); 
 		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+	}
+
+	public static function _doSubmitIssue() {
+		$user = Member::findById($_POST['user'])->forum_name;
+		$title = $_POST['title'];
+		$link = $_POST['link'];
+		$body = $_POST['body'];
+		$body .= "<hr />Link to problem area: {$link}<br />";
+		$body .= "Reported by: {$user}";
+		$issue = Github::createIssue($title, $body);
+		var_dump($issue);die;
+		if (null) {
+			$data = array('success' => true, 'message' => "Member information updated!");	
+		} else {
+			$data = array('success' => true, 'message' => "Member information updated!");	
+		}
 	}
 
 }
