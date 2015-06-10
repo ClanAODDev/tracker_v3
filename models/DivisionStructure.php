@@ -174,7 +174,7 @@ class DivisionStructure {
 		$partTimers = PartTime::find_all($game_id);
 
 		foreach ($partTimers as $player) {
-			if ($i % 10 == 0) {
+			if ($i % 15 == 0) {
 				$division_structure .= "[/td][td]";
 			}
 			$bl_url = "[url=" . BATTLELOG . $player->battlelog_name. "][BL][/url]";
@@ -195,10 +195,10 @@ class DivisionStructure {
 		$division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
 		$division_structure .= "[/table]\r\n\r\n";
 		$division_structure .= "[table='width: {$info_width}']";
-		$division_structure .= "[tr][td][center]";
+		$division_structure .= "[tr][td]";
 		$loas = LeaveOfAbsence::find_all($game_id);
 		foreach ($loas as $player) {
-			if ($i % 10 == 0) {
+			if ($i % 15 == 0) {
 				$division_structure .= "[/td][td]";
 			}
 
@@ -210,7 +210,8 @@ class DivisionStructure {
 			$division_structure .= "{$aod_url}" . Member::findForumName($profile->member_id) . "[/url] -- {$date_end} -- {$player->reason}\r\n";
 			$i++;
 		}
-		$division_structure .= "[/center][/td]";
+		
+		$division_structure .= "[/td]";
 		$division_structure .= "[/tr][/table]";
 
 		return $division_structure;

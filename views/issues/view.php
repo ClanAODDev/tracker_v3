@@ -7,20 +7,19 @@
 	</ul>
 
 	<div class='page-header'>
-		<h2><strong><?php echo $issue->getTitle(); ?></strong><br><small>#<?php echo $issue->getNumber(); ?></small></h2>
+		<h2><strong><?php echo $issue->getTitle(); ?></strong> <small>#<?php echo $issue->getNumber(); ?></small></h2><small class="text-muted">Opened <?php echo date("F jS, Y, g:i a", strtotime($issue->getCreatedAt())); ?></small>
 	</div>
 
-	<h4><small><?php echo "This issue was opened on " . substr($issue->getCreatedAt(), 0, 10); ?></small></h4>
-	<h4><small><?php echo "This issue was last edited on " . substr($issue->getUpdatedAt(), 0, 10);?></small></h4>
 
-	<p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p>
+
+	<pre><p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p></pre>
 
 	<?php if ($issue->getAssignee()): ?>
 		<h3>Assigned Developer</h3>
 		<p><?php echo $issue->getAssignee()->getLogin(); ?></p>
 	<?php endif; ?>
 
-	<h3>Comments</h3>
+	<h3>Comments</h3><hr/>
 	<?php if (count($comments)): ?>
 
 		<?php foreach($comments as $comment): ?>
@@ -30,5 +29,8 @@
 	<?php else: ?>
 		<p>There are no comments for this issue.</p>
 	<?php endif; ?>
+
+	<hr />
+	<small>Last updated on <?php echo date("m D Y, H:i:s", strtotime($issue->getUpdatedAt()));?></small>
 
 </div>
