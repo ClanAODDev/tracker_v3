@@ -319,38 +319,27 @@ $(function() {
     });
 
     //ADD ISSUE
-    $("#submit-issue").submit(function(e) {
+    $(".modal").delegate("#submit-issue #submit", "click", function(e) {
+
         e.preventDefault();
+        var url = "do/issue-submit";
 
-        var url = "/do/issue-submit";
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $("#submit-issue").serialize(),
+            success: function(data) {
+                if (data.success) {
 
-        $('.modal').modal({
-            backdrop: 'static',
-            keyboard: false
-        })
-            e.one('click', '#submit', function(e) {
+                } else {
 
-                var comment = $(".modal #comment").val();
+                }
+            }
+        });
+        return false;
 
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    dataType: 'json',
-                    data: $("#submit-issue").serialize() + "&comment=" + comment,
-                    success: function(data){
-                        if(data.success) {
-                            
-                        }
-                        else
-                        {
-
-                        }
-                    }
-                });
-                return false;
-            });
     });
-
 
 
     $("#datepicker").datepicker({
