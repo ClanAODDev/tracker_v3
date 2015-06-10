@@ -328,7 +328,7 @@ $(function() {
             backdrop: 'static',
             keyboard: false
         })
-            e.one('click', '#submit', function() {
+            e.one('click', '#submit', function(e) {
 
                 var comment = $(".modal #comment").val();
 
@@ -339,7 +339,7 @@ $(function() {
                     data: $("#submit-issue").serialize() + "&comment=" + comment,
                     success: function(data){
                         if(data.success) {
-
+                            
                         }
                         else
                         {
