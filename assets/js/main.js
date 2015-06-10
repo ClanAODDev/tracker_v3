@@ -16,6 +16,29 @@ $(function() {
 
     })
 
+    $(".modal").delegate("#submit-issue #submit_btn", "click", function(e) {
+
+        e.preventDefault();
+        var url = "do/issue-submit";
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $("#submit-issue").serialize(),
+            success: function(data) {
+                if (data.success) {
+                    $('.modal').modal('hide');
+                    $(".alert-box").html("<div class='alert alert-success'><i class='fa fa-check'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                } else {
+                    $(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                }
+            }
+        });
+        return false;
+    });
+
+
     $("#searchclear").click(function() {
         $("#member-search").val('');
         $('#member-search-results').empty();

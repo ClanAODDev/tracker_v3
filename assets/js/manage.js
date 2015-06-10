@@ -318,35 +318,11 @@ $(function() {
 
     });
 
-    //ADD ISSUE
-    $(".modal").delegate("#submit-issue #submit", "click", function(e) {
-
-        e.preventDefault();
-        var url = "do/issue-submit";
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            dataType: 'json',
-            data: $("#submit-issue").serialize(),
-            success: function(data) {
-                if (data.success) {
-
-                } else {
-
-                }
-            }
-        });
-        return false;
-
-    });
-
 
     $("#datepicker").datepicker({
         changeMonth: true,
         changeYear: true
     });
-
 
 
     // contact

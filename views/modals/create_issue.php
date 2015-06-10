@@ -22,7 +22,7 @@
 	</div>
 
 	<div class="modal-footer">	
-		<button type="button" class="btn btn-success" id="submit">Submit Issue</button>
+		<button type="button" class="btn btn-success" id="submit_btn">Submit Issue</button>
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	</div>
 

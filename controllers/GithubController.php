@@ -90,7 +90,7 @@ class GithubController {
 	}
 
 	public static function _createIssue() {
-		Flight::render('modals/create_issue'); 
+		Flight::render('modals/create_issue', array('js' => 'issue')); 
 	}
 
 	public static function _devIssues() {
@@ -110,15 +110,17 @@ class GithubController {
 		$title = $_POST['title'];
 		$link = $_POST['link'];
 		$body = $_POST['body'];
-		$body .= "<hr />Link to problem area: {$link}<br />";
-		$body .= "Reported by: {$user}";
+		$body .= "<hr /><strong>Page reported</strong>: {$link}<br />";
+		$body .= "<strong>Reported by</strong>: {$user}";
 		$issue = Github::createIssue($title, $body);
-		var_dump($issue);die;
-		if (null) {
-			$data = array('success' => true, 'message' => "Member information updated!");	
+
+		if ($issue->getNumber()) {
+			$data = array('success' => true, 'message' => "Your report has been submitted");	
 		} else {
-			$data = array('success' => true, 'message' => "Member information updated!");	
+			$data = array('success' => false, 'message' => "Something went wrong");	
 		}
+
+		echo(json_encode($data));
 	}
 
 }
