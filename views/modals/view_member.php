@@ -20,13 +20,17 @@
 				<li><a href="#gameinfo" data-toggle="tab"><i class="fa fa-gamepad text-muted fa-lg"></i> Game Info</a></li>
 				<li><a href="#divinfo" data-toggle="tab"><i class="fa fa-cog text-muted fa-lg"></i> Division Info</a></li>
 				<li><a href="#aliasinfo" data-toggle="tab"><i class="fa fa-users text-muted fa-lg"></i> Aliases</a></li>
+
+				<?php if (User::isUser($member->id)): ?>
+					<li class="pull-right text-info"><a href="#userinfo" data-toggle="tab"><i class="fa fa-key text-muted fa-lg"></i> User Account</a></li>
+				<?php endif; ?>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="profile">
 					<div class="margin-top-20"></div>
 					<div class='form-group'>
 						<label for='forum_name' class='control-label'>Forum Name</label>
-						<input type="text" class="form-control" id="forum_name" value="<?php echo $member->forum_name ?>" <?php echo ($user->role == 1) ? "disabled" : NULL; ?>>
+						<input type="text" class="form-control" id="forum_name" value="<?php echo $member->forum_name ?>" disabled>
 					</div>
 
 					<div class='form-group'>
@@ -105,6 +109,43 @@
 					</div>
 					<div class="margin-top-20"></div>
 				</div>
+
+				<?php if (User::isUser($member->id)): ?>
+					<div class="tab-pane" id="userinfo">
+						<div class="margin-top-20"></div>
+
+						<div class='form-group user-group'>
+							<label for='username' class='control-label'>Account Name</label>
+							<input type='text' class='form-control' id='username' value='<?php echo $userInfo->username ?>' disabled>
+						</div>
+
+						<div class='form-group email-group'>
+							<label for='email' class='control-label'>Email</label>
+							<input type='email' class='form-control' id='email' value='<?php echo $userInfo->email ?>'>
+						</div>
+
+						<div class='form-group role-group'>
+							<label for='role' class='control-label'>Account Role</label>
+							<select id="role" class="form-control">
+								<?php foreach ($rolesArray as $role) : ?>
+									<?php if ($role->id <= $userInfo->role || User::isDev()):?>
+										<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?>><?php echo $role->role_name ?></option>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							</select>
+						</div>
+
+						<?php if ($userInfo->developer || User::isOnSafeList($userInfo->id)): ?>
+							<div class="form-group dev-group">
+								<label class="checkbox-inline"><input type="checkbox" name="developer" <?php echo ($userInfo->developer > 0) ? "checked" : NULL; ?>><i class="fa fa-user-secret text-danger"></i> Developer Mode</label>
+								<label class="checkbox-inline"><input type="checkbox" name="debug" <?php echo ($userInfo->debug > 0) ? "checked" : NULL; ?>><i class="fa fa-wrench"></i> Debug Mode</label>
+							</div>
+						<?php endif; ?>
+
+						<div class="margin-top-20"></div>
+					</div>
+				<?php endif; ?>
+
 			</div>
 		</div>
 	</div>

@@ -60,9 +60,16 @@ class MemberController {
 		$platoon_id = (($user->role >= 2) && (!User::isDev())) ? $member->platoon_id : false; 
 		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
 		$positionsArray = Position::find_all();
+		$rolesArray = Role::find_all();
 		$memberGames = MemberGame::get($member->id);
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'platoons' => $platoons, 'memberGames' => $memberGames, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray));
+		if (User::isUser($member->id)) {
+			$userInfo = User::findByMemberId($member->id);
+		} else {
+			$userInfo = NULL;
+		}
+
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'userInfo' => $userInfo, 'platoons' => $platoons, 'memberGames' => $memberGames, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray, 'rolesArray' => $rolesArray));
 
 	}
 
@@ -78,7 +85,6 @@ class MemberController {
 		// a hidden form element wasn't tampered with
 		if ($user->role > 1 || User::isDev()) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
 		if ($user->role > 2 || User::isDev()) { $params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
-
 
 		// only continue if we have permission to edit the user
 		if (User::canEdit($params['member_id'], $user, $member) == true) {

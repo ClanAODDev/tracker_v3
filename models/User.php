@@ -13,6 +13,7 @@ class User extends Application {
 	public $last_seen;
 	public $idle;
 	public $developer;
+	public $debug;
 	public $reset_flag;
 	public $member_id;
 
@@ -21,7 +22,7 @@ class User extends Application {
 	static $name_field = 'username';
 
 	public static function findByMemberId($member_id) {
-		self::find(array('member_id' => $member_id));
+		return self::find(array('member_id' => $member_id));
 	}
 
 	public static function findAll() {
@@ -48,6 +49,11 @@ class User extends Application {
 		$id = $_SESSION['userid'];
 		$params = Flight::aod()->sql("SELECT developer FROM users WHERE id = {$id} LIMIT 1")->one();
 		return ($params['developer'] == 1) ? true : false;
+	}
+
+	public static function isOnSafeList($id) {
+		$params = Flight::aod()->sql("SELECT count(*) as count FROM admin_safelist WHERE user_id = {$id}")->one();
+		return $params['count'];
 	}
 
 	public static function canEdit($mid, $user, $member)
