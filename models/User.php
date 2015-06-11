@@ -20,12 +20,17 @@ class User extends Application {
 	static $id_field = 'id';
 	static $name_field = 'username';
 
+	public static function findByMemberId($member_id) {
+		self::find(array('member_id' => $member_id));
+	}
+
 	public static function findAll() {
 		return self::fetch_all();
 	}
 
 	public static function isUser($member_id) {
-		if (self::find(array('member_id' => $member_id))->id) {
+		$user = self::find(array('member_id' => $member_id));
+		if (!empty($user)) {
 			return true;
 		} else {
 			return false;
@@ -70,7 +75,7 @@ class User extends Application {
 			return false;
 		}
 	}
- 
+
 	public static function onlineList() {
 		$params = Flight::aod()->sql("SELECT member.member_id, users.username, users.last_seen, users.role, users.idle FROM users LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
 		return $params;

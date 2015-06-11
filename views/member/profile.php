@@ -28,11 +28,15 @@
 			<div class='col-xs-6'>
 				<?php if (User::canEdit($memberInfo->member_id, $user, $member)) : ?>
 					<div class='btn-group pull-right' data-player-id='<?php echo $memberInfo->member_id ?>' data-user-id='<?php echo $member->member_id ?>'>
-						<button type='button' class='btn btn-info edit-member'><i class="fa fa-pencil fa-lg"></i> <span class="hidden-sm hidden-xs">Edit Profile</span></button>
+						<button type='button' class='btn btn-info edit-member'><i class="fa fa-pencil fa-lg"></i> <span class="hidden-sm hidden-xs">Edit </span>Member</button>
+						<?php if (User::isUser($memberInfo->id)): ?>
+							<button type='button' class='btn btn-warning edit-user'><i class="fa fa-pencil fa-lg"></i> <span class="hidden-sm hidden-xs">Edit </span>Account</button>
+						<?php endif; ?>
 						<!-- <button type='button' class='btn btn-success'><i class="fa fa-user-plus fa-lg"></i> <span class="hidden-sm hidden-xs">Promote</span></button> -->
 						<?php if ($user->role >= 2 && $member->rank_id >= 9 && $memberInfo->status_id != 4) : ?>
-							<a href="<?php echo REMOVE ?>" title="Remove player from AOD" class='removeMember btn btn-danger'><i class='fa fa-trash fa-lg'></i> <span class="hidden-sm hidden-xs">Remove from AOD</span></a>
+							<a href="<?php echo REMOVE ?>" title="Remove player from AOD" class='removeMember btn btn-danger'><i class='fa fa-trash fa-lg'></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
 						<?php endif; ?>
+
 					</div>
 				<?php endif; ?>
 			</div>
@@ -52,6 +56,7 @@
 				<?php endif; ?>
 				<li role="presentation"><a href="#recruits" aria-controls="recruits" role="tab" data-toggle="tab">Recruiting records</a></li>
 				<li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Member history</a></li>
+
 			</ul>
 
 		</div>
@@ -78,6 +83,7 @@
 						<div role="tabpanel" class="tab-pane" id="history">
 							<?php echo $history ?>
 						</div>
+
 					</div>
 
 				</div>
