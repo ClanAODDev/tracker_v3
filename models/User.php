@@ -14,10 +14,23 @@ class User extends Application {
 	public $idle;
 	public $developer;
 	public $reset_flag;
+	public $member_id;
 
 	static $table = 'users';
 	static $id_field = 'id';
 	static $name_field = 'username';
+
+	public static function findAll() {
+		return self::fetch_all();
+	}
+
+	public static function isUser($member_id) {
+		if (self::find(array('member_id' => $member_id))->id) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public static function isLoggedIn() {
 		if (isset($_SESSION['loggedIn']) && ($_SESSION['loggedIn'] === true)) {
