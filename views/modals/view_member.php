@@ -128,8 +128,8 @@
 							<label for='role' class='control-label'>Account Role</label>
 							<select id="role" class="form-control">
 								<?php foreach ($rolesArray as $role) : ?>
-									<?php if ($role->id <= $userInfo->role || User::isDev()):?>
-										<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?>><?php echo $role->role_name ?></option>
+									<?php if ($role->id < $userInfo->role || User::isDev()):?>
+										<option value="<?php echo $role->id; ?>"><?php echo $role->role_name ?></option>
 									<?php endif; ?>
 								<?php endforeach; ?>
 							</select>
