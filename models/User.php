@@ -52,7 +52,7 @@ class User extends Application {
 	}
 
 	public static function isOnSafeList($id) {
-		$params = Flight::aod()->sql("SELECT count(*) as count FROM admin_safelist WHERE user_id = {$id}")->one();
+		$params = Flight::aod()->sql("SELECT count(*) as count FROM dev_safelist WHERE user_id = {$id}")->one();
 		return $params['count'];
 	}
 
