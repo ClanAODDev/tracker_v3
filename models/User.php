@@ -45,6 +45,12 @@ class User extends Application {
 		return false;
 	}
 
+	public static function debugMode() {
+		$id = $_SESSION['userid'];
+		$params = Flight::aod()->sql("SELECT debug FROM users WHERE id = {$id} LIMIT 1")->one();
+		return ($params['debug'] == 1) ? true : false;
+	}
+
 	public static function isDev() {
 		$id = $_SESSION['userid'];
 		$params = Flight::aod()->sql("SELECT developer FROM users WHERE id = {$id} LIMIT 1")->one();
@@ -53,7 +59,7 @@ class User extends Application {
 
 	public static function isOnSafeList($id) {
 		$params = Flight::aod()->sql("SELECT count(*) as count FROM dev_safelist WHERE user_id = {$id}")->one();
-		return $params['count'];
+		return ($params['count'] > 0) ? true : false;
 	}
 
 	public static function canEdit($mid, $user, $member)
