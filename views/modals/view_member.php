@@ -13,16 +13,17 @@
 		<input type='hidden' id='cur_plt' name='cur_plt' value='<?php echo $member->platoon_id ?>' />
 		<input type='hidden' id='cur_sqd' name='cur_sqd' value='<?php echo $member->squad_leader_id ?>' />
 		<input type='hidden' id='cur_pos' name='cur_pos' value='<?php echo $member->position_id ?>' />
+		<input type='hidden' id='user_change' name='user_change' />
 
 		<div class="tabbable">
 			<ul class="nav nav-tabs">
-				<li class="active"><a href="#profile" data-toggle="tab"><i class="fa fa-user text-muted fa-lg"></i> Member Profile</a></li>
-				<li><a href="#gameinfo" data-toggle="tab"><i class="fa fa-gamepad text-muted fa-lg"></i> Game Info</a></li>
-				<li><a href="#divinfo" data-toggle="tab"><i class="fa fa-cog text-muted fa-lg"></i> Division Info</a></li>
-				<li><a href="#aliasinfo" data-toggle="tab"><i class="fa fa-users text-muted fa-lg"></i> Aliases</a></li>
+				<li class="active"><a href="#profile" data-toggle="tab"><i class="fa fa-user text-muted fa-lg"></i><span class="hidden-sm hidden-xs">Member Profile</a></span></li>
+				<li><a href="#gameinfo" data-toggle="tab"><i class="fa fa-gamepad text-muted fa-lg"></i> <span class="hidden-sm hidden-xs">Game Info</a></span></li>
+				<li><a href="#divinfo" data-toggle="tab"><i class="fa fa-cog text-muted fa-lg"></i> <span class="hidden-sm hidden-xs">Division Info</a></span></li>
+				<li><a href="#aliasinfo" data-toggle="tab"><i class="fa fa-users text-muted fa-lg"></i> <span class="hidden-sm hidden-xs">Aliases</a></span></li>
 
 				<?php if (User::isUser($member->id)): ?>
-					<li class="pull-right text-info"><a href="#userinfo" data-toggle="tab"><i class="fa fa-key text-muted fa-lg"></i> User Account</a></li>
+					<li class="pull-right text-info"><a href="#userinfo" data-toggle="tab"><i class="fa fa-key text-muted fa-lg"></i> <span class="hidden-sm hidden-xs">User Account</a></li>
 				<?php endif; ?>
 			</ul>
 			<div class="tab-content">
@@ -116,17 +117,17 @@
 
 						<div class='form-group user-group'>
 							<label for='username' class='control-label'>Account Name</label>
-							<input type='text' class='form-control' id='username' value='<?php echo $userInfo->username ?>' disabled>
+							<input type='text' class='form-control user-form-control' id='username' value='<?php echo $userInfo->username ?>' disabled>
 						</div>
 
 						<div class='form-group email-group'>
 							<label for='email' class='control-label'>Email</label>
-							<input type='email' class='form-control' id='email' value='<?php echo $userInfo->email ?>'>
+							<input type='email' class='form-control user-form-control' id='email' value='<?php echo $userInfo->email ?>'>
 						</div>
 
 						<div class='form-group role-group'>
 							<label for='role' class='control-label'>Account Role</label>
-							<select id="role" class="form-control">
+							<select id="role" class="form-control user-form-control">
 								<?php foreach ($rolesArray as $role) : ?>
 									<?php if ($role->id <= $userInfo->role || User::isDev()):?>
 										<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?> <?php echo ($user->role == $role->id && !User::isDev()) ? "disabled" : NULL ?>><?php echo $role->role_name ?></option>
@@ -137,8 +138,8 @@
 
 						<?php if ($userInfo->developer || User::isOnSafeList($userInfo->id)): ?>
 							<div class="form-group dev-group">
-								<label class="checkbox-inline"><input type="checkbox" name="developer" <?php echo ($userInfo->developer > 0) ? "checked" : NULL; ?>><i class="fa fa-user-secret text-danger"></i> Developer Mode</label>
-								<label class="checkbox-inline"><input type="checkbox" name="debug" <?php echo ($userInfo->debug > 0) ? "checked" : NULL; ?>><i class="fa fa-wrench"></i> Debug Mode</label>
+								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="developer" <?php echo ($userInfo->developer > 0) ? "checked" : NULL; ?>><i class="fa fa-user-secret text-danger"></i> Developer Mode</label>
+								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="debug" <?php echo ($userInfo->debug > 0) ? "checked" : NULL; ?>><i class="fa fa-wrench"></i> Debug Mode</label>
 							</div>
 						<?php endif; ?>
 

@@ -105,6 +105,16 @@ class MemberController {
 			}
 
 			$result = Member::modify($params);
+
+			if (isset($_POST['user_change'])) {
+				// user account information was updated
+				// log this differently, and also track changes?
+				// update user account
+				// validate changes
+				// - user cannot update someone who is of the same role
+				// - user cannot update someopne who is above their role
+			}
+
 			$data = array('success' => true, 'message' => "Member information updated!");			
 
 		} else {

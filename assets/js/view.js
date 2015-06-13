@@ -36,6 +36,10 @@ $(function() {
         updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games);
     });
 
+    $(".user-form-control").change(function() {
+        $("#user_change").attr('value', 1);
+    });
+
 });
 
 function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games) {
