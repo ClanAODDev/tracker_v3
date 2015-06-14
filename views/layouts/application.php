@@ -67,7 +67,7 @@
 										<ul class="activity">
 											<?php foreach(UserAction::find_all() as $action) : ?>
 												<li>
-													<i class="fa fa-<?php echo UserAction::activityIcon($action->type_id); ?> fa-2x"></i>
+													<i class="<?php echo $action->icon; ?> fa-2x"></i>
 													<div>
 														<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
 														<span><?php echo formatTime(strtotime($action->date)); ?></span>
@@ -152,7 +152,7 @@
 									<li><a href="issues">View Open Issues</a></li>
 									<li><a href="issues/closed">View Closed Issues</a></li>
 									<?php if ($user->developer > 0 || $user->role > 2): ?>
-									<li><a href="issues/dev">View Developer Issues</a></li>
+										<li><a href="issues/dev">View Developer Issues</a></li>
 									<?php endif; ?>
 								</ul>
 							</li>		
@@ -207,6 +207,20 @@
 		<script src="assets/js/<?php echo $js ?>.js"></script>
 	<?php endif; ?>
 
+
+
+	<?php
+
+	// debug information	
+
+	if (User::debugMode($_SESSION['userid'])) {
+		Flight::aod()->show_sql = true;
+		error_reporting(E_ALL);
+		ini_set('display_errors', '1');
+		var_dump(get_defined_vars());
+	}
+
+	?>
 </body>
 </html>
 
