@@ -122,12 +122,12 @@
 
 						<div class='form-group email-group'>
 							<label for='email' class='control-label'>Email</label>
-							<input type='email' class='form-control user-form-control' id='email' value='<?php echo $userInfo->email ?>'>
+							<input type='email' class='form-control user-form-control' id='email' name="email" value='<?php echo $userInfo->email ?>'>
 						</div>
 
 						<div class='form-group role-group'>
 							<label for='role' class='control-label'>Account Role</label>
-							<select id="role" class="form-control user-form-control">
+							<select id="role" name="role" class="form-control user-form-control">
 								<?php foreach ($rolesArray as $role) : ?>
 									<?php if ($role->id <= $userInfo->role || User::isDev()):?>
 										<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?> <?php echo ($user->role == $role->id && !User::isDev()) ? "disabled" : NULL ?>><?php echo $role->role_name ?></option>

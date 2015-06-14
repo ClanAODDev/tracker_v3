@@ -75,19 +75,20 @@ class MemberController {
 
 	public static function _doUpdateMember() {
 
-		$user = User::find(intval($_SESSION['userid']));
+		$respUser = User::find(intval($_SESSION['userid']));
 		$respMember = Member::find(intval($_SESSION['memberid']));
 		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
 		
 		$member = Member::profileData($params['member_id']);
+		$user = User::findByMemberId(Member::findId($params['member_id']));
 
 		// post values based on role since we can't be sure 
 		// a hidden form element wasn't tampered with
-		if ($user->role > 1 || User::isDev()) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
-		if ($user->role > 2 || User::isDev()) { $params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
+		if ($respUser->role > 1 || User::isDev()) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
+		if ($respUser->role > 2 || User::isDev()) { $params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
 
 		// only continue if we have permission to edit the user
-		if (User::canEdit($params['member_id'], $user, $member) == true) {
+		if (User::canEdit($params['member_id'], $respUser, $member) == true) {
 
 			// don't log if user edits their own profile
 			if ($respMember->member_id != $member->member_id) {
@@ -106,11 +107,29 @@ class MemberController {
 
 			$result = Member::modify($params);
 
+			var_dump($_POST);die;
+
 			if (isset($_POST['user_change'])) {
 				// user account information was updated
 				// log this differently, and also track changes?
 				// update user account
 				// validate changes
+
+				var_dump($user);die;
+				
+				$userUpdate = stdClass();
+				$userUpdate->username = $_POST['username'];
+				$userUpdate->email = $_POST['email'];
+				$userUpdate->role = $_POST['role'];
+
+				if (User::isOnSafeList($respUser->id) || $respUser->developer > 0) {
+					$userUpdate->developer = $_POST['developer'];
+					$userUpdate->debug = $_POST['debug'];
+
+				}
+
+
+
 				// - user cannot update someone who is of the same role
 				// - user cannot update someopne who is above their role
 			}

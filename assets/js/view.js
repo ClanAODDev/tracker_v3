@@ -20,20 +20,26 @@ $(function() {
         $("#edit-form .message").html("Updating member information. Please wait...").addClass("alert-info").show();
         $("#edit-form :submit").html("Saving...").attr('class', 'btn btn-default disabled');
 
-        var uid = $("#uid").val(),
-            mid = $("#member_id").val(),
-            fname = $("#forum_name").val(),
-            platoon = $("#platoon").val(),
-            sqdldr = $("#sqdldr").val(),
-            blog = $("#battlelog").val(),
-            recruiter = $("#recruiter").val(),
-            position = $("#position").val();
+        var formData = $("#edit-form").serializeArray(),
+            dataObj = {};
 
         var played_games = $("#games option:selected").map(function() {
             return $(this).val();
         }).get();
 
-        updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games);
+        formData.concat(played_games);
+
+        $(formData).each(function(i, field) {
+            dataObj[field.name] = field.value;
+        });
+
+
+        console.log(formData);
+        return false;
+
+        updateMember(data);
+
+
     });
 
     $(".user-form-control").change(function() {
@@ -42,7 +48,7 @@ $(function() {
 
 });
 
-function updateMember(uid, mid, fname, blog, platoon, sqdldr, position, recruiter, played_games) {
+function updateMember(data) {
     setTimeout(function() {
         $.post("do/update-member", {
                 uid: uid,
