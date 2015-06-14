@@ -1,5 +1,5 @@
 <?php
-class GitHub extends Application {
+class Github extends Application {
 
 	private static $owner = 'flashadvocate';
 	private static $repo = 'Division-Tracker';
