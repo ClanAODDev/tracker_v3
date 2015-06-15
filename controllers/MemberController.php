@@ -99,7 +99,7 @@ class MemberController {
 			}
 
 			// validate recruiter
-			if (!Member::exists($memberData['recruiter'])) {
+			if ($memberData['recruiter'] != 0 && !Member::exists($memberData['recruiter'])) {
 				$data = array('success' => false, 'message' => "Recruiter id is invalid.");
 			} else {
 				// update member info
@@ -120,13 +120,16 @@ class MemberController {
 			// update user
 			if (isset($_POST['userData'])) {
 				$userData = $_POST['userData'];
+
+				// wish I had a better way to do this... yuck
+				$userData['developer'] = (isset($userData['developer'])) ? $userData['developer'] : 0;
+				$userData['debug'] = (isset($userData['debug'])) ? $userData['debug'] : 0;
+
 				if (!User::isDev()) {
-					if (!User::isOnSafeList($respUser->id)) {
-						unset($userData['developer'], $userData['debug']);
-					}
+					unset($userData['developer'], $userData['debug']);
 				}
 
-				if ($userData['role'] >= $respUser->role) {
+				if ($userData['role'] >= $respUser->role && !User::isDev()) {
 					$data = array('success' => false, 'message' => "You are not authorized to make that change.");	
 				} else {
 					User::modify($userData);

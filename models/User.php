@@ -54,7 +54,7 @@ class User extends Application {
 	public static function isDev() {
 		$id = $_SESSION['userid'];
 		$params = Flight::aod()->sql("SELECT developer FROM users WHERE id = {$id} LIMIT 1")->one();
-		return ($params['developer'] == 1) ? true : false;
+		return ($params['developer'] == 1 || self::isOnSafeList($id)) ? true : false;
 	}
 
 	public static function isOnSafeList($id) {
