@@ -1,78 +1,67 @@
 $(function() {
 
+    $(".user-form-control").change(function() {
+        $("#user_change").attr('value', 1);
+    });
+
     $('#games').multiselect({
         includeSelectAllOption: true,
         allSelectedText: 'All games selected'
     });
 
     // auto select values
-    var sqdldr = $("#cur_sqd").val(),
-        plt = $("#cur_plt").val(),
-        pos = $("#cur_pos").val();
+    var squad_leader_id = $("#cur_squad_leader_id").val(),
+        platoon_id = $("#cur_platoon_id").val(),
+        position_id = $("#cur_position_id").val();
 
-    $("#platoon option[value=" + plt + "]").attr("selected", "selected");
-    $("#sqdldr option[value=" + sqdldr + "]").attr("selected", "selected");
-    $("#position option[value=" + pos + "]").attr("selected", "selected");
+    $("#platoon_id option[value=" + platoon_id + "]").attr("selected", "selected");
+    $("#squad_leader_id option[value=" + squad_leader_id + "]").attr("selected", "selected");
+    $("#position_id option[value=" + position_id + "]").attr("selected", "selected");
 
-    $("#edit-form").submit(function(event) {
+    $("#submit-form").click(function(event) {
         event.preventDefault();
 
-        $("#edit-form .message").html("Updating member information. Please wait...").addClass("alert-info").show();
-        $("#edit-form :submit").html("Saving...").attr('class', 'btn btn-default disabled');
+        $(".modal .message").html("Updating member information. Please wait...").addClass("alert-info").show();
+        $(".modal :submit").html("Saving...").attr('class', 'btn btn-default disabled');
 
-        var formData = $("#edit-form").serializeArray(),
-            dataObj = {};
+        var memberData = $("#member-form,#alias-form,#div-form").serializeArray(),
+            userData = $("#user-form").serializeArray(),
+            played_games = $("#games option:selected").map(function() {
+                return $(this).val();
+            }).get();
 
-        var played_games = $("#games option:selected").map(function() {
-            return $(this).val();
-        }).get();
-
-        formData.concat(played_games);
-
-        $(formData).each(function(i, field) {
-            dataObj[field.name] = field.value;
-        });
-
-
-        console.log(formData);
-        return false;
-
-        updateMember(data);
-
-
-    });
-
-    $(".user-form-control").change(function() {
-        $("#user_change").attr('value', 1);
+        updateMember(memberData, userData, played_games);
     });
 
 });
 
-function updateMember(data) {
+function updateMember(memberData, userData, played_games) {
     setTimeout(function() {
+
+        var memberObj = {},
+            userObj = {};
+
+        $(memberData).each(function(i, field) {
+            memberObj[field.name] = field.value;
+        });
+
+        $(userData).each(function(i, field) {
+            userObj[field.name] = field.value;
+        });
+
         $.post("do/update-member", {
-                uid: uid,
-                mid: mid,
-                fname: fname,
-                blog: blog,
-                platoon: platoon,
-                squad: sqdldr,
-                position: position,
-                recruiter: recruiter,
+                memberData: memberObj,
+                userData: userObj,
                 played_games: played_games
             },
 
             function(data) {
-                $("#edit-form :submit").html("Submit Info").attr('class', 'btn btn-success');
+                $(".modal :submit").html("Submit Info").attr('class', 'btn btn-success');
                 if (data.success === false) {
-                    if (data.battlelog === true) {
-                        $("#edit-form .battlelog-group").addClass("has-error");
-                    }
-                    $("#edit-form .message").html(data.message).addClass("alert-danger").show();
-
+                    $(".modal .message").html(data.message).addClass("alert-danger").show();
                     return false;
                 } else {
-                    $("#edit-form .message").show().html(data.message).removeClass("alert-danger alert-info").addClass('alert-success').delay(1000).fadeOut();
+                    $(".modal .message").show().html(data.message).removeClass("alert-danger alert-info").addClass('alert-success').delay(1000).fadeOut();
                     $(".has-error").removeClass("has-error");
                 }
 

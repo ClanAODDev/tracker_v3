@@ -130,6 +130,7 @@ class User extends Application {
 	public static function canUpdate($role) {
 
 		switch ($role) {
+			case 0:
 			case 1:
 			$allowPltAssignmentEdit = false;
 			$allowSqdAssignmentEdit = false;
@@ -144,8 +145,6 @@ class User extends Application {
 
 			case 3:
 			case 4:
-			case 5:
-			case 6:
 			$allowPltAssignmentEdit = true;
 			$allowSqdAssignmentEdit = true;
 			$allowPosAssignmentEdit = true;

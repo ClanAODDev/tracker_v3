@@ -75,26 +75,38 @@ class MemberController {
 
 	public static function _doUpdateMember() {
 
+		// user attempting to make changes
 		$respUser = User::find(intval($_SESSION['userid']));
 		$respMember = Member::find(intval($_SESSION['memberid']));
-		$params = array("id" => $_POST['uid'], "forum_name" => $_POST['fname'], 'battlelog_name' => $_POST['blog'], 'member_id' => $_POST['mid'], 'recruiter' => $_POST['recruiter']);
-		
-		$member = Member::profileData($params['member_id']);
-		$user = User::findByMemberId(Member::findId($params['member_id']));
 
-		// post values based on role since we can't be sure 
-		// a hidden form element wasn't tampered with
-		if ($respUser->role > 1 || User::isDev()) { $params = array_merge($params, array("squad_leader_id" => $_POST['squad'], "position_id" => $_POST['position'])); }
-		if ($respUser->role > 2 || User::isDev()) { $params = array_merge($params, array("platoon_id" => $_POST['platoon'])); }
+		// member being changed
+		$memberData = $_POST['memberData'];
+		$member = Member::profileData($memberData['member_id']);
+		$user = User::findByMemberId(Member::findId($memberData['member_id']));
+
+		// only update values allowed by role
+		if (!User::isDev()) {
+			if ($respUser->role < 2) { unset($memberData['squad_leader_id'], $memberData['position'], $memberData['platoon_id']);  }
+			if ($respUser->role < 3) { unset($memberData['platoon_id']); }
+		}
 
 		// only continue if we have permission to edit the user
-		if (User::canEdit($params['member_id'], $respUser, $member) == true) {
+		if (User::canEdit($memberData['member_id'], $respUser, $member) == true) {
 
 			// don't log if user edits their own profile
 			if ($respMember->member_id != $member->member_id) {
 				UserAction::create(array('type_id'=>3,'date'=>date("Y-m-d H:i:s"),'user_id'=>$respMember->member_id,'target_id'=>$member->member_id));
 			}
 
+			// validate recruiter
+			if (!Member::exists($memberData['recruiter'])) {
+				$data = array('success' => false, 'message' => "Recruiter id is invalid.");
+			} else {
+				// update member info
+				Member::modify($memberData);
+			}		
+
+			// update games
 			if (isset($_POST['played_games'])) {
 				$games = $_POST['played_games'];
 				foreach ($games as $game) {
@@ -105,39 +117,28 @@ class MemberController {
 				}
 			}
 
-			$result = Member::modify($params);
-
-			var_dump($_POST);die;
-
-			if (isset($_POST['user_change'])) {
-				// user account information was updated
-				// log this differently, and also track changes?
-				// update user account
-				// validate changes
-
-				var_dump($user);die;
-				
-				$userUpdate = stdClass();
-				$userUpdate->username = $_POST['username'];
-				$userUpdate->email = $_POST['email'];
-				$userUpdate->role = $_POST['role'];
-
-				if (User::isOnSafeList($respUser->id) || $respUser->developer > 0) {
-					$userUpdate->developer = $_POST['developer'];
-					$userUpdate->debug = $_POST['debug'];
-
+			// update user
+			if (isset($_POST['userData'])) {
+				$userData = $_POST['userData'];
+				if (!User::isDev()) {
+					if (!User::isOnSafeList($respUser->id)) {
+						unset($userData['developer'], $userData['debug']);
+					}
 				}
 
-
-
-				// - user cannot update someone who is of the same role
-				// - user cannot update someopne who is above their role
+				if ($userData['role'] >= $respUser->role) {
+					$data = array('success' => false, 'message' => "You are not authorized to make that change.");	
+				} else {
+					User::modify($userData);
+				}
 			}
-
-			$data = array('success' => true, 'message' => "Member information updated!");			
 
 		} else {
 			$data = array('success' => false, 'message' => 'You do not have permission to modify this player.');
+		}
+
+		if (!isset($data['success'])) {
+			$data = array('success' => true, 'message' => "Member information updated!");	
 		}
 
 		// print out a pretty response
@@ -224,7 +225,7 @@ class MemberController {
 
 
 	// api stuff
-	
+
 	public static function _getMemberData($game) {
 		$membersQ = "SELECT battlelog_name, forum_name FROM member WHERE status_id = 1 AND game_id = {$game} ORDER BY forum_name ASC";
 		$ptmembersQ = "SELECT battlelog_name, forum_name FROM part_timers WHERE game_id = {$game} ORDER BY forum_name ASC";

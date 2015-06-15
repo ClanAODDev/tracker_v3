@@ -7,7 +7,6 @@
 		<li class='active'><?php echo $memberInfo->forum_name; ?></li>
 	</ul>
 
-
 	<div class='page-header vertical-align'>
 		<div class='col-xs-1 hidden-sm hidden-xs'>
 			<?php echo Member::avatar($memberInfo->member_id, 'large'); ?></div>
@@ -27,23 +26,16 @@
 
 			<div class='col-xs-6'>
 				<?php if (User::canEdit($memberInfo->member_id, $user, $member)) : ?>
-
-					
 					<div class='btn-group pull-right' data-player-id='<?php echo $memberInfo->member_id ?>' data-user-id='<?php echo $member->member_id ?>'>
-
-						<!-- disable for now -->
-						<?php if (User::isDev()): ?>
-							<button type='button' class='btn btn-info edit-member'><i class="fa fa-pencil fa-lg"></i> Edit</button>
-						<?php endif; ?>
-
+						<button type='button' class='btn btn-info edit-member'><i class="fa fa-pencil fa-lg"></i> Edit</button>
 						<!-- <button type='button' class='btn btn-success'><i class="fa fa-user-plus fa-lg"></i> <span class="hidden-sm hidden-xs">Promote</span></button> -->
 						<?php if ($user->role >= 2 && $member->rank_id >= 9 && $memberInfo->status_id != 4) : ?>
 							<a href="<?php echo REMOVE ?>" title="Remove player from AOD" class='removeMember btn btn-danger'><i class='fa fa-trash fa-lg'></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
 						<?php endif; ?>
-
 					</div>
 				<?php endif; ?>
 			</div>
+
 		</div>
 
 
