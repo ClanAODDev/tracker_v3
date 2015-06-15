@@ -143,7 +143,7 @@
 								<label for='role' class='control-label'>Account Role</label>
 								<select id="role" name="role" class="form-control user-form-control">
 									<?php foreach ($rolesArray as $role) : ?>
-										<?php if ($role->id <= $userInfo->role || User::isDev()):?>
+										<?php if ($role->id <= $user->role || User::isDev()):?>
 											<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?> <?php echo ($user->role == $role->id && !User::isDev()) ? "disabled" : NULL ?>><?php echo $role->role_name ?></option>
 										<?php endif; ?>
 									<?php endforeach; ?>
