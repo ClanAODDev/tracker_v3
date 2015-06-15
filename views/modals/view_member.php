@@ -138,12 +138,12 @@
 							<input type='email' class='form-control user-form-control' name="email" value='<?php echo $userInfo->email ?>'>
 						</div>
 
-						<?php if ($userInfo->role > 1): ?>
+						<?php if ($user->role > 1 || User::isDev()): ?>
 							<div class='form-group role-group'>
-								<label for='role' class='control-label'>Account Role</label>
+								<label for='role' class='control-label'>Account Access</label>
 								<select id="role" name="role" class="form-control user-form-control">
 									<?php foreach ($rolesArray as $role) : ?>
-										<?php if ($role->id <= $userInfo->role || User::isDev()):?>
+										<?php if ($role->id <= $user->role || User::isDev()):?>
 											<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?> <?php echo ($user->role == $role->id && !User::isDev()) ? "disabled" : NULL ?>><?php echo $role->role_name ?></option>
 										<?php endif; ?>
 									<?php endforeach; ?>
@@ -153,8 +153,8 @@
 
 						<?php if (User::isDev()): ?>
 							<div class="form-group dev-group">
-								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="developer" <?php echo ($userInfo->developer > 0) ? "checked" : NULL; ?>><i class="fa fa-user-secret text-danger"></i> Developer Mode</label>
-								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="debug" <?php echo ($userInfo->debug > 0) ? "checked" : NULL; ?>><i class="fa fa-wrench"></i> Debug Mode</label>
+								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="developer" value="1" <?php echo ($userInfo->developer > 0) ? "checked" : NULL; ?>><i class="fa fa-user-secret text-danger"></i> Developer Mode</label>
+								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="debug" value="1" <?php echo ($userInfo->debug > 0) ? "checked" : NULL; ?>><i class="fa fa-wrench"></i> Debug Mode</label>
 							</div>
 						<?php endif; ?>
 					</form>
