@@ -14,19 +14,19 @@ class GithubController {
 
 		switch ($filter) {
 			case "open":
-			$issues = GitHub::getOpenIssues();
+			$issues = Github::getOpenIssues();
 			break;
 
 			case "closed":
-			$issues = GitHub::getClosedIssues();
+			$issues = Github::getClosedIssues();
 			break;
 
 			case "dev" && ($user->role > 2 || User::isDev()):
-			$issues = GitHub::getDevIssues();
+			$issues = Github::getDevIssues();
 			break;
 
 			default:
-			$issues = GitHub::getOpenIssues();
+			$issues = Github::getOpenIssues();
 			$filter = "Open";
 			break;
 		}
@@ -44,14 +44,14 @@ class GithubController {
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
-		$closed_issues = GitHub::getClosedIssues();
+		$closed_issues = Github::getClosedIssues();
 		Flight::render('issues/closed', array('closed_issues' => $closed_issues), 'content'); 
 		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
 	public static function _view($id) {
 
-		if ($issue = GitHub::getIssue($id)) {
+		if ($issue = Github::getIssue($id)) {
 
 			$user = User::find(intval($_SESSION['userid']));
 			$member = Member::find(intval($_SESSION['memberid']));
@@ -59,7 +59,7 @@ class GithubController {
 			$divisions = Division::find_all();
 			$division = Division::findById(intval($member->game_id));
 			$platoons = Platoon::find_all($member->game_id);
-			$comments = GitHub::getComments($id);
+			$comments = Github::getComments($id);
 
 			// not sure if I am a big fan of doing it this way as
 			// looping through the labels significantly increases the 
@@ -100,7 +100,7 @@ class GithubController {
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
-		$dev_issues = GitHub::getDevIssues();
+		$dev_issues = Github::getDevIssues();
 		Flight::render('issues/dev', array('dev_issue' => $dev_issues), 'content'); 
 		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
