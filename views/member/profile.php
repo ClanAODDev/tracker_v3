@@ -7,7 +7,6 @@
 		<li class='active'><?php echo $memberInfo->forum_name; ?></li>
 	</ul>
 
-
 	<div class='page-header vertical-align'>
 		<div class='col-xs-1 hidden-sm hidden-xs'>
 			<?php echo Member::avatar($memberInfo->member_id, 'large'); ?></div>
@@ -33,10 +32,10 @@
 						<?php if ($user->role >= 2 && $member->rank_id >= 9 && $memberInfo->status_id != 4) : ?>
 							<a href="<?php echo REMOVE ?>" title="Remove player from AOD" class='removeMember btn btn-danger'><i class='fa fa-trash fa-lg'></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
 						<?php endif; ?>
-
 					</div>
 				<?php endif; ?>
 			</div>
+
 		</div>
 
 
