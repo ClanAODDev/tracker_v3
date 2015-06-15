@@ -140,7 +140,7 @@
 
 						<?php if ($user->role > 1 || User::isDev()): ?>
 							<div class='form-group role-group'>
-								<label for='role' class='control-label'>Account Role</label>
+								<label for='role' class='control-label'>Account Access</label>
 								<select id="role" name="role" class="form-control user-form-control">
 									<?php foreach ($rolesArray as $role) : ?>
 										<?php if ($role->id <= $user->role || User::isDev()):?>
