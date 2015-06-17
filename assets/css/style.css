@@ -567,15 +567,15 @@ h2.pull-right {
 }
 
 #searchclear {
-    position: absolute;
-    right: 5px;
-    top: 0;
-    bottom: 0;
-    height: 14px;
-    margin: auto;
-    font-size: 19px;
-    cursor: pointer;
-    color: #ccc;
+  position: absolute;
+  right: 5px;
+  top: 0;
+  bottom: 0;
+  height: 14px;
+  margin: auto;
+  font-size: 19px;
+  cursor: pointer;
+  color: #ccc;
 }
 
 #searchclear:hover {
@@ -742,9 +742,9 @@ div.DTTT_container {
 
 
 
-.multiselect-container{position:absolute;list-style-type:none;margin:0;padding:0}.multiselect-container .input-group{margin:5px}.multiselect-container>li{padding:0}.multiselect-container>li>a.multiselect-all label{font-weight:700}.multiselect-container>li.multiselect-group label{margin:0;padding:3px 20px 3px 20px;height:100%;font-weight:700}.multiselect-container>li.multiselect-group-clickable label{cursor:pointer}.multiselect-container>li>a{padding:0}.multiselect-container>li>a>label{margin:0;height:100%;cursor:pointer;font-weight:400;padding:3px 20px 3px 40px}.multiselect-container>li>a>label.radio,.multiselect-container>li>a>label.checkbox{margin:0}.multiselect-container>li>a>label>input[type=checkbox]{margin-bottom:5px}.btn-group>.btn-group:nth-child(2)>.multiselect.btn{border-top-left-radius:4px;border-bottom-left-radius:4px}.form-inline .multiselect-container label.checkbox,.form-inline .multiselect-container label.radio{padding:3px 20px 3px 40px}.form-inline .multiselect-container li a label.checkbox input[type=checkbox],.form-inline .multiselect-container li a label.radio input[type=radio]{margin-left:-20px;margin-right:0}
+ .multiselect-container{position:absolute;list-style-type:none;margin:0;padding:0}.multiselect-container .input-group{margin:5px}.multiselect-container>li{padding:0}.multiselect-container>li>a.multiselect-all label{font-weight:700}.multiselect-container>li.multiselect-group label{margin:0;padding:3px 20px 3px 20px;height:100%;font-weight:700}.multiselect-container>li.multiselect-group-clickable label{cursor:pointer}.multiselect-container>li>a{padding:0}.multiselect-container>li>a>label{margin:0;height:100%;cursor:pointer;font-weight:400;padding:3px 20px 3px 40px}.multiselect-container>li>a>label.radio,.multiselect-container>li>a>label.checkbox{margin:0}.multiselect-container>li>a>label>input[type=checkbox]{margin-bottom:5px}.btn-group>.btn-group:nth-child(2)>.multiselect.btn{border-top-left-radius:4px;border-bottom-left-radius:4px}.form-inline .multiselect-container label.checkbox,.form-inline .multiselect-container label.radio{padding:3px 20px 3px 40px}.form-inline .multiselect-container li a label.checkbox input[type=checkbox],.form-inline .multiselect-container li a label.radio input[type=radio]{margin-left:-20px;margin-right:0}
 
-.multidrop.open>.dropdown-menu {
+ .multidrop.open>.dropdown-menu {
   width: 100% !important;
 }
 
@@ -778,11 +778,11 @@ div.DTTT_container {
 
  #history .thumbnail {
   padding:0px;
- }
- #history .panel {
+}
+#history .panel {
   position:relative;
- }
- #history .panel>.panel-heading:after,#history  .panel>.panel-heading:before{
+}
+#history .panel>.panel-heading:after,#history  .panel>.panel-heading:before{
   position:absolute;
   top:11px;left:-16px;
   right:100%;
@@ -793,17 +793,17 @@ div.DTTT_container {
   border-color:transparent;
   border-style:solid solid outset;
   pointer-events:none;
- }
- #history .panel>.panel-heading:after{
+}
+#history .panel>.panel-heading:after{
   border-width:7px;
   border-right-color:#f7f7f7;
   margin-top:1px;
   margin-left:2px;
- }
- #history .panel>.panel-heading:before{
+}
+#history .panel>.panel-heading:before{
   border-right-color:#ddd;
   border-width:8px;
- }
+}
 
 
 /* *

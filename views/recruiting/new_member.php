@@ -192,6 +192,9 @@
 									<label><input type="checkbox" value="" name="chk[]">Give them the "AOD Member" server group permission (Right-click &raquo; Server Groups &raquo; AOD Member) on TeamSpeak</label>
 								</div>
 								<div class="checkbox">
+									<label><input type="checkbox" value="" name="chk[]">Remind them that their login name will be changing in 24/48 hours</label>
+								</div>
+								<div class="checkbox">
 									<label><input type="checkbox" value="" name="chk[]">Introduce them to the other members in the division</label>
 								</div>
 							</fieldset>
