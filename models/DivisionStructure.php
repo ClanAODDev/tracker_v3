@@ -96,14 +96,16 @@ class DivisionStructure {
     		// platoon leader
 			$leader = Member::profileData($platoon->leader_id);
 
-			$games = self::getIcons(MemberGame::getGamesPlayed($leader->id));
-			$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
-			$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]{$games}[/url]";
+			if ($platoon->leader_id != 0) {
+				$games = self::getIcons(MemberGame::getGamesPlayed($leader->id));
+				$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
+				$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]{$games}[/url]";
+			}
 
-			if ($leader != 0) {
+			if ($platoon->leader_id != 0) {
 				$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank} {$leader->forum_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
 			} else {
-				$division_structure .= "[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]TBA[/color][/size]\r\n";
+				$division_structure .= "[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
 			}
 
     		// squad leaders
