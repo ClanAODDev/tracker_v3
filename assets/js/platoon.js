@@ -1,20 +1,16 @@
     $(function() {
 
-  
         $("#members-table tbody tr").click(function() {
             window.location.href = "member/" + $(this).attr('data-id');
         })
 
-
-        var platoonNum = parseInt($('.platoon-number').text());
-
-        var formattedDate = new Date();
-        var d = formattedDate.getDate();
-        var m = (formattedDate.getMonth() + 1);
-        var y = formattedDate.getFullYear();
-        var nowDate = y + "-" + m + "-" + d;
-
-        var selected = new Array();
+        var platoonNum = parseInt($('.platoon-number').text()),
+            formattedDate = new Date(),
+            d = formattedDate.getDate(),
+            m = (formattedDate.getMonth() + 1),
+            y = formattedDate.getFullYear(),
+            nowDate = y + "-" + m + "-" + d,
+            selected = new Array();
 
         var table = $('#members-table').DataTable({
             "autoWidth": true,

@@ -7,8 +7,6 @@ $(function() {
         }
     });
 
-
-
     $('[data-toggle="popover"]').popover();
 
     $('#games').multiselect({

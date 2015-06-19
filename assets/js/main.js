@@ -164,7 +164,6 @@ $(function() {
     });
 
 
-
     /**
      * navigation links for user cp
      */
