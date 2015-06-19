@@ -100,7 +100,11 @@ class DivisionStructure {
 			$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 			$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]{$games}[/url]";
 
-			$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank} {$leader->forum_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
+			if ($leader != 0) {
+				$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank} {$leader->forum_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
+			} else {
+				$division_structure .= "[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]TBA[/color][/size]\r\n";
+			}
 
     		// squad leaders
 			$squadleaders = Platoon::SquadLeaders($game_id, $platoon->id, true);
