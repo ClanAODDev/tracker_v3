@@ -61,7 +61,7 @@ class UserController {
 			$data['success'] = false;
 			$data['message'] = "No AOD member exists with that forum name.";
 		} else {
-			$params = array('username' => $user, 'email' => $email, 'credential' => $pass);
+			$params = array('username' => $user, 'email' => $email, 'credential' => $pass, 'member_id' => $memberObj->id);
 			User::create($params);
 			$data['success'] = true;
 			$data['message'] = "Your account was created!";
