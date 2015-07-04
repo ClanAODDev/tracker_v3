@@ -120,4 +120,12 @@ class Platoon extends Application {
 		foreach ($params as $member) { $memberIds[] = intval($member['member_id']); }
 		return $memberIds;
 	}
+
+	public static function modify($params) {
+		$platoon = new self();
+		foreach ($params as $key=>$value) {
+			$platoon->$key = $value;
+		}
+		$platoon->update($params);
+	}
 }
