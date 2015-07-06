@@ -11,6 +11,7 @@ class Member extends Application {
 	public $rank_id;
 	public $position_id;
 	public $squad_leader_id;
+	public $squad_id;
 	public $status_id;
 	public $game_id;
 	public $join_date;
