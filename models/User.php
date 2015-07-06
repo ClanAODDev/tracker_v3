@@ -181,7 +181,7 @@ class User extends Application {
 			'email'=>$params['email'],
 			'date_joined'=>date("Y-m-d H:i:s"),
 			'ip'=>$_SERVER['REMOTE_ADDR'],
-			'memebr_id'=>$params['memberid']
+			'member_id'=>$params['memberid']
 			);
 
 		Flight::aod()->from(self::$table)->insert($data)->one();
