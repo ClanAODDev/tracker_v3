@@ -26,12 +26,15 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-4 hidden-xs">
-			<?php echo $statistics; ?>
-		</div>
 
 		<div class="col-md-8">			
 			<?php echo $membersTable; ?>
 		</div>
+
+		<div class="col-md-4 hidden-xs">
+			<?php echo $statistics; ?>
+		</div>
+
 	</div>
+	
 </div>

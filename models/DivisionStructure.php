@@ -93,7 +93,7 @@ class DivisionStructure {
 
 			$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->name} [/size][/i]\r\n\r\n";
 
-    		// platoon leader
+    		// platoon leaders
 			$leader = Member::profileData($platoon->leader_id);
 
 			if ($platoon->leader_id != 0) {
@@ -103,7 +103,8 @@ class DivisionStructure {
 			}
 
 			if ($platoon->leader_id != 0) {
-				$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank} {$leader->forum_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
+				$leader_name = ucwords($leader->forum_name);
+				$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader->rank} {$leader_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
 			} else {
 				$division_structure .= "[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
 			}

@@ -34,5 +34,8 @@
 
 		</tbody>
 	</table>
+
+	<div class='panel-footer text-muted text-center' id='member-footer'></div>
 </div>
-<div class='panel-footer text-muted text-center' id='member-footer'></div>
+
+</div>

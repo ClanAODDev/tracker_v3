@@ -9,6 +9,10 @@ class Squad extends Application {
 	static $table = 'squad';
 	static $id_field = 'id';
 
+	public static function findByPlatoonId($platoon_id) {
+		return self::find(array('platoon_id' => $platoon_id));
+	}
+
 	public static function create($params) {
 		$member = new self();
 		foreach ($params as $key=>$value) {
