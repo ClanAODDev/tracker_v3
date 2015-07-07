@@ -91,7 +91,7 @@ class DivisionStructure {
 				$division_structure .= "[td]";
 			}
 
-			$division_structure .= "[size=5][color={$platoon_num_color}]Platoon {$i}[/color][/size] \r\n[i][size=3]{$platoon->name} [/size][/i]\r\n\r\n";
+			$division_structure .= "[size=5][color={$platoon_num_color}]". ordsuffix($i) ." Platoon[/color][/size] \r\n[i][size=3]{$platoon->name} [/size][/i]\r\n\r\n";
 
     		// platoon leaders
 			$leader = Member::profileData($platoon->leader_id);
