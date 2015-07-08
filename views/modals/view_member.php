@@ -22,7 +22,7 @@
 			<?php endif; ?>
 			<li><a href="#aliasinfo" data-toggle="tab"><i class="fa fa-users text-muted fa-lg"></i> <span class="hidden-sm hidden-xs">Aliases</a></span></li>
 
-			<?php if (User::isUser($member->id) && $user->role > 1 || $userInfo->id == $user->id): ?>
+			<?php if (User::isUser($member->id) && $user->role > 1 || (!is_null($userInfo) && $userInfo->id == $user->id)): ?>
 				<li class="pull-right text-info"><a href="#userinfo" data-toggle="tab"><i class="fa fa-key text-muted fa-lg"></i> <span class="hidden-sm hidden-xs">User Account</a></li>
 			<?php endif; ?>
 		</ul>
@@ -76,7 +76,7 @@
 										<option value='<?php echo $squadLeader->member_id ?>'><?php echo $squadLeader->forum_name ?> - <?php echo $squadLeader->platoon_name ?></option>
 									<?php endforeach; ?>
 								<?php endif; ?>
-								<option value='0' selected>None (Gen Pop or Division Leader)</option>
+								<option value='0' selected>None (Division Leader)</option>
 							</select>
 						</div>
 
@@ -123,7 +123,7 @@
 				<div class="margin-top-50"></div>
 			</div>		
 
-			<?php if (User::isUser($member->id) && $user->role > 1 || $userInfo->id == $user->id) : ?>
+			<?php if (User::isUser($member->id) && $user->role > 1 || (!is_null($userInfo) && $userInfo->id == $user->id)) : ?>
 				<div class="tab-pane" id="userinfo">
 					<div class="margin-top-20"></div>
 					<form id='user-form'>
