@@ -1,7 +1,7 @@
 <?php if ($user->role == 1) : ?><!-- if squad leader -->
 
-<?php $squad_id = Squad::mySquadId($member->id)->id; ?>
-<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad_id)); ?>
+	<?php $squad_id = Squad::mySquadId($member->id)->id; ?>
+	<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad_id)); ?>
 
 	<?php if (count((array)$squadMembers)) : ?>
 
@@ -37,20 +37,25 @@
 
 					<a href='#collapseSquad_<?php echo $i; ?>' data-toggle='collapse' class='list-group-item active accordion-toggle' data-parent='#squads'>
 						<?php if ($squad->leader_id != 0): ?>
-							<?php echo ordsuffix($i) . " Squad - " . Rank::convert($leader->rank_id)->abbr ?> <?php echo $leader->forum_name ?> <span class="badge"><?php echo Squad::count($squad->id); ?></span>
+
+							<?php echo ordsuffix($i) . " Squad - " . Rank::convert($leader->rank_id)->abbr ?> <?php echo $leader->forum_name ?> <span class="badge"><?php echo Squad::countSquadMembers($squad->id); ?></span>
+
 						<?php else: ?>
+
 							<?php echo ordsuffix($i) ?> Squad <span class="badge"><?php echo Squad::count($squad->id); ?></span>
+
 						<?php endif; ?>
 					</a>
 
 					<!-- get squad members -->
 					<div class='squad-group collapse' id='collapseSquad_<?php echo $i; ?>'>
 
-						<?php foreach(Squad::find($squad->id) as $player) : ?>
-							<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
+						<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad->id)); ?>
+
+						<?php foreach($squadMembers as $player) : ?>
+							<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($leader->rank_id)->abbr ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
 						<?php endforeach; ?>
 					</div>
-
 
 					<?php $i++; ?>
 				<?php endforeach;  ?>
