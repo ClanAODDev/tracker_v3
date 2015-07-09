@@ -1,12 +1,18 @@
 <?php if ($user->role == 1) : ?><!-- if squad leader -->
 
-	<?php if (Squad::count($member->member_id)) : ?>
+<?php $squad_id = Squad::mySquadId($member->id)->id; ?>
+<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad_id)); ?>
+
+	<?php if (count((array)$squadMembers)) : ?>
+
 		<div class='panel panel-default'>
-			<div class='panel-heading'><strong> Your Squad</strong> <span class="pull-right"><?php echo Squad::count($member->member_id); ?> members</span></div>
+			<div class='panel-heading'><strong> Your Squad</strong> <span class="pull-right"><?php echo count((array) $squadMembers); ?> members</span></div>
 			<div class='list-group' id='squad'>
-				<?php foreach($squad as $player) : ?>
-					<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
-				<?php endforeach; ?>				
+
+				<?php foreach($squadMembers as $player) : ?>
+					<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($player->rank_id)->abbr; ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
+				<?php endforeach; ?>		
+
 			</div>
 			<div class='panel-footer'>
 				<button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
@@ -15,6 +21,7 @@
 
 	<?php endif; ?>
 	
+
 <?php elseif ($user->role == 2) : ?><!-- if platoon leader -->
 
 	<div class='panel panel-default'>

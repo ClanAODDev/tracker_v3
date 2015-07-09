@@ -49,6 +49,15 @@ class Squad extends Application {
 		$member->update($params);
 	}
 
+	public static function mySquadId($leader_id) {
+		return (object) Flight::aod()->from('squad')->where(array('leader_id' => $leader_id))->one();
+	}
+
+	public static function findSquadMembers($squad_id) {
+		return Flight::aod()->from('member')->where(array('squad_id' => $squad_id, 'status_id @' => array(1, 3, 999)))->sortAsc('last_activity')->many();
+		// return (object) Member::find_each();
+	}
+/*
 
 	// deprecated functions
 	// need to refactor
@@ -70,7 +79,7 @@ class Squad extends Application {
 		$sql = "SELECT count(*) as count FROM `member` WHERE member.squad_id = {$id} AND (member.status_id = 1 OR member.status_id = 3 OR member.status_id = 999) AND member.position_id = 6";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
-	}
+	}*/
 
 
 }
