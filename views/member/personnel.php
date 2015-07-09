@@ -42,7 +42,7 @@
 
 						<?php else: ?>
 
-							<?php echo ordsuffix($i) ?> Squad <span class="badge"><?php echo Squad::count($squad->id); ?></span>
+							<?php echo ordsuffix($i) ?> Squad <span class="badge"><?php echo Squad::countSquadMembers($squad->id); ?></span>
 
 						<?php endif; ?>
 					</a>
