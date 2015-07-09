@@ -5,12 +5,32 @@ class Squad extends Application {
 	public $id;
 	public $platoon_id;
 	public $leader_id;
+	public $game_id;
 
 	static $table = 'squad';
 	static $id_field = 'id';
 
+	public static function findAll($game_id, $platoon_id = false) {
+
+		if ($platoon_id) {
+			$conditions = array('game_id' => $game_id, 'platoon_id' => $platoon_id);
+		} else {
+			$conditions = array('game_id' => $game_id);
+		}
+
+		return arrayToObject(Flight::aod()->from('squad')->where($conditions)->SortAsc('platoon_id')->many());
+		
+	}
+
 	public static function findByPlatoonId($platoon_id) {
-		return self::find(array('platoon_id' => $platoon_id));
+		return self::find_each(array('platoon_id' => $platoon_id));
+	}
+
+	public static function members($squad_id) {
+		// finds active, LOAs, and pending members
+		$sql = "SELECT * FROM member WHERE squad_id = {$squad_id} AND (status_id = 1 OR status_id = 3 OR status_id = 999)";
+		$sql .= " ORDER BY member.rank_id DESC, member.join_date DESC";
+		return arrayToObject(Flight::aod()->sql($sql)->many());
 	}
 
 	public static function create($params) {

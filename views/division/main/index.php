@@ -35,7 +35,7 @@
 						<?php $platoons = Platoon::find_all($division->id); ?>
 						<?php if (count($platoons)) : ?>
 							<?php foreach ($platoons as $platoon) : ?>
-								<a href='divisions/<?php echo $division->short_name; ?>/<?php echo $platoon->number; ?>' class='list-group-item'>
+								<a href='divisions/<?php echo $division->short_name; ?>/platoon/<?php echo $platoon->number; ?>' class='list-group-item'>
 									<h5 class='pull-right text-muted'><?php echo ordSuffix($platoon->number); ?> Platoon</h5>
 									<h4 class='list-group-item-heading'><strong><?php echo $platoon->name; ?></strong></h4>
 									<p class='list-group-item-text text-muted'><?php echo $platoon->leader_rank . " " . $platoon->leader_name; ?></p>

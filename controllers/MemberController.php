@@ -57,8 +57,11 @@ class MemberController {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::profileData($_POST['member_id']);
 		$platoons = Platoon::find_all($member->game_id);
+
+		// if user role lower than plt ld, show only own platoon's squads
 		$platoon_id = (($user->role >= 2) && (!User::isDev())) ? $member->platoon_id : false; 
-		$squadleadersArray = Platoon::SquadLeaders($member->game_id, $platoon_id);
+		$squads = Squad::findAll($member->game_id, $platoon_id);
+
 		$positionsArray = Position::find_all();
 		$rolesArray = Role::find_all();
 		$memberGames = MemberGame::get($member->id);
@@ -69,7 +72,7 @@ class MemberController {
 			$userInfo = NULL;
 		}
 
-		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'userInfo' => $userInfo, 'platoons' => $platoons, 'memberGames' => $memberGames, 'squadleadersArray' => $squadleadersArray, 'positionsArray' => $positionsArray, 'rolesArray' => $rolesArray));
+		Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'userInfo' => $userInfo, 'platoons' => $platoons, 'memberGames' => $memberGames, 'squads' => $squads, 'positionsArray' => $positionsArray, 'rolesArray' => $rolesArray));
 
 	}
 
@@ -160,15 +163,17 @@ class MemberController {
 
 	public static function _doAddMember() {
 
+
+
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$platoon_id = ($user->role >= 3 || User::isDev()) ? $_POST['platoon_id'] : $member->platoon_id;
-		$squad_leader_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_leader_id'] : $member->member_id;
-		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev()) ) ? 7 : 6;
+		$squad_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_id'] : $member->member_id;
+		$position_id = 6;
 
-		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'squad_id' => 0, 'position_id' => $position_id);
+		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
-		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
+		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
 		if (Member::exists($_POST['member_id'])) {
 

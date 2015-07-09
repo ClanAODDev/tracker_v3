@@ -4,7 +4,7 @@ class PlatoonController {
 
 	public static function _index($div, $plt) {
 		$division = Division::findByName(strtolower($div));
-		$platoonId = Platoon::get_id_from_number($plt, $division->id);
+		$platoonId = Platoon::getIdFromNumber($plt, $division->id);
 
 		if (!is_null($platoonId)) {
 
@@ -32,6 +32,44 @@ class PlatoonController {
 			Flight::redirect('404/', 404); 
 
 		}
+	}
+
+	public static function _manage_platoon($div, $plt) {
+
+		$division = Division::findByName(strtolower($div));
+		$platoonId = Platoon::getIdFromNumber($plt, $division->id);
+
+		if (!is_null($platoonId)) {
+
+			$user = User::find(intval($_SESSION['userid']));
+			$member = Member::find(intval($_SESSION['memberid']));
+			$tools = Tool::find_all($user->role);
+			$divisions = Division::find_all();
+			$platoon = Platoon::findById($platoonId);
+			$unassignedMembers = Platoon::unassignedMembers($platoonId, true);
+			$squads = Squad::findByPlatoonId($platoonId);
+
+			Flight::render('manage/platoon', array('division' => $division, 'platoon' => $platoon, 'squads' => $squads, 'unassignedMembers' => $unassignedMembers), 'content');
+			Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+
+		} else {
+
+			Flight::redirect('404/', 404); 
+
+		}
+
+	}
+
+	public static function _doUpdateMemberSquad() {
+
+		$params = array();
+		$params['id'] = $_POST['member_id'];
+		$params['squad_id'] = $_POST['squad_id'];
+		$params['position_id'] = 6;
+
+		Member::modify($params);
+		$data = array('success' => true);
+		echo(json_encode($data));
 	}
 
 	public static function _create() {}

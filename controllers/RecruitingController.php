@@ -20,8 +20,8 @@ class RecruitingController {
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
 		$platoon_id = (($user->role >= 2) && (!User::isDev())) ? $member->platoon_id : false;
-		$squadLeaders = Platoon::SquadLeaders($member->game_id, $platoon_id);
-		Flight::render('recruiting/new_member', array('user' => $user, 'member'=> $member, 'division' => $division, 'platoons' => $platoons, 'squadLeaders' => $squadLeaders), 'content');
+		$squads = Squad::findAll($member->game_id, $platoon_id);
+		Flight::render('recruiting/new_member', array('user' => $user, 'member'=> $member, 'division' => $division, 'platoons' => $platoons, 'squads' => $squads), 'content');
 		Flight::render('layouts/application', array('js' => 'recruit', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 

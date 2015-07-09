@@ -133,7 +133,7 @@
 											<ul class="dropdown-menu">
 
 												<?php foreach ($platoons as $platoonLink) : ?>
-													<li><a href="divisions/<?php echo $division->short_name ?>/<?php echo $platoonLink->number ?>"><?php echo $platoonLink->name; ?></a></li>
+													<li><a href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoonLink->number ?>"><?php echo $platoonLink->name; ?></a></li>
 												<?php endforeach; ?>	
 											</ul>
 										</li>
@@ -201,7 +201,6 @@
 	<script src="assets/js/libraries/jquery.bootstrap.wizard.min.js"></script>
 	<script src="assets/js/libraries/bootstrap-multiselect.js"></script>
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
-	<script src="assets/js/treed.js"></script>
 	<script src="assets/js/main.js"></script>
 
 	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>

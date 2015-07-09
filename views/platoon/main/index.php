@@ -16,7 +16,8 @@
 			<?php if ($user->role >= 2) : ?>
 
 				<div class="btn-group pull-right">
-					<button type="button" class="btn btn-default disabled">Edit</button>
+					<button type="button" class="btn btn-default disabled"><i class="fa fa-pencil"></i> Edit</button>
+					<a class="btn btn-default" href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoon->number ?>/manage"><i class="fa fa-users"></i> Manage</a>
 					<a class="btn btn-default send-pm" data-members="<?php echo implode(",", $memberIdList); ?>" href="<?php echo PRIVMSG; ?>" target="_blank"><i class="fa fa-comment"></i> Send Platoon PM</a>
 				</div>
 

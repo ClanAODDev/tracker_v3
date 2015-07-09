@@ -117,14 +117,17 @@
 								</div>
 
 								<div class='form-group squadldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
-									<label for='squadldr' class='col-sm-3 control-label'><strong>Squad Leader</strong></label>
+									<label for='squad_id' class='col-sm-3 control-label'><strong>Squad Leader</strong></label>
 									<div class='col-sm-9'>
-										<select name='squadLdr' id='squadLdr' class='form-control'>
-											<?php foreach($squadLeaders as $squadLeader) : ?>
-												<option value='<?php echo $squadLeader->member_id ?>'><?php echo $squadLeader->forum_name . " - " . $squadLeader->platoon_name ?></option>
-											<?php endforeach; ?>
-											<option value='0' selected>None (Gen Pop)</option>
+										<select name='squad_id' id='squad_id' class='form-control'>
+											<?php foreach($squads as $squad) : ?>
 
+												<?php $leader = Member::findById($squad->leader_id); ?>
+												<?php $platoon = Platoon::findById($squad->platoon_id); ?>
+
+												<option value='<?php echo $squad->id ?>'><?php echo ($squad->leader_id != 0) ? Rank::convert($leader->rank_id)->abbr . " " . ucwords($leader->forum_name) : "TBA (Squad #{$squad->id})"; ?> - <?php echo $platoon->name ?></option>
+
+											<?php endforeach; ?>
 										</select>
 									</div>
 								</div>
@@ -180,7 +183,7 @@
 									<label><input type="checkbox" value="" name="chk[]">Have them adjust their forum (<a class="popup-link" href="http://www.clanaod.net/forums/sarcoth_profilemod.php">Forum &raquo; Settings &raquo; Edit AOD Member Info</a>) profile settings</label>
 								</div>
 								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Request (optional) that they enable email notifications of new private messages on the forums. <button type="button" class="btn btn-info btn-xs" data-toggle="popover" data-content="We PM members after 14 days of forum inactivity. Without this setting, they will not be notified of the new PM.">Why?</span></label>
+									<label><input type="checkbox" value="" name="chk[]">Request (optional) that they enable email notifications of new private messages on the forums. <button type="button" class="btn btn-info btn-xs" data-toggle="popover" data-content="We PM members after 14 days of forum inactivity. Without this setting, they will not be notified of the new PM.">Why?</button></label>
 								</div>
 								<div class="checkbox">
 									<label><input type="checkbox" value="" name="chk[]">Have them change their name on Teamspeak: <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></label>

@@ -12,6 +12,27 @@ $(function() {
         location.href = "member/" + userId;
     });
 
+    $(".create-squad").click(function(e) {
+        e.preventDefault();
+        $(".viewPanel .viewer").load("create/squad", {
+            division_id: $(this).attr('data-division-id'),
+            platoon_id: $(this).attr('data-platoon-id')
+        });
+        $(".viewPanel").modal();
+    });
+
+    $(".modal").delegate("#create_squad_btn", "click", function(e) {
+        e.preventDefault();
+        var data = $("#create_squad").serialize();
+        $.post("do/create-squad", data, function() {
+            $(".viewPanel").modal('hide');
+            setTimeout(function() {
+                location.reload();
+            }, 600);
+        });
+
+    });
+
     var itemMoved, targetplatoon, sourcePlatoon, action = null;
 
     $(".sortable").sortable({
@@ -37,6 +58,7 @@ $(function() {
 
 
             } else {
+
                 $(ui.item).find('.removed-by').empty();
                 context = " no longer flagged for removal."
                 action = 0;
@@ -78,13 +100,7 @@ $(function() {
         }
     });
 
-
-
     // manage division
-
-    $(".draggable").draggable({
-        connectToSortable: 'ul'
-    });
 
     var itemMoved, targetplatoon, sourcePlatoon;
     $(".sortable-division").sortable({
@@ -97,6 +113,67 @@ $(function() {
 
         }
     });
+
+    // manage platoon
+
+    var itemMoved, targetplatoon, sourcePlatoon;
+
+    $(".mod-plt .sortable").sortable({
+        connectWith: 'ul',
+        placeholder: "ui-state-highlight",
+        receive: function(event, ui) {
+            itemMoved = $(ui.item).attr('data-member-id');
+            targetSquad = $(this).attr('data-squad-id');
+            senderLength = $(ui.sender).find('li').length;
+            receiverLength = $(this).find('li').length;
+
+            if (undefined == targetSquad) {
+
+                alert("You cannot move players to this list");
+                $(".mod-plt .sortable").sortable('cancel');
+
+            } else {
+
+                // is genpop empty?
+                if ($('.genpop').find('li').length < 1) {
+                    $('.genpop').fadeOut();
+                }
+
+                // update squad counts
+                $(ui.sender).parent().find('.badge').text(senderLength);
+                $(this).parent().find('.badge').text(receiverLength);
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'do/update-member-squad',
+                    data: {
+                        member_id: itemMoved,
+                        squad_id: targetSquad
+                    },
+
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success === false) {
+                            message = response.message;
+
+                            $(".alert-box").stop().html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + message + "</div>").effect('highlight').delay(1000).fadeOut();
+                        } else {
+                            //message = "Player " + itemMoved + context;
+                            message = "Player #" + itemMoved + " reassigned";
+
+                            $(".alert-box").stop().html("<div class='alert alert-success'><i class='fa fa-check'></i> " + message + "</div>").effect('highlight').delay(1000).fadeOut();
+                        }
+                    },
+
+                    // fail: function()
+                });
+
+            }
+
+        }
+    });
+
 
 
 

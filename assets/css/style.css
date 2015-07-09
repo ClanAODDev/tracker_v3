@@ -735,7 +735,7 @@ div.DTTT_container {
  .sortable li:hover { background-color: rgba(252,248,227, .7); }
  .sortable { list-style-type: none !important; margin: 0 !important; padding: 0; margin-bottom: 0px; -webkit-padding-start: 0px !important; margin-left: -30px; background-color: rgba(0,0,0,.01); min-height: 45px; }
  .sortable li { margin: 0px; cursor: move; display: block; }
- .ui-state-highlight { height: 1.45em; line-height: 1.5em; background-color: rgba(252,248,227, .7); border: 1px solid #fff; }
+ .ui-state-highlight { height: 3.3em; line-height: 1.8em; background-color: rgba(252,248,227, .7); border: 1px solid #fff; }
  .view-profile { cursor: pointer;}
  .actions .btn { opacity: 0; }
  .sortable li:hover .actions .btn { opacity: 1; }

@@ -6,7 +6,7 @@
 </div>
 
 <input type='hidden' id='cur_platoon_id' name='cur_platoon_id' value='<?php echo $member->platoon_id ?>' />
-<input type='hidden' id='cur_squad_leader_id' name='cur_squad_leader_id' value='<?php echo $member->squad_leader_id ?>' />
+<input type='hidden' id='cur_squad_id' name='cur_squad_id' value='<?php echo $member->squad_id ?>' />
 <input type='hidden' id='cur_position_id' name='cur_position_id' value='<?php echo $member->position_id ?>' />
 
 <div class='modal-body' style='overflow-y: scroll; min-height: 350px;'>
@@ -69,13 +69,22 @@
 						</div>
 
 						<div class='form-group sqdldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
-							<label for='squad_leader_id' class='control-label'>Squad Leader</label>
-							<select name='squad_leader_id' id='squad_leader_id' class='form-control'>
+							<label for='squad_id' class='control-label'>Squad</label>
+							<select name='squad_id' id='squad_id' class='form-control'>
+
 								<?php if (count(Division::countSquadLeaders($member->game_id))) : ?>
-									<?php foreach($squadleadersArray as $squadLeader) : ?>
-										<option value='<?php echo $squadLeader->member_id ?>'><?php echo $squadLeader->forum_name ?> - <?php echo $squadLeader->platoon_name ?></option>
+
+									<?php foreach($squads as $squad) : ?>
+
+										<?php $leader = Member::findById($squad->leader_id); ?>
+										<?php $platoon = Platoon::findById($squad->platoon_id); ?>
+
+										<option value='<?php echo $squad->id ?>'><?php echo ($squad->leader_id != 0) ? Rank::convert($leader->rank_id)->abbr . " " . ucwords($leader->forum_name) : "TBA (Squad #{$squad->id})"; ?> - <?php echo $platoon->name ?></option>
+
 									<?php endforeach; ?>
+
 								<?php endif; ?>
+
 								<option value='0' selected>None (Division Leader)</option>
 							</select>
 						</div>

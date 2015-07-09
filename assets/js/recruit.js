@@ -28,7 +28,7 @@ $(function() {
                 var forumName = $('#forumname').val(),
                     battlelog = $('#battlelog').val(),
                     platoon = $('#platoon').val(),
-                    squadLdr = $('#squadLdr').val(),
+                    squad_id = $('#squad_id').val(),
                     member_id = $('#member_id').val();
 
                 $(".progress-bar").attr("class", "bar progress-bar progress-bar-striped progress-bar-warning active");
@@ -172,7 +172,7 @@ $(function() {
         var forum_name = $('#forumname').val(),
             battlelog_name = $('#battlelog').val(),
             platoon = $('#platoon').val(),
-            squad_leader = $('#squadLdr').val(),
+            squad_id = $('#squad_id').val(),
             division = $('#game').val(),
             member_id = $('#member_id').val();
 
@@ -182,7 +182,7 @@ $(function() {
         });
 
         if (member_id != "") {
-            storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, division, played_games);
+            storePlayer(member_id, forum_name, platoon, squad_id, battlelog_name, division, played_games);
         }
     });
 });
@@ -259,7 +259,7 @@ function loadThreadCheck() {
     });
 }
 
-function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_name, division, played_games) {
+function storePlayer(member_id, forum_name, platoon, squad_id, battlelog_name, division, played_games) {
 
     var played_games = $("#games option:selected").map(function() {
         return $(this).val();
@@ -274,7 +274,7 @@ function storePlayer(member_id, forum_name, platoon, squad_leader, battlelog_nam
             member_id: member_id,
             forum_name: forum_name,
             platoon_id: platoon,
-            squad_leader_id: squad_leader,
+            squad_id: squad_id,
             battlelog_name: battlelog_name,
             game_id: division,
             played_games: played_games

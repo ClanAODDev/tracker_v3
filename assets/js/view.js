@@ -10,12 +10,12 @@ $(function() {
     });
 
     // auto select values
-    var squad_leader_id = $("#cur_squad_leader_id").val(),
+    var squad_id = $("#cur_squad_id").val(),
         platoon_id = $("#cur_platoon_id").val(),
         position_id = $("#cur_position_id").val();
 
     $("#platoon_id option[value=" + platoon_id + "]").attr("selected", "selected");
-    $("#squad_leader_id option[value=" + squad_leader_id + "]").attr("selected", "selected");
+    $("#squad_id option[value=" + squad_id + "]").attr("selected", "selected");
     $("#position_id option[value=" + position_id + "]").attr("selected", "selected");
 
     $("#submit-form").click(function(event) {
