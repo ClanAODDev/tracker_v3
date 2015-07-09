@@ -53,13 +53,19 @@ class Squad extends Application {
 		return (object) Flight::aod()->from('squad')->where(array('leader_id' => $leader_id))->one();
 	}
 
-	public static function findSquadMembers($squad_id) {
-		return Flight::aod()->from('member')->where(array('squad_id' => $squad_id, 'status_id @' => array(1, 3, 999)))->sortAsc('last_activity')->many();
-		// return (object) Member::find_each();
+	public static function findSquadMembers($squad_id, $div_struc_sort = false, $recruiter = false) {
+		$conditions = ($recruiter) ? array('squad_id' => $squad_id, 'position_id' => 6, 'recruiter !%' => $recruiter, 'status_id @' => array(1, 3, 999)) : array('squad_id' => $squad_id, 'position_id' => 6, 'status_id @' => array(1, 3, 999));
+
+		if ($div_struc_sort) {
+			return Flight::aod()->from('member')->where($conditions)->sortDesc('rank_id')->many();
+		} else {
+			return Flight::aod()->from('member')->where($conditions)->sortAsc('last_activity')->many();
+		}
+
 	}
 
 	public static function countSquadMembers($squad_id) {
-		return Flight::aod()->from('member')->where(array('squad_id' => $squad_id, 'status_id @' => array(1, 3, 999)))->sortAsc('last_activity')->count();
+		return count(self::findSquadMembers($squad_id));
 	}
 
 }

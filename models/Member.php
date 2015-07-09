@@ -79,7 +79,7 @@ class Member extends Application {
 	public static function findRecruits($member_id) {
 		return Flight::aod()->from(self::$table)
 		->sortDesc(array('rank_id'))
-		->where(array('recruiter' => $member_id))
+		->where(array('recruiter' => $member_id, 'position_id' => 6))
 		->join('rank', array('rank.id' => 'member.rank_id'))
 		->select()->many();
 	}

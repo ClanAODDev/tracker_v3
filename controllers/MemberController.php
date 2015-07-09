@@ -163,8 +163,6 @@ class MemberController {
 
 	public static function _doAddMember() {
 
-
-
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$platoon_id = ($user->role >= 3 || User::isDev()) ? $_POST['platoon_id'] : $member->platoon_id;

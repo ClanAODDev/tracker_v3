@@ -24,8 +24,8 @@ class DivisionStructure {
 		$platoon_pos_color = "#40E0D0";
 
 		// widths
-		$players_width = 1400;
-		$info_width = 1300;
+		$players_width = 1500;
+		$info_width = 1400;
 
     	// misc settings
 		$min_num_squad_leaders = 2;
@@ -109,44 +109,77 @@ class DivisionStructure {
 				$division_structure .= "[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
 			}
 
-    		// squad leaders
-			$squadleaders = Platoon::SquadLeaders($game_id, $platoon->id, true);
-			$mcount = 0;
 
-			foreach ($squadleaders as $sqdldr) {
-				$games = self::getIcons(MemberGame::getGamesPlayed($sqdldr->id));
-				$aod_url = "[url=" . CLANAOD . $sqdldr->member_id . "]";
-				$bl_url = "[url=" . BATTLELOG . $sqdldr->battlelog_name. "]{$games}[/url]";
-				$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$squad_leaders_color}]{$sqdldr->abbr} {$sqdldr->forum_name}[/color][/url] {$bl_url}[/size]\r\n";
+
+
+
+
+
+    		// squad leaders
+			$squads = Squad::findAll($game_id, $platoon->id);
+
+			foreach ($squads as $squad) {
+
+				if ($squad->leader_id != 0) {
+
+					$leader = Member::findById($squad->leader_id);
+					$games = self::getIcons(MemberGame::getGamesPlayed($leader->id));
+					$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
+					$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]{$games}[/url]";
+
+					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$squad_leaders_color}]" . Rank::convert($leader->rank_id)->abbr . " {$leader->forum_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
+					$division_structure .= "[size=1]";
+
+					// direct recruits
+					$recruits = arrayToObject(Member::findRecruits($leader->member_id));
+					if (count((array) $recruits)) {
+						$division_structure .= "[list=1]";
+
+						foreach ($recruits as $player) {
+							$games = self::getIcons(MemberGame::getGamesPlayed($player->id));
+							$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
+							$bl_url = "[url=" . BATTLELOG . $player->battlelog_name. "]{$games}[/url]";
+							$division_structure .= "[*]{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
+						}
+						$division_structure .= "[/list]";
+
+					}
+
+				} else {
+
+					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n[color={$squad_leaders_color}]TBA[/color][/size]\r\n\r\n";
+					$division_structure .= "[size=1]";
+
+				}
+
+				$division_structure .= "\r\n";
 
         		// squad members
-				$squadmembers = Squad::find($sqdldr->member_id, true);
-				$division_structure .= "[size=1][list=1]";
-
-				foreach ($squadmembers as $player) {
+				$squadMembers = arrayToObject(Squad::findSquadMembers($squad->id, true, $leader->member_id));
+				foreach ($squadMembers as $player) {
 					$games = self::getIcons(MemberGame::getGamesPlayed($player->id));
 					$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
 					$bl_url = "[url=" . BATTLELOG . $player->battlelog_name. "]{$games}[/url]";
-					$division_structure .= "[*]{$aod_url}{$player->rank} {$player->forum_name}[/url] {$bl_url}\r\n";
+					$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
 				}
 
-				$division_structure .= "[/list][/size]\r\n";
-				$mcount++;
-			}
+				$division_structure .= "[/size]\r\n";
 
-			if ($mcount < $min_num_squad_leaders) {
-            	// minimum of 2 squad leaders per platoon
-				$min_num_squad_leaders = ($min_num_squad_leaders < 2) ? 2 : $min_num_squad_leaders;
-				for ($mcount = $mcount; $mcount < $min_num_squad_leaders; $mcount++)
-					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n[color={$squad_leaders_color}]TBA[/color][/size]\r\n";
 			}
 
 			$division_structure .= "\r\n\r\n";
+			$division_structure .= "[/td]";
+
+
+
 
 			/**
 	         * ----general population-----
 	         */
 
+
+			/* -- removing gen pop
+			
 			$genpop = Platoon::GeneralPop($platoon->id, true);
 			$division_structure .= "[size=3][color={$platoon_pos_color}]Members[/color][/size]\r\n[size=1]";
 
@@ -157,8 +190,9 @@ class DivisionStructure {
 				$division_structure .= "{$aod_url}{$player->rank} {$player->forum_name}[/url] {$bl_url}\r\n";
 			}
 
-			$division_structure .= "[/size]";
-			$division_structure .= "[/td]";
+	
+
+			*/
 
 			$i++;
 		}
