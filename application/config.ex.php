@@ -35,6 +35,7 @@ define('INACTIVE_MAX', 25);
 
 // global settings
 define('MAX_GAMES_ON_PROFILE', 25);
+define('MAX_SQUADS_IN_PLT', 2);
 
 // gitHub username and password
 define('GITHUB_USER', '');
