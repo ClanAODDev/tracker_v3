@@ -53,7 +53,7 @@
 						<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad->id)); ?>
 
 						<?php foreach($squadMembers as $player) : ?>
-							<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($leader->rank_id)->abbr ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
+							<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($player->rank_id)->abbr ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
 						<?php endforeach; ?>
 					</div>
 
