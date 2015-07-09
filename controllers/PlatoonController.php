@@ -35,7 +35,7 @@ class PlatoonController {
 	}
 
 	public static function _manage_platoon($div, $plt) {
-
+		
 		$division = Division::findByName(strtolower($div));
 		$platoonId = Platoon::getIdFromNumber($plt, $division->id);
 
@@ -43,17 +43,27 @@ class PlatoonController {
 
 			$user = User::find(intval($_SESSION['userid']));
 			$member = Member::find(intval($_SESSION['memberid']));
-			$tools = Tool::find_all($user->role);
-			$divisions = Division::find_all();
-			$platoon = Platoon::findById($platoonId);
-			$unassignedMembers = Platoon::unassignedMembers($platoonId, true);
-			$squads = Squad::findByPlatoonId($platoonId);
 
-			Flight::render('manage/platoon', array('division' => $division, 'platoon' => $platoon, 'squads' => $squads, 'unassignedMembers' => $unassignedMembers), 'content');
-			Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+			if ($member->platoon_id == $platoonId || $user->role > 2 || User::isDev()) {
+
+				$tools = Tool::find_all($user->role);
+				$divisions = Division::find_all();
+				$platoon = Platoon::findById($platoonId);
+				$unassignedMembers = Platoon::unassignedMembers($platoonId, true);
+				$squads = Squad::findByPlatoonId($platoonId);
+
+				Flight::render('manage/platoon', array('division' => $division, 'platoon' => $platoon, 'squads' => $squads, 'unassignedMembers' => $unassignedMembers), 'content');
+				Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+
+			} else {
+
+				// insufficient access
+				Flight::redirect('404/', 404); 
+			}
 
 		} else {
 
+			// nonexistent platoon
 			Flight::redirect('404/', 404); 
 
 		}

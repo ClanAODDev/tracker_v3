@@ -13,11 +13,13 @@
 		</div>
 
 		<div class="col-xs-5">
-			<?php if ($user->role >= 2) : ?>
+			<?php if ($user->role >= 2 || User::isDev()) : ?>
 
 				<div class="btn-group pull-right">
 					<button type="button" class="btn btn-default disabled"><i class="fa fa-pencil"></i> Edit</button>
-					<a class="btn btn-default" href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoon->number ?>/manage"><i class="fa fa-users"></i> Manage</a>
+					<?php if ($member->platoon_id == $platoon->id || $user->role > 2 || User::isDev()): ?>
+						<a class="btn btn-default" href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoon->number ?>/manage"><i class="fa fa-users"></i> Manage</a>
+					<?php endif; ?>
 					<a class="btn btn-default send-pm" data-members="<?php echo implode(",", $memberIdList); ?>" href="<?php echo PRIVMSG; ?>" target="_blank"><i class="fa fa-comment"></i> Send Platoon PM</a>
 				</div>
 
