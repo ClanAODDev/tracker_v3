@@ -168,7 +168,7 @@ class MemberController {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$platoon_id = ($user->role >= 3 || User::isDev()) ? $_POST['platoon_id'] : $member->platoon_id;
-		$squad_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_id'] : $member->member_id;
+		$squad_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_id'] : $member->squad_id;
 		$position_id = 6;
 
 		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
