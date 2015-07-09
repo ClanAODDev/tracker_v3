@@ -29,7 +29,7 @@ class MemberController {
 			$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
 
 			if (property_exists($platoonInfo, 'id')) {
-				$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
+				$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/platoon/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
 				$platoonInfo->item = "<li class='list-group-item text-right'><span class='pull-left'><strong>Platoon: </strong></span> <span class='text-muted'>{$platoonInfo->name}</span></li>";
 			}
 
@@ -166,7 +166,7 @@ class MemberController {
 		$squad_leader_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_leader_id'] : $member->member_id;
 		$position_id = ($_POST['squad_leader_id'] == 0 && ($user->role >= 2 || User::isDev()) ) ? 7 : 6;
 
-		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
+		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'squad_id' => 0, 'position_id' => $position_id);
 
 		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_leader_id' => $squad_leader_id, 'position_id' => $position_id);
 
