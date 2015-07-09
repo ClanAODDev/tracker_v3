@@ -22,24 +22,19 @@
 		<div class='list-group' id='squads'>
 			<?php if (count((array) $squads)) : $i = 1;	?>
 
-
-
 				<!-- get squads -->
-
 
 				<?php foreach($squads as $squad) : ?>
 
 					<?php $leader = Member::findById($squad->leader_id); ?>
 
-
 					<a href='#collapseSquad_<?php echo $i; ?>' data-toggle='collapse' class='list-group-item active accordion-toggle' data-parent='#squads'>
 						<?php if ($squad->leader_id != 0): ?>
 							<?php echo ordsuffix($i) . " Squad - " . Rank::convert($leader->rank_id)->abbr ?> <?php echo $leader->forum_name ?> <span class="badge"><?php echo Squad::count($squad->id); ?></span>
-						</a>
-
-					<?php else: ?>
-						<?php echo ordsuffix($i) ?> Squad <span class="badge"><?php echo Squad::count($squad->id); ?></span>
-					<?php endif; ?>
+						<?php else: ?>
+							<?php echo ordsuffix($i) ?> Squad <span class="badge"><?php echo Squad::count($squad->id); ?></span>
+						<?php endif; ?>
+					</a>
 
 					<!-- get squad members -->
 					<div class='squad-group collapse' id='collapseSquad_<?php echo $i; ?>'>
@@ -48,6 +43,7 @@
 							<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo $player->rank ?> <?php echo $player->forum_name ?></span><small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small></a>
 						<?php endforeach; ?>
 					</div>
+
 
 					<?php $i++; ?>
 				<?php endforeach;  ?>

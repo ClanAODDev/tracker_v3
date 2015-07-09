@@ -50,9 +50,6 @@ class Squad extends Application {
 	}
 
 
-
-
-
 	// deprecated functions
 	// need to refactor
 
