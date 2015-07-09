@@ -15,7 +15,7 @@
 				<?php endforeach; ?>		
 
 			</div>
-			<div class='panel-footer'><span class="text-muted margin-top-10"><i class='fa fa-asterisk text-success'></i> - Direct recruit</span><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
+			<div class='panel-footer'><small class="text-muted margin-top-10"><i class='fa fa-asterisk text-success'></i> - Direct recruit</small><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
 		</div>
 	</div>
 
@@ -63,7 +63,7 @@
 
 			<?php endif; ?>
 		</div>
-		<div class='panel-footer'><span class="text-muted margin-top-10"><i class='fa fa-asterisk text-success'></i> - Direct recruit</span><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
+		<div class='panel-footer'><small class="text-muted margin-top-10"><i class='fa fa-asterisk text-success'></i> - Direct recruit</small><button id='pm-checked' class='btn btn-success btn-sm toggle-pm pull-right' style='display: none;'>Send PM (<span class='count-pm'>0</span>)</button>  <button class='btn btn-default btn-sm toggle-pm pull-right'>PM MODE</button><div class='clearfix'></div>
 
 	</div>
 </div>
