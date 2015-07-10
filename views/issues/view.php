@@ -16,7 +16,11 @@
 
 	<?php if ($issue->getAssignee()): ?>
 		<h3>Assigned Developer</h3>
-		<p><?php echo $issue->getAssignee()->getLogin(); ?></p>
+		<p>
+			<?php $url = $issue->getAssignee()->getAvatarUrl(); ?>
+			<?php echo "<img src='$url' width=30, height=30 />";?>
+			<?php echo $issue->getAssignee()->getLogin(); ?>
+		</p>
 	<?php endif; ?>
 
 	<h3>Comments</h3><hr/>
@@ -25,7 +29,7 @@
 		<?php foreach($comments as $comment): ?>
 			<p>
 				<?php $url = $comment->getUser()->getAvatarUrl(); ?>
-				<?php echo "<img src='$url'/>";?>
+				<?php echo "<img src='$url' width=35, height=35/>";?>
 				<?php echo $comment->getBody(); ?>
 			</p>		
 		<?php endforeach; ?>
