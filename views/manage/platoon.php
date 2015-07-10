@@ -28,9 +28,9 @@
 		<?php $squad_width = (count((array) $unassignedMembers)) ? 4 : 6; ?>
 
 		<div class="col-md-<?php echo $squad_width ?>">
-			<h3 class="page-header"><strong><?php echo ordsuffix($i); ?> Squad</strong> <small><?php echo $leader_name ?></small><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
+			<h3 class="page-header squad-header"><strong><?php echo ordsuffix($i); ?> Squad</strong> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-sm btn-default modify-squad"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
-			<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>">
+			<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>" data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>">
 				<?php foreach ($members as $member): ?>
 					<?php $rctFlag = (!is_null($leader) && $member->recruiter == $leader->member_id) ? "<sup><i class='fa fa-asterisk text-success'></i></sup>" : NULL; ?>
 					<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
