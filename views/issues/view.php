@@ -12,30 +12,31 @@
 
 
 
-	<pre><p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p></pre>
+	<h3><p>About The Issue</p></h3>
+	<div class='GitHubIssues'><p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p></div>
 
 	<?php if ($issue->getAssignee()): ?>
 		<h3>Assigned Developer</h3>
-		<p>
+		<div class='GitHubIssues'><p>
 			<?php $url = $issue->getAssignee()->getAvatarUrl(); ?>
 			<?php echo "<img src='$url' width=30, height=30 />";?>
 			<?php echo $issue->getAssignee()->getLogin(); ?>
-		</p>
+		</p></div>
 	<?php endif; ?>
 
 	<h3>Comments</h3><hr/>
 	<?php if (count($comments)): ?>
 
 		<?php foreach($comments as $comment): ?>
-			<p>
+			<div class='GitHubIssues'><p>
 				<?php $url = $comment->getUser()->getAvatarUrl(); ?>
 				<?php echo "<img src='$url' width=35, height=35/>";?>
 				<?php echo $comment->getBody(); ?>
-			</p>		
+			</p></div>	
 		<?php endforeach; ?>
 
 	<?php else: ?>
-		<p>There are no comments for this issue.</p>
+		<div class='GitHubIssues'><p>There are no comments for this issue.</p></div>
 	<?php endif; ?>
 
 	<hr />
