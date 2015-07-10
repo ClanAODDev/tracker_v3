@@ -7,7 +7,7 @@
 	</ul>
 
 	<div class='page-header'>
-		<h2><strong>Issue #<?php echo $id ?> Is Not Available To You</strong></h2>
+		<h2><strong>Issue #<?php echo $id ?> Is Not Available</strong></h2>
 	</div>
 
 </div>
