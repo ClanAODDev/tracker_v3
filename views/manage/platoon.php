@@ -25,7 +25,9 @@
 		<?php $leader_name = (!is_null($leader)) ? Rank::convert($leader->rank_id)->abbr . " " . $leader->forum_name : "TBA"; ?>
 		<?php $members = Squad::members($squad->id); ?>
 
-		<div class="col-md-4">
+		<?php $squad_width = (count((array) $unassignedMembers)) ? 4 : 6; ?>
+
+		<div class="col-md-<?php echo $squad_width ?>">
 			<h3 class="page-header"><strong><?php echo ordsuffix($i); ?> Squad</strong> <small><?php echo $leader_name ?></small><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
 			<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>">
