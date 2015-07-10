@@ -127,7 +127,7 @@ class DivisionStructure {
 					$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 					$bl_url = "[url=" . BATTLELOG . $leader->battlelog_name. "]{$games}[/url]";
 
-					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$squad_leaders_color}]" . Rank::convert($leader->rank_id)->abbr . " {$leader->forum_name}[/color][/url] {$bl_url}[/size]\r\n";
+					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$squad_leaders_color}]" . Rank::convert($leader->rank_id)->abbr . " {$leader->forum_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
 					$division_structure .= "[size=1]";
 
 					// direct recruits
