@@ -147,7 +147,7 @@ class DivisionStructure {
 
 				} else {
 
-					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n[color={$squad_leaders_color}]TBA[/color][/size]\r\n\r\n";
+					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n[color={$squad_leaders_color}]TBA[/color][/size]\r\n";
 					$division_structure .= "[size=1]";
 
 				}
