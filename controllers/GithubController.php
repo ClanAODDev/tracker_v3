@@ -50,43 +50,20 @@ class GithubController {
 	}
 
 	public static function _view($id) {
-
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+		$division = Division::findById(intval($member->game_id));
+		$platoons = Platoon::find_all($member->game_id);
 		if ($issue = Github::getIssue($id)) {
-
-			$user = User::find(intval($_SESSION['userid']));
-			$member = Member::find(intval($_SESSION['memberid']));
-			$tools = Tool::find_all($user->role);
-			$divisions = Division::find_all();
-			$division = Division::findById(intval($member->game_id));
-			$platoons = Platoon::find_all($member->game_id);
 			$comments = Github::getComments($id);
-
-			// not sure if I am a big fan of doing it this way as
-			// looping through the labels significantly increases the 
-			// page load time. We need to find a better way to do this.
-			// For now, let's leave this check out, presently it's causing
-			// problems with issues that should be working
-
-			/*  
-			foreach($labels as $label) {
-				if($label->getName() === "dev" && ($user->role > 2 || User::isDev())) {
-					Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
-				} elseif($label->getName() === "dev" && !($user->role > 2 || User::isDev())) {
-					Flight::render('issues/notAvailable', array('id' => $id), 'content');
-				} elseif($label->getName() === "client") {
-					Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
-				}
-			}
-			*/
-
 			Flight::render('issues/view', array('user' => $user, 'issue' => $issue, 'comments' => $comments), 'content'); 
-			Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
-
-		} else {
-
-			Flight::redirect('/404', 404);
-
 		}
+		else {
+			Flight::render('issues/notAvailable', array('id' => $id), 'content');
+		}
+		Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
 
 	public static function _createIssue() {
