@@ -51,12 +51,14 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('POST /do/remove-member', array('MemberController', '_doKickFromAod'));
 	Flight::route('POST /do/issue-submit', array('GithubController', '_doSubmitIssue'));
 	Flight::route('POST /do/create-squad', array('SquadController', '_doCreateSquad'));
+	Flight::route('POST /do/modify-squad', array('SquadController', '_doModifySquad'));
 
 	// modals
 	Flight::route('POST /edit/member', array('MemberController', '_edit'));
 	Flight::route('/get/division-structure', array('DivisionController', '_generateDivisionStructure'));
 	Flight::route('/create/issue', array('GithubController', '_createIssue'));
 	Flight::route('/create/squad', array('SquadController', '_createSquad'));
+	Flight::route('/modify/squad', array('SquadController', '_modifySquad'));
 
 	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));

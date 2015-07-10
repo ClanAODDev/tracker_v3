@@ -30,8 +30,33 @@ $(function() {
                 location.reload();
             }, 600);
         });
-
     });
+
+
+    $(".modify-squad").click(function(e) {
+        e.preventDefault();
+        $(".viewPanel .viewer").load("modify/squad", {
+            division_id: $(this).closest('div').find('ul').attr('data-division-id'),
+            platoon_id: $(this).closest('div').find('ul').attr('data-platoon-id'),
+            squad_id: $(this).closest('div').find('ul').attr('data-squad-id')
+        });
+        $(".viewPanel").modal();
+    });
+
+
+    $(".modal").delegate("#modify_squad_btn", "click", function(e) {
+        e.preventDefault();
+        var data = $("#modify_squad").serialize();
+        $.post("do/modify-squad", data, function() {
+            $(".viewPanel").modal('hide');
+            setTimeout(function() {
+                location.reload();
+            }, 600);
+        });
+    });
+
+
+
 
     var itemMoved, targetplatoon, sourcePlatoon, action = null;
 

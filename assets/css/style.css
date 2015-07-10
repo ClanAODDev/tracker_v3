@@ -477,6 +477,14 @@ h2.pull-right {
   max-height: 400px;
 }
 
+.squad-header a {
+  display: none;
+}
+
+.squad-header:hover a {
+  display: inline;
+}
+
 
 
 /**
