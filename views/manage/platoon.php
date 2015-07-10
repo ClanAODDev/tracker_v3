@@ -32,9 +32,10 @@
 
 			<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>">
 				<?php foreach ($members as $member): ?>
+					<?php $rctFlag = (!is_null($leader) && $member->recruiter == $leader->member_id) ? "<sup><i class='fa fa-asterisk text-success'></i></sup>" : NULL; ?>
 					<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
 						<img src="assets/images/grab.svg" class="pull-right" style="width: 8px; opacity: .20;">
-						<?php echo Rank::convert($member->rank_id)->abbr . " " . ucwords($member->forum_name); ?>
+						<?php echo Rank::convert($member->rank_id)->abbr . " " . ucwords($member->forum_name) . $rctFlag; ?>
 					</li>
 				<?php endforeach; ?>
 			</ul>
@@ -68,5 +69,10 @@
 		<?php endif; ?>
 
 	</div>
+
+
+	<hr>
+	<small class="text-muted margin-top-10"><i class='fa fa-asterisk text-success'></i> - Direct recruit</small>
+	
 
 </div>
