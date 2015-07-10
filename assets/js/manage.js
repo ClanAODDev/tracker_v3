@@ -273,8 +273,6 @@ $(function() {
             member_id = $('.modal').attr('data-member-id'),
             loa_id = $('.modal').attr('data-loa-id');
 
-
-
         $.ajax({
             type: "POST",
             url: url,
