@@ -23,7 +23,11 @@
 	<?php if (count($comments)): ?>
 
 		<?php foreach($comments as $comment): ?>
-			<p><?php echo $comment->getBody(); ?></p>		
+			<p>
+				<?php $url = $comment->getUser()->getAvatarUrl(); ?>
+				<?php echo "<img src='$url'/>";?>
+				<?php echo $comment->getBody(); ?>
+			</p>		
 		<?php endforeach; ?>
 
 	<?php else: ?>
