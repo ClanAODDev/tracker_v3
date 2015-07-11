@@ -17,7 +17,7 @@
 			</form>
 			
 		</div>
-		<div class="panel-footer text-muted"><small>Don"t have an account? <a href="./register/">Create one</a>.</small></div>
+		<div class="panel-footer text-muted"><p><small>Don"t have an account? <a href="./register/">Create one</a>.</small></p></div>
 	</div>
 	<div class="msg"></div>
 	<div class="status-text"></div>

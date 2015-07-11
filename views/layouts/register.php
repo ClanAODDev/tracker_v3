@@ -1,6 +1,6 @@
 <div class='container register-form' style='z-index: 5;'>
 	<div class='panel panel-primary' id='register-panel'>
-		<div class='panel-heading text-left'><small><strong>AOD</strong> Leader Registration<i class='fa fa-user pull-right fa-2x'></i></small></div>
+		<div class='panel-heading text-left'><small><strong>AOD</strong> Tracker Registration<i class='fa fa-user pull-right fa-2x'></i></small></div>
 		<div class='panel-body'>
 			<form class='form' role='form' id='register'>  
 				<div class='form-group'>
@@ -23,8 +23,9 @@
 				<button type='submit' class='btn btn-primary register-btn'>Register</button>
 			</form> 
 		</div>
-		<div class='panel-footer text-muted'><small>Your username should be the one you use for the AOD Forums, <strong>without the AOD prefix</strong>.</small></div>
+		<div class='panel-footer text-muted'><p><small>Your username should be the one you use for the AOD Forums, <strong>without the AOD prefix</strong>.</small></p></div>
 	</div>
+	<p class="text-muted"><small><strong>Note:</strong> You must be an active member of a division that is currently supported by this application to create an account.</small></p>
 	<div class='msg'></div>
 	<div class='status-text'></div>
 </div>
