@@ -8,14 +8,25 @@ class SquadController {
 			'platoon_id' => $_POST['platoon_id'], 
 			'leader_id' => $_POST['leader_id']);
 		Squad::create($params);
+
+		// update member position, squad id
+		if ($params['leader_id']) {
+			$params = array('id' => $params['leader_id'], 'position_id' => 5, 'squad_id' => 0);
+			Member::modify($params);
+		}
 	}
 
 	public static function _doModifySquad() {
-		$params = array(
-			'id' => $_POST['squad_id'],
-			'leader_id' => $_POST['leader_id']
-			);
+
+		$params = array('id' => $_POST['squad_id'],	'leader_id' => $_POST['leader_id']);
 		Squad::modify($params);
+
+		// update member position, squad id
+		if ($params['leader_id']) {
+			$params = array('id' => $params['leader_id'], 'position_id' => 5, 'squad_id' => 0);
+			Member::modify($params);
+		}
+
 	}
 
 
