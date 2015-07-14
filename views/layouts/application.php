@@ -46,7 +46,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="./"><img src='assets/images/logo.svg' class='pull-left'  /> <strong class='logo'>AOD</strong> <small>Division Tracker <sup>v2</sup></small></a>
+					<a class="navbar-brand" href="./"><img src='assets/images/logo.svg' class='pull-left'  /> <span class="hidden-sm hidden-xs"><strong class='logo'>AOD</strong> <small>Division Tracker <sup>v2</sup></small></span></a>
 				</div>
 
 				<?php if (User::isLoggedIn()): ?>
