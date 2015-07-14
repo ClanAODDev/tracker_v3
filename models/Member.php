@@ -143,6 +143,11 @@ class Member extends Application {
 		return Flight::aod()->sql($sql)->many();
 	}
 
+	public static function getLastRct() {
+		$params = (object) Flight::aod()->from('Member')->sortDesc('member_id')->where(array('status_id' => 1))->select('member_id')->one();
+		return $params->member_id;
+	}
+
 	public static function create($params) {
 		$member = new self();
 		foreach ($params as $key=>$value) {

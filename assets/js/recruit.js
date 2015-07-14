@@ -23,13 +23,13 @@ $(function() {
              * slide validation
              */
 
-            if (index == 2) {
+             if (index == 2) {
 
                 var forumName = $('#forumname').val(),
-                    battlelog = $('#battlelog').val(),
-                    platoon = $('#platoon').val(),
-                    squad_id = $('#squad_id').val(),
-                    member_id = $('#member_id').val();
+                battlelog = $('#battlelog').val(),
+                platoon = $('#platoon').val(),
+                squad_id = $('#squad_id').val(),
+                member_id = $('#member_id').val();
 
                 $(".progress-bar").attr("class", "bar progress-bar progress-bar-striped progress-bar-warning active");
 
@@ -72,7 +72,7 @@ $(function() {
                 }
 
                 // post member data to db
-                var flag = 0;
+                var flag = {};
                 $.ajax({
                     type: 'POST',
                     url: 'do/validate-member',
@@ -83,22 +83,38 @@ $(function() {
                     async: false,
                     success: function(response) {
                         if (response.success === false) {
+
                             if (response.memberExists === true) {
-                                flag = 0;
-                            }
+                                flag = { error: true, type: 'memberExists' };
+                            } else if (response.invalidId === true) {
+                                flag = { error: true, type: 'invalidId' };
+                            } 
+
                         } else {
-                            flag = 1;
+                            flag = { error: true };
                         }
                     }
                 });
 
                 // have to declare a flag so it's not undefined...
-                if (flag == 0) {
-                    $(".memberid-group").addClass('has-error');
-                    if (confirm("You have entered a member id which already exists. If you are recruiting a player who was previously an AOD member, you can continue. If not, press cancel and verify the forum member id is correct")) {
-                        return true;
-                    } else {
+                console.log(flag);
+                if (flag.error) {
+
+                    if (flag.type == 'memberExists') {
+
+                        $(".memberid-group").addClass('has-error');
+                        if (confirm("You have entered a member id which already exists. If you are recruiting a player who was previously an AOD member, you can continue. If not, press cancel and verify the forum member id is correct")) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+
+                    } else if (flag.type == 'invalidId') {
+
+                        $(".memberid-group").addClass('has-error');
+                        $(".message").html("<i class='fa fa-times'></i> Verify member id. It appears to be invalid.").effect("bounce");
                         return false;
+
                     }
                 }
 
@@ -137,24 +153,24 @@ $(function() {
             // panel titles
             switch (index) {
                 case 0:
-                    $(".tab-title strong").html("Recruiting Introduction")
-                    break;
+                $(".tab-title strong").html("Recruiting Introduction")
+                break;
                 case 1:
-                    $(".tab-title strong").html("Add new member information")
-                    break;
+                $(".tab-title strong").html("Add new member information")
+                break;
                 case 2:
-                    $(".tab-title strong").html("Rules and Regulations Threads")
-                    loadThreadCheck();
-                    break;
+                $(".tab-title strong").html("Rules and Regulations Threads")
+                loadThreadCheck();
+                break;
                 case 3:
-                    $(".tab-title strong").html("Finishing Up With Your Recruit")
-                    break;
+                $(".tab-title strong").html("Finishing Up With Your Recruit")
+                break;
                 case 4:
-                    $(".tab-title strong").html("\"Dreaded Paperwork\"")
-                    break;
+                $(".tab-title strong").html("\"Dreaded Paperwork\"")
+                break;
                 case 5:
-                    $(".tab-title strong").html("Add New Recruit to Division")
-                    break;
+                $(".tab-title strong").html("Add New Recruit to Division")
+                break;
             }
 
             var $total = navigation.find('li').length;
@@ -166,25 +182,25 @@ $(function() {
         }
     });
 
-    $("#storePlayer").click(function(event) {
+$("#storePlayer").click(function(event) {
 
-        event.preventDefault();
-        var forum_name = $('#forumname').val(),
-            battlelog_name = $('#battlelog').val(),
-            platoon = $('#platoon').val(),
-            squad_id = $('#squad_id').val(),
-            division = $('#game').val(),
-            member_id = $('#member_id').val();
+    event.preventDefault();
+    var forum_name = $('#forumname').val(),
+    battlelog_name = $('#battlelog').val(),
+    platoon = $('#platoon').val(),
+    squad_id = $('#squad_id').val(),
+    division = $('#game').val(),
+    member_id = $('#member_id').val();
 
-        var played_games = [];
-        $.each($("input[name='games']:checked"), function() {
-            played_games.push($(this).val());
-        });
-
-        if (member_id != "") {
-            storePlayer(member_id, forum_name, platoon, squad_id, battlelog_name, division, played_games);
-        }
+    var played_games = [];
+    $.each($("input[name='games']:checked"), function() {
+        played_games.push($(this).val());
     });
+
+    if (member_id != "") {
+        storePlayer(member_id, forum_name, platoon, squad_id, battlelog_name, division, played_games);
+    }
+});
 });
 
 
@@ -192,9 +208,9 @@ function loadThreadCheck() {
 
     // setting these here since we know we have them
     var player = $('#forumname').val(),
-        battlelog = $('#battlelog').val(),
-        game = $("#game").val(),
-        member_id = $("#member_id").val(),
+    battlelog = $('#battlelog').val(),
+    game = $("#game").val(),
+    member_id = $("#member_id").val(),
 
         // division structure
         postCode = "Please add:<br />Full-time<br />AOD_Rct_" + ucwords(player) + "<br />http://www.clanaod.net/forums/member.php?u=" + member_id + "<br />http://battlelog.battlefield.com/bf4/user/" + battlelog,
@@ -203,12 +219,12 @@ function loadThreadCheck() {
         // welcome PM -- needs to come from the DB
         welcomeCode = "[b]Congratulations " + ucwords(player) + ", you've been accepted to join AOD![/b] I hope your stay so far has been positive.<br /><br />Here's a couple of key points to get you started and keep you going:<br /><br />[list][*]**Most Important** You'll need to be on Teamspeak any time you are in game. You dont have to be talking to others (we have a quiet room) but we use vent to communicate and organize ourselves.[*]AOD has a military structure. We do not enforce it oppressively, but we do require a minimum level of respect. Check it out here.http://www.clanaod.net/forums/showthread.php?t=3326[*]AOD has a Code of Conduct. The summary is, be respectful of others, they will already be respecting you, otherwise they wouldnt be here. http://www.clanaod.net/forums/showthread.php?t=3327[*]AOD has several games. If you play any of the games AOD supports, make sure you throw on the AOD tags.[*]*** We check the forums periodically for member activity to make sure we aren't carrying dead weight. AOD is a huge clan, and it's important that we clean house periodically. If you feel that you will be absent for any reason, you can request an LOA and your membership status will be maintained. There is LOTS of cool stuff, events, and announcements in the Battlefield 4 forums. ***[*]We like to screenshot when we take each other's tags. We post the screenshots here on our wall of shame. I hope very much to personally add your tags to the wall! =) ... The wall is HERE: http://www.clanaod.net/forums/showthread.php?t=75595[/list]<br /><br />IMPORTANT:<br />Also remember, your forum username will change in a day or so to AOD_" + player + ", so don't panic! It is our way of keeping track of who has been processed in properly, and given access to the member only forums. You will NOT receive an email reminding you of this, however if you need to do a password recovery, it will remind you that your username is not exactly what you registered with.<br /><br />Most importantly, HAVE FUN, and PLAY TOGETHER. Feel free to PM Me, BL Chat me, or pull me aside in Teamspeak if you have ANY questions at all. You can also feel free to contact any other NCO with questions.",
 
-        welcomeCopy = "[b]Congratulations " + ucwords(player) + ", you've been accepted to join AOD![/b] I hope your stay so far has been positive.\r\n\r\nHere's a couple of key points to get you started and keep you going:\r\n\r\n[list][*]**Most Important** You'll need to be on Teamspeak any time you are in game. You dont have to be talking to others (we have a quiet room) but we use teamspeak to communicate and organize ourselves.[*]AOD has a military structure. We do not enforce it oppressively, but we do require a minimum level of respect. Check it out here.http://www.clanaod.net/forums/showthread.php?t=3326[*]AOD has a Code of Conduct. The summary is, be respectful of others, they will already be respecting you, otherwise they wouldnt be here. http://www.clanaod.net/forums/showthread.php?t=3327[*]AOD has several games. If you play any of the games AOD supports, make sure you throw on the AOD tags.[*]*** We check the forums periodically for member activity to make sure we aren't carrying dead weight. AOD is a huge clan, and it's important that we clean house periodically. If you feel that you will be absent for any reason, you can request an LOA and your membership status will be maintained. There is LOTS of cool stuff, events, and announcements in the Battlefield 4 forums. ***[*]We like to screenshot when we take each other's tags. We post the screenshots here on our wall of shame. I hope very much to personally add your tags to the wall! =) ... The wall is HERE: http://www.clanaod.net/forums/showthread.php?t=75595[/list]\r\n\r\nIMPORTANT:\r\nAlso remember, your forum username will change in a day or so to AOD_" + player + ", so don't panic! It is our way of keeping track of who has been processed in properly, and given access to the member only forums. You will NOT receive an email reminding you of this, however if you need to do a password recovery, it will remind you that your username is not exactly what you registered with.\r\n\r\nMost importantly, HAVE FUN, and PLAY TOGETHER. Feel free to PM Me, BL Chat me, or pull me aside in Teamspeak if you have ANY questions at all. You can also feel free to contact any other NCO with questions.";
+welcomeCopy = "[b]Congratulations " + ucwords(player) + ", you've been accepted to join AOD![/b] I hope your stay so far has been positive.\r\n\r\nHere's a couple of key points to get you started and keep you going:\r\n\r\n[list][*]**Most Important** You'll need to be on Teamspeak any time you are in game. You dont have to be talking to others (we have a quiet room) but we use teamspeak to communicate and organize ourselves.[*]AOD has a military structure. We do not enforce it oppressively, but we do require a minimum level of respect. Check it out here.http://www.clanaod.net/forums/showthread.php?t=3326[*]AOD has a Code of Conduct. The summary is, be respectful of others, they will already be respecting you, otherwise they wouldnt be here. http://www.clanaod.net/forums/showthread.php?t=3327[*]AOD has several games. If you play any of the games AOD supports, make sure you throw on the AOD tags.[*]*** We check the forums periodically for member activity to make sure we aren't carrying dead weight. AOD is a huge clan, and it's important that we clean house periodically. If you feel that you will be absent for any reason, you can request an LOA and your membership status will be maintained. There is LOTS of cool stuff, events, and announcements in the Battlefield 4 forums. ***[*]We like to screenshot when we take each other's tags. We post the screenshots here on our wall of shame. I hope very much to personally add your tags to the wall! =) ... The wall is HERE: http://www.clanaod.net/forums/showthread.php?t=75595[/list]\r\n\r\nIMPORTANT:\r\nAlso remember, your forum username will change in a day or so to AOD_" + player + ", so don't panic! It is our way of keeping track of who has been processed in properly, and given access to the member only forums. You will NOT receive an email reminding you of this, however if you need to do a password recovery, it will remind you that your username is not exactly what you registered with.\r\n\r\nMost importantly, HAVE FUN, and PLAY TOGETHER. Feel free to PM Me, BL Chat me, or pull me aside in Teamspeak if you have ANY questions at all. You can also feel free to contact any other NCO with questions.";
 
 
-    if (battlelog) {
-        $(".rank-name").html("AOD_Rct_" + ucwords(battlelog));
-        $(".player-name").html(ucwords(battlelog));
+if (battlelog) {
+    $(".rank-name").html("AOD_Rct_" + ucwords(battlelog));
+    $(".player-name").html(ucwords(battlelog));
 
         // full name copy
         $('.player-name-copy').attr("data-clipboard-text", "AOD_Rct_" + ucwords(battlelog))
