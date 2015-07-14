@@ -97,7 +97,7 @@ class Member extends Application {
 	}
 
 	public static function isOnLeave($member_id) {
-		$params = Flight::aod()->sql("SELECT * FROM loa WHERE `member_id`={$member_id}")->one();
+		$params = LeaveOfAbsence::hasLOA($member_id);
 		if (count($params)) {
 			return true;
 		} else {
