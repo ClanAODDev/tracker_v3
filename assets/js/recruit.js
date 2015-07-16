@@ -120,8 +120,11 @@ $(function() {
                     } else if (flag.type == 'invalidId') {
 
                         $(".memberid-group").addClass('has-error');
-                        $(".message").html("<i class='fa fa-times'></i> Verify member id. It appears to be invalid.").effect("bounce");
-                        return false;
+                        if (confirm("Please verify you entered the correct member id. If you are certain it is correct, select ok. Otherwise, select cancel and correct it.")) {
+                            return true;
+                        } else {
+                            return false;
+                        }
 
                     }
                 }
