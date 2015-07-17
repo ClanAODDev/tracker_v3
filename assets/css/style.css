@@ -396,6 +396,14 @@ h2.pull-right {
   letter-spacing: -5px;
 }
 
+.big-num {
+  font-family: 'dincond-black';
+  font-size: 46px;
+  margin-top: -7px;
+  opacity: .3;
+  color: #999;
+}
+
 .pm-checkbox {
   display: none;
   position: absolute;

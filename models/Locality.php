@@ -17,11 +17,11 @@ class Locality extends Application {
 	 * @return string         the converted string, or if no match is found, the original string
 	 */
 	public static function run($string, $game) {
-		$params = (object) self::find(array('subject %' => '%'.$string.'%', 'game_id' => $game));
+		$params = (object) self::find(array('subject %' => '%'.strtolower($string).'%', 'game_id' => $game));
 		if (property_exists($params, 'replace')) {
-			return str_replace($string, $params->replace, $string);	
+			return ucwords(str_replace($string, $params->replace, $string));	
 		} else {
-			return $string;
+			return ucwords($string);
 		}
 	}
 	
