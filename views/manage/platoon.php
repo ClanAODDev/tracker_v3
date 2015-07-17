@@ -53,17 +53,19 @@
 			</div>
 		<?php endif; ?>
 
+		<?php $unassigned = count((array) $unassignedMembers); ?>
 
-		<?php if (count((array) $unassignedMembers)): ?>
+		<?php if ($unassigned): ?>
 			<div class="col-xs-4 genpop">
-				<h3 class="page-header text-muted"><strong>Unassigned</strong><span class="badge pull-right"><?php echo count((array) $unassignedMembers); ?></span></h3>
+				<h3 class="page-header text-muted"><strong>Unassigned</strong><span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
+
 				<ul class="list-group sortable">
 					<?php foreach ($unassignedMembers as $member): ?>
 						<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
 							<img src="assets/images/grab.svg" class="pull-right" style="width: 8px; opacity: .20;">
 							<?php echo Rank::convert($member->rank_id)->abbr . " " . ucwords($member->forum_name); ?>
 						</li> 
-					<?php endforeach ?>
+					<?php endforeach; ?>
 				</ul>
 			</div>
 		<?php endif; ?>
