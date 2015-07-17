@@ -17,8 +17,7 @@ class Locality extends Application {
 	 * @return string         the converted string, or if no match is found, the original string
 	 */
 	public static function run($string, $game) {
-		$subject = '%' . strtolower(trim($string)) . '%';
-		$params = (object) self::find(array('subject %' => $subject, 'game_id' => $game));
+		$params = (object) self::find(array('subject' => strtolower(trim($string)), 'game_id' => $game));
 		if (property_exists($params, 'replace')) {
 			return ucwords(str_replace($string, $params->replace, $string));	
 		} else {
