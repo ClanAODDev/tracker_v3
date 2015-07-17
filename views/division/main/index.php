@@ -69,9 +69,10 @@
 			</div>
 
 		</div>
-
-
-		<?php echo $statistics ?>
+		
+		<?php if ($division->id == 2): ?>
+			<?php echo $statistics ?>
+		<?php endif; ?>
 
 	</div>
 
