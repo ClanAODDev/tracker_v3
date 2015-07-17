@@ -45,8 +45,6 @@ if ($division) {
 		// 8 "aodrankval",
 		// 9 "aoddivision",
 		// 10 "aodstatus"
-		
-		var_dump($json);die;
 
 		if (count($json->column_order) == 11 && ($json->column_order[0] == 'userid') && ($json->column_order[10] == 'aodstatus')) {
 
