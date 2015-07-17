@@ -28,7 +28,7 @@ class Division extends Application {
 	}
 
 	public static function findDivisionLeaders($gid) {
-		$sql = "SELECT member.id, member.member_id, member.forum_name, rank.abbr as rank, member.battlelog_name, position.desc as position_desc FROM member LEFT JOIN rank on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE position_id IN (1,2) AND member.game_id = {$gid}";
+		$sql = "SELECT member.id, member.member_id, member.forum_name, rank.abbr as rank, member.battlelog_name, position.desc as position_desc FROM member LEFT JOIN rank on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE position_id IN (1,2) AND member.game_id = {$gid} ORDER BY position_id ASC";
 		$params = Flight::aod()->sql($sql)->many();
 		return arrayToObject($params);
 	}
