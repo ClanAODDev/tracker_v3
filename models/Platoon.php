@@ -50,8 +50,7 @@ class Platoon extends Application {
 	}
 
 	public static function members($platoon_id) {
-		$sql = "SELECT member.forum_name, member.member_id,  position.desc as position_desc, position.id as position_id, member.battlelog_name, member.rank_id, rank.abbr as rank, join_date, last_forum_login, last_forum_post, last_activity, forum_posts FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id} AND position_id NOT IN (3,2,1) ORDER BY member.rank_id DESC";
-		$params = Flight::aod()->sql($sql)->many();
+		$params = Member::find_each(array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999)));
 		return $params;
 	}
 

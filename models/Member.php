@@ -63,10 +63,9 @@ class Member extends Application {
 	}
 
 	public static function profileData($member_id) {
-		return (object) Flight::aod()->sql("SELECT member.id, forum_name, member.member_id, battlelog_name, rank_id, platoon_id, position_id, squad_id, status_id, game_id, join_date, recruiter, last_forum_login, last_activity, member.game_id, last_forum_post, forum_posts, status.desc FROM member 
+		return (object) Flight::aod()->sql("SELECT member.id, forum_name, member.member_id, battlelog_name, rank_id, platoon_id, position_id, squad_id, status_id, game_id, join_date, recruiter, last_forum_login, last_activity, member.game_id, last_forum_post, forum_posts FROM member 
 			LEFT JOIN users ON users.member_id = member.id 
-			LEFT JOIN divisions ON divisions.id = member.game_id
-			LEFT JOIN status ON status.id = member.status_id WHERE member.member_id = {$member_id}")->one();
+			LEFT JOIN divisions ON divisions.id = member.game_id")->one();
 	}
 
 	public static function findForumName($member_id) {

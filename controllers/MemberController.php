@@ -11,7 +11,7 @@ class MemberController {
 		$platoons = Platoon::find_all($member->game_id);
 
 		// profile data
-		$memberInfo = Member::profileData(intval($id));
+		$memberInfo = Member::findByMemberId(intval($id));
 
 		if (property_exists($memberInfo, 'id')) {
 

@@ -28,8 +28,14 @@
 					<td class='text-center col-hidden'><?php echo $member->rank_id ?></td>
 					<td class='text-center col-hidden'><?php echo $member->last_activity ?></td>
 
-					<td><em><span class='<?php echo $position->class ?>' title='<?php echo $position->desc ?>'><i class='<?php echo $position->icon ?>'></i> <?php echo $member->forum_name ?></span></em></td>
-					
+					<?php if (property_exists($position, 'id')): ?>
+						<?php echo $position->id; ?>
+						<td><em><span class='<?php echo $position->class ?>' title='<?php echo Locality::run($position->desc, $member->game_id); ?>'><i class='<?php echo $position->icon ?>'></i> <?php echo $member->forum_name ?></span></em></td>
+						<?php var_dump(Flight::aod()->last_query);  ?>
+					<?php else: ?>
+						<td><em><?php echo $member->forum_name ?></span></em></td>
+					<?php endif; ?>
+
 					<td class='text-center hidden-xs hidden-sm'><?php echo Rank::convert($member->rank_id)->abbr; ?></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo date('m-d-y', strtotime($member->join_date)); ?></td>
 					<td class='text-center text-<?php echo lastSeenColored($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
