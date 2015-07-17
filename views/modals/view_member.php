@@ -2,7 +2,7 @@
 
 <div class='modal-header'>
 	<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button>
-	<h4 class='modal-title'>Editing <strong><?php echo $member->rank . " " . $member->forum_name ?></strong></h4>
+	<h4 class='modal-title'>Editing <strong><?php echo Rank::convert($member->rank_id)->abbr . " " . $member->forum_name ?></strong></h4>
 </div>
 
 <input type='hidden' id='cur_platoon_id' name='cur_platoon_id' value='<?php echo $member->platoon_id ?>' />
