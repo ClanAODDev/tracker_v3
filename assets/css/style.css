@@ -51,7 +51,7 @@
  }
 
  body {
-  background: #fcfcfc url("../images/bg.jpg") 50% 95% no-repeat fixed;
+  background: #fcfcfc url("../images/bg.jpg") 50% no-repeat fixed;
 }
 
 .danger {
