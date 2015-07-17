@@ -28,7 +28,7 @@
 		<?php $squad_width = (count((array) $unassignedMembers)) ? 4 : 6; ?>
 
 		<div class="col-xs-<?php echo $squad_width ?>">
-			<h3 class="page-header squad-header"><strong><?php echo ordsuffix($i); ?> Squad</strong> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-sm btn-default modify-squad"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
+			<h3 class="page-header squad-header"><strong><?php echo ordsuffix($i); ?> <?php echo Locality::run('Squad', $division->id); ?></strong> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-sm btn-default modify-squad"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
 			<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>" data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>">
 				<?php foreach ($members as $member): ?>
@@ -47,8 +47,8 @@
 
 		<?php if ($i < (MAX_SQUADS_IN_PLT + 1)): ?>
 			<div class="col-xs-4">
-				<h3 class="page-header text-muted"><strong>New Squad</strong></h3>
-				<p>This platoon has less than the maximum number of squads (<?php echo MAX_SQUADS_IN_PLT ?>) allowed. Would you like to add a new squad?</p><p><a data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>" class="btn btn-success center-block create-squad" href="create/squad"><i class="fa fa-plus"></i> Create new squad</a></p>
+				<h3 class="page-header text-muted"><strong>New <?php echo Locality::run('Squad', $division->id); ?></strong></h3>
+				<p>Would you like to add a new <?php echo Locality::run('Squad', $division->id); ?>?</p><p><a data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>" class="btn btn-success center-block create-squad" href="create/squad"><i class="fa fa-plus"></i> Add</a></p>
 
 			</div>
 		<?php endif; ?>

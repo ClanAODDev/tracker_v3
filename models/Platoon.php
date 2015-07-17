@@ -65,22 +65,8 @@ class Platoon extends Application {
 			);
 	}
 
-
-	public static function GeneralPop($platoon_id, $order_by_rank = false) {
-		$sql = "SELECT member.id, member.forum_name, member.member_id, member.last_activity, member.battlelog_name, member.rank_id, rank.abbr as rank FROM `member` LEFT JOIN `rank` on member.rank_id = rank.id WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
-
-		if ($order_by_rank) {
-			$sql .= " ORDER BY member.rank_id DESC, member.join_date ASC ";
-		} else {
-			$sql .= " ORDER BY member.last_activity ASC ";
-		}
-
-		$params = Flight::aod()->sql($sql)->many();
-		return arrayToObject($params);
-	}
-
 	public static function unassignedMembers($platoon_id) {
-		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999), 'squad_id' => 0, 'position_id >' => 5, 'position_id !%' => 8);
+		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999), 'squad_id' => 0, 'position_id @' => array(6,7));
 		return arrayToObject(Flight::aod()->from('member')->where($conditions)->SortDesc('rank_id')->many());
 	}
 
