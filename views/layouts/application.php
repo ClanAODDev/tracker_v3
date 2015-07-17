@@ -132,7 +132,6 @@
 										<li class="dropdown-submenu"><a href='divisions/<?php echo $division->short_name ?>'><?php echo $division->full_name ?></a>
 											<?php if ((array) count($platoons)): ?>
 												<ul class="dropdown-menu">
-
 													<?php foreach ($platoons as $platoonLink) : ?>
 														<li><a href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoonLink->number ?>"><?php echo $platoonLink->name; ?></a></li>
 													<?php endforeach; ?>	

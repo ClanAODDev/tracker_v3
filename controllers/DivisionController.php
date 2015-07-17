@@ -8,18 +8,22 @@ class DivisionController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
-		$division_leaders = Division::findDivisionLeaders($division->id);
 
-		$topListMonthly = Activity::topList30DaysByDivision($division->id);
-		$topListToday = Activity::topListTodayByDivision($division->id);
+		if (property_exists($division, 'id')) {
+			
+			$division_leaders = Division::findDivisionLeaders($division->id);
+			$topListMonthly = Activity::topList30DaysByDivision($division->id);
+			$topListToday = Activity::topListTodayByDivision($division->id);
+			$personnelData = new stdClass();
+			$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
+			$personnelData->totalCount = Division::totalCount($division->id)->count;
 
-		$personnelData = new stdClass();
-		$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
-		$personnelData->totalCount = Division::totalCount($division->id)->count;
-
-		Flight::render('division/main/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday, 'personnelData' => $personnelData), 'statistics');
-		Flight::render('division/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders), 'content');
-		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'division'));
+			Flight::render('division/main/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday, 'personnelData' => $personnelData), 'statistics');
+			Flight::render('division/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders), 'content');
+			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'division'));
+		} else {
+			Flight::redirect('/404', 404);
+		}
 	}
 
 	public static function _manage_inactives() {
