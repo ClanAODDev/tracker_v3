@@ -55,7 +55,7 @@ class MemberController {
 	public static function _edit() {
 
 		$user = User::find(intval($_SESSION['userid']));
-		$member = Member::profileData($_POST['member_id']);
+		$member = Member::findByMemberId($_POST['member_id']);
 		$platoons = Platoon::find_all($member->game_id);
 
 		// if user role lower than plt ld, show only own platoon's squads
@@ -84,7 +84,7 @@ class MemberController {
 
 		// member being changed
 		$memberData = $_POST['memberData'];
-		$member = Member::profileData($memberData['member_id']);
+		$member = Member::findByMemberId($memberData['member_id']);
 		$user = User::findByMemberId(Member::findId($memberData['member_id']));
 
 		// only update values allowed by role

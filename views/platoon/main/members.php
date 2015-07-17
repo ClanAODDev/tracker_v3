@@ -1,5 +1,5 @@
 <div class='panel panel-default'>
-	<div class='panel-heading'><div class='download-area hidden-xs'></div>Platoon members (last 30 days)<span></span></div>
+	<div class='panel-heading'><div class='download-area hidden-xs'></div>Members (last 30 days)<span></span></div>
 	<div class='panel-body border-bottom'><div id='playerFilter'></div>
 </div> 
 
