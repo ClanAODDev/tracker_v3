@@ -335,7 +335,7 @@ function memberColor($user, $level)
 
 
 function average($array) {
- return array_sum($array) / count($array);
+   return array_sum($array) / count($array);
 }
 
 
