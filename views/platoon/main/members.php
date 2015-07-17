@@ -27,7 +27,7 @@
 					<td class='text-center col-hidden'><?php echo $member->rank_id ?></td>
 					<td class='text-center col-hidden'><?php echo $member->last_activity ?></td>
 					<td><em><?php echo memberColor(ucwords($member->forum_name), $member->position_id); ?></em></td>
-					<td class='text-center hidden-xs hidden-sm'><?php echo $member->rank ?></td>
+					<td class='text-center hidden-xs hidden-sm'><?php echo Rank::convert($member->rank_id)->abbr; ?></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo date('m-d-y', strtotime($member->join_date)); ?></td>
 					<td class='text-center text-<?php echo lastSeenColored($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
 
