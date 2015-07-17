@@ -21,7 +21,7 @@ if ($division) {
 		$auth_code = md5($cur_minute . $cred);
 
 		$json_url = "http://www.clanaod.net/forums/aodinfo.php?type=json&division=Battlefield&authcode={$auth_code}";
-		$agent = "AOD Squad Tracking Tool";
+		$agent = "AOD Division Tracking Tool";
 
 		$ch = curl_init();
 
@@ -63,7 +63,6 @@ if ($division) {
 				$aodrankval = $column[8]-2; 
 				$aoddivision = convertDivision($column[9]);
 				$aodstatus = convertStatus($column[10]);
-
 
 				global $pdo;
 				$currentMembers[$username] = $memberid;

@@ -39,6 +39,10 @@ function convertDivision($division) {
 		$id = 2;
 		break;
 
+		case "wargaming":
+		$id = 3;
+		break;
+
 	}
 	return $id;
 }
