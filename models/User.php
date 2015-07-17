@@ -65,8 +65,7 @@ class User extends Application {
 	public static function canEdit($mid, $user, $member)
 	{
 
-		$sql = "SELECT id, platoon_id, squad_leader_id, game_id FROM member WHERE member_id = {$mid}";
-		$player = arrayToObject(Flight::aod()->sql($sql)->one());
+		$player = Member::findByMemberId($mid);
 
     	// is the user the assigned squad leader?
 		if (($user->role == 1) && ($member->member_id == $player->squad_leader_id)) {

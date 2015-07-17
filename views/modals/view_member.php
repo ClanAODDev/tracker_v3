@@ -55,21 +55,21 @@
 					<div class="margin-top-20"></div>			
 					<form id='div-form'>
 						<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
-							<label for='platoon_id' class='control-label'>Platoon</label>
+							<label for='platoon_id' class='control-label'><?php echo Locality::run('Platoon', $member->game_id); ?></label>
 							<select name='platoon_id' id='platoon_id' class='form-control'>
 								<?php if (count(Platoon::countPlatoons())) : ?>
 									<?php foreach($platoons as $platoon) : ?>
 										<option value='<?php echo $platoon->id ?>'><?php echo $platoon->name ?></option>
 									<?php endforeach; ?>
 								<?php else : ?>
-									<option>No platoons exist.</option>
+									<option>No <?php echo Locality::run('platoons', $member->game_id); ?> exist.</option>
 								<?php endif; ?>
 								<option value='0' selected>None (General Sergeant or Division Leader)</option>
 							</select>
 						</div>
 
 						<div class='form-group sqdldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
-							<label for='squad_id' class='control-label'>Squad</label>
+							<label for='squad_id' class='control-label'><?php echo Locality::run('squad', $member->game_id); ?></label>
 							<select name='squad_id' id='squad_id' class='form-control'>
 
 								<?php if (count(Division::countSquadLeaders($member->game_id))) : ?>

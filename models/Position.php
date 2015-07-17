@@ -3,12 +3,17 @@
 class Position extends Application {
 	public $id;
 	public $desc;
-	public $abbr;
+	public $icon;
+	public $class;
 
 	static $id_field = 'id';
 	static $table = 'position';
 	
 	public static function find_all() {
 		return self::fetch_all();
+	}
+
+	public static function convert($id) {
+		return self::find($id);
 	}
 }

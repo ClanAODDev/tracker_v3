@@ -12,11 +12,11 @@
 			<?php echo Member::avatar($memberInfo->member_id, 'large'); ?></div>
 
 			<div class='col-xs-5'>
-				<h2><strong><?php echo $memberInfo->rank . " " . $memberInfo->forum_name; ?></strong>
+				<h2><strong><?php echo Rank::convert($memberInfo->rank_id)->abbr . " " . $memberInfo->forum_name; ?></strong>
 					<span class="games_played">
 						<?php if (count($gamesPlayed)): $gamesPlayed = arrayToObject($gamesPlayed);?>
 							<?php foreach($gamesPlayed as $game): ?>
-								<sup><img class="img-circle" title="<?php echo $game->full_name ?>" src="assets/images/game_icons/tiny/<?php echo $game->short_name ?>.png" /></sup>
+								<sup><img class="img-circle" title="<?php echo $game->full_name ?>" src="assets/images/game_icons/16x16/<?php echo $game->short_name ?>.png" /></sup>
 							<?php endforeach; ?>					
 						<?php endif; ?>
 					</span>

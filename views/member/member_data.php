@@ -4,7 +4,7 @@
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Status: </strong></span> <span class='text-muted'><?php echo $memberInfo->desc ?></span></li>
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Division: </strong></span> <span class='text-muted'><?php echo $divisionInfo->full_name ?></span></li>
 		<?php echo (property_exists($platoonInfo, 'item')) ? $platoonInfo->item : NULL; ?>
-		<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo $memberInfo->position ?></span></li>
+		<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo Position::convert($memberInfo->position_id)->desc ?></span></li>
 		<?php $squadleader = (property_exists($memberInfo, 'squad_leader_id')) ? $memberInfo->squad_leader_id : NULL; ?>
 
 		<?php if ($squadleader != 0) : ?>
