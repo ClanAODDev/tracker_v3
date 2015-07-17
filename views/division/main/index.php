@@ -10,7 +10,7 @@
 			
 			<h2>
 
-				<strong><img src='assets/images/game_icons/large/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong>
+				<strong><img src='assets/images/game_icons/48x48/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong>
 
 				<?php if ($user->role >= 3 || User::isDev()) : ?>
 					<div class="btn-group pull-right">

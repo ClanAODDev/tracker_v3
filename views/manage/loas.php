@@ -6,7 +6,7 @@
 
 
 	<div class='page-header'>
-		<h1><strong>Manage</strong> <small>Leaves of Absence</small><img class='pull-right' src='assets/images/game_icons/large/<?php echo $division->short_name ?>.png'/></h1>
+		<h1><strong>Manage</strong> <small>Leaves of Absence</small><img class='pull-right' src='assets/images/game_icons/48x48/<?php echo $division->short_name ?>.png'/></h1>
 	</div>
 
 	<?php if (LeaveOfAbsence::count_expired($division->id) > 0) : ?>

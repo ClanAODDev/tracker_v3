@@ -9,7 +9,7 @@
 	<div class="row page-header">
 
 		<div class="col-xs-7 platoon-name">
-			<h2><img src="assets/images/game_icons/large/<?php echo $division->short_name ?>.png" /> <strong><?php echo $platoon->name ?></strong> <small class="platoon-number"><?php echo ordSuffix($plt); ?> Platoon</small></h2>
+			<h2><img src="assets/images/game_icons/48x48/<?php echo $division->short_name ?>.png" /> <strong><?php echo $platoon->name ?></strong> <small class="platoon-number"><?php echo ordSuffix($plt); ?> Platoon</small></h2>
 		</div>
 
 		<div class="col-xs-5">
