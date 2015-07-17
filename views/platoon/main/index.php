@@ -9,7 +9,7 @@
 	<div class="row page-header">
 
 		<div class="col-xs-7 platoon-name">
-			<h2><img src="assets/images/game_icons/48x48/<?php echo $division->short_name ?>.png" /> <strong><?php echo $platoon->name ?></strong> <small class="platoon-number"><?php echo ordSuffix($plt); ?> Platoon</small></h2>
+			<h2><img src="assets/images/game_icons/48x48/<?php echo $division->short_name ?>.png" /> <strong><?php echo $platoon->name ?></strong> <small class="platoon-number"><?php echo ordSuffix($plt); ?> <?php echo Locality::run('Platoon', $division->id); ?></small></h2>
 		</div>
 
 		<div class="col-xs-5">
@@ -20,7 +20,7 @@
 					<?php if ($member->platoon_id == $platoon->id || $user->role > 2 || User::isDev()): ?>
 						<a class="btn btn-default" href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoon->number ?>/manage"><i class="fa fa-users"></i> Manage</a>
 					<?php endif; ?>
-					<a class="btn btn-default send-pm disabled" data-members="<?php echo implode(",", $memberIdList); ?>" href="<?php echo PRIVMSG; ?>" target="_blank"><i class="fa fa-comment"></i> Send Platoon PM</a>
+					<a class="btn btn-default send-pm disabled" data-members="<?php echo ($memberIdList) ? implode(",", $memberIdList) : NULL; ?>" href="<?php echo PRIVMSG; ?>" target="_blank"><i class="fa fa-comment"></i> Send Platoon PM</a>
 				</div>
 
 			<?php endif; ?>

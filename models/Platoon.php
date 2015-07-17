@@ -122,8 +122,12 @@ class Platoon extends Application {
 	public static function memberIdsList($platoon_id) {
 		$sql = "SELECT member_id FROM member WHERE platoon_id = {$platoon_id} AND status_id IN (1, 999)";
 		$params = Flight::aod()->sql($sql)->many();
-		foreach ($params as $member) { $memberIds[] = intval($member['member_id']); }
-		return $memberIds;
+		if (count($params)) {
+			foreach ($params as $member) { $memberIds[] = intval($member['member_id']); }
+			return $memberIds;	
+		} else {
+			return false;
+		}		
 	}
 
 	public static function modify($params) {

@@ -4,11 +4,11 @@
 	</div>
 </div>
 
-<div class='panel panel-primary'>
+<!-- <div class='panel panel-primary'>
 	<div class='panel-heading'>Percentage AOD Games</div>
-	<div class='panel-body count-detail-big follow-tool striped-bg' title='<center><strong>AOD Games</strong><br /><?php echo $gameStats->AOD . " out of " . $gameStats->total; ?></center>'><span class='count-animated percentage'><?php echo $gameStats->pct; ?>%</span>
+	<div class='panel-body count-detail-big follow-tool striped-bg' title='<center><strong>AOD Games</strong><br /><?php //echo $gameStats->AOD . " out of " . $gameStats->total; ?></center>'><span class='count-animated percentage'><?php // echo $gameStats->pct; ?>%</span>
 	</div>
-</div>
+</div> -->
 
 <!-- show squad if squad leader in platoon being viewed
 <div class='panel panel-default'>

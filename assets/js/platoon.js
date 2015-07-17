@@ -25,12 +25,12 @@
                 "searchable": false
             }, {
                 // sort rank by rank id
-                "iDataSort": 6,
-                "aTargets": [1]
+                "iDataSort": 0,
+                "aTargets": [3]
             }, {
                 // sort activity by last login date
-                "iDataSort": 7,
-                "aTargets": [3]
+                "iDataSort": 1,
+                "aTargets": [5]
             }],
             stateSave: true,
             paging: false,

@@ -20,12 +20,14 @@ class PlatoonController {
 			$bdate = date("Y-m-d", strtotime("now - 30 days"));
 			$edate = date("Y-m-d", strtotime("now"));
 
-			$gameStats = arrayToObject(Platoon::gameStats($platoonId, $bdate, $edate));
+			//$gameStats = arrayToObject(Platoon::gameStats($platoonId, $bdate, $edate));
 
-			Flight::render('platoon/main/statistics', array('platoon' => $platoon, 'gameStats' => $gameStats), 'statistics');
-			Flight::render('platoon/main/members', array('members' => $members, 'js' => 'platoon', 'bdate' => $bdate, 'edate' => $edate), 'membersTable');
+			Flight::render('platoon/main/statistics', array('platoon' => $platoon), 'statistics');
+			Flight::render('platoon/main/members', array('division' => $division, 'members' => $members, 'js' => 'platoon', 'bdate' => $bdate, 'edate' => $edate), 'membersTable');
 			Flight::render('platoon/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'platoon' => $platoon, 'memberIdList' => $memberIdList, 'plt' => $plt, 'div' => $division->id, 'members' => $members, 'platoonId' => $platoonId), 'content');
 			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+
+
 
 		} else {
 
