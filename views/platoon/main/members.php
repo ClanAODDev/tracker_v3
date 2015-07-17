@@ -29,7 +29,6 @@
 					<td class='text-center col-hidden'><?php echo $member->last_activity ?></td>
 
 					<?php if (property_exists($position, 'id')): ?>
-						<?php echo $position->id; ?>
 						<td><em><span class='<?php echo $position->class ?>' title='<?php echo Locality::run($position->desc, $member->game_id); ?>'><i class='<?php echo $position->icon ?>'></i> <?php echo $member->forum_name ?></span></em></td>
 					<?php else: ?>
 						<td><em><?php echo $member->forum_name ?></span></em></td>
