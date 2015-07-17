@@ -20,7 +20,7 @@ if ($division) {
 		$cur_minute = floor(time()/60)*60;
 		$auth_code = md5($cur_minute . $cred);
 
-		$json_url = "http://www.clanaod.net/forums/aodinfo.php?type=json&division=Battlefield&authcode={$auth_code}";
+		$json_url = "http://www.clanaod.net/forums/aodinfo.php?type=json&division={$division}&authcode={$auth_code}";
 		$agent = "AOD Division Tracking Tool";
 
 		$ch = curl_init();
