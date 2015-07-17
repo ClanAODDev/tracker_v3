@@ -23,10 +23,13 @@
 		<tbody>
 
 			<?php foreach ($members as $member) : ?>
+				<?php $position = Position::convert($member->position_id); ?>
 				<tr title='Click to view profile' data-id='<?php echo $member->member_id; ?>'>
 					<td class='text-center col-hidden'><?php echo $member->rank_id ?></td>
 					<td class='text-center col-hidden'><?php echo $member->last_activity ?></td>
-					<td><em><?php echo memberColor(ucwords($member->forum_name), $member->position_id); ?></em></td>
+
+					<td><em><span class='<?php echo $position->class ?>' title='<?php echo $position->desc ?>'><i class='<?php echo $position->icon ?>'></i> <?php echo $member->forum_name ?></span></em></td>
+					
 					<td class='text-center hidden-xs hidden-sm'><?php echo Rank::convert($member->rank_id)->abbr; ?></td>
 					<td class='text-center hidden-xs hidden-sm'><?php echo date('m-d-y', strtotime($member->join_date)); ?></td>
 					<td class='text-center text-<?php echo lastSeenColored($member->last_activity); ?>'><?php echo formatTime(strtotime($member->last_activity)); ?></td>
