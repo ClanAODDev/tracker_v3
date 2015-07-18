@@ -49,7 +49,12 @@ class Platoon extends Application {
 	}
 
 	public static function members($platoon_id) {
-		$params = Member::find_each(array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999)));
+		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999));
+		$params = Flight::aod()->from('member')
+		->join('position', array('position.id' => 'member.position_id'))
+		->sortAsc('position.sort_order')
+		->where($conditions)
+		->select()->many();
 		return $params;
 	}
 

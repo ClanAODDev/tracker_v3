@@ -93,7 +93,7 @@
 							<label for='position_id' class='control-label'>Position</label>
 							<select name='position_id' id='position_id' class='form-control'>
 								<?php foreach ($positionsArray as $position) : ?>
-									<option value='<?php echo $position->id ?>'><?php echo $position->desc ?></option>
+									<option value='<?php echo $position->id ?>'><?php echo Locality::run($position->desc, $member->game_id); ?></option>
 								<?php endforeach; ?>
 							</select> 
 						</div>

@@ -52,8 +52,9 @@ class Application {
 		return self::find_each(array('active' => 1));
 	}
 	
-	public static function fetch_all() {
-		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->find();
+	public static function fetch_all($sort=false) {
+		if ($sort) $sort = " ORDER BY sort_order";
+		$results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table." {$sort}")->find();
 		return is_object($results) ? array($results) : $results;
 	} 
 
