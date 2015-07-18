@@ -72,8 +72,8 @@ class Platoon extends Application {
 	public static function forumActivity($platoon_id) {
 		$conditions = "status_id IN (1,3,999) AND platoon_id = {$platoon_id}";		
 		$underTwoWeeks = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -2 WEEK) AND CURDATE();')->one();
-		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -4 WEEK) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
-		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL -4 WEEK)')->one();
+		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
+		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL 30 DAY)')->one();
 		$data = new stdClass();
 		$data->underTwoWeeks = $underTwoWeeks['count'];
 		$data->twoWeeksMonth = $twoWeeksMonth['count'];
