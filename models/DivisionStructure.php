@@ -110,11 +110,6 @@ class DivisionStructure {
 			}
 
 
-
-
-
-
-
     		// squad leaders
 			$squads = Squad::findAll($game_id, $platoon->id);
 
@@ -169,30 +164,6 @@ class DivisionStructure {
 
 			$division_structure .= "\r\n\r\n";
 			$division_structure .= "[/td]";
-
-
-
-
-			/**
-	         * ----general population-----
-	         */
-
-
-			/* -- removing gen pop
-			
-			$genpop = Platoon::GeneralPop($platoon->id, true);
-			$division_structure .= "[size=3][color={$platoon_pos_color}]Members[/color][/size]\r\n[size=1]";
-
-			foreach ($genpop as $player) {
-				$games = self::getIcons(MemberGame::getGamesPlayed($player->id));
-				$bl_url = "[url=" . BATTLELOG . $player->battlelog_name. "]{$games}[/url]";
-				$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
-				$division_structure .= "{$aod_url}{$player->rank} {$player->forum_name}[/url] {$bl_url}\r\n";
-			}
-
-	
-
-			*/
 
 			$i++;
 		}
