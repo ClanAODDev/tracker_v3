@@ -29,7 +29,7 @@
 						<?php $leader_name = (!is_null($leader)) ? $leader->forum_name : "TBA"; ?>
 						<?php $members = Squad::members($squad->id); ?>
 
-						<div class="col-xs-6">
+						<div class="col-xs-12">
 							<h3 class="page-header squad-header"><?php echo ordsuffix($i); ?> <?php echo Locality::run('Squad', $division->id); ?> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-xs btn-default modify-squad" style="position: absolute; left: 15px;"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
 							<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>" data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>">
@@ -71,16 +71,18 @@
 					<?php $unassigned = count((array) $unassignedMembers); ?>
 					<?php if ($unassigned): ?>
 						<div class="col-xs-12 genpop">
-							<h3 class="page-header text-muted"><strong>Unassigned</strong><span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
+						<div data-spy="affix" data-offset-bottom="-270" data-offset-top="0" style="position: fixed; width: 20%;">
+								<h3 class="page-header text-muted"><strong>Unassigned</strong><span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
 
-							<ul class="list-group sortable">
-								<?php foreach ($unassignedMembers as $member): ?>
-									<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
-										<img src="assets/images/grab.svg" class="pull-right" style="width: 8px; opacity: .20;">
-										<?php echo Rank::convert($member->rank_id)->abbr . " " . ucwords($member->forum_name); ?>
-									</li> 
-								<?php endforeach; ?>
-							</ul>
+								<ul class="list-group sortable" style="max-height: 600px; overflow-y: scroll;">
+									<?php foreach ($unassignedMembers as $member): ?>
+										<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
+											<img src="assets/images/grab.svg" class="pull-right" style="width: 8px; opacity: .20;">
+											<?php echo Rank::convert($member->rank_id)->abbr . " " . ucwords($member->forum_name); ?>
+										</li> 
+									<?php endforeach; ?>
+								</ul>
+							</div>
 						</div>
 					<?php endif; ?>
 				</div>
