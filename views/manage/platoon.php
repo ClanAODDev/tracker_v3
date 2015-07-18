@@ -74,7 +74,7 @@
 						<div class="sticky-box" style="position:fixed; width: 19%;">
 								<h3 class="page-header text-muted">Unassigned<span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
 
-								<ul class="list-group sortable" style="max-height: 600px; overflow-y: auto;">
+								<ul class="list-group sortable" style="max-height: 400px; overflow-y: auto;">
 									<?php foreach ($unassignedMembers as $member): ?>
 										<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
 											<img src="assets/images/grab.svg" class="pull-right" style="width: 8px; opacity: .20;">
