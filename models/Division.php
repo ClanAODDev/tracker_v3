@@ -65,7 +65,7 @@ class Division extends Application {
 	}
 
 	public static function totalCount($game_id) {
-		$sql = "SELECT count(*) as count FROM member WHERE member.game_id = {$game_id} AND status_id IN (1,2,3,999)";
+		$sql = "SELECT count(*) as count FROM member WHERE member.game_id = {$game_id} AND status_id IN (1,3,999)";
 		return arrayToObject(Flight::aod()->sql($sql)->one());
 	}
 

@@ -404,6 +404,14 @@ h2.pull-right {
   color: #999;
 }
 
+.big-num-main {
+  font-family: 'dincond-black';
+  font-size: 46px;
+  margin-top: -40px;
+  opacity: .2;
+  color: #999;
+}
+
 .pm-checkbox {
   display: none;
   position: absolute;
