@@ -7,7 +7,7 @@
 <div class='panel panel-primary'>
 	<div class='panel-heading'>Forum Activity</div>
 	<div class='panel-body striped-bg'>
-		<div id="activity" style="width: 300px; height: 300px; margin: 0 auto;"></div>
+		<div id="activity" style="width: 300px; height: 300px; margin: 0 auto; -webkit-filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"></div>
 	</div>
 </div>
 
