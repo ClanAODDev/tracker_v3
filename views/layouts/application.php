@@ -22,6 +22,7 @@
 	<link href="//cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css" rel="stylesheet">	
 	<link href="assets/css/jquery.dataTables.css" rel="stylesheet">
 	<link href="assets/css/dataTables.tableTools.css" rel="stylesheet">
+	<link href="assets/css/chartist.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 </head>
@@ -203,6 +204,7 @@
 	<script src="assets/js/libraries/bootstrap-multiselect.js"></script>
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/libraries/touchpunch.js"></script>
+	<script src="assets/js/libraries/chartist.min.js"></script>
 	<script src="assets/js/main.js"></script>
 
 	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>
