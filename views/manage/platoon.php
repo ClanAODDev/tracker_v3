@@ -71,7 +71,7 @@
 					<?php $unassigned = count((array) $unassignedMembers); ?>
 					<?php if ($unassigned): ?>
 						<div class="col-xs-12 genpop">
-						<div data-spy="affix" data-offset-bottom="-270" data-offset-top="0" style="position: fixed; width: 20%;">
+						<div class="sticky-box" style="position:fixed; width: 20%;">
 								<h3 class="page-header text-muted"><strong>Unassigned</strong><span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
 
 								<ul class="list-group sortable" style="max-height: 600px; overflow-y: scroll;">
