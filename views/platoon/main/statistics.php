@@ -19,15 +19,15 @@
 	function drawChart() {
 		var data = google.visualization.arrayToDataTable([
 			['Players', 'Forum Activity'],
-			['Less than two weeks', <?php echo $activity->underTwoWeeks ?>],
-			['More than 2 weeks', <?php echo $activity->twoWeeksMonth ?>],
-			['Inactive', <?php echo $activity->oneMonth ?>]
+			['< 2 weeks', <?php echo $activity->underTwoWeeks ?>],
+			['> 2 weeks', <?php echo $activity->twoWeeksMonth ?>],
+			['> 1 month', <?php echo $activity->oneMonth ?>]
 			]);
 
 		var options = {
 			is3D: true,
 			position: 'labeled',
-			legend: {position: 'none'},
+			legend: {position: 'bottom'},
 			backgroundColor: { fill:'transparent' },
 			colors: ['#28b62c', '#ff851b', '#ff4136'],
 			width:300,
