@@ -432,18 +432,17 @@ $(function() {
         windowOpener(pm_url, "Mass PM", "width=900,height=600,scrollbars=yes");
     });
 
-    
-    var stickyElement = '.sticky-box', 
-        bottomElement = '#footer .navbar'; 
-    
+
+    var stickyElement = '.sticky-box',
+        bottomElement = '#footer .navbar';
+
     if ($(stickyElement).length) {
         $(stickyElement).each(function() {
 
-            
             var fromTop = $(this).offset().top,
                 fromBottom = $(document).height() - ($(this).offset().top + $(this).outerHeight()),
                 stopOn = $(document).height() - ($(bottomElement).offset().top) + ($(this).outerHeight() - $(this).height());
-            
+
             if ((fromBottom - stopOn) > 200) {
                 $(this).css('width', $(this).width()).css('top', 0).css('position', '');
                 $(this).affix({
@@ -455,7 +454,7 @@ $(function() {
                     $(this).css('top', 0).css('position', '');
                 });
             }
-            
+
             $(window).trigger('scroll');
         });
     }
