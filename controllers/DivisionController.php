@@ -18,7 +18,7 @@ class DivisionController {
 			$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
 			$personnelData->totalCount = Division::totalCount($division->id)->count;
 
-			Flight::render('division/main/statistics', array('monthly' => $topListMonthly, 'daily' => $topListToday, 'personnelData' => $personnelData), 'statistics');
+			Flight::render('division/main/statistics', array('division' => $division, 'monthly' => $topListMonthly, 'daily' => $topListToday, 'personnelData' => $personnelData), 'statistics');
 			Flight::render('division/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders), 'content');
 			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'division'));
 		} else {

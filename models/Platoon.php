@@ -79,7 +79,7 @@ class Platoon extends Application {
 	}
 
 	public static function unassignedMembers($platoon_id) {
-		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999), 'squad_id' => 0, 'position_id @' => array(6,7));
+		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999), 'squad_id' => 0, 'position_id @' => array(6,7,0));
 		return arrayToObject(Flight::aod()->from('member')->where($conditions)->SortDesc('rank_id')->many());
 	}
 

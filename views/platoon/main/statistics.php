@@ -4,6 +4,38 @@
 	</div>
 </div>
 
+<div class='panel panel-primary'>
+	<div class='panel-heading'>Activity</div>
+	<div class='panel-body striped-bg'><div id="activity" style="width: 200px; height: 200px; margin: 0 auto;"></div>
+</div>
+</div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript">
+	google.load("visualization", "1", {packages:["corechart"]});
+	google.setOnLoadCallback(drawChart);
+	function drawChart() {
+		var data = google.visualization.arrayToDataTable([
+			['Task', 'Hours per Day'],
+			['Players', 80],
+			['Sold', 5],
+			['Open', 15]
+			]);
+
+		var options = {
+			is3D: true,
+			position: 'labeled',
+			legend: {position: 'none'},
+			backgroundColor: { fill:'transparent' },
+			colors: ['#83768d', '#b7c777', '#959c9c']
+		};
+
+		var chart = new google.visualization.PieChart(document.getElementById('activity'));
+		chart.draw(data, options);
+	}
+</script>
+
 <!-- <div class='panel panel-primary'>
 	<div class='panel-heading'>Percentage AOD Games</div>
 	<div class='panel-body count-detail-big follow-tool striped-bg' title='<center><strong>AOD Games</strong><br /><?php //echo $gameStats->AOD . " out of " . $gameStats->total; ?></center>'><span class='count-animated percentage'><?php // echo $gameStats->pct; ?>%</span>
