@@ -50,7 +50,8 @@ class Squad extends Application {
 	}
 
 	public static function mySquadId($leader_id) {
-		return (object) Flight::aod()->from('squad')->where(array('leader_id' => $leader_id))->one();
+		$params = Flight::aod()->from('squad')->where(array('leader_id' => $leader_id))->one();
+		return $params['id'];
 	}
 
 	public static function findSquadMembers($squad_id, $div_struc_sort = false, $recruiter = false) {

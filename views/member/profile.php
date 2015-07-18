@@ -48,7 +48,7 @@
 			<ul class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#activity" aria-controls="home" role="tab" data-toggle="tab">Server Activity</a></li>
 				<?php if ($user->role >= 1 && $memberInfo->position_id == 5) : ?>
-					<li role="presentation"><a href="#squadmembers" aria-controls="squadmembers" role="tab" data-toggle="tab">Squad members</a></li>
+					<li role="presentation"><a href="#squadmembers" aria-controls="squadmembers" role="tab" data-toggle="tab"><?php echo Locality::run('Squad', $memberInfo->game_id); ?> members</a></li>
 				<?php endif; ?>
 				<li role="presentation"><a href="#recruits" aria-controls="recruits" role="tab" data-toggle="tab">Recruiting records</a></li>
 				<li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">Member history</a></li>
