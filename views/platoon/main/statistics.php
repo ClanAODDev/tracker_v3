@@ -5,9 +5,10 @@
 </div>
 
 <div class='panel panel-primary'>
-	<div class='panel-heading'>Activity</div>
-	<div class='panel-body striped-bg'><div id="activity" style="width: 200px; height: 200px; margin: 0 auto;"></div>
-</div>
+	<div class='panel-heading'>Forum Activity</div>
+	<div class='panel-body striped-bg'>
+		<div id="activity" style="width: 300px; height: 300px; margin: 0 auto;"></div>
+	</div>
 </div>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -17,10 +18,10 @@
 	google.setOnLoadCallback(drawChart);
 	function drawChart() {
 		var data = google.visualization.arrayToDataTable([
-			['Task', 'Hours per Day'],
-			['Players', 80],
-			['Sold', 5],
-			['Open', 15]
+			['Players', 'Forum Activity'],
+			['Less than two weeks', <?php echo $activity->underTwoWeeks ?>],
+			['More than 2 weeks', <?php echo $activity->twoWeeksMonth ?>],
+			['Inactive', <?php echo $activity->oneMonth ?>]
 			]);
 
 		var options = {
@@ -28,7 +29,9 @@
 			position: 'labeled',
 			legend: {position: 'none'},
 			backgroundColor: { fill:'transparent' },
-			colors: ['#83768d', '#b7c777', '#959c9c']
+			colors: ['#28b62c', '#ff851b', '#ff4136'],
+			width:300,
+			height:300
 		};
 
 		var chart = new google.visualization.PieChart(document.getElementById('activity'));
@@ -36,17 +39,3 @@
 	}
 </script>
 
-<!-- <div class='panel panel-primary'>
-	<div class='panel-heading'>Percentage AOD Games</div>
-	<div class='panel-body count-detail-big follow-tool striped-bg' title='<center><strong>AOD Games</strong><br /><?php //echo $gameStats->AOD . " out of " . $gameStats->total; ?></center>'><span class='count-animated percentage'><?php // echo $gameStats->pct; ?>%</span>
-	</div>
-</div> -->
-
-<!-- show squad if squad leader in platoon being viewed
-<div class='panel panel-default'>
-	<div class='panel-heading'><strong> Your Squad</strong> {$squadCount}<span class='pull-right text-muted'>Last seen</span></div>
-
-	<div class='list-group' id='squad'>
-		{$my_squad}
-	</div>
-</div> -->

@@ -69,13 +69,16 @@ class Platoon extends Application {
 			);
 	}
 
-	public static function platoonActivity($platoon_id) {
-		$conditions = "status_id IN (1,3,999) AND platoon_id = {$platoon_id}";
-		$thisWeek = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN NOW() - INTERVAL 1 WEEK AND NOW();')->one();
-		$lastWeek = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_SUB(NOW(), INTERVAL 1 WEEK) AND DATE_SUB(NOW(), INTERVAL 2 WEEK)')->one();
-
-		return json_encode(array(array('This week' => $thisWeek, 'Last week' =>$lastWeek)));
-		
+	public static function forumActivity($platoon_id) {
+		$conditions = "status_id IN (1,3,999) AND platoon_id = {$platoon_id}";		
+		$underTwoWeeks = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -2 WEEK) AND CURDATE();')->one();
+		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -4 WEEK) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
+		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL -4 WEEK)')->one();
+		$data = new stdClass();
+		$data->underTwoWeeks = $underTwoWeeks['count'];
+		$data->twoWeeksMonth = $twoWeeksMonth['count'];
+		$data->oneMonth = $oneMonth['count'];
+		return $data;
 	}
 
 	public static function unassignedMembers($platoon_id) {
