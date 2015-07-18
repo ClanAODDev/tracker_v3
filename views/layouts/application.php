@@ -187,7 +187,7 @@
 
 	<div id="footer" class="navbar navbar-default">
 		<div class="container">
-			<small class="text-muted col-xs-6">Copright &copy; Angels of Death <span class="hidden-xs">2005-2015. All rights reserved.</span><br /><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google Chrome</strong></a></span></small>
+			<small class="text-muted">Copright &copy; Angels of Death <span class="hidden-xs">2005-2015. All rights reserved.</span><br /><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google Chrome</strong></a></span></small>
 		</div>
 	</div>
 
