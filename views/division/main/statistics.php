@@ -1,3 +1,5 @@
+<?php if ($division->id == 2): ?>
+
 <div class='row col-md-12 margin-top-50'>
 	<div class='page-header'>
 		<h3><i class="fa fa-tachometer fa-lg"></i> Division Statistics</h3>
@@ -22,7 +24,7 @@
 
 
 
-<?php if ($division->id == 2): ?>
+
 
 	<div class='row col-md-12 margin-top-50'>
 		<div class='page-header'>
