@@ -17,6 +17,8 @@
 
 			</div>
 		</div>
+	<?php else: ?>
+		<li class="list-group-item text-muted">No members assigned</li>
 	<?php endif; ?>
 
 <?php endif; ?>
