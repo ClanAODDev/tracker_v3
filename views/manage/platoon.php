@@ -70,8 +70,8 @@
 
 					<?php $unassigned = count((array) $unassignedMembers); ?>
 					<?php if ($unassigned): ?>
-						<div class="col-xs-12 genpop">
-						<div class="sticky-box" style="position:fixed; width: 19%;">
+						<div class="col-xs-12 genpop sidebar-parent">
+							<div id="sidebar" data-spy="affix">
 								<h3 class="page-header text-muted">Unassigned<span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
 
 								<ul class="list-group sortable" style="max-height: 400px; overflow-y: auto;">
