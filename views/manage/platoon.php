@@ -29,7 +29,7 @@
 						<?php $leader_name = (!is_null($leader)) ? $leader->forum_name : "TBA"; ?>
 						<?php $members = Squad::members($squad->id); ?>
 
-						<div class="col-xs-12">
+						<div class="col-xs-6">
 							<h3 class="page-header squad-header"><?php echo ordsuffix($i); ?> <?php echo Locality::run('Squad', $division->id); ?> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-xs btn-default modify-squad" style="position: absolute; left: 15px;"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
 							<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>" data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>">
