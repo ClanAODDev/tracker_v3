@@ -69,6 +69,15 @@ class Platoon extends Application {
 			);
 	}
 
+	public static function platoonActivity($platoon_id) {
+		$conditions = "status_id IN (1,3,999) AND platoon_id = {$platoon_id}";
+		$thisWeek = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN NOW() - INTERVAL 1 WEEK AND NOW();')->one();
+		$lastWeek = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_SUB(NOW(), INTERVAL 1 WEEK) AND DATE_SUB(NOW(), INTERVAL 2 WEEK)')->one();
+
+		return json_encode(array(array('This week' => $thisWeek, 'Last week' =>$lastWeek)));
+		
+	}
+
 	public static function unassignedMembers($platoon_id) {
 		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999), 'squad_id' => 0, 'position_id @' => array(6,7));
 		return arrayToObject(Flight::aod()->from('member')->where($conditions)->SortDesc('rank_id')->many());

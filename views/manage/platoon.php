@@ -50,15 +50,9 @@
 						<?php $i++; ?>
 
 					<?php endforeach;  ?>
-				</div>
-
-			</div>
-
-			<div class="col-xs-4">
-				<div class="row">
 
 					<?php if ($squadCount < (MAX_SQUADS_IN_PLT)): ?>
-						<div class="col-xs-12">
+						<div class="col-xs-6">
 							<div class="panel panel-info">
 								<div class="panel-heading"><strong>New <?php echo Locality::run('Squad', $division->id); ?></strong></div>
 								<div class="panel-body">
@@ -67,14 +61,20 @@
 							</div>
 						</div>
 					<?php endif; ?>
+				</div>
+
+			</div>
+
+			<div class="col-xs-4">
+				<div class="row">
 
 					<?php $unassigned = count((array) $unassignedMembers); ?>
 					<?php if ($unassigned): ?>
 						<div class="col-xs-12 genpop">
-						<div class="sticky-box" style="position:fixed; width: 20%;">
-								<h3 class="page-header text-muted"><strong>Unassigned</strong><span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
+						<div class="sticky-box" style="position:fixed; width: 19%;">
+								<h3 class="page-header text-muted">Unassigned<span class="badge pull-right"><?php echo $unassigned; ?></span></h3>
 
-								<ul class="list-group sortable" style="max-height: 600px; overflow-y: scroll;">
+								<ul class="list-group sortable" style="max-height: 600px; overflow-y: auto;">
 									<?php foreach ($unassignedMembers as $member): ?>
 										<li class="list-group-item" data-member-id="<?php echo $member->id ?>">
 											<img src="assets/images/grab.svg" class="pull-right" style="width: 8px; opacity: .20;">
