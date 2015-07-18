@@ -11,8 +11,6 @@
 		<h2><strong>Manage <small><?php echo $platoon->name ?></small></strong></h2>
 	</div>
 
-	<p>Platoons currently have at a max two squads. Ensure that your platoon membership is evenly distributed between your squads, and also avoid stacking all of your higher ranks into one particular squad. Organization of platoons may be primarily administrative, it does not hurt to try and build cohesion between squad-mates and between squads.</p>
-
 	<div class="margin-top-50"></div>
 
 	<div class="alert alert-info"><span class="fa-stack fa-lg"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-exclamation fa-stack-1x  text-info"></i></span> <strong>TIP:</strong> Drag members between lists to organize them</div>
@@ -28,7 +26,7 @@
 		<?php $squad_width = (count((array) $unassignedMembers)) ? 4 : 6; ?>
 
 		<div class="col-xs-<?php echo $squad_width ?>">
-			<h3 class="page-header squad-header"><strong><?php echo ordsuffix($i); ?> <?php echo Locality::run('Squad', $division->id); ?></strong> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-sm btn-default modify-squad"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
+			<h3 class="page-header squad-header"><strong><?php echo ordsuffix($i); ?> <?php echo Locality::run('Squad', $division->id); ?></strong> <small><?php echo $leader_name ?></small> <a href="#" class="btn btn-sm btn-default modify-squad"><i class="fa fa-wrench"></i> Edit</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
 			<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>" data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>">
 				<?php foreach ($members as $member): ?>
