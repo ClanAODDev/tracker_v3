@@ -13,7 +13,7 @@
 
 	<?php $squadCount = count((array)Squad::findAll($division->id, $platoon->id)); ?>
 
-	<?php if ($squadCount): ?>
+	<?php if ($memberCount): ?>
 
 
 		<div class="row mod-plt">
@@ -50,9 +50,15 @@
 						<?php $i++; ?>
 
 					<?php endforeach;  ?>
+				</div>
+
+			</div>
+
+			<div class="col-xs-4">
+				<div class="row">
 
 					<?php if ($squadCount < (MAX_SQUADS_IN_PLT)): ?>
-						<div class="col-xs-6">
+						<div class="col-xs-12">
 							<div class="panel panel-info">
 								<div class="panel-heading"><strong>New <?php echo Locality::run('Squad', $division->id); ?></strong></div>
 								<div class="panel-body">
@@ -61,12 +67,6 @@
 							</div>
 						</div>
 					<?php endif; ?>
-				</div>
-
-			</div>
-
-			<div class="col-xs-4">
-				<div class="row">
 
 					<?php $unassigned = count((array) $unassignedMembers); ?>
 					<?php if ($unassigned): ?>

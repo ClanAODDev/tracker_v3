@@ -49,8 +49,9 @@ class PlatoonController {
 				$platoon = Platoon::findById($platoonId);
 				$unassignedMembers = Platoon::unassignedMembers($platoonId, true);
 				$squads = Squad::findByPlatoonId($platoonId);
+				$memberCount = count((array) Platoon::members($platoonId));
 
-				Flight::render('manage/platoon', array('division' => $division, 'platoon' => $platoon, 'squads' => $squads, 'unassignedMembers' => $unassignedMembers), 'content');
+				Flight::render('manage/platoon', array('division' => $division, 'platoon' => $platoon, 'squads' => $squads, 'unassignedMembers' => $unassignedMembers, 'memberCount' => $memberCount), 'content');
 				Flight::render('layouts/application', array('js' => 'manage', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 
 			} else {
