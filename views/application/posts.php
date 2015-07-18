@@ -1,7 +1,7 @@
 <?php if (count($posts)) : $posts = arrayToObject($posts);?>
 	<?php foreach($posts as $post) : ?>
 		<?php $member_id = Member::findById($post->member_id)->member_id; ?>
-		<?php $member = Member::profileData($member_id); ?>
+		<?php $member = Member::findByMemberId($member_id); ?>
 		<div class='panel panel-default'>
 			<div class='panel-heading'><?php echo Member::avatar($member->member_id) . " " .  $post->title; ?></div>
 			<div class='panel-body'><?php echo $post->content ?></div>
