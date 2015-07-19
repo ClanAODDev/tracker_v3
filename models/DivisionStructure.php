@@ -126,7 +126,7 @@ class DivisionStructure {
 					$division_structure .= "[size=1]";
 
 					// direct recruits
-					$recruits = arrayToObject(Member::findRecruits($leader->member_id));
+					$recruits = arrayToObject(Member::findRecruits($leader->member_id, true));
 					if (count((array) $recruits)) {
 						$division_structure .= "[list=1]";
 

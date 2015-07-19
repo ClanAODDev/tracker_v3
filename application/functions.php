@@ -405,17 +405,21 @@ function excerpt($text, $limit) {
 function convertIcon($game) {
     switch ($game) {
         case "bf3":
-        // $img = " [img]http://i.imgur.com/SIy4iVy.png[/img]";
         $img = "[img]http://i.imgur.com/eiloJ8H.png[/img]";
         break;
         case "bf4":
-        // $img = " [img]http://i.imgur.com/WjKYT85.png[/img]";
         $img = "[img]http://i.imgur.com/IHsTUwa.png[/img]";
         break;
         case "bfh":
-        // $img = " [img]http://i.imgur.com/sF5IBfy.png[/img]";
         $img = "[img]http://i.imgur.com/Azd2G5f.png[/img]";
+        break;        
+        case "wt":
+        $img = "[img]http://i.imgur.com/WMF8ZYd.png[/img]";
         break;
+        case "ws":
+        $img = "[img]http://i.imgur.com/SYNAwZd.png[/img]";
+        break;
+
     }
     return $img;
 }

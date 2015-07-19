@@ -76,10 +76,12 @@ class Member extends Application {
 		}
 	}
 
-	public static function findRecruits($member_id) {
+	public static function findRecruits($member_id, $division_structure = false) {
+		$conditions = array('recruiter' => $member_id, 'position_id' => 6);
+		if ($division_structure) array_push($conditions, array('status_id @' => array(1,3,999)));
 		return Flight::aod()->from(self::$table)
 		->sortDesc(array('rank_id'))
-		->where(array('recruiter' => $member_id, 'position_id' => 6))
+		->where($conditions)
 		->join('rank', array('rank.id' => 'member.rank_id'))
 		->select()->many();
 	}
