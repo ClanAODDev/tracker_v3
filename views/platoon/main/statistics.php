@@ -7,7 +7,7 @@
 <div class='panel panel-primary'>
 	<div class='panel-heading'>Forum Activity</div>
 	<div class='panel-body striped-bg'>
-		<div id="activity" style="width: 300px; height: 300px; margin: 0 auto; -webkit-filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"></div>
+		<div id="activity" style="width: 330px; height: 330px; margin: 0 auto; margin-top: -40px; -webkit-filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"></div>
 	</div>
 </div>
 
@@ -19,9 +19,9 @@
 	function drawChart() {
 		var data = google.visualization.arrayToDataTable([
 			['Players', 'Forum Activity'],
-			['< 2 weeks', <?php echo $activity->underTwoWeeks ?>],
-			['> 2 weeks', <?php echo $activity->twoWeeksMonth ?>],
-			['> 1 month', <?php echo $activity->oneMonth ?>]
+			['<2 wks', <?php echo $activity->underTwoWeeks ?>],
+			['>2 wks', <?php echo $activity->twoWeeksMonth ?>],
+			['>30 days', <?php echo $activity->oneMonth ?>]
 			]);
 
 		var options = {
@@ -30,8 +30,10 @@
 			legend: {position: 'bottom'},
 			backgroundColor: { fill:'transparent' },
 			colors: ['#28b62c', '#ff851b', '#ff4136'],
-			width:300,
-			height:300
+			sliceVisibilityThreshold: 0,
+			width:330,
+			height:330,
+			pieStartAngle: 60
 		};
 
 		var chart = new google.visualization.PieChart(document.getElementById('activity'));
