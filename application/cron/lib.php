@@ -30,22 +30,22 @@ function dbConnect()
 	return true;
 }
 
-function convertDivision($division) {
-
-	$division = strtolower($division);
-	switch ($division) {
-
-		case "battlefield":
-		$id = 2;
-		break;
-
-		case "wargaming":
-		$id = 3;
-		break;
-
+function getDivisions() {
+	global $pdo;
+	if (dbConnect()) {
+		try {
+			$query = "SELECT * FROM divisions";
+			$query = $pdo->prepare($query);
+			$query->execute();
+			$query = $query->fetchAll();
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
 	}
-	return $id;
+
+	return $query;
 }
+
 
 function convertStatus($status) {
 
