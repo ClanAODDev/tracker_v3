@@ -3,7 +3,7 @@ $(function() {
     // warn before leaving recruiting process before completion
     $(window).bind('beforeunload', function(e) {
         if ($('#tab6 button.disabled').length < 1) {
-            return "You are in the recruitment process. If you have not finished with your recruitment, you may lose your data if you leave the page.";;
+            return "You are in the recruitment process. If you leave, you will lose any data entered.";;
         }
     });
 
