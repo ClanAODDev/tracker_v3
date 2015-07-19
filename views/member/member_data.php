@@ -5,7 +5,8 @@
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Division: </strong></span> <span class='text-muted'><?php echo $divisionInfo->full_name ?></span></li>
 
 		<?php echo (property_exists($platoonInfo, 'item')) ? $platoonInfo->item : NULL; ?>
-		<?php $position = Position::convert($memberInfo->position_id)->desc; ?>
+
+		<?php $position = ($memberInfo->position_id) ? Position::convert($memberInfo->position_id)->desc : 'Unknown'; ?>
 		
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo Locality::run($position, $memberInfo->game_id)?></span></li>
 		<?php $squadleader = (property_exists($memberInfo, 'squad_leader_id')) ? $memberInfo->squad_leader_id : NULL; ?>
