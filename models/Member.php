@@ -50,7 +50,12 @@ class Member extends Application {
 	}
 
 	public static function search($name) {
-		$params = Flight::aod()->sql("SELECT * FROM member LEFT JOIN rank ON member.rank_id = rank.id WHERE `forum_name` LIKE '%{$name}%' OR `battlelog_name` LIKE '%{$name}%' ORDER BY member.rank_id DESC LIMIT 25")->many();
+		$conditions = array('forum_name %' => "%{$name}%");
+		$params = Flight::aod()->from('member')
+		->limit(20)
+		->sortDesc('rank_id')
+		->join('rank', array('rank.id' => 'member.rank_id'))
+		->where($conditions)->select()->many();
 		return $params;
 	}
 
