@@ -64,7 +64,11 @@ class Member extends Application {
 
 	public static function findForumName($member_id) {
 		$params = self::find(array('member_id' => $member_id));
-		return $params->forum_name;
+		if (count($params)) {
+			return $params->forum_name;
+		} else {
+			return false;
+		}
 	}
 
 	public static function findRecruits($member_id) {

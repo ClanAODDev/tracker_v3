@@ -34,6 +34,15 @@ class LeaveOfAbsence extends Application {
 		return count(self::find(array("date_end <" => date('Y-m-d H:i:s'), 'game_id' => $gid)));
 	}
 
+	public static function exists($member_id) {
+		$params = count(self::find_each(array('member_id' => $member_id)));
+		if ($params) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static function find_expired($gid) {
 		return self::find_each(array("date_end <" => date('Y-m-d H:i:s'), 'game_id' => $gid));
 	}

@@ -396,14 +396,7 @@ $(function() {
                     data: $("#loa-update").serialize() + "&comment=" + comment,
                     success: function(data) {
                         if (data.success) {
-                            var $newRow = $("<tr data-id='" + data.id + "'><td>" + data.name + "</td><td>" + data.reason + "</td><td>" + data.date + "</td><td class='text-center'><h4><span class='label bg-warning'><i class='fa fa-check fa-lg' title='Pending'></i> Pending</span></h4></td><td class='text-center loa-actions' style='opacity: .2;'><button class='btn btn-default btn-block' title='Review LOA' disabled>Review LOA</button></td></tr>");
-
-                            $("#loas tbody tr:last").after($newRow);
-                            $newRow.effect("highlight", {}, 3000);
-                            $('#loa-update')[0].reset();
-
-                            $('.modal').modal('hide');
-
+                            location.reload();
                         } else {
                             $('.modal').modal('hide');
                             $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(3000).fadeOut();

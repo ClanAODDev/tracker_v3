@@ -92,7 +92,7 @@ class DivisionController {
 				} else if (isset($_POST['approve'])) {
 
 					if ($member->member_id == $loa->member_id) {
-						$data = array('success' => false, 'message' => "You can't approve your own leave of absence!.");
+						$data = array('success' => false, 'message' => "You can't approve your own leave of absence!");
 					} else {
 
 						$approved = LeaveOfAbsence::approve($loa->id, $member->member_id);
@@ -110,12 +110,16 @@ class DivisionController {
 			$comment = htmlentities($_POST['comment'], ENT_QUOTES);
 			$name = Member::findForumName($_POST['id']);
 
-			if ($name != false) {
+			if ($name) {
 				if (strtotime($date) > strtotime('now')) {
-					LeaveOfAbsence::add($_POST['id'], $date, $reason, $comment, $member->game_id);
-					UserAction::create(array('type_id'=>11,'date'=>date("Y-m-d H:i:s"),'user_id'=>$_POST['id']));
-					$data = array('success' => true, 'Request successfully submitted!', 'id' => $_POST[
-						'id'], 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
+					if (LeaveOfAbsence::exists($member->member_id)) {
+						$data = array('success' => false, 'message' => "This member already has an LOA in place!");
+					} else {
+						LeaveOfAbsence::add($_POST['id'], $date, $reason, $comment, $member->game_id);
+						UserAction::create(array('type_id'=>11,'date'=>date("Y-m-d H:i:s"),'user_id'=>$_POST['id']));
+						$data = array('success' => true, 'Request successfully submitted!', 'id' => $_POST[
+							'id'], 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
+					}
 				} else {
 					$data = array('success' => false, 'message' => "Date cannot be before today's date.");
 				}
