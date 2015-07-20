@@ -124,7 +124,7 @@ if (count($divisions)) {
 				echo date('Y-m-d h:i:s A') . " - Updated the following member ids to 'removed': " . $removalIds . "{$linebreak}";
 			}
 
-			echo date('Y-m-d h:i:s A') . " - $division['full_name'] sync done. {$linebreak}";
+			echo date('Y-m-d h:i:s A') . " - {$division['full_name']} sync done. {$linebreak}";
 
 			try {
 				$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'arch_sync'")->execute();
