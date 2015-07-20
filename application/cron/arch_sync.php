@@ -24,24 +24,24 @@ if (count($divisions)) {
 		$postResult = curl_exec($ch);
 		$json = json_decode($postResult);
 
-	// 11 values in column sort as of 12/17/2014
-	// 0 "userid",
-	// 1 "username",
-	// 2 "joindate",
-	// 3 "lastvisit",
-	// 4 "lastactivity",
-	// 5 "lastpost",
-	// 6 "postcount",
-	// 7 "aodrank",
-	// 8 "aodrankval",
-	// 9 "aoddivision",
-	// 10 "aodstatus"
+		// 11 values in column sort as of 12/17/2014
+		// 0 "userid",
+		// 1 "username",
+		// 2 "joindate",
+		// 3 "lastvisit",
+		// 4 "lastactivity",
+		// 5 "lastpost",
+		// 6 "postcount",
+		// 7 "aodrank",
+		// 8 "aodrankval",
+		// 9 "aoddivision",
+		// 10 "aodstatus"
 
 		if (count($json->column_order) == 11 && ($json->column_order[0] == 'userid') && ($json->column_order[10] == 'aodstatus')) {
 
 			$currentMembers = array();
 
-		// loop through member records
+			// loop through member records
 			foreach ($json->data as $column) {
 
 				$memberid = $column[0];
@@ -98,7 +98,7 @@ if (count($divisions)) {
 
 			}
 
-		// fetch all existing db members for array comparison
+			// fetch all existing db members for array comparison
 			$query = $pdo->prepare("SELECT member_id, forum_name FROM member WHERE status_id = 1 AND game_id = :gid");
 			$query->execute(array(':gid' => $requested_division));
 			$existingMemberArray = $query->fetchAll();
@@ -108,7 +108,7 @@ if (count($divisions)) {
 				$existingMembers[$member['forum_name']] = $member['member_id'];
 			}
 
-		// select members that need to be removed
+			// select members that need to be removed
 			$removals = array_diff($existingMembers, $currentMembers);
 
 			if (count($removals)) {
@@ -124,7 +124,7 @@ if (count($divisions)) {
 				echo date('Y-m-d h:i:s A') . " - Updated the following member ids to 'removed': " . $removalIds . "{$linebreak}";
 			}
 
-			echo date('Y-m-d h:i:s A') . " - sync done. {$linebreak}";
+			echo date('Y-m-d h:i:s A') . " - {$division->full_name} sync done. {$linebreak}";
 
 			try {
 				$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'arch_sync'")->execute();
