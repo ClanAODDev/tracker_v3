@@ -32,7 +32,6 @@ $(function() {
         });
     });
 
-
     $(".modify-squad").click(function(e) {
         e.preventDefault();
         $(".viewPanel .viewer").load("modify/squad", {
@@ -42,7 +41,6 @@ $(function() {
         });
         $(".viewPanel").modal();
     });
-
 
     $(".modal").delegate("#modify_squad_btn", "click", function(e) {
         e.preventDefault();
@@ -55,18 +53,12 @@ $(function() {
         });
     });
 
-
-
-
     var itemMoved, targetplatoon, sourcePlatoon, action = null;
-
     $(".sortable").sortable({
-
         revert: true,
         connectWith: 'ul',
         placeholder: "ui-state-highlight",
         receive: function(event, ui) {
-
             itemMoved = $(ui.item).attr('data-player-id');
             targetList = $(this).attr('id');
 
@@ -74,32 +66,22 @@ $(function() {
                 $(ui.item).find('.removed-by').show().html("Flagged by you");
                 action = 1;
                 context = " flagged for removal.";
-
                 var flagCount = parseInt($(".flagCount").text()) + 1,
                     inactiveCount = parseInt($(".inactiveCount").text()) - 1;
-
                 $(".flagCount").text(flagCount);
                 $(".inactiveCount").text(inactiveCount);
-
-
             } else {
-
                 $(ui.item).find('.removed-by').empty();
                 context = " no longer flagged for removal."
                 action = 0;
-
                 var flagCount = parseInt($(".flagCount").text()) - 1,
                     inactiveCount = parseInt($(".inactiveCount").text()) + 1;
-
                 $(".flagCount").text(flagCount);
                 $(".inactiveCount").text(inactiveCount);
 
             }
-
             var member_id = $("#member_id").val();
-
             $.ajax({
-
                 type: 'POST',
                 url: 'do/update-flag',
                 data: {
@@ -107,7 +89,6 @@ $(function() {
                     id: itemMoved,
                     member_id: member_id
                 },
-
                 dataType: 'json',
                 success: function(response) {
                     if (response.success === false) {
@@ -118,15 +99,11 @@ $(function() {
                         $(".alert-box").stop().html("<div class='alert alert-success'><i class='fa fa-check'></i> " + message + "</div>").effect('highlight').delay(1000).fadeOut();
                     }
                 },
-
-                // fail: function()
             });
-
         }
     });
 
     // manage division
-
     var itemMoved, targetplatoon, sourcePlatoon;
     $(".sortable-division").sortable({
         connectWith: 'ul',
@@ -140,9 +117,12 @@ $(function() {
     });
 
     // manage platoon
-
+    // fix for affix panel
+    $(window).resize(function() {
+        $('#sidebar').width($('.sidebar-parent').width());
+    });
+    
     var itemMoved, targetplatoon, sourcePlatoon;
-
     $(".mod-plt .sortable").sortable({
         connectWith: 'ul',
         placeholder: "ui-state-highlight",
@@ -151,32 +131,24 @@ $(function() {
             targetSquad = $(this).attr('data-squad-id');
             senderLength = $(ui.sender).find('li').length;
             receiverLength = $(this).find('li').length;
-
             if (undefined == targetSquad) {
-
                 alert("You cannot move players to this list");
                 $(".mod-plt .sortable").sortable('cancel');
-
             } else {
-
                 // is genpop empty?
                 if ($('.genpop').find('li').length < 1) {
                     $('.genpop').fadeOut();
                 }
-
                 // update squad counts
                 $(ui.sender).parent().find('.badge').text(senderLength);
                 $(this).parent().find('.badge').text(receiverLength);
-
                 $.ajax({
-
                     type: 'POST',
                     url: 'do/update-member-squad',
                     data: {
                         member_id: itemMoved,
                         squad_id: targetSquad
                     },
-
                     dataType: 'json',
                     success: function(response) {
                         if (response.success === false) {
@@ -190,12 +162,8 @@ $(function() {
                             $(".alert-box").stop().html("<div class='alert alert-success'><i class='fa fa-check'></i> " + message + "</div>").effect('highlight').delay(1000).fadeOut();
                         }
                     },
-
-                    // fail: function()
                 });
-
             }
-
         }
     });
 
@@ -208,21 +176,19 @@ $(function() {
 
     // pending view loa
 
-    var view_pending_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Review Leave of Absence</h4></div><div class='modal-body'><strong>Reason for request</strong>: <textarea class='form-control' style='resize:vertical; min-height: 200px;' id='comment' class='comment' /></div><div class='modal-footer'><div class='btn-group'><button type='button' class='btn btn-success approve-loa-btn'>Approve</button> <button type='button' class='btn btn-danger deny-loa-btn'>Deny</button><button type='button' data-dismiss='modal' class='btn'>Close</button></div></div></div></div>";
-
     $(".view-pending-loa").click(function() {
         var id = $(this).closest('tr').attr('data-member-id'),
             loa_id = $(this).closest('tr').attr('data-loa-id'),
             comment = $(this).closest('tr').attr('data-comment');
 
-        $(".viewPanel .viewer").html(view_pending_loa);
-        $(".modal #comment").html(comment);
-
-        $(".modal").attr('data-member-id', id).modal();
-        $(".modal").attr('data-loa-id', loa_id).modal();
+        $(".viewPanel .viewer").load("views/modals/loa/view-pending.php",
+            function() {
+                $(".modal #comment").html(comment);
+                $(".modal").attr('data-member-id', id).modal();
+                $(".modal").attr('data-loa-id', loa_id).modal();
+            }
+        );
     })
-
-
 
     // deny LOA
 
@@ -302,46 +268,37 @@ $(function() {
 
     })
 
-
-
     // active view loa
-
     $('#loas').delegate(".view-active-loa", "click", function(e) {
         var id = $(this).closest('tr').attr('data-loa-id'),
             member_id = $(this).closest('tr').attr('data-member-id'),
             comment = $(this).closest('tr').attr('data-comment'),
             approval = $(this).closest('tr').attr('data-approval');
 
-        $(".viewPanel .viewer").html(view_active_loa);
-        $(".modal #comment").html(comment);
-        $(".modal #approval").val(approval);
-
-        $(".modal").attr('data-loa-id', id).modal();
-        $(".modal").attr('data-member-id', member_id).modal();
-
+        $(".viewPanel .viewer").load("views/modals/loa/view-active.php",
+            function() {
+                $(".modal #comment").html(comment);
+                $(".modal #approval").val(approval);
+                $(".modal").attr('data-loa-id', id).modal();
+                $(".modal").attr('data-member-id', member_id).modal();
+            }
+        );
     })
 
-
-    var view_active_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Review Leave of Absence</h4></div><div class='modal-body'><p><strong>Approved by</strong>: <input class='form-control' id='approval' /></p><p><strong>Reason for request</strong>: <textarea class='form-control' style='resize:vertical; min-height: 200px;' id='comment' class='comment' /></p></div><div class='modal-footer'> <div class='btn-group'> <button type='button' class='btn btn-primary pm-btn'>PM Player</button><button type='button' class='btn btn-danger revoke-loa-btn'>Revoke</button>  <button type='button' data-dismiss='modal' class='btn'>Close</button></div></div></div></div>";
-
     // revoke LOA
-    var revoke_confirm = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Confirm revoke leave of absence</h4></div><div class='modal-body'><p>Once a player's LOA is revoked, their status must be updated on the forums. Additionally, if this is a revocation, the member should be flagged for removal.</p></div><div class='modal-footer'> <div class='btn-group'><button type='button' data-dismiss='modal' class='btn btn-primary' id='delete'>Revoke LOA</button> <button type='button' data-dismiss='modal' class='btn'>Cancel</button></div></div></div></div>";
-
     $(".modal").delegate(".revoke-loa-btn", "click", function(e) {
-
+        $('.modal').modal('hide');
         e.preventDefault();
-
-        $(".viewPanel .viewer").html(revoke_confirm);
-
-        var url = "do/update-loa",
-            loa_id = $('.modal').attr('data-loa-id'),
-            member_id = $('.modal').attr('data-member-id');
-
-        $('.modal').modal({
-            backdrop: 'static',
-            keyboard: false
-        })
-            .one('click', '#delete', function(e) {
+        swal({
+                title: 'Are you sure?',
+                text: 'Are you sure you want to revoke this player\'s leave of absence?.',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28b62c',
+                confirmButtonText: 'Yes, revoke',
+                closeOnConfirm: false
+            },
+            function() {
                 $.ajax({
                     type: "POST",
                     url: url,
@@ -351,43 +308,38 @@ $(function() {
                         loa_id: loa_id,
                         member_id: member_id
                     },
-
                     success: function(data) {
                         if (data.success) {
                             $('*[data-loa-id="' + loa_id + '"]').effect('highlight').hide("fade", {
                                 direction: "out"
                             }, "slow");
-                            $(".loa-alerts").attr('class', 'alert alert-success loa-alerts').html("<i class='fa fa-check fa-lg'></i> " + data.message).show().delay(3000).fadeOut();
 
-                            $('.modal').modal('hide');
-
+                            swal('Revoked!', 'Leave of absence has been revoked', 'success');
                         } else {
-                            $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(3000).fadeOut();
+                            swal('Error', data.message, 'error');
                             $('.modal').modal('hide');
                         }
                     }
                 });
+
             });
 
+        var url = "do/update-loa",
+            loa_id = $('.modal').attr('data-loa-id'),
+            member_id = $('.modal').attr('data-member-id');
+
     })
-
-    var add_loa = "<div class='viewer fadeIn animate'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'><i class='fa fa-times-circle'></i></span></button><h4>Request Leave of Absence</h4></div><div class='modal-body'><label for='comment' class='control-label'>Reason for request</label>: <textarea class='form-control' style='resize:vertical; min-height: 100px;' id='comment' name='comment' class='comment' placeholder='Provide an explanation for your leave of absence request. Please include a reference link to the post requesting an LOA.' required /></div><div class='modal-footer'><div class='btn-group'> <button type='button' data-dismiss='modal' class='btn'>Cancel</button> <button type='button' id='submit' class='btn btn-success'>Submit</button> </div></div></div></div>";
-
 
     // LOA ADD
     $("#loa-update").submit(function(e) {
         e.preventDefault();
-
         var url = "do/update-loa";
-
-        $(".viewPanel .viewer").html(add_loa);
-
+        $(".viewPanel .viewer").load("views/modals/loa/add.php");
         $('.modal').modal({
             backdrop: 'static',
             keyboard: false
         })
             .one('click', '#submit', function(e) {
-
                 var comment = $(".modal #comment").val();
                 $.ajax({
                     type: "POST",
@@ -400,24 +352,17 @@ $(function() {
                         } else {
                             $('.modal').modal('hide');
                             $(".loa-alerts").attr('class', 'alert alert-danger loa-alerts').html("<i class='fa fa-exclamation-triangle fa-lg'></i> " + data.message).show().delay(3000).fadeOut();
-
                         }
                     }
                 });
-
-
                 return false;
-
             });
-
     });
-
 
     $("#datepicker").datepicker({
         changeMonth: true,
         changeYear: true
     });
-
 
     // contact
     $(".modal").delegate(".pm-btn", "click", function(e) {
@@ -425,13 +370,9 @@ $(function() {
         windowOpener(pm_url, "Mass PM", "width=900,height=600,scrollbars=yes");
     });
 
-
-
-});
-
-
-$(document).ready(function() {
-    $(window).resize(function() {
-        $('#sidebar').width($('.sidebar-parent').width());
+    // view profile
+    $(".modal").delegate(".profile-btn", "click", function(e) {
+        var userId = $('.modal').attr('data-member-id');
+        location.href = "member/" + userId;
     });
 });
