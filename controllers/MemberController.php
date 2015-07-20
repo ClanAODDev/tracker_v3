@@ -89,7 +89,7 @@ class MemberController {
 
 		// only update values allowed by role
 		if (!User::isDev()) {
-			if ($respUser->role < 2) { unset($memberData['squad_leader_id'], $memberData['position'], $memberData['platoon_id']);  }
+			if ($respUser->role < 2) { unset($memberData['squad_id'], $memberData['position'], $memberData['platoon_id']);  }
 			if ($respUser->role < 3) { unset($memberData['platoon_id']); }
 		}
 
@@ -104,6 +104,9 @@ class MemberController {
 			// validate recruiter
 			if ($memberData['recruiter'] != 0 && !Member::exists($memberData['recruiter'])) {
 				$data = array('success' => false, 'message' => "Recruiter id is invalid.");
+			// validate squad leader / squad_id setting
+			} else if ($memberData['position_id'] == 5 && $memberData['squad_id'] != 0) {
+				$data = array('success' => false, 'message' => "Squad leaders cannot be in a squad.");
 			} else {
 				// update member info
 				Member::modify($memberData);
