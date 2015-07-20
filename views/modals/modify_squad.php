@@ -18,7 +18,7 @@
 
 				<?php if (count((array) $leaders)): ?>
 					<?php foreach($leaders as $leader): ?>
-						<option value="<?php echo $leader->id ?>"><?php echo $leader->abbr . " " . ucwords($leader->forum_name); ?></option>
+						<option value="<?php echo $leader->id ?>"><?php echo Rank::convert($leader->rank_id)->abbr . " " . ucwords($leader->forum_name); ?></option>
 					<?php endforeach; ?>
 				<?php endif; ?>
 				<option value="0">None</option>

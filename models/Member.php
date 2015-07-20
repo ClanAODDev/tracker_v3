@@ -54,7 +54,7 @@ class Member extends Application {
 		$params = Flight::aod()->from('member')
 		->limit(20)
 		->sortDesc('rank_id')
-		->join('rank', array('rank.id' => 'member.rank_id'))
+		->join('rank', array('rank.id' => 'rank_id'))
 		->where($conditions)->select()->many();
 		return $params;
 	}
@@ -82,7 +82,7 @@ class Member extends Application {
 		return Flight::aod()->from(self::$table)
 		->sortDesc(array('rank_id'))
 		->where($conditions)
-		->join('rank', array('rank.id' => 'member.rank_id'))
+		->join('rank', array('rank.id' => 'rank_id'))
 		->select()->many();
 	}
 
@@ -108,7 +108,7 @@ class Member extends Application {
 	}
 
 	public static function isFlaggedForInactivity($member_id) {
-		$params = Flight::aod()->sql("SELECT * FROM inactive_flagged WHERE `member_id`={$member_id}")->one();
+		$params = Flight::aod()->sql("SELECT * FROM ".InactiveFlagged::$table." WHERE `member_id`={$member_id}")->one();
 		if (count($params)) {
 			return true;
 		} else {
@@ -117,36 +117,35 @@ class Member extends Application {
 	}
 
 	public static function findInactives($id, $type, $flagged=false) {
-		$sql = "SELECT member.forum_name, member.member_id, member.last_activity, member.battlelog_name, inactive_flagged.flagged_by, member.forum_posts, member.join_date, platoon.number as plt_number, platoon.name as plt_name 
-		FROM `member` 
+		$sql = "SELECT m.forum_name, m.member_id, m.last_activity, m.battlelog_name, i.flagged_by, m.forum_posts, m.join_date, p.number as plt_number, p.name as plt_name 
+		FROM ".Member::$table." m
 		
-		LEFT JOIN `rank` ON member.rank_id = rank.id  
-		LEFT JOIN `inactive_flagged` ON member.member_id = inactive_flagged.member_id 
-		LEFT JOIN platoon on member.platoon_id = platoon.id 
+		LEFT JOIN ".InactiveFlagged::$table." i ON m.member_id = i.member_id 
+		LEFT JOIN ".Platoon::$table." p on m.platoon_id = p.id 
 
 		WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND 
-		member.member_id NOT IN (SELECT member_id FROM loa) AND ";
+		m.member_id NOT IN (SELECT member_id FROM ".LeaveOfAbsence::$table.") AND ";
 
 		switch ($type) {
-			case "sqd": $args = "member.squad_leader_id = {$id}"; break;
-			case "plt": $args = "member.platoon_id = {$id}"; break;
-			case "div": $args = "member.game_id = {$id}"; break;
-			default: $args = "member.game_id = {$id}"; break;
+			case "sqd": $args = "m.squad_leader_id = {$id}"; break;
+			case "plt": $args = "m.platoon_id = {$id}"; break;
+			case "div": $args = "m.game_id = {$id}"; break;
+			default: $args = "m.game_id = {$id}"; break;
 		}
 
 		if ($flagged) {
-			$sql .= "(member.member_id IN (SELECT member_id FROM inactive_flagged)) AND ";
-			$sql .= $args . " ORDER BY inactive_flagged.flagged_by";
+			$sql .= "(m.member_id IN (SELECT member_id FROM ".InactiveFlagged::$table.")) AND ";
+			$sql .= $args . " ORDER BY i.flagged_by";
 		} else {
-			$sql .= "(member.member_id NOT IN (SELECT member_id FROM inactive_flagged)) AND ";
-			$sql .= $args . " ORDER BY member.platoon_id, member.last_activity ASC";
+			$sql .= "(m.member_id NOT IN (SELECT member_id FROM ".InactiveFlagged::$table.")) AND ";
+			$sql .= $args . " ORDER BY m.platoon_id, m.last_activity ASC";
 		}
 
 		return Flight::aod()->sql($sql)->many();
 	}
 
 	public static function getLastRct() {
-		$params = (object) Flight::aod()->from('Member')->sortDesc('member_id')->where(array('status_id' => 1))->select('member_id')->one();
+		$params = (object) Flight::aod()->from(Member::$table)->sortDesc('member_id')->where(array('status_id' => 1))->select('member_id')->one();
 		return $params->member_id;
 	}
 

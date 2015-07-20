@@ -28,7 +28,7 @@ class Squad extends Application {
 
 	public static function members($squad_id) {
 		// finds active, LOAs, and pending members
-		$sql = "SELECT * FROM member WHERE squad_id = {$squad_id} AND (status_id = 1 OR status_id = 3 OR status_id = 999)";
+		$sql = "SELECT * FROM ".Member::$table." WHERE squad_id = {$squad_id} AND (status_id = 1 OR status_id = 3 OR status_id = 999)";
 		$sql .= " ORDER BY member.rank_id DESC, member.join_date DESC";
 		return arrayToObject(Flight::aod()->sql($sql)->many());
 	}
@@ -50,7 +50,7 @@ class Squad extends Application {
 	}
 
 	public static function mySquadId($leader_id) {
-		$params = Flight::aod()->from('squad')->where(array('leader_id' => $leader_id))->one();
+		$params = Flight::aod()->from(Squad::$table)->where(array('leader_id' => $leader_id))->one();
 		if (isset($params['id'])) {
 			return $params['id'];
 		} else {
@@ -62,9 +62,9 @@ class Squad extends Application {
 		$conditions = ($recruiter) ? array('squad_id' => $squad_id, 'position_id' => 6, 'recruiter !%' => $recruiter, 'status_id @' => array(1, 3, 999)) : array('squad_id' => $squad_id, 'position_id' => 6, 'status_id @' => array(1, 3, 999));
 
 		if ($div_struc_sort) {
-			return Flight::aod()->from('member')->where($conditions)->sortDesc('rank_id')->many();
+			return Flight::aod()->from(Member::$table)->where($conditions)->sortDesc('rank_id')->many();
 		} else {
-			return Flight::aod()->from('member')->where($conditions)->sortAsc('last_activity')->many();
+			return Flight::aod()->from(Member::$table)->where($conditions)->sortAsc('last_activity')->many();
 		}
 
 	}

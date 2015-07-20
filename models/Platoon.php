@@ -21,7 +21,7 @@ class Platoon extends Application {
 	}
 
 	public static function findById($platoon_id) {
-		$sql = "SELECT platoon.id, platoon.number, platoon.name, platoon.leader_id, member.forum_name, rank.abbr FROM platoon LEFT JOIN member on platoon.leader_id = member.member_id LEFT JOIN rank on member.rank_id = rank.id WHERE platoon.id = {$platoon_id}";
+		$sql = "SELECT p.id, p.number, p.name, p.leader_id, m.forum_name, r.abbr FROM ".Platoon::$table." p LEFT JOIN ".Member::$table." m on p.leader_id = m.member_id LEFT JOIN ".Rank::$table." r on m.rank_id = r.id WHERE p.id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return arrayToObject($params);
 	}
@@ -32,25 +32,30 @@ class Platoon extends Application {
 	}
 
 	public static function SquadLeaders($game_id, $platoon_id = false, $order_by_rank = false) {
-		$sql = "SELECT member.id, last_activity, rank.abbr, member_id, forum_name, platoon.name as platoon_name, member.battlelog_name FROM member LEFT JOIN platoon ON platoon.id = member.platoon_id LEFT JOIN rank ON rank.id = member.rank_id WHERE member.position_id = 5 AND member.game_id = {$game_id} AND member.id NOT IN (SELECT leader_id FROM squad)";
+		$m = Member::$table;
+		$p = Platoon::$table;
+		$s = Squad::$table;
+
+		$sql = "SELECT m.id, member_id, rank_id, forum_name, p.name as platoon_name FROM {$m} m LEFT JOIN {$p} p ON p.id = m.platoon_id WHERE position_id = 5 AND m.game_id = {$game_id} AND m.id NOT IN (SELECT leader_id FROM {$s})";
 
 		if ($platoon_id) {
 			$sql .= " AND platoon_id = {$platoon_id} ";
 		}
 
 		if ($order_by_rank) {
-			$sql .= " ORDER BY member.rank_id DESC, member.forum_name ASC ";
+			$sql .= " ORDER BY m.rank_id DESC, m.forum_name ASC ";
 		} else {
-			$sql .= " ORDER BY platoon.id, forum_name";
+			$sql .= " ORDER BY p.id, forum_name";
 		}
 
 		$params = Flight::aod()->sql($sql)->many();
+		//var_dump(Flight::aod()->last_query);die;
 		return arrayToObject($params);
 	}
 
 	public static function members($platoon_id) {
 		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999));
-		$params = Flight::aod()->from('member')
+		$params = Flight::aod()->from(Member::$table)
 		->join('position', array('position.id' => 'member.position_id'))
 		->sortAsc('position.sort_order')
 		->where($conditions)
@@ -71,9 +76,9 @@ class Platoon extends Application {
 
 	public static function forumActivity($platoon_id) {
 		$conditions = "status_id IN (1,3,999) AND platoon_id = {$platoon_id}";		
-		$underTwoWeeks = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -2 WEEK) AND CURDATE();')->one();
-		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
-		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM member WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->one();
+		$underTwoWeeks = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -2 WEEK) AND CURDATE();')->one();
+		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
+		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->one();
 		$data = new stdClass();
 		$data->underTwoWeeks = $underTwoWeeks['count'];
 		$data->twoWeeksMonth = $twoWeeksMonth['count'];
@@ -83,23 +88,23 @@ class Platoon extends Application {
 
 	public static function unassignedMembers($platoon_id) {
 		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 3, 999), 'squad_id' => 0, 'position_id @' => array(6,7,0));
-		return arrayToObject(Flight::aod()->from('member')->where($conditions)->SortDesc('rank_id')->many());
+		return arrayToObject(Flight::aod()->from(Member::$table)->where($conditions)->SortDesc('rank_id')->many());
 	}
 
 	public static function countSquadLeaders($platoon_id) {
-		$sql = "SELECT count(*) as count FROM member WHERE position_id = 5 AND platoon_id = {$platoon_id}";
+		$sql = "SELECT count(*) as count FROM ".Member::$table." WHERE position_id = 5 AND platoon_id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
 
 	public static function countSquadMembers($platoon_id) {
-		$sql = "SELECT count(*) as count FROM member WHERE position_id = 6 AND platoon_id = {$platoon_id}";
+		$sql = "SELECT count(*) as count FROM ".Member::$table." WHERE position_id = 6 AND platoon_id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
 
 	public static function countGeneralPop($platoon_id) {
-		$sql = "SELECT count(*) as count FROM member WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
+		$sql = "SELECT count(*) as count FROM ".Member::$table." WHERE member.position_id = 7 AND (status_id = 1 OR status_id = 999) AND platoon_id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
 	}
@@ -109,19 +114,19 @@ class Platoon extends Application {
 	}
 
 	public static function getIdFromNumber($platoon_number, $division) {
-		$sql = "SELECT id FROM platoon WHERE number = {$platoon_number} AND game_id = {$division}";
+		$sql = "SELECT id FROM ".Platoon::$table." WHERE number = {$platoon_number} AND game_id = {$division}";
 		$params = Flight::aod()->sql($sql)->one(); 
 		return $params['id'];
 	}
 
 	public static function get_number_from_id($platoon_id) 	{
-		$sql = "SELECT number FROM platoon WHERE id = {$platoon_id}";
+		$sql = "SELECT number FROM ".Platoon::$table." WHERE id = {$platoon_id}";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['number'];
 	}
 
 	public static function memberIdsList($platoon_id) {
-		$sql = "SELECT member_id FROM member WHERE platoon_id = {$platoon_id} AND status_id IN (1, 999)";
+		$sql = "SELECT member_id FROM ".Member::$table." WHERE platoon_id = {$platoon_id} AND status_id IN (1, 999)";
 		$params = Flight::aod()->sql($sql)->many();
 		if (count($params)) {
 			foreach ($params as $member) { $memberIds[] = intval($member['member_id']); }

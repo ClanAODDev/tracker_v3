@@ -47,13 +47,13 @@ class User extends Application {
 
 	public static function debugMode() {
 		$id = $_SESSION['userid'];
-		$params = Flight::aod()->sql("SELECT debug FROM users WHERE id = {$id} LIMIT 1")->one();
+		$params = Flight::aod()->sql("SELECT debug FROM ".self::$table." WHERE id = {$id} LIMIT 1")->one();
 		return ($params['debug'] == 1) ? true : false;
 	}
 
 	public static function isDev() {
 		$id = $_SESSION['userid'];
-		$params = Flight::aod()->sql("SELECT developer FROM users WHERE id = {$id} LIMIT 1")->one();
+		$params = Flight::aod()->sql("SELECT developer FROM ".self::$table." WHERE id = {$id} LIMIT 1")->one();
 		return ($params['developer'] == 1 || self::isOnSafeList($id)) ? true : false;
 	}
 
@@ -88,12 +88,12 @@ class User extends Application {
 	}
 
 	public static function onlineList() {
-		$params = Flight::aod()->sql("SELECT member.member_id, users.username, users.last_seen, users.role, users.idle FROM users LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
+		$params = Flight::aod()->sql("SELECT member.member_id, users.username, users.last_seen, users.role, users.idle FROM ".self::$table." LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
 		return $params;
 	}
 
 	public static function exists($forum_name)	{
-		$count = Flight::aod()->sql("SELECT count(*) as count FROM users WHERE `username`='{$forum_name}'")->one();
+		$count = Flight::aod()->sql("SELECT count(*) as count FROM ".self::$table." WHERE `username`='{$forum_name}'")->one();
 		if ($count['count'] > 0) { return true; } else {	return false; }
 	}
 

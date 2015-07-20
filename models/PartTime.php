@@ -16,7 +16,7 @@ class PartTime extends Application {
 
 	public static function add($member_id, $date, $reason, $comment) {
 		$member = Member::findByMemberId($member_id);
-		$sql = "INSERT INTO loa ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
+		$sql = "INSERT INTO ".LeaveOfAbsence::$table." ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
 		Flight::aod()->sql($sql)->one();
 		return array('success' => true);
 	}
