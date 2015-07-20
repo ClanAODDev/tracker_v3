@@ -30,7 +30,7 @@
 						<?php $members = Squad::members($squad->id); ?>
 
 						<div class="col-xs-6">
-							<h3 class="page-header squad-header"><strong><?php echo $leader_name ?></strong> <a href="#" class="btn btn-xs btn-default modify-squad" style="position: absolute; left: 15px;"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
+							<h3 class="page-header squad-header"><small><strong><?php echo $leader_name ?></strong></small> <a href="#" class="btn btn-xs btn-default modify-squad" style="position: absolute; left: 15px;"><i class="fa fa-wrench"></i> Edit Squad</a><span class="badge pull-right"><?php echo count((array)$members); ?></span></h3>
 
 							<ul class="list-group sortable" data-squad-id="<?php echo $squad->id ?>" data-platoon-id="<?php echo $platoon->id ?>" data-division-id="<?php echo $division->id ?>">
 								<?php foreach ($members as $member): ?>
