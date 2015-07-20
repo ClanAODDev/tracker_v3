@@ -10,6 +10,10 @@ class Squad extends Application {
 	static $table = 'squad';
 	static $id_field = 'id';
 
+	public static function findById($id) {
+		return (object) self::find($id);
+	}
+
 	public static function findAll($game_id, $platoon_id = false) {
 
 		if ($platoon_id) {

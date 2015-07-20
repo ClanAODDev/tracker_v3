@@ -66,9 +66,10 @@ class User extends Application {
 	{
 
 		$player = Member::findByMemberId($mid);
+		$squad = ($player->squad_id != 0) ? Squad::find($player->squad_id) : false;
 
     	// is the user the assigned squad leader?
-		if (($user->role == 1) && ($member->member_id == $player->squad_leader_id)) {
+		if (($user->role == 1) && ($squad) && ($squad->leader_id == $player->id)) {
 			return true;
         // is the user the platoon leader of the user?
 		} else if (($user->role == 2) && ($member->platoon_id == $player->platoon_id)) {
