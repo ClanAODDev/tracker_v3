@@ -121,10 +121,10 @@ if (count($divisions)) {
 					echo "ERROR: " . $e->getMessage();			
 				}
 
-				echo date('Y-m-d h:i:s A') . " - Updated the following member ids to 'removed': " . $removalIds . "{$linebreak}";
+				echo date('Y-m-d h:i:s A') . " - Updated the following member ids to 'removed': " . $removalIds . "\r\n";
 			}
 
-			echo date('Y-m-d h:i:s A') . " - {$division['full_name']} sync done. {$linebreak}";
+			echo date('Y-m-d h:i:s A') . " - {$division['full_name']} sync done. \r\n";
 
 			try {
 				$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'arch_sync'")->execute();
@@ -133,7 +133,7 @@ if (count($divisions)) {
 			}
 
 		} else {
-			echo date('Y-m-d h:i:s A') . " - Error: Column count has changed. Parser needs to be updated.{$linebreak}";
+			echo date('Y-m-d h:i:s A') . " - Error: Column count has changed. Parser needs to be updated.\r\n";
 			die;
 		}
 
