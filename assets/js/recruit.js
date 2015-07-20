@@ -63,7 +63,6 @@ $(function() {
                 $(".has-error").removeClass("has-error");
                 $(".message").html("");
 
-
                 // check for matching forum name / battlelog
                 if (battlelog != forumName) {
                     if (!confirm("The member's forum name does not match the ingame name. Are you sure you wish to continue with this information?")) {
@@ -311,13 +310,11 @@ function storePlayer(member_id, forum_name, platoon, squad_id, battlelog_name, d
         success: function(response) {
             message = response.message;
             if (response.success === false) {
-                $("#storePlayer").html("<i class='fa fa-times'></i> " + message).attr("class", "btn btn-danger");
+                swal('Error!', message, 'error');
             } else {
                 $("#storePlayer").html("<i class='fa fa-check'></i> " + message).attr("class", "btn btn-success disabled").delay(1000).fadeOut();
-                $(".alert-box").attr("style", "display: block;").empty();
-                $(".alert-box").append("<div class='alert alert-success' style='z-index: 5;'><i class='fa fa-check fa-2x'></i> " + ucwords(forum_name) + " has been successfully added to the division!</div>").delay(3000).fadeOut();
                 $("#storePlayer").after("<br /><br /><a href='./' class='btn btn-info'>Go Home</a>");
-                // success
+                swal('Success!', ucwords(forum_name) + ' has been successfully added to the division', 'success');
             }
         }
     });
