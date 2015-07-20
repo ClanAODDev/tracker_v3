@@ -62,26 +62,33 @@ class User extends Application {
 		return ($params['count'] > 0) ? true : false;
 	}
 
-	public static function canEdit($mid, $user, $member)
+	/**
+	 * checks user's editing abilities for a specific member
+	 * @param  int $mid    the member id of the member being edited
+	 * @param  int $user   the user object of the user doing the editing
+	 * @param  int $member the member object of the user doing the editing
+	 * @return boolean      self explanatory
+	 */
+	public static function canEdit($mid, $myUser, $myMember)
 	{
 
 		$player = Member::findByMemberId($mid);
 		$squad = ($player->squad_id != 0) ? Squad::find($player->squad_id) : false;
 
     	// is the user the assigned squad leader?
-		if (($user->role == 1) && ($squad) && ($squad->leader_id == $player->id)) {
+		if (($myUser->role == 1) && ($squad) && ($squad->leader_id == $myMember->id)) {
 			return true;
         // is the user the platoon leader of the user?
-		} else if (($user->role == 2) && ($member->platoon_id == $player->platoon_id)) {
+		} else if (($myUser->role == 2) && ($myMember->platoon_id == $player->platoon_id)) {
 			return true;
         // is the user the division leader of the user?
-		} else if (($user->role == 3) && ($member->game_id == $player->game_id)) {
+		} else if (($myUser->role == 3) && ($myMember->game_id == $player->game_id)) {
 			return true;
         // is the user a dev or clan administrator?        
 		} else if (self::isDev()) {
 			return true;
         // is the user editing someone of a lesser role, or himself?
-		} else if ($mid == $member->member_id) {
+		} else if ($mid == $myMember->member_id) {
 			return true;
 		} else {
 			return false;

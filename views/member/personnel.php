@@ -1,6 +1,6 @@
 <?php if ($user->role == 1) : ?><!-- if squad leader -->
 
-	<?php $squad_id = (Squad::mySquadId($member->id)) ? Squad::mySquadId($member->id)->id : NULL; ?>
+	<?php $squad_id = (Squad::mySquadId($member->id)) ? Squad::mySquadId($member->id) : NULL; ?>
 	<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad_id)); ?>
 
 	<?php if (!is_null($squad_id)) : ?>
@@ -11,7 +11,7 @@
 				<div class='list-group' id='squad'>
 
 					<?php foreach($squadMembers as $player) : ?>
-						<?php $rctFlag = ($player->recruiter == $leader->member_id) ? "<sup><i class='fa fa-asterisk text-success'></i></sup>" : NULL; ?>
+						<?php $rctFlag = ($player->recruiter == $member->member_id) ? "<sup><i class='fa fa-asterisk text-success'></i></sup>" : NULL; ?>
 						<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($player->rank_id)->abbr; ?> <?php echo $player->forum_name ?></span> <?php echo $rctFlag ?>
 							<?php if (Member::isOnLeave($player->member_id)) : ?>
 								<small class='pull-right text-muted'>On Leave</small>

@@ -22,7 +22,7 @@
 					</span>
 					<br /><a class='btn btn-default btn-xs popup-link' href='<?php echo PRIVMSG . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-comment'></i> Send PM</a><a class='btn btn-default btn-xs popup-link' href='<?php echo EMAIL . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-envelope'></i> Send Email</a>
 				</h2>
-			</div>			
+			</div>			 
 
 			<div class='col-xs-6'>
 				<?php if (User::canEdit($memberInfo->member_id, $user, $member)) : ?>
