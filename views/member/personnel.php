@@ -1,6 +1,6 @@
 <?php if ($user->role == 1) : ?><!-- if squad leader -->
 
-	<?php $squad_id = (property_exists(Squad::mySquadId($member->id), 'id')) ? Squad::mySquadId($member->id)->id : NULL; ?>
+	<?php $squad_id = (Squad::mySquadId($member->id)) ? Squad::mySquadId($member->id)->id : NULL; ?>
 	<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad_id)); ?>
 
 	<?php if (!is_null($squad_id)) : ?>
