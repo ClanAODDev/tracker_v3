@@ -5,9 +5,8 @@
 			<?php foreach($tools as $tool) : ?>
 				<?php $disabled = ($tool->disabled) ? "disabled" : null; ?>
 				<a href='<?php echo $tool->tool_path ?>' class='list-group-item <?php echo $tool->class . " " . $disabled ?>'>
-					<h4 class='pull-right text-muted'><i class='fa fa-<?php echo $tool->icon ?> fa-lg'></i></h4>
-					<h4 class='list-group-item-heading'><strong><?php echo $tool->tool_name ?></strong></h4>
-					<p class='list-group-item-text text-muted'><?php echo $tool->tool_descr ?></p>
+					<h4 class='list-group-item-heading'><strong><?php echo $tool->tool_name ?></strong><i class='pull-right fa fa-<?php echo $tool->icon ?> fa-lg text-muted'></i></h4>
+					<p class='list-group-item-text text-muted hidden-xs hidden-sm'><?php echo $tool->tool_descr ?></p>
 				</a>			
 			<?php endforeach; ?>				
 		<?php else : ?>
