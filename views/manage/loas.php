@@ -23,8 +23,8 @@
 				<thead>
 					<tr>
 						<th>Member name</th>
-						<th>Reason</th>
-						<th>End Date</th>
+						<th class="hidden-xs">Reason</th>
+						<th class="hidden-xs hidden-sm">End Date</th>
 						<th class='text-center'>Status</th>
 					</tr>
 				</thead>
@@ -34,8 +34,8 @@
 					<?php foreach ($pendingLoas as $player) : ?>
 						<tr data-member-id='<?php echo $player->member_id ?>' data-loa-id='<?php echo $player->id ?>' data-comment='<?php echo $player->comment ?>'>
 							<td><?php echo Member::findForumName($player->member_id); ?></td> 
-							<td><?php echo $player->reason; ?></td>
-							<td><?php echo date("M d, Y", strtotime($player->date_end)); ?></td>
+							<td class="hidden-xs"><?php echo $player->reason; ?></td>
+							<td class="hidden-xs hidden-sm"><?php echo date("M d, Y", strtotime($player->date_end)); ?></td>
 							<td class='text-center' style='vertical-align: middle;'><h4><span class='label bg-warning'><i class='fa fa-clock-o' title='Pending'></i> Pending</span></h4></td>
 
 							<?php if ($user->role >= 1) : ?>
@@ -55,8 +55,8 @@
 			<thead>
 				<tr>
 					<th>Member name</th>
-					<th>Reason</th>
-					<th>End Date</th>
+					<th class="hidden-xs">Reason</th>
+					<th class="hidden-xs hidden-sm">End Date</th>
 					<th class='text-center'>Status</th>
 				</tr>
 			</thead>
@@ -73,8 +73,8 @@
 
 						<tr data-member-id='<?php echo $player->member_id ?>' data-loa-id='<?php echo $player->id ?>' data-approval='<?php echo $approved_by ?>' data-comment='<?php echo $comment ?>'>
 							<td><?php echo Member::findForumName($player->member_id); ?></td> 
-							<td><?php echo $player->reason ?></td>
-							<td>
+							<td class="hidden-xs"><?php echo $player->reason ?></td>
+							<td class="hidden-xs hidden-sm">
 								<?php if ($expired) : ?><span class='text-danger' title='Expired'><?php echo $date_end ?></span>
 								<?php else : echo $date_end ?>
 								<?php endif; ?>
