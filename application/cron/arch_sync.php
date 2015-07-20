@@ -140,7 +140,7 @@ if (count($divisions)) {
 	}
 
 } else {
-	echo "There are no divisions to sync."
+	echo "There are no divisions to sync.";
 }
 
 

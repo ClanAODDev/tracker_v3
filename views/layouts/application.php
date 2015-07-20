@@ -211,8 +211,6 @@
 		<script src="assets/js/<?php echo $js ?>.js"></script>
 	<?php endif; ?>
 
-
-
 	<?php
 
 	// debug information	
@@ -221,7 +219,6 @@
 		Flight::aod()->show_sql = true;
 		error_reporting(E_ALL);
 		ini_set('display_errors', '1');
-		var_dump(get_defined_vars());
 	}
 
 	?>
