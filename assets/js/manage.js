@@ -118,6 +118,8 @@ $(function() {
 
     // manage platoon
     // fix for affix panel
+    $('#sidebar').width($('.sidebar-parent').width());
+    // activate on resize
     $(window).resize(function() {
         $('#sidebar').width($('.sidebar-parent').width());
     });
