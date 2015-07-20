@@ -89,7 +89,7 @@ class MemberController {
 
 		// only update values allowed by role
 		if (!User::isDev()) {
-			if ($respUser->role < 2) { unset($memberData['squad_id'], $memberData['position'], $memberData['platoon_id']);  }
+			if ($respUser->role < 2) { unset($memberData['squad_id'], $memberData['position_id'], $memberData['platoon_id']);  }
 			if ($respUser->role < 3) { unset($memberData['platoon_id']); }
 		}
 
