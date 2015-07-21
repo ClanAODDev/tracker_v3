@@ -82,9 +82,9 @@ class Platoon extends Application {
 
 		// generate json for graph
 		$data = Array();
-		$data[] = array('label' => '< 2 weeks', 'color' => '#28b62c', 'highlight' => '#5bc75e', 'value' => $underTwoWeeks['count']);
-		$data[] = array('label' => '> 2 weeks', 'color' => '#ff851b', 'highlight' => '#ffa14f', 'value' => $twoWeeksMonth['count']);
-		$data[] = array('label' => '> 1 month', 'color' => '#ff4136', 'highlight' => '#ff6c64', 'value' => $oneMonth['count']);
+		$data[] = array('label' => '< 2 weeks ago', 'color' => '#28b62c', 'highlight' => '#5bc75e', 'value' => $underTwoWeeks['count']);
+		$data[] = array('label' => '> 2 weeks ago', 'color' => '#ff851b', 'highlight' => '#ffa14f', 'value' => $twoWeeksMonth['count']);
+		$data[] = array('label' => '> 1 month ago', 'color' => '#ff4136', 'highlight' => '#ff6c64', 'value' => $oneMonth['count']);
 		return json_encode($data);
 
 	}

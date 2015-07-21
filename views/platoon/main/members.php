@@ -12,7 +12,7 @@
 				<th><b>Member</b></th>				
 				<th class='nosearch text-center hidden-xs hidden-sm'><b>Rank</b></th>
 				<th class='text-center hidden-xs hidden-sm'><b>Joined</b></th>
-				<th class='text-center'><b>Last Active</b></th>
+				<th class='text-center'><b>Forum Activity</b></th>
 
 				<?php if ($division->id == 2): ?>
 					<th class='text-center tool' title='In AOD servers'><b>AOD</b></th>
