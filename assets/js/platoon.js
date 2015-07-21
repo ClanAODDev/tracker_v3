@@ -91,6 +91,7 @@
             animationEasing: "easeInOutQuint",
             animationSteps: 75,
             percentageInnerCutout: 50,
+            animateScale: true
         });
 
     });
