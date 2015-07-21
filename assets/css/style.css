@@ -790,6 +790,11 @@ div.DTTT_container {
   }
 }
 
+div.chart_div table {
+    width: auto;
+    margin: 0 auto !important;
+}
+
 #sidebar {
   margin-top: 30px;
 }
