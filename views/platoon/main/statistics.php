@@ -7,34 +7,30 @@
 <div class='panel panel-primary'>
 	<div class='panel-heading'>Forum Activity</div>
 	<div class='panel-body striped-bg'>
-		<div id="activity" style="margin: 0 auto; margin-top: -40px;"></div>
+		<div id="canvas-holder">
+			<canvas id="chart-area" style="filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"/>
+		</div>
 	</div>
 </div>
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="assets/js/libraries/Chart.js/Chart.Core.js"></script>
+<script src="assets/js/libraries/Chart.js/Chart.Doughnut.js"></script>
 
 <script type="text/javascript">
-	google.load("visualization", "1", {packages:["corechart"]});
-	google.setOnLoadCallback(drawChart);
-	function drawChart() {
-		var data = google.visualization.arrayToDataTable([
-			['Players', 'Forum Activity'],
-			['<2 wks', <?php echo $activity->underTwoWeeks ?>],
-			['>2 wks', <?php echo $activity->twoWeeksMonth ?>],
-			['>30 days', <?php echo $activity->oneMonth ?>]
-			]);
 
-		var options = {
-			is3D: true,
-			position: 'labeled',
-			legend: {position: 'bottom'},
-			backgroundColor: { fill:'transparent' },
-			colors: ['#28b62c', '#ff851b', '#ff4136'],
-			sliceVisibilityThreshold: 0
-		};
+	var donutData = <?php echo $activity; ?>
 
-		var chart = new google.visualization.PieChart(document.getElementById('activity'));
-		chart.draw(data, options);
-	}
+	window.onload = function() {
+		var ctx = document.getElementById("chart-area").getContext("2d");
+		window.myDonut = new Chart(ctx).Doughnut(donutData, {
+			responsive: true,
+			animationEasing: "easeInOutQuint",
+			animationSteps : 75,
+			percentageInnerCutout : 30,
+			segmentShowStroke : true,
+			segmentStrokeWidth : 2,
+		});
+	};
+
 </script>
 
