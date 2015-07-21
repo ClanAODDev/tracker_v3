@@ -7,24 +7,8 @@
 <div class='panel panel-primary'>
 	<div class='panel-heading'>Forum Activity</div>
 	<div class='panel-body striped-bg'>
-		<div id="canvas-holder">
+		<div id="canvas-holder" data-stats="<?php echo htmlentities($activity, ENT_QUOTES, 'UTF-8'); ?>">
 			<canvas id="chart-area" style="filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"/>
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-
-	var donutData = <?php echo $activity; ?>;
-
-	window.onload = function() {
-		var ctx = document.getElementById("chart-area").getContext("2d");
-		window.myDonut = new Chart(ctx).Doughnut(donutData, {
-			animationEasing: "easeInOutQuint",
-			animationSteps : 75,
-			percentageInnerCutout : 30,
-		});
-	};
-
-</script>
-
