@@ -18,7 +18,7 @@
 
 <script type="text/javascript">
 
-	var donutData = <?php echo $activity; ?>
+	var donutData = <?php echo $activity; ?>;
 
 	window.onload = function() {
 		var ctx = document.getElementById("chart-area").getContext("2d");
