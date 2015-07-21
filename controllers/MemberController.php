@@ -23,10 +23,22 @@ class MemberController {
 			// game data
 			$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
 			$edate = date("Y-m-d", strtotime("tomorrow"));
-			$countTotalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
-			$countAODGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
-			$allGames = Activity::find_allGames($memberInfo->member_id);
-			$pctAod = ($countTotalGames>0) ? $countAODGames * 100 / $countTotalGames : 0;
+			$totalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
+			$aodGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
+			$games = Activity::find_allGames($memberInfo->member_id);
+			$pctAod = ($totalGames>0) ? $aodGames * 100 / $totalGames : 0;
+
+			switch ($divisionInfo->short_name) {
+				case "bf":
+					$activity = array('totalGames' => $totalGames, 'aodGames' => $aodGames, 'games' => $games, 'pctAod' => $pctAod);
+					break;
+				case "wg":
+					$activity = array();
+					break;
+				default:
+					$activity = array();
+					break
+			}
 
 			if (property_exists($platoonInfo, 'id')) {
 				$platoonInfo->link = "<li><a href='divisions/{$divisionInfo->short_name}/platoon/{$platoonInfo->number}'>{$platoonInfo->name}</a></li>";
@@ -41,7 +53,7 @@ class MemberController {
 			Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
 			Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
 			Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
-			Flight::render('member/activity', array('totalGames' => $countTotalGames, 'aodGames' => $countAODGames, 'games' => $allGames, 'pctAod' => $pctAod), 'activity');
+			Flight::render('member/activity/'.$divisionInfo->short_name, $activity, 'activity');
 			Flight::render('member/history', array(), 'history');
 			Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'gamesPlayed' => $gamesPlayed), 'content');
 			Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
