@@ -13,8 +13,6 @@
 	</div>
 </div>
 
-<script src="assets/js/libraries/Chart.js/Chart.Core.js"></script>
-<script src="assets/js/libraries/Chart.js/Chart.Doughnut.js"></script>
 
 <script type="text/javascript">
 
