@@ -11,11 +11,7 @@
 			<canvas id="chart-area" style="filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"/>
 		</div>
 	</div>
-
 </div>
-
-<script src="assets/js/libraries/chartjs/Chart.Core.js"></script>
-<script src="assets/js/libraries/chartjs/Chart.Doughnut.js"></script>
 
 <script type="text/javascript">
 
@@ -24,14 +20,10 @@
 	window.onload = function() {
 		var ctx = document.getElementById("chart-area").getContext("2d");
 		window.myDonut = new Chart(ctx).Doughnut(donutData, {
-			responsive: true,
 			animationEasing: "easeInOutQuint",
 			animationSteps : 75,
 			percentageInnerCutout : 30,
-			segmentShowStroke : true,
-			segmentStrokeWidth : 2
 		});
-
 	};
 
 </script>
