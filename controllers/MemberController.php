@@ -37,7 +37,7 @@ class MemberController {
 					break;
 				default:
 					$activity = array();
-					break
+					break;
 			}
 
 			if (property_exists($platoonInfo, 'id')) {
