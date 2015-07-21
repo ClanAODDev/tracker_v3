@@ -11,6 +11,7 @@
 			<canvas id="chart-area" style="filter: drop-shadow(0px 0px 10px rgba(0,0,0,.5));"/>
 		</div>
 	</div>
+
 </div>
 
 <script src="assets/js/libraries/chartjs/Chart.Core.js"></script>
@@ -28,8 +29,9 @@
 			animationSteps : 75,
 			percentageInnerCutout : 30,
 			segmentShowStroke : true,
-			segmentStrokeWidth : 2,
+			segmentStrokeWidth : 2
 		});
+
 	};
 
 </script>

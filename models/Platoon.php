@@ -80,12 +80,13 @@ class Platoon extends Application {
 		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
 		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->one();
 
+		// generate json for graph
 		$data = Array();
 		$data[] = array('label' => '< 2 weeks', 'color' => '#28b62c', 'value' => $underTwoWeeks['count']);
 		$data[] = array('label' => '> 2 weeks', 'color' => '#ff851b', 'value' => $twoWeeksMonth['count']);
 		$data[] = array('label' => '> 1 month', 'color' => '#ff4136', 'value' => $oneMonth['count']);
 		return json_encode($data);
-		
+
 	}
 
 	public static function unassignedMembers($platoon_id) {
