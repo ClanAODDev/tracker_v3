@@ -14,6 +14,9 @@
     })();
 	</script>
 	<![endif]-->
+
+		<script src="assets/js/libraries/Chart.js/Chart.Core.js"></script>
+	<script src="assets/js/libraries/Chart.js/Chart.Doughnut.js"></script>
 	
 	<link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/lumen/bootstrap.min.css">
@@ -205,8 +208,6 @@
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/libraries/touchpunch.js"></script>
 	<script src="assets/js/libraries/sweetalert2.min.js"></script>
-	<script src="assets/js/libraries/Chart.js/Chart.Core.js"></script>
-	<script src="assets/js/libraries/Chart.js/Chart.Doughnut.js"></script>
 	<script src="assets/js/main.js"></script>
 
 	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>
