@@ -131,20 +131,34 @@ $(function() {
 
     $(".removeMember").click(function(e) {
         e.preventDefault();
-        if (confirm("Are you SURE you want to REMOVE this player from AOD?")) {
-            var member = $(this).closest('li').attr('data-player-id');
 
-            if (member == undefined) {
-                member = $(this).closest('.btn-group').attr('data-player-id');
-            } else {
-                $(this).closest('.list-group-item').remove();
-            }
+        swal({
+                title: 'Remove player?',
+                html: '<p>Are you sure you want to <strong>remove this player</strong> from AOD?</p>',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4136',
+                confirmButtonText: 'Yes, remove',
+                closeOnConfirm: false
+            },
+            function() {
 
-            $.post("do/remove-member", {
-                id: member
+                var member = $(this).closest('li').attr('data-player-id');
+
+                if (member == undefined) {
+                    member = $(this).closest('.btn-group').attr('data-player-id');
+                } else {
+                    $(this).closest('.list-group-item').remove();
+                }
+
+                $.post("do/remove-member", {
+                    id: member
+                });
+
+                windowOpener($(this).attr("href") + member, "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
             });
-            windowOpener($(this).attr("href") + member, "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
-        }
+
+
     });
 
 
