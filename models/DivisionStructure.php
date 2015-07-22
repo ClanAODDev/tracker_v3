@@ -23,15 +23,23 @@ class DivisionStructure {
 		$platoon_num_color = "#FF0000";
 		$platoon_pos_color = "#40E0D0";
 
+		// number of columns
+		$num_columns = 3;
+
 		// widths
-		$players_width = 1500;
-		$info_width = 1400;
+		$players_width = 900;
+		$info_width = 800;
 
     	// misc settings
 		$min_num_squad_leaders = 2;
 
 		// ctr
 		$i = 1;
+
+
+
+
+
 
     	// header
 		$division_structure = "[table='width: {$info_width}']";
@@ -157,6 +165,10 @@ class DivisionStructure {
 			}
 
 			$division_structure .= "\r\n\r\n";
+
+			if ($i % $num_columns == 0) {
+			$division_structure .= "[/td][/tr][tr]";	
+			}
 			$division_structure .= "[/td]";
 
 			$i++;
@@ -171,16 +183,19 @@ class DivisionStructure {
 
 		$i = 1;
 
+		// header
 		$division_structure .= "\r\n[table='width: {$info_width}']";
 		$division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Part Time Members[/b][/color][/size][/center][/td][/tr]";
 		$division_structure .= "[/table]\r\n\r\n";
-		$division_structure .= "[table='width: {$info_width}']";
+
+		// players
+		$division_structure .= "[table='width: {$players_width}']";
 		$division_structure .= "[tr][td]";
 
 		$partTimers = PartTime::find_all($game_id);
 
 		foreach ($partTimers as $player) {
-			if ($i % 15 == 0) {
+			if ($i % 20 == 0) {
 				$division_structure .= "[/td][td]";
 			}
 			$bl_url = "[url=" . BATTLELOG . $player->battlelog_name. "][BL][/url]";
@@ -197,10 +212,13 @@ class DivisionStructure {
 
 		$i = 1;
 
+		// header
 		$division_structure .= "\r\n[table='width: {$info_width}']";
 		$division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
 		$division_structure .= "[/table]\r\n\r\n";
-		$division_structure .= "[table='width: {$info_width}']";
+
+		// players
+		$division_structure .= "[center][table='width: {$info_width}']";
 		$division_structure .= "[tr][td]";
 		$loas = LeaveOfAbsence::find_all($game_id);
 		foreach ($loas as $player) {
@@ -209,7 +227,6 @@ class DivisionStructure {
 			}
 
 			$date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end)); 
-			
 
 			$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 			$profile = Member::findByMemberId($player->member_id);
@@ -218,7 +235,7 @@ class DivisionStructure {
 		}
 		
 		$division_structure .= "[/td]";
-		$division_structure .= "[/tr][/table]";
+		$division_structure .= "[/tr][/table][/center]";
 
 		return $division_structure;
 	}
