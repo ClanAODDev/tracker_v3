@@ -10,7 +10,7 @@ class MemberHandle extends Application {
 	static $id_field = 'id';
 	static $table = 'member_handles';
 
-	public static function find_all($member_id) {
+	public static function findByMemberId($member_id) {
 		return self::find(array('member_id' => $member_id))->many();
 	}
 
