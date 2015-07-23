@@ -59,7 +59,7 @@ $(function() {
         if (type) {
             $("#aliases tr:last").before($newRow);
             $newRow.effect("highlight", {}, 1000);
-            if ($("#alias-selector option").length > 1) {
+            if ($("#alias-selector option").length > 2) {
                 $this.remove();
             } else {
                 $(this).closest("tr").fadeOut();
