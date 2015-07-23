@@ -7,7 +7,7 @@
 		<?php if (count((array)$squadMembers)) : ?>
 
 			<div class='panel panel-default'>
-				<div class='panel-heading'><strong> Your Squad</strong> <span class="pull-right"><?php echo count((array) $squadMembers); ?> members</span></div>
+				<div class='panel-heading'><strong> Your </strong> <span class="pull-right"><?php echo count((array) $squadMembers); ?> members</span></div>
 				<div class='list-group' id='squad'>
 
 					<?php foreach($squadMembers as $player) : ?>

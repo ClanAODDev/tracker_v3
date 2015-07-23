@@ -19,6 +19,7 @@ class MemberController {
 			$platoonInfo = Platoon::findById(intval($memberInfo->platoon_id));
 			$recruits = Member::findRecruits($memberInfo->member_id);
 			$gamesPlayed = MemberGame::get($memberInfo->id);
+			$aliases = MemberHandle::findByMemberId($memberInfo->id);
 
 			// game data
 			$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
@@ -30,14 +31,14 @@ class MemberController {
 
 			switch ($divisionInfo->short_name) {
 				case "bf":
-					$activity = array('totalGames' => $totalGames, 'aodGames' => $aodGames, 'games' => $games, 'pctAod' => $pctAod);
-					break;
+				$activity = array('totalGames' => $totalGames, 'aodGames' => $aodGames, 'games' => $games, 'pctAod' => $pctAod);
+				break;
 				case "wg":
-					$activity = array();
-					break;
+				$activity = array();
+				break;
 				default:
-					$activity = array();
-					break;
+				$activity = array();
+				break;
 			}
 
 			if (property_exists($platoonInfo, 'id')) {
@@ -52,7 +53,7 @@ class MemberController {
 
 			Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
 			Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
-			Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo), 'member_data');
+			Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'aliases' => $aliases), 'member_data');
 			Flight::render('member/activity/'.$divisionInfo->short_name, $activity, 'activity');
 			Flight::render('member/history', array(), 'history');
 			Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'gamesPlayed' => $gamesPlayed), 'content');
@@ -117,7 +118,7 @@ class MemberController {
 			if ($memberData['recruiter'] != 0 && !Member::exists($memberData['recruiter'])) {
 				$data = array('success' => false, 'message' => "Recruiter id is invalid.");
 			// validate squad leader / squad_id setting
-			} else if ($memberData['position_id'] == 5 && $memberData['squad_id'] != 0) {
+			} else if ($respMember->member_id != $member->member_id && $memberData['position_id'] == 5 && $memberData['squad_id'] != 0 ) {
 				$data = array('success' => false, 'message' => "Squad leaders cannot be in a squad.");
 			} else {
 				// update member info
@@ -154,6 +155,32 @@ class MemberController {
 				}
 			}
 
+			// update aliases
+			if (isset($_POST['userAliases'])) {
+				$aliases = $_POST['userAliases'];
+				//var_dump($aliases);die;
+
+				foreach($aliases as $type => $value) {
+
+					$type = Handle::findByName($type)->id;
+
+					if ($value != '') {
+
+						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => 0);
+						$id = MemberHandle::hasAlias($type, $memberData['id']);
+
+						if ($id) {
+
+							$params['id'] = $id;
+							MemberHandle::modify($params);
+
+						} else {
+							MemberHandle::add($params);
+						}
+					}
+				}
+			}
+
 		} else {
 			$data = array('success' => false, 'message' => 'You do not have permission to modify this player.');
 		}
@@ -182,38 +209,48 @@ class MemberController {
 
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
+		$division = Division::findById($member->game_id);
 		$platoon_id = ($user->role >= 3 || User::isDev()) ? $_POST['platoon_id'] : $member->platoon_id;
 		$squad_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_id'] : (Squad::mySquadId($member->id)) ?: 0;
 		$position_id = 6;
 
-		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'recruiter'=>$member->member_id, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
-		$existingParams = array('forum_name'=>$_POST['forum_name'], 'battlelog_name'=>$_POST['battlelog_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'battlelog_id'=>0, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+		$existingParams = array('forum_name'=>$_POST['forum_name'], 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
 		if (Member::exists($_POST['member_id'])) {
 
 			$existingParams = array_merge($existingParams, array('id' => Member::findId($_POST['member_id'])));
-			Member::modify($existingParams);
-			$insert_id = Flight::aod()->insert_id;
+			$insert_id = Member::modify($existingParams);
 			UserAction::create(array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']));
 			$data = array('success' => true, 'message' => "Existing member successfully updated!");
 
 		} else {
 
-			Member::create($newParams);
-			$insert_id = Flight::aod()->insert_id;
+			$insert_id = Member::create($newParams);
 			UserAction::create(array('type_id'=>1,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']));
 			$data = array('success' => true, 'message' => "Member successfully added!");
-
 		}
 
-		if (isset($_POST['played_games'])) {
-			$games = $_POST['played_games'];
-			foreach ($games as $game) {
-				$params = new stdClass();
-				$params->member_id = $insert_id;
-				$params->game_id = $game;
-				MemberGame::add($params);
+		if ($insert_id != 0) {
+
+			if (isset($_POST['played_games'])) {
+				$games = $_POST['played_games'];
+				foreach ($games as $game) {
+					$memberGame = new stdClass();
+					$memberGame->member_id = $insert_id;
+					$memberGame->game_id = $game;
+					MemberGame::add($memberGame);
+				}
+			}
+
+			if (isset($_POST['ingame_name'])) {
+				$ingame_name = $_POST['ingame_name'];
+				$handle = new stdClass();
+				$handle->member_id = $insert_id;
+				$handle->handle_type = $division->primary_handle;
+				$handle->handle_value = $ingame_name;
+				MemberHandle::add($handle);
 			}
 		}
 

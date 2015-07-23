@@ -98,15 +98,15 @@
 									</div>
 								</div>
 
-								<div class='form-group battlelog-group'>
-									<label for='battlelog' class='col-sm-3 control-label'><strong>Battlelog Name</strong></label>
+								<div class='form-group ingame-group'>
+									<label for='ingame' class='col-sm-3 control-label'><strong>Ingame Name</strong></label>
 									<div class='col-sm-9'>
-										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='battlelog' name='battlelog' tabindex='3'>
+										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='ingame' name='ingame' tabindex='3'>
 									</div>
 								</div>
 
 								<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
-									<label for='platoon' class='col-sm-3 control-label'><strong>Platoon</strong></label>
+									<label for='platoon' class='col-sm-3 control-label'><strong><?php echo Locality::run('Platoon', $division->id); ?></strong></label>
 									<div class='col-sm-9'>
 										<select name='platoon' id='platoon' class='form-control'>
 											<?php foreach($platoons as $platoon) : ?>
@@ -117,7 +117,7 @@
 								</div>
 
 								<div class='form-group squadldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
-									<label for='squad_id' class='col-sm-3 control-label'><strong>Squad Leader</strong></label>
+									<label for='squad_id' class='col-sm-3 control-label'><strong><?php echo Locality::run('Squad leader', $division->id); ?></strong></label>
 									<div class='col-sm-9'>
 										<select name='squad_id' id='squad_id' class='form-control'>
 											<?php foreach($squads as $squad) : ?>
@@ -236,7 +236,7 @@
 												<div class='col-md-6'>
 													<div class='well code'>
 														<button type='button' class='division-code-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
-														<code class='post-code'></code>
+														<code class='post-code' data-post="<?php echo RecruitingString::findByName('division-structure-post', 2)->string; ?>"></code>
 													</div>
 												</div>
 
@@ -254,7 +254,7 @@
 												<div class='col-md-6'>
 													<div class='well code'>
 														<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
-														<code class='welcome-code'></code>
+														<code class='welcome-code' data-post="<?php echo RecruitingString::findByName('welcome-pm', 2)->string; ?>"></code>
 													</div>
 												</div>
 

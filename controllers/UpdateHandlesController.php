@@ -7,19 +7,13 @@ class UpdateHandlesController {
 		$members = Flight::aod()->from(Member::$table)->where($conditions)->select('battlelog_name, battlelog_id, id')->many();
 
 		foreach($members as $member) {
-
-			$battlelogName = new MemberHandle;
-			$battlelogName->member_id = $member['id'];
-			$battlelogName->handle_type = 2;
-			$battlelogName->handle_value = $member['battlelog_name'];
-			$battlelogName->save();
-
-			$battlelogId = new MemberHandle;
-			$battlelogId->member_id = $member['id'];
-			$battlelogId->handle_type = 1;
-			$battlelogId->handle_value = $member['battlelog_id'];
-			$battlelogId->save();
-
+			$handle = new MemberHandle;
+			$handle->member_id = $member['id'];
+			$handle->handle_type = 2;
+			$handle->handle_value = $member['battlelog_name'];
+			$handle->handle_account_id = $member['battlelog_id'];
+			$handle->save();
+			echo $handle->member_id . " done.";
 		}
 
 	}

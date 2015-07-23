@@ -10,6 +10,7 @@ class Division extends Application {
 	public $short_descr;
 	public $division_structure_thread;
 	public $welcome_forum;
+	public $primary_handle;
 
 	static $table = 'divisions';
 	static $id_field = 'id';

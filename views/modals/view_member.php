@@ -9,7 +9,7 @@
 <input type='hidden' id='cur_squad_id' name='cur_squad_id' value='<?php echo $member->squad_id ?>' />
 <input type='hidden' id='cur_position_id' name='cur_position_id' value='<?php echo $member->position_id ?>' />
 
-<div class='modal-body' style='overflow-y: scroll; min-height: 350px;'>
+<div class='modal-body' style='overflow-y: scroll; max-height: 400px; min-height:350px;'>
 	<div class='message alert' style='display: none;'></div>
 
 	<div class="tabbable">
@@ -38,10 +38,10 @@
 						<input type="text" class="form-control" name="forum_name" value="<?php echo $member->forum_name ?>" disabled>
 					</div>
 
-					<div class="form-group">
-						<label for="member_id" class="control-label">Forum ID</label>
-						<input type="number" class="form-control" name="member_id" value="<?php echo $member->member_id ?>">
-					</div>
+
+						
+						<input type="hidden" name="member_id" value="<?php echo $member->member_id ?>">
+
 					<div class="form-group">
 						<label for="recruiter" class="control-label">Recruiter ID</label>
 						<input type="number" class="form-control" name="recruiter" value="<?php echo $member->recruiter ?>">
@@ -106,9 +106,30 @@
 			<div class="tab-pane" id="aliasinfo">
 				<form id='alias-form'>
 					<div class="margin-top-20"></div>
-					<div class='form-group battlelog-group'>
-						<label for='battlelog_name' class='control-label'>Battlelog Name</label>
-						<input type='text' class='form-control' name='battlelog_name' value='<?php echo $member->battlelog_name ?>'>
+					<div class='form-group handles-group'>
+						<table class="table table-striped table-hover" id="aliases" style="overflow-y: scroll; max-height: 400px;">
+							<?php $memberHandles = MemberHandle::findByMemberId($member->id); ?>
+							<?php if (count($memberHandles)): ?>
+								<?php foreach($memberHandles as $handle): ?>
+									<?php if ($handle->isVisible || User::isDev()): ?>
+										<tr class="member-handle" data-handle-type="<?php echo $handle->handle_type ?>" data-handle-id="<?php echo $handle->id ?>"><td><strong><?php echo $handle->name; ?></strong></td><td><input type='text' class='form-control' name='<?php echo $handle->handle_name; ?>' value='<?php echo $handle->handle_value ?>' required /></td><td></td></tr>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							<?php endif; ?>
+							<?php $handles = Handle::find_all(); ?>
+							<?php if (count($handles) > (count($memberHandles))): ?>
+								<tr>
+									<td class="text-muted">Add new alias</td>
+									<td><select id="alias-selector" class="form-control">
+										<?php foreach($handles as $handle): ?>
+											<option value="<?php echo $handle->id ?>" data-type="<?php echo $handle->type ?>" data-description="<?php echo $handle->name ?>"><?php echo $handle->name ?></option>
+										<?php endforeach; ?>
+									</select></td>
+									<td><button class="btn btn-success btn-block add-alias"><i class="fa fa-plus fa-lg"></i></button></td>
+								</tr>
+							<?php endif; ?>
+
+						</table>
 					</div>
 				</form>
 				<div class="margin-top-20"></div>
@@ -179,7 +200,7 @@
 
 </div>
 <div class='modal-footer'>
-	<button type='button' class='btn btn-default' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>Cancel</span></button><button type='button' class='btn btn-success' id="submit-form">Save Info</button> 
+	<button type='button' class='btn btn-default' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>Cancel</span></button><button type='button' class='btn btn-success save-btn' id="submit-form"><i class="fa fa-save fa-lg"></i> Save Info</button> 
 </form>
 </div>
 
