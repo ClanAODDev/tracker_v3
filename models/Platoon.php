@@ -78,15 +78,15 @@ class Platoon extends Application {
 		$conditions = "status_id IN (1,3,999) AND platoon_id = {$platoon_id}";		
 		$underTwoWeeks = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -2 WEEK) AND CURDATE();')->one();
 		$twoWeeksMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -2 WEEK);')->one();
-		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -45 DAY')->one();
+		$oneMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -45 DAY) AND DATE_ADD(CURDATE(), INTERVAL -30 DAY')->one();
 		$moreThanOneMonth = Flight::aod()->sql('SELECT count(*) as count FROM '.Member::$table.' WHERE '.$conditions.' AND last_activity < DATE_ADD(CURDATE(), INTERVAL -45 DAY)')->one();
 
 
 		// generate json for graph
 		$data = Array();
 		$data[] = array('label' => '< 2 weeks ago', 'color' => '#28b62c', 'highlight' => '#5bc75e', 'value' => $underTwoWeeks['count']);
-		$data[] = array('label' => '> 2 weeks ago', 'color' => '#ff851b', 'highlight' => '#ffa14f', 'value' => $twoWeeksMonth['count']);
-		$data[] = array('label' => '> 30 days ago', 'color' => '#ff4136', 'highlight' => '#ff6c64', 'value' => $oneMonth['count']);
+		$data[] = array('label' => '14 - 30 days ago', 'color' => '#ff851b', 'highlight' => '#ffa14f', 'value' => $twoWeeksMonth['count']);
+		$data[] = array('label' => '30 - 45 days ago', 'color' => '#ff4136', 'highlight' => '#ff6c64', 'value' => $oneMonth['count']);
 		$data[] = array('label' => '> 45 days ago', 'color' => '#000', 'highlight' => '#111', 'value' => $moreThanOneMonth['count']);
 		return json_encode($data);
 
