@@ -98,15 +98,15 @@
 									</div>
 								</div>
 
-								<div class='form-group battlelog-group'>
-									<label for='battlelog' class='col-sm-3 control-label'><strong>Battlelog Name</strong></label>
+								<div class='form-group ingame-group'>
+									<label for='ingame' class='col-sm-3 control-label'><strong>Ingame Name</strong></label>
 									<div class='col-sm-9'>
-										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='battlelog' name='battlelog' tabindex='3'>
+										<input type='text' class='form-control' placeholder='JoeSnuffy25' id='ingame' name='ingame' tabindex='3'>
 									</div>
 								</div>
 
 								<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
-									<label for='platoon' class='col-sm-3 control-label'><strong>Platoon</strong></label>
+									<label for='platoon' class='col-sm-3 control-label'><strong><?php echo Locality::run('Platoon', $division->id); ?></strong></label>
 									<div class='col-sm-9'>
 										<select name='platoon' id='platoon' class='form-control'>
 											<?php foreach($platoons as $platoon) : ?>
@@ -117,7 +117,7 @@
 								</div>
 
 								<div class='form-group squadldr-group' style='display: <?php echo $allowEdit->sqdField ?>'>
-									<label for='squad_id' class='col-sm-3 control-label'><strong>Squad Leader</strong></label>
+									<label for='squad_id' class='col-sm-3 control-label'><strong><?php echo Locality::run('Squad leader', $division->id); ?></strong></label>
 									<div class='col-sm-9'>
 										<select name='squad_id' id='squad_id' class='form-control'>
 											<?php foreach($squads as $squad) : ?>
@@ -236,7 +236,7 @@
 												<div class='col-md-6'>
 													<div class='well code'>
 														<button type='button' class='division-code-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
-														<code class='post-code'></code>
+														<code class='post-code' data-post="<?php echo RecruitingString::findByName('division-structure-post', 2)->string; ?>"></code>
 													</div>
 												</div>
 
@@ -254,7 +254,7 @@
 												<div class='col-md-6'>
 													<div class='well code'>
 														<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
-														<code class='welcome-code'></code>
+														<code class='welcome-code' data-post="<?php echo RecruitingString::findByName('welcome-pm', 2)->string; ?>"></code>
 													</div>
 												</div>
 
@@ -306,6 +306,7 @@
 						<div class='tab-pane' id='tab6'>
 							<p>If you have successfully completed all the required previous steps of the recruitment process, you are now ready to add the new recruit to the division. Click the button below to submit the new member's information.</p>
 							<p>Keep in mind that new members will appear as "pending" until their membership status in AOD is approved by a MSgt or above. This generally takes around 24 hours or less. New members will also not have any recent server actvity information. After a few days, this information will have had time to update in the tracker.</p>
+							<p><strong>Reminder:</strong> Don't forget to mark your recruit's forum application completed if they submitted one!</p>
 							<p class="text-center margin-top-50">
 								<button class="btn btn-success btn-lg" id="storePlayer"><i class="fa fa-user-plus fa-lg"></i> Add member to division</button>
 							</p>

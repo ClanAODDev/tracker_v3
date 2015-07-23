@@ -1,12 +1,13 @@
 <?php
 
 class DivisionThread extends Application {
+	public $id;
 	public $game_id;
 	public $thread_url;
 	public $thread_title;
 
 	static $table = "games_threads";
-	static $id = "id";
+	static $id_field = "id";
 
 	public static function find_all($game_id) {
 		return self::find_each(array("game_id" => $game_id, "|game_id" => 0));

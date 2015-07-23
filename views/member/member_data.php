@@ -42,11 +42,14 @@
 	<div class='panel-heading'>
 		<strong>Gaming Profiles</strong>
 	</div>
-
+	
+	<!-- everyone has a forum profile -->
 	<a target='_blank' href='<?php echo CLANAOD . $memberInfo->member_id ?>' class='list-group-item'>AOD Forum <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
 
-	<?php if ($memberInfo->battlelog_name !== "0") : ?>
-		<a target="_blank" href="<?php echo BATTLELOG . $memberInfo->battlelog_name ?>" class="list-group-item">Battlelog <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
-	<?php endif; ?>
+	<?php foreach($aliases as $alias): ?>
+		<?php if ($alias->isVisible): ?>
+			<a target="_blank" href="<?php echo (property_exists($alias, 'url')) ? $alias->url . $alias->handle_value : "#"; ?>" class="list-group-item"><?php echo $alias->name ?> <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+		<?php endif; ?>
+	<?php endforeach; ?>
 
 </div>

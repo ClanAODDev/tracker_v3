@@ -1,16 +1,27 @@
 <?php
 
 class Handle extends Application {
+
 	public $id;
-	public $handle_type;
-	public $handle_profile_url;
+	public $type;
+	public $name;
+	public $url;
+	public $show_on_profile;
 
 	static $id_field = 'id';
-	static $name_field = 'handle_type';
+	static $name_field = 'type';
 	static $table = 'handles';
 
 	public static function find_all() {
 		return self::fetch_all();
+	}
+
+	public static function findByType($id) {
+		return self::find($id);
+	}
+
+	public static function findByName($name) {
+		return self::find($name);
 	}
 
 	public static function create($params) {
@@ -30,4 +41,5 @@ class Handle extends Application {
 	}
 
 	public static function delete($id) {}
+
 }

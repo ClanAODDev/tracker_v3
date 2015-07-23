@@ -30,6 +30,7 @@ class RecruitingController {
 			$player = trim($_POST['player']);
 			$member = Member::find(intval($_SESSION['memberid']));
 			$gameThreads = DivisionThread::find_all($member->game_id);
+
 			Flight::render('recruiting/thread_check', array('js' => 'check_threads', 'gameThreads' => $gameThreads, 'player' => $player));
 		} else {
 			echo "<span class='text-muted'>A valid player was not provided!</span>";

@@ -5,8 +5,6 @@ class Member extends Application {
 	public $id;
 	public $forum_name;
 	public $member_id;
-	public $battlelog_id;	
-	public $battlelog_name;	
 	public $platoon_id;
 	public $rank_id;
 	public $position_id;
@@ -155,6 +153,7 @@ class Member extends Application {
 			$member->$key = $value;
 		}
 		$member->save($params);
+		return Flight::aod()->insert_id;
 	}
 
 	public static function kickFromAod($id) {
@@ -169,6 +168,7 @@ class Member extends Application {
 			$member->$key = $value;
 		}
 		$member->update($params);
+		return Flight::aod()->insert_id;
 	}
 
 }
