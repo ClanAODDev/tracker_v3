@@ -121,7 +121,7 @@
 								<tr>
 									<td class="text-muted">Add new alias</td>
 									<td><select id="alias-selector" class="form-control">
-									<option value="">Select an alias type</option>
+									<option value="" disabled selected="selected">Select an alias type</option>
 										<?php foreach($handles as $handle): ?>
 											<option value="<?php echo $handle->id ?>" data-type="<?php echo $handle->type ?>" data-description="<?php echo $handle->name ?>"><?php echo $handle->name ?></option>
 										<?php endforeach; ?>
