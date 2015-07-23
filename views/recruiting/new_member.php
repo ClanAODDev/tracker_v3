@@ -306,6 +306,7 @@
 						<div class='tab-pane' id='tab6'>
 							<p>If you have successfully completed all the required previous steps of the recruitment process, you are now ready to add the new recruit to the division. Click the button below to submit the new member's information.</p>
 							<p>Keep in mind that new members will appear as "pending" until their membership status in AOD is approved by a MSgt or above. This generally takes around 24 hours or less. New members will also not have any recent server actvity information. After a few days, this information will have had time to update in the tracker.</p>
+							<p><strong>Reminder:</strong> Don't forget to mark your recruit's forum application completed if they submitted one!</p>
 							<p class="text-center margin-top-50">
 								<button class="btn btn-success btn-lg" id="storePlayer"><i class="fa fa-user-plus fa-lg"></i> Add member to division</button>
 							</p>
