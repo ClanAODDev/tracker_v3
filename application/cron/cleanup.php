@@ -17,10 +17,10 @@ if (dbConnect()) {
 		$pdo->prepare("DELETE FROM inactive_flagged WHERE inactive_flagged.member_id IN (SELECT member_id FROM member WHERE member.last_activity BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW())")->execute();
 
 		// cleans up activity older than 90 days
-		$pdo->prepare("DELETE FROM activity WHERE datetime < (NOW() - INTERVAL 90 DAY)")->execute();
+		$pdo->prepare("DELETE FROM bf_activity WHERE datetime < (NOW() - INTERVAL 90 DAY)")->execute();
 
 		// cleans up activity belonging to an ex-member
-		$pdo->prepare("DELETE FROM activity WHERE member_id IN (SELECT member_id FROM member WHERE status_id = 4)")->execute();
+		$pdo->prepare("DELETE FROM bf_activity WHERE member_id IN (SELECT member_id FROM member WHERE status_id = 4)")->execute();
 
 		// cleans up member games, deleting entries for non-members
 		$pdo->prepare("DELETE FROM member_games WHERE member_id NOT IN (SELECT member.id FROM member WHERE status_id IN (1,999,3))")->execute();

@@ -11,7 +11,7 @@ class Activity extends Application {
 	public $map_name;
 	public $report_id;
 
-	static $table = 'activity';
+	static $table = 'bf_activity';
 	static $id_field = 'id';
 	static $name_field = 'server';
 

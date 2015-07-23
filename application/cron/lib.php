@@ -69,13 +69,13 @@ function convertStatus($status) {
 	return $id;
 }
 
-function newActivity($reports, $game, $member_id, $id) {
+function bf_newActivity($reports, $game, $member_id, $id) {
 	global $pdo;
 	if (dbConnect()) {
 		foreach ($reports as $report) {
 			try {
 				$hash = 
-				$sql = "INSERT IGNORE INTO activity (member_id, server, datetime, hash, game_id, map_name, report_id) VALUES (:member, :serverName, :date, :hash, :game, :map, :report)";
+				$sql = "INSERT IGNORE INTO bf_activity (member_id, server, datetime, hash, game_id, map_name, report_id) VALUES (:member, :serverName, :date, :hash, :game, :map, :report)";
 				
 				$pdo->prepare($sql)
 				->execute(array(
