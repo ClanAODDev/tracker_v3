@@ -87,7 +87,7 @@ class Platoon extends Application {
 		$data[] = array('label' => '< 2 weeks ago', 'color' => '#28b62c', 'highlight' => '#5bc75e', 'value' => $underTwoWeeks['count']);
 		$data[] = array('label' => '14 - 30 days ago', 'color' => '#ff851b', 'highlight' => '#ffa14f', 'value' => $twoWeeksMonth['count']);
 		$data[] = array('label' => '30 - 45 days ago', 'color' => '#ff4136', 'highlight' => '#ff6c64', 'value' => $oneMonth['count']);
-		$data[] = array('label' => '> 45 days ago', 'color' => '#000', 'highlight' => '#111', 'value' => $moreThanOneMonth['count']);
+		$data[] = array('label' => '> 45 days ago', 'color' => '#000', 'highlight' => '#333', 'value' => $moreThanOneMonth['count']);
 		return json_encode($data);
 
 	}
