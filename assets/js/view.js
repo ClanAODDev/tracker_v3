@@ -54,7 +54,7 @@ $(function() {
             type = $this.attr('value'),
             description = $this.attr('data-description'),
             name = $this.attr('data-type'),
-            $newRow = $("<tr class=\"member-handle\" data-handle-type='" + type + "'><td><strong>" + description + "</strong></td><td><input type='text' class='form-control' name='" + name + "' required /></td><td><button class=\"btn btn-danger btn-block rem-alias\"><i class=\"fa fa-minus fa-lg\"></i></button></td></tr>");
+            $newRow = $("<tr class=\"member-handle\" data-handle-type='" + type + "'><td><strong>" + description + "</strong></td><td><input placeholder='Alias name' type='text' class='form-control' name='" + name + "' required /></td><td><button class=\"btn btn-danger btn-block rem-alias\"><i class=\"fa fa-minus fa-lg\"></i></button></td></tr>");
         $("#aliases tr:last").before($newRow);
         $newRow.effect("highlight", {}, 1000);
         if ($("#alias-selector option").length > 1) {
