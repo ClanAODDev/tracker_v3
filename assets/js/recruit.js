@@ -229,14 +229,14 @@ function loadThreadCheck() {
 
         // division structure
         postString = $("#division-post").find(".post-code").attr('data-post');
-        postCode = postString.replace('%%member_id%%', member_id).replace('%%member_name%%', player);
+        postCode = postString.replace(/%%member_id%%/g, member_id).replace(/%%member_name%%/g, player);
         $("#division-post .post-code").html(postCode);
         $('.division-code-btn').attr("data-clipboard-text", postCode);
 
 
         // welcome PM
         postString = $("#welcome-pm").find(".welcome-code").attr('data-post');
-        welcomeCode = postString.replace('%%member_name%%', player);
+        welcomeCode = postString.replace(/%%member_name%%/g, player);
         $("#welcome-pm .welcome-code").html(welcomeCode);
         $('.welcome-pm-btn').attr("data-clipboard-text", welcomeCode);
         $(".pm-link").click(function(e) {
