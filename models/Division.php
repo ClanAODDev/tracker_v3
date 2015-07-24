@@ -46,7 +46,7 @@ class Division extends Application {
 		if ($order_by_rank) {
 			$sql .= " ORDER BY member.rank_id DESC, member.forum_name ASC ";
 		} else {
-			$sql .= "  ORDER BY platoon.id, forum_name";
+			$sql .= " ORDER BY platoon.id, forum_name";
 		}
 
 		$params = Flight::aod()->sql($sql)->one();
@@ -61,7 +61,7 @@ class Division extends Application {
 	}
 
 	public static function recruitsThisMonth($game_id) {
-		$sql = "SELECT count(*) as count, member.forum_name, join_date FROM ".Member::$table." WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND member.game_id = {$game_id}";
+		$sql = "SELECT count(*) as count, m.forum_name, join_date FROM ".Member::$table." m WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND m.game_id = {$game_id}";
 		return arrayToObject(Flight::aod()->sql($sql)->one());
 	}
 

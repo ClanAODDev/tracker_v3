@@ -69,18 +69,18 @@ class Activity extends Application {
 	}
 
 	public static function topList30DaysByDivision($game_id) {
-		$sql = "SELECT forum_name, rank.abbr as rank, platoon.number as plt, member_id, ( SELECT count(*) FROM ".self::$table." WHERE activity.member_id = member.member_id AND activity.server LIKE 'AOD%' AND activity.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 30 day) AND CURRENT_TIMESTAMP ) AS aod_games FROM member LEFT JOIN rank ON rank.id = member.rank_id LEFT JOIN platoon ON member.platoon_id = platoon.id WHERE member.game_id = {$game_id} AND (status_id = 1 OR status_id = 999) ORDER BY aod_games DESC LIMIT 10";
+		$sql = "SELECT forum_name, rank_id, p.number as plt, member_id, ( SELECT count(*) FROM ".self::$table." a WHERE a.member_id = m.member_id AND a.server LIKE 'AOD%' AND a.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 30 day) AND CURRENT_TIMESTAMP ) AS aod_games FROM ".Member::$table." m LEFT JOIN ".Platoon::$table." p ON m.platoon_id = p.id WHERE m.game_id = {$game_id} AND (status_id = 1 OR status_id = 999) ORDER BY aod_games DESC LIMIT 10";
 		return arrayToObject(Flight::aod()->sql($sql)->many());
 
 	}
 
 	public static function topListTodayByDivision($game_id) {
-		$sql = "SELECT forum_name, rank.abbr as rank, platoon.number as plt, member_id, ( SELECT count(*) FROM ".self::$table." WHERE activity.member_id = member.member_id AND activity.server LIKE 'AOD%' AND activity.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 1 day) AND CURRENT_TIMESTAMP ) AS aod_games FROM member LEFT JOIN rank ON rank.id = member.rank_id LEFT JOIN platoon ON member.platoon_id = platoon.id WHERE member.game_id = {$game_id} AND (status_id = 1 OR status_id = 999) ORDER BY aod_games DESC LIMIT 10";
+		$sql = "SELECT forum_name, rank_id, p.number as plt, member_id, ( SELECT count(*) FROM ".self::$table." a WHERE a.member_id = m.member_id AND a.server LIKE 'AOD%' AND a.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 1 day) AND CURRENT_TIMESTAMP ) AS aod_games FROM ".Member::$table." m LEFT JOIN ".Platoon::$table." p ON m.platoon_id = p.id WHERE m.game_id = {$game_id} AND (status_id = 1 OR status_id = 999) ORDER BY aod_games DESC LIMIT 10";
 		return arrayToObject(Flight::aod()->sql($sql)->many());
 	}
 
 	public static function toplistMonthlyAODTotal() {
-		$sql = "SELECT round((SELECT count(*) FROM ".self::$table." WHERE (server LIKE '%AOD%') AND activity.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 30 day) AND CURRENT_TIMESTAMP) / count(*)*100, 1) as pct FROM ".self::$table." WHERE activity.datetime BETWEEN DATE_SUB( NOW(), INTERVAL 30 day ) AND CURRENT_TIMESTAMP";
+		$sql = "SELECT round((SELECT count(*) FROM ".self::$table." a WHERE (server LIKE '%AOD%') AND a.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 30 day) AND CURRENT_TIMESTAMP) / count(*)*100, 1) as pct FROM ".self::$table." a WHERE a.datetime BETWEEN DATE_SUB( NOW(), INTERVAL 30 day ) AND CURRENT_TIMESTAMP";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['pct'];
 	}
