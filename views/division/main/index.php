@@ -56,7 +56,7 @@
 						<?php foreach($division_leaders as $leader) : ?>
 							<a href='member/<?php echo $leader->member_id; ?>' class='list-group-item'>
 								<h5 class='pull-right'><i class='fa fa-shield fa-2x text-muted'></i></h5>
-								<h4 class='list-group-item-heading'><strong><?php echo $leader->rank . " " . $leader->forum_name; ?></strong></h4>
+								<h4 class='list-group-item-heading'><strong><?php echo Rank::convert($leader->rank_id)->abbr . " " . $leader->forum_name; ?></strong></h4>
 								<p class='list-group-item-text text-muted'><?php echo $leader->position_desc; ?></p>
 							</a>
 						<?php endforeach; ?>
