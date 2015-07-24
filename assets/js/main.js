@@ -132,6 +132,17 @@ $(function() {
     $(".removeMember").click(function(e) {
         e.preventDefault();
 
+
+        var $this = $(this);
+        var member = $this.closest('li').attr('data-player-id');
+
+        if (member == undefined) {
+            member = $this.closest('.btn-group').attr('data-player-id');
+            listgroup = false;
+        } else {
+            listgroup = true;
+        }
+
         swal({
                 title: 'Remove player?',
                 html: '<p>Are you sure you want to <strong>remove this player</strong> from AOD?</p>',
@@ -141,14 +152,11 @@ $(function() {
                 confirmButtonText: 'Yes, remove',
                 closeOnConfirm: false
             },
+
             function() {
 
-                var member = $(this).closest('li').attr('data-player-id');
-
-                if (member == undefined) {
-                    member = $(this).closest('.btn-group').attr('data-player-id');
-                } else {
-                    $(this).closest('.list-group-item').remove();
+                if (listgroup) {
+                    $this.closest('.list-group-item').remove();
                 }
 
                 $.post("do/remove-member", {
