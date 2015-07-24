@@ -179,6 +179,22 @@
 			</div>
 		</div>
 
+
+		<?php $alerts = Alert::find_all($_SESSION['userid']); ?>
+		<?php if (count((array) $alerts)) : ?>
+			<div class="container margin-top-20">
+				<?php foreach($alerts as $alert) : ?>
+					<div data-id="<?php echo $alert->id; ?>" data-user="<?php echo $user->id; ?>" class="alert-dismissable alert alert-<?php echo $alert->type; ?>" role="alert">
+						<button type="button" class="close" data-dismiss="alert">
+							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+						</button>
+						<?php echo $alert->content; ?>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+
+
 		<!-- content -->
 		<?php echo $content; ?>
 

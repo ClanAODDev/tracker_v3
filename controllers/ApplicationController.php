@@ -9,7 +9,6 @@ class ApplicationController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
-		$alerts = Alert::find_all($user->id);
 		$notifications = new Notification($user, $member);
 		$posts = Post::find_all($user->role);
 		$squad = Squad::find($member->member_id);
@@ -20,7 +19,7 @@ class ApplicationController {
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
 		Flight::render('member/personnel', array('member' => $member, 'squad' => $squad, 'platoon' => $platoon, 'squads' => $squads), 'personnel');
 		Flight::render('application/divisions', array('divisions' => $divisions), 'divisions_list');
-		Flight::render('user/notifications', array('notifications' => $notifications->all, 'alerts' => $alerts), 'notifications_list');
+		Flight::render('user/notifications', array('notifications' => $notifications->all), 'notifications_list');
 		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
