@@ -148,7 +148,7 @@ class MemberController {
 					unset($userData['developer'], $userData['debug']);
 				}
 
-				if ($userData['role'] >= $respUser->role && !User::isDev()) {
+				if ($respMember->member_id != $member->member_id && $user->role >= $respUser->role && !User::isDev()) {
 					$data = array('success' => false, 'message' => "You are not authorized to make that change.");	
 				} else {
 					User::modify($userData);
