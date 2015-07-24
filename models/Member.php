@@ -138,11 +138,7 @@ class Member extends Application {
 			$sql .= "(m.member_id NOT IN (SELECT member_id FROM ".InactiveFlagged::$table.")) AND ";
 			$sql .= $args . " ORDER BY m.platoon_id, m.last_activity ASC";
 		}
-
-		
-
-		$params = Flight::aod()->sql($sql)->many();
-		print_r(Flight::aod()->last_query);die;
+		return Flight::aod()->sql($sql)->many();
 	}
 
 	public static function getLastRct() {

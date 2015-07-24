@@ -40,6 +40,18 @@ class MemberHandle extends Application {
 		return $params;
 	}
 
+	public static function findHandle($member_id, $type) {
+		$params = self::find(array('member_id' => $member_id, 'handle_type' => $type));
+		$handle = Handle::findByType($params->handle_type);
+		$params->handle_name = $handle->type;
+		$params->name = $handle->name;
+		$params->isVisible = (bool) $handle->show_on_profile;
+		if (!is_null($handle->url)) {
+			$params->url = $handle->url;	
+		}		
+		return $params;
+	}
+
 	public static function add($params) {
 		$handle = new self();
 		foreach ($params as $key=>$value) {
