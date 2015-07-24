@@ -115,7 +115,7 @@ class Member extends Application {
 	}
 
 	public static function findInactives($id, $type, $flagged=false) {
-		$sql = "SELECT m.forum_name, m.member_id, m.last_activity, m.battlelog_name, i.flagged_by, m.forum_posts, m.join_date, p.number as plt_number, p.name as plt_name 
+		$sql = "SELECT m.forum_name, m.member_id, m.last_activity, i.flagged_by, m.forum_posts, m.join_date, p.number as plt_number, p.name as plt_name 
 		FROM ".Member::$table." m
 		
 		LEFT JOIN ".InactiveFlagged::$table." i ON m.member_id = i.member_id 
@@ -125,7 +125,7 @@ class Member extends Application {
 		m.member_id NOT IN (SELECT member_id FROM ".LeaveOfAbsence::$table.") AND ";
 
 		switch ($type) {
-			case "sqd": $args = "m.squad_leader_id = {$id}"; break;
+			case "sqd":
 			case "plt": $args = "m.platoon_id = {$id}"; break;
 			case "div": $args = "m.game_id = {$id}"; break;
 			default: $args = "m.game_id = {$id}"; break;
@@ -139,7 +139,10 @@ class Member extends Application {
 			$sql .= $args . " ORDER BY m.platoon_id, m.last_activity ASC";
 		}
 
-		return Flight::aod()->sql($sql)->many();
+		
+
+		$params = Flight::aod()->sql($sql)->many();
+		print_r(Flight::aod()->last_query);die;
 	}
 
 	public static function getLastRct() {
