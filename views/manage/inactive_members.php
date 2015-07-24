@@ -33,14 +33,13 @@
 							<ul class='sortable striped-bg' id='flagged-inactives' style='overflow-y: auto; max-height: 193px;'>
 
 								<?php $flaggedCopy = "[SIZE=2]Members flagged for removal ({$flaggedCount})[/SIZE][hr][/hr][table=\"width: 500\"]"; ?>
-								<?php $flaggedCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][/tr]"; ?>
 								<?php $flagged_ids = array(); ?>
 
 								<?php foreach ($flagged as $player) : ?>
 
 									<?php $flagged_ids[] = $player->member_id; ?>
 
-									<?php $flaggedCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][/tr]"; ?>
+									<?php $flaggedCopy .= "[tr][td][COLOR=\"#FF0000\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=http://aodwebhost.site.nfoservers.com/tracker/member/{$player->member_id}]Tracker Profile[/url][/td][/tr]"; ?>
 									
 
 									<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
@@ -93,12 +92,11 @@
 							<?php $inactive_ids = array(); ?>
 
 							<?php $inactiveCopy = "[SIZE=3]Inactive members ({$inactiveCount})[/SIZE][hr][/hr][table=\"width: 700\"]"; ?>
-							<?php $inactiveCopy .= "[tr][td][b]Player[/b][/td][td][b]Forum Account[/b][/td][td][b]Battlelog Account[/b][/td][td][b]Last Seen[/b][/td][td][b]Platoon[/b][/td][/tr]"; ?>
 
 							<?php foreach ($inactives as $player) : ?>
 								<?php $inactive_ids[] = $player->member_id; ?>
 
-								<?php $inactiveCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=" . BATTLELOG . "{$player->battlelog_name}]Battlelog Account[/url][/td][td]" . formatTime(strtotime($player->last_activity)) . "[/td][td]" . ordSuffix($player->plt_number) . " Platoon[/td][/tr]"; ?>
+								<?php $inactiveCopy .= "[tr][td][COLOR=\"#FFD700\"]{$player->forum_name}[/color][/td][td][url=" . CLANAOD . "{$player->member_id}]Forum Account[/url][/td][td][url=http://aodwebhost.site.nfoservers.com/tracker/member/{$player->member_id}]Tracker Profile[/url][/td][td]" . formatTime(strtotime($player->last_activity)) . "[/td][td]" . ordSuffix($player->plt_number) . " Platoon[/td][/tr]"; ?>
 
 								<li class='list-group-item clearfix' data-user-id='<?php echo $player->member_id ?>' data-player-id='<?php echo $player->member_id ?>'>
 									<div class='col-xs-1'><img src='/public/images/grab.svg' style='width: 8px; opacity: .20;' /></div>
