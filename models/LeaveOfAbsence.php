@@ -23,7 +23,8 @@ class LeaveOfAbsence extends Application {
 	}
 
 	public static function find_all($game_id) {
-		return self::find_each(array('game_id' => $game_id, 'approved' => 1));
+		$conditions = array('game_id' => $game_id, 'approved' => 1);
+		return arrayToObject(Flight::aod()->from(self::$table)->sortAsc('date_end')->where($conditions)->select()->many());
 	}
 
 	public static function count_active($game_id) {

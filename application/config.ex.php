@@ -24,7 +24,7 @@ Flight::register('aod', 'Database', array('aod'));
 
 // defines for website URLs
 define('CLANAOD', 'http://www.clanaod.net/forums/member.php?u=');
-define('BATTLELOG', 'http://battlelog.battlefield.com/bf4/user/');
+define('BATTLELOG', 'http://battlelog.battlefield.com/bfh/agent/');
 define('BATTLEREPORT', 'http://battlelog.battlefield.com/bf4/battlereport/show/1/');
 define('BF4DB', 'http://bf4db.com/players/');
 define('PRIVMSG', 'http://www.clanaod.net/forums/private.php?do=newpm&u=');

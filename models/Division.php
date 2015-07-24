@@ -39,9 +39,8 @@ class Division extends Application {
 	}
 
 	public static function findGeneralSergeants($gid) {
-		$sql = "SELECT member.id, member.member_id as forum_id, member.forum_name, rank.abbr as rank, position.desc as position_desc, member.battlelog_name FROM ".Member::$table." LEFT JOIN rank on member.rank_id = rank.id LEFT JOIN `position` ON member.position_id = position.id WHERE position_id = 3 AND member.game_id = {$gid} AND status_id = 1";
-		$params = Flight::aod()->sql($sql)->many();
-		return arrayToObject($params);
+		$conditions = array('position_id' => 3, 'game_id' => $gid, 'status_id' => 1);
+		return arrayToObject(Flight::aod()->from(Member::$table)->where($conditions)->select()->many());
 	}
 
 	public static function findSquadLeaders($gid, $order_by_rank = false) {
