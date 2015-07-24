@@ -125,6 +125,7 @@ class Member extends Application {
 		m.member_id NOT IN (SELECT member_id FROM ".LeaveOfAbsence::$table.") AND ";
 
 		switch ($type) {
+			case "sqd": $args = "m.squad_id = {$id}"; break;
 			case "plt": $args = "m.platoon_id = {$id}"; break;
 			case "div": $args = "m.game_id = {$id}"; break;
 			default: $args = "m.game_id = {$id}"; break;

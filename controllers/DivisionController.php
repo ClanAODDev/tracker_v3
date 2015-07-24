@@ -34,7 +34,7 @@ class DivisionController {
 
 		switch ($user->role) {
 			case User::isDev(): $type = "div"; $id = $member->game_id; break;
-			case 1: 
+			case 1: $type = "sqd"; //$id = $member->squad_id; break;
 			case 2: $type = "plt"; $id = $member->platoon_id; break;
 			case 3: $type = "div";  $id = $member->game_id; break;
 			default: $type = "div"; $id = $member->game_id; break;
