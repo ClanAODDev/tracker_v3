@@ -24,9 +24,9 @@ class MemberController {
 			// game data
 			$bdate = date("Y-m-d", strtotime("tomorrow - 30 days"));
 			$edate = date("Y-m-d", strtotime("tomorrow"));
-			$totalGames = Activity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
-			$aodGames = Activity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
-			$games = Activity::find_allGames($memberInfo->member_id);
+			$totalGames = BfActivity::countPlayerGames($memberInfo->member_id, $bdate, $edate);
+			$aodGames = BfActivity::countPlayerAODGames($memberInfo->member_id, $bdate, $edate);
+			$games = BfActivity::find_allGames($memberInfo->member_id);
 			$pctAod = ($totalGames>0) ? $aodGames * 100 / $totalGames : 0;
 
 			switch ($divisionInfo->short_name) {

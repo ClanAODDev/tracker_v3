@@ -48,8 +48,8 @@ class GraphicsController {
 		 */
 		try {
 
-			$daily = Activity::topListTodayByDivision($division);
-			$monthly = Activity::topList30DaysByDivision($division);
+			$daily = BfActivity::topListTodayByDivision($division);
+			$monthly = BfActivity::topList30DaysByDivision($division);
 
 			if (!$daily) {
 				throw new Exception($daily['message'], 1);

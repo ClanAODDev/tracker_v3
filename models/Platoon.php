@@ -55,18 +55,19 @@ class Platoon extends Application {
 
 	public static function members($platoon_id) {
 		$conditions = array('platoon_id' => $platoon_id, 'status_id @' => array(1, 999));
+		$select = array('member.id as memberid', 'forum_name', 'member_id', 'rank_id', 'position_id','join_date','last_forum_login','last_activity','position.desc','game_id');
 		$params = Flight::aod()->from(Member::$table)
 		->join('position', array('position.id' => 'member.position_id'))
 		->sortAsc('position.sort_order')
 		->where($conditions)
-		->select()->many();
+		->select($select)->many();
 		return $params;
 	}
 
 	public static function gameStats($platoon_id, $bdate, $edate) {
 		$members = self::memberIdsList($platoon_id);
-		$total = Activity::findTotalGamesByArray($members, $bdate, $edate);
-		$AOD = Activity::findTotalAODGamesByArray($members, $bdate, $edate);
+		$total = BF_BfActivity::findTotalGamesByArray($members, $bdate, $edate);
+		$AOD = BF_BfActivity::findTotalAODGamesByArray($members, $bdate, $edate);
 		return array(
 			'pct' => round(array_sum($AOD) / array_sum($total)*100),
 			'total' => array_sum($total), 

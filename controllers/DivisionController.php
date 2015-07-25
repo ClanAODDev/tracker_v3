@@ -12,8 +12,8 @@ class DivisionController {
 		if (property_exists($division, 'id')) {
 			
 			$division_leaders = Division::findDivisionLeaders($division->id);
-			$topListMonthly = Activity::topList30DaysByDivision($division->id);
-			$topListToday = Activity::topListTodayByDivision($division->id);
+			$topListMonthly = BfActivity::topList30DaysByDivision($division->id);
+			$topListToday = BfActivity::topListTodayByDivision($division->id);
 			$personnelData = new stdClass();
 			$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
 			$personnelData->totalCount = Division::totalCount($division->id)->count;

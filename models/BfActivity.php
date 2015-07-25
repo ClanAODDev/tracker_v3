@@ -1,6 +1,6 @@
 <?php 
 
-class Activity extends Application {
+class BfActivity extends Application {
 	
 	public $id;
 	public $member_id;
@@ -24,20 +24,6 @@ class Activity extends Application {
 		$sql = "SELECT count(*) as count FROM ".self::$table." WHERE member_id = {$member_id} AND datetime between '{$bdate}' AND '{$edate}'";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['count'];
-	}
-
-	public static function newActivity($reports, $game, $member_id, $id) {
-		foreach ($reports as $report) {
-			$activity = new self();
-			$activity->member_id = $member_id;
-			$activity->server = $report->serverName;
-			$activity->datetime = $report->date;
-			$activity->map_name = $report->map;
-			$activity->hash = hash("sha256", $member_id.$report->date);
-			$activity->game_id = $game;
-			$activity->report_id = $report->reportId;
-			Flight::aod()->save($activity);
-		}
 	}
 
 	public static function countPlayerAODGames($member_id, $bdate, $edate) {
@@ -83,10 +69,6 @@ class Activity extends Application {
 		$sql = "SELECT round((SELECT count(*) FROM ".self::$table." a WHERE (server LIKE '%AOD%') AND a.datetime BETWEEN DATE_SUB(NOW(), INTERVAL 30 day) AND CURRENT_TIMESTAMP) / count(*)*100, 1) as pct FROM ".self::$table." a WHERE a.datetime BETWEEN DATE_SUB( NOW(), INTERVAL 30 day ) AND CURRENT_TIMESTAMP";
 		$params = Flight::aod()->sql($sql)->one();
 		return $params['pct'];
-	}
-
-	public static function cleanUpActivity() {
-		Flight::aod()->sql("DELETE FROM ".self::$table." WHERE datetime < (NOW() - INTERVAL 90 DAY)");
 	}
 
 }
