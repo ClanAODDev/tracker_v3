@@ -244,7 +244,8 @@ function parse_tanks_profile($data) {
 			$pdo->prepare($sql)
 				->execute(array(
 					':member' => $data->member_id, 
-					':last_battle_time' => date("Y-m-d H:i:s", $data->last_battle_time)
+					':last_battle_time' => date("Y-m-d H:i:s", $data->last_battle_time);
+					)
 				);
 			
 		} catch (PDOException $e) {
