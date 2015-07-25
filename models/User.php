@@ -11,7 +11,6 @@ class User extends Application {
 	public $credential;
 	public $date_joined;
 	public $last_seen;
-	public $idle;
 	public $developer;
 	public $member_id;
 
