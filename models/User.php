@@ -43,12 +43,6 @@ class User extends Application {
 		return false;
 	}
 
-	public static function debugMode() {
-		$id = $_SESSION['userid'];
-		$params = Flight::aod()->sql("SELECT debug FROM ".self::$table." WHERE id = {$id} LIMIT 1")->one();
-		return ($params['debug'] == 1) ? true : false;
-	}
-
 	public static function isDev() {
 		$id = $_SESSION['userid'];
 		$params = Flight::aod()->sql("SELECT developer FROM ".self::$table." WHERE id = {$id} LIMIT 1")->one();
