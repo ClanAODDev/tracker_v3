@@ -236,6 +236,7 @@ class MemberController {
 			$data = array('success' => true, 'message' => "Member successfully added!");
 		}
 
+
 		if ($insert_id != 0) {
 
 			if (isset($_POST['played_games'])) {
@@ -254,6 +255,7 @@ class MemberController {
 				$handle->member_id = $insert_id;
 				$handle->handle_type = $division->primary_handle;
 				$handle->handle_value = $ingame_name;
+				$handle->handle_account_id = 0;
 				MemberHandle::add($handle);
 			}
 		}
