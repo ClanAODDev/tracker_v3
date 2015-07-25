@@ -37,7 +37,7 @@
 								<a href='divisions/<?php echo $division->short_name; ?>/platoon/<?php echo $platoon->number; ?>' class='list-group-item'>
 									<h5 class='pull-right text-muted big-num'><?php echo $platoon->number ?></h5>
 									<h4 class='list-group-item-heading'><strong><?php echo $platoon->name; ?></strong></h4>
-									<p class='list-group-item-text text-muted'><?php echo Rank::convert($leader->rank_id)->abbr . " " . $leader->forum_name; ?></p>
+									<p class='list-group-item-text text-muted'><?php echo ($platoon->leader_id != 0) ? Rank::convert($leader->rank_id)->abbr . " " . $leader->forum_name : "TBA"; ?></p>
 								</a>
 							<?php endforeach; ?>
 						<?php else : ?>
