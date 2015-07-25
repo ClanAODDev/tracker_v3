@@ -2,7 +2,7 @@
 
 require 'lib.php';
 
-$cron_column = "tanks_na_next_player";
+$cron_column = "tanks_eu_next_player";
 
 global $pdo;
 
@@ -23,7 +23,7 @@ if (dbConnect()) {
 		}
 
 		// fetch battlelog persona id
-		$params = $pdo->query("SELECT m.member_id, h.handle_value FROM member m INNER JOIN member_handles h ON h.member_id = m.id WHERE m.id = {$next_player} AND m.status_id = 1 AND m.game_id = 3 AND h.handle_type = 8")->fetch(); 
+		$params = $pdo->query("SELECT m.id, h.handle_value FROM member m INNER JOIN member_handles h ON h.member_id = m.id WHERE m.id = {$next_player} AND m.status_id = 1 AND m.game_id = 3 AND h.handle_type = 8")->fetch(); 
 
 		if (empty($params)) {
 
@@ -36,12 +36,11 @@ if (dbConnect()) {
 
 			// fetch tanks data
 			$data = new stdClass();
-			$data->member_id = $params['member_id'];
+			$data->member_id = $params['id'];
 			$data->last_battle_time = $profile->last_battle_time;
 
 			// parse
 			parse_tanks_profile($data);
-
 
 			// queue next player
 			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = '{$cron_column}'")->execute(); 

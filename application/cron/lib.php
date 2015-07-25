@@ -202,8 +202,8 @@ function getBattlelogId($battlelogName) {
 function download_tanks_profile($account_id, $type) {
 	$agent = random_uagent();
 
-	$na_api_key = WG_NA_API_KEY;
-	$eu_api_key = WG_EU_API_KEY;
+	$na_api_key = "16924c431c705523aae25b6f638c54dd";
+	$eu_api_key = "d0a293dc77667c9328783d489c8cef73";
 
 	$options = array(
 		'http'=>array(
@@ -225,7 +225,6 @@ function download_tanks_profile($account_id, $type) {
 		break;
 	}
 	
-
 	$json = file_get_contents($url, false, $context);
 	$data = json_decode($json);
 
@@ -243,7 +242,7 @@ function parse_tanks_profile($data) {
 
 			$pdo->prepare($sql)
 				->execute(array(
-					':member' => $data->member_id, 
+					':member_id' => $data->member_id, 
 					':last_battle_time' => date("Y-m-d H:i:s", $data->last_battle_time)
 					)
 				);
