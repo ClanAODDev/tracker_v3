@@ -269,8 +269,11 @@ class MemberController {
 		$flagged_by = $_POST['member_id'];
 
 		if ($action == 1) {
+			$params = new stdClass();
+			$params->member_flagged = $member_flagged;
+			$params->flagged_by = $flagged_by;
+			InactiveFlagged::add($params);
 
-			InactiveFlagged::add($member_flagged, $flagged_by);
 			$data = array('success' => true, 'message' => 'Member {$member_flagged} flagged for removal.');
 			UserAction::create(array('type_id'=>4,'date'=>date("Y-m-d H:i:s"),'user_id'=>$flagged_by,'target_id'=>$member_flagged));
 
