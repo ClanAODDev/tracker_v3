@@ -183,7 +183,6 @@
 						<?php if (User::isDev()): ?>
 							<div class="form-group dev-group">
 								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="developer" value="1" <?php echo ($userInfo->developer > 0) ? "checked" : NULL; ?>><i class="fa fa-user-secret text-danger"></i> Developer Mode</label>
-								<label class="checkbox-inline"><input class="user-form-control" type="checkbox" name="debug" value="1" <?php echo ($userInfo->debug > 0) ? "checked" : NULL; ?>><i class="fa fa-wrench"></i> Debug Mode</label>
 							</div>
 						<?php endif; ?>
 					</form>

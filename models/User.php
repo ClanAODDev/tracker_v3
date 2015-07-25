@@ -13,8 +13,6 @@ class User extends Application {
 	public $last_seen;
 	public $idle;
 	public $developer;
-	public $debug;
-	public $reset_flag;
 	public $member_id;
 
 	static $table = 'users';
@@ -182,19 +180,21 @@ class User extends Application {
 	}
 
 	public static function create($params) {
-		$data = array(
-			'credential'=>hasher($params['credential']),
-			'username'=>$params['username'],
-			'email'=>$params['email'],
-			'date_joined'=>date("Y-m-d H:i:s"),
-			'ip'=>$_SERVER['REMOTE_ADDR'],
-			'member_id'=>$params['member_id']
-			);
-
-		Flight::aod()->from(self::$table)->insert($data)->one();
-		return Flight::aod()->insert_id;
-
+		$user = new User;
+		$user->username = $params['user'];
+		$user->credential = $params['password'];
+		$user->email = $params['email'];
+		$user->date_joined = date("Y-m-d H:i:s");
+		$user->ip = $_SERVER['REMOTE_ADDR'];
+		$user->validation = md5(time() . rand());
+		$user->member_id = $params['member_id'];
+		$user->date_joined = date('Y-m-d H:i:s');
+		$user->role = 0;
+		$user->last_logged = 0;
+		$user->last_seen = 0;
+		$user->developer = 0;
+		$user->save();
+		//Email::validate($user);
 	}
-
 
 }

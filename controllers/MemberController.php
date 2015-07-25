@@ -143,10 +143,9 @@ class MemberController {
 
 				// wish I had a better way to do this... yuck
 				$userData['developer'] = (isset($userData['developer'])) ? $userData['developer'] : 0;
-				$userData['debug'] = (isset($userData['debug'])) ? $userData['debug'] : 0;
 
 				if (!User::isDev()) {
-					unset($userData['developer'], $userData['debug']);
+					unset($userData['developer']);
 				}
 
 				if ($respMember->member_id != $member->member_id && $user->role >= $respUser->role && !User::isDev()) {

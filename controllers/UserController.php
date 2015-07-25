@@ -41,30 +41,36 @@ class UserController {
 	}
 
 	public static function _doRegister() {
-		$user = $_POST['user'];
-		$pass = $_POST['password'];
-		$passVerify = $_POST['passVerify'];
-		$email = $_POST['email'];
+		$user = $_POST;
+		$memberObj = Member::findByName($user['user']);		
 
-		$memberObj = Member::findByName($user);
+		if (stristr($user['user'], 'aod_')) {
 
-		if (stristr($user, 'aod_')) {
 			$data['success'] = false;
 			$data['message'] = "Please do not use 'AOD_' in your username";
-		} else if ($pass != $passVerify) {
+
+		} else if ($user['password'] != $user['passVerify']) {
+
 			$data['success'] = false;
 			$data['message'] = "Passwords must match.";
-		} else if (User::exists($user)) {
+
+		} else if (User::exists($user['user'])) {
+
 			$data['success'] = false;
 			$data['message'] = "That username has already been used.";
+
 		} else if (!property_exists($memberObj, 'id')) {
+
 			$data['success'] = false;
 			$data['message'] = "No AOD member exists with that forum name.";
+
 		} else {
-			$params = array('username' => $user, 'email' => $email, 'credential' => $pass, 'member_id' => $memberObj->id);
-			User::create($params);
+
+			$user['member_id'] = $memberObj->member_id;
+			User::create($user);
 			$data['success'] = true;
 			$data['message'] = "Your account was created!";
+			
 		}
 
 		echo json_encode($data);

@@ -25,7 +25,5 @@
 		</div>
 		<div class='panel-footer text-muted'><p><small>Your username should be the one you use for the AOD Forums, <strong>without the AOD prefix</strong>.</small></p></div>
 	</div>
-	<p class="text-muted"><small><strong>Note:</strong> You must be an active member of a division that is currently supported by this application to create an account.</small></p>
-	<div class='msg'></div>
-	<div class='status-text'></div>
+	<p><small><strong>Note:</strong> You must be an active member of a division that is currently supported by this application to create an account.</small></p>
 </div>

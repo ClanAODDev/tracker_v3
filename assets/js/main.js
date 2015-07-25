@@ -220,10 +220,7 @@ $(function() {
                     }, 1000);
 
                 } else if (data['success'] === false) {
-                    $('#register-panel').addClass('has-error');
-                    $('.msg').addClass('alert alert-danger').html("<i class=\"fa fa-times-circle\"></i> <small>" + data['message'] + "</small>");
-                    $('.msg').effect("bounce");
-
+                    swal('Error', data.message, 'error');
                 }
             }, "json");
 
