@@ -74,7 +74,6 @@ function bf_newActivity($reports, $game, $member_id, $id) {
 	if (dbConnect()) {
 		foreach ($reports as $report) {
 			try {
-				$hash = 
 				$sql = "INSERT IGNORE INTO bf_activity (member_id, server, datetime, hash, game_id, map_name, report_id) VALUES (:member, :serverName, :date, :hash, :game, :map, :report)";
 				
 				$pdo->prepare($sql)
@@ -171,7 +170,7 @@ function download_bl_reports($personaId, $game) {
 
 
 function getBattlelogId($battlelogName) {
-		// check for bf4 entry
+	// check for bf4 entry
 	$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
 	$headers = get_headers($url); 
 	if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) { 
@@ -193,4 +192,63 @@ function getBattlelogId($battlelogName) {
 		$result = array('error' => false, 'id' => $personaId);
 	}
 	return $result;
+}
+
+
+/**
+ * world of tanks CRON stuff
+ */
+
+function download_tanks_profile($account_id, $type) {
+	$agent = random_uagent();
+
+	$na_api_key = WG_NA_API_KEY;
+	$eu_api_key = WG_EU_API_KEY;
+
+	$options = array(
+		'http'=>array(
+			'method'=>"GET",
+			'header'=>"Accept-language: en\r\n" .
+			"Cookie: foo=bar\r\n" .
+			"User-Agent: {$agent}\r\n"
+			)
+		);
+
+	$context = stream_context_create($options);
+
+	switch ($type) {
+		case 7:
+		$url = "http://api.worldoftanks.com/2.0/account/info/?application_id={$na_api_key}&account_id={$account_id}";
+		break;
+		case 8:
+		$url = "http://api.worldoftanks.eu/2.0/account/info/?application_id={$eu_api_key}&account_id={$account_id}";
+		break;
+	}
+	
+
+	$json = file_get_contents($url, false, $context);
+	$data = json_decode($json);
+
+	return $data->data->$account_id;
+}
+
+function parse_tanks_profile($data) {
+	global $pdo;
+	if (dbConnect()) {
+		try {
+			$sql = "INSERT INTO wg_activity (member_id, last_battle_time)
+			VALUES (:member_id, :last_battle_time)
+			ON DUPLICATE KEY UPDATE
+			last_battle_time = :last_battle_time";
+
+			$pdo->prepare($sql)
+				->execute(array(
+					':member' => $data->member_id, 
+					':last_battle_time' => date("Y-m-d H:i:s", $data->last_battle_time)
+				);
+			
+		} catch (PDOException $e) {
+			return $e->getMessage();
+		}
+	}
 }
