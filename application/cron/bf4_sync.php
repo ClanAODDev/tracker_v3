@@ -32,7 +32,7 @@ if (dbConnect()) {
 
 			// fetch battlelog data
 			$reports = parse_battlelog_reports($params['handle_account_id'], 'bf4');
-			newActivity($reports, "bf4", $params['member_id'], $next_player);
+			bf_newActivity($reports, "bf4", $params['member_id'], $next_player);
 			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = 'bf4_next_player'")->execute(); 
 
 		}
