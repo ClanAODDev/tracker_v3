@@ -48,5 +48,5 @@ define('GITHUB_PASS', '');
 
 // wargaming API key
 // 10 requests per second
-define('TANKS_NA_KEY', '');
-define('TANKS_EU_KEY', '');
+define('WG_NA_API_KEY', '');
+define('WG_EU_API_KEY', '');
