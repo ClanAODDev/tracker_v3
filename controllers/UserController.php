@@ -66,7 +66,7 @@ class UserController {
 
 		} else {
 
-			$user['member_id'] = $memberObj->member_id;
+			$user['member_id'] = $memberObj->id;
 			User::create($user);
 			$data['success'] = true;
 			$data['message'] = "Your account was created!";
