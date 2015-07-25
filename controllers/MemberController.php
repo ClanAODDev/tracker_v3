@@ -158,7 +158,6 @@ class MemberController {
 			// update aliases
 			if (isset($_POST['userAliases'])) {
 				$aliases = $_POST['userAliases'];
-				//var_dump($aliases);die;
 
 				foreach($aliases as $type => $value) {
 
@@ -169,7 +168,6 @@ class MemberController {
 						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => '0');
 						$id = MemberHandle::hasAlias($type, $memberData['id']);
 
-
 						if ($id) {
 
 							$params['id'] = $id;
@@ -177,10 +175,8 @@ class MemberController {
 
 						} else {
 							MemberHandle::add($params);
-							var_dump(Flight::aod()->last_query);die;
 						}
-
-						
+			
 					}
 				}
 			}

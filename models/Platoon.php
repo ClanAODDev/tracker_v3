@@ -49,7 +49,6 @@ class Platoon extends Application {
 		}
 
 		$params = Flight::aod()->sql($sql)->many();
-		//var_dump(Flight::aod()->last_query);die;
 		return arrayToObject($params);
 	}
 
