@@ -4,7 +4,7 @@
 	<div class='panel-body count-detail-big striped-bg'><span class='count-animated'><?php echo $pltCount; ?></span>
 	</div>
 </div>
-<?php if (count($pltCount)): ?>
+<?php if ($pltCount): ?>
 	<div class='panel panel-primary'>
 		<div class='panel-heading'>Forum Activity</div>
 		<div class='panel-body striped-bg'>
