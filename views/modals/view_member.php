@@ -173,7 +173,7 @@
 								<select id="role" name="role" class="form-control user-form-control">
 									<?php foreach ($rolesArray as $role) : ?>
 										<?php if ($role->id <= $user->role || User::isDev()):?>
-											<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?> <?php echo ($user->role == $role->id && !User::isDev()) ? "disabled" : NULL ?>><?php echo Locality::run($role->role_name, $member->game_id); ?> ?></option>
+											<option value="<?php echo $role->id; ?>" <?php echo ($userInfo->role == $role->id) ? "selected" : NULL ?> <?php echo ($user->role == $role->id && !User::isDev()) ? "disabled" : NULL ?>><?php echo Locality::run($role->role_name, $member->game_id); ?></option>
 										<?php endif; ?>
 									<?php endforeach; ?>
 								</select>
