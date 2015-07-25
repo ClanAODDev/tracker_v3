@@ -16,6 +16,7 @@ if (dbConnect()) {
 		// determine player range
 		$limit = $pdo->query("SELECT max(id) as max, min(id) as min FROM member WHERE game_id = 2 AND status_id = 1")->fetch();
 
+		// reset queue once max is reached
 		if ($next_player['value'] > $limit['max']) {
 			$next_player = $limit['min'];
 		} else {
