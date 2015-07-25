@@ -2,47 +2,41 @@
 
 class DivisionStructure {
 
-	public static function getIcons($array) {
-		$string = NULL;
-		foreach ($array as $game) {
-			$string .= convertIcon($game['short_name']);
-		}
-		return $string;
-	}
+	function __construct($game_id) {
 
-	public static function generate($game_id) {
-		
-		$division = Division::findById($game_id);
-		$platoons = Platoon::find_all($game_id);
+		$this->game_id = $game_id;
+
+		// get data
+		$this->division = Division::findById($this->game_id);
+		$this->platoons = Platoon::find_all($this->game_id);
 
 		// colors
-		$division_leaders_color = "#00FF00";
-		$platoon_leaders_color = "#00FF00";
-		$squad_leaders_color = "#FFA500";
-		$div_name_color = "#FF0000";
-		$platoon_num_color = "#FF0000";
-		$platoon_pos_color = "#40E0D0";
+		$this->division_leaders_color = "#00FF00";
+		$this->platoon_leaders_color = "#00FF00";
+		$this->squad_leaders_color = "#FFA500";
+		$this->div_name_color = "#FF0000";
+		$this->platoon_num_color = "#FF0000";
+		$this->platoon_pos_color = "#40E0D0";
 
 		// number of columns
-		$num_columns = 3;
+		$this->num_columns = 3;
 
 		// widths
-		$players_width = 900;
-		$info_width = 800;
+		$this->players_width = 900;
+		$this->info_width = 800;
 
     	// misc settings
-		$min_num_squad_leaders = 2;
+		$this->min_num_squad_leaders = 2;
 
-		// ctr
-		$i = 1;
+		self::generate();
 
-
-
+	}
 
 
-
+	public function generate() {
+		
     	// header
-		$division_structure = "[table='width: {$info_width}']";
+		$division_structure = "[table='width: {$this->info_width}']";
 		$division_structure .= "[tr][td]";
 
     	// banner
@@ -52,19 +46,19 @@ class DivisionStructure {
 	     * ------division leaders-----
 	     */
 
-	    $division_structure .= "\r\n\r\n[center][size=5][color={$div_name_color}][b][i][u]Division Leaders[/u][/i][/b][/color][/size][/center]\r\n";
+	    $division_structure .= "\r\n\r\n[center][size=5][color={$this->div_name_color}][b][i][u]Division Leaders[/u][/i][/b][/color][/size][/center]\r\n";
 	    $division_structure .= "[center][size=4]";
 
-	    $division_leaders = Division::findDivisionLeaders($game_id);
+	    $division_leaders = Division::findDivisionLeaders($this->game_id);
 	    foreach ($division_leaders as $leader) {
 	    	$leader_name = Rank::convert($leader->rank_id)->abbr." ".$leader->forum_name;
-	    	$memberHandle = MemberHandle::findHandle($leader->id, $division->primary_handle);
+	    	$memberHandle = MemberHandle::findHandle($leader->id, $this->division->primary_handle);
 
 	    	$leader->handle = $memberHandle->handle_value;
 
 	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 	    	$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
-	    	$division_structure .= "{$aod_url}[color={$division_leaders_color}]{$leader_name}[/url] {$bl_url}[/color] - {$leader->position_desc}\r\n";
+	    	$division_structure .= "{$aod_url}[color={$this->division_leaders_color}]{$leader_name}[/url] {$bl_url}[/color] - {$leader->position_desc}\r\n";
 	    }
 
 	    $division_structure .= "[/size][/center]\r\n\r\n";
@@ -73,12 +67,12 @@ class DivisionStructure {
 	     * -----general sergeants-----
 	     */
 
-		$genSgts = Division::findGeneralSergeants($game_id);
-		$division_structure .= "[center][size=3][color={$platoon_pos_color}]General Sergeants[/color]\r\n";
+		$genSgts = Division::findGeneralSergeants($this->game_id);
+		$division_structure .= "[center][size=3][color={$this->platoon_pos_color}]General Sergeants[/color]\r\n";
 
 		foreach ($genSgts as $sgt) {
 			$sgt_name = Rank::convert($sgt->rank_id)->abbr." ".$sgt->forum_name;
-			$memberHandle = MemberHandle::findHandle($sgt->id, $division->primary_handle);
+			$memberHandle = MemberHandle::findHandle($sgt->id, $this->division->primary_handle);
 			$sgt->handle = $memberHandle->handle_value;
 
 			$aod_url = "[url=" . CLANAOD . $sgt->member_id . "]";
@@ -92,8 +86,9 @@ class DivisionStructure {
 	     * ---------platoons----------
 	     */
 
-		$division_structure .= "\r\n\r\n[table='width: {$players_width}']";
-		$platoons = Platoon::find_all($game_id);
+		$division_structure .= "\r\n\r\n[table='width: {$this->players_width}']";
+		$platoons = $this->platoons;
+		$i = 1;
 
 		foreach ($platoons as $platoon) {
 
@@ -106,13 +101,13 @@ class DivisionStructure {
 				$division_structure .= "[td]";
 			}
 
-			$division_structure .= "[size=5][color={$platoon_num_color}]". ordsuffix($i) ." Platoon[/color][/size] \r\n[i][size=3]{$platoon->name} [/size][/i]\r\n\r\n";
+			$division_structure .= "[size=5][color={$this->platoon_num_color}]". ordsuffix($i) ." Platoon[/color][/size] \r\n[i][size=3]{$platoon->name} [/size][/i]\r\n\r\n";
 
     		// platoon leaders
 			$leader = Member::findByMemberId($platoon->leader_id);
 
 			if ($platoon->leader_id != 0) {
-				$memberHandle = MemberHandle::findHandle($leader->id, $division->primary_handle);
+				$memberHandle = MemberHandle::findHandle($leader->id, $this->division->primary_handle);
 				$leader->handle = $memberHandle->handle_value;
 
 				$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
@@ -121,25 +116,24 @@ class DivisionStructure {
 
 			if ($platoon->leader_id != 0) {
 				$leader_name = Rank::convert($leader->rank_id)->abbr. " " .ucwords($leader->forum_name);
-				$division_structure .= "{$aod_url}[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]{$leader_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
+				$division_structure .= "{$aod_url}[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]{$leader_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
 			} else {
-				$division_structure .= "[size=3][color={$platoon_pos_color}]Platoon Leader[/color]\r\n[color={$platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
+				$division_structure .= "[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
 			}
 
-
     		// squad leaders
-			$squads = Squad::findAll($game_id, $platoon->id);
+			$squads = Squad::findAll($this->game_id, $platoon->id);
 
 			foreach ($squads as $squad) {
 
 				if ($squad->leader_id != 0) {
 					$leader = Member::findById($squad->leader_id);
-					$memberHandle = MemberHandle::findHandle($leader->id, $division->primary_handle);
+					$memberHandle = MemberHandle::findHandle($leader->id, $this->division->primary_handle);
 					$leader->handle = $memberHandle->handle_value;
 					$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 					$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
 
-					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$squad_leaders_color}]" . Rank::convert($leader->rank_id)->abbr . " {$leader->forum_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
+					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$this->squad_leaders_color}]" . Rank::convert($leader->rank_id)->abbr . " {$leader->forum_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
 					$division_structure .= "[size=1]";
 
 					// direct recruits
@@ -148,7 +142,7 @@ class DivisionStructure {
 						$division_structure .= "[list=1]";
 
 						foreach ($recruits as $player) {
-							$memberHandle = MemberHandle::findHandle($player->id, $division->primary_handle);
+							$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
 							$player->handle = $memberHandle->handle_value;
 							
 							$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
@@ -161,7 +155,7 @@ class DivisionStructure {
 
 				} else {
 
-					$division_structure .= "[size=3][color={$platoon_pos_color}]Squad Leader[/color]\r\n[color={$squad_leaders_color}]TBA[/color][/size]\r\n";
+					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Squad Leader[/color]\r\n[color={$this->squad_leaders_color}]TBA[/color][/size]\r\n";
 					$division_structure .= "[size=1]";
 
 				}
@@ -171,7 +165,7 @@ class DivisionStructure {
         		// squad members
 				$squadMembers = arrayToObject(Squad::findSquadMembers($squad->id, true, $leader->member_id));
 				foreach ($squadMembers as $player) {
-					$memberHandle = MemberHandle::findHandle($player->id, $division->primary_handle);
+					$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
 					$player->handle = $memberHandle->handle_value;
 
 					$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
@@ -185,7 +179,7 @@ class DivisionStructure {
 
 			$division_structure .= "\r\n\r\n";
 
-			if ($i % $num_columns == 0) {
+			if ($i % $this->num_columns == 0) {
 				$division_structure .= "[/td][/tr][tr]";	
 			}
 			$division_structure .= "[/td]";
@@ -203,15 +197,15 @@ class DivisionStructure {
 		$i = 1;
 
 		// header
-		$division_structure .= "\r\n[table='width: {$info_width}']";
-		$division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Part Time Members[/b][/color][/size][/center][/td][/tr]";
+		$division_structure .= "\r\n[table='width: {$this->info_width}']";
+		$division_structure .= "[tr][td]\r\n[center][size=3][color={$this->platoon_pos_color}][b]Part Time Members[/b][/color][/size][/center][/td][/tr]";
 		$division_structure .= "[/table]\r\n\r\n";
 
 		// players
-		$division_structure .= "[table='width: {$info_width}']";
+		$division_structure .= "[table='width: {$this->info_width}']";
 		$division_structure .= "[tr][td]";
 
-		$partTimers = PartTime::find_all($game_id);
+		$partTimers = PartTime::find_all($this->game_id);
 
 		foreach ($partTimers as $player) {
 
@@ -233,25 +227,25 @@ class DivisionStructure {
 		$i = 1;
 
 		// header
-		$division_structure .= "\r\n[table='width: {$info_width}']";
-		$division_structure .= "[tr][td]\r\n[center][size=3][color={$platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
+		$division_structure .= "\r\n[table='width: {$this->info_width}']";
+		$division_structure .= "[tr][td]\r\n[center][size=3][color={$this->platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
 		$division_structure .= "[/table]\r\n\r\n";
 
 		// players
-		$division_structure .= "[table='width: {$info_width}']";
-		$loas = LeaveOfAbsence::find_all($game_id);
+		$division_structure .= "[table='width: {$this->info_width}']";
+		$loas = LeaveOfAbsence::find_all($this->game_id);
 
 		foreach ($loas as $player) {
 			$date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end)); 
 			$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 			$profile = Member::findByMemberId($player->member_id);
 
-			$division_structure .= "[tr][td]{$aod_url}" . Member::findForumName($profile->member_id) . "[/url][/td][td]{$date_end}[/td][td]{$player->reason}[/td][/tr]";
+			$division_structure .= "[tr][td]{$aod_url}" . Member::findForumName($profile->member_id) . "[/url][/td][td][center]{$date_end}[/center][/td][td]{$player->reason}[/td][/tr]";
 			$i++;
 		}
 		
 		$division_structure .= "[/table]";
 
-		return $division_structure;
+		$this->content = $division_structure;
 	}
 }

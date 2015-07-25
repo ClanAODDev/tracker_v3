@@ -66,8 +66,8 @@ class DivisionController {
 
 	public static function _generateDivisionStructure() {
 		$member = Member::find(intval($_SESSION['memberid']));
-		$division_structure = DivisionStructure::generate($member->game_id);
-		Flight::render('modals/division_structure', array('division_structure' => $division_structure));
+		$division_structure = new DivisionStructure($member->game_id);
+		Flight::render('modals/division_structure', array('division_structure' => $division_structure->content));
 	}
 
 	public static function _updateLoa() {
