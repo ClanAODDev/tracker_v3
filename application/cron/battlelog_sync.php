@@ -5,7 +5,7 @@ require 'lib.php';
 $members = array();
 
 if (dbConnect()) {
-	$query = $pdo->prepare(" SELECT handle_value FROM member_handles WHERE handle_account_id = '0' AND handle_type = '2' ");
+	$query = $pdo->prepare(" SELECT handle_value FROM member_handles WHERE handle_account_id = 0 AND handle_type = 2 ");
 	try {
 		$query->execute();
 		$battlelog_names = $query->fetchAll();
