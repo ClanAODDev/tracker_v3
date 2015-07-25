@@ -2,6 +2,8 @@
 
 require 'lib.php';
 
+$cron_column = "bfh_next_player";
+
 global $pdo;
 
 if (dbConnect()) {
@@ -9,7 +11,7 @@ if (dbConnect()) {
 	try {
 
 		// fetch next player in queue
-		$next_player = $pdo->query("SELECT value FROM crontab WHERE name = 'bfh_next_player'")->fetch(); 
+		$next_player = $pdo->query("SELECT value FROM crontab WHERE name = {$cron_column}")->fetch(); 
 
 		// determine player range
 		$limit = $pdo->query("SELECT max(id) as max, min(id) as min FROM member WHERE game_id = 2 AND status_id = 1")->fetch();
@@ -26,14 +28,14 @@ if (dbConnect()) {
 		if (empty($params)) {
 
 			// no member exists... move on
-			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = 'bfh_next_player'")->execute();
+			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = {$cron_column}")->execute();
 
 		} else {
 
 			// fetch battlelog data
 			$reports = parse_battlelog_reports($params['handle_account_id'], 'bfh');
 			bf_newActivity($reports, "bfh", $params['member_id'], $next_player);
-			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = 'bfh_next_player'")->execute(); 
+			$pdo->prepare("UPDATE crontab SET value = {$next_player}+1 WHERE name = {$cron_column}")->execute(); 
 
 		}
 
