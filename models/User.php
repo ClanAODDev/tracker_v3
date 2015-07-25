@@ -176,7 +176,7 @@ class User extends Application {
 	public static function create($params) {
 		$user = new User;
 		$user->username = $params['user'];
-		$user->credential = $params['password'];
+		$user->credential = hasher($params['password']);
 		$user->email = $params['email'];
 		$user->date_joined = date("Y-m-d H:i:s");
 		$user->ip = $_SERVER['REMOTE_ADDR'];
