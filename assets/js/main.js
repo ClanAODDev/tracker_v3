@@ -168,7 +168,8 @@ $(function() {
     });
 
 
-    $(".divGenerator").click(function() {
+    $(".divGenerator").click(function(e) {
+        e.preventDefault();
         $(".viewPanel .viewer").load("get/division-structure");
         $(".viewPanel").modal();
     });
