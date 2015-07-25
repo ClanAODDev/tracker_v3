@@ -30,7 +30,7 @@
 					<table class='table table-striped table-hover'>
 						<?php $i = 1; ?>
 						<?php foreach($daily as $player) : ?>
-							<tr data-id='<?php echo $player->member_id ?>'><td class='text-center text-muted'><small><?php echo $i; $i++ ?></small></td><td><?php echo Rank::convert($player->rank_id)->abbr; ?> <?php echo $player->forum_name;?></td><td class='text-center text-muted'><?php echo ordSuffix($player->plt); ?> Platoon</td><td><strong><?php echo $player->aod_games ?></strong></td></tr>
+							<tr data-id='<?php echo $player->member_id ?>'><td class='text-center text-muted'><small><?php echo $i; $i++ ?></small></td><td><?php echo Rank::convert($player->rank_id)->abbr; ?> <?php echo $player->forum_name;?></td><td><strong><?php echo $player->aod_games ?></strong></td></tr>
 						<?php endforeach; ?>
 
 					</table>
@@ -45,7 +45,7 @@
 				<table class='table table-striped table-hover'>
 					<?php $i = 1; ?>
 					<?php foreach($monthly as $player) : ?>
-						<tr data-id='<?php echo $player->member_id ?>'><td class='text-center text-muted'><small><?php echo $i; $i++ ?></small></td><td><?php echo Rank::convert($player->rank_id)->abbr; ?> <?php echo $player->forum_name;?></td><td class='text-center text-muted'><?php echo ordSuffix($player->plt); ?> Platoon</td><td><strong><?php echo $player->aod_games ?></strong></td></tr>
+						<tr data-id='<?php echo $player->member_id ?>'><td class='text-center text-muted'><small><?php echo $i; $i++ ?></small></td><td><?php echo Rank::convert($player->rank_id)->abbr; ?> <?php echo $player->forum_name;?></td><td><strong><?php echo $player->aod_games ?></strong></td></tr>
 					<?php endforeach; ?>
 
 				</table>

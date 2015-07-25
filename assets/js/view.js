@@ -24,7 +24,7 @@ $(function() {
         $(".modal .message").html("Updating member information. Please wait...").addClass("alert-info").show();
         $(".save-btn").html("Saving...").attr('class', 'btn btn-default disabled save-btn');
 
-        var memberData = $("#member-form,#alias-form,#div-form").serializeArray(),
+        var memberData = $("#member-form,#div-form").serializeArray(),
             userData = $("#user-form").serializeArray(),
             userAliases = $("#alias-form").serializeArray(),
             played_games = $("#games option:selected").map(function() {

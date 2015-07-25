@@ -38,9 +38,7 @@
 						<input type="text" class="form-control" name="forum_name" value="<?php echo $member->forum_name ?>" disabled>
 					</div>
 
-
-						
-						<input type="hidden" name="member_id" value="<?php echo $member->member_id ?>">
+					<input type="hidden" name="member_id" value="<?php echo $member->member_id ?>">
 
 					<div class="form-group">
 						<label for="recruiter" class="control-label">Recruiter ID</label>
@@ -121,7 +119,7 @@
 								<tr>
 									<td class="text-muted">Add new alias</td>
 									<td><select id="alias-selector" class="form-control">
-									<option value="" disabled selected="selected">Select an alias type</option>
+										<option value="" disabled selected="selected">Select an alias type</option>
 										<?php foreach($handles as $handle): ?>
 											<option value="<?php echo $handle->id ?>" data-type="<?php echo $handle->type ?>" data-description="<?php echo $handle->name ?>"><?php echo $handle->name ?></option>
 										<?php endforeach; ?>

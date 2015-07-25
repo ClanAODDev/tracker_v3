@@ -121,6 +121,7 @@ class MemberController {
 			} else if ($respMember->member_id != $member->member_id && $memberData['position_id'] == 5 && $memberData['squad_id'] != 0 ) {
 				$data = array('success' => false, 'message' => "Squad leaders cannot be in a squad.");
 			} else {
+
 				// update member info
 				Member::modify($memberData);
 			}		
@@ -166,8 +167,9 @@ class MemberController {
 
 					if ($value != '') {
 
-						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => 0);
+						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => '0');
 						$id = MemberHandle::hasAlias($type, $memberData['id']);
+
 
 						if ($id) {
 
@@ -176,7 +178,10 @@ class MemberController {
 
 						} else {
 							MemberHandle::add($params);
+							var_dump(Flight::aod()->last_query);die;
 						}
+
+						
 					}
 				}
 			}
