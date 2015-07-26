@@ -251,8 +251,10 @@ class MemberController {
 				$handle->member_id = $insert_id;
 				$handle->handle_type = $division->primary_handle;
 				$handle->handle_value = $ingame_name;
-				$handle->handle_account_id = 0;
+				$handle->handle_account_id = '0';
+
 				MemberHandle::add($handle);
+				var_dump(Flight::aod()->last_query);
 			}
 		}
 
