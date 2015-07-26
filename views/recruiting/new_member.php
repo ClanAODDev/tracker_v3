@@ -81,7 +81,7 @@
 
 							<div class='col-sm-6'>
 								<p class='margin-top-20'>Does your new recruit have a forum account? They will need one for you to complete this section. Please fill out and check the form completely for accuracy once this has been done. </p>
-								<p class='text-warning'><strong>Be certain the Battlelog name is correct. If it is not valid, server activity will not be available for your new recruit.</strong></p>
+							
 							</div>
 							<div class='col-sm-6 well'>
 								<div class='form-group memberid-group'>
