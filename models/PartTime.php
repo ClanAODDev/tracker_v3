@@ -1,12 +1,14 @@
 <?php
 
 class PartTime extends Application {
+
+	public $id;
 	public $member_id;
 	public $forum_name;
-	public $battlelog_name;
+	public $ingame_alias;
 	public $game_id;
 
-	static $id_field = 'member_id';
+	static $id_field = 'id';
 	static $name = 'forum_name';
 	static $table = 'part_timers';
 
@@ -14,25 +16,25 @@ class PartTime extends Application {
 		return self::find(array('game_id' => $game_id));
 	}
 
-	public static function add($member_id, $date, $reason, $comment) {
-		$member = Member::findByMemberId($member_id);
-		$sql = "INSERT INTO ".LeaveOfAbsence::$table." ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
-		Flight::aod()->sql($sql)->one();
-		return array('success' => true);
+	public static function add($params) {
+		$pt = new self;
+		$pt->member_id = $params['member_id'];
+		$pt->forum_name = $params['forum_name'];
+		$pt->game_id = $params['game_id'];
+		$pt->save();
 	}
 
-	public static function delete($loa_id) {
-		$loa = self::find($loa_id);
-		Flight::aod()->remove($loa);
-		return array('success' => true);
+	public static function delete($id) {
+		$pt = self::find($id);
+		Flight::aod()->remove($pt);
 	}
 
 	public static function modify($params) {
-		$member = new self();
+		$pt = new self();
 		foreach ($params as $key=>$value) {
-			$member->$key = $value;
+			$pt->$key = $value;
 		}
-		$member->update($params);
+		$pt->update($params);
 	}
 
 }
