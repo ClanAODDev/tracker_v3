@@ -65,7 +65,13 @@ class User extends Application {
 	public static function isDev() {
 		$id = $_SESSION['userid'];
 		$params = self::find($id);
-		return (boolean) $params->developer;
+		$dev = (boolean) $params->developer;
+		$safelist = self::isOnSafeList($id);
+		if ($dev || $safelist) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static function isOnSafeList($id) {
@@ -86,17 +92,17 @@ class User extends Application {
 		$player = Member::findByMemberId($mid);
 		$squad = ($player->squad_id != 0) ? Squad::find($player->squad_id) : false;
 
+        // is the user a dev or clan administrator?        
+		if (self::isDev()) {
+			return true;
     	// is the user the assigned squad leader?
-		if (($myUser->role == 1) && ($squad) && ($squad->leader_id == $myMember->id)) {
+		} else if (($myUser->role == 1) && ($squad) && ($squad->leader_id == $myMember->id)) {
 			return true;
         // is the user the platoon leader of the user?
 		} else if (($myUser->role == 2) && ($myMember->platoon_id == $player->platoon_id)) {
 			return true;
         // is the user the division leader of the user?
 		} else if (($myUser->role == 3) && ($myMember->game_id == $player->game_id)) {
-			return true;
-        // is the user a dev or clan administrator?        
-		} else if (self::isDev()) {
 			return true;
         // is the user editing someone of a lesser role, or himself?
 		} else if ($mid == $myMember->member_id) {
