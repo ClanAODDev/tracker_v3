@@ -34,7 +34,6 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/platoon/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
-
 	Flight::route('/issues/view/@id', array('GithubController', '_view'));
 	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));
 	
@@ -92,3 +91,8 @@ Flight::map('notFound', array('ApplicationController', '_404'));
 
 // graphics
 Flight::route('/stats/@division/top10.png', array('GraphicsController', '_generateDivisionTop10'));
+
+// authenticate
+Flight::route('GET /authenticate', array('UserController', '_authenticate'));
+Flight::route('POST /do/authenticate', array('UserController', '_doAuthenticate'));
+Flight::route('POST /do/reset-authentication', array('UserController', '_doResetAuthentication'));

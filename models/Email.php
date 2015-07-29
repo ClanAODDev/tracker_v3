@@ -23,8 +23,8 @@ class Email {
     $email->subject = "Account created";
     $email->message = "PLEASE DO NOT REPLY TO THIS E-MAIL\r\n\n";
     $email->message .= "{$user->username},\r\n";
-    $email->message .= "This email was used to create an account on the AOD Division Tracker. Please verify that it was you by clicking the link provided below, or copy-paste the URL into your browser's address bar.\r\n";
-    $email->message .= "http://aodwebhost.site.nfoservers.com/tracker/validate?id={$user->validation}\r\n\r\n";
+    $email->message .= "This email was used by someone with the IP {$_SERVER['REMOTE_ADDR']} to create an account on the AOD Division Tracker. Please verify that it was you by clicking the link provided below, or copy-paste the URL into your browser's address bar.\r\n";
+    $email->message .= "http://aodwebhost.site.nfoservers.com/tracker/authenticate?id={$user->validation}\r\n\r\n";
     $email->message .= "If you believe you have received this email in error, or the account was not created by you, please let us know by sending an email to admin@aodwebhost.site.nfoservers.com";
     $email->send();
   }

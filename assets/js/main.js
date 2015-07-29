@@ -38,6 +38,89 @@ $(function() {
         return false;
     });
 
+    $(".send-email-validation").click(function(e) {
+        e.preventDefault();
+        var url = "do/reset-authentication",
+            email = $(this).attr('data-email'),
+            alert = $(this).closest(".alert");
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: {
+                email: email
+            },
+            success: function(data) {
+                if (data.success) {
+                    $(alert).attr('class', 'alert alert-success').html("<i class='fa fa-check fa-lg'></i> A validation code has been sent to your email.").delay(3000).fadeOut();
+                } else {
+                    swal('Error', data.message, 'error');
+                }
+            }
+        });
+
+    });
+
+    $(".resend-btn").click(function(e) {
+        e.preventDefault();
+        var url = "do/reset-authentication",
+            email = $("#email").val(),
+            inputGroup = $("#email").closest(".input-group");
+        if (email == '') {
+            $(inputGroup).addClass('has-error');
+        } else if (validateEmail(email)) {
+            $(inputGroup).addClass('has-error');
+        } else {
+            $(inputGroup).removeClass('has-error');
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: 'json',
+                data: $("#verify").serialize(),
+                success: function(data) {
+                    if (data.success) {
+                        $(".alert-box").html("<div class='alert alert-success'><i class='fa fa-check'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                        setTimeout(function() {
+                            window.location.href = "./";
+                        }, 1200);
+                    } else {
+                        $(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                    }
+                }
+            });
+        }
+    });
+
+    $("#verify .submit-btn").click(function(e) {
+        e.preventDefault();
+        var url = "do/authenticate",
+            email = $("#email").val(),
+            inputGroup = $("#email").closest(".input-group");
+        if (email == '') {
+            $(inputGroup).addClass('has-error');
+        } else if (validateEmail(email)) {
+            $(inputGroup).addClass('has-error');
+        } else {
+            $(inputGroup).removeClass('has-error');
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: 'json',
+                data: $("#verify").serialize(),
+                success: function(data) {
+                    if (data.success) {
+                        $(".alert-box").html("<div class='alert alert-success'><i class='fa fa-check'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                        setTimeout(function() {
+                            window.location.href = "./";
+                        }, 1200);
+                    } else {
+                        $(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                    }
+                }
+            });
+        }
+    });
+
 
     $("#searchclear").click(function() {
         $("#member-search").val('');
@@ -216,7 +299,7 @@ $(function() {
                     $('.msg').fadeOut();
 
                     setTimeout(function() {
-                        window.location.href = "/";
+                        window.location.href = "./";
                     }, 1000);
 
                 } else if (data['success'] === false) {
@@ -349,6 +432,11 @@ function ucwords(str) {
         .replace(/^([a-z\u00E0-\u00FC])|\s+([a-z\u00E0-\u00FC])/g, function($1) {
             return $1.toUpperCase();
         });
+}
+
+function validateEmail(email) {
+    var regExp = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    return (!regExp.test(email)) ? true : false;
 }
 
 

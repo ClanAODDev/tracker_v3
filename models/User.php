@@ -13,6 +13,8 @@ class User extends Application {
 	public $last_seen;
 	public $developer;
 	public $member_id;
+	public $validation;
+	public $validated;
 
 	static $table = 'users';
 	static $id_field = 'id';
@@ -26,12 +28,30 @@ class User extends Application {
 		return self::fetch_all();
 	}
 
+	public static function isValidated() {
+		$params = self::find($_SESSION['userid']);
+		return (boolean) $params->validated;
+	}
+
 	public static function isUser($member_id) {
 		$user = self::find(array('member_id' => $member_id));
 		if (!empty($user)) {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	public static function validateCode($params) {
+		$user = self::find(array('email' => $params['email'], 'validation' => $params['validation'], 'validated' => 0));
+		
+		if (empty($user)) {
+			return false;
+		} else {
+			$user->validated = 1;
+			$user->validation = NULL;
+			Flight::aod()->save($user);
+			return true;
 		}
 	}
 
@@ -44,8 +64,8 @@ class User extends Application {
 
 	public static function isDev() {
 		$id = $_SESSION['userid'];
-		$params = Flight::aod()->sql("SELECT developer FROM ".self::$table." WHERE id = {$id} LIMIT 1")->one();
-		return ($params['developer'] == 1 || self::isOnSafeList($id)) ? true : false;
+		$params = self::find($id);
+		return (boolean) $params->developer;
 	}
 
 	public static function isOnSafeList($id) {
@@ -172,6 +192,21 @@ class User extends Application {
 		$user->update($params);
 	}
 
+	public static function resetValidation($email) {
+
+		$user = self::find(array('email' => $email));
+
+		if (empty($user)) {
+			return false;
+		} else {
+			$user->validation = md5(time() . rand());
+			$user->validated = 0;
+			Flight::aod()->save($user);
+			Email::validate($user);
+			return true;
+		}
+	}
+
 	public static function create($params) {
 		$user = new User;
 		$user->username = $params['user'];
@@ -180,6 +215,7 @@ class User extends Application {
 		$user->date_joined = date("Y-m-d H:i:s");
 		$user->ip = $_SERVER['REMOTE_ADDR'];
 		$user->validation = md5(time() . rand());
+		$user->validated = 0;
 		$user->member_id = $params['member_id'];
 		$user->date_joined = date('Y-m-d H:i:s');
 		$user->role = 0;
@@ -187,7 +223,7 @@ class User extends Application {
 		$user->last_seen = 0;
 		$user->developer = 0;
 		$user->save();
-		//Email::validate($user);
+		Email::validate($user);
 	}
 
 }

@@ -3,12 +3,12 @@
 class UserController {
 
 	public static function _login() {
-		Flight::render('layouts/login', array(''), 'content');
+		Flight::render('layouts/login', array(), 'content');
 		Flight::render('layouts/application');
 	} 
 
 	public static function _register() {
-		Flight::render('layouts/register', array(''), 'content');
+		Flight::render('layouts/register', array(), 'content');
 		Flight::render('layouts/application');
 	}
 
@@ -37,6 +37,47 @@ class UserController {
 			Flight::redirect('/invalid-login');
 		} else {
 			Flight::redirect('./');
+		}
+	}
+
+	public static function _authenticate() {
+		Flight::render('layouts/auth', array(), 'content');
+		Flight::render('layouts/application');		
+	}
+
+	public static function _doAuthenticate() {
+		$email = ($_POST['email']) ? $_POST['email'] : false;
+		$validation = ($_POST['validation']) ? $_POST['validation'] : false;
+
+		if ($email) {
+			$params = array('email' => $email, 'validation' => $validation);
+
+			if (empty($params)) {
+				$data['success'] = false;
+				$data['message'] = "The email you provided is not recognized";	
+			} else if (!$validation || !User::validateCode($params)) {
+				$data['success'] = false;
+				$data['message'] = "Invalid authentication code.";	
+			} else {
+				$data['success'] = true;
+				$data['message'] = "Your account and email address have been authenticated.";
+			}
+			echo json_encode($data);
+
+		}
+	}
+
+	public static function _doResetAuthentication() {
+		$email = ($_POST['email']) ? $_POST['email'] : false;
+		if ($email) {
+			if (!User::resetValidation($email)) {
+				$data['success'] = false;
+				$data['message'] = "The email you provided is not recognized.";
+			} else {
+				$data['success'] = true;
+				$data['message'] = "A new validation code has been sent to your email.";
+			}
+			echo json_encode($data);
 		}
 	}
 

@@ -19,7 +19,7 @@ class ApplicationController {
 		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
 		Flight::render('member/personnel', array('member' => $member, 'squad' => $squad, 'platoon' => $platoon, 'squads' => $squads), 'personnel');
 		Flight::render('application/divisions', array('divisions' => $divisions), 'divisions_list');
-		Flight::render('user/notifications', array('notifications' => $notifications->all), 'notifications_list');
+		Flight::render('user/notifications', array('notifications' => $notifications->messages), 'notifications_list');
 		Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 	}
