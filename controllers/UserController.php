@@ -41,8 +41,19 @@ class UserController {
 	}
 
 	public static function _authenticate() {
-		Flight::render('layouts/auth', array(), 'content');
-		Flight::render('layouts/application');		
+		if (User::isLoggedIn()) {
+			$user = User::find(intval($_SESSION['userid']));
+			$member = Member::find(intval($_SESSION['memberid']));
+			$tools = Tool::find_all($user->role);
+			$divisions = Division::find_all();
+			$division = Division::findById(intval($member->game_id));
+			$platoons = Platoon::find_all($member->game_id);
+			Flight::render('layouts/auth', array(), 'content');
+			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));	
+		} else {
+			Flight::render('layouts/auth', array(), 'content');
+			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+		}
 	}
 
 	public static function _doAuthenticate() {
@@ -111,7 +122,7 @@ class UserController {
 			User::create($user);
 			$data['success'] = true;
 			$data['message'] = "Your account was created!";
-			
+
 		}
 
 		echo json_encode($data);
