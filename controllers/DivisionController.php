@@ -14,6 +14,7 @@ class DivisionController {
 			$division_leaders = Division::findDivisionLeaders($division->id);
 			$topListMonthly = BfActivity::topList30DaysByDivision($division->id);
 			$topListToday = BfActivity::topListTodayByDivision($division->id);
+			
 			$personnelData = new stdClass();
 			$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
 			$personnelData->totalCount = Division::totalCount($division->id)->count;
