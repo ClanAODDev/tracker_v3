@@ -1,6 +1,6 @@
 <?php
 
-class DivisionStructure {
+class BfDivisionStructure {
 
 	function __construct($game_id) {
 
