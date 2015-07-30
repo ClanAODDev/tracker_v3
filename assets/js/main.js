@@ -54,7 +54,7 @@ $(function() {
                 if (data.success) {
                     $(alert).attr('class', 'alert alert-success').html("<i class='fa fa-check fa-lg'></i> A validation code has been sent to your email.").delay(3000).fadeOut();
                 } else {
-                    swal('Error', data.message, 'error');
+                    swal('Error', "Something went wrong!", 'error');
                 }
             }
         });
