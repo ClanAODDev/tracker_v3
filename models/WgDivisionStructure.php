@@ -120,7 +120,7 @@ class WgDivisionStructure {
 				$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
 
 				$leader_name = Rank::convert($leader->rank_id)->abbr. " " .ucwords($leader->forum_name);
-				$division_structure .= "{$aod_url}[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]{$leader_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
+				$division_structure .= "{$aod_url}[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]{$leader_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
 			} else {
 				$division_structure .= "[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
 			}
@@ -179,13 +179,15 @@ class WgDivisionStructure {
 
         		// squad members
 				$squadMembers = arrayToObject(Squad::findSquadMembers($squad->id, true, $leader->member_id));
-				foreach ($squadMembers as $player) {
-					$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
-					$player->handle = $memberHandle->handle_value;
+				if (count((array) $squadMembers)) {
+					foreach ($squadMembers as $player) {
+						$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
+						$player->handle = $memberHandle->handle_value;
 
-					$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
-					$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
-					$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
+						$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
+						$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
+						$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
+					}
 				}
 
 				$division_structure .= "[/size]\r\n";
