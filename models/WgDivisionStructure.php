@@ -138,17 +138,28 @@ class WgDivisionStructure {
 
 					// direct recruits
 					$recruits = arrayToObject(Member::findRecruits($leader->member_id, true));
+
 					if (count((array) $recruits)) {
 						$division_structure .= "[list=1]";
 
-						foreach ($recruits as $player) {
-							$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
-							$player->handle = $memberHandle->handle_value;
-							
-							$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
-							$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
-							$division_structure .= "[*]{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
+						foreach ($recruits as $recruit) { 
+
+							$memberHandle = MemberHandle::findHandle($recruit->id, $this->division->primary_handle);
+							$division_structure .= "[*]{$aod_url}" . Rank::convert($recruit->rank_id)->abbr . " {$recruit->forum_name}[/url]";
+
+							// does member have a member handle?
+							if (count((array)$memberHandle)) {
+								$recruit->handle = (is_object($memberHandle)) ? $memberHandle->handle_value : NULL;
+								$url = (is_object($memberHandle)) ? $memberHandle->url : NULL;
+								$aod_url = "[url=" . CLANAOD . $recruit->member_id . "]";
+								$bl_url = "[url=" . $url .  $recruit->handle. "][BL][/url]";
+								$division_structure .= "{$bl_url}\r\n";
+							} else {
+								$division_structure .= " [color=red]XX[/color]\r\n";
+							}
+
 						}
+
 						$division_structure .= "[/list]";
 
 					}
