@@ -118,9 +118,7 @@ class BfDivisionStructure {
 
 				$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 				$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
-			}
 
-			if ($platoon->leader_id != 0) {
 				$leader_name = Rank::convert($leader->rank_id)->abbr. " " .ucwords($leader->forum_name);
 				$division_structure .= "{$aod_url}[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]{$leader_name}[/color][/size][/url] {$bl_url}\r\n\r\n";
 			} else {
