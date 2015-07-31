@@ -256,7 +256,7 @@ class BfDivisionStructure {
 			$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 			$profile = Member::findByMemberId($player->member_id);
 
-			$division_structure .= "[tr][td]{$aod_url}" . Member::findForumName($profile->member_id) . "[/url][/td][td][center]{$date_end}[/center][/td][td]{$player->reason}[/td][/tr]";
+			$division_structure .= "[tr][td]{$aod_url}" . Member::findForumName($profile->member_id) . "[/url][/td][td]{$date_end}[/td][td]{$player->reason}[/td][/tr]";
 			$i++;
 		}
 		
