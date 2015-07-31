@@ -42,35 +42,39 @@
 
 					<?php foreach($squads as $squad) : ?>
 
-						<?php $leader = Member::findById($squad->leader_id); ?>
+						<?php $leader = ($squad->leader_id != 0) ? Member::findById($squad->leader_id) : false; ?>
 
 						<a href='#collapseSquad_<?php echo $i; ?>' data-toggle='collapse' class='list-group-item active accordion-toggle' data-parent='#squads'>
-							<?php if ($squad->leader_id != 0): ?>
+
+							<?php if ($squad->leader_id): ?>
 
 								<?php echo ordsuffix($i) . " Squad - " . Rank::convert($leader->rank_id)->abbr ?> <?php echo $leader->forum_name ?> <span class="badge"><?php echo Squad::countSquadMembers($squad->id); ?></span>
 
 							<?php else: ?>
 
-								<?php echo ordsuffix($i) ?> Squad <span class="badge"><?php echo Squad::countSquadMembers($squad->id); ?></span>
+								<?php echo ordsuffix($i) ?> Squad - TBA <span class="badge"><?php echo Squad::countSquadMembers($squad->id); ?></span>
 
 							<?php endif; ?>
 						</a>
 
-						<!-- get squad members -->
-						<div class='squad-group collapse' id='collapseSquad_<?php echo $i; ?>'>
+						<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad->id)); ?>
+						<?php if (count((array)$squadMembers)): ?>
 
-							<?php $squadMembers = arrayToObject(Squad::findSquadMembers($squad->id)); ?>
+							<!-- get squad members -->
+							<div class='squad-group collapse' id='collapseSquad_<?php echo $i; ?>'>
 
-							<?php foreach($squadMembers as $player) : ?>
-								<?php $rctFlag = ($player->recruiter == $leader->member_id) ? "<sup><i class='fa fa-asterisk text-success'></i></sup>" : NULL; ?>
-								<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($player->rank_id)->abbr ?> <?php echo $player->forum_name ?></span> <?php echo $rctFlag ?>
-									<?php if (Member::isOnLeave($player->member_id)) : ?>
-										<small class='pull-right text-muted'>On Leave</small>
-									<?php else: ?>
-										<small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small>
-									<?php endif; ?></a>
-								<?php endforeach; ?>
-							</div>
+								<?php foreach($squadMembers as $player) : ?>
+									<?php $rctFlag = ($leader && $player->recruiter == $leader->member_id) ? "<sup><i class='fa fa-asterisk text-success'></i></sup>" : NULL; ?>
+									<a href='member/<?php echo $player->member_id ?>' class='list-group-item'><input type='checkbox' data-id='<?php echo $player->member_id; ?>' class='pm-checkbox'><span class='member-item'><?php echo Rank::convert($player->rank_id)->abbr ?> <?php echo $player->forum_name ?></span> <?php echo $rctFlag ?>
+										<?php if (Member::isOnLeave($player->member_id)) : ?>
+											<small class='pull-right text-muted'>On Leave</small>
+										<?php else: ?>
+											<small class='pull-right text-<?php echo inactiveClass($player->last_activity); ?>'>Seen <?php echo formatTime(strtotime($player->last_activity)); ?></small>
+										<?php endif; ?></a>
+									<?php endforeach; ?>
+								</div>
+
+							<?php endif; ?>
 
 							<?php $i++; ?>
 						<?php endforeach;  ?>

@@ -74,14 +74,15 @@ class Member extends Application {
 		}
 	}
 
-	public static function findRecruits($member_id, $division_structure = false) {
+	public static function findRecruits($member_id, $platoon_id = false, $division_structure = false) {
 		$conditions = array('recruiter' => $member_id, 'position_id' => 6);
+		if ($platoon_id) array_merge($conditions, array('platoon_id' => $platoon_id));
 		if ($division_structure) $conditions = array_merge($conditions, array('status_id @' => array(1,3,999)));
 		return Flight::aod()->from(self::$table)
 		->sortDesc(array('rank_id'))
 		->where($conditions)
-		->join('rank', array('rank.id' => 'rank_id'))
 		->select()->many();
+
 	}
 
 	public static function avatar($email, $type = "thumb") {
