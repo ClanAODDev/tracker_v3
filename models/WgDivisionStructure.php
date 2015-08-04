@@ -141,7 +141,7 @@ class WgDivisionStructure {
 					$division_structure .= "[size=1]";
 
 					// direct recruits
-					$recruits = arrayToObject(Member::findRecruits($leader->member_id, true));
+					$recruits = arrayToObject(Member::findRecruits($leader->member_id, $leader->platoon_id, $squad->id, true));
 
 					if (count((array) $recruits)) {
 						$division_structure .= "[list=1]";
@@ -153,8 +153,8 @@ class WgDivisionStructure {
 
 							// does member have a member handle?
 							if (count((array)$memberHandle)) {
-								$recruit->handle = (is_object($memberHandle)) ? $memberHandle->handle_value : NULL;
-								$url = (is_object($memberHandle)) ? $memberHandle->url : NULL;
+								$recruit->handle = $memberHandle->handle_value;
+								$url = $memberHandle->url;
 								$aod_url = "[url=" . CLANAOD . $recruit->member_id . "]";
 								$bl_url = "[url=" . $url .  $recruit->handle. "][BL][/url]";
 								$division_structure .= "{$bl_url}\r\n";
@@ -229,7 +229,7 @@ class WgDivisionStructure {
 			if ($i % 20 == 0) {
 				$division_structure .= "[/td][td]";
 			}
-			$bl_url = "[url=" . BATTLELOG .  $player->battlelog_name . "][BL][/url]";
+			$bl_url = "[url=" . BATTLELOG .  $player->ingame_alias . "][BL][/url]";
 			$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 			$division_structure .= "{$aod_url}AOD_{$player->forum_name}[/url] {$bl_url}\r\n";
 			$i++;
