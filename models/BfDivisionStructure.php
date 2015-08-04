@@ -59,9 +59,7 @@ class BfDivisionStructure {
 	    foreach ($division_leaders as $leader) {
 	    	$leader_name = Rank::convert($leader->rank_id)->abbr." ".$leader->forum_name;
 	    	$memberHandle = MemberHandle::findHandle($leader->id, $this->division->primary_handle);
-
 	    	$leader->handle = $memberHandle->handle_value;
-
 	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 	    	$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
 	    	$division_structure .= "{$aod_url}[color={$this->division_leaders_color}]{$leader_name}[/url] {$bl_url}[/color] - {$leader->position_desc}\r\n";
@@ -80,7 +78,6 @@ class BfDivisionStructure {
 			$sgt_name = Rank::convert($sgt->rank_id)->abbr." ".$sgt->forum_name;
 			$memberHandle = MemberHandle::findHandle($sgt->id, $this->division->primary_handle);
 			$sgt->handle = $memberHandle->handle_value;
-
 			$aod_url = "[url=" . CLANAOD . $sgt->member_id . "]";
 			$bl_url = "[url=" . $memberHandle->url .  $sgt->handle. "][BL][/url]";
 			$division_structure .= "{$aod_url}{$sgt_name}[/url] {$bl_url}\r\n";
@@ -115,10 +112,8 @@ class BfDivisionStructure {
 			if ($platoon->leader_id != 0) {
 				$memberHandle = MemberHandle::findHandle($leader->id, $this->division->primary_handle);
 				$leader->handle = $memberHandle->handle_value;
-
 				$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 				$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
-
 				$leader_name = Rank::convert($leader->rank_id)->abbr. " " .ucwords($leader->forum_name);
 				$division_structure .= "{$aod_url}[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]{$leader_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
 			} else {
@@ -136,7 +131,6 @@ class BfDivisionStructure {
 					$leader->handle = $memberHandle->handle_value;
 					$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
 					$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
-
 					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Squad Leader[/color]\r\n{$aod_url}[color={$this->squad_leaders_color}]" . Rank::convert($leader->rank_id)->abbr . " {$leader->forum_name}[/color][/url] {$bl_url}[/size]\r\n\r\n";
 					$division_structure .= "[size=1]";
 
@@ -149,14 +143,13 @@ class BfDivisionStructure {
 						foreach ($recruits as $recruit) { 
 
 							$memberHandle = MemberHandle::findHandle($recruit->id, $this->division->primary_handle);
-							$division_structure .= "[*]{$aod_url}" . Rank::convert($recruit->rank_id)->abbr . " {$recruit->forum_name}[/url]";
 
 							// does member have a member handle?
 							if (count((array)$memberHandle)) {
 								$recruit->handle = $memberHandle->handle_value;
-								$url = $memberHandle->url;
+								$bl_url = "[url=" . $memberHandle->url .  $recruit->handle. "][BL][/url]";
 								$aod_url = "[url=" . CLANAOD . $recruit->member_id . "]";
-								$bl_url = "[url=" . $url .  $recruit->handle. "][BL][/url]";
+								$division_structure .= "[*]{$aod_url}" . Rank::convert($recruit->rank_id)->abbr . " {$recruit->forum_name}[/url]";
 								$division_structure .= "{$bl_url}\r\n";
 							} else {
 								$division_structure .= " [color=red]XX[/color]\r\n";
@@ -183,7 +176,6 @@ class BfDivisionStructure {
 					foreach ($squadMembers as $player) {
 						$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
 						$player->handle = $memberHandle->handle_value;
-
 						$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
 						$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
 						$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
