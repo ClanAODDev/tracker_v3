@@ -64,8 +64,21 @@ class Division extends Application {
 	}
 
 	public static function recruitsThisMonth($game_id) {
-		$sql = "SELECT count(*) as count, m.forum_name, join_date FROM ".Member::$table." m WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND m.game_id = {$game_id}";
+		$sql = "SELECT count(*) as count FROM ".Member::$table." WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND game_id = {$game_id}";
 		return arrayToObject(Flight::aod()->sql($sql)->one());
+	}
+
+	public static function recruitingStats($game_id) {
+		$days_30 = Flight::aod()->sql("SELECT count(*) as count FROM ".Member::$table." WHERE join_date >= DATE_SUB(CURRENT_DATE, INTERVAL DAYOFMONTH(CURRENT_DATE)-1 DAY) AND game_id = {$game_id}")->one();
+		$days_60 = Flight::aod()->sql("SELECT count(*) as count FROM ".Member::$table." WHERE YEAR(join_date) = YEAR(CURDATE() - INTERVAL 1 MONTH) AND MONTH(join_date) = MONTH(CURDATE() - INTERVAL 1 MONTH) AND game_id = {$game_id};")->one();
+		$days_90 = Flight::aod()->sql("SELECT count(*) as count FROM ".Member::$table." WHERE YEAR(join_date) = YEAR(CURDATE() - INTERVAL 2 MONTH) AND MONTH(join_date) = MONTH(CURDATE() - INTERVAL 2 MONTH) AND game_id = {$game_id};")->one();
+
+		$stats = new stdClass();
+		$stats->days_30 = $days_30['count'];
+		$stats->days_60 = $days_60['count'];
+		$stats->days_90 = $days_90['count'];
+		return $stats;
+
 	}
 
 	public static function totalCount($game_id) {

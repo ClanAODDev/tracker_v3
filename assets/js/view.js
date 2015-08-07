@@ -81,6 +81,23 @@ $(function() {
 
     });
 
+    $("#position_id").change(function() {
+        var position = $(this).val();
+        $(this).popover('hide')
+        if (position == 5) {
+            $(this).popover({
+                animation: true,
+                selector: false,
+                trigger: 'click',
+                content: "Don't forget to assign this player as squad leader of a platoon via the \"Manage Platoon\" button.",
+                placement: 'auto',
+            });
+        } else {
+            $(this).popover('hide');
+        }
+
+    });
+
 });
 
 function updateMember(memberData, userData, userAliases, played_games) {

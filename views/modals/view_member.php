@@ -52,6 +52,14 @@
 				<div class="tab-pane" id="divinfo">
 					<div class="margin-top-20"></div>			
 					<form id='div-form'>
+						<div class='form-group position-group' style='display: <?php echo $allowEdit->posField ?>'>
+							<label for='position_id' class='control-label'>Position</label>
+							<select name='position_id' id='position_id' class='form-control'>
+								<?php foreach ($positionsArray as $position) : ?>
+									<option value='<?php echo $position->id ?>'><?php echo Locality::run($position->desc, $member->game_id); ?></option>
+								<?php endforeach; ?>
+							</select> 
+						</div>
 						<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
 							<label for='platoon_id' class='control-label'><?php echo Locality::run('Platoon', $member->game_id); ?></label>
 							<select name='platoon_id' id='platoon_id' class='form-control'>
@@ -87,14 +95,6 @@
 							</select>
 						</div>
 
-						<div class='form-group position-group' style='display: <?php echo $allowEdit->posField ?>'>
-							<label for='position_id' class='control-label'>Position</label>
-							<select name='position_id' id='position_id' class='form-control'>
-								<?php foreach ($positionsArray as $position) : ?>
-									<option value='<?php echo $position->id ?>'><?php echo Locality::run($position->desc, $member->game_id); ?></option>
-								<?php endforeach; ?>
-							</select> 
-						</div>
 					</form>
 					<div class="margin-top-20"></div>
 
