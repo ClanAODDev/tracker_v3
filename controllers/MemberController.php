@@ -291,29 +291,4 @@ class MemberController {
 		UserAction::create(array('type_id'=>2,'date'=>date("Y-m-d H:i:s"),'user_id'=>$user,'target_id'=>$id));
 	}
 
-
-	// api stuff
-
-	public static function _getMemberData($game) {
-		$membersQ = "SELECT battlelog_name, forum_name FROM member WHERE status_id = 1 AND game_id = {$game} ORDER BY forum_name ASC";
-		$ptmembersQ = "SELECT battlelog_name, forum_name FROM part_timers WHERE game_id = {$game} ORDER BY forum_name ASC";
-
-
-		$members = arrayToObject(Flight::aod()->sql($membersQ)->many());
-		$partTimers = arrayToObject(Flight::aod()->sql($ptmembersQ)->many());
-
-		$out = "<h1>Member list</h1><hr />";
-
-		foreach ($members as $member) {
-			$out .= "{$member->forum_name} - {$member->battlelog_name} <br />";
-		}
-
-		$out .= "<h1>Partimers list</h1><hr />";
-
-		foreach($partTimers as $member) {
-			$out .= "{$member->forum_name} - {$member->battlelog_name} <br />";
-		}
-		echo $out;
-	}
-
 }
