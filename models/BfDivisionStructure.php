@@ -145,13 +145,14 @@ class BfDivisionStructure {
 							$memberHandle = MemberHandle::findHandle($recruit->id, $this->division->primary_handle);
 
 							// does member have a member handle?
-							if (count((array)$memberHandle)) {
+							if ($memberHandle) {
 								$recruit->handle = $memberHandle->handle_value;
 								$bl_url = "[url=" . $memberHandle->url .  $recruit->handle. "][BL][/url]";
 								$aod_url = "[url=" . CLANAOD . $recruit->member_id . "]";
 								$division_structure .= "[*]{$aod_url}" . Rank::convert($recruit->rank_id)->abbr . " {$recruit->forum_name}[/url]";
 								$division_structure .= "{$bl_url}\r\n";
 							} else {
+								$division_structure .= "[*]{$aod_url}" . Rank::convert($recruit->rank_id)->abbr . " {$recruit->forum_name}[/url]";
 								$division_structure .= " [color=red]XX[/color]\r\n";
 							}
 
