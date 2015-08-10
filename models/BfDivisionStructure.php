@@ -174,11 +174,12 @@ class BfDivisionStructure {
 				$squadMembers = arrayToObject(Squad::findSquadMembers($squad->id, true, $leader->member_id));
 				if (count((array) $squadMembers)) {
 					foreach ($squadMembers as $player) {
-						$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
-						$player->handle = $memberHandle->handle_value;
-						$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
-						$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
-						$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
+						if ($memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle)) {
+							$player->handle = $memberHandle->handle_value;
+							$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
+							$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
+							$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
+						}
 					}
 				}
 
