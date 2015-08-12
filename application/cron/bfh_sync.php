@@ -12,7 +12,7 @@ if (dbConnect()) {
 		$next_player = $pdo->query("SELECT value FROM crontab WHERE id = 2 ")->fetch(); 
 
 		// determine player range
-		$limit = $pdo->query("SELECT max(id) as max, min(id) as min FROM member WHERE game_id = 2 AND status_id = 2")->fetch();
+		$limit = $pdo->query("SELECT max(id) as max, min(id) as min FROM member WHERE game_id = 3 AND status_id = 1")->fetch();
 
 		// reset queue once max is reached
 		if ($next_player['value'] > $limit['max']) {
