@@ -145,7 +145,7 @@ class BfDivisionStructure {
 							$memberHandle = MemberHandle::findHandle($recruit->id, $this->division->primary_handle);
 
 							// does member have a member handle?
-							if ($memberHandle) {
+							if (count((array)$memberHandle)) {
 								$recruit->handle = $memberHandle->handle_value;
 								$bl_url = "[url=" . $memberHandle->url .  $recruit->handle. "][BL][/url]";
 								$aod_url = "[url=" . CLANAOD . $recruit->member_id . "]";

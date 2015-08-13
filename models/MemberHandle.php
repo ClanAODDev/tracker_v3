@@ -50,9 +50,8 @@ class MemberHandle extends Application {
 			if (!is_null($handle->url)) {
 				$params->url = $handle->url;	
 			}		
-			return $params;
 		}
-		return false;
+		return $params;
 	}
 
 	public static function add($params) {
