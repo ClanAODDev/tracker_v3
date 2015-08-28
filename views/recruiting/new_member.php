@@ -81,7 +81,7 @@
 
 							<div class='col-sm-6'>
 								<p class='margin-top-20'>Does your new recruit have a forum account? They will need one for you to complete this section. Please fill out and check the form completely for accuracy once this has been done. </p>
-							
+
 							</div>
 							<div class='col-sm-6 well'>
 								<div class='form-group memberid-group'>
@@ -218,30 +218,11 @@
 
 									<ul class='nav nav-tabs' role='tablist'>
 										<li role='presentation' class='active'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>1</span> Request new member status</a></li>
-										<li role='presentation'><a href='#division-post' aria-controls='division-post' role='tab' data-toggle='tab'><span class='badge'>2</span> Post to division structure</a></li>
 										<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>3</span> Send Welcome PM</a></li>
 										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>4</span> Post Welcome thread</a></li>
 									</ul>
 
 									<div class='tab-content'>
-										<div role='tabpanel' class='tab-pane' id='division-post'>
-											<div class='row margin-top-20'>
-
-												<div class='col-md-6'>
-													<p>A division structure post needs to be made so that your new recruit can be added to the forum thread in addition to being tracked here. The box to the right shows what your division structure post should look like, including the information you have provided.</p>
-													<p>Click the copy button to copy the contents of the box to your clipboard. Then follow the division structure link to make your post.</p>
-													<p class='margin-top-20'><a class='popup-link' href='http://www.clanaod.net/forums/showthread.php?t=<?php echo $division->division_structure_thread ?>' class='text-center'><button type='button' class='btn btn-primary'>Open Division Structure</button></a></p>
-												</div>
-
-												<div class='col-md-6'>
-													<div class='well code'>
-														<button type='button' class='division-code-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
-														<code class='post-code' data-post="<?php echo RecruitingString::findByName('division-structure-post', 2)->string; ?>"></code>
-													</div>
-												</div>
-
-											</div>
-										</div>
 
 										<div role='tabpanel' class='tab-pane' id='welcome-pm'>
 											<div class='row margin-top-20'>
