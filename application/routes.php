@@ -14,9 +14,6 @@ if (empty($_SESSION['userid'])) {
 
 } else {
 
-	// api stuff
-	Flight::route('/get/member-data/division/@game', array('MemberController', '_getMemberData'));
-
 	// user views
 	Flight::route('/', array('ApplicationController', '_index'));
 	Flight::route('/logout', array('UserController', '_doLogout'));

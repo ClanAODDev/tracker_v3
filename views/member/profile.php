@@ -20,7 +20,7 @@
 							<?php endforeach; ?>					
 						<?php endif; ?>
 					</span>
-					<br /><a class='btn btn-default btn-xs popup-link' href='<?php echo PRIVMSG . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-comment'></i> Send PM</a><a class='btn btn-default btn-xs popup-link' href='<?php echo EMAIL . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-envelope'></i> Send Email</a>
+					<br /><a class='btn btn-default btn-xs popup-link' href='<?php echo PRIVMSG . $memberInfo->member_id ?>&url=<?php echo CLANAOD . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-comment'></i> Send PM</a><a class='btn btn-default btn-xs popup-link' href='<?php echo EMAIL . $memberInfo->member_id ?>&url=<?php echo CLANAOD . $memberInfo->member_id ?>' target='_blank'><i class='fa fa-envelope'></i> Send Email</a>
 				</h2>
 			</div>			 
 
