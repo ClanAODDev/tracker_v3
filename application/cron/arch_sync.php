@@ -100,7 +100,7 @@ if (count($divisions)) {
 
 			// fetch all existing db members for array comparison
 			$query = $pdo->prepare("SELECT member_id, forum_name FROM member WHERE status_id = 1 AND game_id = :gid");
-			$query->execute(array(':gid' => $requested_division));
+			$query->execute(array(':gid' => intval($division["id"])));
 			$existingMemberArray = $query->fetchAll();
 			$existingMembers = array();
 
@@ -116,7 +116,7 @@ if (count($divisions)) {
 
 				try {
 					$query = $pdo->prepare("UPDATE member SET status_id = 4 WHERE member_id IN ({$removalIds}) AND game_id = :gid");
-					$query->execute(array(':gid' => $requested_division));
+					$query->execute(array(':gid' => intval($division["id"])));
 				} catch (PDOException $e) {
 					echo "ERROR: " . $e->getMessage();			
 				}
