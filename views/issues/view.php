@@ -14,6 +14,7 @@
 
 	<h3><p>About The Issue</p></h3>
 	<div class='GitHubIssues'><p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p></div>
+	
 
 	<?php if ($issue->getAssignee()): ?>
 		<h3>Assigned Developer</h3>
@@ -28,11 +29,11 @@
 	<?php if (count($comments)): ?>
 
 		<?php foreach($comments as $comment): ?>
-			<div class='GitHubIssues'><p>
+				<div class='GitHubIssues'><p>
 				<?php $url = $comment->getUser()->getAvatarUrl(); ?>
 				<?php echo "<img src='$url' width=35, height=35/>";?>
 				<?php echo $comment->getBody(); ?>
-			</p></div>	
+			</p></div>
 		<?php endforeach; ?>
 
 	<?php else: ?>
@@ -41,5 +42,4 @@
 
 	<hr />
 	<small>Last updated on <?php echo date("m D Y, H:i:s", strtotime($issue->getUpdatedAt()));?></small>
-
 </div>
