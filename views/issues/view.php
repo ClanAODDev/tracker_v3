@@ -14,11 +14,7 @@
 
 	<h3><p>About The Issue</p></h3>
 	<div class='GitHubIssues'><p><?php echo $issue->getBody() ?: "No description exists for this issue"; ?></p></div>
-	<?php if(strpos($issue->getBody(), 'Reported by')): ?>
-	<br>
-	<br>
-	<br>
-	<?php endif; ?>
+	
 
 	<?php if ($issue->getAssignee()): ?>
 		<h3>Assigned Developer</h3>
@@ -33,19 +29,11 @@
 	<?php if (count($comments)): ?>
 
 		<?php foreach($comments as $comment): ?>
-			<?php if(strlen($comment->getBody())>176): ?>
-				<div class='GitHubIssuesLarger'><p>
+				<div class='GitHubIssues'><p>
 				<?php $url = $comment->getUser()->getAvatarUrl(); ?>
 				<?php echo "<img src='$url' width=35, height=35/>";?>
 				<?php echo $comment->getBody(); ?>
 			</p></div>
-		<?php else: ?>
-			<div class='GitHubIssues'><p>
-				<?php $url = $comment->getUser()->getAvatarUrl(); ?>
-				<?php echo "<img src='$url' width=35, height=35/>";?>
-				<?php echo $comment->getBody(); ?>
-			</p></div>
-		<?php endif; ?>	
 		<?php endforeach; ?>
 
 	<?php else: ?>

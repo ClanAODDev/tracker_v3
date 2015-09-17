@@ -674,21 +674,6 @@ div.DTTT_container {
   border-top-right-radius:20px;
   border-bottom-right-radius:20px;
   border-bottom-left-radius:20px; 
-  height: 40px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-
-}
-
-.GitHubIssuesLarger {
-  background-color:#EDE9E9;
-  border-top-left-radius:20px;
-  border-top-right-radius:20px;
-  border-bottom-right-radius:20px;
-  border-bottom-left-radius:20px; 
-  height: 80px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
