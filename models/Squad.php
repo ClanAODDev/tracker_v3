@@ -26,6 +26,11 @@ class Squad extends Application {
 		
 	}
 
+	public static function findSquadLeader($squad_id) {
+		$member_id = self::findById($squad_id);
+		return Member::findMemberId($member_id);
+	}
+
 	public static function findByPlatoonId($platoon_id) {
 		return self::find_each(array('platoon_id' => $platoon_id));
 	}
