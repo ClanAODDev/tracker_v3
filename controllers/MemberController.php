@@ -216,10 +216,10 @@ class MemberController {
 		$position_id = 6;
 
 		// provide params for brand new members
-		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>$_POST['forum_name'], 'recruiter'=>$recruiter, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>trim($_POST['forum_name']), 'recruiter'=>$recruiter, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
 		// only affect specific fields for existing members who get re-recruited
-		$existingParams = array('forum_name'=>$_POST['forum_name'], 'game_id'=>$_POST['game_id'], 'recruiter'=>$recruiter, 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+		$existingParams = array('forum_name'=>trim($_POST['forum_name']), 'game_id'=>$_POST['game_id'], 'recruiter'=>$recruiter, 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
 		if (Member::exists($_POST['member_id'])) {
 
@@ -249,7 +249,7 @@ class MemberController {
 			}
 
 			if (isset($_POST['ingame_name'])) {
-				$ingame_name = $_POST['ingame_name'];
+				$ingame_name = trim($_POST['ingame_name']);
 				$handle = new stdClass();
 				$handle->member_id = $insert_id;
 				$handle->handle_type = $division->primary_handle;
