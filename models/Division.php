@@ -30,7 +30,7 @@ class Division extends Application {
 
 	public static function findDivisionLeaders($gid) {
 		$conditions = array('position_id @' => array(1,2), 'game_id' => $gid);
-		$params = arrayToObject(Flight::aod()->from(Member::$table)->sortAsc('position_id')->where($conditions)->select()->many());
+		$params = arrayToObject(Flight::aod()->from(Member::$table)->sortAsc('position_id')->sortDesc('rank_id')->where($conditions)->select()->many());
 		foreach($params as $member) {
 			$position = Position::find($member->position_id);
 			$member->position_desc = $position->desc;
@@ -40,7 +40,7 @@ class Division extends Application {
 
 	public static function findGeneralSergeants($gid) {
 		$conditions = array('position_id' => 3, 'game_id' => $gid, 'status_id' => 1);
-		return arrayToObject(Flight::aod()->from(Member::$table)->where($conditions)->select()->many());
+		return arrayToObject(Flight::aod()->from(Member::$table)->sortDesc('rank_id')->where($conditions)->select()->many());
 	}
 
 	public static function findSquadLeaders($gid, $order_by_rank = false) {
