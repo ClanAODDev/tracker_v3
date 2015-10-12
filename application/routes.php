@@ -86,6 +86,9 @@ if (empty($_SESSION['userid'])) {
 // 404 redirect
 Flight::map('notFound', array('ApplicationController', '_404'));
 
+// error handler
+Flight::route('/error', array('ApplicationController', '_error'));
+
 // graphics
 Flight::route('/stats/@division/top10.png', array('GraphicsController', '_generateDivisionTop10'));
 

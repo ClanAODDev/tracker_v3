@@ -67,6 +67,11 @@ class ApplicationController {
 		Flight::render('errors/main');
 	}
 
+	public static function _error() {
+		Flight::render('errors/error', array(), 'content');
+		Flight::render('errors/main');
+	}
+
 	public static function _doUpdateAlert() {
 		$params = array('id' => $_POST['id'], 'user' => $_POST['user']);
 		AlertStatus::create($params);
