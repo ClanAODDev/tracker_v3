@@ -145,16 +145,6 @@
 							<!-- bug reports -->
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Bug Reports<span class="caret"></span></a>
-
-								<ul class="dropdown-menu" role="menu">
-									<li><a href="#" class="create-issue">Report New Issue</a></li>
-									<li class="divider"></li>
-									<li disabled><a href="issues">View Open Issues</a></li>
-									<li disabled><a href="issues/closed">View Closed Issues</a></li>
-									<?php if ($user->developer > 0 || $user->role > 2): ?>
-										<li disabled><a href="issues/dev">View Developer Issues</a></li>
-									<?php endif; ?>
-								</ul>
 							</li>
 
 						</ul>
