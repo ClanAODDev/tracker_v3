@@ -14,13 +14,13 @@
     })();
 	</script>
 	<![endif]-->
-	
+
 	<link rel="Shortcut Icon" href="favicon.ico" type="image/x-icon" />
 	<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Source+Sans+Pro'>
 	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/lumen/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/jquery.powertip.min.css">
-	<link rel="stylesheet" href="assets/css/font-awesome.min.css">	
-	<link href="//cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css" rel="stylesheet">	
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+	<link href="//cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css" rel="stylesheet">
 	<link href="assets/css/jquery.dataTables.css" rel="stylesheet">
 	<link href="assets/css/dataTables.tableTools.css" rel="stylesheet">
 	<link href="assets/css/sweetalert2.css" rel="stylesheet">
@@ -57,7 +57,7 @@
 							<div class="form-group has-feedback">
 								<input type='text' class='form-control' id='member-search' placeholder='Search for a player...' />
 								<span id="searchclear" class="fa fa-times-circle fa-2x text-muted"></span>
-								<div id='member-search-results' class='scroll'></div> 
+								<div id='member-search-results' class='scroll'></div>
 							</div>
 						</form>
 
@@ -94,7 +94,7 @@
 									<li class="divider"></li>
 									<li><a href="#" data-toggle="pill" class="logout-btn"><i class="fa fa-lock pull-right"></i> Logout</a></li>
 								</ul>
-							</li>						
+							</li>
 
 							<!-- showing tools if squad leader or above -->
 							<?php if ($user->role > 0): ?>
@@ -107,9 +107,6 @@
 											<li class="dropdown-submenu">
 												<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
 												<ul class="dropdown-menu">
-													<li><a href="#">Report</a></li>
-													<li><a href="#">Report</a></li>
-													<li><a href="#">Report</a></li>
 													<li><a href="#">Report</a></li>
 												</ul>
 											</li>
@@ -136,7 +133,7 @@
 												<ul class="dropdown-menu">
 													<?php foreach ($platoons as $platoonLink) : ?>
 														<li><a href="divisions/<?php echo $division->short_name ?>/platoon/<?php echo $platoonLink->number ?>"><?php echo $platoonLink->name; ?></a></li>
-													<?php endforeach; ?>	
+													<?php endforeach; ?>
 												</ul>
 											<?php endif; ?>
 										</li>
@@ -144,7 +141,7 @@
 								</ul>
 							</li>
 
-							
+
 							<!-- bug reports -->
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Bug Reports<span class="caret"></span></a>
@@ -152,13 +149,13 @@
 								<ul class="dropdown-menu" role="menu">
 									<li><a href="#" class="create-issue">Report New Issue</a></li>
 									<li class="divider"></li>
-									<li><a href="issues">View Open Issues</a></li>
-									<li><a href="issues/closed">View Closed Issues</a></li>
+									<li disabled><a href="issues">View Open Issues</a></li>
+									<li disabled><a href="issues/closed">View Closed Issues</a></li>
 									<?php if ($user->developer > 0 || $user->role > 2): ?>
-										<li><a href="issues/dev">View Developer Issues</a></li>
+										<li disabled><a href="issues/dev">View Developer Issues</a></li>
 									<?php endif; ?>
 								</ul>
-							</li>		
+							</li>
 
 						</ul>
 					</div>
@@ -172,7 +169,7 @@
 						</ul>
 					</div>
 
-				<?php endif; ?>		
+				<?php endif; ?>
 
 				<div class='container row'  style='position: absolute; margin-top: 10px;'>
 					<div class='alert-box'></div>
@@ -232,7 +229,7 @@
 
 	<?php
 
-	// debug information	
+	// debug information
 
 	if ( isset($_SESSION['userid']) ) {
 		Flight::aod()->show_sql = true;
