@@ -33,7 +33,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/member/@id', array('MemberController', '_profile'));
 	Flight::route('/issues/view/@id', array('GithubController', '_view'));
 	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));
-	
+
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
 	Flight::route('POST /do/online-list', array('ApplicationController', '_doUsersOnline'));
@@ -59,16 +59,16 @@ if (empty($_SESSION['userid'])) {
 	// cURLS
 	Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
 
-	/*	
+	/*
 	Flight::route('/settings', array('UserController', '_settings'));
 
 	// view screens
 	Flight::route('/member/[0-9]+', array('MemberController', '_profile'));
-	
-	
+
+
 
 	// manage
-	
+
 	Flight::route('/manage/division', array('DivisionController', '_manage_division'));
 	Flight::route('/manage/loas', array('DivisionController', '_manage_loas'));
 
@@ -96,3 +96,11 @@ Flight::route('/stats/@division/top10.png', array('GraphicsController', '_genera
 Flight::route('GET /authenticate', array('UserController', '_authenticate'));
 Flight::route('POST /do/authenticate', array('UserController', '_doAuthenticate'));
 Flight::route('POST /do/reset-authentication', array('UserController', '_doResetAuthentication'));
+
+// handle errors privately unless localhost
+if(!in_array($_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ))){
+	Flight::set('flight.log_errors', true);
+	Flight::map('error', function(Exception $ex){
+		Flight::redirect('/error', 500);
+	});
+}
