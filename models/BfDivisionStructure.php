@@ -40,7 +40,7 @@ class BfDivisionStructure {
 
 
 	public function generate() {
-		
+
     	// header
 		$division_structure = "[table='width: {$this->info_width}']";
 		$division_structure .= "[tr][td]";
@@ -60,9 +60,9 @@ class BfDivisionStructure {
 	    	$leader_name = Rank::convert($leader->rank_id)->abbr." ".$leader->forum_name;
 	    	$memberHandle = MemberHandle::findHandle($leader->id, $this->division->primary_handle);
 	    	$leader->handle = $memberHandle->handle_value;
-	    	$aod_url = "[url=" . CLANAOD . $leader->member_id . "]";
+	    	$aod_url = Member::createAODlink(array('member_id'=>$leader->member_id, 'forum_name'=>$leader_name));
 	    	$bl_url = "[url=" . $memberHandle->url .  $leader->handle. "][BL][/url]";
-	    	$division_structure .= "{$aod_url}[color={$this->division_leaders_color}]{$leader_name}[/url] {$bl_url}[/color] - {$leader->position_desc}\r\n";
+	    	$division_structure .= "[color={$this->division_leaders_color}]{$aod_url} {$bl_url}[/color] - {$leader->position_desc}\r\n";
 	    }
 
 	    $division_structure .= "[/size][/center]\r\n\r\n";
@@ -140,7 +140,7 @@ class BfDivisionStructure {
 					if (count((array) $recruits)) {
 						$division_structure .= "[list=1]";
 
-						foreach ($recruits as $recruit) { 
+						foreach ($recruits as $recruit) {
 
 							$memberHandle = MemberHandle::findHandle($recruit->id, $this->division->primary_handle);
 
@@ -177,7 +177,7 @@ class BfDivisionStructure {
 					foreach ($squadMembers as $player) {
 						if ($memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle)) {
 							$player->handle = $memberHandle->handle_value;
-							$aod_url = "[url=" . CLANAOD . $player->member_id . "]";  
+							$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 							$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
 							$division_structure .= "{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url] {$bl_url}\r\n";
 						}
@@ -191,7 +191,7 @@ class BfDivisionStructure {
 			$division_structure .= "\r\n\r\n";
 
 			if ($i % $this->num_columns == 0) {
-				$division_structure .= "[/td][/tr][tr]";	
+				$division_structure .= "[/td][/tr][tr]";
 			}
 			$division_structure .= "[/td]";
 
@@ -247,14 +247,14 @@ class BfDivisionStructure {
 		$loas = LeaveOfAbsence::find_all($this->game_id);
 
 		foreach ($loas as $player) {
-			$date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end)); 
+			$date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end));
 			$aod_url = "[url=" . CLANAOD . $player->member_id . "]";
 			$profile = Member::findByMemberId($player->member_id);
 
 			$division_structure .= "[tr][td]{$aod_url}" . Member::findForumName($profile->member_id) . "[/url][/td][td]{$date_end}[/td][td]{$player->reason}[/td][/tr]";
 			$i++;
 		}
-		
+
 		$division_structure .= "[/table]";
 
 		$this->content = $division_structure;

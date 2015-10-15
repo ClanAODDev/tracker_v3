@@ -1,7 +1,7 @@
 <?php
 
 class Squad extends Application {
-	
+
 	public $id;
 	public $platoon_id;
 	public $leader_id;
@@ -23,11 +23,11 @@ class Squad extends Application {
 		}
 
 		return arrayToObject(Flight::aod()->from('squad')->where($conditions)->SortAsc('platoon_id')->many());
-		
+
 	}
 
 	public static function findSquadLeader($squad_id) {
-		$member_id = self::findById($squad_id);
+		$member_id = self::findById($squad_id)->leader_id;
 		return Member::findMemberId($member_id);
 	}
 
