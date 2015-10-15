@@ -74,6 +74,11 @@ class Member extends Application {
 		}
 	}
 
+	public static function createAODlink($args) {
+		$string = "[profile={$args['member_id']}]{$args['forum_name']}[/profile]";
+		return $string;
+	}
+
 	public static function findRecruits($member_id, $platoon_id = false, $squad_id = false, $division_structure = false) {
 		$conditions = array('recruiter' => $member_id, 'position_id' => 6);
 		if ($platoon_id) $conditions = array_merge($conditions, array('platoon_id' => $platoon_id));
@@ -113,13 +118,13 @@ class Member extends Application {
 	}
 
 	public static function findInactives($id, $type, $flagged=false) {
-		$sql = "SELECT m.forum_name, m.member_id, m.last_activity, i.flagged_by, m.forum_posts, m.join_date, p.number as plt_number, p.name as plt_name 
+		$sql = "SELECT m.forum_name, m.member_id, m.last_activity, i.flagged_by, m.forum_posts, m.join_date, p.number as plt_number, p.name as plt_name
 		FROM ".Member::$table." m
-		
-		LEFT JOIN ".InactiveFlagged::$table." i ON m.member_id = i.member_id 
-		LEFT JOIN ".Platoon::$table." p on m.platoon_id = p.id 
 
-		WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND 
+		LEFT JOIN ".InactiveFlagged::$table." i ON m.member_id = i.member_id
+		LEFT JOIN ".Platoon::$table." p on m.platoon_id = p.id
+
+		WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND
 		m.member_id NOT IN (SELECT member_id FROM ".LeaveOfAbsence::$table.") AND ";
 
 		switch ($type) {
