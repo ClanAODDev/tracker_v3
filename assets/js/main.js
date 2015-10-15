@@ -10,7 +10,7 @@ $(function() {
         if (windows > 1) {
             var i = 0;
             if (confirm("Note about forum PM limitation")) {
-                // open dialog and generate PM buttons to handle rows of "20's" 
+                // open dialog and generate PM buttons to handle rows of "20's"
             }
         }
 
@@ -233,7 +233,7 @@ $(function() {
                 showCancelButton: true,
                 confirmButtonColor: '#ff4136',
                 confirmButtonText: 'Yes, remove',
-                closeOnConfirm: false
+                closeOnConfirm: true
             },
 
             function() {
