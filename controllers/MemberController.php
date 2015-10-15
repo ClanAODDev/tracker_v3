@@ -62,7 +62,7 @@ class MemberController {
 		} else {
 			Flight::redirect('/404', 404);
 		}
-		
+
 	}
 
 	public static function _edit() {
@@ -72,7 +72,7 @@ class MemberController {
 		$platoons = Platoon::find_all($member->game_id);
 
 		// if user role lower than plt ld, show only own platoon's squads
-		$platoon_id = (($user->role >= 2) && (!User::isDev())) ? $member->platoon_id : false; 
+		$platoon_id = (($user->role >= 2) && (!User::isDev())) ? $member->platoon_id : false;
 		$squads = Squad::findAll($member->game_id, $platoon_id);
 
 		$positionsArray = Position::find_all();
@@ -124,7 +124,7 @@ class MemberController {
 
 				// update member info
 				Member::modify($memberData);
-			}		
+			}
 
 			// update games
 			if (isset($_POST['played_games'])) {
@@ -149,7 +149,7 @@ class MemberController {
 				}
 
 				if ($respMember->member_id != $member->member_id && $user->role >= $respUser->role && !User::isDev()) {
-					$data = array('success' => false, 'message' => "You are not authorized to make that change.");	
+					$data = array('success' => false, 'message' => "You are not authorized to make that change.");
 				} else {
 					User::modify($userData);
 				}
@@ -176,7 +176,7 @@ class MemberController {
 						} else {
 							MemberHandle::add($params);
 						}
-			
+
 					}
 				}
 			}
@@ -186,7 +186,7 @@ class MemberController {
 		}
 
 		if (!isset($data['success'])) {
-			$data = array('success' => true, 'message' => "Member information updated!");	
+			$data = array('success' => true, 'message' => "Member information updated!");
 		}
 
 		// print out a pretty response
@@ -210,6 +210,7 @@ class MemberController {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
 		$division = Division::findById($member->game_id);
+
 		$platoon_id = ($user->role >= 3 || User::isDev()) ? $_POST['platoon_id'] : $member->platoon_id;
 		$squad_id = ($user->role >= 2 || User::isDev()) ? $_POST['squad_id'] : (Squad::mySquadId($member->id)) ?: 0;
 		$recruiter = ($user->role >=2 || User::isDev()) ? Squad::findSquadLeader($_POST['squad_id']) : $member->member_id;
@@ -219,10 +220,12 @@ class MemberController {
 		$newParams = array('member_id'=>$_POST['member_id'],'forum_name'=>trim($_POST['forum_name']), 'recruiter'=>$recruiter, 'game_id'=>$_POST['game_id'], 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
 
 		// only affect specific fields for existing members who get re-recruited
-		$existingParams = array('forum_name'=>trim($_POST['forum_name']), 'game_id'=>$_POST['game_id'], 'recruiter'=>$recruiter, 'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+		$existingParams = array('forum_name'=>trim($_POST['forum_name']), 'recruiter'=>$recruiter, 'game_id'=>$_POST['game_id'],  'status_id'=>999, 'join_date'=>date("Y-m-d H:i:s"), 'rank_id'=>1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+
 
 		if (Member::exists($_POST['member_id'])) {
 
+			// update existing record
 			$existingParams = array_merge($existingParams, array('id' => Member::findId($_POST['member_id'])));
 			$insert_id = Member::modify($existingParams);
 			UserAction::create(array('type_id'=>10,'date'=>date("Y-m-d H:i:s"),'user_id'=>$member->member_id,'target_id'=>$newParams['member_id']));
@@ -237,7 +240,6 @@ class MemberController {
 
 
 		if ($insert_id != 0) {
-
 			if (isset($_POST['played_games'])) {
 				$games = $_POST['played_games'];
 				foreach ($games as $game) {
