@@ -156,8 +156,8 @@ class BfDivisionStructure {
 
 								$division_structure .= "[*]{$aod_url} {$bl_url}\r\n";
 							} else {
-								$division_structure .= "[*]{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url]";
-								$division_structure .= " [color=red]XX[/color]\r\n";
+								$division_structure .= "[*]{$aod_url} {$bl_url} [color=red]XX[/color]\r\n";
+
 							}
 
 						}
