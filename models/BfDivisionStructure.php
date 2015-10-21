@@ -146,18 +146,16 @@ class BfDivisionStructure {
 						foreach ($recruits as $player) {
 
 							$memberHandle = MemberHandle::findHandle($player->id, $this->division->primary_handle);
+							$player_name = Rank::convert($player->rank_id)->abbr." ".$player->forum_name;
+							$aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>$player_name));
 
 							// does member have a division primary member handle?
-							if (count((array)$memberHandle)) {
+							if ( count( ( array ) $memberHandle ) ) {
 								$player->handle = $memberHandle->handle_value;
-								$player_name = Rank::convert($player->rank_id)->abbr." ".$player->forum_name;
 								$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
-								$aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>$player_name));
-
 								$division_structure .= "[*]{$aod_url} {$bl_url}\r\n";
 							} else {
-								$division_structure .= "[*]{$aod_url}" . Rank::convert($player->rank_id)->abbr . " {$player->forum_name}[/url]";
-								$division_structure .= " [color=red]XX[/color]\r\n";
+								$division_structure .= "[*]{$aod_url} [color=red]XX[/color]\r\n";
 							}
 
 						}
