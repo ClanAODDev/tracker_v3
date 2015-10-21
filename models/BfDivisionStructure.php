@@ -155,8 +155,7 @@ class BfDivisionStructure {
 								$bl_url = "[url=" . $memberHandle->url .  $player->handle. "][BL][/url]";
 								$division_structure .= "[*]{$aod_url} {$bl_url}\r\n";
 							} else {
-								$division_structure .= "[*]{$aod_url} {$bl_url} [color=red]XX[/color]\r\n";
-
+								$division_structure .= "[*]{$aod_url} [color=red]XX[/color]\r\n";
 							}
 
 						}
