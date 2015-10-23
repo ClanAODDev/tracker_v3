@@ -131,7 +131,7 @@ class BfDivisionStructure {
 					$memberHandle = MemberHandle::findHandle($squad_leader->id, $this->division->primary_handle);
 					$squad_leader->handle = $memberHandle->handle_value;
 					$player_name = Rank::convert($squad_leader->rank_id)->abbr." ".$squad_leader->forum_name;
-					$aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>$player_name));
+					$aod_url = Member::createAODlink(array('member_id'=>$squad_leader->member_id, 'forum_name'=>$player_name));
 					$bl_url = "[url=" . $memberHandle->url .  $squad_leader->handle. "][BL][/url]";
 
 					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Squad Leader[/color]\r\n[color={$this->squad_leaders_color}]{$aod_url}[/color] {$bl_url}[/size]\r\n\r\n";
