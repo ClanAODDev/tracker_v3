@@ -21,6 +21,12 @@ $(function() {
         e.preventDefault();
         var url = "do/issue-submit";
 
+        if ($.trim($("#submit-issue #title").html())=='') {
+            $("#submit-issue #title").parent().addClass("has-error");
+            $(".modal-body").prepend($(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> You must provide a title.</div>"));
+            return false;
+        }
+
         $.ajax({
             type: "POST",
             url: url,
@@ -31,7 +37,7 @@ $(function() {
                     $('.modal').modal('hide');
                     $(".alert-box").html("<div class='alert alert-success'><i class='fa fa-check'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
                 } else {
-                    $(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + data.message + "</div>").effect('highlight').delay(3000).fadeOut();
+                    $(".modal-body").prepend($(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> " + data.message + "</div>"));
                 }
             }
         });

@@ -49,7 +49,7 @@ class Member extends Application {
 
 	public static function search($name) {
 		$conditions = array('forum_name %' => "%{$name}%");
-		$params = Flight::aod()->from('member')
+		$params = Flight::aod()->from(self::$table)
 		->limit(20)
 		->sortDesc('rank_id')
 		->join('rank', array('rank.id' => 'rank_id'))

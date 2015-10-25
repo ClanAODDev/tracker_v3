@@ -28,11 +28,11 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div/platoon/@plt/squad/@squad', array('SquadController', '_manage_squad'));
 
 	// view
-	Flight::route('/divisions/@div', array('DivisionController', '_index'));
+/*	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/platoon/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
 	Flight::route('/issues/view/@id', array('GithubController', '_view'));
-	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));
+	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));*/
 
 	// updates
 	Flight::route('POST /do/search-members', array('ApplicationController', '_doSearch'));
@@ -97,10 +97,11 @@ Flight::route('GET /authenticate', array('UserController', '_authenticate'));
 Flight::route('POST /do/authenticate', array('UserController', '_doAuthenticate'));
 Flight::route('POST /do/reset-authentication', array('UserController', '_doResetAuthentication'));
 
-// handle errors privately unless localhost
+/*// handle errors privately unless localhost
 if(!in_array($_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ))){
 	Flight::set('flight.log_errors', true);
 	Flight::map('error', function(Exception $ex){
 		Flight::redirect('/error', 500);
 	});
 }
+*/

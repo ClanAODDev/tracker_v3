@@ -346,9 +346,9 @@ a[disabled] { pointer-events: none; }
 
 .center {
   text-align: center;
-  margin-left: auto; 
-  margin-right: auto; 
-  margin-bottom: auto; 
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: auto;
   margin-top: auto;
 }
 
@@ -436,9 +436,13 @@ h2.pull-right {
   text-decoration: underline !important;
 }
 
+.alert-box {
+  z-index: 9999 !important;
+}
+
 
 .dropdown-menu > .disabled, .disabled {
- cursor: not-allowed; 
+ cursor: not-allowed;
 }
 
 .dropdown-menu > .disabled:active, .disabled:active {
@@ -489,7 +493,7 @@ h2.pull-right {
 
 
 #squad, #squads, #platoons {
-  overflow-y: auto; 
+  overflow-y: auto;
   max-height: 400px;
 }
 
@@ -673,7 +677,7 @@ div.DTTT_container {
   border-top-left-radius:20px;
   border-top-right-radius:20px;
   border-bottom-right-radius:20px;
-  border-bottom-left-radius:20px; 
+  border-bottom-left-radius:20px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 10px;
@@ -734,7 +738,7 @@ div.DTTT_container {
   margin-top: 15px;
 }
 
-/* make sidebar nav vertical */ 
+/* make sidebar nav vertical */
 @media (min-width: 768px) {
   .sidebar-nav .navbar .navbar-collapse {
     padding: 0;
