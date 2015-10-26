@@ -14,7 +14,7 @@ class GithubController {
 			$title = $_POST['title'];
 			$link = $_POST['link'];
 			$body = $_POST['body'];
-			$body .= "<hr /><strong>Page reported</strong>: {$link}<br />";
+			$body .= ( !empty( $link ) ) ? "<hr /><strong>Page reported</strong>: {$link}<br />" : NULL;
 			$body .= "<strong>Reported by</strong>: {$user}";
 			$issue = GitHub::createIssue( $title, $body );
 
