@@ -97,7 +97,7 @@ $(function() {
 
                         } else {
                             flag = {
-                                error: true
+                                error: false
                             };
                         }
                     }
@@ -112,18 +112,18 @@ $(function() {
                         $(".memberid-group").addClass('has-error');
                         if (confirm("You have entered a member id which already exists. If you are recruiting a player who was previously an AOD member, you can continue. If not, press cancel and verify the forum member id is correct")) {
                             return true;
-                        } else {
-                            return false;
                         }
+
+                        return false;
 
                     } else if (flag.type == 'invalidId') {
 
                         $(".memberid-group").addClass('has-error');
                         if (confirm("Please verify you entered the correct member id. If you are certain it is correct, select ok. Otherwise, select cancel and correct it.")) {
                             return true;
-                        } else {
-                            return false;
                         }
+
+                        return false;
 
                     }
                 }
@@ -236,13 +236,13 @@ function loadThreadCheck() {
 
         // welcome PM
         postString = $("#welcome-pm").find(".welcome-code").attr('data-post');
-        welcomeCode = postString.replace(/%%member_name%%/g, player);
-        $("#welcome-pm .welcome-code").html(welcomeCode);
-        $('.welcome-pm-btn').attr("data-clipboard-text", welcomeCode);
-        $(".pm-link").click(function(e) {
-            e.preventDefault();
-            windowOpener($(this).attr("href") + member_id, "AOD Squad Tracking", "width=1000,height=600,scrollbars=yes");
-        });
+    welcomeCode = postString.replace(/%%member_name%%/g, player);
+    $("#welcome-pm .welcome-code").html(welcomeCode);
+    $('.welcome-pm-btn').attr("data-clipboard-text", welcomeCode);
+    $(".pm-link").click(function(e) {
+        e.preventDefault();
+        windowOpener($(this).attr("href") + member_id, "AOD Squad Tracking", "width=1000,height=600,scrollbars=yes");
+    });
 
 
     if (ingame) {

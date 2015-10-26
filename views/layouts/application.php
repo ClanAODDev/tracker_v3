@@ -140,6 +140,17 @@
 									<?php endforeach; ?>
 								</ul>
 							</li>
+
+							<!-- submit bug reports -->
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Bug Reports<span class="caret"></span></a>
+
+								<ul class="dropdown-menu" role="menu">
+									<li><a href="#" class="create-issue">Report New Issue</a></li>
+								</ul>
+							</li>
+
+
 						</ul>
 					</div>
 

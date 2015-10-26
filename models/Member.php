@@ -49,7 +49,7 @@ class Member extends Application {
 
 	public static function search($name) {
 		$conditions = array('forum_name %' => "%{$name}%");
-		$params = Flight::aod()->from('member')
+		$params = Flight::aod()->from(self::$table)
 		->limit(20)
 		->sortDesc('rank_id')
 		->join('rank', array('rank.id' => 'rank_id'))
@@ -69,9 +69,8 @@ class Member extends Application {
 		$params = self::find(array('member_id' => $member_id));
 		if (count($params)) {
 			return $params->forum_name;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public static function createAODlink($args) {

@@ -1,5 +1,5 @@
 <?php
-class Github extends Application {
+class GitHub extends Application {
 
 	private static $owner = 'flashadvocate';
 	private static $repo = 'Division-Tracker';
@@ -7,7 +7,6 @@ class Github extends Application {
 	private static function client() {
 		$client = new GitHubClient();
 		$client->setCredentials(GITHUB_USER, GITHUB_PASS);
-		$client->setPageSize(1);
 		return $client;
 	}
 
@@ -29,21 +28,6 @@ class Github extends Application {
 	 * @return array<GitHubIssue>
 	 */
 
-	public static function getOpenIssues() {
-		$git = self::client();
-		return $git->issues->listAllIssues(true, "all", "open", "client", "updated");
-	}
-
-	public static function getClosedIssues() {
-		$git = self::client();
-		return $git->issues->listAllIssues(true, "all", "closed", "client", "updated");
-	}
-
-	public static function getDevIssues() {
-		$git = self::client();
-		return $git->issues->listAllIssues(true, "all", "open", "dev", "updated");
-	}
-
 	public static function createIssue($title, $body) {
 		try {
 			$git = self::client();
@@ -52,41 +36,7 @@ class Github extends Application {
 		} catch(GitHubClientException $e) {
 			return $e->getMessage();
 		}
-		
-	}
 
-	public static function getIssue($id) {
-		try {
-			$git = self::client();
-			$issue = $git->issues->getIssue(self::$owner, self::$repo, $id);
-			return $issue;
-		} catch(GitHubClientException $e) {
-			return false;
-		}
-	}
-
-	public static function getLabels($id) {
-		$git = self::client();
-		return $git->issues->labels->listLabelsOnAnIssue(self::$owner, self::$repo, $id);
-	}
-
-	public static function getComments($id) {
-		$git = self::client();
-		return $git->issues->comments->listCommentsOnAnIssue(self::$owner, self::$repo, $id);
-	}
-
-	public static function convertState($state) {
-		switch ($state) {
-			case "open":
-			$class = "success";
-			break;
-			case "closed":
-			$class = "danger";
-			break;
-		}
-		$state = strtoupper($state);
-		$label = "<span class='label label-{$class}'>{$state}</span>";
-		return $label;
 	}
 
 }
