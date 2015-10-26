@@ -21,7 +21,7 @@ $(function() {
         e.preventDefault();
         var url = "do/issue-submit";
 
-        if ($.trim($("#submit-issue #title").html())=='') {
+        if ($("#submit-issue #title").val() ==='') {
             $("#submit-issue #title").parent().addClass("has-error");
             $(".modal-body").prepend($(".alert-box").html("<div class='alert alert-danger'><i class='fa fa-times'></i> You must provide a title.</div>"));
             return false;

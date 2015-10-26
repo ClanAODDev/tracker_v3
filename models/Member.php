@@ -69,9 +69,8 @@ class Member extends Application {
 		$params = self::find(array('member_id' => $member_id));
 		if (count($params)) {
 			return $params->forum_name;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	public static function createAODlink($args) {
