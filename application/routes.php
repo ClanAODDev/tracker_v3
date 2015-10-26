@@ -28,10 +28,10 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/divisions/@div/platoon/@plt/squad/@squad', array('SquadController', '_manage_squad'));
 
 	// view
-/*	Flight::route('/divisions/@div', array('DivisionController', '_index'));
+	Flight::route('/divisions/@div', array('DivisionController', '_index'));
 	Flight::route('/divisions/@div/platoon/@plt', array('PlatoonController', '_index'));
 	Flight::route('/member/@id', array('MemberController', '_profile'));
-	Flight::route('/issues/view/@id', array('GithubController', '_view'));
+	/* Flight::route('/issues/view/@id', array('GithubController', '_view'));
 	Flight::route('/issues/@filter|/issues', array('GithubController', '_index'));*/
 
 	// updates
