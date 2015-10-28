@@ -253,6 +253,7 @@ $(function() {
                 });
 
                 windowOpener($this.attr("href") + member, "AOD Squad Tracking", "width=900,height=600,scrollbars=yes");
+                window.location.reload();
             });
     });
 
