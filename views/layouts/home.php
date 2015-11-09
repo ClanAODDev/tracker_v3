@@ -35,12 +35,7 @@
 		</div>
 	</div>
 
-	<?php if ($user->role == 0) : ?>
-
-		<!-- posts visible to users / non-leadership -->
-		<?php echo $posts_list ?>
-
-	<?php else : ?>
+	<?php if ($user->role > 0) : ?>
 
 		<!-- quick tools and personnel view, posts-->
 
@@ -50,7 +45,20 @@
 				<?php echo $personnel ?>
 			</div>
 			<div class='col-md-7'>
-				<?php echo $posts_list ?>
+				<div class="panel panel-info">
+				<div class="panel-heading"><strong>Recent Activity</strong></div>
+					<ul class="activity-list">
+						<?php foreach(UserAction::find_all(25) as $action) : ?>
+							<li>
+								<i class="<?php echo $action->icon; ?> fa-2x"></i>
+								<div>
+									<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
+									<span><?php echo formatTime(strtotime($action->date)); ?></span>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
 			</div>
 		</div>
 
