@@ -40,11 +40,11 @@
 		<!-- quick tools and personnel view, posts-->
 
 		<div class='row'>
-			<div class='col-md-5'>
+			<div class='col-md-7'>
 				<?php echo $main_tools ?>
 				<?php echo $personnel ?>
 			</div>
-			<div class='col-md-7'>
+			<div class='col-md-5'>
 				<div class="panel panel-info">
 				<div class="panel-heading"><strong>Recent Activity</strong></div>
 					<ul class="activity-list">
