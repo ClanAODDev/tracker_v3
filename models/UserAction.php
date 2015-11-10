@@ -27,7 +27,7 @@ class UserAction extends Application {
 	 *  9  |  Revoke an loa
 	 *  10 |  recruit former member
 	 *  11 |  request an loa
-	 *  ----------------------- 
+	 *  -----------------------
 	 */
 
 	public static function create($params) {
@@ -38,10 +38,12 @@ class UserAction extends Application {
 		$UserAction->save($params);
 	}
 
-	public static function find_all() {
+	public static function find_all($limit = false) {
+		if (!$limit)
+			$limit = 10;
 		return arrayToObject(Flight::aod()
 			->from(self::$table)
-			->limit(15)
+			->limit($limit)
 			->sortDesc('date')
 			->join('actions', array('actions.id' => 'user_actions.type_id'))
 			->select(array('date','user_id', 'type_id', 'target_id', 'verbage', 'icon'))->many()
@@ -55,23 +57,23 @@ class UserAction extends Application {
 			case 1:
 			$text = "{$user} {$verbage} {$player} into the division";
 			break;
-			case 2: 
+			case 2:
 			$text = "{$user} {$verbage} {$player} from the division";
 			break;
-			case 3: 
+			case 3:
 			$text = "{$user} {$verbage} {$player}'s profile information";
 			break;
-			case 4: 
+			case 4:
 			$text = "{$player} was {$verbage} by {$user}";
 			break;
 			case 5:
 			case 11:
 			$text = "{$user} {$verbage}";
 			break;
-			case 6: 
+			case 6:
 			$text = "{$player} was {$verbage} by {$user}";
 			break;
-			case 7: 
+			case 7:
 			case 8:
 			case 9:
 			$text = "{$user} {$verbage} for {$player}";

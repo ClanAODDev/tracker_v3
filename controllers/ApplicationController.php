@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class ApplicationController {
 
@@ -10,13 +10,12 @@ class ApplicationController {
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
 		$notifications = new Notification($user, $member);
-		$posts = Post::find_all($user->role);
+
 		$squad = Squad::find($member->member_id);
 		$platoon = Platoon::find($member->platoon_id);
 		$squads = Squad::findAll($member->game_id, $member->platoon_id);
 
 		Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
-		Flight::render('application/posts', array( 'posts' => $posts), 'posts_list');
 		Flight::render('member/personnel', array('member' => $member, 'squad' => $squad, 'platoon' => $platoon, 'squads' => $squads), 'personnel');
 		Flight::render('application/divisions', array('divisions' => $divisions), 'divisions_list');
 		Flight::render('user/notifications', array('notifications' => $notifications->messages), 'notifications_list');
@@ -39,11 +38,11 @@ class ApplicationController {
 	public static function _doUsersOnline() {
 		if (isset($_SESSION['loggedIn'])) {
 			$user = User::find(intval($_SESSION['userid']));
-			$member = Member::find(intval($_SESSION['memberid'])); 
+			$member = Member::find(intval($_SESSION['memberid']));
 			Flight::render('user/online_list', array('user' => $user, 'member' => $member));
 		} else {
 			Flight::render('user/online_list');
-		}		
+		}
 	}
 
 	public static function _doSearch() {

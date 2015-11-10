@@ -618,30 +618,36 @@ h2.pull-right {
   padding: 0;
   list-style: none;
 }
-.activity > li {
+.activity-list {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.activity > li, .activity-list > li {
   padding: 12px;
   border-top: 1px solid #f5f5f5;
 }
-.activity > li:first-child {
+.activity > li:first-child, .activity-list > li:first-child {
   border-top: 0;
 }
-.activity > li:hover {
+.activity > li:hover, .activity-list > li:hover {
   background-color: #F5FFFB;
 }
-.activity > li:hover a {
+.activity > li:hover a, .activity-list > li:hover a {
   color: #D65C4F;
 }
-.activity > li > i {
+.activity > li > i, .activity-list > li > i {
   float: left;
   margin-top: 1px;
 }
-.activity > li > div {
+.activity > li > div, .activity-list > li > div {
   margin-left: 35px;
 }
-.activity > li > div > a {
+.activity > li > div > a, .activity-list li > div > a {
   font-weight: 600;
 }
-.activity > li > div > span {
+.activity > li > div > span, .activity-list > li > div > span {
   display: block;
   color: #999;
   font-size: 11px;
@@ -795,8 +801,8 @@ div.DTTT_container {
 }
 
 div.chart_div table {
-    width: auto;
-    margin: 0 auto !important;
+  width: auto;
+  margin: 0 auto !important;
 }
 
 #sidebar {
