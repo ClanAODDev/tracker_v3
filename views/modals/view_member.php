@@ -148,7 +148,7 @@
 						</select>
 					</div>
 				<?php else: ?>
-					<p>This division has no sub-games to select.</p>
+					<p class="text-muted">This division has no sub-games to select.</p>
 				<?php endif; ?>
 
 				<div class="margin-top-50"></div>
