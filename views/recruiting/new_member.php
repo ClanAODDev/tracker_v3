@@ -1,7 +1,7 @@
 <?php $allowEdit = User::canUpdate($user->role); ?>
 
 <div class='container'>
-	
+
 	<ul class='breadcrumb'>
 		<li><a href='./'>Home</a></li>
 		<li><a href='recruiting/'>Recruiting</a></li>
@@ -27,7 +27,7 @@
 				</ul>
 			</div>
 		</div>
-		
+
 
 		<div class='progress striped-bg'>
 			<div class='bar progress-bar progress-bar-rct progress-bar-striped progress-bar-success active' ></div>
@@ -56,7 +56,7 @@
 
 								<p class="margin-top-20 lead">Vital items to discuss:
 									<hr />
-									
+
 									<ul>
 										<li>You must <strong>be in Teamspeak</strong> whenever you're ingame.</li>
 										<li>You must <strong>login to the forums</strong> at least once a month.</li>
@@ -111,7 +111,7 @@
 										<select name='platoon' id='platoon' class='form-control'>
 											<?php foreach($platoons as $platoon) : ?>
 												<option value='<?php echo $platoon->id ?>'><?php echo $platoon->name ?></option>
-											<?php endforeach; ?> 
+											<?php endforeach; ?>
 										</select>
 									</div>
 								</div>
@@ -179,27 +179,14 @@
 							<p>Now, you are ready to finalize your new recruit and take care of the paperwork associated with each new recruit. <strong>Be sure to ask</strong> if there are any questions or concerns your recruit may have. You should also remind him/her that <strong>you will be their squad leader</strong> and can come to you if they have any issues in the relative future.</p><p>Perform these final steps to complete the recruitment:</p>
 
 							<fieldset id="checkArray">
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Have them adjust their forum (<a class="popup-link" href="http://www.clanaod.net/forums/sarcoth_profilemod.php">Forum &raquo; Settings &raquo; Edit AOD Member Info</a>) profile settings</label>
-								</div>
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Request (optional) that they enable email notifications of new private messages on the forums. <button type="button" class="btn btn-info btn-xs" data-toggle="popover" data-content="We PM members after 14 days of forum inactivity. Without this setting, they will not be notified of the new PM.">Why?</button></label>
-								</div>
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Have them change their name on Teamspeak: <code class='rank-name'>NaN</code><i class='fa fa-copy text-primary player-name-copy copy-button' title='Copy link to clipboard' href='#'></i></label>
-								</div>
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Accept or invite them into ONE Battlelog platoon, and adjust ingame tags if necessary</label>
-								</div>
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Give them the "AOD Member" server group permission (Right-click &raquo; Server Groups &raquo; AOD Member) on TeamSpeak</label>
-								</div>
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Remind them that their login name will be changing in 24/48 hours</label>
-								</div>
-								<div class="checkbox">
-									<label><input type="checkbox" value="" name="chk[]">Introduce them to the other members in the division</label>
-								</div>
+								<?php $tasks = RecruitingTask::findAll($division->id); ?>
+								<?php if ( count( $tasks ) ): ?>
+									<?php foreach ( $tasks as $tasks ): ?>
+										<div class="checkbox">
+											<label><input type="checkbox" value="" name="chk[]"><?php echo $task->content ?></label>
+										</div>
+									<?php endforeach; ?>
+								<?php endif; ?>
 							</fieldset>
 							<div class="margin-top-20">
 								<p class="text-muted">Note: All steps must be marked complete in order to continue.</p>
@@ -234,7 +221,7 @@
 
 												<div class='col-md-6'>
 													<div class='well code'>
-														<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button> 
+														<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button>
 														<code class='welcome-code' data-post="<?php echo RecruitingString::findByName('welcome-pm', 2)->string; ?>"></code>
 													</div>
 												</div>
@@ -293,7 +280,7 @@
 							</p>
 						</div>
 
-					</div>	
+					</div>
 				</form>
 			</div>
 
