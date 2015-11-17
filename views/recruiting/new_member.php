@@ -181,7 +181,7 @@
 							<fieldset id="checkArray">
 								<?php $tasks = RecruitingTask::findAll($division->id); ?>
 								<?php if ( count( $tasks ) ): ?>
-									<?php foreach ( $tasks as $tasks ): ?>
+									<?php foreach ( $tasks as $task ): ?>
 										<div class="checkbox">
 											<label><input type="checkbox" value="" name="chk[]"><?php echo $task->content ?></label>
 										</div>
