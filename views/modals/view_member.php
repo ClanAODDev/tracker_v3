@@ -50,7 +50,7 @@
 
 			<?php if ($user->role > 1): ?>
 				<div class="tab-pane" id="divinfo">
-					<div class="margin-top-20"></div>			
+					<div class="margin-top-20"></div>
 					<form id='div-form'>
 						<div class='form-group position-group' style='display: <?php echo $allowEdit->posField ?>'>
 							<label for='position_id' class='control-label'>Position</label>
@@ -58,7 +58,7 @@
 								<?php foreach ($positionsArray as $position) : ?>
 									<option value='<?php echo $position->id ?>'><?php echo Locality::run($position->desc, $member->game_id); ?></option>
 								<?php endforeach; ?>
-							</select> 
+							</select>
 						</div>
 						<div class='form-group platoon-group' style='display: <?php echo $allowEdit->pltField ?>'>
 							<label for='platoon_id' class='control-label'><?php echo Locality::run('Platoon', $member->game_id); ?></label>
@@ -142,15 +142,17 @@
 						<label for='platoon' class='control-label'>Games Played</label><br />
 						<select id="games" multiple="multiple">
 							<?php foreach (SubGame::get($member->game_id) as $game): ?>
-								<?php $selected = (MemberGame::plays($member->id, $game->id)) ? "selected='selected'" : ""; ?> 
+								<?php $selected = (MemberGame::plays($member->id, $game->id)) ? "selected='selected'" : ""; ?>
 								<option value="<?php echo $game->id ?>" <?php echo $selected ?>><?php echo $game->full_name ?></option>
 							<?php endforeach; ?>
 						</select>
 					</div>
+				<?php else: ?>
+					<p>This division has no sub-games to select.</p>
 				<?php endif; ?>
 
 				<div class="margin-top-50"></div>
-			</div>		
+			</div>
 
 			<?php if (User::isUser($member->id) && $user->role > 1 || (!is_null($userInfo) && $userInfo->id == $user->id)) : ?>
 				<div class="tab-pane" id="userinfo">
@@ -198,7 +200,7 @@
 
 </div>
 <div class='modal-footer'>
-	<button type='button' class='btn btn-default' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>Cancel</span></button><button type='button' class='btn btn-success save-btn' id="submit-form"><i class="fa fa-save fa-lg"></i> Save Info</button> 
+	<button type='button' class='btn btn-default' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>Cancel</span></button><button type='button' class='btn btn-success save-btn' id="submit-form"><i class="fa fa-save fa-lg"></i> Save Info</button>
 </form>
 </div>
 
