@@ -47,12 +47,12 @@ class UserAction extends Application {
 			->sortDesc('date')
 			->join('actions', array('actions.id' => 'user_actions.type_id'))
 			->select(array('date','user_id', 'type_id', 'target_id', 'verbage', 'icon'))->many()
-		);
+			);
 	}
 
 	public static function humanize($type_id, $target_id, $user_id, $verbage) {
 		$user = "<a href='member/{$user_id}'>" . Member::findForumName($user_id) . "</a>";
-		$player = (!is_null($target_id) && Member::exists($target_id)) ? "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>" : "NULL";
+		$player = "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>";
 		switch ($type_id) {
 			case 1:
 			$text = "{$user} {$verbage} {$player} into the division";

@@ -46,16 +46,18 @@
 			</div>
 			<div class='col-md-5'>
 				<div class="panel panel-info">
-				<div class="panel-heading"><strong>Recent Activity</strong></div>
+					<div class="panel-heading"><strong>Recent Activity</strong></div>
 					<ul class="activity-list">
-						<?php foreach(UserAction::find_all(25) as $action) : ?>
-							<li>
-								<i class="<?php echo $action->icon; ?> fa-2x"></i>
-								<div>
-									<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
-									<span><?php echo formatTime(strtotime($action->date)); ?></span>
-								</div>
-							</li>
+						<?php foreach(UserAction::find_all(15) as $action) : ?>
+							<?php if ( ! is_null ( $action->target_id ) ): ?>
+								<li>
+									<i class="<?php echo $action->icon; ?> fa-2x"></i>
+									<div>
+										<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
+										<span><?php echo formatTime(strtotime($action->date)); ?></span>
+									</div>
+								</li>
+							<?php endif; ?>
 						<?php endforeach; ?>
 					</ul>
 				</div>
