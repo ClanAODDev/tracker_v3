@@ -62,26 +62,6 @@
 						</form>
 
 						<ul class="nav navbar-nav navbar-left">
-							<?php if ($user->role >= 1) : ?>
-								<li class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" href="#">Activity <span class="caret"></span></a>
-									<div class="popup dropdown-menu">
-										<ul class="activity">
-											<?php foreach(UserAction::find_all() as $action) : ?>
-												<?php if ( ! is_null ( $action->target_id ) ): ?>
-													<li>
-														<i class="<?php echo $action->icon; ?> fa-2x"></i>
-														<div>
-															<?php echo UserAction::humanize($action->type_id, $action->target_id, $action->user_id, $action->verbage); ?>
-															<span><?php echo formatTime(strtotime($action->date)); ?></span>
-														</div>
-													</li>
-												<?php endif; ?>
-											<?php endforeach; ?>
-										</ul>
-									</div>
-								</li>
-							<?php endif; ?>
 
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
