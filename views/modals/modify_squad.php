@@ -1,4 +1,4 @@
-<?php $leaders = Platoon::SquadLeaders($_POST['division_id'], $_POST['platoon_id']); ?>
+<?php $leaders = Platoon::SquadLeaders($_POST['division_id']); ?>
 
 <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -28,7 +28,7 @@
 
 	</div>
 
-	<div class="modal-footer">	
+	<div class="modal-footer">
 		<button type="button" class="btn btn-success" id="modify_squad_btn">Modify Squad</button>
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	</div>
