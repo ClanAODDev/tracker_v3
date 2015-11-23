@@ -59,6 +59,7 @@
 								</li>
 							<?php endif; ?>
 						<?php endforeach; ?>
+						<li><div><a href="activity/">View more</a></div></li>
 					</ul>
 				</div>
 			</div>
