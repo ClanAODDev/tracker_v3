@@ -1,7 +1,7 @@
 <?php
 
 class DivisionController {
-	
+
 	public static function _index($div) {
 		$user = User::find(intval($_SESSION['userid']));
 		$member = Member::find(intval($_SESSION['memberid']));
@@ -10,11 +10,11 @@ class DivisionController {
 		$division = Division::findByName(strtolower($div));
 
 		if (property_exists($division, 'id')) {
-			
+
 			$division_leaders = Division::findDivisionLeaders($division->id);
 			$topListMonthly = BfActivity::topList30DaysByDivision($division->id);
 			$topListToday = BfActivity::topListTodayByDivision($division->id);
-			
+
 			$personnelData = new stdClass();
 			$personnelData->recruitsThisMonth = Division::recruitsThisMonth($division->id)->count;
 			$personnelData->totalCount = Division::totalCount($division->id)->count;
@@ -62,7 +62,16 @@ class DivisionController {
 
 		Flight::render('manage/loas', array('division' => $division, 'member' => $member, 'user' => $user), 'content');
 		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
-		
+
+	}
+
+	public static function _reports() {
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+		$division = Division::findByName(strtolower($div));
+		Flight::render('modals/reports');
 	}
 
 	public static function _generateDivisionStructure() {
@@ -111,7 +120,7 @@ class DivisionController {
 					}
 
 				}
-			} 
+			}
 
 		} else {
 
