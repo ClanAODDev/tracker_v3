@@ -30,7 +30,7 @@ class ApplicationController {
 		$divisions = Division::find_all();
 		$division = Division::findById(intval($member->game_id));
 		$platoons = Platoon::find_all($member->game_id);
-		Flight::render('layouts/activity', array('division' => $division), 'content');
+		Flight::render('application/activity', array('division' => $division), 'content');
 		Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 
 	}

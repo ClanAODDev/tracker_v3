@@ -21,7 +21,7 @@ class Notification extends Application {
 		// division CO / XO
 		if ( $user->role > 2 ) {
 
-			array_push($this->messages, "<div class=\"alert alert-warning\"><i class=\"fa fa-exclamation-circle\"></i> Your division has unassigned members. <a class=\"alert-link\" href=\"#\">Resolve</a></div>");
+			//array_push($this->messages, "<div class=\"alert alert-warning\"><i class=\"fa fa-exclamation-circle\"></i> Your division has unassigned members. <a class=\"alert-link\" href=\"#\">Resolve</a></div>");
 
 		}
 
