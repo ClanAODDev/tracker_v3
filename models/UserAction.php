@@ -42,7 +42,7 @@ class UserAction extends Application {
 		if (!$limit)
 			$limit = 10;
 		return arrayToObject(Flight::aod()
-			->where(array("game_id" => $game_id))
+			->where(array("member.game_id" => $game_id))
 			->from(self::$table)
 			->limit($limit)
 			->sortDesc('date')
