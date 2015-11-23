@@ -12,5 +12,6 @@
 				</li>
 			<?php endif; ?>
 		<?php endforeach; ?>
+		<?php var_dump(Flight::aod()->last_query);?>
 	</ul>
 </div>
