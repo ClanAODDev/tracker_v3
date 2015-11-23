@@ -19,6 +19,7 @@ if (empty($_SESSION['userid'])) {
 	Flight::route('/logout', array('UserController', '_doLogout'));
 	Flight::route('/help', array('ApplicationController', '_help'));
 	Flight::route('/recruiting', array('RecruitingController', '_index'));
+	Flight::route('/activity', array('ApplicationController', '_activity'));
 	Flight::route('/recruiting/new-member', array('RecruitingController', '_addNewMember'));
 
 	// manage

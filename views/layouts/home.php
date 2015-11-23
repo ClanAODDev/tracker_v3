@@ -48,7 +48,7 @@
 				<div class="panel panel-info">
 					<div class="panel-heading"><strong>Recent Activity</strong></div>
 					<ul class="activity-list">
-						<?php foreach(UserAction::find_all(15) as $action) : ?>
+						<?php foreach(UserAction::find_all($division->id,15) as $action) : ?>
 							<?php if ( ! is_null ( $action->target_id ) ): ?>
 								<li>
 									<i class="<?php echo $action->icon; ?> fa-2x"></i>

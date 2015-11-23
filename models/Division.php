@@ -20,6 +20,8 @@ class Division extends Application {
 		return self::fetch_all();
 	}
 
+	//public static function hasUnassignedMembers()
+
 	public static function findUnassigned( $game_id ) {
 		return ( object ) self::find( array( 'position_id' => 0, 'game_id' => $game_id ) );
 	}

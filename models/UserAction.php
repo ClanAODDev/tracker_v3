@@ -38,10 +38,11 @@ class UserAction extends Application {
 		$UserAction->save($params);
 	}
 
-	public static function find_all($limit = false) {
+	public static function find_all($game_id, $limit = false) {
 		if (!$limit)
 			$limit = 10;
 		return arrayToObject(Flight::aod()
+			->where(array("game_id" => $game_id))
 			->from(self::$table)
 			->limit($limit)
 			->sortDesc('date')
