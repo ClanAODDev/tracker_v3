@@ -59,7 +59,6 @@
 								</li>
 							<?php endif; ?>
 						<?php endforeach; ?>
-						<li><div class="pull-right"><a href="activity/">View more</a></div></li>
 					</ul>
 				</div>
 			</div>
