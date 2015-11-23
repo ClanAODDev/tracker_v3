@@ -1,7 +1,9 @@
 <div class="panel panel-info">
 	<div class="panel-heading"><strong>Recent Activity</strong></div>
 	<ul class="activity-list">
-		<?php foreach(UserAction::find_all($division->id, 15) as $action) : ?>
+	<?php $actions = UserAction::find_all($division->id, 15); ?>
+	<?php var_dump(Flight::aod()->last_query);?>
+		<?php foreach($actions as $action) : ?>
 			<?php if ( ! is_null ( $action->target_id ) ): ?>
 				<li>
 					<i class="<?php echo $action->icon; ?> fa-2x"></i>
@@ -12,6 +14,6 @@
 				</li>
 			<?php endif; ?>
 		<?php endforeach; ?>
-		<?php var_dump(Flight::aod()->last_query);?>
+
 	</ul>
 </div>
