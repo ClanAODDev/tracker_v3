@@ -101,19 +101,19 @@ class SWBDivisionStructure {
 
 			$division_structure .= "[size=5]{$platoon->name}[/size]\r\n\r\n";
 
-    		// platoon leader
+    		// Legion Commander
 			$player = Member::findByMemberId($platoon->leader_id);
 
-			// is a platoon leader assigned?
+			// is a Legion Commander assigned?
 			if ($platoon->leader_id != 0) {
 				$player_name = Rank::convert($player->rank_id)->abbr." ".$player->forum_name;
 				$aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>$player_name));
-				$division_structure .= "[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]{$aod_url}[/color][/size]\r\n\r\n";
+				$division_structure .= "[size=3][color={$this->platoon_pos_color}]Legion Commander[/color]\r\n[color={$this->platoon_leaders_color}]{$aod_url}[/color][/size]\r\n\r\n";
 			} else {
-				$division_structure .= "[size=3][color={$this->platoon_pos_color}]Platoon Leader[/color]\r\n[color={$this->platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
+				$division_structure .= "[size=3][color={$this->platoon_pos_color}]Legion Commander[/color]\r\n[color={$this->platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
 			}
 
-    		// squad leaders
+    		// Regimental Leaders
 			$squads = Squad::findAll($this->game_id, $platoon->id);
 
 			foreach ($squads as $squad) {
@@ -123,7 +123,7 @@ class SWBDivisionStructure {
 					$player_name = Rank::convert($squad_leader->rank_id)->abbr." ".$squad_leader->forum_name;
 					$aod_url = Member::createAODlink(array('member_id'=>$squad_leader->member_id, 'forum_name'=>$player_name));
 
-					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Squad Leader[/color]\r\n[color={$this->squad_leaders_color}]{$aod_url}[/color][/size]\r\n\r\n";
+					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Regimental Leader[/color]\r\n[color={$this->squad_leaders_color}]{$aod_url}[/color][/size]\r\n\r\n";
 					$division_structure .= "[size=1]";
 
 					// direct recruits
@@ -147,7 +147,7 @@ class SWBDivisionStructure {
 
 				} else {
 
-					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Squad Leader[/color]\r\n[color={$this->squad_leaders_color}]TBA[/color][/size]\r\n";
+					$division_structure .= "[size=3][color={$this->platoon_pos_color}]Regimental Leader[/color]\r\n[color={$this->squad_leaders_color}]TBA[/color][/size]\r\n";
 					$division_structure .= "[size=1]";
 
 				}
