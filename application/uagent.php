@@ -1,6 +1,7 @@
 <?php
 
-function chooseRandomBrowserAndOS() {
+function chooseRandomBrowserAndOS()
+{
     $frequencies = array(
         34 => array(
             89 => array('chrome', 'win'),
@@ -51,39 +52,48 @@ function chooseRandomBrowserAndOS() {
 }
 
 
-function array_random(array $array) {
+function array_random(array $array)
+{
     return $array[array_rand($array, 1)];
 }
 
-function nt_version() {
+function nt_version()
+{
     return rand(5, 6) . '.' . rand(0, 1);
 }
 
-function ie_version() {
+function ie_version()
+{
     return rand(7, 9) . '.0';
 }
 
-function trident_version() {
+function trident_version()
+{
     return rand(3, 5) . '.' . rand(0, 1);
 }
 
-function osx_version() {
+function osx_version()
+{
     return "10_" . rand(5, 7) . '_' . rand(0, 9);
 }
 
-function chrome_version() {
+function chrome_version()
+{
     return rand(13, 15) . '.0.' . rand(800, 899) . '.0';
 }
 
-function presto_version() {
+function presto_version()
+{
     return '2.9.' . rand(160, 190);
 }
 
-function presto_version2() {
+function presto_version2()
+{
     return rand(10, 12) . '.00';
 }
 
-function firefox($arch) {
+function firefox($arch)
+{
     $ver = array_random(array(
        'Gecko/' . date('Ymd', rand(strtotime('2011-1-1'), time())) . ' Firefox/' . rand(5, 7) . '.0',
        'Gecko/' . date('Ymd', rand(strtotime('2011-1-1'), time())) . ' Firefox/' . rand(5, 7) . '.0.1',
@@ -105,7 +115,8 @@ function firefox($arch) {
     }
 }
 
-function safari($arch) {
+function safari($arch)
+{
     $saf = rand(531, 535) . '.' . rand(1, 50) . '.' . rand(1, 7);
     if (rand(0, 1) == 0) {
         $ver = rand(4, 5) . '.' . rand(0, 1);
@@ -124,10 +135,10 @@ function safari($arch) {
         $nt = nt_version();
         return "(Windows; U; Windows NT $nt) AppleWebKit/$saf (KHTML, like Gecko) Version/$ver Safari/$saf";
     }
-
 }
 
-function iexplorer($arch) {
+function iexplorer($arch)
+{
     $ie_extra = array(
         '',
         '; .NET CLR 1.1.' . rand(4320, 4325) . '',
@@ -140,7 +151,8 @@ function iexplorer($arch) {
     return "(compatible; MSIE $ie; Windows NT $nt; Trident/$trident)";
 }
 
-function opera($arch) {
+function opera($arch)
+{
     $op_extra = array(
         '',
         '; .NET CLR 1.1.' . rand(4320, 4325) . '',
@@ -160,7 +172,8 @@ function opera($arch) {
     }
 }
 
-function chrome($arch) {
+function chrome($arch)
+{
     $saf = rand(531, 536) . rand(0, 2);
     $chrome = chrome_version();
 
@@ -182,7 +195,8 @@ function chrome($arch) {
  * @param  array $lang  languages to choose from
  * @return string       user agent
  */
-function random_uagent(array $lang=array('en-US')) {
+function random_uagent(array $lang=array('en-US'))
+{
     list($browser, $os) = chooseRandomBrowserAndOs();
 
     $proc = array(
@@ -209,9 +223,8 @@ function random_uagent(array $lang=array('en-US')) {
        break;
    }
 
-   $ua = str_replace('{proc}', array_random($proc[$os]), $ua);
-   $ua = str_replace('{lang}', array_random($lang), $ua);
+    $ua = str_replace('{proc}', array_random($proc[$os]), $ua);
+    $ua = str_replace('{lang}', array_random($lang), $ua);
 
-   return $ua;
+    return $ua;
 }
-

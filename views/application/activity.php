@@ -3,8 +3,8 @@
 		<div class="panel-heading"><strong>Recent Activity</strong></div>
 		<ul class="activity-list">
 			<?php $actions = UserAction::find_all($division->id, 30); ?>
-			<?php foreach($actions as $action) : ?>
-				<?php if ( ! is_null ( $action->target_id ) ): ?>
+			<?php foreach ($actions as $action) : ?>
+				<?php if (!is_null($action->target_id)): ?>
 					<li>
 						<i class="<?php echo $action->icon; ?> fa-2x"></i>
 						<div>

@@ -1,10 +1,11 @@
 <?php
 
-class Database extends Sparrow {
-  
-  static $type = 'pdomysql';
+class Database extends Sparrow
+{
+  public static $type = 'pdomysql';
 
-  public function __construct($database) {
+  public function __construct($database)
+  {
     $config = [
     'type' => self::$type,
     'hostname' => DB_HOST,
@@ -14,7 +15,4 @@ class Database extends Sparrow {
     ];
     $this->setDb($config);
   }
-  
 }
-
-?>

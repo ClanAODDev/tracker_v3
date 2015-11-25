@@ -1,11 +1,10 @@
 <?php
 
-class Setting extends Application {
+class Setting extends Application
+{
+    public $id;
+    public $name;
+    public $value;
   
-  public $id;
-  public $name;
-  public $value;
-  
-  static $table = 'settings';
-  
+    public static $table = 'settings';
 }

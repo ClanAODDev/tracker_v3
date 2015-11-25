@@ -40,7 +40,6 @@ function hasher($info, $encdata = false)
     if ($encdata) {
         if (substr($encdata, 0, 60) == crypt($info, "$2a$" . $strength . "$" . substr($encdata, 60))) {
             return true;
-            
         } else {
             return false;
         }
@@ -53,7 +52,6 @@ function hasher($info, $encdata = false)
         }
         //return 82 char string (60 char hash & 22 char salt) 
         return crypt($info, "$2a$" . $strength . "$" . $salt) . $salt;
-        
     }
 }
 
@@ -103,11 +101,11 @@ function forceEndSession()
  * @param  array $d 
  * @return object    
  */
-function arrayToObject($d) {
+function arrayToObject($d)
+{
     if (is_array($d)) {
         return (object) array_map(__FUNCTION__, $d);
-    }
-    else {
+    } else {
         return $d;
     }
 }
@@ -117,16 +115,15 @@ function arrayToObject($d) {
  * @param  object $d 
  * @return array
  */
-function objectToArray($d) {
+function objectToArray($d)
+{
     if (is_object($d)) {
         $d = get_object_vars($d);
     }
 
     if (is_array($d)) {
         return array_map(__FUNCTION__, $d);
-    }
-    else {
-
+    } else {
         return $d;
     }
 }
@@ -174,10 +171,10 @@ function lastSeenFlag($last_seen)
 {
     if (strtotime($last_seen) < strtotime('-30 days')) {
         $status = "<i class='fa fa-flag text-danger'></i>";
-    } else if (strtotime($last_seen) < strtotime('-14 days')) {
+    } elseif (strtotime($last_seen) < strtotime('-14 days')) {
         $status = "<i class='fa fa-flag text-warning'></i>";
     } else {
-        $status = NULL;
+        $status = null;
     }
     return $status;
 }
@@ -186,7 +183,7 @@ function lastSeenColored($last_seen)
 {
     if (strtotime($last_seen) < strtotime('-30 days')) {
         $status = 'danger';
-    } else if (strtotime($last_seen) < strtotime('-14 days')) {
+    } elseif (strtotime($last_seen) < strtotime('-14 days')) {
         $status = 'warning';
     } else {
         $status = 'default';
@@ -200,10 +197,11 @@ function lastSeenColored($last_seen)
  * @param  timestamp $last_seen 
  * @return string            
  */
-function inactiveClass($last_seen) {
+function inactiveClass($last_seen)
+{
     if (strtotime($last_seen) < strtotime('-30 days')) {
         $status = 'danger';
-    } else if (strtotime($last_seen) < strtotime('-14 days')) {
+    } elseif (strtotime($last_seen) < strtotime('-14 days')) {
         $status = 'warning';
     } else {
         $status = 'muted';
@@ -256,7 +254,7 @@ function getPercentageColor($pct)
 {
     if ($pct >= PERCENTAGE_CUTOFF_GREEN) {
         $percent_class = "success";
-    } else if ($pct >= PERCENTAGE_CUTOFF_AMBER) {
+    } elseif ($pct >= PERCENTAGE_CUTOFF_AMBER) {
         $percent_class = "warning";
     } else {
         $percent_class = "danger";
@@ -273,7 +271,6 @@ function getPercentageColor($pct)
  */
 function userColor($user, $level, $last_seen)
 {
-
     $last_seen = formatTime(strtotime($last_seen));
 
     switch ($level) {
@@ -309,7 +306,6 @@ function userColor($user, $level, $last_seen)
  */
 function memberColor($user, $level)
 {
-
     switch ($level) {
         case 3:
         case 8:
@@ -334,17 +330,17 @@ function memberColor($user, $level)
 }
 
 
-function average($array) {
-   return array_sum($array) / count($array);
+function average($array)
+{
+    return array_sum($array) / count($array);
 }
 
 
-function curl_last_url( /*resource*/ $ch, /*int*/ &$maxredirect = null)
+function curl_last_url(/*resource*/ $ch, /*int*/ &$maxredirect = null)
 {
     $mr = $maxredirect === null ? 5 : intval($maxredirect);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
     if ($mr > 0) {
-
         $newurl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         
         $rch = curl_copy_handle($ch);
@@ -383,18 +379,20 @@ function curl_last_url( /*resource*/ $ch, /*int*/ &$maxredirect = null)
 }
 
 
-function generate_report_link($game, $id) {
+function generate_report_link($game, $id)
+{
     return "http://battlelog.battlefield.com/{$game}/battlereport/show/1/{$id}";
 }
 
 
-function excerpt($text, $limit) {
-  if (str_word_count($text, 0) > $limit) {
-      $words = str_word_count($text, 2);
-      $pos = array_keys($words);
-      $text = substr($text, 0, $pos[$limit]) . '...';
-  }
-  return $text;
+function excerpt($text, $limit)
+{
+    if (str_word_count($text, 0) > $limit) {
+        $words = str_word_count($text, 2);
+        $pos = array_keys($words);
+        $text = substr($text, 0, $pos[$limit]) . '...';
+    }
+    return $text;
 }
 
 /**
@@ -402,7 +400,8 @@ function excerpt($text, $limit) {
  * @param  strng $game bf3,bf4,bfh
  * @return string      image of icon
  */
-function convertIcon($game) {
+function convertIcon($game)
+{
     switch ($game) {
         case "bf3":
         $img = "[img]http://i.imgur.com/eiloJ8H.png[/img]";
@@ -412,7 +411,7 @@ function convertIcon($game) {
         break;
         case "bfh":
         $img = "[img]http://i.imgur.com/Azd2G5f.png[/img]";
-        break;        
+        break;
         case "wt":
         $img = "[img]http://i.imgur.com/WMF8ZYd.png[/img]";
         break;
