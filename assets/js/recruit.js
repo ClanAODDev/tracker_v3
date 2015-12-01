@@ -244,14 +244,11 @@ function loadThreadCheck() {
         windowOpener($(this).attr("href") + member_id, "AOD Squad Tracking", "width=1000,height=600,scrollbars=yes");
     });
 
-
     if (ingame) {
-      if (strpos(ingame, 'AOD_', 0)) {
-         $(".rank-name").html("Rct_" + ucwords(ingame));
-      } else {
-           $(".rank-name").html("AOD_Rct_" + ucwords(ingame));
-      }
 
+        ingame = ingame.replace('AOD_', '');
+
+        $(".rank-name").html("AOD_Rct_" + ucwords(ingame));
         $(".player-name").html(ucwords(ingame));
 
         // full name copy
@@ -326,7 +323,7 @@ function storePlayer(member_id, forum_name, platoon, squad_id, ingame_name, divi
 }
 
 function strpos(haystack, needle, offset) {
-  var i = (haystack + '')
-  .indexOf(needle, (offset || 0));
-  return i === -1 ? false : i;
+    var i = (haystack + '')
+        .indexOf(needle, (offset || 0));
+    return i === -1 ? false : i;
 }
