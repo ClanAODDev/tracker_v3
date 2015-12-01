@@ -59,7 +59,7 @@ class SWBDivisionStructure
         foreach ($division_leaders as $player) {
             $player_name = Rank::convert($player->rank_id)->abbr." ".$player->forum_name;
             $aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>$player_name, 'color'=>$this->division_leaders_color));
-            $division_structure .= "[color={$this->division_leaders_color}]{$aod_url}[/color] - {$player->position_desc}\r\n";
+            $division_structure .= "{$aod_url} - {$player->position_desc}\r\n";
         }
 
         $division_structure .= "[/size][/center]\r\n\r\n";
@@ -107,7 +107,7 @@ class SWBDivisionStructure
             if ($platoon->leader_id != 0) {
                 $player_name = Rank::convert($player->rank_id)->abbr." ".$player->forum_name;
                 $aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>$player_name, 'color'=>$this->platoon_leaders_color));
-                $division_structure .= "[size=3][color={$this->platoon_pos_color}]Legion Commander[/color]\r\n[color={$this->platoon_leaders_color}]{$aod_url}[/color][/size]\r\n\r\n";
+                $division_structure .= "[size=3][color={$this->platoon_pos_color}]Legion Commander[/color]\r\n{$aod_url}[/size]\r\n\r\n";
             } else {
                 $division_structure .= "[size=3][color={$this->platoon_pos_color}]Legion Commander[/color]\r\n[color={$this->platoon_leaders_color}]TBA[/color][/size]\r\n\r\n";
             }
@@ -121,7 +121,7 @@ class SWBDivisionStructure
                     $player_name = Rank::convert($squad_leader->rank_id)->abbr." ".$squad_leader->forum_name;
                     $aod_url = Member::createAODlink(array('member_id'=>$squad_leader->member_id, 'forum_name'=>$player_name, 'color'=>$this->squad_leaders_color));
 
-                    $division_structure .= "[size=3][color={$this->platoon_pos_color}]Regimental Leader[/color]\r\n[color={$this->squad_leaders_color}]{$aod_url}[/color][/size]\r\n\r\n";
+                    $division_structure .= "[size=3][color={$this->platoon_pos_color}]Regimental Leader[/color]\r\n{$aod_url}[/size]\r\n\r\n";
                     $division_structure .= "[size=1]";
 
                     // direct recruits
