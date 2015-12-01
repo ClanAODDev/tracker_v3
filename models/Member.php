@@ -85,6 +85,9 @@ class Member extends Application
     public static function createAODlink($args)
     {
         $string = "[profile={$args['member_id']}]{$args['forum_name']}[/profile]";
+        if (isset($args['color'])) {
+            $string = "[profile={$args['member_id']}][color={$args['color']}]{$args['forum_name']}[/color][/profile]";
+        }
         return $string;
     }
 
