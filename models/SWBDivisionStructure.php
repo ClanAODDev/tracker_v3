@@ -205,7 +205,7 @@ class SWBDivisionStructure
          */
 
 
-        if (count(LeaveOfAbsence::find_all($this->game_id))) {
+        if (count((array)LeaveOfAbsence::find_all($this->game_id))) {
             $i = 1;
 
             // header

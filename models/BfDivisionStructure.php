@@ -228,27 +228,29 @@ class BfDivisionStructure
          * -----------LOAS------------
          */
 
-        $i = 1;
+        if (count((array)LeaveOfAbsence::find_all($this->game_id))) {
+            $i = 1;
 
         // header
         $division_structure .= "\r\n[table='align:center,width: {$this->info_width}']";
-        $division_structure .= "[tr][td]\r\n[center][size=3][color={$this->platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
-        $division_structure .= "[/table]\r\n\r\n";
+            $division_structure .= "[tr][td]\r\n[center][size=3][color={$this->platoon_pos_color}][b]Leaves of Absence[/b][/color][/size][/center][/td][/tr]";
+            $division_structure .= "[/table]\r\n\r\n";
 
         // players
         $division_structure .= "[table='align:center,width: {$this->info_width}']";
-        $loas = LeaveOfAbsence::find_all($this->game_id);
+            $loas = LeaveOfAbsence::find_all($this->game_id);
 
-        foreach ($loas as $player) {
-            $date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end));
-            $profile = Member::findByMemberId($player->member_id);
-            $aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>"AOD_".$profile->forum_name));
+            foreach ($loas as $player) {
+                $date_end = (strtotime($player->date_end) < strtotime('now')) ? "[COLOR='#FF0000']Expired " . formatTime(strtotime($player->date_end)) . "[/COLOR]" : date("M d, Y", strtotime($player->date_end));
+                $profile = Member::findByMemberId($player->member_id);
+                $aod_url = Member::createAODlink(array('member_id'=>$player->member_id, 'forum_name'=>"AOD_".$profile->forum_name));
 
-            $division_structure .= "[tr][td]{$aod_url}[/td][td]{$date_end}[/td][td]{$player->reason}[/td][/tr]";
-            $i++;
+                $division_structure .= "[tr][td]{$aod_url}[/td][td]{$date_end}[/td][td]{$player->reason}[/td][/tr]";
+                $i++;
+            }
+
+            $division_structure .= "[/table]";
         }
-
-        $division_structure .= "[/table]";
 
         $this->content = $division_structure;
     }
