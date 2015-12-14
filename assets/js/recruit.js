@@ -192,6 +192,13 @@ $(function() {
         }
     });
 
+// stop enter from submitting
+$("form").bind("keypress", function (e) {
+    if (e.keyCode == 13) {
+        return false;
+    }
+});
+
     $("#storePlayer").click(function(event) {
 
         event.preventDefault();
