@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 require 'config.php';
 require '/usr/www/aodwebhost/public/tracker/application/uagent.php';
@@ -75,11 +75,11 @@ function bf_newActivity($reports, $game, $member_id, $id) {
 		foreach ($reports as $report) {
 			try {
 				$sql = "INSERT IGNORE INTO bf_activity (member_id, server, datetime, hash, game_id, map_name, report_id) VALUES (:member, :serverName, :date, :hash, :game, :map, :report)";
-				
+
 				$pdo->prepare($sql)
 				->execute(array(
-					':member' => $member_id, 
-					':serverName' => $report['serverName'], 
+					':member' => $member_id,
+					':serverName' => $report['serverName'],
 					':date' => $report['date'],
 					':hash' => hash("sha256", $member_id.$report['date']),
 					':game' => $game,
@@ -172,12 +172,13 @@ function download_bl_reports($personaId, $game) {
 function getBattlelogId($battlelogName) {
 	// check for bf4 entry
 	$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
-	$headers = get_headers($url); 
-	if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) { 
+	$headers = get_headers($url);
+	if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
 			// check for hardline entry
 		$url = "http://api.bfhstats.com/api/playerInfo?plat=pc&name={$battlelogName}";
+		ini_set('default_socket_timeout', 10);
 		$headers = get_headers($url);
-		if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) { 
+		if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
 			$result = array('error' => true, 'message' => 'Player not found, or BF Stats server down.');
 		} else {
 			$json = file_get_contents($url);
@@ -224,7 +225,7 @@ function download_tanks_profile($account_id, $type) {
 		$url = "http://api.worldoftanks.eu/2.0/account/info/?application_id={$eu_api_key}&account_id={$account_id}";
 		break;
 	}
-	
+
 	$json = file_get_contents($url, false, $context);
 	$data = json_decode($json);
 
@@ -242,11 +243,11 @@ function parse_tanks_profile($data) {
 
 			$pdo->prepare($sql)
 				->execute(array(
-					':member_id' => $data->member_id, 
+					':member_id' => $data->member_id,
 					':last_battle_time' => date("Y-m-d H:i:s", $data->last_battle_time)
 					)
 				);
-			
+
 		} catch (PDOException $e) {
 			return $e->getMessage();
 		}
