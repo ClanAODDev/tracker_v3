@@ -5,7 +5,7 @@ require 'lib.php';
 $members = array();
 
 if (dbConnect()) {
-	$query = $pdo->prepare(" SELECT handle_value FROM member_handles WHERE handle_account_id = 0 AND handle_type = 2 ");
+	$query = $pdo->prepare(" SELECT handle_value FROM member_handles JOIN member ON member.id = member_handles.member_id WHERE handle_account_id = 0 AND handle_type = 2 AND status_id = 1");
 	try {
 		$query->execute();
 		$battlelog_names = $query->fetchAll();
@@ -27,7 +27,7 @@ if (dbConnect()) {
 
 					$pdo->prepare("UPDATE crontab SET last_updated = '" . date('Y-m-d H:i:s') . "' WHERE name = 'battlelog_sync'")->execute();
 				} catch (PDOException $e) {
-					echo "ERROR: " . $e->getMessage();			
+					echo "ERROR: " . $e->getMessage();
 				}
 			} else {
 				echo "ERROR: {$row['handle_value']} - {$battlelog_id['message']}\r\n";
@@ -37,6 +37,6 @@ if (dbConnect()) {
 
 
 	} catch (PDOException $e) {
-		echo "ERROR: " . $e->getMessage();			
+		echo "ERROR: " . $e->getMessage();
 	}
 }
