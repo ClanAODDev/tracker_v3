@@ -49,7 +49,7 @@
 	<?php foreach($aliases as $alias): ?>
 		<?php if ($alias->isVisible): ?>
 			<?php $invalid = ($alias->isInvalid) ? "<label class=\"label label-danger\" title=\"Invalid\"><i class=\"fa fa-times\"></i></label>": NULL; ?>
-			<a target="_blank" href="<?php echo (property_exists($alias, 'url')) ? $alias->url . $alias->handle_value : "#"; ?>" class="list-group-item"><?php echo $invalid . $alias->name ?> <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+			<a target="_blank" href="<?php echo (property_exists($alias, 'url')) ? $alias->url . $alias->handle_value : "#"; ?>" class="list-group-item"><?php echo $alias->name . $invalid ?> <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
 		<?php endif; ?>
 	<?php endforeach; ?>
 
