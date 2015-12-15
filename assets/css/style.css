@@ -841,3 +841,7 @@ div.chart_div table {
   border-right-color:#ddd;
   border-width:8px;
 }
+
+.gaming-profiles a label {
+  margin-left: 5px;
+}

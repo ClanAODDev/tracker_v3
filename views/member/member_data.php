@@ -38,7 +38,7 @@
 	</ul>
 </div>
 
-<div class='panel panel-info'>
+<div class='panel panel-info game-profiles'>
 	<div class='panel-heading'>
 		<strong>Gaming Profiles</strong>
 	</div>
