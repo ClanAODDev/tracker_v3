@@ -49,6 +49,7 @@ class MemberHandle extends Application
             $handle = Handle::findByType($params->handle_type);
             $params->handle_name = $handle->type;
             $params->name = $handle->name;
+            $params->isInvalid = (bool) $params->invalid;
             $params->isVisible = (bool) $handle->show_on_profile;
             if (!is_null($handle->url)) {
                 $params->url = $handle->url;
