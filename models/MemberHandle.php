@@ -31,7 +31,7 @@ class MemberHandle extends Application
             if ($handle) {
                 $memberHandle->handle_name = $handle->type;
                 $memberHandle->name = $handle->name;
-                $params->isInvalid = (bool) $memberHandle->invalid;
+                $memberHandle->isInvalid = (bool) $memberHandle->invalid;
                 $memberHandle->isVisible = (bool) $handle->show_on_profile;
                 if (!is_null($handle->url)) {
                     $memberHandle->url = $handle->url;
