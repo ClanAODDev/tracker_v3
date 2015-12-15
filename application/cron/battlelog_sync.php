@@ -17,7 +17,7 @@ if (dbConnect()) {
 
 			$battlelog_id = getBattlelogId($row['handle_value']);
 			$query = $pdo->prepare("UPDATE member_handles SET handle_account_id = :battlelog_id WHERE handle_value = :battlelog_name");
-			$invalid = $pdo->prepare("UPDATE member_handles SET invalid = 1 WHERE handle_value = :battlelog_name");
+			$invalid = $pdo->prepare("UPDATE member_handles SET invalid = 1, invalid_date = :invalid_date WHERE handle_value = :battlelog_name");
 
 			if (!$battlelog_id['error']) {
 				try {
@@ -32,6 +32,7 @@ if (dbConnect()) {
 				}
 			} else {
 				$invalid->bindParam(':battlelog_name', $row['handle_value']);
+				$invalid->bindParam(':invalid_date', date('Y-m-d h:i:s A'));
 				$invalid->execute();
 				echo "ERROR: {$row['handle_value']} - {$battlelog_id['message']}\r\n";
 			}
