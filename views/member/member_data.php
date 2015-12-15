@@ -7,13 +7,13 @@
 		<?php echo (property_exists($platoonInfo, 'item')) ? $platoonInfo->item : NULL; ?>
 
 		<?php $position = ($memberInfo->position_id) ? Position::convert($memberInfo->position_id)->desc : 'Unknown'; ?>
-		
+
 		<li class='list-group-item text-right'><span class='pull-left'><strong>Position: </strong></span> <span class='text-muted'><?php echo Locality::run($position, $memberInfo->game_id)?></span></li>
 		<?php $squadleader = (property_exists($memberInfo, 'squad_leader_id')) ? $memberInfo->squad_leader_id : NULL; ?>
 
 		<?php if ($squadleader != 0) : ?>
 			<a href="member/<?php echo $squadleader ?>" class="list-group-item text-right">
-				<span class='pull-left'><strong>Squad Leader: </strong></span> 
+				<span class='pull-left'><strong>Squad Leader: </strong></span>
 				<span class='text-muted'><?php echo Member::findForumName($squadleader) ?></a></span>
 			</a>
 		<?php endif; ?>
@@ -21,7 +21,7 @@
 		<?php $recruiter = ($memberInfo->recruiter != 0) ? $memberInfo->recruiter : NULL; ?>
 		<?php if (!is_null($recruiter)) : ?>
 			<a href="member/<?php echo $recruiter ?>" class="list-group-item text-right">
-				<span class='pull-left'><strong>Recruiter: </strong></span> 
+				<span class='pull-left'><strong>Recruiter: </strong></span>
 				<span class='text-muted'><?php echo Member::findForumName($recruiter) ?></a></span>
 			</a>
 		<?php endif; ?>
@@ -42,13 +42,14 @@
 	<div class='panel-heading'>
 		<strong>Gaming Profiles</strong>
 	</div>
-	
+
 	<!-- everyone has a forum profile -->
 	<a target='_blank' href='<?php echo CLANAOD . $memberInfo->member_id ?>' class='list-group-item'>AOD Forum <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
 
 	<?php foreach($aliases as $alias): ?>
 		<?php if ($alias->isVisible): ?>
-			<a target="_blank" href="<?php echo (property_exists($alias, 'url')) ? $alias->url . $alias->handle_value : "#"; ?>" class="list-group-item"><?php echo $alias->name ?> <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
+			<?php $invalid = ((boolean) $alias->invalid)? "<label class=\"label label-danger\" title=\"Invalid\"><i class=\"fa fa-times\"></i></label>": NULL; ?>
+			<a target="_blank" href="<?php echo (property_exists($alias, 'url')) ? $alias->url . $alias->handle_value : "#"; ?>" class="list-group-item"><?php echo $invalid . $alias->name ?> <span class='pull-right'><i class='text-info fa fa-external-link'></i></span></a>
 		<?php endif; ?>
 	<?php endforeach; ?>
 
