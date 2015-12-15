@@ -30,7 +30,6 @@ class MemberHandle extends Application
         foreach ($params as $memberHandleElement => $memberHandle) {
             $handle = Handle::findByType((int) $memberHandle->handle_type);
             if ($handle) {
-            	var_dump($memberHandle);die;
                 $memberHandle->handle_name = $handle->type;
                 $memberHandle->name = $handle->name;
                 $memberHandle->isInvalid = (bool) $memberHandle->invalid;
