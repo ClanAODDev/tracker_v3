@@ -172,31 +172,19 @@ function download_bl_reports($personaId, $game) {
 function getBattlelogId($battlelogName) {
 	// check for bf4 entry
 	$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
-	$headers = get_headers($url);
-	if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
-			// check for hardline entry
-		$url = "http://api.bfhstats.com/api/playerInfo?plat=pc&name={$battlelogName}";
-		ini_set('default_socket_timeout', 5);
-
-
-		$headers = get_headers($url);
-		if ($headers) {
-			if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
-				$result = array('error' => true, 'message' => 'Player not found, or BF Stats server down.');
-			} else {
-				$json = file_get_contents($url);
-				$data = json_decode($json);
-				$personaId = $data->player->id;
-				$result = array('error' => false, 'id' => $personaId);
-			}
+	$headers = @get_headers($url);
+	if ($headers) {
+		if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
+			$result = array('error' => true, 'message' => 'Player not found, or BF Stats server down.');
+		} else {
+			$json = file_get_contents($url);
+			$data = json_decode($json);
+			$personaId = $data->player->id;
+			$result = array('error' => false, 'id' => $personaId);
 		}
-	} else {
-		$json = file_get_contents($url);
-		$data = json_decode($json);
-		$personaId = $data->player->id;
-		$result = array('error' => false, 'id' => $personaId);
+		return $result;
 	}
-	return $result;
+	return $result = array('error' => true, 'message' => 'Timed out. Probably a 404.');
 }
 
 
