@@ -172,6 +172,7 @@ function download_bl_reports($personaId, $game) {
 function getBattlelogId($battlelogName) {
 	// check for bf4 entry
 	$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
+	ini_set('default_socket_timeout', 5);
 	$headers = @get_headers($url);
 	if ($headers) {
 		if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
