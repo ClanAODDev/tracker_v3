@@ -165,7 +165,7 @@ class MemberController {
 
 					if ($value != '') {
 
-						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => '0');
+						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => '0', 'invalid' => '0', 'invalid_date' => '0000-00-00');
 						$id = MemberHandle::hasAlias($type, $memberData['id']);
 
 						if ($id) {
@@ -257,6 +257,8 @@ class MemberController {
 				$handle->handle_type = $division->primary_handle;
 				$handle->handle_value = $ingame_name;
 				$handle->handle_account_id = '0';
+				$handle->invalid = '0';
+				$handle->invalid_date = '0000-00-00';
 				MemberHandle::add($handle);
 			}
 		}
