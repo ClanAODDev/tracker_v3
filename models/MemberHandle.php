@@ -8,6 +8,7 @@ class MemberHandle extends Application
     public $handle_value;
     public $handle_account_id;
     public $invalid;
+    public $invalid_date;
 
     public static $id_field = 'id';
     public static $table = 'member_handles';
