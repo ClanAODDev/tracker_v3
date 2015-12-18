@@ -50,7 +50,7 @@ class UserAction extends Application
             ->limit($limit)
             ->sortDesc('date')
             ->join('actions', array('actions.id' => 'user_actions.type_id'))
-            ->join('member', array('member.member_id' => 'user_actions.user_id'))
+            ->join('member', array('member.member_id' => 'user_actions.target_id'))
             ->select(array('date', 'user_id', 'type_id', 'target_id', 'verbage', 'icon'))->many()
             );
     }
