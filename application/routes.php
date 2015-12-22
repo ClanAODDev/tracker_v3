@@ -25,6 +25,7 @@ if (empty($_SESSION['userid'])) {
     Flight::route('/manage/leaves-of-absence', array('DivisionController', '_manage_loas'));
     Flight::route('/divisions/@div/platoon/@plt/manage', array('PlatoonController', '_manage_platoon'));
     Flight::route('/divisions/@div/platoon/@plt/squad/@squad', array('SquadController', '_manage_squad'));
+    Flight::route('/manage/part-time', array('DivisionController', '_manage_part_time'));
 
     // view
     Flight::route('/divisions/@div', array('DivisionController', '_index'));
@@ -41,6 +42,7 @@ if (empty($_SESSION['userid'])) {
     Flight::route('POST /do/update-member-squad', array('PlatoonController', '_doUpdateMemberSquad'));
     Flight::route('POST /do/validate-member', array('MemberController', '_doValidateMember'));
     Flight::route('POST /do/add-member', array('MemberController', '_doAddMember'));
+    Flight::route('POST /do/add-parttime', array('DivisionController', '_doAddPartTimeMember'));
     Flight::route('POST /do/update-flag', array('MemberController', '_doUpdateFlag'));
     Flight::route('POST /do/update-loa', array('DivisionController', '_updateLoa'));
     Flight::route('POST /do/remove-member', array('MemberController', '_doKickFromAod'));

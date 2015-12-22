@@ -15,7 +15,7 @@
 				</div>
 				<button type="submit" class="btn btn-primary login-btn">Log in </button>
 			</form>
-			
+
 		</div>
 		<div class="panel-footer text-muted"><p><small>Don't have an account? <a href="./register/">Create one</a>.</small></p></div>
 	</div>

@@ -22,6 +22,7 @@ class PartTime extends Application
         $pt = new self;
         $pt->member_id = $params['member_id'];
         $pt->forum_name = $params['forum_name'];
+        $pt->ingame_alias = $params['ingame_alias'];
         $pt->game_id = $params['game_id'];
         $pt->save();
     }

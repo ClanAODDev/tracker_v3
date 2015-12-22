@@ -27,6 +27,7 @@ class UserAction extends Application
      *  9  |  Revoke an loa
      *  10 |  recruit former member
      *  11 |  request an loa
+     *  12 |  add part time member
      *  -----------------------
      */
 
@@ -61,6 +62,7 @@ class UserAction extends Application
         $player = "<a href='member/{$target_id}'>" . Member::findForumName($target_id) . "</a>";
         switch ($type_id) {
             case 1:
+            case 12:
             $text = "{$user} {$verbage} {$player} into the division";
             break;
             case 2:

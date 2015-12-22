@@ -52,6 +52,36 @@ class DivisionController {
 
 	}
 
+	public static function _manage_part_time() {
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+		$tools = Tool::find_all($user->role);
+		$divisions = Division::find_all();
+
+		$part_time = PartTime::find_all($member->game_id);
+		Flight::render('manage/part_time', array('member' => $member, 'user' => $user, 'part_time' => $part_time), 'content');
+		Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
+	}
+
+	public static function _doAddPartTimeMember() {
+		$user = User::find(intval($_SESSION['userid']));
+		$member = Member::find(intval($_SESSION['memberid']));
+
+		$member_params = array(
+			'member_id' => $_POST['member_id'],
+			'forum_name' => $_POST['name'],
+			'ingame_alias' => $_POST['ingame_alias'],
+			'game_id' => $member->game_id
+			);
+
+		PartTime::add($member_params);
+		Flight::redirect('/manage/part-time');
+	}
+
+	public static function _remove_part_time() {
+		echo json_encode($data);
+	}
+
 	public static function _manage_loas() {
 
 		$user = User::find(intval($_SESSION['userid']));
