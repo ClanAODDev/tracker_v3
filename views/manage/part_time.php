@@ -31,7 +31,7 @@
 			<div class="panel panel-primary">
 				<div class="panel-heading">Add member</div>
 				<div class="panel-body">
-					<form action="/Division-Tracker/do/add-parttime" method="POST">
+					<form action="do/add-parttime" method="POST">
 						<div class="form-group">
 							<label for="member_id" class="control-label">Member ID</label>
 							<input type="number" class="form-control" name="member_id" />
