@@ -51,6 +51,7 @@
  }
 
  body {
+  background-size: cover;
   background: #fcfcfc url("../images/bg.jpg") 50% no-repeat fixed;
 }
 
