@@ -1,5 +1,5 @@
 <div class='container'>
-	
+
 	<ul class='breadcrumb'>
 		<li><a href='./'>Home</a></li>
 		<li class='active'>Recruiting</li>
@@ -18,7 +18,7 @@
 				<dl class='dl-horizontal'>
 					<dt>AOD Forum ID</dt><dd>The forum member id of the new recruit (<a href="http://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate" class="popup-link">Search newest forum members</a>)</dd>
 					<dt>AOD Forum Name</dt><dd>The username (without AOD_) of the recruit</dd>
-					<dt>Battlelog Name</dt><dd>The battlelog name of the recruit (should be the same as the forum name)</dd>
+					<dt>Ingame Name</dt><dd>The ingame name of the recruit (should be the same as the forum name)</dd>
 				</dl>
 			</div>
 		</div>
