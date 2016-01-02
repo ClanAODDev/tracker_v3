@@ -5,7 +5,10 @@ require 'lib.php';
 $members = array();
 
 if (dbConnect()) {
-	$query = $pdo->prepare(" SELECT handle_value FROM member_handles JOIN member ON member.id = member_handles.member_id WHERE handle_account_id = 0 AND handle_type = 2 AND status_id = 1 AND invalid = 0");
+	$query = $pdo->prepare(" SELECT handle_value FROM member_handles
+		JOIN member ON member.id = member_handles.member_id
+		WHERE handle_account_id = 0 AND handle_type = 2 AND status_id = 1
+		AND invalid = 0 AND game_id = 2");
 	try {
 		$query->execute();
 		$battlelog_names = $query->fetchAll();

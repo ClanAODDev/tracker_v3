@@ -168,24 +168,57 @@ function download_bl_reports($personaId, $game) {
 	return $reports;
 }
 
+function containsNumbers($String){
+	return preg_match('/\\d/', $String) > 0;
+}
+
 
 function getBattlelogId($battlelogName) {
 	// check for bf4 entry
 	$url = "http://api.bf4stats.com/api/playerInfo?plat=pc&name={$battlelogName}";
-	ini_set('default_socket_timeout', 5);
-	$headers = @get_headers($url);
+	ini_set('default_socket_timeout', 10);
+	$headers = get_headers_curl($url);
 	if ($headers) {
 		if (stripos($headers[0], '40') !== false || stripos($headers[0], '50') !== false) {
 			$result = array('error' => true, 'message' => 'Player not found, or BF Stats server down.');
 		} else {
-			$json = file_get_contents($url);
+			$json = get_bf4db_dump($url);
 			$data = json_decode($json);
 			$personaId = $data->player->id;
-			$result = array('error' => false, 'id' => $personaId);
+			if (!containsNumbers($data->player->id)) {
+				$result = array('error' => true, 'message' => 'Player not found, or BF Stats server down.');
+			} else {
+				$result = array('error' => false, 'id' => $personaId);
+			}
 		}
 		return $result;
 	}
 	return $result = array('error' => true, 'message' => 'Timed out. Probably a 404.');
+}
+
+function get_headers_curl($url)
+{
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL,            $url);
+	curl_setopt($ch, CURLOPT_HEADER,         true);
+	curl_setopt($ch, CURLOPT_NOBODY,         true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_TIMEOUT,        15);
+
+	$r = curl_exec($ch);
+	$r = split("\n", $r);
+	return $r;
+}
+
+function get_bf4db_dump($url) {
+	$curl = curl_init();
+	curl_setopt($curl, CURLOPT_URL, $url);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($curl, CURLOPT_HEADER, false);
+	$data = curl_exec($curl);
+	curl_close($curl);
+	return $data;
 }
 
 
