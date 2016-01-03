@@ -7,7 +7,7 @@
 		</ul>
 
 		<div class='page-header'>
-			
+
 			<h2>
 
 				<strong><img src='assets/images/game_icons/48x48/<?php echo $division->short_name; ?>.png' /> <?php echo $division->full_name; ?> Division</strong>
@@ -22,9 +22,9 @@
 			</h2>
 
 		</div>
-		
+
 		<p><?php echo $division->description; ?></p><hr>
-		
+
 		<div class='row'>
 			<div class='col-md-8'>
 				<div class='panel panel-primary'>
@@ -68,8 +68,6 @@
 			</div>
 
 		</div>
-		
-		<?php echo $statistics ?>
 
 	</div>
 

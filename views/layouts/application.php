@@ -197,8 +197,8 @@
 	<script src="assets/js/libraries/ZeroClipboard.js"></script>
 	<script src="assets/js/libraries/touchpunch.js"></script>
 	<script src="assets/js/libraries/sweetalert2.min.js"></script>
-	<script src="assets/js/libraries/chartjs/Chart.Core.js"></script>
-	<script src="assets/js/libraries/chartjs/Chart.Doughnut.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+
 	<script src="assets/js/main.js"></script>
 
 	<?php if (isset($js) && file_exists("assets/js/{$js}.js")) :?>

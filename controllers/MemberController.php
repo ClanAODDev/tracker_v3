@@ -32,12 +32,11 @@ class MemberController {
 			switch ($divisionInfo->short_name) {
 				case "bf":
 				$activity = array('totalGames' => $totalGames, 'aodGames' => $aodGames, 'games' => $games, 'pctAod' => $pctAod);
-				break;
-				case "wg":
-				$activity = array();
+				$activity_page = $divisionInfo->short_name;
 				break;
 				default:
 				$activity = array();
+				$activity_page = 'default';
 				break;
 			}
 
@@ -54,7 +53,7 @@ class MemberController {
 			Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
 			Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
 			Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'aliases' => $aliases), 'member_data');
-			Flight::render('member/activity/'.$divisionInfo->short_name, $activity, 'activity');
+			Flight::render('member/activity/'.$activity_page, $activity, 'activity');
 			Flight::render('member/history', array(), 'history');
 			Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'gamesPlayed' => $gamesPlayed), 'content');
 			Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
@@ -165,7 +164,7 @@ class MemberController {
 
 					if ($value != '') {
 
-						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => $value, 'handle_account_id' => '0', 'invalid' => '0', 'invalid_date' => '0000-00-00');
+						$params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => trim($value), 'handle_account_id' => '0', 'invalid' => '0', 'invalid_date' => '0000-00-00');
 						$id = MemberHandle::hasAlias($type, $memberData['id']);
 
 						if ($id) {

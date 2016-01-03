@@ -36,7 +36,51 @@ class Report extends Application
 		return objectToArray($params);
 	}
 
+	public static function recruitingByDay30days($game_id)
+	{
+		$sql = "SELECT date(date) AS day, count( * ) AS count
+				FROM user_actions
+				JOIN member ON member.member_id = user_actions.user_id
+				WHERE member.game_id = {$game_id}
+				AND date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+				AND type_id = 1
+				GROUP BY day
+				ORDER BY date DESC";
 
+		$params = Flight::aod()->sql($sql)->many();
+		return objectToArray($params);
 
+	}
+
+	public static function recruitingWeekly($game_id)
+	{
+		$sql = "SELECT FROM_DAYS(TO_DAYS(date) -MOD(TO_DAYS(date) -1, 7)) AS week_beginning, count( * ) AS count
+				FROM user_actions
+				JOIN member ON member.member_id = user_actions.user_id
+				WHERE member.game_id = {$game_id}
+				AND date > DATE_SUB(NOW(), INTERVAL 1 MONTH)
+				AND type_id = 1
+				GROUP BY FROM_DAYS(TO_DAYS(date) -MOD(TO_DAYS(date) -1, 7))
+				ORDER BY date ASC";
+
+		$params = Flight::aod()->sql($sql)->many();
+		return objectToArray($params);
+	}
+
+	public static function recruitingByTheMonth($game_id)
+	{
+		$sql = "SELECT DATE(DATE_FORMAT(date, '%Y-%m-01')) AS month_beginning, count( * ) AS count
+				FROM user_actions
+				JOIN member ON member.member_id = user_actions.user_id
+				WHERE member.game_id = {$game_id}
+				AND date > DATE_SUB(NOW(), INTERVAL 4 MONTH)
+				AND type_id = 1
+				GROUP BY DATE(DATE_FORMAT(date, '%Y-%m-01'))
+				ORDER BY DATE(DATE_FORMAT(date, '%Y-%m-01'))";
+
+		$params = Flight::aod()->sql($sql)->many();
+		return objectToArray($params);
+
+	}
 
 }

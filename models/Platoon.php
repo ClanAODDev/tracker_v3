@@ -13,7 +13,8 @@ class Platoon extends Application
 
     public static function find_all($game_id)
     {
-        $params = self::find_each(array('game_id' => $game_id));
+        $conditions = array('game_ID' => $game_id);
+        $params = Flight::aod()->from(self::$table)->sortAsc('number')->where($conditions)->select()->many();
         return arrayToObject($params);
     }
 
