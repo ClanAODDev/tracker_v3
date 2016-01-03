@@ -86,12 +86,14 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<span class="caret"></span></a>
 									<ul class="dropdown-menu" role="menu">
 										<?php if ($user->role > 2 || User::isDev()) : ?>
-											<li class="dropdown-submenu">
-												<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
-												<ul class="dropdown-menu">
-													<li><a href="#">Report</a></li>
-												</ul>
-											</li>
+											<?php if ($user->role >= 3 || User::isDev()): ?>
+												<li class="dropdown-submenu">
+													<a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports</a>
+													<ul class="dropdown-menu">
+														<li><a href="reports/retention">Retention Numbers</a></li>
+													</ul>
+												</li>
+											<?php endif; ?>
 											<li class='divider'></li>
 										<?php endif; ?>
 										<?php foreach ($tools as $tool) : ?>

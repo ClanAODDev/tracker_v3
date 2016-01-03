@@ -56,7 +56,10 @@ if (empty($_SESSION['userid'])) {
     Flight::route('/create/issue', array('GithubController', '_createIssue'));
     Flight::route('/create/squad', array('SquadController', '_createSquad'));
     Flight::route('/modify/squad', array('SquadController', '_modifySquad'));
-    Flight::route('/view/reports', array('DivisionController', '_reports'));
+
+
+    // reports
+    Flight::route('/reports/retention', array('ReportController', '_retentionNumbers'));
 
     // cURLS
     Flight::route('POST /do/check-division-threads', array('RecruitingController', '_doDivisionThreadCheck'));
