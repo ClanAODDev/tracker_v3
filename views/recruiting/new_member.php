@@ -205,29 +205,36 @@
 
 									<ul class='nav nav-tabs' role='tablist'>
 										<li role='presentation' class='active'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>1</span> Request new member status</a></li>
-										<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>2</span> Send Welcome PM</a></li>
+										<?php $welcomePmString = RecruitingString::findByName('welcome-pm', $member->game_id)->string; ?>
+										<?php if (!empty($welcomePmString)): ?>
+											<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>2</span> Send Welcome PM</a></li>
+										<?php endif; ?>
 										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>3</span> Post Welcome thread</a></li>
 									</ul>
 
 									<div class='tab-content'>
 
-										<div role='tabpanel' class='tab-pane' id='welcome-pm'>
-											<div class='row margin-top-20'>
-												<div class='col-md-6'>
-													<p>In addition to your discussion with your new recruit, it's always a good idea to recap. For this reason, we like to send follow-up PMs to our new members summarizing what we went over in case they have any questions. It's also a good way to start a conversation with them on the forums, and generally a good way to close things up.</p>
-													<p>Click the copy button to copy the contents of the box to your clipboard. Then follow the link to send a PM to your recruit.</p>
-													<p class='margin-top-20'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u=' class='text-center pm-link'><button type='button' class='btn btn-primary'>Send Forum PM</button></a></p>
-												</div>
-
-												<div class='col-md-6'>
-													<div class='well code'>
-														<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button>
-														<code class='welcome-code' data-post="<?php echo RecruitingString::findByName('welcome-pm', 2)->string; ?>"></code>
+										<?php if (!empty($welcomePmString)): ?>
+											<div role='tabpanel' class='tab-pane' id='welcome-pm'>
+												<div class='row margin-top-20'>
+													<div class='col-md-6'>
+														<p>In addition to your discussion with your new recruit, it's always a good idea to recap. For this reason, we like to send follow-up PMs to our new members summarizing what we went over in case they have any questions. It's also a good way to start a conversation with them on the forums, and generally a good way to close things up.</p>
+														<p>Click the copy button to copy the contents of the box to your clipboard. Then follow the link to send a PM to your recruit.</p>
+														<p class='margin-top-20'><a href='http://www.clanaod.net/forums/private.php?do=newpm&u=' class='text-center pm-link'><button type='button' class='btn btn-primary'>Send Forum PM</button></a></p>
 													</div>
-												</div>
 
+													<div class='col-md-6'>
+														<div class='well code'>
+
+															<button type='button' class='welcome-pm-btn copy-button btn btn-default tool pull-right' title='Copy to clipboard'><i class='fa fa-copy'></i></button>
+
+															<code class='welcome-code' data-post="<?php echo $welcomePmString; ?>"></code>
+														</div>
+													</div>
+
+												</div>
 											</div>
-										</div>
+										<?php endif; ?>
 
 
 										<div role='tabpanel' class='tab-pane active' id='member-request'>
