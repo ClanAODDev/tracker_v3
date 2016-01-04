@@ -220,7 +220,6 @@ $(function() {
     });
 });
 
-
 function loadThreadCheck() {
 
     // setting these here since we know we have them
@@ -228,18 +227,6 @@ function loadThreadCheck() {
         ingame = $('#ingame').val(),
         game = $("#game").val(),
         member_id = $("#member_id").val();
-
-
-    /**
-     * big copy paste blurbs for posts
-     */
-
-    // division structure
-    /*postString = $("#division-post").find(".post-code").attr('data-post');
-    postCode = postString.replace(/%%member_id%%/g, member_id).replace(/%%member_name%%/g, player);
-    $("#division-post .post-code").html(postCode);
-    $('.division-code-btn').attr("data-clipboard-text", postCode);*/
-
 
     // welcome PM
     if ($("#welcome-pm").find(".welcome-code").length) {
@@ -275,25 +262,25 @@ function loadThreadCheck() {
     $(".thread-results").html('<img src="assets/images/loading.gif " class="margin-top-20" />');
 
     $.ajax({
-        url: "do/check-division-threads",
-        type: 'POST',
-        data: {
-            player: player,
-            game: game
-        },
-        cache: false,
-        beforeSend: function() {
-            $('#content').hide();
-            $('#loading').show();
-        },
-    })
+            url: "do/check-division-threads",
+            type: 'POST',
+            data: {
+                player: player,
+                game: game
+            },
+            cache: false,
+            beforeSend: function() {
+                $('#content').hide();
+                $('#loading').show();
+            },
+        })
 
-    .done(function(html) {
-        $(".thread-results ").empty().prepend(html);
-        $('.tool').powerTip({
-            placement: 'n'
+        .done(function(html) {
+            $(".thread-results ").empty().prepend(html);
+            $('.tool').powerTip({
+                placement: 'n'
+            });
         });
-    });
 }
 
 function storePlayer(member_id, forum_name, platoon, squad_id, ingame_name, division, played_games) {
