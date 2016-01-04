@@ -69,7 +69,7 @@
 								<p class="margin-top-50 lead"><strong>AOD</strong> Quick Info</p>
 								<hr />
 
-								<p><a class='popup-link'  href='http://www.clanaod.net/forums/showthread.php?t=97502'><button type='button' class='btn btn-primary'>Teamspeak Server Information</button></a> <a href='http://www.teamspeak.com/?page=downloads&gclid=CJakz7CwwcMCFRQQ7AodsDsASA' target='_blank'><button type='button' class='tool btn btn-primary' title='Right click to copy link'>TS3 Client Download</button></a>  <a href='http://www.clanaod.net/forums/showthread.php?t=72805' target='_blank' class='popup-link'><button type='button' class='tool btn btn-primary' title='Recruitment Process Thread'>Recruitment Process Thread</button></a></p>
+								<p><a class='popup-link'  href='http://www.clanaod.net/forums/showthread.php?t=97502'><button type='button' class='btn btn-primary'>Teamspeak Server Information</button></a> <a href='http://www.teamspeak.com/?page=downloads&gclid=CJakz7CwwcMCFRQQ7AodsDsASA' target='_blank'><button type='button' class='tool btn btn-primary' title='Right click to copy link'>TS3 Client Download</button></a>  <a href='http://www.clanaod.net/forums/showthread.php?t=<?php echo $division->recruiting_process_thread ?>' target='_blank' class='popup-link'><button type='button' class='tool btn btn-primary' title='Recruitment Process Thread'>Recruitment Process Thread</button></a></p>
 
 							</div>
 						</div>
@@ -205,11 +205,11 @@
 
 									<ul class='nav nav-tabs' role='tablist'>
 										<li role='presentation' class='active'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>1</span> Request new member status</a></li>
+										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>2</span> Post Welcome thread</a></li>
 										<?php $welcomePmString = RecruitingString::findByName('welcome-pm', $member->game_id)->string; ?>
 										<?php if (!empty($welcomePmString)): ?>
-											<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>2</span> Send Welcome PM</a></li>
+											<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>3</span> Send Welcome PM</a></li>
 										<?php endif; ?>
-										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>3</span> Post Welcome thread</a></li>
 									</ul>
 
 									<div class='tab-content'>

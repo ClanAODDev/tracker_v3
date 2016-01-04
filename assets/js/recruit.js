@@ -23,13 +23,13 @@ $(function() {
              * slide validation
              */
 
-             if (index == 2) {
+            if (index == 2) {
 
                 var forumName = $('#forumname').val(),
-                ingame = $('#ingame').val(),
-                platoon = $('#platoon').val(),
-                squad_id = $('#squad_id').val(),
-                member_id = $('#member_id').val();
+                    ingame = $('#ingame').val(),
+                    platoon = $('#platoon').val(),
+                    squad_id = $('#squad_id').val(),
+                    member_id = $('#member_id').val();
 
                 $(".progress-bar").attr("class", "bar progress-bar progress-bar-striped progress-bar-warning active");
 
@@ -163,24 +163,24 @@ $(function() {
             // panel titles
             switch (index) {
                 case 0:
-                $(".tab-title strong").html("Recruiting Introduction")
-                break;
+                    $(".tab-title strong").html("Recruiting Introduction")
+                    break;
                 case 1:
-                $(".tab-title strong").html("Add new member information")
-                break;
+                    $(".tab-title strong").html("Add new member information")
+                    break;
                 case 2:
-                $(".tab-title strong").html("Rules and Regulations Threads")
-                loadThreadCheck();
-                break;
+                    $(".tab-title strong").html("Rules and Regulations Threads")
+                    loadThreadCheck();
+                    break;
                 case 3:
-                $(".tab-title strong").html("Finishing Up With Your Recruit")
-                break;
+                    $(".tab-title strong").html("Finishing Up With Your Recruit")
+                    break;
                 case 4:
-                $(".tab-title strong").html("\"Dreaded Paperwork\"")
-                break;
+                    $(".tab-title strong").html("\"Dreaded Paperwork\"")
+                    break;
                 case 5:
-                $(".tab-title strong").html("Add New Recruit to Division")
-                break;
+                    $(".tab-title strong").html("Add New Recruit to Division")
+                    break;
             }
 
             var $total = navigation.find('li').length;
@@ -203,11 +203,11 @@ $(function() {
 
         event.preventDefault();
         var forum_name = $('#forumname').val(),
-        ingame_name = $('#ingame').val(),
-        platoon = $('#platoon').val(),
-        squad_id = $('#squad_id').val(),
-        division = $('#game').val(),
-        member_id = $('#member_id').val();
+            ingame_name = $('#ingame').val(),
+            platoon = $('#platoon').val(),
+            squad_id = $('#squad_id').val(),
+            division = $('#game').val(),
+            member_id = $('#member_id').val();
 
         var played_games = [];
         $.each($("input[name='games']:checked"), function() {
@@ -225,13 +225,25 @@ function loadThreadCheck() {
 
     // setting these here since we know we have them
     var player = $('#forumname').val(),
-    ingame = $('#ingame').val(),
-    game = $("#game").val(),
-    member_id = $("#member_id").val(),
+        ingame = $('#ingame').val(),
+        game = $("#game").val(),
+        member_id = $("#member_id").val();
 
 
-        // welcome PM
-        postString = $("#welcome-pm").find(".welcome-code").attr('data-post');
+    /**
+     * big copy paste blurbs for posts
+     */
+
+    // division structure
+    /*postString = $("#division-post").find(".post-code").attr('data-post');
+    postCode = postString.replace(/%%member_id%%/g, member_id).replace(/%%member_name%%/g, player);
+    $("#division-post .post-code").html(postCode);
+    $('.division-code-btn').attr("data-clipboard-text", postCode);*/
+
+
+    // welcome PM
+    if ($("#welcome-pm").find(".welcome-code").length) {
+        var postString = $("#welcome-pm").find(".welcome-code").attr('data-post');
         welcomeCode = postString.replace(/%%member_name%%/g, player);
         $("#welcome-pm .welcome-code").html(welcomeCode);
         $('.welcome-pm-btn').attr("data-clipboard-text", welcomeCode);
@@ -239,13 +251,14 @@ function loadThreadCheck() {
             e.preventDefault();
             windowOpener($(this).attr("href") + member_id, "AOD Squad Tracking", "width=1000,height=600,scrollbars=yes");
         });
+    }
 
-        if (ingame) {
+    if (ingame) {
 
-            ingame = ingame.replace('AOD_', '');
+        ingame = ingame.replace('AOD_', '');
 
-            $(".rank-name").html("AOD_Rct_" + ucwords(ingame));
-            $(".player-name").html(ucwords(ingame));
+        $(".rank-name").html("AOD_Rct_" + ucwords(ingame));
+        $(".player-name").html(ucwords(ingame));
 
         // full name copy
         $('.player-name-copy').attr("data-clipboard-text", "AOD_Rct_" + ucwords(ingame))
@@ -320,6 +333,6 @@ function storePlayer(member_id, forum_name, platoon, squad_id, ingame_name, divi
 
 function strpos(haystack, needle, offset) {
     var i = (haystack + '')
-    .indexOf(needle, (offset || 0));
+        .indexOf(needle, (offset || 0));
     return i === -1 ? false : i;
 }

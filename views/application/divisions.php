@@ -7,7 +7,6 @@
 				<h4 class='list-group-item-heading hidden-xs hidden-sm'><strong><?php echo $division->full_name ?></strong></h4><h4 class='list-group-item-heading hidden-md hidden-lg' style="margin:10px 0;"><strong><?php echo strtoupper($division->short_name); ?> Division</strong></h4>
 				<p class='list-group-item-text text-muted hidden-xs hidden-sm'><?php echo $division->short_descr ?></p>
 				<h5 class="pull-right text-muted big-num-main count-animated"><?php echo Division::totalCount($division->id)->count; ?></h5>
-
 			</a>
 		<?php endforeach; ?>
 	</div>

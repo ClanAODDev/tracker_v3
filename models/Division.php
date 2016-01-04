@@ -9,6 +9,7 @@ class Division extends Application
     public $subforum;
     public $short_descr;
     public $division_structure_thread;
+    public $recruiting_process_thread;
     public $welcome_forum;
     public $primary_handle;
 
@@ -18,7 +19,7 @@ class Division extends Application
 
     public static function find_all()
     {
-        return self::fetch_all();
+        return arrayToObject(Flight::aod()->from(self::$table)->sortAsc('full_name')->select()->many());
     }
 
     //public static function hasUnassignedMembers()
