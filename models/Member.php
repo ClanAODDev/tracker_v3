@@ -174,6 +174,14 @@ class Member extends Application
         return $params->member_id;
     }
 
+    public static function assignToPlatoon($params)
+    {
+        $member = self::find(['member_id' => $params['member']]);
+        $member->platoon_id = $params['platoon'];
+        $member->position_id = 6;
+        $member->save();
+    }
+
     public static function create($params)
     {
         $member = new self();

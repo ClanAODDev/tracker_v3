@@ -8,13 +8,14 @@ class DivisionController {
 		$tools = Tool::find_all($user->role);
 		$divisions = Division::find_all();
 		$division = Division::findByName(strtolower($div));
+		$js = 'division';
 
 		if (property_exists($division, 'id')) {
 
 			$division_leaders = Division::findDivisionLeaders($division->id);
 
-			Flight::render('division/main/index', array('user' => $user, 'member' => $member, 'division' => $division, 'division_leaders' => $division_leaders), 'content');
-			Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'division'));
+			Flight::render('division/main/index', compact('user','member', 'division', 'division_leaders'), 'content');
+			Flight::render('layouts/application', compact('user', 'member', 'tools', 'divisions', 'js'));
 		} else {
 			Flight::redirect('/404', 404);
 		}

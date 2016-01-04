@@ -26,7 +26,9 @@ class Division extends Application
 
     public static function findUnassigned($game_id)
     {
-        return ( object ) self::find(array( 'position_id' => 0, 'game_id' => $game_id ));
+        $params = Flight::aod()->using('Member');
+        $data = $params->find(['position_id @' => [0,6], 'status_id' => 1, 'platoon_id' => 0, 'game_id' => $game_id]);
+        return $data;
     }
 
     public static function findById($id)

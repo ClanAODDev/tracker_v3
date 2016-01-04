@@ -846,3 +846,23 @@ div.chart_div table {
 .gaming-profiles a label {
   margin-left: 5px;
 }
+
+
+
+/** draggable division unassigned */
+.movable {
+  cursor: move !important;
+}
+
+.platoon-target {
+  position: absolute;
+  color: green;
+  opacity: .6;
+  left: -30px;
+  top: 15px;
+  display: none;
+}
+
+.platoon-state-hover {
+  background-color: #eee;
+}

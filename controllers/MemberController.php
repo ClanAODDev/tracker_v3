@@ -290,6 +290,14 @@ class MemberController {
 		echo(json_encode($data));
 	}
 
+	public static function _doAssignMemberToPlatoon()
+	{
+		$member = $_POST['member_id'];
+		$platoon = $_POST['platoon_id'];
+		Member::assignToPlatoon(compact('member', 'platoon'));
+		echo json_encode(['success' => true]);
+	}
+
 	public static function _doKickFromAod() {
 		$user = Member::findMemberId($_SESSION['memberid']);
 		$id = $_POST['id'];

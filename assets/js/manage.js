@@ -123,7 +123,7 @@ $(function() {
     $(window).resize(function() {
         $('#sidebar').width($('.sidebar-parent').width());
     });
-    
+
     var itemMoved, targetplatoon, sourcePlatoon;
     $(".mod-plt .sortable").sortable({
         connectWith: 'ul',
