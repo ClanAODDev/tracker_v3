@@ -5,13 +5,13 @@ class UserController
 
     public static function _login()
     {
-        Flight::render('layouts/login', array(), 'content');
+        Flight::render('layouts/login', [], 'content');
         Flight::render('layouts/application');
     }
 
     public static function _register()
     {
-        Flight::render('layouts/register', array(), 'content');
+        Flight::render('layouts/register', [], 'content');
         Flight::render('layouts/application');
     }
 
@@ -52,13 +52,11 @@ class UserController
             $member = Member::find(intval($_SESSION['memberid']));
             $tools = Tool::find_all($user->role);
             $divisions = Division::find_all();
-            $division = Division::findById(intval($member->game_id));
-            $platoons = Platoon::find_all($member->game_id);
-            Flight::render('layouts/auth', array(), 'content');
-            Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+            Flight::render('layouts/auth', [], 'content');
+            Flight::render('layouts/application', compact('user', 'member', 'tools', 'divisions'));
         } else {
-            Flight::render('layouts/auth', array(), 'content');
-            Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+            Flight::render('layouts/auth', [], 'content');
+            Flight::render('layouts/application', compact('user', 'member', 'tools', 'divisions'));
         }
     }
 
@@ -106,34 +104,23 @@ class UserController
         $memberObj = Member::findByName($user['user']);
 
         if (stristr($user['user'], 'aod_')) {
-
             $data['success'] = false;
             $data['message'] = "Please do not use 'AOD_' in your username";
-
         } else if ($user['password'] != $user['passVerify']) {
-
             $data['success'] = false;
             $data['message'] = "Passwords must match.";
-
         } else if (User::exists($user['user'])) {
-
             $data['success'] = false;
             $data['message'] = "That username has already been used.";
-
         } else if (!property_exists($memberObj, 'id')) {
-
             $data['success'] = false;
             $data['message'] = "No AOD member exists with that forum name.";
-
         } else {
-
             $user['member_id'] = $memberObj->id;
             User::create($user);
             $data['success'] = true;
             $data['message'] = "Your account was created!";
-
         }
-
         echo json_encode($data);
         exit;
     }

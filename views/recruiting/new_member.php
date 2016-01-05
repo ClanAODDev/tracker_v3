@@ -206,8 +206,9 @@
 									<ul class='nav nav-tabs' role='tablist'>
 										<li role='presentation' class='active'><a href='#member-request' aria-controls='member-request' role='tab' data-toggle='tab'><span class='badge'>1</span> Request new member status</a></li>
 										<li role='presentation'><a href='#welcome-post' aria-controls='welcome-post' role='tab' data-toggle='tab'><span class='badge'>2</span> Post Welcome thread</a></li>
-										<?php $welcomePmString = RecruitingString::findByName('welcome-pm', $member->game_id)->string; ?>
-										<?php if (!empty($welcomePmString)): ?>
+
+										<?php $welcomePmString = RecruitingString::findByName('welcome-pm', $member->game_id); ?>
+										<?php if (is_object($welcomePmString) && property_exists($welcomePmString, 'string')): ?>
 											<li role='presentation'><a href='#welcome-pm' aria-controls='welcome-pm' role='tab' data-toggle='tab'><span class='badge'>3</span> Send Welcome PM</a></li>
 										<?php endif; ?>
 									</ul>
