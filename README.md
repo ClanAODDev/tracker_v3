@@ -1,6 +1,8 @@
 # ![logo](http://aodwebhost.site.nfoservers.com/tracker/assets/images/icons/small/tracker.png) AOD Tracker v3
 An in-house member activity tracking tool.
 
+[![Deployment status from DeployBot](https://aod.deploybot.com/badge/77558060042150/58594.svg)](http://deploybot.com)
+
 ## Laravel Refactor
 
 This branch is dedicated to the migration of the tracker to the Laravel framework. With it, a lot of muddled and confused tendencies are being redone. The goal is to end with a project that
@@ -8,4 +10,4 @@ This branch is dedicated to the migration of the tracker to the Laravel framewor
 * Allows for easier integration of components
 * Enables easier contribution
 
-[![Deployment status from DeployBot](https://aod.deploybot.com/badge/77558060042150/58594.svg)](http://deploybot.com)
+
