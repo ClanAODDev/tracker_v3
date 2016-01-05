@@ -18,11 +18,13 @@ class ApplicationController
         $squads = Squad::findAll($member->game_id, $member->platoon_id);
 
         Flight::render('user/main_tools', array('user' => $user, 'tools' => $tools), 'main_tools');
-        Flight::render('member/personnel', array('member' => $member, 'squad' => $squad, 'platoon' => $platoon, 'squads' => $squads), 'personnel');
+        Flight::render('member/personnel',
+            array('member' => $member, 'squad' => $squad, 'platoon' => $platoon, 'squads' => $squads), 'personnel');
         Flight::render('application/divisions', array('divisions' => $divisions), 'divisions_list');
         Flight::render('user/notifications', array('notifications' => $notifications->messages), 'notifications_list');
         Flight::render('layouts/home', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
-        Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+        Flight::render('layouts/application',
+            array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
     }
 
     public static function _activity()
@@ -34,7 +36,8 @@ class ApplicationController
         $division = Division::findById(intval($member->game_id));
         $platoons = Platoon::find_all($member->game_id);
         Flight::render('application/activity', array('division' => $division), 'content');
-        Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+        Flight::render('layouts/application',
+            array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
 
     }
 
@@ -47,8 +50,10 @@ class ApplicationController
         $division = Division::findById(intval($member->game_id));
         $platoons = Platoon::find_all($member->game_id);
 
-        Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division), 'content');
-        Flight::render('layouts/application', array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+        Flight::render('application/help', array('user' => $user, 'member' => $member, 'division' => $division),
+            'content');
+        Flight::render('layouts/application',
+            array('js' => 'help', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
     }
 
     public static function _doUsersOnline()

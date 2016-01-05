@@ -57,8 +57,21 @@ class DivisionController
         $inactives = Member::findInactives($id, $type);
         $inactiveCount = (count($inactives)) ? count($inactives) : 0;
 
-        Flight::render('manage/inactive_members', array('member' => $member, 'user' => $user, 'inactives' => arrayToObject($inactives), 'flagged' => arrayToObject($flagged_inactives), 'flaggedCount' => $flaggedCount, 'inactiveCount' => $inactiveCount), 'content');
-        Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
+        Flight::render('manage/inactive_members', array(
+            'member' => $member,
+            'user' => $user,
+            'inactives' => arrayToObject($inactives),
+            'flagged' => arrayToObject($flagged_inactives),
+            'flaggedCount' => $flaggedCount,
+            'inactiveCount' => $inactiveCount
+        ), 'content');
+        Flight::render('layouts/application', array(
+            'user' => $user,
+            'member' => $member,
+            'tools' => $tools,
+            'divisions' => $divisions,
+            'js' => 'manage'
+        ));
 
     }
 
@@ -70,8 +83,15 @@ class DivisionController
         $divisions = Division::find_all();
 
         $part_time = PartTime::find_all($member->game_id);
-        Flight::render('manage/part_time', array('member' => $member, 'user' => $user, 'part_time' => $part_time), 'content');
-        Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
+        Flight::render('manage/part_time', array('member' => $member, 'user' => $user, 'part_time' => $part_time),
+            'content');
+        Flight::render('layouts/application', array(
+            'user' => $user,
+            'member' => $member,
+            'tools' => $tools,
+            'divisions' => $divisions,
+            'js' => 'manage'
+        ));
     }
 
     public static function _doAddPartTimeMember()
@@ -105,7 +125,13 @@ class DivisionController
         $division = Division::findById(intval($member->game_id));
 
         Flight::render('manage/loas', array('division' => $division, 'member' => $member, 'user' => $user), 'content');
-        Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions, 'js' => 'manage'));
+        Flight::render('layouts/application', array(
+            'user' => $user,
+            'member' => $member,
+            'tools' => $tools,
+            'divisions' => $divisions,
+            'js' => 'manage'
+        ));
 
     }
 
@@ -155,20 +181,35 @@ class DivisionController
                 if (isset($_POST['remove'])) {
 
                     $revoked = LeaveOfAbsence::delete($loa->id);
-                    UserAction::create(array('type_id' => 8, 'date' => date("Y-m-d H:i:s"), 'user_id' => $member->member_id, 'target_id' => $loa->member_id));
+                    UserAction::create(array(
+                        'type_id' => 8,
+                        'date' => date("Y-m-d H:i:s"),
+                        'user_id' => $member->member_id,
+                        'target_id' => $loa->member_id
+                    ));
                     $data = array('success' => true, 'message' => "Leave of absence successfully removed.");
 
-                } else if (isset($_POST['approve'])) {
+                } else {
+                    if (isset($_POST['approve'])) {
 
-                    if ($member->member_id == $loa->member_id) {
-                        $data = array('success' => false, 'message' => "You can't approve your own leave of absence!");
-                    } else {
+                        if ($member->member_id == $loa->member_id) {
+                            $data = array(
+                                'success' => false,
+                                'message' => "You can't approve your own leave of absence!"
+                            );
+                        } else {
 
-                        $approved = LeaveOfAbsence::approve($loa->id, $member->member_id);
-                        UserAction::create(array('type_id' => 7, 'date' => date("Y-m-d H:i:s"), 'user_id' => $member->member_id, 'target_id' => $loa->member_id));
-                        $data = array('success' => true, 'message' => "Leave of absence successfully approved.");
+                            $approved = LeaveOfAbsence::approve($loa->id, $member->member_id);
+                            UserAction::create(array(
+                                'type_id' => 7,
+                                'date' => date("Y-m-d H:i:s"),
+                                'user_id' => $member->member_id,
+                                'target_id' => $loa->member_id
+                            ));
+                            $data = array('success' => true, 'message' => "Leave of absence successfully approved.");
+                        }
+
                     }
-
                 }
             }
 
@@ -185,8 +226,19 @@ class DivisionController
                         $data = array('success' => false, 'message' => "This member already has an LOA in place!");
                     } else {
                         LeaveOfAbsence::add($_POST['id'], $date, $reason, $comment, $member->game_id);
-                        UserAction::create(array('type_id' => 11, 'date' => date("Y-m-d H:i:s"), 'user_id' => $_POST['id']));
-                        $data = array('success' => true, 'Request successfully submitted!', 'id' => $_POST['id'], 'name' => $name, 'date' => date('M d, Y', strtotime($date)), 'reason' => $reason);
+                        UserAction::create(array(
+                            'type_id' => 11,
+                            'date' => date("Y-m-d H:i:s"),
+                            'user_id' => $_POST['id']
+                        ));
+                        $data = array(
+                            'success' => true,
+                            'Request successfully submitted!',
+                            'id' => $_POST['id'],
+                            'name' => $name,
+                            'date' => date('M d, Y', strtotime($date)),
+                            'reason' => $reason
+                        );
                     }
                 } else {
                     $data = array('success' => false, 'message' => "Date cannot be before today's date.");

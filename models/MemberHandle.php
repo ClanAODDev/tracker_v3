@@ -29,12 +29,12 @@ class MemberHandle extends Application
     {
         $params = self::find_each(array('member_id' => $member_id));
         foreach ($params as $memberHandleElement => $memberHandle) {
-            $handle = Handle::findByType((int) $memberHandle->handle_type);
+            $handle = Handle::findByType((int)$memberHandle->handle_type);
             if ($handle) {
                 $memberHandle->handle_name = $handle->type;
                 $memberHandle->name = $handle->name;
-                $memberHandle->isInvalid = (bool) $memberHandle->invalid;
-                $memberHandle->isVisible = (bool) $handle->show_on_profile;
+                $memberHandle->isInvalid = (bool)$memberHandle->invalid;
+                $memberHandle->isVisible = (bool)$handle->show_on_profile;
                 if (!is_null($handle->url)) {
                     $memberHandle->url = $handle->url;
                 }
@@ -52,8 +52,8 @@ class MemberHandle extends Application
             $handle = Handle::findByType($params->handle_type);
             $params->handle_name = $handle->type;
             $params->name = $handle->name;
-            $params->isInvalid = (bool) $params->invalid;
-            $params->isVisible = (bool) $handle->show_on_profile;
+            $params->isInvalid = (bool)$params->invalid;
+            $params->isVisible = (bool)$handle->show_on_profile;
             if (!is_null($handle->url)) {
                 $params->url = $handle->url;
             }
@@ -64,7 +64,7 @@ class MemberHandle extends Application
     public static function add($params)
     {
         $handle = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $handle->$key = $value;
         }
         $handle->create($params);
@@ -73,7 +73,7 @@ class MemberHandle extends Application
     public static function modify($params)
     {
         $handle = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $handle->$key = $value;
         }
         $handle->update($params);

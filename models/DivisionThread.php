@@ -30,7 +30,7 @@ class DivisionThread extends Application
         $getPosts = curl_exec($ch);
         $countPosts = stripos($getPosts, $player);
         if (!$countPosts) {
-            $url   = parse_url(curl_last_url($ch));
+            $url = parse_url(curl_last_url($ch));
             $query = $url['query'];
             parse_str($query, $url_array);
             $page = @$url_array['page'] - 1;

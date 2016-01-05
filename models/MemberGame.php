@@ -12,17 +12,17 @@ class MemberGame extends Application
     public static function get($member_id)
     {
         return Flight::aod()->from(self::$table)
-        ->where(array('member_id' => $member_id))
-        ->join('subgames', array('subgames.id' => self::$table.'.subgame_id'))
-        ->select()->many();
+            ->where(array('member_id' => $member_id))
+            ->join('subgames', array('subgames.id' => self::$table . '.subgame_id'))
+            ->select()->many();
     }
 
     public static function getGamesPlayed($member_id)
     {
         return Flight::aod()->from(self::$table)
-        ->where(array('member_id' => $member_id))
-        ->join('subgames', array('subgames.id' => self::$table.'.subgame_id'))
-        ->select('subgames.short_name')->many();
+            ->where(array('member_id' => $member_id))
+            ->join('subgames', array('subgames.id' => self::$table . '.subgame_id'))
+            ->select('subgames.short_name')->many();
     }
 
     public static function plays($member_id, $game)

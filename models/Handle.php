@@ -30,7 +30,7 @@ class Handle extends Application
     public static function create($params)
     {
         $handle = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $handle->$key = $value;
         }
         $handle->save($params);
@@ -39,7 +39,7 @@ class Handle extends Application
     public static function modify($params)
     {
         $handle = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $handle->$key = $value;
         }
         $handle->update($params);

@@ -27,26 +27,26 @@ class Division extends Application
     public static function findUnassigned($game_id)
     {
         $params = Flight::aod()->using('Member');
-        $data = $params->find(['position_id @' => [0,6], 'status_id' => 1, 'platoon_id' => 0, 'game_id' => $game_id]);
+        $data = $params->find(['position_id @' => [0, 6], 'status_id' => 1, 'platoon_id' => 0, 'game_id' => $game_id]);
         return $data;
     }
 
     public static function findById($id)
     {
-        return (object) self::find($id);
+        return (object)self::find($id);
     }
 
     public static function findByName($short_name)
     {
-        return (object) self::find($short_name);
+        return (object)self::find($short_name);
     }
 
     public static function findDivisionLeaders($gid)
     {
         $conditions = array(
-            'position_id @' => array( 1, 2 ),
+            'position_id @' => array(1, 2),
             'game_id' => $gid
-            );
+        );
         $params = arrayToObject(Flight::aod()->from(Member::$table)->sortAsc('position_id')->sortDesc('rank_id')->where($conditions)->select()->many());
         foreach ($params as $member) {
             $position = Position::find($member->position_id);
@@ -61,7 +61,7 @@ class Division extends Application
             'position_id' => 3,
             'game_id' => $gid,
             'status_id' => 1
-            );
+        );
         return arrayToObject(Flight::aod()->from(Member::$table)->sortDesc('rank_id')->where($conditions)->select()->many());
     }
 
@@ -114,9 +114,11 @@ class Division extends Application
     public static function _create()
     {
     }
+
     public static function _modify()
     {
     }
+
     public static function _delete()
     {
     }

@@ -71,12 +71,14 @@ class UserController
             if (empty($params)) {
                 $data['success'] = false;
                 $data['message'] = "The email you provided is not recognized";
-            } else if (!$validation || !User::validateCode($params)) {
-                $data['success'] = false;
-                $data['message'] = "Invalid authentication code.";
             } else {
-                $data['success'] = true;
-                $data['message'] = "Your account and email address have been authenticated.";
+                if (!$validation || !User::validateCode($params)) {
+                    $data['success'] = false;
+                    $data['message'] = "Invalid authentication code.";
+                } else {
+                    $data['success'] = true;
+                    $data['message'] = "Your account and email address have been authenticated.";
+                }
             }
             echo json_encode($data);
 
@@ -106,20 +108,26 @@ class UserController
         if (stristr($user['user'], 'aod_')) {
             $data['success'] = false;
             $data['message'] = "Please do not use 'AOD_' in your username";
-        } else if ($user['password'] != $user['passVerify']) {
-            $data['success'] = false;
-            $data['message'] = "Passwords must match.";
-        } else if (User::exists($user['user'])) {
-            $data['success'] = false;
-            $data['message'] = "That username has already been used.";
-        } else if (!property_exists($memberObj, 'id')) {
-            $data['success'] = false;
-            $data['message'] = "No AOD member exists with that forum name.";
         } else {
-            $user['member_id'] = $memberObj->id;
-            User::create($user);
-            $data['success'] = true;
-            $data['message'] = "Your account was created!";
+            if ($user['password'] != $user['passVerify']) {
+                $data['success'] = false;
+                $data['message'] = "Passwords must match.";
+            } else {
+                if (User::exists($user['user'])) {
+                    $data['success'] = false;
+                    $data['message'] = "That username has already been used.";
+                } else {
+                    if (!property_exists($memberObj, 'id')) {
+                        $data['success'] = false;
+                        $data['message'] = "No AOD member exists with that forum name.";
+                    } else {
+                        $user['member_id'] = $memberObj->id;
+                        User::create($user);
+                        $data['success'] = true;
+                        $data['message'] = "Your account was created!";
+                    }
+                }
+            }
         }
         echo json_encode($data);
         exit;

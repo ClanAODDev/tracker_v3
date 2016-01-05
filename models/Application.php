@@ -4,11 +4,11 @@ class Application
 {
     public static $id_field = 'id';
     public static $name_field = 'name';
-    
+
     public function __construct()
     {
     }
-    
+
     public function load($params)
     {
         foreach ($params as $key => $value) {
@@ -21,7 +21,7 @@ class Application
             $this->$key = $value;
         }
     }
-    
+
     public function save($params = array())
     {
         $fields = null;
@@ -37,51 +37,51 @@ class Application
             $this->id = Flight::aod()->insert_id;
         }
     }
-    
+
     public function to_json()
     {
         return json_encode($this);
     }
-    
+
     public static function find($params)
     {
         if (is_numeric($params)) {
-            $params = (int) $params;
+            $params = (int)$params;
         }
         return Flight::aod()->using(get_called_class())->find($params);
     }
-    
+
     public static function find_each($params)
     {
         $results = Flight::aod()->using(get_called_class())->find($params);
         return is_array($results) ? $results : array($results);
     }
-    
+
     public static function sql_find($sql)
     {
         return Flight::aod()->using(get_called_class())->sql($sql)->find();
     }
-    
+
     public static function fetch_active()
     {
         return self::find_each(array('active' => 1));
     }
-    
-    public static function fetch_all($sort=false)
+
+    public static function fetch_all($sort = false)
     {
         if ($sort) {
             $sort = " ORDER BY sort_order";
         }
-        $results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table." {$sort}")->find();
+        $results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM " . static::$table . " {$sort}")->find();
         return is_object($results) ? array($results) : $results;
     }
 
     public static function count_all()
     {
-        $results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM ".static::$table)->count();
+        $results = Flight::aod()->using(get_called_class())->sql("SELECT * FROM " . static::$table)->count();
         return is_object($results) ? array($results) : $results;
     }
-    
+
     public static function create($params)
     {
         $object = new static();
@@ -91,7 +91,7 @@ class Application
         $object->save($params);
         return $object;
     }
-    
+
     public static function update($params)
     {
         $object = new static();

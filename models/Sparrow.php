@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sparrow: A simple database toolkit.
  *
@@ -27,10 +28,17 @@ class Sparrow
     protected $class;
 
     protected static $db_types = array(
-        'pdo', 'mysqli', 'mysql', 'pgsql', 'sqlite', 'sqlite3'
+        'pdo',
+        'mysqli',
+        'mysql',
+        'pgsql',
+        'sqlite',
+        'sqlite3'
     );
     protected static $cache_types = array(
-        'memcached', 'memcache', 'xcache'
+        'memcached',
+        'memcache',
+        'xcache'
     );
 
     public $last_query;
@@ -60,7 +68,7 @@ class Sparrow
      */
     public function build($sql, $input)
     {
-        return (strlen($input) > 0) ? ($sql.' '.$input) : $sql;
+        return (strlen($input) > 0) ? ($sql . ' ' . $input) : $sql;
     }
 
     /**
@@ -168,7 +176,7 @@ class Sparrow
     {
         if (is_string($field)) {
             if ($value === null) {
-                return $join.' '.trim($field);
+                return $join . ' ' . trim($field);
             }
 
             $operator = '';
@@ -210,12 +218,12 @@ class Sparrow
                 if (strpos($operator, '@') === false) {
                     $condition = ' IN ';
                 }
-                $value = '('.implode(',', array_map(array($this, 'quote'), $value)).')';
+                $value = '(' . implode(',', array_map(array($this, 'quote'), $value)) . ')';
             } else {
                 $value = ($escape && !is_numeric($value)) ? $this->quote($value) : $value;
             }
 
-            return $join.' '.str_replace('|', '', $field).$condition.$value;
+            return $join . ' ' . str_replace('|', '', $field) . $condition . $value;
         } elseif (is_array($field)) {
             $str = '';
             foreach ($field as $key => $value) {
@@ -267,7 +275,7 @@ class Sparrow
             throw new Exception('Invalid join type.');
         }
 
-        $this->joins .= ' '.$type.' JOIN '.$table.
+        $this->joins .= ' ' . $type . ' JOIN ' . $table .
             $this->parseCondition($fields, null, ' ON', false);
 
         return $this;
@@ -359,15 +367,15 @@ class Sparrow
 
         if (is_array($field)) {
             foreach ($field as $key => $value) {
-                $field[$key] = $value.' '.$direction;
+                $field[$key] = $value . ' ' . $direction;
             }
         } else {
-            $field .= ' '.$direction;
+            $field .= ' ' . $direction;
         }
 
         $fields = (is_array($field)) ? implode(', ', $field) : $field;
 
-        $this->order .= $join.' '.$fields;
+        $this->order .= $join . ' ' . $fields;
 
         return $this;
     }
@@ -383,7 +391,7 @@ class Sparrow
         $join = (empty($this->order)) ? 'GROUP BY' : ',';
         $fields = (is_array($field)) ? implode(',', $field) : $field;
 
-        $this->groups .= $join.' '.$fields;
+        $this->groups .= $join . ' ' . $fields;
 
         return $this;
     }
@@ -413,7 +421,7 @@ class Sparrow
     public function limit($limit, $offset = null)
     {
         if ($limit !== null) {
-            $this->limit = 'LIMIT '.$limit;
+            $this->limit = 'LIMIT ' . $limit;
         }
         if ($offset !== null) {
             $this->offset($offset);
@@ -432,7 +440,7 @@ class Sparrow
     public function offset($offset, $limit = null)
     {
         if ($offset !== null) {
-            $this->offset = 'OFFSET '.$offset;
+            $this->offset = 'OFFSET ' . $offset;
         }
         if ($limit !== null) {
             $this->limit($limit);
@@ -526,9 +534,9 @@ class Sparrow
         $this->sql(array(
             'INSERT INTO',
             $this->table,
-            '('.$keys.')',
+            '(' . $keys . ')',
             'VALUES',
-            '('.$values.')'
+            '(' . $values . ')'
         ));
 
         return $this;
@@ -552,7 +560,7 @@ class Sparrow
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
-                $values[] = (is_numeric($key)) ? $value : $key.'='.$this->quote($value);
+                $values[] = (is_numeric($key)) ? $value : $key . '=' . $this->quote($value);
             }
         } else {
             $values[] = (string)$data;
@@ -628,8 +636,7 @@ class Sparrow
         // Connection string
         if (is_string($db)) {
             $this->setDb($this->parseConnection($db));
-        }
-        // Connection information
+        } // Connection information
         elseif (is_array($db)) {
             switch ($db['type']) {
                 case 'mysqli':
@@ -641,7 +648,7 @@ class Sparrow
                     );
 
                     if ($this->db->connect_error) {
-                        throw new Exception('Connection error: '.$this->db->connect_error);
+                        throw new Exception('Connection error: ' . $this->db->connect_error);
                     }
 
                     break;
@@ -654,7 +661,7 @@ class Sparrow
                     );
 
                     if (!$this->db) {
-                        throw new Exception('Connection error: '.mysql_error());
+                        throw new Exception('Connection error: ' . mysql_error());
                     }
 
                     mysql_select_db($db['database'], $this->db);
@@ -678,7 +685,7 @@ class Sparrow
                     $this->db = sqlite_open($db['database'], 0666, $error);
 
                     if (!$this->db) {
-                        throw new Exception('Connection error: '.$error);
+                        throw new Exception('Connection error: ' . $error);
                     }
 
                     break;
@@ -717,7 +724,7 @@ class Sparrow
                     break;
 
                 case 'pdosqlite':
-                    $this->db = new PDO('sqlite:/'.$db['database']);
+                    $this->db = new PDO('sqlite:/' . $db['database']);
                     $db['type'] = 'pdo';
 
                     break;
@@ -728,8 +735,7 @@ class Sparrow
             }
 
             $this->db_type = $db['type'];
-        }
-        // Connection object or resource
+        } // Connection object or resource
         else {
             $type = $this->getDbType($db);
 
@@ -754,7 +760,7 @@ class Sparrow
 
     /**
      * Gets the database type.
-     * 
+     *
      * @param object|resource $db Database object or resource
      * @return string Database type
      */
@@ -913,9 +919,9 @@ class Sparrow
 
             if ($error !== null) {
                 if ($this->show_sql) {
-                    $error .= "\nSQL: ".$this->sql;
+                    $error .= "\nSQL: " . $this->sql;
                 }
-                throw new Exception('Database error: '.$error);
+                throw new Exception('Database error: ' . $error);
             }
         }
 
@@ -953,14 +959,14 @@ class Sparrow
             $data = $result;
 
             if ($this->stats_enabled) {
-                $this->stats['cached'][$this->key_prefix.$key] = $this->sql;
+                $this->stats['cached'][$this->key_prefix . $key] = $this->sql;
             }
         } else {
             switch ($this->db_type) {
                 case 'pdo':
                     $data = $result->fetchAll(PDO::FETCH_ASSOC);
                     $this->num_rows = sizeof($data);
- 
+
                     break;
 
                 case 'mysqli':
@@ -973,7 +979,7 @@ class Sparrow
                     }
                     $result->close();
                     break;
-           
+
                 case 'mysql':
                     while ($row = mysql_fetch_assoc($result)) {
                         $data[] = $row;
@@ -1056,7 +1062,7 @@ class Sparrow
      */
     public function min($field, $key = null, $expire = 0)
     {
-        $this->select('MIN('.$field.') min_value');
+        $this->select('MIN(' . $field . ') min_value');
 
         return $this->value(
             'min_value',
@@ -1075,7 +1081,7 @@ class Sparrow
      */
     public function max($field, $key = null, $expire = 0)
     {
-        $this->select('MAX('.$field.') max_value');
+        $this->select('MAX(' . $field . ') max_value');
 
         return $this->value(
             'max_value',
@@ -1094,7 +1100,7 @@ class Sparrow
      */
     public function sum($field, $key = null, $expire = 0)
     {
-        $this->select('SUM('.$field.') sum_value');
+        $this->select('SUM(' . $field . ') sum_value');
 
         return $this->value(
             'sum_value',
@@ -1113,7 +1119,7 @@ class Sparrow
      */
     public function avg($field, $key = null, $expire = 0)
     {
-        $this->select('AVG('.$field.') avg_value');
+        $this->select('AVG(' . $field . ') avg_value');
 
         return $this->value(
             'avg_value',
@@ -1132,7 +1138,7 @@ class Sparrow
      */
     public function count($field = '*', $key = null, $expire = 0)
     {
-        $this->select('COUNT('.$field.') num_rows');
+        $this->select('COUNT(' . $field . ') num_rows');
 
         return $this->value(
             'num_rows',
@@ -1160,19 +1166,19 @@ class Sparrow
                         return $this->db->quote($value);
 
                     case 'mysqli':
-                        return "'".$this->db->real_escape_string($value)."'";
+                        return "'" . $this->db->real_escape_string($value) . "'";
 
                     case 'mysql':
-                        return "'".mysql_real_escape_string($value, $this->db)."'";
+                        return "'" . mysql_real_escape_string($value, $this->db) . "'";
 
                     case 'pgsql':
-                        return "'".pg_escape_string($this->db, $value)."'";
+                        return "'" . pg_escape_string($this->db, $value) . "'";
 
                     case 'sqlite':
-                        return "'".sqlite_escape_string($value)."'";
+                        return "'" . sqlite_escape_string($value) . "'";
 
                     case 'sqlite3':
-                        return "'".$this->db->escapeString($value)."'";
+                        return "'" . $this->db->escapeString($value) . "'";
                 }
             }
 
@@ -1208,8 +1214,7 @@ class Sparrow
             } else {
                 $this->setCache($this->parseConnection($cache));
             }
-        }
-        // Connection information
+        } // Connection information
         elseif (is_array($cache)) {
             switch ($cache['type']) {
                 case 'memcache':
@@ -1233,8 +1238,7 @@ class Sparrow
             }
 
             $this->cache_type = $cache['type'];
-        }
-        // Cache object
+        } // Cache object
         elseif (is_object($cache)) {
             $type = strtolower(get_class($cache));
 
@@ -1266,7 +1270,7 @@ class Sparrow
      */
     public function store($key, $value, $expire = 0)
     {
-        $key = $this->key_prefix.$key;
+        $key = $this->key_prefix . $key;
 
         switch ($this->cache_type) {
             case 'memcached':
@@ -1286,7 +1290,7 @@ class Sparrow
                 break;
 
             case 'file':
-                $file = $this->cache.'/'.md5($key);
+                $file = $this->cache . '/' . md5($key);
                 $data = array(
                     'value' => $value,
                     'expire' => ($expire > 0) ? (time() + $expire) : 0
@@ -1307,7 +1311,7 @@ class Sparrow
      */
     public function fetch($key)
     {
-        $key = $this->key_prefix.$key;
+        $key = $this->key_prefix . $key;
 
         switch ($this->cache_type) {
             case 'memcached':
@@ -1328,7 +1332,7 @@ class Sparrow
                 return xcache_get($key);
 
             case 'file':
-                $file = $this->cache.'/'.md5($key);
+                $file = $this->cache . '/' . md5($key);
 
                 if ($this->is_cached = file_exists($file)) {
                     $data = unserialize(file_get_contents($file));
@@ -1354,7 +1358,7 @@ class Sparrow
      */
     public function clear($key)
     {
-        $key = $this->key_prefix.$key;
+        $key = $this->key_prefix . $key;
 
         switch ($this->cache_type) {
             case 'memcached':
@@ -1370,7 +1374,7 @@ class Sparrow
                 return xcache_unset($key);
 
             case 'file':
-                $file = $this->cache.'/'.md5($key);
+                $file = $this->cache . '/' . md5($key);
                 if (file_exists($file)) {
                     return unlink($file);
                 }
@@ -1411,7 +1415,7 @@ class Sparrow
                 if ($handle = opendir($this->cache)) {
                     while (false !== ($file = readdir($handle))) {
                         if ($file != '.' && $file != '..') {
-                            unlink($this->cache.'/'.$file);
+                            unlink($this->cache . '/' . $file);
                         }
                     }
                     closedir($handle);
@@ -1462,7 +1466,7 @@ class Sparrow
 
         return $object;
     }
-   
+
     /**
      * Finds and populates an object.
      *

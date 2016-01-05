@@ -34,7 +34,7 @@ class UserAction extends Application
     public static function create($params)
     {
         $UserAction = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $UserAction->$key = $value;
         }
         $UserAction->save($params);
@@ -53,7 +53,7 @@ class UserAction extends Application
             ->join('actions', array('actions.id' => 'user_actions.type_id'))
             ->join('member', array('member.member_id' => 'user_actions.target_id'))
             ->select(array('date', 'user_id', 'type_id', 'target_id', 'verbage', 'icon'))->many()
-            );
+        );
     }
 
     public static function humanize($type_id, $target_id, $user_id, $verbage)
@@ -63,32 +63,32 @@ class UserAction extends Application
         switch ($type_id) {
             case 1:
             case 12:
-            $text = "{$user} {$verbage} {$player} into the division";
-            break;
+                $text = "{$user} {$verbage} {$player} into the division";
+                break;
             case 2:
-            $text = "{$user} {$verbage} {$player} from the division";
-            break;
+                $text = "{$user} {$verbage} {$player} from the division";
+                break;
             case 3:
-            $text = "{$user} {$verbage} {$player}'s profile information";
-            break;
+                $text = "{$user} {$verbage} {$player}'s profile information";
+                break;
             case 4:
-            $text = "{$player} was {$verbage} by {$user}";
-            break;
+                $text = "{$player} was {$verbage} by {$user}";
+                break;
             case 5:
             case 11:
-            $text = "{$user} {$verbage}";
-            break;
+                $text = "{$user} {$verbage}";
+                break;
             case 6:
-            $text = "{$player} was {$verbage} by {$user}";
-            break;
+                $text = "{$player} was {$verbage} by {$user}";
+                break;
             case 7:
             case 8:
             case 9:
-            $text = "{$user} {$verbage} for {$player}";
-            break;
+                $text = "{$user} {$verbage} for {$player}";
+                break;
             case 10:
-            $text = "{$user} {$verbage} former member {$player} back into the division";
-            break;
+                $text = "{$user} {$verbage} former member {$player} back into the division";
+                break;
         }
         return $text;
     }

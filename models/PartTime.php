@@ -36,7 +36,7 @@ class PartTime extends Application
     public static function modify($params)
     {
         $pt = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $pt->$key = $value;
         }
         $pt->update($params);

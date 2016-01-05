@@ -24,6 +24,7 @@ class SubGame extends Application
     public static function add()
     {
     }
+
     public static function remove()
     {
     }

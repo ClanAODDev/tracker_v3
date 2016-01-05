@@ -32,7 +32,12 @@ class MemberController
 
             switch ($divisionInfo->short_name) {
                 case "bf":
-                    $activity = array('totalGames' => $totalGames, 'aodGames' => $aodGames, 'games' => $games, 'pctAod' => $pctAod);
+                    $activity = array(
+                        'totalGames' => $totalGames,
+                        'aodGames' => $aodGames,
+                        'games' => $games,
+                        'pctAod' => $pctAod
+                    );
                     $activity_page = $divisionInfo->short_name;
                     break;
                 default:
@@ -53,11 +58,29 @@ class MemberController
 
             Flight::render('member/alerts', array('memberInfo' => $memberInfo), 'alerts');
             Flight::render('member/recruits', array('recruits' => $recruits), 'recruits');
-            Flight::render('member/member_data', array('memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'aliases' => $aliases), 'member_data');
+            Flight::render('member/member_data', array(
+                'memberInfo' => $memberInfo,
+                'divisionInfo' => $divisionInfo,
+                'platoonInfo' => $platoonInfo,
+                'aliases' => $aliases
+            ), 'member_data');
             Flight::render('member/activity/' . $activity_page, $activity, 'activity');
             Flight::render('member/history', array(), 'history');
-            Flight::render('member/profile', array('user' => $user, 'member' => $member, 'memberInfo' => $memberInfo, 'divisionInfo' => $divisionInfo, 'platoonInfo' => $platoonInfo, 'gamesPlayed' => $gamesPlayed), 'content');
-            Flight::render('layouts/application', array('js' => 'member', 'user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+            Flight::render('member/profile', array(
+                'user' => $user,
+                'member' => $member,
+                'memberInfo' => $memberInfo,
+                'divisionInfo' => $divisionInfo,
+                'platoonInfo' => $platoonInfo,
+                'gamesPlayed' => $gamesPlayed
+            ), 'content');
+            Flight::render('layouts/application', array(
+                'js' => 'member',
+                'user' => $user,
+                'member' => $member,
+                'tools' => $tools,
+                'divisions' => $divisions
+            ));
 
         } else {
             Flight::redirect('/404', 404);
@@ -86,7 +109,16 @@ class MemberController
             $userInfo = null;
         }
 
-        Flight::render('modals/view_member', array('user' => $user, 'member' => $member, 'userInfo' => $userInfo, 'platoons' => $platoons, 'memberGames' => $memberGames, 'squads' => $squads, 'positionsArray' => $positionsArray, 'rolesArray' => $rolesArray));
+        Flight::render('modals/view_member', array(
+            'user' => $user,
+            'member' => $member,
+            'userInfo' => $userInfo,
+            'platoons' => $platoons,
+            'memberGames' => $memberGames,
+            'squads' => $squads,
+            'positionsArray' => $positionsArray,
+            'rolesArray' => $rolesArray
+        ));
 
     }
 
@@ -117,19 +149,26 @@ class MemberController
 
             // don't log if user edits their own profile
             if ($respMember->member_id != $member->member_id) {
-                UserAction::create(array('type_id' => 3, 'date' => date("Y-m-d H:i:s"), 'user_id' => $respMember->member_id, 'target_id' => $member->member_id));
+                UserAction::create(array(
+                    'type_id' => 3,
+                    'date' => date("Y-m-d H:i:s"),
+                    'user_id' => $respMember->member_id,
+                    'target_id' => $member->member_id
+                ));
             }
 
             // validate recruiter
             if ($memberData['recruiter'] != 0 && !Member::exists($memberData['recruiter'])) {
                 $data = array('success' => false, 'message' => "Recruiter id is invalid.");
                 // validate squad leader / squad_id setting
-            } else if ($respMember->member_id != $member->member_id && $memberData['position_id'] == 5 && $memberData['squad_id'] != 0) {
-                $data = array('success' => false, 'message' => "Squad leaders cannot be in a squad.");
             } else {
+                if ($respMember->member_id != $member->member_id && $memberData['position_id'] == 5 && $memberData['squad_id'] != 0) {
+                    $data = array('success' => false, 'message' => "Squad leaders cannot be in a squad.");
+                } else {
 
-                // update member info
-                Member::modify($memberData);
+                    // update member info
+                    Member::modify($memberData);
+                }
             }
 
             // update games
@@ -171,7 +210,14 @@ class MemberController
 
                     if ($value != '') {
 
-                        $params = array('member_id' => $memberData['id'], 'handle_type' => $type, 'handle_value' => trim($value), 'handle_account_id' => '0', 'invalid' => '0', 'invalid_date' => '0000-00-00');
+                        $params = array(
+                            'member_id' => $memberData['id'],
+                            'handle_type' => $type,
+                            'handle_value' => trim($value),
+                            'handle_account_id' => '0',
+                            'invalid' => '0',
+                            'invalid_date' => '0000-00-00'
+                        );
                         $id = MemberHandle::hasAlias($type, $memberData['id']);
 
                         if ($id) {
@@ -204,10 +250,12 @@ class MemberController
         $member_id = $_POST['member_id'];
         if (Member::exists($member_id)) {
             $data = array('success' => false, 'memberExists' => true);
-        } else if (abs($member_id - Member::getLastRct()) > 200) {
-            $data = array('success' => false, 'invalidId' => true);
         } else {
-            $data = array('success' => true);
+            if (abs($member_id - Member::getLastRct()) > 200) {
+                $data = array('success' => false, 'invalidId' => true);
+            } else {
+                $data = array('success' => true);
+            }
         }
         echo(json_encode($data));
     }
@@ -225,10 +273,31 @@ class MemberController
         $position_id = 6;
 
         // provide params for brand new members
-        $newParams = array('member_id' => $_POST['member_id'], 'forum_name' => trim($_POST['forum_name']), 'recruiter' => $recruiter, 'game_id' => $_POST['game_id'], 'status_id' => 999, 'join_date' => date("Y-m-d H:i:s"), 'rank_id' => 1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+        $newParams = array(
+            'member_id' => $_POST['member_id'],
+            'forum_name' => trim($_POST['forum_name']),
+            'recruiter' => $recruiter,
+            'game_id' => $_POST['game_id'],
+            'status_id' => 999,
+            'join_date' => date("Y-m-d H:i:s"),
+            'rank_id' => 1,
+            'platoon_id' => $platoon_id,
+            'squad_id' => $squad_id,
+            'position_id' => $position_id
+        );
 
         // only affect specific fields for existing members who get re-recruited
-        $existingParams = array('forum_name' => trim($_POST['forum_name']), 'recruiter' => $recruiter, 'game_id' => $_POST['game_id'], 'status_id' => 999, 'join_date' => date("Y-m-d H:i:s"), 'rank_id' => 1, 'platoon_id' => $platoon_id, 'squad_id' => $squad_id, 'position_id' => $position_id);
+        $existingParams = array(
+            'forum_name' => trim($_POST['forum_name']),
+            'recruiter' => $recruiter,
+            'game_id' => $_POST['game_id'],
+            'status_id' => 999,
+            'join_date' => date("Y-m-d H:i:s"),
+            'rank_id' => 1,
+            'platoon_id' => $platoon_id,
+            'squad_id' => $squad_id,
+            'position_id' => $position_id
+        );
 
 
         if (Member::exists($_POST['member_id'])) {
@@ -236,13 +305,23 @@ class MemberController
             // update existing record
             $existingParams = array_merge($existingParams, array('id' => Member::findId($_POST['member_id'])));
             $insert_id = Member::modify($existingParams);
-            UserAction::create(array('type_id' => 10, 'date' => date("Y-m-d H:i:s"), 'user_id' => $member->member_id, 'target_id' => $newParams['member_id']));
+            UserAction::create(array(
+                'type_id' => 10,
+                'date' => date("Y-m-d H:i:s"),
+                'user_id' => $member->member_id,
+                'target_id' => $newParams['member_id']
+            ));
             $data = array('success' => true, 'message' => "Existing member successfully updated!");
 
         } else {
 
             $insert_id = Member::create($newParams);
-            UserAction::create(array('type_id' => 1, 'date' => date("Y-m-d H:i:s"), 'user_id' => $member->member_id, 'target_id' => $newParams['member_id']));
+            UserAction::create(array(
+                'type_id' => 1,
+                'date' => date("Y-m-d H:i:s"),
+                'user_id' => $member->member_id,
+                'target_id' => $newParams['member_id']
+            ));
             $data = array('success' => true, 'message' => "Member successfully added!");
         }
 
@@ -288,13 +367,23 @@ class MemberController
             InactiveFlagged::add($params);
 
             $data = array('success' => true, 'message' => 'Member {$member_flagged} flagged for removal.');
-            UserAction::create(array('type_id' => 4, 'date' => date("Y-m-d H:i:s"), 'user_id' => $flagged_by, 'target_id' => $member_flagged));
+            UserAction::create(array(
+                'type_id' => 4,
+                'date' => date("Y-m-d H:i:s"),
+                'user_id' => $flagged_by,
+                'target_id' => $member_flagged
+            ));
 
         } else {
 
             InactiveFlagged::remove($member_flagged);
             $data = array('success' => true, 'message' => 'Member {$member_flagged} no longer flagged for removal.');
-            UserAction::create(array('type_id' => 6, 'date' => date("Y-m-d H:i:s"), 'user_id' => $flagged_by, 'target_id' => $member_flagged));
+            UserAction::create(array(
+                'type_id' => 6,
+                'date' => date("Y-m-d H:i:s"),
+                'user_id' => $flagged_by,
+                'target_id' => $member_flagged
+            ));
         }
 
         echo(json_encode($data));
@@ -313,7 +402,12 @@ class MemberController
         $user = Member::findMemberId($_SESSION['memberid']);
         $id = $_POST['id'];
         Member::kickFromAod($id);
-        UserAction::create(array('type_id' => 2, 'date' => date("Y-m-d H:i:s"), 'user_id' => $user, 'target_id' => $id));
+        UserAction::create(array(
+            'type_id' => 2,
+            'date' => date("Y-m-d H:i:s"),
+            'user_id' => $user,
+            'target_id' => $id
+        ));
     }
 
 }

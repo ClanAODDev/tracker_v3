@@ -68,7 +68,7 @@ class LeaveOfAbsence extends Application
     public static function add($member_id, $date, $reason, $comment)
     {
         $member = Member::findByMemberId($member_id);
-        $sql = "INSERT INTO ".self::$table." ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
+        $sql = "INSERT INTO " . self::$table . " ( member_id, date_end, reason, comment, game_id ) VALUES ( {$member_id}, '{$date}', '{$reason}', '{$comment}', {$member->game_id} )";
         Flight::aod()->sql($sql)->one();
         return array('success' => true);
     }
@@ -82,14 +82,14 @@ class LeaveOfAbsence extends Application
 
     public static function approve($loa_id, $approvingId)
     {
-        self::modify(array('id'=>$loa_id, 'approved'=>1, 'approved_by'=>$approvingId));
+        self::modify(array('id' => $loa_id, 'approved' => 1, 'approved_by' => $approvingId));
         return array('success' => true);
     }
 
     public static function modify($params)
     {
         $member = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $member->$key = $value;
         }
         $member->update($params);

@@ -49,7 +49,7 @@ class User extends Application
     public static function validateCode($params)
     {
         $user = self::find(array('email' => $params['email'], 'validation' => $params['validation'], 'validated' => 0));
-        
+
         if (empty($user)) {
             return false;
         } else {
@@ -89,8 +89,8 @@ class User extends Application
 
     /**
      * checks user's editing abilities for a specific member
-     * @param  int $mid    the member id of the member being edited
-     * @param  int $user   the user object of the user doing the editing
+     * @param  int $mid the member id of the member being edited
+     * @param  int $user the user object of the user doing the editing
      * @param  int $member the member object of the user doing the editing
      * @return boolean      self explanatory
      */
@@ -102,16 +102,16 @@ class User extends Application
         // is the user a dev or clan administrator?        
         if (self::isDev()) {
             return true;
-        // is the user the assigned squad leader?
+            // is the user the assigned squad leader?
         } elseif (($myUser->role == 1) && ($squad) && ($squad->leader_id == $myMember->id)) {
             return true;
-        // is the user the platoon leader of the user?
+            // is the user the platoon leader of the user?
         } elseif (($myUser->role == 2) && ($myMember->platoon_id == $player->platoon_id)) {
             return true;
-        // is the user the division leader of the user?
+            // is the user the division leader of the user?
         } elseif (($myUser->role == 3) && ($myMember->game_id == $player->game_id)) {
             return true;
-        // is the user editing someone of a lesser role, or himself?
+            // is the user editing someone of a lesser role, or himself?
         } elseif ($mid == $myMember->member_id) {
             return true;
         } else {
@@ -121,13 +121,13 @@ class User extends Application
 
     public static function onlineList()
     {
-        $params = Flight::aod()->sql("SELECT member.member_id, users.username, users.last_seen, users.role, users.idle FROM ".self::$table." LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
+        $params = Flight::aod()->sql("SELECT member.member_id, users.username, users.last_seen, users.role, users.idle FROM " . self::$table . " LEFT JOIN member ON users.username = member.forum_name WHERE last_seen >= CURRENT_TIMESTAMP - INTERVAL 10 MINUTE ORDER BY idle, last_seen DESC")->many();
         return $params;
     }
 
     public static function exists($forum_name)
     {
-        $count = Flight::aod()->sql("SELECT count(*) as count FROM ".self::$table." WHERE `username`='{$forum_name}'")->one();
+        $count = Flight::aod()->sql("SELECT count(*) as count FROM " . self::$table . " WHERE `username`='{$forum_name}'")->one();
         if ($count['count'] > 0) {
             return true;
         } else {
@@ -143,7 +143,7 @@ class User extends Application
 
         if (!empty($params)) {
             if ($pass == hasher($pass, $params->credential)) {
-                return array('userid'=>$params->id, 'memberid'=>$member->id);
+                return array('userid' => $params->id, 'memberid' => $member->id);
             } else {
                 return false;
             }
@@ -155,9 +155,9 @@ class User extends Application
     public static function updateActivityStatus($id)
     {
         Flight::aod()->from(self::$table)
-        ->where(array('id' => $id))
-        ->update(array('last_seen' => date('Y-m-d H:i:s')))
-        ->one();
+            ->where(array('id' => $id))
+            ->update(array('last_seen' => date('Y-m-d H:i:s')))
+            ->one();
     }
 
     /**
@@ -170,23 +170,23 @@ class User extends Application
         switch ($role) {
             case 0:
             case 1:
-            $allowPltAssignmentEdit = false;
-            $allowSqdAssignmentEdit = false;
-            $allowPosAssignmentEdit = false;
-            break;
+                $allowPltAssignmentEdit = false;
+                $allowSqdAssignmentEdit = false;
+                $allowPosAssignmentEdit = false;
+                break;
 
             case 2:
-            $allowPltAssignmentEdit = false;
-            $allowSqdAssignmentEdit = true;
-            $allowPosAssignmentEdit = true;
-            break;
+                $allowPltAssignmentEdit = false;
+                $allowSqdAssignmentEdit = true;
+                $allowPosAssignmentEdit = true;
+                break;
 
             case 3:
             case 4:
-            $allowPltAssignmentEdit = true;
-            $allowSqdAssignmentEdit = true;
-            $allowPosAssignmentEdit = true;
-            break;
+                $allowPltAssignmentEdit = true;
+                $allowSqdAssignmentEdit = true;
+                $allowPosAssignmentEdit = true;
+                break;
         }
 
         // allow developers to see all fields regardless of role
@@ -201,13 +201,13 @@ class User extends Application
         $sqdField = ($allowSqdAssignmentEdit) ? "block" : "none";
         $posField = ($allowPosAssignmentEdit) ? "block" : "none";
 
-        return (object) array( 'pltField' => $pltField,  'sqdField' => $sqdField, 'posField' => $posField );
+        return (object) array('pltField' => $pltField, 'sqdField' => $sqdField, 'posField' => $posField);
     }
 
     public static function modify($params)
     {
         $user = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $user->$key = $value;
         }
         $user->update($params);

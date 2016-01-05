@@ -23,10 +23,14 @@ class PlatoonController
 
             $bdate = date("Y-m-d", strtotime("now - 30 days"));
             $edate = date("Y-m-d", strtotime("now"));
+            $div = $division->id;
 
             Flight::render('platoon/main/statistics', compact('platoon', 'activity'), 'statistics');
-            Flight::render('platoon/main/members', compact('division', 'members', 'js', 'bdate', 'edate'), 'membersTable');
-            Flight::render('platoon/main/index', compact('user', 'member', 'division', 'platoon', 'memberIdList', 'plt', ['div' => $division->id], 'members', 'platoonId'), 'content');
+            Flight::render('platoon/main/members', compact('division', 'members', 'js', 'bdate', 'edate'),
+                'membersTable');
+            Flight::render('platoon/main/index',
+                compact('user', 'member', 'division', 'platoon', 'memberIdList', 'plt', 'div',
+                    'members', 'platoonId'), 'content');
             Flight::render('layouts/application', compact('user', 'member', 'tools', 'divisions'));
 
         } else {
@@ -54,10 +58,13 @@ class PlatoonController
                 $platoon = Platoon::findById($platoonId);
                 $unassignedMembers = Platoon::unassignedMembers($platoonId, true);
                 $squads = Squad::findByPlatoonId($platoonId);
-                $memberCount = count((array)Platoon::members($platoonId));
+                $memberCount = count((array) Platoon::members($platoonId));
+                $js = 'manage';
 
-                Flight::render('manage/platoon', compact('division', 'platoon', 'squads', 'unassignedMembers', 'memberCount'), 'content');
-                Flight::render('layouts/application', compact(['js' => 'manage'], 'user', 'member', 'tools', 'divisions'));
+                Flight::render('manage/platoon',
+                    compact('division', 'platoon', 'squads', 'unassignedMembers', 'memberCount'), 'content');
+                Flight::render('layouts/application',
+                    compact('js', 'user', 'member', 'tools', 'divisions'));
 
             } else {
 

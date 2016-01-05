@@ -23,8 +23,9 @@ class GithubController
 
             if (is_object($issue)) {
 
-                if ($issue->getNumber())
+                if ($issue->getNumber()) {
                     $data = array('success' => true, 'message' => "Your report has been submitted");
+                }
 
             } else {
                 $data = array('success' => false, 'message' => "Something went wrong");

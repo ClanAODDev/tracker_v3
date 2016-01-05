@@ -16,8 +16,10 @@ class ReportController
             $monthlyBreakdown = Report::recruitingWeekly($member->game_id);
             $byTheMonth = Report::recruitingByTheMonth($member->game_id);
             $js = 'report';
-            Flight::render('reports/retention', compact('recruited', 'removed', 'js', 'monthlyBreakdown', 'byTheMonth'), 'content');
-            Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+            Flight::render('reports/retention', compact('recruited', 'removed', 'js', 'monthlyBreakdown', 'byTheMonth'),
+                'content');
+            Flight::render('layouts/application',
+                array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
         } else {
             Flight::redirect('/404', 404);
         }

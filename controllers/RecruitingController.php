@@ -10,7 +10,8 @@ class RecruitingController
         $tools = Tool::find_all($user->role);
         $divisions = Division::find_all();
         Flight::render('recruiting/index', array(), 'content');
-        Flight::render('layouts/application', array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
+        Flight::render('layouts/application',
+            array('user' => $user, 'member' => $member, 'tools' => $tools, 'divisions' => $divisions));
     }
 
     public static function _addNewMember()

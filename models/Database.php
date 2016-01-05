@@ -2,17 +2,17 @@
 
 class Database extends Sparrow
 {
-  public static $type = 'pdomysql';
+    public static $type = 'pdomysql';
 
-  public function __construct($database)
-  {
-    $config = [
-    'type' => self::$type,
-    'hostname' => DB_HOST,
-    'database' => $database,
-    'username' => DB_USER,
-    'password' => DB_PASS
-    ];
-    $this->setDb($config);
-  }
+    public function __construct($database)
+    {
+        $config = [
+            'type' => self::$type,
+            'hostname' => DB_HOST,
+            'database' => $database,
+            'username' => DB_USER,
+            'password' => DB_PASS
+        ];
+        $this->setDb($config);
+    }
 }

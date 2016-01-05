@@ -24,7 +24,7 @@ class Member extends Application
 
     public static function findByName($forum_name)
     {
-        return (object) self::find($forum_name);
+        return (object)self::find($forum_name);
     }
 
     public static function exists($member_id)
@@ -56,21 +56,21 @@ class Member extends Application
     {
         $conditions = array('forum_name %' => "%{$name}%");
         $params = Flight::aod()->from(self::$table)
-        ->limit(20)
-        ->sortDesc('rank_id')
-        ->join('rank', array('rank.id' => 'rank_id'))
-        ->where($conditions)->select()->many();
+            ->limit(20)
+            ->sortDesc('rank_id')
+            ->join('rank', array('rank.id' => 'rank_id'))
+            ->where($conditions)->select()->many();
         return $params;
     }
 
     public static function findById($userId)
     {
-        return (object) self::find($userId);
+        return (object)self::find($userId);
     }
 
     public static function findByMemberId($member_id)
     {
-        return (object) self::find(array('member_id' => $member_id));
+        return (object)self::find(array('member_id' => $member_id));
     }
 
     public static function findForumName($member_id)
@@ -109,7 +109,7 @@ class Member extends Application
     public static function avatar($email, $type = "thumb")
     {
         $forum_img = self::GetGravatarUrl($email);
-        $unknown   = "assets/images/blank_avatar.jpg";
+        $unknown = "assets/images/blank_avatar.jpg";
         return "<img src='{$forum_img}' class='img-thumbnail avatar-{$type}' />";
     }
 
@@ -132,7 +132,7 @@ class Member extends Application
 
     public static function isFlaggedForInactivity($member_id)
     {
-        $params = Flight::aod()->sql("SELECT * FROM ".InactiveFlagged::$table." WHERE `member_id`={$member_id}")->one();
+        $params = Flight::aod()->sql("SELECT * FROM " . InactiveFlagged::$table . " WHERE `member_id`={$member_id}")->one();
         if (count($params)) {
             return true;
         } else {
@@ -140,29 +140,37 @@ class Member extends Application
         }
     }
 
-    public static function findInactives($id, $type, $flagged=false)
+    public static function findInactives($id, $type, $flagged = false)
     {
         $sql = "SELECT m.forum_name, m.member_id, m.last_activity, i.flagged_by, m.forum_posts, m.join_date, p.number as plt_number, p.name as plt_name
-		FROM ".Member::$table." m
+		FROM " . Member::$table . " m
 
-		LEFT JOIN ".InactiveFlagged::$table." i ON m.member_id = i.member_id
-		LEFT JOIN ".Platoon::$table." p on m.platoon_id = p.id
+		LEFT JOIN " . InactiveFlagged::$table . " i ON m.member_id = i.member_id
+		LEFT JOIN " . Platoon::$table . " p on m.platoon_id = p.id
 
 		WHERE (status_id = 1) AND (last_activity < CURDATE() - INTERVAL 30 DAY) AND
-		m.member_id NOT IN (SELECT member_id FROM ".LeaveOfAbsence::$table.") AND ";
+		m.member_id NOT IN (SELECT member_id FROM " . LeaveOfAbsence::$table . ") AND ";
 
         switch ($type) {
-            case "sqd": $args = "m.squad_id = {$id}"; break;
-            case "plt": $args = "m.platoon_id = {$id}"; break;
-            case "div": $args = "m.game_id = {$id}"; break;
-            default: $args = "m.game_id = {$id}"; break;
+            case "sqd":
+                $args = "m.squad_id = {$id}";
+                break;
+            case "plt":
+                $args = "m.platoon_id = {$id}";
+                break;
+            case "div":
+                $args = "m.game_id = {$id}";
+                break;
+            default:
+                $args = "m.game_id = {$id}";
+                break;
         }
 
         if ($flagged) {
-            $sql .= "(m.member_id IN (SELECT member_id FROM ".InactiveFlagged::$table.")) AND ";
+            $sql .= "(m.member_id IN (SELECT member_id FROM " . InactiveFlagged::$table . ")) AND ";
             $sql .= $args . " ORDER BY i.flagged_by";
         } else {
-            $sql .= "(m.member_id NOT IN (SELECT member_id FROM ".InactiveFlagged::$table.")) AND ";
+            $sql .= "(m.member_id NOT IN (SELECT member_id FROM " . InactiveFlagged::$table . ")) AND ";
             $sql .= $args . " ORDER BY m.platoon_id, m.last_activity ASC";
         }
         return Flight::aod()->sql($sql)->many();
@@ -170,7 +178,7 @@ class Member extends Application
 
     public static function getLastRct()
     {
-        $params = (object) Flight::aod()->from(Member::$table)->sortDesc('member_id')->where(array('status_id' => 1))->select('member_id')->one();
+        $params = (object)Flight::aod()->from(Member::$table)->sortDesc('member_id')->where(array('status_id' => 1))->select('member_id')->one();
         return $params->member_id;
     }
 
@@ -185,7 +193,7 @@ class Member extends Application
     public static function create($params)
     {
         $member = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $member->$key = $value;
         }
         $member->save($params);
@@ -202,7 +210,7 @@ class Member extends Application
     public static function modify($params)
     {
         $member = new self();
-        foreach ($params as $key=>$value) {
+        foreach ($params as $key => $value) {
             $member->$key = $value;
         }
         $member->update($params);
