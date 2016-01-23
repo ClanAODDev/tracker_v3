@@ -1,0 +1,52 @@
+[
+    {
+        "name": "flynsarmy/db-blade-compiler",
+        "version": "v2.0.2",
+        "version_normalized": "2.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Flynsarmy/laravel-db-blade-compiler.git",
+            "reference": "011658034c5ca14d42c64c7f1024f7cc9811fdb3"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Flynsarmy/laravel-db-blade-compiler/zipball/011658034c5ca14d42c64c7f1024f7cc9811fdb3",
+            "reference": "011658034c5ca14d42c64c7f1024f7cc9811fdb3",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2015-06-15 22:21:08",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Flynsarmy\\DbBladeCompiler\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Flyn San",
+                "email": "flynsarmy@gmail.com"
+            },
+            {
+                "name": "Ebrahim Radi",
+                "email": "ebrahim.radi@gmail.com",
+                "homepage": "http://me2bits.com"
+            }
+        ],
+        "description": "Render Blade templates from Eloquent Model Fields",
+        "keywords": [
+            "blade",
+            "compiler",
+            "eloquent",
+            "laravel",
+            "model"
+        ]
+    }
+]

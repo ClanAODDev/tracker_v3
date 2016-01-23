@@ -1,0 +1,5 @@
+{
+    "require": {
+        "flynsarmy/db-blade-compiler": "2.*"
+    }
+}
