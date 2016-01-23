@@ -51,7 +51,8 @@ return [
     |
     */
 
-    'icon' => "http://159.203.134.98/images/logo.svg",
+    // Tracker logo for messages
+    'icon' => "http://159.203.134.98/images/logo.png",
 
     /*
     |-------------------------------------------------------------
