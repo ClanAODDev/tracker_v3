@@ -7,14 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
     /**
-     * relationship - division has many members
-     */
-    public function members()
-    {
-        return $this->belongsToMany(Member::class)->withPivot('primary');
-    }
-
-    /**
      * relationship - division has many platoons
      */
     public function platoons()
@@ -31,6 +23,14 @@ class Division extends Model
     }
 
     /**
+     * relationship - division has many members
+     */
+    public function members()
+    {
+        return $this->belongsToMany(Member::class)->withPivot('primary');
+    }
+
+    /**
      * Gets active members of a division
      */
     public function getActiveMembers()
@@ -44,11 +44,17 @@ class Division extends Model
      */
     public function getUnassignedMembers()
     {
-    	return $this->members()->where(['platoon_id' => 0, 'position_id' => 1]);
+        return $this->members()->where([
+            'platoon_id' => 0,
+            'position_id' => 1
+        ]);
     }
 
     public function leaders()
     {
-        return $this->members()->where(['position_id' => 7, 'position_id' => 8]);
+        return $this->members()->where([
+            'position_id' => 7,
+            'position_id' => 8
+        ]);
     }
 }

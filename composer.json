@@ -19,7 +19,8 @@
         "guzzlehttp/guzzle": "~4.0",
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
-        "laracasts/generators": "^1.1"
+        "laracasts/generators": "^1.1",
+        "laravel/homestead": "^3.0"
     },
     "autoload": {
         "classmap": [
