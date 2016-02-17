@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -52,10 +53,11 @@ class DivisionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param Division $division
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
-    public function show(\App\Division $division)
+    public function show(Division $division)
     {
         return view('division.show', compact('division'));
     }
