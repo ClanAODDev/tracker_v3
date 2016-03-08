@@ -11,10 +11,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('divisions/{division}', 'DivisionController@show');
     Route::get('send/mail', 'UserController@sendEmailReminder');
 
-});
+    /**
+     * Resources
+     */
+    Route::resource('members', 'MemberController');
 
-/**
- * Resources
- */
-Route::resource('members', 'MemberController');
+});
 
