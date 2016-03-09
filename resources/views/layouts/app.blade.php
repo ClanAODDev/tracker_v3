@@ -6,30 +6,29 @@
 </head>
 <body>
 
-    <!-- modal for tools -->
-    <div class="modal viewPanel fade">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="viewer fadeIn animate"></div>
-            </div>
+<!-- modal for tools -->
+<div class="modal viewPanel fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="viewer fadeIn animate"></div>
+        </div>
+    </div>
+</div>
+
+<div id="wrap">
+
+    @include('partials.nav.base')
+
+    <div class="main-body">
+        <div class="container">
+            @include('flash::message')
+            @yield('content')
         </div>
     </div>
 
-    <div id="wrap">
+</div>
 
-        @include('partials.nav.base')
-
-        <div class="main-body">
-            <div class="container">
-                @include('flash::message')
-                @yield('content')
-            </div>
-        </div>
-
-    </div>
-
-    @include('layouts.footer')
-
+@include('layouts.footer')
 
 
 </body>
