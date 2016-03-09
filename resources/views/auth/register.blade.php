@@ -18,8 +18,9 @@
 
                                 @if ($errors->has('name'))
                                     <span class="help-block">
-                                    <strong>{{ $errors->first('name') }}</strong>
-                                </span>
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
                                 @endif
 
                             </div>
@@ -30,8 +31,9 @@
                                        placeholder="Email Address">
                                 @if ($errors->has('email'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('email') }}</strong>
-                            </span>
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
                                 @endif
                             </div>
 
@@ -39,8 +41,9 @@
                                 <input type="password" class="form-control" name="password" placeholder="Password">
                                 @if ($errors->has('password'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('password') }}</strong>
-                            </span>
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                     </span>
                                 @endif
                             </div>
 
@@ -49,8 +52,9 @@
                                        placeholder="Confirm Password">
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
-                                <strong>{{ $errors->first('password_confirmation') }}</strong>
-                            </span>
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
                                 @endif
                             </div>
 
