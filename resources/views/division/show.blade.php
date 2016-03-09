@@ -13,8 +13,6 @@
                 <div class="btn-group pull-right">
                     <a class="btn btn-default edit-div disabled" href="#" target="_blank"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
-                    <a class="btn btn-default create-div disabled" href="#" target="_blank"><i
-                                class="fa fa-plus-square"></i> <span class="hidden-xs hidden-sm">Create Division</span></a>
                 </div>
             @endif
 
@@ -28,7 +26,6 @@
                 {{-- locality --}}
                 <div class='panel-heading'>Platoons</div>
                 <div class='list-group'>
-
                     @if (count($division->platoons))
                         @foreach ($division->platoons as $platoon)
                             <a href='divisions/{{ $division->abbreviation }}/platoons/{{ $platoon->id }}'

@@ -53,6 +53,7 @@ class Member extends Model
     	return $this->belongsTo(Rank::class);
     }
 
+
     /**
      * relationship - member belongs to a position
      */
@@ -72,8 +73,9 @@ class Member extends Model
     /**
      * Gets member's primary division
      */
-    public function getPrimaryDivision()
+    public function primaryDivision()
     {
     	return $this->divisions()->wherePivot('primary', true)->first();
     }
+
 }

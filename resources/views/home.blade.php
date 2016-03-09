@@ -12,6 +12,7 @@
         <div class='panel-heading'><i class='fa fa-gamepad fa-lg pull-right text-muted'></i> <strong>Gaming
                 Divisions</strong></div>
         <div class='list-group'>
+
             @foreach (App\Division::all() as $division)
                 <a href='divisions/{{ $division->abbreviation }}' class='list-group-item' style='padding-bottom: 18px;'>
                     <span class='pull-left' style='margin-right: 20px; vertical-align: middle;'><img
@@ -24,8 +25,8 @@
                     <h5 class="pull-right text-muted big-num-main count-animated">{{ $division->members->count() }}</h5>
                 </a>
             @endforeach
+
         </div>
     </div>
-
 
 @endsection

@@ -17,7 +17,7 @@ class Division extends Model
     /**
      * Gets part time members of a division
      */
-    public function getPartTimeMembers()
+    public function partTimeMembers()
     {
         return $this->members()->wherePivot('primary', false)->get();
     }
@@ -33,7 +33,7 @@ class Division extends Model
     /**
      * Gets active members of a division
      */
-    public function getActiveMembers()
+    public function activeMembers()
     {
         return $this->members()->wherePivot('primary', true);
     }
@@ -42,7 +42,7 @@ class Division extends Model
      * Gets unassigned members of a division
      * (unassigned meaning no platoon assignment)
      */
-    public function getUnassignedMembers()
+    public function unassignedMembers()
     {
         return $this->members()->where([
             'platoon_id' => 0,

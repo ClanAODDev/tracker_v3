@@ -1,6 +1,6 @@
 <div id="footer" class="navbar navbar-default">
     <div class="container">
-        <small class="text-muted">Proudly driven by <a href="http://laravel.com"><strong>Laravel</strong></a>
+        <small class="text-muted">Driven by <a href="http://laravel.com"><strong>Laravel</strong></a>, hosted on <a href="http://digitalocean.com"><strong>Digital Ocean</strong></a>
             <br/><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google
                         Chrome</strong></a></span></small>
     </div>

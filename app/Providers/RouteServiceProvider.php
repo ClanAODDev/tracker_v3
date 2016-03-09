@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Division;
+use App\Member;
 use Illuminate\Routing\Router;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -30,6 +31,10 @@ class RouteServiceProvider extends ServiceProvider
         // route model bind to division shortname instead of id
         \Route::bind('division', function($division) {
             return Division::where('abbreviation', strtolower($division))->firstOrFail();
+        });
+
+        \Route::bind('member', function($member) {
+            return Member::where('clan_id', $member)->firstOrFail();
         });
 
     }
