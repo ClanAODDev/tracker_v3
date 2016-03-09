@@ -44,36 +44,43 @@ class AuthController extends Controller
     /**
      * flash success on login
      */
-    public function authenticated( \Illuminate\Http\Request $request, \App\User $user ) {
-        flash()->success( "Welcome back {$user->name}!" );
+    public function authenticated(\Illuminate\Http\Request $request, \App\User $user)
+    {
+        flash()->success("Welcome back {$user->name}!");
         return redirect()->intended($this->redirectPath());
     }
 
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
 
-        $messages = [
-        'exists' => 'AOD member name not found',
-        ];
+        $messages = array(
+            'regex' => 'Username cannot contain "AOD_"',
+            'exists' => 'AOD member name not found',
+        );
 
         return Validator::make($data, [
             // ensure member exists before registering user
-            'name' => 'required|max:255|exists:members',
+            'name' => [
+                'Regex:/^((?!AOD_).)*$/',
+                'required',
+                'max:255',
+                'exists:members',
+            ],
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
-            ], $messages);
+        ], $messages);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return User
      */
     protected function create(array $data)
@@ -86,6 +93,6 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'member_id' => $member->id,
-            ]);
+        ]);
     }
 }
