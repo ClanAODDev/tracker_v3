@@ -7,6 +7,7 @@ use App\Member;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Http\Request;
 use Validator;
 
 class AuthController extends Controller
@@ -44,7 +45,7 @@ class AuthController extends Controller
     /**
      * flash success on login
      */
-    public function authenticated(\Illuminate\Http\Request $request, \App\User $user)
+    public function authenticated(Request $request, \App\User $user)
     {
         flash()->success("Welcome back {$user->name}!");
         return redirect()->intended($this->redirectPath());
@@ -67,7 +68,7 @@ class AuthController extends Controller
         return Validator::make($data, [
             // ensure member exists before registering user
             'name' => [
-                'Regex:/^((?!AOD_).)*$/',
+                'Regex:/^((?!AOD_|aod_).)*$/',
                 'required',
                 'max:255',
                 'exists:members',
@@ -85,7 +86,9 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        // find the corresponding member
+        /**
+         * All users must have a corresponding member entry
+         */
         $member = Member::where('name', $data['name'])->first();
 
         return User::create([

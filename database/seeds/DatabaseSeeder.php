@@ -11,6 +11,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+        // seed members
+        factory(App\Member::class, 10)->create();
+
+        // seed platoons and squads
+        factory(App\Platoon::class, 3)->create()->each(function ($p) {
+            $p->squads()->save(factory(App\Squad::class)->make());
+        });
+
+        // generate division members
         DB::table('division_member')->insert(
             [
                 ['division_id' => 1, 'member_id' => 1, 'primary' => true],
