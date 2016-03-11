@@ -45,13 +45,14 @@
                                 <button type="submit" class="btn btn-primary btn-block">
                                     <i class="fa fa-btn fa-user"></i>Register
                                 </button>
-
                             </div>
+
                         </form>
                     </div>
+
                     <div class="panel-footer text-muted">
                         <p>
-                            <small>Your username should be the one you use for the AOD Forums, <strong>without the AOD
+                            <small>Username should be your AOD forum name, <strong>minus AOD
                                     prefix</strong>.
                             </small>
                         </p>
