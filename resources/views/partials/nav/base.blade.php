@@ -9,8 +9,6 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/home"><img src='{!! asset('images/logo.svg') !!}' class='pull-left'/> <span
-                        class="hidden-xs"><strong class='logo'>AOD</strong> <small>Tracker <sup>v3</sup></small></span></a>
         </div>
 
         @if (Auth::check())
