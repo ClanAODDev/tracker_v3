@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
 use App\Http\Requests;
-use Illuminate\Http\Request;
 
 class AppController extends Controller
 {
@@ -24,7 +24,10 @@ class AppController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $divisions = Division::all();
+        return view('home')->with(
+            compact('divisions')
+        );
     }
 
 }

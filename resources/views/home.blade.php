@@ -13,7 +13,7 @@
                 Divisions</strong></div>
         <div class='list-group'>
 
-            @foreach (App\Division::all() as $division)
+            @foreach ($divisions as $division)
                 <a href='divisions/{{ $division->abbreviation }}' class='list-group-item' style='padding-bottom: 18px;'>
                     <span class='pull-left' style='margin-right: 20px; vertical-align: middle;'><img
                                 class="img-responsive" src='images/game_icons/48x48/{{ $division->abbreviation }}.png'/></span>
