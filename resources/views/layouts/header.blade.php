@@ -3,7 +3,8 @@
 
 <link href="{{ asset('favicon.ico') }}" type="image/x-icon" rel="Shortcut Icon"/>
 
-<link rel="stylesheet" type="text/css" href="//bootswatch.com/lumen/bootstrap.min.css">
+<link href="{{ asset('/css/libs/bootstrap.min.css') }}" rel="stylesheet">
+
 <link href="//cdn.datatables.net/responsive/1.0.3/css/dataTables.responsive.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css"
       href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.10/css/jquery.dataTables.css">
@@ -15,5 +16,5 @@
       href="//cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTools.css">
 
 
-<link href="{{ asset('/css/sweetalert2.css') }}" rel="stylesheet">
+<link href="{{ asset('/css/libs/sweetalert2.css') }}" rel="stylesheet">
 <link href="{{ asset('/css/app.css') }}" rel="stylesheet">
