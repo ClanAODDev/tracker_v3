@@ -22,4 +22,22 @@
 
     </div>
 
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            Test
+        </div>
+
+        <div class="panel-body">
+
+            <ul class="list-group">
+                <a href="#" class="list-group-item col-xs-6">Row1</a>
+                <a href="#" class="list-group-item col-xs-6">Row2</a>
+                <a href="#" class="list-group-item col-xs-6">Row3</a>
+                <a href="#" class="list-group-item col-xs-6">Row4</a>
+                <a href="#" class="list-group-item col-xs-6">Row5</a>
+            </ul>
+        </div>
+    </div>
+
 @stop
