@@ -11,11 +11,7 @@ var Tracker = Tracker || {};
 
             $('.count-animated').each(function () {
                 var $this = $(this);
-                $({
-                    Counter: 0
-                }).animate({
-                    Counter: $this.text()
-                }, {
+                $({Counter: 0}).animate({Counter: $this.text()}, {
                     duration: 3000,
                     easing: "easeOutQuart",
                     step: function () {
