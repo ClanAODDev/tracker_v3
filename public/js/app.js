@@ -1,6 +1,7 @@
 var Tracker = Tracker || {};
 
 (function ($) {
+
     Tracker = {
 
         Setup: function () {
@@ -8,7 +9,6 @@ var Tracker = Tracker || {};
         },
 
         AnimateCounter: function () {
-
             $('.count-animated').each(function () {
                 var $this = $(this);
                 $({Counter: 0}).animate({Counter: $this.text()}, {
@@ -23,7 +23,6 @@ var Tracker = Tracker || {};
                     }
                 });
             });
-
         },
 
         FormatNumber: function (num) {
@@ -31,6 +30,7 @@ var Tracker = Tracker || {};
         }
 
     }
+
 })(jQuery);
 
 Tracker.Setup();
