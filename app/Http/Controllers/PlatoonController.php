@@ -2,31 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Platoon;
 use App\Division;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class DivisionController extends Controller
+class PlatoonController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -53,12 +37,13 @@ class DivisionController extends Controller
      * Display the specified resource.
      *
      * @param Division $division
+     * @param Platoon $platoon
      * @return \Illuminate\Http\Response
      * @internal param int $id
      */
-    public function show(Division $division)
+    public function show(Division $division, Platoon $platoon)
     {
-        return view('division.show', compact('division'));
+        return view('platoon.show', compact('division', 'platoon'));
     }
 
     /**

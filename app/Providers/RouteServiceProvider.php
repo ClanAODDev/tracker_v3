@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Division;
 use App\Member;
-use Illuminate\Routing\Router;
+use App\Platoon;
+use App\Division;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Routing\Router;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -21,20 +22,35 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function boot(Router $router)
     {
         parent::boot($router);
 
-        // route model bind to division shortname instead of id
-        \Route::bind('division', function($division) {
+        /**
+         * Show division by abbreviation
+         */
+        \Route::bind('division', function ($division) {
             return Division::where('abbreviation', strtolower($division))->firstOrFail();
         });
 
-        \Route::bind('member', function($member) {
+        /**
+         * Show member by clan member id (forum id)
+         */
+        \Route::bind('member', function ($member) {
             return Member::where('clan_id', $member)->firstOrFail();
+        });
+
+        /**
+         * Show platoon by division abbrev, platoon number (1st, 2nd, etc)
+         */
+        \Route::bind('platoon', function ($division, $platoon) {
+            return Platoon::where([
+                'abbreviation' => strtolower($division),
+                'number' => $platoon
+            ])->firstOrFail();
         });
 
     }
@@ -42,7 +58,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
+     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function map(Router $router)
