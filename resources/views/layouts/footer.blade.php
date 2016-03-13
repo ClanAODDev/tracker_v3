@@ -1,13 +1,17 @@
 <div id="footer" class="navbar navbar-default">
     <div class="container">
-        <small class="text-muted">Driven by <a href="http://laravel.com"><strong>Laravel</strong></a>, hosted on <a href="http://digitalocean.com"><strong>Digital Ocean</strong></a>
+        <small class="text-muted">Driven by <a href="http://laravel.com"><strong>Laravel</strong></a>, hosted on <a
+                    href="http://digitalocean.com"><strong>Digital Ocean</strong></a>
             <br/><span class="hidden-xs"> Built to run on <a href="https://www.google.com/chrome/"><strong>Google
                         Chrome</strong></a></span></small>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="https://code.jquery.com/ui/1.12.0-beta.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.1.min.js"
+        integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"
+        integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
         integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A=="
         crossorigin="anonymous"></script>
