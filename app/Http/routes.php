@@ -18,7 +18,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('divisions/{division}', 'DivisionController@show');
 
     // platoons
-    Route::get('divisions/{division}/platoons/{platoon}', 'PlatoonController@show');
+    Route::get('platoons/{platoon}', 'PlatoonController@show');
 
 });
 

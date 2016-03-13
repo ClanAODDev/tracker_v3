@@ -17,7 +17,7 @@
 
 <div id="wrap">
 
-    @include('partials.nav.base')
+    @include('layouts.partials.nav.base')
 
     <div class="main-body">
         <div class="container">

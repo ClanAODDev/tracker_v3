@@ -46,11 +46,8 @@ class RouteServiceProvider extends ServiceProvider
         /**
          * Show platoon by division abbrev, platoon number (1st, 2nd, etc)
          */
-        \Route::bind('platoon', function ($division, $platoon) {
-            return Platoon::where([
-                'abbreviation' => strtolower($division),
-                'number' => $platoon
-            ])->firstOrFail();
+        \Route::bind('platoon', function ($platoon) {
+            return Platoon::whereId($platoon)->firstOrFail();
         });
 
     }

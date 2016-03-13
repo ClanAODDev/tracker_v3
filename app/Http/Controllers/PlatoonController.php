@@ -41,9 +41,9 @@ class PlatoonController extends Controller
      * @return \Illuminate\Http\Response
      * @internal param int $id
      */
-    public function show(Division $division, Platoon $platoon)
+    public function show(Platoon $platoon)
     {
-        return view('platoon.show', compact('division', 'platoon'));
+        return view('platoon.show', compact('platoon'));
     }
 
     /**

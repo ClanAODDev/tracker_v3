@@ -10,7 +10,14 @@ Breadcrumbs::register('home', function($breadcrumbs)
 Breadcrumbs::register('divisions', function($breadcrumbs, $division)
 {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, '/'.$division->abbreviation);
+    $breadcrumbs->push($division->name, '/divisions/'.$division->abbreviation);
+});
+
+Breadcrumbs::register('platoons', function($breadcrumbs, $division, $platoon)
+{
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push($division->name, '/divisions/'.$division->abbreviation);
+    $breadcrumbs->push($platoon->name, '/'.$platoon->id);
 });
 
 

@@ -202,9 +202,6 @@ a[disabled] {
     font-weight: normal;
     font-size: 12px; }
 
-.breadcrumb {
-  margin-top: 20px; }
-
 .vertical-align {
   display: -webkit-flex;
   display: -ms-flexbox;

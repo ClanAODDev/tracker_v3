@@ -16,7 +16,7 @@
         </div>
 
         @if (Auth::check())
-            @include('partials.nav.authed')
+            @include('layouts.partials.nav.authed')
         @endif
 
     </div>
