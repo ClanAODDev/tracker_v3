@@ -16,6 +16,10 @@
             @include('platoon.partials.platoon_members')
         </div>
 
+        <div class="col-md-4">
+            @include('platoon.partials.member_stats')
+        </div>
+
     </div>
 
 @stop
