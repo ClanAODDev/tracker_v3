@@ -28,6 +28,15 @@
         <div class="col-md-4">
             @include('division.partials.division_leadership')
         </div>
+
+    </div>
+
+    <div class="row margin-top-50">
+        <div class="col-md-6">
+            <div class="panel-body count-detail-big striped-bg">
+                <span class="count-animated">{{ $division->members->count() }}</span>
+            </div>
+        </div>
     </div>
 
 @endsection

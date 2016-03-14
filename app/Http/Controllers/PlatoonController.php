@@ -11,6 +11,13 @@ use App\Http\Controllers\Controller;
 
 class PlatoonController extends Controller
 {
+    /**
+     * PlatoonController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * Show the form for creating a new resource.

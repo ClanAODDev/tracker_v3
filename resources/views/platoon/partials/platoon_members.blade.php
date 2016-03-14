@@ -2,9 +2,9 @@
     <div class="panel-heading">Members</div>
     <div class="list-group">
         @foreach($platoon->members as $member)
-            <li class="list-group-item">
+            <a href="{{ action('MemberController@show', [$member->clan_id]) }}" class="list-group-item">
                 {{ $member->name }}
-            </li>
+            </a>
         @endforeach
     </div>
 </div>
