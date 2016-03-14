@@ -37,9 +37,8 @@
 
  body {
  	height: 100%;
- 	background-image: url('../images/bg.jpg');
- 	background-attachment: fixed;
- 	/* The html and body elements cannot have any padding or margin. */
+	 background: url('../images/bg.jpg') fixed;
+	 /* The html and body elements cannot have any padding or margin. */
  }
 
 
@@ -359,6 +358,10 @@
 
  h2.pull-right {
  	padding-top: 10px;
+ }
+
+ h2 {
+   margin-top: 0 !important;
  }
 
  .striped-bg {

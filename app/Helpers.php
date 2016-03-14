@@ -13,7 +13,7 @@ class Helpers
     {
         $forum_img = self::GetGravatarUrl($email);
         $unknown = "assets/images/blank_avatar.jpg";
-        return "<img src='{$forum_img}' class='img-thumbnail avatar-{$type}' />";
+        return "<img src='{$forum_img}' class='img-thumbnail' />";
     }
 
     private static function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')

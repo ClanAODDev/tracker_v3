@@ -3,11 +3,16 @@
 
     {!! Breadcrumbs::render('divisions', $division) !!}
 
-    <div class="page-header">
-        <h2>
-            <img src="/images/game_icons/48x48/{{ $division->abbreviation }}.png"/>
-            <strong>{{ $division->name }} Division</strong>
+    <div class="row">
 
+        <div class="col-xs-6">
+            <h2>
+                <img src="/images/game_icons/48x48/{{ $division->abbreviation }}.png"/>
+                <strong>{{ $division->name }} Division</strong>
+            </h2>
+        </div>
+
+        <div class="col-xs-6">
             {{-- if user is division leader --}}
             @if (Auth::user()->role->id >= 3 || Auth::user()->developer)
                 <div class="btn-group pull-right">
@@ -15,9 +20,11 @@
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
                 </div>
             @endif
+        </div>
 
-        </h2>
     </div>
+
+    <hr/>
 
     <div class="row">
 
