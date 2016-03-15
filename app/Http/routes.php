@@ -30,4 +30,7 @@ Route::group(['middleware' => 'web'], function () {
 Route::group(['prefix' => 'api', 'middleware' => 'throttle:5'], function () {
     Route::get('members', 'API\APIController@members');
     Route::get('users', 'API\APIController@users');
+    Route::get('divisions', 'API\APIController@divisions');
+    Route::get('squads', 'API\APIController@squads');
+    Route::get('platoons', 'API\APIController@platoons');
 });

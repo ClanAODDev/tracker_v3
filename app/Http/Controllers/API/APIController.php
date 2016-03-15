@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Division;
+use App\Platoon;
+use App\Squad;
 use App\User;
 use App\Member;
 use Illuminate\Http\Request;
@@ -25,6 +28,30 @@ class APIController extends Controller
     public function users()
     {
         return User::all();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function divisions()
+    {
+        return Division::all();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function squads()
+    {
+        return Squad::all();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function platoons()
+    {
+        return Platoon::all();
     }
 
     /**
