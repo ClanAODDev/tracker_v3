@@ -23,8 +23,8 @@ Route::group(['middleware' => 'web'], function () {
 
 
     // API
-    Route::get('api/members', 'APIController@members');
-    Route::get('api/users','APIController@users' );
+    Route::get('api/members', 'API\APIController@members');
+    Route::get('api/users','API\APIController@users' );
 
 });
 
