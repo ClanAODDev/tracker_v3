@@ -20,5 +20,11 @@ Route::group(['middleware' => 'web'], function () {
     // platoons
     Route::get('platoons/{platoon}', 'PlatoonController@show');
 
+
+
+    // API
+    Route::get('api/members', 'APIController@members');
+    Route::get('api/users','APIController@users' );
+
 });
 

@@ -27,21 +27,25 @@
     <hr/>
 
     <div class="row">
-
         <div class="col-md-8">
             @include('division.partials.all_platoons')
         </div>
-
         <div class="col-md-4">
             @include('division.partials.division_leadership')
         </div>
-
     </div>
 
-    <div class="row margin-top-50">
+    <h3>Division Statistics</h3>
+    <hr />
+
+    <div class="row">
         <div class="col-md-6">
-            <div class="panel-body count-detail-big striped-bg">
-                <span class="count-animated">{{ $division->members->count() }}</span>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Total Members</div>
+
+                <div class="panel-body count-detail-big striped-bg">
+                    <span class="count-animated">{{ $division->members->count() }}</span>
+                </div>
             </div>
         </div>
     </div>

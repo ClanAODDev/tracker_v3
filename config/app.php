@@ -128,6 +128,7 @@ return [
          */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+        GrahamCampbell\GitHub\GitHubServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -191,6 +192,7 @@ return [
         'File' => Illuminate\Support\Facades\File::class,
         'Flash' => Laracasts\Flash\Flash::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
+        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
         'Helpers' => App\Helpers::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
