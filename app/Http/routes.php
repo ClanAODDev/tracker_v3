@@ -1,7 +1,7 @@
 <?php
 
 /**
- * authentication route handler
+ * Authentication-protected routes
  */
 Route::group(['middleware' => 'web'], function () {
 
@@ -20,11 +20,14 @@ Route::group(['middleware' => 'web'], function () {
     // platoons
     Route::get('platoons/{platoon}', 'PlatoonController@show');
 
-
-
-    // API
-    Route::get('api/members', 'API\APIController@members');
-    Route::get('api/users','API\APIController@users' );
-
 });
 
+/**
+ * API request routes.
+ *
+ * Throttle: 5 per minute
+ */
+Route::group(['prefix' => 'api', 'middleware' => 'throttle:5'], function () {
+    Route::get('members', 'API\APIController@members');
+    Route::get('users', 'API\APIController@users');
+});

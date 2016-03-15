@@ -9,6 +9,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class APIController
+ *
+ * Handles primitive API requests.
+ *
+ * @package App\Http\Controllers\API
+ */
 class APIController extends Controller
 {
 
