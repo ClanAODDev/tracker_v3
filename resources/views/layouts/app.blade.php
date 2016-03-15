@@ -30,6 +30,7 @@
 
 @include('layouts.footer')
 
+@yield('footer_scripts')
 
 </body>
 </html>

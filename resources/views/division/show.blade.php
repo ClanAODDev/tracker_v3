@@ -44,7 +44,7 @@
                 <div class="panel-heading">Total Members</div>
 
                 <div class="panel-body count-detail-big striped-bg">
-                    <span class="count-animated">{{ $division->members->count() }}</span>
+                    <span class="count-animated">{{ $division->activeMembers->count() }}</span>
                 </div>
             </div>
         </div>

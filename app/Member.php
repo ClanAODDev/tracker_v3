@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -30,11 +31,29 @@ class Member extends Model
     }
 
     /**
+     * @return string
+     */
+    public function getSpecialNameAttribute()
+    {
+        $icon = (!empty($this->position->icon)) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
+        return $this->specialName = "<span class=\"{$this->position->class}\">{$icon} {$this->name}</span>";
+    }
+
+    /**
      * relationship - member has many divisions
      */
     public function divisions()
     {
     	return $this->belongsToMany(Division::class)->withPivot('primary');
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getJoinDateAttribute($value)
+    {
+        return Carbon::parse($value)->toFormattedDateString();
     }
 
     /**

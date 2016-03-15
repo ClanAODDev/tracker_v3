@@ -31,6 +31,10 @@ class User extends Authenticatable
         'email',
     ];
 
+    protected $casts = [
+        'developer' => 'boolean',
+    ];
+
     /**
      * relationship - user belongs to a member
      */
@@ -56,8 +60,4 @@ class User extends Authenticatable
         return ucfirst($value);
     }
 
-    public function getDeveloperAttribute($value)
-    {
-        return (boolean) $value;
-    }
 }

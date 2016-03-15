@@ -24,7 +24,7 @@ class CreatePositionsTable extends Migration
 
         DB::table('positions')->insert(
             [
-                ['name' => 'Member', 'icon' => 'fa', 'class' => 'text-default', 'order' => 0],
+                ['name' => 'Member', 'icon' => '', 'class' => 'text-default', 'order' => 0],
                 ['name' => 'Squad Leader', 'icon' => 'fa fa-shield', 'class' => 'text-info', 'order' => 0],
                 ['name' => 'Platoon Leader', 'icon' => 'fa fa-circle', 'class' => 'text-warning', 'order' => 0],
                 ['name' => 'Troop Leader', 'icon' => 'fa fa-shield', 'class' => 'text-primary', 'order' => 0],
