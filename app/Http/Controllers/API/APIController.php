@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Division;
-use App\Platoon;
-use App\Squad;
 use App\User;
+use App\Squad;
 use App\Member;
+use App\Platoon;
+use App\Division;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
