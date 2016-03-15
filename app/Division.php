@@ -57,4 +57,14 @@ class Division extends Model
             'position_id' => 8
         ]);
     }
+
+    public function getDivisionStructureAttribute($value)
+    {
+        return "http://www.clanaod.net/forums/showthread.php?t=" . $value;
+    }
+
+    public function getWelcomeForumAttribute($value)
+    {
+        return "http://www.clanaod.net/forums/forumdisplay.php?f=" . $value;
+    }
 }
