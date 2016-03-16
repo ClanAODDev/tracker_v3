@@ -1,3 +1,20 @@
+
+@if (count($platoon->squads->count()))
+
+    <div class="panel panel-info">
+
+        <div class="panel-heading">Squads</div>
+
+        @foreach($platoon->squads as $squad)
+            <a class="list-group-item">
+                {{ $squad->id }}
+            </a>
+        @endforeach
+
+    </div>
+@endif
+
+
 <div class="panel panel-primary">
 
     <div class='panel-heading'>
@@ -44,6 +61,5 @@
     </div>
 
     <div class='panel-footer text-muted text-center' id='member-footer'></div>
+
 </div>
-
-
