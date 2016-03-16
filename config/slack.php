@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'endpoint' => 'https://hooks.slack.com/services/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',
+    'endpoint' => 'https://hooks.slack.com/services/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',
 
     /*
     |-------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'channel' => '#tracker_events',
+    'channel' => '#tracker',
 
     /*
     |-------------------------------------------------------------
