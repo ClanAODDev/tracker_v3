@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
+use App\Squad;
 use App\Member;
 use App\Platoon;
 use App\Division;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -29,25 +30,43 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot($router);
 
+
         /**
          * Show division by abbreviation
          */
         \Route::bind('division', function ($division) {
-            return Division::where('abbreviation', strtolower($division))->firstOrFail();
-        });
-
-        /**
-         * Show member by clan member id (forum id)
-         */
-        \Route::bind('member', function ($member) {
-            return Member::where('clan_id', $member)->firstOrFail();
+            $model = Division::whereAbbreviation(strtolower($division))->first();
+            if ($model instanceof Division) {
+                return $model;
+            }
         });
 
         /**
          * Show platoon by division abbrev, platoon number (1st, 2nd, etc)
          */
         \Route::bind('platoon', function ($platoon) {
-            return Platoon::whereId($platoon)->firstOrFail();
+            $model = Platoon::whereId($platoon)->first();
+            if ($model instanceof Platoon) {
+                return $model;
+            }
+        });
+
+
+        \Route::bind('squad', function ($squad) {
+            $model = Squad::whereId($squad)->first();
+            if ($model instanceof Squad) {
+                return $model;
+            }
+        });
+
+        /**
+         * Show member by clan member id (forum id)
+         */
+        \Route::bind('member', function ($member) {
+            $model = Member::whereClanId($member)->first();
+            if ($model instanceof Member) {
+                return $model;
+            }
         });
 
     }
@@ -65,3 +84,5 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 }
+
+

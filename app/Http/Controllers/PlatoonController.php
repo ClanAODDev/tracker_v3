@@ -60,6 +60,11 @@ class PlatoonController extends Controller
             ->sortBy(['position_id' => 'desc', 'rank_id' => 'asc']);
     }
 
+    public function squads(Platoon $platoon)
+    {
+        return view('platoon.squads', compact('platoon'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

@@ -31,15 +31,18 @@ class Member extends Model
     }
 
     /**
+     * Returns
      * @return string
      */
     public function getSpecialNameAttribute()
     {
-        $title = ($this->position->name) ?: null;
-        $icon = ($this->position->icon) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
-        return $this->specialName = ($this->position)
-            ? "<span title=\"{$title}\" class=\"{$this->position->class}\">{$icon} {$this->name}</span>"
-            : $this->name;
+        if ($this->position) {
+            $title = ($this->position->name) ?: null;
+            $icon = ($this->position->icon) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
+
+            return "<span title=\"{$title}\" class=\"{$this->position->class}\">{$icon} {$this->name}</span>";
+        }
+        return $this->name;
     }
 
     /**
@@ -51,6 +54,7 @@ class Member extends Model
     }
 
     /**
+     * Return a carbon formatted date
      * @param $value
      * @return string
      */

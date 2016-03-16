@@ -5,19 +5,29 @@ Breadcrumbs::register('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', '/home');
 });
 
-// Home > Divisions
-Breadcrumbs::register('divisions', function ($breadcrumbs, $division) {
+// Home > Division
+Breadcrumbs::register('division', function ($breadcrumbs, $division) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
 });
 
-Breadcrumbs::register('platoons', function ($breadcrumbs, $division, $platoon) {
+// Home > Division > Platoon
+Breadcrumbs::register('platoon', function ($breadcrumbs, $division, $platoon) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
     $breadcrumbs->push($platoon->name);
 });
 
-Breadcrumbs::register('members', function ($breadcrumbs, $division, $platoon, $member) {
+// Home > Division > Platoon > Squad
+Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+    $breadcrumbs->push($platoon->name, '/platoons/' . $platoon->id);
+    $breadcrumbs->push('Squad');
+});
+
+// Home > Division > Platoon > Member
+Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $member) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
     $breadcrumbs->push($platoon->name, '/platoons/' . $platoon->id);

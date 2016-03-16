@@ -16,9 +16,14 @@ Route::group(['middleware' => 'web'], function () {
 
     // divisions
     Route::get('divisions/{division}', 'DivisionController@show');
+    Route::get('divisions/{division}/squads/', 'DivisionController@squads');
 
     // platoons
     Route::get('platoons/{platoon}', 'PlatoonController@show');
+    Route::get('platoons/{platoon}/squads', 'PlatoonController@squads');
+
+    // squads
+    Route::get('squads/{squad}', 'SquadController@show');
 
 });
 

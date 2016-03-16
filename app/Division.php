@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Division extends Model
 {
+
+    public function squads()
+    {
+        return $this->hasManyThrough(Squad::class, Platoon::class);
+    }
+
     /**
      * relationship - division has many platoons
      */
