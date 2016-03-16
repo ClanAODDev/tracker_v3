@@ -18,7 +18,7 @@ class Member extends Model
      */
     public function user()
     {
-    	return $this->hasOne(User::class);
+        return $this->hasOne(User::class);
     }
 
     /**
@@ -35,8 +35,11 @@ class Member extends Model
      */
     public function getSpecialNameAttribute()
     {
-        $icon = (!empty($this->position->icon)) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
-        return $this->specialName = "<span class=\"{$this->position->class}\">{$icon} {$this->name}</span>";
+        $title = ($this->position->name) ?: null;
+        $icon = ($this->position->icon) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
+        return $this->specialName = ($this->position)
+            ? "<span title=\"{$title}\" class=\"{$this->position->class}\">{$icon} {$this->name}</span>"
+            : $this->name;
     }
 
     /**
@@ -44,7 +47,7 @@ class Member extends Model
      */
     public function divisions()
     {
-    	return $this->belongsToMany(Division::class)->withPivot('primary');
+        return $this->belongsToMany(Division::class)->withPivot('primary');
     }
 
     /**
@@ -61,7 +64,7 @@ class Member extends Model
      */
     public function platoon()
     {
-    	return $this->belongsTo(Platoon::class);
+        return $this->belongsTo(Platoon::class);
     }
 
     /**
@@ -69,7 +72,7 @@ class Member extends Model
      */
     public function rank()
     {
-    	return $this->belongsTo(Rank::class);
+        return $this->belongsTo(Rank::class);
     }
 
 
@@ -78,7 +81,7 @@ class Member extends Model
      */
     public function position()
     {
-    	return $this->belongsTo(Position::class);
+        return $this->belongsTo(Position::class);
     }
 
     /**
@@ -86,7 +89,7 @@ class Member extends Model
      */
     public function squad()
     {
-    	return $this->belongsTo(Squad::class);
+        return $this->belongsTo(Squad::class);
     }
 
     /**
@@ -94,7 +97,7 @@ class Member extends Model
      */
     public function primaryDivision()
     {
-    	return $this->divisions()->wherePivot('primary', true)->first();
+        return $this->divisions()->wherePivot('primary', true)->first();
     }
 
 }
