@@ -26,7 +26,7 @@ $factory->define(App\Member::class, function (Faker\Generator $faker) {
         'clan_id' => $faker->randomNumber(6),
         'rank_id' => $faker->numberBetween(1, 14),
         'platoon_id' => $faker->numberBetween(1, 3),
-        'position_id' => $faker->numberBetween(1, 11),
+        'position_id' => $faker->numberBetween(1, 8),
         'squad_id' => $faker->numberBetween(1, 3),
         'join_date' => $faker->dateTime('now'),
         'last_forum_login' => $faker->dateTime('now'),
