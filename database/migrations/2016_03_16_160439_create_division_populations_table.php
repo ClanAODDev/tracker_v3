@@ -14,6 +14,7 @@ class CreateDivisionPopulationsTable extends Migration
     {
         Schema::create('division_populations', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('division_id')->unsigned();
             $table->foreign('division_id')->references('id')->on('divisions')->onDelete('cascade');
             $table->integer('count');
             $table->timestamps();

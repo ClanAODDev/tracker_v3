@@ -24,6 +24,14 @@
         </div>
     </div>
 
+
+    @if (count($platoon->squads->count()))
+        <div class="row">
+            @include('platoon.partials.squads')
+        </div>
+    @endif
+
+
 @stop
 
 @section('footer_scripts')

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,21 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        // seed members
-        factory(App\Member::class, 10)->create();
+        Model::unguard();
 
-        // seed platoons and squads
-        factory(App\Platoon::class, 3)->create()->each(function ($p) {
-            $p->squads()->save(factory(App\Squad::class)->make());
-        });
-
-        // generate division members
-        DB::table('division_member')->insert(
-            [
-                ['division_id' => 1, 'member_id' => 1, 'primary' => true],
-                ['division_id' => 1, 'member_id' => 2, 'primary' => true],
-                ['division_id' => 1, 'member_id' => 3, 'primary' => true],
-            ]
-        );
     }
 }

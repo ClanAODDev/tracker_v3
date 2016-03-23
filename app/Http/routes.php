@@ -29,10 +29,8 @@ Route::group(['middleware' => 'web'], function () {
 
 /**
  * API request routes.
- *
- * Throttle: 5 per minute
  */
-Route::group(['prefix' => 'api', 'middleware' => 'throttle:5'], function () {
+Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () {
     Route::get('members', 'API\APIController@members');
     Route::get('users', 'API\APIController@users');
     Route::get('divisions', 'API\APIController@divisions');

@@ -22,6 +22,8 @@ class CreateMembersTable extends Migration
             $table->tinyInteger('position_id')->default(1);
             $table->timestamp('join_date');
             $table->timestamp('last_forum_login');
+            $table->timestamp('last_promoted');
+            $table->mediumInteger('recruiter_id');
             $table->timestamps();
             $table->softDeletes();
         });

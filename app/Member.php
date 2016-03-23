@@ -9,7 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Member extends Model
 {
 
-    protected $dates = ['join_date', 'last_forum_login'];
+    protected $dates = [
+        'join_date',
+        'last_forum_login',
+        'last_promoted'
+    ];
 
     use SoftDeletes;
 

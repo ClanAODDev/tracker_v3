@@ -21,4 +21,14 @@ class Squad extends Model
     {
         return $this->hasMany('App\Member');
     }
+
+    public function scopeMembersWithoutLeader($query, $squadLeaderId)
+    {
+        return $query->except($squadLeaderId);
+    }
+
+    public function leader()
+    {
+        return $this->hasOne('App\Member', 'id', 'leader_id');
+    }
 }

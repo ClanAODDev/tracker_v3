@@ -16,7 +16,7 @@ class CreateSquadsTable extends Migration {
         {
             $table->increments('id');
             $table->mediumInteger('platoon_id');
-            $table->mediumInteger('squad_leader_id');
+            $table->mediumInteger('leader_id');
             $table->timestamps();
         });
     }

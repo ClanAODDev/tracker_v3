@@ -15,10 +15,10 @@ class CreatePlatoonsTable extends Migration {
         Schema::create('platoons', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->mediumInteger('order');
+            $table->integer('order')->default(0);
             $table->string('name');
             $table->mediumInteger('division_id');
-            $table->mediumInteger('platoon_leader_id');
+            $table->mediumInteger('leader_id');
             $table->timestamps();
         });
     }
