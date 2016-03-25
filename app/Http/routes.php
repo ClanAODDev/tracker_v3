@@ -37,3 +37,13 @@ Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () 
     Route::get('squads', 'API\APIController@squads');
     Route::get('platoons', 'API\APIController@platoons');
 });
+
+/**
+ * Slack handler
+ */
+Route::group(['middleware' => 'slack'], function () {
+    Route::get('slack', [
+        'as' => 'slack.commands',
+        'uses' => 'SlackController@index'
+    ]);
+});

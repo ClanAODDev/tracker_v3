@@ -49,5 +49,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'developer' => \App\Http\Middleware\MustBeDeveloper::class,
+        'slack' => \App\Http\Middleware\VerifySlackToken::class,
     ];
 }
