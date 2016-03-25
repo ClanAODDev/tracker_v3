@@ -18,7 +18,7 @@ class VerifySlackToken
     {
         $app_token = env('SLACK_TOKEN');
 
-        if (isset($request->token) && $request->token === $app_token) {
+        if ($request->token === $app_token) {
             return $next($request);
         }
 
