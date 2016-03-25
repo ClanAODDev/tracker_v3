@@ -12,8 +12,6 @@
         "barryvdh/laravel-ide-helper": "^2.1",
         "maknz/slack": "^1.7",
         "graham-campbell/github": "^4.2",
-        "graham-campbell/exceptions": "^8.3",
-        "whoops/soap": "^1.0",
         "laracasts/testdummy": "^2.3"
     },
     "require-dev": {
@@ -24,8 +22,7 @@
         "symfony/css-selector": "2.8.*|3.0.*",
         "symfony/dom-crawler": "2.8.*|3.0.*",
         "laracasts/generators": "^1.1",
-        "laravel/homestead": "^3.0",
-        "filp/whoops": "^2.1"
+        "laravel/homestead": "^3.0"
     },
     "autoload": {
         "classmap": [
