@@ -15,7 +15,7 @@ class SlackApp
         }
 
         return [
-            "text" => 'Unrecognized command. Sorry!'
+            "text" => 'Unrecognized command. Sorry!',
         ];
     }
 }

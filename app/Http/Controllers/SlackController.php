@@ -17,7 +17,7 @@ class SlackController extends Controller
     {
         if (!$this->isValid($request)) {
             return response()->json([
-                'text' => 'Unrecognized command. Sorry!'
+                'text' => 'Unrecognized command. Sorry!',
             ]);
         }
 
@@ -26,6 +26,7 @@ class SlackController extends Controller
         );
 
         $response = SlackApp::handle($command, $request->all());
+
         return response()->json($response);
     }
 

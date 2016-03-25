@@ -23,7 +23,7 @@ class VerifySlackToken
         }
 
         return response()->json([
-            'text' => 'Invalid token'
+            'text' => 'Invalid token',
         ]);
 
     }
