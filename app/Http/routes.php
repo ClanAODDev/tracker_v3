@@ -51,11 +51,13 @@ Route::group(['middleware' => 'slack'], function () {
     ]);
 });
 
-
-
-
-Route::get('/data/{division_name}', function ($division_name) {
-    $info = new \App\AOD\DivisionInfo($division_name);
-
-    return response()->json($info->data);
+/**
+ * AOD Forum sync endpoint
+ */
+Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:5'], function () {
+    Route::get('/division-data/{division_name}', function ($division_name) {
+        $info = new \App\AOD\DivisionInfo($division_name);
+        return response()->json($info->data);
+    });
 });
+
