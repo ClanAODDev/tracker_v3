@@ -75,7 +75,7 @@ class Platoon extends Model
             ]
         ];
 
-        return $this->oneWeekActivity = json_encode($data);
+        return toJSON($data);
     }
 
 

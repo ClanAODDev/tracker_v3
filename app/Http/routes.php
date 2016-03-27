@@ -1,9 +1,11 @@
 <?php
 
+
 /**
  * Authentication-protected routes
  */
 Route::group(['middleware' => 'web'], function () {
+
 
     Route::auth();
     Route::get('/home', 'AppController@index');
@@ -27,6 +29,7 @@ Route::group(['middleware' => 'web'], function () {
 
 });
 
+
 /**
  * API request routes.
  */
@@ -44,6 +47,15 @@ Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () 
 Route::group(['middleware' => 'slack'], function () {
     Route::get('slack', [
         'as' => 'slack.commands',
-        'uses' => 'SlackController@index'
+        'uses' => 'SlackController@index',
     ]);
+});
+
+
+
+
+Route::get('/data/{division_name}', function ($division_name) {
+    $info = new \App\AOD\DivisionInfo($division_name);
+
+    return response()->json($info->data);
 });
