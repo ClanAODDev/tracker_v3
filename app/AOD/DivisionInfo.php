@@ -2,6 +2,8 @@
 
 namespace App\AOD;
 
+use App\ErrorReport\Slack;
+
 /**
  * Handles member data sync from AOD forums
  *
@@ -9,8 +11,9 @@ namespace App\AOD;
  */
 class DivisionInfo
 {
-    public $division;
     public $data;
+    public $division;
+
     protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
 
     public function __construct($division)
@@ -22,10 +25,17 @@ class DivisionInfo
             $this->data = [
                 'error' => 'AOD token not defined in environment'
             ];
-            
+
+            $this->error($this->data['error']);
+
         } else {
             $this->data = $this->fetchData();
         }
+    }
+
+    private function error($error)
+    {
+        Slack::send('SYNC ERROR: ' . $error);
     }
 
     /**
@@ -50,6 +60,7 @@ class DivisionInfo
         );
 
         if (array_has($data, 'error')) {
+            $this->error($data->error);
             return $data;
         }
 
