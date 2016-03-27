@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'endpoint' => 'https://hooks.slack.com/services/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',
+    'endpoint' => 'https://hooks.slack.com/services/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',
 
     /*
     |-------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'channel' => '#tracker',
+    'channel' => '#tracker_events',
 
     /*
     |-------------------------------------------------------------
@@ -112,7 +112,7 @@ return [
     |
     */
 
-    'markdown_in_attachments' => [],
+    'markdown_in_attachments' => ['text', 'title'],
 
     // Allow Markdown in just the text and title fields
     // 'markdown_in_attachments' => ['text', 'title']
