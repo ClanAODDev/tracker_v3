@@ -9,26 +9,51 @@ namespace App\AOD;
  */
 class DivisionInfo
 {
-    protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
-
     public $division;
     public $data;
+    protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
 
     public function __construct($division)
     {
         $this->division = $division;
-        $this->data = $this->fetchData();
+
+        if (!getenv('AOD_TOKEN')) {
+
+            $this->data = [
+                'error' => 'AOD token not defined in environment'
+            ];
+            
+        } else {
+            $this->data = $this->fetchData();
+        }
     }
 
     /**
-     * Generates authentication token for AOD API
-     * @return string
+     * Fetches member data per division
+     *
+     * @return mixed
+     * @internal param $agent
      */
-    protected function generateToken()
+    protected function fetchData()
     {
-        $currentMinute = floor(time() / 60) * 60;
+        $agent = "AOD Division Tracker";
+        $json_url = $this->jsonUrl();
 
-        return md5($currentMinute . env('AOD_TOKEN'));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+        curl_setopt($ch, CURLOPT_URL, $json_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        $data = json_decode(
+            curl_exec($ch)
+        );
+
+        if (array_has($data, 'error')) {
+            return $data;
+        }
+
+        return $this->prepareData($data);
     }
 
     /**
@@ -47,6 +72,17 @@ class DivisionInfo
         ];
 
         return $this->source . http_build_query($arguments);
+    }
+
+    /**
+     * Generates authentication token for AOD API
+     * @return string
+     */
+    protected function generateToken()
+    {
+        $currentMinute = floor(time() / 60) * 60;
+
+        return md5($currentMinute . env('AOD_TOKEN'));
     }
 
     /**
@@ -74,30 +110,6 @@ class DivisionInfo
         }
 
         return $prepared;
-    }
-
-    /**
-     * Fetches member data per division
-     *
-     * @return mixed
-     * @internal param $agent
-     */
-    protected function fetchData()
-    {
-        $agent = "AOD Division Tracker";
-        $json_url = $this->jsonUrl();
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-        curl_setopt($ch, CURLOPT_URL, $json_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-        $data = json_decode(
-            curl_exec($ch)
-        );
-
-        return $this->prepareData($data);
     }
 
 }
