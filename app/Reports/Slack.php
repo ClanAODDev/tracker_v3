@@ -24,10 +24,7 @@ class Slack
      */
     public static function info($message)
     {
-        SlackClient::attach([
-            'text' => $message,
-            'color' => 'info',
-        ])->send('*Just a heads up...*');
+        SlackClient::send($message);
     }
 
 
