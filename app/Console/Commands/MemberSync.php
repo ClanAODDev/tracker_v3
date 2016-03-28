@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\AOD\SyncMemberData;
+use App\Reports\Slack;
 use Illuminate\Console\Command;
 
 class MemberSync extends Command
@@ -40,5 +41,7 @@ class MemberSync extends Command
     {
         // AOD member data sync
         SyncMemberData::execute();
+        $this->comment(\Carbon::now() . " - Member sync complete");
+        Slack::info(\Carbon::now() . " - Member sync complete");
     }
 }

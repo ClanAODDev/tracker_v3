@@ -2,7 +2,7 @@
 
 namespace App\AOD;
 
-use App\ErrorReport\Slack;
+use App\Reports\Slack;
 
 /**
  * Handles member data sync from AOD forums
