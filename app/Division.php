@@ -33,7 +33,7 @@ class Division extends Model
      */
     public function members()
     {
-        return $this->belongsToMany(Member::class)->withPivot('primary');
+        return $this->belongsToMany(Member::class)->withPivot('primary')->withTimestamps();
     }
 
     /**

@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Member extends Model
 {
 
+    protected $guarded = [
+       'id'
+    ];
+
     protected $dates = [
         'join_date',
         'last_forum_login',
-        'last_promoted'
+        'last_promoted',
     ];
 
     use SoftDeletes;
@@ -46,6 +50,7 @@ class Member extends Model
 
             return "<span title=\"{$title}\" class=\"{$this->position->class}\">{$icon} {$this->name}</span>";
         }
+
         return $this->name;
     }
 
@@ -54,7 +59,7 @@ class Member extends Model
      */
     public function divisions()
     {
-        return $this->belongsToMany(Division::class)->withPivot('primary');
+        return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
     }
 
     /**
@@ -105,7 +110,7 @@ class Member extends Model
      */
     public function primaryDivision()
     {
-        return $this->divisions()->wherePivot('primary', true)->first();
+        return $this->divisions()->wherePivot('primary', true);
     }
 
 }

@@ -9,7 +9,7 @@ use App\ErrorReport\Slack;
  *
  * @package App\AOD
  */
-class DivisionInfo
+class GetDivisionInfo
 {
     public $data;
     public $division;
@@ -23,7 +23,7 @@ class DivisionInfo
         if (!getenv('AOD_TOKEN')) {
 
             $this->data = [
-                'error' => 'AOD token not defined in environment'
+                'error' => 'AOD token not defined in environment',
             ];
 
             $this->error($this->data['error']);
@@ -36,35 +36,6 @@ class DivisionInfo
     private function error($error)
     {
         Slack::send('SYNC ERROR: ' . $error);
-    }
-
-    /**
-     * Fetches member data per division
-     *
-     * @return mixed
-     * @internal param $agent
-     */
-    protected function fetchData()
-    {
-        $agent = "AOD Division Tracker";
-        $json_url = $this->jsonUrl();
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-        curl_setopt($ch, CURLOPT_URL, $json_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-        $data = json_decode(
-            curl_exec($ch)
-        );
-
-        if (array_has($data, 'error')) {
-            $this->error($data->error);
-            return $data;
-        }
-
-        return $this->prepareData($data);
     }
 
     /**
@@ -121,6 +92,29 @@ class DivisionInfo
         }
 
         return $prepared;
+    }
+
+    /**
+     * Fetches member data per division
+     *
+     * @return mixed
+     * @internal param $agent
+     */
+    protected function fetchData()
+    {
+        $agent = "AOD Division Tracker";
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+        curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        $data = json_decode(
+            curl_exec($ch)
+        );
+
+        return $this->prepareData($data);
     }
 
 }
