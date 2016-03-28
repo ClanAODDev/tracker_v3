@@ -4,6 +4,7 @@ namespace App\AOD;
 
 use App\Division;
 use App\Member;
+use App\Slack;
 
 class SyncMemberData
 {
@@ -27,6 +28,7 @@ class SyncMemberData
 
             $division->members()->sync(self::$activeMembers, false);
         }
+        Slack::info(\Carbon::now() . " - Member sync performed");
     }
 
     /**

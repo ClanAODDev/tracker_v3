@@ -20,8 +20,9 @@ class MemberSync implements Command
     public function handle()
     {
         SyncMemberData::execute();
+
         return [
-            'text' => 'Member sync performed successfully!'
+            'text' => 'Member sync performed successfully!',
         ];
     }
 
