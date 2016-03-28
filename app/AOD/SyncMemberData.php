@@ -10,19 +10,19 @@ class SyncMemberData
     protected static $activeMembers = [];
 
     /**
-     * Performs update operation on divisions and members
-     * and also syncs division membership (adds, removes)
+     * Performs update operation on divisions and members and also
+     * syncs division membership (adds, removes)
      */
     public static function execute()
     {
         foreach (Division::all() as $division) {
             $divisionInfo = new GetDivisionInfo($division->name);
 
-            foreach ($divisionInfo->data as $item) {
-                self::doMemberUpdate($item, $division);
+            foreach ($divisionInfo->data as $member) {
+                self::doMemberUpdate($member, $division);
             }
 
-            $division->members()->sync(self::$activeMembers, false);
+            $division->members()->sync(self::$activeMembers);
         }
     }
 
@@ -38,6 +38,7 @@ class SyncMemberData
             'clan_id' => $item['userid'],
         ]);
 
+        // have they been recently promoted?
         if ($member->rank_id < ($item['aodrankval'] - 2) && $member->rank_id > 0) {
             $member->last_promoted = \Carbon::now();
         }
@@ -46,7 +47,7 @@ class SyncMemberData
         $member->join_date = $item['joindate'];
         $member->last_forum_login = $item['lastvisit'];
 
-        // accounts for forum member, prospective member ranks
+        // accounts for forum member, prospective member ranks which we don't use
         $member->rank_id = $item['aodrankval'] - 2;
 
         $member->save();
@@ -55,5 +56,4 @@ class SyncMemberData
             'primary' => true,
         ];
     }
-
 }
