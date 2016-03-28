@@ -6,9 +6,23 @@ class Help implements Command
 {
     private $data;
     private $commands = [
-        ['name' => 'help', 'description' => 'Lists all available commands', 'usage' => '/tracker help'],
-        ['name' => 'member_sync', 'description' => 'Syncs tracker with forum data. Use only when necessary', 'usage' => '/tracker member_sync'],
-        ['name' => 'all_divisions', 'description' => 'Lists all divisions supported by the tracker', 'usage' => '/tracker all_divisions'],
+        [
+            'name' => 'help',
+            'description' => 'Lists all available commands',
+            'usage' => '/tracker help',
+        ],
+
+        [
+            'name' => 'member_sync',
+            'description' => 'Syncs tracker with forum data. Use only when necessary',
+            'usage' => '/tracker member_sync',
+        ],
+
+        [
+            'name' => 'all_divisions',
+            'description' => 'Lists all divisions supported by the tracker',
+            'usage' => '/tracker all_divisions',
+        ],
     ];
 
     /**
@@ -26,11 +40,14 @@ class Help implements Command
         $commandsList = "";
 
         foreach ($this->commands as $command) {
-            $commandsList .= "{$command['name']}: {$command['description']}. _{$command['usage']}_\r\n";
+            $commandsList .= "*{$command['name']}*: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n";
         }
 
         return [
-            'text' => "The following commands are currently available. \n\n{$commandsList}",
+            'text' => "The following commands are currently available.",
+            'attachments' => [
+                'text' => $commandsList,
+            ],
         ];
     }
 
