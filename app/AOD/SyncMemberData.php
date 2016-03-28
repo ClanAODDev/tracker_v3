@@ -16,13 +16,16 @@ class SyncMemberData
     public static function execute()
     {
         foreach (Division::all() as $division) {
+
+            self::$activeMembers = [];
+
             $divisionInfo = new GetDivisionInfo($division->name);
 
             foreach ($divisionInfo->data as $member) {
                 self::doMemberUpdate($member, $division);
             }
 
-            $division->members()->sync(self::$activeMembers);
+            $division->members()->sync(self::$activeMembers, false);
         }
     }
 
