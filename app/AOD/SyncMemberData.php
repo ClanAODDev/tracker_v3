@@ -7,36 +7,32 @@ use App\Member;
 
 class SyncMemberData
 {
-    public $divisions;
-    private $activeMembers = [];
-
-    public function __construct()
-    {
-        $this->divisions = Division::all();
-    }
+    protected static $activeMembers = [];
 
     /**
      * Performs update operation on divisions and members
      * and also syncs division membership (adds, removes)
      */
-    public function execute()
+    public static function execute()
     {
-        foreach ($this->divisions as $division) {
+        foreach (Division::all() as $division) {
             $divisionInfo = new GetDivisionInfo($division->name);
 
             foreach ($divisionInfo->data as $item) {
-                $this->doMemberUpdate($item, $division);
+                self::doMemberUpdate($item, $division);
             }
 
-            $division->members()->sync($this->activeMembers, false);
+            $division->members()->sync(self::$activeMembers, false);
         }
     }
 
     /**
+     * Updates an individual member and queues as an active primary member
+     *
      * @param $item
      * @param Division $division
      */
-    private function doMemberUpdate($item, Division $division)
+    private static function doMemberUpdate($item, Division $division)
     {
         $member = Member::firstOrCreate([
             'clan_id' => $item['userid'],
@@ -55,10 +51,9 @@ class SyncMemberData
 
         $member->save();
 
-        $this->activeMembers[$member->id] = [
+        self::$activeMembers[$member->id] = [
             'primary' => true,
         ];
     }
-
 
 }

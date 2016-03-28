@@ -25,8 +25,7 @@ class Kernel extends ConsoleKernel
     {
         // AOD member data sync
         $schedule->call(function () {
-            $sync = new SyncMemberData;
-            $sync->execute();
+            SyncMemberData::execute();
         })->everyThirtyMinutes();
     }
 
