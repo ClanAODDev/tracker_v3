@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Slack\Commands;
+namespace App\Slack\Commands;
 
 use App\AOD\SyncMemberData;
 
@@ -20,9 +20,9 @@ class MemberSync implements Command
     public function handle()
     {
         SyncMemberData::execute();
-        return response()->json([
+        return [
             'text' => 'Member sync performed successfully!'
-        )];
+        ];
     }
 
 
