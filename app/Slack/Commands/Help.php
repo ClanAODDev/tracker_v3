@@ -23,8 +23,10 @@ class Help implements Command
     public function handle()
     {
 
+        $commandsList = "";
+
         foreach ($this->commands as $command) {
-            $commandsList .= "{$command['name']}: {$command['description']}. _{$command['usage']}_\n";
+            $commandsList .= "{$command['name']}: {$command['description']}. _{$command['usage']}_\r\n";
         }
 
         return [
