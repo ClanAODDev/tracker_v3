@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\AOD\SyncMemberData;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +12,9 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [];
+    protected $commands = [
+        Commands\MemberSync::class,
+    ];
 
     /**
      * Define the application's command schedule.
@@ -23,10 +24,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // AOD member data sync
-        $schedule->call(function () {
-            SyncMemberData::execute();
-        })->everyThirtyMinutes();
+        $schedule->command('memberSync')->hourly();
     }
-
 }
