@@ -15,7 +15,16 @@ class AllDivisions implements Command
 
     public function handle()
     {
-        return Division::all();
+        $divisions = Division::lists('name')->toArray();
+
+        return [
+            'text' => 'The tracker current supports the following divisions: ',
+            'attachments' => [
+                [
+                    'text' => implode(', ', $divisions)
+                ],
+            ],
+        ];
     }
 
 }

@@ -46,7 +46,9 @@ class Help implements Command
         return [
             'text' => "The following commands are currently available.",
             'attachments' => [
-                'text' => $commandsList,
+                [
+                    'text' => $commandsList
+                ],
             ],
         ];
     }
