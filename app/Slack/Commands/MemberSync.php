@@ -21,10 +21,6 @@ class MemberSync implements Command
     public function handle()
     {
 
-        return [
-            'text' => $this->data['response_url']
-        ];
-
         SyncMemberData::execute();
 
         $this->response();
