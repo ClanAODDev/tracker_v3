@@ -30,11 +30,14 @@ class AllDivisions implements Command
     public function response()
     {
         return [
-            'text' => 'The tracker current supports the following divisions: ',
+
+            'text' => 'The tracker currently supports the following divisions: ',
+
             'attachments' => [
                 [
                     'text' => implode(', ', $this->divisions)
                 ],
+
             ],
         ];
     }

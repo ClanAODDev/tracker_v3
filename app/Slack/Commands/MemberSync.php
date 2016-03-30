@@ -23,8 +23,7 @@ class MemberSync extends Base implements Command
     public function handle()
     {
         SyncMemberData::execute();
-
-        $this->response();
+        return $this->response();
     }
 
     /**
