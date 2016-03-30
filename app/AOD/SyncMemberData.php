@@ -19,7 +19,6 @@ class SyncMemberData
         foreach (Division::all() as $division) {
 
             self::$activeMembers = [];
-
             $divisionInfo = new GetDivisionInfo($division->name);
 
             foreach ($divisionInfo->data as $member) {

@@ -3,6 +3,7 @@
 namespace App\Slack\Commands;
 
 use App\AOD\SyncMemberData;
+use GuzzleHttp\Client;
 
 class MemberSync implements Command
 {
@@ -21,10 +22,17 @@ class MemberSync implements Command
     {
         SyncMemberData::execute();
 
-        return [
-            'text' => 'Member sync performed successfully!',
-        ];
+        return $this->response();
     }
 
+    public function response()
+    {
+        $client = new Client;
 
+        $client->post($this->data['response_url'], [
+           'json' => [
+               'text' => 'Member sync performed successfully'
+           ]
+        ]);
+    }
 }
