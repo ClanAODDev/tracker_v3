@@ -6,7 +6,7 @@ use App\AOD\SyncMemberData;
 
 class MemberSync extends Base implements Command
 {
-    private $data;
+    protected $data;
 
     /**
      * MemberSync constructor.
