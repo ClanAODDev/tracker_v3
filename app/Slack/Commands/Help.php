@@ -2,9 +2,10 @@
 
 namespace App\Slack\Commands;
 
-class Help implements Command
+class Help extends Base implements Command
 {
     private $data;
+    private $content;
     private $commands = [
         [
             'name' => 'help',
@@ -37,21 +38,30 @@ class Help implements Command
     public function handle()
     {
 
-        $commandsList = "";
-
         foreach ($this->commands as $command) {
-            $commandsList .= "*{$command['name']}*: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n";
+            $this->content .= "*{$command['name']}*: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n";
         }
 
+        return $this->response();
+    }
+
+
+    /**
+     * Response should either provide a JSON response right away
+     * or POST to the response_url if the request takes
+     * longer than 300ms
+     *
+     * @return mixed
+     */
+    public function response()
+    {
         return [
             'text' => "The following commands are currently available.",
             'attachments' => [
                 [
-                    'text' => $commandsList
+                    'text' => $this->content
                 ],
             ],
         ];
     }
-
-
 }
