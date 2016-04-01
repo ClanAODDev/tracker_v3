@@ -108,9 +108,9 @@ class Member extends Model
     /**
      * Gets member's primary division
      */
-    public function primaryDivision()
+    public function getPrimaryDivisionAttribute()
     {
-        return $this->divisions()->wherePivot('primary', true);
+        return $this->divisions()->wherePivot('primary', true)->first();
     }
 
 }

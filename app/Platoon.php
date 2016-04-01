@@ -75,7 +75,7 @@ class Platoon extends Model
             ]
         ];
 
-        return toJSON($data);
+        return json_encode($data);
     }
 
 

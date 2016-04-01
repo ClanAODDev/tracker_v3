@@ -14,4 +14,5 @@
             Squad #{{ $squad->id }}
         </li>
     @endforeach
+
 @stop

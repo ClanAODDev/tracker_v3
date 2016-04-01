@@ -9,7 +9,7 @@
                 @endif
             </div>
 
-            @if (count($squad->members))
+            @if (count($squad->membersWithoutLeader))
 
                 @foreach($squad->membersWithoutLeader($squad->leader_id) as $member)
 

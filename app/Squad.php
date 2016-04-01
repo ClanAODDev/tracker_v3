@@ -24,7 +24,7 @@ class Squad extends Model
 
     public function scopeMembersWithoutLeader($query, $squadLeaderId)
     {
-        return $query->except($squadLeaderId);
+        return $query->where('id', '!=', $squadLeaderId);
     }
 
     public function leader()

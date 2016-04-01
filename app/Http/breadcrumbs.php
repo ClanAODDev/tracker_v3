@@ -30,7 +30,11 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
 Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $member) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
-    $breadcrumbs->push($platoon->name, '/platoons/' . $platoon->id);
+
+    if ($platoon instanceof Platoon) {
+        $breadcrumbs->push(($platoon->name) ?: null, '/platoons/' . ($platoon->id) ?: null);
+    }
+
     $breadcrumbs->push($member->name);
 });
 
