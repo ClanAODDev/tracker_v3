@@ -9,7 +9,13 @@
                    class=" list-group-item">
                     <h5 class="pull-right text-muted big-num count-animated">{{ $platoon->members->count() }}</h5>
                     <h4 class="list-group-item-heading"><strong>{{ $platoon->name }}</strong></h4>
-                    <p class="list-group-item-text text-muted">Leader</p>
+                    <p class="list-group-item-text text-muted">
+                        @if ($platoon->leader)
+                            {{ $platoon->leader->rankName }}
+                        @else
+                            TBA
+                        @endif
+                    </p>
                 </a>
             @endforeach
         @else

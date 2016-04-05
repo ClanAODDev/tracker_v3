@@ -31,6 +31,11 @@ class Platoon extends Model
         return $this->hasMany(Member::class);
     }
 
+    public function leader()
+    {
+        return $this->hasOne(Member::class, 'clan_id', 'leader_id');
+    }
+
     /**
      * Set forum activity attribute for platoon
      *
