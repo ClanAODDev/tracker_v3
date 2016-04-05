@@ -10,7 +10,7 @@ class Member extends Model
 {
 
     protected $guarded = [
-       'id'
+        'id',
     ];
 
     protected $dates = [
@@ -92,7 +92,6 @@ class Member extends Model
     {
         return $this->rank->abbreviation . " " . $this->name;
     }
-
 
     /**
      * relationship - member belongs to a position

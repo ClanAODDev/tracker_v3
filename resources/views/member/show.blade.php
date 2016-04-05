@@ -3,8 +3,6 @@
 
     {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member ) !!}
 
-
-
     <div class="row">
         <div class="col-xs-6">
 
@@ -16,15 +14,14 @@
                 <div class="btn-group">
 
                     <a class="btn btn-default btn-xs popup-link"
-                       href="http://www.clanaod.net/forums/private.php?do=newpm&amp;u=31832&amp;url=http://www.clanaod.net/forums/member.php?u=31832"
+                       href="http://www.clanaod.net/forums/private.php?do=newpm&amp;u={{ $member->clan_id }}&amp;url=http://www.clanaod.net/forums/member.php?u={{ $member->clan_id }}"
                        target="_blank"><i class="fa fa-comment"></i> Send PM</a>
 
                     <a class="btn btn-default btn-xs popup-link"
-                       href="http://www.clanaod.net/forums/sendmessage.php?do=mailmember&amp;u=31832&amp;url=http://www.clanaod.net/forums/member.php?u=31832"
+                       href="http://www.clanaod.net/forums/sendmessage.php?do=mailmember&amp;u={{ $member->clan_id }}&amp;url=http://www.clanaod.net/forums/member.php?u={{ $member->clan_id }}"
                        target="_blank"><i class="fa fa-envelope"></i> Send Email</a>
 
                 </div>
-
             </h2>
         </div>
 
@@ -38,11 +35,8 @@
                    class="removeMember btn btn-danger"><i class="fa fa-trash fa-lg"></i> Remove<span
                             class="hidden-sm hidden-xs"> from AOD</span></a>
             </div>
-
         </div>
-
     </div>
-
     <hr/>
 
 @stop
