@@ -2,14 +2,15 @@
  * fonts
  */
 
- @font-face {
+//noinspection ALL
+@font-face {
  	font-family: 'bebasregular';
  	src: url('../fonts/BEBAS___-webfont.eot');
  	src: url('../fonts/BEBAS___-webfont.eot?#iefix') format("embedded-opentype"), url('../fonts/BEBAS___-webfont.woff') format("woff"), url('../fonts/BEBAS___-webfont.ttf') format("truetype"), url('../fonts/BEBAS___-webfont.svg#bebasregular') format("svg");
  }
 
-
- @font-face {
+//noinspection ALL
+@font-face {
  	font-family: 'dincond-light';
  	src: url('../fonts/din-light-webfont.eot');
  	src: url('../fonts/din-light-webfont.eot?#iefix') format("embedded-opentype"), url('../fonts/din-light-webfont.woff2') format("woff2"), url('../fonts/din-light-webfont.woff') format("woff"), url('../fonts/din-light-webfont.ttf') format("truetype"), url('../fonts/din-light-webfont.svg#dincond-lightregular') format("svg");
@@ -17,8 +18,8 @@
  	font-style: normal;
  }
 
-
- @font-face {
+//noinspection ALL
+@font-face {
  	font-family: 'dincond-black';
  	src: url('../fonts/din-black-webfont.eot');
  	src: url('../fonts/din-black-webfont.eot?#iefix') format("embedded-opentype"), url('../fonts/din-black-webfont.woff2') format("woff2"), url('../fonts/din-black-webfont.woff') format("woff"), url('../fonts/din-black-webfont.ttf') format("truetype"), url('../fonts/din-black-webfont.svg#dincond-blackregular') format("svg");
@@ -35,9 +36,10 @@
  	/* The html and body elements cannot have any padding or margin. */
  }
 
- body {
+//noinspection ALL
+body {
  	height: 100%;
-	 background: url('../images/bg.jpg') fixed;
+	 background: url("../images/bg.jpg") fixed;
 	 /* The html and body elements cannot have any padding or margin. */
  }
 
@@ -290,8 +292,7 @@
 
  #wrap {
  	min-height: 100%;
- 	height: auto !important;
- 	height: 100%;
+	 height: 100%;
  	/* Negative indent footer by it's height */
  	margin: 0 auto -60px;
  }
@@ -398,7 +399,7 @@
  /* IE7 */
 
  .count-detail-big {
- 	font-family: 'dincond-black';
+	 font-family: 'dincond-black', serif;
  	font-size: 72px;
  	text-align: center;
  	color: #999;
@@ -407,7 +408,7 @@
  }
 
  .big-num {
- 	font-family: 'dincond-black';
+	 font-family: "dincond-black", serif;
  	font-size: 46px;
  	margin-top: -7px;
  	opacity: .3;
@@ -415,7 +416,7 @@
  }
 
  .big-num-main {
- 	font-family: 'dincond-black';
+	 font-family: "dincond-black", serif;
  	font-size: 46px;
  	margin-top: -40px;
  	opacity: .2;
@@ -721,7 +722,7 @@
 
  	.title {
  		font-size: 82px;
- 		font-family: 'Lato';
+		font-family: "Lato", serif;
  		margin-bottom: 40px;
  	}
  }
@@ -766,13 +767,13 @@
  		&:hover {
  			background-color: rgba(252, 248, 227, 0.7);
  		}
- 		margin: 0px;
+ 		margin: 0;
  		cursor: move;
  		display: block;
  	}
  	list-style-type: none !important;
    padding: 0;
-   -webkit-padding-start: 0px !important;
+   -webkit-padding-start: 0 !important;
    margin: 0 !important;
    background-color: rgba(0, 0, 0, 0.01);
  	min-height: 45px;
@@ -882,7 +883,7 @@
 
  #history {
  	.thumbnail {
- 		padding: 0px;
+ 		padding: 0;
  	}
  	.panel {
  		position: relative;
