@@ -8,6 +8,11 @@ use App\Reports\Slack;
 
 class SyncMemberData
 {
+    /**
+     * Collection of active members to sync
+     *
+     * @var array
+     */
     protected static $activeMembers = [];
 
     /**
@@ -36,7 +41,7 @@ class SyncMemberData
      * Updates an individual member and queues as an active primary member
      *
      * @param $item
-     * @param Division $division
+     * @param $division
      */
     private static function doMemberUpdate($item, Division $division)
     {

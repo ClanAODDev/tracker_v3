@@ -14,28 +14,52 @@ class GetDivisionInfo
     public $data;
     public $division;
 
+    /**
+     * AOD member data endpoint
+     *
+     * @var string
+     */
     protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
 
+
+    /**
+     * GetDivisionInfo constructor.
+     *
+     * @param $division
+     */
     public function __construct($division)
     {
         $this->division = $division;
 
         if (!getenv('AOD_TOKEN')) {
-
-            $this->data = [
-                'error' => 'AOD token not defined in environment',
-            ];
-
-            $this->error($this->data['error']);
-
+            $error = "AOD token not defined";
+            Slack::error('SYNC ERROR: ' . $error);
         } else {
             $this->data = $this->fetchData();
         }
     }
 
-    private function error($error)
+    /**
+     * Fetches member data per division
+     *
+     * @return mixed
+     * @internal param $agent
+     */
+    protected function fetchData()
     {
-        Slack::send('SYNC ERROR: ' . $error);
+        $agent = "AOD Division Tracker";
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
+        curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+        $data = json_decode(
+            curl_exec($ch)
+        );
+
+        return $this->prepareData($data);
     }
 
     /**
@@ -92,29 +116,6 @@ class GetDivisionInfo
         }
 
         return $prepared;
-    }
-
-    /**
-     * Fetches member data per division
-     *
-     * @return mixed
-     * @internal param $agent
-     */
-    protected function fetchData()
-    {
-        $agent = "AOD Division Tracker";
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-        curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-
-        $data = json_decode(
-            curl_exec($ch)
-        );
-
-        return $this->prepareData($data);
     }
 
 }
