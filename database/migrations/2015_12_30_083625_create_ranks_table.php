@@ -34,7 +34,7 @@ class CreateRanksTable extends Migration
                 ['name' => 'Corporal', 'abbreviation' => 'Cpl'],
                 ['name' => 'Sergeant', 'abbreviation' => 'Sgt'],
                 ['name' => 'Staff Sergeant', 'abbreviation' => 'SSgt'],
-                ['name' => 'Master Sergeant', 'abbreviation' => 'Rct'],
+                ['name' => 'Master Sergeant', 'abbreviation' => 'MSgt'],
                 ['name' => 'First Sergeant', 'abbreviation' => '1stSgt'],
                 ['name' => 'Command Sergeant', 'abbreviation' => 'CmdSgt'],
                 ['name' => 'Sergeant Major', 'abbreviation' => 'SgtMaj'],
