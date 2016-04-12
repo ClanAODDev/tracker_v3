@@ -12,10 +12,22 @@ var Tracker = Tracker || {};
 
         },
 
+        /**
+         * Handle member search
+         * @constructor
+         */
         SearchMembers: function () {
-            this.TriggerFilter(document.getElementById("member-search"), this.DoMemberSearch, 1000);
+            this.TriggerFilter(document.getElementById("member-search"), this.GetSearchResults, 1000);
         },
 
+        /**
+         * Textarea event listener
+         *
+         * @param textArea
+         * @param callback
+         * @param delay
+         * @constructor
+         */
         TriggerFilter: function (textArea, callback, delay) {
             var timer = null;
             textArea.onkeypress = function () {
@@ -30,7 +42,12 @@ var Tracker = Tracker || {};
             textArea = null;
         },
 
-        DoMemberSearch: function () {
+        /**
+         * Search members handle
+         *
+         * @constructor
+         */
+        GetSearchResults: function () {
             if ($('#member-search').val()) {
                 var name = $('input#member-search').val();
 
