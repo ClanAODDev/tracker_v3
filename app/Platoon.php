@@ -31,6 +31,11 @@ class Platoon extends Model
         return $this->hasMany(Member::class);
     }
 
+    public function leader()
+    {
+        return $this->hasOne(Member::class, 'clan_id', 'leader_id');
+    }
+
     /**
      * Set forum activity attribute for platoon
      *
@@ -53,26 +58,26 @@ class Platoon extends Model
                 'label' => '< 2 weeks ago',
                 'color' => '#28b62c',
                 'highlight' => '#5bc75e',
-                'value' => $twoWeeksValue
+                'value' => $twoWeeksValue,
             ],
             [
                 'label' => '14 - 30 days ago',
                 'color' => '#ff851b',
                 'highlight' => '#ffa14f',
-                'value' => $oneMonthValue
+                'value' => $oneMonthValue,
             ],
             [
                 'label' => '30 - 45 days ago',
                 'color' => '#ff4136',
                 'highlight' => '#ff6c64',
-                'value' => $moreThanMonthValue
+                'value' => $moreThanMonthValue,
             ],
             [
                 'label' => '> 45 days ago',
                 'color' => '#000',
                 'highlight' => '#333',
-                'value' => $moreThan45DaysValue
-            ]
+                'value' => $moreThan45DaysValue,
+            ],
         ];
 
         return json_encode($data);

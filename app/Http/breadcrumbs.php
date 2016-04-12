@@ -1,6 +1,8 @@
 <?php
 
-// Home
+use App\Division;
+use App\Platoon;
+
 Breadcrumbs::register('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', '/home');
 });
@@ -29,10 +31,13 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
 // Home > Division > Platoon > Member
 Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $member) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+
+    if ($division instanceof Division) {
+        $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+    }
 
     if ($platoon instanceof Platoon) {
-        $breadcrumbs->push(($platoon->name) ?: null, '/platoons/' . ($platoon->id) ?: null);
+        $breadcrumbs->push($platoon->name, '/platoons/' . $platoon->id);
     }
 
     $breadcrumbs->push($member->name);

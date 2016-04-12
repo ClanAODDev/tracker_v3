@@ -15,6 +15,7 @@ Route::group(['middleware' => 'web'], function () {
 
     // members
     Route::get('members/{member}', 'MemberController@show');
+    Route::get('members/search/{name}', 'MemberController@search');
 
     // divisions
     Route::get('divisions/{division}', 'DivisionController@show');

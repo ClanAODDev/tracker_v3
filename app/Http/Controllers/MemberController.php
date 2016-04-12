@@ -27,6 +27,18 @@ class MemberController extends Controller
     }
 
     /**
+     * Search for a member
+     *
+     * @param $name
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function search($name)
+    {
+        $members = Member::where('name', 'LIKE', "%{$name}%")->get();
+        return view('member.search', compact('members'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

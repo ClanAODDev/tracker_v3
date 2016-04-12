@@ -10,7 +10,7 @@ class Member extends Model
 {
 
     protected $guarded = [
-       'id'
+        'id',
     ];
 
     protected $dates = [
@@ -88,6 +88,10 @@ class Member extends Model
         return $this->belongsTo(Rank::class);
     }
 
+    public function getRankNameAttribute()
+    {
+        return $this->rank->abbreviation . " " . $this->name;
+    }
 
     /**
      * relationship - member belongs to a position
