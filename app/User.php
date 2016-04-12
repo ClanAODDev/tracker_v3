@@ -52,6 +52,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Check to see if user is a certain role
+     *
+     * @param $role
+     * @return bool
+     */
+    public function isRole($role)
+    {
+        switch ($role) {
+            case "admin":
+                return ($this->role->id === 4);
+            case "srLeader":
+                return ($this->role->id === 3);
+            case "jrLeader":
+                return ($this->role->id === 2);
+            case "user":
+                return ($this->role->id === 1);
+        }
+    }
+
+    /**
      * Accessor for name
      * enforce proper casing
      */
