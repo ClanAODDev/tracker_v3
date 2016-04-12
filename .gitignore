@@ -7,3 +7,8 @@ Homestead.yaml
 Homestead.json
 .env
 .idea
+/public/js/platoon.js.map
+/public/js/libs.js.map
+/public/js/app.js.map
+/public/css/app.css.map
+/npm-debug.log

@@ -321,12 +321,16 @@
  	display: none;
  }
 
+ #member-search {
+	 width: 250px;
+ }
+
  #member-search-results.scroll {
  	position: absolute;
  	z-index: 1;
  	overflow-x: hidden;
  	max-height: 300px;
- 	width: 190px;
+ 	width: 250px;
  }
 
  .copy-link, .copy-button-rct, .copy-button {
