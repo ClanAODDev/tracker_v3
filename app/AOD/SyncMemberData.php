@@ -30,7 +30,7 @@ class SyncMemberData
                 self::doMemberUpdate($member, $division);
             }
 
-            $division->members()->sync(self::$activeMembers, false);
+            $division->members()->sync(self::$activeMembers);
         }
 
         $responsibleUser = (request()->user_name) ?: 'System';

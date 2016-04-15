@@ -22,7 +22,7 @@ class SlackController extends Controller
         }
 
         $command = array_first(
-            explode(':', $request->all()['text'])
+            explode(':', $request->text)
         );
 
         $response = SlackApp::handle($command, $request->all());
