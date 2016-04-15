@@ -24,6 +24,12 @@ class Help extends Base implements Command
             'description' => 'Lists all divisions supported by the tracker',
             'usage' => '/tracker all_divisions',
         ],
+
+        [
+            'name' => 'search',
+            'description' => 'Search members in divisions supported by tracker',
+            'usage' => '/tracker search:playernamehere',
+        ],
     ];
 
     /**
@@ -59,7 +65,7 @@ class Help extends Base implements Command
             'text' => "The following commands are currently available.",
             'attachments' => [
                 [
-                    'text' => $this->content
+                    'text' => $this->content,
                 ],
             ],
         ];
