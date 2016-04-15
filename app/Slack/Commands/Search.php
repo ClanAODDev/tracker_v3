@@ -31,7 +31,7 @@ class Search extends Base implements Command
             explode(':', $data['text'], 2)
         );
 
-        $this->params = $params;
+        $this->params = trim($params);
     }
 
 
