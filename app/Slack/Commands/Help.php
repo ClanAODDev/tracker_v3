@@ -45,7 +45,7 @@ class Help extends Base implements Command
     {
 
         foreach ($this->commands as $command) {
-            $this->content .= "*{$command['name']}*: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n";
+            $this->content .= "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n";
         }
 
         return $this->response();
