@@ -32,13 +32,10 @@ class MemberController extends Controller
      * @param $name
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function search($name, Request $request)
+    public function search($name)
     {
         $members = Member::where('name', 'LIKE', "%{$name}%")->get();
 
-        if ($request->ajax())
-            return $members;
-        
         return view('member.search', compact('members'));
     }
 
