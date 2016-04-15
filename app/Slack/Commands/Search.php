@@ -44,7 +44,7 @@ class Search extends Base implements Command
 
         if ($this->members) {
             foreach ($this->members as $member) {
-                $this->content .= "{$member->name} : {$this->profile_path}{$member->clan_id} \r\n";
+                $this->content .= "{$member->rankName} | {$this->profile_path}{$member->clan_id} \r\n";
             }
         }
 
