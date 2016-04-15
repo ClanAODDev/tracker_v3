@@ -44,7 +44,8 @@ class Search extends Base implements Command
 
         if ($this->members) {
             foreach ($this->members as $member) {
-                $this->content .= "{$member->rankName} | {$this->profile_path}{$member->clan_id} \r\n";
+                $division = ($member->primaryDivision) ? "| {$member->primaryDivision->name} Division |" : "| Ex-AOD |";
+                $this->content .= "{$member->rankName} {$division} {$this->profile_path}{$member->clan_id} \r\n";
             }
         }
 
