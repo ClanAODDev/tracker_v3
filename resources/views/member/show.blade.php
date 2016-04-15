@@ -39,4 +39,9 @@
     </div>
     <hr/>
 
+    @if (!$member->primaryDivision)
+        <div class="alert alert-danger">This player does not belong to a division supported by the tracker. </div>
+    @endif
+
+
 @stop
