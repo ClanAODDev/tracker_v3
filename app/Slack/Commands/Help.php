@@ -2,6 +2,9 @@
 
 namespace App\Slack\Commands;
 
+use App\Slack\Base;
+use App\Slack\Command;
+
 class Help extends Base implements Command
 {
     private $data;

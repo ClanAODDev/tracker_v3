@@ -3,6 +3,7 @@
 namespace App\Slack\Commands;
 
 use App\Division;
+use App\Slack\Command;
 
 class AllDivisions implements Command
 {
@@ -35,7 +36,7 @@ class AllDivisions implements Command
 
             'attachments' => [
                 [
-                    'text' => implode(', ', $this->divisions)
+                    'text' => implode(', ', $this->divisions),
                 ],
 
             ],

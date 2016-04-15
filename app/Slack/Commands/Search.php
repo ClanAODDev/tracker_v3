@@ -8,8 +8,9 @@
 
 namespace App\Slack\Commands;
 
-
 use App\Member;
+use App\Slack\Base;
+use App\Slack\Command;
 
 class Search extends Base implements Command
 {
@@ -33,11 +34,18 @@ class Search extends Base implements Command
         $this->params = $params;
     }
 
+
     /**
-     * @return mixed
+     * @return array|mixed
      */
     public function handle()
     {
+        if (strlen($this->params) < 3) {
+            return [
+                'text' => "Your search criteria must be 3 characters or more",
+            ];
+        }
+
         $this->members = Member::where(
             'name', 'LIKE', "%{$this->params}%"
         )->get();
@@ -63,6 +71,7 @@ class Search extends Base implements Command
         if (count($this->members)) {
             return [
                 'text' => "The following members were found",
+                'response_type' => 'in_channel',
                 'attachments' => [
                     [
                         'text' => $this->content,
@@ -73,6 +82,7 @@ class Search extends Base implements Command
 
         return [
             'text' => "No results were found",
+            'response_type' => 'in_channel',
         ];
     }
 }

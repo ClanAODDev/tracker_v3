@@ -3,6 +3,8 @@
 namespace App\Slack\Commands;
 
 use App\AOD\SyncMemberData;
+use App\Slack\Base;
+use App\Slack\Command;
 
 class MemberSync extends Base implements Command
 {
@@ -23,7 +25,7 @@ class MemberSync extends Base implements Command
     public function handle()
     {
         SyncMemberData::execute();
-        
+
         return $this->response();
     }
 

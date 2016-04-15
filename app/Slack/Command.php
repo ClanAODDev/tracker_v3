@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Slack\Commands;
+namespace App\Slack;
 
 /**
  * Interface Command
