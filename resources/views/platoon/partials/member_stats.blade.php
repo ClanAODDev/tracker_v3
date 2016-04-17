@@ -4,5 +4,3 @@
         <donut-graph url="/v1/api/activity/platoon/{{ $platoon->id }}"></donut-graph>
     </div>
 </div>
-
-{{ $platoon->forumActivity }}
