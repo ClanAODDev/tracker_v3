@@ -7,43 +7,36 @@ use App\Slack\Command;
 
 class Help extends Base implements Command
 {
-    private $data;
     private $content;
     private $commands = [
         [
-            'name' => 'help',
+            'name' => 'Help',
             'description' => 'Lists all available commands',
             'usage' => '/tracker help',
         ],
 
         [
-            'name' => 'member_sync',
+            'name' => 'Member sync',
             'description' => 'Syncs tracker with forum data. Use only when necessary',
             'usage' => '/tracker member_sync',
         ],
 
         [
-            'name' => 'all_divisions',
+            'name' => 'Supported divisions',
             'description' => 'Lists all divisions supported by the tracker',
             'usage' => '/tracker all_divisions',
         ],
 
         [
-            'name' => 'search',
+            'name' => 'Member search',
             'description' => 'Search members in divisions supported by tracker',
-            'usage' => '/tracker search:playernamehere',
+            'usage' => '/tracker search:guybrush',
         ],
     ];
 
     /**
-     * MemberSync constructor.
-     * @param $data
+     * @return mixed
      */
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
-
     public function handle()
     {
         foreach ($this->commands as $command) {

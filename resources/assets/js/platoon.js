@@ -3,6 +3,11 @@ var Platoon = Platoon || {};
 (function ($) {
 
     Platoon = {
+
+        setup: function () {
+            this.handleMembers();
+        },
+
         handleMembers: function () {
             $("#members-table tbody tr").click(function () {
                 window.location.href = "/members/" + $(this).attr('data-id');
@@ -69,8 +74,6 @@ var Platoon = Platoon || {};
                         "bSelectedOnly": true
                     }]
                 }
-
-
             });
 
             $("#members-table_paginate").addClass('text-center');
@@ -87,20 +90,8 @@ var Platoon = Platoon || {};
 
             $(".no-sort").removeClass("sorting");
 
-            // platoon forum activity stats
-            var json = $("#canvas-holder").attr('data-stats');
-            console.log(json);
-            var donutData = $.parseJSON(json);
-            var ctx = document.getElementById("chart-area").getContext("2d");
-            window.myDonut = new Chart(ctx).Doughnut(donutData, {
-                animationEasing: "easeInOutQuint",
-                animationSteps: 75,
-                percentageInnerCutout: 50,
-                animateScale: true,
-                responsive: true
-            });
         },
     }
 })(jQuery);
 
-Platoon.handleMembers();
+Platoon.setup();

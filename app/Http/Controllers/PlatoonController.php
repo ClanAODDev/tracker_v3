@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Platoon;
 use App\Division;
-use Illuminate\Http\Request;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Platoon;
+use Illuminate\Http\Request;
 
 class PlatoonController extends Controller
 {
@@ -32,7 +30,7 @@ class PlatoonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -51,6 +49,7 @@ class PlatoonController extends Controller
     public function show(Platoon $platoon)
     {
         $platoon->members = $this->sortPlatoonMembers($platoon);
+
         return view('platoon.show', compact('platoon'));
     }
 
@@ -68,7 +67,7 @@ class PlatoonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -79,8 +78,8 @@ class PlatoonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -91,11 +90,19 @@ class PlatoonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
+    }
+
+    public function activity(Platoon $platoon, Request $request)
+    {
+        if ($request->ajax())
+            return $platoon->forumActivity;
+
+        return redirect(404);
     }
 }

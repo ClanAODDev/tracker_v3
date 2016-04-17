@@ -12,6 +12,21 @@ use GuzzleHttp\Client;
 class Base
 {
     /**
+     * All commands have parameters
+     *
+     * @var array
+     */
+    protected $params;
+
+    public function __construct($data) {
+        $params = last(
+            explode(':', $data['text'], 2)
+        );
+
+        $this->params = trim($params);
+    }
+
+    /**
      * Useful if response will take longer than 300ms
      *
      * @param $message

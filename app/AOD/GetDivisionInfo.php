@@ -19,7 +19,8 @@ class GetDivisionInfo
      *
      * @var string
      */
-    protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
+    // protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
+    protected $source = "https://api.myjson.com/bins/1t4bg";
 
 
     /**
@@ -48,16 +49,14 @@ class GetDivisionInfo
     protected function fetchData()
     {
         $agent = "AOD Division Tracker";
-        $ch = curl_init();
 
+        $ch = curl_init();
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
-        $data = json_decode(
-            curl_exec($ch)
-        );
+        $data = json_decode(curl_exec($ch));
 
         return $this->prepareData($data);
     }

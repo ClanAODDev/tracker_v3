@@ -30,16 +30,18 @@ var Tracker = Tracker || {};
          */
         TriggerFilter: function (textArea, callback, delay) {
             var timer = null;
-            textArea.onkeypress = function () {
-                if (timer) {
-                    window.clearTimeout(timer);
-                }
-                timer = window.setTimeout(function () {
-                    timer = null;
-                    callback();
-                }, delay);
-            };
-            textArea = null;
+            if ($("#member-search").length) {
+                textArea.onkeypress = function () {
+                    if (timer) {
+                        window.clearTimeout(timer);
+                    }
+                    timer = window.setTimeout(function () {
+                        timer = null;
+                        callback();
+                    }, delay);
+                };
+                textArea = null;
+            }
         },
 
         /**

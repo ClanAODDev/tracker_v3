@@ -28,6 +28,14 @@ Route::group(['middleware' => 'web'], function () {
     // squads
     Route::get('squads/{squad}', 'SquadController@show');
 
+
+    /**
+     * graphing endpoints
+     */
+    Route::group(['prefix' => 'v1/api'], function () {
+        Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
+    });
+
 });
 
 
@@ -58,6 +66,7 @@ Route::group(['middleware' => 'slack'], function () {
 Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:5'], function () {
     Route::get('/division-data/{division_name}', function ($division_name) {
         $info = new \App\AOD\DivisionInfo($division_name);
+
         return response()->json($info->data);
     });
 });

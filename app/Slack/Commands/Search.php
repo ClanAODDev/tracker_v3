@@ -14,26 +14,11 @@ use App\Slack\Command;
 
 class Search extends Base implements Command
 {
-
-    private $params;
+    
     private $members;
     private $content;
 
     private $profile_path = "http://www.clanaod.net/forums/member.php?u=";
-
-    /**
-     * Search constructor.
-     * @param $data
-     */
-    public function __construct($data)
-    {
-        $params = last(
-            explode(':', $data['text'], 2)
-        );
-
-        $this->params = trim($params);
-    }
-
 
     /**
      * @return array|mixed

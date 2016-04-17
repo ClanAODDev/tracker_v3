@@ -11,6 +11,8 @@ var elixir = require('laravel-elixir');
  |
  */
 
+elixir.config.sourcemaps = false;
+
 elixir(function (mix) {
 
     mix.sass('app.scss');
@@ -42,8 +44,11 @@ elixir(function (mix) {
 
         'public/js/libs.js', 'resources/assets/js');
 
+
     mix.scripts('app.js', 'public/js/app.js', 'resources/assets/js')
         .scripts('platoon.js', 'public/js/platoon.js', 'resources/assets/js')
+
+    mix.browserify('activity.js');
 });
 
 
