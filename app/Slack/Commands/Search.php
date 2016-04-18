@@ -31,15 +31,13 @@ class Search extends Base implements Command
             ];
         }
 
-        $this->members = Member::where(
-            'name', 'LIKE', "%{$this->params}%"
-        )->get();
+        $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
 
         if ($this->members) {
             foreach ($this->members as $member) {
-                $division = ($member->primaryDivision) ? "{$member->primaryDivision->name} Division\r\n" : null;
+                $division = ($member->primaryDivision) ? "{$member->primaryDivision->name} Division" : null;
                 $this->content[] = [
-                    'text' => "{$member->rankName}\r\n{$division}{$this->profile_path}{$member->clan_id} \r\n",
+                    'text' => "*{$member->rankName}* - {$division}\r\n{$this->profile_path}{$member->clan_id} \r\n",
                 ];
             }
         }
