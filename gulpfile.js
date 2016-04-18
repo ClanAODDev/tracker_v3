@@ -44,10 +44,8 @@ elixir(function (mix) {
 
         'public/js/libs.js', 'resources/assets/js');
 
-
-    mix.scripts('app.js', 'public/js/app.js', 'resources/assets/js')
-        .scripts('platoon.js', 'public/js/platoon.js', 'resources/assets/js')
-
+    mix.browserify('app.js');
+    mix.browserify('platoon.js');
     mix.browserify('activity.js');
 });
 

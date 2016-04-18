@@ -54,7 +54,7 @@ var Tracker = Tracker || {};
                 var name = $('input#member-search').val();
 
                 $.ajax({
-                    url: '/members/search/' + name,
+                    url: '/search/members/' + name,
                     type: 'GET',
                     success: function (response) {
                         $('#member-search-results').html(response);
