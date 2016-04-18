@@ -14,9 +14,9 @@ use App\Slack\Command;
 
 class Search extends Base implements Command
 {
-    
+
     private $members;
-    private $content;
+    private $content = [];
 
     private $profile_path = "http://www.clanaod.net/forums/member.php?u=";
 
@@ -37,8 +37,10 @@ class Search extends Base implements Command
 
         if ($this->members) {
             foreach ($this->members as $member) {
-                $division = ($member->primaryDivision) ? "| {$member->primaryDivision->name} Division |" : "| Ex-AOD |";
-                $this->content .= "{$member->rankName} {$division} {$this->profile_path}{$member->clan_id} \r\n";
+                $division = ($member->primaryDivision) ? "{$member->primaryDivision->name} Division" : null;
+                $this->content[] = [
+                    'text' => "{$member->rankName}\r\n{$division}\r\n{$this->profile_path}{$member->clan_id} \r\n",
+                ];
             }
         }
 
@@ -57,11 +59,7 @@ class Search extends Base implements Command
             return [
                 'text' => "The following members were found",
                 'response_type' => 'in_channel',
-                'attachments' => [
-                    [
-                        'text' => $this->content,
-                    ],
-                ],
+                'attachments' => $this->content,
             ];
         }
 
