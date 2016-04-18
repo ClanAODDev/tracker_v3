@@ -7,28 +7,28 @@ use App\Slack\Command;
 
 class Help extends Base implements Command
 {
-    private $content;
+    private $content = [];
     private $commands = [
         [
-            'name' => 'Help',
-            'description' => 'Lists all available commands',
+            'name' => 'Help reference',
+            'description' => 'Lists all available commands for the tracker integration',
             'usage' => '/tracker help',
         ],
 
         [
-            'name' => 'Member sync',
-            'description' => 'Syncs tracker with forum data. Use only when necessary',
+            'name' => 'Sync AOD member data',
+            'description' => 'Syncs tracker with AOD forum data. Use only when necessary',
             'usage' => '/tracker member_sync',
         ],
 
         [
-            'name' => 'Supported divisions',
+            'name' => 'All supported divisions',
             'description' => 'Lists all divisions supported by the tracker',
             'usage' => '/tracker all_divisions',
         ],
 
         [
-            'name' => 'Member search',
+            'name' => 'Search members',
             'description' => 'Search members in divisions supported by tracker',
             'usage' => '/tracker search:guybrush',
         ],
@@ -40,7 +40,9 @@ class Help extends Base implements Command
     public function handle()
     {
         foreach ($this->commands as $command) {
-            $this->content .= "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n";
+            $this->content[] = [
+                'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
+            ];
         }
 
         return $this->response();
@@ -58,11 +60,7 @@ class Help extends Base implements Command
     {
         return [
             'text' => "The following commands are currently available.",
-            'attachments' => [
-                [
-                    'text' => $this->content,
-                ],
-            ],
+            'attachments' => $this->content,
         ];
     }
 }
