@@ -15,6 +15,7 @@ Route::group(['middleware' => 'web'], function () {
 
     // members
     Route::get('members/{member}', 'MemberController@show');
+    Route::get('search/members/{name}', 'MemberController@search');
 
     // divisions
     Route::get('divisions/{division}', 'DivisionController@show');
@@ -33,7 +34,6 @@ Route::group(['middleware' => 'web'], function () {
      */
     Route::group(['prefix' => 'v1/api'], function () {
         Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
-        Route::get('search/members/{name}', 'MemberController@search');
     });
 
 });
