@@ -39,6 +39,7 @@ class Search extends Base implements Command
                 $this->content[] = [
                     'title' => "{$member->rankName} - {$division}",
                     'text' => $this->profile_path . $member->clan_id,
+                    'color' => '#88C53E',
                 ];
             }
         }
