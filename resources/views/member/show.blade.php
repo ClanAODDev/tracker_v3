@@ -14,11 +14,11 @@
                 <div class="btn-group">
 
                     <a class="btn btn-default btn-xs popup-link"
-                       href="{{ Helpers::getAODPmUrl($member->clan_id) }}"
+                       href="{{ Helpers::doForumFunction([$member->clan_id], 'pm') }}"
                        target="_blank"><i class="fa fa-comment"></i> Send PM</a>
 
                     <a class="btn btn-default btn-xs popup-link"
-                       href="{{ Helpers::getAODEmailUrl($member->clan_id) }}"
+                       href="{{ Helpers::doForumFunction([$member->clan_id], 'email') }}"
                        target="_blank"><i class="fa fa-envelope"></i> Send Email</a>
 
                 </div>

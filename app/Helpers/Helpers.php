@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
+
 /**
  * Class Helpers
  *
@@ -9,37 +11,33 @@ namespace App\Helpers;
  */
 class Helpers
 {
-
     /**
-     * Returns proper URL for sending an AOD forum PM
+     * Perform an AOD forum function (pm or email)
      *
-     * @param $clan_id
-     * @return string
+     * @param array $clan_id
+     * @param $action
+     * @return mixed
      */
-    public static function getAODPmUrl($clan_id)
+    public static function doForumFunction(array $clan_id, $action)
     {
+        if ($action === "email") {
+            $action = "mailmember";
+            $path = "http://www.clanaod.net/forums/sendmessage.php?";
+        } else if ($action === "pm") {
+            $action = "newpm";
+            $path = "http://www.clanaod.net/forums/private.php?";
+        } else {
+            throw new InvalidArgumentException('Invalid action type specified.');
+        }
+
         $params = [
-            'do' => 'newpm',
+            'do' => $action,
             'u' => $clan_id,
         ];
 
-        return "http://www.clanaod.net/forums/private.php?" . http_build_query($params);
-    }
+        $url = $path . http_build_query($params);
 
-    /**
-     * Returns proper URL for sending an AOD forum email
-     *
-     * @param $clan_id
-     * @return string
-     */
-    public static function getAODEmailUrl($clan_id)
-    {
-        $params = [
-            'do' => 'mailmember',
-            'u' => $clan_id,
-        ];
-
-        return "http://www.clanaod.net/forums/sendmessage.php?" . http_build_query($params);
+        return urldecode($url);
     }
 
     /**
@@ -49,7 +47,8 @@ class Helpers
      * @param string $type
      * @return string
      */
-    public static function avatar($email, $type = "thumb")
+    public
+    static function avatar($email, $type = "thumb")
     {
         $forum_img = self::GetGravatarUrl($email);
         $unknown = "assets/images/blank_avatar.jpg";
@@ -66,7 +65,8 @@ class Helpers
      * @param string $rating
      * @return mixed
      */
-    private static function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
+    private
+    static function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
     {
         $gravatar = sprintf('http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
             md5($email), $type, $size, $rating);
