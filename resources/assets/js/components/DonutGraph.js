@@ -1,9 +1,8 @@
+// import Chart from 'chart.js';
 import Vue from "vue";
 import VueResource from "vue-resource";
 
 Vue.use(VueResource);
-
-//import Chart from 'chart.js';
 
 export default Vue.extend({
     template: `
@@ -32,7 +31,7 @@ export default Vue.extend({
         render(data, options) {
             const chart = new Chart(
                 this.$els.canvas.getContext('2d')
-            ).Doughnut(data, options);
+            ).Pie(data, options);
         }
     }
 });
