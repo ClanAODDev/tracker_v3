@@ -37,14 +37,14 @@ class Search extends Base implements Command
             foreach ($this->members as $member) {
                 $division = ($member->primaryDivision) ? "{$member->primaryDivision->name} Division" : null;
                 $this->content[] = [
-                    'text' => "*{$member->rankName}* - {$division}\r\n{$this->profile_path}{$member->clan_id} \r\n",
+                    'title' => "{$member->rankName} - {$division}",
+                    'text' => $this->profile_path . $member->clan_id,
                 ];
             }
         }
 
         return $this->response();
     }
-
 
     /**
      * Provide a response to slack.
