@@ -35,10 +35,12 @@ class Base
     {
         $client = new Client;
 
-        $client->post($this->data['response_url'], [
-            'json' => [
-                'text' => $message
-            ]
-        ]);
+        if (!empty($this->data['response_url'])) {
+            $client->post($this->data['response_url'], [
+                'json' => [
+                    'text' => $message
+                ]
+            ]);
+        }
     }
 }
