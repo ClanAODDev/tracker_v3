@@ -30,7 +30,8 @@ class SyncMemberData
                 self::doMemberUpdate($member, $division);
             }
 
-            $division->members()->sync(self::$activeMembers);
+            $members = $division->members()->sync(self::$activeMembers);
+            self::doRemovalCleanup($members);
         }
 
         $responsibleUser = (request()->user_name) ?: 'System';
@@ -66,5 +67,23 @@ class SyncMemberData
         self::$activeMembers[$member->id] = [
             'primary' => true,
         ];
+    }
+
+    /**
+     * Handles cleanup of members removed from a division (platoon, squad info wiped)
+     *
+     * @param array $members
+     */
+    private static function doRemovalCleanup(array $members)
+    {
+        $detached = $members['detached'];
+        foreach ($detached as $index => $id) {
+            $member = Member::find($id);
+            if ($member instanceof Member) {
+                $member->squad_id = 0;
+                $member->platoon_id = 0;
+                $member->save();
+            }
+        }
     }
 }
