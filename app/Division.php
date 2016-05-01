@@ -56,12 +56,16 @@ class Division extends Model
         ]);
     }
 
+    /**
+     * Gets CO and XOs of a division
+     * 
+     * @return mixed
+     */
     public function leaders()
     {
-        return $this->members()->where([
-            'position_id' => 7,
-            'position_id' => 8
-        ]);
+        return $this->members()
+            ->where('position_id', 7)
+            ->orWhere('position_id', 8);
     }
 
     public function getDivisionStructureAttribute($value)
