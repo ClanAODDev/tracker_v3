@@ -134,9 +134,9 @@ class PlatoonController extends Controller
      */
     private function activityGraphData(Platoon $platoon)
     {
-        $twoWeeks = $platoon->members()->whereRaw("last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()")->count();
-        $oneMonth = $platoon->members()->whereRaw("last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)")->count();
-        $moreThanOneMonth = $platoon->members()->whereRaw("last_forum_login < DATE_ADD(CURDATE(), INTERVAL -30 DAY)")->count();
+        $twoWeeks = $platoon->members()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()')->count();
+        $oneMonth = $platoon->members()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)')->count();
+        $moreThanOneMonth = $platoon->members()->whereRaw('last_forum_login < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->count();
 
         $data = [
             [

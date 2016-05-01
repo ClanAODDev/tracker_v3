@@ -46,7 +46,7 @@ class Member extends Model
 
         foreach ($preferences as $limit) {
             if ($days > $limit['days']) {
-                return $this->activityColor = $limit;
+                return $limit;
             }
         }
     }
