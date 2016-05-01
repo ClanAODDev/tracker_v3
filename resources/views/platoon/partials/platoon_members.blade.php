@@ -32,7 +32,10 @@
                     <td class="">{!! $member->specialName !!}</td>
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
                     <td class="text-center">{{ $member->join_date }}</td>
-                    <td class="text-center">{{ $member->last_forum_login->diffForHumans() }}</td>
+                    <td class="text-center">
+                        <span class="{{ $member->activity['class'] }}">{{ $member->last_forum_login->diffInDays() }}
+                            days ago</span>
+                    </td>
                 </tr>
 
             @endforeach

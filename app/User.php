@@ -79,5 +79,5 @@ class User extends Authenticatable
     {
         return ucfirst($value);
     }
-
+    
 }

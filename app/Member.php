@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\AOD\Division\Preferences;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,6 +39,17 @@ class Member extends Model
         return ucfirst($value);
     }
 
+    public function getActivityAttribute()
+    {
+        $preferences = Preferences::ActivityThreshold();
+        $days = $this->last_forum_login->diffInDays();
+
+        foreach ($preferences as $limit) {
+            if ($days > $limit['days']) {
+                return $this->activityColor = $limit;
+            }
+        }
+    }
     /**
      * Returns
      * @return string
