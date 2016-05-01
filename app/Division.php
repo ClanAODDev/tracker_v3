@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
 
+    /**
+     * Get division's squads
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function squads()
     {
         return $this->hasManyThrough(Squad::class, Platoon::class);
@@ -58,7 +63,7 @@ class Division extends Model
 
     /**
      * Gets CO and XOs of a division
-     * 
+     *
      * @return mixed
      */
     public function leaders()
@@ -68,11 +73,23 @@ class Division extends Model
             ->orWhere('position_id', 8);
     }
 
+    /**
+     * Get division structure attribute as a proper URL
+     *
+     * @param $value
+     * @return string
+     */
     public function getDivisionStructureAttribute($value)
     {
         return "http://www.clanaod.net/forums/showthread.php?t=" . $value;
     }
 
+    /**
+     * Get welcome thread attribute as a proper URL
+     *
+     * @param $value
+     * @return string
+     */
     public function getWelcomeForumAttribute($value)
     {
         return "http://www.clanaod.net/forums/forumdisplay.php?f=" . $value;
