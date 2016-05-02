@@ -9,7 +9,7 @@ class Division extends Model
 
     /**
      * Get division's squads
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function squads()
@@ -50,8 +50,8 @@ class Division extends Model
     }
 
     /**
-     * Gets unassigned members of a division
-     * (unassigned meaning no platoon assignment)
+     * Gets unassigned members of a division (no platoon assignment)
+     * NOTE: Only members (position 1)
      */
     public function unassignedMembers()
     {

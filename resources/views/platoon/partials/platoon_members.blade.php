@@ -26,10 +26,10 @@
 
             @foreach($platoon->members as $member)
 
-                <tr role="row" data-id="{{ $member->clan_id }}">
+                <tr role="row">
                     <td class="col-hidden">{{ $member->rank_id }}</td>
                     <td class="col-hidden">{{ $member->last_forum_login }}</td>
-                    <td class="">{!! $member->specialName !!}</td>
+                    <td class="">{!! $member->specialName !!} <a href="{{ action('MemberController@show', $member->clan_id) }}"><i class="fa fa-link"></i></a></td>
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
                     <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">

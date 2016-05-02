@@ -9,9 +9,6 @@ var Platoon = Platoon || {};
         },
 
         handleMembers: function () {
-            $("#members-table tbody tr").click(function () {
-                window.location.href = "/members/" + $(this).attr('data-id');
-            })
 
             var platoonNum = parseInt($('.platoon-number').text()),
                 formattedDate = new Date(),

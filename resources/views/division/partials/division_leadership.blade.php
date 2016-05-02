@@ -3,7 +3,7 @@
     @if (count($division->leaders))
 
         @foreach ($division->leaders as $leader)
-            <a href="members/{{ $leader->clan_id }}" class="list-group-item">
+            <a href="{{ action('MemberController@show', $leader->clan_id) }}" class="list-group-item">
                 <h5 class="pull-right"><i class="fa fa-shield fa-2x text-muted"></i></h5>
                 <h4 class="list-group-item-heading">
                     <strong>{{ $leader->rank->abbreviation }} {{ $leader->name }}</strong></h4>
