@@ -31,9 +31,8 @@ class Helpers
                 throw new InvalidArgumentException('Invalid action type specified.');
             }
         }
-
-        $url = $path . http_build_query($params);
-        return urldecode($url);
+        
+        return urldecode($path . http_build_query($params));
     }
 
     /**
