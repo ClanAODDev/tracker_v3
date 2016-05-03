@@ -43,11 +43,8 @@ class Helpers
      * @param string $type
      * @return string
      */
-    public
-    static function avatar(
-        $email,
-        $type = "thumb"
-    ) {
+    public static function avatar($email, $type = "thumb")
+    {
         $forum_img = self::GetGravatarUrl($email);
         $unknown = "assets/images/blank_avatar.jpg";
 
@@ -63,13 +60,8 @@ class Helpers
      * @param string $rating
      * @return mixed
      */
-    private
-    static function GetGravatarUrl(
-        $email,
-        $size = 80,
-        $type = 'retro',
-        $rating = 'pg'
-    ) {
+    private static function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
+    {
         $gravatar = sprintf('http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
             md5($email), $type, $size, $rating);
 
