@@ -48,7 +48,7 @@ var Platoon = Platoon || {};
 
                 "oTableTools": {
                     "sRowSelect": "multi",
-                    "sSwfPath": "assets/swf/copy_csv_xls_pdf.swf",
+                    "sSwfPath": "/swf/copy_csv_xls_pdf.swf",
                     "aButtons": [{
 
                         "sExtends": "text",
