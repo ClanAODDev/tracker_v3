@@ -21,23 +21,18 @@ class Helpers
     public static function doForumFunction(array $clan_id, $action)
     {
         if ($action === "email") {
-            $clan_id = array_first($clan_id);
-            $action = "mailmember";
             $path = "http://www.clanaod.net/forums/sendmessage.php?";
-        } else if ($action === "pm") {
-            $action = "newpm";
-            $path = "http://www.clanaod.net/forums/private.php?";
+            $params = ['do' => 'mailmember', 'u' => array_first($clan_id)];
         } else {
-            throw new InvalidArgumentException('Invalid action type specified.');
+            if ($action === "pm") {
+                $params = ['do' => 'newpm', 'u' => $clan_id];
+                $path = "http://www.clanaod.net/forums/private.php?";
+            } else {
+                throw new InvalidArgumentException('Invalid action type specified.');
+            }
         }
 
-        $params = [
-            'do' => $action,
-            'u' => $clan_id,
-        ];
-
         $url = $path . http_build_query($params);
-
         return urldecode($url);
     }
 
@@ -49,8 +44,10 @@ class Helpers
      * @return string
      */
     public
-    static function avatar($email, $type = "thumb")
-    {
+    static function avatar(
+        $email,
+        $type = "thumb"
+    ) {
         $forum_img = self::GetGravatarUrl($email);
         $unknown = "assets/images/blank_avatar.jpg";
 
@@ -67,8 +64,12 @@ class Helpers
      * @return mixed
      */
     private
-    static function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
-    {
+    static function GetGravatarUrl(
+        $email,
+        $size = 80,
+        $type = 'retro',
+        $rating = 'pg'
+    ) {
         $gravatar = sprintf('http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
             md5($email), $type, $size, $rating);
 
