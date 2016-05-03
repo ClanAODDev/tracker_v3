@@ -21,7 +21,7 @@ class Helpers
     public static function doForumFunction(array $clan_id, $action)
     {
         if ($action === "email") {
-            $clan_id = $clan_id[0];
+            $clan_id = array_first($clan_id);
             $action = "mailmember";
             $path = "http://www.clanaod.net/forums/sendmessage.php?";
         } else if ($action === "pm") {

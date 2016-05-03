@@ -10,7 +10,7 @@
                 <strong>{{ $member->name }}</strong>
                 <small>{{ $member->rank->name }}</small>
                 <br/>
-                
+
                 <div class="btn-group">
 
                     <a class="btn btn-default btn-xs popup-link"
