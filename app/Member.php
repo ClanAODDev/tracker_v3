@@ -32,15 +32,6 @@ class Member extends Model
     }
 
     /**
-     * Accessor for name
-     * enforce proper casing
-     */
-    public function getNameAttribute($value)
-    {
-        return ucfirst($value);
-    }
-
-    /**
      * relationship - member has many divisions
      */
     public function divisions()
