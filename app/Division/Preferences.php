@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AOD\Division;
+namespace App\Division;
 
 class Preferences
 {

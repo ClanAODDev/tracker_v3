@@ -2,13 +2,14 @@
 
 namespace App;
 
-use App\AOD\Division\Preferences;
-use Carbon\Carbon;
+use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Member extends Model
 {
+
+    use Member\HasCustomAttributes;
 
     protected $guarded = [
         'id',
@@ -39,49 +40,12 @@ class Member extends Model
         return ucfirst($value);
     }
 
-    public function getActivityAttribute()
-    {
-        $preferences = Preferences::ActivityThreshold();
-        $days = $this->last_forum_login->diffInDays();
-
-        foreach ($preferences as $limit) {
-            if ($days > $limit['days']) {
-                return $limit;
-            }
-        }
-    }
-    /**
-     * Returns
-     * @return string
-     */
-    public function getSpecialNameAttribute()
-    {
-        if ($this->position) {
-            $title = ($this->position->name) ?: null;
-            $icon = ($this->position->icon) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
-
-            return "<span title=\"{$title}\" class=\"{$this->position->class}\">{$icon} {$this->name}</span>";
-        }
-
-        return $this->name;
-    }
-
     /**
      * relationship - member has many divisions
      */
     public function divisions()
     {
         return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
-    }
-
-    /**
-     * Return a carbon formatted date
-     * @param $value
-     * @return string
-     */
-    public function getJoinDateAttribute($value)
-    {
-        return Carbon::parse($value)->toFormattedDateString();
     }
 
     /**
@@ -100,11 +64,6 @@ class Member extends Model
         return $this->belongsTo(Rank::class);
     }
 
-    public function getRankNameAttribute()
-    {
-        return $this->rank->abbreviation . " " . $this->name;
-    }
-
     /**
      * relationship - member belongs to a position
      */
@@ -119,14 +78,6 @@ class Member extends Model
     public function squad()
     {
         return $this->belongsTo(Squad::class);
-    }
-
-    /**
-     * Gets member's primary division
-     */
-    public function getPrimaryDivisionAttribute()
-    {
-        return $this->divisions()->wherePivot('primary', true)->first();
     }
 
 }
