@@ -8,6 +8,18 @@ use App\Division\Preferences;
 trait HasCustomAttributes
 {
 
+    public function getActivityAttribute()
+    {
+        $preferences = Preferences::ActivityThreshold();
+        $days = $this->last_forum_login->diffInDays();
+
+        foreach ($preferences as $limit) {
+            if ($days > $limit['days']) {
+                return $limit;
+            }
+        }
+    }
+
     /**
      * Returns member's name with position icon
      *
@@ -60,22 +72,5 @@ trait HasCustomAttributes
     public function getPrimaryDivisionAttribute()
     {
         return $this->divisions()->wherePivot('primary', true)->first();
-    }
-
-    /**
-     * Gets member's activity information
-     *
-     * @return mixed
-     */
-    public function getActivityAttribute()
-    {
-        $preferences = Preferences::ActivityThreshold();
-        $days = $this->last_forum_login->diffInDays();
-
-        foreach ($preferences as $limit) {
-            if ($days > $limit['days']) {
-                return $limit;
-            }
-        }
     }
 }

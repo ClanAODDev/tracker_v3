@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
 
+    use Division\HasCustomAttributes;
+
     /**
      * Get division's squads
      *
@@ -71,27 +73,5 @@ class Division extends Model
         return $this->members()
             ->where('position_id', 7)
             ->orWhere('position_id', 8);
-    }
-
-    /**
-     * Get division structure attribute as a proper URL
-     *
-     * @param $value
-     * @return string
-     */
-    public function getDivisionStructureAttribute($value)
-    {
-        return "http://www.clanaod.net/forums/showthread.php?t=" . $value;
-    }
-
-    /**
-     * Get welcome thread attribute as a proper URL
-     *
-     * @param $value
-     * @return string
-     */
-    public function getWelcomeForumAttribute($value)
-    {
-        return "http://www.clanaod.net/forums/forumdisplay.php?f=" . $value;
     }
 }

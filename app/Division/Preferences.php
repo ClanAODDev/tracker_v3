@@ -4,6 +4,7 @@ namespace App\Division;
 
 class Preferences
 {
+
     public static function ActivityThreshold()
     {
         // TODO: fetch from division settings
@@ -27,5 +28,4 @@ class Preferences
             ],
         ];
     }
-
 }
