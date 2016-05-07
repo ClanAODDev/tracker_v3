@@ -12,3 +12,4 @@ Homestead.json
 /public/js/app.js.map
 /public/css/app.css.map
 /npm-debug.log
+composer.phar
