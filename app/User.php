@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -61,14 +62,29 @@ class User extends Authenticatable
     {
         switch ($role) {
             case "admin":
-                return ($this->role->id === 4);
+                return $this->role->id === 4 || $this->isDeveloper();
+
             case "srLeader":
-                return ($this->role->id === 3);
+                return $this->role->id === 3;
+
             case "jrLeader":
-                return ($this->role->id === 2);
+                return $this->role->id === 2;
+
             case "user":
-                return ($this->role->id === 1);
+                return $this->role->id === 1;
         }
+
+        throw new InvalidArgumentException('Invalid role used in isRole method.');
+    }
+
+    /**
+     * Checks to see if user is a developer
+     *
+     * @return boolean
+     */
+    public function isDeveloper()
+    {
+        return ($this->developer);
     }
 
     /**
@@ -79,5 +95,5 @@ class User extends Authenticatable
     {
         return ucfirst($value);
     }
-    
+
 }
