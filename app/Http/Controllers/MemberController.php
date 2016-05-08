@@ -52,11 +52,13 @@ class MemberController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param Member $member
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Member $member, Request $request)
     {
+        $this->authorize($member);
         dd($request->all());
     }
 
