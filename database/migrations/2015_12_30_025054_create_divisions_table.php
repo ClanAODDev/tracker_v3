@@ -13,6 +13,7 @@ class CreateDivisionsTable extends Migration
      */
     public function up()
     {
+
         Schema::create('divisions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -22,9 +23,9 @@ class CreateDivisionsTable extends Migration
             $table->string('welcome_forum');
             $table->mediumInteger('handle_id');
             $table->timestamps();
-        });
 
-        $this->populateDivisions();
+            $this->populateDivisions();
+        });
     }
  
     /**
