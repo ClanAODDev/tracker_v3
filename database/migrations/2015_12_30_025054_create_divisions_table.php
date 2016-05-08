@@ -43,8 +43,8 @@ class CreateDivisionsTable extends Migration
             [
                 // AOD Racing
                 [
-                    'name' => 'AOD Racing',
-                    'abbreviation' => 'aodr',
+                    'name' => 'Project Cars',
+                    'abbreviation' => 'pc',
                     'division_structure' => 103832,
                     'welcome_forum' => 544,
                     'handle_id' => 0,
@@ -133,7 +133,7 @@ class CreateDivisionsTable extends Migration
 
                 // War Thunder
                 [
-                    'name' => 'Warthunder',
+                    'name' => 'War Thunder',
                     'abbreviation' => 'wt',
                     'division_structure' => 64966,
                     'welcome_forum' => 432,
