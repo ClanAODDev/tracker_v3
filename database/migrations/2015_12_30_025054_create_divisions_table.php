@@ -17,7 +17,7 @@ class CreateDivisionsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('abbreviation')->unique();
-            $table->boolean('enabled')->default(false);
+            $table->boolean('enabled')->default(0);
             $table->string('division_structure');
             $table->string('welcome_forum');
             $table->mediumInteger('handle_id');
