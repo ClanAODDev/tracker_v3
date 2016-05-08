@@ -7,21 +7,12 @@
         <div class="col-xs-6">
 
             <h2>
-                <strong>{{ $member->name }}</strong>
-                <small>{{ $member->rank->name }}</small>
-                <br/>
+                <strong>{!! $member->rankName !!}</strong>
 
-                <div class="btn-group">
-
-                    <a class="btn btn-default btn-xs popup-link"
-                       href="{{ Helpers::doForumFunction([$member->clan_id], 'pm') }}"
-                       target="_blank"><i class="fa fa-comment"></i> Send PM</a>
-
-                    <a class="btn btn-default btn-xs popup-link"
-                       href="{{ Helpers::doForumFunction([$member->clan_id], 'email') }}"
-                       target="_blank"><i class="fa fa-envelope"></i> Send Email</a>
-
-                </div>
+                @if ($member->position)
+                    <small>{{ $member->position->name }}</small>
+                @endif
+                
             </h2>
         </div>
 
@@ -29,20 +20,19 @@
 
             <div class="btn-group pull-right" data-player-id="{{ $member->clan_id }}"
                  data-user-id="{{ $member->clan_id }}">
-                <button type="button" class="btn btn-info edit-member"><i class="fa fa-pencil fa-lg"></i> Edit
+                <button type="button" class="btn btn-primary edit-member"><i class="fa fa-pencil fa-lg"></i> Edit
                 </button>
 
-                {{-- if user sgt or higher, show remove button --}}
-                @if ($member->rank_id >= 9)
-                    <a href="#" title="Remove player from AOD" class="removeMember btn btn-danger"><i
-                                class="fa fa-trash fa-lg"></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
+                <button type="button" class="btn btn-primary"><i class="fa fa-comment"></i> Contact</button>
 
-                @else
-                    {{-- else show request removal--}}
-                    <a href="#" title="Remove player from AOD" class="requestRemoval btn btn-warning"><i
-                                class="fa fa-trash fa-lg"></i> Request<span class="hidden-sm hidden-xs"> removal</span></a>
+                {{-- <a class="btn btn-default btn-xs popup-link"
+                       href="{{ Helpers::doForumFunction([$member->clan_id], 'pm') }}"
+                       target="_blank"><i class="fa fa-comment"></i> Send PM</a>
 
-                @endif
+                    <a class="btn btn-default btn-xs popup-link"
+                       href="{{ Helpers::doForumFunction([$member->clan_id], 'email') }}"
+                       target="_blank"><i class="fa fa-envelope"></i> Send Email</a>--}}
+
             </div>
 
             {{--Else show request removal button--}}
