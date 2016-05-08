@@ -93,8 +93,8 @@ class CreateDivisionsTable extends Migration
 
                 // Planetside 2
                 [
-                    'name' => 'Jedi Knight',
-                    'abbreviation' => 'jk',
+                    'name' => 'Planetside 2',
+                    'abbreviation' => 'ps2',
                     'division_structure' => 65422,
                     'welcome_forum' => 393,
                     'handle_id' => 0,
