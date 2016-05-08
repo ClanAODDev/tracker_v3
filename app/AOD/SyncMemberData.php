@@ -33,9 +33,6 @@ class SyncMemberData
             $members = $division->members()->sync(self::$activeMembers);
             self::doRemovalCleanup($members);
         }
-
-        $responsibleUser = (request()->user_name) ?: 'System';
-        Slack::info(\Carbon::now() . " - Member sync performed [{$responsibleUser}]");
     }
 
     /**
