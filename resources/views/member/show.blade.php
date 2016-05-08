@@ -12,7 +12,7 @@
                 @if ($member->position)
                     <small>{{ $member->position->name }}</small>
                 @endif
-                
+
             </h2>
         </div>
 

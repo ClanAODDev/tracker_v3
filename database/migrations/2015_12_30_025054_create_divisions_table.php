@@ -28,7 +28,7 @@ class CreateDivisionsTable extends Migration
             [
                 ['name' => 'Battlefield', 'abbreviation' => 'bf', 'description' => 'Battlefield 4', 'division_structure' => 73448, 'welcome_forum' => 458, 'handle_id' => 2],
                 ['name' => 'Wargaming', 'abbreviation' => 'wg', 'description' => 'World of Tanks, World of Warships', 'division_structure' => 94236, 'welcome_forum' => 54564, 'handle_id' => 2],
-                ['name' => 'Battlefront', 'abbreviation' => 'swb', 'description' => 'Star Wars: Battlefront', 'division_structure' => 115653, 'welcome_forum' => 574, 'handle_id' => 2],
+                ['name' => 'Battlefront', 'abbreviation' => 'swb', 'description' => 'Star Wars: Battlefront', 'division_structure' => 115653, 'welcome_forum' => 574, 'handle_id' => 2, 'enabled' => 1],
             ]
         );
     }
