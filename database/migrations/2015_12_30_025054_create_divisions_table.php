@@ -48,7 +48,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 103832,
                     'welcome_forum' => 544,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // ARK
@@ -58,7 +58,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 128577,
                     'welcome_forum' => 533,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // Battlefield
@@ -88,7 +88,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 62557,
                     'welcome_forum' => 123,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // Planetside 2
@@ -98,7 +98,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 65422,
                     'welcome_forum' => 393,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // Skyforge
@@ -108,7 +108,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 119785,
                     'welcome_forum' => 566,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // Tom Clancy
@@ -118,7 +118,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 121653,
                     'welcome_forum' => 495,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // Warframe
@@ -128,7 +128,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 104706,
                     'welcome_forum' => 514,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
 
                 // War Thunder
@@ -138,7 +138,7 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 64966,
                     'welcome_forum' => 432,
                     'handle_id' => 0,
-                    'enabled' => 1
+                    'enabled' => 0
                 ],
             ]
         );
