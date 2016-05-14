@@ -14,7 +14,7 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
-                <li><a href="members/{{ Auth::user()->member->clan_id }}">{{ Auth::user()->name }}<span
+                <li><a href="{{ action('MemberController@show', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}<span
                                 class="pull-right"></span></a></li>
                 <li class="divider"></li>
                 <li class='disabled'><a href='#' disabled>{{ Auth::user()->role->name }}</a></li>
