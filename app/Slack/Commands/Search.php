@@ -54,17 +54,19 @@ class Search extends Base implements Command
      */
     public function response()
     {
-        if (count($this->members)) {
+        if (count($this->members) <= 10) {
             return [
                 'text' => "The following members were found",
-                'response_type' => 'in_channel',
                 'attachments' => $this->content,
+            ];
+        } else if (count($this->members) > 10) {
+            return [
+                'text' => 'More than 10 members were found. Please narrow your search terms.'
             ];
         }
 
         return [
             'text' => "No results were found",
-            'response_type' => 'in_channel',
         ];
     }
 }

@@ -17,6 +17,7 @@ class CreateDivisionsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('abbreviation')->unique();
+            $table->string('description');
             $table->boolean('enabled')->default(0);
             $table->string('division_structure');
             $table->string('welcome_forum');
@@ -45,6 +46,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Project Cars',
                     'abbreviation' => 'pc',
+                    'description' => 'Some random description here',
                     'division_structure' => 103832,
                     'welcome_forum' => 544,
                     'handle_id' => 0,
@@ -55,6 +57,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'ARK',
                     'abbreviation' => 'ark',
+                    'description' => 'Some random description here',
                     'division_structure' => 128577,
                     'welcome_forum' => 533,
                     'handle_id' => 0,
@@ -65,6 +68,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Battlefield',
                     'abbreviation' => 'bf',
+                    'description' => 'Some random description here',
                     'division_structure' => 73448,
                     'welcome_forum' => 458,
                     'handle_id' => 2,
@@ -75,6 +79,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Battlefront',
                     'abbreviation' => 'swb',
+                    'description' => 'Some random description here',
                     'division_structure' => 115653,
                     'welcome_forum' => 574,
                     'handle_id' => 2,
@@ -85,8 +90,20 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Jedi Knight',
                     'abbreviation' => 'jk',
+                    'description' => 'Some random description here',
                     'division_structure' => 62557,
                     'welcome_forum' => 123,
+                    'handle_id' => 0,
+                    'enabled' => 0
+                ],
+
+                // Overwatch
+                [
+                    'name' => 'Overwatch',
+                    'abbreviation' => 'ow',
+                    'description' => 'Some random description here',
+                    'division_structure' => 132965,
+                    'welcome_forum' => 617,
                     'handle_id' => 0,
                     'enabled' => 0
                 ],
@@ -95,6 +112,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Planetside 2',
                     'abbreviation' => 'ps2',
+                    'description' => 'Some random description here',
                     'division_structure' => 65422,
                     'welcome_forum' => 393,
                     'handle_id' => 0,
@@ -105,6 +123,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Skyforge',
                     'abbreviation' => 'sf',
+                    'description' => 'Some random description here',
                     'division_structure' => 119785,
                     'welcome_forum' => 566,
                     'handle_id' => 0,
@@ -115,6 +134,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Tom Clancy',
                     'abbreviation' => 'tc',
+                    'description' => 'Some random description here',
                     'division_structure' => 121653,
                     'welcome_forum' => 495,
                     'handle_id' => 0,
@@ -125,6 +145,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'Warframe',
                     'abbreviation' => 'wf',
+                    'description' => 'Some random description here',
                     'division_structure' => 104706,
                     'welcome_forum' => 514,
                     'handle_id' => 0,
@@ -135,6 +156,7 @@ class CreateDivisionsTable extends Migration
                 [
                     'name' => 'War Thunder',
                     'abbreviation' => 'wt',
+                    'description' => 'Some random description here',
                     'division_structure' => 64966,
                     'welcome_forum' => 432,
                     'handle_id' => 0,

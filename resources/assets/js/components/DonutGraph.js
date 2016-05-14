@@ -11,7 +11,7 @@ export default Vue.extend({
         </div>
     `,
 
-    props: ['url'],
+    props: ['url'], 
 
     ready() {
         this.$http.get(this.url)

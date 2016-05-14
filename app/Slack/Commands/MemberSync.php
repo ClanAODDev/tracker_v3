@@ -2,7 +2,7 @@
 
 namespace App\Slack\Commands;
 
-use App\AOD\SyncMemberData;
+use App\AOD\MemberSync\SyncMemberData;
 use App\Slack\Base;
 use App\Slack\Command;
 

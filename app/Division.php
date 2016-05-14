@@ -74,4 +74,9 @@ class Division extends Model
             ->where('position_id', 7)
             ->orWhere('position_id', 8);
     }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
 }

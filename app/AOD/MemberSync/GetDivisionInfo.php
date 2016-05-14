@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AOD;
+namespace App\AOD\MemberSync;
 
 use App\Reports\Slack;
 

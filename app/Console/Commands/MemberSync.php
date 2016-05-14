@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\AOD\SyncMemberData;
+use App\AOD\MemberSync\SyncMemberData;
 use Illuminate\Console\Command;
 
 class MemberSync extends Command

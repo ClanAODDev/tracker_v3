@@ -1,10 +1,9 @@
 <?php
 
-namespace App\AOD;
+namespace App\AOD\MemberSync;
 
 use App\Division;
 use App\Member;
-use App\Reports\Slack;
 
 class SyncMemberData
 {
