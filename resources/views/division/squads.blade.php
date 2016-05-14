@@ -9,10 +9,12 @@
     </h2>
     <hr/>
 
-    @foreach ($division->squads as $squad)
+    @forelse ($division->squads as $squad)
         <li class="list-group-item">
             Squad #{{ $squad->id }}
         </li>
-    @endforeach
-
+    @empty
+        <p>No squads exist for this division</p>
+    @endforelse
+    
 @stop
