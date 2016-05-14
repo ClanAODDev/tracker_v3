@@ -8,6 +8,11 @@ use App\Division\Preferences;
 trait HasCustomAttributes
 {
 
+    public function getAODProfileLinkAttribute()
+    {
+        return "http://www.clanaod.net/forums/member.php?u=" . $this->clan_id;
+    }
+
     public function getActivityAttribute()
     {
         $preferences = Preferences::ActivityThreshold();

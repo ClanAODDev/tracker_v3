@@ -26,7 +26,7 @@
                 @endif
 
                 <li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
-                <li><a href="http://www.clanaod.net/forums/member.php?u={{ Auth::user()->member->clan_id }}"
+                <li><a href="{{ Auth::user()->member->AODProfileLink }}"
                        target="_blank"> Forum profile</a></li>
                 <li><a href="help/" role="button">Help</a></li>
                 <li class="divider"></li>
