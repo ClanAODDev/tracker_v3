@@ -1,1 +1,1 @@
-Helow {{ $user->name }}!
+Hello {{ $user->name }}!
