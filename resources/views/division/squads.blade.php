@@ -16,5 +16,5 @@
     @empty
         <p>No squads exist for this division</p>
     @endforelse
-    
+
 @stop

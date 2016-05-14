@@ -28,7 +28,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            @include('division.partials.all_platoons')
+            @include('division.partials.platoons')
         </div>
         <div class="col-md-4">
             @include('division.partials.division_leadership')
