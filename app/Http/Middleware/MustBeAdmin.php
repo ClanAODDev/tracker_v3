@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class MustBeDeveloper
+class MustBeAdmin
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,7 @@ class MustBeDeveloper
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->developer) {
+        if ($request->user()->isRole('admin')) {
             return $next($request);
         }
 
