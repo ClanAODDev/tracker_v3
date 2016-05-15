@@ -28,6 +28,17 @@ class Division extends Model
     }
 
     /**
+     * Enabled division scope
+     * 
+     * @param $query
+     * @return mixed
+     */
+    public function scopeEnabled($query)
+    {
+        return $query->whereEnabled(true);
+    }
+
+    /**
      * Gets part time members of a division
      */
     public function partTimeMembers()

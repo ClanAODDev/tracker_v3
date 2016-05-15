@@ -24,7 +24,8 @@ class AppController extends Controller
      */
     public function index()
     {
-        $divisions = Division::all();
+        $divisions = Division::enabled()->get();
+
         return view('layouts.home')->with(
             compact('divisions')
         );
