@@ -13,3 +13,4 @@ Homestead.json
 /public/css/app.css.map
 /npm-debug.log
 composer.phar
+.DS_Store
