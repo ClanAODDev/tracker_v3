@@ -29,7 +29,7 @@ class MemberSync extends Base implements Command
     {
         $job = new SyncMemberData($this->data);
 
-        $this->dispatch($job)->delay(15);
+        $this->dispatch($job);
 
         return [
             'text' => 'Member sync request has been queued'
