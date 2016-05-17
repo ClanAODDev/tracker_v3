@@ -45,19 +45,6 @@ class Help extends Base implements Command
             ];
         }
 
-        return $this->response();
-    }
-
-
-    /**
-     * Response should either provide a JSON response right away
-     * or POST to the response_url if the request takes
-     * longer than 300ms
-     *
-     * @return mixed
-     */
-    public function response()
-    {
         return [
             'text' => "The following commands are currently available.",
             'attachments' => $this->content,

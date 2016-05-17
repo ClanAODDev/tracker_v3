@@ -22,14 +22,6 @@ class AllDivisions implements Command
     {
         $this->divisions = Division::lists('name')->toArray();
 
-        return $this->response();
-    }
-
-    /**
-     * @return array
-     */
-    public function response()
-    {
         return [
 
             'text' => 'The tracker currently supports the following divisions: ',

@@ -2,12 +2,15 @@
 
 namespace App\Slack\Commands;
 
-use App\AOD\MemberSync\SyncMemberData;
+use App\Jobs\SyncMemberData;
 use App\Slack\Base;
 use App\Slack\Command;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class MemberSync extends Base implements Command
 {
+    use DispatchesJobs;
+
     protected $data;
 
     /**
@@ -24,18 +27,12 @@ class MemberSync extends Base implements Command
      */
     public function handle()
     {
-        SyncMemberData::execute();
+        $job = new SyncMemberData($this->data);
 
-        return $this->response();
-    }
+        $this->dispatch($job);
 
-    /**
-     * Provide a response to Slack about the action
-     */
-    public function response()
-    {
-        return $this->delayedResponse(
-            'Member sync successful'
-        );
+        return [
+            'text' => 'Member sync request has been queued'
+        ];
     }
 }

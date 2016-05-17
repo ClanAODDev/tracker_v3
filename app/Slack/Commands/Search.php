@@ -44,25 +44,17 @@ class Search extends Base implements Command
             }
         }
 
-        return $this->response();
-    }
-
-    /**
-     * Provide a response to slack.
-     *
-     * @return mixed
-     */
-    public function response()
-    {
         if (count($this->members) <= 10) {
             return [
                 'text' => "The following members were found",
                 'attachments' => $this->content,
             ];
-        } else if (count($this->members) > 10) {
-            return [
-                'text' => 'More than 10 members were found. Please narrow your search terms.'
-            ];
+        } else {
+            if (count($this->members) > 10) {
+                return [
+                    'text' => 'More than 10 members were found. Please narrow your search terms.'
+                ];
+            }
         }
 
         return [

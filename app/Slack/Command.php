@@ -22,11 +22,4 @@ interface Command
      * @return mixed
      */
     public function handle();
-
-    /**
-     * Provide a response to slack.
-     *
-     * @return mixed
-     */
-    public function response();
 }
