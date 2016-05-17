@@ -36,6 +36,6 @@ class SyncMemberData extends Job implements ShouldQueue
     {
         MemberSync::execute();
 
-        Delayed::handle('Member sync completed successfully', $this->data);
+        Delayed::handle('Member sync completed successfully!', $this->data);
     }
 }

@@ -32,7 +32,7 @@ class MemberSync extends Base implements Command
         $this->dispatch($job);
 
         return [
-            'text' => 'Member sync request has been queued'
+            'text' => 'Member sync request has been queued...'
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App;
 
-class SlackApp
+class Slack
 {
     /**
      * Checks to see if a class for a particular command exists,

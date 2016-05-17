@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\SlackApp;
+use App\Slack;
 use Illuminate\Http\Request;
 
 class SlackController extends Controller
@@ -25,7 +25,7 @@ class SlackController extends Controller
             explode(':', $request->text)
         );
 
-        $response = SlackApp::handle($command, $request->all());
+        $response = Slack::handle($command, $request->all());
 
         return response()->json($response);
     }
