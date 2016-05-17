@@ -20,7 +20,7 @@ class SyncMemberData extends Job implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $data
      */
     public function __construct($data)
     {
