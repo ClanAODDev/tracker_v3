@@ -13,9 +13,9 @@ class MemberPresenter extends Presenter
      */
     public function nameWithIcon()
     {
-        if ($this-member->position) {
-            $title = ($this->member->position-member->name) ?: null;
-            $icon = ($this->member->position-member->icon) ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>" : null;
+        if ($this->member->position) {
+            $title = ($this->member->position->member->name) ?: null;
+            $icon = ($this->member->position->member->icon) ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>" : null;
 
             return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$this->member->name}</span>";
         }
