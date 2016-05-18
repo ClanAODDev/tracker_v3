@@ -29,7 +29,7 @@
                 <tr role="row">
                     <td class="col-hidden">{{ $member->rank_id }}</td>
                     <td class="col-hidden">{{ $member->last_forum_login }}</td>
-                    <td class="">{!! $member->specialName !!} <a
+                    <td class="">{!! $member->present()->nameWithIcon !!} <a
                                 href="{{ action('MemberController@show', $member->clan_id) }}"><i
                                     class="fa fa-search text-muted pull-right" title="View profile"></i></a></td>
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
