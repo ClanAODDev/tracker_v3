@@ -4,9 +4,11 @@ namespace App\Presenters;
 
 abstract class Presenter
 {
-    public function __construct($user)
+    public $member;
+
+    public function __construct($member)
     {
-        $this->user = $user;
+        $this->member = $member;
     }
 
     public function __get($property)

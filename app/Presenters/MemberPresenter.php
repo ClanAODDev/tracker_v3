@@ -4,8 +4,6 @@ namespace App\Presenters;
 
 class MemberPresenter extends Presenter
 {
-    private $user;
-
     /**
      * Returns member's name with position icon
      *
@@ -28,7 +26,7 @@ class MemberPresenter extends Presenter
      *
      * @return string
      */
-    public function getRankNameAttribute()
+    public function rankName()
     {
         return $this->member->rank->abbreviation . " " . $this->member->name;
     }

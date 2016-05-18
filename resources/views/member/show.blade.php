@@ -7,7 +7,7 @@
         <div class="col-xs-6">
 
             <h2>
-                <strong>{!! $member->rankName !!}</strong>
+                <strong>{!! $member->present()->rankName !!}</strong>
 
                 @if ($member->position)
                     <small>{{ $member->position->name }}</small>
