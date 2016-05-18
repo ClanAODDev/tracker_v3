@@ -26,23 +26,6 @@ trait HasCustomAttributes
     }
 
     /**
-     * Returns member's name with position icon
-     *
-     * @return string
-     */
-    public function getSpecialNameAttribute()
-    {
-        if ($this->position) {
-            $title = ($this->position->name) ?: null;
-            $icon = ($this->position->icon) ? "<i class=\"fa fa-{$this->position->icon}\"></i>" : null;
-
-            return "<span title=\"{$title}\" class=\"{$this->position->class}\">{$icon} {$this->name}</span>";
-        }
-
-        return $this->name;
-    }
-
-    /**
      * Accessor for name - enforce proper casing
      */
     public function getNameAttribute($value)
@@ -59,16 +42,6 @@ trait HasCustomAttributes
     public function getJoinDateAttribute($value)
     {
         return Carbon::parse($value)->toFormattedDateString();
-    }
-
-    /**
-     * Gets member's rank and name
-     *
-     * @return string
-     */
-    public function getRankNameAttribute()
-    {
-        return $this->rank->abbreviation . " " . $this->name;
     }
 
     /**

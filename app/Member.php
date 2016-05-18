@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Presenters\MemberPresenter;
 use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,6 +23,11 @@ class Member extends Model
     ];
 
     use SoftDeletes;
+    
+    public function present()
+    {
+        return new MemberPresenter($this);
+    }
 
     /**
      * relationship - user has one member
