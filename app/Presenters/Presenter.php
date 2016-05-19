@@ -4,13 +4,6 @@ namespace App\Presenters;
 
 abstract class Presenter
 {
-    public $member;
-
-    public function __construct($member)
-    {
-        $this->member = $member;
-    }
-
     public function __get($property)
     {
         if (method_exists($this, $property)) {

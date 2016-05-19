@@ -2,12 +2,36 @@
 
 namespace App;
 
+use App\Presenters\DivisionPresenter;
 use Illuminate\Database\Eloquent\Model;
 
 class Division extends Model
 {
 
     use Division\HasCustomAttributes;
+
+    /**
+     * @return DivisionPresenter
+     */
+    public function present()
+    {
+        return new DivisionPresenter($this);
+    }
+
+    /**
+     * Division translation model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function locality()
+    {
+        return $this->hasMany(Locality::class);
+    }
+
+    public function translation($string)
+    {
+        return $this->locality;
+    }
 
     /**
      * Get division's squads

@@ -2,8 +2,25 @@
 
 namespace App\Presenters;
 
+use App\Member;
+
 class MemberPresenter extends Presenter
 {
+    /**
+     * @var Member
+     */
+    public $member;
+
+    /**
+     * MemberPresenter constructor.
+     * @param Member $member
+     */
+    public function __construct(Member $member)
+    {
+        $this->member = $member;
+    }
+
+
     /**
      * Returns member's name with position icon
      *
@@ -12,8 +29,8 @@ class MemberPresenter extends Presenter
     public function nameWithIcon()
     {
         if ($this->member->position) {
-            $title = ($this->member->position->member->name) ?: null;
-            $icon = ($this->member->position->member->icon) ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>" : null;
+            $title = ($this->member->position->name) ?: null;
+            $icon = ($this->member->position->icon) ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>" : null;
 
             return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$this->member->name}</span>";
         }
@@ -31,3 +48,4 @@ class MemberPresenter extends Presenter
         return $this->member->rank->abbreviation . " " . $this->member->name;
     }
 }
+
