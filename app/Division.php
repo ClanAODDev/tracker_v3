@@ -19,21 +19,6 @@ class Division extends Model
     }
 
     /**
-     * Division translation model
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function locality()
-    {
-        return $this->hasMany(Locality::class);
-    }
-
-    public function translation($string)
-    {
-        return $this->locality;
-    }
-
-    /**
      * Get division's squads
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
@@ -53,7 +38,7 @@ class Division extends Model
 
     /**
      * Enabled division scope
-     * 
+     *
      * @param $query
      * @return mixed
      */
