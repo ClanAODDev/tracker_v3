@@ -83,16 +83,22 @@ class Division extends Model
         return $this->members()->wherePivot('primary', true);
     }
 
+    public function staffSergeants()
+    {
+        return $this->belongsToMany(Member::class, 'staff_sergeants');
+    }
+
     /**
      * Gets unassigned members of a division (no platoon assignment)
      * NOTE: Only members (position 1)
      */
     public function unassignedMembers()
     {
-        return $this->members()->where([
-            'platoon_id' => 0,
-            'position_id' => 1
-        ]);
+        return $this->members()
+            ->where('platoon_id', 0)
+            ->whereNotIn('position_id', [
+
+            ]);
     }
 
     /**

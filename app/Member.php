@@ -77,4 +77,9 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    public function staff_sergeants()
+    {
+        return $this->belongsToMany(Division::class, 'staff_sergeants');
+    }
+
 }
