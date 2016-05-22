@@ -6,8 +6,8 @@
  */
 Route::group(['middleware' => 'web'], function () {
 
-
     Route::auth();
+
     Route::get('/home', 'AppController@index');
     Route::get('/', 'AppController@index');
 

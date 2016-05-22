@@ -2,11 +2,23 @@
 
 namespace App;
 
+use App\Settings\DivisionSettings;
 use App\Presenters\DivisionPresenter;
+use App\Settings\LocalitySettings;
 use Illuminate\Database\Eloquent\Model;
 
 class Division extends Model
 {
+
+    protected $casts = [
+        'enabled' => 'boolean',
+        'settings' => 'json',
+        'locality' => 'json',
+    ];
+
+    protected $guarded = [
+        'id',
+    ];
 
     use Division\HasCustomAttributes;
 
@@ -81,6 +93,19 @@ class Division extends Model
             'platoon_id' => 0,
             'position_id' => 1
         ]);
+    }
+
+    /**
+     * @return DivisionSettings
+     */
+    public function settings()
+    {
+        return new DivisionSettings($this->settings, $this);
+    }
+
+    public function locality()
+    {
+        return new LocalitySettings($this->locality, $this);
     }
 
     /**

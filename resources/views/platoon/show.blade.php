@@ -1,14 +1,14 @@
 @extends('layouts.app')
 @section('content')
 
-    {!! Breadcrumbs::render('platoon', $platoon->division, $platoon) !!}
+    {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
     <div class="row">
         <div class="col-xs-12">
             <h2>
-                <img src="/images/game_icons/48x48/{{ $platoon->division->abbreviation }}.png"/>
+                <img src="/images/game_icons/48x48/{{ $division->abbreviation }}.png"/>
                 <strong>{{ $platoon->name }}</strong>
-                <small>{{ $platoon->division->name }}</small>
+                <small>{{ $division->name }}</small>
             </h2>
         </div>
     </div>

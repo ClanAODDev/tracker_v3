@@ -26,11 +26,11 @@
                 <button type="button" class="btn btn-primary"><i class="fa fa-comment"></i> Contact</button>
 
                 {{-- <a class="btn btn-default btn-xs popup-link"
-                       href="{{ Helpers::doForumFunction([$member->clan_id], 'pm') }}"
+                       href="{{ doForumFunction([$member->clan_id], 'pm') }}"
                        target="_blank"><i class="fa fa-comment"></i> Send PM</a>
 
                     <a class="btn btn-default btn-xs popup-link"
-                       href="{{ Helpers::doForumFunction([$member->clan_id], 'email') }}"
+                       href="{{ doForumFunction([$member->clan_id], 'email') }}"
                        target="_blank"><i class="fa fa-envelope"></i> Send Email</a>--}}
 
             </div>

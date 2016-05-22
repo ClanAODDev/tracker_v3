@@ -1,7 +1,9 @@
 <div class="panel panel-primary">
 
-    {{-- locality --}}
-    <div class="panel-heading">Platoons</div>
+    <div class="panel-heading">
+        {{ ucwords(str_plural($division->locality['platoon'])) }}
+    </div>
+
     <div class="list-group">
         @forelse ($division->platoons as $platoon)
             <a href="{{ action('PlatoonController@show', [$platoon->id]) }}"
@@ -17,7 +19,9 @@
                 </p>
             </a>
         @empty
-            <li class="list-group-item text-muted">No platoons currently exist for this division.</li>
+            <li class="list-group-item text-muted">
+                No {{ str_plural($division->locality['platoon']) }} currently exist for this division.
+            </li>
         @endforelse
 
     </div>

@@ -22,6 +22,8 @@ class CreateDivisionsTable extends Migration
             $table->string('division_structure');
             $table->string('welcome_forum');
             $table->mediumInteger('handle_id');
+            $table->json('settings');
+            $table->json('locality');
             $table->timestamps();
         });
 
@@ -50,7 +52,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 103832,
                     'welcome_forum' => 544,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // ARK
@@ -61,7 +70,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 128577,
                     'welcome_forum' => 533,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Battlefield
@@ -72,7 +88,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 73448,
                     'welcome_forum' => 458,
                     'handle_id' => 2,
-                    'enabled' => 1
+                    'enabled' => 1,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Battlefront
@@ -83,7 +106,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 115653,
                     'welcome_forum' => 574,
                     'handle_id' => 2,
-                    'enabled' => 1
+                    'enabled' => 1,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Jedi Knight
@@ -94,7 +124,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 62557,
                     'welcome_forum' => 123,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Overwatch
@@ -105,7 +142,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 132965,
                     'welcome_forum' => 617,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Planetside 2
@@ -116,7 +160,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 65422,
                     'welcome_forum' => 393,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Skyforge
@@ -127,7 +178,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 119785,
                     'welcome_forum' => 566,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Tom Clancy
@@ -138,7 +196,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 121653,
                     'welcome_forum' => 495,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // Warframe
@@ -149,7 +214,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 104706,
                     'welcome_forum' => 514,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
 
                 // War Thunder
@@ -160,7 +232,14 @@ class CreateDivisionsTable extends Migration
                     'division_structure' => 64966,
                     'welcome_forum' => 432,
                     'handle_id' => 0,
-                    'enabled' => 0
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
                 ],
             ]
         );

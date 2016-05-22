@@ -49,8 +49,9 @@ class PlatoonController extends Controller
     public function show(Platoon $platoon)
     {
         $platoon->members = $this->sortPlatoonMembers($platoon);
-
-        return view('platoon.show', compact('platoon'));
+        $division = $platoon->division;
+        
+        return view('platoon.show', compact('platoon', 'division'));
     }
 
     /**

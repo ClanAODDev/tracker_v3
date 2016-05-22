@@ -2,6 +2,8 @@
 
 namespace App;
 
+
+use App\Settings\UserSettings;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -18,6 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'settings',
         'developer',
         'member_id',
     ];
@@ -34,6 +37,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'developer' => 'boolean',
+        'settings' => 'json',
     ];
 
     /**
@@ -75,6 +79,14 @@ class User extends Authenticatable
         }
 
         throw new InvalidArgumentException('Invalid role used in isRole method.');
+    }
+
+    /**
+     * @return \App\Settings
+     */
+    public function settings()
+    {
+        return new UserSettings($this->settings, $this);
     }
 
     /**
