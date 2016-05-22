@@ -79,7 +79,7 @@ class Member extends Model
 
     /**
      * Handle Staff Sergeant assignments
-     * 
+     * division/
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function ssgtAssignment()
