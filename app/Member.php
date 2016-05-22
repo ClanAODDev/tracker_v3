@@ -77,7 +77,12 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
-    public function staff_sergeants()
+    /**
+     * Handle Staff Sergeant assignments
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function ssgtAssignment()
     {
         return $this->belongsToMany(Division::class, 'staff_sergeants');
     }
