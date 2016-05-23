@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePlatoonsTable extends Migration {
-
+class CreateActivitiesTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -12,14 +12,13 @@ class CreatePlatoonsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('platoons', function(Blueprint $table)
-        {
+        Schema::create('activities', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order')->default(0);
+            $table->integer('subject_id')->index();
+            $table->string('subject_type')->index();
             $table->string('name');
-            $table->mediumInteger('division_id');
-            $table->mediumInteger('leader_id');
-            $table->softDeletes();
+            $table->integer('user_id')->index();
+            $table->integer('division_id')->index();
             $table->timestamps();
         });
     }
@@ -31,7 +30,6 @@ class CreatePlatoonsTable extends Migration {
      */
     public function down()
     {
-        Schema::drop('platoons');
+        Schema::drop('activities');
     }
-
 }

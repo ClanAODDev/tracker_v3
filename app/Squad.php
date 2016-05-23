@@ -2,10 +2,14 @@
 
 namespace App;
 
+use App\Activities\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Squad extends Model
 {
+
+    use RecordsActivity;
+    
     /**
      * relationship - squad belongs to a platoon
      */

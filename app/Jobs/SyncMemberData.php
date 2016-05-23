@@ -11,22 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class SyncMemberData extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
-
-    /**
-     * @var
-     */
-    private $data;
-
-    /**
-     * Create a new job instance.
-     *
-     * @param $data
-     */
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
-
+    
     /**
      * Execute the job.
      *
@@ -35,7 +20,5 @@ class SyncMemberData extends Job implements ShouldQueue
     public function handle()
     {
         MemberSync::execute();
-
-        Delayed::handle('Member sync completed successfully!', $this->data);
     }
 }

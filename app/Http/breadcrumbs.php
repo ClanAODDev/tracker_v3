@@ -28,6 +28,13 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
     $breadcrumbs->push('Squad');
 });
 
+
+Breadcrumbs::register('user', function ($breadcrumbs, $division, $user) {
+   $breadcrumbs->parent('home');
+    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+    $breadcrumbs->push($user->name);
+});
+
 // Home > Division > Platoon > Member
 Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $member) {
     $breadcrumbs->parent('home');

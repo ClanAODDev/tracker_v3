@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-    {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
+    {!! Breadcrumbs::render('platoon', $division) !!}
 
     <div class="row">
         <div class="col-xs-12">

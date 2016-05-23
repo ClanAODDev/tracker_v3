@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;
 use Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,10 @@ class Member extends Model
 {
 
     use Member\HasCustomAttributes;
+    use RecordsActivity;
+    use SoftDeletes;
+
+    // protected static $recordEvents = ['created'];
 
     protected $guarded = [
         'id',
@@ -22,8 +27,6 @@ class Member extends Model
         'last_promoted',
     ];
 
-    use SoftDeletes;
-    
     public function present()
     {
         return new MemberPresenter($this);

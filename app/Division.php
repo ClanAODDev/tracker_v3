@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Activity;
 use App\Settings\DivisionSettings;
 use App\Presenters\DivisionPresenter;
 use App\Settings\LocalitySettings;
@@ -40,12 +41,26 @@ class Division extends Model
         return $this->hasManyThrough(Squad::class, Platoon::class);
     }
 
+
     /**
-     * relationship - division has many platoons
+     * Division has many platoons
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function platoons()
     {
         return $this->hasMany(Platoon::class);
+    }
+
+
+    /**
+     * Division has many activity entries
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activity()
+    {
+        return $this->hasMany(Activity::class);
     }
 
     /**

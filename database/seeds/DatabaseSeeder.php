@@ -16,8 +16,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call('DivisionTableSeeder');
-
-        $this->command->info('User table seeded!');
+        $this->command->info('Divisions table seeded!');
 
     }
 }

@@ -28,6 +28,10 @@ Route::group(['middleware' => 'web'], function () {
     // squads
     Route::get('squads/{squad}', 'SquadController@show');
 
+    // activity
+    Route::get('users/{username}/activity', 'ActivitiesController@byUser');
+    Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
+
 
     /**
      * Vue endpoints

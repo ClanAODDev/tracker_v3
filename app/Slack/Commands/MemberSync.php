@@ -27,12 +27,12 @@ class MemberSync extends Base implements Command
      */
     public function handle()
     {
-        $job = new SyncMemberData($this->data);
+        $job = new SyncMemberData();
 
         $this->dispatch($job);
 
         return [
-            'text' => 'Member sync request has been queued...'
+            'text' => 'Member sync request has been queued.'
         ];
     }
 }

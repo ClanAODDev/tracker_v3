@@ -2,10 +2,19 @@
 
 namespace App;
 
+use App\Activities\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Platoon extends Model
 {
+
+    protected $dates = [
+        'deleted_at'
+    ];
+
+    use RecordsActivity;
+    use SoftDeletes;
 
     /**
      * relationship - platoon belongs to a division
