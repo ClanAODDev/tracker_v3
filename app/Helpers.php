@@ -69,6 +69,17 @@ function UserSettings($key = null)
     return $key ? $settings->get($key) : $settings;
 }
 
+function hasDivisionIcon($abbreviation)
+{
+    $image = public_path() . "/images/game_icons/48x48/{$abbreviation}.png";
+
+    return File::exists($image);
+}
+
+function getDivisionIconPath($abbreviation)
+{
+    return asset("/images/game_icons/48x48/{$abbreviation}.png");
+}
 /**
  * array_keys with recursive implementation
  *
@@ -78,12 +89,13 @@ function UserSettings($key = null)
  * @param array $arrayKeys
  * @return array
  */
-function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = array()){
-    if($depth < $MAXDEPTH){
+function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = array())
+{
+    if ($depth < $MAXDEPTH) {
         $depth++;
         $keys = array_keys($myArray);
-        foreach($keys as $key){
-            if(is_array($myArray[$key])){
+        foreach ($keys as $key) {
+            if (is_array($myArray[$key])) {
                 $arrayKeys[$key] = array_keys_recursive($myArray[$key], $MAXDEPTH, $depth);
             }
         }

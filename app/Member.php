@@ -15,7 +15,7 @@ class Member extends Model
     use RecordsActivity;
     use SoftDeletes;
 
-    // protected static $recordEvents = ['created'];
+    protected static $recordEvents = ['created', 'updated'];
 
     protected $guarded = [
         'id',

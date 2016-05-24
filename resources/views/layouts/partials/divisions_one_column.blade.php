@@ -3,8 +3,9 @@
         <a href="{{ action('DivisionController@show', [$division->abbreviation]) }}"
            class="list-group-item"
            style="padding-bottom: 18px;">
-                    <span class="pull-left" style="margin-right: 20px; vertical-align: middle;"><img
-                                class="img-responsive" src="images/game_icons/48x48/{{ $division->abbreviation }}.png"/></span>
+            <span class="pull-left" style="margin-right: 20px; vertical-align: middle;">
+                @include('division.partials.icon')
+            </span>
             <h4 class="list-group-item-heading hidden-xs hidden-sm">
                 <strong>{{ $division->name }}</strong>
             </h4>
