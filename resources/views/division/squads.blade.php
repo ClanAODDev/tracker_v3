@@ -1,11 +1,12 @@
 @extends('layouts.app')
 @section('content')
 
-    {!! Breadcrumbs::render('division', $division) !!}
+    {!! Breadcrumbs::render('squads', $division) !!}
 
     <h2>
-        <img src="/images/game_icons/48x48/{{ $division->abbreviation }}.png"/>
-        <strong>{{ $division->name }} Division</strong>
+        @include('division.partials.icon')
+        <strong>{{ $division->name }}</strong>
+        <small>Squads</small>
     </h2>
     <hr/>
 

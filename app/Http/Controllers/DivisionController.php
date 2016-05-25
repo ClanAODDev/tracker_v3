@@ -105,4 +105,11 @@ class DivisionController extends Controller
     {
         return view('division.squads', compact('division'));
     }
+
+    public function partTime(Division $division)
+    {
+        $partTime = $division->partTimeMembers;
+
+        return view('division.part_time', compact('division', 'partTime'));
+    }
 }

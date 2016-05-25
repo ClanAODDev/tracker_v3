@@ -13,6 +13,20 @@ Breadcrumbs::register('division', function ($breadcrumbs, $division) {
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
 });
 
+// Home > Division > Squads
+Breadcrumbs::register('squads', function ($breadcrumbs, $division) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+    $breadcrumbs->push('Squads');
+});
+
+// Home > Division > Part-timers
+Breadcrumbs::register('part-timers', function ($breadcrumbs, $division) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+    $breadcrumbs->push('Part-timers');
+});
+
 // Home > Division > Platoon
 Breadcrumbs::register('platoon', function ($breadcrumbs, $division, $platoon) {
     $breadcrumbs->parent('home');

@@ -79,7 +79,7 @@ class Division extends Model
      */
     public function partTimeMembers()
     {
-        return $this->members()->wherePivot('primary', false)->get();
+        return $this->members()->wherePivot('primary', false);
     }
 
     /**

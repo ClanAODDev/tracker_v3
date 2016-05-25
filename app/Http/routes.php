@@ -20,6 +20,8 @@ Route::group(['middleware' => 'web'], function () {
     // divisions
     Route::get('divisions/{division}', 'DivisionController@show');
     Route::get('divisions/{division}/squads/', 'DivisionController@squads');
+    Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
+    Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');
 
     // platoons
     Route::get('platoons/{platoon}', 'PlatoonController@show');
@@ -30,7 +32,7 @@ Route::group(['middleware' => 'web'], function () {
 
     // activity
     Route::get('users/{username}/activity', 'ActivitiesController@byUser');
-    Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
+
 
 
     /**

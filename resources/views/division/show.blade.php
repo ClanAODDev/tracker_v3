@@ -7,7 +7,7 @@
 
         <div class="col-xs-6">
             <h2>
-                <img src="/images/game_icons/48x48/{{ $division->abbreviation }}.png"/>
+                @include('division.partials.icon')
                 <strong>{{ $division->name }} Division</strong>
             </h2>
         </div>
@@ -41,10 +41,20 @@
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-primary">
-                <div class="panel-heading">Total Members</div>
+                <div class="panel-heading">Active Members</div>
 
                 <div class="panel-body count-detail-big striped-bg">
                     <span class="count-animated">{{ $division->activeMembers->count() }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Part-time Members</div>
+
+                <div class="panel-body count-detail-big striped-bg">
+                    <span class="count-animated">{{ $division->partTimeMembers->count() }}</span>
                 </div>
             </div>
         </div>

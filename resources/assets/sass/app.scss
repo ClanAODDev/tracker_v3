@@ -107,6 +107,12 @@ body {
  	box-sizing: content-box !important;
  }
 
+ .unknown-icon {
+	 width: 48px;
+	 opacity: .20;
+	 filter: grayscale(40%);
+ }
+
  table.dataTable {
  	thead {
  		th, td {
