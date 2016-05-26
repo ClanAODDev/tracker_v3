@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\AOD\MemberSync\SyncMemberData;
+
+use App\Jobs\SyncMemberData;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
