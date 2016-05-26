@@ -13,6 +13,7 @@
     @forelse ($partTime as $member)
         <div class="list-group-item">
             {{ $member->present()->rankName }}
+            <span class="text-muted pull-right clearfix">{{ $member->primaryDivision->name }}</span>
         </div>
     @empty
         <p>This division has no part-time members.</p>

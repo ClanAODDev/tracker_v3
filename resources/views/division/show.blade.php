@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <h3>Division Statistics</h3>
+    <h3>Demographics</h3>
     <hr />
 
     <div class="row">
