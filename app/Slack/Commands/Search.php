@@ -37,7 +37,7 @@ class Search extends Base implements Command
             foreach ($this->members as $member) {
                 $division = ($member->primaryDivision) ? "{$member->primaryDivision->name} Division" : null;
                 $this->content[] = [
-                    'title' => "{$member->rankName} - {$division}",
+                    'title' => "{$member->present()->rankName} - {$division}",
                     'text' => $this->profile_path . $member->clan_id,
                     'color' => '#88C53E',
                 ];
