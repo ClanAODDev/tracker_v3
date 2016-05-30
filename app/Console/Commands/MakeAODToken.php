@@ -2,29 +2,23 @@
 
 namespace App\Console\Commands;
 
-
-use App\Jobs\SyncMemberData;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 
-class MemberSync extends Command
+class MakeAODToken extends Command
 {
-
-    use DispatchesJobs;
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'do:membersync';
+    protected $signature = 'make:aodtoken';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Performs member sync with AOD forums';
+    protected $description = 'Generates a token for interfacing with AOD API. Valid for one minute.';
 
     /**
      * Create a new command instance.
@@ -36,6 +30,13 @@ class MemberSync extends Command
         parent::__construct();
     }
 
+    protected function generateToken()
+    {
+        $currentMinute = floor(time() / 60) * 60;
+
+        return md5($currentMinute . env('AOD_TOKEN'));
+    }
+
     /**
      * Execute the console command.
      *
@@ -43,11 +44,6 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        // AOD member data sync
-        $job = new SyncMemberData();
-
-        $this->dispatch($job);
-
-        $this->comment('Member sync has been queued.');
+        return $this->generateToken();
     }
 }
