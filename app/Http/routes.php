@@ -4,7 +4,6 @@
 /**
  * Authentication-protected routes
  */
-use App\AOD\DivisionInfo;
 
 Route::group(['middleware' => 'web'], function () {
 
@@ -74,7 +73,7 @@ Route::group(['middleware' => 'slack'], function () {
  */
 Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:5'], function () {
     Route::get('/division-data/{division_name}', function ($division_name) {
-        $info = new DivisionInfo($division_name);
+        $info = new \App\AOD\MemberSync\GetDivisionInfo($division_name)
 
         return response()->json($info->data);
     });
