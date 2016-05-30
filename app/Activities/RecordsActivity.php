@@ -17,9 +17,22 @@ trait RecordsActivity
         }
     }
 
+    protected static function getModelEvents()
+    {
+        if (isset(static::$recordEvents)) {
+            return static::$recordEvents;
+        }
+
+        return [
+            'created',
+            'deleted',
+            'updated'
+        ];
+    }
+
     public function recordActivity($event) //$post->recordActivity('favorited')
     {
-        if (Auth::check()) {
+        if (\Auth::check()) {
             $user = \Auth::user();
 
             Activity::create([
@@ -38,18 +51,5 @@ trait RecordsActivity
 
         return "{$action}_{$name}";
 
-    }
-
-    protected static function getModelEvents()
-    {
-        if (isset(static::$recordEvents)) {
-            return static::$recordEvents;
-        }
-
-        return [
-            'created',
-            'deleted',
-            'updated'
-        ];
     }
 }
