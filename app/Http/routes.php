@@ -4,6 +4,8 @@
 /**
  * Authentication-protected routes
  */
+use App\AOD\DivisionInfo;
+
 Route::group(['middleware' => 'web'], function () {
 
     Route::auth();
@@ -54,6 +56,7 @@ Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () 
     Route::get('divisions', 'API\APIController@divisions');
     Route::get('squads', 'API\APIController@squads');
     Route::get('platoons', 'API\APIController@platoons');
+
 });
 
 /**
@@ -71,7 +74,7 @@ Route::group(['middleware' => 'slack'], function () {
  */
 Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:5'], function () {
     Route::get('/division-data/{division_name}', function ($division_name) {
-        $info = new \App\AOD\DivisionInfo($division_name);
+        $info = new DivisionInfo($division_name);
 
         return response()->json($info->data);
     });
