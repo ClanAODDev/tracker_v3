@@ -44,6 +44,6 @@ class MakeAODToken extends Command
      */
     public function handle()
     {
-        return $this->generateToken();
+        $this->comment("curl http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode=" . $this->generateToken());
     }
 }
