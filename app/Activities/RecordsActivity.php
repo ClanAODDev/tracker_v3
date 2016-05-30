@@ -19,15 +19,17 @@ trait RecordsActivity
 
     public function recordActivity($event) //$post->recordActivity('favorited')
     {
-        $user = \Auth::user();
+        if (Auth::check()) {
+            $user = \Auth::user();
 
-        Activity::create([
-            'subject_id' => $this->id,
-            'subject_type' => get_class($this),
-            'name' => $this->getActivityName($this, $event),
-            'user_id' => $user->id,
-            'division_id' => $user->member->primaryDivision->id
-        ]);
+            Activity::create([
+                'subject_id' => $this->id,
+                'subject_type' => get_class($this),
+                'name' => $this->getActivityName($this, $event),
+                'user_id' => $user->id,
+                'division_id' => $user->member->primaryDivision->id
+            ]);
+        }
     }
 
     protected function getActivityName($model, $action)
