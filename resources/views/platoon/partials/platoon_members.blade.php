@@ -19,6 +19,7 @@
                 <th class='nosearch text-center hidden-xs hidden-sm'><strong>Rank</strong></th>
                 <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
                 <th class='text-center'><strong>Forum Activity</strong></th>
+                <th class='text-center'><string>Last Promoted</string></th>
             </tr>
             </thead>
 
@@ -36,6 +37,10 @@
                     <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">
                         <span class="{{ $member->activity['class'] }}">{{ $member->last_forum_login->diffInDays() }}
+                            days ago</span>
+                    </td>
+                    <td class="text-center">
+                        <span class="{{ $member->activity['class'] }}">{{ $member->last_promoted->diffInDays() }}
                             days ago</span>
                     </td>
                 </tr>
