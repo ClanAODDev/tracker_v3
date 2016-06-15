@@ -80,6 +80,13 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    public function squadLeaderOf()
+    {
+        return $this->belongsTo(Squad::class, 'leader_id');
+    }
+
+    
+
     /**
      * Handle Staff Sergeant assignments
      * division/
