@@ -50,12 +50,17 @@ class GetDivisionInfo
         $agent = "AOD Division Tracker";
 
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
         $data = json_decode(curl_exec($ch));
+
+        if (property_exists($data, 'error')) {
+            exit(date('Y-m-d h:i:s') . " - " . $data->error);
+        }
 
         return $this->prepareData($data);
     }

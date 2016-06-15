@@ -27,7 +27,7 @@ class MemberSync extends Base implements Command
      */
     public function handle()
     {
-        $job = new SyncMemberData();
+        $job = new SyncMemberData($this->data);
 
         $this->dispatch($job);
 

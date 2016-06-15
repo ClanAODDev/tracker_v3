@@ -11,6 +11,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class SyncMemberData extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
+
+    public function __construct($data) {
+        $this->data = $data;
+    }
     
     /**
      * Execute the job.
@@ -20,5 +24,10 @@ class SyncMemberData extends Job implements ShouldQueue
     public function handle()
     {
         MemberSync::execute();
+    }
+
+    public function failed()
+    {
+        Delayed::handle('Member sync failed.', $data);
     }
 }
