@@ -17,9 +17,7 @@ class Member extends Model
 
     protected static $recordEvents = ['created', 'updated'];
 
-    protected $guarded = [
-        'id',
-    ];
+    protected $guarded = ['id'];
 
     protected $dates = [
         'join_date',
@@ -85,7 +83,6 @@ class Member extends Model
         return $this->belongsTo(Squad::class, 'leader_id');
     }
 
-    
 
     /**
      * Handle Staff Sergeant assignments
