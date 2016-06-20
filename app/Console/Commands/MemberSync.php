@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-
-use App\Jobs\SyncMemberData;
 use Illuminate\Console\Command;
+use App\AOD\MemberSync\SyncMemberData;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class MemberSync extends Command
@@ -43,10 +42,7 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        // AOD member data sync
-        $job = new SyncMemberData();
-
-        $this->dispatch($job);
+        SyncMemberData::execute();
 
         $this->comment('Member sync has been queued.');
     }
