@@ -22,7 +22,8 @@ class SyncMemberData
     {
         foreach (Division::all() as $division) {
 
-            echo date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}" . PHP_EOL;
+            // log activity
+            Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
             self::$activeMembers = [];
             $divisionInfo = new GetDivisionInfo($division->name);
