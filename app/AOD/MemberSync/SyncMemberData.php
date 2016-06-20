@@ -4,6 +4,7 @@ namespace App\AOD\MemberSync;
 
 use App\Division;
 use App\Member;
+use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
 {
