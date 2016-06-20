@@ -35,7 +35,6 @@ class GetDivisionInfo
             $error = "AOD token not defined";
             Slack::error('SYNC ERROR: ' . $error);
         } else {
-            echo "Fetching {$this->division}" . PHP_EOL;
             $this->data = $this->fetchData();
         }
     }
