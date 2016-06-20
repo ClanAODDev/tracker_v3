@@ -44,6 +44,6 @@ class MemberSync extends Command
     {
         SyncMemberData::execute();
 
-        $this->comment('Member sync has been queued.');
+        $this->comment('Member sync successful');
     }
 }
