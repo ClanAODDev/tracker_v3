@@ -15,7 +15,7 @@ class DivisionTableSeeder extends Seeder
             [
                 // AOD Racing
                 [
-                    'name' => 'Project Cars',
+                    'name' => 'AOD Racing',
                     'abbreviation' => 'pc',
                     'description' => 'Some random description here',
                     'division_structure' => 103832,
