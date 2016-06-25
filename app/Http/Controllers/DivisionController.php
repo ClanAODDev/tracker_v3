@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use DB;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -18,6 +19,7 @@ class DivisionController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +43,7 @@ class DivisionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -64,7 +66,7 @@ class DivisionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -75,8 +77,8 @@ class DivisionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -87,7 +89,7 @@ class DivisionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -111,5 +113,31 @@ class DivisionController extends Controller
         $partTime = $division->partTimeMembers;
 
         return view('division.part_time', compact('division', 'partTime'));
+    }
+
+    public function rankDemographic(Division $division)
+    {
+        $ranks = DB::select(
+            DB::raw("
+               SELECT ranks.name, count(*) as count
+               FROM members
+               JOIN ranks ON ranks.id = members.rank_id
+               JOIN division_member ON member_id = members.id
+               WHERE division_id = {$division->id}
+               GROUP BY rank_id
+               ")
+        );
+
+        $data = [];
+
+        foreach ($ranks as $rank) {
+            $data[] = [
+                'label' => $rank->name,
+                'value' => $rank->count
+            ];
+        }
+
+        return json_encode($data);
+
     }
 }

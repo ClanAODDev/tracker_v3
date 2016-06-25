@@ -41,6 +41,7 @@ Route::group(['middleware' => 'web'], function () {
      */
     Route::group(['prefix' => 'v1/api'], function () {
         Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
+        Route::get('stats/ranks/division/{division}', 'DivisionController@rankDemographic');
     });
 
 });

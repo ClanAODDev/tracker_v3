@@ -39,7 +39,7 @@
     <hr />
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">Active Members</div>
 
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">Part-time Members</div>
 
@@ -58,6 +58,22 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Rank Demographic</div>
+
+                <div class="panel-body striped-bg">
+                    <donut-graph url="/v1/api/stats/ranks/division/{{ $division->abbreviation  }}"></donut-graph>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-@endsection
+@stop
+
+@section('footer_scripts')
+    <script src="{!! asset('/js/platoon.js') !!}"></script>
+    <script src="{!! asset('/js/activity.js') !!}"></script>
+@stop
