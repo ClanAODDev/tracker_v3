@@ -49,6 +49,24 @@ class DivisionTableSeeder extends Seeder
                     ]),
                 ],
 
+                // Armored Warfare
+                [
+                    'name' => 'Armored Warfare',
+                    'abbreviation' => 'aw',
+                    'description' => 'Some random description here',
+                    'division_structure' => 131206,
+                    'welcome_forum' => 609,
+                    'handle_id' => 0,
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
+                ],
+
                 // Battlefield
                 [
                     'name' => 'Battlefield',
@@ -76,6 +94,42 @@ class DivisionTableSeeder extends Seeder
                     'welcome_forum' => 574,
                     'handle_id' => 2,
                     'enabled' => 1,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
+                ],
+
+                // Black Desert
+                [
+                    'name' => 'Black Desert',
+                    'abbreviation' => 'bdo',
+                    'description' => 'Some random description here',
+                    'division_structure' => 128672,
+                    'welcome_forum' => 598,
+                    'handle_id' => 0,
+                    'enabled' => 0,
+                    'settings' => json_encode([]),
+                    'locality' => json_encode([
+                        'squad' => 'squad',
+                        'platoon' => 'platoon',
+                        'squad leader' => 'squad leader',
+                        'platoon leader' => 'platoon leader',
+                    ]),
+                ],
+
+                // Floaters (SGM)
+                [
+                    'name' => 'Floater',
+                    'abbreviation' => 'floater',
+                    'description' => 'Some random description here',
+                    'division_structure' => 0,
+                    'welcome_forum' => 0,
+                    'handle_id' => 0,
+                    'enabled' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
