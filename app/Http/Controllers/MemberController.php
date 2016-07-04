@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Member;
+use App\Repositories\MemberRepository;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
+    protected $member;
+
     /**
      * MemberController constructor.
+     * @param MemberRepository $member
      */
-    public function __construct()
+    public function __construct(MemberRepository $member)
     {
+        $this->member = $member;
+
         $this->middleware('auth');
     }
 
@@ -33,8 +39,8 @@ class MemberController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function search($name)
-    {
-        $members = Member::where('name', 'LIKE', "%{$name}%")->get();
+    {        
+        $members = $this->member->search($name);
 
         return view('member.search', compact('members'));
     }
