@@ -94,7 +94,7 @@ function getDivisionIconPath($abbreviation)
  * @param array $arrayKeys
  * @return array
  */
-function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = array())
+function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = [])
 {
     if ($depth < $MAXDEPTH) {
         $depth++;

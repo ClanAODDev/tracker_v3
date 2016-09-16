@@ -60,10 +60,10 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
 
-        $messages = array(
+        $messages = [
             'regex' => 'Username cannot contain "AOD_"',
             'exists' => 'AOD member name not found',
-        );
+        ];
 
         return Validator::make($data, [
             // ensure member exists before registering user
