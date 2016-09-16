@@ -16,7 +16,8 @@ class Base
      */
     protected $params;
 
-    public function __construct($data) {
+    public function __construct($data)
+    {
         $params = last(
             explode(':', $data['text'], 2)
         );

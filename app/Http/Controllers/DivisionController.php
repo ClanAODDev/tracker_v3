@@ -27,7 +27,6 @@ class DivisionController extends Controller
      */
     public function index()
     {
-
     }
 
     /**
@@ -138,6 +137,5 @@ class DivisionController extends Controller
         }
 
         return json_encode($data);
-
     }
 }

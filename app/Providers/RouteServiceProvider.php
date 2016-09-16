@@ -43,7 +43,8 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         \Route::bind('username', function ($username) {
-            return User::whereName($username)->firstOrFail();;
+            return User::whereName($username)->firstOrFail();
+            ;
         });
 
         /**
@@ -73,7 +74,6 @@ class RouteServiceProvider extends ServiceProvider
                 return $model;
             }
         });
-
     }
 
     /**
@@ -89,5 +89,3 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 }
-
-

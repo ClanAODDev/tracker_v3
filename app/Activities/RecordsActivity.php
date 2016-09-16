@@ -9,11 +9,9 @@ trait RecordsActivity
     protected static function bootRecordsActivity()
     {
         foreach (static::getModelEvents() as $event) {
-
             static::$event(function ($model) use ($event) {
                 $model->recordActivity($event);
             });
-
         }
     }
 
@@ -50,6 +48,5 @@ trait RecordsActivity
         $name = strtolower((new \ReflectionClass($model))->getShortName());
 
         return "{$action}_{$name}";
-
     }
 }

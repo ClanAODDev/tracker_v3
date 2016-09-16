@@ -44,7 +44,7 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
 
 
 Breadcrumbs::register('user', function ($breadcrumbs, $division, $user) {
-   $breadcrumbs->parent('home');
+    $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
     $breadcrumbs->push($user->name);
 });

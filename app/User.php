@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 use App\Settings\UserSettings;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -115,5 +114,4 @@ class User extends Authenticatable
     {
         return ucfirst($value);
     }
-
 }

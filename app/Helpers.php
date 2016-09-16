@@ -50,8 +50,13 @@ function avatar($email, $type = "thumb")
  */
 function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
 {
-    $gravatar = sprintf('http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
-        md5($email), $type, $size, $rating);
+    $gravatar = sprintf(
+        'http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
+        md5($email),
+        $type,
+        $size,
+        $rating
+    );
 
     return $gravatar;
 }

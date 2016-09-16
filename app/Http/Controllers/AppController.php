@@ -30,5 +30,4 @@ class AppController extends Controller
             compact('divisions')
         );
     }
-
 }

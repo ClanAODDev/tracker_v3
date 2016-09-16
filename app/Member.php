@@ -93,5 +93,4 @@ class Member extends Model
     {
         return $this->belongsToMany(Division::class, 'staff_sergeants');
     }
-
 }

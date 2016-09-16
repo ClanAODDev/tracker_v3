@@ -31,6 +31,5 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton('App\Settings\UserSettings', function () {
             return Auth::user()->settings();
         });
-
     }
 }

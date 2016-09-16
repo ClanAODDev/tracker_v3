@@ -44,7 +44,7 @@ class Division extends Model
 
     /**
      * Division has many platoons
-     * 
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function platoons()

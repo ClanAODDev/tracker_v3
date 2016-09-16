@@ -39,7 +39,7 @@ class MemberController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function search($name)
-    {        
+    {
         $members = $this->member->search($name);
 
         return view('member.search', compact('members'));

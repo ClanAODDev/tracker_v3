@@ -26,6 +26,4 @@ class Slack
     {
         SlackClient::send($message);
     }
-
-
 }

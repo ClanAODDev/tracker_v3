@@ -43,7 +43,6 @@ Route::group(['middleware' => 'web'], function () {
         Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
         Route::get('stats/ranks/division/{division}', 'DivisionController@rankDemographic');
     });
-
 });
 
 
@@ -56,7 +55,6 @@ Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () 
     Route::get('divisions', 'API\APIController@divisions');
     Route::get('squads', 'API\APIController@squads');
     Route::get('platoons', 'API\APIController@platoons');
-
 });
 
 /**
@@ -79,4 +77,3 @@ Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:5'], function () {
         return response()->json($info->data);
     });
 });
-

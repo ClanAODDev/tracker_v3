@@ -17,7 +17,8 @@ class VerifySlackToken
     public function handle($request, Closure $next)
     {
         $app_tokens = explode(
-            ',', env('SLACK_TOKENS')
+            ',',
+            env('SLACK_TOKENS')
         );
 
         if (in_array($request->token, $app_tokens)) {
@@ -27,6 +28,5 @@ class VerifySlackToken
         return response()->json([
             'text' => 'Either an invalid token was provided, or the request didn\'t originate from Slack',
         ]);
-
     }
 }

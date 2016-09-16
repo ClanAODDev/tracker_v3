@@ -48,4 +48,3 @@ class MemberPresenter extends Presenter
         return $this->member->rank->abbreviation . " " . $this->member->name;
     }
 }
-
