@@ -19,15 +19,15 @@ class SyncMemberData
      *
      * @var array
      */
-    protected $activeMembers = [];
+    protected static $activeMembers = [];
 
     /**
      * Performs update operation on divisions and members and also
      * syncs division membership (adds, removes)
      */
-    public function execute()
+    public static function execute()
     {
-        foreach ($this->division->active() as $division) {
+        foreach (self::$division->active() as $division) {
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
@@ -49,7 +49,7 @@ class SyncMemberData
      * @param $item
      * @param $division
      */
-    private function doMemberUpdate($item, Division $division)
+    private static function doMemberUpdate($item, Division $division)
     {
         $member = Member::firstOrCreate([
             'clan_id' => $item['userid'],
