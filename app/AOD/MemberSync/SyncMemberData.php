@@ -9,17 +9,14 @@ use Illuminate\Support\Facades\Log;
 class SyncMemberData
 {
 
+    protected static $division;
+
+    protected static $activeMembers = [];
+
     public function __construct(DivisionRepository $division)
     {
         $this->division = $division;
     }
-
-    /**
-     * Collection of active members to sync
-     *
-     * @var array
-     */
-    protected static $activeMembers = [];
 
     /**
      * Performs update operation on divisions and members and also
