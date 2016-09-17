@@ -9,14 +9,7 @@ use Illuminate\Support\Facades\Log;
 class SyncMemberData
 {
 
-    protected static $division;
-
     protected static $activeMembers = [];
-
-    public function __construct(DivisionRepository $division)
-    {
-        $this->division = $division;
-    }
 
     /**
      * Performs update operation on divisions and members and also
@@ -24,7 +17,7 @@ class SyncMemberData
      */
     public static function execute()
     {
-        foreach (self::$division->active() as $division) {
+        foreach (Division::active() as $division) {
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
