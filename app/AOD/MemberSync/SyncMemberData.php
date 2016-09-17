@@ -2,8 +2,8 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Repositories\DivisionRepository;
 use App\Member;
+use App\Division;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
