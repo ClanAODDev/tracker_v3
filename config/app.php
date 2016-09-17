@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'My Application',
+    'name' => 'AOD Tracker',
 
     /*
     |--------------------------------------------------------------------------
@@ -105,7 +105,7 @@ return [
 
     'key' => env('APP_KEY'),
 
-    'cipher' => MCRYPT_RIJNDAEL_256,
+    'cipher' => 'AES-256-CBC',
 
     /*
     |--------------------------------------------------------------------------
