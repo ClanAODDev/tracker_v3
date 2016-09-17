@@ -24,7 +24,7 @@ class AppController extends Controller
      */
     public function index()
     {
-        $divisions = Division::enabled()->orderBy('name')->get();
+        $divisions = Division::active()->orderBy('name')->get();
 
         return view('layouts.home')->with(
             compact('divisions')

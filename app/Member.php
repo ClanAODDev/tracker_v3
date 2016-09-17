@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Carbon;
 use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;
-use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

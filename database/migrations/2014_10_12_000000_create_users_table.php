@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password', 60);
             $table->tinyInteger('role_id')->default(1);
             $table->mediumInteger('member_id');
-            $table->json('settings');
+            $table->text('settings');
             $table->boolean('developer')->default(0);
             $table->rememberToken();
             $table->timestamps();

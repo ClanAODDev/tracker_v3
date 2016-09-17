@@ -2,26 +2,32 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Division;
+use App\Repositories\DivisionRepository;
 use App\Member;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
 {
+
+    public function __construct(DivisionRepository $division)
+    {
+        $this->division = $division;
+    }
+
     /**
      * Collection of active members to sync
      *
      * @var array
      */
-    protected static $activeMembers = [];
+    protected $activeMembers = [];
 
     /**
      * Performs update operation on divisions and members and also
      * syncs division membership (adds, removes)
      */
-    public static function execute()
+    public function execute()
     {
-        foreach (Division::all() as $division) {
+        foreach ($this->division->active() as $division) {
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
@@ -43,7 +49,7 @@ class SyncMemberData
      * @param $item
      * @param $division
      */
-    private static function doMemberUpdate($item, Division $division)
+    private function doMemberUpdate($item, Division $division)
     {
         $member = Member::firstOrCreate([
             'clan_id' => $item['userid'],

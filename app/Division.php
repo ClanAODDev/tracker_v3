@@ -12,7 +12,7 @@ class Division extends Model
 {
 
     protected $casts = [
-        'enabled' => 'boolean',
+        'active' => 'boolean',
         'settings' => 'json',
         'locality' => 'json',
     ];
@@ -69,9 +69,9 @@ class Division extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeEnabled($query)
+    public function scopeActive($query)
     {
-        return $query->whereEnabled(true);
+        return $query->whereActive(true);
     }
 
     /**
@@ -141,8 +141,8 @@ class Division extends Model
             ->orWhere('position_id', 8);
     }
 
-    public function isEnabled()
+    public function isActive()
     {
-        return $this->enabled;
+        return $this->active;
     }
 }

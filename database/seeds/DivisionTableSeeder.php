@@ -21,7 +21,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 103832,
                     'welcome_forum' => 544,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -39,7 +39,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 128577,
                     'welcome_forum' => 533,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -57,7 +57,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 131206,
                     'welcome_forum' => 609,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -75,7 +75,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 73448,
                     'welcome_forum' => 458,
                     'handle_id' => 2,
-                    'enabled' => 1,
+                    'active' => 1,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -93,7 +93,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 115653,
                     'welcome_forum' => 574,
                     'handle_id' => 2,
-                    'enabled' => 1,
+                    'active' => 1,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -111,7 +111,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 128672,
                     'welcome_forum' => 598,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -129,7 +129,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 0,
                     'welcome_forum' => 0,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -147,7 +147,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 62557,
                     'welcome_forum' => 123,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -165,7 +165,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 132965,
                     'welcome_forum' => 617,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -183,7 +183,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 65422,
                     'welcome_forum' => 393,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -201,7 +201,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 119785,
                     'welcome_forum' => 566,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -219,7 +219,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 121653,
                     'welcome_forum' => 495,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -237,7 +237,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 104706,
                     'welcome_forum' => 514,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',
@@ -255,7 +255,7 @@ class DivisionTableSeeder extends Seeder
                     'division_structure' => 64966,
                     'welcome_forum' => 432,
                     'handle_id' => 0,
-                    'enabled' => 0,
+                    'active' => 0,
                     'settings' => json_encode([]),
                     'locality' => json_encode([
                         'squad' => 'squad',

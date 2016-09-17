@@ -22,8 +22,8 @@ class CreateDivisionsTable extends Migration
             $table->string('division_structure');
             $table->string('welcome_forum');
             $table->mediumInteger('handle_id');
-            $table->json('settings');
-            $table->json('locality');
+            $table->text('settings');
+            $table->text('locality');
             $table->timestamps();
         });
     }
