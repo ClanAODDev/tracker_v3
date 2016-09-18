@@ -3,7 +3,7 @@
         <a href="{{ action('DivisionController@show', [$division->abbreviation]) }}"
            class="list-group-item"
            style="padding-bottom: 18px;">
-            
+
             <span class="pull-left" style="margin-right: 20px; vertical-align: middle;">
                 @include('division.partials.icon')
             </span>

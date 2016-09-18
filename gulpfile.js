@@ -44,13 +44,9 @@ elixir(function (mix) {
 
         'public/js/libs.js', 'resources/assets/js');
 
-    mix.browserify('app.js');
+    mix.browserify('main.js');
     mix.browserify('platoon.js');
     mix.browserify('activity.js');
-});
-
-elixir(mix => {
-   mix.webpack('app.js');
 });
 
 
