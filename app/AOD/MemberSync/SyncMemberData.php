@@ -17,7 +17,7 @@ class SyncMemberData
      */
     public static function execute()
     {
-        foreach (Division::active() as $division) {
+        foreach (Division::active()->get() as $division) {
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
@@ -44,6 +44,8 @@ class SyncMemberData
         $member = Member::firstOrCreate([
             'clan_id' => $item['userid'],
         ]);
+
+        echo $member->clan_id;
 
         // have they been recently promoted?
         if ($member->rank_id < ($item['aodrankval'] - 2) && $member->rank_id > 0) {
