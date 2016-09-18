@@ -3,7 +3,7 @@
     <div class="col-md-6 list-group">
         @foreach ($chunk as $division)
 
-            @if ($division->isEnabled())
+            @if ($division->isActive())
                 <a href="{{ action('DivisionController@show', [$division->abbreviation]) }}"
                    class="list-group-item"
                    style="padding-bottom: 18px;">
