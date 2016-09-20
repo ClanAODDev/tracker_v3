@@ -8,6 +8,7 @@
 
 namespace App\Slack\Commands;
 
+use App\Member;
 use App\Slack\Base;
 use App\Slack\Command;
 
