@@ -50,6 +50,7 @@ class Search extends Base implements Command
             ];
         } else if (count($this->members) >= 1) {
             return [
+                ''
                 'text' => "The following members were found",
                 'attachments' => $this->content,
             ];

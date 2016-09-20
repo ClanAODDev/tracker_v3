@@ -16,12 +16,6 @@ class Help extends Base implements Command
         ],
 
         [
-            'name' => 'Sync AOD member data',
-            'description' => 'Syncs tracker with AOD forum data. Use only when necessary',
-            'usage' => '/tracker member_sync',
-        ],
-
-        [
             'name' => 'All supported divisions',
             'description' => 'Lists all divisions supported by the tracker',
             'usage' => '/tracker all_divisions',
@@ -42,6 +36,10 @@ class Help extends Base implements Command
         foreach ($this->commands as $command) {
             $this->content[] = [
                 'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
+            ];
+
+            $this->content[] = [
+                'text' => 'More commands will be added soon!'
             ];
         }
 
