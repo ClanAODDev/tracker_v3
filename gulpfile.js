@@ -1,4 +1,4 @@
-var elixir = require('laravel-elixir');
+const elixir = require('laravel-elixir');
 
 /*
  |--------------------------------------------------------------------------
@@ -44,7 +44,7 @@ elixir(function (mix) {
 
         'public/js/libs.js', 'resources/assets/js');
 
-    mix.browserify('app.js');
+    mix.browserify('main.js');
     mix.browserify('platoon.js');
     mix.browserify('activity.js');
 });

@@ -14,5 +14,4 @@ abstract class Presenter
 
         throw new \Exception(sprintf($message, static::class, $property));
     }
-
 }

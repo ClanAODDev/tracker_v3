@@ -27,5 +27,4 @@ class UserSettings
     {
         return $this->user->update(['settings' => $this->settings]);
     }
-
 }

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
 use DB;
+use App\Division;
 use Illuminate\Http\Request;
+use App\Repositories\DivisionRepository;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -15,8 +16,10 @@ class DivisionController extends Controller
      * Create a new controller instance.
      *
      */
-    public function __construct()
+    public function __construct(DivisionRepository $division)
     {
+        $this->division = $division;
+
         $this->middleware('auth');
     }
 
@@ -27,7 +30,6 @@ class DivisionController extends Controller
      */
     public function index()
     {
-
     }
 
     /**
@@ -117,6 +119,7 @@ class DivisionController extends Controller
 
     public function rankDemographic(Division $division)
     {
+        $ranks = $this->division->getRankDemographic($division);
         $ranks = DB::select(
             DB::raw("
                SELECT ranks.name, count(*) as count
@@ -138,6 +141,5 @@ class DivisionController extends Controller
         }
 
         return json_encode($data);
-
     }
 }

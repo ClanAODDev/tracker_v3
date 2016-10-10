@@ -44,6 +44,4 @@ class Platoon extends Model
     {
         return $this->hasOne(Member::class, 'clan_id', 'leader_id');
     }
-    
-
 }

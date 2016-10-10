@@ -2,17 +2,13 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Division;
 use App\Member;
+use App\Division;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
 {
-    /**
-     * Collection of active members to sync
-     *
-     * @var array
-     */
+
     protected static $activeMembers = [];
 
     /**
@@ -22,7 +18,6 @@ class SyncMemberData
     public static function execute()
     {
         foreach (Division::all() as $division) {
-
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 

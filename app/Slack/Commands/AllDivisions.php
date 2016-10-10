@@ -20,7 +20,7 @@ class AllDivisions implements Command
      */
     public function handle()
     {
-        $this->divisions = Division::lists('name')->toArray();
+        $this->divisions = Division::pluck('name')->toArray();
 
         return [
 

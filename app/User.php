@@ -2,13 +2,14 @@
 
 namespace App;
 
-
 use App\Settings\UserSettings;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -115,5 +116,4 @@ class User extends Authenticatable
     {
         return ucfirst($value);
     }
-
 }

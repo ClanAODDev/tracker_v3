@@ -20,5 +20,4 @@ class SyncMemberData extends Job implements ShouldQueue
     {
         MemberSync::execute();
     }
-
 }

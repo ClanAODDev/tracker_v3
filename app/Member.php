@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Carbon;
 use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;
-use Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -93,5 +93,4 @@ class Member extends Model
     {
         return $this->belongsToMany(Division::class, 'staff_sergeants');
     }
-
 }

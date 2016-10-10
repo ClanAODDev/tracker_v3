@@ -7,7 +7,7 @@ use App\Member;
 use App\Platoon;
 use App\Division;
 use App\User;
-use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -27,10 +27,9 @@ class RouteServiceProvider extends ServiceProvider
      * @param  \Illuminate\Routing\Router $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
-        parent::boot($router);
-
+        parent::boot();
 
         /**
          * Show division by abbreviation
@@ -43,7 +42,8 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         \Route::bind('username', function ($username) {
-            return User::whereName($username)->firstOrFail();;
+            return User::whereName($username)->firstOrFail();
+            ;
         });
 
         /**
@@ -73,7 +73,6 @@ class RouteServiceProvider extends ServiceProvider
                 return $model;
             }
         });
-
     }
 
     /**
@@ -82,12 +81,31 @@ class RouteServiceProvider extends ServiceProvider
      * @param  \Illuminate\Routing\Router $router
      * @return void
      */
-    public function map(Router $router)
+    public function map()
     {
-        $router->group(['namespace' => $this->namespace], function ($router) {
-            require app_path('Http/routes.php');
+        $this->mapApiRoutes();
+
+        $this->mapWebRoutes();
+    }
+
+    protected function mapApiRoutes()
+    {
+        Route::group([
+           'middleware' => 'api',
+            'namespace' => $this->namespace,
+            'prefix' => 'api',
+        ], function ($router) {
+            require base_path('routes/api.php');
+        });
+    }
+
+    protected function mapWebRoutes()
+    {
+        Route::group([
+            'middleware' => 'web',
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/web.php');
         });
     }
 }
-
-

@@ -45,18 +45,14 @@ class Search extends Base implements Command
         }
 
         if (count($this->members) > 10) {
-
             return [
                 'text' => 'More than 10 members were found. Please narrow your search terms.'
             ];
-
-        } else if (count($this->members) >= 1)  {
-
+        } else if (count($this->members) >= 1) {
             return [
                 'text' => "The following members were found",
                 'attachments' => $this->content,
             ];
-
         }
 
         return [
@@ -64,4 +60,3 @@ class Search extends Base implements Command
         ];
     }
 }
-
