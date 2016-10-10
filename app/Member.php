@@ -83,6 +83,12 @@ class Member extends Model
         return $this->belongsTo(Squad::class, 'leader_id');
     }
 
+    /*
+     * relationship - member has many bans
+     */
+    public function ban() {
+        return $this->belongsToMany(GameBan::class, 'member_id');
+    }
 
     /**
      * Handle Staff Sergeant assignments

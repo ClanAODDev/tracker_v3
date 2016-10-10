@@ -2,9 +2,8 @@
 
 namespace App;
 
-use App\Activity;
-use App\Settings\DivisionSettings;
 use App\Presenters\DivisionPresenter;
+use App\Settings\DivisionSettings;
 use App\Settings\LocalitySettings;
 use Illuminate\Database\Eloquent\Model;
 
@@ -90,6 +89,16 @@ class Division extends Model
         return $this->belongsToMany(Member::class)->withPivot('primary')->withTimestamps();
     }
 
+
+    /*
+     * relationship - division has many bans
+     */
+    public function bans()
+    {
+        return $this->belongsToMany(GameBan::class, 'division_id');
+    }
+
+
     /**
      * Gets active members of a division
      */
@@ -112,7 +121,6 @@ class Division extends Model
         return $this->members()
             ->where('platoon_id', 0)
             ->whereNotIn('position_id', [
-
             ]);
     }
 

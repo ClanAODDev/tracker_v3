@@ -34,6 +34,10 @@ Route::group(['middleware' => 'web'], function () {
     // activity
     Route::get('users/{username}/activity', 'ActivitiesController@byUser');
 
+    // bans
+    Route::get('gameBans', 'GameBanController@viewGameBans');
+    Route::post('do/submitBan' , 'GameBanController@submitBan');
+
 
 
     /**
