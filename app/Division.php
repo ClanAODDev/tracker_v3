@@ -137,8 +137,8 @@ class Division extends Model
     public function leaders()
     {
         return $this->members()
-            ->where('position_id', 7)
-            ->orWhere('position_id', 8);
+            ->where('position_id', 5)
+            ->orWhere('position_id', 6);
     }
 
     public function isActive()
