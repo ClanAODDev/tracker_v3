@@ -37,5 +37,4 @@
 
 @section('footer_scripts')
     <script src="{!! asset('/js/platoon.js') !!}"></script>
-    <script src="{!! asset('/js/activity.js') !!}"></script>
 @stop

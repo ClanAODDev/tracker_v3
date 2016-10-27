@@ -4,11 +4,10 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Division;
-use Illuminate\Http\Request;
-use App\Repositories\DivisionRepository;
-
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use ConsoleTVs\Charts\Charts;
+use App\Repositories\DivisionRepository;
 
 class DivisionController extends Controller
 {
@@ -62,7 +61,9 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
-        return view('division.show', compact('division'));
+        $chart = $this->getRanksChart($division);
+
+        return view('division.show', compact('division', 'chart'));
     }
 
     /**
@@ -119,27 +120,18 @@ class DivisionController extends Controller
 
     public function rankDemographic(Division $division)
     {
-        $ranks = $this->division->getRankDemographic($division);
-        $ranks = DB::select(
-            DB::raw("
-               SELECT ranks.name, count(*) as count
-               FROM members
-               JOIN ranks ON ranks.id = members.rank_id
-               JOIN division_member ON member_id = members.id
-               WHERE division_id = {$division->id}
-               GROUP BY rank_id
-               ")
-        );
+        return $this->division->getRankDemographic($division);
+    }
 
-        $data = [];
+    private function getRanksChart($division)
+    {
+        $data = $this->rankDemographic($division);
 
-        foreach ($ranks as $rank) {
-            $data[] = [
-                'label' => $rank->name,
-                'value' => $rank->count
-            ];
-        }
-
-        return json_encode($data);
+        return Charts::create('bar', 'morris')
+            ->setTitle('Rank Demographic')
+            ->setLabels($data['labels'])
+            ->setValues($data['values'])
+            ->setElementLabel('Rank count')
+            ->setResponsive(true);
     }
 }

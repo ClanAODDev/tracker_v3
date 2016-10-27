@@ -15,6 +15,8 @@ href="//cdnjs.cloudflare.com/ajax/libs/jquery-powertip/1.2.0/css/jquery.powertip
 <link rel="stylesheet" type="text/css"
 href="//cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTools.css">
 
+{!! Charts::assets() !!}
+
 
 <link href="{{ asset('/css/libs/sweetalert2.css') }}" rel="stylesheet">
 <link href="{{ asset('/css/app.css') }}" rel="stylesheet">

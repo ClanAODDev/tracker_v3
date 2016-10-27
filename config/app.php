@@ -174,6 +174,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
 
     ],
 
@@ -194,7 +195,6 @@ return [
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
         'Blade' => Illuminate\Support\Facades\Blade::class,
-        'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'Cache' => Illuminate\Support\Facades\Cache::class,
         'Carbon' => Carbon\Carbon::class,
         'Config' => Illuminate\Support\Facades\Config::class,
@@ -208,7 +208,6 @@ return [
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
-        'Helpers' => App\Helpers\Helpers::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
@@ -222,11 +221,16 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
-        'Slack' => Maknz\Slack\Facades\Slack::class,
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        // custom aliases
+        'Charts' => ConsoleTVs\Charts\Charts::class,
+        'Slack' => Maknz\Slack\Facades\Slack::class,
+        'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
+        'Helpers' => App\Helpers::class,
 
     ],
 

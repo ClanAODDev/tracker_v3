@@ -60,8 +60,15 @@
         </div>
     </div>
 
-@stop
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Test Graph</div>
+                <div class="panel-body">
+                    {!! $chart->render() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 
-@section('footer_scripts')
-    <script src="{!! asset('/js/activity.js') !!}"></script>
 @stop

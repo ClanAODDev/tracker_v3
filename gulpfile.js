@@ -32,21 +32,12 @@ elixir(function (mix) {
             'libs/dataTables/jquery.dataTables.min.js',
             'libs/dataTables/dataTables.bootstrap.js',
             'libs/dataTables/dataTables.tableTools.min.js',
-
-            'libs/chartjs/chartjs.min.js',
-            'libs/chartjs/Chart.Bar.js',
-            'libs/chartjs/Chart.Core.js',
-            'libs/chartjs/Chart.Doughnut.js',
-            'libs/chartjs/Chart.Line.js',
-            'libs/chartjs/Chart.PolarArea.js',
-            'libs/chartjs/Chart.Radar.js',
         ],
 
         'public/js/libs.js', 'resources/assets/js');
 
     mix.browserify('main.js');
     mix.browserify('platoon.js');
-    mix.browserify('activity.js');
 });
 
 

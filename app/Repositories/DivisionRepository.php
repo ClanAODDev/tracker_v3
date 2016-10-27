@@ -20,14 +20,18 @@ class DivisionRepository
                ")
         );
 
-        $data = [];
+        $labels = [];
+        $values = [];
 
         foreach ($ranks as $rank) {
-            $data[] = [
-                'label' => $rank->abbreviation,
-                'value' => $rank->count
-            ];
+            $labels[] = $rank->abbreviation;
+            $values[] = $rank->count;
         }
+
+        $data = [
+            'labels' => $labels,
+            'values' => $values
+        ];
 
         return $data;
     }
