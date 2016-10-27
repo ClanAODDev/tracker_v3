@@ -1,61 +1,41 @@
 <?php
 
+Auth::routes();
 
-/**
- * Authentication-protected routes
- */
+Route::get('/home', 'AppController@index');
+Route::get('/', 'AppController@index');
 
-Route::group(['middleware' => 'web'], function () {
+//Route::get('send/mail', 'UserController@sendEmailReminder');
 
-    Route::auth();
+// members
+Route::get('members/{member}', 'MemberController@show');
+Route::get('search/members/{name}', 'MemberController@search');
 
-    Route::get('/home', 'AppController@index');
-    Route::get('/', 'AppController@index');
+// divisions
+Route::get('divisions/{division}', 'DivisionController@show');
+Route::get('divisions/{division}/squads/', 'DivisionController@squads');
+Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
+Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');
 
-    //Route::get('send/mail', 'UserController@sendEmailReminder');
+// platoons
+Route::get('platoons/{platoon}', 'PlatoonController@show');
+Route::get('platoons/{platoon}/squads', 'PlatoonController@squads');
 
-    // members
-    Route::get('members/{member}', 'MemberController@show');
-    Route::get('search/members/{name}', 'MemberController@search');
+// squads
+Route::get('squads/{squad}', 'SquadController@show');
 
-    // divisions
-    Route::get('divisions/{division}', 'DivisionController@show');
-    Route::get('divisions/{division}/squads/', 'DivisionController@squads');
-    Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
-    Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');
-
-    // platoons
-    Route::get('platoons/{platoon}', 'PlatoonController@show');
-    Route::get('platoons/{platoon}/squads', 'PlatoonController@squads');
-
-    // squads
-    Route::get('squads/{squad}', 'SquadController@show');
-
-    // activity
-    Route::get('users/{username}/activity', 'ActivitiesController@byUser');
-
-
-
-    /**
-     * Vue endpoints
-     */
-    Route::group(['prefix' => 'v1/api'], function () {
-        Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
-        Route::get('stats/ranks/division/{division}', 'DivisionController@rankDemographic');
-    });
-});
+// activity
+Route::get('users/{username}/activity', 'ActivitiesController@byUser');
 
 
 /**
- * API request routes.
+ * Vue endpoints
  */
-Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () {
-    Route::get('members', 'API\APIController@members');
-    Route::get('users', 'API\APIController@users');
-    Route::get('divisions', 'API\APIController@divisions');
-    Route::get('squads', 'API\APIController@squads');
-    Route::get('platoons', 'API\APIController@platoons');
+Route::group(['prefix' => 'v1/api'], function () {
+    Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
+    Route::get('stats/ranks/division/{division}', 'DivisionController@rankDemographic');
 });
+
 
 /**
  * Slack handler
@@ -77,3 +57,13 @@ Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:5'], function () {
         return response()->json($info->data);
     });
 });
+
+
+Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () {
+    Route::get('members', 'API\APIController@members');
+    Route::get('users', 'API\APIController@users');
+    Route::get('divisions', 'API\APIController@divisions');
+    Route::get('squads', 'API\APIController@squads');
+    Route::get('platoons', 'API\APIController@platoons');
+});
+

@@ -1,8 +1,8 @@
 // import Chart from 'chart.js';
-import Vue from "vue";
-import VueResource from "vue-resource";
+import Vue from "vue"
+import VueResource from "vue-resource"
 
-Vue.use(VueResource);
+Vue.use(VueResource)
 
 export default Vue.extend({
     template: `
@@ -34,8 +34,8 @@ export default Vue.extend({
                     percentageInnerCutout: 50,
                     animateScale: true,
                     responsive: true
-                });
-            });
+                })
+            })
     },
 
     methods: {

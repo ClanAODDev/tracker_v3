@@ -58,23 +58,6 @@
                 </div>
             </div>
         </div>
-
-    </div>
-
-
-    <div class="row">
-
-        <div class="col-md-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Rank Demographic</div>
-
-                <div class="panel-body striped-bg">
-                        <donut-graph-with-legend url="/v1/api/stats/ranks/division/{{ $division->abbreviation  }}"></donut-graph-with-legend>
-                </div>
-
-            </div>
-        </div>
-
     </div>
 
 @stop

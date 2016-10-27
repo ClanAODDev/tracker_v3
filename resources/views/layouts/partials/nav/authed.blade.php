@@ -30,7 +30,10 @@
                        target="_blank"> Forum profile</a></li>
                 <li><a href="help/" role="button">Help</a></li>
                 <li class="divider"></li>
-                <li><a href="{{ url('/logout') }}"><i class="fa fa-lock pull-right"></i> Logout</a></li>
+                <li><a href="{{ url('/logout') }}"
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-lock pull-right"></i> Logout</a>
+                </li>
+
             </ul>
         </li>
 

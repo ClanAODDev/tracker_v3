@@ -18,6 +18,7 @@ class ActivitiesController extends Controller
             'user',
             'division',
             'subject' => function ($query) {
+                // provide context even if a subject is "trashed"
                 $query->withTrashed();
             }
         ])->get();
