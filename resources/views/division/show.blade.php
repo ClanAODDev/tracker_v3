@@ -63,7 +63,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Test Graph</div>
+                <div class="panel-heading">Membership By Rank</div>
                 <div class="panel-body">
                     {!! $chart->render() !!}
                 </div>

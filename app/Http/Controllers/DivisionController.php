@@ -127,8 +127,7 @@ class DivisionController extends Controller
     {
         $data = $this->rankDemographic($division);
 
-        return Charts::create('bar', 'morris')
-            ->setTitle('Rank Demographic')
+        return Charts::create('area', 'morris')
             ->setLabels($data['labels'])
             ->setValues($data['values'])
             ->setElementLabel('Rank count')
