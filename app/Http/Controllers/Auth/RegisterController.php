@@ -61,7 +61,9 @@ class RegisterController extends Controller
                 'required',
                 'max:255',
                 'exists:members',
+                'unique'
             ],
+            'member_id' => 'unique',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ], $messages);
