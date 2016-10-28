@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Platoon;
 use App\Division;
 use App\Http\Requests;
-use App\Platoon;
 use Illuminate\Http\Request;
+use ConsoleTVs\Charts\Charts;
+use App\Repositories\PlatoonRepository;
 
 class PlatoonController extends Controller
 {
     /**
      * PlatoonController constructor.
+     * @param PlatoonRepository $platoon
      */
-    public function __construct()
+    public function __construct(PlatoonRepository $platoon)
     {
+        $this->platoon = $platoon;
+
         $this->middleware('auth');
     }
 
@@ -48,10 +53,11 @@ class PlatoonController extends Controller
      */
     public function show(Platoon $platoon)
     {
-        $platoon->members = $this->sortPlatoonMembers($platoon);
         $division = $platoon->division;
-        
-        return view('platoon.show', compact('platoon', 'division'));
+        $platoon->members = $this->sortPlatoonMembers($platoon);
+        $activityGraph = $this->activityGraphData($platoon);
+
+        return view('platoon.show', compact('platoon', 'division', 'activityGraph'));
     }
 
     /**
@@ -112,54 +118,19 @@ class PlatoonController extends Controller
     }
 
     /**
-     * Platoon activity endpoint
-     *
-     * @param Platoon $platoon
-     * @param Request $request
-     * @return mixed
-     */
-    public function activity(Platoon $platoon, Request $request)
-    {
-        if ($request->ajax()) {
-            return $this->activityGraphData($platoon);
-        }
-
-        return redirect(404);
-    }
-
-    /**
-     * Generates JSON for platoon activity
+     * Generates data for platoon activity
      *
      * @param Platoon $platoon
      * @return mixed
      */
     private function activityGraphData(Platoon $platoon)
     {
-        $twoWeeks = $platoon->members()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()')->count();
-        $oneMonth = $platoon->members()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)')->count();
-        $moreThanOneMonth = $platoon->members()->whereRaw('last_forum_login < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->count();
-
-        $data = [
-            [
-                'label' => '< 2 weeks ago',
-                'color' => '#28b62c',
-                'highlight' => '#5bc75e',
-                'value' => $twoWeeks,
-            ],
-            [
-                'label' => '14 - 30 days ago',
-                'color' => '#ff851b',
-                'highlight' => '#ffa14f',
-                'value' => $oneMonth,
-            ],
-            [
-                'label' => '> 30 days ago',
-                'color' => '#ff4136',
-                'highlight' => '#ff6c64',
-                'value' => $moreThanOneMonth,
-            ],
-        ];
-
-        return json_encode($data);
+        $data = $this->platoon->getPlatoonActivity($platoon);
+        
+        return Charts::create('donut', 'morris')
+            ->setLabels($data['labels'])
+            ->setValues($data['values'])
+            ->setColors($data['colors'])
+            ->setResponsive(true);
     }
 }

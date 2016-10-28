@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use App\Division;
 use App\Http\Requests;
 use Illuminate\Http\Request;

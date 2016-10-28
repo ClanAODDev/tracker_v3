@@ -112,7 +112,6 @@ class Division extends Model
         return $this->members()
             ->where('platoon_id', 0)
             ->whereNotIn('position_id', [
-
             ]);
     }
 
@@ -136,9 +135,9 @@ class Division extends Model
      */
     public function leaders()
     {
-        return $this->members()
-            ->where('position_id', 5)
-            ->orWhere('position_id', 6);
+        return $this->activeMembers()
+            ->whereIn('position_id', [5, 6]);
+
     }
 
     public function isActive()
