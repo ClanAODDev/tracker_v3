@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Division;
-use App\Http\Requests;
 use Illuminate\Http\Request;
 use ConsoleTVs\Charts\Charts;
 use App\Repositories\DivisionRepository;
@@ -12,7 +11,7 @@ class DivisionController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
+     * @param DivisionRepository $division
      */
     public function __construct(DivisionRepository $division)
     {

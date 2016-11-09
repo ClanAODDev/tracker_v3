@@ -4,7 +4,6 @@
     {!! Breadcrumbs::render('division', $division) !!}
 
     <div class="row">
-
         <div class="col-xs-6">
             <h2>
                 @include('division.partials.icon')
@@ -14,7 +13,7 @@
 
         <div class="col-xs-6">
             {{-- if user is division leader --}}
-            @if (Auth::user()->role->id >= 3 || Auth::user()->developer)
+            @if (Auth::user()->canEditDivision(Auth::user()->role->id, Auth::user()->developer))
                 <div class="btn-group pull-right">
                     <a class="btn btn-default edit-div disabled" href="#" target="_blank"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>

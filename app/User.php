@@ -3,9 +3,9 @@
 namespace App;
 
 use App\Settings\UserSettings;
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
 class User extends Authenticatable
 {
@@ -91,7 +91,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \App\Settings
+     * @return UserSettings
      */
     public function settings()
     {

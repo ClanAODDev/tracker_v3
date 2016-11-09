@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Division;
-use App\Http\Requests;
 
 class AppController extends Controller
 {
