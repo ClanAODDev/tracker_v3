@@ -73,21 +73,14 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
-        switch ($role) {
-            case "admin":
-                return $this->role->id === 4 || $this->isDeveloper();
+        return $this->role->name === $role;
+    }
 
-            case "srLeader":
-                return $this->role->id === 3;
-
-            case "jrLeader":
-                return $this->role->id === 2;
-
-            case "user":
-                return $this->role->id === 1;
-        }
-
-        throw new InvalidArgumentException('Invalid role used in isRole method.');
+    public function assignRole($role)
+    {
+        return $this->role()->associate(
+            Role::whereName($role)->firstOrFail()
+        );
     }
 
     /**

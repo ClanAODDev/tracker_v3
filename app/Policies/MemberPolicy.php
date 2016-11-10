@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberPolicy
@@ -14,9 +15,9 @@ class MemberPolicy
      * @param $user
      * @return bool
      */
-    public function before($user)
+    public function before(User $user)
     {
-        return $user->isAdmin() || $user->isDeveloper();
+        return $user->isRole('admin') || $user->isDeveloper();
     }
 
     public function store(Member $member)

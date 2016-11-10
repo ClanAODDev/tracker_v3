@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     /**
-     * relationship - user has one role
+     * relationship - role belongs to many users
      */
-    public function user()
+    public function users()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsToMany(User::class);
     }
 }

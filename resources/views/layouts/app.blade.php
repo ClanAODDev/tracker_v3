@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-
+{{--
 <div id="wrap">
 
     @include('layouts.partials.nav.base')
@@ -26,7 +26,12 @@
         </div>
     </div>
 
-</div>
+</div>--}}
+
+@can('edit_member')
+    <h1>can edit this guy</h1>
+@endcan
+
 
 @include('layouts.footer')
 

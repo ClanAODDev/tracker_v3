@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRolesTable extends Migration
+class CreateRolesTables extends Migration
 {
     /**
      * Run the migrations.
@@ -12,20 +13,12 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('roles', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('label')->nullable();
             $table->timestamps();
         });
-
-        DB::table('roles')->insert(
-            [
-                ['name' => 'User'],
-                ['name' => 'Junior Leader'],
-                ['name' => 'Senior Leader'],
-                ['name' => 'Administrator'],
-            ]
-        );
     }
 
     /**
@@ -35,6 +28,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('roles');
+        //
     }
 }
