@@ -23,7 +23,7 @@ class Squad extends Model
      */
     public function members()
     {
-        return $this->hasMany('App\Member');
+        return $this->hasMany(Member::class);
     }
 
     public function scopeMembersWithoutLeader($query, $squadLeaderId)
@@ -33,6 +33,11 @@ class Squad extends Model
 
     public function leader()
     {
-        return $this->hasOne('App\Member', 'id', 'leader_id');
+        return $this->belongsTo('App\Member', 'leader_id');
+    }
+
+    public function assignLeaderTo($member)
+    {
+        return $this->leader()->associate($member);
     }
 }

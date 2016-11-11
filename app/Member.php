@@ -46,6 +46,11 @@ class Member extends Model
         return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
     }
 
+    public function primaryDivision()
+    {
+        return $this->hasOne(Division::class)->wherePivot('primary', true);
+    }
+
     /**
      * relationship - member belongs to a platoon
      */
@@ -78,11 +83,16 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    /**
+     * Enforce a singleton relationship for squad leaders
+     *
+     * Prevents members from being a squad leader of more than one squad
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function squadLeaderOf()
     {
-        return $this->belongsTo(Squad::class, 'leader_id');
+        return $this->hasOne(Squad::class, 'leader_id');
     }
-
 
     /**
      * Handle Staff Sergeant assignments
@@ -93,4 +103,30 @@ class Member extends Model
     {
         return $this->belongsToMany(Division::class, 'staff_sergeants');
     }
+
+    //public function isSquadLeader($)
+
+    /**
+     * Policy object refers to these methods
+     * @param Squad $squad
+     * @return bool
+     */
+    // MemberPolicy > modify
+    // -- Member->isSquadLeader
+    public function isSquadLeader(Squad $squad)
+    {
+        return $this->id === $squad->leader_id;
+    }
+
+    public function isPlatoonLeader(Platoon $platoon)
+    {
+        return $this->id === $platoon->leader_id;
+    }
+
+    public function isDivisionLeader(Division $division)
+    {
+        //return $this->divisions
+          //  ->contains($division)
+    }
+    // -- Member->isDivisionLeader
 }

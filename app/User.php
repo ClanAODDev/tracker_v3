@@ -73,6 +73,11 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
+        // sanity check for role in case it doesn't exist
+        if ( ! $this->role instanceof Role) {
+            return false;
+        }
+
         return $this->role->name === $role;
     }
 

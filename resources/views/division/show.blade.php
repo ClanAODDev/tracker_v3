@@ -13,12 +13,12 @@
 
         <div class="col-xs-6">
             {{-- if user is division leader --}}
-            @if (Auth::user()->canEditDivision(Auth::user()->role->id, Auth::user()->developer))
+
                 <div class="btn-group pull-right">
                     <a class="btn btn-default edit-div disabled" href="#" target="_blank"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
                 </div>
-            @endif
+
         </div>
 
     </div>
