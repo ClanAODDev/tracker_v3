@@ -18,6 +18,7 @@ class CreateStaffSergeantsTable extends Migration
             $table->integer('member_id')->unsigned()->index();
             $table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
             $table->primary(['division_id', 'member_id']);
+            $table->timestamps();
         });
     }
 

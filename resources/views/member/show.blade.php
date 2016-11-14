@@ -8,11 +8,9 @@
 
             <h2>
                 <strong>{!! $member->present()->rankName !!}</strong>
-
                 @if ($member->position)
                     <small>{{ $member->position->name }}</small>
                 @endif
-
             </h2>
         </div>
 

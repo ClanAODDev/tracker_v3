@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
 
         Model::unguard();
 
-        $this->call('DivisionTableSeeder');
-        $this->command->info('Divisions table seeded!');
-
+        $this->call('DivisionSeeder');
+        $this->call('RoleSeeder');
+        $this->command->info('Tables seeded!');
     }
 }

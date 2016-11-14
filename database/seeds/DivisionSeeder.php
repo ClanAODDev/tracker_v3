@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DivisionTableSeeder extends Seeder
+class DivisionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,13 @@ class DivisionTableSeeder extends Seeder
      */
     public function run()
     {
+        $defaultLocality = [
+            'squad' => 'squad',
+            'platoon' => 'platoon',
+            'squad leader' => 'squad leader',
+            'platoon leader' => 'platoon leader',
+        ];
+
         DB::table('divisions')->insert(
             [
                 // AOD Racing
@@ -23,14 +30,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // ARK
                 [
                     'name' => 'ARK',
@@ -41,14 +42,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Armored Warfare
                 [
                     'name' => 'Armored Warfare',
@@ -59,14 +54,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Battlefield
                 [
                     'name' => 'Battlefield',
@@ -77,14 +66,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 2,
                     'active' => 1,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Battlefront
                 [
                     'name' => 'Battlefront',
@@ -95,14 +78,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 2,
                     'active' => 1,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Black Desert
                 [
                     'name' => 'Black Desert',
@@ -113,14 +90,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Floaters (SGM)
                 [
                     'name' => 'Floater',
@@ -131,14 +102,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Jedi Knight
                 [
                     'name' => 'Jedi Knight',
@@ -149,14 +114,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Overwatch
                 [
                     'name' => 'Overwatch',
@@ -167,14 +126,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Planetside 2
                 [
                     'name' => 'Planetside 2',
@@ -185,14 +138,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Skyforge
                 [
                     'name' => 'Skyforge',
@@ -203,14 +150,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Tom Clancy
                 [
                     'name' => 'Tom Clancy',
@@ -221,14 +162,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // Warframe
                 [
                     'name' => 'Warframe',
@@ -239,14 +174,8 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
-
                 // War Thunder
                 [
                     'name' => 'War Thunder',
@@ -257,12 +186,7 @@ class DivisionTableSeeder extends Seeder
                     'handle_id' => 0,
                     'active' => 0,
                     'settings' => json_encode([]),
-                    'locality' => json_encode([
-                        'squad' => 'squad',
-                        'platoon' => 'platoon',
-                        'squad leader' => 'squad leader',
-                        'platoon leader' => 'platoon leader',
-                    ]),
+                    'locality' => json_encode($defaultLocality),
                 ],
             ]
         );

@@ -2,6 +2,8 @@
 
 namespace App\Settings;
 
+use App\User;
+
 class UserSettings
 {
 

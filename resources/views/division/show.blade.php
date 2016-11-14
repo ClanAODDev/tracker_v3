@@ -7,7 +7,7 @@
         <div class="col-xs-6">
             <h2>
                 @include('division.partials.icon')
-                <strong>{{ $division->name }} Division</strong>
+                <strong>{{ $division->name }}</strong>
             </h2>
         </div>
 
@@ -58,16 +58,4 @@
             </div>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Membership By Rank</div>
-                <div class="panel-body">
-                    {!! $chart->render() !!}
-                </div>
-            </div>
-        </div>
-    </div>
-
 @stop

@@ -16,6 +16,7 @@ Route::get('divisions/{division}', 'DivisionController@show');
 Route::get('divisions/{division}/squads/', 'DivisionController@squads');
 Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
 Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');
+Route::get('divisions/{division}/statistics', 'DivisionController@statistics');
 
 // platoons
 Route::get('platoons/{platoon}', 'PlatoonController@show');

@@ -7,32 +7,12 @@
         <div class="col-xs-6">
             <h2>
                 @include('division.partials.icon')
-                <strong>{{ $division->name }} Division</strong>
+                <strong>{{ $division->name }}</strong> <small>Statistics</small>
             </h2>
         </div>
-
-        <div class="col-xs-6">
-            {{-- if user is division leader --}}
-
-                <div class="btn-group pull-right">
-                    <a class="btn btn-default edit-div disabled" href="#" target="_blank"><i class="fa fa-pencil"></i>
-                        <span class="hidden-xs hidden-sm">Edit Division</span></a>
-                </div>
-
-        </div>
-
     </div>
 
     <hr/>
-
-    <div class="row">
-        <div class="col-md-8">
-            @include('division.partials.platoons')
-        </div>
-        <div class="col-md-4">
-            @include('division.partials.division_leadership')
-        </div>
-    </div>
 
     <h3>Demographics</h3>
     <hr/>
@@ -64,7 +44,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Membership By Rank</div>
                 <div class="panel-body">
-                    {!! $chart->render() !!}
+                    {!! $rankDemographic->render() !!}
                 </div>
             </div>
         </div>
