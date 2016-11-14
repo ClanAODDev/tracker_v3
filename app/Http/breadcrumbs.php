@@ -13,20 +13,6 @@ Breadcrumbs::register('division', function ($breadcrumbs, $division) {
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
 });
 
-// Home > Division > Squads
-Breadcrumbs::register('squads', function ($breadcrumbs, $division) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
-    $breadcrumbs->push('Squads');
-});
-
-// Home > Division > Part-timers
-Breadcrumbs::register('part-timers', function ($breadcrumbs, $division) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
-    $breadcrumbs->push('Part-timers');
-});
-
 // Home > Division > Platoon
 Breadcrumbs::register('platoon', function ($breadcrumbs, $division, $platoon) {
     $breadcrumbs->parent('home');
@@ -43,13 +29,6 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
 });
 
 
-Breadcrumbs::register('user', function ($breadcrumbs, $division, $user) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
-    $breadcrumbs->push($user->name);
-});
-
-// Home > Division > Platoon > Member
 Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $member) {
     $breadcrumbs->parent('home');
 
@@ -64,8 +43,34 @@ Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $me
     $breadcrumbs->push($member->name);
 });
 
+// Home > Division > Platoon > Member
+Breadcrumbs::register('user', function ($breadcrumbs, $division, $user) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+    $breadcrumbs->push($user->name);
+});
 
+registerDivisionSubPage();
 
+/**
+ * Handle static division sub pages
+ */
+function registerDivisionSubPage() {
+
+    $divisionStaticSubPages = [
+        'squads',
+        'part-timers',
+        'statistics'
+    ];
+
+    foreach($divisionStaticSubPages as $page) {
+        Breadcrumbs::register($page, function ($breadcrumbs, $division) use ($page) {
+            $breadcrumbs->parent('home');
+            $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
+            $breadcrumbs->push(ucwords($page));
+        });
+    }
+}
 
 /*
 // Home > About
@@ -96,3 +101,11 @@ Breadcrumbs::register('page', function($breadcrumbs, $page)
     $breadcrumbs->push($page->title, route('page', $page->id));
 });
 */
+
+
+
+
+
+
+
+

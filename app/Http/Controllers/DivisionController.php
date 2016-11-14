@@ -131,4 +131,11 @@ class DivisionController extends Controller
             ->setElementLabel('Rank count')
             ->setResponsive(true);
     }
+
+    public function statistics(Division $division)
+    {
+        $rankDemographic = $this->getRanksChart($division);
+
+        return view('division.statistics', compact('division', 'rankDemographic'));
+    }
 }
