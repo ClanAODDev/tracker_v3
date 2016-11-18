@@ -12,7 +12,7 @@
                 <strong>{{ strtoupper($division->abbreviation) }}</strong>
             </h4>
 
-            <p class="list-group-item-text text-muted hidden-xs">{{ $division->description }}</p>
+            <p class="list-group-item-text text-muted">{{ $division->description }}</p>
 
             <h5 class="pull-right text-muted big-num-main count-animated">{{ $division->members->count() }}</h5>
         </a>

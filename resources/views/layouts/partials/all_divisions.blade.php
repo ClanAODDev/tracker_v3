@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-gamepad fa-lg pull-right text-muted"></i> <strong>All Gaming
             Divisions</strong> ({{ $divisions->count() }})
     </div>

@@ -14,16 +14,18 @@
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">User CP<span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
-                <li><a href="{{ action('MemberController@show', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}<span
-                                class="pull-right"></span></a></li>
-                <li class="divider"></li>
-                <li class='disabled'><a href='#' disabled>{{ Auth::user()->role->name }}</a></li>
-                <li class='divider'></li>
+                <li>
+                    <a href="{{ action('MemberController@show', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}
+                        <span class="pull-right"></span>
+                    </a>
+                </li>
 
-                @if (Auth::user()->developer)
-                    <li class='disabled'><a href='#' disabled>Developer</a></li>
-                    <li class='divider'></li>
-                @endif
+                <li class="divider"></li>
+                <li class='disabled'><a href='#' disabled>{{ ucwords(Auth::user()->role->name) }}
+                        @if (Auth::user()->developer)
+                            <i class="fa fa-shield text-danger pull-right"></i>
+                        @endif</a></li>
+                <li class='divider'></li>
 
                 <li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
                 <li><a href="{{ Auth::user()->member->AODProfileLink }}"
