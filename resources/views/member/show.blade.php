@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member ) !!}
+    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
 
     <div class="row">
         <div class="col-xs-6">
@@ -16,20 +16,30 @@
 
         <div class="col-xs-6">
 
-            <div class="btn-group pull-right" data-player-id="{{ $member->clan_id }}"
-                 data-user-id="{{ $member->clan_id }}">
-                <button type="button" class="btn btn-primary edit-member"><i class="fa fa-pencil fa-lg"></i> Edit
-                </button>
+            <div class="btn-group pull-right">
 
-                <button type="button" class="btn btn-primary"><i class="fa fa-comment"></i> Contact</button>
+                @can('update', $member)
+                    <a href="{{ action('MemberController@edit', $member->clan_id) }}"
+                       type="button" class="btn btn-default edit-member"><i class="fa fa-pencil fa-lg"></i> Edit
+                    </a>
+                @endcan
 
-                {{-- <a class="btn btn-default btn-xs popup-link"
-                       href="{{ doForumFunction([$member->clan_id], 'pm') }}"
-                       target="_blank"><i class="fa fa-comment"></i> Send PM</a>
+                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-comment"></i> Contact
+                    <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Send Forum PM</a></li>
+                    <li><a href="#">Send Forum Email</a></li>
+                </ul>
 
-                    <a class="btn btn-default btn-xs popup-link"
-                       href="{{ doForumFunction([$member->clan_id], 'email') }}"
-                       target="_blank"><i class="fa fa-envelope"></i> Send Email</a>--}}
+                <!-- clan removal actions -->
+                @if (Auth::user()->canRemoveUsers())
+                    <a href="#" title="Remove player from AOD" class="removeMember btn btn-danger"><i
+                                class="fa fa-trash fa-lg"></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
+                @else
+                    {{-- else show request removal--}}
+                    <a href="#" title="Remove player from AOD" class="requestRemoval btn btn-warning"><i
+                                class="fa fa-trash fa-lg"></i> Request<span class="hidden-sm hidden-xs"> removal</span></a>
+                @endif
 
             </div>
 
@@ -39,8 +49,8 @@
     <hr/>
 
     {{-- Member not primary in any division --}}
-    @if (!$member->primaryDivision)
-        <div class="alert alert-danger">This player does not belong to a division supported by the tracker.</div>
+    @if ( ! $member->primaryDivision)
+        <div class="alert alert-danger">This player is no longer active in AOD.</div>
     @endif
 
 

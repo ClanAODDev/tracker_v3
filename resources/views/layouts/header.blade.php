@@ -1,5 +1,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
+<script src="https://use.fontawesome.com/b59371f038.js"></script>
 
 <link href="{{ asset('favicon.ico') }}" type="image/x-icon" rel="Shortcut Icon"/>
 
@@ -11,7 +12,6 @@ href="//cdnjs.cloudflare.com/ajax/libs/datatables/1.10.10/css/jquery.dataTables.
 <link rel="stylesheet" type="text/css"
 href="//cdnjs.cloudflare.com/ajax/libs/jquery-powertip/1.2.0/css/jquery.powertip.css">
 <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro" rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
 <link rel="stylesheet" type="text/css"
 href="//cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTools.css">
 

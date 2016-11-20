@@ -89,6 +89,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Is member allowed to remove members from AOD
+     *
+     * @return bool
+     */
+    public function canRemoveUsers()
+    {
+        return $this->member->rank_id >= 9;
+    }
+
+    /**
      * @return UserSettings
      */
     public function settings()

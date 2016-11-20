@@ -108,3 +108,17 @@ function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys 
 
     return $arrayKeys;
 }
+
+/**
+ * Provides a 'selected' property for dropdown forms
+ *
+ * @param $arg1
+ * @param $arg2
+ * @return string
+ */
+function selected($arg1, $arg2)
+{
+    if ($arg1 == $arg2) {
+        return "selected";
+    }
+}

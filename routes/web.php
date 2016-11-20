@@ -9,6 +9,7 @@ Route::get('/', 'AppController@index');
 
 // members
 Route::get('members/{member}', 'MemberController@show');
+Route::get('members/{member}/edit', 'MemberController@edit');
 Route::get('search/members/{name}', 'MemberController@search');
 
 // divisions

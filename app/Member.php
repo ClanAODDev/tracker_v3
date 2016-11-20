@@ -104,15 +104,16 @@ class Member extends Model
         return $this->belongsToMany(Division::class, 'staff_sergeants');
     }
 
-    //public function isSquadLeader($)
+    /**
+     * -------------------------------------
+     * Policy object refers to these methods
+     * -------------------------------------
+     */
 
     /**
-     * Policy object refers to these methods
      * @param Squad $squad
      * @return bool
      */
-    // MemberPolicy > modify
-    // -- Member->isSquadLeader
     public function isSquadLeader(Squad $squad)
     {
         return $this->id === $squad->leader_id;
@@ -123,10 +124,21 @@ class Member extends Model
         return $this->id === $platoon->leader_id;
     }
 
+    /**
+     * Check to see if the member is a division leader
+     * and also assigned to the given division
+     *
+     * @param Division $division
+     * @return bool
+     */
     public function isDivisionLeader(Division $division)
     {
-        //return $this->divisions
-          //  ->contains($division)
+        if ($this->primaryDivision->id === $division->id &&
+            in_array($this->position_id, [5, 6])
+        ) {
+            return true;
+        }
+
+        return false;
     }
-    // -- Member->isDivisionLeader
 }

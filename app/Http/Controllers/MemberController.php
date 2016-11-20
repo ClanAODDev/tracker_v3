@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Member;
+use App\Platoon;
+use App\Position;
+use App\Http\Requests;
 use App\Repositories\MemberRepository;
+use App\Squad;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class MemberController extends Controller
 {
@@ -83,12 +87,25 @@ class MemberController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Member $member
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Member $member)
     {
-        //
+        $this->authorize('update', $member);
+
+        $positions = Position::all();
+
+        if ( ! $member->primaryDivision) {
+            abort(409);
+        }
+
+        $platoons = $member->primaryDivision->platoons;
+        $squads = $member->primaryDivision->squads;
+
+        return view('member.modify', compact(
+            'member', 'positions', 'platoons', 'squads'
+        ));
     }
 
     /**

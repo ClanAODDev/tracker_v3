@@ -2,7 +2,10 @@
 
 namespace App\Policies;
 
+use App\Platoon;
+use App\Squad;
 use App\User;
+use App\Member;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberPolicy
@@ -17,11 +20,36 @@ class MemberPolicy
      */
     public function before(User $user)
     {
-        return $user->isRole('admin') || $user->isDeveloper();
+        //return $user->isRole('admin') || $user->isDeveloper();
     }
 
-    public function store(Member $member)
+    /**
+     * Can the user update the given member?
+     *
+     * @TODO: Provide a mechanism for divisions to configure this policy
+     *
+     * @param User $user
+     * @param Member $member
+     * @return bool
+     */
+    public function update(User $user, Member $member)
     {
-        return true;
+        if ($user->member->isDivisionLeader($member->primaryDivision)) {
+            return true;
+        }
+
+        if ($member->platoon instanceof Platoon &&
+            $user->member->isPlatoonLeader($member->platoon)
+        ) {
+            return true;
+        }
+
+        if ($member->squad instanceof Squad &&
+            $user->member->isSquadLeader($member->squad)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
