@@ -26,7 +26,7 @@
 <body>
 <div class="container error">
     <div class="content">
-        <div class="title">Be Right Back.</div>
+        <div class="title">Hold your horses.</div>
         <strong>The AOD Tracker is currently down for maintenance.</strong>
     </div>
 </div>

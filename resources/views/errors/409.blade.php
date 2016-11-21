@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>AOD | 404 Page not found</title>
+    <title>AOD | Inactive Member</title>
     <link rel="stylesheet" type="text/css" href="//bootswatch.com/lumen/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/css/app.css') }}">
     <link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>

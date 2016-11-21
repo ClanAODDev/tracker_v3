@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Platoon;
-use App\Squad;
 use App\User;
+use App\Squad;
 use App\Member;
+use App\Platoon;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberPolicy
@@ -20,7 +20,7 @@ class MemberPolicy
      */
     public function before(User $user)
     {
-        //return $user->isRole('admin') || $user->isDeveloper();
+        return $user->isRole('admin') || $user->isDeveloper();
     }
 
     /**
