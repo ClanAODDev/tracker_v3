@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\User;
+use App\Rank;
 use App\Squad;
 use App\Member;
 use App\Platoon;
@@ -13,14 +14,16 @@ class MemberPolicy
     use HandlesAuthorization;
 
     /**
-     * Admins and developers have access to all members
+     * Admins and developers have carte blanche access
      *
      * @param $user
      * @return bool
      */
     public function before(User $user)
     {
-        return $user->isRole('admin') || $user->isDeveloper();
+        if ($user->isRole('admin') || $user->isDeveloper()) {
+            return true;
+        }
     }
 
     /**
@@ -34,22 +37,43 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        if ($user->member->isDivisionLeader($member->primaryDivision)) {
+        // division leaders can modify anyone in their own division
+        if ($user->member->isDivisionLeader($member->primaryDivision) &&
+            $user->isRole('sr_ldr')
+        ) {
             return true;
         }
 
+        // platoon leaders can modify anyone in their own platoon
         if ($member->platoon instanceof Platoon &&
+            $user->isRole('sr_ldr') &&
             $user->member->isPlatoonLeader($member->platoon)
         ) {
             return true;
         }
 
         if ($member->squad instanceof Squad &&
+            $user->isRole('jr_ldr') &&
             $user->member->isSquadLeader($member->squad)
         ) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Determines policy for removing members
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function delete(User $user)
+    {
+        return true;
+        // use the abbreviation in case id changes for some reason
+        $minimumRankToRemove = Rank::whereAbbreviation('sgt')->first();
+
+        return $user->member->rank_id >= $minimumRankToRemove;
     }
 }
