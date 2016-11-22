@@ -20,6 +20,15 @@ class MemberPresenter extends Presenter
         $this->member = $member;
     }
 
+    public function lastPromoted()
+    {
+        if ( $this->member->last_promoted->diffInDays() > 736666) {
+            return "Never";
+        }
+
+        return $this->member->last_promoted->diffInDays();
+    }
+
     /**
      * Returns member's name with position icon
      *

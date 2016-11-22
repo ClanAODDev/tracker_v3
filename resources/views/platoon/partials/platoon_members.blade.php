@@ -39,7 +39,7 @@
                         <span class="{{ $member->activity['class'] }}">{{ $member->last_forum_login->diffInDays() }}
                             days ago</span>
                     </td>
-                    <td class="text-center">{{ $member->last_promoted->diffInDays() }} days ago</span>
+                    <td class="text-center">{{ $member->present()->lastPromoted }}</span>
                     </td>
                 </tr>
 
