@@ -30,20 +30,7 @@
                     <li><a href="#">Send Forum PM</a></li>
                     <li><a href="#">Send Forum Email</a></li>
                 </ul>
-
-                <!-- clan removal actions -->
-                @if (Auth::user()->canRemoveUsers())
-                    <a href="#" title="Remove player from AOD" class="removeMember btn btn-danger"><i
-                                class="fa fa-trash fa-lg"></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
-                @else
-                    {{-- else show request removal--}}
-                    <a href="#" title="Remove player from AOD" class="requestRemoval btn btn-warning"><i
-                                class="fa fa-trash fa-lg"></i> Request<span class="hidden-sm hidden-xs"> removal</span></a>
-                @endif
-
             </div>
-
-            {{--Else show request removal button--}}
         </div>
     </div>
     <hr/>

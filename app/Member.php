@@ -141,4 +141,17 @@ class Member extends Model
 
         return false;
     }
+
+    /**
+     * @param $rank
+     * @return bool
+     */
+    public function isRank($rank)
+    {
+        if ( ! $this->rank instanceof Rank) {
+            return false;
+        }
+
+        return $this->rank->abbreviation === $rank;
+    }
 }

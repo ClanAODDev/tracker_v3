@@ -36,7 +36,7 @@
                 <i class="fa fa-users fa-lg"></i><span class="hidden-sm hidden-xs"> Handles</span>
             </a>
         </li>
-        <li class="disabled">
+        <li>
             <a>
                 <i class="fa fa-history fa-lg"></i><span class="hidden-sm hidden-xs"> Records</span>
             </a>
@@ -49,13 +49,24 @@
     </ul>
     {{-- end profile edit nav --}}
 
+    {{-- division info --}}
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade active in" id="division-info">
             <div class="margin-top-20">
                 @include('member.forms.editProfileForm')
             </div>
         </div>
-
     </div>
+
+    {{-- Remove Member --}}
+    <!-- clan removal actions -->
+    @can('delete', $member)
+        <a href="#" title="Remove player from AOD" class="removeMember btn btn-danger"><i
+                    class="fa fa-trash fa-lg"></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
+    @else
+        {{-- else show request removal--}}
+        <a href="#" title="Remove player from AOD" class="requestRemoval btn btn-warning"><i
+                    class="fa fa-trash fa-lg"></i> Request<span class="hidden-sm hidden-xs"> removal</span></a>
+    @endcan
 
 @stop
