@@ -39,7 +39,7 @@
             </ul>
         </li>
 
-        @if (Auth::user()->isRole('admin'))
+        @if (Auth::user()->isRole('admin') || Auth::user()->isDeveloper())
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
