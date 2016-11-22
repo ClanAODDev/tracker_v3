@@ -34,8 +34,8 @@ class PlatoonPolicy
         return false;
     }
 
-    public function delete(User $user, Division $division)
+    public function delete(User $user, Platoon $platoon)
     {
-        return $this->update($user, $division);
+        return $this->update($user, $platoon);
     }
 }
