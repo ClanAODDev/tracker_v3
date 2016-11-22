@@ -3,7 +3,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 @if ($squad->leader)
-                    <strong>{!! $squad->leader->present()->nameWithIcon !!}</strong>
+                    <strong>{!! $squad->leader->present()->rankName !!}</strong>
                 @else
                     <span class="text-muted">No leader assigned</span>
                 @endif
