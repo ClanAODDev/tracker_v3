@@ -37,29 +37,4 @@
             @include('division.partials.division_leadership')
         </div>
     </div>
-
-    <h3>Demographics</h3>
-    <hr/>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Active Members</div>
-
-                <div class="panel-body count-detail-big striped-bg">
-                    <span class="count-animated">{{ $division->activeMembers->count() }}</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Part-time Members</div>
-
-                <div class="panel-body count-detail-big striped-bg">
-                    <span class="count-animated">{{ $division->partTimeMembers->count() }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
 @stop
