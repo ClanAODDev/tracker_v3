@@ -15,8 +15,10 @@
             {{-- if user is division leader --}}
 
                 <div class="btn-group pull-right">
+                    @can('update', $division)
                     <a class="btn btn-default" href="{{ action('DivisionController@edit', $division->abbreviation) }}"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
+                    @endcan
                 </div>
 
         </div>
