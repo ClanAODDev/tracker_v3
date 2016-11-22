@@ -46,12 +46,12 @@ class SquadController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param Squad $squad
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Squad $squad)
     {
-        //
+        $this->authorize('update', $squad);
     }
 
     /**
@@ -61,19 +61,19 @@ class SquadController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Squad $squad)
     {
-        //
+        $this->authorize('update', $squad);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Squad $squad
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Squad $squad)
     {
-        //
+        $this->authorize('delete', $squad);
     }
 }
