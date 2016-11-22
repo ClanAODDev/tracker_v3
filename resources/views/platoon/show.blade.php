@@ -14,24 +14,45 @@
         </div>
     </div>
 
-    <hr/>
+    <ul class="nav nav-tabs margin-top-20">
+        <li class="active">
+            <a href="#platoon-view" data-toggle="tab" aria-expanded="false">
+                <i class="fa fa-cube fa-lg"></i><span class="hidden-sm hidden-xs"> Platoon View</span>
+            </a>
+        </li>
 
-    <div class="row">
+        {{-- Only show squads tab if squads are found --}}
+        @if (count($platoon->squads))
+            <li>
+                <a href="#squad-view" data-toggle="tab" aria-expanded="false">
+                    <i class="fa fa-cubes fa-lg"></i><span class="hidden-sm hidden-xs"> Squads</span>
+                </a>
+            </li>
+        @endif
+    </ul>
+
+    <div class="row margin-top-20">
         <div class="col-md-8">
-            @include('platoon.partials.platoon_members')
+            <div id="platoon" class="tab-content">
+
+                <div class="tab-pane fade active in" id="platoon-view">
+                    @include('platoon.partials.platoon_members')
+                </div>
+
+                <div class="tab-pane fade in" id="squad-view">
+                    <div class="row">
+                        @if (count($platoon->squads))
+                            @include('platoon.partials.squads')
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div class="col-md-4">
             @include('platoon.partials.member_stats')
         </div>
     </div>
-
-
-    @if (count($platoon->squads->count()))
-        <div class="row">
-            @include('platoon.partials.squads')
-        </div>
-    @endif
-
 
 @stop
 

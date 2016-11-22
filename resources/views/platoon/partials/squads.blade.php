@@ -1,10 +1,5 @@
-<div class="col-md-12">
-    <h2>Squads</h2>
-    <hr/>
-</div>
-
 @foreach($platoon->squads as $squad)
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
                 @if ($squad->leader)
@@ -16,13 +11,11 @@
 
             @if (count($squad->membersWithoutLeader))
 
-                @foreach($squad->membersWithoutLeader($squad->leader_id) as $member)
+                @foreach($squad->membersWithoutLeader as $member)
 
                     <a class="list-group-item">
-                        <div class="col-xs-3">{{ $member->name }}</div>
-                        <div class="col-xs-3 text-center">{{ $member->rank->abbreviation }}</div>
-                        <div class="col-xs-3 text-center">{{ $member->join_date }}</div>
-                        <div class="col-xs-3 text-center">{{ $member->last_forum_login->diffForHumans() }}</div>
+                        <div class="col-xs-6">{{ $member->present()->rankName }}</div>
+                        <div class="col-xs-6 text-center">{{ $member->last_forum_login->diffForHumans() }}</div>
                         <div class="clearfix"></div>
                     </a>
 

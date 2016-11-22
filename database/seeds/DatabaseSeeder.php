@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call('DivisionSeeder');
+        $this->call('PositionSeeder');
+        $this->call('RankSeeder');
         $this->call('RoleSeeder');
         $this->command->info('Tables seeded!');
     }

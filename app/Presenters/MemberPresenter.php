@@ -20,7 +20,6 @@ class MemberPresenter extends Presenter
         $this->member = $member;
     }
 
-
     /**
      * Returns member's name with position icon
      *

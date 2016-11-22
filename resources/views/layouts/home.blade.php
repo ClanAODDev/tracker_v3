@@ -10,6 +10,10 @@
         <button class="btn btn-success btn-lg">Go to your dashboard &raquo;</button>
     </div>
 
-    @include('layouts.partials.all_divisions')
+    @if($divisions->count())
+        @include('layouts.partials.all_divisions')
+    @else
+        <p>There are no existing divisions.</p>
+    @endif
 
 @endsection

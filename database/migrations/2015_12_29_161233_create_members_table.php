@@ -20,9 +20,9 @@ class CreateMembersTable extends Migration
             $table->mediumInteger('platoon_id');
             $table->mediumInteger('squad_id');
             $table->tinyInteger('position_id')->default(1);
-            $table->timestamp('join_date');
-            $table->timestamp('last_forum_login');
-            $table->timestamp('last_promoted');
+            $table->timestamp('join_date')->nullable();
+            $table->timestamp('last_forum_login')->nullable();
+            $table->timestamp('last_promoted')->nullable();
             $table->mediumInteger('recruiter_id');
             $table->softDeletes();
             $table->timestamps();

@@ -26,14 +26,26 @@ class Squad extends Model
         return $this->hasMany(Member::class);
     }
 
-    public function scopeMembersWithoutLeader($query, $squadLeaderId)
+    /**
+     * List members of a squad without the leader
+     *
+     * @return mixed
+     */
+    public function membersWithoutLeader()
     {
-        return $query->where('id', '!=', $squadLeaderId);
+        return $this->hasMany(Member::class)->whereNotIn('clan_id', [$this->leader->id]);
     }
 
+    /**
+     * Leader of a squad
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function leader()
     {
-        return $this->belongsTo('App\Member', 'leader_id');
+        return $this->belongsTo(Member::class, 'clan_id', 'leader_id');
+
+        // $squad->members()->whereNotIn('id', [$squad->leader->id])->get();
     }
 
     public function assignLeaderTo($member)
@@ -41,3 +53,6 @@ class Squad extends Model
         return $this->leader()->associate($member);
     }
 }
+
+
+

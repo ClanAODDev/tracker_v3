@@ -12,7 +12,7 @@
                 <h4 class="list-group-item-heading"><strong>{{ $platoon->name }}</strong></h4>
                 <p class="list-group-item-text text-muted">
                     @if ($platoon->leader)
-                        {{ $platoon->leader->rankName }}
+                        {{ $platoon->leader->present()->rankName }}
                     @else
                         TBA
                     @endif

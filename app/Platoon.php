@@ -40,8 +40,26 @@ class Platoon extends Model
         return $this->hasMany(Member::class);
     }
 
+    /**
+     * List members of a platoon without the leader
+     *
+     * @return mixed
+     */
+    public function membersWithoutLeader()
+    {
+        return $this->hasMany(Member::class)->whereNotIn('clan_id', [$this->leader->id]);
+    }
+
+    /**
+     * Leader of a platoon
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function leader()
     {
-        return $this->hasOne(Member::class, 'clan_id', 'leader_id');
+        return $this->belongsTo(Member::class, 'clan_id', 'leader_id');
     }
 }
+
+
+
