@@ -22,7 +22,7 @@ class MemberPresenter extends Presenter
 
     public function lastPromoted()
     {
-        if ( $this->member->last_promoted->diffInDays() > 736666) {
+        if ( ! $this->member->last_promoted) {
             return "Never";
         }
 
