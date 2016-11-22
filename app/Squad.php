@@ -33,7 +33,7 @@ class Squad extends Model
      */
     public function membersWithoutLeader()
     {
-        return $this->hasMany(Member::class)->whereNotIn('clan_id', [$this->leader->id]);
+        return $this->hasMany(Member::class)->whereNotIn('id', [$this->leader->id]);
     }
 
     /**
@@ -43,7 +43,7 @@ class Squad extends Model
      */
     public function leader()
     {
-        return $this->belongsTo(Member::class, 'clan_id', 'leader_id');
+        return $this->belongsTo(Member::class, 'leader_id');
 
         // $squad->members()->whereNotIn('id', [$squad->leader->id])->get();
     }
