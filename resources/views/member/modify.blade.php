@@ -37,17 +37,18 @@
             </a>
         </li>
         <li>
-            <a>
+            <a href="#history" data-toggle="tab" aria-expanded="false">
                 <i class="fa fa-history fa-lg"></i><span class="hidden-sm hidden-xs"> Records</span>
             </a>
         </li>
-        <li class="disabled">
-            <a>
+        <li class="disabled pull-right">
+            <a href="#user-account" data-toggle="tab" aria-expanded="false">
                 <i class="fa fa-key" aria-hidden="true"></i><span class="hidden-sm hidden-xs"> User Account</span>
             </a>
         </li>
     </ul>
     {{-- end profile edit nav --}}
+
 
     {{-- division info --}}
     <div id="myTabContent" class="tab-content">
@@ -56,17 +57,10 @@
                 @include('member.forms.editProfileForm')
             </div>
         </div>
+        <div class="tab-pane fade in" id="game-info"></div>
+        <div class="tab-pane fade in" id="handles"></div>
+        <div class="tab-pane fade in" id="history"></div>
+        <div class="tab-pane fade in" id="user-account"></div>
     </div>
-
-    {{-- Remove Member --}}
-    <!-- clan removal actions -->
-    @can('delete', $member)
-        <a href="#" title="Remove player from AOD" class="removeMember btn btn-danger"><i
-                    class="fa fa-trash fa-lg"></i> Remove<span class="hidden-sm hidden-xs"> from AOD</span></a>
-    @else
-        {{-- else show request removal--}}
-        <a href="#" title="Remove player from AOD" class="requestRemoval btn btn-warning"><i
-                    class="fa fa-trash fa-lg"></i> Request<span class="hidden-sm hidden-xs"> removal</span></a>
-    @endcan
 
 @stop

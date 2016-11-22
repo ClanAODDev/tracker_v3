@@ -28,7 +28,10 @@ class SyncMemberData
                 self::doMemberUpdate($member, $division);
             }
 
+            // add new members, detach removed members
             $members = $division->members()->sync(self::$activeMembers);
+
+            // trash removed members
             self::doRemovalCleanup($members);
         }
     }
@@ -36,29 +39,34 @@ class SyncMemberData
     /**
      * Updates an individual member and queues as an active primary member
      *
-     * @param $item
+     * @param $record
      * @param $division
      */
-    private static function doMemberUpdate($item, Division $division)
+    private static function doMemberUpdate($record)
     {
+        // are we updating or creating?
         $member = Member::firstOrCreate([
-            'clan_id' => $item['userid'],
+            'clan_id' => $record['userid'],
         ]);
 
         // have they been recently promoted?
-        if ($member->rank_id < ($item['aodrankval'] - 2) && $member->rank_id > 0) {
+        if ($member->rank_id < ($record['aodrankval'] - 2) && $member->rank_id > 0) {
             $member->last_promoted = \Carbon::now();
         }
 
-        $member->name = str_replace('AOD_', '', $item['username']);
-        $member->join_date = $item['joindate'];
-        $member->last_forum_login = $item['lastvisit'];
+        // drop aod prefix
+        $member->name = str_replace('AOD_', '', $record['username']);
+
+        // handle timestamps
+        $member->join_date = $record['joindate'];
+        $member->last_forum_login = "{$record['lastvisit']} {$record['lastvisit_time']}";
 
         // accounts for forum member, prospective member ranks which we don't use
-        $member->rank_id = $item['aodrankval'] - 2;
+        $member->rank_id = $record['aodrankval'] - 2;
 
         $member->save();
 
+        // set member's active division
         self::$activeMembers[$member->id] = [
             'primary' => true,
         ];
@@ -72,9 +80,12 @@ class SyncMemberData
     private static function doRemovalCleanup(array $members)
     {
         $detached = $members['detached'];
+
         foreach ($detached as $index => $id) {
             $member = Member::find($id);
             if ($member instanceof Member) {
+
+                // unassign member from squad / platoon
                 $member->squad_id = 0;
                 $member->platoon_id = 0;
                 $member->save();

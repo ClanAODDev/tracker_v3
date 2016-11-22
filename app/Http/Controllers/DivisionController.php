@@ -67,12 +67,14 @@ class DivisionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Division $division
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Division $division)
     {
-        //
+        $this->authorize('update', $division);
+
+        return view('division.modify', compact('division'));
     }
 
     /**

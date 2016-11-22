@@ -70,10 +70,9 @@ class MemberPolicy
      */
     public function delete(User $user)
     {
-        return true;
         // use the abbreviation in case id changes for some reason
         $minimumRankToRemove = Rank::whereAbbreviation('sgt')->first();
 
-        return $user->member->rank_id >= $minimumRankToRemove;
+        return $user->member->rank_id >= $minimumRankToRemove->id;
     }
 }

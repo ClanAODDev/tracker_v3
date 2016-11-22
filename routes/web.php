@@ -12,8 +12,12 @@ Route::get('members/{member}', 'MemberController@show');
 Route::get('members/{member}/edit', 'MemberController@edit');
 Route::get('search/members/{name}', 'MemberController@search');
 
+// member data handling
+Route::delete('members/{member}/delete', 'MemberController@destroy');
+
 // divisions
 Route::get('divisions/{division}', 'DivisionController@show');
+Route::get('divisions/{division}/edit', 'DivisionController@edit');
 Route::get('divisions/{division}/squads/', 'DivisionController@squads');
 Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
 Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');

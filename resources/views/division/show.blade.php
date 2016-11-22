@@ -15,7 +15,7 @@
             {{-- if user is division leader --}}
 
                 <div class="btn-group pull-right">
-                    <a class="btn btn-default edit-div disabled" href="#" target="_blank"><i class="fa fa-pencil"></i>
+                    <a class="btn btn-default" href="{{ action('DivisionController@edit', $division->abbreviation) }}"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
                 </div>
 

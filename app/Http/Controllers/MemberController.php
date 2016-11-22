@@ -123,11 +123,13 @@ class MemberController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param Member $member
+     * @param Request $request
+     * @return Response
      */
-    public function destroy($id)
+    public function destroy(Member $member, Request $request)
     {
-        //
+        $this->authorize('delete', $member);
+        dd($request->input('removal-reason'));
     }
 }

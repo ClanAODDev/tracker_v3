@@ -2,8 +2,16 @@
 
 namespace App\Providers;
 
+use App\Squad;
 use App\Member;
+use App\Platoon;
+use App\Division;
+
+use App\Policies\SquadPolicy;
 use App\Policies\MemberPolicy;
+use App\Policies\PlatoonPolicy;
+use App\Policies\DivisionPolicy;
+
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -16,6 +24,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Member::class => MemberPolicy::class,
+        Squad::class => SquadPolicy::class,
+        Platoon::class => PlatoonPolicy::class,
+        Division::class => DivisionPolicy::class,
     ];
 
     /**

@@ -10,17 +10,13 @@
             </div>
 
             @if (count($squad->membersWithoutLeader))
-
                 @foreach($squad->membersWithoutLeader as $member)
-
                     <a class="list-group-item">
                         <div class="col-xs-6">{{ $member->present()->rankName }}</div>
                         <div class="col-xs-6 text-center">{{ $member->last_forum_login->diffForHumans() }}</div>
                         <div class="clearfix"></div>
                     </a>
-
                 @endforeach
-
             @else
                 <li class="text-muted list-group-item">No members assigned</li>
             @endif
