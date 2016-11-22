@@ -44,10 +44,14 @@ class Squad extends Model
     public function leader()
     {
         return $this->belongsTo(Member::class, 'leader_id');
-
-        // $squad->members()->whereNotIn('id', [$squad->leader->id])->get();
     }
 
+    /**
+     * Assign the leader of a squad
+     *
+     * @param $member
+     * @return Model
+     */
     public function assignLeaderTo($member)
     {
         return $this->leader()->associate($member);
