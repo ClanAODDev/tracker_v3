@@ -29,6 +29,15 @@ class MemberPresenter extends Presenter
         return $this->member->last_promoted->diffInDays();
     }
 
+    public function lastActive()
+    {
+        if ($this->member->last_forum_login->diffInDays() < 1) {
+            return "Today";
+        }
+
+        return $this->member->last_forum_login->diffInDays() . " days ago";
+    }
+
     /**
      * Returns member's name with position icon
      *

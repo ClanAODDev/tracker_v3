@@ -36,7 +36,7 @@
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
                     <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">
-                        <span class="{{ $member->activity['class'] }}">{{ $member->last_forum_login->diffInDays() }}
+                        <span class="{{ $member->activity['class'] }}">{{ $member->present()->lastActive }}
                             days ago</span>
                     </td>
                     <td class="text-center">{{ $member->present()->lastPromoted }}</span>
