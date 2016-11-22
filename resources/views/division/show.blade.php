@@ -19,6 +19,8 @@
                     <a class="btn btn-default" href="{{ action('DivisionController@edit', $division->abbreviation) }}"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
                     @endcan
+                    <a class="btn btn-default" href="{{ action('DivisionController@statistics', $division->abbreviation) }}"><i class="fa fa-bar-chart"></i>
+                        <span class="hidden-xs hidden-sm">Statistics</span></a>
                 </div>
 
         </div>
