@@ -2,18 +2,12 @@
 @section('content')
 
     <h2>
+        <a href="{{ action('DivisionController@show', $division->abbreviation) }}"
+           class="btn btn-default" title="Return to division page">
+            <i class="fa fa-angle-left fa-2x"></i>
+        </a>
         <strong>{!! $division->name !!}</strong>
         <small>Edit Division</small>
-
-        <div class="btn-group btn-group-sm pull-right">
-            <a href="{{ action('DivisionController@show', $division->abbreviation) }}"
-               class="btn btn-default"><i class="fa fa-times fa-lg"></i><span class="hidden-sm hidden-xs"> Cancel</span>
-            </a>
-
-            <a href="#" class="btn btn-success">
-                <i class="fa fa-check fa-lg"></i><span class="hidden-sm hidden-xs"> Save Changes</span>
-            </a>
-        </div>
     </h2>
     <hr/>
 
@@ -36,15 +30,38 @@
         </li>
     </ul>
     {{-- end profile edit nav --}}
+    <div class="row margin-top-20">
+        <form id="division-settings" method="post"
+              action="{{ action('DivisionController@update', $division->abbreviation) }}">
+            {{ method_field('PATCH') }}
+            <div class="col-md-8">
+                <div id="recruitmentForm" class="tab-content">
+                    <div class="well">
 
-    <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade active in" id="recruitment-settings">
-            <div class="margin-top-20">
-                @include('division.forms.recruitmentSettingsForm')
+                        <div class="tab-pane fade active in" id="recruitment-settings">
+                            @include('division.forms.recruitmentSettingsForm')
+                        </div>
+
+                        <div class="tab-pane fade in" id="locality">
+
+                        </div>
+
+                        <div class="tab-pane fade in" id="slack">
+
+                        </div>
+
+                        <button type="submit" method="post" class="btn btn-success btn-lg text-right">Save Changes</button>
+
+                    </div>
+
+                </div>
             </div>
-        </div>
-        <div class="tab-pane fade in" id="locality"></div>
+
+
+            {{ csrf_field() }}
+        </form>
     </div>
+
 
 
 @stop

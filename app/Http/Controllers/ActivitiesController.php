@@ -28,10 +28,15 @@ class ActivitiesController extends Controller
 
     public function byDivision(Division $division)
     {
-        return $division->activity()->with([
+        $activity = $division->activity()->with([
             'user',
-            'subject',
-            'division'
+            'division',
+            'subject' => function ($query) {
+                // provide context even if a subject is "trashed"
+                $query->withTrashed();
+            }
         ])->get();
+
+        return view('activity.show', compact('activity', 'division', 'user'));
     }
 }

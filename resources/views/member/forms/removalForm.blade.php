@@ -13,7 +13,8 @@
 
                 <button type="submit" title="Remove player from AOD"
                         class="btn btn-danger">Submit<span class="hidden-sm hidden-xs"> removal</span></button>
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                {{ csrf_field() }}
 
             </form>
         </div>

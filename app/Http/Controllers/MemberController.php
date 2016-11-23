@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Squad;
 use App\Member;
 use App\Platoon;
 use App\Position;
 use App\Http\Requests;
-use App\Repositories\MemberRepository;
-use App\Squad;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Repositories\MemberRepository;
 
 class MemberController extends Controller
 {
@@ -130,6 +130,22 @@ class MemberController extends Controller
     public function destroy(Member $member, Request $request)
     {
         $this->authorize('delete', $member);
-        dd($request->input('removal-reason'));
+
+        // log action, include reason
+
+        // adding members
+        // $member->divisions()->attach($division, ['primary' => true]);
+
+        // removing members from a division
+        // $member->divisions()->detach($division);
+
+        // remove from all divisions
+        $member->divisions()->detach();
+
+        $member->recordActivity('removed');
+
+        return redirect()->action('MemberController@show', [
+            'clan_id' => $member->clan_id
+        ]);
     }
 }

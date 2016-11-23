@@ -23,6 +23,10 @@ Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
 Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');
 Route::get('divisions/{division}/statistics', 'DivisionController@statistics');
 
+// division data handling
+Route::patch('divisions/{division}/update', 'DivisionController@update');
+Route::delete('divisions/{division}/delete', 'DivisionController@destroy');
+
 // platoons
 Route::get('platoons/{platoon}', 'PlatoonController@show');
 Route::get('platoons/{platoon}/squads', 'PlatoonController@squads');
@@ -30,7 +34,7 @@ Route::get('platoons/{platoon}/squads', 'PlatoonController@squads');
 // squads
 Route::get('squads/{squad}', 'SquadController@show');
 
-// activity
+// logging activity
 Route::get('users/{username}/activity', 'ActivitiesController@byUser');
 
 

@@ -7,6 +7,7 @@ use App\Rank;
 use App\Squad;
 use App\Member;
 use App\Platoon;
+use App\Division;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberPolicy
@@ -38,7 +39,8 @@ class MemberPolicy
     public function update(User $user, Member $member)
     {
         // division leaders can modify anyone in their own division
-        if ($user->member->isDivisionLeader($member->primaryDivision) &&
+        if ($member->primaryDivision instanceof Division &&
+            $user->member->isDivisionLeader($member->primaryDivision) &&
             $user->isRole('sr_ldr')
         ) {
             return true;

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model
 {
+    protected $fillable = ['subject_id', 'subject_type', 'name', 'division_id', 'user_id'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

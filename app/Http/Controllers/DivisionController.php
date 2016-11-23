@@ -81,21 +81,21 @@ class DivisionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param Division $division
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Division $division)
     {
-        //
+        dd($request);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param Division $division
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Division $division)
     {
         //
     }
