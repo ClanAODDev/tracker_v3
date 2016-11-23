@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeEnabledDivisionToActiveDivision extends Migration
+class DivisionsUsesSoftDeletes extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ChangeEnabledDivisionToActiveDivision extends Migration
     public function up()
     {
         Schema::table('divisions', function ($table) {
-            $table->renameColumn('enabled', 'active');
+            $table->softDeletes();
         });
     }
 
@@ -25,10 +25,6 @@ class ChangeEnabledDivisionToActiveDivision extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('divisions', 'active')) {
-            Schema::table('divisions', function ($table) {
-                $table->renameColumn('active', 'enabled');
-            });
-        }
+        //
     }
 }

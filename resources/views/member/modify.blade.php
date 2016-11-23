@@ -1,8 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member ) !!}
-
     <h2>
         <strong>{!! $member->present()->rankName !!}</strong>
         <small>Edit Profile</small>

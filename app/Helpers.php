@@ -122,3 +122,10 @@ function selected($arg1, $arg2)
         return "selected";
     }
 }
+
+function checked($arg)
+{
+    if ($arg) {
+        return "checked";
+    }
+}

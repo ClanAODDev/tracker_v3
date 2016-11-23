@@ -8,10 +8,7 @@ class DivisionSettings
 {
 
     use Settable;
-    
-    /**
-     * @var Division
-     */
+
     protected $division;
 
     /**

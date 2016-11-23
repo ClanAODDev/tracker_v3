@@ -25,6 +25,10 @@ class DivisionPolicy
 
     public function update(User $user, Division $division)
     {
+        if ( ! $division->active) {
+            return false;
+        }
+
         if ($user->member->isDivisionLeader($division) &&
             $user->isRole('sr_ldr')
         ) {
@@ -36,6 +40,12 @@ class DivisionPolicy
 
     public function delete(User $user, Division $division)
     {
-        return $this->update($user, $division);
+        if ($user->member->isDivisionLeader($division) &&
+            $user->isRole('sr_ldr')
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

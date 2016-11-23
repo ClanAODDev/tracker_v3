@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeEnabledDivisionToActiveDivision extends Migration
+class ChangeWelcomeForumToWelcomeArea extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ChangeEnabledDivisionToActiveDivision extends Migration
     public function up()
     {
         Schema::table('divisions', function ($table) {
-            $table->renameColumn('enabled', 'active');
+            $table->renameColumn('welcome_forum', 'welcome_area');
         });
     }
 
@@ -25,9 +25,9 @@ class ChangeEnabledDivisionToActiveDivision extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('divisions', 'active')) {
+        if (Schema::hasColumn('divisions', 'welcome_area')) {
             Schema::table('divisions', function ($table) {
-                $table->renameColumn('active', 'enabled');
+                $table->renameColumn('welcome_area', 'welcome_forum');
             });
         }
     }

@@ -21,7 +21,7 @@
                 </li>
 
                 <li class="divider"></li>
-                <li class='disabled'><a href='#' disabled>{{ ucwords(Auth::user()->role->name) }}
+                <li class='disabled'><a href='#' disabled>{{ ucwords(Auth::user()->role->label) }}
                         @if (Auth::user()->developer)
                             <i class="fa fa-shield text-danger pull-right"></i>
                         @endif</a></li>

@@ -123,11 +123,6 @@ class Division extends Model
         return new DivisionSettings($this->settings, $this);
     }
 
-    public function locality()
-    {
-        return new LocalitySettings($this->locality, $this);
-    }
-
     /**
      * Gets CO and XOs of a division
      *
@@ -143,5 +138,14 @@ class Division extends Model
     public function isActive()
     {
         return $this->active;
+    }
+
+    public function locality($string)
+    {
+        if ( ! array_key_exists($string, $this->division->locality)) {
+            return $string;
+        }
+
+        return $this->division->locality[$string];
     }
 }

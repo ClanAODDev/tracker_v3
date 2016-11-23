@@ -46,11 +46,6 @@ class Member extends Model
         return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
     }
 
-    public function primaryDivision()
-    {
-        return $this->hasOne(Division::class)->wherePivot('primary', true);
-    }
-
     /**
      * relationship - member belongs to a platoon
      */
