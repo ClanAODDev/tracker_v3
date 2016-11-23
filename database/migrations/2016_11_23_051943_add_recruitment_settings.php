@@ -21,6 +21,8 @@ class AddRecruitmentSettings extends Migration
 
             $settings->set('division_structure', '');
             $settings->set('welcome_area', '');
+            $settings->set('use_welcome_thread', false);
+
         }
     }
 
