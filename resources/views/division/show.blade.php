@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-xs-6">
-            <div class="btn-group pull-right">
+            <div class="pull-right">
                 <a class="btn btn-info"
                    href="{{ action('DivisionController@statistics', $division->abbreviation) }}"><i class="fa fa-bar-chart"></i><span class="hidden-xs hidden-sm">Statistics</span></a>
 

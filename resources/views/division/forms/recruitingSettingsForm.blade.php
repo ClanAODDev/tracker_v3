@@ -1,8 +1,8 @@
 <div class="well">
     <fieldset>
-        <legend>Locality</legend>
+        <legend>Recruiting Settings</legend>
 
-        <form id="locality-settings" method="post"
+        <form id="recruiting-settings" method="post"
               action="{{ action('DivisionController@update', $division->abbreviation) }}">
             {{ method_field('PATCH') }}
 
