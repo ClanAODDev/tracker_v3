@@ -6,15 +6,6 @@
 </head>
 <body>
 
-<!-- modal for tools -->
-<div class="modal viewPanel fade">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="viewer fadeIn animate"></div>
-        </div>
-    </div>
-</div>
-
 <div id="wrap">
 
     @include('layouts.partials.nav.base')

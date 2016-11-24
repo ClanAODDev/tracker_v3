@@ -6,6 +6,7 @@ use App\Division;
 use Illuminate\Http\Request;
 use ConsoleTVs\Charts\Charts;
 use App\Repositories\DivisionRepository;
+use Illuminate\Support\Facades\Session;
 
 class DivisionController extends Controller
 {
@@ -93,7 +94,8 @@ class DivisionController extends Controller
         // will be ignored
         $division->settings()->merge($request->all());
 
-        Session::flash('message','DID STUFF YO');
+        flash('Changes saved successfully', 'success');
+
         return back();
     }
 

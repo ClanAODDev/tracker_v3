@@ -5,6 +5,7 @@ var Tracker = Tracker || {};
     Tracker = {
 
         Setup: function () {
+            Tracker.AlertHandling();
             Tracker.SearchMembers();
             Tracker.AnimateCounter();
             Tracker.SearchCollection();
@@ -28,7 +29,6 @@ var Tracker = Tracker || {};
                 $('.repeater').repeater();
             });
         },
-
         /**
          * Handle tab activation on URL navigation
          *
@@ -36,6 +36,10 @@ var Tracker = Tracker || {};
          */
         InitTabActivate: function () {
             $('.nav-tabs').stickyTabs();
+        },
+
+        AlertHandling: function () {
+            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
         },
 
         /**
