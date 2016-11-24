@@ -1,22 +1,3 @@
-<?php
-
-//dd($division->settings()->merge(['recruiting_threads' => [
-//        [
-//                'thread-name' => 'asdfasfd',
-//                'thread-id' => 8762,
-//                'default' => true
-//        ],
-//        [
-//                'thread-name' => 'tyjetyj',
-//                'thread-id' => 92826,
-//                'default' => true
-//        ],
-//]]));
-
-?>
-
-{{ dd($division->settings()->get('recruiting_tasks')) }}
-
 @extends('layouts.app')
 @section('content')
 
