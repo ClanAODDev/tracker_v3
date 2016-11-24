@@ -1,5 +1,5 @@
 @foreach($division->settings()->get('recruiting_threads') as $thread)
-    <tr class="{{ ($thread['default']) ? "default-item" : null }}" data-repeater-item>
+    <tr data-repeater-item>
 
         <td class="col-xs-7">
             <input type="text" name="threads[{{ $loop->index }}][thread_name]"

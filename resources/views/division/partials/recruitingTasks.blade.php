@@ -1,5 +1,5 @@
 @foreach($division->settings()->get('recruiting_tasks') as $task)
-    <tr class="{{ ($task['default']) ? "default-item" : null }}" data-repeater-item>
+    <tr data-repeater-item>
 
         <td class="col-xs-11">
             <input type="text" name="tasks[{{ $loop->index }}][task_description]"
