@@ -2,11 +2,9 @@
       action="{{ action('DivisionController@update', $division->abbreviation) }}">
 
     {{ method_field('PATCH') }}
+
     <fieldset>
-        <legend><i class="fa fa-user-plus"></i> Recruiting Settings
-            <button type="submit" class="btn btn-default btn-xs pull-right">Save changes</button>
-            <div class="clearfix"></div>
-        </legend>
+        <legend><i class="fa fa-user-plus"></i> Recruiting Settings <button type="submit" class="btn btn-success btn-xs pull-right">Save changes</button><div class="clearfix"></div></legend>
 
         <div class="row">
 
@@ -17,25 +15,9 @@
 
                     <div class="panel-body">Provide any additional steps your recruiters must take in order to process your new recruit into your division.</div>
 
-                    <div data-repeater-list="tasks">
-
-                        <div class="list-group-item" data-repeater-item>
-                            <div class="row">
-
-                                <div class="col-md-10">
-                                    <input type="text" name="tasks[0][task-description]"
-                                           class="form-control" placeholder="Add a task" required/>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <button type="button" data-repeater-delete class="btn btn-danger">
-                                        <i class="fa fa-trash-o fa-lg"></i></button>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
+                    <table data-repeater-list="tasks" class="table table-striped table-hover">
+                        @include('division.partials.recruitingTasks')
+                    </table>
 
                     <div class="panel-footer text-right">
                         <button data-repeater-create class="btn btn-success btn-block" type="button">
@@ -53,30 +35,9 @@
 
                     <div class="panel-body">If there are additional threads a new recruit must respond to before being accepted to your division, you can provide those below.</div>
 
-                    <div data-repeater-list="threads">
-
-                        <div class="list-group-item" data-repeater-item>
-                            <div class="row">
-
-                                <div class="col-md-6">
-                                    <input type="text" name="threads[0][thread-name]"
-                                           class="form-control" placeholder="Thread Name" required/>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <input type="number" name="threads[0][thread-id]"
-                                           class="form-control" placeholder="Thread ID" required/>
-                                </div>
-
-                                <div class="col-md-2">
-                                    <button type="button" data-repeater-delete class="btn btn-danger">
-                                        <i class="fa fa-trash-o fa-lg"></i></button>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
+                    <table data-repeater-list="threads" class="table table-striped table-hover">
+                        @include('division.partials.recruitingThreads')
+                    </table>
 
                     <div class="panel-footer text-right">
                         <button data-repeater-create class="btn btn-success btn-block" type="button">
@@ -94,8 +55,6 @@
 
 <script>
     $(document).ready(function () {
-        $('.repeater').repeater({
-            isFirstItemUndeletable: true
-        });
+        $('.repeater').repeater();
     });
 </script>

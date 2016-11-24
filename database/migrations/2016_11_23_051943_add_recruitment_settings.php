@@ -19,8 +19,8 @@ class AddRecruitmentSettings extends Migration
         foreach ($divisions as $division) {
             $settings = $division->settings();
 
-            $settings->set('division_structure', '');
-            $settings->set('welcome_area', '');
+            $settings->set('division_structure', 0);
+            $settings->set('welcome_area', 0);
             $settings->set('use_welcome_thread', false);
 
         }

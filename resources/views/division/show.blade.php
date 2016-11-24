@@ -1,3 +1,22 @@
+<?php
+
+//dd($division->settings()->merge(['recruiting_threads' => [
+//        [
+//                'thread-name' => 'asdfasfd',
+//                'thread-id' => 8762,
+//                'default' => true
+//        ],
+//        [
+//                'thread-name' => 'tyjetyj',
+//                'thread-id' => 92826,
+//                'default' => true
+//        ],
+//]]));
+
+?>
+
+{{ dd($division->settings()->get('recruiting_tasks')) }}
+
 @extends('layouts.app')
 @section('content')
 
@@ -16,10 +35,10 @@
                 <a class="btn btn-info"
                    href="{{ action('DivisionController@statistics', $division->abbreviation) }}"><i class="fa fa-bar-chart"></i><span class="hidden-xs hidden-sm">Statistics</span></a>
 
-                    @can('update', $division)
+                @can('update', $division)
                     <a class="btn btn-default" href="{{ action('DivisionController@edit', $division->abbreviation) }}"><i class="fa fa-pencil"></i>
                         <span class="hidden-xs hidden-sm">Edit Division</span></a>
-                    @endcan
+                @endcan
 
             </div>
 
