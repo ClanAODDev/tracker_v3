@@ -18,7 +18,7 @@
                             <li class="list-group-item">
                                 When a new member is recruited
                                 <div class="material-switch pull-right">
-                                    <input id="slack_alert_created_member" name="slack_alert_created_member" type="checkbox"/>
+                                    <input id="slack_alert_created_member" name="slack_alert_created_member" type="checkbox" {{ checked($division->settings()->slack_alert_created_member) }} />
                                     <label for="slack_alert_created_member" class="label-success"></label>
                                 </div>
                             </li>
@@ -26,7 +26,7 @@
                             <li class="list-group-item">
                                 When a member is removed
                                 <div class="material-switch pull-right">
-                                    <input id="slack_alert_removed_member" name="slack_alert_removed_member" type="checkbox"/>
+                                    <input id="slack_alert_removed_member" name="slack_alert_removed_member" type="checkbox" {{ checked($division->settings()->slack_alert_removed_member) }} />
                                     <label for="slack_alert_removed_member" class="label-success"></label>
                                 </div>
                             </li>
@@ -34,7 +34,7 @@
                             <li class="list-group-item">
                                 When a member's profile is edited
                                 <div class="material-switch pull-right">
-                                    <input id="slack_alert_updated_member" name="slack_alert_updated_member" type="checkbox"/>
+                                    <input id="slack_alert_updated_member" name="slack_alert_updated_member" type="checkbox" {{ checked($division->settings()->slack_alert_updated_member) }}/>
                                     <label for="slack_alert_updated_member" class="label-success"></label>
                                 </div>
                             </li>
@@ -44,7 +44,7 @@
                             <li class="list-group-item">
                                 When a request is submitted
                                 <div class="material-switch pull-right">
-                                    <input id="slack_alert_created_request" name="slack_alert_created_request" type="checkbox"/>
+                                    <input id="slack_alert_created_request" name="slack_alert_created_request" type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} />
                                     <label for="slack_alert_created_request" class="label-success"></label>
                                 </div>
                             </li>
@@ -56,10 +56,10 @@
                 <div class="col-md-6">
 
                     <div class="form-group">
-                        <label for="division_structure" class="control-label">Webhook URL</label>
-                        <input type="text" id="division_structure" name="division_structure"
+                        <label for="slack_webhook_url" class="control-label">Webhook URL</label>
+                        <input type="text" id="slack_webhook_url" name="slack_webhook_url"
                                placeholder="https://hooks.slack.com/services/..."
-                               value="{{ $division->settings()->division_structure }}" class="form-control" required/>
+                               value="{{ $division->settings()->slack_webhook_url }}" class="form-control" required/>
                         <span class="help-block"><small>Enter the webhook URL you want to post information to.</small></span>
                     </div>
 
