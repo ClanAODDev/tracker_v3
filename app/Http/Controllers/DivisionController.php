@@ -86,7 +86,11 @@ class DivisionController extends Controller
      */
     public function update(Request $request, Division $division)
     {
-        dd($request);
+        $this->authorize('update', $division);
+
+        $division->settings()->merge($request->all());
+
+        return redirect()->action('DivisionController@edit', $division->abbreviation);
     }
 
     /**

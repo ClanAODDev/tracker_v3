@@ -1,9 +1,11 @@
-<fieldset>
-    <legend><i class="fa fa-sliders"></i> General Settings  <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button></legend>
+<form id="division-settings" method="post"
+      action="{{ action('DivisionController@update', $division->abbreviation) }}">
+    {{ method_field('PATCH') }}
+    <fieldset>
+        <legend><i class="fa fa-sliders"></i> General Settings
+            <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button>
+        </legend>
 
-    <form id="division-settings" method="post"
-          action="{{ action('DivisionController@update', $division->abbreviation) }}">
-        {{ method_field('PATCH') }}
 
         <div class="row">
             <div class="col-sm-6">
@@ -24,6 +26,7 @@
                     <span class="help-block"><small>Numerical id of your division's welcome area.</small></span>
                     <div class="checkbox">
                         <label>
+                            <input type='hidden' value='0' name="use_welcome_thread">
                             <input type="checkbox" name="use_welcome_thread"
                                    {{ checked($division->settings()->use_welcome_thread) }}
                                    id="use-welcome-thread"> Use thread instead of forum
@@ -37,13 +40,12 @@
         <div class="form-group">
             <label for="welcome_pm" class="control-label">Welcome PM</label>
 
-            <textarea id="welcome_pm" name="welcome_pm"
-                      value="{{ $division->settings()->welcome_pm }}"
-                      class="form-control" rows="5"></textarea>
+            <textarea id="welcome_pm" name="welcome_pm" class="form-control"
+                      rows="5">{{ $division->settings()->welcome_pm }}</textarea>
             <span class="help-block"><small><p>Message template provided to recruiters to send to new members following recruitment process. </p><p><code>%%member_name%%</code> is replaced with the member's name.</p></small></span>
         </div>
 
         {{ csrf_field() }}
-    </form>
 
-</fieldset>
+    </fieldset>
+</form>

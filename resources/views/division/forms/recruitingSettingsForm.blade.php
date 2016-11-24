@@ -15,7 +15,7 @@
 
                     <div class="panel-body">Provide any additional steps your recruiters must take in order to process your new recruit into your division.</div>
 
-                    <table data-repeater-list="tasks" class="table table-striped table-hover">
+                    <table data-repeater-list="recruiting_tasks" class="table table-striped table-hover">
                         @include('division.partials.recruitingTasks')
                     </table>
 
@@ -35,7 +35,7 @@
 
                     <div class="panel-body">If there are additional threads a new recruit must respond to before being accepted to your division, you can provide those below.</div>
 
-                    <table data-repeater-list="threads" class="table table-striped table-hover">
+                    <table data-repeater-list="recruiting_threads" class="table table-striped table-hover">
                         @include('division.partials.recruitingThreads')
                     </table>
 
