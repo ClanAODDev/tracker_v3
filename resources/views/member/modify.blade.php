@@ -1,9 +1,11 @@
 @extends('layouts.app')
 @section('content')
 
+    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
+
     <h2>
         <a href="{{ action('MemberController@show', $member->clan_id) }}"
-           class="btn btn-default" title="Return to division page">
+           class="btn btn-default" title="Return to member profile">
             <i class="fa fa-angle-left fa-2x"></i>
         </a>
         <strong>{!! $member->present()->rankName !!}</strong>

@@ -60,7 +60,7 @@ function registerDivisionSubPage() {
     $divisionStaticSubPages = [
         'squads',
         'part-timers',
-        'statistics'
+        'statistics',
     ];
 
     foreach($divisionStaticSubPages as $page) {
