@@ -9,6 +9,7 @@ var Tracker = Tracker || {};
             Tracker.AnimateCounter();
             Tracker.SearchCollection();
             Tracker.InitRepeater();
+            Tracker.InitTabActivate();
         },
         /**
          * Handle member search
@@ -17,7 +18,6 @@ var Tracker = Tracker || {};
         SearchMembers: function () {
             this.TriggerFilter(document.getElementById("member-search"), this.GetSearchResults, 1000);
         },
-
         /**
          * Handle repeater fields
          *
@@ -27,6 +27,15 @@ var Tracker = Tracker || {};
             $(document).ready(function () {
                 $('.repeater').repeater();
             });
+        },
+
+        /**
+         * Handle tab activation on URL navigation
+         *
+         * @constructor
+         */
+        InitTabActivate: function () {
+            $('.nav-tabs').stickyTabs();
         },
 
         /**

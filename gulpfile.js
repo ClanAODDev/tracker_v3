@@ -26,6 +26,7 @@ elixir(function (mix) {
             'libs/jquery/jquery.bootstrap.wizard.min.js',
             'libs/jquery/jquery.powertip.min.js',
             'libs/jquery/jquery.repeater.min.js',
+            'libs/jquery/jquery.stickytabs.js',
 
             'libs/bootstrap/bootstrap.min.js',
             'libs/bootstrap/bootstrap-multiselect.js',
