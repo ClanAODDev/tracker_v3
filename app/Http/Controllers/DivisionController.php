@@ -88,6 +88,8 @@ class DivisionController extends Controller
     {
         $this->authorize('update', $division);
 
+        // sync updates to existing settings. foreign post data
+        // will be ignored
         $division->settings()->merge($request->all());
 
         return redirect()->action('DivisionController@edit', $division->abbreviation);

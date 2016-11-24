@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use Auth;
 
 class AppController extends Controller
 {

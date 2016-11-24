@@ -2,10 +2,10 @@
 
 namespace App;
 
-use App\Activity;
-use App\Settings\DivisionSettings;
-use App\Presenters\DivisionPresenter;
 use Exception;
+use App\Settings\DivisionSettings;
+use App\Activities\RecordsActivity;
+use App\Presenters\DivisionPresenter;
 use Illuminate\Database\Eloquent\Model;
 
 class Division extends Model
@@ -21,6 +21,9 @@ class Division extends Model
     ];
 
     use Division\HasCustomAttributes;
+    use RecordsActivity;
+
+    protected static $recordEvents = ['created', 'updated', 'deleted'];
 
     /**
      * @return DivisionPresenter
