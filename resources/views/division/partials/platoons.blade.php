@@ -1,7 +1,7 @@
 <div class="panel panel-primary">
 
     <div class="panel-heading">
-        {{ ucwords(str_plural($division->locality['platoon'])) }}
+        {{ ucwords(str_plural($division->locality('platoon'))) }}
     </div>
 
     <div class="list-group">
@@ -20,7 +20,7 @@
             </a>
         @empty
             <li class="list-group-item text-muted">
-                No {{ str_plural($division->locality['platoon']) }} currently exist for this division.
+                No {{ str_plural($division->locality('platoon')) }} currently exist for this division.
             </li>
         @endforelse
 

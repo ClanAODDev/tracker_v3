@@ -11,13 +11,6 @@ class DivisionSeeder extends Seeder
      */
     public function run()
     {
-        $defaultLocality = [
-            'squad' => 'squad',
-            'platoon' => 'platoon',
-            'squad leader' => 'squad leader',
-            'platoon leader' => 'platoon leader',
-        ];
-
         $defaultSettings = [
             'use_welcome_thread' => false,
             'division_structure' => '',
@@ -33,7 +26,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // ARK
@@ -43,7 +35,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Armored Warfare
@@ -53,7 +44,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Battlefield
@@ -63,7 +53,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Battlefront
@@ -73,7 +62,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Black Desert
@@ -83,7 +71,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Floaters (SGM)
@@ -93,7 +80,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Jedi Knight
@@ -103,7 +89,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Overwatch
@@ -113,7 +98,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Planetside 2
@@ -123,7 +107,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Skyforge
@@ -133,7 +116,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Tom Clancy
@@ -143,7 +125,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // Warframe
@@ -153,7 +134,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
                 // War Thunder
@@ -163,7 +143,6 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'locality' => json_encode($defaultLocality),
                     'active' => true,
                 ],
             ]

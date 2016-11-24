@@ -5,7 +5,7 @@ namespace App;
 use App\Activity;
 use App\Settings\DivisionSettings;
 use App\Presenters\DivisionPresenter;
-use App\Settings\LocalitySettings;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class Division extends Model
@@ -14,7 +14,6 @@ class Division extends Model
     protected $casts = [
         'active' => 'boolean',
         'settings' => 'json',
-        'locality' => 'json',
     ];
 
     protected $guarded = [
@@ -123,6 +122,21 @@ class Division extends Model
         return new DivisionSettings($this->settings, $this);
     }
 
+    public function locality($string)
+    {
+        $locality = $this->settings()->get('locality');
+
+        if (empty($locality)) {
+            throw new Exception("No locality defaults were found for division {$this->name}");
+        }
+
+        if ( ! array_key_exists($string, $locality)) {
+            throw new Exception("The {$string} locality does not exist");
+        }
+
+        return $locality[$string];
+    }
+
     /**
      * Gets CO and XOs of a division
      *
@@ -140,12 +154,4 @@ class Division extends Model
         return $this->active;
     }
 
-    public function locality($string)
-    {
-        if ( ! array_key_exists($string, $this->division->locality)) {
-            return $string;
-        }
-
-        return $this->division->locality[$string];
-    }
 }

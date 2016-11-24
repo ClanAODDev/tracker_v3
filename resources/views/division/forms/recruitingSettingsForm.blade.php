@@ -4,7 +4,7 @@
     {{ method_field('PATCH') }}
 
     <fieldset>
-        <legend><i class="fa fa-user-plus"></i> Recruiting Settings <button type="submit" class="btn btn-success btn-xs pull-right">Save changes</button><div class="clearfix"></div></legend>
+        <legend><i class="fa fa-user-plus"></i> Recruiting Settings <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button></legend>
 
         <div class="row">
 

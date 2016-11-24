@@ -1,27 +1,23 @@
-<div class="well">
+<form id="locality-settings" method="post"
+      action="{{ action('DivisionController@update', $division->abbreviation) }}">
     <fieldset>
-        <legend><i class="fa fa-language"></i> Locality</legend>
+        <legend><i class="fa fa-language"></i> Locality
+            <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button>
+        </legend>
 
-        <form id="locality-settings" method="post"
-              action="{{ action('DivisionController@update', $division->abbreviation) }}">
-            {{ method_field('PATCH') }}
+        {{ method_field('PATCH') }}
 
+        <div class="panel panel-default">
+            <div class="panel-heading">String Conversions</div>
 
-            <div class="form-group">
-                <label for="division_structure" class="control-label">Division Structure</label>
-                <input type="number" id="division_structure" name="division_structure"
-                       value="{{ $division->settings()->division_structure }}" class="form-control" required/>
-                <span class="help-block"><small>Numerical id of your division's division structure thread</small></span>
-            </div>
+            <div class="panel-body">This section allows you to customize the tracker's language to match your game's specific terminology. Entries should be all lower-case.</div>
 
+            <table class="table table-striped table-hover">
+                @include('division.partials.locality')
+            </table>
+        </div>
 
-            <div class="form-group margin-top-50">
-                <button type="submit" class="btn btn-default btn-lg pull-right">Save changes</button>
-            </div>
-
-            {{ csrf_field() }}
-        </form>
+        {{ csrf_field() }}
 
     </fieldset>
-</div>
-
+</form>
