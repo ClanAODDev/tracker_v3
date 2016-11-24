@@ -27,7 +27,7 @@
                                     </div>
 
                                     <div class="col-md-2">
-                                        <button type="button" data-repeater-delete class="btn btn-danger">
+                                        <button type="button" data-repeater-delete class="btn btn-danger btn-block">
                                             <i class="fa fa-trash-o fa-lg"></i></button>
                                     </div>
 
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="panel-footer text-right">
-                            <button data-repeater-create class="btn btn-success" type="button">
+                            <button data-repeater-create class="btn btn-success btn-block" type="button">
                                 <i class="fa fa-plus"></i>Add Link
                             </button>
                         </div>
