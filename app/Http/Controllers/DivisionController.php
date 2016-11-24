@@ -93,7 +93,7 @@ class DivisionController extends Controller
         // will be ignored
         $division->settings()->merge($request->all());
 
-        return redirect()->action('DivisionController@edit', $division->abbreviation);
+        return back();
     }
 
     /**
