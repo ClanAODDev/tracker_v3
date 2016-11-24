@@ -23,7 +23,7 @@
 
                                     <div class="col-md-10">
                                         <input type="text" name="tasks[0][task-description]"
-                                               class="form-control" placeholder="Add a task"/>
+                                               class="form-control" placeholder="Add a task" required/>
                                     </div>
 
                                     <div class="col-md-2">
@@ -59,12 +59,12 @@
 
                                     <div class="col-md-6">
                                         <input type="text" name="threads[0][thread-name]"
-                                               class="form-control" placeholder="Thread Name"/>
+                                               class="form-control" placeholder="Thread Name" required/>
                                     </div>
 
                                     <div class="col-md-4">
                                         <input type="number" name="threads[0][thread-id]"
-                                               class="form-control" placeholder="Thread ID"/>
+                                               class="form-control" placeholder="Thread ID" required/>
                                     </div>
 
                                     <div class="col-md-2">
