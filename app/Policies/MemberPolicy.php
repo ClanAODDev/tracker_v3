@@ -15,19 +15,6 @@ class MemberPolicy
     use HandlesAuthorization;
 
     /**
-     * Admins and developers have carte blanche access
-     *
-     * @param $user
-     * @return bool
-     */
-    public function before(User $user)
-    {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
-            return true;
-        }
-    }
-
-    /**
      * Can the user update the given member?
      *
      * @TODO: Provide a mechanism for divisions to configure this policy
@@ -38,6 +25,11 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
+        // admins and developers can update
+        if ($user->isRole('admin') || $user->isDeveloper()) {
+            return true;
+        }
+
         // division leaders can modify anyone in their own division
         if ($member->primaryDivision instanceof Division &&
             $user->member->isDivisionLeader($member->primaryDivision) &&
@@ -68,13 +60,24 @@ class MemberPolicy
      * Determines policy for removing members
      *
      * @param User $user
+     * @param Member $member
      * @return bool
      */
-    public function delete(User $user)
+    public function delete(User $user, Member $member)
     {
-        // use the abbreviation in case id changes for some reason
-        $minimumRankToRemove = Rank::whereAbbreviation('sgt')->first();
+        // can't delete yourself
+        if ($member->id == $user->member->id) {
+            return false;
+        }
 
-        return $user->member->rank_id >= $minimumRankToRemove->id;
+        // use the abbreviation in case id changes for some reason
+        if ($user->member->rank_id < Rank::whereAbbreviation('sgt')->first()->id) {
+            return false;
+        }
+
+
+        return true;
+
+
     }
 }

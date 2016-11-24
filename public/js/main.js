@@ -8,7 +8,6 @@ var Tracker = Tracker || {};
     Tracker = {
 
         Setup: function Setup() {
-
             Tracker.SearchMembers();
             Tracker.AnimateCounter();
             Tracker.SearchCollection();

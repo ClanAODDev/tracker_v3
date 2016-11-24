@@ -1053,7 +1053,6 @@ table.dataTable {
     text-align: center;
     margin-top: 0.5em; } }
 
-/** Material switch **/
 .material-switch > input[type="checkbox"] {
   display: none; }
 

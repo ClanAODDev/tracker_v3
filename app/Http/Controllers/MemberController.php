@@ -121,7 +121,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove member from AOD
      *
      * @param Member $member
      * @param Request $request
@@ -131,18 +131,9 @@ class MemberController extends Controller
     {
         $this->authorize('delete', $member);
 
-        // log action, include reason
-
-        // adding members
-        // $member->divisions()->attach($division, ['primary' => true]);
-
-        // removing members from a division
-        // $member->divisions()->detach($division);
-
-        // remove from all divisions
-        $member->divisions()->detach();
-
         $member->recordActivity('removed');
+
+        $member->resetPositionsAndAssignments();
 
         return redirect()->action('MemberController@show', [
             'clan_id' => $member->clan_id

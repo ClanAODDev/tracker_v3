@@ -40,6 +40,9 @@ trait RecordsActivity
                 'user_id' => $user->id,
                 'division_id' => $user->member->primaryDivision->id
             ]);
+
+            // @TODO: Add slack hook for notifications
+            // use activity name?
         }
     }
 

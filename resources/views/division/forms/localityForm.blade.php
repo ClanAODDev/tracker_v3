@@ -1,6 +1,6 @@
 <div class="well">
     <fieldset>
-        <legend>Locality</legend>
+        <legend><i class="fa fa-language"></i> Locality</legend>
 
         <form id="locality-settings" method="post"
               action="{{ action('DivisionController@update', $division->abbreviation) }}">

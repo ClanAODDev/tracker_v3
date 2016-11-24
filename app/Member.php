@@ -100,6 +100,21 @@ class Member extends Model
     }
 
     /**
+     * Resets member's positions and division assignments
+     * including part-time divisions
+     */
+    public function resetPositionsAndAssignments()
+    {
+        $this->divisions()->detach();
+
+        $this->position()->dissociate();
+        $this->platoon()->dissociate();
+        $this->squad()->dissociate();
+
+        $this->save();
+    }
+
+    /**
      * -------------------------------------
      * Policy object refers to these methods
      * -------------------------------------

@@ -20,23 +20,23 @@
             {{-- Edit profile nav --}}
             <ul class="nav nav-tabs margin-top-20">
                 <li class="active">
-                    <a href="#recruitment-settings" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-sliders fa-lg"></i><span class="hidden-xs"> General</span>
+                    <a href="#general-settings" data-toggle="tab" aria-expanded="false">
+                        <i class="fa fa-sliders fa-lg"></i><span class="hidden-xs">General</span>
                     </a>
                 </li>
                 <li>
                     <a href="#locality" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-language fa-lg"></i><span class="hidden-xs"> Locality</span>
+                        <i class="fa fa-language fa-lg"></i><span class="hidden-xs">Locality</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#recruitment-settings" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-user-plus fa-lg"></i><span class="hidden-xs"> Recruiting</span>
+                    <a href="#recruiting-settings" data-toggle="tab" aria-expanded="false">
+                        <i class="fa fa-user-plus fa-lg"></i><span class="hidden-xs">Recruiting</span>
                     </a>
                 </li>
                 <li>
                     <a href="#slack" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-slack fa-lg"></i><span class="hidden-xs"> Slack</span>
+                        <i class="fa fa-slack fa-lg"></i><span class="hidden-xs">Slack</span>
                     </a>
                 </li>
             </ul>
@@ -45,7 +45,7 @@
 
                 <div id="settings-form" class="tab-content">
 
-                    <div class="tab-pane fade active in" id="recruitment-settings">
+                    <div class="tab-pane fade active in" id="general-settings">
                         @include('division.forms.generalSettingsForm')
                     </div>
 

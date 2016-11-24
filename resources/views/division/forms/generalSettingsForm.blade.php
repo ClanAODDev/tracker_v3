@@ -1,6 +1,6 @@
 <div class="well">
     <fieldset>
-        <legend>General Settings</legend>
+        <legend><i class="fa fa-sliders"></i> General Settings</legend>
 
         <form id="division-settings" method="post"
               action="{{ action('DivisionController@update', $division->abbreviation) }}">
