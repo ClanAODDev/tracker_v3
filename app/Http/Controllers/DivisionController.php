@@ -86,6 +86,7 @@ class DivisionController extends Controller
      */
     public function update(Request $request, Division $division)
     {
+
         $this->authorize('update', $division);
 
         // sync updates to existing settings. foreign post data
