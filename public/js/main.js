@@ -11,14 +11,25 @@ var Tracker = Tracker || {};
             Tracker.SearchMembers();
             Tracker.AnimateCounter();
             Tracker.SearchCollection();
+            Tracker.InitRepeater();
         },
-
         /**
          * Handle member search
          * @constructor
          */
         SearchMembers: function SearchMembers() {
             this.TriggerFilter(document.getElementById("member-search"), this.GetSearchResults, 1000);
+        },
+
+        /**
+         * Handle repeater fields
+         * 
+         * @constructor
+         */
+        InitRepeater: function InitRepeater() {
+            $(document).ready(function () {
+                $('.repeater').repeater();
+            });
         },
 
         /**
