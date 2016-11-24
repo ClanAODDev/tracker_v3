@@ -1,4 +1,4 @@
-<form id="recruiting-links" method="post"
+<form id="recruiting-links" method="post" class="well"
       action="{{ action('DivisionController@update', $division->abbreviation) }}">
 
     {{ method_field('PATCH') }}

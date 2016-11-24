@@ -90,24 +90,11 @@ class DivisionController extends Controller
 
         $this->authorize('update', $division);
 
-        // sync updates to existing settings. foreign post data
-        // will be ignored
         $division->settings()->merge($request->all());
 
         flash('Changes saved successfully', 'success');
 
         return back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Division $division
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Division $division)
-    {
-        //
     }
 
     /**

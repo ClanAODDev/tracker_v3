@@ -1,4 +1,4 @@
-<form id="slack-settings" method="post"
+<form id="slack-settings" method="post" class="well"
       action="{{ action('DivisionController@update', $division->abbreviation) }}">
 
     {{ method_field('PATCH') }}

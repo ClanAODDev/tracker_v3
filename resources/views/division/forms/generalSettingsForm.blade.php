@@ -1,4 +1,4 @@
-<form id="division-settings" method="post"
+<form id="division-settings" method="post" class="well"
       action="{{ action('DivisionController@update', $division->abbreviation) }}">
     {{ method_field('PATCH') }}
     <fieldset>

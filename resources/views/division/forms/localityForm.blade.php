@@ -1,4 +1,4 @@
-<form id="locality-settings" method="post"
+<form id="locality-settings" method="post" class="well"
       action="{{ action('DivisionController@update', $division->abbreviation) }}">
     <fieldset>
         <legend><i class="fa fa-language"></i> Locality
