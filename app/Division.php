@@ -7,6 +7,7 @@ use App\Settings\DivisionSettings;
 use App\Activities\RecordsActivity;
 use App\Presenters\DivisionPresenter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Division extends Model
 {
@@ -131,7 +132,8 @@ class Division extends Model
         $locality = collect($this->settings()->locality);
 
         if ( ! $locality->count()) {
-            throw new Exception("No locality defaults were found for division {$this->name}");
+            Log::error("No locality defaults were found for division {$this->name}");
+            return $string;
         }
 
         $results = $locality->first(function($translation) use ($string) {
@@ -139,7 +141,8 @@ class Division extends Model
         });
 
         if ( ! $results) {
-            throw new Exception("The {$string} locality does not exist");
+            Log::error("The {$string} locality does not exist");
+            return $string;
         }
 
         return $results['new-string'];

@@ -93,6 +93,7 @@ class DivisionController extends Controller
         // will be ignored
         $division->settings()->merge($request->all());
 
+        Session::flash('message','DID STUFF YO');
         return back();
     }
 
