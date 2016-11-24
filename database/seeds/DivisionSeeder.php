@@ -21,6 +21,7 @@ class DivisionSeeder extends Seeder
             'use_welcome_thread' => false,
             'division_structure' => '',
             'welcome_area' => '',
+            'welcome_pm' => '',
             'recruiting_threads' => [
                 [
                     'thread_name' => 'AOD Code of Conduct',
