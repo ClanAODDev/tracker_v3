@@ -133,15 +133,19 @@ class Division extends Model
 
         if ( ! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
+
             return $string;
         }
 
-        $results = $locality->first(function($translation) use ($string) {
-            return $translation['old-string'] == $string;
+        $results = $locality->first(function ($translation) use ($string) {
+            if (array_key_exists('old-string', $translation)) {
+                return $translation['old-string'] == $string;
+            }
         });
 
         if ( ! $results) {
             Log::error("The {$string} locality does not exist");
+
             return $string;
         }
 
