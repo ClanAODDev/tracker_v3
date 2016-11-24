@@ -127,17 +127,22 @@ class Division extends Model
 
     public function locality($string)
     {
-        $locality = $this->settings()->get('locality');
 
-        if (empty($locality)) {
+        $locality = collect($this->settings()->locality);
+
+        if ( ! $locality->count()) {
             throw new Exception("No locality defaults were found for division {$this->name}");
         }
 
-        if ( ! array_key_exists($string, $locality)) {
+        $results = $locality->first(function($translation) use ($string) {
+            return $translation['old-string'] == $string;
+        });
+
+        if ( ! $results) {
             throw new Exception("The {$string} locality does not exist");
         }
 
-        return $locality[$string];
+        return $results['new-string'];
     }
 
     /**

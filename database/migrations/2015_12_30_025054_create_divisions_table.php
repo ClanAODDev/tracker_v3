@@ -6,6 +6,12 @@ use Illuminate\Database\Migrations\Migration;
 class CreateDivisionsTable extends Migration
 {
 
+    public function __construct()
+    {
+        DB::getDoctrineSchemaManager()->getDatabasePlatform()
+            ->registerDoctrineTypeMapping('json', 'string');
+    }
+
     /**
      * Run the migrations.
      *
@@ -22,7 +28,7 @@ class CreateDivisionsTable extends Migration
             $table->string('division_structure');
             $table->string('welcome_forum');
             $table->mediumInteger('handle_id');
-            $table->text('settings');
+            $table->json('settings');
             $table->text('locality');
             $table->timestamps();
         });
