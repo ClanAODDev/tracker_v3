@@ -151,7 +151,7 @@ class Division extends Model
 
         $results = $locality->first(function ($translation) use ($string) {
             if (array_key_exists('old-string', $translation)) {
-                return $translation['old-string'] == $string;
+                return $translation['old-string'] == strtolower($string);
             }
         });
 

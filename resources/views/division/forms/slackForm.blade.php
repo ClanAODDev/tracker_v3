@@ -10,6 +10,17 @@
 
         <div class="row">
             <div class="col-md-6">
+
+                <div class="form-group">
+                    <label for="slack_webhook_url" class="control-label">Webhook URL</label>
+                    <input type="text" id="slack_webhook_url" name="slack_webhook_url"
+                           placeholder="https://hooks.slack.com/services/..."
+                           value="{{ $division->settings()->slack_webhook_url }}" class="form-control" />
+                    <span class="help-block"><small>Enter the webhook URL you want to post information to.</small></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
                 <div class="form-group">
                     <div class="panel panel-primary">
                         <div class="panel-heading">Alert Slack when the following events occur...</div>
@@ -55,17 +66,6 @@
                         </li>
 
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-
-                <div class="form-group">
-                    <label for="slack_webhook_url" class="control-label">Webhook URL</label>
-                    <input type="text" id="slack_webhook_url" name="slack_webhook_url"
-                           placeholder="https://hooks.slack.com/services/..."
-                           value="{{ $division->settings()->slack_webhook_url }}" class="form-control" />
-                    <span class="help-block"><small>Enter the webhook URL you want to post information to.</small></span>
                 </div>
             </div>
 

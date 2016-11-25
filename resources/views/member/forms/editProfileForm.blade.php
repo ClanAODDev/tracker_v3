@@ -2,6 +2,8 @@
 
 use App\Squad, App\Platoon, App\Position;
 
+$division = $member->primaryDivision
+
 ?>
 
 <div class="row">
@@ -18,7 +20,7 @@ use App\Squad, App\Platoon, App\Position;
                     @foreach($positions as $position)
                         <option value="{{ $position->id }}"
                                 {{ selected($selectedPosition, $position->id) }}
-                        >{{ $position->name }}</option>
+                        >{{ ucwords($division->locality($position->name)) }}</option>
                     @endforeach
                 </select>
             </div>
@@ -28,7 +30,7 @@ use App\Squad, App\Platoon, App\Position;
             <?php $selectedPlatoon = ($member->platoon instanceof Platoon) ? $member->platoon->id : null; ?>
 
             <div class="form-group">
-                <label for="platoon" class="control-label">Platoon</label>
+                <label for="platoon" class="control-label">{{ ucwords($division->locality('platoon')) }}</label>
                 <select class="form-control" id="select">
                     <option value="">None</option>
                     @foreach($platoons as $platoon)
@@ -44,7 +46,7 @@ use App\Squad, App\Platoon, App\Position;
             <?php $selectedSquad = ($member->squad instanceof Squad) ? $member->squad->id : null; ?>
 
             <div class="form-group">
-                <label for="squad" class="control-label">Squad</label>
+                <label for="squad" class="control-label">{{ ucwords($division->locality('squad')) }}</label>
                 <select class="form-control" id="select">
                     <option value="">None</option>
                     @foreach($squads as $squad)

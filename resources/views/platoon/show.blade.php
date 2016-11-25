@@ -17,7 +17,9 @@
     <ul class="nav nav-tabs margin-top-20">
         <li class="active">
             <a href="#platoon-view" data-toggle="tab" aria-expanded="false">
-                <i class="fa fa-cube fa-lg"></i><span class="hidden-sm hidden-xs"> Platoon View</span>
+                <i class="fa fa-cube fa-lg"></i><span class="hidden-sm hidden-xs">
+                    {{ ucwords($division->locality('platoon')) }} View
+                </span>
             </a>
         </li>
 
@@ -25,7 +27,9 @@
         @if (count($platoon->squads))
             <li>
                 <a href="#squad-view" data-toggle="tab" aria-expanded="false">
-                    <i class="fa fa-cubes fa-lg"></i><span class="hidden-sm hidden-xs"> Squads</span>
+                    <i class="fa fa-cubes fa-lg"></i><span class="hidden-sm hidden-xs">
+                        {{ str_plural(ucwords($division->locality('squads'))) }}
+                    </span>
                 </a>
             </li>
         @endif
