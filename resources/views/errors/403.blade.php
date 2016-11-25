@@ -27,8 +27,8 @@
 <div class="container error">
     <div class="content">
         <div class="title">Unauthorized</div>
-        <strong>You are not authorized to perform that action. You should probably
-            <a href="{{ url('/home') }}">go home</a></strong>
+        You are not authorized to perform that action. You should probably
+            <a href="{{ url('/home') }}"><strong>go home</strong></a>.
     </div>
 </div>
 </body>

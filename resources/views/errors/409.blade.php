@@ -27,7 +27,7 @@
 <div class="container error">
     <div class="content">
         <div class="title">Sorry</div>
-        <strong>You cannot edit a member who is no longer an active member of AOD. You should probably <a href="{{ url('/home') }}">go home</a></strong>
+        You are attempting to edit a user that is no longer an AOD member, and that's no bueno. You should probably <a href="{{ url('/home') }}"><strong>go home</strong></a>.
     </div>
 </div>
 </body>

@@ -79,4 +79,5 @@ Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () 
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
    Route::get('/', 'AdminController@index');
+   Route::patch('divisions/update', 'AdminController@updateDivisions');
 });

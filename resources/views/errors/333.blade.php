@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>AOD | 404 Page not found</title>
+    <title>AOD | Unauthorized</title>
     <link rel="stylesheet" type="text/css" href="//bootswatch.com/lumen/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('/css/app.css') }}">
     <link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
@@ -26,8 +26,9 @@
 <body>
 <div class="container error">
     <div class="content">
-        <div class="title">He's dead, Jim!</div>
-        You've managed to break something. Or I did. Or both. You should probably <a href="{{ url('/home') }}"><strong>go home</strong></a>.
+        <div class="title">Unauthorized</div>
+        You probably shouldn't be doing whatever it is that you tried to do. Why don't you
+        <a href="{{ url('/home') }}"><strong>go home</strong></a>?
     </div>
 </div>
 </body>
