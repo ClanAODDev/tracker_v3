@@ -15,16 +15,17 @@
                 <p>Use the
                     <code>Old String</code> column as a guide to determine what each term should display as. Terms you wish to remain unchanged should match on both columns.
                 </p>
-                <div class="margin-top-20">
-                    <button type="button" class="btn btn-primary" data-reset-locality>
-                        <i class="fa fa-refresh"></i>Reset Locality
-                    </button>
-                </div>
             </div>
 
             <table class="table table-striped table-hover">
                 @include('division.partials.locality')
             </table>
+
+            <div class="panel-footer text-right">
+                <button type="button" class="btn btn-primary" data-reset-locality>
+                    <i class="fa fa-undo"></i>Reset to default
+                </button>
+            </div>
         </div>
 
         {{ csrf_field() }}
