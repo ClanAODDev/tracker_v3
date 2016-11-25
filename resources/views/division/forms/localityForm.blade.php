@@ -10,7 +10,17 @@
         <div class="panel panel-default">
             <div class="panel-heading">String Conversions</div>
 
-            <div class="panel-body">This section allows you to customize the tracker's language to match your game's specific terminology. Entries should be all lower-case.</div>
+            <div class="panel-body">
+                <p>This section allows you to customize the tracker's language to match your game's specific terminology. Entries should be all lower-case and singular.</p>
+                <p>Use the
+                    <code>Old String</code> column as a guide to determine what each term should display as. Terms you wish to remain unchanged should match on both columns.
+                </p>
+                <div class="margin-top-20">
+                    <button type="button" class="btn btn-primary" data-reset-locality>
+                        <i class="fa fa-refresh"></i>Reset Locality
+                    </button>
+                </div>
+            </div>
 
             <table class="table table-striped table-hover">
                 @include('division.partials.locality')

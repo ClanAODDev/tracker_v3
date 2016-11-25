@@ -5,12 +5,15 @@ var Tracker = Tracker || {};
     Tracker = {
 
         Setup: function () {
-            Tracker.AlertHandling();
             Tracker.SearchMembers();
-            Tracker.AnimateCounter();
             Tracker.SearchCollection();
+
+            // misc functionality, visual
+            Tracker.AnimateCounter();
+            Tracker.AlertHandling();
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
+            Tracker.ResetLocality();
         },
         /**
          * Handle member search
@@ -136,6 +139,18 @@ var Tracker = Tracker || {};
                 });
             });
         },
+
+        ResetLocality: function () {
+            $('[data-reset-locality]').click(function () {
+                $('[data-locality-entry]').each(function () {
+
+                    var new_string = $(this).find('[data-new-string]'),
+                        old_string = $(this).find('[data-old-string]');
+
+                    new_string.val(old_string.val());
+                });
+            })
+        }
 
     }
 
