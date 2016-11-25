@@ -20,7 +20,8 @@
                 </div>
 
                 <div class="form-group">
-                    <img src="{{ asset('images/slack-preview.png') }}" width="100%"/>
+                    <img src="{{ asset('images/slack-preview.png') }}"
+                         style="mix-blend-mode: darken;" width="100%"/>
                 </div>
             </div>
 
