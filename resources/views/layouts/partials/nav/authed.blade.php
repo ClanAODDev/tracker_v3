@@ -40,18 +40,7 @@
         </li>
 
         @if (Auth::user()->isRole('admin') || Auth::user()->isDeveloper())
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li class="disabled"><a href="#">API</a></li>
-                    <li class="divider"></li>
-                    <li><a href={{ action('API\APIController@divisions') }} target="_blank" role="button">Divisions</a>
-                    </li>
-                    <li><a href={{ action('API\APIController@platoons') }} target="_blank" role="button">Platoons</a>
-                    </li>
-                    <li><a href={{ action('API\APIController@squads') }} target="_blank" role="button">Squads</a></li>
-                </ul>
-            </li>
+            <li><a href="{{ action('AdminController@index') }}">Admin CP</a></li>
         @endif
 
     </ul>

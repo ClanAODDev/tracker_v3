@@ -14,7 +14,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Division statuses</div>
                     <div class="panel-body">
-                        <p>Divisions that are not set to active will not be included in census data collection, or be updated by the forum data sync. Divisions that <strong>should not</strong> be active include divisions that are:</p>
+                        <p>Divisions that are not set to active will not be included in census data collection, be updated by the forum data sync, or be listed in the Tracker. Divisions that <strong>should not</strong> be active include divisions that are:</p>
                         <ul>
                             <li>No longer running</li>
                             <li>Are purely organizational (floater)</li>
