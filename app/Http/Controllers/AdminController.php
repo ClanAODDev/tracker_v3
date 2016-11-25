@@ -34,6 +34,8 @@ class AdminController extends Controller
 
         }
 
+        flash('Division status(es) have been updated successfully!', 'success');
+
         return redirect()->back();
     }
 }

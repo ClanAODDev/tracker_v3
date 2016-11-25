@@ -21,16 +21,11 @@
                         </ul>
                     </div>
 
-                    @foreach($divisions as $division)
-                        <li class="list-group-item" title="Click to visit division page">
-                            {{ $division->name }} <i class="fa fa-arrow-circle-right"></i>
-                            <div class="material-switch pull-right">
-                                <input type='hidden' value='0' name="divisions[{{ $division->abbreviation }}]">
-                                <input id="{{ $division->abbreviation }}" name="divisions[{{ $division->abbreviation }}]" type="checkbox" {{ checked($division->active) }} />
-                                <label for="{{ $division->abbreviation }}" class="label-success"></label>
-                            </div>
-                        </li>
-                    @endforeach
+                    <div style="max-height: 500px; overflow-y: scroll; ">
+                        @include('admin.partials.divisionStatusList')
+                    </div>
+
+                    <div class="panel-footer text-muted"><small>Divisions are never deleted, for historical purposes.</small></div>
                 </div>
             </div>
         </div>
