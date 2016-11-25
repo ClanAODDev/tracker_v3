@@ -8,7 +8,6 @@
            class="btn btn-default btn-lg" title="Return to division page">
             <i class="fa fa-angle-left fa-2x"></i>
         </a>
-        @include('division.partials.icon')
         <strong>{!! $division->name !!}</strong>
         <small>Edit Division</small>
     </h2>

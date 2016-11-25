@@ -15,7 +15,7 @@
                     <label for="slack_channel" class="control-label">Slack Channel</label>
                     <input type="text" id="slack_channel" name="slack_channel"
                            placeholder="#channel-name"
-                           value="{{ $division->settings()->slack_webhook_url }}" class="form-control" />
+                           value="{{ $division->settings()->slack_channel }}" class="form-control" />
                     <span class="help-block"><small>Enter the channel you wish to post updates to. This application is automatically integrated with the <a href="http://clanaod.slack.com" target="_blank">Clan AOD Slack Team</a>.</small></span>
                 </div>
 

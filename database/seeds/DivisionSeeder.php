@@ -17,7 +17,7 @@ class DivisionSeeder extends Seeder
             'slack_alert_removed_member' => false,
             'slack_alert_updated_member' => false,
             'slack_alert_created_request' => false,
-            'slack_webhook_url' => '',
+            'slack_channel' => '',
             'use_welcome_thread' => false,
             'division_structure' => '',
             'welcome_area' => '',
