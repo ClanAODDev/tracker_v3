@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon;
 use Exception;
 use App\Settings\DivisionSettings;
 use App\Activities\RecordsActivity;
@@ -32,6 +33,11 @@ class Division extends Model
     public function present()
     {
         return new DivisionPresenter($this);
+    }
+
+    public function census()
+    {
+        return $this->hasMany(Census::class);
     }
 
     /**
@@ -99,6 +105,12 @@ class Division extends Model
     public function activeMembers()
     {
         return $this->members()->wherePivot('primary', true);
+    }
+
+    public function membersActiveSinceDaysAgo($days)
+    {
+        return $this->activeMembers()
+            ->where('last_forum_login', '>=', Carbon::now()->subDays($days));
     }
 
     public function staffSergeants()

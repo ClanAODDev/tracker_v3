@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
 use Auth;
+use App\Census;
+use App\Division;
 
 class AppController extends Controller
 {

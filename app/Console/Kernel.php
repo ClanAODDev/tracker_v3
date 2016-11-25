@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\MemberSync::class,
+        Commands\DivisionCensus::class,
         Commands\MakeAODToken::class,
     ];
 
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('do:membersync')->hourly();
+        $schedule->command('do:divisioncensus')->weekly();
     }
     /**
      * Register the Closure based commands for the application.
