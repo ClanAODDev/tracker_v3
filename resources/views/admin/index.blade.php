@@ -1,7 +1,6 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: dcdeaton
- * Date: 11/24/16
- * Time: 12:56 PM
- */
+@extends('layouts.app')
+@section('content')
+
+    {!! Breadcrumbs::render('division', $division) !!}
+
+@stop
