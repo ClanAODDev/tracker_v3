@@ -12,18 +12,22 @@
             <div class="col-md-6">
 
                 <div class="form-group">
-                    <label for="slack_webhook_url" class="control-label">Webhook URL</label>
-                    <input type="text" id="slack_webhook_url" name="slack_webhook_url"
-                           placeholder="https://hooks.slack.com/services/..."
+                    <label for="slack_channel" class="control-label">Slack Channel</label>
+                    <input type="text" id="slack_channel" name="slack_channel"
+                           placeholder="#channel-name"
                            value="{{ $division->settings()->slack_webhook_url }}" class="form-control" />
-                    <span class="help-block"><small>Enter the webhook URL you want to post information to.</small></span>
+                    <span class="help-block"><small>Enter the channel you wish to post updates to. This application is automatically integrated with the <a href="http://clanaod.slack.com" target="_blank">Clan AOD Slack Team</a>.</small></span>
+                </div>
+
+                <div class="form-group">
+                    <img src="{{ asset('images/slack-preview.png') }}" width="100%"/>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="panel panel-primary">
-                        <div class="panel-heading">Alert Slack when the following events occur...</div>
+                        <div class="panel-heading">Notify when the following events occur...</div>
 
                         <li class="list-group-item text-muted">MEMBER</li>
 

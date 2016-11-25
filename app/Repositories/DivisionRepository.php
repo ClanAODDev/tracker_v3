@@ -35,4 +35,9 @@ class DivisionRepository
 
         return $data;
     }
+
+    public function withoutSsgts()
+    {
+        return Division::doesntHave('staffSergeants')->get();
+    }
 }

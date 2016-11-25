@@ -115,7 +115,7 @@ class Division extends Model
 
     public function staffSergeants()
     {
-        return $this->belongsToMany(Member::class, 'staff_sergeants');
+        return $this->belongsToMany(Member::class, 'division_staffSergeants');
     }
 
     /**

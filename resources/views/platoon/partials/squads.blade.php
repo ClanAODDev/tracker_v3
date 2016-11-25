@@ -11,7 +11,7 @@
 
             @if (count($squad->membersWithoutLeader))
                 @foreach($squad->membersWithoutLeader as $member)
-                    <a class="list-group-item">
+                    <a class="list-group-item" href="{{ action('MemberController@show', $member->clan_id) }}">
                         <div class="col-xs-6">{{ $member->present()->rankName }}</div>
                         <div class="col-xs-6 text-center">{{ $member->last_forum_login->diffForHumans() }}</div>
                         <div class="clearfix"></div>

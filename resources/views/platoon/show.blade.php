@@ -28,7 +28,7 @@
             <li>
                 <a href="#squad-view" data-toggle="tab" aria-expanded="false">
                     <i class="fa fa-cubes fa-lg"></i><span class="hidden-sm hidden-xs">
-                        {{ str_plural(ucwords($division->locality('squads'))) }}
+                        {{ str_plural(ucwords($division->locality('squad'))) }}
                     </span>
                 </a>
             </li>

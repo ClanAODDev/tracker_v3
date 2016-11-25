@@ -31,7 +31,7 @@ class Search extends Base implements Command
             ];
         }
 
-        $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
+        $this->members = Member::search($this->params)->get();
 
         if ($this->members) {
             foreach ($this->members as $member) {

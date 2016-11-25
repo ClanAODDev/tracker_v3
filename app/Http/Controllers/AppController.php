@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Auth;
-use App\Census;
 use App\Division;
 
 class AppController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {

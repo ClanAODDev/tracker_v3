@@ -46,6 +46,7 @@ class MemberPolicy
             return true;
         }
 
+        // squad leaders can edit members of their squad
         if ($member->squad instanceof Squad &&
             $user->isRole('jr_ldr') &&
             $user->member->isSquadLeader($member->squad)
