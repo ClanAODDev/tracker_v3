@@ -153,7 +153,7 @@ class DivisionSeeder extends Seeder
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
-                    'active' => true,
+                    'active' => false,
                 ],
                 // Jedi Knight
                 [
@@ -200,6 +200,17 @@ class DivisionSeeder extends Seeder
                     'settings' => json_encode($defaultSettings),
                     'active' => true,
                 ],
+
+                // Titanfall 2
+                [
+                    'name' => 'Titanfall 2',
+                    'abbreviation' => 'tf2',
+                    'description' => 'Some random description here',
+                    'handle_id' => 0,
+                    'settings' => json_encode($defaultSettings),
+                    'active' => true,
+                ],
+
                 // Warframe
                 [
                     'name' => 'Warframe',
@@ -213,6 +224,26 @@ class DivisionSeeder extends Seeder
                 [
                     'name' => 'War Thunder',
                     'abbreviation' => 'wt',
+                    'description' => 'Some random description here',
+                    'handle_id' => 0,
+                    'settings' => json_encode($defaultSettings),
+                    'active' => true,
+                ],
+
+                // Warhammer
+                [
+                    'name' => 'Warhammer',
+                    'abbreviation' => 'wh',
+                    'description' => 'Some random description here',
+                    'handle_id' => 0,
+                    'settings' => json_encode($defaultSettings),
+                    'active' => true,
+                ],
+
+                // World of Warcraft
+                [
+                    'name' => 'World of Warcraft',
+                    'abbreviation' => 'wow',
                     'description' => 'Some random description here',
                     'handle_id' => 0,
                     'settings' => json_encode($defaultSettings),
