@@ -131,10 +131,25 @@ class DivisionController extends Controller
             ->setResponsive(true);
     }
 
+    private function getActivityChart($division)
+    {
+        $data = $this->division->getDivisionActivity($division);
+
+        return Charts::create('donut', 'morris')
+            ->setLabels($data['labels'])
+            ->setValues($data['values'])
+            ->setColors($data['colors'])
+            ->setResponsive(true);
+    }
+
     public function statistics(Division $division)
     {
         $rankDemographic = $this->getRanksChart($division);
 
-        return view('division.statistics', compact('division', 'rankDemographic'));
+        $activity = $this->getActivityChart($division);
+
+        return view('division.statistics',
+            compact('division', 'rankDemographic', 'activity')
+        );
     }
 }
