@@ -53,8 +53,7 @@ class Platoon extends Model
     public function membersWithoutLeader()
     {
         return $this->members()
-            ->whereNotIn('id', [$this->leader->id])
-            ->wherePivot('primary', true);
+            ->whereNotIn('id', [$this->leader->id]);
     }
 
     /**
