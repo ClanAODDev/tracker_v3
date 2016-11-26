@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Division statuses</div>
+                    <div class="panel-heading">Division statuses ({{ $divisions->count() }})</div>
                     <div class="panel-body">
                         <p>Divisions that are not set to active will not be included in census data collection, be updated by the forum data sync, or be listed in the Tracker. Divisions that <strong>should not</strong> be active include divisions that are:</p>
                         <ul>
