@@ -37,7 +37,8 @@ class Platoon extends Model
      */
     public function members()
     {
-        return $this->hasMany(Member::class);
+        return $this->hasMany(Member::class)
+            ->wherePivot('primary', true);
     }
 
     /**
@@ -47,7 +48,9 @@ class Platoon extends Model
      */
     public function membersWithoutLeader()
     {
-        return $this->hasMany(Member::class)->whereNotIn('id', [$this->leader->id]);
+        return $this->members()
+            ->whereNotIn('id', [$this->leader->id])
+            ->wherePivot('primary', true);
     }
 
     /**
