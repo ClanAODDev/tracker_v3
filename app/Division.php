@@ -113,6 +113,12 @@ class Division extends Model
             ->where('last_forum_login', '>=', Carbon::now()->subDays($days));
     }
 
+    public function generalSergeants()
+    {
+        return $this->activeMembers()
+            ->wherePositionId(4);
+    }
+
     public function staffSergeants()
     {
         return $this->belongsToMany(Member::class, 'division_staffSergeants');

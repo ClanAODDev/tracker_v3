@@ -30,11 +30,14 @@
     <hr/>
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-4">
             @include('division.partials.platoons')
         </div>
         <div class="col-md-4">
-            @include('division.partials.division_leadership')
+            @include('division.partials.generalSergeants')
+        </div>
+        <div class="col-md-4">
+            @include('division.partials.leadership')
         </div>
     </div>
 @stop
