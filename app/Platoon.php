@@ -37,8 +37,12 @@ class Platoon extends Model
      */
     public function members()
     {
-        return $this->belongsToMany(Member::class)
-            ->withPivot('primary')->withTimestamps();
+        return $this->belongsToMany(Member::class);
+    }
+
+    public function activeMembers()
+    {
+        return $this->members()->wherePivot('primary', true);
     }
 
     /**
