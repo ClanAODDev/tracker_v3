@@ -107,7 +107,7 @@ class AddWarhammerWowTf2Divisions extends Migration
                 'abbreviation' => 'wow',
                 'description' => 'Some random description here',
                 'handle_id' => 0,
-                'settings' => json_encode($defaultSettings),
+                'settings' => json_encode($this->defaultSettings),
                 'active' => true,
             ],
 
@@ -117,7 +117,7 @@ class AddWarhammerWowTf2Divisions extends Migration
                 'abbreviation' => 'tf2',
                 'description' => 'Some random description here',
                 'handle_id' => 0,
-                'settings' => json_encode($defaultSettings),
+                'settings' => json_encode($this->defaultSettings),
                 'active' => true,
             ],
         ]);
