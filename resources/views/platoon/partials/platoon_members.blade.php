@@ -25,7 +25,7 @@
 
             <tbody>
 
-            @foreach($platoon->activeMembers as $member)
+            @foreach($platoon->members as $member)
 
                 <tr role="row">
                     <td class="col-hidden">{{ $member->rank_id }}</td>

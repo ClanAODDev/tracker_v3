@@ -40,11 +40,6 @@ class Platoon extends Model
         return $this->hasMany(Member::class);
     }
 
-    public function activeMembers()
-    {
-        return $this->division()->activeMembers();
-    }
-
     /**
      * List members of a platoon without the leader
      *

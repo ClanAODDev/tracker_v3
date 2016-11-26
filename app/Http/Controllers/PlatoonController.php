@@ -55,6 +55,7 @@ class PlatoonController extends Controller
     {
         $division = $platoon->division;
         $platoon->members = $this->sortPlatoonMembers($platoon);
+
         $activityGraph = $this->activityGraphData($platoon);
 
         return view('platoon.show', compact('platoon', 'division', 'activityGraph'));
