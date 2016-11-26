@@ -12,11 +12,18 @@
             <div class="col-md-6">
 
                 <div class="form-group">
-                    <label for="slack_channel" class="control-label">Slack Channel</label>
+                    <label for="slack_webhook_url" class="control-label">Webhook URL</label>
+                    <input type="text" id="slack_webhook_url" name="slack_webhook_url"
+                           placeholder="https://hooks.slack.com/services/..."
+                           value="{{ $division->settings()->slack_channel }}" class="form-control" />
+                    <span class="help-block"><small>Enter the webhook URL you wish to post updates to. Left blank, the Tracker will default to the <a href="http://clanaod.slack.com" target="_blank">AOD Slack</a>.</small></span>
+                </div>
+                <div class="form-group">
+                    <label for="slack_channel" class="control-label">Channel</label>
                     <input type="text" id="slack_channel" name="slack_channel"
                            placeholder="#channel-name"
                            value="{{ $division->settings()->slack_channel }}" class="form-control" />
-                    <span class="help-block"><small>Enter the channel you wish to post updates to. This application is automatically integrated with the <a href="http://clanaod.slack.com" target="_blank">Clan AOD Slack Team</a>.</small></span>
+                    <span class="help-block"><small>Enter the channel you wish to post updates to.</small></span>
                 </div>
 
                 <div class="form-group">
