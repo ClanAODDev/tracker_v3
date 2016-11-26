@@ -42,7 +42,7 @@ class Platoon extends Model
 
     public function activeMembers()
     {
-        return $this->members()->wherePivot('primary', true);
+        return $this->division()->activeMembers();
     }
 
     /**
