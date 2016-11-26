@@ -4,10 +4,7 @@
     {{ method_field('PATCH') }}
 
     <fieldset>
-        <legend><i class="fa fa-toggle-on"></i> Manage Divisions
-            <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button>
-        </legend>
-
+        <legend><i class="fa fa-toggle-on"></i> Manage Divisions</legend>
 
         <div class="row">
             <div class="col-md-6">
@@ -25,7 +22,7 @@
                         @include('admin.partials.divisionStatusList')
                     </div>
 
-                    <div class="panel-footer text-muted"><small>Divisions are never deleted, for historical purposes.</small></div>
+                    <div class="panel-footer text-muted"><small>Divisions are never deleted, for historical purposes.</small> <button type="submit" class="btn btn-success pull-right btn-xs">Update statuses</button><div class="clearfix"></div></div>
                 </div>
             </div>
         </div>

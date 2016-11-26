@@ -43,8 +43,8 @@
 
                 <div id="settings-form" class="tab-content">
 
-                    <div class="tab-pane fade active in" id="general-settings">
-                        Manage general settings
+                    <div class="tab-pane fade active in" id="stats">
+                        @include('admin.partials.rankDemographic')
                     </div>
 
                     <div class="tab-pane fade in" id="users">

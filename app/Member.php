@@ -164,4 +164,9 @@ class Member extends Model
 
         return $this->rank->abbreviation === $rank;
     }
+
+    public function search($name)
+    {
+        return Member::where('name', 'LIKE', "%{$name}%")->get();
+    }
 }
