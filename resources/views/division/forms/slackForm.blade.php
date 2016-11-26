@@ -49,7 +49,7 @@
                         </li>
 
                         <li class="list-group-item">
-                            When a member is removed
+                            When a member is removed <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Potentially spammy"></i>
                             <div class="material-switch pull-right">
                                 <input type='hidden' value='0' name="slack_alert_removed_member">
                                 <input id="slack_alert_removed_member" name="slack_alert_removed_member" type="checkbox" {{ checked($division->settings()->slack_alert_removed_member) }} />
@@ -58,7 +58,7 @@
                         </li>
 
                         <li class="list-group-item">
-                            When a member's profile is edited
+                            When a member's profile is edited <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Potentially spammy"></i>
                             <div class="material-switch pull-right">
                                 <input type='hidden' value='0' name="slack_alert_updated_member">
                                 <input id="slack_alert_updated_member" name="slack_alert_updated_member" type="checkbox" {{ checked($division->settings()->slack_alert_updated_member) }}/>
