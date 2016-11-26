@@ -97,7 +97,7 @@ class AddWarhammerWowTf2Divisions extends Migration
                 'abbreviation' => 'wh',
                 'description' => 'Some random description here',
                 'handle_id' => 0,
-                'settings' => json_encode($defaultSettings),
+                'settings' => json_encode($this->defaultSettings),
                 'active' => true,
             ],
 
