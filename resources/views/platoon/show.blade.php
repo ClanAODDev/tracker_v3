@@ -16,18 +16,20 @@
 
     <ul class="nav nav-pills margin-top-20">
         <li class="active">
-            <a href="{{ action('PlatoonController@show', $platoon->id) }}">
-                <i class="fa fa-cube fa-lg"></i><span class="hidden-sm hidden-xs">
+            <a href="#">
+                <i class="fa fa-cube fa-lg"></i>
                 {{ ucwords($division->locality('platoon')) }}
             </a>
         </li>
 
-        <li>
-            <a href="{{ action('PlatoonController@getSquads', $platoon->id) }}">
-                <i class="fa fa-cubes fa-lg"></i><span class="hidden-sm hidden-xs">
-                {{ str_plural(ucwords($division->locality('squad'))) }}
-            </a>
-        </li>
+        @if($platoon->squads->count())
+            <li>
+                <a href="{{ action('PlatoonController@getSquads', $platoon->id) }}">
+                    <i class="fa fa-cubes fa-lg"></i>
+                    {{ str_plural(ucwords($division->locality('squad'))) }}
+                </a>
+            </li>
+        @endif
     </ul>
 
     <div class="row margin-top-20">
