@@ -47,9 +47,12 @@ class MemberPresenter extends Presenter
     {
         if ($this->member->position) {
             $title = ($this->member->position->name) ?: null;
-            $icon = ($this->member->position->icon) ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>" : null;
+            $rank = ($this->member->rank->abbreviation) ?: null;
+            $icon = ($this->member->position->icon)
+                ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>"
+                : null;
 
-            return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$this->member->name}</span>";
+            return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$rank} {$this->member->name}</span>";
         }
 
         return $this->member->name;

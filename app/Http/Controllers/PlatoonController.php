@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Member;
 use App\Platoon;
 use App\Division;
 use App\Http\Requests;
@@ -54,23 +55,27 @@ class PlatoonController extends Controller
     public function show(Platoon $platoon)
     {
         $division = $platoon->division;
-        $platoon->members = $this->sortPlatoonMembers($platoon);
+
+        $members = $platoon->members()->with('rank', 'position')->get();
 
         $activityGraph = $this->activityGraphData($platoon);
 
-        return view('platoon.show', compact('platoon', 'division', 'activityGraph'));
+        return view('platoon.show',
+            compact('platoon', 'members', 'division', 'activityGraph')
+        );
     }
 
-    /**
-     * Sort platoon members by position desc, rank asc
-     *
-     * @param Platoon $platoon
-     * @return static
-     */
-    private function sortPlatoonMembers(Platoon $platoon)
+    public function getSquads(Platoon $platoon)
     {
-        return $platoon->members
-            ->sortBy(['position_id' => 'desc', 'rank_id' => 'asc']);
+        $division = $platoon->division;
+
+        $squads = $platoon->squads()
+            ->with('members', 'members.rank', 'members.position')
+            ->get();
+
+        return view('platoon.squads',
+            compact('platoon', 'division', 'squads')
+        );
     }
 
     /**

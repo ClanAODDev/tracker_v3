@@ -169,4 +169,5 @@ class Member extends Model
     {
         return Member::where('name', 'LIKE', "%{$name}%")->get();
     }
+
 }

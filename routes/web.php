@@ -29,7 +29,7 @@ Route::delete('divisions/{division}/delete', 'DivisionController@destroy');
 
 // platoons
 Route::get('platoons/{platoon}', 'PlatoonController@show');
-Route::get('platoons/{platoon}/squads', 'PlatoonController@squads');
+Route::get('platoons/{platoon}/squads', 'PlatoonController@getSquads');
 
 // squads
 Route::get('squads/{squad}', 'SquadController@show');
