@@ -30,7 +30,7 @@ class PlatoonController extends Controller
      */
     public function create()
     {
-        //
+        return view('platoon.create');
     }
 
     /**
@@ -50,31 +50,15 @@ class PlatoonController extends Controller
      * @param Division $division
      * @param Platoon $platoon
      * @return \Illuminate\Http\Response
-     * @internal param int $id
      */
-    public function show(Platoon $platoon)
+    public function show(Division $division,Platoon $platoon)
     {
-        $division = $platoon->division;
-
         $members = $platoon->members()->with('rank', 'position')->get();
 
         $activityGraph = $this->activityGraphData($platoon);
 
         return view('platoon.show',
             compact('platoon', 'members', 'division', 'activityGraph')
-        );
-    }
-
-    public function getSquads(Platoon $platoon)
-    {
-        $division = $platoon->division;
-
-        $squads = $platoon->squads()
-            ->with('members', 'members.rank', 'members.position')
-            ->get();
-
-        return view('platoon.squads',
-            compact('platoon', 'division', 'squads')
         );
     }
 

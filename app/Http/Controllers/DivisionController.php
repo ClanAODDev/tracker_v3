@@ -97,17 +97,6 @@ class DivisionController extends Controller
         return back();
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @param Division $division
-     * @return \Illuminate\Http\Response
-     */
-    public function squads(Division $division)
-    {
-        return view('division.squads', compact('division'));
-    }
-
     public function partTime(Division $division)
     {
         $partTime = $division->partTimeMembers;

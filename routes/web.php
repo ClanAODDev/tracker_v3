@@ -15,24 +15,31 @@ Route::get('search/members/{name}', 'MemberController@search');
 // member data handling
 Route::delete('members/{member}/delete', 'MemberController@destroy');
 
-// divisions
-Route::get('divisions/{division}', 'DivisionController@show');
-Route::get('divisions/{division}/edit', 'DivisionController@edit');
-Route::get('divisions/{division}/squads/', 'DivisionController@squads');
-Route::get('divisions/{division}/activity', 'ActivitiesController@byDivision');
-Route::get('divisions/{division}/part-timers', 'DivisionController@partTime');
-Route::get('divisions/{division}/statistics', 'DivisionController@statistics');
 
-// division data handling
-Route::patch('divisions/{division}/update', 'DivisionController@update');
-Route::delete('divisions/{division}/delete', 'DivisionController@destroy');
+/**
+ * Division Endpoints
+ */
+Route::group(['prefix' => 'divisions/'], function () {
+    Route::get('{division}', 'DivisionController@show');
+    Route::get('{division}/edit', 'DivisionController@edit');
+    Route::patch('{division}/update', 'DivisionController@update');
+    Route::delete('{division}/delete', 'DivisionController@destroy');
+    Route::get('{division}/activity', 'ActivitiesController@byDivision');
+    Route::get('{division}/part-timers', 'DivisionController@partTime');
+    Route::get('{division}/statistics', 'DivisionController@statistics');
 
-// platoons
-Route::get('platoons/{platoon}', 'PlatoonController@show');
-Route::get('platoons/{platoon}/squads', 'PlatoonController@getSquads');
+    // platoons
+    Route::get('{division}/platoons/create', 'PlatoonController@create');
+    Route::get('{division}/platoons/{platoon}', 'PlatoonController@show');
+    Route::get('{division}/platoons/{platoon}/squads', 'SquadController@index');
 
-// squads
-Route::get('squads/{squad}', 'SquadController@show');
+    // squads
+    Route::get('{division}/squads/{squad}', 'SquadController@show');
+});
+
+
+
+
 
 // logging activity
 Route::get('users/{username}/activity', 'ActivitiesController@byUser');

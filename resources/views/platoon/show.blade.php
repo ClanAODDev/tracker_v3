@@ -24,7 +24,7 @@
 
         @if($platoon->squads->count())
             <li>
-                <a href="{{ action('PlatoonController@getSquads', $platoon->id) }}">
+                <a href="{{ action('SquadController@index', [$division->abbreviation, $platoon->id]) }}">
                     <i class="fa fa-cubes fa-lg"></i>
                     {{ str_plural(ucwords($division->locality('squad'))) }}
                 </a>

@@ -15,7 +15,7 @@
 
     <ul class="nav nav-pills margin-top-20">
         <li>
-            <a href="{{ action('PlatoonController@show', $platoon->id) }}">
+            <a href="{{ action('PlatoonController@show', [$division->abbreviation, $platoon->id]) }}">
                 <i class="fa fa-cube fa-lg"></i>
                 {{ ucwords($division->locality('platoon')) }}
             </a>

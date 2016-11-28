@@ -6,7 +6,7 @@
 
     <div class="list-group">
         @forelse ($division->platoons as $platoon)
-            <a href="{{ action('PlatoonController@show', [$platoon->id]) }}"
+            <a href="{{ action('PlatoonController@show', [$division->abbreviation, $platoon->id]) }}"
                class=" list-group-item">
                 <h5 class="pull-right text-muted big-num count-animated">{{ $platoon->members->count() }}</h5>
                 <h4 class="list-group-item-heading"><strong>{{ $platoon->name }}</strong></h4>

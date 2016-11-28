@@ -41,15 +41,10 @@
                     <td class="text-center">{{ $member->present()->lastPromoted }}</span>
                     </td>
                 </tr>
-
             @endforeach
-
             </tbody>
-
         </table>
-
     </div>
-
 
     <div class='panel-footer text-muted text-center' id='member-footer'></div>
 

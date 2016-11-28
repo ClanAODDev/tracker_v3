@@ -7,7 +7,7 @@
     <style>
         body {
             background-image: url('{{ asset("images/bg.jpg") }}');
-            margin: 0;
+            margin: 0 ;
             padding: 0;
             width: 100%;
             height: 100%;
@@ -24,10 +24,13 @@
     </style>
 </head>
 <body>
-<div class="container error">
-    <div class="content">
-        <div class="title">Sorry</div>
-        You are attempting to edit a user that is no longer an AOD member, and that's no bueno. You should probably <a href="{{ url('/home') }}"><strong>go home</strong></a>.
+<div class="wrap">
+    <div class="container error">
+        <div class="content">
+            <div class="title">Sorry</div>
+            You are attempting to edit a user that is no longer an AOD member, and that's no bueno. You should probably
+            <a href="{{ url('/home') }}"><strong>go home</strong></a>.
+        </div>
     </div>
 </div>
 </body>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use App\Platoon;
 use App\Squad;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,26 @@ use App\Http\Requests;
 
 class SquadController extends Controller
 {
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Division $division
+     * @param Platoon $platoon
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Division $division, Platoon $platoon)
+    {
+        $squads = $platoon->squads()
+            ->with('members', 'members.rank', 'members.position')
+            ->get();
+
+        return view('platoon.squads',
+            compact('platoon', 'division', 'squads')
+        );
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
