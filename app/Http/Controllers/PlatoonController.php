@@ -28,9 +28,9 @@ class PlatoonController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Division $division)
     {
-        return view('platoon.create');
+        return view('platoon.create', compact('division'));
     }
 
     /**

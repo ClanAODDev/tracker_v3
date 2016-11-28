@@ -36,13 +36,16 @@ function registerDivisionSubPages() {
         'squads',
         'part-timers',
         'statistics',
+        'create-platoon'
     ];
 
     foreach($divisionStaticSubPages as $page) {
         Breadcrumbs::register($page, function ($breadcrumbs, $division) use ($page) {
             $breadcrumbs->parent('home');
             $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
-            $breadcrumbs->push(ucwords($page));
+            $breadcrumbs->push(ucwords(
+                str_replace('-', ' ', $page)
+            ));
         });
     }
 }

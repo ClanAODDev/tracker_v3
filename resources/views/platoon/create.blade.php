@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
-    {!! Breadcrumbs::render('platoon', $division) !!}
+    {!! Breadcrumbs::render('create-platoon', $division) !!}
 
 
 
@@ -10,8 +10,8 @@
             <h2>
                 @include('division.partials.icon')
 
-                <strong>{{ $platoon->name }}</strong>
-                <small>{{ $division->name }}</small>
+                <strong>{{ $division->name }}</strong>
+                <small>Create Platoon</small>
             </h2>
         </div>
     </div>
