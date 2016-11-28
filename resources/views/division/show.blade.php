@@ -8,23 +8,30 @@
             <h2>
                 @include('division.partials.icon')
                 <strong>{{ $division->name }}</strong>
+
+                @can('update', $division)
+                    <a title="Edit division" class="btn btn-default btn-xs"
+                       href="{{ action('DivisionController@edit', $division->abbreviation) }}">
+                        <i class="fa fa-cogs"></i> Settings
+                    </a>
+                @endcan
+
             </h2>
         </div>
 
         <div class="col-xs-6">
-            <div class="pull-right">
-                <a class="btn btn-info"
-                   href="{{ action('DivisionController@statistics', $division->abbreviation) }}"><i class="fa fa-bar-chart"></i><span class="hidden-xs hidden-sm">Statistics</span></a>
+            <ul class="nav nav-pills pull-right">
 
-                @can('update', $division)
-                    <a class="btn btn-default" href="{{ action('DivisionController@edit', $division->abbreviation) }}"><i class="fa fa-pencil"></i>
-                        <span class="hidden-xs hidden-sm">Edit Division</span></a>
-                @endcan
+                <li class="active">
+                    <a href="#"><i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs hidden-sm">Overview</span></a>
+                </li>
 
-            </div>
-
+                <li>
+                    <a href="{{ action('DivisionController@statistics', $division->abbreviation) }}"><i class="fa fa-bar-chart fa-lg"></i><span class="hidden-xs hidden-sm">Statistics</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-
     </div>
 
     <hr/>

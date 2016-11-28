@@ -7,14 +7,26 @@
         <div class="col-xs-6">
             <h2>
                 @include('division.partials.icon')
-                <strong>{{ $division->name }}</strong> <small>Statistics</small>
+                <strong>{{ $division->name }}</strong>
+                <small>Statistics</small>
             </h2>
+        </div>
+        <div class="col-xs-6">
+            <ul class="nav nav-pills pull-right">
+
+                <li>
+                    <a href="{{ action('DivisionController@show', $division->abbreviation) }}"><i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs hidden-sm">Overview</span></a>
+                </li>
+
+                <li class="active">
+                    <a href="#"><i class="fa fa-bar-chart fa-lg"></i><span class="hidden-xs hidden-sm">Statistics</span>
+                    </a>
+                </li>
+
+            </ul>
         </div>
     </div>
 
-    <hr/>
-
-    <h3>Demographics</h3>
     <hr/>
 
     <div class="row">
