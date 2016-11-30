@@ -23,7 +23,7 @@ Breadcrumbs::register('platoon', function ($breadcrumbs, $division, $platoon) {
 Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, '/divisions/' . $division->abbreviation);
-    $breadcrumbs->push($platoon->name, '/platoons/' . $platoon->id);
+    $breadcrumbs->push($platoon->name, '/divisions/' . $division->abbreviation . '/platoons/' . $platoon->id);
     $breadcrumbs->push('Squad');
 });
 

@@ -35,7 +35,7 @@ class MemberPresenter extends Presenter
             return "Today";
         }
 
-        return $this->member->last_forum_login->diffInDays() . " days ago";
+        return $this->member->last_forum_login->diffForHumans();
     }
 
     /**
@@ -43,13 +43,17 @@ class MemberPresenter extends Presenter
      *
      * @return string
      */
-    public function nameWithIcon()
+    public function nameWithIcon($showRank = false)
     {
         if ($this->member->position) {
             $title = ($this->member->position->name) ?: null;
-            $rank = ($this->member->rank->abbreviation) ?: null;
+
             $icon = ($this->member->position->icon)
-                ? "<i class=\"fa fa-{$this->member->position->icon}\"></i>"
+                ? "<i class=\"{$this->member->position->icon}\"></i>"
+                : null;
+
+            $rank = ($this->member->rank->abbreviation AND $showRank)
+                ? $this->member->rank->abbreviation
                 : null;
 
             return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$rank} {$this->member->name}</span>";

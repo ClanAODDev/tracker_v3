@@ -62,7 +62,15 @@ class DivisionController extends Controller
     {
         $chart = $this->getRanksChart($division);
 
-        return view('division.show', compact('division', 'chart'));
+        $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
+        $platoons = $division->platoons()->with('leader.rank', 'leader.position')->get();
+        $generalSergeants = $division->generalSergeants()->with('rank', 'position')->get();
+        $staffSergeants = $division->staffSergeants()->with('rank', 'position')->get();
+
+        return view('division.show', compact(
+            'division', 'chart', 'platoons', 'divisionLeaders',
+            'generalSergeants', 'staffSergeants'
+        ));
     }
 
     /**

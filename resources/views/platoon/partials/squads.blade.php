@@ -3,21 +3,30 @@
         <div class="col-md-4">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    Squad #{{ $loop->index + 1 }}
+                    Squad #{{ $loop->index + 1 }} <span class="badge pull-right">{{ $squad->members->count() }}</span>
                 </div>
 
-                <div style="max-height: 300px; overflow-y: scroll;">
-                    <table class="table table-striped table-hover">
-                    @forelse($squad->members as $member)
-                            <tr>
-                                <td>{!! $member->present()->nameWithIcon !!}</td>
-                                <td>{{ $member->last_forum_login->diffForHumans() }}</td>
-                            </tr>
-                    @empty
-                        <li class="text-muted list-group-item">No members assigned</li>
-                    @endforelse
-                    </table>
-                </div>
+                @if($squad->members->count())
+                    <div style="max-height: 200px; overflow-y: scroll;">
+                        @foreach($squad->members as $member)
+                            <a href="{{ action('MemberController@show', $member->clan_id) }}"
+                               class="list-group-item">
+                                <span class="col-xs-6">
+                                    {!! $member->present()->nameWithIcon !!}
+                                </span>
+                                <span class="col-xs-6 text-center">
+                                    <span class="{{ $member->activity['class'] }}">{{ $member->present()->lastActive }}</span>
+                                </span>
+                                <span class="clearfix"></span>
+                            </a>
+                        @endforeach
+                    </div>
+                    <div class="panel-footer text-muted text-center">
+                        <small>Scroll for more <i class="fa fa-caret-down"></i></small>
+                    </div>
+                @else
+                    <div class="panel-body text-muted">No members assigned</div>
+                @endif
 
             </div>
         </div>

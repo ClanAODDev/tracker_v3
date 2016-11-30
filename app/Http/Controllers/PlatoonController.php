@@ -51,7 +51,7 @@ class PlatoonController extends Controller
      * @param Platoon $platoon
      * @return \Illuminate\Http\Response
      */
-    public function show(Division $division,Platoon $platoon)
+    public function show(Division $division, Platoon $platoon)
     {
         $members = $platoon->members()->with('rank', 'position')->get();
 

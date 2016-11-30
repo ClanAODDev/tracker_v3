@@ -554,14 +554,15 @@ div.DTTT_container {
 /**
  * error page stuff
  */
-.error .content {
-  text-align: center;
-  display: inline-block; }
-
-.error .title {
-  font-size: 82px;
-  font-family: "Lato", serif;
-  margin-bottom: 40px; }
+.error {
+  width: 100%; }
+  .error .content {
+    text-align: center;
+    display: inline-block; }
+  .error .title {
+    font-size: 82px;
+    font-family: "Lato", serif;
+    margin-bottom: 40px; }
 
 /* make sidebar nav vertical */
 @media (min-width: 768px) {

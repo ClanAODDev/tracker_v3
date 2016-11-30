@@ -152,7 +152,7 @@ class Division extends Model
         if ( ! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
-            return $string;
+            return ucwords($string);
         }
 
         $results = $locality->first(function ($translation) use ($string) {
@@ -164,10 +164,10 @@ class Division extends Model
         if ( ! $results) {
             Log::error("The {$string} locality does not exist");
 
-            return $string;
+            return ucwords($string);
         }
 
-        return $results['new-string'];
+        return ucwords($results['new-string']);
     }
 
     /**

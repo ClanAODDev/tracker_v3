@@ -18,7 +18,7 @@
         <li class="active">
             <a href="#">
                 <i class="fa fa-cube fa-lg"></i>
-                {{ ucwords($division->locality('platoon')) }}
+                {{ $division->locality('platoon') }}
             </a>
         </li>
 
@@ -26,7 +26,7 @@
             <li>
                 <a href="{{ action('SquadController@index', [$division->abbreviation, $platoon->id]) }}">
                     <i class="fa fa-cubes fa-lg"></i>
-                    {{ str_plural(ucwords($division->locality('squad'))) }}
+                    {{ str_plural($division->locality('squad')) }}
                 </a>
             </li>
         @endif

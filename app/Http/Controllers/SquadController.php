@@ -22,12 +22,12 @@ class SquadController extends Controller
     public function index(Division $division, Platoon $platoon)
     {
         $squads = $platoon->squads()
-            ->with('members', 'members.rank', 'members.position')
+            ->with('members.rank', 'members.position')
             ->get();
 
-        return view('platoon.squads',
-            compact('platoon', 'division', 'squads')
-        );
+        return view('platoon.squads', compact(
+            'platoon', 'division', 'squads'
+        ));
     }
 
 

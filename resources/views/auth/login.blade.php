@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container error">
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
                 <div class="panel panel-primary">
