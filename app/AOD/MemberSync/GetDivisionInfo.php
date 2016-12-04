@@ -67,8 +67,6 @@ class GetDivisionInfo
             return [
                 $data,
                 $results,
-                curl_error($ch),
-                curl_errno($ch),
                 $this->jsonUrl()
             ];
         }
