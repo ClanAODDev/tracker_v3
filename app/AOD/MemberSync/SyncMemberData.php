@@ -24,24 +24,22 @@ class SyncMemberData
             self::$activeMembers = [];
             $divisionInfo = new GetDivisionInfo($division->name);
 
-            if (! is_object($divisionInfo)) {
-
+            if ( ! is_object($divisionInfo)) {
                 Log::critical(date('Y-m-d H:i:s') . " - Could not sync $division->name");
-                continue;
-
-            } else {
-
-                foreach ($divisionInfo->data as $member) {
-                    self::doMemberUpdate($member, $division);
-                }
-
-                // add new members, detach removed members
-                $members = $division->members()->sync(self::$activeMembers);
-
-                // trash removed members
-                self::doRemovalCleanup($members);
+                break;
             }
+
+            foreach ($divisionInfo->data as $member) {
+                self::doMemberUpdate($member, $division);
+            }
+
+            // add new members, detach removed members
+            $members = $division->members()->sync(self::$activeMembers);
+
+            // trash removed members
+            self::doRemovalCleanup($members);
         }
+
     }
 
     /**
