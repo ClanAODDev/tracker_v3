@@ -57,9 +57,10 @@ class GetDivisionInfo
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
-        $data = json_decode(curl_exec($ch));
+        $data = curl_exec($ch);
 
-        if ( ! is_object($data)) {
+        if ( ! $data) {
+
             return [
                 $data,
                 curl_error($ch),
@@ -67,7 +68,9 @@ class GetDivisionInfo
             ];
         }
 
-        return $this->prepareData($data);
+        return $this->prepareData(
+            json_decode($data)
+        );
     }
 
     /**
