@@ -30,7 +30,11 @@ trait Settable
      */
     public function get($key)
     {
-        return array_get($this->settings, $key);
+        if ($this->has($key)) {
+            return array_get($this->settings, $key);
+        }
+
+        throw new Exception("The {$key} setting does not exist");
     }
 
     /**

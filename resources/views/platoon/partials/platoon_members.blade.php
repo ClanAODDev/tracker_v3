@@ -32,11 +32,11 @@
                                 href="{{ action('MemberController@show', $member->clan_id) }}"><i
                                     class="fa fa-search text-muted pull-right" title="View profile"></i></a></td>
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
-                    <td class="text-center">{{ $member->join_date->format('Y-m-d') }}</td>
+                    <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">
                         <span class="{{ $member->activity['class'] }}">{{ $member->present()->lastActive }}</span>
                     </td>
-                    <td class="text-center">{{ $member->lastPromoted->format('Y-m-d') }}</td>
+                    <td class="text-center">{{ $member->last_promoted }}</td>
                 </tr>
             @endforeach
             </tbody>

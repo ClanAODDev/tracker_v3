@@ -2,7 +2,9 @@
 
 namespace App\Member;
 
-use Carbon;
+use Carbon\Carbon;
+use Exception;
+use App\Division;
 
 trait HasCustomAttributes
 {
@@ -19,10 +21,16 @@ trait HasCustomAttributes
      */
     public function getActivityAttribute()
     {
-        $days = $this->last_forum_login->diffInDays();
-        $settings = $this->primaryDivision->settings();
+        if ( ! $this->primaryDivision instanceof Division) {
+            throw new Exception("Member {$this->id} has no primary division");
+        }
 
-        foreach ($settings->get('activity_threshold') as $limit) {
+        $days = $this->last_forum_login->diffInDays();
+        $limits = $this->primaryDivision
+            ->settings()
+            ->get('activity_threshold');
+
+        foreach ($limits as $limit) {
             if ($days >= $limit['days']) {
                 return $limit;
             }
@@ -42,21 +50,31 @@ trait HasCustomAttributes
     }
 
     /**
-     * Format join date as a carbon instance
-     *
-     * @param $value
-     * @return string
-     */
-    public function getJoinDateAttribute($value)
-    {
-        return Carbon::parse($value)->toFormattedDateString();
-    }
-
-    /**
      * Gets member's primary division
      */
     public function getPrimaryDivisionAttribute()
     {
         return $this->divisions()->wherePivot('primary', true)->first();
+    }
+
+
+    public function getLastPromotedAttribute($value)
+    {
+        if (strlen($value)) {
+            return Carbon::parse($value)->format('Y-m-d');
+        }
+
+        return "Never";
+
+    }
+
+    public function getJoinDateAttribute($value)
+    {
+        if (strlen($value)) {
+            return Carbon::parse($value)->format('Y-m-d');
+        }
+
+        return "Never";
+
     }
 }
