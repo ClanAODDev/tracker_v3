@@ -62,14 +62,6 @@ class GetDivisionInfo
 
         curl_close($ch);
 
-        if ( ! is_object($data)) {
-
-            return [
-                $data,
-                $this->jsonUrl()
-            ];
-        }
-
         return $this->prepareData($data);
     }
 
