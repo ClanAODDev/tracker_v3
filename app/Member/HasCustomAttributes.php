@@ -20,7 +20,7 @@ trait HasCustomAttributes
     public function getActivityAttribute()
     {
         $days = $this->last_forum_login->diffInDays();
-        $settings = $member->primaryDivision->settings();
+        $settings = $this->primaryDivision->settings();
 
         foreach ($settings->get('activity_threshold') as $limit) {
             if ($days < $limit['days']) {

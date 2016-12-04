@@ -1,7 +1,4 @@
 <div class="panel panel-primary">
-
-
-
     <div class='panel-heading'>
         <div class='download-area hidden-xs'></div>
         Members<span></span>
