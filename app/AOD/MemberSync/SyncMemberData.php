@@ -26,6 +26,7 @@ class SyncMemberData
 
             if ( ! is_object($divisionInfo)) {
                 Log::critical(date('Y-m-d H:i:s') . " - Could not sync $division->name");
+                Log::critical($divisionInfo);
                 break;
             }
 

@@ -60,7 +60,7 @@ class GetDivisionInfo
         $data = json_decode(curl_exec($ch));
 
         if ( ! is_object($data)) {
-            return null;
+            return $data;
         }
 
         return $this->prepareData($data);
