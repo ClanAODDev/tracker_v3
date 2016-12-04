@@ -59,11 +59,8 @@ class GetDivisionInfo
         $data = json_decode(curl_exec($ch));
 
         if ( ! is_object($data)) {
-            exit(date('Y-m-d h:i:s') . " - ERROR: " . $this->jsonUrl());
-        }
-
-        if (is_object($data) && property_exists($data, 'error')) {
-            exit(date('Y-m-d h:i:s') . " - ERROR: " . $data->error);
+            Log::critical(date('Y-m-d H:i:s') . " " . $ch);
+            exit;
         }
 
         return $this->prepareData($data);
