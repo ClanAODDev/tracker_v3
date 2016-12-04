@@ -129,3 +129,19 @@ function checked($arg)
         return "checked";
     }
 }
+
+function getActivityClass($date, $division)
+{
+    $limits = $division->settings()
+        ->get('activity_threshold');
+
+    $days = $date->diffInDays();
+
+    foreach ($limits as $limit) {
+        if ($days >= $limit['days']) {
+            return $limit['class'];
+        }
+    }
+
+    return 'text-success';
+}

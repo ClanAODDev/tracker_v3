@@ -34,7 +34,7 @@
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
                     <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">
-                        <span class="{{ $member->activity['class'] }}">{{ $member->present()->lastActive }}</span>
+                        <span class="{{ getActivityClass($member->last_forum_login, $division) }}">{{ $member->present()->lastActive }}</span>
                     </td>
                     <td class="text-center">{{ $member->last_promoted }}</td>
                 </tr>

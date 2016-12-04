@@ -15,33 +15,6 @@ trait HasCustomAttributes
     }
 
     /**
-     * Classifies activity level based on division threshold
-     *
-     * @return array
-     */
-    public function getActivityAttribute()
-    {
-        if ( ! $this->primaryDivision instanceof Division) {
-            throw new Exception("Member {$this->id} has no primary division");
-        }
-
-        $days = $this->last_forum_login->diffInDays();
-        $limits = $this->primaryDivision
-            ->settings()
-            ->get('activity_threshold');
-
-        foreach ($limits as $limit) {
-            if ($days >= $limit['days']) {
-                return $limit;
-            }
-        }
-
-        return [
-            'class' => 'text-success'
-        ];
-    }
-
-    /**
      * Accessor for name - enforce proper casing
      */
     public function getNameAttribute($value)

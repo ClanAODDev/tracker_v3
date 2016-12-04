@@ -53,7 +53,9 @@ class PlatoonController extends Controller
      */
     public function show(Division $division, Platoon $platoon)
     {
-        $members = $platoon->members()->with('rank', 'position')->get();
+        $members = $platoon->members()->with(
+            'rank', 'position', 'divisions'
+        )->get();
 
         $activityGraph = $this->activityGraphData($platoon);
 
