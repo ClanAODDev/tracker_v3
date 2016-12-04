@@ -26,11 +26,11 @@ trait HasCustomAttributes
             if ($days >= $limit['days']) {
                 return $limit;
             }
-
-            return [
-                'class' => 'text-success'
-            ];
         }
+
+        return [
+            'class' => 'text-success'
+        ];
     }
 
     /**
