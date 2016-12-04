@@ -23,12 +23,12 @@ trait HasCustomAttributes
         $settings = $this->primaryDivision->settings();
 
         foreach ($settings->get('activity_threshold') as $limit) {
-            if ($days < $limit['days']) {
+            if ($days >= $limit['days']) {
                 return $limit;
             }
 
             return [
-                'class' => 'fa fa-success'
+                'class' => 'text-success'
             ];
         }
     }
