@@ -57,7 +57,10 @@ trait HasCustomAttributes
         return $this->divisions()->wherePivot('primary', true)->first();
     }
 
-
+    /**
+     * @param $value
+     * @return string
+     */
     public function getLastPromotedAttribute($value)
     {
         if (strlen($value)) {
@@ -68,13 +71,12 @@ trait HasCustomAttributes
 
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     public function getJoinDateAttribute($value)
     {
-        if (strlen($value)) {
-            return Carbon::parse($value)->format('Y-m-d');
-        }
-
-        return "Never";
-
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }
