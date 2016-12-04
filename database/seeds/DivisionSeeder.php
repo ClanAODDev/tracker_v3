@@ -25,11 +25,11 @@ class DivisionSeeder extends Seeder
             'activity_threshold' => [
                 [
                     'days' => 30,
-                    'class' => 'fa fa-danger'
+                    'class' => 'text-danger'
                 ],
                 [
                     'days' => 14,
-                    'class' => 'fa fa-warning'
+                    'class' => 'text-warning'
                 ],
             ],
             'recruiting_threads' => [

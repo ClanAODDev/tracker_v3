@@ -20,11 +20,11 @@ class AddActivityThresholdSetting extends Migration
             $division->settings()->set('activity_threshold', [
                 [
                     'days' => 30,
-                    'class' => 'fa fa-danger'
+                    'class' => 'text-danger'
                 ],
                 [
                     'days' => 14,
-                    'class' => 'fa fa-warning'
+                    'class' => 'text-warning'
                 ],
             ]);
         });
