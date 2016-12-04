@@ -64,7 +64,13 @@ class GetDivisionInfo
         curl_close($ch);
 
         if ( ! is_object($data)) {
-            dd($results);
+            Log::critical("ERROR: Member sync returning invalid: {$this->jsonUrl()}");
+            exit;
+        }
+
+        if (property_exists('error', $data)) {
+            Log::critical("ERROR: Member sync returned error: {$data->error}");
+            exit;
         }
 
         return $this->prepareData($data);
