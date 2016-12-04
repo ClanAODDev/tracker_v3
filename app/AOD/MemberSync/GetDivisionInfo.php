@@ -109,6 +109,10 @@ class GetDivisionInfo
         $prepared = [];
         $memberCount = 0;
 
+        if ( ! is_object($json)) {
+            return null;
+        }
+
         foreach ($json->data as $member) {
             $columnCount = 0;
 

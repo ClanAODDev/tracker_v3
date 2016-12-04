@@ -24,6 +24,11 @@ class SyncMemberData
             self::$activeMembers = [];
             $divisionInfo = new GetDivisionInfo($division->name);
 
+            if (! is_object($divisionInfo)) {
+                Log::critical(date('Y-m-d H:i:s') . " - Could not sync $division->name");
+                continue;
+            }
+
             foreach ($divisionInfo->data as $member) {
                 self::doMemberUpdate($member, $division);
             }
