@@ -3,6 +3,7 @@
 namespace App\AOD\MemberSync;
 
 use App\Reports\Slack;
+use Log;
 
 /**
  * Handles member data sync from AOD forums
