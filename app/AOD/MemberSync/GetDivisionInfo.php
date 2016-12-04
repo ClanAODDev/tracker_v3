@@ -59,7 +59,7 @@ class GetDivisionInfo
 
         $results = curl_exec($ch);
 
-        $data = json_decode($results);
+        $data = json_decode(utf8_encode($results));
 
         curl_close($ch);
 
