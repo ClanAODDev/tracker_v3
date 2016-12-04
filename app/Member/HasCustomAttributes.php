@@ -3,7 +3,6 @@
 namespace App\Member;
 
 use Carbon;
-use App\Division\Preferences;
 
 trait HasCustomAttributes
 {
@@ -13,15 +12,24 @@ trait HasCustomAttributes
         return "http://www.clanaod.net/forums/member.php?u=" . $this->clan_id;
     }
 
+    /**
+     * Classifies activity level based on division threshold
+     *
+     * @return array
+     */
     public function getActivityAttribute()
     {
-        $preferences = Preferences::ActivityThreshold();
         $days = $this->last_forum_login->diffInDays();
+        $settings = $member->primaryDivision->settings();
 
-        foreach ($preferences as $limit) {
-            if ($days > $limit['days']) {
+        foreach ($settings->get('activity_threshold') as $limit) {
+            if ($days < $limit['days']) {
                 return $limit;
             }
+
+            return [
+                'class' => 'fa fa-success'
+            ];
         }
     }
 

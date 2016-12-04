@@ -10,9 +10,9 @@ class DivisionRepository
 
     public function getDivisionActivity(Division $division)
     {
-        $twoWeeks = $division->members()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()')->count();
-        $oneMonth = $division->members()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)')->count();
-        $moreThanOneMonth = $division->members()->whereRaw('last_forum_login < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->count();
+        $twoWeeks = $division->activeMembers()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()')->count();
+        $oneMonth = $division->activeMembers()->whereRaw('last_forum_login BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)')->count();
+        $moreThanOneMonth = $division->activeMembers()->whereRaw('last_forum_login < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->count();
 
         return [
             'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],

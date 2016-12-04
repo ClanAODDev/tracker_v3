@@ -22,6 +22,16 @@ class DivisionSeeder extends Seeder
             'division_structure' => '',
             'welcome_area' => '',
             'welcome_pm' => '',
+            'activity_threshold' => [
+                [
+                    'days' => 30,
+                    'class' => 'fa fa-danger'
+                ],
+                [
+                    'days' => 14,
+                    'class' => 'fa fa-warning'
+                ],
+            ],
             'recruiting_threads' => [
                 [
                     'thread_name' => 'AOD Code of Conduct',
