@@ -68,7 +68,7 @@ class GetDivisionInfo
             exit;
         }
 
-        if (property_exists('error', $data)) {
+        if (property_exists($data, 'error')) {
             Log::critical("ERROR: Member sync returned error: {$data->error}");
             exit;
         }
