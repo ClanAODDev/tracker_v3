@@ -56,7 +56,7 @@ class GetDivisionInfo
         curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_ENCODING ,"");
+        curl_setopt($ch, CURLOPT_ENCODING ,"UTF-8");
 
         $results = curl_exec($ch);
 
