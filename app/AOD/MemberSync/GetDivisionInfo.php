@@ -58,7 +58,9 @@ class GetDivisionInfo
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
         $results = curl_exec($ch);
-        $data = json_decode($ch);
+        $data = json_decode($results);
+
+        curl_close($ch);
 
         if ( ! is_object($data)) {
 
