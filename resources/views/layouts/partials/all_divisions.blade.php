@@ -1,6 +1,7 @@
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-gamepad fa-lg pull-right text-muted"></i> <strong>All Gaming
-            Divisions</strong> ({{ $divisions->count() }})
+    <div class="panel-heading">
+        <strong>All Divisions</strong>
+        <div class="badge pull-right">{{ $divisions->count() }}</div>
     </div>
 
     <div class="panel-body">

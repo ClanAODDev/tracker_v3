@@ -6,6 +6,7 @@
     @forelse ($platoons as $platoon)
         <a class="list-group-item"
            href="{{ action('PlatoonController@show', [$division->abbreviation, $platoon->id]) }}">
+            <h5 class="pull-right text-muted big-num count-animated">{{ $platoon->members->count() }}</h5>
             <h4 class="list-group-item-heading"><strong>{{ $platoon->name }}</strong></h4>
             @if($platoon->leader != 0)
                 <p class="list-group-item-text">{{ $platoon->leader->present()->rankName }}</p>
