@@ -66,7 +66,6 @@ class GetDivisionInfo
 
             return [
                 $data,
-                $results,
                 $this->jsonUrl()
             ];
         }
