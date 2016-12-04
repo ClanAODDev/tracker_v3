@@ -17,7 +17,7 @@ class SyncMemberData
      */
     public static function execute()
     {
-        foreach (Division::all() as $division) {
+        foreach (Division::active()->get() as $division) {
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
