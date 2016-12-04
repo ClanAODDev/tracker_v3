@@ -58,7 +58,11 @@ class GetDivisionInfo
 
         $data = json_decode(curl_exec($ch));
 
-        if (property_exists($data, 'error')) {
+        if ( ! is_object($data)) {
+            exit(date('Y-m-d h:i:s') . " - " . $data);
+        }
+
+        if (is_object($data) && property_exists($data, 'error')) {
             exit(date('Y-m-d h:i:s') . " - " . $data->error);
         }
 
