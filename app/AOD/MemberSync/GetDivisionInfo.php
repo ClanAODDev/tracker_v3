@@ -60,7 +60,7 @@ class GetDivisionInfo
         $data = json_decode(curl_exec($ch));
 
         if ( ! is_object($data)) {
-            Log::critical(date('Y-m-d H:i:s') . " " . $ch);
+            Log::critical(date('Y-m-d H:i:s') . " " . $data . " ----- " . $this->jsonUrl());
             exit;
         }
 
