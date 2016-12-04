@@ -22,11 +22,9 @@ class MemberPresenter extends Presenter
 
     public function lastPromoted()
     {
-        if ( ! $this->member->last_promoted) {
-            return "Never";
-        }
-
-        return $this->member->last_promoted->diffInDays();
+        return ! $this->member->last_promoted
+            ? "Never"
+            : $this->member->last_promoted;
     }
 
     public function lastActive()
@@ -46,7 +44,7 @@ class MemberPresenter extends Presenter
     public function nameWithIcon($showRank = false)
     {
         if ($this->member->position) {
-            $title = ($this->member->position->name) ?: null;
+            $title = ($this->member->position->name) ? : null;
 
             $icon = ($this->member->position->icon)
                 ? "<i class=\"{$this->member->position->icon}\"></i>"
