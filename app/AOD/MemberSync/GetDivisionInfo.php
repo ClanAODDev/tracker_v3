@@ -59,14 +59,7 @@ class GetDivisionInfo
 
         $results = curl_exec($ch);
 
-        dd(utf8_encode($results));
-
-        // weird BOM issue?
-        if ($results[0] === 'b') {
-            $results = ltrim($results, 'b');
-        }
-
-        $data = json_decode($results);
+        $data = json_decode(utf8_encode($results));
 
         curl_close($ch);
 
