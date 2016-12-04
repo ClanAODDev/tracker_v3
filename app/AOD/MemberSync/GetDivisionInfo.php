@@ -61,7 +61,7 @@ class GetDivisionInfo
 
         if ( ! is_object($data)) {
             Log::critical(date('Y-m-d H:i:s') . " " . $data . " ----- " . $this->jsonUrl());
-            exit;
+            return null;
         }
 
         return $this->prepareData($data);
@@ -108,10 +108,6 @@ class GetDivisionInfo
     {
         $prepared = [];
         $memberCount = 0;
-
-        if ( ! is_object($json)) {
-            return null;
-        }
 
         foreach ($json->data as $member) {
             $columnCount = 0;
