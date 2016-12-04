@@ -130,6 +130,14 @@ function checked($arg)
     }
 }
 
+/**
+ * Provides visual feedback for a member's last activity
+ * based on division activity threshold
+ *
+ * @param $date
+ * @param $division
+ * @return string
+ */
 function getActivityClass($date, $division)
 {
     $limits = $division->settings()

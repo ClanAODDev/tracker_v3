@@ -10,9 +10,9 @@
                 <strong>{{ $division->name }}</strong>
 
                 @can('update', $division)
-                    <a title="Edit division" class="btn btn-default btn-xs"
+                    <a title="Edit division" class="btn btn-default"
                        href="{{ action('DivisionController@edit', $division->abbreviation) }}">
-                        <i class="fa fa-cogs"></i> Settings
+                        <i class="fa fa-cogs fa-lg"></i>
                     </a>
                 @endcan
 

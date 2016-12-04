@@ -33,6 +33,8 @@ class PlatoonController extends Controller
         return view('platoon.create', compact('division'));
     }
 
+    public function manage(){}
+
     /**
      * Store a newly created resource in storage.
      *

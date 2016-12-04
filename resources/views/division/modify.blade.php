@@ -3,6 +3,7 @@
 
     {!! Breadcrumbs::render('division', $division) !!}
 
+
     <h2>
         <a href="{{ action('DivisionController@show', $division->abbreviation) }}"
            class="btn btn-default btn-lg" title="Return to division page">
@@ -11,6 +12,7 @@
         <strong>{!! $division->name !!}</strong>
         <small>Edit Division</small>
     </h2>
+
     <hr/>
 
     {{-- Edit profile nav --}}
