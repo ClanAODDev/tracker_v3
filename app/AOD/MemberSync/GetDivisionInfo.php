@@ -58,6 +58,12 @@ class GetDivisionInfo
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
         $results = curl_exec($ch);
+
+        // weird BOM issue?
+        if ($results[0] === 'b') {
+            $results = ltrim($results, 'b');
+        }
+
         $data = json_decode($results);
 
         curl_close($ch);
