@@ -54,12 +54,9 @@ class GetDivisionInfo
 
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 
         $results = curl_exec($ch);
-
-        $data = json_decode(utf8_encode($results));
+        $data = json_decode($results);
 
         curl_close($ch);
 
