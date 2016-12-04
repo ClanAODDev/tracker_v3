@@ -31,7 +31,7 @@ class GetDivisionInfo
     {
         $this->division = $division;
 
-        if (!getenv('AOD_TOKEN')) {
+        if ( ! getenv('AOD_TOKEN')) {
             $error = "AOD token not defined";
             Slack::error('SYNC ERROR: ' . $error);
         } else {
@@ -59,11 +59,11 @@ class GetDivisionInfo
         $data = json_decode(curl_exec($ch));
 
         if ( ! is_object($data)) {
-            exit(date('Y-m-d h:i:s') . " - " . $data);
+            exit(date('Y-m-d h:i:s') . " - ERROR: " . $this->jsonUrl());
         }
 
         if (is_object($data) && property_exists($data, 'error')) {
-            exit(date('Y-m-d h:i:s') . " - " . $data->error);
+            exit(date('Y-m-d h:i:s') . " - ERROR: " . $data->error);
         }
 
         return $this->prepareData($data);
