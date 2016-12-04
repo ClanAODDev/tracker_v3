@@ -59,6 +59,8 @@ class GetDivisionInfo
 
         $results = curl_exec($ch);
 
+        dd($results[0]);
+
         // weird BOM issue?
         if ($results[0] === 'b') {
             $results = ltrim($results, 'b');
