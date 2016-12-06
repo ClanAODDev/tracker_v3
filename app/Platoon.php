@@ -58,7 +58,7 @@ class Platoon extends Model
      */
     public function leader()
     {
-        return $this->belongsTo(Member::class, 'leader_id');
+        return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
 }
 

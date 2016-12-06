@@ -98,7 +98,7 @@ var Tracker = Tracker || {};
                 var $this = $(this);
                 $({Counter: 0}).animate({Counter: $this.text()}, {
                     duration: 3000,
-                    easing: "easeInOutQuint",
+                    easing: "easeInOutCirc",
                     step: function () {
                         if ($this.hasClass('percentage')) {
                             $this.text(Tracker.FormatNumber(Math.ceil(this.Counter) + "%"));

@@ -26,6 +26,7 @@ class PlatoonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param Division $division
      * @return \Illuminate\Http\Response
      */
     public function create(Division $division)
@@ -33,17 +34,41 @@ class PlatoonController extends Controller
         return view('platoon.create', compact('division'));
     }
 
-    public function manage(){}
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
+     * @param Division $division
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Division $division)
     {
-        //
+        $this->validate($request,
+
+            // rules
+            [
+                'leader' => [
+                    'exists:members,clan_id',
+                    'unique:platoons,leader_id',
+                ]
+            ],
+
+            // messages
+            [
+                'leader.unique' => 'Already assigned as a leader.',
+                'leader.exists' => 'Member with that clan id does not exist.',
+            ]
+        );
+
+        $platoon = new Platoon;
+        $platoon->name = $request->name;
+        $platoon->leader_id = $request->leader;
+        $platoon->division()->associate($division);
+        $platoon->save();
+
+        flash("{$division->locality('platoon')} has been created!", 'success');
+
+        return redirect()->action('DivisionController@show', $division->abbreviation);
     }
 
     /**

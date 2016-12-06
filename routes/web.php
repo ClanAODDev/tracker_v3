@@ -30,16 +30,13 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     // platoons
     Route::get('{division}/platoons/create', 'PlatoonController@create');
-    Route::get('{division}/platoons/manage', 'PlatoonController@manage');
+    Route::post('{division}/platoons/store', 'PlatoonController@store');
     Route::get('{division}/platoons/{platoon}', 'PlatoonController@show');
     Route::get('{division}/platoons/{platoon}/squads', 'SquadController@index');
 
     // squads
     Route::get('{division}/squads/{squad}', 'SquadController@show');
 });
-
-
-
 
 
 // logging activity

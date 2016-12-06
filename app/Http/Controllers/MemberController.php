@@ -95,11 +95,6 @@ class MemberController extends Controller
         $this->authorize('update', $member);
 
         $positions = Position::all();
-
-        if ( ! $member->primaryDivision) {
-            abort(409);
-        }
-
         $platoons = $member->primaryDivision->platoons;
         $squads = $member->primaryDivision->squads;
 
