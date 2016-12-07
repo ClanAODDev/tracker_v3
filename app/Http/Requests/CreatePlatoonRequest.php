@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Platoon;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreatePlatoonRequest extends FormRequest
@@ -40,7 +41,7 @@ class CreatePlatoonRequest extends FormRequest
         return [
             'leader' => [
                 'exists:members,clan_id',
-                'unique:platoons,leader_id',
+                Rule::unique('platoons', 'leader_id')->ignore(0, 'leader_id')
             ]
         ];
     }

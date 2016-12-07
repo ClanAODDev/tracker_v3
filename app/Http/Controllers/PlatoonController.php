@@ -40,10 +40,16 @@ class PlatoonController extends Controller
      *
      * @param CreatePlatoonRequest $request
      * @param Division $division
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CreatePlatoonRequest $request, Division $division)
     {
+        if ( ! $this->isMemberOfDivision($division, $request)) {
+            return redirect()->back()
+                ->withErrors(['leader' => 'Member not assigned to this division!'])
+                ->withInput();
+        }
+
         $this->createPlatoon($request, $division);
 
         flash("{$division->locality('platoon')} has been created!", 'success');
@@ -144,5 +150,18 @@ class PlatoonController extends Controller
         $platoon->leader_id = $request->leader;
         $platoon->division()->associate($division);
         $platoon->save();
+    }
+
+    /**
+     * @param CreatePlatoonRequest $request
+     * @param Division $division
+     * @return bool
+     */
+    public function isMemberOfDivision(Division $division, CreatePlatoonRequest $request)
+    {
+        $member = Member::whereClanId($request->leader)->first();
+
+        return $member->primaryDivision instanceOf Division &&
+            $member->primaryDivision->id === $division->id;
     }
 }
