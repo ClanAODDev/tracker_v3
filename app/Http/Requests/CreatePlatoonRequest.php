@@ -41,7 +41,7 @@ class CreatePlatoonRequest extends FormRequest
         return [
             'leader' => [
                 'exists:members,clan_id',
-                Rule::unique('platoons', 'leader_id')->ignore(0, 'leader_id')
+                'unique:platoons,leader_id'
             ]
         ];
     }

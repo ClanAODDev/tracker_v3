@@ -159,9 +159,15 @@ class PlatoonController extends Controller
      */
     public function isMemberOfDivision(Division $division, CreatePlatoonRequest $request)
     {
+        if ( ! $request->leader) {
+
+            return true;
+        }
+
         $member = Member::whereClanId($request->leader)->first();
 
         return $member->primaryDivision instanceOf Division &&
             $member->primaryDivision->id === $division->id;
     }
+
 }
