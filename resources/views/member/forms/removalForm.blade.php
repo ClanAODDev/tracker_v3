@@ -4,7 +4,7 @@
         <div class="panel-body">
             <p>This action will take you to the AOD Mod CP and process the member for removal. Once you confirm, the action is non-reversible.</p>
 
-            <form action="{{ action('MemberController@destroy', $member->clan_id) }}" method="post">
+            <form action="{{ route('deleteMember', $member->clan_id) }}" method="post">
                 {{ method_field('DELETE') }}
                 <div class="form-group">
                     <textarea class="form-control" name="removal-reason" placeholder="Reason"

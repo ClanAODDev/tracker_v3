@@ -4,7 +4,7 @@
         @foreach ($chunk as $division)
 
             @if ($division->isActive())
-                <a href="{{ action('DivisionController@show', [$division->abbreviation]) }}"
+                <a href="{{ route('division', [$division->abbreviation]) }}"
                    class="list-group-item"
                    style="padding-bottom: 18px;">
 

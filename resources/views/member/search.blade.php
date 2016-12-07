@@ -1,6 +1,6 @@
 @if (count($members))
     @foreach ($members as $member)
-        <a href="{{ action('MemberController@show', $member->clan_id) }}" class="list-group-item">
+        <a href="{{ route('member', $member->clan_id) }}" class="list-group-item">
             <strong>{{ $member->present()->rankName }}</strong>
         </a>
     @endforeach

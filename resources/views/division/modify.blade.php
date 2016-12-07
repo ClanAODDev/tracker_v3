@@ -5,7 +5,7 @@
 
 
     <h2>
-        <a href="{{ action('DivisionController@show', $division->abbreviation) }}"
+        <a href="{{ route('division', $division->abbreviation) }}"
            class="btn btn-default btn-lg" title="Return to division page">
             <i class="fa fa-angle-left fa-2x"></i>
         </a>

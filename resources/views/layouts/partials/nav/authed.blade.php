@@ -15,7 +15,7 @@
 
             <ul class="dropdown-menu" role="menu">
                 <li>
-                    <a href="{{ action('MemberController@show', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}
+                    <a href="{{ route('member', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}
                         <span class="pull-right"></span>
                     </a>
                 </li>
@@ -40,7 +40,7 @@
         </li>
 
         @if (Auth::user()->isRole('admin') || Auth::user()->isDeveloper())
-            <li><a href="{{ action('AdminController@index') }}">Admin CP</a></li>
+            <li><a href="{{ route('admin') }}">Admin CP</a></li>
         @endif
 
     </ul>

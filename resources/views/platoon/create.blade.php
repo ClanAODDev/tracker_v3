@@ -14,7 +14,7 @@
     <hr/>
 
     <form id="create-platoon" method="post" class="well"
-          action="{{ action('PlatoonController@store', $division->abbreviation) }}">
+          action="{{ route('savePlatoon', $division->abbreviation) }}">
         <fieldset>
             <legend><i class="fa fa-sliders"></i> Platoon Details
                 <button type="submit" class="btn btn-success pull-right btn-xs">Create</button>

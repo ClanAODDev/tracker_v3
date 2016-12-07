@@ -1,5 +1,5 @@
 <form id="division-settings" method="post" class="well"
-      action="{{ action('AdminController@updateDivisions') }}">
+      action="{{ route('updateDivisions') }}">
 
     {{ method_field('PATCH') }}
 

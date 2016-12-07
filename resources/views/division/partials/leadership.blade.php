@@ -1,7 +1,7 @@
 <div class="panel panel-info">
     <div class="panel-heading">Division Command Staff</div>
     @forelse($divisionLeaders as $leader)
-        <a href="{{ action('MemberController@show', $leader->clan_id) }}" class="list-group-item">
+        <a href="{{ route('member', $leader->clan_id) }}" class="list-group-item">
             <h5 class="pull-right"><i class="fa fa-shield fa-2x text-muted"></i></h5>
             <h4 class="list-group-item-heading">
                 <strong>{!! $leader->present()->rankName !!}</strong></h4>

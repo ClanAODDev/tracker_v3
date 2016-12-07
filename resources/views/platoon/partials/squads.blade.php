@@ -9,7 +9,7 @@
                 @if($squad->members->count())
                     <div style="max-height: 200px; overflow-y: scroll;">
                         @foreach($squad->members as $member)
-                            <a href="{{ action('MemberController@show', $member->clan_id) }}"
+                            <a href="{{ route('member', $member->clan_id) }}"
                                class="list-group-item">
                                 <span class="col-xs-6">
                                     {!! $member->present()->nameWithIcon !!}

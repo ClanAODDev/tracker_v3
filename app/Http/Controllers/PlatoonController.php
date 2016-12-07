@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePlatoonRequest;
 use App\Member;
 use App\Platoon;
 use App\Division;
@@ -37,38 +38,17 @@ class PlatoonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param CreatePlatoonRequest $request
      * @param Division $division
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Division $division)
+    public function store(CreatePlatoonRequest $request, Division $division)
     {
-        $this->validate($request,
-
-            // rules
-            [
-                'leader' => [
-                    'exists:members,clan_id',
-                    'unique:platoons,leader_id',
-                ]
-            ],
-
-            // messages
-            [
-                'leader.unique' => 'Already assigned as a leader.',
-                'leader.exists' => 'Member with that clan id does not exist.',
-            ]
-        );
-
-        $platoon = new Platoon;
-        $platoon->name = $request->name;
-        $platoon->leader_id = $request->leader;
-        $platoon->division()->associate($division);
-        $platoon->save();
+        $this->createPlatoon($request, $division);
 
         flash("{$division->locality('platoon')} has been created!", 'success');
 
-        return redirect()->action('DivisionController@show', $division->abbreviation);
+        return redirect()->route('division', $division->abbreviation);
     }
 
     /**
@@ -151,5 +131,18 @@ class PlatoonController extends Controller
             ->setValues($data['values'])
             ->setColors($data['colors'])
             ->setResponsive(true);
+    }
+
+    /**
+     * @param Request $request
+     * @param Division $division
+     */
+    public function createPlatoon(Request $request, Division $division)
+    {
+        $platoon = new Platoon;
+        $platoon->name = $request->name;
+        $platoon->leader_id = $request->leader;
+        $platoon->division()->associate($division);
+        $platoon->save();
     }
 }

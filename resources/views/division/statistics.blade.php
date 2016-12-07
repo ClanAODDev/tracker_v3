@@ -15,7 +15,7 @@
             <ul class="nav nav-pills pull-right">
 
                 <li>
-                    <a href="{{ action('DivisionController@show', $division->abbreviation) }}"><i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs hidden-sm">Overview</span></a>
+                    <a href="{{ route('division', $division->abbreviation) }}"><i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs hidden-sm">Overview</span></a>
                 </li>
 
                 <li class="active">

@@ -11,7 +11,7 @@
 
                 @can('update', $division)
                     <a title="Edit division" class="btn btn-default"
-                       href="{{ action('DivisionController@edit', $division->abbreviation) }}">
+                       href="{{ route('editDivision', $division->abbreviation) }}">
                         <i class="fa fa-cogs fa-lg"></i>
                     </a>
                 @endcan
@@ -27,7 +27,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ action('DivisionController@statistics', $division->abbreviation) }}"><i class="fa fa-bar-chart fa-lg"></i><span class="hidden-xs hidden-sm">Statistics</span>
+                    <a href="{{ route('divisionStats', $division->abbreviation) }}"><i class="fa fa-bar-chart fa-lg"></i><span class="hidden-xs hidden-sm">Statistics</span>
                     </a>
                 </li>
             </ul>

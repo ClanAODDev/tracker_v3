@@ -1,5 +1,5 @@
 <form id="locality-settings" method="post" class="well"
-      action="{{ action('DivisionController@update', $division->abbreviation) }}">
+      action="{{ route('updateDivision', $division->abbreviation) }}">
     <fieldset>
         <legend><i class="fa fa-language"></i> Locality
             <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button>

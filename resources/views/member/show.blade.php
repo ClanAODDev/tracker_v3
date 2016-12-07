@@ -19,7 +19,7 @@
             <div class="btn-group pull-right">
 
                 @can('update', $member)
-                    <a href="{{ action('MemberController@edit', $member->clan_id) }}"
+                    <a href="{{ route('editMember', $member->clan_id) }}"
                        type="button" class="btn btn-default edit-member"><i class="fa fa-pencil fa-lg"></i> Edit
                     </a>
                 @endcan
