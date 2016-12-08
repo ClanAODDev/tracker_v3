@@ -10,7 +10,7 @@ class MemberRepository
     public function search($name)
     {
         return Member::where('name', 'LIKE', "%{$name}%")
-            ->with('rank', 'primaryDivision')
+            ->with('rank')
             ->get();
     }
 
