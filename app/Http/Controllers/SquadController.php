@@ -22,8 +22,14 @@ class SquadController extends Controller
     public function index(Division $division, Platoon $platoon)
     {
 
-        $squads = $platoon->squads()->with('members', 'members.rank')->get();
-        $unassigned = $platoon->unassigned()->with('rank')->get();
+        $squads = $platoon->squads()
+            ->with(
+                'members', 'members.rank', 'leader', 'leader.rank'
+            )->get()->sortByDesc('members.rank_id');
+
+        $unassigned = $platoon->unassigned()
+            ->with('rank', 'position')
+            ->get();
 
         return view('platoon.squads', compact(
             'platoon', 'division', 'squads', 'unassigned'

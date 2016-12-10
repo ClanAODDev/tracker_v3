@@ -27,23 +27,13 @@ class Squad extends Model
     }
 
     /**
-     * List members of a squad without the leader
-     *
-     * @return mixed
-     */
-    public function membersWithoutLeader()
-    {
-        return $this->hasMany(Member::class)->whereNotIn('id', [$this->leader->id]);
-    }
-
-    /**
      * Leader of a squad
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function leader()
     {
-        return $this->belongsTo(Member::class, 'leader_id');
+        return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
 
     /**

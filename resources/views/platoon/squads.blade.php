@@ -35,7 +35,7 @@
             @include('platoon.partials.unassigned')
         </div>
 
-        <div class="col-xs-8">
+        <div class="col-md-8">
             @include('platoon.partials.squads')
         </div>
 

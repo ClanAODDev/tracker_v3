@@ -41,17 +41,6 @@ class Platoon extends Model
     }
 
     /**
-     * List members of a platoon without the leader
-     *
-     * @return mixed
-     */
-    public function membersWithoutLeader()
-    {
-        return $this->members()
-            ->whereNotIn('id', [$this->leader->id]);
-    }
-
-    /**
      * Leader of a platoon
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
