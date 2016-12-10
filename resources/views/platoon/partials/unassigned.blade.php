@@ -4,7 +4,9 @@
         @forelse($unassigned->chunk(ceil($platoon->unassigned->count() / 2)) as $chunk)
             <div class="col-md-6 list-group">
                 @foreach($chunk as $member)
-                    <a href="#" class="list-group-item wrap-ellipsis">{{ $member->present()->rankName }}</a>
+                    <a href="#" class="list-group-item wrap-ellipsis">
+                        <small>{!! $member->present()->nameWithIcon(true) !!}</small>
+                    </a>
                 @endforeach
             </div>
         @empty

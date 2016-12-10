@@ -13,7 +13,7 @@
                         @foreach($chunk as $member)
                             <a href="{{ route('member', $member->clan_id) }}"
                                class="list-group-item wrap-ellipsis">
-                                {!! $member->present()->rankName !!}
+                                <small>{!! $member->present()->nameWithIcon(true) !!}</small>
                             </a>
                         @endforeach
                     </div>
