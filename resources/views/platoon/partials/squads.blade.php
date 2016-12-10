@@ -1,34 +1,37 @@
-<div class="row margin-top-50">
-    @foreach($squads as $squad)
-        <div class="col-md-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    Squad #{{ $loop->index + 1 }} <span class="badge pull-right">{{ $squad->members->count() }}</span>
-                </div>
+@forelse($squads as $squad)
+    <div class="col-md-6">
+        <div class="panel panel-primary squad">
+            <div class="panel-heading">
+                Squad #{{ $loop->index + 1 }}
+                <span class="badge pull-right">{{ $squad->members->count() }}</span>
+            </div>
 
-                @if($squad->members->count())
-                    <div style="max-height: 200px; overflow-y: scroll;">
-                        @foreach($squad->members as $member)
+            <div class="panel-body" style="height: 250px; max-height: 250px; overflow-y: scroll;">
+
+                @forelse($squad->members->chunk(ceil($squad->members->count() / 2)) as $chunk)
+                    <div class="col-md-6 list-group">
+                        @foreach($chunk as $member)
                             <a href="{{ route('member', $member->clan_id) }}"
-                               class="list-group-item">
-                                <span class="col-xs-6">
-                                    {!! $member->present()->nameWithIcon !!}
-                                </span>
-                                <span class="col-xs-6 text-center">
-                                    <span class="{{ $member->activity['class'] }}">{{ $member->present()->lastActive }}</span>
-                                </span>
-                                <span class="clearfix"></span>
+                               class="list-group-item wrap-ellipsis">
+                                {!! $member->present()->rankName !!}
                             </a>
                         @endforeach
                     </div>
-                    <div class="panel-footer text-muted text-center">
-                        <small>Scroll for more <i class="fa fa-caret-down"></i></small>
-                    </div>
-                @else
-                    <div class="panel-body text-muted">No members assigned</div>
-                @endif
+                @empty
+                    <div class="text-muted">No members assigned</div>
+                @endforelse
+            </div>
 
+        </div>
+    </div>
+
+@empty
+    <div class="col-xs-8">
+        <div class="panel panel-primary squad">
+            <div class="panel-heading">Squads</div>
+            <div class="panel-body">
+                <p>There are no squads</p>
             </div>
         </div>
-    @endforeach
-</div>
+    </div>
+@endforelse

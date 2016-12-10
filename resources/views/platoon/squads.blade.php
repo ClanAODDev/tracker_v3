@@ -29,8 +29,17 @@
         </li>
     </ul>
 
+    <div class="row margin-top-20">
 
-    @include('platoon.partials.squads')
+        <div class="col-md-4">
+            @include('platoon.partials.unassigned')
+        </div>
+
+        <div class="col-xs-8">
+            @include('platoon.partials.squads')
+        </div>
+
+    </div>
 
 @stop
 

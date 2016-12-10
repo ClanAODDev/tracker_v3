@@ -22,14 +22,12 @@
             </a>
         </li>
 
-        @if($platoon->squads->count())
-            <li>
-                <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon->id]) }}">
-                    <i class="fa fa-cubes fa-lg"></i>
-                    {{ str_plural($division->locality('squad')) }}
-                </a>
-            </li>
-        @endif
+        <li>
+            <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon->id]) }}">
+                <i class="fa fa-cubes fa-lg"></i>
+                {{ str_plural($division->locality('squad')) }}
+            </a>
+        </li>
     </ul>
 
     <div class="row margin-top-20">

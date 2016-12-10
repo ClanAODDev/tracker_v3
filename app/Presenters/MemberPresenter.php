@@ -39,6 +39,7 @@ class MemberPresenter extends Presenter
     /**
      * Returns member's name with position icon
      *
+     * @param bool $showRank
      * @return string
      */
     public function nameWithIcon($showRank = false)

@@ -97,7 +97,7 @@ class DivisionController extends Controller
      */
     public function update(Request $request, Division $division)
     {
-
+        // @FIXME: Move to Form Request
         $this->authorize('update', $division);
 
         $division->settings()->merge($request->all());

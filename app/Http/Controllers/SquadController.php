@@ -21,12 +21,12 @@ class SquadController extends Controller
      */
     public function index(Division $division, Platoon $platoon)
     {
-        $squads = $platoon->squads()
-            ->with('members.rank', 'members.position')
-            ->get();
+
+        $squads = $platoon->squads()->with('members', 'members.rank')->get();
+        $unassigned = $platoon->unassigned()->with('rank')->get();
 
         return view('platoon.squads', compact(
-            'platoon', 'division', 'squads'
+            'platoon', 'division', 'squads', 'unassigned'
         ));
     }
 
@@ -44,7 +44,7 @@ class SquadController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -61,6 +61,8 @@ class SquadController extends Controller
      */
     public function show(Squad $squad)
     {
+        $squad = $squad->with('members');
+
         return view('squad.show', compact('squad'));
     }
 
@@ -78,8 +80,8 @@ class SquadController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Squad $squad)

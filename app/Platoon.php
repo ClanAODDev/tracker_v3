@@ -60,6 +60,13 @@ class Platoon extends Model
     {
         return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
+
+    public function unassigned()
+    {
+        return $this->members()
+            ->whereSquadId(0)
+            ->whereIn('position_id', [1]);
+    }
 }
 
 

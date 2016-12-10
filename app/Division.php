@@ -128,12 +128,11 @@ class Division extends Model
      * Gets unassigned members of a division (no platoon assignment)
      * NOTE: Only members (position 1)
      */
-    public function unassignedMembers()
+    public function unassigned()
     {
         return $this->members()
             ->where('platoon_id', 0)
-            ->whereNotIn('position_id', [
-            ]);
+            ->whereIn('position_id', [1]);
     }
 
     /**

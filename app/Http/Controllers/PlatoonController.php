@@ -78,17 +78,6 @@ class PlatoonController extends Controller
     }
 
     /**
-     * Get platoon's squads
-     *
-     * @param Platoon $platoon
-     * @return mixed
-     */
-    public function squads(Platoon $platoon)
-    {
-        return view('platoon.squads', compact('platoon'));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int $id
