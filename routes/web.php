@@ -97,6 +97,7 @@ Route::get('7dayactive', function() {
     $csv->insertOne(\Schema::getColumnListing('members'));
 
     foreach ($members as $person) {
+        dd($person);
         $csv->insertOne($person->toArray());
     }
 
