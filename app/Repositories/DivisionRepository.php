@@ -11,17 +11,22 @@ class DivisionRepository
 
     public function getDivisionActivity(Division $division)
     {
-        $today = Carbon::now();
-        $twoWeeksAgo = Carbon::now()->subDays(24);
+        $twoWeeksAgo = Carbon::now()->subDays(14);
         $oneMonthAgo = Carbon::now()->subDays(30);
 
-        $twoWeeks = $division->activeMembers()->where('last_activity', '<=', $twoWeeksAgo)->count();
-        $oneMonth = $division->activeMembers()->where('last_activity', '<=', $twoWeeksAgo)->where('last_activity', '>=', $oneMonthAgo)->count();
-        $moreThanOneMonth = $division->activeMembers()->where('last_activity', '>=', $oneMonthAgo)->count();
+        $twoWeeks = $division->activeMembers()
+            ->where('last_activity', '>=', $twoWeeksAgo);
+
+        $oneMonth = $division->activeMembers()
+            ->where('last_activity', '<=', $twoWeeksAgo)
+            ->where('last_activity', '>=', $oneMonthAgo);
+
+        $moreThanOneMonth = $division->activeMembers()
+            ->where('last_activity', '<=', $oneMonthAgo);
 
         return [
             'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
-            'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth],
+            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
     }
