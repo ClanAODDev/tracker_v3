@@ -96,7 +96,7 @@ Route::get('7dayactive', function() {
     $csv = Writer::createFromFileObject(new \SplTempFileObject());
 
     foreach ($members as $person) {
-        $csv->insertOne([$person->name, $person->last_login]);
+        $csv->insertOne([$person->name, $person->last_forum_login]);
     }
 
     $csv->output('7dayactive.csv');
