@@ -51,11 +51,10 @@
                     <p>If no leader is available, leave it blank and it will be marked
                         <code>TBA</code>. You can update it later.</p>
                     <p>Leaders can only be assigned to a single {{ $division->locality('squad') }} and they must belong to the current division.</p>
-                    <p>
-                        <small class="text-muted">
-                            <sup>1</sup>{{ str_plural($division->locality('squad')) }} designated as general population cannot have a leader or a name. You may use them to keep track of recruited members left over when a {{ $division->locality('squad leader') }} leaves his/her position.
-                        </small>
-                    </p>
+                    <small class="text-muted">
+                            <sup>1</sup>{{ str_plural($division->locality('squad')) }} designated as general population may be used to track recruited members left over when a {{ $division->locality('squad leader') }} leaves his/her position, but it cannot have a leader or a name, and there can only be one in a {{ $division->locality('platoon') }}.
+                    </small>
+                    <p></p>
                 </div>
 
                 <input type="hidden" value="{{ $platoon->id }}" name="division"/>
@@ -79,12 +78,13 @@
                         </span>
                     </div>
 
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" value="{{ old('general-population') }}" name="gen-pop">
-                            <small>General Population ({{ $division->locality('platoon') }} may have only one)</small>
-                            <sup>1</sup>
-                        </label>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" value="{{ old('general-population') }}" name="gen-pop">General Population
+                                <sup>1</sup>
+                            </label>
+                        </div>
                     </div>
 
                 </div>
