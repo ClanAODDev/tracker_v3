@@ -92,11 +92,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
 Route::get('7dayactive', function() {
     $division = \App\Division::find(4);
-    $members = $division->membersActiveSinceDaysAgo(8);
+    $members = $division->membersActiveSinceDaysAgo(8)->get();
     $csv = Writer::createFromFileObject(new \SplTempFileObject());
     $csv->insertOne(\Schema::getColumnListing('members'));
-
-    dd($members);
 
 
     foreach ($members as $person) {
