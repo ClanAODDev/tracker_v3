@@ -101,3 +101,17 @@ Route::get('7dayactive', function() {
 
     $csv->output('7dayactive.csv');
 });
+
+
+
+Route::get('all', function() {
+    $division = \App\Division::find(4);
+    $members = $division->activeMembers;
+    $csv = Writer::createFromFileObject(new \SplTempFileObject());
+
+    foreach ($members as $person) {
+        $csv->insertOne([$person->name, $person->last_forum_login]);
+    }
+
+    $csv->output('all.csv');
+});
