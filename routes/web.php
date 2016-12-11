@@ -1,5 +1,7 @@
 <?php
 
+use League\Csv\Writer;
+
 Auth::routes();
 
 Route::get('/home', 'AppController@index');
@@ -91,7 +93,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 Route::get('7dayactive', function() {
     $division = \App\Division::find(4);
     $members = $division->membersActiveSinceDaysAgo(8);
-    $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
+    $csv = Writer::createFromFileObject(new \SplTempFileObject());
     $csv->insertOne(\Schema::getColumnListing('members'));
 
     foreach ($members as $person) {

@@ -232,7 +232,6 @@ return [
         'Slack' => Maknz\Slack\Facades\Slack::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'Helpers' => App\Helpers::class,
-        'League' => \league
 
     ],
 
