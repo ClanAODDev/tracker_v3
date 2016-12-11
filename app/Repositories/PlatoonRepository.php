@@ -16,13 +16,19 @@ class PlatoonRepository
      */
     public function getPlatoonActivity(Platoon $platoon)
     {
-        $twoWeeks = $platoon->members()->whereRaw('last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()')->count();
-        $oneMonth = $platoon->members()->whereRaw('last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)')->count();
-        $moreThanOneMonth = $platoon->members()->whereRaw('last_activity < DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->count();
+        $twoWeeksAgo = Carbon::now()->subDays(14);
+        $oneMonthAgo = Carbon::now()->subDays(30);
+
+        $twoWeeks = $platoon->members()->where('last_activity', '>=', $twoWeeksAgo);
+
+        $oneMonth = $platoon->members()->where('last_activity', '<=', $twoWeeksAgo)
+            ->where('last_activity', '>=', $oneMonthAgo);
+
+        $moreThanOneMonth = $platoon->members()->where('last_activity', '<=', $oneMonthAgo);
 
         return [
-            'labels' => ['< 2 weeks', '< 1 month', '> 1 month'],
-            'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth],
+            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
+            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
     }

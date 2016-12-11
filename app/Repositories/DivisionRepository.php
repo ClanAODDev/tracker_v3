@@ -14,15 +14,12 @@ class DivisionRepository
         $twoWeeksAgo = Carbon::now()->subDays(14);
         $oneMonthAgo = Carbon::now()->subDays(30);
 
-        $twoWeeks = $division->activeMembers()
-            ->where('last_activity', '>=', $twoWeeksAgo);
+        $twoWeeks = $division->activeMembers()->where('last_activity', '>=', $twoWeeksAgo);
 
-        $oneMonth = $division->activeMembers()
-            ->where('last_activity', '<=', $twoWeeksAgo)
+        $oneMonth = $division->activeMembers()->where('last_activity', '<=', $twoWeeksAgo)
             ->where('last_activity', '>=', $oneMonthAgo);
 
-        $moreThanOneMonth = $division->activeMembers()
-            ->where('last_activity', '<=', $oneMonthAgo);
+        $moreThanOneMonth = $division->activeMembers()->where('last_activity', '<=', $oneMonthAgo);
 
         return [
             'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
