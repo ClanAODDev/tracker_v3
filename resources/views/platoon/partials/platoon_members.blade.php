@@ -27,14 +27,14 @@
             @foreach($members as $member)
                 <tr role="row">
                     <td class="col-hidden">{{ $member->rank_id }}</td>
-                    <td class="col-hidden">{{ $member->last_forum_login }}</td>
+                    <td class="col-hidden">{{ $member->last_activity }}</td>
                     <td class="">{!! $member->present()->nameWithIcon !!} <a
                                 href="{{ route('member', $member->clan_id) }}"><i
                                     class="fa fa-search text-muted pull-right" title="View profile"></i></a></td>
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
                     <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">
-                        <span class="{{ getActivityClass($member->last_forum_login, $division) }}">{{ $member->present()->lastActive }}</span>
+                        <span class="{{ getActivityClass($member->last_activity, $division) }}">{{ $member->present()->lastActive }}</span>
                     </td>
                     <td class="text-center">{{ $member->last_promoted }}</td>
                 </tr>
