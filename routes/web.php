@@ -1,7 +1,5 @@
 <?php
 
-dd($division->membersActiveSinceDaysAgo(8)->toSql());
-
 Auth::routes();
 
 Route::get('/home', 'AppController@index');
