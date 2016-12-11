@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Carbon;
 use DB;
 use App\Division;
 
@@ -10,9 +11,13 @@ class DivisionRepository
 
     public function getDivisionActivity(Division $division)
     {
-        $twoWeeks = $division->activeMembers()->whereRaw('last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -14 DAY) AND CURDATE()')->count();
-        $oneMonth = $division->activeMembers()->whereRaw('last_activity BETWEEN DATE_ADD(CURDATE(), INTERVAL -30 DAY) AND DATE_ADD(CURDATE(), INTERVAL -14 DAY)')->count();
-        $moreThanOneMonth = $division->activeMembers()->whereRaw('last_activity <= DATE_ADD(CURDATE(), INTERVAL -30 DAY)')->count();
+        $today = Carbon::now();
+        $twoWeeksAgo = Carbon::now()->subDays(24);
+        $oneMonthAgo = Carbon::now()->subDays(30);
+
+        $twoWeeks = $division->activeMembers()->where('last_activity', '<=', $twoWeeksAgo)->count();
+        $oneMonth = $division->activeMembers()->where('last_activity', '<=', $twoWeeksAgo)->where('last_activity', '>=', $oneMonthAgo)->count();
+        $moreThanOneMonth = $division->activeMembers()->where('last_activity', '>=', $oneMonthAgo)->count();
 
         return [
             'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
