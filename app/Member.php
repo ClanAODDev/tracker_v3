@@ -25,7 +25,7 @@ class Member extends Model
 
     protected $dates = [
         'join_date',
-        'last_forum_login',
+        'last_activity',
         'last_promoted',
     ];
 

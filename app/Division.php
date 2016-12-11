@@ -112,7 +112,7 @@ class Division extends Model
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
 
         return $this->activeMembers()
-            ->where('last_forum_login', '>=', $date);
+            ->where('last_activity', '>=', $date);
     }
 
     public function generalSergeants()

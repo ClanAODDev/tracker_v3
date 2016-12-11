@@ -29,11 +29,11 @@ class MemberPresenter extends Presenter
 
     public function lastActive()
     {
-        if ($this->member->last_forum_login->diffInDays() < 1) {
+        if ($this->member->last_activity->diffInDays() < 1) {
             return "Today";
         }
 
-        return $this->member->last_forum_login->diffForHumans();
+        return $this->member->last_activity->diffForHumans();
     }
 
     /**

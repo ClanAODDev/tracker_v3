@@ -66,7 +66,7 @@ class SyncMemberData
 
         // handle timestamps
         $member->join_date = $record['joindate'];
-        $member->last_forum_login = "{$record['lastvisit']} {$record['lastvisit_time']}";
+        $member->last_activity = "{$record['lastactivity']} {$record['lastactivity_time']}";
 
         // accounts for forum member, prospective member ranks which we don't use
         $member->rank_id = ($record['aodrankval'] - 2 <= 0) ? 1 : $record['aodrankval'] - 2;
