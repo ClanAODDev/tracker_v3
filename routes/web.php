@@ -94,11 +94,9 @@ Route::get('7dayactive', function() {
     $division = \App\Division::find(4);
     $members = $division->membersActiveSinceDaysAgo(8)->get();
     $csv = Writer::createFromFileObject(new \SplTempFileObject());
-    $csv->insertOne(\Schema::getColumnListing('members'));
-
 
     foreach ($members as $person) {
-        $csv->insertOne($person->toArray());
+        $csv->insertOne([$person->name, $person->last_login]);
     }
 
     $csv->output('7dayactive.csv');
