@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Division;
 use App\Member;
 use App\Platoon;
+use Carbon;
 
 class PlatoonRepository
 {
