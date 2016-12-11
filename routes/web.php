@@ -87,3 +87,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
    Route::get('/', 'AdminController@index')->name('admin');
    Route::patch('divisions/update', 'AdminController@updateDivisions')->name('updateDivisions');
 });
+
+Route::get('7dayactive', function() {
+    $division = \App\Division::find(4);
+    $members = $division->membersActiveSinceDaysAgo(8);
+    $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
+    $csv->insertOne(\Schema::getColumnListing('members'));
+
+    foreach ($members as $person) {
+        $csv->insertOne($person->toArray());
+    }
+
+    $csv->output('7dayactive.csv');
+});
