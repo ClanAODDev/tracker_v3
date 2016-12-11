@@ -1,4 +1,4 @@
-@forelse($squads as $squad)
+@foreach($squads as $squad)
     <div class="col-md-6">
         <div class="panel panel-primary squad">
             <div class="panel-heading">
@@ -11,7 +11,6 @@
             </div>
 
             <div class="panel-body" style="height: 250px; max-height: 250px; overflow-y: scroll;">
-
                 @forelse($squad->members->chunk(ceil($squad->members->count() / 2)) as $chunk)
                     <div class="col-xs-6 list-group">
                         @foreach($chunk as $member)
@@ -30,14 +29,4 @@
 
         </div>
     </div>
-
-@empty
-    <div class="col-xs-8">
-        <div class="panel panel-primary squad">
-            <div class="panel-heading">Squads</div>
-            <div class="panel-body">
-                <p>There are no squads</p>
-            </div>
-        </div>
-    </div>
-@endforelse
+@endforeach

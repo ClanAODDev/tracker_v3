@@ -1,5 +1,7 @@
 <?php
 
+dd($division->membersActiveSinceDaysAgo(8)->toSql());
+
 Auth::routes();
 
 Route::get('/home', 'AppController@index');
@@ -35,6 +37,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/platoons/{platoon}/squads', 'SquadController@index')->name('platoonSquads');
 
     // squads
+    Route::get('{division}/platoons/{platoon}/squads/create', 'SquadController@show')->name('createSquad');
     Route::get('{division}/squads/{squad}', 'SquadController@show')->name('squad');
 });
 

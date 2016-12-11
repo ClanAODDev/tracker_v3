@@ -13,6 +13,7 @@
         </div>
     </div>
 
+
     <ul class="nav nav-pills margin-top-20">
         <li>
             <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}">
@@ -27,7 +28,16 @@
                 {{ str_plural(ucwords($division->locality('squad'))) }}
             </a>
         </li>
+
+        @can('update', $platoon)
+            <li>
+                <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}"><i class="fa fa-plus fa-lg"></i><span class="hidden-xs hidden-sm">Create {{ $division->locality('squad') }}</span>
+                </a>
+            </li>
+        @endcan
     </ul>
+
+
 
     <div class="row margin-top-20">
 

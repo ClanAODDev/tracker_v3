@@ -44,15 +44,26 @@ class DivisionCensus extends Command
         $this->comment('Beginning division census...');
 
         foreach ($divisions as $division) {
-            $census = new Census();
-            $census->division()->associate($division);
-            $census->count = $division->activeMembers->count();
-            $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();
-            $census->save();
 
             $this->comment("Recording data for {$division->name}...");
+
+            $this->recordEntry($division);
         }
 
         $this->comment('Census complete.');
+    }
+
+    /**
+     * @param $division
+     */
+    protected function recordEntry(Division $division)
+    {
+        $census = new Census();
+        $census->division()->associate($division);
+        $census->count = $division->activeMembers->count();
+        $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)
+            ->format('Y-m-d')
+            ->count();
+        $census->save();
     }
 }
