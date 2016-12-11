@@ -96,8 +96,10 @@ Route::get('7dayactive', function() {
     $csv = Writer::createFromFileObject(new \SplTempFileObject());
     $csv->insertOne(\Schema::getColumnListing('members'));
 
+    dd($members);
+
+
     foreach ($members as $person) {
-        dd($person);
         $csv->insertOne($person->toArray());
     }
 
