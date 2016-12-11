@@ -42,9 +42,9 @@ class SquadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Division $division, Platoon $platoon)
     {
-        //
+        return view('squad.create', compact('division', 'platoon'));
     }
 
     /**

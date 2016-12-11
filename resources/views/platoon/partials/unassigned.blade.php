@@ -1,5 +1,5 @@
 <div class="panel panel-warning">
-    <div class="panel-heading">Unassigned Members</div>
+    <div class="panel-heading">Unassigned Members <span class="badge pull-right">{{ $platoon->unassigned->count() }}</span></div>
     <div class="panel-body" style="height: 250px; max-height: 250px; overflow-y: scroll;">
         @forelse($unassigned->chunk(ceil($platoon->unassigned->count() / 2)) as $chunk)
             <div class="col-md-6 list-group">

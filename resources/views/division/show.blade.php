@@ -4,7 +4,7 @@
     {!! Breadcrumbs::render('division', $division) !!}
 
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-sm-6">
             <h2>
                 @include('division.partials.icon')
                 <strong>{{ $division->name }}</strong>
@@ -19,7 +19,7 @@
             </h2>
         </div>
 
-        <div class="col-xs-6">
+        <div class="col-sm-6">
             <ul class="nav nav-pills pull-right">
 
                 <li class="active">
@@ -30,6 +30,11 @@
                     <a href="{{ route('divisionStats', $division->abbreviation) }}"><i class="fa fa-bar-chart fa-lg"></i><span class="hidden-xs hidden-sm">Statistics</span>
                     </a>
                 </li>
+                @can('update', $division)
+                    <li>
+                        <a href="{{ route('createPlatoon', $division->abbreviation) }}"><i class="fa fa-cube fa-lg"></i>Create {{ $division->locality('platoon') }}</a>
+                    </li>
+                @endcan
             </ul>
         </div>
     </div>

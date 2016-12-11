@@ -5,6 +5,7 @@ namespace App;
 use App\Activities\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Platoon extends Model
 {
@@ -50,6 +51,11 @@ class Platoon extends Model
         return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
 
+    /**
+     * Only return members who are squad members
+     *
+     * @return Collection
+     */
     public function unassigned()
     {
         return $this->members()

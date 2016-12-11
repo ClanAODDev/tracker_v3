@@ -37,7 +37,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/platoons/{platoon}/squads', 'SquadController@index')->name('platoonSquads');
 
     // squads
-    Route::get('{division}/platoons/{platoon}/squads/create', 'SquadController@show')->name('createSquad');
+    Route::get('{division}/platoons/{platoon}/squads/create', 'SquadController@create')->name('createSquad');
     Route::get('{division}/squads/{squad}', 'SquadController@show')->name('squad');
 });
 
@@ -89,19 +89,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
    Route::get('/', 'AdminController@index')->name('admin');
    Route::patch('divisions/update', 'AdminController@updateDivisions')->name('updateDivisions');
 });
-
-Route::get('7dayactive', function() {
-    $division = \App\Division::find(4);
-    $members = $division->membersActiveSinceDaysAgo(8)->get();
-    $csv = Writer::createFromFileObject(new \SplTempFileObject());
-
-    foreach ($members as $person) {
-        $csv->insertOne([$person->name, $person->last_forum_login->format('Y-m-d')]);
-    }
-
-    $csv->output('7dayactive.csv');
-});
-
 
 
 Route::get('all', function() {

@@ -15,12 +15,6 @@
             @endif
         </a>
     @empty
-        <li class="list-group-item text-muted">No Platoons Found</li>
+        <li class="list-group-item text-muted">No {{ $division->locality('platoon') }} Found</li>
     @endforelse
-
-    @can('update', $division)
-        <div class="panel-footer text-right">
-            <a class="btn btn-default" href="{{ route('createPlatoon', $division->abbreviation) }}"><i class="fa fa-plus fa-lg"></i>Create</a>
-        </div>
-    @endcan
 </div>
