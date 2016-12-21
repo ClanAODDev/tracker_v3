@@ -1,13 +1,13 @@
 @foreach($squads as $squad)
     <div class="col-md-6">
         <div class="panel panel-primary squad">
-            <div class="panel-heading">
+            <div class="panel-heading wrap-ellipsis">
+                <span class="badge pull-right">{{ $squad->members->count() }}</span>
                 @if($squad->leader)
                     {!! $squad->leader->present()->rankName !!}
                 @else
                     TBA
                 @endif
-                <span class="badge pull-right">{{ $squad->members->count() }}</span>
             </div>
 
             <div class="panel-body" style="height: 250px; max-height: 250px; overflow-y: scroll;">

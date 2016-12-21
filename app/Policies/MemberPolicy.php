@@ -30,7 +30,7 @@ class MemberPolicy
             return true;
         }
 
-        // division leaders can modify anyone in their own division
+        // division leaders (CO,XO) can modify anyone in their own division
         if ($member->primaryDivision instanceof Division &&
             $user->member->isDivisionLeader($member->primaryDivision) &&
             $user->isRole('sr_ldr')
@@ -76,9 +76,6 @@ class MemberPolicy
             return false;
         }
 
-
         return true;
-
-
     }
 }

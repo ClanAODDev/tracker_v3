@@ -1,5 +1,9 @@
 <?php
 
+use App\Member;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+
 /**
  * Perform an AOD forum function (pm or email)
  *
@@ -85,6 +89,7 @@ function getDivisionIconPath($abbreviation)
 {
     return asset("/images/game_icons/48x48/{$abbreviation}.png");
 }
+
 /**
  * array_keys with recursive implementation
  *
@@ -152,4 +157,27 @@ function getActivityClass($date, $division)
     }
 
     return 'text-success';
+}
+
+/**
+ * Helper for assigning leadership of platoons, squads
+ *
+ * @param Member $member
+ * @param Eloquent|Model $model
+ */
+function setLeaderOf(Model $model, Member $member)
+{
+    $model->leader()->associate($member)->save();
+
+    // Tease out the class name (platoon or squad)
+    $modelName = strtolower(getNameOfClass($model));
+
+    // assign the pertinent role (platoon, squad leader)
+    $member->assignPosition("{$modelName} leader")->save();
+
+}
+
+function getNameOfClass($class) {
+    $path = explode('\\', get_class($class));
+    return array_pop($path);
 }

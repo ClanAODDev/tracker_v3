@@ -2,14 +2,35 @@
 
 namespace App;
 
+use App\Presenters\SquadPresenter;
 use App\Activities\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Squad extends Model
 {
 
     use RecordsActivity;
-    
+    use SoftDeletes;
+
+    protected static $recordEvents = [
+        'created',
+        'updated',
+        'deleted'
+    ];
+
+    protected $casts = [
+        'gen_pop' => 'boolean'
+    ];
+
+    /**
+     * @return SquadPresenter
+     */
+    public function present()
+    {
+        return new SquadPresenter($this);
+    }
+
     /**
      * relationship - squad belongs to a platoon
      */

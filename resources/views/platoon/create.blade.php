@@ -22,8 +22,8 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <p>Provide the details for your new platoon here. When assigning a leader, if they do not already have the {{ $division->locality('platoon leader') }} position, it will be updated for them. Any existing assignment will be cleared.</p>
-                    <p>If no leader is available, leave it blank and it will be marked
+                    <p>Provide the details for your new {{ $division->locality('platoon') }} here. When assigning a leader, the tracker will automatically assign them to the new platoon, and set their position to {{ $division->locality('platoon leader') }}.</p>
+                    <p>If no leader is available, <strong>leave it blank</strong> and it will be marked
                         <code>TBA</code>. You can update it later.</p>
                     <p>Leaders can only be assigned to a single {{ $division->locality('platoon') }} and they must belong to the current division.</p>
                 </div>

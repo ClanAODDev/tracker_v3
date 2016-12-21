@@ -39,7 +39,7 @@
     <hr/>
 
     <form id="create-squad" method="post" class="well"
-          action="{{ route('savePlatoon', $division->abbreviation) }}">
+          action="{{ route('saveSquad', [$division->abbreviation, $platoon->id]) }}">
         <fieldset>
             <legend><i class="fa fa-sliders"></i> {{ $division->locality('squad') }} Details
                 <button type="submit" class="btn btn-success pull-right btn-xs">Create</button>
@@ -47,7 +47,7 @@
 
             <div class="row">
                 <div class="col-sm-6">
-                    <p>Provide the details for your new {{ $division->locality('squad') }} here. When assigning a leader, if they do not already have the {{ $division->locality('squad leader') }} position, it will be updated for them. Any existing assignment will be cleared.</p>
+                    <p>Provide the details for your new {{ $division->locality('squad') }} here. When assigning a leader, the tracker will automatically assign them to the new squad in the current platoon, and set their position to {{ $division->locality('squad leader') }}.</p>
                     <p>If no leader is available, leave it blank and it will be marked
                         <code>TBA</code>. You can update it later.</p>
                     <p>Leaders can only be assigned to a single {{ $division->locality('squad') }} and they must belong to the current division.</p>
@@ -60,12 +60,6 @@
                 <input type="hidden" value="{{ $platoon->id }}" name="division"/>
 
                 <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="name" class="control-label">{{ $division->locality('squad') }} Name</label>
-                        <input type="text" id="name" name="name"
-                               value="{{ old('name') }}" class="form-control" required/>
-                    </div>
-
                     <div class="form-group {{ $errors->has('leader') ? ' has-error' : null }}">
                         <label for="leader" class="control-label">{{ $division->locality('squad leader') }}</label>
                         <input type="text" id="leader" name="leader" placeholder="AOD Member ID"
@@ -81,7 +75,7 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" value="{{ old('general-population') }}" name="gen-pop">General Population
+                                <input type="checkbox" value="{{ old('general-population') }}" name="genpop">General Population
                                 <sup>1</sup>
                             </label>
                         </div>

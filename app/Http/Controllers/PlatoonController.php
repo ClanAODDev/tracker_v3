@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreatePlatoonRequest;
+use App\Http\Requests\CreatePlatoonForm;
 use App\Member;
 use App\Platoon;
 use App\Division;
@@ -38,21 +38,21 @@ class PlatoonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param CreatePlatoonRequest $request
+     * @param CreatePlatoonForm $form
      * @param Division $division
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(CreatePlatoonRequest $request, Division $division)
+    public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($request->leader && ! $this->isMemberOfDivision($division, $request)) {
+        if ($form->leader && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader' => 'Member not assigned to this division!'])
                 ->withInput();
         }
 
-        $this->createPlatoon($request, $division);
+        $form->persist();
 
-        flash("{$division->locality('platoon')} has been created!", 'success');
+        flash("{$division->locality('platoon')} has been created! If you assigned a leader, you will need to ensure you have also updated their account access to 'Senior Leader'", 'success');
 
         return redirect()->route('division', $division->abbreviation);
     }
@@ -129,24 +129,11 @@ class PlatoonController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Division $division
-     */
-    public function createPlatoon(Request $request, Division $division)
-    {
-        $platoon = new Platoon;
-        $platoon->name = $request->name;
-        $platoon->leader_id = $request->leader;
-        $platoon->division()->associate($division);
-        $platoon->save();
-    }
-
-    /**
-     * @param CreatePlatoonRequest $request
+     * @param CreatePlatoonForm $request
      * @param Division $division
      * @return bool
      */
-    public function isMemberOfDivision(Division $division, CreatePlatoonRequest $request)
+    public function isMemberOfDivision(Division $division, CreatePlatoonForm $request)
     {
         $member = Member::whereClanId($request->leader)->first();
 

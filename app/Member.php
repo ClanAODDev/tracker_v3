@@ -82,6 +82,13 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    public function assignPosition($position)
+    {
+        return $this->position()->associate(
+            Position::whereName(strtolower($position))->firstOrFail()
+        );
+    }
+
     /**
      * Enforce a singleton relationship for squad leaders
      *
@@ -130,12 +137,12 @@ class Member extends Model
      */
     public function isSquadLeader(Squad $squad)
     {
-        return $this->id === $squad->leader_id;
+        return $this->clan_id === $squad->leader_id;
     }
 
     public function isPlatoonLeader(Platoon $platoon)
     {
-        return $this->id === $platoon->leader_id;
+        return $this->clan_id === $platoon->leader_id;
     }
 
     /**

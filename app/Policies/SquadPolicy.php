@@ -13,7 +13,7 @@ class SquadPolicy
 
     public function before(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->isRole('admin') || $user->isDeveloper()) {
             return true;
         }
     }
@@ -42,5 +42,15 @@ class SquadPolicy
     {
         // delete shares policies with update
         return $this->update($user, $squad);
+    }
+
+    public function create(User $user)
+    {
+        // is user the division leader of division containing squad?
+        if ($user->isRole('sr_ldr')) {
+            return true;
+        }
+
+        return false;
     }
 }

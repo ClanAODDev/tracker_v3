@@ -22,7 +22,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon->id]) }}">
+                    <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon]) }}">
                         <i class="fa fa-cubes fa-lg"></i>
                         {{ str_plural($division->locality('squad')) }}
                     </a>

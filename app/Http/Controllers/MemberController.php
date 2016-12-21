@@ -95,8 +95,8 @@ class MemberController extends Controller
         $this->authorize('update', $member);
 
         $positions = Position::all();
-        $platoons = $member->primaryDivision->platoons;
-        $squads = $member->primaryDivision->squads;
+        $platoons = $member->primaryDivision->platoons()->with('leader', 'leader.rank')->get();
+        $squads = $member->primaryDivision->squads()->with('leader', 'leader.rank')->get();
 
         return view('member.modify', compact(
             'member', 'positions', 'platoons', 'squads'

@@ -17,14 +17,12 @@ class AppController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         $divisions = Division::active()->orderBy('name')->get();
 
-        return view('layouts.home')->with(
-            compact('divisions')
-        );
+        return view('layouts.home', compact('divisions'));
     }
 }
