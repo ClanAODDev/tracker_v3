@@ -77,7 +77,9 @@ Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:15'], function () {
     });
 });
 
-
+/**
+ * API ENDPOINTS
+ */
 Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () {
     Route::get('members', 'API\APIController@members');
     Route::get('users', 'API\APIController@users');

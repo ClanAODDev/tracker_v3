@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
-use App\User;
-use App\Squad;
+use App\Division;
+use App\Http\Controllers\Controller;
 use App\Member;
 use App\Platoon;
-use App\Division;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Squad;
+use App\User;
 
 /**
  * Class APIController
