@@ -15,6 +15,8 @@ class AdminController extends Controller
     public function __construct(ClanRepository $clanRepository)
     {
         $this->clanRepository = $clanRepository;
+
+        $this->middleware('auth');
     }
 
     public function index()

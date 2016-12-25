@@ -41,7 +41,7 @@
     <form id="create-squad" method="post" class="well"
           action="{{ route('saveSquad', [$division->abbreviation, $platoon->id]) }}">
         <fieldset>
-            <legend><i class="fa fa-sliders"></i> {{ $division->locality('squad') }} Details
+            <legend><i class="fa fa-cubes"></i> {{ $division->locality('squad') }} Details
                 <button type="submit" class="btn btn-success pull-right btn-xs">Create</button>
             </legend>
 
@@ -52,7 +52,7 @@
                         <code>TBA</code>. You can update it later.</p>
                     <p>Leaders can only be assigned to a single {{ $division->locality('squad') }} and they must belong to the current division.</p>
                     <small class="text-muted">
-                            <sup>1</sup>{{ str_plural($division->locality('squad')) }} designated as general population may be used to track recruited members left over when a {{ $division->locality('squad leader') }} leaves his/her position, but it cannot have a leader or a name, and there can only be one in a {{ $division->locality('platoon') }}.
+                        <sup>1</sup>{{ str_plural($division->locality('squad')) }} designated as general population may be used to track recruited members left over when a {{ $division->locality('squad leader') }} leaves his/her position, but it cannot have a leader or a name, and there can only be one in a {{ $division->locality('platoon') }}.
                     </small>
                     <p></p>
                 </div>

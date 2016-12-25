@@ -84,6 +84,7 @@ Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () 
     Route::get('divisions', 'API\APIController@divisions');
     Route::get('squads', 'API\APIController@squads');
     Route::get('platoons', 'API\APIController@platoons');
+    Route::get('divisions/info', 'API\DivisionController@info');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {

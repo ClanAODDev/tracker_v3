@@ -16,7 +16,7 @@
     <form id="create-platoon" method="post" class="well"
           action="{{ route('savePlatoon', $division->abbreviation) }}">
         <fieldset>
-            <legend><i class="fa fa-sliders"></i> {{ $division->locality('platoon') }} Details
+            <legend><i class="fa fa-cube"></i> {{ $division->locality('platoon') }} Details
                 <button type="submit" class="btn btn-success pull-right btn-xs">Create</button>
             </legend>
 
