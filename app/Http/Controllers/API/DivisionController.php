@@ -20,11 +20,10 @@ class DivisionController extends Controller
 
         return $divisions->map(function ($division) {
             return [
-                $division->abbreviation => [
-                    'name' => $division->name,
-                    'member_count' => $division->members()->count(),
-                    // 'leaders' => $division->leaders()->with('rank')->get()
-                ]
+                'name' => $division->name,
+                'abbreviation' => $division->abbreviation,
+                'member_count' => $division->members()->count(),
+                // 'leaders' => $division->leaders()->with('rank')->get()
             ];
         });
     }
