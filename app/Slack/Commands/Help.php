@@ -37,11 +37,11 @@ class Help extends Base implements Command
             $this->content[] = [
                 'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
             ];
-
-            $this->content[] = [
-                'text' => 'More commands will be added soon!'
-            ];
         }
+
+        $this->content[] = [
+            'text' => 'More commands will be added soon!'
+        ];
 
         return [
             'text' => "The following commands are currently available.",
