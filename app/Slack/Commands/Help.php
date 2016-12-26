@@ -33,11 +33,13 @@ class Help extends Base implements Command
      */
     public function handle()
     {
-        foreach ($this->commands as $command) {
-            $this->content[] = [
-                'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
-            ];
-        }
+
+        $this->content = collect($this->commands)
+            ->each(function ($command) {
+                return [
+                    'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
+                ];
+            });
 
         $this->content[] = [
             'text' => 'More commands will be added soon!'
