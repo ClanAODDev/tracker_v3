@@ -35,7 +35,7 @@ class Help extends Base implements Command
     {
 
         $this->content = collect($this->commands)
-            ->each(function ($command) {
+            ->map(function ($command) {
                 return [
                     'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
                 ];
