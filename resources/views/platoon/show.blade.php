@@ -17,14 +17,14 @@
                 <li class="active">
                     <a href="#">
                         <i class="fa fa-cube fa-lg"></i>
-                        {{ $division->locality('platoon') }}
+                        {{ $division->locality('platoon') }} View
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon]) }}">
                         <i class="fa fa-cubes fa-lg"></i>
-                        {{ str_plural($division->locality('squad')) }}
+                        {{ $division->locality('squad') }} View
                     </a>
                 </li>
             </ul>

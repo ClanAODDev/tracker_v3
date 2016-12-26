@@ -16,6 +16,7 @@
                 <th class='col-hidden'><strong>Last Login Date</strong></th>
                 <th><strong>Member</strong></th>
                 <th class='nosearch text-center hidden-xs hidden-sm'><strong>Rank</strong></th>
+                <th class='text-center'><strong>Squad</strong></th>
                 <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
                 <th class='text-center'><strong>Forum Activity</strong></th>
                 <th class='text-center'><string>Last Promoted</string></th>
@@ -32,6 +33,7 @@
                                 href="{{ route('member', $member->clan_id) }}"><i
                                     class="fa fa-search text-muted pull-right" title="View profile"></i></a></td>
                     <td class="text-center">{{ $member->rank->abbreviation }}</td>
+                    <td class="text-center">{{ $member->squad_id }}</td>
                     <td class="text-center">{{ $member->join_date }}</td>
                     <td class="text-center">
                         <span class="{{ getActivityClass($member->last_activity, $division) }}">{{ $member->present()->lastActive }}</span>
