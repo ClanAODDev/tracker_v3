@@ -20,7 +20,7 @@ $division = $member->primaryDivision
                     @foreach($positions as $position)
                         <option value="{{ $position->id }}"
                                 {{ selected($selectedPosition, $position->id) }}
-                        >{{ ucwords($division->locality($position->name)) }}</option>
+                        >{{ ucwords($position->name) }}</option>
                     @endforeach
                 </select>
             </div>

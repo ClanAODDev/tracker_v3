@@ -77,26 +77,6 @@ class DivisionSeeder extends Seeder
                     'old-string' => 'platoon leader',
                     'new-string' => 'platoon leader'
                 ],
-                [
-                    'old-string' => 'member',
-                    'new-string' => 'member'
-                ],
-                [
-                    'old-string' => 'general sergeant',
-                    'new-string' => 'general sergeant'
-                ],
-                [
-                    'old-string' => 'executive officer',
-                    'new-string' => 'executive officer'
-                ],
-                [
-                    'old-string' => 'commanding officer',
-                    'new-string' => 'commanding officer'
-                ],
-                [
-                    'old-string' => 'clan admin',
-                    'new-string' => 'clan admin'
-                ],
             ]
         ];
 
