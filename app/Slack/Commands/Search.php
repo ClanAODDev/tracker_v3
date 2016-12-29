@@ -21,7 +21,7 @@ class Search extends Base implements Command
     private $profile_path = "http://www.clanaod.net/forums/member.php?u=";
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function handle()
     {
@@ -35,7 +35,10 @@ class Search extends Base implements Command
 
         if ($this->members) {
             foreach ($this->members as $member) {
-                $division = ($member->primaryDivision) ? "{$member->primaryDivision->name} Division" : null;
+                $division = ($member->primaryDivision)
+                    ? "{$member->primaryDivision->name} Division"
+                    : "Ex-AOD";
+
                 $this->content[] = [
                     'title' => "{$member->present()->rankName} - {$division}",
                     'text' => $this->profile_path . $member->clan_id,
@@ -44,11 +47,13 @@ class Search extends Base implements Command
             }
         }
 
-        if (count($this->members) > 10) {
+        if ($this->members->count() > 10) {
             return [
                 'text' => 'More than 10 members were found. Please narrow your search terms.'
             ];
-        } else if (count($this->members) >= 1) {
+        }
+
+        if ($this->members->count() >= 1) {
             return [
                 'response_type' => 'in_channel',
                 'text' => "The following members were found:",

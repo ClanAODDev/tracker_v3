@@ -1,25 +1,24 @@
 <?php
 
-use League\Csv\Writer;
-
 Auth::routes();
 
 Route::get('/home', 'AppController@index');
 Route::get('/', 'AppController@index');
 
-//Route::get('send/mail', 'UserController@sendEmailReminder');
-
-// members
-Route::get('members/{member}', 'MemberController@show')->name('member');
-Route::get('members/{member}/edit', 'MemberController@edit')->name('editMember');
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
 
-// member data handling
-Route::delete('members/{member}/delete', 'MemberController@destroy')->name('deleteMember');
+//Route::get('send/mail', 'UserController@sendEmailReminder');
 
+
+// Members endpoints
+Route::group(['prefix' => 'members'], function () {
+    Route::get('members/{member}', 'MemberController@show')->name('member');
+    Route::get('members/{member}/edit', 'MemberController@edit')->name('editMember');
+    Route::delete('members/{member}/delete', 'MemberController@destroy')->name('deleteMember');
+});
 
 /**
- * Division Endpoints
+ * Division endpoints
  */
 Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}', 'DivisionController@show')->name('division');
@@ -42,18 +41,8 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/squads/{squad}', 'SquadController@show')->name('squad');
 });
 
-
 // logging activity
 Route::get('users/{username}/activity', 'ActivitiesController@byUser');
-
-
-/**
- * Vue endpoints
- */
-Route::group(['prefix' => 'v1/api'], function () {
-    Route::get('activity/platoon/{platoon}', 'PlatoonController@activity');
-    Route::get('stats/ranks/division/{division}', 'DivisionController@rankDemographic');
-});
 
 
 /**
@@ -66,35 +55,22 @@ Route::group(['middleware' => 'slack'], function () {
     ]);
 });
 
-/**
- * AOD Forum sync endpoint
- */
-Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:15'], function () {
-    Route::get('/division-data/{division_name}', function ($division_name) {
-        $info = new \App\AOD\MemberSync\GetDivisionInfo($division_name);
-
-        return response()->json($info);
-    });
-});
 
 /**
  * API ENDPOINTS
  */
-Route::group(['prefix' => 'v1/api', 'middleware' => 'throttle:30'], function () {
-    Route::get('members', 'API\APIController@members');
-    Route::get('users', 'API\APIController@users');
-    Route::get('divisions', 'API\APIController@divisions');
-    Route::get('squads', 'API\APIController@squads');
-    Route::get('platoons', 'API\APIController@platoons');
-    Route::get('divisions/info', 'API\DivisionController@info');
+
+Route::group(['prefix' => 'api/v1', 'middleware' => 'throttle:30'], function () {
+    Route::get('divisions', 'API\v1\DivisionController@index');
+    Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show');
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
-   Route::get('/', 'AdminController@index')->name('admin');
-   Route::patch('divisions/update', 'AdminController@updateDivisions')->name('updateDivisions');
+    Route::get('/', 'AdminController@index')->name('admin');
+    Route::patch('divisions/update', 'AdminController@updateDivisions')->name('updateDivisions');
 });
 
-
+/*
 Route::get('all', function() {
     $division = \App\Division::find(4);
     $members = $division->activeMembers;
@@ -106,3 +82,17 @@ Route::get('all', function() {
 
     $csv->output('all.csv');
 });
+*/
+
+/**
+ * AOD Forum sync endpoint
+ */
+/*
+Route::group(['prefix' => 'AOD', 'middleware' => 'throttle:15'], function () {
+    Route::get('/division-data/{division_name}', function ($division_name) {
+        $info = new \App\AOD\MemberSync\GetDivisionInfo($division_name);
+
+        return response()->json($info);
+    });
+});
+*/

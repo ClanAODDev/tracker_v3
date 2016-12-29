@@ -20,7 +20,8 @@
         "consoletvs/charts": "^2.0",
         "barryvdh/laravel-debugbar": "^2.3",
         "guzzlehttp/guzzle": "^6.2",
-        "league/csv": "^8.1"
+        "league/csv": "^8.1",
+        "laravel/passport": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
