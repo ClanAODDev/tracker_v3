@@ -3,13 +3,13 @@
 namespace App;
 
 use App\Settings\UserSettings;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
