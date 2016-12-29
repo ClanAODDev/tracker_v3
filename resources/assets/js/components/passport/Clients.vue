@@ -6,6 +6,7 @@
     .m-b-none {
         margin-bottom: 0;
     }
+
 </style>
 
 <template>
@@ -31,46 +32,46 @@
 
                 <table class="table table-borderless m-b-none" v-if="clients.length > 0">
                     <thead>
-                        <tr>
-                            <th>Client ID</th>
-                            <th>Name</th>
-                            <th>Secret</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
+                    <tr>
+                        <th>Client ID</th>
+                        <th>Name</th>
+                        <th>Secret</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
                     </thead>
 
                     <tbody>
-                        <tr v-for="client in clients">
-                            <!-- ID -->
-                            <td style="vertical-align: middle;">
-                                {{ client.id }}
-                            </td>
+                    <tr v-for="client in clients">
+                        <!-- ID -->
+                        <td style="vertical-align: middle;">
+                            {{ client.id }}
+                        </td>
 
-                            <!-- Name -->
-                            <td style="vertical-align: middle;">
-                                {{ client.name }}
-                            </td>
+                        <!-- Name -->
+                        <td style="vertical-align: middle;">
+                            {{ client.name }}
+                        </td>
 
-                            <!-- Secret -->
-                            <td style="vertical-align: middle;">
-                                <code>{{ client.secret }}</code>
-                            </td>
+                        <!-- Secret -->
+                        <td style="vertical-align: middle;">
+                            <code>{{ client.secret }}</code>
+                        </td>
 
-                            <!-- Edit Button -->
-                            <td style="vertical-align: middle;">
-                                <a class="action-link" @click="edit(client)">
-                                    Edit
-                                </a>
-                            </td>
+                        <!-- Edit Button -->
+                        <td style="vertical-align: middle;">
+                            <a class="action-link" @click="edit(client)">
+                                Edit
+                            </a>
+                        </td>
 
-                            <!-- Delete Button -->
-                            <td style="vertical-align: middle;">
-                                <a class="action-link text-danger" @click="destroy(client)">
-                                    Delete
-                                </a>
-                            </td>
-                        </tr>
+                        <!-- Delete Button -->
+                        <td style="vertical-align: middle;">
+                            <a class="action-link text-danger" @click="destroy(client)">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -108,7 +109,7 @@
 
                                 <div class="col-md-7">
                                     <input id="create-client-name" type="text" class="form-control"
-                                                                @keyup.enter="store" v-model="createForm.name">
+                                           @keyup.enter="store" v-model="createForm.name">
 
                                     <span class="help-block">
                                         Something your users will recognize and trust.
@@ -122,7 +123,7 @@
 
                                 <div class="col-md-7">
                                     <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="store" v-model="createForm.redirect">
+                                           @keyup.enter="store" v-model="createForm.redirect">
 
                                     <span class="help-block">
                                         Your application's authorization callback URL.
@@ -176,7 +177,7 @@
 
                                 <div class="col-md-7">
                                     <input id="edit-client-name" type="text" class="form-control"
-                                                                @keyup.enter="update" v-model="editForm.name">
+                                           @keyup.enter="update" v-model="editForm.name">
 
                                     <span class="help-block">
                                         Something your users will recognize and trust.
@@ -190,7 +191,7 @@
 
                                 <div class="col-md-7">
                                     <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="update" v-model="editForm.redirect">
+                                           @keyup.enter="update" v-model="editForm.redirect">
 
                                     <span class="help-block">
                                         Your application's authorization callback URL.
@@ -351,4 +352,5 @@
             }
         }
     }
+
 </script>

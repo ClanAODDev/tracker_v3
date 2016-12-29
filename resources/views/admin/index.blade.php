@@ -9,7 +9,6 @@
             </h2>
             <hr/>
 
-
             {{-- Edit profile nav --}}
             <ul class="nav nav-tabs margin-top-20">
                 <li class="active">
@@ -37,6 +36,11 @@
                         <i class="fa fa-wrench fa-lg text-muted"></i><span class="hidden-xs">Cron Jobs</span>
                     </a>
                 </li>
+                <li>
+                    <a href="#api" data-toggle="tab" aria-expanded="false">
+                        <i class="fa fa-bolt fa-lg text-muted"></i><span class="hidden-xs">API</span>
+                    </a>
+                </li>
             </ul>
             {{-- end profile edit nav --}}
             <div class="margin-top-20">
@@ -61,6 +65,14 @@
 
                     <div class="tab-pane fade in" id="crons">
                         Manage cron jobs for application
+                    </div>
+
+                    <div class="tab-pane fade in" id="api">
+                        <div id="passport">
+                            <passport-clients ></passport-clients>
+                            <passport-authorized-clients ></passport-authorized-clients>
+                            <passport-personal-access-tokens ></passport-personal-access-tokens>
+                        </div>
                     </div>
                 </div>
             </div>
