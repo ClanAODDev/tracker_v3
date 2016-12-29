@@ -2,17 +2,15 @@
 
 namespace App\Providers;
 
-use App\Squad;
+use App\Division;
 use App\Member;
 use App\Platoon;
-use App\Division;
-
-use App\Policies\SquadPolicy;
+use App\Policies\DivisionPolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\PlatoonPolicy;
-use App\Policies\DivisionPolicy;
-
-use Illuminate\Support\Facades\Gate;
+use App\Policies\SquadPolicy;
+use App\Squad;
+use Carbon;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -40,7 +38,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
-
         Passport::tokensCan([
             'provision' => 'Provision Test',
         ]);
