@@ -60,7 +60,7 @@ Route::group(['middleware' => 'slack'], function () {
  * API ENDPOINTS
  */
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'throttle:30'], function () {
+Route::group(['prefix' => 'api/v1', 'middleware' => 'throttle:30', 'auth:api'], function () {
     Route::get('divisions', 'API\v1\DivisionController@index');
     Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show');
 });
