@@ -44,6 +44,8 @@ Route::group(['prefix' => 'divisions/'], function () {
 // logging activity
 Route::get('users/{username}/activity', 'ActivitiesController@byUser');
 
+Route::get('developers', 'DeveloperController@index')->name('developer');
+
 
 /**
  * Slack handler
