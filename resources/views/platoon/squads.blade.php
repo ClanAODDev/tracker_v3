@@ -16,14 +16,14 @@
                 <li>
                     <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}">
                         <i class="fa fa-cube fa-lg"></i>
-                        {{ ucwords($division->locality('platoon')) }}
+                        {{ ucwords($division->locality('platoon')) }} View
                     </a>
                 </li>
 
                 <li class="active">
                     <a href="#">
                         <i class="fa fa-cubes fa-lg"></i>
-                        {{ str_plural(ucwords($division->locality('squad'))) }}
+                        {{ ucwords($division->locality('squad')) }} View
                     </a>
                 </li>
 
