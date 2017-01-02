@@ -2,22 +2,28 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Rank;
-use App\Squad;
 use App\Member;
-use App\Platoon;
-use App\Division;
+use App\Rank;
+use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberPolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user)
+    {
+        // admins, SGTs, developers have access to all members
+        if ($user->isRole('admin')
+            || $user->isRole('sr_ldr')
+            || $user->isDeveloper()
+        ) {
+            return true;
+        }
+    }
+
     /**
      * Can the user update the given member?
-     *
-     * @TODO: Provide a mechanism for divisions to configure this policy
      *
      * @param User $user
      * @param Member $member
@@ -25,32 +31,18 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        // admins and developers can update
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        // user can update self
+        if ($user->member == $member) {
             return true;
         }
 
-        // division leaders (CO,XO) can modify anyone in their own division
-        if ($member->primaryDivision instanceof Division &&
-            $user->member->isDivisionLeader($member->primaryDivision) &&
-            $user->isRole('sr_ldr')
-        ) {
+        // Officers can update anyone within own platoon (or squad)
+        if ($user->isRole('officer') && $user->member->platoon == $member->platoon) {
             return true;
         }
 
-        // platoon leaders can modify anyone in their own platoon
-        if ($member->platoon instanceof Platoon &&
-            $user->isRole('sr_ldr') &&
-            $user->member->isPlatoonLeader($member->platoon)
-        ) {
-            return true;
-        }
-
-        // squad leaders can edit members of their squad
-        if ($member->squad instanceof Squad &&
-            $user->isRole('jr_ldr') &&
-            $user->member->isSquadLeader($member->squad)
-        ) {
+        // Jr leaders (CPl) can update anyone within division
+        if ($user->isRole('jr_ldr') && $user->member->division == $member->division) {
             return true;
         }
 

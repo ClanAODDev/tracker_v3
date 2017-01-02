@@ -21,24 +21,34 @@ class RoleSeeder extends Seeder
         DB::table('roles')->insert(
             [
                 [
-                    'name' => 'user',
-                    'label' => 'User',
+                    'name' => 'member',
+                    'label' => 'Member',
                     'created_at' => $date,
                     'updated_at' => $date,
                 ],
                 [
+                    // NCO
+                    'name' => 'officer',
+                    'label' => 'Officer',
+                    'created_at' => $date,
+                    'updated_at' => $date,
+                ],
+                [
+                    // Moderators (CPL)
                     'name' => 'jr_ldr',
                     'label' => 'Junior Leader',
                     'created_at' => $date,
                     'updated_at' => $date,
                 ],
                 [
+                    // SGT
                     'name' => 'sr_ldr',
                     'label' => 'Senior Leader',
                     'created_at' => $date,
                     'updated_at' => $date,
                 ],
                 [
+                    // MSGT+
                     'name' => 'admin',
                     'label' => 'Administrator',
                     'created_at' => $date,
@@ -46,6 +56,5 @@ class RoleSeeder extends Seeder
                 ],
             ]
         );
-
     }
 }
