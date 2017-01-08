@@ -13,11 +13,8 @@ class MemberPolicy
 
     public function before(User $user)
     {
-        // admins, SGTs, developers have access to all members
-        if ($user->isRole('admin')
-            || $user->isRole('sr_ldr')
-            || $user->isDeveloper()
-        ) {
+        // MSgts, SGTs, developers have access to all members
+        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
             return true;
         }
     }
@@ -32,7 +29,7 @@ class MemberPolicy
     public function update(User $user, Member $member)
     {
         // user can update self
-        if ($user->member == $member) {
+        if ($user->member->id == $member->id) {
             return true;
         }
 
@@ -42,7 +39,7 @@ class MemberPolicy
         }
 
         // Jr leaders (CPl) can update anyone within division
-        if ($user->isRole('jr_ldr') && $user->member->division == $member->division) {
+        if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $member->primaryDivision->id) {
             return true;
         }
 

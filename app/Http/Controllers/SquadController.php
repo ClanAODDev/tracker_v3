@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Http\Requests\CreateSquadForm;
+use App\Http\Requests\UpdateSquadForm;
 use App\Member;
 use App\Platoon;
 use App\Squad;
-use Auth;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 
 class SquadController extends Controller
 {
@@ -52,7 +50,7 @@ class SquadController extends Controller
      */
     public function create(Division $division, Platoon $platoon)
     {
-        $this->authorize('update', $platoon);
+        $this->authorize('create', [Squad::class, $division]);
 
         return view('squad.create', compact('division', 'platoon'));
     }
@@ -67,16 +65,15 @@ class SquadController extends Controller
      */
     public function store(CreateSquadForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
-                ->withErrors(['leader' => 'Member not assigned to this division!'])
+                ->withErrors(['leader_id' => 'Member not assigned to this division!'])
                 ->withInput();
         }
 
         $form->persist();
 
-        flash("{$division->locality('squad')} has been created!",
-            'success');
+        flash("{$division->locality('squad')} has been created!", 'success');
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
@@ -97,24 +94,37 @@ class SquadController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param Division $division
+     * @param Platoon $platoon
      * @param Squad $squad
      * @return \Illuminate\Http\Response
      */
-    public function edit(Squad $squad)
+    public function edit(Division $division, Platoon $platoon, Squad $squad)
     {
         $this->authorize('update', $squad);
+
+        return view('squad.update', compact('squad', 'platoon', 'division'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param UpdateSquadForm $form
+     * @param Division $division
+     * @param Platoon $platoon
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Squad $squad)
+    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
     {
-        $this->authorize('update', $squad);
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
+            return redirect()->back()
+                ->withErrors(['leader_id' => 'Member not assigned to this division!'])
+                ->withInput();
+        }
+
+        $form->persist($squad);
+
+        return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
 
     /**
@@ -129,13 +139,13 @@ class SquadController extends Controller
     }
 
     /**
-     * @param CreatePlatoonRequest $request
+     * @param $request
      * @param Division $division
      * @return bool
      */
-    public function isMemberOfDivision(Division $division, CreateSquadForm $request)
+    public function isMemberOfDivision(Division $division, $request)
     {
-        $member = Member::whereClanId($request->leader)->first();
+        $member = Member::whereClanId($request->leader_id)->first();
 
         return $member->primaryDivision instanceOf Division &&
             $member->primaryDivision->id === $division->id;

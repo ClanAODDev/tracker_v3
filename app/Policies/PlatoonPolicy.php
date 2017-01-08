@@ -3,10 +3,14 @@
 namespace App\Policies;
 
 use App\Division;
-use App\User;
 use App\Platoon;
+use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class PlatoonPolicy
+ * @package App\Policies
+ */
 class PlatoonPolicy
 {
     use HandlesAuthorization;
@@ -19,25 +23,49 @@ class PlatoonPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
             return true;
         }
     }
 
-    public function create(User $user, Division $division)
-    {
-
-
-        return true;
-    }
-
+    /**
+     * @param User $user
+     * @param Platoon $platoon
+     * @return bool
+     */
     public function update(User $user, Platoon $platoon)
     {
+        // moderators (CPLs) can affect platoons within their division
+        if ($user->isRole('jr_ldr')
+            && $user->member->primaryDivision == $platoon->division
+        ) {
+            return true;
+        }
+
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Division $division
+     * @return bool
+     */
+    public function create(User $user, Division $division)
+    {
+        // CPLs can create platoons within their own division
+        if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $division->id) {
+            return true;
+        }
+    }
+
+    /**
+     * @param User $user
+     * @param Platoon $platoon
+     * @return bool
+     */
     public function delete(User $user, Platoon $platoon)
     {
-        return $this->update($user, $platoon);
+        // mimic create permissions
+        return $this->create($user, $platoon->division);
     }
 }

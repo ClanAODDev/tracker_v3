@@ -3,15 +3,12 @@
 
     {!! Breadcrumbs::render('create-platoon', $division) !!}
 
-
     <h2>
         @include('division.partials.icon')
 
         <strong>{{ $division->name }}</strong>
         <small>Create {{ $division->locality('platoon') }}</small>
     </h2>
-
-    <hr/>
 
     <form id="create-platoon" method="post" class="well"
           action="{{ route('savePlatoon', $division->abbreviation) }}">

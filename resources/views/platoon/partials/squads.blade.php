@@ -1,8 +1,15 @@
 @foreach($squads as $squad)
 
-    <div class="panel panel-primary squad">
+    <div class="panel panel-default squad">
         <div class="panel-heading wrap-ellipsis">
             <span class="badge pull-right">{{ $squad->members->count() }}</span>
+            @can('update', $squad)
+                <a href="{{ route('editSquad', [$division->abbreviation, $platoon, $squad]) }}"
+                   title="Edit Squad">
+                    <i class="fa fa-cog fa-lg"></i>
+                </a>
+            @endcan
+
             @if($squad->leader)
                 {!! $squad->leader->present()->rankName !!}
             @else

@@ -11,42 +11,17 @@
                 <small>{{ $division->name }}</small>
             </h2>
         </div>
-        <div class="col-sm-6">
-            <ul class="nav nav-pills pull-right">
-                <li>
-                    <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}">
-                        <i class="fa fa-cube fa-lg"></i>
-                        {{ ucwords($division->locality('platoon')) }}
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon->id]) }}">
-                        <i class="fa fa-cubes fa-lg"></i>
-                        {{ str_plural($division->locality('squad')) }}
-                    </a>
-                </li>
-
-                @can('update', $platoon)
-                    <li class="pull-right active">
-                        <a href="#"><i class="fa fa-plus fa-lg"></i><span class="hidden-xs hidden-sm">Create {{ $division->locality('squad') }}</span>
-                        </a>
-                    </li>
-                @endcan
-            </ul>
-        </div>
     </div>
-    <hr/>
 
-    <form id="create-squad" method="post" class="well"
+    <form id="create-squad" method="post" class="well margin-top-20"
           action="{{ route('saveSquad', [$division->abbreviation, $platoon->id]) }}">
         <fieldset>
-            <legend><i class="fa fa-cubes"></i> {{ $division->locality('squad') }} Details
+            <legend><i class="fa fa-cubes"></i> New {{ $division->locality('squad') }} Details
                 <button type="submit" class="btn btn-success pull-right btn-xs">Create</button>
             </legend>
 
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-6 hidden-xs">
                     <p>Provide the details for your new {{ $division->locality('squad') }} here. When assigning a leader, the tracker will automatically assign them to the new squad in the current platoon, and set their position to {{ $division->locality('squad leader') }}.</p>
                     <p>If no leader is available, leave it blank and it will be marked
                         <code>TBA</code>. You can update it later.</p>
@@ -60,14 +35,14 @@
                 <input type="hidden" value="{{ $platoon->id }}" name="division"/>
 
                 <div class="col-sm-6">
-                    <div class="form-group {{ $errors->has('leader') ? ' has-error' : null }}">
-                        <label for="leader" class="control-label">{{ $division->locality('squad leader') }}</label>
-                        <input type="text" id="leader" name="leader" placeholder="AOD Member ID"
-                               value="{{ old('leader') }}" class="form-control"/>
+                    <div class="form-group {{ $errors->has('leader_is') ? ' has-error' : null }}">
+                        <label for="leader_is" class="control-label">{{ $division->locality('squad leader') }}</label>
+                        <input type="text" id="leader_is" name="leader_is" placeholder="AOD Member ID"
+                               value="{{ old('leader_is') }}" class="form-control"/>
 
                         <span class="help-block">
-                        @if ($errors->has('leader'))
-                                {{ $errors->first('leader') }}
+                        @if ($errors->has('leader_id'))
+                                {{ $errors->first('leader_id') }}
                             @endif
                         </span>
                     </div>
@@ -75,7 +50,8 @@
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" value="{{ old('general-population') }}" name="genpop">General Population
+                                <input type="checkbox" value="{{ old('gen_pop') }}"
+                                       name="gen_pop">General Population
                                 <sup>1</sup>
                             </label>
                         </div>

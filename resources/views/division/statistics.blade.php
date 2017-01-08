@@ -7,8 +7,8 @@
         <div class="col-xs-6">
             <h2>
                 @include('division.partials.icon')
-                <strong>{{ $division->name }}</strong>
-                <small>Statistics</small>
+                <strong class="hidden-xs">{{ $division->name }}</strong>
+                <small class="hidden-xs">Statistics</small>
             </h2>
         </div>
         <div class="col-xs-6">

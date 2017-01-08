@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Member;
 use App\Squad;
+use App\Member;
+use App\Division;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateSquadForm extends FormRequest
@@ -11,11 +12,12 @@ class CreateSquadForm extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
+     * @param Division $division
      * @return bool
      */
-    public function authorize()
+    public function authorize(Division $division)
     {
-        return $this->user()->can('create', Squad::class);
+        return $this->user()->can('create', [Squad::class, $division]);
     }
 
     /**
@@ -26,7 +28,7 @@ class CreateSquadForm extends FormRequest
     public function rules()
     {
         return [
-            'leader' => [
+            'leader_id' => [
                 'exists:members,clan_id',
                 'unique:squads,leader_id'
             ]
@@ -41,8 +43,8 @@ class CreateSquadForm extends FormRequest
     public function messages()
     {
         return [
-            'leader.unique' => 'Member already assigned as a leader.',
-            'leader.exists' => 'Member with that clan id does not exist.',
+            'leader_id.unique' => 'Member already assigned as a leader.',
+            'leader_id.exists' => 'Member with that clan id does not exist.',
         ];
     }
 
@@ -50,7 +52,7 @@ class CreateSquadForm extends FormRequest
     {
         $squad = new Squad;
 
-        $squad->gen_pop = $this->genpop;
+        $squad->gen_pop = $this->gen_pop;
         $squad->platoon()->associate($this->route('platoon'));
         $squad->save();
 
@@ -58,12 +60,12 @@ class CreateSquadForm extends FormRequest
          * Handle squad leader assignment
          */
         if ($this->leader) {
-            $leader = Member::whereClanId($this->leader)->firstOrFail();
+            $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
+            $squad->leader()->associate($leader);
             $leader->squad()->associate($squad);
             $leader->platoon()->associate($this->route('platoon'));
-
-            setLeaderOf($squad, $leader);
+            $leader->assignPosition("squad leader")->save();
         }
     }
 }

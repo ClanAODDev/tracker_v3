@@ -4,10 +4,10 @@
     {!! Breadcrumbs::render('division', $division) !!}
 
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-xs-6">
             <h2>
                 @include('division.partials.icon')
-                <strong>{{ $division->name }}</strong>
+                <strong class="hidden-xs">{{ $division->name }}</strong>
 
                 @can('update', $division)
                     <a title="Edit division" class="btn btn-default"
@@ -19,7 +19,7 @@
             </h2>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-xs-6">
             <ul class="nav nav-pills pull-right">
 
                 <li class="active">

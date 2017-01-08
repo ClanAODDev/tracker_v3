@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
 use App\Http\Requests\CreatePlatoonForm;
 use App\Member;
 use App\Platoon;
-use App\Division;
-use App\Http\Requests;
-use Illuminate\Http\Request;
-use ConsoleTVs\Charts\Charts;
 use App\Repositories\PlatoonRepository;
+use App\User;
+use ConsoleTVs\Charts\Charts;
+use Illuminate\Http\Request;
 
 class PlatoonController extends Controller
 {
@@ -27,11 +27,14 @@ class PlatoonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param User $user
      * @param Division $division
      * @return \Illuminate\Http\Response
      */
     public function create(Division $division)
     {
+        $this->authorize('create', [Platoon::class, $division]);
+
         return view('platoon.create', compact('division'));
     }
 
@@ -52,7 +55,8 @@ class PlatoonController extends Controller
 
         $form->persist();
 
-        flash("{$division->locality('platoon')} has been created! If you assigned a leader, you will need to ensure you have also updated their account access to 'Senior Leader'", 'success');
+        flash("{$division->locality('platoon')} has been created! If you assigned a leader, you will need to ensure you have also updated their account access to 'Senior Leader'",
+            'success');
 
         return redirect()->route('division', $division->abbreviation);
     }
