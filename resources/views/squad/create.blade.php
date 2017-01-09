@@ -17,7 +17,7 @@
           action="{{ route('saveSquad', [$division->abbreviation, $platoon->id]) }}">
 
         @include('squad.form', ['actionText' => 'Create New'])
-        
+
     </form>
 
 @stop

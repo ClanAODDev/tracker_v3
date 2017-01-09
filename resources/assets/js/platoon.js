@@ -18,7 +18,7 @@ var Platoon = Platoon || {};
                 nowDate = y + "-" + m + "-" + d,
                 selected = new Array();
 
-            var table = $('#members-table').DataTable({
+            $('table.members-table').DataTable({
                 "autoWidth": true,
                 "sDom": 'T<"clear">tfrip',
                 "order": [],
@@ -73,17 +73,19 @@ var Platoon = Platoon || {};
                 }
             });
 
-            $("#members-table_paginate").addClass('text-center');
-            $("#members-table_filter input").appendTo("#playerFilter").removeClass('input-sm');
+
+            $(".dataTables_info").remove();
+            $(".dataTables_filter input").appendTo("#playerFilter").removeClass('input-sm');
             $("#playerFilter input").attr({
                 "placeholder": "Search Players",
                 "class": "form-control input-lg"
             });
-            $("#members-table_filter label").remove();
+            $(".dataTables_filter label").remove();
 
-            $(".DTTT_container .DTTT_button").removeClass('DTTT_button');
-            $(".DTTT_container").appendTo('.download-area');
-            $(".DTTT_container a").addClass('btn btn-xs btn-info tool').attr('title', 'Download table data').text("Export").css('margin-top', '5px');
+            $(".DTTT_container .DTTT_button").removeClass('DTTT_button').remove();
+            $(".DTTT_container").appendTo('.download-area').remove();
+
+            $(".DTTT_container a").addClass('btn btn-xs btn-info tool').attr('title', 'Download table data').text("Export").css('margin-top', '5px').remove();
 
             $(".no-sort").removeClass("sorting");
 
