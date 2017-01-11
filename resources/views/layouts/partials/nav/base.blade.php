@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ action('AppController@index') }}"><img src='{!! asset('images/logo.svg') !!}' class='pull-left'/><strong
+            <a class="navbar-brand" href="{{ route('index') }}"><img src='{!! asset('images/logo.svg') !!}' class='pull-left'/><strong
                         class='logo'>AOD</strong>
                 <small>Tracker <sup>v3</sup></small>
             </a>
