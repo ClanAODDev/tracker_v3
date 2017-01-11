@@ -3,8 +3,8 @@
 Auth::routes();
 
 
-Route::get('/home', 'AppController@index');
-Route::get('/', 'AppController@index');
+Route::get('/home', 'AppController@index')->name('home');
+Route::get('/', 'AppController@index')->name('index');
 
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
 

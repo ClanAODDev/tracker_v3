@@ -33,9 +33,8 @@
                 <li><a href="#" data-toggle="pill" class="settings-btn"> Settings</a></li>
                 <li><a href="{{ Auth::user()->member->AODProfileLink }}"
                        target="_blank"> Forum profile</a></li>
-                <li><a href="help/" role="button">Help</a></li>
                 <li class="divider"></li>
-                <li><a href="{{ url('/logout') }}"
+                <li><a href="#"
                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i> Logout</a>
                 </li>
 
