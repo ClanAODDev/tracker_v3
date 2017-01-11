@@ -82,7 +82,7 @@ var Tracker = Tracker || {};
                 var name = $('input#member-search').val();
 
                 $.ajax({
-                    url: '/search/members/' + name,
+                    url: window.Laravel.appPath + '/search/members/' + name,
                     type: 'GET',
                     success: function success(response) {
                         $('#member-search-results').html(response);

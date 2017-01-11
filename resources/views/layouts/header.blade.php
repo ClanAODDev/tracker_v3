@@ -27,5 +27,6 @@ href="//cdnjs.cloudflare.com/ajax/libs/datatables-tabletools/2.1.5/css/TableTool
 <script>
     window.Laravel = <?php echo json_encode([
         'csrfToken' => csrf_token(),
+        'appPath' => route('index'),
     ]); ?>
 </script>
