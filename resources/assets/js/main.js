@@ -9,7 +9,6 @@ var Tracker = Tracker || {};
             Tracker.SearchCollection();
 
             // misc functionality, visual
-            Tracker.AnimateCounter();
             Tracker.AlertHandling();
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
@@ -82,32 +81,12 @@ var Tracker = Tracker || {};
                     url: window.Laravel.appPath + '/search/members/' + name,
                     type: 'GET',
                     success: function (response) {
+                        alert(this.url);
+                        console.log(this.url);
                         $('#member-search-results').html(response);
                     }
                 });
             }
-        },
-
-        /**
-         * Animate counter areas
-         *
-         * @constructor
-         */
-        AnimateCounter: function () {
-            $('.count-animated').each(function () {
-                var $this = $(this);
-                $({Counter: 0}).animate({Counter: $this.text()}, {
-                    duration: 3000,
-                    easing: "easeInOutCirc",
-                    step: function () {
-                        if ($this.hasClass('percentage')) {
-                            $this.text(Tracker.FormatNumber(Math.ceil(this.Counter) + "%"));
-                        } else {
-                            $this.text(Tracker.FormatNumber(Math.ceil(this.Counter)));
-                        }
-                    }
-                });
-            });
         },
 
         /**
