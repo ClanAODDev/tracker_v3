@@ -21,8 +21,6 @@ class WelcomeEmail extends Mailable
     {
         $user = Auth::user();
 
-        return $this->view('emails.welcome', [
-            compact('user')
-        ]);
+        return $this->view('emails.welcome', compact('user'));
     }
 }
