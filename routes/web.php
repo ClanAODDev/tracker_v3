@@ -1,13 +1,5 @@
 <?php
 
-use App\Mail\WelcomeEmail;
-
-Route::get('email/test/do', function () {
-    $user = App\User::find(1);
-    Mail::to($user->email)->send(new WelcomeEmail());
-});
-
-
 Auth::routes();
 
 
