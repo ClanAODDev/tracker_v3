@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'from' => ['address' => 'admin@aod-tracker.com', 'name' => 'Guybrush'],
+    'from' => env('MAIL_SENDER'),
 
     /*
     |--------------------------------------------------------------------------
