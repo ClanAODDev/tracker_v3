@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use Auth;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -18,6 +19,10 @@ class WelcomeEmail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.welcome');
+        $user = Auth::user();
+
+        return $this->view('emails.welcome', [
+            compact('user')
+        ]);
     }
 }

@@ -1,5 +1,13 @@
 <?php
 
+use App\Mail\WelcomeEmail;
+
+Route::get('email/test/do', function () {
+    $user = App\User::find(1);
+    Mail::to($user->email)->send(new WelcomeEmail());
+});
+
+
 Auth::routes();
 
 
@@ -7,8 +15,6 @@ Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
-
-//Route::get('send/mail', 'UserController@sendEmailReminder');
 
 
 // Members endpoints

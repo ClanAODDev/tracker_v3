@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use App\Mail\WelcomeEmail;
+use Mail;
 
 class AppController extends Controller
 {

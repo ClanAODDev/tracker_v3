@@ -20,6 +20,9 @@ var Tracker = Tracker || {};
          */
         SearchMembers: function () {
             this.TriggerFilter(document.getElementById("member-search"), this.GetSearchResults, 1000);
+            $("#searchclear").click(function () {
+                $("div#member-search-results").hide();
+            });
         },
         /**
          * Handle repeater fields
@@ -75,13 +78,14 @@ var Tracker = Tracker || {};
          */
         GetSearchResults: function () {
             if ($('#member-search').val()) {
-                var name = $('input#member-search').val();
+                var name = $('input#member-search').val(),
+                    base_url = window.Laravel.appPath;
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/search/members/' + name,
+                    url: base_url + '/search/members/' + name,
                     type: 'GET',
                     success: function (response) {
-                        alert(this.url);
+                        $("div#member-search-results").show();
                         console.log(this.url);
                         $('#member-search-results').html(response);
                     }
