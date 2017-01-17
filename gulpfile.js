@@ -30,8 +30,9 @@ elixir(function (mix) {
         'public/js/libs.js', 'resources/assets/js');
 
     mix.browserify('main.js');
-    mix.webpack('app.js');
     mix.browserify('platoon.js');
+
+    mix.webpack('app.js');
 });
 
 
