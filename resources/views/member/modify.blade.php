@@ -21,11 +21,6 @@
             </a>
         </li>
         <li>
-            <a href="#game-info" data-toggle="tab" aria-expanded="false">
-                <i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs"> Sub-games</span>
-            </a>
-        </li>
-        <li>
             <a href="#handles" data-toggle="tab" aria-expanded="false">
                 <i class="fa fa-users fa-lg"></i><span class="hidden-xs"> Handles</span>
             </a>
@@ -51,7 +46,6 @@
                 @include('member.forms.editProfileForm')
             </div>
         </div>
-        <div class="tab-pane fade in" id="game-info"></div>
         <div class="tab-pane fade in" id="handles"></div>
         <div class="tab-pane fade in" id="history"></div>
         <div class="tab-pane fade in" id="user-account"></div>
