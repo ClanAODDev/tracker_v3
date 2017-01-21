@@ -13,16 +13,22 @@
     <form id="create-platoon" method="post" class="well"
           action="{{ route('savePlatoon', $division->abbreviation) }}">
         <fieldset>
+
             <legend><i class="fa fa-cube"></i> {{ $division->locality('platoon') }} Details
                 <button type="submit" class="btn btn-success pull-right btn-xs">Create</button>
             </legend>
 
             <div class="row">
                 <div class="col-sm-6">
-                    <p>Provide the details for your new {{ $division->locality('platoon') }} here. When assigning a leader, the tracker will automatically assign them to the new platoon, and set their position to {{ $division->locality('platoon leader') }}.</p>
+                    <p>Provide the details for your new {{ $division->locality('platoon') }} here. When assigning a
+                        leader, the tracker will automatically assign them to the new platoon, and set their position
+                        to {{ $division->locality('platoon leader') }}.</p>
+
                     <p>If no leader is available, <strong>leave it blank</strong> and it will be marked
                         <code>TBA</code>. You can update it later.</p>
-                    <p>Leaders can only be assigned to a single {{ $division->locality('platoon') }} and they must belong to the current division.</p>
+
+                    <p>Leaders can only be assigned to a single {{ $division->locality('platoon') }} and they must
+                        belong to the current division.</p>
                 </div>
 
                 <input type="hidden" value="{{ $division->id }}" name="division"/>
