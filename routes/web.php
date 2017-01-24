@@ -30,12 +30,13 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::delete('{division}', 'DivisionController@destroy')->name('deleteDivision');
 
     // platoons
-    Route::get('{division}/platoons/create', 'PlatoonController@create')->name('createPlatoon');
-    Route::post('{division}/platoons/store', 'PlatoonController@store')->name('savePlatoon');
     Route::put('{division/platoons', 'PlatoonController@update')->name('updatePlatoon');
     Route::patch('{division/platoons/{platoon}', 'PlatoonController@update');
     Route::delete('{division}/platoons/{platoon}', 'PlatoonController@delete')->name('deletePlatoon');
+    Route::get('{division}/platoons/create', 'PlatoonController@create')->name('createPlatoon');
+    Route::post('{division}/platoons/store', 'PlatoonController@store')->name('savePlatoon');
     Route::get('{division}/platoons/{platoon}', 'PlatoonController@show')->name('platoon');
+    Route::get('{division}/platoons/{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
     Route::get('{division}/platoons/{platoon}/squads', 'SquadController@index')->name('platoonSquads');
 
     // squads

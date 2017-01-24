@@ -8,7 +8,7 @@
             <h2>
                 @include('division.partials.icon')
                 <strong>{{ $platoon->name }}</strong>
-                <small>Management</small>
+                <small>Manage Platoon</small>
             </h2>
         </div>
     </div>

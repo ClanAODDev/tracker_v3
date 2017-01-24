@@ -47,7 +47,7 @@ class PlatoonController extends Controller
      */
     public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($form->leader && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader' => 'Member not assigned to this division!'])
                 ->withInput();
@@ -84,12 +84,15 @@ class PlatoonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param Division $division
+     * @param Platoon $platoon
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Division $division, Platoon $platoon)
     {
-        //
+        return view('platoon.edit',
+            compact('division', 'platoon')
+        );
     }
 
     /**

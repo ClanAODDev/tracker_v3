@@ -1,16 +1,12 @@
 <div class="panel panel-warning">
-    <div class="panel-heading">Unassigned Members <span class="badge pull-right">{{ $platoon->unassigned->count() }}</span></div>
-    <div class="panel-body" style="height: 250px; max-height: 250px; overflow-y: scroll;">
-        @forelse($unassigned->chunk(ceil($platoon->unassigned->count() / 2)) as $chunk)
-            <div class="col-md-6 list-group">
-                @foreach($chunk as $member)
-                    <a href="#" class="list-group-item wrap-ellipsis">
-                        <small>{!! $member->present()->nameWithIcon(true) !!}</small>
-                    </a>
-                @endforeach
-            </div>
-        @empty
-            <p class="text-muted">No Unassigned Members</p>
-        @endforelse
+    <div class="panel-heading">Unassigned Members <span
+                class="badge pull-right">{{ $platoon->unassigned->count() }}</span></div>
+    <div class="panel-body">
+        @if($platoon->unassigned->count())
+            <p>There are <code>{{ $platoon->unassigned->count() }}</code> unassigned members. Do you wish to assign them?</p>
+            <button class="btn btn-default">Manage Squads</button>
+        @else
+            <p>There are no unassigned members.</p>
+        @endif
     </div>
 </div>
