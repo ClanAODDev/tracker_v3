@@ -2,7 +2,6 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Reports\Slack;
 use Log;
 
 /**
@@ -33,8 +32,8 @@ class GetDivisionInfo
         $this->division = $division;
 
         if ( ! getenv('AOD_TOKEN')) {
-            $error = "AOD token not defined";
-            Slack::error('SYNC ERROR: ' . $error);
+            Log::critical("ERROR: AOD Token not defined in configuration.");
+            exit;
         } else {
             $this->data = $this->fetchData();
         }
