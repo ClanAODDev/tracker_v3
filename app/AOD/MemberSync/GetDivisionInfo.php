@@ -53,6 +53,7 @@ class GetDivisionInfo
 
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $results = curl_exec($ch);
@@ -62,6 +63,7 @@ class GetDivisionInfo
 
         if ( ! is_object($data)) {
             Log::critical("ERROR: Member sync returning invalid: {$this->jsonUrl()}");
+            Log::critical($results);
             exit;
         }
 
