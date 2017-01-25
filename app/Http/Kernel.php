@@ -56,5 +56,7 @@ class Kernel extends HttpKernel
         'developer' => \App\Http\Middleware\MustBeDeveloper::class,
         'admin' => \App\Http\Middleware\MustBeAdmin::class,
         'slack' => \App\Http\Middleware\VerifySlackToken::class,
+        'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
+        'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
     ];
 }
