@@ -39,7 +39,9 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::routes();
         Passport::tokensCan([
-            'provision' => 'Provision Test',
+            'query-division-info-basic' => 'Query basic information about divisions',
+            'query-division-info-full' => 'Query full information about divisions',
+            'query-member-data' => 'Query member data',
         ]);
     }
 }
