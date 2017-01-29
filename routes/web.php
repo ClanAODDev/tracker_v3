@@ -72,15 +72,10 @@ Route::group(['middleware' => 'slack'], function () {
 });
 
 
+
 /**
- * API ENDPOINTS
+ * Admin Routes
  */
-
-Route::group(['prefix' => 'api/v1', 'middleware' => ['auth:api', 'throttle:30', 'scope:query-division-info-basic']], function () {
-    Route::get('divisions', 'API\v1\DivisionController@index');
-    Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show');
-});
-
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
     Route::patch('divisions/update', 'AdminController@updateDivisions')->name('updateDivisions');

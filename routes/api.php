@@ -1,20 +1,23 @@
 <?php
 
-use Illuminate\Http\Request;
+Route::group([
+    'prefix' => 'v1',
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+    'middleware' => [
+        'auth:api',
+        'throttle:30',
+        'scope:query-division-info-basic'
+    ]
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
+],
+    function () {
+        // Basic information on divisions
+        Route::get('divisions', 'API\v1\DivisionController@index');
+
+        // Basic information about a specific division
+        Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show');
+
+    }
+);
 
 

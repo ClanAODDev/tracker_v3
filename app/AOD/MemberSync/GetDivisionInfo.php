@@ -19,7 +19,7 @@ class GetDivisionInfo
      *
      * @var string
      */
-    protected $source = "http://www.clanaod.net/forums/aodinfo.php?";
+    protected $source = "https://www.clanaod.net/forums/aodinfo.php?";
 
 
     /**
