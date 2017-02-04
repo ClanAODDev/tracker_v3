@@ -1,19 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-
-    <div class="jumbotron welcome">
-        <h1>Hi, <strong>{{ Auth::user()->name }}</strong>!</h1>
-        <p>Welcome to the AOD Division Tracker, a tool for managing the members within your division in conjunction with the Angels of Death gaming community.</p>
-        <p>v3 brings with it a complete application rewrite, and a slew of new and improved features in addition to what you're already used to. Visit the about page to learn more about the update.</p>
-        <button class="btn btn-primary btn-lg">Find Out More &raquo;</button>
-        <button class="btn btn-success btn-lg">Go to your dashboard &raquo;</button>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="view-header">
+                    <div class="pull-right text-right" style="line-height: 14px">
+                        <small>AOD Division Tracker<br>Dashboard<br> <span class="c-white">v3</span></small>
+                    </div>
+                    <div class="header-icon">
+                        <i class="pe page-header-icon pe-7s-home"></i>
+                    </div>
+                    <div class="header-title">
+                        <h3 class="m-b-xs">AOD Division Tracker</h3>
+                        <small>The tracker is a management tool to help leaders organize and maintain the members assigned to their division.</small>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
     </div>
 
-    @if($divisions->count())
-        @include('layouts.partials.all_divisions')
-    @else
-        <p>There are no existing divisions.</p>
-    @endif
-
-@endsection
+@stop

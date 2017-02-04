@@ -163,7 +163,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Laracasts\Flash\FlashServiceProvider::class,
         Maknz\Slack\SlackServiceProvider::class,
 
         /*
@@ -178,6 +177,7 @@ return [
         ConsoleTVs\Charts\ChartsServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Whossun\Toastr\ToastrServiceProvider::class,
 
     ],
 
@@ -207,7 +207,6 @@ return [
         'Eloquent' => Illuminate\Database\Eloquent\Model::class,
         'Event' => Illuminate\Support\Facades\Event::class,
         'File' => Illuminate\Support\Facades\File::class,
-        'Flash' => Laracasts\Flash\Flash::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
@@ -236,6 +235,8 @@ return [
         'Helpers' => App\Helpers::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Toastr' => Whossun\Toastr\Facades\Toastr::class,
+
 
     ],
 

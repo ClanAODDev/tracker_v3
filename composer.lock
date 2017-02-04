@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0cdff6c07b71c3423c20cff29685095a",
+    "content-hash": "d1e19246ebf70053569f31da67bc3fae",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -3928,6 +3928,54 @@
                 "environment"
             ],
             "time": "2016-09-01T10:05:43+00:00"
+        },
+        {
+            "name": "whossun/laravel-toastr",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whossun/laravel-toastr.git",
+                "reference": "f27e013aa086f4dd9251b311602b1b61a516a338"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whossun/laravel-toastr/zipball/f27e013aa086f4dd9251b311602b1b61a516a338",
+                "reference": "f27e013aa086f4dd9251b311602b1b61a516a338",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/session": ">=5.2.7",
+                "illuminate/support": ">=5.2.7",
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Whossun\\Toastr\\": "src/"
+                },
+                "files": [
+                    "src/helper.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "whossun",
+                    "email": "whossun@gmail.com"
+                }
+            ],
+            "description": "toastr.js for laravel 5.2",
+            "homepage": "https://github.com/whossun/laravel-toastr",
+            "keywords": [
+                "laravel",
+                "notification",
+                "php",
+                "toastr"
+            ],
+            "time": "2016-07-10T11:12:29+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",

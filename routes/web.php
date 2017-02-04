@@ -11,9 +11,9 @@ Route::get('search/members/{name}', 'MemberController@search')->name('memberSear
 
 // Members endpoints
 Route::group(['prefix' => 'members'], function () {
-    Route::get('members/{member}', 'MemberController@show')->name('member');
-    Route::get('members/{member}/edit', 'MemberController@edit')->name('editMember');
-    Route::delete('members/{member}/delete', 'MemberController@destroy')->name('deleteMember');
+    Route::get('{member}', 'MemberController@show')->name('member');
+    Route::get('{member}/edit', 'MemberController@edit')->name('editMember');
+    Route::delete('{member}/delete', 'MemberController@destroy')->name('deleteMember');
 });
 
 /**

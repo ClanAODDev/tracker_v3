@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Mail;
 use App\Division;
 use App\Mail\WelcomeEmail;
-use Mail;
+use Whossun\Toastr\Facades\Toastr;
 
 class AppController extends Controller
 {
@@ -24,6 +25,8 @@ class AppController extends Controller
     public function index()
     {
         $divisions = Division::active()->orderBy('name')->get();
+
+        Toastr::info('Messages in here', 'Title');
 
         return view('layouts.home', compact('divisions'));
     }
