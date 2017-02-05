@@ -8,7 +8,7 @@
             </div>
         </div>
         <a class="navbar-brand">
-            AOD Tracker
+            AOD TRACKER
             <span>v3</span>
         </a>
     </div>
