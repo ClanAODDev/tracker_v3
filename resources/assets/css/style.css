@@ -537,7 +537,7 @@ fieldset[disabled] .btn-danger.focus {
 }
 
 .content > div {
-    opacity: 0;
+    /*opacity: 0;*/
 }
 
 .pace {
@@ -1444,6 +1444,16 @@ sup {
     box-shadow: none;
     color: #949ba2;
     border-radius: 3px;
+}
+
+a.panel {
+    display: block;
+}
+
+a.panel:hover, a.panel:active, a.panel:focus {
+    text-decoration: none;
+    color: inherit;
+    background-color: rgba(68, 70, 79, 0.8);
 }
 
 .panel .panel-body {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Mail;
 use App\Division;
 use App\Mail\WelcomeEmail;
@@ -24,10 +25,17 @@ class AppController extends Controller
      */
     public function index()
     {
-        $divisions = Division::active()->orderBy('name')->get();
+        $myDivision = Auth::user()->member->primaryDivision;
 
-        Toastr::info('Messages in here', 'Title');
+        $divisions = Division::active()
+            ->withCount('members')
+            ->orderBy('name')->get();
 
-        return view('layouts.home', compact('divisions'));
+       /* Toastr::success('You have successfully logged in!', 'Hello, ' . strtoupper(Auth::user()->name), [
+            'positionClass' => 'toast-top-right',
+            'progressBar' => true
+        ]);*/
+
+        return view('layouts.home', compact('divisions', 'myDivision'));
     }
 }

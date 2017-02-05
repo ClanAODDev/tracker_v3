@@ -85,9 +85,16 @@ function hasDivisionIcon($abbreviation)
     return File::exists($image);
 }
 
-function getDivisionIconPath($abbreviation)
+function getDivisionIconPath($abbreviation, $size = "large")
 {
-    return asset("/images/game_icons/48x48/{$abbreviation}.png");
+    switch ($size) {
+        case "small":
+            return asset("/images/game_icons/16x16/{$abbreviation}.png");
+        case "medium":
+            return asset("/images/game_icons/32x32/{$abbreviation}.png");
+        case "large":
+            return asset("/images/game_icons/48x48/{$abbreviation}.png");
+    }
 }
 
 /**
@@ -159,7 +166,8 @@ function getActivityClass($date, $division)
     return 'text-success';
 }
 
-function getNameOfClass($class) {
+function getNameOfClass($class)
+{
     $path = explode('\\', get_class($class));
     return array_pop($path);
 }
