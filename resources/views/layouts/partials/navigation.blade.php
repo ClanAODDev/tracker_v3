@@ -1,11 +1,11 @@
 <ul class="nav luna-nav">
 
-    <li class="active">
-        <a href="index.html">Home</a>
+    <li class="{{ set_active('home') }}">
+        <a href="{{ route('home') }}">Home</a>
     </li>
 
-    <li>
-        <a href="#">Documentation</a>
+    <li class="{{ set_active('help') }}">
+        <a href="{{ route('help') }}">Documentation</a>
     </li>
 
     <li>
@@ -17,19 +17,9 @@
             <li><a href="{{ route('member', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}</a></li>
             <li><a href="usage.html">Settings</a></li>
             <li><a href="activity.html">Forum Profile</a></li>
-            <li><a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+            <li><a href="#"
+                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
             </li>
-        </ul>
-    </li>
-
-    <li>
-        <a href="#divisions" data-toggle="collapse" aria-expanded="false">
-            Divisions<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-        </a>
-        <ul id="divisions" class="nav nav-second collapse">
-            @foreach (App\Division::active()->get() as $division)
-                <li><a href="#">{{ $division->name }}</a></li>
-            @endforeach
         </ul>
     </li>
 
@@ -38,11 +28,12 @@
             Tools<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
         <ul id="tools" class="nav nav-second collapse">
-           <li><a href="#">Thing</a></li>
-           <li><a href="#">Thing</a></li>
-           <li><a href="#">Thing</a></li>
-           <li><a href="#">Thing</a></li>
-           <li><a href="#">Thing</a></li>
+            {{--class="{{ set_active('home') }}"--}}
+            <li><a href="#">Thing</a></li>
+            <li><a href="#">Thing</a></li>
+            <li><a href="#">Thing</a></li>
+            <li><a href="#">Thing</a></li>
+            <li><a href="#">Thing</a></li>
         </ul>
     </li>
 </ul>

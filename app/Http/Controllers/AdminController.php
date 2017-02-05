@@ -30,7 +30,7 @@ class AdminController extends Controller
 
     public function rankDemographic()
     {
-        $data = $this->clanRepository->getClanwideRankDemographic();
+        $data = $this->clanRepository->rankDemographic();
 
         return Charts::create('area', 'morris')
             ->setLabels($data['labels'])

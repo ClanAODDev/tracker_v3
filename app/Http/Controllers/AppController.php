@@ -7,14 +7,17 @@ use Mail;
 use App\Division;
 use App\Mail\WelcomeEmail;
 use Whossun\Toastr\Facades\Toastr;
+use App\Repositories\ClanRepository;
 
 class AppController extends Controller
 {
     /**
      * Create a new controller instance.
      */
-    public function __construct()
+    public function __construct(ClanRepository $clanRepository)
     {
+        $this->clan = $clanRepository;
+
         $this->middleware('auth');
     }
 
@@ -26,16 +29,17 @@ class AppController extends Controller
     public function index()
     {
         $myDivision = Auth::user()->member->primaryDivision;
+        $memberCount = $this->clan->totalActiveMembers();
+        $divisions = Division::active()->withCount('members')->orderBy('name')->get();
+        $census = $this->clan->censusCounts(1);
 
-        $divisions = Division::active()
-            ->withCount('members')
-            ->orderBy('name')->get();
-
-       /* Toastr::success('You have successfully logged in!', 'Hello, ' . strtoupper(Auth::user()->name), [
-            'positionClass' => 'toast-top-right',
-            'progressBar' => true
-        ]);*/
-
-        return view('layouts.home', compact('divisions', 'myDivision'));
+        return view('layouts.home', compact(
+            'divisions', 'myDivision', 'memberCount', 'census'
+        ));
     }
 }
+
+/* Toastr::success('You have successfully logged in!', 'Hello, ' . strtoupper(Auth::user()->name), [
+        'positionClass' => 'toast-top-right',
+        'progressBar' => true
+    ]);*/

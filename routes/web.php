@@ -15,6 +15,10 @@ Route::group(['prefix' => 'members'], function () {
     Route::delete('{member}/delete', 'MemberController@destroy')->name('deleteMember');
 });
 
+Route::group(['prefix' => 'help'], function() {
+   Route::get('/', 'HelpController@index')->name('help');
+});
+
 /**
  * Division endpoints
  */

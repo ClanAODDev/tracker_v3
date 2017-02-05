@@ -7,7 +7,7 @@
                 </a>
             </div>
         </div>
-        <a class="navbar-brand">
+        <a class="navbar-brand" href="{{ route('home') }}">
             AOD TRACKER
             <span>v3</span>
         </a>
