@@ -536,8 +536,9 @@ fieldset[disabled] .btn-danger.focus {
     text-decoration: none;
 }
 
+/* PACE handler */
 .content > div {
-    /*opacity: 0;*/
+    opacity: 0;
 }
 
 .pace {
