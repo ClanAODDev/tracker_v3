@@ -31,10 +31,13 @@ class AppController extends Controller
         $myDivision = Auth::user()->member->primaryDivision;
         $memberCount = $this->clan->totalActiveMembers();
         $divisions = Division::active()->withCount('members')->orderBy('name')->get();
-        $census = $this->clan->censusCounts(1);
+
+        $previousCensus = $this->clan->censusCounts(1);
+        $lastYearCensus = $this->clan->censusCounts(8)->reverse();
 
         return view('layouts.home', compact(
-            'divisions', 'myDivision', 'memberCount', 'census'
+            'divisions', 'myDivision', 'memberCount',
+            'previousCensus', 'lastYearCensus'
         ));
     }
 }

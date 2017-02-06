@@ -11,7 +11,7 @@
                         </small>
                     </div>
                     <div class="header-icon">
-                        <i class="pe page-header-icon pe-7s-shield"></i>
+                        <i class="pe page-header-icon pe-7s-home"></i>
                     </div>
                     <div class="header-title">
                         <h3 class="m-b-xs text-uppercase">AOD Tracker</h3>
@@ -26,6 +26,10 @@
 
 
         <div class="row">
+            <div class="col-md-4">
+                @include('layouts.partials.member-census-count')
+            </div>
+
             <div class="col-md-8">
                 <div class="row my-division">
                     @include('layouts.partials.my-division')
@@ -34,10 +38,6 @@
                 <div class="row divisions">
                     @include('layouts.partials.divisions')
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                @include('layouts.partials.member-census-count')
             </div>
         </div>
 

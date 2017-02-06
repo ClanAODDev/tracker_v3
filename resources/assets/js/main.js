@@ -138,8 +138,9 @@ var Tracker = Tracker || {};
             })
         },
 
-
         GeneralInit: function () {
+
+            this.handleSparklineCharts();
 
             // Handle minimalize left menu
             $('.left-nav-toggle a').on('click', function (event) {
@@ -179,6 +180,31 @@ var Tracker = Tracker || {};
                 hpanel.remove();
             });
 
+        },
+
+        
+        handleSparklineCharts: function () {
+            var sparklineCharts = function () {
+                $("[census-data]").sparkline(
+                    $("[census-data]").data('counts'), {
+                        type: 'line',
+                        lineColor: '#fff',
+                        lineWidth: 3,
+                        fillColor: '#393D47',
+                        height: 80,
+                        width: '100%'
+                    }
+                );
+            }
+
+            var sparkResize;
+
+            $(window).resize(function () {
+                clearTimeout(sparkResize);
+                sparkResize = setTimeout(sparklineCharts, 100);
+            });
+
+            sparklineCharts();
         }
 
     }

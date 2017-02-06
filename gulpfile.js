@@ -22,6 +22,8 @@ elixir(function (mix) {
             'libs/bootstrap/bootstrap.min.js',
             'libs/bootstrap/bootstrap-multiselect.js',
 
+            'libs/sparkline.js',
+
             'libs/dataTables/jquery.dataTables.min.js',
             'libs/dataTables/dataTables.bootstrap.js',
             'libs/dataTables/dataTables.tableTools.min.js',
