@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\DB;
 class ClanRepository
 {
 
+    /**
+     * Get clan population totals groups by date ranges (typically weekly)
+     * @param int $limit
+     * @return \Illuminate\Support\Collection|mixed
+     */
     public function censusCounts($limit = 10)
     {
         $censuses = collect(DB::select(
@@ -24,13 +29,41 @@ class ClanRepository
         return $censuses;
     }
 
+    /**
+     * @return mixed
+     */
     public function totalActiveMembers()
     {
-        $members = DB::table('division_member')->where('primary', '1')->count();
+        $members = DB::table('division_member')
+            ->where('primary', '1')->count();
 
         return $members;
     }
 
+    /**
+     * Measure recruit count
+     *
+     * @return mixed
+     */
+    public function recruitDemographic()
+    {
+        $data = collect(DB::select(
+            DB::raw("
+                SELECT count(*) as count FROM members
+                INNER JOIN division_member
+                ON member_id = members.id
+                WHERE rank_id = 1
+                AND division_member.primary = 1
+            ")
+        ))->first();
+
+        return $data->count;
+    }
+
+    /**
+     * Breakdown of ranks across clan
+     * @return array
+     */
     public function rankDemographic()
     {
         $ranks = DB::select(

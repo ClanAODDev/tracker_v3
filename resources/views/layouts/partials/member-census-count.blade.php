@@ -1,7 +1,7 @@
 <div class="panel">
     <div class="panel-body">
 
-        <h1 class="m-t-md m-b-xs" style="margin-top: 30px">
+        <h1 class="m-t-md m-b-xs">
             <i class="pe pe-7s-global text-warning"> </i>
 
             {{ number_format($memberCount) }}
@@ -21,18 +21,15 @@
         </h1>
 
         <div class="small">
-            <span class="c-white">Total active members</span> in the Angels of Death clan. Percent difference from
-            previous count of {{ $previousCensus->count }} on {{ $previousCensus->date }}
+            <span class="c-white">Total active members</span> in the Angels of Death clan. Percent difference from previous count of {{ $previousCensus->count }} on {{ $previousCensus->date }}
         </div>
 
         <div class="m-t-sm">
             <div class="row">
                 <div class="col-md-12">
-                    <small class="c-white">
-                    </small>
                     <div data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
                          census-data></div>
-                    <div class="small text-center slight">Weekly census data</div>
+                    <div class="small text-center slight m-t-md">Weekly census data</div>
                 </div>
             </div>
         </div>

@@ -33,11 +33,12 @@ class AppController extends Controller
         $divisions = Division::active()->withCount('members')->orderBy('name')->get();
 
         $previousCensus = $this->clan->censusCounts(1);
-        $lastYearCensus = $this->clan->censusCounts(8)->reverse();
+        $lastYearCensus = $this->clan->censusCounts(30)->reverse();
+        $recruitCount = $this->clan->recruitDemographic();
 
         return view('layouts.home', compact(
             'divisions', 'myDivision', 'memberCount',
-            'previousCensus', 'lastYearCensus'
+            'previousCensus', 'lastYearCensus', 'recruitCount'
         ));
     }
 }

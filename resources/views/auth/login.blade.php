@@ -40,7 +40,7 @@
                         @endif
                     </div>
                     <div class="form-group">
-                        <input type="checkbox" name="remember"> Remember Me
+                        <input type="checkbox" name="remember" id="remember"> <label for="remember">Remember Me</label>
                     </div>
                     <div>
                         <button class="btn btn-accent">Login</button>

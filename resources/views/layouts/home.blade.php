@@ -24,10 +24,10 @@
             </div>
         </div>
 
-
         <div class="row">
             <div class="col-md-4">
                 @include('layouts.partials.member-census-count')
+                @include('layouts.partials.recruit-count')
             </div>
 
             <div class="col-md-8">

@@ -140,14 +140,44 @@ var Tracker = Tracker || {};
 
         GeneralInit: function () {
 
-            this.handleSparklineCharts();
+            var sparklineCharts = function () {
+                $("[recruit-count]").sparkline(
+                    $("[recruit-count]").data('count'), {
+                        type: 'pie',
+                        sliceColors: ['#404652','#f7af3e'],
+                        width: '100%',
+                        height: 100
+                    }
+                );
+
+                $("[census-data]").sparkline(
+                    $("[census-data]").data('counts'), {
+                        type: 'line',
+                        lineColor: '#fff',
+                        lineWidth: 3,
+                        fillColor: '#393D47',
+                        height: 80,
+                        width: '100%'
+                    }
+                );
+            }
+
+            var sparkResize;
+
+            $(window).resize(function () {
+                clearTimeout(sparkResize);
+                sparkResize = setTimeout(sparklineCharts, 100);
+            });
+
+            sparklineCharts();
 
             // Handle minimalize left menu
             $('.left-nav-toggle a').on('click', function (event) {
                 event.preventDefault();
                 $("body").toggleClass("nav-toggle");
+                clearTimeout(sparkResize);
+                sparkResize = setTimeout(sparklineCharts, 100);
             });
-
 
             // Hide all open sub nav menu list
             $('.nav-second').on('show.bs.collapse', function () {
@@ -181,31 +211,6 @@ var Tracker = Tracker || {};
             });
 
         },
-
-        
-        handleSparklineCharts: function () {
-            var sparklineCharts = function () {
-                $("[census-data]").sparkline(
-                    $("[census-data]").data('counts'), {
-                        type: 'line',
-                        lineColor: '#fff',
-                        lineWidth: 3,
-                        fillColor: '#393D47',
-                        height: 80,
-                        width: '100%'
-                    }
-                );
-            }
-
-            var sparkResize;
-
-            $(window).resize(function () {
-                clearTimeout(sparkResize);
-                sparkResize = setTimeout(sparklineCharts, 100);
-            });
-
-            sparklineCharts();
-        }
 
     }
 
