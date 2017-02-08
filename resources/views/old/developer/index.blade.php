@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('application.base')
 @section('content')
 
     <h2>Tracker <small>For Developers</small></h2>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('application.base')
 
 @section('content')
     <div class="container-fluid">
@@ -24,19 +24,34 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                @include('layouts.partials.member-census-count')
-                @include('layouts.partials.recruit-count')
+        <div class="panel panel-filled">
+            <div class="panel-body">
+                <div class="row text-center">
+                    <div class="col-xs-6">
+                        @include('home.partials.recruit-count')
+                    </div>
+                    <div class="col-xs-6">
+                        @include('home.partials.nco-count')
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="col-md-8">
+
+        <div class="row">
+            <div class="col-md-12">
+                @include('home.partials.member-census-count')
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
                 <div class="row my-division">
-                    @include('layouts.partials.my-division')
+                    @include('home.partials.my-division')
                 </div>
 
                 <div class="row divisions">
-                    @include('layouts.partials.divisions')
+                    @include('home.partials.divisions')
                 </div>
             </div>
         </div>

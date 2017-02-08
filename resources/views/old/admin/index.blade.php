@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('application.base')
 @section('content')
 
     <div class="row">
@@ -43,8 +43,7 @@
                 <div id="settings-form" class="tab-content">
 
                     <div class="tab-pane fade active in" id="stats">
-                        @include('admin.partials.rankDemographic')
-                    </div>
+                        @include('allRankDemograpallRankDemographic           </div>
 
                     <div class="tab-pane fade in" id="users">
                         Manage users

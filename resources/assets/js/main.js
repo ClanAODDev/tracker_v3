@@ -141,15 +141,6 @@ var Tracker = Tracker || {};
         GeneralInit: function () {
 
             var sparklineCharts = function () {
-                $("[recruit-count]").sparkline(
-                    $("[recruit-count]").data('count'), {
-                        type: 'pie',
-                        sliceColors: ['#404652','#f7af3e'],
-                        width: '100%',
-                        height: 100
-                    }
-                );
-
                 $("[census-data]").sparkline(
                     $("[census-data]").data('counts'), {
                         type: 'line',

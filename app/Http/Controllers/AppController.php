@@ -34,10 +34,11 @@ class AppController extends Controller
 
         $previousCensus = $this->clan->censusCounts(1);
         $lastYearCensus = $this->clan->censusCounts(30)->reverse();
-        $recruitCount = $this->clan->recruitDemographic();
+        $recruitCount = $this->clan->rankDemographic(1);
+        $ncoCount = $this->clan->rankDemographic(range(7,14));
 
-        return view('layouts.home', compact(
-            'divisions', 'myDivision', 'memberCount',
+        return view('home.show', compact(
+            'divisions', 'myDivision', 'memberCount', 'ncoCount',
             'previousCensus', 'lastYearCensus', 'recruitCount'
         ));
     }

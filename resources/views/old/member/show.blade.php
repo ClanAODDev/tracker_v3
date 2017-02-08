@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('application.base')
 @section('content')
 
     {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}

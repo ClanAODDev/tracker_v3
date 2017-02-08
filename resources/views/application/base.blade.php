@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>AOD | Tracker v3</title>
-    @include('layouts.header')
+    @include('application.header')
 </head>
 
 
@@ -11,10 +11,10 @@
     {!! Toastr::message() !!}
     <div class="wrapper">
         <nav class="navbar navbar-default navbar-fixed-top">
-            @include('layouts.partials.primaryHeader')
+            @include('application.partials.primaryHeader')
         </nav>
         <aside class="navigation">
-            @include('layouts.partials.navigation')
+            @include('application.partials.navigation')
         </aside>
 
         <section class="content">
@@ -35,7 +35,7 @@
 
 @endif
 
-@include('layouts.footer')
+@include('application.footer')
 
 @yield('footer_scripts')
 
