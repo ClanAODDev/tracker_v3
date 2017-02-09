@@ -10,7 +10,6 @@ var Tracker = Tracker || {};
             Tracker.SearchCollection();
 
             // misc functionality, visual
-            Tracker.AlertHandling();
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
             Tracker.ResetLocality();
@@ -44,9 +43,6 @@ var Tracker = Tracker || {};
          */
         InitTabActivate: function () {
             $('.nav-tabs').stickyTabs();
-        },
-        AlertHandling: function () {
-            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
         },
 
         /**
@@ -147,7 +143,7 @@ var Tracker = Tracker || {};
                         lineColor: '#fff',
                         lineWidth: 3,
                         fillColor: '#393D47',
-                        height: 80,
+                        height: 50,
                         width: '100%'
                     }
                 );

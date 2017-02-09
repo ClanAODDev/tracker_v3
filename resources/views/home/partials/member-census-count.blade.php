@@ -1,4 +1,7 @@
-<div class="panel">
+<div class="panel panel-filled">
+    <div class="panel-heading">
+        Clan Populations
+    </div>
     <div class="panel-body">
 
         <h1>
@@ -18,13 +21,18 @@
                 </span>
             @endif
 
+            <a href="#"
+               class="btn btn-default pull-right">View Census Data</a>
+
         </h1>
 
         <div class="small">
-            <span class="c-white">Total active members</span> in the Angels of Death clan. Percent difference from previous count of <strong>{{ $previousCensus->count }}</strong> on <strong>{{ $previousCensus->date }}</strong>. Census data is collected weekly.
+            <span class="c-white">Total active members</span> in the Angels of Death clan. Percent difference from previous count of
+            <strong>{{ $previousCensus->count }}</strong> on
+            <strong>{{ $previousCensus->date }}</strong>. Census data is collected weekly.
         </div>
 
-        <div class="m-t-sm">
+        <div class="m-t-md">
             <div class="row">
                 <div class="col-md-12">
                     <div data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
@@ -33,4 +41,5 @@
             </div>
         </div>
     </div>
+    <div class="panel-footer">Last 30 weeks</div>
 </div>

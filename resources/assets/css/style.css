@@ -2445,13 +2445,13 @@ div.dt-button-info h2 {
 }
 
 .alert-warning {
-    color: #ffffff;
+    color: rgba(0,0,0,.5);
     border-color: #f7af3e;
     background-color: #f7af3e;
 }
 
 .alert-warning .alert-link {
-    color: #f7af3e;
+    color: #fff;
 }
 
 .alert-info {

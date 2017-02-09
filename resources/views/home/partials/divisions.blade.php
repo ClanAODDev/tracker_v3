@@ -1,6 +1,6 @@
 @foreach($divisions as $division)
     @if($division->id != $myDivision->id)
-        <div class="col-md-6">
+        <div class="col-md-4 col-sm-6">
             <a href="{{ route('division', $division->abbreviation) }}" class="panel panel-filled">
                 <div class="panel-body">
                     <h4 class="m-b-none text-uppercase">

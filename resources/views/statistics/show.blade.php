@@ -6,7 +6,7 @@
             <div class="col-lg-12">
                 <div class="view-header">
                     <div class="pull-right text-right hidden-sm hidden-xs" style="line-height: 14px">
-                        <small>AOD Tracker<br>Dashboard<br> <span class="c-white">v3</span>
+                        <small>Statistics<br>Angels of Death<br> <span class="c-white">v3</span>
                         </small>
                     </div>
                     <div class="header-icon">
@@ -14,7 +14,7 @@
                     </div>
                     <div class="header-title">
                         <h3 class="m-b-xs text-uppercase">AOD Tracker</h3>
-                        <small>Division and member management software</small>
+                        <small>Clan Statistics</small>
                     </div>
                 </div>
                 <hr>
@@ -22,22 +22,12 @@
         </div>
 
         <div class="row">
+
             <div class="col-md-12">
-                <div class="my-division">
-                    @include('home.partials.my-division')
-                </div>
+                @include('home.partials.member-census-count')
             </div>
         </div>
 
-        <div class="row m-t-xl">
-            <div class="col-lg-12">
-                <h3 class="m-b-xs text-uppercase">All Divisions</h3>
-                <hr>
-            </div>
-        </div>
-
-        <div class="row divisions">
-            @include('home.partials.divisions')
-        </div>
     </div>
 @stop
+

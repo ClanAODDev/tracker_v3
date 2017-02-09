@@ -19,6 +19,10 @@ Route::group(['prefix' => 'help'], function() {
    Route::get('/', 'HelpController@index')->name('help');
 });
 
+Route::group(['prefix' => 'statistics'], function() {
+    Route::get('/', 'ClanStatisticsController@show')->name('statistics');
+});
+
 /**
  * Division endpoints
  */

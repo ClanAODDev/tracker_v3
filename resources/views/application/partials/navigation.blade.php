@@ -1,7 +1,11 @@
 <ul class="nav luna-nav">
 
     <li class="{{ set_active('home') }}">
-        <a href="{{ route('home') }}">Home</a>
+        <a href="{{ route('home') }}">Dashboard</a>
+    </li>
+
+    <li class="{{ set_active('statistics') }}">
+        <a href="{{ route('statistics') }}">Statistics</a>
     </li>
 
     <li class="{{ set_active('help') }}">
