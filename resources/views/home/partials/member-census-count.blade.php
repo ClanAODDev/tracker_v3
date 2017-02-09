@@ -41,5 +41,5 @@
             </div>
         </div>
     </div>
-    <div class="panel-footer">Last 30 weeks</div>
+    <div class="panel-footer slight">Last 30 weeks</div>
 </div>

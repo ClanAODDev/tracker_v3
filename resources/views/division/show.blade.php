@@ -26,16 +26,20 @@
             </div>
         </div>
 
+        <div class="row m-t-xl">
+            <div class="col-lg-12">
+                <h3 class="m-b-xs text-uppercase">Platoons and Staff</h3>
+                <hr>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-8">
                 @include('division.partials.platoons')
             </div>
             <div class="col-md-4">
-
                 @include('division.partials.general-sergeants')
-
                 @include('division.partials.staff-sergeants')
-
             </div>
         </div>
     </div>
