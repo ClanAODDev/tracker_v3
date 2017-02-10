@@ -537,9 +537,9 @@ fieldset[disabled] .btn-danger.focus {
 }
 
 /* PACE handler */
-.content > div {
-    opacity: 0;
-}
+/*.content > div {*/
+    /*opacity: 0;*/
+/*}*/
 
 .pace {
     -webkit-pointer-events: none;

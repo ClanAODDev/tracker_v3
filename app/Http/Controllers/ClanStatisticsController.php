@@ -12,6 +12,8 @@ class ClanStatisticsController extends Controller
 
     public function __construct(ClanRepository $clanRepository)
     {
+        $this->middleware('auth');
+
         $this->clan = $clanRepository;
     }
 

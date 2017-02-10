@@ -16,7 +16,7 @@ class AdminController extends Controller
     {
         $this->clanRepository = $clanRepository;
 
-        $this->middleware('auth');
+        $this->middleware('auth', 'admin');
     }
 
     public function index()

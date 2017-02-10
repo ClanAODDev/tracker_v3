@@ -23,7 +23,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="my-division">
+                <div class="my-division animated fadeInDown">
                     @include('home.partials.my-division')
                 </div>
             </div>
