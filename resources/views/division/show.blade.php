@@ -28,7 +28,7 @@
 
         <div class="row m-t-xl">
             <div class="col-lg-12">
-                <h3 class="m-b-xs text-uppercase">Platoons and Staff</h3>
+                <h3 class="m-b-xs text-uppercase">{{ str_plural($division->locality('platoon')) }}</h3>
                 <hr>
             </div>
         </div>

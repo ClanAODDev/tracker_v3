@@ -4,7 +4,7 @@
         <div class="panel-body">
             <h4 class="m-b-none">
                 {{ $platoon->name }}
-                <label class="label label-accent pull-right">{{ $platoon->members->count() }}</label>
+                <label class="badge pull-right">{{ $platoon->members->count() }}</label>
             </h4>
 
             @if(is_object($platoon->leader))

@@ -46,7 +46,7 @@
                         <button class="btn btn-accent">Login</button>
                         <div class="btn-group pull-right text-muted">
                             <a class="btn btn-default" href="{{ url('/register') }}">Register</a>
-                            <a class="btn btn-default" href="{{ url('/password/reset') }}">Forgot Password</a>
+                            <a class="btn btn-default" href="{{ url('/password/reset') }}">Forgot</a>
                         </div>
                     </div>
                 </form>
