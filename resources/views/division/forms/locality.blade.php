@@ -1,34 +1,24 @@
-<form id="locality-settings" method="post" class="well"
-      action="{{ route('updateDivision', $division->abbreviation) }}">
-    <fieldset>
-        <legend><i class="fa fa-language"></i> Locality
-            <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button>
-        </legend>
+<form id="locality-settings" method="post"
+      action="{{ route('updateDivision', $division->abbreviation) }}#locality-settings">
 
-        {{ method_field('PATCH') }}
+    {{ method_field('PATCH') }}
 
-        <div class="panel panel-default">
-            <div class="panel-heading">String Conversions</div>
+    <p>This section allows you to customize the tracker's language to match your game's specific terminology. Entries should be all lower-case and singular.</p>
+    <p>Use the
+        <code>Old String</code> column as a guide to determine what each term should display as. Terms you wish to remain unchanged should match on both columns.
+    </p>
 
-            <div class="panel-body">
-                <p>This section allows you to customize the tracker's language to match your game's specific terminology. Entries should be all lower-case and singular.</p>
-                <p>Use the
-                    <code>Old String</code> column as a guide to determine what each term should display as. Terms you wish to remain unchanged should match on both columns.
-                </p>
-            </div>
+    <table class="table">
+        @include('division.partials.locality')
+    </table>
 
-            <table class="table table-striped table-hover">
-                @include('division.partials.locality')
-            </table>
+    <div class="text-right">
+        <button type="button" class="btn btn-default" data-reset-locality>
+            <i class="fa fa-undo"></i> Reset to default
+        </button>
+        <button type="submit" class="btn btn-success">Save changes</button>
+    </div>
 
-            <div class="panel-footer text-right">
-                <button type="button" class="btn btn-primary" data-reset-locality>
-                    <i class="fa fa-undo"></i>Reset to default
-                </button>
-            </div>
-        </div>
+    {{ csrf_field() }}
 
-        {{ csrf_field() }}
-
-    </fieldset>
 </form>

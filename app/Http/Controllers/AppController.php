@@ -27,7 +27,9 @@ class AppController extends Controller
     public function index()
     {
         $myDivision = Auth::user()->member->primaryDivision;
-        $divisions = Division::active()->withCount('members')->orderBy('name')->get();
+
+        $activeDivisions = Division::active()->withCount('members')->orderBy('name')->get();
+        $divisions = $activeDivisions->except($myDivision->id);
 
         return view('home.show', compact(
             'divisions', 'myDivision'

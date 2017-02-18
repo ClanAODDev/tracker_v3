@@ -85,7 +85,7 @@ class ClanRepository
                FROM members
                JOIN ranks ON ranks.id = members.rank_id
                JOIN division_member ON member_id = members.id
-               WHERE primary = 1
+               WHERE division_member.primary = 1
                GROUP BY rank_id
             ")
         );

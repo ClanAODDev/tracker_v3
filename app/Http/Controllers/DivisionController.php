@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use ConsoleTVs\Charts\Charts;
 use App\Repositories\DivisionRepository;
 use Illuminate\Support\Facades\Session;
+use Whossun\Toastr\Facades\Toastr;
 
 class DivisionController extends Controller
 {
@@ -102,7 +103,10 @@ class DivisionController extends Controller
 
         $division->settings()->merge($request->all());
 
-        flash('Changes saved successfully', 'success');
+        Toastr::success('Changes saved successfully!', "Update {$division->name}", [
+            'positionClass' => 'toast-top-right',
+            'progressBar' => true
+        ]);
 
         return back();
     }

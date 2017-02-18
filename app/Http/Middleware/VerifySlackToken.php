@@ -22,6 +22,8 @@ class VerifySlackToken
             return $next($request);
         }
 
+        dd($request);
+
         return response()->json([
             'text' => 'Either an invalid token was provided, or the request didn\'t originate from Slack',
         ]);

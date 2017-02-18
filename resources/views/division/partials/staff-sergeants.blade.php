@@ -1,4 +1,4 @@
-<div class="panel panel-primary">
+<div class="panel panel-filled">
     <div class="panel-heading">Assigned Staff Sergeants <span class="pull-right badge">{{ $staffSergeants->count() }}</span></div>
 
     @forelse ($staffSergeants as $staffSergeant)

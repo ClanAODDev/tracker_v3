@@ -73,19 +73,16 @@ var Platoon = Platoon || {};
                 }
             });
 
-
-            $(".dataTables_info").remove();
             $(".dataTables_filter input").appendTo("#playerFilter").removeClass('input-sm');
+
             $("#playerFilter input").attr({
                 "placeholder": "Search Players",
-                "class": "form-control input-lg"
+                "class": "form-control"
             });
+
+            $(".dataTables_info").addClass('panel-footer text-center')
+
             $(".dataTables_filter label").remove();
-
-            $(".DTTT_container .DTTT_button").removeClass('DTTT_button').remove();
-            $(".DTTT_container").appendTo('.download-area').remove();
-
-            $(".DTTT_container a").addClass('btn btn-xs btn-info tool').attr('title', 'Download table data').text("Export").css('margin-top', '5px').remove();
 
             $(".no-sort").removeClass("sorting");
 
