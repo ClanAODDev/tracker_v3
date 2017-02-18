@@ -71,7 +71,7 @@ Route::get('developers', 'DeveloperController@index')->name('developer');
 /**
  * Slack handler
  */
-Route::get('slack', [
+Route::post('slack', [
     'as' => 'slack.commands',
     'uses' => 'SlackController@index',
 ])->middleware('slack');
