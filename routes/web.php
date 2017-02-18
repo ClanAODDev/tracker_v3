@@ -15,11 +15,11 @@ Route::group(['prefix' => 'members'], function () {
     Route::delete('{member}/delete', 'MemberController@destroy')->name('deleteMember');
 });
 
-Route::group(['prefix' => 'help'], function() {
-   Route::get('/', 'HelpController@index')->name('help');
+Route::group(['prefix' => 'help'], function () {
+    Route::get('/', 'HelpController@index')->name('help');
 });
 
-Route::group(['prefix' => 'statistics'], function() {
+Route::group(['prefix' => 'statistics'], function () {
     Route::get('/', 'ClanStatisticsController@show')->name('statistics');
 });
 
@@ -71,13 +71,10 @@ Route::get('developers', 'DeveloperController@index')->name('developer');
 /**
  * Slack handler
  */
-Route::group(['middleware' => 'slack'], function () {
-    Route::get('slack', [
-        'as' => 'slack.commands',
-        'uses' => 'SlackController@index',
-    ]);
-});
-
+Route::get('slack', [
+    'as' => 'slack.commands',
+    'uses' => 'SlackController@index',
+])->middleware('slack');
 
 
 /**

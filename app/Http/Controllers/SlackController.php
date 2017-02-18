@@ -15,7 +15,7 @@ class SlackController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$this->isValid($request)) {
+        if ( ! $this->isValid($request)) {
             return response()->json([
                 'text' => 'Unrecognized command. Sorry!',
             ]);
