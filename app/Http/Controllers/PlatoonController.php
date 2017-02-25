@@ -55,8 +55,10 @@ class PlatoonController extends Controller
 
         $form->persist();
 
-        flash("{$division->locality('platoon')} has been created! If you assigned a leader, you will need to ensure you have also updated their account access to 'Senior Leader'",
-            'success');
+        flash(
+            "{$division->locality('platoon')} has been created! If you assigned a leader, you will need to ensure you have also updated their account access to 'Senior Leader'",
+            'success'
+        );
 
         return redirect()->route('division', $division->abbreviation);
     }
@@ -71,12 +73,15 @@ class PlatoonController extends Controller
     public function show(Division $division, Platoon $platoon)
     {
         $members = $platoon->members()->with(
-            'rank', 'position', 'divisions'
+            'rank',
+            'position',
+            'divisions'
         )->get();
 
         $activityGraph = $this->activityGraphData($platoon);
 
-        return view('platoon.show',
+        return view(
+            'platoon.show',
             compact('platoon', 'members', 'division', 'activityGraph')
         );
     }
@@ -90,7 +95,8 @@ class PlatoonController extends Controller
      */
     public function edit(Division $division, Platoon $platoon)
     {
-        return view('platoon.edit',
+        return view(
+            'platoon.edit',
             compact('division', 'platoon')
         );
     }
@@ -144,8 +150,7 @@ class PlatoonController extends Controller
     {
         $member = Member::whereClanId($request->leader)->first();
 
-        return $member->primaryDivision instanceOf Division &&
+        return $member->primaryDivision instanceof Division &&
             $member->primaryDivision->id === $division->id;
     }
-
 }

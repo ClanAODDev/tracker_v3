@@ -49,7 +49,7 @@ class ClanRepository
      */
     public function rankDemographic($rank)
     {
-        if ( ! is_int($rank) && ! is_array($rank)) {
+        if (! is_int($rank) && ! is_array($rank)) {
             throw new \Exception('Rank provided to rank demographic must be an integer or an array');
         }
 

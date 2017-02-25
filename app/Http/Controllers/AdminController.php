@@ -55,7 +55,7 @@ class AdminController extends Controller
             }
         }
 
-        if ( ! $changes) {
+        if (! $changes) {
             flash('No changes were made.', 'info');
 
             return redirect()->back();

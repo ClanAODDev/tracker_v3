@@ -13,8 +13,7 @@ class RenameLastForumLoginColumn extends Migration
      */
     public function up()
     {
-        Schema::table('members', function($table)
-        {
+        Schema::table('members', function ($table) {
             $table->renameColumn('last_forum_login', 'last_activity');
         });
     }
@@ -26,8 +25,7 @@ class RenameLastForumLoginColumn extends Migration
      */
     public function down()
     {
-        Schema::table('members', function($table)
-        {
+        Schema::table('members', function ($table) {
             $table->renameColumn('last_activity', 'last_forum_login');
         });
     }

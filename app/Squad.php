@@ -73,6 +73,3 @@ class Squad extends Model
         return $this->leader()->associate($member);
     }
 }
-
-
-

@@ -51,7 +51,7 @@ class MemberPresenter extends Presenter
                 ? "<i class=\"{$this->member->position->icon}\"></i>"
                 : null;
 
-            $rank = ($this->member->rank->abbreviation AND $showRank)
+            $rank = ($this->member->rank->abbreviation and $showRank)
                 ? $this->member->rank->abbreviation
                 : null;
 

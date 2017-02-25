@@ -59,7 +59,6 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
     Route::get('{division}/part-timers', 'DivisionController@partTime')->name('partTimers');
     Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
-
 });
 
 // logging activity

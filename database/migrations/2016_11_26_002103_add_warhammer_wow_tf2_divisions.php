@@ -121,7 +121,6 @@ class AddWarhammerWowTf2Divisions extends Migration
                 'active' => true,
             ],
         ]);
-
     }
 
     /**

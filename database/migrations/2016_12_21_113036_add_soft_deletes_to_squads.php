@@ -13,8 +13,7 @@ class AddSoftDeletesToSquads extends Migration
      */
     public function up()
     {
-        Schema::table('squads', function(Blueprint $table)
-        {
+        Schema::table('squads', function (Blueprint $table) {
             $table->softDeletes();
         });
     }
@@ -26,8 +25,7 @@ class AddSoftDeletesToSquads extends Migration
      */
     public function down()
     {
-        Schema::table('squads', function(Blueprint $table)
-        {
+        Schema::table('squads', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
     }

@@ -71,8 +71,12 @@ class DivisionController extends Controller
         $staffSergeants = $division->staffSergeants()->with('rank', 'position')->get();
 
         return view('division.show', compact(
-            'division', 'chart', 'platoons', 'divisionLeaders',
-            'generalSergeants', 'staffSergeants'
+            'division',
+            'chart',
+            'platoons',
+            'divisionLeaders',
+            'generalSergeants',
+            'staffSergeants'
         ));
     }
 
@@ -151,7 +155,8 @@ class DivisionController extends Controller
 
         $activity = $this->getActivityChart($division);
 
-        return view('division.statistics',
+        return view(
+            'division.statistics',
             compact('division', 'rankDemographic', 'activity')
         );
     }

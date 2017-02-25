@@ -243,5 +243,3 @@ class DivisionSeeder extends Seeder
         );
     }
 }
-
-

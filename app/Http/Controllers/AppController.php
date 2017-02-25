@@ -32,7 +32,8 @@ class AppController extends Controller
         $divisions = $activeDivisions->except($myDivision->id);
 
         return view('home.show', compact(
-            'divisions', 'myDivision'
+            'divisions',
+            'myDivision'
         ));
     }
 }

@@ -28,7 +28,12 @@ class ClanStatisticsController extends Controller
         $ncoCount = $this->clan->rankDemographic(range(7, 14));
 
         return view('statistics.show')->with(compact(
-            'memberCount', 'ncoCount', 'previousCensus', 'lastYearCensus',
-            'recruitCount', 'memberCount'));
+            'memberCount',
+            'ncoCount',
+            'previousCensus',
+            'lastYearCensus',
+            'recruitCount',
+            'memberCount'
+        ));
     }
 }

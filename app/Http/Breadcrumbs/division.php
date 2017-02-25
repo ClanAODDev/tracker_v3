@@ -31,7 +31,8 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
 /**
  * Handle static division sub pages
  */
-function registerDivisionSubPages() {
+function registerDivisionSubPages()
+{
 
     $divisionStaticSubPages = [
         'squads',
@@ -40,7 +41,7 @@ function registerDivisionSubPages() {
         'create-platoon'
     ];
 
-    foreach($divisionStaticSubPages as $page) {
+    foreach ($divisionStaticSubPages as $page) {
         Breadcrumbs::register($page, function ($breadcrumbs, $division) use ($page) {
             $breadcrumbs->parent('home');
             $breadcrumbs->push($division->name, route('division', $division->abbreviation));

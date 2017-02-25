@@ -179,10 +179,12 @@ function getNameOfClass($class)
  * @param string $active
  * @return string
  */
-function set_active($path, $active = 'active') {
+function set_active($path, $active = 'active')
+{
     return call_user_func_array('Request::is', (array)$path) ? $active : '';
 }
 
-function percent($old_member_count, $new_member_count) {
+function percent($old_member_count, $new_member_count)
+{
     return number_format((1 - $old_member_count / $new_member_count) * 100, 2); // yields 0.76
 }
