@@ -73,7 +73,7 @@ function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
  */
 function UserSettings($key = null)
 {
-    $settings = app('App\Settings\UserSettings');
+    $settings = app(\App\Settings\UserSettings::class);
 
     return $key ? $settings->get($key) : $settings;
 }

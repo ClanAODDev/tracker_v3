@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register('Laracasts\Generators\GeneratorsServiceProvider');
         }
 
-        $this->app->singleton('App\Settings\UserSettings', function () {
+        $this->app->singleton(\App\Settings\UserSettings::class, function () {
             return Auth::user()->settings();
         });
     }
