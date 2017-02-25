@@ -81,12 +81,16 @@ class ClanRepository
     {
         $ranks = DB::select(
             DB::raw("
-               SELECT ranks.abbreviation, count(*) as count
-               FROM members
-               JOIN ranks ON ranks.id = members.rank_id
-               JOIN division_member ON member_id = members.id
-               WHERE division_member.primary = 1
-               GROUP BY rank_id
+                SELECT
+                  ranks.abbreviation,
+                  count(*) AS count
+                FROM members
+                  JOIN ranks
+                    ON ranks.id = members.rank_id
+                  JOIN division_member
+                    ON member_id = members.id
+                WHERE division_member.primary = 1
+                GROUP BY rank_id
             ")
         );
 

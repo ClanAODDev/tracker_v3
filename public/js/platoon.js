@@ -1,1 +1,95 @@
-!function e(t,r,a){function n(s,l){if(!r[s]){if(!t[s]){var i="function"==typeof require&&require;if(!l&&i)return i(s,!0);if(o)return o(s,!0);var u=new Error("Cannot find module '"+s+"'");throw u.code="MODULE_NOT_FOUND",u}var c=r[s]={exports:{}};t[s][0].call(c.exports,function(e){var r=t[s][1][e];return n(r?r:e)},c,c.exports,e,t,r,a)}return r[s].exports}for(var o="function"==typeof require&&require,s=0;s<a.length;s++)n(a[s]);return n}({1:[function(e,t,r){"use strict";function a(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}var n=n||{};!function(e){n={setup:function(){this.handleMembers()},handleMembers:function(){var t,r=parseInt(e(".platoon-number").text()),n=new Date,o=n.getDate(),s=n.getMonth()+1,l=n.getFullYear(),i=l+"-"+s+"-"+o;new Array;e("table.members-table").DataTable({autoWidth:!0,sDom:'T<"clear">tfrip',order:[],columnDefs:[{targets:"no-search",searchable:!1},{targets:"col-hidden",visible:!1,searchable:!1},{iDataSort:0,aTargets:[3]},{iDataSort:1,aTargets:[5]}],stateSave:!1,paging:!1,bServerSide:!1,drawCallback:function(t){e("#member-footer").empty(),e("#members-table_info").contents().appendTo("#member-footer")},oTableTools:{sRowSelect:"multi",sSwfPath:"/swf/copy_csv_xls_pdf.swf",aButtons:[(t={sExtends:"text",fnSelect:function(e,t,r){}},a(t,"sExtends","collection"),a(t,"sButtonText",""),a(t,"mColumns","visible"),a(t,"aButtons",["select_all","select_none",{sExtends:"pdf",sPdfOrientation:"landscape",sFileName:"AOD Plt "+r+"_"+i+".pdf",mColumns:"visible"},{sExtends:"csv",sFileName:"AOD Plt "+r+"_"+i+".csv",mColumns:"visible"}]),a(t,"bSelectedOnly",!0),t)]}}),e(".dataTables_filter input").appendTo("#playerFilter").removeClass("input-sm"),e("#playerFilter input").attr({placeholder:"Search Players","class":"form-control"}),e(".dataTables_info").addClass("panel-footer text-center"),e(".dataTables_filter label").remove(),e(".no-sort").removeClass("sorting")}}}(jQuery),n.setup()},{}]},{},[1]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var Platoon = Platoon || {};
+
+(function ($) {
+
+    Platoon = {
+
+        setup: function setup() {
+            this.handleMembers();
+        },
+
+        handleMembers: function handleMembers() {
+            var _ref;
+
+            var platoonNum = parseInt($('.platoon-number').text()),
+                formattedDate = new Date(),
+                d = formattedDate.getDate(),
+                m = formattedDate.getMonth() + 1,
+                y = formattedDate.getFullYear(),
+                nowDate = y + "-" + m + "-" + d,
+                selected = new Array();
+
+            $('table.members-table').DataTable({
+                "autoWidth": true,
+                "sDom": 'T<"clear">tfrip',
+                "order": [],
+                "columnDefs": [{
+                    "targets": 'no-search',
+                    "searchable": false
+                }, {
+                    "targets": 'col-hidden',
+                    "visible": false,
+                    "searchable": false
+                }, {
+                    // sort rank by rank id
+                    "iDataSort": 0,
+                    "aTargets": [3]
+                }, {
+                    // sort activity by last login date
+                    "iDataSort": 1,
+                    "aTargets": [5]
+                }],
+                stateSave: false,
+                paging: false,
+                "bServerSide": false,
+                "drawCallback": function drawCallback(settings) {
+                    $("#member-footer").empty();
+                    $("#members-table_info").contents().appendTo("#member-footer");
+                },
+
+                "oTableTools": {
+                    "sRowSelect": "multi",
+                    "sSwfPath": "/swf/copy_csv_xls_pdf.swf",
+                    "aButtons": [(_ref = {
+
+                        "sExtends": "text",
+                        "fnSelect": function fnSelect(nButton, oConfig, nRow) {
+                            console.log($(nRow).data('id') + " clicked");
+                        }
+                    }, _defineProperty(_ref, "sExtends", "collection"), _defineProperty(_ref, "sButtonText", ""), _defineProperty(_ref, "mColumns", "visible"), _defineProperty(_ref, "aButtons", ["select_all", "select_none", {
+                        "sExtends": "pdf",
+                        "sPdfOrientation": "landscape",
+                        "sFileName": "AOD Plt " + platoonNum + "_" + nowDate + ".pdf",
+                        "mColumns": "visible"
+                    }, {
+                        "sExtends": "csv",
+                        "sFileName": "AOD Plt " + platoonNum + "_" + nowDate + ".csv",
+                        "mColumns": "visible"
+                    }]), _defineProperty(_ref, "bSelectedOnly", true), _ref)]
+                }
+            });
+
+            $(".dataTables_filter input").appendTo("#playerFilter").removeClass('input-sm');
+
+            $("#playerFilter input").attr({
+                "placeholder": "Search Players",
+                "class": "form-control"
+            });
+
+            $(".dataTables_info").addClass('panel-footer text-center');
+
+            $(".dataTables_filter label").remove();
+
+            $(".no-sort").removeClass("sorting");
+        }
+    };
+})(jQuery);
+
+Platoon.setup();
+
+},{}]},{},[1]);

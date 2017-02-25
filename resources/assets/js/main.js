@@ -129,7 +129,10 @@ var Tracker = Tracker || {};
                     var new_string = $(this).find('[data-new-string]'),
                         old_string = $(this).find('[data-old-string]');
 
-                    new_string.val(old_string.val());
+                    if (new_string.val() != old_string.val()) {
+                        new_string.effect('highlight', 1000);
+                        new_string.val(old_string.val());
+                    }
                 });
             })
         },

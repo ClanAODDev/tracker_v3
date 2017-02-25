@@ -90,6 +90,7 @@ class SyncMemberData
 
         foreach ($detached as $index => $id) {
             $member = Member::find($id);
+
             if ($member instanceof Member) {
 
                 // unassign member from squad / platoon

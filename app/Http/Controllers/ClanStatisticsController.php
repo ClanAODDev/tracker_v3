@@ -20,8 +20,10 @@ class ClanStatisticsController extends Controller
     public function show()
     {
         $memberCount = $this->clan->totalActiveMembers();
-        $previousCensus = $this->clan->censusCounts(1);
-        $lastYearCensus = $this->clan->censusCounts(30)->reverse();
+        $censusCounts = $this->clan->censusCounts(30);
+        $previousCensus = $censusCounts->first();
+        $lastYearCensus = $censusCounts->reverse();
+
         $recruitCount = $this->clan->rankDemographic(1);
         $ncoCount = $this->clan->rankDemographic(range(7, 14));
 
