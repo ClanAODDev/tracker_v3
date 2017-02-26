@@ -1,7 +1,20 @@
 @extends('application.base')
 
 @section('content')
-    <div class="container">
+    <div class="container-center">
+
+        <div class="view-header">
+            <div class="header-icon">
+                <i class="pe page-header-icon pe-7s-unlock"></i>
+            </div>
+            <div class="header-title">
+                <h3>AOD Tracker</h3>
+                <small>
+                    Create a new account using your forum username and a valid email
+                </small>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-4 col-md-offset-4">
 
@@ -15,8 +28,7 @@
                     </div>
                 @endif
 
-                <div class="panel panel-primary">
-                    <div class="panel-heading">Register</div>
+                <div class="panel panel-filled">
                     <div class="panel-body">
 
                         <form role="form" method="POST" action="{{ url('/register') }}">
@@ -42,20 +54,12 @@
                             </div>
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary btn-block">
-                                    <i class="fa fa-btn fa-user"></i>Register
+                                <button type="submit" class="btn btn-accent btn-block">
+                                    Register
                                 </button>
                             </div>
 
                         </form>
-                    </div>
-
-                    <div class="panel-footer text-muted">
-                        <p>
-                            <small>Username should be your AOD forum name, <strong>minus AOD
-                                    prefix</strong>.
-                            </small>
-                        </p>
                     </div>
                 </div>
             </div>
