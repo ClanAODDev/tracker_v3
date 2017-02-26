@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Mail;
 use App\Division;
 use App\Mail\WelcomeEmail;
-use Mail;
+use Whossun\Toastr\Facades\Toastr;
+use App\Repositories\ClanRepository;
 
 class AppController extends Controller
 {
@@ -23,8 +26,19 @@ class AppController extends Controller
      */
     public function index()
     {
-        $divisions = Division::active()->orderBy('name')->get();
+        $myDivision = Auth::user()->member->primaryDivision;
 
-        return view('layouts.home', compact('divisions'));
+        $activeDivisions = Division::active()->withCount('members')->orderBy('name')->get();
+        $divisions = $activeDivisions->except($myDivision->id);
+
+        return view('home.show', compact(
+            'divisions',
+            'myDivision'
+        ));
     }
 }
+
+/* Toastr::success('You have successfully logged in!', 'Hello, ' . strtoupper(Auth::user()->name), [
+        'positionClass' => 'toast-top-right',
+        'progressBar' => true
+    ]);*/

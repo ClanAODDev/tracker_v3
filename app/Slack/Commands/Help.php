@@ -23,8 +23,8 @@ class Help extends Base implements Command
 
         [
             'name' => 'Search members',
-            'description' => 'Search members in divisions supported by tracker',
-            'usage' => '/tracker search:guybrush',
+            'description' => 'Search for members in AOD. Can search for up to two names. Can search for a portion of a name. Cannot return more than 10 results at a time.',
+            'usage' => '/tracker search:archan,kid_a',
         ],
     ];
 

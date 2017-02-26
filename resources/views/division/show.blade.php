@@ -1,53 +1,43 @@
-@extends('layouts.app')
+@extends('application.base')
+
 @section('content')
 
-    {!! Breadcrumbs::render('division', $division) !!}
+    <div class="container-fluid">
 
-    <div class="row">
-        <div class="col-xs-6">
-            <h2>
-                @include('division.partials.icon')
-                <strong class="hidden-xs">{{ $division->name }}</strong>
-
-                @can('update', $division)
-                    <a title="Edit division" class="btn btn-default"
-                       href="{{ route('editDivision', $division->abbreviation) }}">
-                        <i class="fa fa-cogs fa-lg"></i>
-                    </a>
-                @endcan
-
-            </h2>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="division-header">
+                    <div class="header-icon">
+                        <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+                    </div>
+                    <div class="header-title">
+                        <h3 class="m-b-xs text-uppercase">{{ $division->name }} Division</h3>
+                        <small>
+                            {{ $division->description }}
+                        </small>
+                    </div>
+                </div>
+                <hr>
+            </div>
         </div>
 
-        <div class="col-xs-6">
-            <ul class="nav nav-pills pull-right">
-
-                <li class="active">
-                    <a href="#"><i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs hidden-sm">Overview</span></a>
-                </li>
-
-                <li>
-                    <a href="{{ route('divisionStats', $division->abbreviation) }}"><i class="fa fa-bar-chart fa-lg"></i><span class="hidden-xs hidden-sm">Statistics</span>
-                    </a>
-                </li>
-                @can('update', $division)
-                    <li>
-                        <a href="{{ route('createPlatoon', $division->abbreviation) }}"><i class="fa fa-cube fa-lg"></i>Create {{ $division->locality('platoon') }}</a>
-                    </li>
-                @endcan
-            </ul>
+        <div class="row">
+            <div class="col-md-12">
+                @include('division.partials.leadership')
+            </div>
         </div>
-    </div>
 
-    <hr/>
+        <div class="row m-t-xl">
+            <div class="col-lg-12">
+                <h3 class="m-b-xs text-uppercase">{{ str_plural($division->locality('platoon')) }}</h3>
+                <hr>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-md-6">
+        <div class="row">
             @include('division.partials.platoons')
         </div>
-        <div class="col-md-6">
-            @include('division.partials.leadership')
-        </div>
+
     </div>
 
 @stop

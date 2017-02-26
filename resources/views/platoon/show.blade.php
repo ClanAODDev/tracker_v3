@@ -1,48 +1,35 @@
-@extends('layouts.app')
+@extends('application.base')
 @section('content')
 
-    {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
-
-    <div class="row">
-        <div class="col-sm-6">
-            <h2>
-                @include('division.partials.icon')
-
-                <strong>{{ $platoon->name }}</strong>
-                <small>{{ $division->name }}</small>
-            </h2>
+    <div class="division-header">
+        <div class="header-icon">
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
         </div>
-        <div class="col-sm-6">
-            <ul class="nav nav-pills pull-right">
-                <li class="active">
-                    <a href="#">
-                        <i class="fa fa-cube fa-lg"></i>
-                        {{ $division->locality('platoon') }} View
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon]) }}">
-                        <i class="fa fa-cubes fa-lg"></i>
-                        {{ $division->locality('squad') }} View
-                    </a>
-                </li>
-            </ul>
+        <div class="header-title">
+            <h3 class="m-b-xs text-uppercase">
+                {{ $platoon->name }} {{ $division->locality('platoon') }}
+            </h3>
+            <small>
+                {{ $division->name }} Division
+            </small>
         </div>
     </div>
 
-    <hr/>
+    <hr />
 
-    <div class="row margin-top-20">
-        <div class="col-md-8">
-            @include('platoon.partials.platoon_members')
+    <div class="container-fluid">
+
+        <div class="row margin-top-20">
+            <div class="col-md-12">
+                @include('platoon.partials.platoon-members')
+            </div>
+
+            <div class="col-md-4">
+                {{--@include('platoon.partials.member_stats')--}}
+            </div>
         </div>
 
-        <div class="col-md-4">
-            @include('platoon.partials.member_stats')
-        </div>
     </div>
-
 @stop
 
 @section('footer_scripts')

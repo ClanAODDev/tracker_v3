@@ -16,7 +16,7 @@ class AdminController extends Controller
     {
         $this->clanRepository = $clanRepository;
 
-        $this->middleware('auth');
+        $this->middleware(['auth', 'admin']);
     }
 
     public function index()
@@ -30,7 +30,7 @@ class AdminController extends Controller
 
     public function rankDemographic()
     {
-        $data = $this->clanRepository->getClanwideRankDemographic();
+        $data = $this->clanRepository->allRankDemographic();
 
         return Charts::create('area', 'morris')
             ->setLabels($data['labels'])
@@ -55,7 +55,7 @@ class AdminController extends Controller
             }
         }
 
-        if ( ! $changes) {
+        if (! $changes) {
             flash('No changes were made.', 'info');
 
             return redirect()->back();

@@ -1,6 +1,6 @@
 <?php
 
-class RegisterTest extends TestCase
+class RegisterTest extends BrowserKitTestCase
 {
 
     /**

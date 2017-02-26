@@ -169,7 +169,7 @@ class Member extends Model
      */
     public function isRank($rank)
     {
-        if ( ! $this->rank instanceof Rank) {
+        if (! $this->rank instanceof Rank) {
             return false;
         }
 
@@ -180,5 +180,4 @@ class Member extends Model
     {
         return Member::where('name', 'LIKE', "%{$name}%")->get();
     }
-
 }

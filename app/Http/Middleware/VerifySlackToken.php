@@ -16,12 +16,9 @@ class VerifySlackToken
      */
     public function handle($request, Closure $next)
     {
-        $app_tokens = explode(
-            ',',
-            env('SLACK_TOKENS')
-        );
+        $app_tokens = explode(',', env('SLACK_TOKENS'));
 
-        if (in_array($request->token, $app_tokens)) {
+        if (in_array($request->token, $app_tokens) && ! empty($request->token)) {
             return $next($request);
         }
 

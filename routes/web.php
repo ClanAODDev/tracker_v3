@@ -2,7 +2,6 @@
 
 Auth::routes();
 
-
 Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
@@ -11,9 +10,17 @@ Route::get('search/members/{name}', 'MemberController@search')->name('memberSear
 
 // Members endpoints
 Route::group(['prefix' => 'members'], function () {
-    Route::get('members/{member}', 'MemberController@show')->name('member');
-    Route::get('members/{member}/edit', 'MemberController@edit')->name('editMember');
-    Route::delete('members/{member}/delete', 'MemberController@destroy')->name('deleteMember');
+    Route::get('{member}', 'MemberController@show')->name('member');
+    Route::get('{member}/edit', 'MemberController@edit')->name('editMember');
+    Route::delete('{member}/delete', 'MemberController@destroy')->name('deleteMember');
+});
+
+Route::group(['prefix' => 'help'], function () {
+    Route::get('/', 'HelpController@index')->name('help');
+});
+
+Route::group(['prefix' => 'statistics'], function () {
+    Route::get('/', 'ClanStatisticsController@show')->name('statistics');
 });
 
 /**
@@ -52,7 +59,6 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
     Route::get('{division}/part-timers', 'DivisionController@partTime')->name('partTimers');
     Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
-
 });
 
 // logging activity
@@ -64,13 +70,10 @@ Route::get('developers', 'DeveloperController@index')->name('developer');
 /**
  * Slack handler
  */
-Route::group(['middleware' => 'slack'], function () {
-    Route::get('slack', [
-        'as' => 'slack.commands',
-        'uses' => 'SlackController@index',
-    ]);
-});
-
+Route::post('slack', [
+    'as' => 'slack.commands',
+    'uses' => 'SlackController@index',
+])->middleware('slack');
 
 
 /**

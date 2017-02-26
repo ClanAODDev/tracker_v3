@@ -1,44 +1,98 @@
-@extends('layouts.app')
+@extends('application.base')
+
 @section('content')
+    <div class="container-fluid">
 
-    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
-
-    <div class="row">
-        <div class="col-xs-6">
-
-            <h2>
-                <strong>{!! $member->present()->rankName !!}</strong>
-                @if ($member->position)
-                    <small>{{ $member->position->name }}</small>
-                @endif
-            </h2>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="division-header">
+                    <div class="header-icon">
+                        <img src="{{ getDivisionIconPath($member->primaryDivision->abbreviation) }}"/>
+                    </div>
+                    <div class="header-title">
+                        <h3 class="m-b-xs text-uppercase">{!! $member->present()->rankName !!}</h3>
+                        @if ($member->position)
+                            <small>
+                                {{ $member->position->name }}
+                            </small>
+                        @endif
+                    </div>
+                </div>
+                <hr>
+            </div>
         </div>
 
-        <div class="col-xs-6">
+        <div class="row m-t-sm">
 
-            <div class="btn-group pull-right">
+            <div class="col-md-12">
+                <div class="panel panel-filled">
 
-                @can('update', $member)
-                    <a href="{{ route('editMember', $member->clan_id) }}"
-                       type="button" class="btn btn-default edit-member"><i class="fa fa-pencil fa-lg"></i> Edit
-                    </a>
-                @endcan
+                    <div class="panel-body">
 
-                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-comment"></i> Contact
-                    <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Send Forum PM</a></li>
-                    <li><a href="#">Send Forum Email</a></li>
-                </ul>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="media">
+                                    <i class="pe pe-7s-user c-accent fa-3x"></i>
+                                    <h2 class="m-t-xs m-b-none">
+                                        Luna user
+                                    </h2>
+                                    <small>
+                                        There are many variations of passages of Lorem Ipsum available, but the majority
+                                        have suffered alteration in some form Ipsum available.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <table class="table small m-t-sm">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong class="c-white">122</strong> Projects
+                                        </td>
+                                        <td>
+                                            <strong class="c-white">42</strong> Active project
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong class="c-white">61</strong> Comments
+                                        </td>
+                                        <td>
+                                            <strong class="c-white">84</strong> Articles
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong class="c-white">244</strong> Tags
+                                        </td>
+                                        <td>
+                                            <strong class="c-white">42</strong> Friends
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-3 m-t-sm">
+                                <span class="c-white">
+                                    Contact with user
+                                </span>
+                                <br>
+                                <small>
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry
+                                </small>
+                                <div class="btn-group m-t-sm">
+                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-envelope"></i>
+                                        Contact</a>
+                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-check"></i> Check
+                                        availability</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <hr/>
-
-    {{-- Member not primary in any division --}}
-    @if ( ! $member->primaryDivision)
-        <div class="alert alert-danger">This player is no longer active in AOD.</div>
-    @endif
-
 
 @stop

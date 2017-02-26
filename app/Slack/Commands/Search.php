@@ -31,7 +31,25 @@ class Search extends Base implements Command
             ];
         }
 
-        $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
+        // are we handling multiple names?
+        if (strstr($this->params, ',')) {
+            $criteria = [];
+            $terms = explode(',', $this->params);
+
+            if (count($terms) > 2) {
+                return [
+                    'text' => "Your search criteria can only be a maximum of two terms.",
+                ];
+            }
+
+            $this->members = Member::where('name', 'LIKE', "%{$terms[0]}%")
+                ->orWhere('name', 'LIKE', "%{$terms[1]}%")
+                ->get();
+
+        } else {
+            $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
+        }
+
 
         if ($this->members) {
             foreach ($this->members as $member) {
@@ -42,7 +60,7 @@ class Search extends Base implements Command
                 $this->content[] = [
                     'title' => "{$member->present()->rankName} - {$division}",
                     'text' => $this->profile_path . $member->clan_id,
-                    'color' => '#88C53E',
+                    'color' => ($member->primaryDivision) ? '#88C53E' : '#ff0000',
                 ];
             }
         }

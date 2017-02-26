@@ -63,6 +63,3 @@ class Platoon extends Model
             ->whereIn('position_id', [1]);
     }
 }
-
-
-

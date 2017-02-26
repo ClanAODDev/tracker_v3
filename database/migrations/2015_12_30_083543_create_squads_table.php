@@ -3,7 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSquadsTable extends Migration {
+class CreateSquadsTable extends Migration
+{
 
     /**
      * Run the migrations.
@@ -12,8 +13,7 @@ class CreateSquadsTable extends Migration {
      */
     public function up()
     {
-        Schema::create('squads', function(Blueprint $table)
-        {
+        Schema::create('squads', function (Blueprint $table) {
             $table->increments('id');
             $table->mediumInteger('platoon_id');
             $table->mediumInteger('leader_id')->nullable();
@@ -30,5 +30,4 @@ class CreateSquadsTable extends Migration {
     {
         Schema::drop('squads');
     }
-
 }

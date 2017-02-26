@@ -10,5 +10,4 @@ class SquadPresenter extends Presenter
     {
         $this->squad = $squad;
     }
-
 }

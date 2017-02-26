@@ -24,7 +24,3 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'member_id' => 31832
     ];
 });
-
-
-
-

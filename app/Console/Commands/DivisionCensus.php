@@ -44,7 +44,6 @@ class DivisionCensus extends Command
         $this->comment('Beginning division census...');
 
         foreach ($divisions as $division) {
-
             $this->comment("Recording data for {$division->name}...");
 
             $this->recordEntry($division);

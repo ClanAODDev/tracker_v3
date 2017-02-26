@@ -29,7 +29,10 @@ class SquadController extends Controller
     {
         $squads = $platoon->squads()
             ->with(
-                'members', 'members.rank', 'leader', 'leader.rank'
+                'members',
+                'members.rank',
+                'leader',
+                'leader.rank'
             )->get()->sortByDesc('members.rank_id');
 
         $unassigned = $platoon->unassigned()
@@ -37,7 +40,10 @@ class SquadController extends Controller
             ->get();
 
         return view('platoon.squads', compact(
-            'platoon', 'division', 'squads', 'unassigned'
+            'platoon',
+            'division',
+            'squads',
+            'unassigned'
         ));
     }
 
@@ -147,7 +153,7 @@ class SquadController extends Controller
     {
         $member = Member::whereClanId($request->leader_id)->first();
 
-        return $member->primaryDivision instanceOf Division &&
+        return $member->primaryDivision instanceof Division &&
             $member->primaryDivision->id === $division->id;
     }
 }

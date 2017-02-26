@@ -99,7 +99,10 @@ class MemberController extends Controller
         $squads = $member->primaryDivision->squads()->with('leader', 'leader.rank')->get();
 
         return view('member.modify', compact(
-            'member', 'positions', 'platoons', 'squads'
+            'member',
+            'positions',
+            'platoons',
+            'squads'
         ));
     }
 

@@ -20,5 +20,7 @@ class DropStructureAndWelcomeColumns extends Migration
         }
     }
 
-    public function down(){}
+    public function down()
+    {
+    }
 }

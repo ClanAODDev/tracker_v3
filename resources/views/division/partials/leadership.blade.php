@@ -1,22 +1,26 @@
-<div class="panel panel-info">
-    <div class="panel-heading">Division Command Staff</div>
-    @forelse($divisionLeaders as $leader)
-        <a href="{{ route('member', $leader->clan_id) }}" class="list-group-item">
-            <h5 class="pull-right"><i class="fa fa-shield fa-2x text-muted"></i></h5>
-            <h4 class="list-group-item-heading">
-                <strong>{!! $leader->present()->rankName !!}</strong></h4>
-            <p class="list-group-item-text text-muted"><?php echo $leader->position->name; ?></p>
-        </a>
-    @empty
-        <li class="list-group-item text-muted">This division has no assigned leadership</li>
-    @endforelse
-</div>
-
 <div class="row">
-    <div class="col-md-6">
-        @include('division.partials.generalSergeants')
-    </div>
-    <div class="col-md-6">
-        @include('division.partials.staffSergeants')
-    </div>
+    @forelse($divisionLeaders as $leader)
+        <div class="col-md-4">
+            <a href="{{ route('member', $leader->clan_id) }}" class="panel panel-filled panel-c-accent">
+                <div class="panel-body">
+                    <h4 class="m-b-none">
+                        {!! $leader->present()->rankName !!}
+                        <span class="pull-right"><i class="pe pe-2x pe-7s-shield"></i></span>
+                    </h4>
+                    <small><?php echo $leader->position->name; ?></small>
+                </div>
+            </a>
+        </div>
+    @empty
+        <div class="col-md-12">
+            <div class="panel panel-filled panel-c-danger">
+                <div class="panel-body">
+                    <h4 class="m-b-none text-uppercase">
+                        No leadership assigned
+                    </h4>
+                    <small class="slight">A clan administrator must update this division in order to assign leadership</small>
+                </div>
+            </div>
+        </div>
+    @endforelse
 </div>

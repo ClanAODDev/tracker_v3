@@ -6,7 +6,7 @@ elixir.config.sourcemaps = false;
 
 elixir(function (mix) {
 
-    mix.sass('app.scss');
+    mix.styles('style.css');
 
     mix.scripts(
         [
@@ -21,6 +21,8 @@ elixir(function (mix) {
 
             'libs/bootstrap/bootstrap.min.js',
             'libs/bootstrap/bootstrap-multiselect.js',
+
+            'libs/sparkline.js',
 
             'libs/dataTables/jquery.dataTables.min.js',
             'libs/dataTables/dataTables.bootstrap.js',

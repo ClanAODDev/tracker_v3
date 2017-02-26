@@ -150,7 +150,7 @@ class Division extends Model
 
         $locality = collect($this->settings()->locality);
 
-        if ( ! $locality->count()) {
+        if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -162,7 +162,7 @@ class Division extends Model
             }
         });
 
-        if ( ! $results) {
+        if (! $results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);
@@ -180,12 +180,10 @@ class Division extends Model
     {
         return $this->activeMembers()
             ->whereIn('position_id', [5, 6]);
-
     }
 
     public function isActive()
     {
         return $this->active;
     }
-
 }

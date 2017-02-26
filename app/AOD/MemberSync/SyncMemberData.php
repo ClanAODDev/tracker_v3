@@ -24,7 +24,7 @@ class SyncMemberData
             self::$activeMembers = [];
             $divisionInfo = new GetDivisionInfo($division->name);
 
-            if ( ! is_object($divisionInfo)) {
+            if (! is_object($divisionInfo)) {
                 Log::critical(date('Y-m-d H:i:s') . " - Could not sync $division->name");
                 Log::critical($divisionInfo);
                 exit;
@@ -40,7 +40,6 @@ class SyncMemberData
             // trash removed members
             self::doRemovalCleanup($members);
         }
-
     }
 
     /**
@@ -90,8 +89,8 @@ class SyncMemberData
 
         foreach ($detached as $index => $id) {
             $member = Member::find($id);
-            if ($member instanceof Member) {
 
+            if ($member instanceof Member) {
                 // unassign member from squad / platoon
                 $member->squad_id = 0;
                 $member->platoon_id = 0;

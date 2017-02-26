@@ -31,7 +31,7 @@ class GetDivisionInfo
     {
         $this->division = $division;
 
-        if ( ! getenv('AOD_TOKEN')) {
+        if (! getenv('AOD_TOKEN')) {
             Log::critical("ERROR: AOD Token not defined in configuration.");
             exit;
         } else {
@@ -61,7 +61,7 @@ class GetDivisionInfo
 
         curl_close($ch);
 
-        if ( ! is_object($data)) {
+        if (! is_object($data)) {
             Log::critical("ERROR: Member sync returning invalid: {$this->jsonUrl()}");
             Log::critical($results);
             exit;

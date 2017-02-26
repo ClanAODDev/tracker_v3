@@ -73,7 +73,7 @@ function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
  */
 function UserSettings($key = null)
 {
-    $settings = app('App\Settings\UserSettings');
+    $settings = app(\App\Settings\UserSettings::class);
 
     return $key ? $settings->get($key) : $settings;
 }
@@ -85,9 +85,16 @@ function hasDivisionIcon($abbreviation)
     return File::exists($image);
 }
 
-function getDivisionIconPath($abbreviation)
+function getDivisionIconPath($abbreviation, $size = "large")
 {
-    return asset("/images/game_icons/48x48/{$abbreviation}.png");
+    switch ($size) {
+        case "small":
+            return asset("/images/game_icons/16x16/{$abbreviation}.png");
+        case "medium":
+            return asset("/images/game_icons/32x32/{$abbreviation}.png");
+        case "large":
+            return asset("/images/game_icons/48x48/{$abbreviation}.png");
+    }
 }
 
 /**
@@ -159,7 +166,25 @@ function getActivityClass($date, $division)
     return 'text-success';
 }
 
-function getNameOfClass($class) {
+function getNameOfClass($class)
+{
     $path = explode('\\', get_class($class));
     return array_pop($path);
+}
+
+/**
+ * Navigation helper for active classs
+ *
+ * @param $path
+ * @param string $active
+ * @return string
+ */
+function set_active($path, $active = 'active')
+{
+    return call_user_func_array('Request::is', (array)$path) ? $active : '';
+}
+
+function percent($old_member_count, $new_member_count)
+{
+    return number_format((1 - $old_member_count / $new_member_count) * 100, 2); // yields 0.76
 }

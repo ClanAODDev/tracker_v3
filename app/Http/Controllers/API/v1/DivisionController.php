@@ -39,7 +39,7 @@ class DivisionController extends ApiController
     {
         $division = Division::whereAbbreviation($abbreviation)->first();
 
-        if ( ! $division) {
+        if (! $division) {
             return $this->respondNotFound('Division could not be found');
         }
 
