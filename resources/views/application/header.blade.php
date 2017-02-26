@@ -3,7 +3,7 @@
 
 <link href="https://fonts.googleapis.com/css?family=Lato|Open+Sans" rel="stylesheet">
 
-<link href="{{ asset('favicon.ico') }}" type="image/x-icon" rel="Shortcut Icon"/>
+<link href="{{ asset('favicon.ico?v=3') }}" type="image/x-icon" rel="Shortcut Icon"/>
 
 {!! Charts::assets() !!}
 
