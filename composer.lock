@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "105a37bb249466d8db70ac863f906d1e",
+    "content-hash": "860a6728c8e8e0717f57eb3461691083",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -62,20 +62,22 @@
         },
         {
             "name": "consoletvs/charts",
-            "version": "2.0.2",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ConsoleTVs/Charts.git",
-                "reference": "c473ddec3479a8be2b1bceaced53f1d74eee4986"
+                "reference": "abc17c9917bc9fa0a8277c7f9c51227c338daad6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ConsoleTVs/Charts/zipball/c473ddec3479a8be2b1bceaced53f1d74eee4986",
-                "reference": "c473ddec3479a8be2b1bceaced53f1d74eee4986",
+                "url": "https://api.github.com/repos/ConsoleTVs/Charts/zipball/abc17c9917bc9fa0a8277c7f9c51227c338daad6",
+                "reference": "abc17c9917bc9fa0a8277c7f9c51227c338daad6",
                 "shasum": ""
             },
             "require": {
-                "jlawrence/eos": "3.*"
+                "illuminate/support": "5.*",
+                "jlawrence/eos": "3.*",
+                "php": ">=5.6.4"
             },
             "type": "library",
             "autoload": {
@@ -94,7 +96,7 @@
                 }
             ],
             "description": "Create charts for laravel using diferent charts libraries",
-            "time": "2016-10-24T14:51:00+00:00"
+            "time": "2017-02-21T10:16:03+00:00"
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -3631,16 +3633,16 @@
         },
         {
             "name": "laracasts/generators",
-            "version": "1.1.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laracasts/Laravel-5-Generators-Extended.git",
-                "reference": "d6afcc60dff846980393d59f6df2074b8a297b08"
+                "reference": "4e9ce5db9d93475ca27b993a92de3b15090aa139"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laracasts/Laravel-5-Generators-Extended/zipball/d6afcc60dff846980393d59f6df2074b8a297b08",
-                "reference": "d6afcc60dff846980393d59f6df2074b8a297b08",
+                "url": "https://api.github.com/repos/laracasts/Laravel-5-Generators-Extended/zipball/4e9ce5db9d93475ca27b993a92de3b15090aa139",
+                "reference": "4e9ce5db9d93475ca27b993a92de3b15090aa139",
                 "shasum": ""
             },
             "require": {
@@ -3671,7 +3673,7 @@
                 "generators",
                 "laravel"
             ],
-            "time": "2015-12-31T18:44:32+00:00"
+            "time": "2017-01-25T15:31:26+00:00"
         },
         {
             "name": "laravel/browser-kit-testing",
@@ -4235,25 +4237,30 @@
         },
         {
             "name": "phpunit/php-timer",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-timer.git",
-                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260"
+                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/38e9124049cf1a164f1e4537caf19c99bf1eb260",
-                "reference": "38e9124049cf1a164f1e4537caf19c99bf1eb260",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
+                "reference": "3dcf38ca72b158baf0bc245e9184d3fdffa9c46f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4|~5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "src/"
@@ -4275,7 +4282,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12T18:03:57+00:00"
+            "time": "2017-02-26T11:10:40+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -5144,7 +5151,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "laracasts/generators": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

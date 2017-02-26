@@ -1,21 +1,17 @@
 @extends('application.base')
 @section('content')
 
-    <div class="division-header">
-        <div class="header-icon">
+    @component ('application.components.division-heading')
+        @slot ('icon')
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
-        </div>
-        <div class="header-title">
-            <h3 class="m-b-xs text-uppercase">
-                {{ $platoon->name }} {{ $division->locality('platoon') }}
-            </h3>
-            <small>
-                {{ $division->name }} Division
-            </small>
-        </div>
-    </div>
-
-    <hr />
+        @endslot
+        @slot ('heading')
+            {{ $platoon->name }} {{ $division->locality('platoon') }}
+        @endslot
+        @slot ('subheading')
+            {{ $division->name }}
+        @endslot
+    @endcomponent
 
     <div class="container-fluid">
 

@@ -228,8 +228,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // custom aliases
-        'Charts' => ConsoleTVs\Charts\Charts::class,
-        //'Slack' => Maknz\Slack\Facades\Slack::class,
+        'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'Helpers' => App\Helpers::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,

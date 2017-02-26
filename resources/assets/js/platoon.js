@@ -20,8 +20,6 @@ var Platoon = Platoon || {};
 
             $('table.members-table').DataTable({
                 "autoWidth": true,
-                "sDom": 'T<"clear">tfrip',
-                "order": [],
                 "columnDefs": [{
                     "targets": 'no-search',
                     "searchable": false
@@ -40,36 +38,9 @@ var Platoon = Platoon || {};
                 }],
                 stateSave: false,
                 paging: false,
-                "bServerSide": false,
                 "drawCallback": function (settings) {
                     $("#member-footer").empty();
                     $("#members-table_info").contents().appendTo("#member-footer");
-                },
-
-                "oTableTools": {
-                    "sRowSelect": "multi",
-                    "sSwfPath": "/swf/copy_csv_xls_pdf.swf",
-                    "aButtons": [{
-
-                        "sExtends": "text",
-                        "fnSelect": function (nButton, oConfig, nRow) {
-                            console.log($(nRow).data('id') + " clicked")
-                        },
-                        "sExtends": "collection",
-                        "sButtonText": "",
-                        "mColumns": "visible",
-                        "aButtons": ["select_all", "select_none", {
-                            "sExtends": "pdf",
-                            "sPdfOrientation": "landscape",
-                            "sFileName": "AOD Plt " + platoonNum + "_" + nowDate + ".pdf",
-                            "mColumns": "visible"
-                        }, {
-                            "sExtends": "csv",
-                            "sFileName": "AOD Plt " + platoonNum + "_" + nowDate + ".csv",
-                            "mColumns": "visible"
-                        }],
-                        "bSelectedOnly": true
-                    }]
                 }
             });
 
