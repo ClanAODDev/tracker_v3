@@ -22,7 +22,6 @@
 
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-{{--<script src="{{ asset('vendor/pacejs/pace.min.js') }}"></script>--}}
 <script src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('js/libs.js') }}"></script>
 

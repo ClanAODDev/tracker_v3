@@ -29,6 +29,16 @@
                         <i class="fa fa-sliders fa-lg"></i> <span class="hidden-xs">General</span>
                     </a>
                 </li>
+                <li class="leaders">
+                    <a data-toggle="tab" href="#leader-settings">
+                        <i class="fa fa-shield fa-lg"></i> <span class="hidden-xs">Leadership</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#recruiting-settings" data-toggle="tab">
+                        <i class="fa fa-user-plus fa-lg"></i> <span class="hidden-xs">Recruiting</span>
+                    </a>
+                </li>
                 <li>
                     <a data-toggle="tab" href="#locality-settings">
                         <i class="fa fa-language fa-lg"></i> <span class="hidden-xs">Locality</span>
@@ -40,10 +50,23 @@
                     </a>
                 </li>
             </ul>
+
             <div class="tab-content">
                 <div id="general-settings" class="tab-pane divisions active">
                     <div class="panel-body">
                         @include('division.forms.general-settings')
+                    </div>
+                </div>
+
+                <div id="leader-settings" class="tab-pane">
+                    <div class="panel-body">
+                        @include('division.forms.leadership')
+                    </div>
+                </div>
+
+                <div class="tab-pane fade in" id="recruiting-settings">
+                    <div class="panel-body">
+                        @include('division.forms.recruiting')
                     </div>
                 </div>
 
@@ -59,6 +82,5 @@
                     </div>
                 </div>
             </div>
-
         </div>
 @stop

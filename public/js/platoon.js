@@ -81,7 +81,7 @@ var Platoon = Platoon || {};
                 "class": "form-control"
             });
 
-            $(".dataTables_info").addClass('panel-footer text-center');
+            $(".dataTables_info").addClass('panel-footer text-center text-muted');
 
             $(".dataTables_filter label").remove();
 

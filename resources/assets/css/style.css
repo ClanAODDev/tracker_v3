@@ -538,7 +538,7 @@ fieldset[disabled] .btn-danger.focus {
 
 /* PACE handler */
 /*.content > div {*/
-    /*opacity: 0;*/
+/*opacity: 0;*/
 /*}*/
 
 .pace {
@@ -592,6 +592,7 @@ fieldset[disabled] .btn-danger.focus {
 
 .text-muted {
     color: #868e96;
+    opacity: .5;
 }
 
 .text-accent {
@@ -2445,7 +2446,7 @@ div.dt-button-info h2 {
 }
 
 .alert-warning {
-    color: rgba(0,0,0,.5);
+    color: rgba(0, 0, 0, .5);
     border-color: #f7af3e;
     background-color: #f7af3e;
 }
@@ -2698,4 +2699,8 @@ fieldset[disabled] .form-control {
     position: absolute;
     right: 15px;
     top: 15px;
+}
+
+.panel > .panel-body + .table, .panel > .panel-body + .table-responsive, .panel > .table + .panel-body, .panel > .table-responsive + .panel-body {
+    border-top: 1px solid #555;
 }
