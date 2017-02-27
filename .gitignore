@@ -16,3 +16,4 @@ composer.phar
 .DS_Store
 /storage/oauth-private.key
 /storage/oauth-public.key
+/_ide_helper.php

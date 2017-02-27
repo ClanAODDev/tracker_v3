@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Charts;
 use App\Division;
 use App\Http\Requests\CreatePlatoonForm;
 use App\Member;
 use App\Platoon;
 use App\Repositories\PlatoonRepository;
 use App\User;
+use Charts;
 use Illuminate\Http\Request;
 
 class PlatoonController extends Controller
@@ -64,6 +64,19 @@ class PlatoonController extends Controller
     }
 
     /**
+     * @param CreatePlatoonForm $request
+     * @param Division $division
+     * @return bool
+     */
+    public function isMemberOfDivision(Division $division, CreatePlatoonForm $request)
+    {
+        $member = Member::whereClanId($request->leader)->first();
+
+        return $member->primaryDivision instanceof Division &&
+            $member->primaryDivision->id === $division->id;
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param Division $division
@@ -84,6 +97,23 @@ class PlatoonController extends Controller
             'platoon.show',
             compact('platoon', 'members', 'division', 'activityGraph')
         );
+    }
+
+    /**
+     * Generates data for platoon activity
+     *
+     * @param Platoon $platoon
+     * @return mixed
+     */
+    private function activityGraphData(Platoon $platoon)
+    {
+        $data = $this->platoon->getPlatoonActivity($platoon);
+
+        return Charts::create('donut', 'morris')
+            ->labels($data['labels'])
+            ->values($data['values'])
+            ->colors($data['colors'])
+            ->responsive(true);
     }
 
     /**
@@ -122,35 +152,5 @@ class PlatoonController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    /**
-     * Generates data for platoon activity
-     *
-     * @param Platoon $platoon
-     * @return mixed
-     */
-    private function activityGraphData(Platoon $platoon)
-    {
-        $data = $this->platoon->getPlatoonActivity($platoon);
-
-        return Charts::create('donut', 'morris')
-            ->labels($data['labels'])
-            ->values($data['values'])
-            ->colors($data['colors'])
-            ->responsive(true);
-    }
-
-    /**
-     * @param CreatePlatoonForm $request
-     * @param Division $division
-     * @return bool
-     */
-    public function isMemberOfDivision(Division $division, CreatePlatoonForm $request)
-    {
-        $member = Member::whereClanId($request->leader)->first();
-
-        return $member->primaryDivision instanceof Division &&
-            $member->primaryDivision->id === $division->id;
     }
 }
