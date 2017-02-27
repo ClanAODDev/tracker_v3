@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Charts;
 use App\Division;
 use Illuminate\Http\Request;
-use ConsoleTVs\Charts\Charts;
-use App\Repositories\DivisionRepository;
-use Illuminate\Support\Facades\Session;
 use Whossun\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Session;
+use App\Repositories\DivisionRepository;
 
 class DivisionController extends Controller
 {
@@ -134,10 +134,10 @@ class DivisionController extends Controller
         $data = $this->rankDemographic($division);
 
         return Charts::create('area', 'morris')
-            ->setLabels($data['labels'])
-            ->setValues($data['values'])
-            ->setElementLabel('Rank count')
-            ->setResponsive(true);
+            ->labels($data['labels'])
+            ->values($data['values'])
+            ->elementLabel('Rank count')
+            ->responsive(true);
     }
 
     private function getActivityChart($division)
@@ -145,10 +145,10 @@ class DivisionController extends Controller
         $data = $this->division->getDivisionActivity($division);
 
         return Charts::create('donut', 'morris')
-            ->setLabels($data['labels'])
-            ->setValues($data['values'])
-            ->setColors($data['colors'])
-            ->setResponsive(true);
+            ->labels($data['labels'])
+            ->values($data['values'])
+            ->colors($data['colors'])
+            ->responsive(true);
     }
 
     public function statistics(Division $division)

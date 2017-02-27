@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Charts;
 use App\Division;
-use App\Repositories\ClanRepository;
-use ConsoleTVs\Charts\Charts;
 use Illuminate\Http\Request;
+use App\Repositories\ClanRepository;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -33,10 +33,10 @@ class AdminController extends Controller
         $data = $this->clanRepository->allRankDemographic();
 
         return Charts::create('area', 'morris')
-            ->setLabels($data['labels'])
-            ->setValues($data['values'])
-            ->setElementLabel('Rank count')
-            ->setResponsive(true);
+            ->labels($data['labels'])
+            ->values($data['values'])
+            ->elementLabel('Rank count')
+            ->responsive(true);
     }
 
     public function updateDivisions(Request $request)

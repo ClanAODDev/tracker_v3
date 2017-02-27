@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Charts;
 use App\Division;
 use App\Http\Requests\CreatePlatoonForm;
 use App\Member;
 use App\Platoon;
 use App\Repositories\PlatoonRepository;
 use App\User;
-use ConsoleTVs\Charts\Charts;
 use Illuminate\Http\Request;
 
 class PlatoonController extends Controller
@@ -135,10 +135,10 @@ class PlatoonController extends Controller
         $data = $this->platoon->getPlatoonActivity($platoon);
 
         return Charts::create('donut', 'morris')
-            ->setLabels($data['labels'])
-            ->setValues($data['values'])
-            ->setColors($data['colors'])
-            ->setResponsive(true);
+            ->labels($data['labels'])
+            ->values($data['values'])
+            ->colors($data['colors'])
+            ->responsive(true);
     }
 
     /**
