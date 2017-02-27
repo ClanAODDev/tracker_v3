@@ -3,7 +3,7 @@
 <!-- Main Content -->
 @section('content')
 
-    <div class="container-center animated slideInDown">
+    <div class="container-center lg">
 
         <div class="view-header">
             <div class="header-icon">
