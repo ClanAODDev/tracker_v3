@@ -229,7 +229,6 @@ return [
 
         // custom aliases
         'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
-        'Helpers' => App\Helpers::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Toastr' => Whossun\Toastr\Facades\Toastr::class,
