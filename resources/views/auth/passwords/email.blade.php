@@ -41,7 +41,7 @@
                         <button type="submit" class="btn btn-accent">
                             <i class="fa fa-btn fa-envelope"></i> Send Password Reset Link
                         </button>
-                        <a class="btn btn-default" href="index.html">Cancel</a>
+                        <a class="btn btn-default" href="{{ route('login') }}">Cancel</a>
                     </div>
                 </form>
             </div>
