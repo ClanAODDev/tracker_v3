@@ -9,19 +9,19 @@
             {{ $platoon->name }} {{ $division->locality('platoon') }}
         @endslot
         @slot ('subheading')
-            {{ $division->name }}
+            {{ $division->name }} Division
         @endslot
     @endcomponent
 
     <div class="container-fluid">
 
-        <div class="row margin-top-20">
-            <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-9">
                 @include('platoon.partials.platoon-members')
             </div>
 
-            <div class="col-md-4">
-                {{--@include('platoon.partials.member_stats')--}}
+            <div class="col-md-3">
+                @include('platoon.partials.member_stats')
             </div>
         </div>
 

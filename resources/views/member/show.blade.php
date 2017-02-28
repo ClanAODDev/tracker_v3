@@ -1,34 +1,28 @@
 @extends('application.base')
 
 @section('content')
+
+    @component ('application.components.division-heading')
+        @slot ('icon')
+            <img src="{{ getDivisionIconPath($member->primaryDivision->abbreviation) }}" />
+        @endslot
+        @slot ('heading')
+            {!! $member->present()->rankName !!}
+        @endslot
+        @slot ('subheading')
+            @if ($member->position)
+                {{ $member->position->name }}
+            @else
+                No position assigned
+            @endif
+        @endslot
+    @endcomponent
+
     <div class="container-fluid">
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="division-header">
-                    <div class="header-icon">
-                        <img src="{{ getDivisionIconPath($member->primaryDivision->abbreviation) }}"/>
-                    </div>
-                    <div class="header-title">
-                        <h3 class="m-b-xs text-uppercase">{!! $member->present()->rankName !!}</h3>
-                        @if ($member->position)
-                            <small>
-                                {{ $member->position->name }}
-                            </small>
-                        @endif
-                    </div>
-                </div>
-                <hr>
-            </div>
-        </div>
-
         <div class="row m-t-sm">
-
             <div class="col-md-12">
                 <div class="panel panel-filled">
-
                     <div class="panel-body">
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="media">
