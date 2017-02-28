@@ -3,16 +3,16 @@
 <!-- Main Content -->
 @section('content')
 
-    <div class="container-center lg">
+    <div class="container-center">
 
         <div class="view-header">
             <div class="header-icon">
-                <i class="pe page-header-icon pe-7s-id"></i>
+                <i class="pe page-header-icon pe-7s-refresh-2"></i>
             </div>
             <div class="header-title">
-                <h3>Reset password</h3>
+                <h3>AOD Tracker</h3>
                 <small>
-                    Please enter your email to reset your password.
+                    Password reset form
                 </small>
             </div>
         </div>
