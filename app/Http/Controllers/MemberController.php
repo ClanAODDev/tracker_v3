@@ -39,14 +39,16 @@ class MemberController extends Controller
     /**
      * Search for a member
      *
-     * @param $name
+     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @internal param $name
      */
     public function search($name)
     {
-        $members = $this->member->search($name);
+        $members = Member::where('name', 'LIKE', "%{$name}%")
+            ->with('rank')->get();
 
-        return view('member.search', compact('members'));
+        return view('member.search', compact('members', 'request'));
     }
 
     /**

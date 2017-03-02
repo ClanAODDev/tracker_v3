@@ -17,6 +17,8 @@
             @include('application.partials.navigation')
         </aside>
 
+        <section class="search-results closed"></section>
+
         <section class="content">
             @yield('content')
         </section>

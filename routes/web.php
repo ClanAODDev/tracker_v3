@@ -12,6 +12,7 @@ Route::get('search/members/{name}', 'MemberController@search')->name('memberSear
 Route::group(['prefix' => 'members'], function () {
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit', 'MemberController@edit')->name('editMember');
+    Route::post('search/{name}', 'MemberController@search');
     Route::delete('{member}/delete', 'MemberController@destroy')->name('deleteMember');
 });
 

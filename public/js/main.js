@@ -24,7 +24,7 @@ var Tracker = Tracker || {};
         SearchMembers: function SearchMembers() {
             this.TriggerFilter(document.getElementById("member-search"), this.GetSearchResults, 1000);
             $("#searchclear").click(function () {
-                $("div#member-search-results").hide();
+                $("section.search-results").toggleClass('closed open');
                 $("#member-search").val('');
                 $("#searchclear").css('display', 'none');
             });
@@ -87,9 +87,9 @@ var Tracker = Tracker || {};
                     type: 'GET',
                     success: function success(response) {
                         $("#searchclear").css('display', 'block');
-                        $("div#member-search-results").show();
+                        $('section.search-results').html(response);
+                        $("section.search-results").toggleClass('open closed');
                         console.log(this.url);
-                        $('#member-search-results').html(response);
                     }
                 });
             }

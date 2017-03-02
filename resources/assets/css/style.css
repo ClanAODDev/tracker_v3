@@ -951,7 +951,6 @@ body {
 }
 
 .content {
-    margin-top: 60px;
     margin-left: 200px;
     position: relative;
     padding: 30px;
@@ -1015,7 +1014,29 @@ body.nav-toggle .navigation:before {
     left: -200px;
 }
 
+
+.search-results {
+    display: block;
+    background-color: #24262d;
+    height: 150px;
+    overflow-y: scroll;
+    margin-left: 200px;
+    transition: margin .3s;
+}
+
+.search-results.open {
+    margin-top: 60px;
+}
+
+.search-results.closed {
+    margin-top: -90px;
+}
+
 @media (max-width: 767px) {
+    .search-results {
+        margin-top: -60px;
+        margin-left: 0 !important;
+    }
     .content {
         margin-left: 0;
         padding: 30px 0 10px 0;
@@ -2682,16 +2703,6 @@ fieldset[disabled] .form-control {
 /**
  * tracker stuff
  */
-
-#member-search-results.scroll {
-    position: absolute;
-    z-index: 1;
-    overflow-x: hidden;
-    max-height: 300px;
-    width: 300px;
-    left: 200px;
-    top: 60px;
-}
 
 #searchclear {
     display: none;

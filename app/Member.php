@@ -43,27 +43,18 @@ class Member extends Model
     }
 
     /**
-     * relationship - member has many divisions
-     */
-    public function divisions()
-    {
-        return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
-    }
-
-    /**
-     * relationship - member belongs to a platoon
-     */
-    public function platoon()
-    {
-        return $this->belongsTo(Platoon::class);
-    }
-
-    /**
      * relationship - member belongs to a rank
      */
     public function rank()
     {
         return $this->belongsTo(Rank::class);
+    }
+
+    public function assignPosition($position)
+    {
+        return $this->position()->associate(
+            Position::whereName(strtolower($position))->firstOrFail()
+        );
     }
 
     /**
@@ -72,21 +63,6 @@ class Member extends Model
     public function position()
     {
         return $this->belongsTo(Position::class);
-    }
-
-    /**
-     * relationship - member belongs to a squad
-     */
-    public function squad()
-    {
-        return $this->belongsTo(Squad::class);
-    }
-
-    public function assignPosition($position)
-    {
-        return $this->position()->associate(
-            Position::whereName(strtolower($position))->firstOrFail()
-        );
     }
 
     /**
@@ -123,6 +99,30 @@ class Member extends Model
         $this->squad()->dissociate();
 
         $this->save();
+    }
+
+    /**
+     * relationship - member has many divisions
+     */
+    public function divisions()
+    {
+        return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
+    }
+
+    /**
+     * relationship - member belongs to a platoon
+     */
+    public function platoon()
+    {
+        return $this->belongsTo(Platoon::class);
+    }
+
+    /**
+     * relationship - member belongs to a squad
+     */
+    public function squad()
+    {
+        return $this->belongsTo(Squad::class);
     }
 
     /**
@@ -169,15 +169,10 @@ class Member extends Model
      */
     public function isRank($rank)
     {
-        if (! $this->rank instanceof Rank) {
+        if ( ! $this->rank instanceof Rank) {
             return false;
         }
 
         return $this->rank->abbreviation === $rank;
-    }
-
-    public function search($name)
-    {
-        return Member::where('name', 'LIKE', "%{$name}%")->get();
     }
 }

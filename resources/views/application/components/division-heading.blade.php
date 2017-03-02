@@ -6,7 +6,7 @@
         <h3 class="m-b-xs text-uppercase">
             {{ $heading }}
         </h3>
-        <small>
+        <small class="slight">
             {{ $subheading }}
         </small>
     </div>
