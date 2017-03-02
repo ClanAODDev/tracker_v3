@@ -61,7 +61,9 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
-        $chart = $this->getRanksChart($division);
+        $censusCounts = $this->division->censusCounts($division, 30);
+        $previousCensus = $censusCounts->first();
+        $lastYearCensus = $censusCounts->reverse();
 
         $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
         $platoons = $division->platoons()->with('leader.rank', 'leader.position', 'members')
@@ -71,12 +73,8 @@ class DivisionController extends Controller
         $staffSergeants = $division->staffSergeants()->with('rank', 'position')->get();
 
         return view('division.show', compact(
-            'division',
-            'chart',
-            'platoons',
-            'divisionLeaders',
-            'generalSergeants',
-            'staffSergeants'
+            'division', 'previousCensus', 'platoons', 'lastYearCensus',
+            'divisionLeaders', 'generalSergeants', 'staffSergeants'
         ));
     }
 

@@ -9,6 +9,24 @@ use App\Division;
 class DivisionRepository
 {
 
+    public function censusCounts(Division $division, $limit = 10)
+    {
+        $censuses = collect(DB::select(
+            DB::raw("    
+                SELECT sum(count) as count, date_format(created_at,'%y-%m-%d') as date 
+                FROM censuses WHERE division_id = {$division->id} 
+                GROUP BY date(created_at) 
+                ORDER BY date DESC LIMIT {$limit};
+            ")
+        ));
+
+        if ($limit === 1) {
+            return $censuses->first();
+        }
+
+        return $censuses;
+    }
+
     public function getDivisionActivity(Division $division)
     {
         $twoWeeksAgo = Carbon::now()->subDays(14);
@@ -55,32 +73,6 @@ class DivisionRepository
         ];
 
         return $data;
-    }
-
-    /**
-     * Get clan population totals groups by date ranges (typically weekly)
-     *
-     * @param Division $division
-     * @param int $limit
-     * @return \Illuminate\Support\Collection|mixed
-     */
-    public function censusCounts(Division $division, $limit = 10)
-    {
-        $censuses = collect(DB::select(
-            DB::raw("    
-                SELECT sum(count) as count, date_format(created_at,'%y-%m-%d') as date 
-                FROM censuses
-                WHERE division_id = {$division->id} 
-                GROUP BY date(created_at) 
-                ORDER BY date DESC LIMIT {$limit};
-            ")
-        ));
-
-        if ($limit === 1) {
-            return $censuses->first();
-        }
-
-        return $censuses;
     }
 
     public function withoutSsgts()

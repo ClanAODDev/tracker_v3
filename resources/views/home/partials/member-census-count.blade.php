@@ -35,8 +35,7 @@
         <div class="m-t-md">
             <div class="row">
                 <div class="col-md-12">
-                    <div data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
-                         census-data></div>
+                    <div data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}" census-data></div>
                 </div>
             </div>
         </div>

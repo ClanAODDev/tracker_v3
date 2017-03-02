@@ -39,7 +39,7 @@ class MemberController extends Controller
     /**
      * Search for a member
      *
-     * @param Request $request
+     * @param $name
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @internal param $name
      */
