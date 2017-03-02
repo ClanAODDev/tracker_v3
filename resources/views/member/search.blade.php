@@ -7,3 +7,9 @@
         </div>
     </a>
 @endforeach
+
+<table class="table table-stripe table-hover">
+    @foreach ($members as $member)
+        <tr><td>{!! $member->present()->rankName !!}</td></tr>
+    @endforeach
+</table>

@@ -1014,28 +1014,10 @@ body.nav-toggle .navigation:before {
     left: -200px;
 }
 
-
-.search-results {
-    display: block;
-    background-color: #24262d;
-    height: 150px;
-    overflow-y: scroll;
-    margin-left: 200px;
-    transition: margin .3s;
-}
-
-.search-results.open {
-    margin-top: 60px;
-}
-
-.search-results.closed {
-    margin-top: -90px;
-}
-
 @media (max-width: 767px) {
     .search-results {
         margin-top: -60px;
-        margin-left: 0 !important;
+        margin-left: 0;
     }
     .content {
         margin-left: 0;
@@ -1435,15 +1417,17 @@ sup {
 }
 
 .luna-nav.nav li.active a {
-    border-left: 6px solid #f6a821;
-    padding-left: 19px;
+    margin-left: 2px;
+    border-left: 1px solid #f6a821;
+    padding-left: 22px;
     color: #c0c4c8;
+    background-color: rgba(0,0,0,.2);
 }
 
 .luna-nav.nav li a:hover,
 .luna-nav.nav li a:focus {
     color: #c0c4c8;
-    background: inherit;
+    background-color: rgba(0,0,0,.2);
 }
 
 .luna-nav.nav .nav-category {
@@ -2715,3 +2699,19 @@ fieldset[disabled] .form-control {
 .panel > .panel-body + .table, .panel > .panel-body + .table-responsive, .panel > .table + .panel-body, .panel > .table-responsive + .panel-body {
     border-top: 1px solid #555;
 }
+
+.search-results {
+    display: block;
+    background-color: #000;
+    height: 150px;
+    overflow-y: scroll;
+    margin-left: 200px;
+    margin-top: -90px;
+    transition: margin .3s;
+}
+
+.search-results.open {
+    margin-top: 60px;
+}
+
+.search-results
