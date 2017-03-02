@@ -108,12 +108,7 @@ class PlatoonController extends Controller
     private function activityGraphData(Platoon $platoon)
     {
         $data = $this->platoon->getPlatoonActivity($platoon);
-
-        return Charts::create('donut', 'morris')
-            ->labels($data['labels'])
-            ->values($data['values'])
-            ->colors($data['colors'])
-            ->responsive(true);
+        return $data;
     }
 
     /**

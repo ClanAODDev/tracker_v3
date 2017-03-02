@@ -6,7 +6,7 @@
             v3
         @endslot
         @slot ('icon')
-            <i class="pe page-header-icon pe-7s-shield"></i>
+            <img src="{{ asset('images/logo_v2.svg') }}" width="50px" />
         @endslot
         @slot ('heading')
             AOD Tracker

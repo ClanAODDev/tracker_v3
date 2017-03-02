@@ -1,5 +1,5 @@
 @foreach($divisions as $division)
-    <div class="col-md-4 col-sm-6 animated fadeInUp" style="animation-delay: {{ $loop->index/5 }}s;">
+    <div class="col-md-4 col-sm-6 animated fadeInUp" style="animation-delay: {{ $loop->index/8 }}s;">
         <a href="{{ route('division', $division->abbreviation) }}" class="panel panel-filled">
             <div class="panel-body">
                 <h4 class="m-b-none text-uppercase">

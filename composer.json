@@ -14,7 +14,6 @@
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
         "laracasts/testdummy": "^2.3",
         "doctrine/dbal": "^2.5",
-        "consoletvs/charts": "4.*",
         "barryvdh/laravel-debugbar": "^2.3",
         "guzzlehttp/guzzle": "^6.2",
         "league/csv": "^8.1",
@@ -65,10 +64,7 @@
         ],
         "post-update-cmd": [
           "php artisan optimize",
-          "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-          "php artisan ide-helper:generate",
-          "php artisan ide-helper:meta",
-            "php artisan optimize"
+          "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ]
     },
     "config": {

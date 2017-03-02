@@ -5,8 +5,6 @@
 
 <link href="{{ asset('favicon.ico?v=3') }}" type="image/x-icon" rel="Shortcut Icon"/>
 
-{!! Charts::assets() !!}
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
 <link rel="stylesheet" href="{{ asset('vendor/fontawesome/css/font-awesome.css') }}"/>
 <link rel="stylesheet" href="{{ asset('vendor/animate.css/animate.css') }}"/>

@@ -173,7 +173,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        ConsoleTVs\Charts\ChartsServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Whossun\Toastr\ToastrServiceProvider::class,
@@ -228,7 +227,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // custom aliases
-        'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Toastr' => Whossun\Toastr\Facades\Toastr::class,
