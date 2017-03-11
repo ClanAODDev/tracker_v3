@@ -26,6 +26,7 @@ class ClanStatisticsController extends Controller
         $lastYearCensus = $censusCounts->reverse();
 
         $divisionCensuses = Division::with('census')->get();
+        $rankDemographic = $this->clan->allRankDemographic();
 
         $recruitCount = $this->clan->rankDemographic(1);
         $ncoCount = $this->clan->rankDemographic(range(7, 14));
@@ -33,7 +34,7 @@ class ClanStatisticsController extends Controller
         return view('statistics.show')->with(compact(
             'memberCount', 'ncoCount', 'previousCensus',
             'lastYearCensus', 'recruitCount', 'memberCount',
-            'divisionCensuses'
+            'divisionCensuses', 'rankDemographic'
         ));
     }
 }

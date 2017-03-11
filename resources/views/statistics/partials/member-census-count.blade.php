@@ -20,17 +20,12 @@
                     {{ percent($previousCensus->count, $memberCount) }}%
                 </span>
             @endif
-
-            <a href="#" class="btn btn-default pull-right">
-                View <span class="hidden-sm hidden-xs">Census Data</span>
-            </a>
-
         </h1>
 
         <div class="small">
             <span class="c-white">Total active members</span> in the Angels of Death clan. Percent difference from previous count of
-            <strong>{{ $previousCensus->count }}</strong> on
-            <strong>{{ $previousCensus->date }}</strong>. Census data is collected weekly.
+            <code>{{ $previousCensus->count }}</code> on
+            <code>{{ $previousCensus->date }}</code>. Census data is collected weekly.
         </div>
 
         <div class="m-t-md">

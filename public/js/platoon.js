@@ -1,1 +1,68 @@
-!function e(t,r,a){function n(l,s){if(!r[l]){if(!t[l]){var i="function"==typeof require&&require;if(!s&&i)return i(l,!0);if(o)return o(l,!0);var u=new Error("Cannot find module '"+l+"'");throw u.code="MODULE_NOT_FOUND",u}var f=r[l]={exports:{}};t[l][0].call(f.exports,function(e){var r=t[l][1][e];return n(r?r:e)},f,f.exports,e,t,r,a)}return r[l].exports}for(var o="function"==typeof require&&require,l=0;l<a.length;l++)n(a[l]);return n}({1:[function(e,t,r){"use strict";var a=a||{};!function(e){a={setup:function(){this.handleMembers()},handleMembers:function(){var t=(parseInt(e(".platoon-number").text()),new Date);t.getDate(),t.getMonth()+1,t.getFullYear(),new Array;e("table.members-table").DataTable({autoWidth:!0,columnDefs:[{targets:"no-search",searchable:!1},{targets:"col-hidden",visible:!1,searchable:!1},{iDataSort:0,aTargets:[3]},{iDataSort:1,aTargets:[5]}],stateSave:!1,paging:!1,drawCallback:function(t){e("#member-footer").empty(),e("#members-table_info").contents().appendTo("#member-footer")}}),e(".dataTables_filter input").appendTo("#playerFilter").removeClass("input-sm"),e("#playerFilter input").attr({placeholder:"Search Players","class":"form-control"}),e(".dataTables_info").addClass("panel-footer text-center text-muted"),e(".dataTables_filter label").remove(),e(".no-sort").removeClass("sorting")}}}(jQuery),a.setup()},{}]},{},[1]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
+var Platoon = Platoon || {};
+
+(function ($) {
+
+    Platoon = {
+
+        setup: function setup() {
+            this.handleMembers();
+        },
+
+        handleMembers: function handleMembers() {
+
+            var platoonNum = parseInt($('.platoon-number').text()),
+                formattedDate = new Date(),
+                d = formattedDate.getDate(),
+                m = formattedDate.getMonth() + 1,
+                y = formattedDate.getFullYear(),
+                nowDate = y + "-" + m + "-" + d,
+                selected = new Array();
+
+            $('table.members-table').DataTable({
+                "autoWidth": true,
+                "columnDefs": [{
+                    "targets": 'no-search',
+                    "searchable": false
+                }, {
+                    "targets": 'col-hidden',
+                    "visible": false,
+                    "searchable": false
+                }, {
+                    // sort rank by rank id
+                    "iDataSort": 0,
+                    "aTargets": [3]
+                }, {
+                    // sort activity by last login date
+                    "iDataSort": 1,
+                    "aTargets": [5]
+                }],
+                stateSave: false,
+                paging: false,
+                "drawCallback": function drawCallback(settings) {
+                    $("#member-footer").empty();
+                    $("#members-table_info").contents().appendTo("#member-footer");
+                }
+            });
+
+            $(".dataTables_filter input").appendTo("#playerFilter").removeClass('input-sm');
+
+            $("#playerFilter input").attr({
+                "placeholder": "Search Players",
+                "class": "form-control"
+            });
+
+            $(".dataTables_info").addClass('panel-footer text-center text-muted');
+
+            $(".dataTables_filter label").remove();
+
+            $(".no-sort").removeClass("sorting");
+        }
+    };
+})(jQuery);
+
+Platoon.setup();
+
+},{}]},{},[1]);

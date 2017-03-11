@@ -142,6 +142,7 @@ var Tracker = Tracker || {};
             $('table.basic-datatable').DataTable({
                 paging: false,
                 bFilter: false,
+                bInfo: false,
                 order: [],
                 columnDefs: [
                     {targets: 'no-sort', orderable: false}
@@ -167,6 +168,36 @@ var Tracker = Tracker || {};
                             sliceColors: ['#404652', '#f7af3e']
                         }
                     )
+                });
+
+                var chartUsersOptions = {
+                    series: {
+                        splines: {
+                            show: true,
+                            tension: 0.4,
+                            lineWidth: 1,
+                            fill: 1
+
+                        }
+
+                    },
+                    grid: {
+                        tickColor: "#404652",
+                        borderWidth: 0,
+                        borderColor: '#404652',
+                        color: '#404652'
+                    },
+                    colors: ["#f7af3e", "#DE9536"]
+                };
+
+                $.plot($("[census-counts]"), [
+                    $(this).data('counts'), $(this).data('weekly-active')
+                ], chartUsersOptions);
+
+                $('[census-data]').bind('sparklineClick', function (ev) {
+                    var sparkline = ev.sparklines[0],
+                        region = sparkline.getCurrentRegionFields();
+                    console.log("Clicked on x=" + region.x + " y=" + region.y);
                 });
             }
 

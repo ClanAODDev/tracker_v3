@@ -22,23 +22,8 @@ class AdminController extends Controller
     public function index()
     {
         $divisions = Division::all();
-
-        $rankDemographic = $this->rankDemographic();
-
-        return view('admin.index', compact('divisions', 'rankDemographic'));
-    }
-
-    public function rankDemographic()
-    {
-        $data = $this->clanRepository->allRankDemographic();
-
-        return $data;
-
-        /*return Charts::create('area', 'morris')
-            ->labels($data['labels'])
-            ->values($data['values'])
-            ->elementLabel('Rank count')
-            ->responsive(true);*/
+        
+        return view('admin.index', compact('divisions'));
     }
 
     public function updateDivisions(Request $request)

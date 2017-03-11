@@ -49,7 +49,7 @@ class ClanRepository
      */
     public function rankDemographic($rank)
     {
-        if (! is_int($rank) && ! is_array($rank)) {
+        if ( ! is_int($rank) && ! is_array($rank)) {
             throw new \Exception('Rank provided to rank demographic must be an integer or an array');
         }
 
@@ -79,7 +79,7 @@ class ClanRepository
      */
     public function allRankDemographic()
     {
-        $ranks = DB::select(
+        return DB::select(
             DB::raw("
                 SELECT
                   ranks.abbreviation,
@@ -93,20 +93,5 @@ class ClanRepository
                 GROUP BY rank_id
             ")
         );
-
-        $labels = [];
-        $values = [];
-
-        foreach ($ranks as $rank) {
-            $labels[] = $rank->abbreviation;
-            $values[] = $rank->count;
-        }
-
-        $data = [
-            'labels' => $labels,
-            'values' => $values
-        ];
-
-        return $data;
     }
 }
