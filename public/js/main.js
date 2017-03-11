@@ -170,8 +170,7 @@ var Tracker = Tracker || {};
                 $('[census-data]').bind('sparklineClick', function (ev) {
                     var sparkline = ev.sparklines[0],
                         region = sparkline.getCurrentRegionFields();
-                    console.log(region);
-                    alert("Clicked on x=" + region.x + " y=" + region.y);
+                    console.log("Clicked on x=" + region.x + " y=" + region.y);
                 });
             };
 

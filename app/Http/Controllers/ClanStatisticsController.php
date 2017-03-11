@@ -21,19 +21,18 @@ class ClanStatisticsController extends Controller
     public function show()
     {
         $memberCount = $this->clan->totalActiveMembers();
+
+        // get our census information, and organize it
         $censusCounts = $this->clan->censusCounts(30);
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
+        // break down census data by division (latest)
         $divisionCensuses = Division::with('census')->get();
         $rankDemographic = $this->clan->allRankDemographic();
 
-        $recruitCount = $this->clan->rankDemographic(1);
-        $ncoCount = $this->clan->rankDemographic(range(7, 14));
-
         return view('statistics.show')->with(compact(
-            'memberCount', 'ncoCount', 'previousCensus',
-            'lastYearCensus', 'recruitCount', 'memberCount',
+            'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
             'divisionCensuses', 'rankDemographic'
         ));
     }
