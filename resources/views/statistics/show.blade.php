@@ -13,7 +13,7 @@
             AOD Tracker
         @endslot
         @slot ('subheading')
-            Clan statistics and demographical information
+            Clan statistics and demographic information
         @endslot
     @endcomponent
 
@@ -21,8 +21,12 @@
 
         <div class="row">
             <div class="col-md-12">
-                @include('home.partials.member-census-count')
+                @include('statistics.partials.member-census-count')
             </div>
+        </div>
+
+        <div class="panel panel-filled">
+            @include('statistics.partials.division-populations')
         </div>
 
     </div>

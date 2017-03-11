@@ -32,36 +32,38 @@ class AdminController extends Controller
     {
         $data = $this->clanRepository->allRankDemographic();
 
-        return Charts::create('area', 'morris')
+        return $data;
+
+        /*return Charts::create('area', 'morris')
             ->labels($data['labels'])
             ->values($data['values'])
             ->elementLabel('Rank count')
-            ->responsive(true);
+            ->responsive(true);*/
     }
 
     public function updateDivisions(Request $request)
     {
         $updates = collect($request->input('divisions'));
-        $changes = 0;
+        $changeCount = 0;
 
         foreach ($updates as $abbreviation => $status) {
             $division = Division::whereAbbreviation($abbreviation)->firstOrFail();
 
             // only perform an update if the statuses differ
             if ((bool)$division->active != (bool)$status) {
-                $changes++;
+                $changeCount++;
                 $division->active = (bool)$status;
                 $division->save();
             }
         }
 
-        if (! $changes) {
+        if (! $changeCount) {
             flash('No changes were made.', 'info');
 
             return redirect()->back();
         }
 
-        flash("{$changes} divisions were updated successfully!", 'success');
+        flash("{$changeCount} divisions were updated successfully!", 'success');
 
         return redirect()->back();
     }

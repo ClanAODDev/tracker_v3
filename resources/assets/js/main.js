@@ -21,7 +21,7 @@ var Tracker = Tracker || {};
         SearchMembers: function () {
             this.TriggerFilter(document.getElementById("member-search"), this.GetSearchResults, 1000);
             $("#searchclear").click(function () {
-                $("section.search-results").toggleClass('closed open');
+                $("section.search-results").addClass('closed').removeClass('open');
                 $("#member-search").val('');
                 $("#searchclear").css('display', 'none');
             });
@@ -85,7 +85,7 @@ var Tracker = Tracker || {};
                     success: function (response) {
                         $("#searchclear").css('display', 'block');
                         $('section.search-results').html(response);
-                        $("section.search-results").toggleClass('open closed');
+                        $("section.search-results").addClass('open').removeClass('closed');
                         console.log(this.url);
                     }
                 });
@@ -150,6 +150,15 @@ var Tracker = Tracker || {};
                         width: '100%'
                     }
                 );
+
+                $(".census-pie").each(function () {
+                    $(this).sparkline(
+                        $(this).data('counts'), {
+                            type: 'pie',
+                            sliceColors: ['#404652', '#f7af3e']
+                        }
+                    )
+                });
             }
 
             var sparkResize;

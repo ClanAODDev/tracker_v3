@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        @include ('division.partials.census')
+        @include ('division.partials.census-short')
 
         <div class="row">
             @include('division.partials.platoons')

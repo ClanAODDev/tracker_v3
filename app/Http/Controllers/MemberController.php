@@ -83,7 +83,9 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        return view('member.show', compact('member'));
+        $division = $member->primaryDivision;
+
+        return view('member.show', compact('member', 'division'));
     }
 
     /**

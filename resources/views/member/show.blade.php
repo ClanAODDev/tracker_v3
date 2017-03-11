@@ -4,17 +4,17 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($member->primaryDivision->abbreviation) }}" />
+            @if ($division)
+                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+            @else
+                <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;" />
+            @endif
         @endslot
         @slot ('heading')
             {!! $member->present()->rankName !!}
         @endslot
         @slot ('subheading')
-            @if ($member->position)
-                {{ $member->position->name }}
-            @else
-                No position assigned
-            @endif
+            {{ $member->position->name  }}
         @endslot
     @endcomponent
 
@@ -76,9 +76,11 @@
                                     Lorem Ipsum is simply dummy text of the printing and typesetting industry
                                 </small>
                                 <div class="btn-group m-t-sm">
-                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-envelope"></i>
+                                    <a href="#" class="btn btn-default btn-sm"><i
+                                                class="fa fa-envelope"></i>
                                         Contact</a>
-                                    <a href="#" class="btn btn-default btn-sm"><i class="fa fa-check"></i> Check
+                                    <a href="#" class="btn btn-default btn-sm"><i
+                                                class="fa fa-check"></i> Check
                                         availability</a>
                                 </div>
                             </div>

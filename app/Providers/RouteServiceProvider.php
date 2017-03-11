@@ -50,7 +50,10 @@ class RouteServiceProvider extends ServiceProvider
          * Show platoon by division abbrev, platoon number (1st, 2nd, etc)
          */
         \Route::bind('platoon', function ($platoon) {
-            $model = Platoon::whereId($platoon)->first();
+            $model = Platoon::whereId($platoon)
+                ->with('members')
+                ->first();
+
             if ($model instanceof Platoon) {
                 return $model;
             }
@@ -68,7 +71,10 @@ class RouteServiceProvider extends ServiceProvider
          * Show member by clan member id (forum id)
          */
         \Route::bind('member', function ($member) {
-            $model = Member::whereClanId($member)->first();
+            $model = Member::whereClanId($member)
+                ->with('rank', 'position')
+                ->first();
+
             if ($model instanceof Member) {
                 return $model;
             }

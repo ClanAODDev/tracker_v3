@@ -21,8 +21,9 @@
                 </span>
             @endif
 
-            <a href="#"
-               class="btn btn-default pull-right">View <span class="hidden-sm hidden-xs">Census Data</span></a>
+            <a href="#" class="btn btn-default pull-right">
+                View <span class="hidden-sm hidden-xs">Census Data</span>
+            </a>
 
         </h1>
 

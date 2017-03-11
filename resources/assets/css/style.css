@@ -2702,7 +2702,7 @@ fieldset[disabled] .form-control {
 
 .search-results {
     display: block;
-    background-color: #000;
+    background-color: rgba(0,0,0,.1);
     height: 150px;
     overflow-y: scroll;
     margin-left: 200px;

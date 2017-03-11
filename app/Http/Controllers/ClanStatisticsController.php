@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\ClanRepository;
+use App\Division;
 use Illuminate\Http\Request;
+use App\Repositories\ClanRepository;
 
 class ClanStatisticsController extends Controller
 {
@@ -24,16 +25,15 @@ class ClanStatisticsController extends Controller
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
+        $divisionCensuses = Division::with('census')->get();
+
         $recruitCount = $this->clan->rankDemographic(1);
         $ncoCount = $this->clan->rankDemographic(range(7, 14));
 
         return view('statistics.show')->with(compact(
-            'memberCount',
-            'ncoCount',
-            'previousCensus',
-            'lastYearCensus',
-            'recruitCount',
-            'memberCount'
+            'memberCount', 'ncoCount', 'previousCensus',
+            'lastYearCensus', 'recruitCount', 'memberCount',
+            'divisionCensuses'
         ));
     }
 }

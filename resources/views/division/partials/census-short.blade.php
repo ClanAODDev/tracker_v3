@@ -14,6 +14,10 @@
             {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
                 </span>
     @endif
+
+    <a href="#" class="btn btn-default pull-right">
+        View <span class="hidden-sm hidden-xs">Census Data</span>
+    </a>
 </h1>
 
 <div class="small">

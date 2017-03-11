@@ -1,5 +1,5 @@
-<div class="panel">
-    <div class="panel-body striped-bg">
+<div class="panel panel-filled">
+    <div class="panel-body">
         {{ dump($activityGraph) }}
     </div>
 </div>
