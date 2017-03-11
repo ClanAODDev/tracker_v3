@@ -139,6 +139,15 @@ var Tracker = Tracker || {};
 
         GeneralInit: function () {
 
+            $('table.basic-datatable').DataTable({
+                paging: false,
+                bFilter: false,
+                order: [],
+                columnDefs: [
+                    {targets: 'no-sort', orderable: false}
+                ]
+            });
+
             var sparklineCharts = function () {
                 $("[census-data]").sparkline(
                     $("[census-data]").data('counts'), {

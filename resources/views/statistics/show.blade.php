@@ -25,7 +25,10 @@
             </div>
         </div>
 
-        <div class="panel panel-filled">
+        <div class="panel panel-filled table-responsive">
+            <div class="panel-body">
+                Division census information within the past week.
+            </div>
             @include('statistics.partials.division-populations')
         </div>
 
