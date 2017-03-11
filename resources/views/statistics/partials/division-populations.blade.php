@@ -17,8 +17,7 @@
                 <td class="text-center col-xs-3">{{ $division->census->first()->count }}</td>
                 <td class="text-center col-xs-3">{{ $division->census->first()->weekly_active_count }}</td>
                 <td class="text-center no-sort col-xs-3">
-                    <div class="census-pie"
-                         data-counts="{{ json_encode([$division->census->first()->count, $division->census->first()->weekly_active_count]) }}"></div>
+                    <div class="census-pie" data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyActive]) }}"></div>
                 </td>
             </tr>
         @endforeach
