@@ -10,6 +10,8 @@ elixir(function (mix) {
 
     mix.scripts(
         [
+            'libs/chartjs/bundle.min.js',
+
             'libs/jquery/jquery-2.1.1.min.js',
             'libs/jquery/jquery-ui.min.js',
 

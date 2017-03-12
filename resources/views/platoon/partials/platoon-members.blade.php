@@ -4,7 +4,7 @@
     </div>
     <div class="table-responsive">
 
-        <table class='table table-striped table-hover members-table'>
+        <table class='table table-hover members-table'>
             <thead>
             <tr>
                 <th class='col-hidden'><strong>Rank Id</strong></th>

@@ -18,30 +18,23 @@ var Platoon = Platoon || {};
                 nowDate = y + "-" + m + "-" + d,
                 selected = new Array();
 
+            /**
+             * Handle platoons, squads
+             */
             $('table.members-table').DataTable({
-                "autoWidth": true,
-                "columnDefs": [{
-                    "targets": 'no-search',
-                    "searchable": false
+                autoWidth: true, bInfo: false,
+                columnDefs: [{
+                    targets: 'no-search', searchable: false
                 }, {
-                    "targets": 'col-hidden',
-                    "visible": false,
-                    "searchable": false
+                    targets: 'col-hidden', visible: false, searchable: false
                 }, {
                     // sort rank by rank id
-                    "iDataSort": 0,
-                    "aTargets": [3]
+                    "iDataSort": 0, "aTargets": [3]
                 }, {
                     // sort activity by last login date
-                    "iDataSort": 1,
-                    "aTargets": [5]
+                    "iDataSort": 1, "aTargets": [5]
                 }],
-                stateSave: false,
-                paging: false,
-                "drawCallback": function (settings) {
-                    $("#member-footer").empty();
-                    $("#members-table_info").contents().appendTo("#member-footer");
-                }
+                stateSave: true, paging: false,
             });
 
             $(".dataTables_filter input").appendTo("#playerFilter").removeClass('input-sm');
@@ -50,8 +43,6 @@ var Platoon = Platoon || {};
                 "placeholder": "Search Players",
                 "class": "form-control"
             });
-
-            $(".dataTables_info").addClass('panel-footer text-center text-muted')
 
             $(".dataTables_filter label").remove();
 

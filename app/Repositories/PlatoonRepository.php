@@ -14,6 +14,7 @@ class PlatoonRepository
      * @return array
      *
      * Returns activity data for platoon members based on last_activity
+     * @TODO: Allow divisions to manage this setting
      */
     public function getPlatoonActivity(Platoon $platoon)
     {
@@ -28,7 +29,7 @@ class PlatoonRepository
         $moreThanOneMonth = $platoon->members()->where('last_activity', '<=', $oneMonthAgo);
 
         return [
-            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
+            'labels' => ['Current', '14 days', '30 days'],
             'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
