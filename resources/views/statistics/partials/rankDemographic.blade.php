@@ -12,7 +12,8 @@
                 <td class="text-center">{{ $rank->count }}</td>
                 <td class="text-center">
                     <span class="census-pie"
-                         data-counts="{{ json_encode([$rank->difference, $rank->count]) }}"></span>
+                          data-counts="{{ json_encode([$rank->difference, $rank->count]) }}"></span>
+                    <small class="slight">{{ round($rank->count / $memberCount * 100, 1) }}%</small>
                 </td>
             </tr>
         @endforeach
