@@ -42,7 +42,7 @@ class CreatePlatoonForm extends FormRequest
     {
         return [
             'leader.unique' => 'Already assigned as a leader.',
-            'leader.exists' => 'Member with that clan id does not exist.',
+            'leader.exists' => 'Member does not exist.',
         ];
     }
 

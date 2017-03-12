@@ -29,7 +29,7 @@ class CreateSquadForm extends FormRequest
     {
         return [
             'leader_id' => [
-                'exists:members,clan_id',
+                'sometimes|exists:members,clan_id',
                 'unique:squads,leader_id'
             ]
         ];

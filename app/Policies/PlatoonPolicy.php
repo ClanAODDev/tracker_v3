@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Division;
-use App\Platoon;
 use App\User;
+use App\Platoon;
+use App\Division;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**

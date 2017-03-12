@@ -25,7 +25,7 @@ class DivisionPolicy
 
     public function update(User $user, Division $division)
     {
-        if (! $division->active) {
+        if ( ! $division->active) {
             return false;
         }
 

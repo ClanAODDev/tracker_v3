@@ -1,3 +1,6 @@
+<h3 class="m-b-xs text-uppercase m-t-xxxl">Leadership</h3>
+<hr />
+
 <div class="row">
     @forelse($divisionLeaders as $leader)
         <div class="col-md-4">
@@ -5,7 +8,7 @@
                 <div class="panel-body">
                     <h4 class="m-b-none">
                         {!! $leader->present()->rankName !!}
-                        <span class="pull-right"><i class="pe pe-2x pe-7s-shield"></i></span>
+                        <span class="pull-right"><i class="pe pe-2x pe-7s-shield text-muted"></i></span>
                     </h4>
                     <small><?php echo $leader->position->name; ?></small>
                 </div>

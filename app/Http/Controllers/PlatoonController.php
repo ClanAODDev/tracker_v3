@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\Http\Requests\CreatePlatoonForm;
+use Charts;
+use Toastr;
 use App\Member;
 use App\Platoon;
-use App\Repositories\PlatoonRepository;
-use App\User;
-use Charts;
+use App\Division;
 use Illuminate\Http\Request;
+use App\Repositories\PlatoonRepository;
+use App\Http\Requests\CreatePlatoonForm;
 
 class PlatoonController extends Controller
 {
@@ -27,9 +27,9 @@ class PlatoonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param User $user
      * @param Division $division
      * @return \Illuminate\Http\Response
+
      */
     public function create(Division $division)
     {
@@ -47,18 +47,21 @@ class PlatoonController extends Controller
      */
     public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($form->leader && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
-                ->withErrors(['leader' => 'Member not assigned to this division!'])
+                ->withErrors(['leader' => 'Member not in your division!'])
                 ->withInput();
         }
 
         $form->persist();
 
-        flash(
-            "{$division->locality('platoon')} has been created! If you assigned a leader, you will need to ensure you have also updated their account access to 'Senior Leader'",
-            'success'
-        );
+        Toastr::success(
+            "{$division->locality('platoon')} has been created! If you assigned a leader, be sure to update their account access as needed.",
+            "New {$division->locality('platoon')} Created",
+            [
+                'positionClass' => 'toast-top-right',
+                'progressBar' => true
+            ]);
 
         return redirect()->route('division', $division->abbreviation);
     }
@@ -120,6 +123,8 @@ class PlatoonController extends Controller
      */
     public function edit(Division $division, Platoon $platoon)
     {
+        $this->authorize('update', [Platoon::class, $division]);
+
         return view(
             'platoon.edit',
             compact('division', 'platoon')
@@ -130,12 +135,13 @@ class PlatoonController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param Division $division
+     * @param Platoon $platoon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Division $division, Platoon $platoon)
     {
-        //
+        $this->authorize('update', [Platoon::class, $division]);
     }
 
     /**

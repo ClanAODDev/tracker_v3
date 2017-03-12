@@ -1311,19 +1311,19 @@ sup {
 }
 
 .navbar-form input.form-control::-webkit-input-placeholder {
-    color: #6f7780;
+    color: rgba(255,255,255,.3);
 }
 
 .navbar-form input.form-control:-moz-placeholder {
-    color: #6f7780;
+    color: rgba(255,255,255,.3);
 }
 
 .navbar-form input.form-control::-moz-placeholder {
-    color: #6f7780;
+    color: rgba(255,255,255,.3);
 }
 
 .navbar-form input.form-control:-ms-input-placeholder {
-    color: #6f7780;
+    color: rgba(255,255,255,.3);
 }
 
 .navbar-nav > li > a {

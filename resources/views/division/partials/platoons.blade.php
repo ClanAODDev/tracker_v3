@@ -1,4 +1,13 @@
-<h3 class="m-b-xs text-uppercase m-t-xxl">{{ str_plural($division->locality('platoon')) }}</h3>
+<h3 class="m-b-xs text-uppercase m-t-xxxl">
+    {{ str_plural($division->locality('platoon')) }}
+
+    @can('create', [App\Platoon::class, $division])
+        <a href="{{ route('createPlatoon', $division->abbreviation) }}"
+           class="btn btn-default">ADD <i class="fa fa-plus text-success"></i>
+        </a>
+    @endcan
+</h3>
+
 <hr>
 
 <div class="row">
