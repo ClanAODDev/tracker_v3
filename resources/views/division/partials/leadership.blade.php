@@ -13,12 +13,11 @@
         </div>
     @empty
         <div class="col-md-12">
-            <div class="panel panel-filled panel-c-danger">
+            <div class="panel panel-filled panel-c-danger text-muted">
                 <div class="panel-body">
                     <h4 class="m-b-none text-uppercase">
                         No leadership assigned
                     </h4>
-                    <small class="slight">A clan administrator must update this division in order to assign leadership</small>
                 </div>
             </div>
         </div>

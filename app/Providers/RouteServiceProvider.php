@@ -23,8 +23,6 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define your route model bindings, pattern filters, etc.
-     *
-     * @param  \Illuminate\Routing\Router $router
      * @return void
      */
     public function boot()
@@ -36,14 +34,13 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('division', function ($division) {
             $model = Division::whereAbbreviation(strtolower($division))->first();
-            if ($model instanceof Division) {
+            if ($model instanceof Division && $model->active) {
                 return $model;
             }
         });
 
         \Route::bind('username', function ($username) {
             return User::whereName($username)->firstOrFail();
-            ;
         });
 
         /**
@@ -97,7 +94,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::group([
-           'middleware' => 'api',
+            'middleware' => 'api',
             'namespace' => $this->namespace,
             'prefix' => 'api',
         ], function ($router) {
