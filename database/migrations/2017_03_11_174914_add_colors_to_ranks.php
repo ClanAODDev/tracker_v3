@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddGenPopToSquads extends Migration
+class AddColorsToRanks extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddGenPopToSquads extends Migration
      */
     public function up()
     {
-        Schema::table('squads', function ($table) {
-            $table->boolean('gen_pop')->nullable();
+        Schema::table('ranks', function ($table) {
+            $table->string('color')->after('abbreviation')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddGenPopToSquads extends Migration
      */
     public function down()
     {
-        Schema::table('squads', function ($table) {
-            $table->dropColumn('gen_pop');
+        Schema::table('ranks', function ($table) {
+            $table->dropColumn('color');
         });
     }
 }

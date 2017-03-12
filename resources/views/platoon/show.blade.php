@@ -6,7 +6,7 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
         @endslot
         @slot ('heading')
-            {{ $platoon->name }} {{ $division->locality('platoon') }}
+            {{ $platoon->name }}
         @endslot
         @slot ('subheading')
             {{ $division->name }} Division

@@ -61,7 +61,7 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
-        $censusCounts = $this->division->censusCounts($division, 30);
+        $censusCounts = $this->division->censusCounts($division);
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 

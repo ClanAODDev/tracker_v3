@@ -186,5 +186,9 @@ function set_active($path, $active = 'active')
 
 function percent($old_member_count, $new_member_count)
 {
+    if ($old_member_count == 0 || $new_member_count == 0) {
+        return 0;
+    }
+
     return number_format((1 - $old_member_count / $new_member_count) * 100, 2); // yields 0.76
 }

@@ -45,7 +45,7 @@ class MemberPresenter extends Presenter
     public function nameWithIcon($showRank = false)
     {
         if ($this->member->position) {
-            $title = ($this->member->position->name) ? : null;
+            $title = ($this->member->position->name) ?: null;
 
             $icon = ($this->member->position->icon)
                 ? "<i class=\"{$this->member->position->icon}\"></i>"

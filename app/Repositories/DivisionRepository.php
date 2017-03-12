@@ -9,7 +9,7 @@ use App\Division;
 class DivisionRepository
 {
 
-    public function censusCounts(Division $division, $limit = 10)
+    public function censusCounts(Division $division, $limit = 52)
     {
         $censuses = collect(DB::select(
             DB::raw("    

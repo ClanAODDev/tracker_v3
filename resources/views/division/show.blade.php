@@ -15,19 +15,8 @@
     @endcomponent
 
     <div class="container-fluid">
-
-        <div class="row">
-            <div class="col-md-12">
-                @include('division.partials.leadership')
-            </div>
-        </div>
-
+        @include('division.partials.leadership')
         @include ('division.partials.census-short')
-
-        <div class="row">
-            @include('division.partials.platoons')
-        </div>
-
+        @include('division.partials.platoons')
     </div>
-
 @stop

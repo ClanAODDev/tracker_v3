@@ -12,7 +12,7 @@ class ClanRepository
      * @param int $limit
      * @return \Illuminate\Support\Collection|mixed
      */
-    public function censusCounts($limit = 10)
+    public function censusCounts($limit = 52)
     {
         $censuses = collect(DB::select(
             DB::raw("    
@@ -91,6 +91,7 @@ class ClanRepository
                     ON member_id = members.id
                 WHERE division_member.primary = 1
                 GROUP BY rank_id
+                ORDER BY ranks.id ASC 
             ")
         );
     }

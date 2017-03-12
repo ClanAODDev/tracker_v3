@@ -155,7 +155,7 @@ var Tracker = Tracker || {};
                     type: 'line',
                     lineColor: '#fff',
                     lineWidth: 3,
-                    fillColor: '#393D47',
+                    fillColor: '#404652',
                     height: 50,
                     width: '100%'
                 });

@@ -23,9 +23,9 @@
         </h1>
 
         <div class="small">
-            <span class="c-white">Total active members</span> in the Angels of Death clan. Percent difference from previous count of
+            <span class="c-white">Total active members</span> in AOD. Percent difference from previous count of
             <code>{{ $previousCensus->count }}</code> on
-            <code>{{ $previousCensus->date }}</code>. Census data is collected weekly.
+            <code>{{ $previousCensus->date }}</code>.
         </div>
 
         <div class="m-t-md">
@@ -38,5 +38,5 @@
             </div>
         </div>
     </div>
-    <div class="panel-footer slight">Last 30 weeks</div>
+    <div class="panel-footer slight">{{ $lastYearCensus->first()->date }} -> {{ $previousCensus->date }} (Last 6 months)</div>
 </div>

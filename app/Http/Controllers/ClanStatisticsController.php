@@ -23,7 +23,7 @@ class ClanStatisticsController extends Controller
         $memberCount = $this->clan->totalActiveMembers();
 
         // get our census information, and organize it
-        $censusCounts = $this->clan->censusCounts(30);
+        $censusCounts = $this->clan->censusCounts();
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
@@ -39,8 +39,11 @@ class ClanStatisticsController extends Controller
             $division->weeklyActive = $weeklyActive;
         });
 
-
-        $rankDemographic = $this->clan->allRankDemographic();
+        // break down rank distribution
+        $rankDemographic = collect($this->clan->allRankDemographic());
+        $rankDemographic->each(function ($rank) use ($memberCount) {
+            $rank->difference = $memberCount - $rank->count;
+        });
 
         return view('statistics.show')->with(compact(
             'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
