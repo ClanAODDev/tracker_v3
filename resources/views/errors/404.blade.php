@@ -1,34 +1,31 @@
-<html>
-<head>
-    <title>AOD | 404 Page not found</title>
-    <link rel="stylesheet" type="text/css" href="//bootswatch.com/lumen/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/css/app.css') }}">
-    <link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
-    <style>
-        body {
-            background-image: url('{{ asset("images/bg.jpg") }}');
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            color: #888;
-            display: table;
-            font-weight: 100;
-        }
+@extends('application.base')
 
-        .container {
-            text-align: center;
-            display: table-cell;
-            vertical-align: middle;
-        }
-    </style>
-</head>
-<body>
-<div class="container error">
-    <div class="content">
-        <div class="title">He's dead, Jim!</div>
-        You've managed to break something. Or I did. Or both. You should probably <a href="{{ url('/home') }}"><strong>go home</strong></a>.
+@section('content')
+
+    <div class="container-center md animated fadeInDown">
+        @component('application.components.view-heading')
+            @slot('heading')
+                Not Found
+            @endslot
+            @slot('subheading')
+                This is not the page you're looking for
+            @endslot
+            @slot('icon')
+                <i class="pe page-header-icon pe-7s-close-circle"></i>
+            @endslot
+            @slot('currentPage')
+                v3
+            @endslot
+        @endcomponent
+
+        <div class="panel panel-filled">
+            <div class="panel-body">
+               Either something broke, or you have poor typing skills. Either way, the page you tried to reach does not exist. If you feel this is in error, please contact your division leadership or a clan administrator.
+            </div>
+        </div>
+        <div>
+            <a href="{{ route('home') }}" class="btn btn-accent">Back to app</a>
+        </div>
     </div>
-</div>
-</body>
-</html>
+
+@endsection

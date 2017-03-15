@@ -8,7 +8,7 @@
                 He's dead, Jim!
             @endslot
             @slot('subheading')
-                Something went very wrong
+                No Primary Division
             @endslot
             @slot('icon')
                 <i class="pe page-header-icon pe-7s-close-circle"></i>
@@ -20,11 +20,8 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-                An application error occurred. Please contact your division leadership or a clan administrator to report the problem.
+                You are no longer associated with a primary division, and cannot access the tracker. Please speak with your intended division leadership to resolve this issue.
             </div>
-        </div>
-        <div>
-            <a href="{{ route('home') }}" class="btn btn-accent">Back to app</a>
         </div>
     </div>
 
