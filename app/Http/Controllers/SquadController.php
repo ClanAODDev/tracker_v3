@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\Http\Requests\CreateSquadForm;
-use App\Http\Requests\UpdateSquadForm;
+use App\Squad;
 use App\Member;
 use App\Platoon;
-use App\Squad;
+use App\Division;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateSquadForm;
+use App\Http\Requests\UpdateSquadForm;
 
 class SquadController extends Controller
 {

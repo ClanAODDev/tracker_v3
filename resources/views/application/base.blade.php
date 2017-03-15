@@ -6,7 +6,7 @@
 </head>
 
 
-@if (Auth::check())
+@if (Auth::check() && Auth::user()->member->primaryDivision)
     <body>
     {!! Toastr::message() !!}
     <div class="wrapper">

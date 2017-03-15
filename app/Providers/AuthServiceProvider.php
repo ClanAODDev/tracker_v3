@@ -38,6 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
+
         Passport::tokensCan([
             'query-division-info-basic' => 'Query basic information about divisions',
             'query-division-info-full' => 'Query full information about divisions',

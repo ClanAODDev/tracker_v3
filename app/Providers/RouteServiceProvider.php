@@ -7,6 +7,7 @@ use App\Member;
 use App\Platoon;
 use App\Division;
 use App\User;
+use Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
