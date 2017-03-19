@@ -29,7 +29,6 @@ class PlatoonController extends Controller
      *
      * @param Division $division
      * @return \Illuminate\Http\Response
-
      */
     public function create(Division $division)
     {
@@ -112,6 +111,26 @@ class PlatoonController extends Controller
     {
         $data = $this->platoon->getPlatoonActivity($platoon);
         return $data;
+    }
+
+    public function squads(Division $division, Platoon $platoon)
+    {
+        $activityGraph = $this->activityGraphData($platoon);
+
+        $squads = $platoon->squads()
+            ->with(
+                'members', 'members.rank', 'members.position',
+                'leader', 'leader.rank', 'leader.position'
+            )->get()->sortByDesc('members.rank_id');
+
+        $unassigned = $platoon->unassigned()
+            ->with('rank', 'position')
+            ->get();
+
+        return view('platoon.squads', compact(
+            'platoon', 'division', 'squads',
+            'unassigned', 'activityGraph'
+        ));
     }
 
     /**

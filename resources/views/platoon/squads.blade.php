@@ -1,44 +1,31 @@
 @extends('application.base')
 @section('content')
 
-    <div class="row">
-        <div class="col-sm-6">
-            <h2>
-                <strong>{{ $platoon->name }}</strong>
-                <small>{{ $division->name }}</small>
-            </h2>
-        </div>
+    @component ('application.components.division-heading')
+        @slot ('icon')
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+        @endslot
+        @slot ('heading')
+            {{ $platoon->name }}
+        @endslot
+        @slot ('subheading')
+            {{ $division->name }} Division
+        @endslot
+    @endcomponent
 
-        <div class="col-sm-6">
-            <ul class="nav nav-pills pull-right">
-                <li>
-                    <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}">
-                        <i class="fa fa-cube fa-lg"></i>
-                        {{ ucwords($division->locality('platoon')) }} View
-                    </a>
-                </li>
+    <div class="container-fluid">
 
-                <li class="active">
-                    <a href="#">
-                        <i class="fa fa-cubes fa-lg"></i>
-                        {{ ucwords($division->locality('squad')) }} View
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+        <div class="row">
+            <div class="col-md-9">
+                @include('platoon.partials.squads')
+            </div>
 
-
-    <hr/>
-
-    <div class="row margin-top-20">
-
-        <div class="col-md-12">
-            @include('platoon.partials.squads')
+            <div class="col-md-3">
+                @include('platoon.partials.member_stats')
+            </div>
         </div>
 
     </div>
-
 @stop
 
 @section('footer_scripts')

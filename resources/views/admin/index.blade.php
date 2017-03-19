@@ -35,7 +35,7 @@
                     </li>
                     <li>
                         <a href="#aliases" data-toggle="tab" aria-expanded="false">
-                            <i class="fa fa-user-circle-o fa-lg text-muted"></i> <span class="hidden-xs">Aliases</span>
+                            <i class="fa fa-user fa-lg text-muted"></i> <span class="hidden-xs">Aliases</span>
                         </a>
                     </li>
                     <li>

@@ -11,7 +11,7 @@
 <template>
     <div>
         <div v-if="tokens.length > 0">
-            <div class="panel panel-default">
+            <div class="panel panel-filled">
                 <div class="panel-heading">Authorized Applications</div>
 
                 <div class="panel-body">

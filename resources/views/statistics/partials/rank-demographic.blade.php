@@ -1,4 +1,4 @@
-<div class="panel panel-filled table-responsive">
+<div class="panel table-responsive">
     <table class="table table-hover">
         <thead>
         <th class="col-xs-4 text-center">Rank</th>

@@ -1,7 +1,4 @@
 <div class="panel panel-filled">
-    <div class="panel-heading">
-        Clan Populations
-    </div>
     <div class="panel-body">
 
         <h1>

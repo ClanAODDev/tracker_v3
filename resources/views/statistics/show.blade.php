@@ -31,7 +31,7 @@
                 @include('statistics.partials.division-populations')
             </div>
             <div class="col-md-4">
-                @include('statistics.partials.rankDemographic')
+                @include('statistics.partials.rank-demographic')
             </div>
         </div>
     </div>

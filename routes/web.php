@@ -45,7 +45,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::post('{division}/platoons/store', 'PlatoonController@store')->name('savePlatoon');
     Route::get('{division}/platoons/{platoon}', 'PlatoonController@show')->name('platoon');
     Route::get('{division}/platoons/{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
-    Route::get('{division}/platoons/{platoon}/squads', 'SquadController@index')->name('platoonSquads');
+    Route::get('{division}/platoons/{platoon}/squads', 'PlatoonController@squads')->name('platoonSquads');
 
     // squads
     Route::get('{division}/platoons/{platoon}/squads/create', 'SquadController@create')->name('createSquad');

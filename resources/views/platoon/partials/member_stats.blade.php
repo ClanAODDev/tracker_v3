@@ -1,4 +1,4 @@
-<div class="panel panel-filled">
+<div class="panel">
     <div class="panel-heading">
         Platoon Activity
     </div>

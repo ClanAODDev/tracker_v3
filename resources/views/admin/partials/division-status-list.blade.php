@@ -1,4 +1,4 @@
-<div class="panel panel-filled">
+<div class="panel">
     <div class="table-responsive">
         <table class="table table-hover">
             @foreach($divisions as $division)

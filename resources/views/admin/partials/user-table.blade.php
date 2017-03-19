@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <div class="panel panel-filled">
+    <div class="panel">
 
         <table class="table table-hover basic-datatable">
 
@@ -9,7 +9,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Dev Enabled</th>
+                <th>Dev</th>
             </tr>
             </thead>
 
@@ -25,10 +25,10 @@
                     <td>{{ $user->member->present()->rankName }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role->label }}</td>
-                    <td class="text-uppercase text-center">
-                        <span class="text-{{ ($user->isDeveloper()) ? 'danger' : 'muted' }}">
+                    <td class="text-uppercase">
+                        <small class="slight text-{{ ($user->isDeveloper()) ? 'success' : 'muted' }}">
                             {{ var_export($user->isDeveloper()) }}
-                        </span>
+                        </small>
                     </td>
                 </tr>
             @endforeach

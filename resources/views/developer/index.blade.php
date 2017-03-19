@@ -1,8 +1,20 @@
 @extends('application.base')
 @section('content')
 
-    <h2>Tracker <small>For Developers</small></h2>
-    <hr />
+    @component ('application.components.view-heading')
+        @slot ('currentPage')
+            Developers
+        @endslot
+        @slot ('icon')
+            <img src="{{ asset('images/logo_v2.svg') }}" width="50px" />
+        @endslot
+        @slot ('heading')
+            AOD Tracker
+        @endslot
+        @slot ('subheading')
+            Developers
+        @endslot
+    @endcomponent
 
     <div id="passport">
         <passport-clients></passport-clients>
