@@ -9,8 +9,8 @@
     </a>
 @empty
     <div class="panel text-muted">
-        <div class="panel-body" style="padding-top: 55px;">
-            <h4 class="text-muted"><i class="fa fa-times-circle text-danger"></i> No results using your search criteria</h4>
+        <div class="panel-body" style="padding-top: 55px; pointer-events: none;">
+            <h4 class="text-muted"><i class="fa fa-times-circle"></i> No results using your search criteria</h4>
         </div>
     </div>
 @endforelse

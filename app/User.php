@@ -77,6 +77,10 @@ class User extends Authenticatable
             return false;
         }
 
+        if ($role === 'admin' && $this->isDeveloper()) {
+            return true;
+        }
+
         if (is_array($role)) {
             return in_array($this->role->name, $role);
         }

@@ -20,7 +20,7 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-               Either something broke, or you have poor typing skills. Either way, the page you tried to reach does not exist. If you feel this is in error, please contact your division leadership or a clan administrator.
+                Either something broke, or you have poor typing skills. Either way, the page you tried to reach does not exist. If you feel this is in error, please contact your division leadership or a clan administrator.
             </div>
         </div>
         <div>

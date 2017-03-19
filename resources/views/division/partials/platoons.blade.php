@@ -3,7 +3,7 @@
 
     @can('create', [App\Platoon::class, $division])
         <a href="{{ route('createPlatoon', $division->abbreviation) }}"
-           class="btn btn-default">ADD <i class="fa fa-plus text-success"></i>
+           class="btn btn-default"><i class="fa fa-plus text-success"></i> NEW
         </a>
     @endcan
 </h3>

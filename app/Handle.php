@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Handle extends Model
 {
     protected $casts = [
-        'visible' => boolean,
+        'visible' => 'boolean',
     ];
 
     public function member()

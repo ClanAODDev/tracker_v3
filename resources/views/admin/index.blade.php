@@ -1,69 +1,83 @@
 @extends('application.base')
 @section('content')
 
-    <div class="row">
-        <div class="col-xs-12">
-            <h2>
-                <strong>Tracker</strong>
-                <small>Administration</small>
-            </h2>
-            <hr/>
+    @component ('application.components.view-heading')
+        @slot ('currentPage')
+            Admin CP
+        @endslot
+        @slot ('icon')
+            <img src="{{ asset('images/logo_v2.svg') }}" width="50px" />
+        @endslot
+        @slot ('heading')
+            AOD Tracker
+        @endslot
+        @slot ('subheading')
+            Administration CP
+        @endslot
+    @endcomponent
 
-            {{-- Edit profile nav --}}
-            <ul class="nav nav-tabs margin-top-20">
-                <li class="active">
-                    <a href="#stats" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-line-chart fa-lg text-muted"></i><span class="hidden-xs">Statistics</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#users" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-users fa-lg text-muted"></i><span class="hidden-xs">Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#divisions" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-toggle-on fa-lg text-muted"></i><span class="hidden-xs">Divisions</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#aliases" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-user-circle-o fa-lg text-muted"></i><span class="hidden-xs">Aliases</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#crons" data-toggle="tab" aria-expanded="false">
-                        <i class="fa fa-wrench fa-lg text-muted"></i><span class="hidden-xs">Cron Jobs</span>
-                    </a>
-                </li>
-            </ul>
-            {{-- end profile edit nav --}}
-            <div class="margin-top-20">
+    <div class="container-fluid">
 
-                <div id="settings-form" class="tab-content">
+        <div class="row">
+            <div class="col-xs-12">
 
-                    <div class="tab-pane fade active in" id="stats">
+                {{-- Edit profile nav --}}
+                <ul class="nav nav-tabs margin-top-20">
+                    <li class="active">
+                        <a href="#users" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-users fa-lg text-muted"></i> <span class="hidden-xs">Users</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#divisions" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-toggle-on fa-lg text-muted"></i> <span class="hidden-xs">Divisions</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#aliases" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-user-circle-o fa-lg text-muted"></i> <span class="hidden-xs">Aliases</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#crons" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-wrench fa-lg text-muted"></i> <span class="hidden-xs">Cron Jobs</span>
+                        </a>
+                    </li>
+                </ul>
+                {{-- end profile edit nav --}}
+                <div class="margin-top-20">
+
+                    <div id="settings-form" class="tab-content">
+
+                        <div class="tab-pane active" id="users">
+                            <div class="panel-body">
+                               @include('admin.partials.user-table')
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="divisions">
+                            <div class="panel-body">
+                                @include('admin.forms.manage-divisions-form')
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="aliases">
+                            <div class="panel-body">
+                                @include('admin.forms.manage-aliases-form')
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="crons">
+                            <div class="panel-body">
+                                Manage cron jobs for application
+                            </div>
+                        </div>
+
                     </div>
-
-                    <div class="tab-pane fade in" id="users">
-                        Manage users
-                    </div>
-
-                    <div class="tab-pane fade in" id="divisions">
-                        @include('admin.forms.manageDivisionsForm')
-                    </div>
-
-                    <div class="tab-pane fade in" id="aliases">
-                        Manage available aliases
-                    </div>
-
-                    <div class="tab-pane fade in" id="crons">
-                        Manage cron jobs for application
-                    </div>
-
                 </div>
             </div>
         </div>
+
     </div>
 
 @stop

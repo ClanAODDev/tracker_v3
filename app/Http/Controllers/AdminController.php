@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Handle;
+use App\User;
 use Charts;
 use App\Division;
 use Illuminate\Http\Request;
@@ -9,6 +11,7 @@ use App\Repositories\ClanRepository;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Whossun\Toastr\Facades\Toastr;
 
 class AdminController extends Controller
 {
@@ -23,7 +26,11 @@ class AdminController extends Controller
     {
         $divisions = Division::all();
         
-        return view('admin.index', compact('divisions'));
+        $aliases = Handle::all();
+
+        $users = User::with('role', 'member', 'member.rank')->get();
+
+        return view('admin.index', compact('divisions', 'users', 'aliases'));
     }
 
     public function updateDivisions(Request $request)
@@ -35,20 +42,29 @@ class AdminController extends Controller
             $division = Division::whereAbbreviation($abbreviation)->firstOrFail();
 
             // only perform an update if the statuses differ
-            if ((bool)$division->active != (bool)$status) {
+            if ((bool) $division->active != (bool) $status) {
                 $changeCount++;
-                $division->active = (bool)$status;
+                $division->active = (bool) $status;
                 $division->save();
             }
         }
 
-        if (! $changeCount) {
-            flash('No changes were made.', 'info');
+        if ( ! $changeCount) {
+            Toastr::warning('No changes made', "Update divisions", [
+                'positionClass' => 'toast-top-right',
+                'progressBar' => true
+            ]);
 
             return redirect()->back();
         }
 
-        flash("{$changeCount} divisions were updated successfully!", 'success');
+        Toastr::success("{$changeCount} divisions were updated successfully!",
+            "Update Divisions", [
+                'positionClass' => 'toast-top-right',
+                'progressBar' => true
+            ]
+        );
+
 
         return redirect()->back();
     }

@@ -12,6 +12,12 @@
         <a href="{{ route('help') }}">Documentation</a>
     </li>
 
+    @if(Auth::user()->isRole('admin'))
+        <li class="{{ set_active('admin') }}">
+            <a href="{{ route('admin') }}">Admin CP</a>
+        </li>
+    @endif
+
     <li>
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
             User CP<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>

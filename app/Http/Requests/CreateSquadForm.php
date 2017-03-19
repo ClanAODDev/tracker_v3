@@ -52,7 +52,7 @@ class CreateSquadForm extends FormRequest
     {
         $squad = new Squad;
 
-        $platoon->name = $this->name;
+        $squad->name = $this->name;
         $squad->platoon()->associate($this->route('platoon'));
         $squad->save();
 

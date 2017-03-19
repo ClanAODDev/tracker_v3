@@ -1,24 +1,20 @@
 @extends('application.base')
 
 @section('content')
-    <div class="container-fluid">
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="division-header">
-                    <div class="header-icon">
-                        <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
-                    </div>
-                    <div class="header-title">
-                        <h3 class="m-b-xs text-uppercase">Manage Division</h3>
-                        <small>
-                            {{ $division->name }} Division
-                        </small>
-                    </div>
-                </div>
-                <hr>
-            </div>
-        </div>
+    @component ('application.components.division-heading')
+        @slot ('icon')
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+        @endslot
+        @slot ('heading')
+            {{ $division->name }} Division
+        @endslot
+        @slot ('subheading')
+            {{ $division->description }}
+        @endslot
+    @endcomponent
+
+    <div class="container-fluid">
 
         {{-- Edit profile nav --}}
         <div class="tabs-container">
@@ -64,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade in" id="recruiting-settings">
+                <div class="tab-pane" id="recruiting-settings">
                     <div class="panel-body">
                         @include('division.forms.recruiting')
                     </div>
