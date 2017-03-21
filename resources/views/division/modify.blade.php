@@ -4,7 +4,9 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+            <a href="{{ route('division', $division->abbreviation) }}">
+                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+            </a>
         @endslot
         @slot ('heading')
             {{ $division->name }} Division
@@ -48,7 +50,7 @@
             </ul>
 
             <div class="tab-content">
-                <div id="general-settings" class="tab-pane divisions active">
+                <div id="general-settings" class="tab-pane active">
                     <div class="panel-body">
                         @include('division.forms.general-settings')
                     </div>

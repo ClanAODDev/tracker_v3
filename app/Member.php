@@ -125,6 +125,11 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    public function handles()
+    {
+        return $this->belongsToMany(Handle::class);
+    }
+
     /**
      * -------------------------------------
      * Policy object refers to these methods

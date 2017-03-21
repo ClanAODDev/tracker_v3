@@ -26,13 +26,24 @@ class AdminController extends Controller
     {
         $divisions = Division::all();
         
-        $aliases = Handle::all();
+        $handles = Handle::with('divisions')->get();
 
         $users = User::with('role', 'member', 'member.rank')->get();
 
-        return view('admin.index', compact('divisions', 'users', 'aliases'));
+        return view('admin.index', compact('divisions', 'users', 'handles'));
     }
 
+    public function editDivision(Division $division)
+    {
+        dd($division);
+    }
+    
+    public function editHandle(Handle $handle)
+    {
+        dd($handle);
+    }
+    
+    
     public function updateDivisions(Request $request)
     {
         $updates = collect($request->input('divisions'));

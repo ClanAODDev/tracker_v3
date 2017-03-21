@@ -10,6 +10,11 @@ class Handle extends Model
         'visible' => 'boolean',
     ];
 
+    public function divisions()
+    {
+        return $this->belongsToMany(Division::class);
+    }
+
     public function member()
     {
         return $this->belongsTo(Member::class);

@@ -1,24 +1,38 @@
-@forelse($leaders as $leader)
-    <div class="col-md-4">
-        <a href="{{ route('member', $leader->clan_id) }}" class="panel panel-filled panel-c-accent">
-            <div class="panel-body">
-                <h4 class="m-b-none">
-                    {!! $leader->present()->rankName !!}
-                    <span class="pull-right"><i class="pe pe-2x pe-7s-shield"></i></span>
-                </h4>
-                <small><?php echo $leader->position->name; ?></small>
-            </div>
-        </a>
-    </div>
-@empty
-    <div class="col-md-12">
-        <div class="panel panel-filled panel-c-danger">
-            <div class="panel-body">
-                <h4 class="m-b-none text-uppercase">
-                    No leadership assigned
-                </h4>
-                <small class="slight">A clan administrator must update this division in order to assign leadership</small>
+<table class="table table-hover basic-datatable">
+    <thead>
+    <tr>
+        <th>Member</th>
+        <th>Position</th>
+        <th>User Role</th>
+        <th>Last Login</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    @forelse($leaders as $leader)
+        <tr>
+            <td>{{ $leader->name }}</td>
+            <td>{{ $leader->position->name }}</td>
+            <td>
+                @if ($leader->user)
+                    {{ $leader->user->role }}
+                @else
+                    <span class="text-muted text-uppercase slight">No account</span>
+                @endif
+            </td>
+            <td>{{ $leader->created_at }}</td>
+        </tr>
+    @empty
+        <div class="col-md-12">
+            <div class="panel panel-filled panel-c-danger">
+                <div class="panel-body">
+                    <h4 class="m-b-none text-uppercase">
+                        No leadership assigned
+                    </h4>
+                    <small class="slight">A clan administrator must update this division in order to assign leadership</small>
+                </div>
             </div>
         </div>
-    </div>
-@endforelse
+    @endforelse
+    </tbody>
+</table>

@@ -126,6 +126,11 @@ class Division extends Model
         return $this->belongsToMany(Member::class, 'division_staffSergeants');
     }
 
+    public function handles()
+    {
+        return $this->belongsToMany(Handle::class);
+    }
+
     /**
      * Gets unassigned members of a division (no platoon assignment)
      * NOTE: Only members (position 1)

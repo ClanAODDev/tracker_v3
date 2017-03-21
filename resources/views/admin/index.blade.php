@@ -34,8 +34,8 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#aliases" data-toggle="tab" aria-expanded="false">
-                            <i class="fa fa-user fa-lg text-muted"></i> <span class="hidden-xs">Aliases</span>
+                        <a href="#handles" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-user fa-lg text-muted"></i> <span class="hidden-xs">Handles</span>
                         </a>
                     </li>
                     <li>
@@ -51,19 +51,19 @@
 
                         <div class="tab-pane active" id="users">
                             <div class="panel-body">
-                               @include('admin.partials.user-table')
+                               @include('admin.partials.users-list')
                             </div>
                         </div>
 
                         <div class="tab-pane" id="divisions">
                             <div class="panel-body">
-                                @include('admin.forms.manage-divisions-form')
+                                @include('admin.partials.division-status-list')
                             </div>
                         </div>
 
-                        <div class="tab-pane" id="aliases">
+                        <div class="tab-pane" id="handles">
                             <div class="panel-body">
-                                @include('admin.forms.manage-aliases-form')
+                                @include('admin.partials.handles-list')
                             </div>
                         </div>
 

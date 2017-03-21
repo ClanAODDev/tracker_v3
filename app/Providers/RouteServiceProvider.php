@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Handle;
 use App\Squad;
 use App\Member;
 use App\Platoon;
@@ -42,6 +43,12 @@ class RouteServiceProvider extends ServiceProvider
 
         \Route::bind('username', function ($username) {
             return User::whereName($username)->firstOrFail();
+        });
+
+        \Route::bind('handle', function ($handle) {
+            return Handle::whereId($handle)
+                ->with('divisions')
+                ->first();
         });
 
         /**

@@ -82,7 +82,16 @@ Route::post('slack', [
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
-    Route::patch('divisions/update', 'AdminController@updateDivisions')->name('updateDivisions');
+
+    // edit division (admin)
+    Route::get('divisions/{division}/edit', 'AdminController@editDivision')->name('adminEditDivision');
+    Route::put('divisions/{division}', 'AdminController@updateDivision')->name('adminUpdateDivision');
+    Route::patch('divisions/{division}', 'AdminController@updateDivision');
+
+    // edit handle
+    Route::get('handles/{handle}/edit', 'AdminController@editHandle')->name('adminEditHandle');
+    Route::put('handles/{handle}', 'AdminController@updateHandle')->name('adminUpdateHandle');
+    Route::patch('handles/{handle}', 'AdminController@updateHandle');
 });
 
 /*

@@ -16,7 +16,7 @@
             <tbody>
             @foreach ($users as $user)
                 <tr>
-                    <td class="text-center">
+                    <td>
                         <a title="View Profile" class="btn btn-default"
                            href="{{ route('member', $user->member->clan_id) }}"><i
                                     class="fa fa-user"></i>

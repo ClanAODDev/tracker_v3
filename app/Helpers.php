@@ -85,16 +85,9 @@ function hasDivisionIcon($abbreviation)
     return File::exists($image);
 }
 
-function getDivisionIconPath($abbreviation, $size = "large")
+function getDivisionIconPath($abbreviation)
 {
-    switch ($size) {
-        case "small":
-            return asset("/images/game_icons/16x16/{$abbreviation}.png");
-        case "medium":
-            return asset("/images/game_icons/32x32/{$abbreviation}.png");
-        case "large":
-            return asset("/images/game_icons/48x48/{$abbreviation}.png");
-    }
+    return asset("/images/game_icons/48x48/{$abbreviation}.png");
 }
 
 /**

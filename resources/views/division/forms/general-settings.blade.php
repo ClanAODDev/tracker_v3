@@ -2,33 +2,29 @@
       action="{{ route('updateDivision', $division->abbreviation) }}#division-settings">
     {{ method_field('PATCH') }}
 
-    <table class="table">
-        <tr>
-            <td class="col-md-6">
-                <label for="division_structure" class="control-label">Division Structure</label>
-                <input type="number" id="division_structure" name="division_structure" class="form-control"
-                       value="{{ $division->settings()->division_structure }}" required />
+    <div class="col-md-6">
+        <label for="division_structure" class="control-label">Division Structure</label>
+        <input type="number" id="division_structure" name="division_structure" class="form-control"
+               value="{{ $division->settings()->division_structure }}" required />
 
-                <span class="help-block"><small>Numerical id of your division's division structure thread</small></span>
-            </td>
+        <span class="help-block"><small>Numerical id of your division's division structure thread</small></span>
+    </div>
 
-            <td class="col-md-6">
-                <label for="welcome_area" class="control-label">Welcome Area</label>
-                <input type="number" id="welcome_area" name="welcome_area"
-                       value="{{ $division->settings()->welcome_area }}" class="form-control" required />
+    <div class="col-md-6">
+        <label for="welcome_area" class="control-label">Welcome Area</label>
+        <input type="number" id="welcome_area" name="welcome_area"
+               value="{{ $division->settings()->welcome_area }}" class="form-control" required />
 
-                <span class="help-block"><small>Numerical id of your division's welcome area.</small></span>
-                <div class="checkbox">
-                    <label>
-                        <input type='hidden' value='0' name="use_welcome_thread">
-                        <input type="checkbox" name="use_welcome_thread"
-                               {{ checked($division->settings()->use_welcome_thread) }}
-                               id="use-welcome-thread"> Use thread instead of forum
-                    </label>
-                </div>
-            </td>
-        </tr>
-    </table>
+        <span class="help-block"><small>Numerical id of your division's welcome area.</small></span>
+        <div class="checkbox">
+            <label>
+                <input type='hidden' value='0' name="use_welcome_thread">
+                <input type="checkbox" name="use_welcome_thread"
+                       {{ checked($division->settings()->use_welcome_thread) }}
+                       id="use-welcome-thread"> Use thread instead of forum
+            </label>
+        </div>
+    </div>
 
     {{ csrf_field() }}
 
