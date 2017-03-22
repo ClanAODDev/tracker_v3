@@ -19,10 +19,11 @@ elixir(function (mix) {
             'libs/jquery/jquery.powertip.min.js',
             'libs/jquery/jquery.repeater.min.js',
             'libs/jquery/jquery.stickytabs.js',
+
             'libs/jquery/jquery.flot.min.js',
             'libs/jquery/jquery.flot.resize.min.js',
+            'libs/jquery/jquery.flot.spline.js',
             'libs/jquery/jquery.flot.pie.min.js',
-            'libs/jquery/jquery.flot.spline.min.js',
             'libs/jquery/jquery.flot.time.min.js',
 
             'libs/bootstrap/bootstrap.min.js',

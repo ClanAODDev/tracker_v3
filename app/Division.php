@@ -27,7 +27,7 @@ class Division extends Model
 
     protected static $recordEvents = ['created', 'updated', 'deleted'];
 
-    protected $defaultSettings = [
+    public $defaultSettings = [
         'slack_alert_created_member' => false,
         'slack_alert_removed_member' => false,
         'slack_alert_updated_member' => false,

@@ -22,10 +22,6 @@ class ClanRepository
             ")
         ));
 
-        if ($limit === 1) {
-            return $censuses->first();
-        }
-
         return $censuses;
     }
 
