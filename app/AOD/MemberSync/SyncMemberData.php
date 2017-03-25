@@ -107,8 +107,8 @@ class SyncMemberData
 
         // reset any leadership assignments
         $assignments = collect([
-            Squad::whereLeaderId($member->leader_id)->firstOrFail(),
-            Platoon::whereLeaderId($member->leader_id)->firstOrFail()
+            Squad::whereLeaderId($member->leader_id)->first(),
+            Platoon::whereLeaderId($member->leader_id)->first()
         ]);
 
         if ($assignments->count()) {
