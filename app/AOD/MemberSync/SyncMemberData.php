@@ -2,7 +2,9 @@
 
 namespace App\AOD\MemberSync;
 
+use App\Squad;
 use App\Member;
+use App\Platoon;
 use App\Division;
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +26,7 @@ class SyncMemberData
             self::$activeMembers = [];
             $divisionInfo = new GetDivisionInfo($division->name);
 
-            if (! is_object($divisionInfo)) {
+            if ( ! is_object($divisionInfo)) {
                 Log::critical(date('Y-m-d H:i:s') . " - Could not sync $division->name");
                 Log::critical($divisionInfo);
                 exit;
@@ -46,7 +48,6 @@ class SyncMemberData
      * Updates an individual member and queues as an active primary member
      *
      * @param $record
-     * @param $division
      */
     private static function doMemberUpdate($record)
     {
@@ -91,11 +92,31 @@ class SyncMemberData
             $member = Member::find($id);
 
             if ($member instanceof Member) {
-                // unassign member from squad / platoon
-                $member->squad_id = 0;
-                $member->platoon_id = 0;
-                $member->save();
+                self::resetMember($member);
             }
+        }
+    }
+
+    private static function resetMember($member)
+    {
+        // reset member data
+        $member->squad_id = 0;
+        $member->platoon_id = 0;
+        $member->position_id = 1;
+        $member->save();
+
+        // reset any leadership assignments
+        $assignments = collect([
+            Squad::whereLeaderId($member->leader_id)->firstOrFail(),
+            Platoon::whereLeaderId($member->leader_id)->firstOrFail()
+        ]);
+
+        if ($assignments->count()) {
+            $assignments->each(function ($model) {
+                if ($model) {
+                    $model->leader()->dissociate($member->leader_id)->save();
+                }
+            });
         }
     }
 }
