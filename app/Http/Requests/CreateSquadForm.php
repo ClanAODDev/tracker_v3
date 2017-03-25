@@ -28,6 +28,7 @@ class CreateSquadForm extends FormRequest
     public function rules()
     {
         return [
+            'name' => 'required',
             'leader_id' => [
                 'exists:members,clan_id',
                 'unique:squads,leader_id'
