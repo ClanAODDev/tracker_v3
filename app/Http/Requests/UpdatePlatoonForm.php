@@ -17,9 +17,9 @@ class UpdatePlatoonForm extends FormRequest
      * @return bool
 
      */
-    public function authorize(Platoon $platoon, Division $division)
+    public function authorize(Platoon $platoon)
     {
-        return $this->user()->can('update', [$platoon, $division]);
+        return $this->user()->can('update', [$platoon]);
 
         $this->platoon = $platoon;
     }

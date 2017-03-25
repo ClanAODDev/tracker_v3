@@ -70,20 +70,7 @@
     </div>
 
 @empty
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-xs-10">
-                <h4>No squads</h4>
-                <p>No squads exist. Do you want to create one?
-                </p>
-            </div>
-            <div class="col-xs-2">
-                <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}"
-                   class="btn btn-default pull-right text-uppercase">
-                    <i class="fa fa-plus"></i> New
-                </a>
-            </div>
-        </div>
-
+    <div class="panel-body text-muted">
+        No {{ str_plural($division->locality('squad')) }} currently exist
     </div>
 @endforelse

@@ -52,10 +52,10 @@
                             </a>
                         </li>
                         <li class="panel panel-filled support-question">
-                            <a href="#answer2" data-toggle="tab">
+                            <a href="#user-access-matrix" data-toggle="tab">
                                 <div class="panel-body">
-                                    <p class="font-bold c-white">Support question 2</p>
-                                    <p>Have evolved over the years, sometimes by accident, sometimes.</p>
+                                    <p class="font-bold c-white">How is user access broken down?</p>
+                                    <p>What things does each role have access to?</p>
                                 </div>
                             </a>
                         </li>
@@ -90,8 +90,8 @@
                                 @include('help.answers.why-use-tracker')
                             </div>
 
-                            <div id="answer2" class="tab-pane animated fadeInUp">
-                                @include('help.answers.why-use-tracker')
+                            <div id="user-access-matrix" class="tab-pane animated fadeInUp">
+                                @include('help.answers.access-roles')
                             </div>
 
                             <div id="answer3" class="tab-pane animated fadeInUp">

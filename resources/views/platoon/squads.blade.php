@@ -32,10 +32,12 @@
                     <li role="presentation" class="active">
                         <a href="#"><i class="fa fa-cubes fa-lg"></i></a>
                     </li>
-                    <li role="presentation" class="pull-right">
-                        <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
-                            <i class="fa fa-plus text-success"></i> New Squad</a>
-                    </li>
+                    @can('create', [$division, 'App\Squad'])
+                        <li role="presentation" class="pull-right">
+                            <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
+                                <i class="fa fa-plus text-success"></i> New Squad</a>
+                        </li>
+                    @endcan
                 </ul>
 
                 <div class="panel panel-filled">

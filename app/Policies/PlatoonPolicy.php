@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\User;
-use App\Platoon;
 use App\Division;
+use App\Platoon;
+use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -36,12 +36,21 @@ class PlatoonPolicy
     public function update(User $user, Platoon $platoon)
     {
         // moderators (CPLs) can affect platoons within their division
-        if ($user->isRole('jr_ldr')
-            && $user->member->primaryDivision == $platoon->division
-        ) {
+        if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $platoon->division->id) {
             return true;
         }
 
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @param Platoon $platoon
+     * @return bool
+     */
+    public function delete(User $user, Platoon $platoon)
+    {
+        // only allow sr_ldrs and above to delete platoons
         return false;
     }
 
@@ -56,16 +65,5 @@ class PlatoonPolicy
         if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $division->id) {
             return true;
         }
-    }
-
-    /**
-     * @param User $user
-     * @param Platoon $platoon
-     * @return bool
-     */
-    public function delete(User $user, Platoon $platoon)
-    {
-        // mimic create permissions
-        return $this->create($user, $platoon->division);
     }
 }

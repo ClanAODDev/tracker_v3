@@ -148,7 +148,7 @@ class PlatoonController extends Controller
      */
     public function edit(Division $division, Platoon $platoon)
     {
-        $this->authorize('update', [Platoon::class, $division]);
+        $this->authorize('update', $platoon);
 
         return view(
             'platoon.edit',

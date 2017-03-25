@@ -21,11 +21,14 @@
         @include('platoon.forms.edit-platoon-form')
         {!! Form::close() !!}
 
-        <hr />
+        @can('delete', $platoon)
+            <hr />
 
-        {!! Form::model($platoon, ['method' => 'delete', 'route' => ['updatePlatoon', $division->abbreviation, $platoon]]) !!}
-        @include('platoon.forms.delete-platoon-form')
-        {!! Form::close() !!}
+            {!! Form::model($platoon, ['method' => 'delete', 'route' => ['updatePlatoon', $division->abbreviation, $platoon]]) !!}
+            @include('platoon.forms.delete-platoon-form')
+            {!! Form::close() !!}
+
+        @endcan
     </div>
 
     </form>
