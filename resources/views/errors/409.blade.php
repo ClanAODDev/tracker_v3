@@ -8,7 +8,7 @@
                 He's dead, Jim!
             @endslot
             @slot('subheading')
-                    Member Inactive
+                Member Inactive
             @endslot
             @slot('icon')
                 <i class="pe page-header-icon pe-7s-close-circle"></i>

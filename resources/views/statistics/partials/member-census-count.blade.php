@@ -1,6 +1,6 @@
 <div class="panel panel-filled">
-    <div class="panel-body">
 
+    <div class="panel-body">
         <h1>
             <i class="pe pe-7s-global text-warning"> </i>
 
@@ -24,16 +24,11 @@
             <code>{{ $previousCensus->count }}</code> on
             <code>{{ $previousCensus->date }}</code>.
         </div>
-
-        <div class="m-t-md">
-            <div class="row">
-                <div class="col-md-12">
-                    <div data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
-                         data-weekly-active="{{ json_encode($lastYearCensus->pluck('weekly_active')) }}"
-                         census-data></div>
-                </div>
-            </div>
-        </div>
     </div>
-    <div class="panel-footer slight">{{ $lastYearCensus->first()->date }} -> {{ $previousCensus->date }} (Last 6 months)</div>
+
+    <div class="sparkline" data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
+         data-weekly-active="{{ json_encode($lastYearCensus->pluck('weekly_active')) }}"
+         census-data>
+    </div>
+
 </div>

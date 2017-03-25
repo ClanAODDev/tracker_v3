@@ -11,7 +11,7 @@
         <strong>{!! $member->present()->rankName !!}</strong>
         <small>Edit Profile</small>
     </h2>
-    <hr/>
+    <hr />
 
     {{-- Edit profile nav --}}
     <ul class="nav nav-tabs margin-top-20">

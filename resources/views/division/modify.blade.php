@@ -63,8 +63,17 @@
                 </div>
 
                 <div class="tab-pane" id="recruiting-settings">
-                    <div class="panel-body">
-                        @include('division.forms.recruiting')
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-body">
+                                @include('division.forms.recruiting')
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel">
+                                @include('division.forms.descriptions.recruiting')
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -79,6 +88,9 @@
                         @include('division.forms.slack')
                     </div>
                 </div>
+
             </div>
         </div>
+
+
 @stop

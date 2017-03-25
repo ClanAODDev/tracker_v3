@@ -51,7 +51,7 @@
 
                         <div class="tab-pane active" id="users">
                             <div class="panel-body">
-                               @include('admin.partials.users-list')
+                                @include('admin.partials.users-list')
                             </div>
                         </div>
 

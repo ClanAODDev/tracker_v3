@@ -8,7 +8,7 @@
         <strong>{{ $division->name }}</strong>
         <small>Squads</small>
     </h2>
-    <hr/>
+    <hr />
 
     @forelse ($division->squads as $squad)
         <li class="list-group-item">

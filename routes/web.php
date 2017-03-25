@@ -13,7 +13,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit', 'MemberController@edit')->name('editMember');
     Route::post('search/{name}', 'MemberController@search');
-    Route::delete('{member}/delete', 'MemberController@destroy')->name('deleteMember');
+    Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
 });
 
 Route::group(['prefix' => 'help'], function () {
@@ -28,43 +28,63 @@ Route::group(['prefix' => 'statistics'], function () {
  * Division endpoints
  */
 Route::group(['prefix' => 'divisions/'], function () {
-    // divisions
+
+    /**
+     * divisions
+     */
     Route::get('{division}', 'DivisionController@show')->name('division');
     Route::get('{division}/edit', 'DivisionController@edit')->name('editDivision');
     Route::get('{division}/create', 'DivisionController@create')->name('createDivision');
-    Route::post('{division}', 'DivisionController@store')->name('storeDivision');
+
+    Route::post('', 'DivisionController@store')->name('storeDivision');
     Route::put('{division}', 'DivisionController@update')->name('updateDivision');
     Route::patch('{division}', 'DivisionController@update');
     Route::delete('{division}', 'DivisionController@destroy')->name('deleteDivision');
 
-    // platoons
-    Route::put('{division/platoons', 'PlatoonController@update')->name('updatePlatoon');
-    Route::patch('{division/platoons/{platoon}', 'PlatoonController@update');
-    Route::delete('{division}/platoons/{platoon}', 'PlatoonController@delete')->name('deletePlatoon');
-    Route::get('{division}/platoons/create', 'PlatoonController@create')->name('createPlatoon');
-    Route::post('{division}/platoons/store', 'PlatoonController@store')->name('savePlatoon');
-    Route::get('{division}/platoons/{platoon}', 'PlatoonController@show')->name('platoon');
-    Route::get('{division}/platoons/{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
-    Route::get('{division}/platoons/{platoon}/squads', 'PlatoonController@squads')->name('platoonSquads');
+    /**
+     * platoons
+     */
+    Route::group(['prefix' => '{division}/platoons/'], function () {
 
-    // squads
-    Route::get('{division}/platoons/{platoon}/squads/create', 'SquadController@create')->name('createSquad');
-    Route::delete('{division}/platoons/{platoon}/squads/', 'SquadController@delete')->name('deleteSquad');
-    Route::post('{division}/platoons/{platoon}/squads/store', 'SquadController@store')->name('saveSquad');
-    Route::get('{division}/platoons/{platoon}/squads/{squad}/edit', 'SquadController@edit')->name('editSquad');
-    Route::put('{division}/platoons/{platoon}/squads/{squad}', 'SquadController@update')->name('updateSquad');
-    Route::patch('{division}/platoons/{platoon}/squads/{squad}', 'SquadController@update');
-    Route::get('{division}/platoons/{platoon}/squads/{squad}', 'SquadController@show')->name('squad');
+        Route::get('/create', 'PlatoonController@create')->name('createPlatoon');
+        Route::get('{platoon}', 'PlatoonController@show')->name('platoon');
+        Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
+        Route::get('{platoon}/squads', 'PlatoonController@squads')->name('platoonSquads');
 
-    // misc routes
+        Route::post('', 'PlatoonController@store')->name('savePlatoon');
+        Route::put('{platoon}', 'PlatoonController@update')->name('updatePlatoon');
+        Route::patch('{platoon}', 'PlatoonController@update');
+        Route::delete('{platoon}', 'PlatoonController@destroy')->name('deletePlatoon');
+
+
+        /**
+         * squads
+         */
+        Route::group(['prefix' => '{platoon}/squads/'], function () {
+            Route::get('/create', 'SquadController@create')->name('createSquad');
+            Route::get('{squad}', 'SquadController@show')->name('squad');
+            Route::get('{squad}/edit', 'SquadController@edit')->name('editSquad');
+
+            Route::post('', 'SquadController@store')->name('storeSquad');
+            Route::put('{squad}', 'SquadController@update')->name('updateSquad');
+            Route::patch('{squad}', 'SquadController@update');
+            Route::delete('{squad}', 'SquadController@destroy')->name('deleteSquad');
+        });
+
+    });
+
+
+    /**
+     * Misc Routes
+     */
     Route::get('{division}/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
     Route::get('{division}/part-timers', 'DivisionController@partTime')->name('partTimers');
     Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
 });
 
+
 // logging activity
 Route::get('users/{username}/activity', 'ActivitiesController@byUser');
-
 Route::get('developers', 'DeveloperController@index')->name('developer');
 
 

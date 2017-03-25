@@ -18,7 +18,9 @@
                 <th class='nosearch text-center'><strong>Rank</strong></th>
                 <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
                 <th class='text-center'><strong>Last Activity</strong></th>
-                <th class='text-center'><string>Last Promoted</string></th>
+                <th class='text-center'>
+                    <string>Last Promoted</string>
+                </th>
             </tr>
             </thead>
 

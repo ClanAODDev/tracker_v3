@@ -1,7 +1,9 @@
 @extends('application.base')
 @section('content')
 
-    <h2>Tracker <small>For Developers</small></h2>
+    <h2>Tracker
+        <small>For Developers</small>
+    </h2>
     <hr />
 
     <div id="passport">

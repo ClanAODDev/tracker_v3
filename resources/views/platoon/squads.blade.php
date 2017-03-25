@@ -9,6 +9,7 @@
         @endslot
         @slot ('heading')
             {{ $platoon->name }}
+            @include('platoon.partials.edit-platoon-button', ['division' => $division])
         @endslot
         @slot ('subheading')
             {{ $division->name }} Division
@@ -17,9 +18,30 @@
 
     <div class="container-fluid">
 
+        {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
+
         <div class="row">
             <div class="col-md-9">
-                @include('platoon.partials.squads')
+
+                <ul class="nav nav-tabs">
+                    <li role="presentation">
+                        <a href="{{ route('platoon', [$division->abbreviation, $platoon]) }}">
+                            <i class="fa fa-cube fa-lg"></i>
+                        </a>
+                    </li>
+                    <li role="presentation" class="active">
+                        <a href="#"><i class="fa fa-cubes fa-lg"></i></a>
+                    </li>
+                    <li role="presentation" class="pull-right">
+                        <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
+                            <i class="fa fa-plus text-success"></i> New Squad</a>
+                    </li>
+                </ul>
+
+                <div class="panel panel-filled">
+                    @include('platoon.partials.squads')
+                </div>
+
             </div>
 
             <div class="col-md-3">

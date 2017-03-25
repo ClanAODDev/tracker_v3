@@ -24,7 +24,8 @@
                     </a>
                 @endcan
 
-                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-comment"></i> Contact
+                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i
+                            class="fa fa-comment"></i> Contact
                     <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="#">Send Forum PM</a></li>
@@ -33,7 +34,7 @@
             </div>
         </div>
     </div>
-    <hr/>
+    <hr />
 
     {{-- Member not primary in any division --}}
     @if ( ! $member->primaryDivision)

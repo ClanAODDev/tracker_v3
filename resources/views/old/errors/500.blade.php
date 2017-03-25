@@ -27,7 +27,8 @@
 <div class="container error">
     <div class="content">
         <div class="title">He's dead, Jim!</div>
-        You've managed to break something. Or I did. Or both. You should probably <a href="{{ url('/home') }}"><strong>go home</strong></a>.
+        You've managed to break something. Or I did. Or both. You should probably <a
+                href="{{ url('/home') }}"><strong>go home</strong></a>.
     </div>
 </div>
 </body>

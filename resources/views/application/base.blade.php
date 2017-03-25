@@ -5,7 +5,6 @@
     @include('application.header')
 </head>
 
-
 @if (Auth::check() && Auth::user()->member->primaryDivision)
     <body>
     {!! Toastr::message() !!}

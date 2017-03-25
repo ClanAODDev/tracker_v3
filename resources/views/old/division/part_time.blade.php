@@ -8,7 +8,7 @@
         <strong>{{ $division->name }}</strong>
         <small>Part-time Members</small>
     </h2>
-    <hr/>
+    <hr />
 
     @forelse ($partTime as $member)
         <div class="list-group-item">

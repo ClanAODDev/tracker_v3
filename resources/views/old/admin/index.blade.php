@@ -7,7 +7,7 @@
                 <strong>Tracker</strong>
                 <small>Administration</small>
             </h2>
-            <hr/>
+            <hr />
 
             {{-- Edit profile nav --}}
             <ul class="nav nav-tabs margin-top-20">
@@ -43,27 +43,27 @@
                 <div id="settings-form" class="tab-content">
 
                     <div class="tab-pane fade active in" id="stats">
-                        @include('allRankDemograpallRankDemographic           </div>
+    @include('allRankDemograpallRankDemographic           </div>
 
-                    <div class="tab-pane fade in" id="users">
-                        Manage users
-                    </div>
+<div class="tab-pane fade in" id="users">
+    Manage users
+</div>
 
-                    <div class="tab-pane fade in" id="divisions">
-                        @include('admin.forms.manageDivisionsForm')
-                    </div>
+<div class="tab-pane fade in" id="divisions">
+    @include('admin.forms.manageDivisionsForm')
+</div>
 
-                    <div class="tab-pane fade in" id="aliases">
-                        Manage available aliases
-                    </div>
+<div class="tab-pane fade in" id="aliases">
+    Manage available aliases
+</div>
 
-                    <div class="tab-pane fade in" id="crons">
-                        Manage cron jobs for application
-                    </div>
+<div class="tab-pane fade in" id="crons">
+    Manage cron jobs for application
+</div>
 
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
+</div>
+</div>
+</div>
 
 @stop

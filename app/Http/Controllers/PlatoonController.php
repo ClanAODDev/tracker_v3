@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePlatoonForm;
 use Charts;
 use Toastr;
 use App\Member;
@@ -46,17 +47,17 @@ class PlatoonController extends Controller
      */
     public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($form->leader && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
-                ->withErrors(['leader' => 'Member not in your division!'])
+                ->withErrors(['leader' => "Member {$form->leader_id} not to this division!"])
                 ->withInput();
         }
 
         $form->persist();
 
         Toastr::success(
-            "{$division->locality('platoon')} has been created! If you assigned a leader, be sure to update their account access as needed.",
-            "New {$division->locality('platoon')} Created",
+            "{$division->locality('platoon')} has been created!",
+            "Success",
             [
                 'positionClass' => 'toast-top-right',
                 'progressBar' => true
@@ -70,9 +71,9 @@ class PlatoonController extends Controller
      * @param Division $division
      * @return bool
      */
-    public function isMemberOfDivision(Division $division, CreatePlatoonForm $request)
+    public function isMemberOfDivision(Division $division, $request)
     {
-        $member = Member::whereClanId($request->leader)->first();
+        $member = Member::whereClanId($request->leader_id)->first();
 
         return $member->primaryDivision instanceof Division &&
             $member->primaryDivision->id === $division->id;
@@ -113,6 +114,11 @@ class PlatoonController extends Controller
         return $data;
     }
 
+    /**
+     * @param Division $division
+     * @param Platoon $platoon
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function squads(Division $division, Platoon $platoon)
     {
         $activityGraph = $this->activityGraphData($platoon);
@@ -153,24 +159,43 @@ class PlatoonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param UpdatePlatoonForm $form
      * @param Division $division
      * @param Platoon $platoon
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Division $division, Platoon $platoon)
+    public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
     {
-        $this->authorize('update', [Platoon::class, $division]);
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
+            return redirect()->back()
+                ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
+                ->withInput();
+        }
+
+        $form->persist($platoon);
+
+        return redirect()->route('division', $division->abbreviation);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param $division
+     * @param $platoon
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Division $division, Platoon $platoon)
     {
-        //
+        $this->authorize('delete', $platoon);
+
+        if ($platoon->members->count()) {
+            return redirect()->back()
+                ->withErrors(['membersFound' => 'Platoon is not empty!'])
+                ->withInput();
+        }
+
+        $platoon->delete();
+
+        return redirect()->route('division', $division->abbreviation);
     }
 }

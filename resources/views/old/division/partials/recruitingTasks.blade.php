@@ -4,7 +4,7 @@
         <td class="col-xs-11">
             <input type="text" name="tasks[{{ $loop->index }}][task_description]"
                    class="form-control" placeholder="Add a task"
-                   value="{{ $task['task_description'] }}" required/>
+                   value="{{ $task['task_description'] }}" required />
         </td>
 
         <td class="col-xs-1">

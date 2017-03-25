@@ -1,4 +1,7 @@
-<tr><th>Old String</th> <th>New String</th></tr>
+<tr>
+    <th>Old String</th>
+    <th>New String</th>
+</tr>
 @foreach($division->settings()->locality as $translation)
 
     <?php $old_string = ! empty($translation['old-string']) ? $translation['old-string'] : null ?>
@@ -12,7 +15,7 @@
 
         <td class="col-xs-7">
             <input type="text" name="locality[{{ $loop->index }}][new-string]" class="form-control"
-                   value="{{ $new_string }}" data-new-string required/>
+                   value="{{ $new_string }}" data-new-string required />
         </td>
     </tr>
 @endforeach

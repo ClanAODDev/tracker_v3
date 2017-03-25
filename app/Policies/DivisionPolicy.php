@@ -23,8 +23,21 @@ class DivisionPolicy
         }
     }
 
+    /**
+     * @param User $user
+     * @param Division $division
+     * @return bool
+     */
     public function update(User $user, Division $division)
     {
+
+        /**
+         * is division active?
+         * is the user a division leader of the division?
+         * is the user a senior leader?
+         */
+
+
         if ( ! $division->active) {
             return false;
         }

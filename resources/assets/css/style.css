@@ -65,6 +65,10 @@
     border-color: #f6a821;
 }
 
+.panel-toggle {
+    cursor: pointer;
+}
+
 .btn-accent:active:hover,
 .btn-accent.active:hover,
 .open > .dropdown-toggle.btn-accent:hover,
@@ -1019,6 +1023,7 @@ body.nav-toggle .navigation:before {
         margin-top: -60px;
         margin-left: 0;
     }
+
     .content {
         margin-left: 0;
         padding: 30px 0 10px 0;
@@ -1311,19 +1316,19 @@ sup {
 }
 
 .navbar-form input.form-control::-webkit-input-placeholder {
-    color: rgba(255,255,255,.3);
+    color: rgba(255, 255, 255, .3);
 }
 
 .navbar-form input.form-control:-moz-placeholder {
-    color: rgba(255,255,255,.3);
+    color: rgba(255, 255, 255, .3);
 }
 
 .navbar-form input.form-control::-moz-placeholder {
-    color: rgba(255,255,255,.3);
+    color: rgba(255, 255, 255, .3);
 }
 
 .navbar-form input.form-control:-ms-input-placeholder {
-    color: rgba(255,255,255,.3);
+    color: rgba(255, 255, 255, .3);
 }
 
 .navbar-nav > li > a {
@@ -1421,13 +1426,13 @@ sup {
     border-left: 1px solid #f6a821;
     padding-left: 22px;
     color: #c0c4c8;
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0, 0, 0, .2);
 }
 
 .luna-nav.nav li a:hover,
 .luna-nav.nav li a:focus {
     color: #c0c4c8;
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0, 0, 0, .2);
 }
 
 .luna-nav.nav .nav-category {
@@ -2702,7 +2707,7 @@ fieldset[disabled] .form-control {
 
 .search-results {
     display: block;
-    background-color: rgba(0,0,0,.1);
+    background-color: rgba(0, 0, 0, .1);
     height: 150px;
     overflow-y: scroll;
     margin-left: 200px;

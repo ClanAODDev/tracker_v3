@@ -20,7 +20,7 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-                Sorry, you're not allowed to do whatever it is that you were trying to do. If you feel you have received this in error, please contact your division leadership or a clan administrator.
+                Sorry, you're not allowed to do that. If you feel you have received this in error, please contact your division leadership or a clan administrator.
             </div>
         </div>
         <div>

@@ -203,7 +203,7 @@ var Tracker = Tracker || {};
             $('.panel-toggle').on('click', function (event) {
                 event.preventDefault();
                 var hpanel = $(event.target).closest('div.panel');
-                var icon = $(event.target).closest('i');
+                var icon = $(event.target).find('i.toggle-icon');
                 var body = hpanel.find('div.panel-body');
                 var footer = hpanel.find('div.panel-footer');
                 body.slideToggle(300);

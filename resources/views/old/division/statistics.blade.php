@@ -15,7 +15,8 @@
             <ul class="nav nav-pills pull-right">
 
                 <li>
-                    <a href="{{ route('division', $division->abbreviation) }}"><i class="fa fa-gamepad fa-lg"></i><span class="hidden-xs hidden-sm">Overview</span></a>
+                    <a href="{{ route('division', $division->abbreviation) }}"><i class="fa fa-gamepad fa-lg"></i><span
+                                class="hidden-xs hidden-sm">Overview</span></a>
                 </li>
 
                 <li class="active">
@@ -27,7 +28,7 @@
         </div>
     </div>
 
-    <hr/>
+    <hr />
 
     <div class="row">
         <div class="col-md-6">

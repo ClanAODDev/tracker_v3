@@ -22,7 +22,6 @@
         <form class="navbar-form navbar-left">
             {{ csrf_field() }}
             <input type="text" class="form-control" id="member-search" name="search"
-                   value="{{ ( ! empty($request)) ? $request->search : null }}"
                    placeholder="Search for a player..." />
             <span id="searchclear" class="fa fa-times-circle fa-2x text-muted pull-right"></span>
         </form>

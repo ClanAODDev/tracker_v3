@@ -19,6 +19,8 @@ class UpdateSquadForm extends FormRequest
     public function authorize(Squad $squad, Division $division)
     {
         return $this->user()->can('update', [$squad, $division]);
+
+        $this->squad = $squad;
     }
 
     /**
@@ -30,8 +32,9 @@ class UpdateSquadForm extends FormRequest
     {
         return [
             'leader_id' => [
+                // ignore current record
+                'unique:squads,leader_id,' . $this->squad->id,
                 'exists:members,clan_id',
-                'unique:squads,leader_id',
             ],
         ];
     }
@@ -49,21 +52,23 @@ class UpdateSquadForm extends FormRequest
         ];
     }
 
-    public function persist(Squad $squad)
+    public function persist()
     {
-        $squad->update([
-            'gen_pop' => $this->gen_pop,
-            'leader_id' => $this->leader_id,
-        ]);
+        $this->squad->update(
+            $this->only(['name', 'leader_id'])
+        );
 
         /**
-         * Handle squad leader assignment
+         * Assign leader as leader of squad
+         * Place member inside squad
+         * Place member inside platoon of squad
+         * Assign squad leader position
          */
-        if ($this->leader) {
+        if ($this->leader_id) {
             $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
-            $squad->leader()->associate($leader);
-            $leader->squad()->associate($squad);
+            $this->squad->leader()->associate($leader);
+            $leader->squad()->associate($this->squad);
             $leader->platoon()->associate($this->route('platoon'));
             $leader->assignPosition("squad leader")->save();
         }

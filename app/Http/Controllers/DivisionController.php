@@ -88,7 +88,7 @@ class DivisionController extends Controller
     {
         $this->authorize('update', $division);
 
-        $leaders = $division->leaders()->with('rank', 'position')->get();
+        $leaders = $division->leaders()->with('rank', 'position', 'user.role', 'user')->get();
 
         return view('division.modify', compact('division', 'leaders'));
     }

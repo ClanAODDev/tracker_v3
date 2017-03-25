@@ -14,6 +14,11 @@ class Platoon extends Model
         'deleted_at'
     ];
 
+    protected $fillable = [
+        'name',
+        'leader_id'
+    ];
+
     use RecordsActivity;
     use SoftDeletes;
 

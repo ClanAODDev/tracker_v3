@@ -6,13 +6,12 @@
             <button type="submit" class="btn btn-success pull-right btn-xs">Save changes</button>
         </legend>
 
-
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-group">
                     <label for="division_structure" class="control-label">Division Structure</label>
                     <input type="number" id="division_structure" name="division_structure"
-                           value="{{ $division->settings()->division_structure }}" class="form-control" required/>
+                           value="{{ $division->settings()->division_structure }}" class="form-control" required />
                     <span class="help-block"><small>Numerical id of your division's division structure thread</small></span>
                 </div>
 
@@ -22,7 +21,7 @@
                 <div class="form-group">
                     <label for="welcome_area" class="control-label">Welcome Area</label>
                     <input type="number" id="welcome_area" name="welcome_area"
-                           value="{{ $division->settings()->welcome_area }}" class="form-control" required/>
+                           value="{{ $division->settings()->welcome_area }}" class="form-control" required />
                     <span class="help-block"><small>Numerical id of your division's welcome area.</small></span>
                     <div class="checkbox">
                         <label>
@@ -35,7 +34,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="form-group">
             <label for="welcome_pm" class="control-label">Welcome PM</label>

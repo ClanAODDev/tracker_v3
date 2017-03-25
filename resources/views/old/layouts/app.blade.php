@@ -19,8 +19,6 @@
 
 </div>
 
-
-
 @include('layouts.footer')
 
 @yield('footer_scripts')

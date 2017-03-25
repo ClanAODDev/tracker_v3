@@ -31,7 +31,7 @@
     </div>
 
 
-    <hr/>
+    <hr />
 
     <div class="row margin-top-20">
 

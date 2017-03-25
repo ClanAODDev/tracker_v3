@@ -1,6 +1,7 @@
 <table class="table table-hover basic-datatable">
     <thead>
     <tr>
+        <th></th>
         <th>Member</th>
         <th>Position</th>
         <th>User Role</th>
@@ -11,11 +12,17 @@
     <tbody>
     @forelse($leaders as $leader)
         <tr>
+            <td>
+                <a title="View Profile" class="btn btn-default"
+                   href="{{ route('member', $leader->clan_id) }}"><i
+                            class="fa fa-user"></i>
+                </a>
+            </td>
             <td>{{ $leader->name }}</td>
             <td>{{ $leader->position->name }}</td>
             <td>
                 @if ($leader->user)
-                    {{ $leader->user->role }}
+                    {{ $leader->user->role->label }}
                 @else
                     <span class="text-muted text-uppercase slight">No account</span>
                 @endif

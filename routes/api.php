@@ -2,13 +2,13 @@
 
 Route::group(
     [
-    'prefix' => 'v1',
+        'prefix' => 'v1',
 
-    'middleware' => [
-        'auth:api',
-        'throttle:30',
-        'scope:query-division-info-basic'
-    ]
+        'middleware' => [
+            'auth:api',
+            'throttle:30',
+            'scope:query-division-info-basic'
+        ]
 
     ],
     function () {

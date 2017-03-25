@@ -22,9 +22,12 @@
                 <td>{{ $handle->name }}</td>
                 <td>
                     @foreach ($handle->divisions as $division)
-                        <label class="label label-default text-uppercase slight">
+                        <a href="{{ route('division', $division->abbreviation) }}"
+                           class="label label-default text-uppercase slight m-r-xs"
+                           title="{{ $division->name }}"
+                        >
                             {{ $division->abbreviation }}
-                        </label>
+                        </a>
                     @endforeach
                 </td>
                 <td>{{ $handle->url }}</td>

@@ -56,15 +56,26 @@ class SquadController extends Controller
     {
         if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
-                ->withErrors(['leader_id' => 'Member not assigned to this division!'])
+                ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
         }
 
         $form->persist();
 
-        flash("{$division->locality('squad')} has been created!", 'success');
-
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
+    }
+
+    /**
+     * @param $request
+     * @param Division $division
+     * @return bool
+     */
+    public function isMemberOfDivision(Division $division, $request)
+    {
+        $member = Member::whereClanId($request->leader_id)->first();
+
+        return $member->primaryDivision instanceof Division &&
+            $member->primaryDivision->id === $division->id;
     }
 
     /**
@@ -92,7 +103,7 @@ class SquadController extends Controller
     {
         $this->authorize('update', $squad);
 
-        return view('squad.update', compact('squad', 'platoon', 'division'));
+        return view('squad.edit', compact('squad', 'platoon', 'division'));
     }
 
     /**
@@ -103,15 +114,15 @@ class SquadController extends Controller
      * @param Platoon $platoon
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
+    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon)
     {
         if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
-                ->withErrors(['leader_id' => 'Member not assigned to this division!'])
+                ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
         }
 
-        $form->persist($squad);
+        $form->persist();
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
@@ -122,21 +133,18 @@ class SquadController extends Controller
      * @param Squad $squad
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Squad $squad)
+    public function destroy(Division $division, Platoon $platoon, Squad $squad)
     {
         $this->authorize('delete', $squad);
-    }
 
-    /**
-     * @param $request
-     * @param Division $division
-     * @return bool
-     */
-    public function isMemberOfDivision(Division $division, $request)
-    {
-        $member = Member::whereClanId($request->leader_id)->first();
+        if ($squad->members->count()) {
+            return redirect()->back()
+                ->withErrors(['membersFound' => 'Squad is not empty!'])
+                ->withInput();
+        }
 
-        return $member->primaryDivision instanceof Division &&
-            $member->primaryDivision->id === $division->id;
+        $squad->delete();
+
+        return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
 }

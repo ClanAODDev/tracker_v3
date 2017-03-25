@@ -1,4 +1,3 @@
-
 require('./bootstrap');
 var Squad = require('./components/manage/Squad.vue')
 

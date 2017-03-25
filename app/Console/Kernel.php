@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('do:membersync')->hourly();
         $schedule->command('do:divisioncensus')->weekly();
     }
+
     /**
      * Register the Closure based commands for the application.
      *

@@ -19,6 +19,9 @@
     @endcomponent
 
     <div class="container-fluid">
+
+        {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
+
         <div class="row m-t-sm">
             <div class="col-md-12">
                 <div class="panel panel-filled">

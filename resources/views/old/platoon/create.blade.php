@@ -31,19 +31,19 @@
                         belong to the current division.</p>
                 </div>
 
-                <input type="hidden" value="{{ $division->id }}" name="division"/>
+                <input type="hidden" value="{{ $division->id }}" name="division" />
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="name" class="control-label">{{ $division->locality('platoon') }} Name</label>
                         <input type="text" id="name" name="name"
-                               value="{{ old('name') }}" class="form-control" required/>
+                               value="{{ old('name') }}" class="form-control" required />
                     </div>
 
                     <div class="form-group {{ $errors->has('leader') ? ' has-error' : null }}">
                         <label for="leader" class="control-label">{{ $division->locality('platoon leader') }}</label>
                         <input type="text" id="leader" name="leader" placeholder="AOD Member ID"
-                               value="{{ old('leader') }}" class="form-control"/>
+                               value="{{ old('leader') }}" class="form-control" />
 
                         <span class="help-block">
                         @if ($errors->has('leader'))

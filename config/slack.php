@@ -12,7 +12,7 @@ return [
     | https://hooks.slack.com/services/XXXXXXXX/XXXXXXXX/XXXXXXXXXXXXXX
     |
     */
-                    
+
     'endpoint' => 'https://hooks.slack.com/services/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',
 
     /*

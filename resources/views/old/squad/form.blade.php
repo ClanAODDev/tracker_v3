@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-group">
-                <input type='hidden' name='gen_pop' value='0'/>
+                <input type='hidden' name='gen_pop' value='0' />
                 {!! Form::label('gen_pop', 'General Population') !!}
                 <span style="margin-right:5px;float: left;">{!! Form::checkbox('gen_pop') !!}</span><sup>1</sup>
             </div>

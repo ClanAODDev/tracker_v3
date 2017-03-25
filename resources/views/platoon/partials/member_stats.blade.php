@@ -1,6 +1,9 @@
-<div class="panel">
+<div class="panel panel-filled hidden-xs hidden-sm m-t-xl">
     <div class="panel-heading">
-        Platoon Activity
+        <h1 class="m-b-n">
+            <i class="pe pe-7s-users pe-lg text-warning"></i> {{ $platoon->members->count() }}
+            <small class="slight">Members</small>
+        </h1>
     </div>
     <div class="panel-body">
         <canvas id="platoonChart" data-labels="{{ json_encode($activityGraph['labels']) }}"
@@ -28,7 +31,7 @@
             rotation: 1 * Math.PI,
             circumference: 1 * Math.PI,
             legend: {
-                position: 'top',
+                position: 'bottom',
                 labels: {
                     boxWidth: 5,
                     fontColor: '#949ba2'

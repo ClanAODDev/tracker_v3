@@ -173,7 +173,8 @@ function setLeaderOf(Model $model, Member $member)
     $modelName = strtolower(getNameOfClass($model));
 
     // assign the pertinent role (platoon, squad leader)
-    $member->assignPosition("{$modelName} leader")->save();
+    $member->assignPosition("{
+    $modelName} leader")->save();
 }
 
 function getNameOfClass($class)

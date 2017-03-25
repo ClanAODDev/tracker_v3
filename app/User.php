@@ -73,7 +73,7 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
-        if (! $this->role instanceof Role) {
+        if ( ! $this->role instanceof Role) {
             return false;
         }
 

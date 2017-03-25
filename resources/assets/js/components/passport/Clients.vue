@@ -273,9 +273,9 @@
              */
             getClients() {
                 this.$http.get('/oauth/clients')
-                        .then(response => {
-                            this.clients = response.data;
-                        });
+                    .then(response => {
+                        this.clients = response.data;
+                    });
             },
 
             /**
@@ -346,9 +346,9 @@
              */
             destroy(client) {
                 this.$http.delete('/oauth/clients/' + client.id)
-                        .then(response => {
-                            this.getClients();
-                        });
+                    .then(response => {
+                        this.getClients();
+                    });
             }
         }
     }

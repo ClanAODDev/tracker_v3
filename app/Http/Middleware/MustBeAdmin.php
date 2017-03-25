@@ -21,6 +21,6 @@ class MustBeAdmin
             return $next($request);
         }
 
-        abort(333, 'You are not authorized to access this area.');
+        abort(403, 'You are not authorized to access this area.');
     }
 }

@@ -1,28 +1,36 @@
-@foreach($squads as $squad)
+@forelse($squads as $squad)
 
     <div class="m-b-xxl">
 
         <div class="panel squad">
-            <div class="panel-heading wrap-ellipsis">
-                <span class="badge pull-right">{{ $squad->members->count() }}</span>
+            <div class="panel-body">
+                <h5 class="text-center">
+                    <span class="pull-left">
+                        @if($squad->leader)
+                            {!! $squad->leader->present()->rankName !!}
+                        @else
+                            Leader TBA
+                        @endif
+                    </span>
 
-                @can('update', $squad)
-                    <a href="{{ route('editSquad', [$division->abbreviation, $platoon, $squad]) }}"
-                       title="Edit Squad">
-                        <i class="fa fa-cog fa-lg"></i>
-                    </a>
-                @endcan
+                    <strong>
+                        {{ ($squad->name) ?: $division->locality('squad') . " " . $loop->index }}
+                    </strong>
 
-                {{ ($squad->name) ?: $division->locality('squad') . " " . $loop->index }}
-
-                @if($squad->leader)
-                    - {!! $squad->leader->present()->rankName !!}
-                @else
-                     - TBA
-                @endif
+                    <span class="pull-right">
+                       @can('update', $squad)
+                            <a href="{{ route('editSquad', [$division->abbreviation, $platoon, $squad]) }}"
+                               title="Edit {{ $division->locality('squad') }}"
+                               class="btn btn-default btn-sm">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        @endcan
+                    </span>
+                </h5>
             </div>
 
-            <div style="height: 250px; max-height: 250px; overflow-y: scroll;">
+            <div class="table-responsive">
+
                 <table class="table table-hover members-table">
                     <thead>
                     <tr>
@@ -56,17 +64,26 @@
                         </tr>
                     @endforeach
                     </tbody>
-
-                    {{--@foreach($chunk as $member)--}}
-                    {{--@if($squad->leader && $member->clan_id != $squad->leader_id)--}}
-                    {{--<a href="{{ route('member', $member->clan_id) }}"--}}
-                    {{--class="list-group-item wrap-ellipsis">--}}
-                    {{--<small>{!! $member->present()->rankName !!}</small>--}}
-                    {{--</a>--}}
-                    {{--@endif--}}
-
                 </table>
             </div>
         </div>
     </div>
-@endforeach
+
+@empty
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-10">
+                <h4>No squads</h4>
+                <p>No squads exist. Do you want to create one?
+                </p>
+            </div>
+            <div class="col-xs-2">
+                <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}"
+                   class="btn btn-default pull-right text-uppercase">
+                    <i class="fa fa-plus"></i> New
+                </a>
+            </div>
+        </div>
+
+    </div>
+@endforelse

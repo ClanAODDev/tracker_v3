@@ -12,7 +12,7 @@
             </h2>
         </div>
     </div>
-    <hr/>
+    <hr />
 
     @foreach ($squads as $squad)
 

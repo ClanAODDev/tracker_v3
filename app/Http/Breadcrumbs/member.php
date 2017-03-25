@@ -11,7 +11,7 @@ Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $me
     }
 
     if ($platoon instanceof Platoon) {
-        $breadcrumbs->push($platoon->name, route('division', [$division->abbreviation, $platoon->id]));
+        $breadcrumbs->push($platoon->name, route('platoon', [$division->abbreviation, $platoon->id]));
     }
 
     $breadcrumbs->push($member->name);

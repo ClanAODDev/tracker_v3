@@ -15,7 +15,7 @@
 
     {!! Form::model($squad, ['class' => 'well', 'method' => 'patch', 'route' => ['updateSquad', $division->abbreviation, $platoon, $squad]]) !!}
 
-        @include('squad.form', ['actionText' => 'Update'])
+    @include('squad.form', ['actionText' => 'Update'])
 
     {!! Form::close() !!}
 

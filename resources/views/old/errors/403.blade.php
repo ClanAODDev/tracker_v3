@@ -28,7 +28,7 @@
     <div class="content">
         <div class="title">Unauthorized</div>
         You are not authorized to perform that action. You should probably
-            <a href="{{ url('/home') }}"><strong>go home</strong></a>.
+        <a href="{{ url('/home') }}"><strong>go home</strong></a>.
     </div>
 </div>
 </body>

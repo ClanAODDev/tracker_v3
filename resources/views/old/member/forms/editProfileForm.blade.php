@@ -1,6 +1,6 @@
 <?php
 
-use App\Squad, App\Platoon, App\Position;
+use App\Platoon;use App\Position;use App\Squad;
 
 $division = $member->primaryDivision
 

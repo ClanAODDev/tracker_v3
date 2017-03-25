@@ -1,5 +1,6 @@
 <div class="panel panel-filled">
-    <div class="panel-heading">General Sergeants <span class="pull-right badge">{{ $generalSergeants->count() }}</span></div>
+    <div class="panel-heading">General Sergeants <span class="pull-right badge">{{ $generalSergeants->count() }}</span>
+    </div>
 
     @forelse ($generalSergeants as $member)
         <a href="{{ route('member', $member->clan_id) }}" class="list-group-item">

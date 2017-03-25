@@ -33,26 +33,26 @@
                     <!-- Personal Access Tokens -->
                     <table class="table table-borderless m-b-none" v-if="tokens.length > 0">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
                         </thead>
 
                         <tbody>
-                            <tr v-for="token in tokens">
-                                <!-- Client Name -->
-                                <td style="vertical-align: middle;">
-                                    {{ token.name }}
-                                </td>
+                        <tr v-for="token in tokens">
+                            <!-- Client Name -->
+                            <td style="vertical-align: middle;">
+                                {{ token.name }}
+                            </td>
 
-                                <!-- Delete Button -->
-                                <td style="vertical-align: middle;">
-                                    <a class="action-link text-danger" @click="revoke(token)">
-                                        Delete
-                                    </a>
-                                </td>
-                            </tr>
+                            <!-- Delete Button -->
+                            <td style="vertical-align: middle;">
+                                <a class="action-link text-danger" @click="revoke(token)">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -90,7 +90,8 @@
                                 <label class="col-md-4 control-label">Name</label>
 
                                 <div class="col-md-6">
-                                    <input id="create-token-name" type="text" class="form-control" name="name" v-model="form.name">
+                                    <input id="create-token-name" type="text" class="form-control" name="name"
+                                           v-model="form.name">
                                 </div>
                             </div>
 
@@ -103,10 +104,10 @@
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox"
-                                                    @click="toggleScope(scope.id)"
-                                                    :checked="scopeIsAssigned(scope.id)">
+                                                       @click="toggleScope(scope.id)"
+                                                       :checked="scopeIsAssigned(scope.id)">
 
-                                                    {{ scope.id }}
+                                                {{ scope.id }}
                                             </label>
                                         </div>
                                     </div>
@@ -210,9 +211,9 @@
              */
             getTokens() {
                 this.$http.get(window.Laravel.appPath + '/oauth/personal-access-tokens')
-                        .then(response => {
-                            this.tokens = response.data;
-                        });
+                    .then(response => {
+                        this.tokens = response.data;
+                    });
             },
 
             /**
@@ -220,9 +221,9 @@
              */
             getScopes() {
                 this.$http.get(window.Laravel.appPath + '/oauth/scopes')
-                        .then(response => {
-                            this.scopes = response.data;
-                        });
+                    .then(response => {
+                        this.scopes = response.data;
+                    });
             },
 
             /**
@@ -241,22 +242,22 @@
                 this.form.errors = [];
 
                 this.$http.post(window.Laravel.appPath + '/oauth/personal-access-tokens', this.form)
-                        .then(response => {
-                            this.form.name = '';
-                            this.form.scopes = [];
-                            this.form.errors = [];
+                    .then(response => {
+                        this.form.name = '';
+                        this.form.scopes = [];
+                        this.form.errors = [];
 
-                            this.tokens.push(response.data.token);
+                        this.tokens.push(response.data.token);
 
-                            this.showAccessToken(response.data.accessToken);
-                        })
-                        .catch(response => {
-                            if (typeof response.data === 'object') {
-                                this.form.errors = _.flatten(_.toArray(response.data));
-                            } else {
-                                this.form.errors = ['Something went wrong. Please try again.'];
-                            }
-                        });
+                        this.showAccessToken(response.data.accessToken);
+                    })
+                    .catch(response => {
+                        if (typeof response.data === 'object') {
+                            this.form.errors = _.flatten(_.toArray(response.data));
+                        } else {
+                            this.form.errors = ['Something went wrong. Please try again.'];
+                        }
+                    });
             },
 
             /**
@@ -293,9 +294,9 @@
              */
             revoke(token) {
                 this.$http.delete(window.Laravel.appPath + '/oauth/personal-access-tokens/' + token.id)
-                        .then(response => {
-                            this.getTokens();
-                        });
+                    .then(response => {
+                        this.getTokens();
+                    });
             }
         }
     }

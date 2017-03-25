@@ -21,11 +21,7 @@ class Squad extends Model
 
     protected $fillable = [
         'leader_id',
-        'gen_pop'
-    ];
-
-    protected $casts = [
-        'gen_pop' => 'boolean'
+        'name'
     ];
 
     /**

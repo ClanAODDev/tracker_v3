@@ -17,7 +17,6 @@
             @endif
         </div>
 
-
         <div style="height: 250px; max-height: 250px; overflow-y: scroll;">
             <table class="table table-striped table-hover members-table">
                 <thead>
@@ -59,7 +58,6 @@
                 {{--<small>{!! $member->present()->rankName !!}</small>--}}
                 {{--</a>--}}
                 {{--@endif--}}
-
 
             </table>
         </div>

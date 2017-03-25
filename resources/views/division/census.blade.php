@@ -8,6 +8,7 @@
         @endslot
         @slot ('heading')
             {{ $division->name }} Division
+            @include('application.partials.editDivision', ['division' => $division])
         @endslot
         @slot ('subheading')
             Census data and statistics

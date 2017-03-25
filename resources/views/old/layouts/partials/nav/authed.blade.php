@@ -2,7 +2,7 @@
 
     <form class="navbar-form navbar-right" role="search">
         <div class="form-group has-feedback">
-            <input type='text' class='form-control' id='member-search' placeholder='Search for a player...'/>
+            <input type='text' class='form-control' id='member-search' placeholder='Search for a player...' />
             <span id="searchclear" class="fa fa-times-circle fa-2x text-muted"></span>
             <div id='member-search-results' class='scroll'></div>
         </div>
@@ -35,7 +35,8 @@
                        target="_blank"> Forum profile</a></li>
                 <li class="divider"></li>
                 <li><a href="#"
-                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out pull-right"></i> Logout</a>
+                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i
+                                class="fa fa-sign-out pull-right"></i> Logout</a>
                 </li>
 
             </ul>

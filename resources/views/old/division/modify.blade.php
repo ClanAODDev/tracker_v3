@@ -13,7 +13,7 @@
         <small>Edit Division</small>
     </h2>
 
-    <hr/>
+    <hr />
 
     {{-- Edit profile nav --}}
     <ul class="nav nav-tabs margin-top-20">
