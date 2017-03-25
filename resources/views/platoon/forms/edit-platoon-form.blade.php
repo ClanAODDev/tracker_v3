@@ -30,7 +30,7 @@
 
                 <div class="form-group {{ $errors->has('name') ? ' has-error' : null }}">
                     <label for="name" class="form-label">{{ $division->locality('platoon') }} Name</label>
-                    {!! Form::text('name', null, ['class' => 'form-control']) !!}
+                    {!! Form::text('name', null, ['class' => 'form-control', 'required' => 'required']) !!}
                 </div>
 
                 <div class="row">

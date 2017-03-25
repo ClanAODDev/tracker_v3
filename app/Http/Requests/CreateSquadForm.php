@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Squad;
-use App\Member;
 use App\Division;
+use App\Member;
+use App\Squad;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateSquadForm extends FormRequest
@@ -59,13 +59,16 @@ class CreateSquadForm extends FormRequest
         /**
          * Handle squad leader assignment
          */
-        if ($this->leader) {
+        if ($this->leader_id) {
             $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
             $squad->leader()->associate($leader);
-            $leader->squad()->associate($squad);
-            $leader->platoon()->associate($this->route('platoon'));
-            $leader->assignPosition("squad leader")->save();
+
+            $leader->squad()->associate($squad)
+                ->platoon()->associate($this->route('platoon'))
+                ->assignPosition("squad leader")
+                ->save();
+
         }
     }
 }

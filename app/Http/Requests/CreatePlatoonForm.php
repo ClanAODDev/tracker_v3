@@ -26,7 +26,7 @@ class CreatePlatoonForm extends FormRequest
     public function rules()
     {
         return [
-            'leader' => [
+            'leader_id' => [
                 'exists:members,clan_id',
                 'unique:platoons,leader_id'
             ]
@@ -41,8 +41,8 @@ class CreatePlatoonForm extends FormRequest
     public function messages()
     {
         return [
-            'leader.unique' => 'Already assigned as a leader.',
-            'leader.exists' => 'Member does not exist.',
+            'leader_id.unique' => 'Already assigned as a leader.',
+            'leader_id.exists' => 'Member does not exist.',
         ];
     }
 
@@ -61,12 +61,15 @@ class CreatePlatoonForm extends FormRequest
         /**
          * Handle Platoon leader assignment
          */
-        if ($this->leader) {
-            $leader = Member::whereClanId($this->leader)->firstOrFail();
+        if ($this->leader_id) {
+            $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
-            $leader->platoon()->associate($platoon)->save();
+            $leader->platoon()
+                ->associate($platoon)
+                ->assignPosition("platoon leader")
+                ->save();
 
-            setLeaderOf($platoon, $leader);
+            $platoon->leader()->associate($leader)->save();
         }
     }
 }
