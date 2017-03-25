@@ -12,12 +12,11 @@ class CreateSquadForm extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @param Division $division
      * @return bool
      */
-    public function authorize(Division $division)
+    public function authorize()
     {
-        return $this->user()->can('create', [Squad::class, $division]);
+        return $this->user()->can('create', [Squad::class, $this->route('division')]);
     }
 
     /**

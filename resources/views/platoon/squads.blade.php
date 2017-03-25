@@ -32,7 +32,7 @@
                     <li role="presentation" class="active">
                         <a href="#"><i class="fa fa-cubes fa-lg"></i></a>
                     </li>
-                    @can('create', ['App\Squad', $division])
+                    @can('create', [App\Squad::class, $division])
                         <li role="presentation" class="pull-right">
                             <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
                                 <i class="fa fa-plus text-success"></i> New Squad</a>

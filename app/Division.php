@@ -18,10 +18,6 @@ class Division extends Model
         'settings' => 'json',
     ];
 
-    protected $guarded = [
-        'id',
-    ];
-
     use Division\HasCustomAttributes;
     use RecordsActivity;
 

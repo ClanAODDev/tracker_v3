@@ -16,9 +16,9 @@ class UpdateSquadForm extends FormRequest
      * @param Division $division
      * @return bool
      */
-    public function authorize(Squad $squad, Division $division)
+    public function authorize()
     {
-        return $this->user()->can('update', [$squad, $division]);
+        return $this->user()->can('update', $this->route('squad'));
 
         $this->squad = $squad;
     }

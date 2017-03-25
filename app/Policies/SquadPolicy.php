@@ -53,8 +53,9 @@ class SquadPolicy
      */
     public function delete(User $user, Squad $squad)
     {
+        return false;
         // mimic create permissions
-        return $this->create($user, $squad->division);
+        // return $this->create($user, $squad->division);
     }
 
     /**

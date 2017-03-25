@@ -4,7 +4,7 @@
     {{ method_field('PATCH') }}
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
 
             <div class="form-group">
                 <label for="slack_webhook_url" class="control-label">Webhook URL</label>
@@ -24,63 +24,79 @@
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="form-group">
+        <div class="col-md-6 pull-right">
 
-                <h5>Notify when the following events occur...</h5>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <tr class="text-muted text-uppercase">
+                        <td>Member notifications</td>
+                    </tr>
 
-                <li class="list-group-item text-muted">MEMBER</li>
+                    <tr>
+                        <td>
+                            <label for="slack_alert_created_member">
+                                When a new member is recruited
+                            </label>
+                            <div class="pull-right">
+                                <input type='hidden' value='0' name="slack_alert_created_member">
+                                <input id="slack_alert_created_member"
+                                       name="slack_alert_created_member"
+                                       type="checkbox" {{ checked($division->settings()->slack_alert_created_member) }} />
+                            </div>
+                        </td>
+                    </tr>
 
-                <li class="list-group-item">
-                    When a new member is recruited
-                    <div class="material-switch pull-right">
-                        <input type='hidden' value='0' name="slack_alert_created_member">
-                        <input id="slack_alert_created_member"
-                               name="slack_alert_created_member"
-                               type="checkbox" {{ checked($division->settings()->slack_alert_created_member) }} />
-                        <label for="slack_alert_created_member" class="label-success"></label>
-                    </div>
-                </li>
+                    <tr>
+                        <td>
+                            <label for="slack_alert_removed_member">
+                                When a member is removed
+                                <i class="fa fa-exclamation-triangle text-danger"
+                                   aria-hidden="true" title="Potentially spammy"></i>
+                            </label>
+                            <div class="pull-right">
+                                <input type='hidden' value='0' name="slack_alert_removed_member">
+                                <input id="slack_alert_removed_member"
+                                       name="slack_alert_removed_member"
+                                       type="checkbox" {{ checked($division->settings()->slack_alert_removed_member) }} />
+                            </div>
+                        </td>
+                    </tr>
 
-                <li class="list-group-item">
-                    When a member is removed <i class="fa fa-exclamation-triangle text-danger"
-                                                aria-hidden="true"
-                                                title="Potentially spammy"></i>
-                    <div class="material-switch pull-right">
-                        <input type='hidden' value='0' name="slack_alert_removed_member">
-                        <input id="slack_alert_removed_member"
-                               name="slack_alert_removed_member"
-                               type="checkbox" {{ checked($division->settings()->slack_alert_removed_member) }} />
-                        <label for="slack_alert_removed_member" class="label-success"></label>
-                    </div>
-                </li>
+                    <tr>
+                        <td>
+                            <label for="slack_alert_updated_member">
+                                When a member's profile is edited <i class="fa fa-exclamation-triangle text-danger"
+                                                                     aria-hidden="true"
+                                                                     title="Potentially spammy"></i>
+                            </label>
+                            <div class=" pull-right">
+                                <input type='hidden' value='0' name="slack_alert_updated_member">
+                                <input id="slack_alert_updated_member"
+                                       name="slack_alert_updated_member"
+                                       type="checkbox" {{ checked($division->settings()->slack_alert_updated_member) }}/>
+                            </div>
+                        </td>
+                    </tr>
 
-                <li class="list-group-item">
-                    When a member's profile is edited <i class="fa fa-exclamation-triangle text-danger"
-                                                         aria-hidden="true"
-                                                         title="Potentially spammy"></i>
-                    <div class="material-switch pull-right">
-                        <input type='hidden' value='0' name="slack_alert_updated_member">
-                        <input id="slack_alert_updated_member"
-                               name="slack_alert_updated_member"
-                               type="checkbox" {{ checked($division->settings()->slack_alert_updated_member) }}/>
-                        <label for="slack_alert_updated_member" class="label-success"></label>
-                    </div>
-                </li>
+                    <tr class="text-muted text-uppercase">
+                        <td>Division notifications</td>
+                    </tr>
 
-                <li class="list-group-item text-muted">DIVISION</li>
+                    <tr>
+                        <td>
+                            <label for="slack_alert_created_request">
+                                When a request is submitted
+                            </label>
+                            <div class="pull-right">
+                                <input type='hidden' value='0' name="slack_alert_created_request">
+                                <input id="slack_alert_created_request"
+                                       name="slack_alert_created_request"
+                                       type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} />
+                            </div>
+                        </td>
+                    </tr>
 
-                <li class="list-group-item">
-                    When a request is submitted
-                    <div class="material-switch pull-right">
-                        <input type='hidden' value='0' name="slack_alert_created_request">
-                        <input id="slack_alert_created_request"
-                               name="slack_alert_created_request"
-                               type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} />
-                        <label for="slack_alert_created_request" class="label-success"></label>
-                    </div>
-                </li>
-
+                </table>
             </div>
         </div>
 

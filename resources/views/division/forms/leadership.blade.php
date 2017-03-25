@@ -27,7 +27,13 @@
                     <span class="text-muted text-uppercase slight">No account</span>
                 @endif
             </td>
-            <td>{{ $leader->created_at }}</td>
+            <td>
+                @if ($leader->user)
+                    {{ $leader->user->role->label }}
+                @else
+                    <span class="text-muted text-uppercase slight">No account</span>
+                @endif
+            </td>
         </tr>
     @empty
         <div class="col-md-12">

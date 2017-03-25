@@ -22,11 +22,12 @@
         @include('squad.forms.edit-squad-form')
         {!! Form::close() !!}
 
-        <hr />
-
-        {!! Form::model($squad, ['method' => 'delete', 'route' => ['deleteSquad', $division->abbreviation, $platoon, $squad]]) !!}
-        @include('squad.forms.delete-squad-form')
-        {!! Form::close() !!}
+        @can('delete', $squad)
+            <hr />
+            {!! Form::model($squad, ['method' => 'delete', 'route' => ['deleteSquad', $division->abbreviation, $platoon, $squad]]) !!}
+            @include('squad.forms.delete-squad-form')
+            {!! Form::close() !!}
+        @endcan
 
     </div>
 
