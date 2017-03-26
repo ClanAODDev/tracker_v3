@@ -42,7 +42,7 @@
 
                 <div class="panel-group">
 
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled nav-tabs">
                         <li class="panel panel-filled support-question active">
                             <a href="#why-use-tracker" data-toggle="tab">
                                 <div class="panel-body">

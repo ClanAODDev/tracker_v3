@@ -92,6 +92,10 @@
                 </div>
             </div>
         </div>
+
+        @if($member->user)
+            {{ dump($member->user->toArray()) }}
+        @endif
     </div>
 
 @stop

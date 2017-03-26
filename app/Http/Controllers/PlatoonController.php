@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
+use App\Http\Requests\CreatePlatoonForm;
 use App\Http\Requests\UpdatePlatoonForm;
-use Charts;
-use Toastr;
 use App\Member;
 use App\Platoon;
-use App\Division;
-use Illuminate\Http\Request;
 use App\Repositories\PlatoonRepository;
-use App\Http\Requests\CreatePlatoonForm;
+use Charts;
+use Toastr;
 
 class PlatoonController extends Controller
 {
@@ -188,11 +187,35 @@ class PlatoonController extends Controller
     {
         $this->authorize('delete', $platoon);
 
-        if ($platoon->members->count()) {
-            return redirect()->back()
-                ->withErrors(['membersFound' => 'Platoon is not empty!'])
-                ->withInput();
+        if ($platoon->leader) {
+            // dissociate leader from platoon
+            $platoon->leader()->dissociate()->save();
         }
+
+        if ($platoon->squads()) {
+            $platoon->squads->each(function ($squad) use($platoon) {
+
+                // remove members from squads inside platoon
+                $squad->members->each(function ($member) use ($squad) {
+                    $member->squad()->dissociate($squad)->save();
+                    $member->assignPosition('member');
+                });
+
+                // dissociate squad from platoon
+                $squad->platoon()->dissociate($platoon);
+
+                $squad->delete();
+            });
+        }
+
+        if ($platoon->members()) {
+
+            // dissociate members from platoon
+            $platoon->members->each(function ($member) use ($platoon) {
+                $member->platoon()->dissociate($platoon)->save();
+            });
+        }
+
 
         $platoon->delete();
 

@@ -5,10 +5,11 @@ namespace App;
 use Carbon;
 use Exception;
 use App\Settings\DivisionSettings;
+use Illuminate\Support\Facades\Log;
 use App\Activities\RecordsActivity;
 use App\Presenters\DivisionPresenter;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Division extends Model
 {
@@ -18,8 +19,13 @@ class Division extends Model
         'settings' => 'json',
     ];
 
+    protected $fillable = [
+        'settings'
+    ];
+
     use Division\HasCustomAttributes;
     use RecordsActivity;
+    use SoftDeletes;
 
     protected static $recordEvents = ['created', 'updated', 'deleted'];
 

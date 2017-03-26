@@ -137,11 +137,7 @@ class SquadController extends Controller
     {
         $this->authorize('delete', $squad);
 
-        if ($squad->members->count()) {
-            return redirect()->back()
-                ->withErrors(['membersFound' => 'Squad is not empty!'])
-                ->withInput();
-        }
+        if ($squad->members)
 
         $squad->delete();
 

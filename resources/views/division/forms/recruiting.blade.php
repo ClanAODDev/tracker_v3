@@ -5,7 +5,7 @@
 
     <div class="row">
 
-        <div class="col-md-6 repeater">
+        <div class="col-md-12 repeater">
 
             <div class="panel">
                 <div class="panel-heading">
@@ -16,16 +16,16 @@
                     @include('division.partials.recruitingTasks')
                 </table>
 
-                <div class="panel-footer text-right">
+                <div class="panel-footer">
                     <button data-repeater-create class="btn btn-default btn-block" type="button">
-                        <i class="fa fa-plus"></i> New Task
+                        <i class="fa fa-plus text-success"></i> New Task
                     </button>
                 </div>
             </div>
 
         </div>
 
-        <div class="col-md-6 repeater">
+        <div class="col-md-12 repeater">
             <div class="panel">
                 <div class="panel-heading">
                     Rules and Regulations
@@ -37,7 +37,7 @@
 
                 <div class="panel-footer">
                     <button data-repeater-create class="btn btn-default btn-block" type="button">
-                        <i class="fa fa-plus"></i> New Link
+                        <i class="fa fa-plus text-success"></i> New Link
                     </button>
                 </div>
 
@@ -46,8 +46,8 @@
             </div>
         </div>
     </div>
-</form>
 
-<div class="text-right">
-    <button type="submit" class="btn btn-success">Save changes</button>
-</div>
+    <div class="text-right">
+        <button type="submit" class="btn btn-success">Save changes</button>
+    </div>
+</form>

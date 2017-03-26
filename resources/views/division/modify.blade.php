@@ -27,11 +27,6 @@
                         <i class="fa fa-sliders fa-lg"></i> <span class="hidden-xs">General</span>
                     </a>
                 </li>
-                <li class="leaders">
-                    <a data-toggle="tab" href="#leader-settings">
-                        <i class="fa fa-shield fa-lg"></i> <span class="hidden-xs">Leadership</span>
-                    </a>
-                </li>
                 <li>
                     <a href="#recruiting-settings" data-toggle="tab">
                         <i class="fa fa-user-plus fa-lg"></i> <span class="hidden-xs">Recruiting</span>
@@ -56,12 +51,6 @@
                     </div>
                 </div>
 
-                <div id="leader-settings" class="tab-pane">
-                    <div class="panel-body">
-                        @include('division.forms.leadership')
-                    </div>
-                </div>
-
                 <div class="tab-pane" id="recruiting-settings">
                     <div class="row">
                         <div class="col-md-9">
@@ -78,14 +67,32 @@
                 </div>
 
                 <div id="locality-settings" class="tab-pane">
-                    <div class="panel-body">
-                        @include('division.forms.locality')
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-body">
+                                @include('division.forms.locality')
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel">
+                                @include('division.forms.descriptions.locality')
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div id="slack-settings" class="tab-pane">
-                    <div class="panel-body">
-                        @include('division.forms.slack')
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-body">
+                                @include('division.forms.slack')
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel">
+                                @include('division.forms.descriptions.slack')
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -1,0 +1,1 @@
+{{ $event->user->name }} removed platoon {{ $event->subject->name }} &mdash; {{ $event->created_at->diffForHumans() }}

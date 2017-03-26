@@ -1,0 +1,1 @@
+{{ $event->user->name }} modified {{ $event->subject->name }} &mdash; {{ $event->created_at->diffForHumans() }}

@@ -1,0 +1,2 @@
+<h4>Slack Settings</h4>
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium ad illum magni maxime voluptatem. Aut consequuntur cum dignissimos dolorem, doloribus esse incidunt placeat porro provident quis quod, repellendus repudiandae sit!</p>

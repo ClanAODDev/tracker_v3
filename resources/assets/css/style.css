@@ -1986,6 +1986,11 @@ a.list-group-item {
     color: #fff;
 }
 
+.list-group-item {
+    background-color: rgba(68, 70, 79, 0.8);
+    border-color: rgba(255,255,255, 0.05);
+}
+
 a.list-group-item:hover {
     background-color: rgba(68, 70, 79, .6);
 }

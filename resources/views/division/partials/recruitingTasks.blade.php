@@ -3,7 +3,7 @@
 
         <td class="col-xs-11">
             <input type="text" name="tasks[{{ $loop->index }}][task_description]"
-                   class="form-control" placeholder="Add a task"
+                   class="form-control" placeholder="Task description"
                    value="{{ $task['task_description'] }}" required />
         </td>
 
@@ -13,4 +13,5 @@
         </td>
 
     </tr>
+
 @endforeach

@@ -8,12 +8,12 @@
     <?php $new_string = ! empty($translation['new-string']) ? $translation['new-string'] : null ?>
 
     <tr data-locality-entry>
-        <td class="col-xs-5">
+        <td class="col-xs-6">
             <input type="text" name="locality[{{ $loop->index }}][old-string]" class="form-control"
                    value="{{ $old_string }}" data-old-string readonly />
         </td>
 
-        <td class="col-xs-7">
+        <td class="col-xs-6">
             <input type="text" name="locality[{{ $loop->index }}][new-string]" class="form-control"
                    value="{{ $new_string }}" data-new-string required />
         </td>
