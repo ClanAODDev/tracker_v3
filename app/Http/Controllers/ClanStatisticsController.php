@@ -35,6 +35,7 @@ class ClanStatisticsController extends Controller
             $count = $division->census->last()->count;
             $weeklyActive = $division->census->last()->weekly_active_count;
 
+            $division->total = $count;
             $division->popMinusActive = $count - $weeklyActive;
             $division->weeklyActive = $weeklyActive;
         });
