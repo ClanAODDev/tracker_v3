@@ -28,7 +28,7 @@ class ClanStatisticsController extends Controller
         $lastYearCensus = $censusCounts->reverse();
 
         // break down census data by division (latest)
-        $divisionCensuses = Division::with('census')->get();
+        $divisionCensuses = Division::active()->with('census')->get();
 
         // calculate graph area of active vs whole
         $divisionCensuses->each(function ($division) {
