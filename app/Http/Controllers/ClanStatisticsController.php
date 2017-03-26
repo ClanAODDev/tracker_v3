@@ -32,8 +32,8 @@ class ClanStatisticsController extends Controller
 
         // calculate graph area of active vs whole
         $divisionCensuses->each(function ($division) {
-            $count = $division->census->first()->count;
-            $weeklyActive = $division->census->first()->weekly_active_count;
+            $count = $division->census->last()->count;
+            $weeklyActive = $division->census->last()->weekly_active_count;
 
             $division->popMinusActive = $count - $weeklyActive;
             $division->weeklyActive = $weeklyActive;

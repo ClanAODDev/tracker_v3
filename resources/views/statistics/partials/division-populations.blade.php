@@ -24,5 +24,9 @@
         @endforeach
         </tbody>
     </table>
+
+    <div class="panel-footer text-muted">
+        <p>Populations reflect data collected during last census.</p>
+    </div>
 </div>
 
