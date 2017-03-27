@@ -27,6 +27,11 @@
                         <i class="fa fa-sliders fa-lg"></i> <span class="hidden-xs">General</span>
                     </a>
                 </li>
+                <li class="censuses">
+                    <a data-toggle="tab" href="#census">
+                        <i class="fa fa-line-chart fa-lg"></i> <span class="hidden-xs">Census</span>
+                    </a>
+                </li>
                 <li>
                     <a href="#recruiting-settings" data-toggle="tab">
                         <i class="fa fa-user-plus fa-lg"></i> <span class="hidden-xs">Recruiting</span>
@@ -48,6 +53,21 @@
                 <div id="general-settings" class="tab-pane active">
                     <div class="panel-body">
                         @include('division.forms.general-settings')
+                    </div>
+                </div>
+
+                <div id="census" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-body">
+                                @include('division.forms.census')
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel">
+                                @include('division.forms.descriptions.census')
+                            </div>
+                        </div>
                     </div>
                 </div>
 

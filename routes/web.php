@@ -41,6 +41,10 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::patch('{division}', 'DivisionController@update');
     Route::delete('{division}', 'DivisionController@destroy')->name('deleteDivision');
 
+    Route::group(['prefix' => '{division}/census/'], function() {
+       Route::get('', 'CensusController@show')->name('census.show');
+    });
+
     /**
      * platoons
      */

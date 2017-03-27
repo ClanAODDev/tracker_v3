@@ -88,7 +88,9 @@ class DivisionController extends Controller
     {
         $this->authorize('update', $division);
 
-        return view('division.modify', compact('division'));
+        $censuses = collect($division->census)->sortByDesc('created_at');
+
+        return view('division.modify', compact('division', 'censuses'));
     }
 
     /**
