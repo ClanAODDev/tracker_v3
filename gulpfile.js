@@ -25,6 +25,7 @@ elixir(function (mix) {
             'libs/jquery/jquery.flot.spline.js',
             'libs/jquery/jquery.flot.pie.min.js',
             'libs/jquery/jquery.flot.time.min.js',
+            'libs/jquery/jquery.flot.comments.min.js',
 
             'libs/bootstrap/bootstrap.min.js',
             'libs/bootstrap/bootstrap-multiselect.js',

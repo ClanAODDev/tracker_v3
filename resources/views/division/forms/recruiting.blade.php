@@ -31,9 +31,9 @@
                     Rules and Regulations
                 </div>
 
-                <table data-repeater-list="recruiting_threads" class="table">
+                <div data-repeater-list="recruiting_threads">
                     @include('division.partials.recruitingThreads')
-                </table>
+                </div>
 
                 <div class="panel-footer">
                     <button data-repeater-create class="btn btn-default btn-block" type="button">

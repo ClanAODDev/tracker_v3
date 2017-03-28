@@ -33,38 +33,3 @@
         </div>
     </div>
 </div>
-
-{{--
-
-flot stuff
-
-<script>
-    $(document).ready(function () {
-        // Flot charts data and options
-        var data1 = [[0, 16], [1, 24], [2, 11], [3, 7], [4, 10], [5, 15], [6, 24], [7, 30]];
-        var data2 = [[0, 76], [1, 44], [2, 31], [3, 27], [4, 36], [5, 46], [6, 56], [7, 66]];
-
-        var chartUsersOptions = {
-            series: {
-                splines: {
-                    show: true,
-                    tension: 0.4,
-                    lineWidth: 1,
-                    fill: 1
-
-                }
-
-            },
-            grid: {
-                tickColor: "#404652",
-                borderWidth: 1,
-                borderColor: '#404652',
-                color: '#404652'
-            },
-            colors: ["#f7af3e", "#DE9536"]
-        };
-
-        $.plot($("#flot-line-chart"), [data2, data1], chartUsersOptions);
-    });
-</script>
---}}

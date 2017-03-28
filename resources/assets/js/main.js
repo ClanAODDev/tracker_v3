@@ -33,7 +33,13 @@ var Tracker = Tracker || {};
          */
         InitRepeater: function () {
             $(document).ready(function () {
-                $('.repeater').repeater();
+                $('.repeater').repeater({
+                    hide: function (deleteElement) {
+                        if(confirm('Are you sure you want to delete this element?')) {
+                            $(this).fadeOut(deleteElement);
+                        }
+                    },
+                });
             });
         },
         /**

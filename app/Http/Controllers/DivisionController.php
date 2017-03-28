@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Charts;
 use App\Division;
+use App\Repositories\DivisionRepository;
+use Charts;
 use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
-use Illuminate\Support\Facades\Session;
-use App\Repositories\DivisionRepository;
 
 class DivisionController extends Controller
 {
@@ -88,9 +87,31 @@ class DivisionController extends Controller
     {
         $this->authorize('update', $division);
 
-        $censuses = collect($division->census)->sortByDesc('created_at');
+        $censuses = $division->census->sortByDesc('created_at')->take(52);
 
-        return view('division.modify', compact('division', 'censuses'));
+        $populations = $censuses->values()->map(function ($census, $key) {
+            return [$key, $census->count];
+        });
+
+        $weeklyActive = $censuses->values()->map(function ($census, $key) {
+            return [$key, $census->weekly_active_count];
+        });
+
+        $comments = $censuses->values()
+            ->filter(function ($census) use ($censuses) {
+                return ($census->notes);
+            })->map(function ($census, $key) use ($censuses) {
+                return [
+                    'x' => $key,
+                    'y' => max(array_flatten([$censuses->values()->pluck('count')]))+20,
+                    'contents' => $census->notes
+                ];
+            })->values();
+
+        return view('division.modify', compact(
+            'division', 'censuses', 'weeklyActive',
+            'populations', 'comments'
+        ));
     }
 
     /**
@@ -122,9 +143,16 @@ class DivisionController extends Controller
         return view('division.part_time', compact('division', 'partTime'));
     }
 
-    public function rankDemographic(Division $division)
+    public function statistics(Division $division)
     {
-        return $this->division->getRankDemographic($division);
+        $rankDemographic = $this->getRanksChart($division);
+
+        $activity = $this->getActivityChart($division);
+
+        return view(
+            'division.statistics',
+            compact('division', 'rankDemographic', 'activity')
+        );
     }
 
     private function getRanksChart($division)
@@ -138,6 +166,11 @@ class DivisionController extends Controller
             ->responsive(true);
     }
 
+    public function rankDemographic(Division $division)
+    {
+        return $this->division->getRankDemographic($division);
+    }
+
     private function getActivityChart($division)
     {
         $data = $this->division->getDivisionActivity($division);
@@ -147,17 +180,5 @@ class DivisionController extends Controller
             ->values($data['values'])
             ->colors($data['colors'])
             ->responsive(true);
-    }
-
-    public function statistics(Division $division)
-    {
-        $rankDemographic = $this->getRanksChart($division);
-
-        $activity = $this->getActivityChart($division);
-
-        return view(
-            'division.statistics',
-            compact('division', 'rankDemographic', 'activity')
-        );
     }
 }

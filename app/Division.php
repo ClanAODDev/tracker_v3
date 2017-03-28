@@ -52,11 +52,13 @@ class Division extends Model
         'recruiting_threads' => [
             [
                 'thread_name' => 'AOD Code of Conduct',
-                'thread_id' => 3327
+                'thread_id' => 3327,
+                'comments' => 'Lorem ipsum dolor...'
             ],
             [
                 'thread_name' => 'AOD Ranking Structure',
-                'thread_id' => 3326
+                'thread_id' => 3326,
+                'comments' => 'Lorem ipsum dolor...'
             ],
         ],
         'recruiting_tasks' => [

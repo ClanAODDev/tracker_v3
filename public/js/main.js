@@ -36,7 +36,13 @@ var Tracker = Tracker || {};
          */
         InitRepeater: function InitRepeater() {
             $(document).ready(function () {
-                $('.repeater').repeater();
+                $('.repeater').repeater({
+                    hide: function hide(deleteElement) {
+                        if (confirm('Are you sure you want to delete this element?')) {
+                            $(this).fadeOut(deleteElement);
+                        }
+                    }
+                });
             });
         },
         /**

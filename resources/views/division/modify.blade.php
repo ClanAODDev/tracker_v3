@@ -60,11 +60,12 @@
                     <div class="row">
                         <div class="col-md-9">
                             <div class="panel-body">
+                                @include('division.partials.census-graph')
                                 @include('division.forms.census')
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="panel">
+                        <div class="col-md-3 hidden-xs hidden-sm">
+                            <div class="panel" data-spy="affix">
                                 @include('division.forms.descriptions.census')
                             </div>
                         </div>
@@ -78,8 +79,8 @@
                                 @include('division.forms.recruiting')
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="panel">
+                        <div class="col-md-3 hidden-xs hidden-sm">
+                            <div class="panel" data-spy="affix">
                                 @include('division.forms.descriptions.recruiting')
                             </div>
                         </div>
@@ -93,8 +94,8 @@
                                 @include('division.forms.locality')
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="panel">
+                        <div class="col-md-3 hidden-xs hidden-sm">
+                            <div class="panel" data-spy="affix">
                                 @include('division.forms.descriptions.locality')
                             </div>
                         </div>
@@ -108,8 +109,8 @@
                                 @include('division.forms.slack')
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="panel">
+                        <div class="col-md-3 hidden-xs hidden-sm">
+                            <div class="panel" data-spy="affix">
                                 @include('division.forms.descriptions.slack')
                             </div>
                         </div>
