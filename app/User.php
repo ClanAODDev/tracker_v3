@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Mail\RoleAssigned;
 use App\Settings\UserSettings;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -90,9 +91,11 @@ class User extends Authenticatable
 
     public function assignRole($role)
     {
-        return $this->role()->associate(
+        $this->role()->associate(
             Role::whereName($role)->firstOrFail()
-        );
+        )->save();
+
+        Mail::to($this)->send(new RoleAssigned($role));
     }
 
     /**
