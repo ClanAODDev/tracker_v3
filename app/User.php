@@ -4,6 +4,7 @@ namespace App;
 
 use App\Mail\RoleAssigned;
 use App\Settings\UserSettings;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
