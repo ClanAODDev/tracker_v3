@@ -9,19 +9,15 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePlatoonForm extends FormRequest
 {
+
     /**
      * Determine if the user is authorized to make this request.
      *
-     * @param Platoon $platoon
-     * @param Division $division
      * @return bool
-
      */
-    public function authorize(Platoon $platoon)
+    public function authorize()
     {
-        return $this->user()->can('update', [$platoon]);
-
-        $this->platoon = $platoon;
+        return $this->user()->can('update', [$this->platoon]);
     }
 
     /**

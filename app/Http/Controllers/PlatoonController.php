@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Http\Requests\CreatePlatoonForm;
+use App\Http\Requests\DeletePlatoonForm;
 use App\Http\Requests\UpdatePlatoonForm;
 use App\Member;
 use App\Platoon;
@@ -57,10 +58,7 @@ class PlatoonController extends Controller
         Toastr::success(
             "{$division->locality('platoon')} has been created!",
             "Success",
-            [
-                'positionClass' => 'toast-top-right',
-                'progressBar' => true
-            ]
+            ['positionClass' => 'toast-top-right', 'progressBar' => true]
         );
 
         return redirect()->route('division', $division->abbreviation);
@@ -111,6 +109,7 @@ class PlatoonController extends Controller
     private function activityGraphData(Platoon $platoon)
     {
         $data = $this->platoon->getPlatoonActivity($platoon);
+
         return $data;
     }
 
@@ -193,42 +192,9 @@ class PlatoonController extends Controller
      * @param $platoon
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Division $division, Platoon $platoon)
+    public function destroy(DeletePlatoonForm $form, Division $division, Platoon $platoon)
     {
-        $this->authorize('delete', $platoon);
-
-        if ($platoon->leader) {
-            // dissociate leader from platoon
-            $platoon->leader()->dissociate()->save();
-        }
-
-        if ($platoon->squads()) {
-            $platoon->squads->each(function ($squad) use ($platoon) {
-
-                // remove members from squads inside platoon
-                // remove squad leader
-                $squad->members->each(function ($member) use ($squad) {
-                    $member->squad()->dissociate()->save();
-                    $squad->leader()->dissociate()->save();
-                    $member->assignPosition('member');
-                });
-
-                // dissociate squad from platoon
-                $squad->platoon()->dissociate();
-
-                $squad->delete();
-            });
-        }
-
-        if ($platoon->members()) {
-
-            // dissociate members from platoon
-            $platoon->members->each(function ($member) use ($platoon) {
-                $member->platoon()->dissociate()->save();
-            });
-        }
-
-        $platoon->delete();
+        $form->persist();
 
         Toastr::success(
             ucwords($platoon->name) . " has been deleted!",

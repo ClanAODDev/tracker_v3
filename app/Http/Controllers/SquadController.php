@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Toastr;
 use App\Squad;
 use App\Member;
 use App\Platoon;
 use App\Division;
-use Illuminate\Http\Request;
+
 use App\Http\Requests\CreateSquadForm;
+use App\Http\Requests\DeleteSquadForm;
 use App\Http\Requests\UpdateSquadForm;
 
 class SquadController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -61,6 +62,12 @@ class SquadController extends Controller
         }
 
         $form->persist();
+
+        Toastr::success(
+            ucwords($division->locality('squad')) . " has been created!",
+            "Success",
+            ['positionClass' => 'toast-top-right', 'progressBar' => true]
+        );
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
@@ -114,8 +121,12 @@ class SquadController extends Controller
      * @param Platoon $platoon
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon)
-    {
+    public function update(
+        UpdateSquadForm $form,
+        Division $division,
+        Platoon $platoon,
+        Squad $squad
+    ) {
         if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
@@ -124,22 +135,37 @@ class SquadController extends Controller
 
         $form->persist();
 
+        Toastr::success(
+            ucwords($squad->name) . " has been updated!",
+            "Success",
+            ['positionClass' => 'toast-top-right', 'progressBar' => true]
+        );
+
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param DeleteSquadForm $form
+     * @param Division $division
+     * @param Platoon $platoon
      * @param Squad $squad
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Division $division, Platoon $platoon, Squad $squad)
-    {
-        $this->authorize('delete', $squad);
+    public function destroy(
+        DeleteSquadForm $form,
+        Division $division,
+        Platoon $platoon,
+        Squad $squad
+    ) {
+        $form->persist();
 
-        if ($squad->members)
-
-        $squad->delete();
+        Toastr::success(
+            ucwords($squad->name) . " has been deleted!",
+            "Success",
+            ['positionClass' => 'toast-top-right', 'progressBar' => true]
+        );
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
