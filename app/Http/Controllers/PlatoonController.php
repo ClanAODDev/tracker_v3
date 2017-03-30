@@ -174,6 +174,15 @@ class PlatoonController extends Controller
 
         $form->persist($platoon);
 
+        Toastr::success(
+            "{$platoon->name} has been updated!",
+            "Success",
+            [
+                'positionClass' => 'toast-top-right',
+                'progressBar' => true
+            ]
+        );
+
         return redirect()->route('division', $division->abbreviation);
     }
 
@@ -213,12 +222,20 @@ class PlatoonController extends Controller
 
             // dissociate members from platoon
             $platoon->members->each(function ($member) use ($platoon) {
-                $member->platoon()->dissociate($platoon)->save();
+                $member->platoon()->dissociate()->save();
             });
         }
 
-
         $platoon->delete();
+
+        Toastr::success(
+            ucwords($platoon->name) . " has been deleted!",
+            "Success",
+            [
+                'positionClass' => 'toast-top-right',
+                'progressBar' => true
+            ]
+        );
 
         return redirect()->route('division', $division->abbreviation);
     }
