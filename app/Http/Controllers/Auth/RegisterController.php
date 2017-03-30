@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Mail\WelcomeEmail;
 use App\User;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\Member;
 use App\Http\Controllers\Controller;
@@ -81,6 +83,8 @@ class RegisterController extends Controller
          * All users must have a corresponding member entry
          */
         $member = Member::where('name', $data['name'])->first();
+
+        Mail::to($this)->send(new WelcomeEmail());
 
         return User::create([
             'name' => $data['name'],

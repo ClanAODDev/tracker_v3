@@ -60,7 +60,8 @@ class PlatoonController extends Controller
             [
                 'positionClass' => 'toast-top-right',
                 'progressBar' => true
-            ]);
+            ]
+        );
 
         return redirect()->route('division', $division->abbreviation);
     }
