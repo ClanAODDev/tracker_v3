@@ -1,8 +1,6 @@
 @extends('application.base')
 @section('content')
 
-    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
-
     <h2>
         <a href="{{ route('member', $member->clan_id) }}"
            class="btn btn-default" title="Return to member profile">
@@ -12,6 +10,8 @@
         <small>Edit Profile</small>
     </h2>
     <hr />
+
+    {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
 
     {{-- Edit profile nav --}}
     <ul class="nav nav-tabs margin-top-20">
@@ -41,8 +41,8 @@
 
     {{-- division info --}}
     <div id="myTabContent" class="tab-content">
-        <div class="tab-pane fade active in" id="division-info">
-            <div class="margin-top-20">
+        <div class="tab-pane active" id="division-info">
+            <div class="panel panel-filled">
                 @include('member.forms.editProfileForm')
             </div>
         </div>

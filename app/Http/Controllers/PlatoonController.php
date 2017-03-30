@@ -203,16 +203,18 @@ class PlatoonController extends Controller
         }
 
         if ($platoon->squads()) {
-            $platoon->squads->each(function ($squad) use($platoon) {
+            $platoon->squads->each(function ($squad) use ($platoon) {
 
                 // remove members from squads inside platoon
+                // remove squad leader
                 $squad->members->each(function ($member) use ($squad) {
-                    $member->squad()->dissociate($squad)->save();
+                    $member->squad()->dissociate()->save();
+                    $squad->leader()->dissociate()->save();
                     $member->assignPosition('member');
                 });
 
                 // dissociate squad from platoon
-                $squad->platoon()->dissociate($platoon);
+                $squad->platoon()->dissociate();
 
                 $squad->delete();
             });

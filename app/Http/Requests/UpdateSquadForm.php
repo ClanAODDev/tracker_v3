@@ -11,9 +11,6 @@ class UpdateSquadForm extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @param Squad $squad
-     * @param Division $division
      * @return bool
      */
     public function authorize()

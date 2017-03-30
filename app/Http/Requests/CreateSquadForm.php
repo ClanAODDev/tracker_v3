@@ -62,7 +62,7 @@ class CreateSquadForm extends FormRequest
         if ($this->leader_id) {
             $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
-            $squad->leader()->associate($leader);
+            $squad->leader()->associate($leader)->save();
 
             $leader->squad()->associate($squad)
                 ->platoon()->associate($this->route('platoon'))
