@@ -35,15 +35,13 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}', 'DivisionController@show')->name('division');
     Route::get('{division}/edit', 'DivisionController@edit')->name('editDivision');
     Route::get('{division}/create', 'DivisionController@create')->name('createDivision');
+    Route::get('{division}/census', 'DivisionController@census')->name('division.census');
 
     Route::post('', 'DivisionController@store')->name('storeDivision');
     Route::put('{division}', 'DivisionController@update')->name('updateDivision');
     Route::patch('{division}', 'DivisionController@update');
     Route::delete('{division}', 'DivisionController@destroy')->name('deleteDivision');
 
-    Route::group(['prefix' => '{division}/census/'], function() {
-       Route::get('', 'CensusController@show')->name('census.show');
-    });
 
     /**
      * platoons

@@ -103,7 +103,7 @@ class DivisionController extends Controller
             })->map(function ($census, $key) use ($censuses) {
                 return [
                     'x' => $key,
-                    'y' => max(array_flatten([$censuses->values()->pluck('count')]))+20,
+                    'y' => max(array_flatten([$censuses->values()->pluck('count')])) + 20,
                     'contents' => $census->notes
                 ];
             })->values();
@@ -141,6 +141,35 @@ class DivisionController extends Controller
         $partTime = $division->partTimeMembers;
 
         return view('division.part_time', compact('division', 'partTime'));
+    }
+
+    public function census(Division $division)
+    {
+        $censuses = $division->census->sortByDesc('created_at')->take(52);
+
+        $populations = $censuses->values()->map(function ($census, $key) {
+            return [$key, $census->count];
+        });
+
+        $weeklyActive = $censuses->values()->map(function ($census, $key) {
+            return [$key, $census->weekly_active_count];
+        });
+
+        $comments = $censuses->values()
+            ->filter(function ($census) use ($censuses) {
+                return ($census->notes);
+            })->map(function ($census, $key) use ($censuses) {
+                return [
+                    'x' => $key,
+                    'y' => max(array_flatten([$censuses->values()->pluck('count')])) + 20,
+                    'contents' => $census->notes
+                ];
+            })->values();
+
+        return view('division.census', compact(
+            'division', 'populations', 'weeklyActive',
+            'comments', 'censuses'
+        ));
     }
 
     public function statistics(Division $division)

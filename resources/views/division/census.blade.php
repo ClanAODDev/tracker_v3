@@ -8,11 +8,15 @@
         @endslot
         @slot ('heading')
             {{ $division->name }} Division
-            @include('application.partials.editDivision', ['division' => $division])
+            @include('division.partials.edit-division-button', ['division' => $division])
         @endslot
         @slot ('subheading')
             Census data and statistics
         @endslot
     @endcomponent
+
+    @include('division.partials.census-graph')
+
+    @include('division.forms.census')
 
 @stop
