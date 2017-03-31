@@ -42,6 +42,7 @@ elixir(function (mix) {
 
     mix.browserify('main.js');
     mix.browserify('platoon.js');
+    mix.browserify('census-graph.js');
 
     mix.webpack('app.js');
 });

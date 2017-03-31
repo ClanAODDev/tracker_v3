@@ -33,12 +33,13 @@ Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
  */
 function registerDivisionSubPages()
 {
-
     $divisionStaticSubPages = [
         'squads',
         'part-timers',
         'statistics',
-        'create-platoon'
+        'create-platoon',
+        'division-census',
+        'manage-division'
     ];
 
     foreach ($divisionStaticSubPages as $page) {

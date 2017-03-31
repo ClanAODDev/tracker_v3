@@ -15,6 +15,8 @@
         @endslot
     @endcomponent
 
+    {!! Breadcrumbs::render('division-census', $division) !!}
+
     @include('division.partials.census-graph')
 
     @include('division.forms.census')
