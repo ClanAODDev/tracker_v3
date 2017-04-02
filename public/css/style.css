@@ -2735,3 +2735,9 @@ img.division-icon-medium {
 img.division-icon-small {
     width: 16px;
 }
+
+.division-header {
+    -webkit-background-size: cover;
+    background-size: cover;
+}
+

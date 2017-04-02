@@ -34,6 +34,7 @@ var chartUsersOptions = {
 
     comment: {
         show: true,
+
         hoverable: false
     },
 

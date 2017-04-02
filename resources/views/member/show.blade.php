@@ -12,6 +12,7 @@
         @endslot
         @slot ('heading')
             {!! $member->present()->rankName !!}
+            @include('member.partials.edit-member-button', ['member' => $member])
         @endslot
         @slot ('subheading')
             {{ $member->position->name  }}

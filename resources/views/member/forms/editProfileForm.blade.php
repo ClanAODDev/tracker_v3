@@ -1,40 +1,28 @@
-<?php
-
-use App\Platoon;use App\Position;use App\Squad;
-
-$division = $member->primaryDivision
-
-?>
-
 <div class="row">
     <div class="col-md-8">
 
         {{-- Position --}}
-        <?php $selectedPosition = ($member->position instanceof Position) ? $member->position->id : null; ?>
-
         <div class="form-group">
             <label for="position" class="control-label">Position</label>
             <select class="form-control" id="position">
                 <option value="">None</option>
-                @foreach($positions as $position)
-                    <option value="{{ $position->id }}"
-                            {{ selected($selectedPosition, $position->id) }}
-                    >{{ ucwords($position->name) }}</option>
+                @foreach($positions as $positionId => $positionName)
+                    <option value="{{ $positionId }}"
+                            {{ selected($member->position->id, $positionId) }}
+                    >{{ ucwords($positionName) }}</option>
                 @endforeach
             </select>
         </div>
         {{-- end position --}}
 
         {{-- Platoon --}}
-        <?php $selectedPlatoon = ($member->platoon instanceof Platoon) ? $member->platoon->id : null; ?>
-
         <div class="form-group">
             <label for="platoon" class="control-label">{{ ucwords($division->locality('platoon')) }}</label>
             <select class="form-control" id="select">
                 <option value="">None</option>
-                @foreach($platoons as $platoon)
+                @foreach($division->platoons as $platoon)
                     <option value="{{ $platoon->id }}"
-                            {{ selected($selectedPlatoon, $platoon->id) }}
+                            {{ selected(($member->platoon) ? $member->platoon->id : null, $platoon->id) }}
                     >{{ $platoon->name }}</option>
                 @endforeach
             </select>
@@ -42,17 +30,14 @@ $division = $member->primaryDivision
         {{-- end platoon --}}
 
         {{-- Squad --}}
-        <?php $selectedSquad = ($member->squad instanceof Squad) ? $member->squad->id : null; ?>
-
         <div class="form-group">
             <label for="squad" class="control-label">{{ ucwords($division->locality('squad')) }}</label>
             <select class="form-control" id="select">
                 <option value="">None</option>
-                @foreach($squads as $squad)
-                    {{ $squadLeader = ( ! empty($squad->leader)) ? $squad->leader->name : "TBA" }}
+                @foreach($division->squads as $squad)
                     <option value="{{ $squad->id }}"
-                            {{ selected($selectedSquad, $squad->id) }}
-                    >{{ $squadLeader }} - {{  $platoon->name }}</option>
+                            {{ selected(($member->squad) ? $member->squad->id : null, $squad->id) }}
+                    >{{ $squad->name }} - {{ $squad->platoon->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -60,7 +45,7 @@ $division = $member->primaryDivision
 
     </div>
 
-    <div class="col-md-4 pull-right">
+    <div class="col-md-12">
         @include('member.forms.removalForm')
     </div>
 

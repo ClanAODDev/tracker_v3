@@ -1,15 +1,22 @@
 @extends('application.base')
 @section('content')
 
-    <h2>
-        <a href="{{ route('member', $member->clan_id) }}"
-           class="btn btn-default" title="Return to member profile">
-            <i class="fa fa-angle-left fa-2x"></i>
-        </a>
-        <strong>{!! $member->present()->rankName !!}</strong>
-        <small>Edit Profile</small>
-    </h2>
-    <hr />
+    @component ('application.components.division-heading')
+        @slot ('icon')
+            @if ($member->primaryDivision)
+                <img src="{{ getDivisionIconPath($member->primaryDivision->abbreviation) }}" />
+            @else
+                <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;" />
+            @endif
+        @endslot
+        @slot ('heading')
+            {!! $member->present()->rankName !!}
+            @include('member.partials.edit-member-button', ['member' => $member])
+        @endslot
+        @slot ('subheading')
+            {{ $member->position->name  }}
+        @endslot
+    @endcomponent
 
     {!! Breadcrumbs::render('member', $member->primaryDivision, $member->platoon, $member) !!}
 

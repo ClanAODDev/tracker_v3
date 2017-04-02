@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Squad;
+use Toastr;
 use App\Member;
-use App\Platoon;
 use App\Position;
-use App\Http\Requests;
+use App\Repositories\MemberRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Repositories\MemberRepository;
 
 class MemberController extends Controller
 {
@@ -98,15 +96,17 @@ class MemberController extends Controller
     {
         $this->authorize('update', $member);
 
-        $positions = Position::all();
-        $platoons = $member->primaryDivision->platoons()->with('leader', 'leader.rank')->get();
-        $squads = $member->primaryDivision->squads()->with('leader', 'leader.rank')->get();
+        $division = $member->primaryDivision;
+
+        $platoons = $division->platoons;
+
+        $squads = $division->squads()->with('platoon')->get();
+
+        $positions = Position::all()->pluck('name', 'id');
 
         return view('member.modify', compact(
-            'member',
-            'positions',
-            'platoons',
-            'squads'
+            'member', 'division', 'platoons',
+            'positions', 'squads'
         ));
     }
 
@@ -133,12 +133,23 @@ class MemberController extends Controller
     {
         $this->authorize('delete', $member);
 
-        $member->recordActivity('removed');
+        $division = $member->primaryDivision;
 
         $member->resetPositionsAndAssignments();
 
-        return redirect()->action('MemberController@show', [
-            'clan_id' => $member->clan_id
+        $member->delete();
+
+        Toastr::success(
+            ucwords($member->name) . " has been removed from the {$division->name} Division!",
+            "Success",
+            [
+                'positionClass' => 'toast-top-right',
+                'progressBar' => true
+            ]
+        );
+
+        return redirect()->route('division', [
+            $division->abbreviation
         ]);
     }
 }

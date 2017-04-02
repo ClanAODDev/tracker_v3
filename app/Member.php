@@ -93,7 +93,6 @@ class Member extends Model
     public function resetPositionsAndAssignments()
     {
         $this->divisions()->detach();
-
         $this->position()->dissociate();
         $this->platoon()->dissociate();
         $this->squad()->dissociate();

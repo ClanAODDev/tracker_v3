@@ -1,8 +1,6 @@
-<div class="panel panel-c-accent panel-filled">
+<div class="panel panel-c-accent panel-filled division-header animated bounceInDown"
+     style="background-image: url({{ asset('images/headers/' . $myDivision->abbreviation . ".png") }})">
     <div class="panel-heading">
-
-        <img src="{{ getDivisionIconPath($myDivision->abbreviation) }}"
-             class="pull-right" />
 
         <h2 class="m-b-none text-uppercase">
             {{ $myDivision->name }}

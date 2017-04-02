@@ -97,17 +97,6 @@ class DivisionController extends Controller
             return [$key, $census->weekly_active_count];
         });
 
-        $comments = $censuses->values()
-            ->filter(function ($census) use ($censuses) {
-                return ($census->notes);
-            })->map(function ($census, $key) use ($censuses) {
-                return [
-                    'x' => $key,
-                    'y' => max(array_flatten([$censuses->values()->pluck('count')])) + 20,
-                    'contents' => $census->notes
-                ];
-            })->values();
-
         return view('division.modify', compact(
             'division', 'censuses', 'weeklyActive',
             'populations', 'comments'
@@ -161,7 +150,8 @@ class DivisionController extends Controller
             })->map(function ($census, $key) use ($censuses) {
                 return [
                     'x' => $key,
-                    'y' => max(array_flatten([$censuses->values()->pluck('count')])) + 20,
+//                    'y' => max(array_flatten([$censuses->values()->pluck('count')])) + 20,
+                    'y' => $censuses->values()->pluck('count'),
                     'contents' => $census->notes
                 ];
             })->values();
