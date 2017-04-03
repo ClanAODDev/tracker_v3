@@ -22,7 +22,7 @@
                 <option value="">None</option>
                 @foreach($division->platoons as $platoon)
                     <option value="{{ $platoon->id }}"
-                            {{ selected(($member->platoon) ? $member->platoon->id : null, $platoon->id) }}
+                            {{ selected($member->platoon or null, $platoon->id) }}
                     >{{ $platoon->name }}</option>
                 @endforeach
             </select>
@@ -36,7 +36,7 @@
                 <option value="">None</option>
                 @foreach($division->squads as $squad)
                     <option value="{{ $squad->id }}"
-                            {{ selected(($member->squad) ? $member->squad->id : null, $squad->id) }}
+                            {{ selected($member->squad or null, $squad->id) }}
                     >{{ $squad->name }} - {{ $squad->platoon->name }}</option>
                 @endforeach
             </select>

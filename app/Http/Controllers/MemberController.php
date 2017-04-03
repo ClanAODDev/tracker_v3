@@ -104,7 +104,7 @@ class MemberController extends Controller
 
         $positions = Position::all()->pluck('name', 'id');
 
-        return view('member.modify', compact(
+        return view('member.edit', compact(
             'member', 'division', 'platoons',
             'positions', 'squads'
         ));
