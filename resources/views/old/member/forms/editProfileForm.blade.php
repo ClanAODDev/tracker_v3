@@ -63,7 +63,7 @@ $division = $member->primaryDivision
     </div>
 
     <div class="col-md-4 pull-right">
-        @include('member.forms.removalForm')
+        @include('member.forms.remove-member-form')
     </div>
 
 </div>

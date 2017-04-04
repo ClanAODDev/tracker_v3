@@ -86,19 +86,6 @@ class SquadController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Division $division
-     * @param Squad $squad
-     * @return \Illuminate\Http\Response
-     * @internal param int $id
-     */
-    public function show(Division $division, Squad $squad)
-    {
-        return view('squad.show', compact('squad'));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param Division $division

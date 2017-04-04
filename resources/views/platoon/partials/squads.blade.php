@@ -14,7 +14,7 @@
                     </span>
 
                     <strong>
-                        {{ ($squad->name) ?: $division->locality('squad') . " " . $loop->index }}
+                        {{ $squad->name or $division->locality('squad') . " " . $loop->iteration }}
                     </strong>
 
                     <span class="pull-right">

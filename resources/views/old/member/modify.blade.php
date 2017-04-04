@@ -43,7 +43,7 @@
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade active in" id="division-info">
             <div class="margin-top-20">
-                @include('member.forms.editProfileForm')
+                @include('edit-member-form.blade.php')
             </div>
         </div>
         <div class="tab-pane fade in" id="handles"></div>

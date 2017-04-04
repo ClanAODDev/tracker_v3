@@ -30,6 +30,11 @@ trait HasCustomAttributes
         return $this->divisions()->wherePivot('primary', true)->first();
     }
 
+    public function getPartTimeDivisionsAttribute()
+    {
+        return $this->divisions()->wherePivot('primary', false)->get();
+    }
+
     /**
      * @param $value
      * @return string

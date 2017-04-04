@@ -124,9 +124,14 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    public function recruiter()
+    {
+        return $this->hasOne(Member::class);
+    }
+
     public function handles()
     {
-        return $this->belongsToMany(Handle::class);
+        return $this->belongsToMany(Handle::class)->withPivot('value');
     }
 
     /**

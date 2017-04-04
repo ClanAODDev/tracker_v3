@@ -1,18 +1,23 @@
 <?php
 
-use App\Division;
-use App\Platoon;
+use App\Member;
 
-Breadcrumbs::register('member', function ($breadcrumbs, $division, $platoon, $member) {
+Breadcrumbs::register('member', function ($breadcrumbs, Member $member) {
     $breadcrumbs->parent('home');
 
-    if ($division instanceof Division) {
-        $breadcrumbs->push($division->name, route('division', $division->abbreviation));
+    if ($member->primaryDivision) {
+        $breadcrumbs->push($member->primaryDivision->name, route('division', $member->primaryDivision->abbreviation));
     }
 
-    if ($platoon instanceof Platoon) {
-        $breadcrumbs->push($platoon->name, route('platoon', [$division->abbreviation, $platoon->id]));
+    if ($member->platoon) {
+        $breadcrumbs->push(
+            ucwords($member->platoon->name),
+            route('platoon', [$member->primaryDivision->abbreviation, $member->platoon->id])
+        );
     }
 
-    $breadcrumbs->push($member->name);
+    if ($member->squad) {
+        $breadcrumbs->push(ucwords($member->squad->name));
+    }
+
 });

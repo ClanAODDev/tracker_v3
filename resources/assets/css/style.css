@@ -1086,6 +1086,15 @@ a:focus {
     outline: none;
 }
 
+a > img {
+    opacity: .7;
+}
+
+a > img:hover {
+    opacity: 1;
+    text-decoration: none;
+}
+
 hr {
     margin-top: 20px;
     margin-bottom: 20px;

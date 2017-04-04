@@ -6,7 +6,7 @@
         <i class="fa fa-trash text-danger"></i> Delete {{ $division->locality('platoon') }}
     </div>
     <div class="panel-body">
-        <p>Deleting this {{ $division->locality('platoon') }} will permanently remove it from your division. Any assigned members will be automatically unassigned, and will need to be reassigned to a new platoon.</p>
+        <p><span class="text-warning">WARNING:</span> Deleting this {{ $division->locality('platoon') }} will permanently remove it from your division. Any assigned members will be automatically unassigned, and will need to be reassigned to a new platoon.</p>
 
         <p>Deleting this {{ $division->locality('platoon') }} will:</p>
 
