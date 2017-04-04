@@ -84,7 +84,7 @@ class RegisterController extends Controller
          */
         $member = Member::where('name', $data['name'])->first();
 
-        Mail::to($data['email'])->send(new WelcomeEmail());
+        Mail::to($data['email'])->send(new WelcomeEmail($data));
 
         return User::create([
             'name' => $data['name'],
