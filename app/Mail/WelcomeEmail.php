@@ -13,9 +13,9 @@ class WelcomeEmail extends Mailable
 
     public $user;
 
-    public function __construct()
+    public function __construct($user)
     {
-        $this->user = auth()->user();
+        $this->user = $user;
     }
 
     /**
