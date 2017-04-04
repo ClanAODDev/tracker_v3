@@ -15,10 +15,14 @@
         @endslot
     @endcomponent
 
-    {!! Breadcrumbs::render('division-census', $division) !!}
+    <div class="container-fluid">
 
-    @include('division.partials.census-graph')
+        {!! Breadcrumbs::render('division-census', $division) !!}
 
-    @include('division.forms.census')
+        @include('division.partials.census-graph')
+
+        @include('division.forms.census')
+
+    </div>
 
 @stop
