@@ -20,4 +20,6 @@ Breadcrumbs::register('member', function ($breadcrumbs, Member $member) {
         $breadcrumbs->push(ucwords($member->squad->name));
     }
 
+    $breadcrumbs->push('View profile');
+
 });
