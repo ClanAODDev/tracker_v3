@@ -112,7 +112,7 @@ class SyncMemberData
         ]);
 
         if ($assignments->count()) {
-            $assignments->each(function ($model) {
+            $assignments->each(function ($model) use ($member) {
                 if ($model) {
                     $model->leader()->dissociate($member->leader_id)->save();
                 }

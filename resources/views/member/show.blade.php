@@ -69,13 +69,6 @@
 
                         <tr>
                             <td>
-                                <span class="c-white">Last active</span> <span
-                                        class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
                                 <span class="c-white">In Teamspeak</span> <span
                                         class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
                             </td>
