@@ -43,6 +43,10 @@ class User extends Authenticatable
         'settings' => 'json',
     ];
 
+    protected $dates = [
+        'last_login_at'
+    ];
+
     /**
      * relationship - user belongs to a member
      */

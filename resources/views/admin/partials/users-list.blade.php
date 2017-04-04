@@ -10,6 +10,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Dev</th>
+                <th>Last Logged In</th>
             </tr>
             </thead>
 
@@ -22,14 +23,21 @@
                                     class="fa fa-user"></i>
                         </a>
                     </td>
-                    <td>{{ $user->member->present()->rankName }}</td>
+                    <td>
+                        {{ $user->member->name }}
+                        <small class="slight text-muted">{{ $user->member->rank->abbreviation }}</small>
+                    </td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->role->label }}</td>
+                    <td>
+                        {{ $user->role->id }}
+                        <small class="slight text-muted">{{ $user->role->label }}</small>
+                    </td>
                     <td class="text-uppercase">
                         <small class="slight text-{{ ($user->isDeveloper()) ? 'success' : 'muted' }}">
                             {{ var_export($user->isDeveloper()) }}
                         </small>
                     </td>
+                    <td>{{ null !== $user->last_login_at ? $user->last_login_at->diffForHumans() : "Never" }}</td>
                 </tr>
             @endforeach
             </tbody>
