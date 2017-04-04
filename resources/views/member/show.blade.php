@@ -62,29 +62,36 @@
                         <tbody>
                         <tr>
                             <td>
-                                <span class="c-white">Last active</span>
-                                <span class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
+                                <span class="c-white">Last active</span> <span
+                                        class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <span class="c-white">In Teamspeak</span>
-                                <span class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
+                                <span class="c-white">Last active</span> <span
+                                        class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <span class="c-white">Joined</span>
-                                <span class="pull-right">{{ $member->join_date }}</span>
+                                <span class="c-white">In Teamspeak</span> <span
+                                        class="pull-right">{{ $member->last_activity->diffForHumans() }}</span>
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <span class="c-white">Last promoted</span>
-                                <span class="pull-right">{{ $member->last_promoted }}</span>
+                                <span class="c-white">Joined</span> <span
+                                        class="pull-right">{{ $member->join_date }}</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <span class="c-white">Last promoted</span> <span
+                                        class="pull-right">{{ $member->last_promoted }}</span>
                             </td>
                         </tr>
                         </tbody>
