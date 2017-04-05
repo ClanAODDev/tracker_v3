@@ -37,7 +37,7 @@
 
                     <div class="col-xs-8">
                         {!! Form::label('leader', 'Search') !!}
-                        <input type="text" class="form-control" name="leader" id="leader" />
+                        <input type="text" class="form-control" name="leader" id="leader" autocomplete="off" />
                         <i class="fa fa-search pull-right" style="position: absolute; right: 20px; top: 35px;"></i>
                         <div class="form-group m-t-md">
                             {!! Form::label('is_tba', 'Leader TBA') !!}
