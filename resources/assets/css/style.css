@@ -2001,7 +2001,8 @@ a.list-group-item {
 }
 
 a.list-group-item:hover {
-    background-color: rgba(68, 70, 79, .9);
+    color: #777;
+    background-color: #3d404c;
 }
 
 /* Nestable list */

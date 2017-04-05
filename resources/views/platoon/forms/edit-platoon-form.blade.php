@@ -67,25 +67,6 @@
 
 {{ csrf_field() }}
 
-<script>
-    // omit leader field if using TBA
-    $("#is_tba").click(function () {
-        toggleTBA();
-    });
-
-    toggleTBA();
-
-    function toggleTBA() {
-        if ($('#is_tba').is(':checked')) {
-            $("#leader_id, #leader").prop("disabled", true).val('');
-        } else {
-            $("#leader_id, #leader").prop("disabled", false)
-        }
-    }
-
-    $('#leader').bootcomplete({
-        url: '/search-leader/',
-        minLength: 3,
-        idField: true
-    });
-</script>
+@section('footer_scripts')
+    <script src="{!! asset('/js/platoon.js') !!}"></script>
+@stop

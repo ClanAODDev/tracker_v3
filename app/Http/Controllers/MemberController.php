@@ -49,9 +49,9 @@ class MemberController extends Controller
         return view('member.search', compact('members', 'request'));
     }
 
-    public function searchAutoComplete()
+    public function searchAutoComplete(Request $request)
     {
-        $query = request()->input('query');
+        $query = $request->input('query');
 
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 

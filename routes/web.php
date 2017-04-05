@@ -6,7 +6,7 @@ Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
-Route::get('search-leader/', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
+Route::post('search-leader/', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 
 
 // Members endpoints

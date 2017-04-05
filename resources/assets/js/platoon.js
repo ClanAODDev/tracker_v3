@@ -48,6 +48,31 @@ var Platoon = Platoon || {};
 
             $(".no-sort").removeClass("sorting");
 
+            // omit leader field if using TBA
+            $("#is_tba").click(function () {
+                toggleTBA();
+            });
+
+            toggleTBA();
+
+            function toggleTBA() {
+                if ($('#is_tba').is(':checked')) {
+                    $("#leader_id, #leader").prop("disabled", true).val('');
+                } else {
+                    $("#leader_id, #leader").prop("disabled", false)
+                }
+            }
+
+            // handle leader assignment completion for
+            // platoons and squads
+            $('#leader').bootcomplete({
+                url: window.Laravel.appPath + '/search-leader/',
+                minLength: 3,
+                idField: true,
+                method: 'POST',
+                dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
+            });
+
         },
     }
 })(jQuery);
