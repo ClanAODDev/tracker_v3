@@ -11,6 +11,7 @@ Route::group(
         ]
 
     ],
+
     function () {
         // Basic information on divisions
         Route::get('divisions', 'API\v1\DivisionController@index');

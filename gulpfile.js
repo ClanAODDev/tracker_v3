@@ -19,6 +19,7 @@ elixir(function (mix) {
             'libs/jquery/jquery.powertip.min.js',
             'libs/jquery/jquery.repeater.min.js',
             'libs/jquery/jquery.stickytabs.js',
+            'libs/jquery/jquery.bootcomplete.min.js',
 
             'libs/jquery/jquery.flot.min.js',
             'libs/jquery/jquery.flot.resize.min.js',

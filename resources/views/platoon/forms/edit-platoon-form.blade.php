@@ -35,19 +35,22 @@
 
                 <div class="row">
 
-                    <div class="col-xs-6">
-                        <div class="form-group {{ $errors->has('leader_id') ? ' has-error' : null }}">
-                            {!! Form::label('leader_id', $division->locality('platoon leader') . ':') !!}
-                            {!! Form::number('leader_id', null, ['class' => 'form-control'] ) !!}
+                    <div class="col-xs-8">
+                        {!! Form::label('leader', 'Search') !!}
+                        <input type="text" class="form-control" name="leader" id="leader" />
+                        <i class="fa fa-search pull-right" style="position: absolute; right: 20px; top: 35px;"></i>
+                        <div class="form-group m-t-md">
+                            {!! Form::label('is_tba', 'Leader TBA') !!}
+                            <div style="margin-right:5px;float: left;">
+                                <input id="is_tba" type="checkbox" {{ (empty($squad->leader_id)) ? "checked" : null }} />
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-xs-6">
-                        <div class="form-group m-t-lg">
-                            {!! Form::label('is_tba', 'Leader TBA') !!}
-                            <div style="margin-right:5px;float: left;">
-                                <input id="is_tba" type="checkbox" {{ (empty($platoon->leader)) ? "checked" : null }} />
-                            </div>
+                    <div class="col-xs-4">
+                        <div class="form-group {{ $errors->has('leader_id') ? ' has-error' : null }}">
+                            {!! Form::label('leader_id', $division->locality('platoon leader') . ':') !!}
+                            {!! Form::number('leader_id', null, ['class' => 'form-control'] ) !!}
                         </div>
                     </div>
                 </div>
@@ -74,9 +77,15 @@
 
     function toggleTBA() {
         if ($('#is_tba').is(':checked')) {
-            $("#leader_id").prop("disabled", true).val('');
+            $("#leader_id, #leader").prop("disabled", true).val('');
         } else {
-            $("#leader_id").prop("disabled", false)
+            $("#leader_id, #leader").prop("disabled", false)
         }
     }
+
+    $('#leader').bootcomplete({
+        url: '/search-leader/',
+        minLength: 3,
+        idField: true
+    });
 </script>

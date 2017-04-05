@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Member;
-use App\Platoon;
-use App\Division;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePlatoonForm extends FormRequest
@@ -29,8 +27,7 @@ class UpdatePlatoonForm extends FormRequest
     {
         return [
             'leader_id' => [
-                // ignore current record
-                'unique:platoons,leader_id,' . $this->platoon->id,
+                "unique:platoons,leader_id,{$this->platoon->id}",
                 'exists:members,clan_id',
             ],
         ];

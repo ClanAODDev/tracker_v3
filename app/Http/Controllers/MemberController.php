@@ -49,6 +49,20 @@ class MemberController extends Controller
         return view('member.search', compact('members', 'request'));
     }
 
+    public function searchAutoComplete()
+    {
+        $query = request()->input('query');
+
+        $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
+
+       return $members->map(function ($member) {
+           return [
+               'id' => $member->clan_id,
+               'label' => $member->name
+           ];
+       });
+    }
+
     /**
      * Show the form for creating a new resource.
      *

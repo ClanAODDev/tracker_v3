@@ -12,6 +12,7 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'slack'
+        'slack',
+        '/api/v1/members'
     ];
 }
