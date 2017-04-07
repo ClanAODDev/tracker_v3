@@ -16,12 +16,12 @@
         </div>
     @empty
         <div class="col-md-12">
-            <div class="panel panel-filled panel-c-danger text-muted">
+            <div class="panel panel-filled panel-c-accent text-muted">
                 <div class="panel-body">
                     <h4 class="m-b-none text-uppercase">
                         No leadership assigned
                     </h4>
-                    <span class="slight">See clan leadership for assistance with assigning division leaders</span>
+                    <span class="slight">See clan leadership for assistance with assigning staff sergeants</span>
                 </div>
             </div>
         </div>

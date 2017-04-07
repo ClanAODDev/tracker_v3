@@ -43,6 +43,10 @@ var chartUsersOptions = {
         show: false
     },
 
+    xaxis: {
+        axisLabel: 'Weeks'
+    },
+
     comments: comments,
 
     colors: ["#f7af3e", "#DE9536"]

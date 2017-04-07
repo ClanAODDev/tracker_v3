@@ -10,7 +10,7 @@
     </div>
     <div class="panel-body">
         <div class="flot-chart">
-            <div class="flot-chart-content" id="flot-line-chart"
+            <div class="flot-chart-content" id="flot-line-chart" 
                  data-populations="{{ $populations }}"
                  data-weekly-active="{{ $weeklyActive }}"
                  data-comments="{{ $comments }}"

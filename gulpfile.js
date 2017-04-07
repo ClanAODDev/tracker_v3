@@ -22,6 +22,7 @@ elixir(function (mix) {
             'libs/jquery/jquery.bootcomplete.min.js',
 
             'libs/jquery/jquery.flot.min.js',
+            'libs/jquery/jquery.flot.axislabels.js',
             'libs/jquery/jquery.flot.resize.min.js',
             'libs/jquery/jquery.flot.spline.js',
             'libs/jquery/jquery.flot.pie.min.js',

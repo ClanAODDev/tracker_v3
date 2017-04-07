@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Division;
-use App\Repositories\DivisionRepository;
-use Charts;
 use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
+use App\Repositories\DivisionRepository;
 
 class DivisionController extends Controller
 {
@@ -150,7 +149,6 @@ class DivisionController extends Controller
             })->map(function ($census, $key) use ($censuses) {
                 return [
                     'x' => $key,
-//                    'y' => max(array_flatten([$censuses->values()->pluck('count')])) + 20,
                     'y' => $censuses->values()->pluck('count'),
                     'contents' => $census->notes
                 ];
@@ -160,44 +158,5 @@ class DivisionController extends Controller
             'division', 'populations', 'weeklyActive',
             'comments', 'censuses'
         ));
-    }
-
-    public function statistics(Division $division)
-    {
-        $rankDemographic = $this->getRanksChart($division);
-
-        $activity = $this->getActivityChart($division);
-
-        return view(
-            'division.statistics',
-            compact('division', 'rankDemographic', 'activity')
-        );
-    }
-
-    private function getRanksChart($division)
-    {
-        $data = $this->rankDemographic($division);
-
-        return Charts::create('area', 'morris')
-            ->labels($data['labels'])
-            ->values($data['values'])
-            ->elementLabel('Rank count')
-            ->responsive(true);
-    }
-
-    public function rankDemographic(Division $division)
-    {
-        return $this->division->getRankDemographic($division);
-    }
-
-    private function getActivityChart($division)
-    {
-        $data = $this->division->getDivisionActivity($division);
-
-        return Charts::create('donut', 'morris')
-            ->labels($data['labels'])
-            ->values($data['values'])
-            ->colors($data['colors'])
-            ->responsive(true);
     }
 }
