@@ -30,7 +30,7 @@
                     <td>{{ $user->email }}</td>
                     <td>
                         {{ $user->role->id }}
-                        <small class="slight text-muted">{{ $user->role->label }}</small>
+                        <small class="slight text-muted">{!! $user->role->present()->roleLabelColored !!}</small>
                     </td>
                     <td class="text-uppercase">
                         <small class="slight text-{{ ($user->isDeveloper()) ? 'success' : 'muted' }}">
