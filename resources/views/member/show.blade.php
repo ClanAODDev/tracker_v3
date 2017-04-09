@@ -31,8 +31,8 @@
 
             <div class="col-sm-4">
                 @include('member.partials.general-information')
-                @include ('member.partials.part-time-divisions')
                 @include('member.partials.aliases')
+                @include ('member.partials.part-time-divisions')
             </div>
         </div>
 
