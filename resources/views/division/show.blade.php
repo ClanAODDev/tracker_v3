@@ -4,9 +4,7 @@
 
     @component ('application.components.division-heading', [$division])
         @slot ('icon')
-            <a href="{{ route('division', $division->abbreviation) }}">
-                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
-            </a>
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
         @endslot
         @slot ('heading')
             {{ $division->name }} Division

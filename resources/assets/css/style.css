@@ -1432,7 +1432,7 @@ sup {
 
 .luna-nav.nav li.active a {
     margin-left: 2px;
-    border-left: 1px solid #f6a821;
+    border-left: 3px solid #f6a821;
     padding-left: 22px;
     color: #c0c4c8;
     background-color: rgba(0, 0, 0, .2);
@@ -1488,6 +1488,11 @@ a.panel:hover, a.panel:active, a.panel:focus {
 .panel .panel-footer {
     background-color: transparent;
     border: none;
+}
+
+.panel-footer.reply {
+    background-color: rgba(0,0,0,.3);
+    padding-left: 30px;
 }
 
 .panel > .panel-heading {
