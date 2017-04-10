@@ -36,8 +36,8 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('division', function ($division) {
             $model = Division::whereAbbreviation(strtolower($division))->first();
-            if ($model instanceof Division && $model->active ||
-                ! $model->active && auth()->user()->isRole('admin')
+            if ($model instanceof Division && $model->active
+                || auth()->user()->isRole('admin')
             ) {
                 return $model;
             }
