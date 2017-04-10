@@ -36,7 +36,13 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('division', function ($division) {
             $model = Division::whereAbbreviation(strtolower($division))->first();
-            if ($model instanceof Division && $model->active) {
+            if ($model instanceof Division) {
+
+                // allow admins to update disabled divisions
+                if (! $model->active && auth()->user()->isRole('admin')) {
+                    return $model;
+                }
+
                 return $model;
             }
         });
