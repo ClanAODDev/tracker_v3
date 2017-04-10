@@ -35,7 +35,7 @@ class AdminController extends Controller
 
     public function editDivision(Division $division)
     {
-        dd($division);
+        return view('admin.modify-division', compact('division'));
     }
     
     public function editHandle(Handle $handle)

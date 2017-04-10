@@ -7,7 +7,8 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
         @endslot
         @slot ('heading')
-            {{ $division->name }} Division
+            <span class="hidden-xs">{{ $division->name }}</span>
+            <span class="visible-xs">{{ $division->abbreviation }}</span>
             @include('division.partials.edit-division-button', ['division' => $division])
         @endslot
         @slot ('subheading')

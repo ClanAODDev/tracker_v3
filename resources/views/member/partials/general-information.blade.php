@@ -10,7 +10,7 @@
     </div>
 
     <div class="list-group-item">
-        <span class="c-white">Joined</span> <span
+        <span class="c-white">Join Date</span> <span
                 class="pull-right">{{ $member->join_date }}</span>
     </div>
 
