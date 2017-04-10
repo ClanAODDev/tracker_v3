@@ -2,15 +2,15 @@
 
 namespace App\Providers;
 
+use App\Division;
 use App\Handle;
-use App\Squad;
 use App\Member;
 use App\Platoon;
-use App\Division;
+use App\Squad;
 use App\User;
 use Auth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -36,13 +36,9 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('division', function ($division) {
             $model = Division::whereAbbreviation(strtolower($division))->first();
-            if ($model instanceof Division) {
-
-                // allow admins to update disabled divisions
-                if (! $model->active && auth()->user()->isRole('admin')) {
-                    return $model;
-                }
-
+            if ($model instanceof Division && $model->active ||
+                ! $model->active && auth()->user()->isRole('admin')
+            ) {
                 return $model;
             }
         });
