@@ -2,18 +2,16 @@
 
 namespace App;
 
-use Carbon;
-use Exception;
 use App\Settings\DivisionSettings;
 use Illuminate\Support\Facades\Log;
 use App\Activities\RecordsActivity;
 use App\Presenters\DivisionPresenter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Division extends Model
 {
-
     protected $casts = [
         'active' => 'boolean',
         'settings' => 'json',
@@ -26,6 +24,7 @@ class Division extends Model
     use Division\HasCustomAttributes;
     use RecordsActivity;
     use SoftDeletes;
+    use Notifiable;
 
     protected static $recordEvents = ['created', 'updated', 'deleted'];
 
@@ -122,6 +121,13 @@ class Division extends Model
         return $this->hasManyThrough(Squad::class, Platoon::class);
     }
 
+    /**
+     * @return mixed
+     */
+    public function routeNotificationForSlack()
+    {
+        return env('SLACK_WEBHOOK');
+    }
 
     /**
      * Division has many platoons
