@@ -87,7 +87,11 @@ function hasDivisionIcon($abbreviation)
 
 function getDivisionIconPath($abbreviation)
 {
-    return asset("/images/game_icons/48x48/{$abbreviation}.png");
+    if (hasDivisionIcon($abbreviation)) {
+        return asset("/images/game_icons/48x48/{$abbreviation}.png");
+    }
+
+    return asset("/images/logo_v2.svg");
 }
 
 /**
