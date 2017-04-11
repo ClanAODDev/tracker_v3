@@ -2743,6 +2743,10 @@ fieldset[disabled] .form-control {
     vertical-align: middle;
 }
 
+img.division-icon-large {
+    width: 48px;
+}
+
 img.division-icon-medium {
     width: 32px;
 }
