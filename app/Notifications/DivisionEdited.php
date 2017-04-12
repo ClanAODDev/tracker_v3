@@ -6,24 +6,27 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
-class MemberProfileEdited extends Notification
+class DivisionEdited extends Notification
 {
     use Queueable;
     /**
      * @var
      */
     private $division;
+    /**
+     * @var
+     */
+    private $request;
 
     /**
      * Create a new notification instance.
      *
      * @param $division
-     * @param $member
      */
-    public function __construct($division, $member)
+    public function __construct($division, $request)
     {
-        $this->member = $member;
         $this->division = $division;
+        $this->request = $request;
     }
 
     /**
@@ -45,6 +48,6 @@ class MemberProfileEdited extends Notification
         return (new SlackMessage())
             ->success()
             ->to($to)
-            ->content($this->member->name . " was updated by " . auth()->user()->name);
+            ->content(auth()->user()->name . " updated division settings for " . $this->division->name);
     }
 }

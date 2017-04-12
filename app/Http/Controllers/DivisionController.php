@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use App\Notifications\DivisionEdited;
 use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
 use App\Repositories\DivisionRepository;
@@ -120,6 +121,10 @@ class DivisionController extends Controller
             'positionClass' => 'toast-top-right',
             'progressBar' => true
         ]);
+
+        if ($division->settings()->get('slack_alert_division_edited')) {
+            $division->notify(new DivisionEdited($division, $request));
+        }
 
         return back();
     }

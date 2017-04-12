@@ -3,9 +3,8 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class MemberRemoved extends Notification
 {
@@ -22,12 +21,10 @@ class MemberRemoved extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param $user
      * @param $member
      */
-    public function __construct($user, $member)
+    public function __construct($member)
     {
-        $this->user = $user;
         $this->member = $member;
         // $this->reason = $reason;
     }
@@ -35,7 +32,7 @@ class MemberRemoved extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -48,8 +45,12 @@ class MemberRemoved extends Notification
      */
     public function toSlack()
     {
+        $to = ($this->division->settings()->get('slack_channel'))
+            ?: '@' . auth()->user()->name;
+
         return (new SlackMessage())
             ->success()
-            ->content("{$this->member->name} was removed from AOD by {$this->user->name}\r\nReason: {$this->reason}");
+            ->to($to)
+            ->content($this->member->name . " was removed by " . auth()->user()->name);
     }
 }

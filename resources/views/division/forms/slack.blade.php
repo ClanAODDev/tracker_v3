@@ -9,8 +9,7 @@
             <div class="form-group">
                 <label for="slack_webhook_url" class="control-label">Webhook URL</label>
                 <input type="text" id="slack_webhook_url" name="slack_webhook_url"
-                       placeholder="https://hooks.slack.com/services/..."
-                       value="{{ $division->settings()->slack_channel }}" class="form-control" />
+                       class="form-control" disabled="disabled" />
                 <span class="help-block"><small>Enter the webhook URL you wish to post updates to. Left blank, the Tracker will default to the <a
                                 href="http://clanaod.slack.com"
                                 target="_blank">AOD Slack</a>.</small></span>
@@ -91,6 +90,20 @@
                         <input id="slack_alert_created_request"
                                name="slack_alert_created_request"
                                type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} />
+                    </div>
+
+                </div>
+
+                <div class="list-group-item">
+
+                    <label for="slack_alert_division_edited">
+                        When your division's settings are edited
+                    </label>
+                    <div class=" pull-right">
+                        <input type='hidden' value='0' name="slack_alert_division_edited">
+                        <input id="slack_alert_division_edited"
+                               name="slack_alert_division_edited"
+                               type="checkbox" {{ checked($division->settings()->slack_alert_division_edited) }}/>
                     </div>
 
                 </div>

@@ -1,19 +1,5 @@
 <?php
 
-/*use App\Notifications\TestNotification;
-
-Route::get('/test', function() {
-    $admin = App\User::find(1);
-
-    $division = $admin->member->primaryDivision;
-
-    $division
-        ->notify(new TestNotification(
-            $admin
-        ));
-    die;
-});*/
-
 Auth::routes();
 
 Route::get('/home', 'AppController@index')->name('home');

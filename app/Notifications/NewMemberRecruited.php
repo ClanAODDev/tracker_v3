@@ -3,9 +3,8 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class NewMemberRecruited extends Notification
 {
@@ -36,7 +35,7 @@ class NewMemberRecruited extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param  mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -49,8 +48,13 @@ class NewMemberRecruited extends Notification
      */
     public function toSlack()
     {
+        $to = ($this->division->settings()->get('slack_channel'))
+            ?: '@' . auth()->user()->name;
+
         return (new SlackMessage())
             ->success()
-            ->content("{$this->user->name} just recruited {$this->member->name}! :thumbsup;");
+            ->to($to)
+            ->content(auth()->user()->name . " just recruited " . $this->member->name);
+
     }
 }
