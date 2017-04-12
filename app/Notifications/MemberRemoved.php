@@ -22,6 +22,7 @@ class MemberRemoved extends Notification
      * Create a new notification instance.
      *
      * @param $member
+     * @param $reason
      */
     public function __construct($member, $reason)
     {

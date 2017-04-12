@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteMember;
 use App\Notifications\MemberRemoved;
 use Toastr;
 use App\Member;
@@ -141,14 +142,18 @@ class MemberController extends Controller
      * Remove member from AOD
      *
      * @param Member $member
-     * @param Request $request
+     * @param DeleteMember $form
      * @return Response
      */
-    public function destroy(Member $member, Request $request)
+    public function destroy(Member $member, DeleteMember $form)
     {
-        $this->authorize('delete', $member);
-
         $division = $member->primaryDivision;
+
+        if ($division->settings()->get('slack_alert_removed_member')) {
+            $division->notify(new MemberRemoved($member, $form->input('removal-reason')));
+        }
+
+        $form->persist();
 
         Toastr::success(
             ucwords($member->name) . " has been removed from the {$division->name} Division!",
@@ -158,13 +163,6 @@ class MemberController extends Controller
                 'progressBar' => true
             ]
         );
-
-        if ($division->settings()->get('slack_alert_removed_member')) {
-            $division->notify(new MemberRemoved($member, $request->input('removal-reason')));
-        }
-
-        $member->resetPositionsAndAssignments();
-        $member->delete();
 
         return redirect()->route('division', [
             $division->abbreviation

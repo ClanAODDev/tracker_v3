@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use App\Http\Requests\UpdateDivision;
 use App\Notifications\DivisionEdited;
 use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
@@ -110,12 +111,9 @@ class DivisionController extends Controller
      * @param Division $division
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Division $division)
+    public function update(UpdateDivision $form, Division $division)
     {
-        // @FIXME: Move to Form Request
-        $this->authorize('update', $division);
-
-        $division->settings()->merge($request->all());
+        $form->persist();
 
         Toastr::success('Changes saved successfully!', "Update {$division->name}", [
             'positionClass' => 'toast-top-right',
