@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\User;
 use App\Division;
+use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DivisionPolicy
@@ -24,6 +24,19 @@ class DivisionPolicy
     }
 
     /**
+     * @param Division $division
+     * @return bool
+     */
+    public function show(Division $division)
+    {
+        if ( ! $division->active) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param User $user
      * @param Division $division
      * @return bool
@@ -36,7 +49,6 @@ class DivisionPolicy
          * is the user a division leader of the division?
          * is the user a senior leader?
          */
-
 
         if ( ! $division->active) {
             return false;

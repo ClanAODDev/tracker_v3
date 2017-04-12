@@ -35,6 +35,8 @@ class AdminController extends Controller
 
     public function editDivision(Division $division)
     {
+        $this->authorize('show', $division);
+
         return view('admin.modify-division', compact('division'));
     }
     
