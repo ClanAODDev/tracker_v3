@@ -23,10 +23,10 @@ class MemberRemoved extends Notification
      *
      * @param $member
      */
-    public function __construct($member)
+    public function __construct($member, $reason)
     {
         $this->member = $member;
-        // $this->reason = $reason;
+         $this->reason = $reason;
     }
 
     /**
@@ -45,12 +45,19 @@ class MemberRemoved extends Notification
      */
     public function toSlack()
     {
-        $to = ($this->division->settings()->get('slack_channel'))
+        $division = $this->member->primaryDivision;
+        $to = ($division->settings()->get('slack_channel'))
             ?: '@' . auth()->user()->name;
+
+        $reason = ($this->reason) ?: "None provided";
 
         return (new SlackMessage())
             ->success()
             ->to($to)
-            ->content($this->member->name . " was removed by " . auth()->user()->name);
+            ->content("{$this->member->name} [{$this->member->clan_id}] was removed by " . auth()->user()->name)
+            ->attachment(function ($attachment) use ($reason) {
+                $attachment->title('Reason')
+                    ->content($reason);
+            });
     }
 }

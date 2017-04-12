@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\MemberRemoved;
 use Toastr;
 use App\Member;
 use App\Position;
@@ -149,10 +150,6 @@ class MemberController extends Controller
 
         $division = $member->primaryDivision;
 
-        $member->resetPositionsAndAssignments();
-
-        $member->delete();
-
         Toastr::success(
             ucwords($member->name) . " has been removed from the {$division->name} Division!",
             "Success",
@@ -161,6 +158,13 @@ class MemberController extends Controller
                 'progressBar' => true
             ]
         );
+
+        if ($division->settings()->get('slack_alert_removed_member')) {
+            $division->notify(new MemberRemoved($member, $request->input('removal-reason')));
+        }
+
+        $member->resetPositionsAndAssignments();
+        $member->delete();
 
         return redirect()->route('division', [
             $division->abbreviation

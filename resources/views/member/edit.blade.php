@@ -55,7 +55,7 @@
         </div>
 
         @can('delete', $member)
-            {!! Form::model($member, ['method' => 'delete', 'route' => ['deleteMember', $member]]) !!}
+            {!! Form::model($member, ['method' => 'delete', 'route' => ['deleteMember', $member->clan_id]]) !!}
             @include('member.forms.remove-member-form')
             {!! Form::close() !!}
         @endcan
