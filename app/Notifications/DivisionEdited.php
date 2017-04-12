@@ -23,10 +23,9 @@ class DivisionEdited extends Notification
      *
      * @param $division
      */
-    public function __construct($division, $request)
+    public function __construct($division)
     {
         $this->division = $division;
-        $this->request = $request;
     }
 
     /**

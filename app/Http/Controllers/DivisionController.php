@@ -123,7 +123,7 @@ class DivisionController extends Controller
         ]);
 
         if ($division->settings()->get('slack_alert_division_edited')) {
-            $division->notify(new DivisionEdited($division, $request));
+            $division->notify(new DivisionEdited($division));
         }
 
         return back();
