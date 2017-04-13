@@ -1,5 +1,4 @@
-<label for="slack-notifications">Slack Notifications</label>
-<table class="table table-hover table-striped table-bordered" id="slack-notifications">
+<table class="table table-hover table-striped table-bordered">
     <tr>
         <th colspan="2" class="text-muted text-uppercase">Member</th>
     </tr>

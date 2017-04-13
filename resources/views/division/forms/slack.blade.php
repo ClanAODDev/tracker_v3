@@ -25,7 +25,8 @@
         </div>
 
         <div class="col-md-6">
-            <div class="table-responsive">
+            <label for="slack-notifications-table">Slack Notifications</label>
+            <div class="table-responsive" id="slack-notifications-table">
                 @include ('division.partials.slack-notifications')
             </div>
         </div>
