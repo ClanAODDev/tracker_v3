@@ -24,7 +24,7 @@ class UpdateDivision extends FormRequest
     public function rules()
     {
         return [
-            
+
         ];
     }
 
