@@ -2,32 +2,17 @@
 
 namespace App;
 
-use App\Settings\DivisionSettings;
-use Illuminate\Support\Facades\Log;
 use App\Activities\RecordsActivity;
 use App\Presenters\DivisionPresenter;
+use App\Settings\DivisionSettings;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 
 class Division extends Model
 {
-    protected $casts = [
-        'active' => 'boolean',
-        'settings' => 'json',
-    ];
-
-    protected $fillable = [
-        'settings'
-    ];
-
-    use Division\HasCustomAttributes;
-    use RecordsActivity;
-    use SoftDeletes;
-    use Notifiable;
-
     protected static $recordEvents = ['created', 'updated', 'deleted'];
-
     public $defaultSettings = [
         'slack_alert_created_member' => false,
         'slack_alert_removed_member' => false,
@@ -97,6 +82,18 @@ class Division extends Model
                 'new-string' => 'platoon leader'
             ],
         ]
+    ];
+
+    use Division\HasCustomAttributes;
+    use RecordsActivity;
+    use SoftDeletes;
+    use Notifiable;
+    protected $casts = [
+        'active' => 'boolean',
+        'settings' => 'json',
+    ];
+    protected $fillable = [
+        'settings'
     ];
 
     /**
@@ -178,20 +175,20 @@ class Division extends Model
         return $this->belongsToMany(Member::class)->withPivot('primary')->withTimestamps();
     }
 
-    /**
-     * Gets active members of a division
-     */
-    public function activeMembers()
-    {
-        return $this->members()->wherePivot('primary', true);
-    }
-
     public function membersActiveSinceDaysAgo($days)
     {
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
 
         return $this->activeMembers()
             ->where('last_activity', '>=', $date);
+    }
+
+    /**
+     * Gets active members of a division
+     */
+    public function activeMembers()
+    {
+        return $this->members()->wherePivot('primary', true);
     }
 
     public function generalSergeants()
@@ -221,14 +218,6 @@ class Division extends Model
             ->whereIn('position_id', [1]);
     }
 
-    /**
-     * @return DivisionSettings
-     */
-    public function settings()
-    {
-        return new DivisionSettings($this->settings, $this);
-    }
-
     public function locality($string)
     {
 
@@ -253,6 +242,14 @@ class Division extends Model
         }
 
         return ucwords($results['new-string']);
+    }
+
+    /**
+     * @return DivisionSettings
+     */
+    public function settings()
+    {
+        return new DivisionSettings($this->settings, $this);
     }
 
     /**

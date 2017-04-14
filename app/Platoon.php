@@ -39,14 +39,6 @@ class Platoon extends Model
     }
 
     /**
-     * relationship - platoon has many members
-     */
-    public function members()
-    {
-        return $this->hasMany(Member::class);
-    }
-
-    /**
      * Leader of a platoon
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -66,5 +58,13 @@ class Platoon extends Model
         return $this->members()
             ->whereSquadId(0)
             ->whereIn('position_id', [1]);
+    }
+
+    /**
+     * relationship - platoon has many members
+     */
+    public function members()
+    {
+        return $this->hasMany(Member::class);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Carbon;
 use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Model;

@@ -3,8 +3,6 @@
 namespace App\Member;
 
 use Carbon\Carbon;
-use Exception;
-use App\Division;
 
 trait HasCustomAttributes
 {

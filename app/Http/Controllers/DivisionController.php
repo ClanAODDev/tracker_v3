@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Division;
 use App\Http\Requests\UpdateDivision;
 use App\Notifications\DivisionEdited;
+use App\Repositories\DivisionRepository;
 use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
-use App\Repositories\DivisionRepository;
 
 class DivisionController extends Controller
 {

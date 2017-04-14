@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Division;
-use Illuminate\Http\Request;
 use App\Repositories\ClanRepository;
 
 class ClanStatisticsController extends Controller

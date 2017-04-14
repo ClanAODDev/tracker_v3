@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
 use App\Handle;
+use App\Repositories\ClanRepository;
 use App\User;
 use Charts;
-use App\Division;
 use Illuminate\Http\Request;
-use App\Repositories\ClanRepository;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Whossun\Toastr\Facades\Toastr;
 
 class AdminController extends Controller
@@ -25,7 +22,7 @@ class AdminController extends Controller
     public function index()
     {
         $divisions = Division::all();
-        
+
         $handles = Handle::with('divisions')->get();
 
         $users = User::with('role', 'member', 'member.rank')->get();
@@ -39,13 +36,13 @@ class AdminController extends Controller
 
         return view('admin.modify-division', compact('division'));
     }
-    
+
     public function editHandle(Handle $handle)
     {
         dd($handle);
     }
-    
-    
+
+
     public function updateDivisions(Request $request)
     {
         $updates = collect($request->input('divisions'));

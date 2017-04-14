@@ -2,9 +2,9 @@
 
 namespace App\Slack\Commands;
 
+use App\Jobs\SyncMemberData;
 use App\Slack\Base;
 use App\Slack\Command;
-use App\Jobs\SyncMemberData;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class MemberSync extends Base implements Command

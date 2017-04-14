@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Division;
 use App\Member;
-use App\Squad;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSquadForm extends FormRequest

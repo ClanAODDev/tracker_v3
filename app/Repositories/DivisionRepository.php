@@ -2,9 +2,8 @@
 
 namespace App\Repositories;
 
-use Carbon;
-use DB;
 use App\Division;
+use DB;
 
 class DivisionRepository
 {

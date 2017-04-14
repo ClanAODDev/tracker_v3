@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteMember;
-use App\Notifications\MemberRemoved;
-use Toastr;
 use App\Member;
+use App\Notifications\MemberRemoved;
 use App\Position;
 use App\Repositories\MemberRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Toastr;
 
 class MemberController extends Controller
 {
@@ -57,12 +57,12 @@ class MemberController extends Controller
 
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 
-       return $members->map(function ($member) {
-           return [
-               'id' => $member->clan_id,
-               'label' => $member->name
-           ];
-       });
+        return $members->map(function ($member) {
+            return [
+                'id' => $member->clan_id,
+                'label' => $member->name
+            ];
+        });
     }
 
     /**

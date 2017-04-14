@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\AOD\MemberSync\SyncMemberData;
+use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class MemberSync extends Command

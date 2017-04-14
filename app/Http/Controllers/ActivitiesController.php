@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\User;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
 
 class ActivitiesController extends Controller
 {

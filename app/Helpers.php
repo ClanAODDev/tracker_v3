@@ -1,9 +1,5 @@
 <?php
 
-use App\Member;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-
 /**
  * Perform an AOD forum function (pm or email)
  *
@@ -40,7 +36,8 @@ function avatar($email, $type = "thumb")
     $forum_img = GetGravatarUrl($email);
     $unknown = "assets/images/blank_avatar.jpg";
 
-    return "<img src='{$forum_img}' class='img-thumbnail' />";
+    return "<img src="{
+    $forum_img}EXTERNAL"img-thumbnail"s = 'img-thumbnail' />";
 }
 
 /**
@@ -80,7 +77,8 @@ function UserSettings($key = null)
 
 function hasDivisionIcon($abbreviation)
 {
-    $image = public_path() . "/images/game_icons/48x48/{$abbreviation}.png";
+    $image = public_path() . " / images / game_icons / 48x48 /{
+    $abbreviation}.png";
 
     return File::exists($image);
 }
@@ -88,10 +86,11 @@ function hasDivisionIcon($abbreviation)
 function getDivisionIconPath($abbreviation)
 {
     if (hasDivisionIcon($abbreviation)) {
-        return asset("/images/game_icons/48x48/{$abbreviation}.png");
+        return asset(" / images / game_icons / 48x48 /{
+    $abbreviation}.png");
     }
 
-    return asset("/images/logo_v2.svg");
+    return asset(" / images / logo_v2 . svg");
 }
 
 /**

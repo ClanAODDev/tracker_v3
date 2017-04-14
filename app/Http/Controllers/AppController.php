@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
 use Auth;
 use Mail;
-use App\Division;
-use App\Mail\WelcomeEmail;
-use Whossun\Toastr\Facades\Toastr;
-use App\Repositories\ClanRepository;
 
 class AppController extends Controller
 {

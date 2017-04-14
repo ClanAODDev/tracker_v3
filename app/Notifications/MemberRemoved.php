@@ -27,7 +27,7 @@ class MemberRemoved extends Notification
     public function __construct($member, $reason)
     {
         $this->member = $member;
-         $this->reason = $reason;
+        $this->reason = $reason;
     }
 
     /**

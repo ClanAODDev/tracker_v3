@@ -23,21 +23,6 @@ trait Settable
     }
 
     /**
-     * Get a setting
-     *
-     * @param $key
-     * @return mixed
-     */
-    public function get($key)
-    {
-        if ($this->has($key)) {
-            return array_get($this->settings, $key);
-        }
-
-        throw new Exception("The {$key} setting does not exist");
-    }
-
-    /**
      * Magic getter for settings
      *
      * @param $key
@@ -48,6 +33,32 @@ trait Settable
     {
         if ($this->has($key)) {
             return $this->get($key);
+        }
+
+        throw new Exception("The {$key} setting does not exist");
+    }
+
+    /**
+     * Checks to see if a key exists
+     *
+     * @param $key
+     * @return bool
+     */
+    private function has($key)
+    {
+        return array_key_exists($key, $this->settings);
+    }
+
+    /**
+     * Get a setting
+     *
+     * @param $key
+     * @return mixed
+     */
+    public function get($key)
+    {
+        if ($this->has($key)) {
+            return array_get($this->settings, $key);
         }
 
         throw new Exception("The {$key} setting does not exist");
@@ -77,16 +88,5 @@ trait Settable
     public function all()
     {
         return $this->settings;
-    }
-
-    /**
-     * Checks to see if a key exists
-     *
-     * @param $key
-     * @return bool
-     */
-    private function has($key)
-    {
-        return array_key_exists($key, $this->settings);
     }
 }

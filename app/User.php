@@ -2,12 +2,10 @@
 
 namespace App;
 
-use App\Mail\RoleAssigned;
 use App\Settings\UserSettings;
-use Illuminate\Support\Facades\Mail;
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -56,14 +54,6 @@ class User extends Authenticatable
     }
 
     /**
-     * relationship - user belongs to a role
-     */
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function activity()
@@ -94,13 +84,29 @@ class User extends Authenticatable
         return $this->role->name === $role;
     }
 
+    /**
+     * Checks to see if user is a developer
+     *
+     * @return boolean
+     */
+    public function isDeveloper()
+    {
+        return ($this->developer);
+    }
+
     public function assignRole($role)
     {
         $this->role()->associate(
             Role::whereName($role)->firstOrFail()
         )->save();
+    }
 
-        Mail::to($this)->send(new RoleAssigned($role));
+    /**
+     * relationship - user belongs to a role
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 
     /**
@@ -119,16 +125,6 @@ class User extends Authenticatable
     public function settings()
     {
         return new UserSettings($this->settings, $this);
-    }
-
-    /**
-     * Checks to see if user is a developer
-     *
-     * @return boolean
-     */
-    public function isDeveloper()
-    {
-        return ($this->developer);
     }
 
     /**

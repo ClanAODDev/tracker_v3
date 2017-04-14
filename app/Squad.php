@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Presenters\SquadPresenter;
 use App\Activities\RecordsActivity;
+use App\Presenters\SquadPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -49,16 +49,6 @@ class Squad extends Model
     }
 
     /**
-     * Leader of a squad
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function leader()
-    {
-        return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
-    }
-
-    /**
      * Assign the leader of a squad
      *
      * @param $member
@@ -67,5 +57,15 @@ class Squad extends Model
     public function assignLeaderTo($member)
     {
         return $this->leader()->associate($member);
+    }
+
+    /**
+     * Leader of a squad
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function leader()
+    {
+        return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
 }

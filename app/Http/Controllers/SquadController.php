@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Toastr;
-use App\Squad;
-use App\Member;
-use App\Platoon;
 use App\Division;
-
 use App\Http\Requests\CreateSquadForm;
 use App\Http\Requests\DeleteSquadForm;
 use App\Http\Requests\UpdateSquadForm;
+use App\Member;
+use App\Platoon;
+use App\Squad;
+use Toastr;
 
 class SquadController extends Controller
 {

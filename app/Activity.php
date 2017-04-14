@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Division;
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Activity extends Model

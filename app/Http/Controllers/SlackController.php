@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\SlackSlashCommand;
 use Illuminate\Http\Request;
 
@@ -15,7 +14,7 @@ class SlackController extends Controller
      */
     public function index(Request $request)
     {
-        if (! $this->isValid($request)) {
+        if ( ! $this->isValid($request)) {
             return response()->json([
                 'text' => 'Unrecognized command. Sorry!',
             ]);

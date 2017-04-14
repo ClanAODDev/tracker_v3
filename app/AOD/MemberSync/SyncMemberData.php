@@ -2,10 +2,10 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Squad;
+use App\Division;
 use App\Member;
 use App\Platoon;
-use App\Division;
+use App\Squad;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
