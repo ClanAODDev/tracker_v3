@@ -49,6 +49,18 @@ class Member extends Model
         return $this->belongsTo(Rank::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'member_id', 'clan_id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * @param $position
+     * @return Model
+     */
     public function assignPosition($position)
     {
         return $this->position()->associate(

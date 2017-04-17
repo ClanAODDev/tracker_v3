@@ -99,7 +99,15 @@ class MemberController extends Controller
     {
         $division = $member->primaryDivision;
 
-        return view('member.show', compact('member', 'division'));
+        // hide admin notes to non-admin users
+        $notes = $member->notes->filter(function ($note) {
+            if ($note->type == 'admin') {
+                return auth()->user()->isRole('admin');
+            }
+            return true;
+        });
+
+        return view('member.show', compact('member', 'division', 'notes'));
     }
 
     /**

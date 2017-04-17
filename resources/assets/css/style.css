@@ -1521,11 +1521,11 @@ a.panel:hover, a.panel:active, a.panel:focus {
     border-left: 3px solid #949ba2;
 }
 
-.panel.panel-c-accent {
+.panel.panel-c-accent, .note.admin {
     border-left: 3px solid #f6a821;
 }
 
-.panel.panel-c-primary {
+.panel.panel-c-primary, .note.misc {
     border-left: 3px solid #0F83C9;
 }
 
@@ -1537,11 +1537,11 @@ a.panel:hover, a.panel:active, a.panel:focus {
     border-left: 3px solid #56C0E0;
 }
 
-.panel.panel-c-success {
+.panel.panel-c-success, .note.positive {
     border-left: 3px solid #1bbf89;
 }
 
-.panel.panel-c-danger {
+.panel.panel-c-danger, .note.negative {
     border-left: 3px solid #DB524B;
 }
 

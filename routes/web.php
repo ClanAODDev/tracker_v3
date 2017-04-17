@@ -15,6 +15,14 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('{member}/edit', 'MemberController@edit')->name('editMember');
     Route::post('search/{name}', 'MemberController@search');
     Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
+
+    // member notes
+    Route::group(['prefix' => '{member}/notes'], function () {
+        Route::post('', 'NoteController@store')->name('storeNote');
+        Route::put('{division}', 'NoteController@update')->name('updateNote');
+        Route::patch('{division}', 'NoteController@update');
+        Route::delete('{division}', 'NoteController@destroy')->name('deleteNote');
+    });
 });
 
 Route::group(['prefix' => 'help'], function () {

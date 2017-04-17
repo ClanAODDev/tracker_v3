@@ -3,63 +3,28 @@
 /**
  * Perform an AOD forum function (pm or email)
  *
- * @param array $clan_id
+ * @param array $ids
  * @param $action
  * @return mixed
  */
-function doForumFunction(array $clan_id, $action)
+function doForumFunction(array $ids, $action)
 {
     if ($action === "email") {
-        $path = "http://www.clanaod.net/forums/sendmessage.php?";
-        $params = ['do' => 'mailmember', 'u' => array_first($clan_id)];
+        $path = "https://www.clanaod.net/forums/sendmessage.php?";
+        $params = ['do' => 'mailmember', 'u' => array_first($ids)];
+    } else if ($action === 'showThread') {
+        $path = "https://www.clanaod.net/forums/showthread.php?";
+        $params = ['t' => array_first($ids)];
     } else {
         if ($action === "pm") {
-            $params = ['do' => 'newpm', 'u' => $clan_id];
-            $path = "http://www.clanaod.net/forums/private.php?";
+            $params = ['do' => 'newpm', 'u' => $ids];
+            $path = "https://www.clanaod.net/forums/private.php?";
         } else {
             throw new InvalidArgumentException('Invalid action type specified.');
         }
     }
 
     return urldecode($path . http_build_query($params));
-}
-
-/**
- * Return gravatar image
- *
- * @param $email
- * @param string $type
- * @return string
- */
-function avatar($email, $type = "thumb")
-{
-    $forum_img = GetGravatarUrl($email);
-    $unknown = "assets/images/blank_avatar.jpg";
-
-    return "<img src="{
-    $forum_img}EXTERNAL"img-thumbnail"s = 'img-thumbnail' />";
-}
-
-/**
- * Generate a gravatar URL
- *
- * @param $email
- * @param int $size
- * @param string $type
- * @param string $rating
- * @return mixed
- */
-function GetGravatarUrl($email, $size = 80, $type = 'retro', $rating = 'pg')
-{
-    $gravatar = sprintf(
-        'http://www.gravatar.com/avatar/%s?d=%s&s=%d&r=%s',
-        md5($email),
-        $type,
-        $size,
-        $rating
-    );
-
-    return $gravatar;
 }
 
 /**
@@ -77,8 +42,7 @@ function UserSettings($key = null)
 
 function hasDivisionIcon($abbreviation)
 {
-    $image = public_path() . " / images / game_icons / 48x48 /{
-    $abbreviation}.png";
+    $image = public_path() . "/images/game_icons/48x48/{$abbreviation}.png";
 
     return File::exists($image);
 }
@@ -86,11 +50,10 @@ function hasDivisionIcon($abbreviation)
 function getDivisionIconPath($abbreviation)
 {
     if (hasDivisionIcon($abbreviation)) {
-        return asset(" / images / game_icons / 48x48 /{
-    $abbreviation}.png");
+        return asset("/images/game_icons/48x48/{$abbreviation}.png");
     }
 
-    return asset(" / images / logo_v2 . svg");
+    return asset("/images/logo_v2.svg");
 }
 
 /**
@@ -195,7 +158,7 @@ function getNameOfClass($class)
  */
 function set_active($path, $active = 'active')
 {
-    return call_user_func_array('Request::is', (array)$path) ? $active : '';
+    return call_user_func_array('Request::is', (array) $path) ? $active : '';
 }
 
 function percent($old_member_count, $new_member_count)

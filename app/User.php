@@ -62,6 +62,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    /**
      * Check to see if user is a certain role
      *
      * @param $role
