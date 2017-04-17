@@ -22,7 +22,7 @@
                           data-counts="{{ json_encode([$popMinus, $census->weekly_active_count]) }}">
                     </span>
                     <small class="slight">
-                        {{ round($census->weekly_active_count / $census->count * 100, 1) }}
+                        {{ round($census->weekly_active_count / $census->count * 100, 1) }}%
                     </small>
                 </td>
                 <td class="text-center">{{ $census->count }}</td>

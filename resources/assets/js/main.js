@@ -155,6 +155,13 @@ var Tracker = Tracker || {};
                 ]
             });
 
+            $('table.adv-datatable').DataTable({
+                order: [],
+                columnDefs: [
+                    {targets: 'no-sort', orderable: false}
+                ]
+            });
+
             var sparklineCharts = function () {
                 $("[census-data]").sparkline(
                     $("[census-data]").data('counts'), {

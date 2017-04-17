@@ -1,6 +1,6 @@
 @foreach($divisions as $division)
     {{-- style="animation-delay: {{ $loop->index/8 }}s;" --}}
-    <div class="col-md-4 col-sm-6">
+    <div class="col-lg-4 col-md-6">
         <a href="{{ route('division', $division->abbreviation) }}"
            class="panel panel-filled division-header">
             <div class="panel-body">

@@ -1,7 +1,7 @@
 <div class="table-responsive">
     <div class="panel">
 
-        <table class="table table-hover basic-datatable">
+        <table class="table table-hover adv-datatable">
 
             <thead>
             <tr>

@@ -7,10 +7,10 @@
             @endif
 
             <span class="badge">COC</span>
-                
+
             <div class="panel-tools">
                 <span class="text-muted slight">{{ $note->updated_at->format('M d, Y') }}</span>
-                <a class="panel-toggle"><i class="fa fa-chevron-down"></i></a>
+                <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
             </div>
         </div>
 
@@ -20,10 +20,13 @@
 
         <div class="panel-footer">
             <span class="author text-muted">{{ $note->author->name }}</span>
-            @if ($note->forum_thread_id)
-                <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}" target="_blank"
-                   class="btn btn-default btn-xs pull-right"><i class="fa fa-comment"></i> View Discussion</a>
-            @endif
+            <div class="btn-group btn-group-xs pull-right">
+                <a href="#" class="btn btn-default"><i class="fa fa-wrench"></i> Edit</a>
+                @if ($note->forum_thread_id)
+                    <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}" target="_blank"
+                       class="btn btn-default btn-default"><i class="fa fa-comment"></i> View Discussion</a>
+                @endif
+            </div>
         </div>
     </div>
 @empty
