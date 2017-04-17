@@ -18,7 +18,7 @@
             </div>
         </div>
     @empty
-        <div class="col-xs-12">
+        <div class="col-xs-12 text-muted">
             No in-game aliases
         </div>
     @endforelse
