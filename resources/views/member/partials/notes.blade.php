@@ -3,11 +3,11 @@
         <div class="panel-heading text-uppercase">
 
             @if ($note['type'] == 'admin')
-                <span class="label label-default slight">{{ $note['type'] }}</span>
+                <span class="badge">{{ $note['type'] }}</span>
             @endif
 
-            <span class="label label-default slight">COC</span>
-
+            <span class="badge">COC</span>
+                
             <div class="panel-tools">
                 <span class="text-muted slight">{{ $note->updated_at->format('M d, Y') }}</span>
                 <a class="panel-toggle"><i class="fa fa-chevron-down"></i></a>
