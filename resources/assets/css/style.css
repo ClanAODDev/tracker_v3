@@ -1471,7 +1471,7 @@ a.panel {
     display: block;
 }
 
-a.panel:hover, a.panel:active, a.panel:focus {
+a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
     text-decoration: none;
     color: inherit;
     background-color: rgba(68, 70, 79, 0.8);
@@ -1491,7 +1491,7 @@ a.panel:hover, a.panel:active, a.panel:focus {
 }
 
 .panel-footer.reply {
-    background-color: rgba(0,0,0,.3);
+    background-color: rgba(0, 0, 0, .3);
     padding-left: 30px;
 }
 
@@ -1612,6 +1612,10 @@ a.panel:hover, a.panel:active, a.panel:focus {
 
 .panel.collapsed .fa.fa-chevron-down:before {
     content: "\f077";
+}
+
+.panel-body .panel-body {
+    background: none !important;
 }
 
 .pagination > li > a,
@@ -2002,7 +2006,7 @@ a.list-group-item {
 
 .list-group-item {
     background-color: rgba(68, 70, 79, 1);
-    border-color: rgba(255,255,255, 0.05);
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 a.list-group-item:hover {
@@ -2760,11 +2764,11 @@ img.division-icon-small {
     background-size: cover;
 }
 
-.bc-wrapper{
+.bc-wrapper {
     position: relative;
 }
 
-.bc-wrapper .bc-menu{
+.bc-wrapper .bc-menu {
     position: absolute;
     z-index: 1000;
     width: 100%;

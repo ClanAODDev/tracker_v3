@@ -1,18 +1,21 @@
 @forelse ($notes as $note)
     <div class="panel panel-filled note {{ $note['type'] }} collapsed">
-        <div class="panel-heading panel-toggle">
+        <div class="panel-heading text-uppercase">
 
             @if ($note['type'] == 'admin')
-                <span class="slight text-muted text-uppercase">{{ $note['type'] }}</span>
+                <span class="label label-default slight">{{ $note['type'] }}</span>
             @endif
 
             <span class="label label-default slight">COC</span>
 
-            <span class="text-muted pull-right slight">{{ $note->updated_at->format('M d, Y') }}</span>
+            <div class="panel-tools">
+                <span class="text-muted slight">{{ $note->updated_at->format('M d, Y') }}</span>
+                <a class="panel-toggle"><i class="fa fa-chevron-down"></i></a>
+            </div>
         </div>
 
         <div class="panel-body">
-            {!! $note->body !!}
+            {{ $note->body }}
         </div>
 
         <div class="panel-footer">

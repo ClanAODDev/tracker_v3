@@ -5,7 +5,7 @@
         <div class="form-group {{ $errors->has('note-body') ? ' has-error' : null }}">
             <label for="note-body" class="slight text-muted">Content</label>
             <textarea name="note-body" id="note-body" class="form-control"
-                      rows="2" style="resize: vertical"></textarea>
+                      rows="2" style="resize: vertical" required></textarea>
         </div>
 
         <div class="row">

@@ -35,7 +35,7 @@ var Tracker = Tracker || {};
             $(document).ready(function () {
                 $('.repeater').repeater({
                     hide: function (deleteElement) {
-                        if(confirm('Are you sure you want to delete this element?')) {
+                        if (confirm('Are you sure you want to delete this element?')) {
                             $(this).fadeOut(deleteElement);
                         }
                     },
@@ -209,7 +209,7 @@ var Tracker = Tracker || {};
             $('.panel-toggle').on('click', function (event) {
                 event.preventDefault();
                 var hpanel = $(event.target).closest('div.panel');
-                var icon = $(event.target).find('i.toggle-icon');
+                var icon = $(event.target).closest('i');
                 var body = hpanel.find('div.panel-body');
                 var footer = hpanel.find('div.panel-footer');
                 body.slideToggle(300);
