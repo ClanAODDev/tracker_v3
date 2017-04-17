@@ -2,16 +2,16 @@
 
 <div class="panel panel-filled">
     <div class="panel-body">
-        <div class="form-group {{ $errors->has('note-body') ? ' has-error' : null }}">
-            <label for="note-body" class="slight text-muted">Content</label>
-            <textarea name="note-body" id="note-body" class="form-control"
+        <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
+            <label for="body" class="slight text-muted">Content</label>
+            <textarea name="body" id="body" class="form-control"
                       rows="2" style="resize: vertical" required></textarea>
         </div>
 
         <div class="row">
             <div class="col-sm-4 form-group">
-                <label for="note-type" class="slight text-muted">Note Type</label>
-                <select name="note-type" id="note-type" class="form-control">
+                <label for="type" class="slight text-muted">Note Type</label>
+                <select name="type" id="type" class="form-control">
                     <option value="negative">Negative</option>
                     <option value="positive">Positive</option>
                     <option value="misc">Misc</option>
@@ -24,8 +24,8 @@
             </div>
 
             <div class="col-sm-4 form-group">
-                <label for="forum-thread" class="slight text-muted">Forum Thread ID</label>
-                <input type="number" class="form-control" name="forum-thread" id="forum-thread" />
+                <label for="forum_thread_id" class="slight text-muted">Forum Thread ID</label>
+                <input type="number" class="form-control" name="forum_thread_id" id="forum_thread_id" />
             </div>
 
             <div class="col-xs-4 form-group">

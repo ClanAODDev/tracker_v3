@@ -20,9 +20,7 @@ class Note extends Model
     protected $fillable = [
         'type',
         'body',
-        'forum_thread_id',
-        'member_id',
-        'author_id'
+        'forum_thread_id'
     ];
 
     /**
