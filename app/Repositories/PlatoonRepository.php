@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Platoon;
+use Carbon\Carbon;
 
 class PlatoonRepository
 {
