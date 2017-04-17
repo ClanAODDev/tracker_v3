@@ -21,7 +21,8 @@
         <div class="panel-footer">
             <span class="author text-muted">{{ $note->author->name }}</span>
             <div class="btn-group btn-group-xs pull-right">
-                <a href="#" class="btn btn-default"><i class="fa fa-wrench"></i> Edit</a>
+                <a href="#" class="btn btn-default"><i class="fa fa-wrench text-accent"></i> Edit</a>
+                <a href="#" class="btn btn-default"><i class="fa fa-trash text-danger"></i> Delete</a>
                 @if ($note->forum_thread_id)
                     <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}" target="_blank"
                        class="btn btn-default btn-default"><i class="fa fa-comment"></i> View Discussion</a>
