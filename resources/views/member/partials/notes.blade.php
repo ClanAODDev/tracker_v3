@@ -1,9 +1,9 @@
 @forelse ($notes as $note)
-    <div class="panel panel-filled panel-toggle note {{ $note['type'] }} collapsed">
-        <div class="panel-heading text-uppercase">
+    <div class="panel panel-filled note {{ $note['type'] }} collapsed">
+        <div class="panel-heading text-uppercase panel-toggle">
 
-            @if ($note['type'] == 'admin')
-                <span class="badge">{{ $note['type'] }}</span>
+            @if ($note['type'] == 'sr_ldr')
+                <span class="badge text-uppercase">SGT+</span>
             @endif
 
             <span class="badge">COC</span>
@@ -12,6 +12,7 @@
                 <span class="text-muted slight">{{ $note->updated_at->format('M d, Y') }}</span>
                 <i class="fa fa-chevron-up text-muted"></i>
             </div>
+
         </div>
 
         <div class="panel-body">
@@ -21,7 +22,7 @@
         </div>
 
         <div class="panel-footer">
-            <span class="author text-muted slight">{{ $note->author->name }}</span>
+            <span class="author text-muted">{{ $note->author->name }}</span>
             <div class="btn-group pull-right">
                 <a href="#" class="btn btn-default"><i class="fa fa-wrench text-accent"></i> Edit</a>
                 <a href="#" class="btn btn-default"><i class="fa fa-trash text-danger"></i> Delete</a>
@@ -34,13 +35,8 @@
         </div>
     </div>
 @empty
-    <div class="panel panel-filled">
-        <div class="panel-body text-muted">
-            Member has no notes
-        </div>
-    </div>
+
+    Member has no notes
 @endforelse
 
-{!! Form::open(['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
-@include('member.forms.add-note-form')
-{!! Form::close() !!}
+{{--@include('member.forms.add-note-form')--}}

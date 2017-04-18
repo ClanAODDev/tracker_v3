@@ -19,7 +19,7 @@ class CreateNotesTable extends Migration
             $table->integer('forum_thread_id')->nullable();
             $table->mediumInteger('member_id');
             $table->mediumInteger('author_id');
-            $table->enum('type', ['positive', 'negative', 'misc', 'admin']);
+            $table->enum('type', ['positive', 'negative', 'misc', 'sr_ldr']);
             $table->softDeletes();
             $table->timestamps();
         });

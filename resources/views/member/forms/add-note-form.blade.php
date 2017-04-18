@@ -1,5 +1,5 @@
+{!! Form::open(['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
 @include('application.partials.errors')
-
 <div class="panel panel-filled">
     <div class="panel-body">
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
@@ -16,8 +16,8 @@
                     <option value="positive">Positive</option>
                     <option value="misc">Misc</option>
 
-                    @if(auth()->user()->isRole('admin'))
-                        <option value="admin">Admin Only</option>
+                    @if(auth()->user()->isRole(['sr_ldr', 'admin']))
+                        <option value="sr_ldr">Sr Leaders Only</option>
                     @endif
 
                 </select>
@@ -34,3 +34,4 @@
         </div>
     </div>
 </div>
+{!! Form::close() !!}

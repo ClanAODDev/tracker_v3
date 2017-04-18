@@ -1,4 +1,4 @@
-<h4 class="m-t-lg">Aliases</h4>
+<h4 class="m-t-lg">Ingame Aliases</h4><hr />
 <div class="row">
     @forelse ($member->handles as $handle)
         <div class="col-md-4">

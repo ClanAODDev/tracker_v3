@@ -1521,7 +1521,7 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
     border-left: 3px solid #949ba2;
 }
 
-.panel.panel-c-accent, .note.admin {
+.panel.panel-c-accent, .note.sr_ldr {
     border-left: 3px solid #f6a821;
 }
 

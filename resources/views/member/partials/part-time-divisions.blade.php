@@ -1,4 +1,4 @@
-<h4 class="m-t-lg">Part-Time Divisions</h4>
+<h4 class="m-t-lg">Part-Time Divisions</h4><hr />
 <div class="row">
     @forelse ($member->partTimeDivisions as $division)
         <div class="col-md-4">

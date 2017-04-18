@@ -102,9 +102,10 @@ class MemberController extends Controller
         // hide admin notes from non-admin users
         $notes = $member->notes()->with('author')->get()
             ->filter(function ($note) {
-                if ($note->type == 'admin') {
-                    return auth()->user()->isRole('admin');
+                if ($note->type == 'sr_ldr') {
+                    return auth()->user()->isRole(['sr_ldr', 'admin']);
                 }
+
                 return true;
             });
 
