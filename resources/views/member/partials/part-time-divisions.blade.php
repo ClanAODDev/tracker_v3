@@ -16,8 +16,8 @@
             </a>
         </div>
     @empty
-        <div class="col-md-4">
-            <span class="text-muted">Not a part-time member of any divisions</span>
+        <div class="col-md-12 text-muted">
+            Not a part-time member of any divisions
         </div>
     @endforelse
 </div>

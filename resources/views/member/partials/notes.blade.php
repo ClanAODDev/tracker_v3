@@ -1,5 +1,5 @@
 @forelse ($notes as $note)
-    <div class="panel panel-filled note {{ $note['type'] }} collapsed">
+    <div class="panel panel-filled panel-toggle note {{ $note['type'] }} collapsed">
         <div class="panel-heading text-uppercase">
 
             @if ($note['type'] == 'admin')
@@ -10,17 +10,19 @@
 
             <div class="panel-tools">
                 <span class="text-muted slight">{{ $note->updated_at->format('M d, Y') }}</span>
-                <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
+                <i class="fa fa-chevron-up text-muted"></i>
             </div>
         </div>
 
         <div class="panel-body">
-            {{ $note->body }}
+            <div class="bs-example">
+                {{ $note->body }}
+            </div>
         </div>
 
         <div class="panel-footer">
-            <span class="author text-muted">{{ $note->author->name }}</span>
-            <div class="btn-group btn-group-xs pull-right">
+            <span class="author text-muted slight">{{ $note->author->name }}</span>
+            <div class="btn-group pull-right">
                 <a href="#" class="btn btn-default"><i class="fa fa-wrench text-accent"></i> Edit</a>
                 <a href="#" class="btn btn-default"><i class="fa fa-trash text-danger"></i> Delete</a>
                 @if ($note->forum_thread_id)
@@ -28,6 +30,7 @@
                        class="btn btn-default btn-default"><i class="fa fa-comment"></i> View Discussion</a>
                 @endif
             </div>
+            <div class="clearfix"></div>
         </div>
     </div>
 @empty
