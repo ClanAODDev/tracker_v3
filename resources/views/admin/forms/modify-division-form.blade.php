@@ -2,9 +2,13 @@
     <div class="col-md-6">
         <h4>Update {{ $division->name }}</h4>
         <div>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad incidunt magni minus, nihil quae qui sapiente similique! A aliquam consequuntur, est eum expedita, iure laboriosam modi, quasi quo rerum voluptatum?</p>
-            <p>Cum delectus eligendi excepturi harum iusto laborum nam natus possimus quis vitae. Aliquam asperiores aspernatur consequatur delectus dolor earum est, eum ex fugiat iste maxime minus nihil odit quis voluptates?</p>
-            <p>Atque debitis facilis laudantium nulla porro, vitae? Alias, asperiores at cumque deleniti doloribus earum eligendi eos est excepturi, facere itaque libero nesciunt nostrum odio possimus quibusdam ullam unde ut veritatis.</p>
+            <p>Administrators can rename, disable, or modify divisions on the tracker. For continuity purposes, division abbreviations cannot be changed after a division is created.</p>
+            <p>Marking a division inactive will:</p>
+            <ul>
+                <li>Stop data syncing from the AOD forums for that division</li>
+                <li>Remove the division from the tracker listing</li>
+                <li>Prevent non-admin users from accessing the division</li>
+            </ul>
         </div>
     </div>
 
@@ -23,7 +27,7 @@
                     <div class="col-xs-6">
                         <div class="form-group {{ $errors->has('abbreviation') ? ' has-error' : null }}">
                             <label for="abbreviation" class="form-label">Abbreviation</label>
-                            {!! Form::text('abbreviation', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                            {!! Form::text('abbreviation', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
                         </div>
                     </div>
                 </div>

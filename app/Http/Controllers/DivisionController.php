@@ -19,7 +19,7 @@ class DivisionController extends Controller
     {
         $this->division = $division;
 
-        $this->middleware('auth');
+        $this->middleware(['auth', 'activeDivision']);
     }
 
     /**

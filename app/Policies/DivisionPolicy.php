@@ -24,19 +24,6 @@ class DivisionPolicy
     }
 
     /**
-     * @param Division $division
-     * @return bool
-     */
-    public function show(Division $division)
-    {
-        if ( ! $division->active) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @param User $user
      * @param Division $division
      * @return bool
@@ -45,14 +32,9 @@ class DivisionPolicy
     {
 
         /**
-         * is division active?
          * is the user a division leader of the division?
          * is the user a senior leader?
          */
-
-        if ( ! $division->active) {
-            return false;
-        }
 
         if ($user->member->isDivisionLeader($division) &&
             $user->isRole('sr_ldr')

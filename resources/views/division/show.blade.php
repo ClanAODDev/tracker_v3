@@ -17,9 +17,13 @@
     @endcomponent
 
     <div class="container-fluid">
-        @include ('division.partials.census-short')
-        @include('division.partials.leadership')
-        @include('division.partials.staff-sergeants')
-        @include('division.partials.platoons')
+        @if ($division->active)
+            @include ('division.partials.census-short')
+            @include('division.partials.leadership')
+            @include('division.partials.staff-sergeants')
+            @include('division.partials.platoons')
+        @else
+            <p>This division is currently inactive, and can only be reactivated by a clan administrator.</p>
+        @endif
     </div>
 @stop

@@ -2575,6 +2575,7 @@ div.dt-button-info h2 {
 fieldset[disabled] .form-control {
     background-color: #2c2e34;
     opacity: 1;
+    color: rgba(255,255,255,.2);
 }
 
 .navbar-form .form-control {

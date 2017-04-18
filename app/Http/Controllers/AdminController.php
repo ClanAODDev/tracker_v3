@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Handle;
+use App\Http\Requests\Admin\UpdateDivisionForm;
 use App\Repositories\ClanRepository;
 use App\User;
-use Charts;
-use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
 
 class AdminController extends Controller
@@ -42,40 +41,22 @@ class AdminController extends Controller
         dd($handle);
     }
 
-
-    public function updateDivisions(Request $request)
+    /**
+     * @param UpdateDivisionForm $form
+     * @param Division $division
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function updateDivision(UpdateDivisionForm $form, Division $division)
     {
-        $updates = collect($request->input('divisions'));
-        $changeCount = 0;
+        $form->persist();
 
-        foreach ($updates as $abbreviation => $status) {
-            $division = Division::whereAbbreviation($abbreviation)->firstOrFail();
-
-            // only perform an update if the statuses differ
-            if ((bool) $division->active != (bool) $status) {
-                $changeCount++;
-                $division->active = (bool) $status;
-                $division->save();
-            }
-        }
-
-        if ( ! $changeCount) {
-            Toastr::warning('No changes made', "Update divisions", [
-                'positionClass' => 'toast-top-right',
-                'progressBar' => true
-            ]);
-
-            return redirect()->back();
-        }
-
-        Toastr::success("{$changeCount} divisions were updated successfully!",
-            "Update Divisions", [
+        Toastr::success("{$division->name} Division was updated successfully!",
+            "Update Division", [
                 'positionClass' => 'toast-top-right',
                 'progressBar' => true
             ]
         );
 
-
-        return redirect()->back();
+        return redirect(route('admin') . '#divisions');
     }
 }

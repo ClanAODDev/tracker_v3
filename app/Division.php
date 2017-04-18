@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 class Division extends Model
 {
     protected static $recordEvents = ['created', 'updated', 'deleted'];
+
     public $defaultSettings = [
         'slack_alert_created_member' => false,
         'slack_alert_removed_member' => false,
@@ -88,12 +89,17 @@ class Division extends Model
     use RecordsActivity;
     use SoftDeletes;
     use Notifiable;
+
     protected $casts = [
         'active' => 'boolean',
         'settings' => 'json',
     ];
+
     protected $fillable = [
-        'settings'
+        'settings',
+        'name',
+        'description',
+        'active'
     ];
 
     /**
