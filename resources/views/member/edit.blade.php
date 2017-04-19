@@ -3,8 +3,8 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            @if ($member->primaryDivision)
-                <img src="{{ getDivisionIconPath($member->primaryDivision->abbreviation) }}" />
+            @if ($division)
+                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
             @else
                 <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;" />
             @endif
@@ -20,7 +20,7 @@
 
 
     <div class="container-fluid">
-        {!! Breadcrumbs::render('member', $member) !!}
+        {!! Breadcrumbs::render('member', $member, $division) !!}
 
         <div class="row">
             <div class="col-md-12">

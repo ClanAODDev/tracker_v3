@@ -1,1 +1,0 @@
-{{ $event->user->name }} recruited {{ $event->subject->name }} &mdash; {{ $event->created_at->diffForHumans() }}

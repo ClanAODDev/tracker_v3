@@ -1,1 +1,0 @@
-{{ $event->user->name }} removed {{ $event->subject->name }} from AOD &mdash; {{ $event->created_at->diffForHumans() }}

@@ -2,7 +2,7 @@
 <hr />
 
 <div class="row">
-    @forelse($divisionLeaders as $leader)
+    @forelse($division->leaders as $leader)
         <div class="col-md-4">
             <a href="{{ route('member', $leader->clan_id) }}" class="panel panel-filled panel-c-accent">
                 <div class="panel-body">

@@ -28,6 +28,9 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
+        $userDivision = $user->member->primary->first();
+        $memberDivision = $member->primary->first();
+
         // user can update self
         if ($user->member->id == $member->id) {
             return true;
@@ -39,7 +42,7 @@ class MemberPolicy
         }
 
         // Jr leaders (CPl) can update anyone within division
-        if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $member->primaryDivision->id) {
+        if ($user->isRole('jr_ldr') && $userDivision->id == $memberDivision->id) {
             return true;
         }
 

@@ -21,7 +21,7 @@
 
     <div class="container-fluid">
 
-        {!! Breadcrumbs::render('member', $member) !!}
+        {!! Breadcrumbs::render('member', $member, $division) !!}
 
         @include ('member.partials.general-information')
         @include ('member.partials.tab-data')

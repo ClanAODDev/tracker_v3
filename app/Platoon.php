@@ -19,6 +19,10 @@ class Platoon extends Model
         'leader_id'
     ];
 
+    protected $with = [
+        'leader'
+    ];
+
     use RecordsActivity;
     use SoftDeletes;
 
