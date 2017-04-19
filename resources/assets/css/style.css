@@ -1748,8 +1748,8 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 }
 
 .modal-backdrop.in {
-    filter: alpha(opacity=10);
-    opacity: .1;
+    filter: alpha(opacity=75);
+    opacity: .75;
 }
 
 h1,

@@ -35,8 +35,20 @@
         </div>
     </div>
 @empty
-
     Member has no notes
 @endforelse
 
-{{--@include('member.forms.add-note-form')--}}
+<button type="button" class="btn btn-default pull-right"
+        data-toggle="modal" data-target="#create-member-note">Add note
+</button>
+
+{{-- add note modal form --}}
+<div class="modal fade" id="create-member-note">
+    <div class="modal-dialog" role="document" style="background-color: #000;">
+        @include('member.forms.add-note-form')
+    </div>
+</div>
+
+@if ($errors->count())
+    <script>$("#create-member-note").modal();</script>
+@endif

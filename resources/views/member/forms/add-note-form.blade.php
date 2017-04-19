@@ -1,6 +1,7 @@
 {!! Form::open(['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
 @include('application.partials.errors')
 <div class="panel panel-filled">
+    <div class="panel-heading">Add Member Note</div>
     <div class="panel-body">
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
             <label for="body" class="slight text-muted">Content</label>
