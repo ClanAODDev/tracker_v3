@@ -44,6 +44,7 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <label for="active" class="form-label m-l-sm">Active</label>
+                            {!! Form::hidden('active', false) !!}
                             {!! Form::checkbox('active', 1, null, ['id' => 'active', 'class' => 'pull-left']) !!}
                         </div>
                     </div>
