@@ -8,7 +8,8 @@
             <textarea name="body" id="body" class="form-control"
                       rows="2" style="resize: vertical" required></textarea>
         </div>
-
+    </div>
+    <div class="panel-footer">
         <div class="row">
             <div class="col-sm-4 form-group">
                 <label for="type" class="slight text-muted">Note Type</label>
