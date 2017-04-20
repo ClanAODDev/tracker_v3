@@ -28,8 +28,8 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        $userDivision = $user->member->primary->first();
-        $memberDivision = $member->primary->first();
+        $userDivision = $user->member->primaryDivision;
+        $memberDivision = $member->primaryDivision;
 
         // user can update self
         if ($user->member->id == $member->id) {
@@ -60,6 +60,11 @@ class MemberPolicy
     {
         // can't delete yourself
         if ($member->id == $user->member->id) {
+            return false;
+        }
+
+        // prevent exploiting ability to change rank to SGT
+        if ( ! $user->isRole(['admin', 'sr_ldr'])) {
             return false;
         }
 

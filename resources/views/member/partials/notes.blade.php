@@ -6,10 +6,20 @@
                 <span class="badge text-uppercase">SGT+</span>
             @endif
 
-            <span class="badge">COC</span>
+            @forelse ($note->tags as $tag)
+                <small class="badge">{{ $tag->name }}</small>
+            @empty
+                <small class="badge text-muted">No tag</small>
+            @endforelse
 
             <div class="panel-tools">
-                <span class="text-muted slight">{{ $note->updated_at->format('M d, Y') }}</span>
+                <span class="text-muted slight">
+                    @if ($note->updated_at > $note->created_at)
+                        <strong>Updated</strong>: {{ $note->updated_at->format('M d, Y') }}
+                    @else
+                        {{ $note->created_at->format('M d, Y') }}
+                    @endif
+                </span>
                 <i class="fa fa-chevron-up text-muted"></i>
             </div>
 
@@ -24,8 +34,12 @@
         <div class="panel-footer">
             <span class="author text-muted">{{ $note->author->name }}</span>
             <div class="btn-group pull-right">
-                <a href="#" class="btn btn-default"><i class="fa fa-wrench text-accent"></i> Edit</a>
-                <a href="#" class="btn btn-default"><i class="fa fa-trash text-danger"></i> Delete</a>
+                @can('delete', $member)
+                    <a href="{{ route('editNote', [$member->clan_id, $note]) }}" class="btn btn-default">
+                        <i class="fa fa-wrench text-accent"></i> Edit
+                    </a>
+                @endcan
+
                 @if ($note->forum_thread_id)
                     <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}" target="_blank"
                        class="btn btn-default btn-default"><i class="fa fa-comment"></i> View Discussion</a>
@@ -45,7 +59,9 @@
 {{-- add note modal form --}}
 <div class="modal fade" id="create-member-note">
     <div class="modal-dialog" role="document" style="background-color: #000;">
-        @include('member.forms.add-note-form')
+        {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
+        @include('note.forms.note-form', ['action' => 'Add Member Note'])
+        {!! Form::close() !!}
     </div>
 </div>
 

@@ -20,6 +20,7 @@ elixir(function (mix) {
             'libs/jquery/jquery.repeater.min.js',
             'libs/jquery/jquery.stickytabs.js',
             'libs/jquery/jquery.bootcomplete.min.js',
+            'libs/jquery/jquery.select2.min.js',
 
             'libs/jquery/jquery.flot.min.js',
             'libs/jquery/jquery.flot.axislabels.js',

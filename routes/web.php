@@ -19,9 +19,10 @@ Route::group(['prefix' => 'members'], function () {
     // member notes
     Route::group(['prefix' => '{member}/notes'], function () {
         Route::post('', 'NoteController@store')->name('storeNote');
-        Route::put('{division}', 'NoteController@update')->name('updateNote');
-        Route::patch('{division}', 'NoteController@update');
-        Route::delete('{division}', 'NoteController@destroy')->name('deleteNote');
+        Route::get('{note}/edit', 'NoteController@edit')->name('editNote');
+        Route::post('{note}', 'NoteController@update')->name('updateNote');
+        Route::patch('{note}', 'NoteController@update');
+        Route::delete('{note}', 'NoteController@destroy')->name('deleteNote');
     });
 });
 
