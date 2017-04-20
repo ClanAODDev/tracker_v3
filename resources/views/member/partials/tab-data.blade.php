@@ -6,7 +6,7 @@
     <div class="tab-content">
         <div id="notes-panel" class="tab-pane active">
             <div class="panel-body">
-                @include('member.partials.notes')
+
             </div>
         </div>
         <div id="division-data-panel" class="tab-pane">

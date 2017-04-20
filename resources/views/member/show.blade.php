@@ -23,8 +23,11 @@
 
         {!! Breadcrumbs::render('member', $member, $division) !!}
 
-        @include ('member.partials.general-information')
-        @include ('member.partials.tab-data')
+        <div class="row">
+            <div class="col-md-6">@include ('member.partials.notes')</div>
+            <div class="col-md-6">@include ('member.partials.general-information')</div>
+        </div>
+
         @include ('member.partials.aliases')
         @include ('member.partials.part-time-divisions')
     </div>

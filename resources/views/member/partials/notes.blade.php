@@ -1,9 +1,16 @@
+<h4 class="m-t-lg">
+    Member Notes
+    <button type="button" class="btn btn-default pull-right"
+            data-toggle="modal" data-target="#create-member-note">Add note
+    </button>
+</h4>
+<hr />
 @forelse ($notes as $note)
-    <div class="panel panel-filled note {{ $note['type'] }} collapsed">
-        <div class="panel-heading text-uppercase panel-toggle">
+    <div class="panel panel-filled note {{ $note['type'] }}">
+        <div class="panel-heading text-uppercase">
 
             @if ($note['type'] == 'sr_ldr')
-                <span class="badge text-uppercase">SGT+</span>
+                <span class="badge">SGT+</span>
             @endif
 
             @forelse ($note->tags as $tag)
@@ -12,7 +19,7 @@
                 <small class="badge text-muted">No tag</small>
             @endforelse
 
-            <div class="panel-tools">
+            <div class="pull-right">
                 <span class="text-muted slight">
                     @if ($note->updated_at > $note->created_at)
                         <strong>Updated</strong>: {{ $note->updated_at->format('M d, Y') }}
@@ -20,7 +27,6 @@
                         {{ $note->created_at->format('M d, Y') }}
                     @endif
                 </span>
-                <i class="fa fa-chevron-up text-muted"></i>
             </div>
 
         </div>
@@ -51,10 +57,6 @@
 @empty
     Member has no notes
 @endforelse
-
-<button type="button" class="btn btn-default pull-right"
-        data-toggle="modal" data-target="#create-member-note">Add note
-</button>
 
 {{-- add note modal form --}}
 <div class="modal fade" id="create-member-note">
