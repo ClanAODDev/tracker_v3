@@ -1,9 +1,6 @@
 <?php
 
-use App\Division;
-use App\Member;
-
-Breadcrumbs::register('member', function ($breadcrumbs, Member $member, Division $division) {
+Breadcrumbs::register('member', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {

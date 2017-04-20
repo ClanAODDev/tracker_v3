@@ -1329,19 +1329,19 @@ sup {
 }
 
 .navbar-form input.form-control::-webkit-input-placeholder {
-    color: rgba(255, 255, 255, .3);
+    color: rgba(0, 0, 0, .3) !important;
 }
 
 .navbar-form input.form-control:-moz-placeholder {
-    color: rgba(255, 255, 255, .3);
+    color: rgba(0, 0, 0, .3) !important;
 }
 
 .navbar-form input.form-control::-moz-placeholder {
-    color: rgba(255, 255, 255, .3);
+    color: rgba(0, 0, 0, .3) !important;
 }
 
 .navbar-form input.form-control:-ms-input-placeholder {
-    color: rgba(255, 255, 255, .3);
+    color: rgba(0, 0, 0, .3) !important;
 }
 
 .navbar-nav > li > a {
