@@ -35,8 +35,8 @@
 @section('footer_scripts')
     <script type="text/javascript">
         $("#select-tags").select2({
-            maximumSelectionLength: 3,
-            theme: "classic"
+            maximumSelectionLength: 2,
+            placeholder: 'Select tag(s)'
         });
     </script>
 @endsection

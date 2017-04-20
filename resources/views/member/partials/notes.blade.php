@@ -10,7 +10,7 @@
         <div class="panel-heading text-uppercase">
 
             @if ($note['type'] == 'sr_ldr')
-                <span class="badge">SGT+</span>
+                <small class="label label-success">SGT+</small>
             @endif
 
             @forelse ($note->tags as $tag)
