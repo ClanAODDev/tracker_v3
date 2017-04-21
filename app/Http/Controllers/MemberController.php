@@ -100,8 +100,6 @@ class MemberController extends Controller
     {
         $division = $member->primaryDivision;
 
-        $tags = Tag::pluck('name', 'id');
-
         // hide admin notes from non-admin users
         $notes = $member->notes()->with('author')->get()
             ->filter(function ($note) {
@@ -113,7 +111,7 @@ class MemberController extends Controller
             });
 
         return view('member.show', compact(
-            'member', 'division', 'notes', 'tags'
+            'member', 'division', 'notes'
         ));
     }
 
