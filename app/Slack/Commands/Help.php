@@ -8,6 +8,7 @@ use App\Slack\Command;
 class Help extends Base implements Command
 {
     private $content = [];
+
     private $commands = [
         [
             'name' => 'Help reference',
