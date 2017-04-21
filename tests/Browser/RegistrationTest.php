@@ -6,16 +6,12 @@ use Laravel\Dusk\Browser;
 use Tests\CreatesApplication;
 use Tests\DuskTestCase;
 
-class ExampleTest extends DuskTestCase
+class RegistrationTest extends DuskTestCase
 {
     use CreatesApplication;
 
-    /**
-     * A basic browser test example.
-     *
-     * @return void
-     */
-    public function testBasicExample()
+    /** @test */
+    public function test_user_cannot_incude_aod_in_username()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/register')
