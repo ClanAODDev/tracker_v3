@@ -3,15 +3,18 @@
 namespace App\Slack\Commands;
 
 use App\Division;
+use App\Slack\Base;
 use App\Slack\Command;
 
-class AllDivisions implements Command
+class AllDivisions extends Base implements Command
 {
     private $data;
     private $divisions;
 
     public function __construct($data)
     {
+        parent::__construct($data);
+
         $this->data = $data;
     }
 

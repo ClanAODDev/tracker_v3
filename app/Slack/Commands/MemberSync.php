@@ -19,6 +19,8 @@ class MemberSync extends Base implements Command
      */
     public function __construct($data)
     {
+        parent::__construct($data);
+
         $this->data = $data;
     }
 
