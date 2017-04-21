@@ -30,6 +30,7 @@
                             </span>
                         @endif
                     </div>
+
                     <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                         <label class="control-label" for="password">Password</label>
                         <input type="password" name="password" id="password" class="form-control">
