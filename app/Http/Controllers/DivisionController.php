@@ -66,11 +66,11 @@ class DivisionController extends Controller
         $lastYearCensus = $censusCounts->reverse();
 
         $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
-        $platoons = $division->platoons()->with('leader.rank', 'leader.position', 'members')
-            ->orderBy('order')->get();
+        $platoons = $division->platoons()->with('leader.rank')
+            ->withCount('members')->orderBy('order')->get();
 
-        $generalSergeants = $division->generalSergeants()->with('rank', 'position')->get();
-        $staffSergeants = $division->staffSergeants()->with('rank', 'position')->get();
+        $generalSergeants = $division->generalSergeants()->with('rank')->get();
+        $staffSergeants = $division->staffSergeants()->with('rank')->get();
 
         return view('division.show', compact(
             'division', 'previousCensus', 'platoons', 'lastYearCensus',
