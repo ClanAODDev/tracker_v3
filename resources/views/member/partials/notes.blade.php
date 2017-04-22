@@ -55,7 +55,7 @@
         </div>
     </div>
 @empty
-    Member has no notes
+    <span class="note">Member has no notes</span>
 @endforelse
 
 {{-- add note modal form --}}
