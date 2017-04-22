@@ -18,3 +18,4 @@ composer.phar
 /storage/oauth-private.key
 /storage/oauth-public.key
 /_ide_helper.php
+/config/mail.mailtrap.php
