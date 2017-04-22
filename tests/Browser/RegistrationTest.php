@@ -11,7 +11,7 @@ class RegistrationTest extends DuskTestCase
     use CreatesApplication;
 
     /** @test */
-    public function test_user_cannot_incude_aod_in_username()
+    public function test_user_cannot_include_aod_in_username()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/register')
