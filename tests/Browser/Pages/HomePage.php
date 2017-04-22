@@ -24,7 +24,7 @@ class HomePage extends Page
      */
     public function assert(Browser $browser)
     {
-        //
+        $browser->assertSee('NAVIGATE ALL DIVISIONS');
     }
 
     /**
