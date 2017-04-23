@@ -49,6 +49,11 @@ var Tracker = Tracker || {};
          */
         InitTabActivate: function () {
             $('.nav-tabs').stickyTabs();
+
+            // handle sparklines that aren't visible on the dom initially
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $.sparkline_display_visible();
+            });
         },
 
         /**
