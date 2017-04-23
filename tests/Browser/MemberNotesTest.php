@@ -1,6 +1,6 @@
 <?php
 
-namespace _\Tests\Browser;
+namespace Tests\Browser;
 
 use App\Note;
 use App\User;
@@ -12,20 +12,36 @@ class MemberNotesTest extends DuskTestCase
 {
 
     /** @test */
-    public function test_a_logged_in_user_can_see_notes()
+    public function test_an_officer_can_see_notes()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
+        $user = User::whereRoleId(2)->first();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
                 ->visit(new MemberProfile)
                 ->assertVisible('.note');
         });
     }
 
     /** @test */
+    public function test_a_member_cannot_see_notes()
+    {
+        $user = User::whereRoleId(1)->whereDeveloper(false)->first();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
+                ->visit(new MemberProfile())
+                ->assertDontSee('notes');
+        });
+    }
+
+    /** @test */
     public function test_a_user_can_create_notes()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->loginAs(User::find(1))
+        $user = User::where('role_id', '>', 1)->first();
+
+        $this->browse(function (Browser $browser) use ($user) {
+            $browser->loginAs($user)
                 ->visit(new MemberProfile)
                 ->press('Add note')
                 ->waitFor('#create-member-note')
