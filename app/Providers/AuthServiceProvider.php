@@ -2,14 +2,7 @@
 
 namespace App\Providers;
 
-use App\Division;
-use App\Member;
-use App\Platoon;
-use App\Policies\DivisionPolicy;
-use App\Policies\MemberPolicy;
-use App\Policies\PlatoonPolicy;
-use App\Policies\SquadPolicy;
-use App\Squad;
+
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -21,10 +14,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Member::class => MemberPolicy::class,
-        Squad::class => SquadPolicy::class,
-        Platoon::class => PlatoonPolicy::class,
-        Division::class => DivisionPolicy::class,
+        \App\Member::class => \App\Policies\MemberPolicy::class,
+        \App\Squad::class => \App\Policies\SquadPolicy::class,
+        \App\Platoon::class => \App\Policies\PlatoonPolicy::class,
+        \App\Division::class => \App\Policies\DivisionPolicy::class,
+        \App\Note::class => \App\Policies\NotePolicy::class,
     ];
 
     /**
