@@ -31,11 +31,6 @@ class MemberPolicy
         $userDivision = $user->member->primaryDivision;
         $memberDivision = $member->primaryDivision;
 
-        // user can update self
-        if ($user->member->id == $member->id) {
-            return true;
-        }
-
         // Officers can update anyone within own platoon (or squad)
         if ($user->isRole('officer') && $user->member->platoon == $member->platoon) {
             return true;
