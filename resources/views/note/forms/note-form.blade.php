@@ -3,7 +3,7 @@
     <div class="panel-heading">{{ $action }}</div>
     <div class="panel-body">
 
-        <div class="form-group">
+        <div class="form-group {{ $errors->has('tag_list') ? ' has-error' : null }}">
             {!! Form::label('tag_list', 'Tags', ['class' => 'slight text-muted']) !!}
             {!! Form::select('tag_list[]', App\Tag::pluck('name', 'id'), null, ['id' => 'select-tags', 'class' => 'form-control', 'multiple', 'style' => 'width: 100%;']) !!}
         </div>

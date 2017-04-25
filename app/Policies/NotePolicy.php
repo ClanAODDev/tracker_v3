@@ -27,6 +27,11 @@ class NotePolicy
         //
     }
 
+    /**
+     * Only officers and above can create notes
+     *
+     * @return bool
+     */
     public function create()
     {
         if (auth()->user()->isRole('member')) {
@@ -34,5 +39,14 @@ class NotePolicy
         }
 
         return true;
+    }
+
+    /**
+     * Officers and above can see notes
+     * @return bool
+     */
+    public function show()
+    {
+        return $this->create();
     }
 }

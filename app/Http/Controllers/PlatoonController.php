@@ -35,6 +35,8 @@ class PlatoonController extends Controller
     {
         $this->authorize('create', [Platoon::class, $division]);
 
+        $division->load('unassigned.rank');
+
         return view('platoon.create', compact('division'));
     }
 

@@ -11,7 +11,6 @@
         @endslot
         @slot ('heading')
             {!! $member->present()->rankName !!}
-            @include('member.partials.edit-member-button', ['member' => $member])
         @endslot
         @slot ('subheading')
             {{ $member->position->name  }}
@@ -20,7 +19,7 @@
 
 
     <div class="container-fluid">
-        {!! Breadcrumbs::render('member', $member, $division) !!}
+        @include ('application.partials.back-breadcrumb', ['page' => 'profile'])
 
         <div class="row">
             <div class="col-md-12">

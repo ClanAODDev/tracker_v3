@@ -15,6 +15,9 @@ function doForumFunction(array $ids, $action)
     } else if ($action === 'showThread') {
         $path = "https://www.clanaod.net/forums/showthread.php?";
         $params = ['t' => array_first($ids)];
+    } else if ($action === 'forumProfile') {
+        $path = "https://www.clanaod.net/forums/member.php?";
+        $params = ['u' => array_first($ids)];
     } else {
         if ($action === "pm") {
             $params = ['do' => 'newpm', 'u' => $ids];

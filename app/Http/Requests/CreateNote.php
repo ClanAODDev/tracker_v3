@@ -27,6 +27,7 @@ class CreateNote extends FormRequest
     {
         return [
             'body' => 'required',
+            'tag_list' => 'required|array|min:1',
             'forum_thread_id' => 'nullable|numeric'
         ];
     }
@@ -34,6 +35,7 @@ class CreateNote extends FormRequest
     public function messages()
     {
         return [
+            'tag_list.required' => 'You must provide at least one tag for your note',
             'body.required' => 'You must provide content for your note',
             'forum_thread_id.numeric' => 'Forum thread ID must be a number'
         ];

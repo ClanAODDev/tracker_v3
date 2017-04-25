@@ -31,7 +31,6 @@
         @endcan
     </div>
 
-    </form>
 
     <script>
         // omit leader field if using TBA

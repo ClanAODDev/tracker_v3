@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+//Auth::onceUsingId(4);
+
 Auth::routes();
 
 Route::get('/home', 'AppController@index')->name('home');

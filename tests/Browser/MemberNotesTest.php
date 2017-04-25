@@ -12,9 +12,9 @@ class MemberNotesTest extends DuskTestCase
 {
 
     /** @test */
-    public function test_an_officer_can_see_notes()
+    public function officers_can_see_notes()
     {
-        $user = User::whereRoleId(2)->first();
+        $user = User::where('role_id', '>', 1)->first();
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
@@ -24,33 +24,36 @@ class MemberNotesTest extends DuskTestCase
     }
 
     /** @test */
-    public function test_a_member_cannot_see_notes()
+    public function members_cannot_see_notes()
     {
         $user = User::whereRoleId(1)->whereDeveloper(false)->first();
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit(new MemberProfile())
-                ->assertDontSee('notes');
+                ->assertVisible('.notes-hidden');
         });
     }
 
     /** @test */
-    public function test_a_user_can_create_notes()
+    public function officers_and_above_can_create_notes()
     {
         $user = User::where('role_id', '>', 1)->first();
 
         $this->browse(function (Browser $browser) use ($user) {
             $browser->loginAs($user)
                 ->visit(new MemberProfile)
-                ->press('Add note')
+                ->press('Actions')
+                ->click('.btn-add-note')
                 ->waitFor('#create-member-note')
+                ->click('.select2-selection__rendered')
+                ->click('.select2-results__option')
                 ->type('body', '--Example note--')
                 ->select('type', 'misc')
                 ->press('Submit');
 
             $browser->assertSeeIn('.note', '--Example note--');
-            $browser->assertSeeIn('.note', 'NO TAG');
+            $browser->assertSeeIn('.note', 'COC');
         });
 
         // cleanup created note
