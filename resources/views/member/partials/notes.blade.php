@@ -12,14 +12,6 @@
                 <small class="badge text-muted">No tag</small>
             @endforelse
 
-            @if ($loop->first)
-                <div class="pull-right">
-                    <button type="button" class="btn btn-default btn-xs"
-                            data-toggle="modal" data-target="#create-member-note">Add note
-                    </button>
-                </div>
-            @endif
-
         </div>
 
         <div class="panel-body">
