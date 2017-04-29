@@ -151,6 +151,8 @@ class PlatoonController extends Controller
     {
         $this->authorize('update', $platoon);
 
+        $division->load('unassigned.rank');
+
         return view(
             'platoon.edit',
             compact('division', 'platoon')
