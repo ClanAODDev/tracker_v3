@@ -115,10 +115,7 @@ class DivisionController extends Controller
     {
         $form->persist();
 
-        Toastr::success('Changes saved successfully!', "Update {$division->name}", [
-            'positionClass' => 'toast-top-right',
-            'progressBar' => true
-        ]);
+        $this->showToast('Changes saved successfully');
 
         if ($division->settings()->get('slack_alert_division_edited')) {
             $division->notify(new DivisionEdited($division));

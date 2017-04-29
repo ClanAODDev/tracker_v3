@@ -62,11 +62,7 @@ class SquadController extends Controller
 
         $form->persist();
 
-        Toastr::success(
-            ucwords($division->locality('squad')) . " has been created!",
-            "Success",
-            ['positionClass' => 'toast-top-right', 'progressBar' => true]
-        );
+        $this->showToast(ucwords($division->locality('squad')) . " has been created!");
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
@@ -107,12 +103,8 @@ class SquadController extends Controller
      * @param Platoon $platoon
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(
-        UpdateSquadForm $form,
-        Division $division,
-        Platoon $platoon,
-        Squad $squad
-    ) {
+    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon)
+    {
         if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
@@ -121,11 +113,7 @@ class SquadController extends Controller
 
         $form->persist();
 
-        Toastr::success(
-            ucwords($squad->name) . " has been updated!",
-            "Success",
-            ['positionClass' => 'toast-top-right', 'progressBar' => true]
-        );
+        $this->showToast('Squad has been updated');
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }
@@ -136,22 +124,13 @@ class SquadController extends Controller
      * @param DeleteSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @param Squad $squad
      * @return \Illuminate\Http\Response
      */
-    public function destroy(
-        DeleteSquadForm $form,
-        Division $division,
-        Platoon $platoon,
-        Squad $squad
-    ) {
+    public function destroy(DeleteSquadForm $form, Division $division, Platoon $platoon)
+    {
         $form->persist();
 
-        Toastr::success(
-            ucwords($squad->name) . " has been deleted!",
-            "Success",
-            ['positionClass' => 'toast-top-right', 'progressBar' => true]
-        );
+        $this->showToast('Squad has been deleted');
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
     }

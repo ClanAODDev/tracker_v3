@@ -9,7 +9,6 @@ use App\Http\Requests\UpdatePlatoonForm;
 use App\Member;
 use App\Platoon;
 use App\Repositories\PlatoonRepository;
-use Charts;
 use Toastr;
 
 class PlatoonController extends Controller
@@ -57,11 +56,7 @@ class PlatoonController extends Controller
 
         $form->persist();
 
-        Toastr::success(
-            "{$division->locality('platoon')} has been created!",
-            "Success",
-            ['positionClass' => 'toast-top-right', 'progressBar' => true]
-        );
+        $this->showToast("{$division->locality('platoon')} has been created!");
 
         return redirect()->route('division', $division->abbreviation);
     }
@@ -151,7 +146,7 @@ class PlatoonController extends Controller
     {
         $this->authorize('update', $platoon);
 
-        $division->load('unassigned.rank');
+        $division->load('unassigned.rank')->withCount('unassigned')->get();
 
         return view(
             'platoon.edit',
@@ -175,18 +170,16 @@ class PlatoonController extends Controller
                 ->withInput();
         }
 
-        $assignedCount = collect(json_decode($form->member_ids))->count();
+        $toastMessage = "Your changes were saved";
+
+        if ($form->member_ids) {
+            $assignedCount = count(json_decode($form->member_ids));
+            $toastMessage .= " and {$assignedCount} members were assigned!";
+        }
 
         $form->persist($platoon);
 
-        Toastr::success(
-            "{$platoon->name} has been updated and {$assignedCount} members were assigned!",
-            "Success",
-            [
-                'positionClass' => 'toast-top-right',
-                'progressBar' => true
-            ]
-        );
+        $this->showToast($toastMessage);
 
         return redirect()->route('division', $division->abbreviation);
     }
@@ -194,22 +187,15 @@ class PlatoonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param $division
-     * @param $platoon
+     * @param DeletePlatoonForm $form
+     * @param Division $division
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(DeletePlatoonForm $form, Division $division, Platoon $platoon)
+    public function destroy(DeletePlatoonForm $form, Division $division)
     {
         $form->persist();
 
-        Toastr::success(
-            ucwords($platoon->name) . " has been deleted!",
-            "Success",
-            [
-                'positionClass' => 'toast-top-right',
-                'progressBar' => true
-            ]
-        );
+        $this->showToast('Platoon has been deleted');
 
         return redirect()->route('division', $division->abbreviation);
     }
