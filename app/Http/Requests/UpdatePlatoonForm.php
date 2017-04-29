@@ -52,6 +52,14 @@ class UpdatePlatoonForm extends FormRequest
             $this->only(['name', 'leader_id'])
         );
 
+        if ($this->member_ids) {
+            collect(json_decode($this->member_ids))->each(function ($memberId) {
+                $member = Member::find($memberId);
+                $member->platoon()->associate($this->platoon);
+                $member->save();
+            });
+        }
+
         /**
          * Assign leader as leader of platoon
          * Place member inside platoon

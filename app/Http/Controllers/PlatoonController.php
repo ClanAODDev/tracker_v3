@@ -165,7 +165,7 @@ class PlatoonController extends Controller
      * @param UpdatePlatoonForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
     public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
     {
@@ -175,10 +175,12 @@ class PlatoonController extends Controller
                 ->withInput();
         }
 
+        $assignedCount = collect(json_decode($form->member_ids))->count();
+
         $form->persist($platoon);
 
         Toastr::success(
-            "{$platoon->name} has been updated!",
+            "{$platoon->name} has been updated and {$assignedCount} members were assigned!",
             "Success",
             [
                 'positionClass' => 'toast-top-right',
