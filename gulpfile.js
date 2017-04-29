@@ -34,6 +34,7 @@ elixir(function (mix) {
             'libs/bootstrap/bootstrap-multiselect.js',
 
             'libs/sparkline.js',
+            'libs/CopyClipboard.js',
 
             'libs/dataTables/jquery.dataTables.min.js',
             'libs/dataTables/dataTables.bootstrap.js',
