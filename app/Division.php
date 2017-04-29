@@ -221,7 +221,9 @@ class Division extends Model
     {
         return $this->members()
             ->where('platoon_id', 0)
-            ->whereIn('position_id', [1]);
+            ->whereIn('position_id', [1])
+            ->orderBy('rank_id', 'asc')
+            ->orderBy('name', 'asc');
     }
 
     public function locality($string)
