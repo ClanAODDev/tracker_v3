@@ -42,7 +42,7 @@
                         <div class="form-group m-t-md">
                             {!! Form::label('is_tba', 'Leader TBA') !!}
                             <div style="margin-right:5px;float: left;">
-                                <input id="is_tba" type="checkbox" {{ (empty($squad->leader_id)) ? "checked" : null }} />
+                                <input id="is_tba" type="checkbox" {{ (empty($platoon->leader_id)) ? "checked" : null }} />
                             </div>
                         </div>
                     </div>
