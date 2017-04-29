@@ -24,16 +24,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
 
-<script>
-    toastr.options = {
-        "debug": false,
-        "newestOnTop": false,
-        "positionClass": "toast-bottom-right",
-        "closeButton": true,
-        "progressBar": true,
-    }
-</script>
-
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>

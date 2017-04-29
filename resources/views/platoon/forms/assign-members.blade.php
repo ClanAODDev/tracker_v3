@@ -24,8 +24,7 @@
             <div class="panel-heading">Selected Members
                 <span class="assigned-count badge pull-right">0</span>
             </div>
-            <div class="panel-body assigned-members" style="max-height: 300px; overflow-y: scroll;">
-            </div>
+            <div class="panel-body assigned-members" style="max-height: 300px; overflow-y: scroll;"></div>
         </div>
     </div>
 </div>
