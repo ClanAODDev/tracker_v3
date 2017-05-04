@@ -31,7 +31,7 @@
             </span>
             <div class="btn-group pull-right">
                 @can('delete', $member)
-                    <a href="{{ route('editNote', [$member->clan_id, $note]) }}" class="btn btn-default">
+                    <a href="{{ route('editNote', [$member->clan_id, $note]) }}" class="btn btn-default btn-sm">
                         <i class="fa fa-wrench text-accent"></i> Edit
                     </a>
                 @endcan
@@ -55,7 +55,7 @@
 <div class="modal fade" id="create-member-note">
     <div class="modal-dialog" role="document" style="background-color: #000;">
         {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
-        @include('note.forms.note-form', ['action' => 'Add Member Note'])
+        @include('member.forms.note-form', ['action' => 'Add Member Note'])
         {!! Form::close() !!}
     </div>
 </div>

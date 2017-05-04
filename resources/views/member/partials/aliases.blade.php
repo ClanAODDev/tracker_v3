@@ -1,4 +1,10 @@
-<h4 class="m-t-lg">Ingame Aliases</h4><hr />
+<h4 class="m-t-lg">
+    Ingame Aliases
+    <a href="#" class="btn btn-default pull-right btn-sm">
+        <i class="fa fa-cog text-accent"></i> MANAGE
+    </a>
+</h4>
+<hr />
 <div class="row">
     @forelse ($member->handles as $handle)
         <div class="col-md-4">

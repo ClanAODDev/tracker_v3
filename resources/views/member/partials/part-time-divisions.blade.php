@@ -1,4 +1,9 @@
-<h4 class="m-t-lg">Part-Time Divisions</h4><hr />
+<h4 class="m-t-lg">
+    Part-Time Divisions
+    <a href="#" class="btn btn-default btn-sm pull-right">
+        <i class="fa fa-cog text-accent"></i> MANAGE
+    </a>
+</h4><hr />
 <div class="row">
     @forelse ($member->partTimeDivisions as $division)
         <div class="col-md-4">

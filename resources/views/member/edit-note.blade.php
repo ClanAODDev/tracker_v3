@@ -24,7 +24,7 @@
         {!! Breadcrumbs::render('member', $member, $division) !!}
 
         {!! Form::model($note, ['method' => 'post', 'route' => ['updateNote', $member->clan_id, $note]]) !!}
-        @include ('note.forms.note-form', ['action' => 'Edit Member Note'])
+        @include ('member.forms.note-form', ['action' => 'Edit Member Note'])
         {!! Form::close() !!}
 
     </div>

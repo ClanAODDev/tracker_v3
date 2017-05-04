@@ -40,7 +40,7 @@ class NoteController extends Controller
 
         $tags = Tag::pluck('name', 'id');
 
-        return view('note.edit', compact(
+        return view('member.edit-note', compact(
             'note', 'division', 'member', 'tags'
         ));
     }
