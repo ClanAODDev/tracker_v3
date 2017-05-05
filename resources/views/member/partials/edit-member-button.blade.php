@@ -21,6 +21,7 @@
         <li>
             <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank">Send forum PM</a>
         </li>
+
         <li>
             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}" target="_blank">View forum profile</a>
         </li>
