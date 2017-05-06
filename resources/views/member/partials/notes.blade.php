@@ -1,56 +1,55 @@
-@forelse ($notes as $note)
-    <div class="panel panel-filled note {{ $note['type'] }}">
-        <div class="panel-heading text-uppercase">
-
-            @if ($note['type'] == 'sr_ldr')
-                <small class="label label-success">SGT+</small>
-            @endif
-
-            @forelse ($note->tags as $tag)
-                <small class="badge">{{ $tag->name }}</small>
-            @empty
-                <small class="badge text-muted">No tag</small>
-            @endforelse
-
-        </div>
-
-        <div class="panel-body">
-            <div class="bs-example">
-                {{ $note->body }}
-            </div>
-        </div>
-
-        <div class="panel-footer">
-            <span class="author text-muted slight text-uppercase">
-                <strong>{{ $note->author->name }}</strong> -
-                @if ($note->updated_at > $note->created_at)
-                    <strong>Updated</strong>: {{ $note->updated_at->format('M d, Y') }}
+<div class="vertical-container v-timeline" style="margin-top: 0;">
+    @forelse ($notes as $note)
+        <div class="vertical-timeline-block note">
+            <div class="vertical-timeline-icon">
+                @if($note->type == 'negative')
+                    <i class="fa fa-thumbs-down text-danger"></i>
+                @elseif ($note->type == 'positive')
+                    <i class="fa fa-thumbs-up text-success"></i>
+                @elseif ($note->type == 'sr_ldr')
+                    <i class="fa fa-shield text-success"></i>
                 @else
-                    {{ $note->created_at->format('M d, Y') }}
-                @endif
-            </span>
-            <div class="btn-group pull-right">
-                @can('delete', $member)
-                    <a href="{{ route('editNote', [$member->clan_id, $note]) }}" class="btn btn-default btn-sm">
-                        <i class="fa fa-wrench text-accent"></i> Edit
-                    </a>
-                @endcan
-
-                @if ($note->forum_thread_id)
-                    <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}" target="_blank"
-                       class="btn btn-default btn-default"><i class="fa fa-comment"></i> View Discussion</a>
+                    <i class="fa fa-comment text-accent"></i>
                 @endif
             </div>
-            <div class="clearfix"></div>
+            <div class="vertical-timeline-content">
+                <div class="p-sm">
+                    <span class="vertical-date pull-right text-muted"> <small>
+                            @if ($note->updated_at > $note->created_at)
+                                {{ $note->updated_at->format('d M Y') }}
+                                <i class="fa fa-pencil text-muted" title="Edited"></i>
+                            @else
+                                {{ $note->created_at->format('d M Y') }}
+                            @endif
+                        </small>
+                    </span>
+
+                    @if ($note['type'] == 'sr_ldr')
+                        <span class="label label-default slight">SGT+</span>
+                    @endif
+
+                    @foreach ($note->tags as $tag)
+                        <span class="label label-default slight text-uppercase">{{ $tag->name }}</span>
+                    @endforeach
+
+                    <p class="bs-example">{{ $note->body }} </p>
+
+                    <div class="m-t-md">
+                        <small class="text-muted">Posted by {{ $note->author->name }}</small>
+                        @can('edit', [$note, $member->clan_id])
+                            <a href="{{ route('editNote', [$member->clan_id, $note]) }}"
+                               class="pull-right btn btn-default btn-xs">Edit</a>
+                        @endcan
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-@empty
-    <div class="panel panel-filled note">
-        <div class="panel-body">
-            <strong class="c-white">Note:</strong> Member has no notes on record.
-        </div>
-    </div>
-@endforelse
+    @empty
+
+        <p>None</p>
+
+    @endforelse
+</div>
 
 <div class="modal fade" id="create-member-note">
     <div class="modal-dialog" role="document" style="background-color: #000;">
