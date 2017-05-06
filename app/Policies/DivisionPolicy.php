@@ -44,6 +44,7 @@ class DivisionPolicy
         }
 
         if ($user->member->primaryDivision->id == $division->id
+            && $user->isRole('sr_ldr')
             && $user->member->isRank(['Sgt', 'SSgt'])
         ) {
             return true;
