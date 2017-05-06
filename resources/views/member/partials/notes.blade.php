@@ -7,7 +7,7 @@
                 @elseif ($note->type == 'positive')
                     <i class="fa fa-thumbs-up text-success"></i>
                 @elseif ($note->type == 'sr_ldr')
-                    <i class="fa fa-shield text-success"></i>
+                    <i class="fa fa-shield text-danger"></i>
                 @else
                     <i class="fa fa-comment text-accent"></i>
                 @endif
