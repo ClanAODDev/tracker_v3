@@ -34,10 +34,17 @@ class DivisionPolicy
         /**
          * is the user a division leader of the division?
          * is the user a senior leader?
+         * is the user a SGT in the division?
          */
 
         if ($user->member->isDivisionLeader($division) &&
             $user->isRole('sr_ldr')
+        ) {
+            return true;
+        }
+
+        if ($user->member->primaryDivision->id == $division->id
+            && $user->member->isRank(['Sgt', 'SSgt'])
         ) {
             return true;
         }

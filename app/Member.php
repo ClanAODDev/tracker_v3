@@ -193,6 +193,13 @@ class Member extends Model
             return false;
         }
 
+        if (is_array($rank)) {
+            return in_array(
+                strtolower($this->rank->abbreviation),
+                array_map('strtolower', $rank)
+            );
+        }
+
         return $this->rank->abbreviation === $rank;
     }
 }
