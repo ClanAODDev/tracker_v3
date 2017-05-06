@@ -100,7 +100,8 @@ class Division extends Model
         'settings',
         'name',
         'description',
-        'active'
+        'active',
+        'abbreviation'
     ];
 
     /**

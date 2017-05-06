@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+
 //Auth::onceUsingId(4);
 
 Auth::routes();
@@ -47,7 +48,6 @@ Route::group(['prefix' => 'divisions/'], function () {
      */
     Route::get('{division}', 'DivisionController@show')->name('division');
     Route::get('{division}/edit', 'DivisionController@edit')->name('editDivision');
-    Route::get('{division}/create', 'DivisionController@create')->name('createDivision');
     Route::get('{division}/census', 'DivisionController@census')->name('division.census');
 
     Route::post('', 'DivisionController@store')->name('storeDivision');
@@ -117,15 +117,19 @@ Route::post('slack', [
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
 
-    // edit division (admin)
-    Route::get('divisions/{division}/edit', 'AdminController@editDivision')->name('adminEditDivision');
-    Route::put('divisions/{division}', 'AdminController@updateDivision')->name('adminUpdateDivision');
-    Route::patch('divisions/{division}', 'AdminController@updateDivision');
+    Route::group(['prefix' => 'divisions'], function () {
+        Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');
+        Route::get('{division}/edit', 'Admin\DivisionController@edit')->name('adminEditDivision');
+        Route::get('create', 'Admin\DivisionController@create')->name('adminCreateDivision');
+        Route::put('{division}', 'Admin\DivisionController@update')->name('adminUpdateDivision');
+        Route::patch('{division}', 'Admin\DivisionController@update');
+        Route::delete('{division}', 'Admin\DivisionController@destroy')->name('adminDeleteDivision');
+    });
 
     // edit handle
-    Route::get('handles/{handle}/edit', 'AdminController@editHandle')->name('adminEditHandle');
-    Route::put('handles/{handle}', 'AdminController@updateHandle')->name('adminUpdateHandle');
-    Route::patch('handles/{handle}', 'AdminController@updateHandle');
+    Route::get('handles/{handle}/edit', 'Admin\HandleController@edit')->name('adminEditHandle');
+    Route::put('handles/{handle}', 'Admin\HandleController@update')->name('adminUpdateHandle');
+    Route::patch('handles/{handle}', 'Admin\HandleController@update');
 });
 
 /*

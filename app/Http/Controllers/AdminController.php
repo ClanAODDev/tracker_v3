@@ -7,6 +7,7 @@ use App\Handle;
 use App\Http\Requests\Admin\UpdateDivisionForm;
 use App\Repositories\ClanRepository;
 use App\User;
+use Illuminate\Http\Request;
 use Whossun\Toastr\Facades\Toastr;
 
 class AdminController extends Controller
@@ -29,34 +30,6 @@ class AdminController extends Controller
         return view('admin.index', compact('divisions', 'users', 'handles'));
     }
 
-    public function editDivision(Division $division)
-    {
-        $this->authorize('show', $division);
 
-        return view('admin.modify-division', compact('division'));
-    }
 
-    public function editHandle(Handle $handle)
-    {
-        dd($handle);
-    }
-
-    /**
-     * @param UpdateDivisionForm $form
-     * @param Division $division
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function updateDivision(UpdateDivisionForm $form, Division $division)
-    {
-        $form->persist();
-
-        Toastr::success("{$division->name} Division was updated successfully!",
-            "Update Division", [
-                'positionClass' => 'toast-top-right',
-                'progressBar' => true
-            ]
-        );
-
-        return redirect(route('admin') . '#divisions');
-    }
 }

@@ -19,7 +19,36 @@
     @endcomponent
 
     <div class="container-fluid">
-        @include ('admin.forms.modify-division-form')
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Update {{ $division->name }}</h4>
+                <div>
+                    <p>Administrators can rename, disable, or modify divisions on the tracker. For continuity purposes, division abbreviations cannot be changed after a division is created.</p>
+                    <p>Marking a division inactive will:</p>
+                    <ul>
+                        <li>Stop data syncing from the AOD forums for that division</li>
+                        <li>Remove the division from the tracker listing</li>
+                        <li>Prevent non-admin users from accessing the division</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-filled">
+                    @include('application.partials.errors')
+                    {!! Form::model($division, ['method' => 'patch', 'route' => ['adminUpdateDivision', $division->abbreviation]]) !!}
+                    @include ('admin.forms.modify-division-form')
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+
+        @can('delete', $division)
+            <hr />
+            {!! Form::model($division, ['method' => 'delete', 'route' => ['adminDeleteDivision', $division->abbreviation]]) !!}
+            @include('admin.forms.delete-division-form')
+            {!! Form::close() !!}
+        @endcan
     </div>
 
 @stop
