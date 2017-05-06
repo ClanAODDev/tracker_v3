@@ -25,8 +25,5 @@ class AddColorsToRanks extends Migration
      */
     public function down()
     {
-        Schema::table('ranks', function ($table) {
-            $table->dropColumn('color');
-        });
     }
 }

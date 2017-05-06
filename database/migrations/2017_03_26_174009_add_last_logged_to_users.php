@@ -25,10 +25,5 @@ class AddLastLoggedToUsers extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('users', 'last_login_at')) {
-            Schema::table('users', function ($table) {
-                $table->dropColumn('last_login_at');
-            });
-        }
     }
 }

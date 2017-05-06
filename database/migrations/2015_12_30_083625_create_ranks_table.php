@@ -28,6 +28,5 @@ class CreateRanksTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ranks');
     }
 }

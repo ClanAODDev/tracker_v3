@@ -27,6 +27,5 @@ class DropLocalityColumnFromDivisions extends Migration
      */
     public function down()
     {
-        //
     }
 }

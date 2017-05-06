@@ -29,6 +29,5 @@ class CreateStaffSergeantsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('staff_sergeants');
     }
 }

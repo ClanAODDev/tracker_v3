@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateDivisionMemberPivotTable extends Migration
 {
@@ -30,6 +30,5 @@ class CreateDivisionMemberPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('division_member');
     }
 }

@@ -25,10 +25,5 @@ class ChangeEnabledDivisionToActiveDivision extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('divisions', 'active')) {
-            Schema::table('divisions', function ($table) {
-                $table->renameColumn('active', 'enabled');
-            });
-        }
     }
 }

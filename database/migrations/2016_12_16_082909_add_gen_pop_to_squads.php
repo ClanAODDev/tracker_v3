@@ -25,8 +25,5 @@ class AddGenPopToSquads extends Migration
      */
     public function down()
     {
-        Schema::table('squads', function ($table) {
-            $table->dropColumn('gen_pop');
-        });
     }
 }

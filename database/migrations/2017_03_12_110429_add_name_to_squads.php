@@ -25,8 +25,5 @@ class AddNameToSquads extends Migration
      */
     public function down()
     {
-        Schema::table('squads', function ($table) {
-            $table->dropColumn('name');
-        });
     }
 }

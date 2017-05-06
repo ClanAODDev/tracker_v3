@@ -25,6 +25,5 @@ class DivisionsUsesSoftDeletes extends Migration
      */
     public function down()
     {
-        //
     }
 }

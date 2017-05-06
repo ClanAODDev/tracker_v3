@@ -25,10 +25,5 @@ class ChangeWelcomeForumToWelcomeArea extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('divisions', 'welcome_area')) {
-            Schema::table('divisions', function ($table) {
-                $table->renameColumn('welcome_area', 'welcome_forum');
-            });
-        }
     }
 }

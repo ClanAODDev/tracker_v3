@@ -23,6 +23,5 @@ class RenameStaffSergeantsTable extends Migration
      */
     public function down()
     {
-        //
     }
 }

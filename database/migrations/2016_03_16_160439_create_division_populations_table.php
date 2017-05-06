@@ -28,6 +28,5 @@ class CreateDivisionPopulationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('division_populations');
     }
 }

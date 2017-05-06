@@ -12,8 +12,6 @@ class CreateDivisionHandlePivotTable extends Migration
      */
     public function up()
     {
-
-
         // drop handle id since we're using many to many relationship
         if (Schema::hasColumn('divisions', 'handle_id')) {
             Schema::table('divisions', function ($table) {
@@ -46,6 +44,5 @@ class CreateDivisionHandlePivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('division_handle');
     }
 }

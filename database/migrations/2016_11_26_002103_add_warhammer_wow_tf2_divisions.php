@@ -130,6 +130,5 @@ class AddWarhammerWowTf2Divisions extends Migration
      */
     public function down()
     {
-        //
     }
 }

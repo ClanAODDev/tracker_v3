@@ -25,6 +25,5 @@ class AddHandleValueToMemberHandles extends Migration
      */
     public function down()
     {
-        //
     }
 }

@@ -30,6 +30,5 @@ class CreateCensusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('censuses');
     }
 }

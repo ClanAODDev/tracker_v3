@@ -28,6 +28,5 @@ class CreateSquadsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('squads');
     }
 }

@@ -37,6 +37,5 @@ class AddActivityThresholdSetting extends Migration
      */
     public function down()
     {
-        //
     }
 }

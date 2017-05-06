@@ -25,8 +25,5 @@ class AddSoftDeletesToSquads extends Migration
      */
     public function down()
     {
-        Schema::table('squads', function (Blueprint $table) {
-            $table->dropSoftDeletes();
-        });
     }
 }

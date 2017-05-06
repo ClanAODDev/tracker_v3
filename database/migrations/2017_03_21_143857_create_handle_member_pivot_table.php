@@ -30,6 +30,5 @@ class CreateHandleMemberPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('handle_member');
     }
 }

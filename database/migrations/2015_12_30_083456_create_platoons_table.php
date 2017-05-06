@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreatePlatoonsTable extends Migration
 {
@@ -31,6 +31,5 @@ class CreatePlatoonsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('platoons');
     }
 }
