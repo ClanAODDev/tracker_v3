@@ -66,7 +66,7 @@ class Search extends Base implements Command
 
                 $this->content[] = [
                     'title' => "{$member->present()->rankName} - {$division}",
-                    'text' => implode(PHP_EOL, $links),
+                    'text' => implode(', ', $links),
                     'color' => ($member->primaryDivision) ? '#88C53E' : '#ff0000',
                 ];
             }
