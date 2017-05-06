@@ -60,13 +60,13 @@ class Search extends Base implements Command
                     : "Ex-AOD";
 
                 $links = [
-                    $this->forumProfile . $member->clan_id,
-                    $this->trackerProfile . $member->clan_id
+                    "<{$this->forumProfile}{$member->clan_id}|Forum Profile>",
+                    "<{$this->trackerProfile}{$member->clan_id}|Tracker Profile>"
                 ];
 
                 $this->content[] = [
                     'title' => "{$member->present()->rankName} - {$division}",
-                    'text' => implode(' | ', $links),
+                    'text' => implode(PHP_EOL, $links),
                     'color' => ($member->primaryDivision) ? '#88C53E' : '#ff0000',
                 ];
             }
