@@ -16,7 +16,7 @@
         </thead>
 
         <tbody>
-        @foreach ($divisionCensuses as $division)
+        @foreach ($cencuses as $division)
             <tr>
                 <td>{{ $division->name }}</td>
                 <td class="text-center no-sort">

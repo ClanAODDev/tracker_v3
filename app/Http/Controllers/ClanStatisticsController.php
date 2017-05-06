@@ -29,11 +29,14 @@ class ClanStatisticsController extends Controller
         // break down census data by division (latest)
         $divisionCensuses = Division::active()->with('census')->get();
 
+        $cencuses = $divisionCensuses->filter(function ($division) {
+           return $division->census()->count();
+        });
+
         // calculate graph area of active vs whole
-        $divisionCensuses->each(function ($division) {
+        $cencuses->each(function ($division) {
             $count = $division->census->last()->count;
             $weeklyActive = $division->census->last()->weekly_active_count;
-
             $division->total = $count;
             $division->popMinusActive = $count - $weeklyActive;
             $division->weeklyActive = $weeklyActive;
@@ -47,7 +50,7 @@ class ClanStatisticsController extends Controller
 
         return view('statistics.show')->with(compact(
             'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
-            'divisionCensuses', 'rankDemographic'
+            'cencuses', 'rankDemographic'
         ));
     }
 }
