@@ -1,7 +1,7 @@
 <h4 class="m-t-lg">
     Part-Time Divisions
     <a href="#" class="btn btn-default btn-sm pull-right">
-        <i class="fa fa-cog text-accent"></i> MANAGE
+        <i class="fa fa-cog text-accent"></i> Manage
     </a>
 </h4><hr />
 <div class="row">

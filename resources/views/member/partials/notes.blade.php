@@ -1,4 +1,5 @@
-<div class="vertical-container v-timeline" style="margin-top: 0;">
+<div class="vertical-container v-timeline"
+     style="margin-top: 0;">
     @forelse ($notes as $note)
         <div class="vertical-timeline-block note">
             <div class="vertical-timeline-icon">
@@ -7,7 +8,7 @@
                 @elseif ($note->type == 'positive')
                     <i class="fa fa-thumbs-up text-success"></i>
                 @elseif ($note->type == 'sr_ldr')
-                    <i class="fa fa-shield text-danger"></i>
+                    <i class="fa fa-shield text-primary"></i>
                 @else
                     <i class="fa fa-comment text-accent"></i>
                 @endif
@@ -16,8 +17,8 @@
                 <div class="p-sm">
                     <span class="vertical-date pull-right text-muted"> <small>
                             @if ($note->updated_at > $note->created_at)
-                                {{ $note->updated_at->format('d M Y') }}
                                 <i class="fa fa-pencil text-muted" title="Edited"></i>
+                                {{ $note->updated_at->format('d M Y') }}
                             @else
                                 {{ $note->created_at->format('d M Y') }}
                             @endif
@@ -36,10 +37,19 @@
 
                     <div class="m-t-md">
                         <small class="text-muted">Posted by {{ $note->author->name }}</small>
-                        @can('edit', [$note, $member->clan_id])
-                            <a href="{{ route('editNote', [$member->clan_id, $note]) }}"
-                               class="pull-right btn btn-default btn-xs">Edit</a>
-                        @endcan
+
+                        <div class="pull-right text-muted">
+
+                            @if ($note->forum_thread_id)
+                                <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}"
+                                   target="_blank" class="btn btn-default btn-xs m-l-sm">View Discussion</a>
+                            @endif
+
+                            @can('edit', [$note, $member->clan_id])
+                                <a href="{{ route('editNote', [$member->clan_id, $note]) }}"
+                                   class="btn btn-default btn-xs">Edit</a>
+                            @endcan
+                        </div>
                     </div>
                 </div>
             </div>

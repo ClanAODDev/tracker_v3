@@ -1,7 +1,7 @@
 <h4 class="m-t-lg">
     Ingame Aliases
     <a href="#" class="btn btn-default pull-right btn-sm">
-        <i class="fa fa-cog text-accent"></i> MANAGE
+        <i class="fa fa-cog text-accent"></i> Manage
     </a>
 </h4>
 <hr />
