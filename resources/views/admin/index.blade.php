@@ -40,7 +40,7 @@
                     </li>
                     <li>
                         <a href="#crons" data-toggle="tab" aria-expanded="false">
-                            <i class="fa fa-wrench fa-lg text-muted"></i> <span class="hidden-xs">Cron Jobs</span>
+                            <i class="fa fa-cog fa-lg text-muted"></i> <span class="hidden-xs">Activity Log</span>
                         </a>
                     </li>
                 </ul>
@@ -69,7 +69,7 @@
 
                         <div class="tab-pane" id="crons">
                             <div class="panel-body">
-                                Manage cron jobs for application
+                                @include('admin.partials.activity-log')
                             </div>
                         </div>
 

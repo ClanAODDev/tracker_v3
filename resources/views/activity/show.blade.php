@@ -17,8 +17,8 @@
         @endslot
     @endcomponent
 
-    <ul class="list-group">
+    <div class="container-fluid">
         @include ('activity.list')
-    </ul>
+    </div>
 
 @stop
