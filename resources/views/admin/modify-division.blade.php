@@ -23,7 +23,7 @@
             <div class="col-md-6">
                 <h4>Update {{ $division->name }}</h4>
                 <div>
-                    <p>Administrators can rename, disable, or modify divisions on the tracker. For continuity purposes, division abbreviations cannot be changed after a division is created.</p>
+                    <p>Division name should match the real name of the division on the AOD forums.</p>
                     <p>Marking a division inactive will:</p>
                     <ul>
                         <li>Stop data syncing from the AOD forums for that division</li>
