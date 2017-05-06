@@ -18,7 +18,9 @@ class Search extends Base implements Command
     private $members;
     private $content = [];
 
-    private $profile_path = "http://www.clanaod.net/forums/member.php?u=";
+    private $forumProfile = "https://www.clanaod.net/forums/member.php?u=";
+
+    private $trackerProfile = "https://www.clanaod.net/v3tracker/members/";
 
     /**
      * @return array
@@ -57,9 +59,14 @@ class Search extends Base implements Command
                     ? "{$member->primaryDivision->name} Division"
                     : "Ex-AOD";
 
+                $links = [
+                    $this->forumProfile . $member->clan_id,
+                    $this->trackerProfile . $member->clan_id
+                ];
+
                 $this->content[] = [
                     'title' => "{$member->present()->rankName} - {$division}",
-                    'text' => $this->profile_path . $member->clan_id,
+                    'text' => implode(' | ', $links),
                     'color' => ($member->primaryDivision) ? '#88C53E' : '#ff0000',
                 ];
             }
