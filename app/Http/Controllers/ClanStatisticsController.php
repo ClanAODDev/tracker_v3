@@ -26,14 +26,17 @@ class ClanStatisticsController extends Controller
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
-        // filter out divisions without census information
-        // and calculate the rest of the divisions
+        // fetch all divisions and eager load census data
         $cencuses = Division::active()->with('census')->get()
+            // filter out divisions without census information
             ->filter(function ($division) {
                 return count($division->census);
-            })->each(function ($division) {
+            })
+            // calculate population and weekly active
+            ->each(function ($division) {
                 $count = $division->census->last()->count;
                 $weeklyActive = $division->census->last()->weekly_active_count;
+
                 $division->total = $count;
                 $division->popMinusActive = $count - $weeklyActive;
                 $division->weeklyActive = $weeklyActive;
