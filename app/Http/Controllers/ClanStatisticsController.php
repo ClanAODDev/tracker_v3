@@ -30,7 +30,7 @@ class ClanStatisticsController extends Controller
         // and calculate the rest of the divisions
         $cencuses = Division::active()->with('census')->get()
             ->filter(function ($division) {
-                return $division->census()->count();
+                return count($division->census);
             })->each(function ($division) {
                 $count = $division->census->last()->count;
                 $weeklyActive = $division->census->last()->weekly_active_count;
