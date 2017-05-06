@@ -13,6 +13,7 @@ class MemberPresenter extends Presenter
 
     /**
      * MemberPresenter constructor.
+     *
      * @param Member $member
      */
     public function __construct(Member $member)

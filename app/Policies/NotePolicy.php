@@ -9,6 +9,16 @@ class NotePolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * Create a new policy instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
     public function before(User $user)
     {
         // MSgts, SGTs, developers have access to all members
@@ -18,13 +28,13 @@ class NotePolicy
     }
 
     /**
-     * Create a new policy instance.
+     * Officers and above can see notes
      *
-     * @return void
+     * @return bool
      */
-    public function __construct()
+    public function show()
     {
-        //
+        return $this->create();
     }
 
     /**
@@ -39,14 +49,5 @@ class NotePolicy
         }
 
         return true;
-    }
-
-    /**
-     * Officers and above can see notes
-     * @return bool
-     */
-    public function show()
-    {
-        return $this->create();
     }
 }

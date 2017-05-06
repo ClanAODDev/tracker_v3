@@ -80,6 +80,7 @@ class Member extends Model
      * Enforce a singleton relationship for squad leaders
      *
      * Prevents members from being a squad leader of more than one squad
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function squadLeaderOf()
@@ -90,6 +91,7 @@ class Member extends Model
     /**
      * Handle Staff Sergeant assignments
      * division/
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function ssgtAssignment()

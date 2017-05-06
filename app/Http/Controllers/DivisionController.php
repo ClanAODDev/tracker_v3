@@ -7,12 +7,12 @@ use App\Http\Requests\UpdateDivision;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use Illuminate\Http\Request;
-use Whossun\Toastr\Facades\Toastr;
 
 class DivisionController extends Controller
 {
     /**
      * Create a new controller instance.
+     *
      * @param DivisionRepository $division
      */
     public function __construct(DivisionRepository $division)

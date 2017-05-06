@@ -12,18 +12,22 @@ function doForumFunction(array $ids, $action)
     if ($action === "email") {
         $path = "https://www.clanaod.net/forums/sendmessage.php?";
         $params = ['do' => 'mailmember', 'u' => array_first($ids)];
-    } else if ($action === 'showThread') {
-        $path = "https://www.clanaod.net/forums/showthread.php?";
-        $params = ['t' => array_first($ids)];
-    } else if ($action === 'forumProfile') {
-        $path = "https://www.clanaod.net/forums/member.php?";
-        $params = ['u' => array_first($ids)];
     } else {
-        if ($action === "pm") {
-            $params = ['do' => 'newpm', 'u' => $ids];
-            $path = "https://www.clanaod.net/forums/private.php?";
+        if ($action === 'showThread') {
+            $path = "https://www.clanaod.net/forums/showthread.php?";
+            $params = ['t' => array_first($ids)];
         } else {
-            throw new InvalidArgumentException('Invalid action type specified.');
+            if ($action === 'forumProfile') {
+                $path = "https://www.clanaod.net/forums/member.php?";
+                $params = ['u' => array_first($ids)];
+            } else {
+                if ($action === "pm") {
+                    $params = ['do' => 'newpm', 'u' => $ids];
+                    $path = "https://www.clanaod.net/forums/private.php?";
+                } else {
+                    throw new InvalidArgumentException('Invalid action type specified.');
+                }
+            }
         }
     }
 
@@ -149,6 +153,7 @@ function setLeaderOf(Model $model, Member $member)
 function getNameOfClass($class)
 {
     $path = explode('\\', get_class($class));
+
     return array_pop($path);
 }
 

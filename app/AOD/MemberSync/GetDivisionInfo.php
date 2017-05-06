@@ -95,6 +95,7 @@ class GetDivisionInfo
 
     /**
      * Generates authentication token for AOD API
+     *
      * @return string
      */
     protected function generateToken()

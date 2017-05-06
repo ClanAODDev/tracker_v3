@@ -14,6 +14,7 @@ class DivisionController extends ApiController
 
     /**
      * DivisionController constructor.
+     *
      * @param DivisionTransformer $divisionTransformer
      */
     public function __construct(DivisionTransformer $divisionTransformer)

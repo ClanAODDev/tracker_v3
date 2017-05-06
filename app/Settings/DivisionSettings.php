@@ -13,6 +13,7 @@ class DivisionSettings
 
     /**
      * Settings constructor.
+     *
      * @param array $settings
      * @param DivisionSettings|Division $division
      */

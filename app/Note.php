@@ -34,6 +34,18 @@ class Note extends Model
     ];
 
     /**
+     * @return array
+     */
+    public static function allNoteTypes()
+    {
+        if (auth()->user()->role(['admin', 'sr_ldr'])) {
+            static::$noteTypes['sr_ldr'] = 'Sr Leaders Only';
+        }
+
+        return static::$noteTypes;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function author()
@@ -51,6 +63,7 @@ class Note extends Model
 
     /**
      * Get tags for a note
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()
@@ -66,17 +79,5 @@ class Note extends Model
     public function getTagListAttribute()
     {
         return $this->tags->pluck('id')->all();
-    }
-
-    /**
-     * @return array
-     */
-    public static function allNoteTypes()
-    {
-        if (auth()->user()->role(['admin', 'sr_ldr'])) {
-            static::$noteTypes['sr_ldr'] = 'Sr Leaders Only';
-        }
-
-        return static::$noteTypes;
     }
 }

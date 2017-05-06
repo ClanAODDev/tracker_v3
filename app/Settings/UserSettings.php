@@ -13,6 +13,7 @@ class UserSettings
 
     /**
      * Settings constructor.
+     *
      * @param array $settings
      * @param User $user
      */

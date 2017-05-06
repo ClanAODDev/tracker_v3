@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Handle;
-use App\Http\Requests\Admin\UpdateDivisionForm;
 use App\Repositories\ClanRepository;
 use App\User;
-use Illuminate\Http\Request;
-use Whossun\Toastr\Facades\Toastr;
 
 class AdminController extends Controller
 {
@@ -29,7 +26,6 @@ class AdminController extends Controller
 
         return view('admin.index', compact('divisions', 'users', 'handles'));
     }
-
 
 
 }

@@ -8,6 +8,7 @@ class Slack
 {
     /**
      * Send slack an error message
+     *
      * @param $message
      */
     public static function error($message)
@@ -20,6 +21,7 @@ class Slack
 
     /**
      * Send slack a general message
+     *
      * @param $message
      */
     public static function info($message)

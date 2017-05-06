@@ -9,6 +9,7 @@ class ClanRepository
 
     /**
      * Get clan population totals groups by date ranges (typically weekly)
+     *
      * @param int $limit
      * @return \Illuminate\Support\Collection|mixed
      */
@@ -71,6 +72,7 @@ class ClanRepository
 
     /**
      * Breakdown of ranks across clan
+     *
      * @return array
      */
     public function allRankDemographic()

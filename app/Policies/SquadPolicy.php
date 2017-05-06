@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Class SquadPolicy
+ *
  * @package App\Policies
  */
 class SquadPolicy

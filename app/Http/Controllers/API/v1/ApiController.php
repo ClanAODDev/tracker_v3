@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 /**
  * Class ApiController
+ *
  * @package App\Http\Controllers\API\v1
  */
 class ApiController extends Controller

@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
  * Class PlatoonPolicy
+ *
  * @package App\Policies
  */
 class PlatoonPolicy

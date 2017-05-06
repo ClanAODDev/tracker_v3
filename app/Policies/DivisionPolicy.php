@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Division;
 use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\HandlesAuthorization; 
 
 class DivisionPolicy
 {

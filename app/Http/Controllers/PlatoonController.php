@@ -15,6 +15,7 @@ class PlatoonController extends Controller
 {
     /**
      * PlatoonController constructor.
+     *
      * @param PlatoonRepository $platoon
      */
     public function __construct(PlatoonRepository $platoon)

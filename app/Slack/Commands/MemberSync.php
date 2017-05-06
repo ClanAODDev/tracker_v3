@@ -15,6 +15,7 @@ class MemberSync extends Base implements Command
 
     /**
      * MemberSync constructor.
+     *
      * @param $data
      */
     public function __construct($data)

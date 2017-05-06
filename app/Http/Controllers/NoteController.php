@@ -67,11 +67,6 @@ class NoteController extends Controller
         return redirect()->route('member', $member->clan_id);
     }
 
-    public function delete()
-    {
-
-    }
-
     /**
      * Sync up the tags on a note
      *
@@ -81,5 +76,10 @@ class NoteController extends Controller
     private function syncTags(Note $note, array $tags)
     {
         $note->tags()->sync($tags);
+    }
+
+    public function delete()
+    {
+
     }
 }
