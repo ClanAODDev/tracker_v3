@@ -11,7 +11,7 @@
     </thead>
 
     <tbody>
-    @foreach(App\Activity::all() as $event)
+    @foreach($activityLog as $event)
         <tr>
             <td>{{ $event->id }}</td>
             <td>{{ $event->user->name }}</td>

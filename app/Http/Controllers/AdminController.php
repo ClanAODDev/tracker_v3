@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
 use App\Division;
 use App\Handle;
 use App\Repositories\ClanRepository;
@@ -19,12 +20,18 @@ class AdminController extends Controller
     public function index()
     {
         $divisions = Division::all();
-
         $handles = Handle::with('divisions')->get();
-
         $users = User::with('role', 'member', 'member.rank')->get();
+        $activityLog = Activity::with([
+            'subject' => function ($query) {
+                // provide context even if a subject is "trashed"
+                $query->withTrashed();
+            }
+        ])->get();
 
-        return view('admin.index', compact('divisions', 'users', 'handles'));
+        return view('admin.index', compact(
+            'divisions', 'users', 'handles', 'activityLog'
+        ));
     }
 
 
