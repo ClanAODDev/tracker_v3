@@ -56,7 +56,7 @@ class CreateSquadForm extends FormRequest
         $squad->save();
 
         if ($this->member_ids) {
-            $this->assignMembersToSquad($squad);
+            $this->assignMembersTo($squad);
         }
 
         if ($this->leader_id) {
@@ -67,7 +67,7 @@ class CreateSquadForm extends FormRequest
     /**
      * @param $squad
      */
-    private function assignMembersToSquad($squad)
+    private function assignMembersTo($squad)
     {
         collect(json_decode($this->member_ids))->each(function ($memberId) use ($squad) {
             $member = Member::find($memberId);
