@@ -3,16 +3,18 @@
 
     {{ number_format($division->activeMembers->count()) }}
 
-    @if($division->activeMembers->count() < $previousCensus->count)
-        <span class="slight">
+    @if($previousCensus)
+        @if($division->activeMembers->count() < $previousCensus->count)
+            <span class="slight">
                     <i class="fa fa-play fa-rotate-90 c-white"></i>
-            {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
+                {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
                 </span>
-    @else
-        <span class="slight">
+        @else
+            <span class="slight">
                     <i class="fa fa-play fa-rotate-270 text-warning"></i>
-            {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
+                {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
                 </span>
+        @endif
     @endif
 
     <a href="{{ route('division.census', $division->abbreviation) }}" class="btn btn-default pull-right">
@@ -21,9 +23,12 @@
 </h1>
 
 <div class="small">
-    <span class="c-white">Total active members</span> in the {{ $division->name }} Division. Percent difference from previous count of
-    <strong>{{ $previousCensus->count }}</strong> on
-    <strong>{{ $previousCensus->date }}</strong>. Census data is collected weekly.
+    <span class="c-white">Total active members</span> in the {{ $division->name }} Division.
+    @if ($previousCensus)
+        Percent difference from previous count of
+        <strong>{{ $previousCensus->count }}</strong> on
+        <strong>{{ $previousCensus->date }}</strong>. Census data is collected weekly.
+    @endif
 </div>
 
 <div class="m-t-md">

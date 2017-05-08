@@ -23,6 +23,9 @@
             </div>
         </div>
     </div>
+
+    @include ('admin.forms.define-leadership-form')
+
     <div class="row">
         <div class="col-xs-12">
             <div class="form-group">
@@ -32,6 +35,8 @@
             </div>
         </div>
     </div>
+
+
 
     <a href="{{ route('admin') }}#divisions" class="btn btn-default">Cancel</a>
     {!! Form::submit('Save Division', ['class' => 'btn btn-default pull-right']) !!}

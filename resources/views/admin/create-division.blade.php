@@ -2,7 +2,6 @@
 
 @section('content')
 
-
     @component ('application.components.view-heading')
         @slot ('currentPage')
             Admin CP
@@ -39,5 +38,9 @@
             </div>
         </div>
     </div>
+
+@section('footer_scripts')
+    <script src="{!! asset('/js/division.js') !!}"></script>
+@stop
 
 @stop

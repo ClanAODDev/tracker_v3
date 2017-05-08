@@ -16,6 +16,7 @@ class Search extends Base implements Command
 {
 
     private $members;
+
     private $content = [];
 
     private $forumProfile = "https://www.clanaod.net/forums/member.php?u=";
