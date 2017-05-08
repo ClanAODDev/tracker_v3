@@ -20,6 +20,8 @@
 
         {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
+        @include('platoon.partials.alerts')
+
         <div class="row">
             <div class="col-md-9">
                 <ul class="nav nav-tabs">
@@ -31,6 +33,15 @@
                             <i class="fa fa-cubes fa-lg"></i>
                         </a>
                     </li>
+                    @unless (count($platoon->squads))
+                        @can('create', [App\Squad::class, $division])
+                            <li role="presentation" class="pull-right slight">
+                                <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
+                                    <i class="fa fa-plus text-info"></i>
+                                    No {{ str_plural($division->locality('squad')) }} exist. Create one?</a>
+                            </li>
+                        @endcan
+                    @endunless
                 </ul>
 
                 <div class="panel panel-filled">

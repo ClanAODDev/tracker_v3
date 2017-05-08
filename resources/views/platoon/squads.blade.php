@@ -20,6 +20,8 @@
 
         {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
+        @include('platoon.partials.alerts')
+
         <div class="row">
             <div class="col-md-9">
 
@@ -33,7 +35,7 @@
                         <a href="#"><i class="fa fa-cubes fa-lg"></i></a>
                     </li>
                     @can('create', [App\Squad::class, $division])
-                        <li role="presentation" class="pull-right">
+                        <li role="presentation" class="pull-right slight">
                             <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
                                 <i class="fa fa-plus text-success"></i> New Squad</a>
                         </li>

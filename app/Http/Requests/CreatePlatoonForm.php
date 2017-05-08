@@ -59,18 +59,39 @@ class CreatePlatoonForm extends FormRequest
         $platoon->division()->associate($this->route('division'));
         $platoon->save();
 
-        /**
-         * Handle Platoon leader assignment
-         */
-        if ($this->leader_id) {
-            $leader = Member::whereClanId($this->leader_id)->firstOrFail();
-
-            $leader->platoon()
-                ->associate($platoon)
-                ->assignPosition("platoon leader")
-                ->save();
-
-            $platoon->leader()->associate($leader)->save();
+        if ($this->member_ids) {
+            $this->assignMembersTo($platoon);
         }
+
+        if ($this->leader_id) {
+            $this->assignLeaderTo($platoon);
+        }
+    }
+
+    /**
+     * @param $platoon
+     */
+    private function assignMembersTo($platoon)
+    {
+        collect(json_decode($this->member_ids))->each(function ($memberId) use ($platoon) {
+            $member = Member::find($memberId);
+            $member->platoon()->associate($platoon);
+            $member->save();
+        });
+    }
+
+    /**
+     * @param $platoon
+     */
+    private function assignLeaderTo($platoon)
+    {
+        $leader = Member::whereClanId($this->leader_id)->firstOrFail();
+
+        $leader->platoon()
+            ->associate($platoon)
+            ->assignPosition("platoon leader")
+            ->save();
+
+        $platoon->leader()->associate($leader)->save();
     }
 }

@@ -65,7 +65,7 @@
     </div>
 </div>
 
-@include ('platoon.forms.assign-members')
+@include ('platoon.forms.assign-members-form')
 
 {{ csrf_field() }}
 
