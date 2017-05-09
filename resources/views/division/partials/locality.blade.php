@@ -15,7 +15,7 @@
 
         <td class="col-xs-6">
             <input type="text" name="locality[{{ $loop->index }}][new-string]" class="form-control"
-                   value="{{ $new_string }}" data-new-string required />
+                   value="{{ strtolower($new_string) }}" data-new-string required />
         </td>
     </tr>
 @endforeach
