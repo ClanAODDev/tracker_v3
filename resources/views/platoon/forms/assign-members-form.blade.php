@@ -1,7 +1,5 @@
 <h4>Assign members</h4>
 <hr />
-<p>If there are unassigned members in the division, you can assign them to this platoon by selecting them. Bear in mind that you will still need to create squads, and assign members to those as well.</p>
-
 <div class="row">
     <div class="col-xs-6">
         <div class="panel panel-filled">
