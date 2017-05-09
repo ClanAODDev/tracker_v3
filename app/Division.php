@@ -11,10 +11,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class Division
+ *
+ * @package App
+ */
 class Division extends Model
 {
+    /**
+     * @var array
+     */
     protected static $recordEvents = ['created', 'updated', 'deleted'];
 
+    /**
+     * @var array
+     */
     public $defaultSettings = [
         'slack_alert_created_member' => false,
         'slack_alert_removed_member' => false,
@@ -91,11 +102,17 @@ class Division extends Model
     use SoftDeletes;
     use Notifiable;
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'active' => 'boolean',
         'settings' => 'json',
     ];
 
+    /**
+     * @var array
+     */
     protected $fillable = [
         'settings',
         'name',
@@ -112,6 +129,9 @@ class Division extends Model
         return new DivisionPresenter($this);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function census()
     {
         return $this->hasMany(Census::class);
@@ -183,6 +203,10 @@ class Division extends Model
         return $this->belongsToMany(Member::class)->withPivot('primary')->withTimestamps();
     }
 
+    /**
+     * @param $days
+     * @return mixed
+     */
     public function membersActiveSinceDaysAgo($days)
     {
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
@@ -199,20 +223,47 @@ class Division extends Model
         return $this->members()->wherePivot('primary', true);
     }
 
+    /**
+     * @return mixed
+     */
     public function generalSergeants()
     {
         return $this->activeMembers()
             ->wherePositionId(4);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function staffSergeants()
     {
         return $this->belongsToMany(Member::class, 'division_staffSergeants');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function handles()
     {
         return $this->belongsToMany(Handle::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
+
+    /**
+     * Get default tags as well as division tags
+     */
+    public function availableTags()
+    {
+        return $this->tags()
+            ->whereDivisionId($this->id)
+            ->orWhere('default', true);
     }
 
     /**
@@ -228,6 +279,10 @@ class Division extends Model
             ->orderBy('name', 'asc');
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     public function locality($string)
     {
 
@@ -273,6 +328,9 @@ class Division extends Model
             ->whereIn('position_id', [5, 6]);
     }
 
+    /**
+     * @return mixed
+     */
     public function isActive()
     {
         return $this->active;

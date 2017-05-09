@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateNote;
 use App\Member;
 use App\Note;
-use App\Tag;
 use Illuminate\Http\Request;
-use Toastr;
 
 class NoteController extends Controller
 {
@@ -34,8 +32,7 @@ class NoteController extends Controller
         $this->authorize('delete', $member);
 
         $division = $member->primaryDivision;
-
-        $tags = Tag::pluck('name', 'id');
+        $tags = $division->availableTags->pluck('name', 'id');
 
         return view('member.edit-note', compact(
             'note', 'division', 'member', 'tags'
@@ -72,9 +69,7 @@ class NoteController extends Controller
     public function delete(Member $member, Note $note)
     {
         $this->authorize('delete', $note);
-
         $note->delete();
-
         $this->showToast('Note deleted successfully');
 
         return redirect()->route('member', $member->clan_id);

@@ -31,4 +31,12 @@ class Tag extends Model
         return $this->belongsToMany(Note::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    }
+
 }
