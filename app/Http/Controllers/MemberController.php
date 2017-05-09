@@ -52,6 +52,12 @@ class MemberController extends Controller
         return view('member.search', compact('members', 'request'));
     }
 
+    /**
+     * Endpoint for Bootcomplete
+     *
+     * @param Request $request
+     * @return mixed
+     */
     public function searchAutoComplete(Request $request)
     {
         $query = $request->input('query');
