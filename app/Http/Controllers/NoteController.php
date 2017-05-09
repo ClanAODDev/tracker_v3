@@ -19,10 +19,7 @@ class NoteController extends Controller
     {
         $form->persist();
 
-        Toastr::success('Note saved successfully!', "Create Member Note", [
-            'positionClass' => 'toast-top-right',
-            'progressBar' => true
-        ]);
+        $this->showToast('Note saved successfully');
 
         return redirect()->back();
     }
@@ -54,15 +51,9 @@ class NoteController extends Controller
     public function update(Request $request, Member $member, Note $note)
     {
         $this->authorize('delete', $member);
-
         $note->update(request()->all());
-
         $this->syncTags($note, $request->input('tag_list'));
-
-        Toastr::success('Note saved successfully!', "Update Member Note", [
-            'positionClass' => 'toast-top-right',
-            'progressBar' => true
-        ]);
+        $this->showToast('Note saved successfully');
 
         return redirect()->route('member', $member->clan_id);
     }
@@ -78,8 +69,14 @@ class NoteController extends Controller
         $note->tags()->sync($tags);
     }
 
-    public function delete()
+    public function delete(Member $member, Note $note)
     {
+        $this->authorize('delete', $note);
 
+        $note->delete();
+
+        $this->showToast('Note deleted successfully');
+
+        return redirect()->route('member', $member->clan_id);
     }
 }
