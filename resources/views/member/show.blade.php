@@ -24,17 +24,22 @@
 
         {!! Breadcrumbs::render('member', $member, $division) !!}
 
-        <div class="row">
+        <div class="row m-b-lg">
             @can('create', \App\Note::class)
-                <div class="col-md-8">
+                <div class="col-md-12">
                     @include ('member.partials.notes')
                 </div>
             @else
-                <div class="col-md-8">
+                <div class="col-md-12">
                     @include ('member.partials.notes-hidden')
                 </div>
             @endcan
-            <div class="col-md-4">@include ('member.partials.general-information')</div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @include ('member.partials.general-information')
+            </div>
         </div>
 
         @include ('member.partials.aliases')
