@@ -8,13 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Tag extends Model
 {
 
-    use RecordsActivity;
-
-    protected static $recordEvents = [
-        'created',
-        'deleted'
-    ];
-
     protected $touches = [
         'notes'
     ];

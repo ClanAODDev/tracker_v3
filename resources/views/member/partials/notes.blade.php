@@ -29,9 +29,11 @@
                         <span class="label label-default slight">SGT+</span>
                     @endif
 
-                    @foreach ($note->tags as $tag)
+                    @forelse ($note->tags as $tag)
                         <span class="label label-default slight text-uppercase">{{ $tag->name }}</span>
-                    @endforeach
+                    @empty
+                        <span class="label label-default slight text-uppercase">NO TAG</span>
+                    @endforelse
 
                     <p class="bs-example">{{ $note->body }} </p>
 

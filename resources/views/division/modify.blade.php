@@ -47,6 +47,11 @@
                         <i class="fa fa-slack fa-lg"></i> <span class="hidden-xs">Slack</span>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#division-tags">
+                        <i class="fa fa-tags fa-lg"></i> <span class="hidden-xs">Tags</span>
+                    </a>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -111,6 +116,21 @@
                         <div class="col-md-3 hidden-xs hidden-sm">
                             <div class="panel">
                                 @include('division.forms.descriptions.slack')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="division-tags" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="panel-body">
+                                @include('division.forms.tags')
+                            </div>
+                        </div>
+                        <div class="col-md-3 hidden-xs hidden-sm">
+                            <div class="panel">
+                                @include('division.forms.descriptions.tags')
                             </div>
                         </div>
                     </div>

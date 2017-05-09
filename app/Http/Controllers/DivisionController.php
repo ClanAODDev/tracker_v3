@@ -6,6 +6,7 @@ use App\Division;
 use App\Http\Requests\UpdateDivision;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
+use App\Tag;
 use Illuminate\Http\Request;
 
 class DivisionController extends Controller
@@ -77,9 +78,11 @@ class DivisionController extends Controller
             return [$key, $census->weekly_active_count];
         });
 
+        $defaultTags = Tag::whereDefault(true)->get();
+
         return view('division.modify', compact(
             'division', 'censuses', 'weeklyActive',
-            'populations', 'comments'
+            'populations', 'comments', 'defaultTags'
         ));
     }
 
