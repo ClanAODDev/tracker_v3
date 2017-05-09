@@ -26,7 +26,7 @@ Route::group(['prefix' => 'members'], function () {
         Route::get('{note}/edit', 'NoteController@edit')->name('editNote');
         Route::post('{note}', 'NoteController@update')->name('updateNote');
         Route::patch('{note}', 'NoteController@update');
-        Route::delete('{note}', 'NoteController@destroy')->name('deleteNote');
+        Route::delete('{note}', 'NoteController@delete')->name('deleteNote');
     });
 });
 

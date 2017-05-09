@@ -28,6 +28,9 @@
         @include ('member.forms.note-form', ['action' => 'Edit Member Note'])
         {!! Form::close() !!}
 
+        {!! Form::model($note, ['method' => 'delete', 'route' => ['deleteNote', $member->clan_id, $note]]) !!}
+        @include ('member.forms.remove-note-form')
+        {!! Form::close() !!}
     </div>
 
 @stop

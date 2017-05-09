@@ -1,6 +1,6 @@
-<div class="vertical-container v-timeline"
-     style="margin-top: 0;">
-    @forelse ($notes as $note)
+@if (count($notes))
+    @foreach ($notes as $note)
+
         <div class="vertical-timeline-block note">
             <div class="vertical-timeline-icon">
                 @if($note->type == 'negative')
@@ -54,20 +54,25 @@
                 </div>
             </div>
         </div>
-    @empty
-
-        <p>None</p>
-
-    @endforelse
-</div>
-
-<div class="modal fade" id="create-member-note">
-    <div class="modal-dialog" role="document" style="background-color: #000;">
-        {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
-        @include('member.forms.note-form', ['action' => 'Add Member Note'])
-        {!! Form::close() !!}
+    @endforeach
+@else
+    <div class="panel panel-filled">
+        <div class="panel-body text-muted">
+            Member has no notes recorded.
+        </div>
     </div>
-</div>
+@endif
+
+
+@can ('create', App\Note::class)
+    <div class="modal fade" id="create-member-note">
+        <div class="modal-dialog" role="document" style="background-color: #000;">
+            {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
+            @include('member.forms.note-form', ['action' => 'Add Member Note'])
+            {!! Form::close() !!}
+        </div>
+    </div>
+@endcan
 
 @if ($errors->count())
     <script>$("#create-member-note").modal();</script>
