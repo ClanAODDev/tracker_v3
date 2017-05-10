@@ -2496,7 +2496,7 @@ h6 .small,
 
 .vertical-timeline-block {
     position: relative;
-    margin: 2em 0;
+    margin: .5em 0;
 }
 
 .vertical-timeline-block:after {

@@ -1,3 +1,4 @@
+<h4>Member Notes</h4><hr />
 @if (count($notes))
     <div class="v-timeline">
         @foreach ($notes as $note)

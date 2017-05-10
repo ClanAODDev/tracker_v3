@@ -12,15 +12,18 @@
         @endif
     </div>
 
-    <div class="vertical-timeline-content">
+    <div class="vertical-timeline-content panel collapsed">
         <div class="p-sm">
-                    <span class="vertical-date pull-right text-muted"> <small>
+            <div class="panel-tools m-l-sm">
+                <i class="fa fa-chevron-up toggle-icon panel-toggle"></i>
+            </div>
+            <span class="vertical-date pull-right text-muted"> <small>
                             @if ($note->updated_at > $note->created_at)
-                                <i class="fa fa-pencil text-muted" title="Edited"></i>
-                                {{ $note->updated_at->format('d M Y') }}
-                            @else
-                                {{ $note->created_at->format('d M Y') }}
-                            @endif
+                        <i class="fa fa-pencil text-muted" title="Edited"></i>
+                        {{ $note->updated_at->format('d M Y') }}
+                    @else
+                        {{ $note->created_at->format('d M Y') }}
+                    @endif
                         </small>
                     </span>
 
@@ -34,10 +37,12 @@
                 <span class="label label-default slight text-uppercase">NO TAG</span>
             @endforelse
 
-            <p class="bs-example">{{ $note->body }} </p>
+            <div class="panel-body">
+                <p>{{ $note->body }} </p>
 
-            <div class="m-t-md">
-                <small class="text-muted">Posted by {{ $note->author->name }}</small>
+            </div>
+            <div class="panel-footer">
+                <span class="text-muted">{{ $note->author->name }}</span>
 
                 <div class="pull-right text-muted">
 
@@ -51,6 +56,7 @@
                            class="btn btn-default btn-xs">Edit</a>
                     @endcan
                 </div>
+
             </div>
         </div>
     </div>
