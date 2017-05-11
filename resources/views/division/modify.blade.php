@@ -24,32 +24,32 @@
             <ul class="nav nav-tabs">
                 <li class="divisions active">
                     <a data-toggle="tab" href="#general-settings">
-                        <i class="fa fa-sliders fa-lg"></i> <span class="hidden-xs">General</span>
+                        <i class="fa fa-sliders fa-lg"></i> <span class="hidden-xs hidden-sm">General</span>
                     </a>
                 </li>
                 <li class="censuses">
                     <a data-toggle="tab" href="#census">
-                        <i class="fa fa-line-chart fa-lg"></i> <span class="hidden-xs">Census</span>
+                        <i class="fa fa-line-chart fa-lg"></i> <span class="hidden-xs hidden-sm">Census</span>
                     </a>
                 </li>
                 <li>
                     <a href="#recruiting-settings" data-toggle="tab">
-                        <i class="fa fa-user-plus fa-lg"></i> <span class="hidden-xs">Recruiting</span>
+                        <i class="fa fa-user-plus fa-lg"></i> <span class="hidden-xs hidden-sm">Recruiting</span>
                     </a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#locality-settings">
-                        <i class="fa fa-language fa-lg"></i> <span class="hidden-xs">Locality</span>
+                        <i class="fa fa-language fa-lg"></i> <span class="hidden-xs hidden-sm">Locality</span>
                     </a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#slack-settings">
-                        <i class="fa fa-slack fa-lg"></i> <span class="hidden-xs">Slack</span>
+                        <i class="fa fa-slack fa-lg"></i> <span class="hidden-xs hidden-sm">Slack</span>
                     </a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#division-tags">
-                        <i class="fa fa-tags fa-lg"></i> <span class="hidden-xs">Tags</span>
+                        <i class="fa fa-tags fa-lg"></i> <span class="hidden-xs hidden-sm">Tags</span>
                     </a>
                 </li>
             </ul>
