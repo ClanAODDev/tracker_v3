@@ -11,13 +11,6 @@
             <li class="divider"></li>
         @endcan
 
-        @can('create', App\Note::class)
-            <li>
-                <a href="#" class="btn-add-note" data-toggle="modal"
-                   data-target="#create-member-note">Add member note</a>
-            </li>
-        @endcan
-
         <li>
             <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank">Send forum PM</a>
         </li>

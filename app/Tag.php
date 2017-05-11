@@ -12,6 +12,10 @@ class Tag extends Model
         'notes'
     ];
 
+    protected $casts = [
+        'default' => 'boolean'
+    ];
+
     protected $fillable = ['name'];
 
     /**

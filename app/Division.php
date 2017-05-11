@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Log;
  */
 class Division extends Model
 {
+    use RecordsActivity;
+
     /**
      * @var array
      */

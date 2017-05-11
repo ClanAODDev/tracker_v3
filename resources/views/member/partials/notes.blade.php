@@ -1,4 +1,14 @@
-<h4>Member Notes</h4><hr />
+<h4>
+    Member Notes
+
+    @can('create', App\Note::class)
+        <span class="pull-right">
+            <a href="#" class="btn-add-note btn btn-default btn-sm" data-toggle="modal"
+               data-target="#create-member-note"><i class="fa fa-comment text-accent"></i> Add note</a>
+        </span>
+    @endcan
+
+</h4><hr />
 @if (count($notes))
     <div class="v-timeline">
         @foreach ($notes as $note)

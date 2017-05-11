@@ -17,15 +17,15 @@
             <div class="panel-tools m-l-sm">
                 <i class="fa fa-chevron-up toggle-icon panel-toggle"></i>
             </div>
-            <span class="vertical-date pull-right text-muted"> <small>
-                            @if ($note->updated_at > $note->created_at)
-                        <i class="fa fa-pencil text-muted" title="Edited"></i>
-                        {{ $note->updated_at->format('d M Y') }}
-                    @else
-                        {{ $note->created_at->format('d M Y') }}
-                    @endif
-                        </small>
-                    </span>
+            <div class="vertical-date pull-right text-muted">
+                @if ($note->updated_at > $note->created_at)
+                    <i class="fa fa-pencil text-muted" title="Edited"></i>
+                    {{ $note->updated_at->format('d M Y') }}
+                @else
+                    {{ $note->created_at->format('d M Y') }}
+                @endif
+
+            </div>
 
             @if ($note['type'] == 'sr_ldr')
                 <span class="label label-default slight">SGT+</span>
