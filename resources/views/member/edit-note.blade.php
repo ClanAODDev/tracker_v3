@@ -28,6 +28,10 @@
         @include ('member.forms.note-form', ['action' => 'Edit Member Note'])
         {!! Form::close() !!}
 
+        @can ('delete', $note)
+            @include('member.partials.note-history')
+        @endcan
+
         {!! Form::model($note, ['method' => 'delete', 'route' => ['deleteNote', $member->clan_id, $note]]) !!}
         @include ('member.forms.remove-note-form')
         {!! Form::close() !!}

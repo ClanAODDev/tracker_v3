@@ -33,10 +33,8 @@ trait RecordsActivity
         if (\Auth::check()) {
             $user = \Auth::user();
 
-            Activity::create([
-                'subject_id' => $this->id,
-                'subject_type' => get_class($this),
-                'name' => $this->getActivityName($this, $event),
+            $this->activity()->create([
+                'name' => $this->getActivityName($event),
                 'user_id' => $user->id,
                 'division_id' => $user->member->primaryDivision->id
             ]);
@@ -46,9 +44,14 @@ trait RecordsActivity
         }
     }
 
-    protected function getActivityName($model, $action)
+    public function activity()
     {
-        $name = strtolower((new \ReflectionClass($model))->getShortName());
+        return $this->morphMany(Activity::class, 'subject');
+    }
+
+    protected function getActivityName($action)
+    {
+        $name = strtolower((new \ReflectionClass($this))->getShortName());
 
         return "{$action}_{$name}";
     }

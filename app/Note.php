@@ -31,7 +31,6 @@ class Note extends Model
 
     protected $with = [
         'tags',
-        'member'
     ];
 
     /**
