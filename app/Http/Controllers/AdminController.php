@@ -6,6 +6,7 @@ use App\Activity;
 use App\Division;
 use App\Handle;
 use App\Repositories\ClanRepository;
+use App\Tag;
 use App\User;
 
 class AdminController extends Controller
@@ -21,7 +22,9 @@ class AdminController extends Controller
     {
         $divisions = Division::all();
         $handles = Handle::with('divisions')->get();
-        $users = User::with('role', 'member', 'member.rank')->get();
+        $defaultTags = Tag::where('default', true)->get();
+        $allTags = Tag::with('notes', 'division')->get();
+        $users = User::with('role', 'member.rank')->get();
         $activityLog = Activity::with([
             'subject' => function ($query) {
                 // provide context even if a subject is "trashed"
@@ -30,7 +33,8 @@ class AdminController extends Controller
         ])->get();
 
         return view('admin.index', compact(
-            'divisions', 'users', 'handles', 'activityLog'
+            'divisions', 'users', 'handles', 'allTags',
+            'activityLog', 'defaultTags'
         ));
     }
 

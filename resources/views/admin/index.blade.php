@@ -28,19 +28,28 @@
                             <i class="fa fa-users fa-lg text-muted"></i> <span class="hidden-xs">Users</span>
                         </a>
                     </li>
+
                     <li>
                         <a href="#divisions" data-toggle="tab" aria-expanded="false">
                             <i class="fa fa-toggle-on fa-lg text-muted"></i> <span class="hidden-xs">Divisions</span>
                         </a>
                     </li>
+
                     <li>
                         <a href="#handles" data-toggle="tab" aria-expanded="false">
                             <i class="fa fa-user fa-lg text-muted"></i> <span class="hidden-xs">Handles</span>
                         </a>
                     </li>
+
                     <li>
                         <a href="#crons" data-toggle="tab" aria-expanded="false">
                             <i class="fa fa-cog fa-lg text-muted"></i> <span class="hidden-xs">Activity Log</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#tags" data-toggle="tab" aria-expanded="false">
+                            <i class="fa fa-tags fa-lg text-muted"></i> <span class="hidden-xs">Tags</span>
                         </a>
                     </li>
                 </ul>
@@ -70,6 +79,13 @@
                         <div class="tab-pane" id="crons">
                             <div class="panel-body">
                                 @include('admin.partials.activity-log')
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="tags">
+                            <div class="panel-body">
+                                @include('admin.forms.tags')
+                                @include('admin.partials.tag-table')
                             </div>
                         </div>
 
