@@ -1,5 +1,5 @@
 @foreach ($division->tags as $tag)
-    <div class="col-xs-3" data-repeater-item>
+    <div class="col-xs-4" data-repeater-item>
         <div class="input-group form-group">
             <input type="text" name="tags[{{ $loop->index }}][tag]"
                    class="form-control" placeholder="Enter a tag..." value="{{ $tag->name }}" required />

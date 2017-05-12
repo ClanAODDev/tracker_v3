@@ -1,5 +1,5 @@
 @foreach($defaultTags as $tag)
-    <div class="col-sm-3 col-xs-6" data-repeater-item>
+    <div class="col-sm-4 col-xs-6" data-repeater-item>
         <div class="input-group form-group">
             <input type="text" name="tags[{{ $loop->index }}][tag]"
                    class="form-control" placeholder="Enter a tag..." value="{{ $tag->name }}" required />
