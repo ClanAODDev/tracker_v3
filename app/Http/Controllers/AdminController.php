@@ -30,7 +30,7 @@ class AdminController extends Controller
                 // provide context even if a subject is "trashed"
                 $query->withTrashed();
             }
-        ])->get();
+        ])->orderByDesc('id')->get();
 
         return view('admin.index', compact(
             'divisions', 'users', 'handles', 'allTags',

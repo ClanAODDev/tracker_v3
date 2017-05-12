@@ -35,11 +35,6 @@ var Tracker = Tracker || {};
             $(document).ready(function () {
                 $('.repeater').repeater({
                     isFirstItemUndeletable: true,
-                    hide: function (deleteElement) {
-                        if (confirm('Are you sure you want to delete this element?')) {
-                            $(this).fadeOut(deleteElement);
-                        }
-                    },
                 });
             });
         },
