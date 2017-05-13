@@ -28,7 +28,11 @@
             @include('platoon.forms.delete-platoon-form')
             {!! Form::close() !!}
 
+            <hr />
+
         @endcan
+
+        @include ('platoon.partials.feed')
     </div>
 
 
