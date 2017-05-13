@@ -28,10 +28,7 @@ class Note extends Model
         'body',
         'forum_thread_id'
     ];
-
-    protected $with = [
-        'tags',
-    ];
+    
 
     /**
      * @return array

@@ -55,4 +55,9 @@ trait RecordsActivity
 
         return "{$action}_{$name}";
     }
+
+    public static function feed()
+    {
+
+    }
 }
