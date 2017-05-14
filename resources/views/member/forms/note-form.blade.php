@@ -26,7 +26,8 @@
             </div>
 
             <div class="col-xs-3 form-group">
-                <a href="{{ url()->previous() }}" class="btn btn-default btn-block" style="margin-top:23px">Cancel</a>
+                <button data-toggle="modal" data-target="#create-member-note" type="button"
+                        class="btn btn-default btn-block" style="margin-top:23px">Cancel</button>
             </div>
 
             <div class="col-xs-3 form-group">
