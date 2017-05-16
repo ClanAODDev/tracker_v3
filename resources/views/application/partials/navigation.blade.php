@@ -24,7 +24,10 @@
         </a>
 
         <ul id="user-cp" class="nav nav-second collapse">
-            <li><a href="{{ route('member', Auth::user()->member->clan_id) }}">{{ Auth::user()->name }}</a></li>
+            <li><a href="{{ route('member', auth()->user()->member->clan_id) }}">
+                    {{ auth()->user()->name }}
+                    <small class="text-muted text-uppercase">[{{ auth()->user()->role->name }}]</small>
+                </a></li>
             <li><a href="usage.html">Settings</a></li>
             <li><a href="activity.html">Forum Profile</a></li>
             <li><a href="#"
