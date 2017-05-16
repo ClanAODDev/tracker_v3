@@ -1,4 +1,5 @@
-<td><i class="fa fa-cube text-success"></i>
+<td>
+    <i class="fa fa-cube text-success"></i>
     {{ $event->user->name }} created platoon
 </td>
 <td>
