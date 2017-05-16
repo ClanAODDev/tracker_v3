@@ -46,7 +46,8 @@ trait RecordsActivity
 
     public function activity()
     {
-        return $this->morphMany(Activity::class, 'subject');
+        return $this->morphMany(Activity::class, 'subject')
+            ->orderBy('created_at', 'desc');
     }
 
     protected function getActivityName($action)
