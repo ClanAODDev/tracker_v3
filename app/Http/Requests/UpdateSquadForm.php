@@ -54,19 +54,39 @@ class UpdateSquadForm extends FormRequest
             $this->only(['name', 'leader_id'])
         );
 
-        /**
-         * Assign leader as leader of squad
-         * Place member inside squad
-         * Place member inside platoon of squad
-         * Assign squad leader position
-         */
-        if ($this->leader_id) {
-            $leader = Member::whereClanId($this->leader_id)->firstOrFail();
-
-            $this->squad->leader()->associate($leader);
-            $leader->squad()->associate($this->squad);
-            $leader->platoon()->associate($this->route('platoon'));
-            $leader->assignPosition("squad leader")->save();
+        if ($this->member_ids) {
+            $this->assignMembersTo($this->squad);
         }
+
+        if ($this->leader_id) {
+            $this->assignLeaderTo($this->squad);
+        }
+    }
+
+    /**
+     * @param $squad
+     */
+    private function assignMembersTo($squad)
+    {
+        collect(json_decode($this->member_ids))->each(function ($memberId) use ($squad) {
+            $member = Member::find($memberId);
+            $member->squad()->associate($squad);
+            $member->save();
+        });
+    }
+
+    /**
+     * @param $squad
+     */
+    private function assignLeaderTo($squad)
+    {
+        $leader = Member::whereClanId($this->leader_id)->firstOrFail();
+
+        $squad->leader()->associate($leader)->save();
+
+        $leader->squad()->associate($squad)
+            ->platoon()->associate($this->route('platoon'))
+            ->assignPosition("squad leader")
+            ->save();
     }
 }
