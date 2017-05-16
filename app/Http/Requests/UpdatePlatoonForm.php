@@ -30,6 +30,7 @@ class UpdatePlatoonForm extends FormRequest
                 "unique:platoons,leader_id,{$this->platoon->id}",
                 'exists:members,clan_id',
             ],
+            'logo' => 'url'
         ];
     }
 
@@ -49,7 +50,7 @@ class UpdatePlatoonForm extends FormRequest
     public function persist()
     {
         $this->platoon->update(
-            $this->only(['name', 'leader_id'])
+            $this->all()
         );
 
         if ($this->member_ids) {

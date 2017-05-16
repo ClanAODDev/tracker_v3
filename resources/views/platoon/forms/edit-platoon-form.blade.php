@@ -33,8 +33,12 @@
                     {!! Form::text('name', null, ['class' => 'form-control', 'required' => 'required']) !!}
                 </div>
 
-                <div class="row">
+                <div class="form-group {{ $errors->has('logo') ? ' has-error' : null }}">
+                    <label for="logo" class="form-label">{{ $division->locality('platoon') }} Logo URL</label>
+                    {!! Form::text('logo', null, ['class' => 'form-control', 'placeholder' => 'https://']) !!}
+                </div>
 
+                <div class="row">
                     <div class="col-xs-8">
                         {!! Form::label('leader', 'Search') !!}
                         <input type="text" class="form-control" name="leader" id="leader" autocomplete="off" />
