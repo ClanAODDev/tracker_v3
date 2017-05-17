@@ -93,7 +93,6 @@ var Tracker = Tracker || {};
                         $("#searchclear").css('display', 'block');
                         $('section.search-results').html(response);
                         $("section.search-results").addClass('open').removeClass('closed');
-                        console.log(this.url);
                     }
                 });
             }
