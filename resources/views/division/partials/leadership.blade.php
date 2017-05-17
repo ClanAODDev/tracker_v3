@@ -21,7 +21,7 @@
                     <h4 class="m-b-none text-uppercase">
                         No leadership assigned
                     </h4>
-                    <span class="slight">See clan leadership for assistance with assigning staff sergeants</span>
+                    <span class="slight">See clan leadership for assistance with assignments</span>
                 </div>
             </div>
         </div>
