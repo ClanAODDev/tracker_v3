@@ -27,7 +27,7 @@ class CreatePlatoonForm extends FormRequest
     {
         return [
             'name' => 'required',
-            'logo' => 'sometimes|url',
+            'logo' => 'nullable|url',
             'leader_id' => [
                 'exists:members,clan_id',
                 'unique:platoons,leader_id'
