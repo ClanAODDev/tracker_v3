@@ -22,7 +22,7 @@
 
     <div class="container-fluid">
 
-        {!! Breadcrumbs::render('member', $member, $division) !!}
+        {!! Breadcrumbs::render('member-note', $member, $division) !!}
 
         {!! Form::model($note, ['method' => 'post', 'route' => ['updateNote', $member->clan_id, $note]]) !!}
         @include ('member.forms.note-form', ['action' => 'Edit Member Note'])

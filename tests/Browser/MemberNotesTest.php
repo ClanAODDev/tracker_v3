@@ -4,6 +4,7 @@ namespace Tests\Browser;
 
 use App\Note;
 use App\User;
+use Debugbar;
 use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\MemberProfile;
 use Tests\DuskTestCase;
@@ -52,7 +53,10 @@ class MemberNotesTest extends DuskTestCase
                 ->select('type', 'misc')
                 ->press('Submit');
 
-            $browser->assertSeeIn('.note', '--Example note--');
+            // deal with collapsed notes
+            $browser->click('.note:first-of-type .panel-toggle .panel-tools')
+                ->assertSeeIn('.note', '--Example note--');
+
             $browser->assertSeeIn('.note', 'COC');
         });
 

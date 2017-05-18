@@ -14,28 +14,31 @@
 
     <div class="vertical-timeline-content panel collapsed">
         <div class="p-sm">
-            <div class="panel-tools m-l-sm">
-                <i class="fa fa-chevron-up toggle-icon panel-toggle"></i>
-            </div>
-            <div class="vertical-date pull-right text-muted">
-                @if ($note->updated_at > $note->created_at)
-                    <i class="fa fa-pencil text-muted" title="Edited"></i>
-                    {{ $note->updated_at->format('d M Y') }}
-                @else
-                    {{ $note->created_at->format('d M Y') }}
+            <div class="panel-toggle">
+                <div class="panel-tools m-l-sm">
+                    <i class="fa fa-chevron-up toggle-icon"></i>
+                </div>
+                <div class="vertical-date pull-right text-muted">
+                    @if ($note->updated_at > $note->created_at)
+                        <i class="fa fa-pencil text-muted" title="Edited"></i>
+                        {{ $note->updated_at->format('d M Y') }}
+                    @else
+                        {{ $note->created_at->format('d M Y') }}
+                    @endif
+
+                </div>
+
+                @if ($note['type'] == 'sr_ldr')
+                    <span class="label label-default slight">SGT+</span>
                 @endif
 
+                @forelse ($note->tags as $tag)
+                    <span class="label label-default slight text-uppercase">{{ $tag->name }}</span>
+                @empty
+                    <span class="label label-default slight text-uppercase">NO TAG</span>
+                @endforelse
+
             </div>
-
-            @if ($note['type'] == 'sr_ldr')
-                <span class="label label-default slight">SGT+</span>
-            @endif
-
-            @forelse ($note->tags as $tag)
-                <span class="label label-default slight text-uppercase">{{ $tag->name }}</span>
-            @empty
-                <span class="label label-default slight text-uppercase">NO TAG</span>
-            @endforelse
 
             <div class="panel-body">
                 <p>{{ $note->body }} </p>

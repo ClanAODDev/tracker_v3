@@ -15,22 +15,17 @@
     </div>
     <div class="panel-footer">
         <div class="row">
-            <div class="col-sm-3 form-group">
+            <div class="col-sm-4 form-group">
                 {!! Form::label('type', 'Note Type', ['class' => 'slight text-muted']) !!}
                 {!! Form::select('type', App\Note::allNoteTypes(), null, ['class' => 'form-control']) !!}
             </div>
 
-            <div class="col-sm-3 form-group">
+            <div class="col-sm-4 form-group">
                 {!! Form::label('forum_thread_id', 'Forum Thread ID', ['class' => 'slight text-muted']) !!}
                 {!! Form::number('forum_thread_id', null, ['class' => 'form-control']) !!}
             </div>
 
-            <div class="col-xs-3 form-group">
-                <button data-toggle="modal" data-target="#create-member-note" type="button"
-                        class="btn btn-default btn-block" style="margin-top:23px">Cancel</button>
-            </div>
-
-            <div class="col-xs-3 form-group">
+            <div class="col-xs-4 form-group">
                 <button type="submit" class="btn btn-default btn-block" style="margin-top:23px">Submit</button>
             </div>
         </div>
