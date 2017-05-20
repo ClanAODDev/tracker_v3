@@ -123,6 +123,30 @@ class Division extends Model
         'abbreviation'
     ];
 
+    public static function threadCheck($string, $thread)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $thread . "&goto=newpost");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        $getPosts = curl_exec($ch);
+        $countPosts = stripos($getPosts, $string);
+        if ( ! $countPosts) {
+            $url = parse_url(curl_last_url($ch));
+            $query = $url['query'];
+            parse_str($query, $url_array);
+            $page = @$url_array['page'] - 1;
+            curl_setopt($ch, CURLOPT_URL, $thread . "&page={$page}");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            $getPosts = curl_exec($ch);
+            $countPosts = stripos($getPosts, $string);
+        }
+
+        return ($countPosts) ? true : false;
+
+    }
+
     /**
      * @return DivisionPresenter
      */
@@ -164,9 +188,8 @@ class Division extends Model
      */
     public function platoons()
     {
-        return $this->hasMany(Platoon::class);
+        return $this->hasMany(Platoon::class)->orderBy('order');
     }
-
 
     /**
      * Division has many activity entries
@@ -243,19 +266,11 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function handles()
+    public function handle()
     {
-        return $this->belongsToMany(Handle::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function tags()
-    {
-        return $this->hasMany(Tag::class);
+        return $this->belongsTo(Handle::class);
     }
 
     /**
@@ -266,6 +281,14 @@ class Division extends Model
         return $this->tags()
             ->whereDivisionId($this->id)
             ->orWhere('default', true);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
     }
 
     /**

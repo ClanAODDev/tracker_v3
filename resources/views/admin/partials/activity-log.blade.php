@@ -20,7 +20,7 @@
             </td>
             <td>{{ $event->name }}</td>
             <td>{{ $event->subject_id }}</td>
-            <td>{{ $event->created_at->format('d M Y h:i A') }}</td>
+            <td>{{ $event->created_at->format('Y-m-d H:i A') }}</td>
         </tr>
     @endforeach
     </tbody>

@@ -16,73 +16,47 @@
     @endcomponent
 
     <div class="container-fluid">
-        <p>Depending on your division configuration, members must be assigned to a {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}. For convenience, your current assignment has been preselected. Changing the {{ $division->locality('platoon') }} will automatically update the list of {{ str_plural($division->locality('squad')) }} available.</p>
 
-        <form action="{{ route('stepOne', [$division->abbreviation]) }}" method="post" class="m-t-lg">
+        @if ($errors->count())
+            <div class="alert alert-warning" onclick="scrollToError()" style="cursor: pointer">
+                There were a few problems with your recruitment. Please review the issues marked in red.
+                <i class="fa fa-arrow-circle-right"></i>
+            </div>
+        @endif
+
+        <form action="{{ route('stepTwo', [$division->abbreviation]) }}" method="post">
 
             {{ csrf_field() }}
 
-            <div class="form-group">
-                <div class="panel panel-filled">
-                    <div class="panel-heading">
-                        Information
-                    </div>
-                    <div class="panel-body">
-                        {{-- member info --}}
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <label for="name">Forum Name</label>
-                                    <input type="text" class="form-control" name="name" id="forum-name" required>
-                                </td>
-                                <td>
-                                    <label for="name">Ingame Name</label>
-                                    <input type="text" class="form-control" name="name" id="ingame-name" required>
-                                </td>
-                                <td>
-                                    <label for="name">Forum Id</label>
-                                    <input type="number" class="form-control" name="name" id="member-id" required>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+            <h3>Getting Started</h3>
+            <hr />
+            <p>This is an introductory content paragraph for divisions to provide specific instructions regarding a recruitment process. This is a good place to talk about division-specific policies that may make or break interest, ie., division in-game requirements, must join platoon, must wear tags, etc.</p>
+            <p>Additionally, recruiters should mention the clan-wide membership requirements:</p>
+            <ul class="c-white">
+                <li>Maintain minimum forum activity. Inactivity can result in removal from AOD</li>
+                <li>Engage on TeamSpeak when playing a game AOD supports</li>
+                <li>Strive to be a contributing member of your division</li>
+                <li>Always be respectful of other clan members and leadership</li>
+            </ul>
 
-                </div>
+            <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1</h3>
+            <hr />
+            @include ('recruit.forms.member-information')
+            @include ('recruit.forms.assignment')
 
-                <div class="panel panel-filled">
-                    <div class="panel-heading">Assignment</div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <td class="col-xs-6">
-                                    <label for="platoon">{{ $division->locality('platoon') }}</label>
-                                    <select name="platoon" id="platoon" class="form-control">
-                                        <option value="">Select a platoon...</option>
-                                        @foreach ($division->platoons as $platoon)
-                                            <option value="{{ $platoon->id }}">
-                                                {{ $platoon->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td class="col-xs-6">
-                                    <label for="squad">{{ $division->locality('squad') }}</label>
-                                    <select name="squad" id="squad" class="form-control" disabled>
-                                        <option>Select a platoon...</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-            </div>
+            <button type="submit" class="btn btn-success pull-right">Continue <i class="fa fa-arrow-right"></i></button>
         </form>
 
-        <button type="submit" class="btn btn-success pull-right">Continue <i class="fa fa-arrow-right"></i></button>
     </div>
 
     <script>
+
+        function scrollToError() {
+            $('html, body').animate({
+                scrollTop: $(".has-error:first-of-type").offset().top
+            }, 2000);
+        }
+
         $("#forum-name").change(function () {
             $("#ingame-name").val($(this).val()).effect('highlight');
         });

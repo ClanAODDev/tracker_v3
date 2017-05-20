@@ -12,7 +12,7 @@ class Handle extends Model
 
     public function divisions()
     {
-        return $this->belongsToMany(Division::class);
+        return $this->hasMany(Division::class);
     }
 
     public function member()

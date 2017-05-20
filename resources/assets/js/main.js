@@ -145,6 +145,13 @@ var Tracker = Tracker || {};
 
         GeneralInit: function () {
 
+            var clipboard = new Clipboard('.copy-to-clipboard');
+
+            clipboard.on('success', function(e) {
+                alert('Copied!');
+                e.clearSelection();
+            });
+
             $('table.basic-datatable').DataTable({
                 paging: false,
                 bFilter: false,

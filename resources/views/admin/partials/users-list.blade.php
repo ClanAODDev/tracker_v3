@@ -37,7 +37,7 @@
                             {{ var_export($user->isDeveloper()) }}
                         </small>
                     </td>
-                    <td>{{ null !== $user->last_login_at ? $user->last_login_at->diffForHumans() : "Never" }}</td>
+                    <td>{{ null !== $user->last_login_at ? $user->last_login_at->format('Y-m-d') : "---" }}</td>
                 </tr>
             @endforeach
             </tbody>

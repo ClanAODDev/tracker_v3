@@ -12,6 +12,7 @@ Route::get('/', 'AppController@index')->name('index');
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
 Route::post('search-leader/', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('search-platoon', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
+Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 
 
 // Members endpoints
@@ -40,7 +41,7 @@ Route::group(['prefix' => 'statistics'], function () {
 });
 
 // initial recruiting screen
-Route::get('recruit', 'RecruitingController@index')->name('recruitHome');
+Route::get('recruit', 'RecruitingController@index')->name('recruit');
 
 /**
  * Division endpoints
@@ -64,6 +65,7 @@ Route::group(['prefix' => 'divisions/'], function () {
      */
     Route::group(['prefix' => '{division}/recruit'], function () {
         Route::get('step-one', 'RecruitingController@stepOne')->name('stepOne');
+        Route::post('step-two', 'RecruitingController@stepTwo')->name('stepTwo');
     });
 
 

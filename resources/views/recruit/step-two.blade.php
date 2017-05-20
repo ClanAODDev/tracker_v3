@@ -16,26 +16,70 @@
     @endcomponent
 
     <div class="container-fluid">
-        <h3>Select Recruit Assignment</h3>
-        <p>Depending on your division configuration, members must be assigned to a {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}. For convenience, your current assignment has been preselected. Changing the {{ $division->locality('platoon') }} will automatically update the list of {{ str_plural($division->locality('squad')) }} available.</p>
-
+        <h4><i class="fa fa-paper-plane"></i> Step 2</h4>
         <hr />
 
-        <h4>{{ str_plural($division->locality('platoon')) }}</h4>
+        <input type="hidden" name="member-id" value="{{ $request['member-id'] }}">
+        <input type="hidden" name="forum-name" value="{{ $request['forum-name'] }}">
+        <input type="hidden" name="ingame-name" value="{{ $request['ingame-name'] }}">
+        <input type="hidden" name="division-id" value="{{ $request->division->id }}">
 
-        <form action="{{ route('stepOne', [$division->abbreviation]) }}" method="post">
-
-            {{ csrf_field() }}
-
-            <div class="btn-group form-group" data-toggle="buttons">
-                @foreach ($division->platoons as $platoon)
-                    <label class="btn btn-accent">
-                        {{ $platoon->name }}
-                        <input type="radio" name="platoon" value="{{ $platoon->id }}" autocomplete="off" />
-                    </label>
-                @endforeach
+        <div class="panel panel-filled">
+            <div class="panel-heading">Recruit Member Agreements</div>
+            <div class="panel-body">
+                <p>AOD members are required to read and reply to a handful of threads posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
+                <button class="btn btn-default refresh-button" onclick="handleThreadCheck()">
+                    <i class="fa fa-spinner fa-spin"></i> <span class="status">Loading...</span>
+                </button>
             </div>
-            <button type="submit" class="form-control">Submit</button>
-        </form>
+
+            <div class="thread-results"></div>
+        </div>
+
+        <button class="pull-right btn btn-success">
+            Continue
+        </button>
+
     </div>
+
+    <script>
+        handleThreadCheck();
+
+        function handleThreadCheck() {
+            let base_url = window.Laravel.appPath,
+                results = $('.thread-results'),
+                loadingIcon = $('.refresh-button i'),
+                statusText = $('.status'),
+                reloadBtn = $('.refresh-button');
+
+            reloadBtn.attr('disabled','disabled');
+
+            $.ajax({
+                url: base_url + "/search-division-threads",
+                type: 'POST',
+                data: {
+                    _token: $('meta[name=csrf-token]').attr('content'),
+                    string: $('input[name=member-id]').val(),
+                    division: $('input[name=division-id]').val(),
+                },
+                cache: false,
+                beforeSend: function () {
+                    results.empty();
+                    loadingIcon.addClass('fa-spin')
+                        .addClass('fa-spinner')
+                        .removeClass('fa-refresh');
+                },
+            })
+
+                .done(function (html) {
+                    results.empty().prepend(html);
+                    loadingIcon.removeClass('fa-spin')
+                        .removeClass('fa-spinner')
+                        .addClass('fa-refresh');
+                    statusText.text('Check Thread Statuses');
+                    reloadBtn.removeAttr('disabled');
+                });
+        }
+    </script>
+
 @stop

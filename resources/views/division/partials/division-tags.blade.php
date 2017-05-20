@@ -1,5 +1,5 @@
 @forelse ($division->tags as $tag)
-    <div class="col-xs-6" data-repeater-item>
+    <div class="col-sm-6" data-repeater-item>
         <div class="form-group">
             <input type="text" name="tags[{{ $loop->index }}][tag]" maxlength="16"
                    class="form-control" placeholder="Enter a tag..." value="{{ $tag->name }}" required />
@@ -10,7 +10,7 @@
         </div>
     </div>
 @empty
-    <div class="col-xs-6" data-repeater-item>
+    <div class="col-sm-6" data-repeater-item>
         <div class="form-group">
             <input type="text" name="tags[0][tag]" maxlength="16"
                    class="form-control" placeholder="Enter a tag..." required />

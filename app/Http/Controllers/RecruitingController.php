@@ -37,10 +37,34 @@ class RecruitingController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function stepOne(Division $division, Request $request) {
+    public function stepOne(Division $division, Request $request)
+    {
         return view('recruit.step-one', compact('division'));
     }
 
+    public function stepTwo(Request $request, Division $division)
+    {
+        // @TODO: Verify platoon, squad are in current division
+
+        $rules = [
+            'member-id' => 'required|digits_between:1,5',
+            'forum-name' => 'required',
+            'ingame-name' => 'required'
+        ];
+
+        $messages = [
+            'member-id.digits_between' => "Forum Member ID appears to be invalid."
+        ];
+
+        $this->validate($request, $rules, $messages);
+
+        return view('recruit.step-two', compact('request', 'division'));
+    }
+
+    /**
+     * @param Request $request
+     * @return object
+     */
     public function searchPlatoonForSquads(Request $request)
     {
         return $this->getSquadsFor(Platoon::find($request->platoon));
@@ -48,10 +72,24 @@ class RecruitingController extends Controller
 
     /**
      * @param Platoon $platoon
-     * @return mixed
+     * @return object
      */
     public function getSquadsFor(Platoon $platoon)
     {
-        return $platoon->squads;
+        return $platoon->squads->pluck('id', 'name');
+    }
+
+    public function doThreadCheck(Request $request)
+    {
+        sleep(5);
+        $division = Division::find($request->division);
+        $threads = $division->settings()->get('recruiting_threads');
+
+        foreach ($threads as $key => $thread) {
+            $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
+            $threads[$key]['status'] = $division->threadCheck($request['string'], $threads[$key]['url']);
+        }
+
+        return view('recruit.partials.thread-check', compact('division', 'threads'));
     }
 }
