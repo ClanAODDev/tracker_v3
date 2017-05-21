@@ -18,13 +18,13 @@
     <div class="container-fluid">
 
         @if ($errors->count())
-            <div class="alert alert-warning" onclick="scrollToError()" style="cursor: pointer">
+            <div class="alert alert-warning" style="cursor: pointer" name="doScrollToErrors">
                 There were a few problems with your recruitment. Please review the issues marked in red.
                 <i class="fa fa-arrow-circle-right"></i>
             </div>
         @endif
 
-        <form action="{{ route('stepTwo', [$division->abbreviation]) }}" method="post">
+        <form action="{{ route('recruiting.stepTwo', [$division->abbreviation]) }}" method="post">
 
             {{ csrf_field() }}
 
@@ -39,7 +39,7 @@
                 <li>Always be respectful of other clan members and leadership</li>
             </ul>
 
-            <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1</h3>
+            <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1: Member Data</h3>
             <hr />
             @include ('recruit.forms.member-information')
             @include ('recruit.forms.assignment')
@@ -48,48 +48,8 @@
         </form>
 
     </div>
+@stop
 
-    <script>
-
-        function scrollToError() {
-            $('html, body').animate({
-                scrollTop: $(".has-error:first-of-type").offset().top
-            }, 2000);
-        }
-
-        $("#forum-name").change(function () {
-            $("#ingame-name").val($(this).val()).effect('highlight');
-        });
-
-        $("#platoon").change(function () {
-            let platoon = $(this).val(),
-                base_url = window.Laravel.appPath;
-
-            $.post(base_url + "/search-platoon",
-                {
-                    platoon: platoon,
-                    _token: $('meta[name=csrf-token]').attr('content')
-                },
-                function (data) {
-                    var options = $("#squad");
-
-                    options.empty().attr('disabled', 'disabled');
-
-                    $.each(data, function (name, id) {
-                        if (!name) {
-                            name = "Squad #" + id
-                        }
-                        options.append(new Option(name, id));
-                    });
-
-                    if (Object.keys(data).length < 1) {
-                        options.append(new Option('No Squads Available'));
-                        return false;
-                    }
-
-                    options.removeAttr('disabled').effect('highlight');
-                })
-        });
-    </script>
-
+@section('footer_scripts')
+    <script src="{!! asset('/js/recruiting.js') !!}"></script>
 @stop

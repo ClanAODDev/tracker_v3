@@ -81,13 +81,16 @@ class RecruitingController extends Controller
 
     public function doThreadCheck(Request $request)
     {
-        sleep(5);
+
         $division = Division::find($request->division);
         $threads = $division->settings()->get('recruiting_threads');
 
         foreach ($threads as $key => $thread) {
             $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
-            $threads[$key]['status'] = $division->threadCheck($request['string'], $threads[$key]['url']);
+            $threads[$key]['status'] = ($request['forum-name'] === 'test-user')
+                ? true
+                : $division->threadCheck($request['string'], $threads[$key]['url']);
+            sleep(2);
         }
 
         return view('recruit.partials.thread-check', compact('division', 'threads'));

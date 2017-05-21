@@ -16,70 +16,35 @@
     @endcomponent
 
     <div class="container-fluid">
-        <h4><i class="fa fa-paper-plane"></i> Step 2</h4>
+        <h4><i class="fa fa-pencil-square-o"></i> Step 2: Member Agreement</h4>
         <hr />
 
-        <input type="hidden" name="member-id" value="{{ $request['member-id'] }}">
-        <input type="hidden" name="forum-name" value="{{ $request['forum-name'] }}">
-        <input type="hidden" name="ingame-name" value="{{ $request['ingame-name'] }}">
-        <input type="hidden" name="division-id" value="{{ $request->division->id }}">
+        <form action="{{ route('recruiting.stepThree', [$division->abbreviation]) }}" method="post" id="member-information">
+            {{ csrf_field() }}
+            <input type="hidden" name="member-id" value="{{ $request['member-id'] }}">
+            <input type="hidden" name="forum-name" value="{{ $request['forum-name'] }}">
+            <input type="hidden" name="ingame-name" value="{{ $request['ingame-name'] }}">
+            <input type="hidden" name="platoon" value="{{ $request['platoon'] }}">
+            <input type="hidden" name="squad" value="{{ $request['squad'] }}">
+            <input type="hidden" name="division-id" value="{{ $request->division->id }}">
+        </form>
 
-        <div class="panel panel-filled">
-            <div class="panel-heading">Recruit Member Agreements</div>
-            <div class="panel-body">
-                <p>AOD members are required to read and reply to a handful of threads posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
-                <button class="btn btn-default refresh-button" onclick="handleThreadCheck()">
-                    <i class="fa fa-spinner fa-spin"></i> <span class="status">Loading...</span>
-                </button>
-            </div>
+        <p>AOD members are required to read and reply to a handful of threads posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
+        <button class="btn btn-default refresh-button" name="doThreadCheck">
+            <i class="fa fa-refresh fa-spin text-info"></i> <span class="status">Loading...</span>
+        </button>
 
-            <div class="thread-results"></div>
-        </div>
+        <div class="thread-results"></div>
+        <hr />
 
-        <button class="pull-right btn btn-success">
+        <button class="pull-right continue-btn btn btn-success" type="button">
             Continue
         </button>
 
     </div>
 
-    <script>
-        handleThreadCheck();
+@stop
 
-        function handleThreadCheck() {
-            let base_url = window.Laravel.appPath,
-                results = $('.thread-results'),
-                loadingIcon = $('.refresh-button i'),
-                statusText = $('.status'),
-                reloadBtn = $('.refresh-button');
-
-            reloadBtn.attr('disabled','disabled');
-
-            $.ajax({
-                url: base_url + "/search-division-threads",
-                type: 'POST',
-                data: {
-                    _token: $('meta[name=csrf-token]').attr('content'),
-                    string: $('input[name=member-id]').val(),
-                    division: $('input[name=division-id]').val(),
-                },
-                cache: false,
-                beforeSend: function () {
-                    results.empty();
-                    loadingIcon.addClass('fa-spin')
-                        .addClass('fa-spinner')
-                        .removeClass('fa-refresh');
-                },
-            })
-
-                .done(function (html) {
-                    results.empty().prepend(html);
-                    loadingIcon.removeClass('fa-spin')
-                        .removeClass('fa-spinner')
-                        .addClass('fa-refresh');
-                    statusText.text('Check Thread Statuses');
-                    reloadBtn.removeAttr('disabled');
-                });
-        }
-    </script>
-
+@section('footer_scripts')
+    <script src="{!! asset('/js/recruiting.js') !!}"></script>
 @stop

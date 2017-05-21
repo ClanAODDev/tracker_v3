@@ -42,7 +42,7 @@
         </a>
         <ul id="tools" class="nav nav-second collapse">
             {{--class="{{ set_active('home') }}"--}}
-            <li><a href="{{ route('recruit') }}">Add New Recruit</a></li>
+            <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
         </ul>
     </li>
 </ul>

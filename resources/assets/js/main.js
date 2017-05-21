@@ -1,4 +1,4 @@
-var Tracker = Tracker || {};
+let Tracker = Tracker || {};
 
 (function ($) {
 
@@ -32,10 +32,8 @@ var Tracker = Tracker || {};
          * @constructor
          */
         InitRepeater: function () {
-            $(document).ready(function () {
-                $('.repeater').repeater({
-                    isFirstItemUndeletable: true,
-                });
+            $('.repeater').repeater({
+                isFirstItemUndeletable: true,
             });
         },
         /**
@@ -145,9 +143,12 @@ var Tracker = Tracker || {};
 
         GeneralInit: function () {
 
+            toastr.options.preventDuplicates = true;
+            toastr.options.progressBar = true;
+
             var clipboard = new Clipboard('.copy-to-clipboard');
 
-            clipboard.on('success', function(e) {
+            clipboard.on('success', function (e) {
                 alert('Copied!');
                 e.clearSelection();
             });
