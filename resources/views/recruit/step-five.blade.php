@@ -25,9 +25,6 @@
                 <a href="{{ route('home') }}" type="button" class="btn btn-success m-t-md">
                     <i class="text-success fa fa-home"></i> Go Home
                 </a>
-                <a href="{{ route('home') }}" type="button" class="btn btn-success m-t-md">
-                    <i class="text-success fa fa-home"></i> View Profile
-                </a>
             </div>
         </div>
     </div>
