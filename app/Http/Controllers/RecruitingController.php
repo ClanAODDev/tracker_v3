@@ -123,7 +123,7 @@ class RecruitingController extends Controller
      */
     private function createMember($request, $division)
     {
-        $member = Member::firstOrNew(['clan_id' => $request->member_id]);
+        $member = Member::createOrNew(['clan_id' => $request->member_id]);
         $member->name = $request->forum_name;
         $member->join_date = Carbon::today();
         $member->last_activity = Carbon::today();
