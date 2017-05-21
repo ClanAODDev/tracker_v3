@@ -144,7 +144,7 @@ class RecruitingController extends Controller
                 'value' => $request->ingame_name
             ]
         ]);
-        
+
         $member->platoon()->associate(Platoon::find($request->platoon));
         $member->squad()->associate(Squad::find($request->squad));
 

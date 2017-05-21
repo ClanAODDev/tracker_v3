@@ -188,7 +188,7 @@ function percent($old_member_count, $new_member_count)
 
 function curl_last_url($ch, &$maxredirect = null)
 {
-    $mr = $maxredirect === null ?: intval($maxredirect);
+    $mr = $maxredirect === null ? 3 : intval($maxredirect);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
     if ($mr > 0) {
         $newurl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
