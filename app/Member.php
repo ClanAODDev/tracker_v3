@@ -7,6 +7,11 @@ use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Class Member
+ *
+ * @package App
+ */
 class Member extends Model
 {
 
@@ -14,20 +19,32 @@ class Member extends Model
     use RecordsActivity;
     use SoftDeletes;
 
+    /**
+     * @var array
+     */
     protected static $recordEvents = [
         'created',
         'updated',
         'deleted'
     ];
 
+    /**
+     * @var array
+     */
     protected $guarded = ['id'];
 
+    /**
+     * @var array
+     */
     protected $dates = [
         'join_date',
         'last_activity',
         'last_promoted',
     ];
 
+    /**
+     * @return MemberPresenter
+     */
     public function present()
     {
         return new MemberPresenter($this);
@@ -65,6 +82,17 @@ class Member extends Model
     {
         return $this->position()->associate(
             Position::whereName(strtolower($position))->firstOrFail()
+        );
+    }
+
+    /**
+     * @param $rank
+     * @return Model
+     */
+    public function assignRank($rank)
+    {
+        return $this->rank()->associate(
+            Rank::whereName(strtolower($rank))->firstOrFail()
         );
     }
 
@@ -137,11 +165,17 @@ class Member extends Model
         return $this->belongsTo(Squad::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function recruiter()
     {
         return $this->hasOne(Member::class);
     }
 
+    /**
+     * @return $this
+     */
     public function handles()
     {
         return $this->belongsToMany(Handle::class)->withPivot('value');
@@ -162,6 +196,10 @@ class Member extends Model
         return $this->clan_id === $squad->leader_id;
     }
 
+    /**
+     * @param Platoon $platoon
+     * @return bool
+     */
     public function isPlatoonLeader(Platoon $platoon)
     {
         return $this->clan_id === $platoon->leader_id;

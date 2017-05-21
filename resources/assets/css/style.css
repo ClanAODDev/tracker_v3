@@ -2262,20 +2262,21 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 
 /* Progress bar */
 .progress {
+    background-color: #222;
     border-radius: 2px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 }
 
 .progress-bar {
-    background-color: #2f323b;
+    background-color: #1bbf89;
     text-align: right;
     padding-right: 10px;
-    color: #949ba2;
+    color: #333;
 }
 
 .progress-small,
 .progress-small .progress-bar {
-    height: 10px;
+    height: 3px;
 }
 
 .progress-bar-primary {
@@ -3158,7 +3159,7 @@ div.dt-button-info h2 {
 }
 
 #toast-container.toast-top-right > div {
-    margin-top: 60px;
+    margin-top: 20px;
 }
 
 .form-control {
@@ -3386,4 +3387,52 @@ img.division-icon-small {
 
 .input-group .bc-wrapper .bc-menu {
     top: 38px;
+}
+
+.roundedTwo {
+    width: 28px;
+    height: 28px;
+    position: relative;
+    margin: 20px auto;
+    background: #fcfff4;
+    background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    background: linear-gradient(to bottom, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5);
+}
+.roundedTwo label {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    cursor: pointer;
+    background: -webkit-linear-gradient(top, #222222 0%, #45484d 100%);
+    background: linear-gradient(to bottom, #222222 0%, #45484d 100%);
+    border-radius: 50px;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px white;
+}
+.roundedTwo label:after {
+    content: '';
+    width: 9px;
+    height: 5px;
+    position: absolute;
+    top: 5px;
+    left: 4px;
+    border: 3px solid #fcfff4;
+    border-top: none;
+    border-right: none;
+    background: transparent;
+    opacity: 0;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.roundedTwo label:hover::after {
+    opacity: 0.3;
+}
+.roundedTwo input[type=checkbox] {
+    visibility: hidden;
+}
+.roundedTwo input[type=checkbox]:checked + label:after {
+    opacity: 1;
 }

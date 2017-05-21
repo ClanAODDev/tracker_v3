@@ -8,25 +8,25 @@
 
         <div class="row">
 
-            <div class="col-md-4 form-group {{ $errors->has('member-id') ? ' has-error' : null }}">
+            <div class="col-md-4 form-group {{ $errors->has('member_id') ? ' has-error' : null }}">
                 <label for="name">Forum Member Id</label>
-                <input type="number" class="form-control" name="member-id"
-                       id="member-id" value="{{ old('member-id') }}" required>
-                @if ($errors->has('member-id'))
-                    <span class="help-block"><small>{{ $errors->first('member-id') }}</small></span>
+                <input type="number" class="form-control" name="member_id"
+                       id="member_id" value="{{ old('member_id') }}" required>
+                @if ($errors->has('member_id'))
+                    <span class="help-block"><small>{{ $errors->first('member_id') }}</small></span>
                 @endif
             </div>
 
             <div class="col-md-4 form-group">
-                <label for="forum-name">Forum Name</label>
-                <input type="text" class="form-control" value="{{ old('forum-name') }}"
-                       name="forum-name" id="forum-name" required>
+                <label for="forum_name">Forum Name</label>
+                <input type="text" class="form-control" value="{{ old('forum_name') }}"
+                       name="forum_name" id="forum_name" required>
             </div>
 
             <div class="col-md-4 form-group">
-                <label for="ingame-name">{{ $division->handle->name or "Ingame Name" }}</label>
-                <input type="text" class="form-control" name="ingame-name"
-                       value="{{ old('ingame-name') }}" id="ingame-name" required>
+                <label for="ingame_name">{{ $division->handle->name or "Ingame Name" }}</label>
+                <input type="text" class="form-control" name="ingame_name"
+                       value="{{ old('ingame_name') }}" id="ingame_name" required>
             </div>
 
         </div>

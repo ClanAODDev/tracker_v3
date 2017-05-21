@@ -68,6 +68,8 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('step-one', 'RecruitingController@stepOne')->name('recruiting.stepOne');
         Route::post('step-two', 'RecruitingController@stepTwo')->name('recruiting.stepTwo');
         Route::post('step-three', 'RecruitingController@stepThree')->name('recruiting.stepThree');
+        Route::post('step-four', 'RecruitingController@stepFour')->name('recruiting.stepFour');
+        Route::get('step-five', 'RecruitingController@stepFive')->name('recruiting.stepFive');
     });
 
 

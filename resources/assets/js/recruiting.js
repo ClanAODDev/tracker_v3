@@ -1,29 +1,19 @@
-let Recruiting = Recruiting || {};
+window.Recruiting = {
+    main: function () {
+        Recruiting.stepOneInit();
+        Recruiting.stepTwoInit();
+        Recruiting.scrollToError();
 
-(function ($) {
+        $("[name=trngMode]").click(function () {
+            // @TODO: Define test user in environment
+            $('[name=member_id]').val(99999).effect('highlight');
+            $('[name=forum_name]').val('test-user').effect('highlight');
+            $('[name=ingame_name]').val('test-user').effect('highlight');
+        });
+    },
 
-    Recruiting = {
-
-        main: function () {
-            Recruiting.stepOneInit();
-            Recruiting.stepTwoInit();
-            Recruiting.scrollToError();
-            Recruiting.handleThreadCheck();
-
-            $("[name=doThreadCheck]").click(function () {
-                Recruiting.handleThreadCheck();
-            });
-        },
-
-        scrollToError: function () {
-            $("[name=doScrollToErrors]").click(function () {
-                $('html, body').animate({
-                    scrollTop: $(".has-error:first-of-type").offset().top
-                }, 2000);
-            });
-        },
-
-        handleThreadCheck: function () {
+    handleThreadCheck: function () {
+        $(document).ready(function () {
             let base_url = window.Laravel.appPath,
                 results = $('.thread-results'),
                 loadingIcon = $('.refresh-button i'),
@@ -37,8 +27,10 @@ let Recruiting = Recruiting || {};
                 type: 'POST',
                 data: {
                     _token: $('meta[name=csrf-token]').attr('content'),
-                    string: $('input[name=member-id]').val(),
-                    division: $('input[name=division-id]').val(),
+                    string: $('input[name=member_id]').val(),
+                    memberName: $('input[name=forum_name]').val(),
+                    division: $('input[name=division_id]').val(),
+                    isTesting: $('input[name=is_testing]').val(),
                 },
                 cache: false,
                 beforeSend: function () {
@@ -52,66 +44,72 @@ let Recruiting = Recruiting || {};
                 reloadBtn.removeAttr('disabled');
                 toastr.success('Thread check finished successfully!', 'Success');
             });
-        },
+        });
+    },
 
-        stepTwoInit: function () {
-            $('.continue-btn').click(function (e) {
-                e.preventDefault();
+    scrollToError: function () {
+        $("[name=doScrollToErrors]").click(function () {
+            $('html, body').animate({
+                scrollTop: $(".has-error:first-of-type").offset().top
+            }, 2000);
+        });
+    },
 
-                if ($('.thread-list').is(':visible')) {
+    stepTwoInit: function () {
+        $('.step-two-submit').click(function (e) {
+            e.preventDefault();
 
-                    if ($('.thread').length !== $('.thread .text-success').length) {
-                        toastr.error('Recruit has not completed all threads.', 'Oops');
+            if ($('.thread-list').is(':visible')) {
+
+                if ($('.thread').length !== $('.thread .text-success').length) {
+                    toastr.error('Recruit has not completed all threads.', 'Oops');
+                    return false;
+                }
+
+                $("#member-information").submit();
+            } else {
+                toastr.error('Thread check still running...', 'Oops...');
+            }
+        });
+    },
+
+    stepOneInit: function () {
+
+        $("#forum_name").change(function () {
+            $("#ingame_name").val($(this).val()).effect('highlight');
+        });
+
+        $("#platoon").change(function () {
+            let platoon = $(this).val(),
+                base_url = window.Laravel.appPath;
+
+            $.post(base_url + "/search-platoon",
+                {
+                    platoon: platoon,
+                    _token: $('meta[name=csrf-token]').attr('content')
+                },
+                function (data) {
+                    var options = $("#squad");
+
+                    options.empty().attr('disabled', 'disabled');
+
+                    $.each(data, function (name, id) {
+                        if (!name) {
+                            name = "Squad #" + id
+                        }
+                        options.append(new Option(name, id));
+                    });
+
+                    if (Object.keys(data).length < 1) {
+                        options.append(new Option('No Squads Available'));
                         return false;
                     }
 
-                    $("#member-information").submit();
-                } else {
-                    toastr.error('Thread check still running...', 'Oops...');
-                }
-            });
-        },
-
-        stepOneInit: function () {
-
-            $("#forum-name").change(function () {
-                $("#ingame-name").val($(this).val()).effect('highlight');
-            });
-
-            $("#platoon").change(function () {
-                let platoon = $(this).val(),
-                    base_url = window.Laravel.appPath;
-
-                $.post(base_url + "/search-platoon",
-                    {
-                        platoon: platoon,
-                        _token: $('meta[name=csrf-token]').attr('content')
-                    },
-                    function (data) {
-                        var options = $("#squad");
-
-                        options.empty().attr('disabled', 'disabled');
-
-                        $.each(data, function (name, id) {
-                            if (!name) {
-                                name = "Squad #" + id
-                            }
-                            options.append(new Option(name, id));
-                        });
-
-                        if (Object.keys(data).length < 1) {
-                            options.append(new Option('No Squads Available'));
-                            return false;
-                        }
-
-                        options.removeAttr('disabled').effect('highlight');
-                    })
-            });
-        }
+                    options.removeAttr('disabled').effect('highlight');
+                })
+        });
     }
-
-})(jQuery);
-
+};
 Recruiting.main();
 
 

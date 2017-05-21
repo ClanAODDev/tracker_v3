@@ -4,8 +4,16 @@ namespace App\Activities;
 
 use App\Activity;
 
+/**
+ * Trait RecordsActivity
+ *
+ * @package App\Activities
+ */
 trait RecordsActivity
 {
+    /**
+     *
+     */
     protected static function bootRecordsActivity()
     {
         foreach (static::getModelEvents() as $event) {
@@ -15,6 +23,9 @@ trait RecordsActivity
         }
     }
 
+    /**
+     * @return array
+     */
     protected static function getModelEvents()
     {
         if (isset(static::$recordEvents)) {
@@ -28,14 +39,19 @@ trait RecordsActivity
         ];
     }
 
+    /**
+     * @param $event
+     */
     public function recordActivity($event) //$post->recordActivity('favorited')
     {
-        if (\Auth::check()) {
-            $user = \Auth::user();
+        if (auth()->check()) {
+            $user = auth()->user();
 
             $this->activity()->create([
                 'name' => $this->getActivityName($event),
                 'user_id' => $user->id,
+                'subject_id' => $this->id,
+                'subject_type' => get_class($this),
                 'division_id' => $user->member->primaryDivision->id
             ]);
 
@@ -44,12 +60,19 @@ trait RecordsActivity
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function activity()
     {
-        return $this->morphMany(Activity::class, 'subject')
+        return $this->morphMany('App\Activity', 'subject')
             ->orderBy('created_at', 'desc');
     }
 
+    /**
+     * @param $action
+     * @return string
+     */
     protected function getActivityName($action)
     {
         $name = strtolower((new \ReflectionClass($this))->getShortName());
@@ -57,6 +80,9 @@ trait RecordsActivity
         return "{$action}_{$name}";
     }
 
+    /**
+     *
+     */
     public static function feed()
     {
 

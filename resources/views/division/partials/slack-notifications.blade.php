@@ -9,8 +9,7 @@
         </td>
         <td>
             <input type='hidden' value='0' name="slack_alert_created_member">
-            <input id="slack_alert_created_member" disabled="disabled"
-                   name="slack_alert_created_member"
+            <input id="slack_alert_created_member" name="slack_alert_created_member"
                    type="checkbox" {{ checked($division->settings()->slack_alert_created_member) }} />
         </td>
     </tr>

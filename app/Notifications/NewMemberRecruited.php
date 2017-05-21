@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Platoon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -23,12 +24,11 @@ class NewMemberRecruited extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param $user
      * @param $member
      */
-    public function __construct($user, $member)
+    public function __construct($member, $division)
     {
-        $this->user = $user;
+        $this->division = $division;
         $this->member = $member;
     }
 
@@ -51,10 +51,17 @@ class NewMemberRecruited extends Notification
         $to = ($this->division->settings()->get('slack_channel'))
             ?: '@' . auth()->user()->name;
 
+        $message = " just recruited `{$this->member->name}` into the {$this->division->name} Division!";
+
         return (new SlackMessage())
             ->success()
             ->to($to)
-            ->content(auth()->user()->name . " just recruited " . $this->member->name);
-
+            ->content(auth()->user()->name . $message)
+            ->attachment(function ($attachment) {
+                $attachment->title('View Member Profile')
+                    ->content(
+                        route('member', $this->member->clan_id)
+                    );
+            });
     }
 }

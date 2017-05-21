@@ -21,7 +21,7 @@ class Controller extends BaseController
             $toastMessage,
             "Success",
             [
-                'positionClass' => 'toast-top-right',
+                'positionClass' => 'toast-bottom-right',
                 'progressBar' => true
             ]
         );

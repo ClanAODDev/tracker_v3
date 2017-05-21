@@ -9,26 +9,34 @@
  */
 function doForumFunction(array $ids, $action)
 {
-    if ($action === "email") {
-        $path = "https://www.clanaod.net/forums/sendmessage.php?";
-        $params = ['do' => 'mailmember', 'u' => array_first($ids)];
-    } else {
-        if ($action === 'showThread') {
+
+    switch ($action) {
+        case "email":
+            $path = "https://www.clanaod.net/forums/sendmessage.php?";
+            $params = ['do' => 'mailmember', 'u' => array_first($ids)];
+            break;
+        case "showThread":
             $path = "https://www.clanaod.net/forums/showthread.php?";
             $params = ['t' => array_first($ids)];
-        } else {
-            if ($action === 'forumProfile') {
-                $path = "https://www.clanaod.net/forums/member.php?";
-                $params = ['u' => array_first($ids)];
-            } else {
-                if ($action === "pm") {
-                    $params = ['do' => 'newpm', 'u' => $ids];
-                    $path = "https://www.clanaod.net/forums/private.php?";
-                } else {
-                    throw new InvalidArgumentException('Invalid action type specified.');
-                }
-            }
-        }
+            break;
+        case "forumProfile":
+            $path = "https://www.clanaod.net/forums/member.php?";
+            $params = ['u' => array_first($ids)];
+            break;
+        case "pm":
+            $params = ['do' => 'newpm', 'u' => $ids];
+            $path = "https://www.clanaod.net/forums/private.php?";
+            break;
+        case "createThread":
+            $params = ['do' => 'newthread', 'f' => array_first($ids)];
+            $path = "https://www.clanaod.net/forums/newthread.php?";
+            break;
+        case "replyToThread":
+            $params = ['do' => 'postreply', 't' => array_first($ids)];
+            $path = "https://www.clanaod.net/forums/newreply.php?";
+            break;
+        default:
+            throw new InvalidArgumentException('Improper forum function used: ' . $action);
     }
 
     return urldecode($path . http_build_query($params));
@@ -180,7 +188,7 @@ function percent($old_member_count, $new_member_count)
 
 function curl_last_url($ch, &$maxredirect = null)
 {
-    $mr = $maxredirect === null ? 3 : intval($maxredirect);
+    $mr = $maxredirect === null ?: intval($maxredirect);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
     if ($mr > 0) {
         $newurl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);

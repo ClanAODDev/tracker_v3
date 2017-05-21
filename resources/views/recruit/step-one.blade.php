@@ -16,10 +16,11 @@
     @endcomponent
 
     <div class="container-fluid">
+        @include ('application.components.progress-bar', ['percent' => 20])
 
         @if ($errors->count())
             <div class="alert alert-warning" style="cursor: pointer" name="doScrollToErrors">
-                There were a few problems with your recruitment. Please review the issues marked in red.
+                There was a problem with your recruitment. Please review the issues marked in red.
                 <i class="fa fa-arrow-circle-right"></i>
             </div>
         @endif
@@ -41,6 +42,8 @@
 
             <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1: Member Data</h3>
             <hr />
+
+            @include ('recruit.partials.trainer-bar')
             @include ('recruit.forms.member-information')
             @include ('recruit.forms.assignment')
 
