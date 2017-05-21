@@ -1,11 +1,11 @@
-<h4><i class="fa fa-plus-square text-accent"></i> Step 4: Member Status Request</h4>
+<h3><i class="fa fa-plus-square text-accent"></i> Step 4: Member Status Request</h3>
 
 <p>Your new recruit has been added to the Tracker, but you still need to submit a member status request to have their AOD permissions approved. To do that, use the button below to open the status request form.</p>
 
 <p>Note: if you need to change the member's forum name, include it as the "name" in your request. Otherwise,
     <span class="text-accent">leave the name field blank</span>.</p>
 
-<div class="row">
+<div class="row p-lg">
     <div class="col-sm-6 text-center">
         <label>Forum User ID</label>
         <code>{{ $request->member_id }}</code>

@@ -1,10 +1,6 @@
 <hr />
 <div class="thread-list">
 
-    @if ($isTesting)
-        <div class="alert alert-info slight">Testing Mode - Thread Checks Bypassed</div>
-    @endif
-
     @foreach ($threads as $thread)
         <div class="panel panel-filled thread panel-c-{{ ($thread['status']) ? "success" : "danger" }}">
             <div class="panel-heading text-uppercase">

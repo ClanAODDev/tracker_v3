@@ -15,10 +15,10 @@
     @endcomponent
 
     <div class="container-fluid">
+        @include ('recruit.partials.testing-bar')
         @include ('application.components.progress-bar', ['percent' => 40])
 
-        <h4><i class="fa fa-pencil-square-o text-accent"></i> Step 2: Member Agreement</h4>
-        <hr />
+        <h3><i class="fa fa-pencil-square-o text-accent"></i> Step 2: Member Agreement</h3>
 
         <form action="{{ route('recruiting.stepThree', [$division->abbreviation]) }}" method="post" id="member-information">
             {{ csrf_field() }}
@@ -35,7 +35,7 @@
 
         <p>Searching threads for posts by member <code>{{ $request['member_id'] }}</code></p>
 
-        <button class="btn btn-default refresh-button" onclick="window.Recruiting.handleThreadCheck()">
+        <button class="btn btn-default refresh-button m-t-lg" onclick="window.Recruiting.handleThreadCheck()">
             <i class="fa fa-refresh fa-spin text-info"></i> <span class="status">Loading...</span>
         </button>
 

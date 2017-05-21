@@ -2264,7 +2264,7 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 .progress {
     background-color: #222;
     border-radius: 2px;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 
 .progress-bar {
@@ -2276,7 +2276,7 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 
 .progress-small,
 .progress-small .progress-bar {
-    height: 3px;
+    height: 10px;
 }
 
 .progress-bar-primary {

@@ -16,36 +16,28 @@
     @endcomponent
 
     <div class="container-fluid">
+
+        @include ('recruit.partials.testing-bar')
         @include ('application.components.progress-bar', ['percent' => 60])
 
-        <h4><i class="fa fa-check-circle-o text-accent"></i> Step 3: Finishing Steps</h4>
-
-        <p>You are almost finished with your recruit. Below are tasks required by your division in order to in-process your new member.</p>
-
-        @if ($isTesting)
-            <div class="alert alert-info slight">Testing Mode - To-do items bypassed</div>
-        @endif
+        <div class="panel">
+            <h3><i class="fa fa-check-circle-o text-accent"></i> Step 3: In-processing</h3>
+            <p>You are almost finished with your recruit. Below are tasks required by your division in order to in-process your new member.</p>
+        </div>
 
         <form action="{{ route('recruiting.stepFour', $division->abbreviation) }}" method="post" id="step-four-form">
             <input type="hidden" name="member_id" value="{{ $request->member_id }}">
             {{ csrf_field() }}
         </form>
 
-        <table class="table table-hover table-bordered table-striped tasks m-b-xl">
-            @foreach ($division->settings()->recruiting_tasks as $task)
-                <tr>
-                    <td class="text-center">
-
-                        <input type="checkbox" name="tasks[]"
-                               id="task-{{ $loop->index }}" {{ ($isTesting) ? "checked" : null }} />
-
-                    </td>
-                    <td>
-                        {{ $task['task_description'] }}</label>
-                    </td>
-                </tr>
-            @endforeach
-        </table>
+        <div class="row">
+            <div class="col-sm-6">
+                @include ('recruit.partials.tasks')
+            </div>
+            <div class="col-sm-6">
+                @include ('recruit.partials.recap-info')
+            </div>
+        </div>
 
         @include('recruit.partials.ts-info')
 
@@ -61,16 +53,16 @@
                 if (event.target.type !== 'checkbox') {
                     $(':checkbox', this).trigger('click');
                 }
-
-                $(".step-three-submit").click(function () {
-                    if ($('.tasks :checkbox:checked').length < $('.tasks :checkbox').length) {
-                        toastr.error('You must mark all listed tasks complete!', 'Oops');
-                        return false;
-                    }
-
-                    $("#step-four-form").submit();
-                })
             });
+
+            $(".step-three-submit").click(function () {
+                if ($('.tasks :checkbox:checked').length < $('.tasks :checkbox').length) {
+                    toastr.error('You must mark all listed tasks complete!', 'Oops');
+                    return false;
+                }
+
+                $("#step-four-form").submit();
+            })
 
 
         });

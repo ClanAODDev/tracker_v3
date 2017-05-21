@@ -16,6 +16,7 @@
     @endcomponent
 
     <div class="container-fluid">
+
         @include ('application.components.progress-bar', ['percent' => 20])
 
         @if ($errors->count())
@@ -30,7 +31,7 @@
             {{ csrf_field() }}
 
             <h3>Getting Started</h3>
-            <hr />
+
             <p>This is an introductory content paragraph for divisions to provide specific instructions regarding a recruitment process. This is a good place to talk about division-specific policies that may make or break interest, ie., division in-game requirements, must join platoon, must wear tags, etc.</p>
             <p>Additionally, recruiters should mention the clan-wide membership requirements:</p>
             <ul class="c-white">

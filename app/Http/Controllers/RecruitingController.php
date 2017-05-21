@@ -165,8 +165,9 @@ class RecruitingController extends Controller
         return view('recruit.step-four', compact('division', 'request'));
     }
 
-    public function stepFive(Division $division)
+    public function stepFive(Division $division, Request $request)
     {
+        dd($request->all());
         return view('recruit.step-five', compact('division'));
     }
 
