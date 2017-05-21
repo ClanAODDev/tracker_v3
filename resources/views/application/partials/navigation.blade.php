@@ -28,8 +28,8 @@
                     {{ auth()->user()->name }}
                     <small class="text-muted text-uppercase">[{{ auth()->user()->role->name }}]</small>
                 </a></li>
-            <li><a href="usage.html">Settings</a></li>
-            <li><a href="activity.html">Forum Profile</a></li>
+            {{--<li><a href="usage.html">Settings</a></li>--}}
+            <li><a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a></li>
             <li><a href="#"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
             </li>
