@@ -53,12 +53,12 @@ class Division extends Model
             [
                 'thread_name' => 'AOD Code of Conduct',
                 'thread_id' => 3327,
-                'comments' => 'Lorem ipsum dolor...'
+                'comments' => ''
             ],
             [
                 'thread_name' => 'AOD Ranking Structure',
                 'thread_id' => 3326,
-                'comments' => 'Lorem ipsum dolor...'
+                'comments' => ''
             ],
         ],
         'recruiting_tasks' => [
@@ -69,7 +69,7 @@ class Division extends Model
                 'task_description' => 'Copy TS identity unique id to forum profile',
             ],
             [
-                'task_description' => 'Change name on Teamspeak: %%member_name%%',
+                'task_description' => 'Change name on Teamspeak (add AOD_ and rank)',
             ],
             [
                 'task_description' => 'Reminder that forum login name will change in 24/48 hours',

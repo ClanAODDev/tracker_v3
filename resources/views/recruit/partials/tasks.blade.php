@@ -6,7 +6,7 @@
                        id="task-{{ $loop->index }}" {{ ($isTesting) ? "checked" : null }} />
             </td>
             <td>
-                {{ $task['task_description'] }}</label>
+                {{ $task['task_description'] }}
             </td>
         </tr>
     @endforeach

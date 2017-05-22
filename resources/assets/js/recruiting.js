@@ -2,13 +2,13 @@ window.Recruiting = {
     main: function () {
         Recruiting.stepOneInit();
         Recruiting.stepTwoInit();
-        Recruiting.scrollToError();
 
         $("[name=trngMode]").click(function () {
             // @TODO: Define test user in environment
             $('[name=member_id]').val(99999).effect('highlight');
             $('[name=forum_name]').val('test-user').effect('highlight');
             $('[name=ingame_name]').val('test-user').effect('highlight');
+            Recruiting.scrollTo("[name=member_id]");
         });
     },
 
@@ -47,12 +47,10 @@ window.Recruiting = {
         });
     },
 
-    scrollToError: function () {
-        $("[name=doScrollToErrors]").click(function () {
-            $('html, body').animate({
-                scrollTop: $(".has-error:first-of-type").offset().top
-            }, 2000);
-        });
+    scrollTo: function (element) {
+        $('html, body').animate({
+            scrollTop: $(element).offset().top
+        }, 1000);
     },
 
     stepTwoInit: function () {

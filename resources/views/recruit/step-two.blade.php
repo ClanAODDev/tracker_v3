@@ -33,7 +33,7 @@
 
         <p>AOD members are required to read and reply to a handful of threads posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
 
-        <p>Searching threads for posts by member <code>{{ $request['member_id'] }}</code></p>
+        <p>Searching threads for posts by member <code>#{{ $request['member_id'] }}</code></p>
 
         <button class="btn btn-default refresh-button m-t-lg" onclick="window.Recruiting.handleThreadCheck()">
             <i class="fa fa-refresh fa-spin text-info"></i> <span class="status">Loading...</span>

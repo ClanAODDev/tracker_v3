@@ -1,1 +1,29 @@
-!function e(t,r,n){function o(u,a){if(!r[u]){if(!t[u]){var c="function"==typeof require&&require;if(!a&&c)return c(u,!0);if(i)return i(u,!0);var f=new Error("Cannot find module '"+u+"'");throw f.code="MODULE_NOT_FOUND",f}var p=r[u]={exports:{}};t[u][0].call(p.exports,function(e){var r=t[u][1][e];return o(r?r:e)},p,p.exports,e,t,r,n)}return r[u].exports}for(var i="function"==typeof require&&require,u=0;u<n.length;u++)o(n[u]);return o}({1:[function(e,t,r){"use strict";var n=n||{};!function(e){n={setup:function(){this.initAutocomplete()},initAutocomplete:function(){e("#leader").bootcomplete({url:window.Laravel.appPath+"/search-leader/",minLength:3,idField:!0,method:"POST",dataParams:{_token:e("meta[name=csrf-token]").attr("content")}})}}}(jQuery),n.setup()},{}]},{},[1]);
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+var Division = Division || {};
+
+(function ($) {
+
+    Division = {
+
+        setup: function setup() {
+            this.initAutocomplete();
+        },
+
+        initAutocomplete: function initAutocomplete() {
+
+            $('#leader').bootcomplete({
+                url: window.Laravel.appPath + '/search-leader/',
+                minLength: 3,
+                idField: true,
+                method: 'POST',
+                dataParams: { _token: $('meta[name=csrf-token]').attr('content') }
+            });
+        }
+    };
+})(jQuery);
+
+Division.setup();
+
+},{}]},{},[1]);

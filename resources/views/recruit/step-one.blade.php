@@ -20,7 +20,7 @@
         @include ('application.components.progress-bar', ['percent' => 20])
 
         @if ($errors->count())
-            <div class="alert alert-warning" style="cursor: pointer" name="doScrollToErrors">
+            <div class="alert alert-warning" style="cursor: pointer" onclick="window.Recruiting.scrollTo('.has-error:first-of-type')">
                 There was a problem with your recruitment. Please review the issues marked in red.
                 <i class="fa fa-arrow-circle-right"></i>
             </div>

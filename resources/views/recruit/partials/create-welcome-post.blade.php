@@ -3,9 +3,9 @@
 @if ($division->settings()->get('welcome_area'))
 
     @if ($division->settings()->get('use_welcome_thread'))
-        <p>Your division uses a welcome thread for all new recruit introductions. Click the button below to create a post and introduce your new recruit to the other members of the division.</p>
+        <p>The {{ $division->name }} division uses a welcome thread for all new recruit introductions. Click the button below to create a post and introduce your new recruit to the other members of the division.</p>
 
-        <div class="text-center p-lg">
+        <div class="text-center p-lg bs-example">
             <a href="{{ doForumFunction([$division->settings()->get('welcome_area')], 'replyToThread') }}"
                target="_blank"
                class="btn btn-accent">
@@ -14,9 +14,9 @@
         </div>
     @else
 
-        <p>Your division uses a welcome forum for all new recruit introductions. Click the button below to create a thread and introduce your new recruit to the other members of the division.</p>
+        <p>The {{ $division->name }} division uses a welcome forum for all new recruit introductions. Click the button below to create a thread and introduce your new recruit to the other members of the division.</p>
 
-        <div class="text-center p-lg">
+        <div class="text-center p-lg bs-example">
             <a href="{{ doForumFunction([$division->settings()->get('welcome_area')], 'createThread') }}"
                target="_blank"
                class="btn btn-accent">

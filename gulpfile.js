@@ -50,7 +50,7 @@ elixir(function (mix) {
     mix.browserify('census-graph.js');
     mix.browserify('recruiting.js');
 
-    mix.webpack('app.js');
+    mix.webpack('passport.js');
 });
 
 

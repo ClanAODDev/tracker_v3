@@ -5,7 +5,7 @@
 <p>Note: if you need to change the member's forum name, include it as the "name" in your request. Otherwise,
     <span class="text-accent">leave the name field blank</span>.</p>
 
-<div class="row p-lg">
+<div class="row p-lg bs-example">
     <div class="col-sm-6 text-center">
         <label>Forum User ID</label>
         <code>{{ $request->member_id }}</code>

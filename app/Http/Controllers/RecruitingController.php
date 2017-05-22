@@ -120,16 +120,20 @@ class RecruitingController extends Controller
      * Handle member creation on recruitment
      *
      * @param $request
+     * @param $division
+     * @return
      */
     private function createMember($request, $division)
     {
-        $member = Member::createOrNew(['clan_id' => $request->member_id]);
+        $member = Member::firstOrNew(['clan_id' => $request->member_id]);
+
         $member->name = $request->forum_name;
         $member->join_date = Carbon::today();
         $member->last_activity = Carbon::today();
-        $member->assignRank('Recruit');
-        $member->assignPosition('Member');
         $member->recruiter_id = auth()->user()->member->clan_id;
+        $member->rank_id = 1;
+        $member->position_id = 1;
+        $member->save();
 
         // assign to division
         $member->divisions()->sync([
@@ -150,7 +154,6 @@ class RecruitingController extends Controller
 
         $member->recordActivity('recruited');
 
-        $member->save();
 
         return $member;
     }
