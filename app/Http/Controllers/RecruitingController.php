@@ -10,6 +10,7 @@ use App\Platoon;
 use App\Squad;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Whossun\Toastr\Toastr;
 
 /**
  * Class RecruitingController
@@ -143,11 +144,15 @@ class RecruitingController extends Controller
         ]);
 
         // handle ingame name assignment
-        $member->handles()->syncWithoutDetaching([
-            Handle::find($division->handle_id)->id => [
-                'value' => $request->ingame_name
-            ]
-        ]);
+        if ($division->handle) {
+            $member->handles()->syncWithoutDetaching([
+                Handle::find($division->handle_id)->id => [
+                    'value' => $request->ingame_name
+                ]
+            ]);
+        } else {
+            $this->showErrorToast('Your division does not have a default ingame handle, so the ingame name could not be stored');
+        }
 
         $member->platoon()->associate(Platoon::find($request->platoon));
         $member->squad()->associate(Squad::find($request->squad));

@@ -26,4 +26,7 @@ class Controller extends BaseController
             ]
         );
     }
+
+    protected function showErrorToast($toastMesage)
+    {}
 }
