@@ -28,5 +28,14 @@ class Controller extends BaseController
     }
 
     protected function showErrorToast($toastMesage)
-    {}
+    {
+        Toastr::error(
+            $toastMessage,
+            "Uh oh...",
+            [
+                'positionClass' => 'toast-bottom-right',
+                'progressBar' => true
+            ]
+        );
+    }
 }
