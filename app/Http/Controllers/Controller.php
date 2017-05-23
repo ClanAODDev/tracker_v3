@@ -27,7 +27,7 @@ class Controller extends BaseController
         );
     }
 
-    protected function showErrorToast($toastMesage)
+    protected function showErrorToast($toastMessage)
     {
         Toastr::error(
             $toastMessage,
