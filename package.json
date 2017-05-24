@@ -21,6 +21,7 @@
     "laravel-elixir-webpack-official": "^1.0.10",
     "laravel-mix": "^0.6.0",
     "lodash": "^4.16.2",
+    "vee-validate": "^2.0.0-rc.3",
     "vue": "^2.0.1"
   }
 }

@@ -1,15 +1,20 @@
 <template>
-    <step-one></step-one>
+    <div>
+        <step-one></step-one>
+        <!--<step-two></step-two>-->
+        <!--<step-three></step-three>-->
+        <!--<step-four></step-four>-->
+        <!--<step-five></step-five>-->
+    </div>
 </template>
-
-<style>
-
-</style>
 
 <script>
     import store from '../store.js';
 
     import StepOne from './StepOne.vue';
+    //    import StepTwo from './StepOne.vue';
+    //    import StepOne from './StepOne.vue';
+    //    import StepOne from './StepOne.vue';
 
     export default {
 
@@ -21,17 +26,12 @@
             return {
                 store
             }
-
         },
 
         props: ['division'],
 
         mounted () {
             this.prepareRecruitingProcess()
-        },
-
-        computed: {
-
         },
 
         methods: {

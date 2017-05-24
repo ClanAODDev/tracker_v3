@@ -2,6 +2,9 @@ let store = {};
 
 export default store
 
+// are we in test mode?
+store.inTestMode = false;
+
 // member data
 store.member_id = '';
 store.ingame_name = '';
