@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-sm-6 form-group">
                         <label for="platoon">{{ $division->locality('platoon') }}</label>
-                        <select name="platoon" id="platoon" class="form-control">
+                        <select name="platoon" id="platoon" class="form-control" v-model="platoon">
                             <option value="">Select a platoon...</option>
                             @foreach ($division->platoons as $platoon)
                                 <option value="{{ $platoon->id }}">

@@ -48,5 +48,4 @@ class DivisionController extends ApiController
             'data' => $this->divisionTransformer->transform($division)
         ]);
     }
-
 }

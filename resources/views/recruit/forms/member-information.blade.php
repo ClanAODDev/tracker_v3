@@ -10,7 +10,7 @@
 
             <div class="col-md-4 form-group {{ $errors->has('member_id') ? ' has-error' : null }}">
                 <label for="name">Forum Member Id</label>
-                <input type="number" class="form-control" name="member_id"
+                <input type="number" class="form-control" name="member_id" v-model="store.member_id"
                        id="member_id" value="{{ old('member_id') }}" required>
                 @if ($errors->has('member_id'))
                     <span class="help-block"><small>{{ $errors->first('member_id') }}</small></span>

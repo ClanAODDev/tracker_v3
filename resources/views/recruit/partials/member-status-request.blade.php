@@ -8,8 +8,8 @@
 <div class="row p-lg bs-example">
     <div class="col-sm-6 text-center">
         <label>Forum User ID</label>
-        <code>{{ $request->member_id }}</code>
-        @include ('application.components.copy-button', ['data' => $request->member_id])
+        <code>@{{ store.member_id }}</code>
+        {{--        @include ('application.components.copy-button', ['data' => $request->member_id])--}}
     </div>
 
     <div class="col-sm-6 text-center">

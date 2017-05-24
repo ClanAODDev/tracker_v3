@@ -7,8 +7,8 @@
         <div class="row">
             <div class="col-xs-4">Member Name</div>
             <div class="col-xs-8 text-right">
-                <code>AOD_Rct_{{ $request->forum_name }}</code>
-                @include ('application.components.copy-button', ['data' => "AOD_Rct_" . $request->forum_name])
+                <code>AOD_Rct_@{{ store.forum_name }}</code>
+                {{--@include ('application.components.copy-button', ['data' => "AOD_Rct_" . $request->forum_name])--}}
             </div>
         </div>
     </div>

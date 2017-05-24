@@ -10,7 +10,6 @@ use App\Platoon;
 use App\Squad;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Whossun\Toastr\Toastr;
 
 /**
  * Class RecruitingController
@@ -178,7 +177,16 @@ class RecruitingController extends Controller
         return view('recruit.step-five', compact('division'));
     }
 
+    public function platoonsAndSquads($abbreviation)
+    {
+        $division = Division::whereAbbreviation($abbreviation)->first();
+
+        return $this->getPlatoonsAndSquadsFor($division);
+    }
+
     /**
+     * ajax method
+     *
      * @param Request $request
      * @return object
      */
@@ -193,7 +201,7 @@ class RecruitingController extends Controller
      */
     public function getSquadsFor(Platoon $platoon)
     {
-        return $platoon->squads->pluck('id', 'name');
+        return $platoon->squads->load('leader');
     }
 
     /**
@@ -215,5 +223,19 @@ class RecruitingController extends Controller
         }
 
         return view('recruit.partials.thread-check', compact('division', 'threads', 'isTesting'));
+    }
+
+    /**
+     * @param $division
+     * @return array
+     */
+    private function getPlatoonsAndSquadsFor($division)
+    {
+        return [
+            'data' => [
+                'platoons' => $division->platoons->pluck('name', 'id'),
+                'squads' => $division->squads->pluck('name', 'id')
+            ]
+        ];
     }
 }

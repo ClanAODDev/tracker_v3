@@ -1,8 +1,9 @@
 const elixir = require('laravel-elixir');
 
 require('laravel-elixir-vue-2');
+require('laravel-elixir-webpack-official');
 
-elixir.config.sourcemaps = false;
+// elixir.config.sourcemaps = false;
 
 elixir(function (mix) {
 
@@ -48,9 +49,9 @@ elixir(function (mix) {
     mix.browserify('platoon.js');
     mix.browserify('division.js');
     mix.browserify('census-graph.js');
-    mix.browserify('recruiting.js');
 
     mix.webpack('passport.js');
+    mix.webpack('recruiting.js');
 });
 
 

@@ -10,9 +10,9 @@ Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
-Route::post('search-leader/', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
+Route::get('division-platoons-squads/{abbreviation}', 'RecruitingController@platoonsAndSquads')->name('platoonsAndSquads');
+Route::post('search-leader', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('search-platoon', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
-Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 
 

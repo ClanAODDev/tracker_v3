@@ -3,7 +3,7 @@
         <tr>
             <td class="text-center">
                 <input type="checkbox" name="tasks[]"
-                       id="task-{{ $loop->index }}" {{ ($isTesting) ? "checked" : null }} />
+                       id="task-{{ $loop->index }}" {{ (true) ? "checked" : null }} />
             </td>
             <td>
                 {{ $task['task_description'] }}
