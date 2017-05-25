@@ -5,6 +5,8 @@ Vue.component(
     require('./components/recruit/RecruitNewMember.vue')
 );
 
+import VeeValidate from 'vee-validate';
+Vue.use(VeeValidate);
 
 const app = new Vue({
     el: '#recruiting-container'

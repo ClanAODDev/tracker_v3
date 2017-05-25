@@ -17,9 +17,10 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
+window.toastr = require('toastr');
 
 import VeeValidate from 'vee-validate';
-Vue.use(VeeValidate);
+window.Vue.use(VeeValidate);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -32,4 +33,10 @@ window.axios = require('axios');
 window.axios.defaults.headers.common = {
     'X-CSRF-TOKEN': window.Laravel.csrfToken,
     'X-Requested-With': 'XMLHttpRequest'
+};
+
+window.toastr.options = {
+    "preventDuplicates": true,
+    "progressBar": true,
+    "positionClass": "toast-bottom-right",
 };

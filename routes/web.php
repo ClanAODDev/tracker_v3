@@ -10,9 +10,9 @@ Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
-Route::get('division-platoons-squads/{abbreviation}', 'RecruitingController@platoonsAndSquads')->name('platoonsAndSquads');
+Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
 Route::post('search-leader', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
-Route::post('search-platoon', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
+Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 
 
@@ -65,11 +65,7 @@ Route::group(['prefix' => 'divisions/'], function () {
      * Recruiting Process
      */
     Route::group(['prefix' => '{division}/recruit'], function () {
-        Route::get('step-one', 'RecruitingController@stepOne')->name('recruiting.stepOne');
-        Route::post('step-two', 'RecruitingController@stepTwo')->name('recruiting.stepTwo');
-        Route::post('step-three', 'RecruitingController@stepThree')->name('recruiting.stepThree');
-        Route::post('step-four', 'RecruitingController@stepFour')->name('recruiting.stepFour');
-        Route::get('step-five', 'RecruitingController@stepFive')->name('recruiting.stepFive');
+        Route::get('form', 'RecruitingController@form')->name('recruiting.form');
     });
 
 

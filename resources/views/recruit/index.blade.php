@@ -26,7 +26,7 @@
         <div class="row">
             @foreach ($divisions as $abbreviation => $name)
                 <div class="col-sm-4">
-                    <a href="{{ route('recruiting.stepOne', [$abbreviation]) }}" class="panel panel-filled" href="#">
+                    <a href="{{ route('recruiting.form', [$abbreviation]) }}" class="panel panel-filled">
                         <div class="panel-body">
                             <img src="{{ getDivisionIconPath($abbreviation) }}"
                                  class="division-icon-small" />

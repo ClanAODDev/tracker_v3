@@ -42,66 +42,18 @@ class RecruitingController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function stepOne(Division $division, Request $request)
+    public function form(Division $division)
     {
-        return view('recruit.step-one', compact('division'));
+        return view('recruit.form', compact('division'));
     }
 
     /**
      * @param Request $request
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function stepTwo(Request $request, Division $division)
+    public function submitRecruitment(Request $request, Division $division)
     {
-        // @TODO: Verify platoon, squad are in current division
-
-        $rules = [
-            'member_id' => 'required|digits_between:1,5',
-            'forum_name' => 'required',
-            'ingame_name' => 'required'
-        ];
-
-        $messages = [
-            'member_id.digits_between' => "Forum Member ID appears to be invalid."
-        ];
-
-        $this->validate($request, $rules, $messages);
-
-        // allow for training mode recruitments
-        $isTesting = $this->isTestUser($request['forum_name'], $request['member_id']);
-
-        return view('recruit.step-two', compact('request', 'division', 'isTesting'));
-    }
-
-    /**
-     * Test mpde functionality
-     *
-     * @param $name
-     * @param $id
-     * @return bool
-     */
-    private function isTestUser($name, $id)
-    {
-        // @TODO: Define test user in environment
-        $test_user = [
-            'name' => 'test-user',
-            'id' => 99999
-        ];
-
-        return $name === $test_user['name'] && $id == $test_user['id'];
-    }
-
-    /**
-     * @param Request $request
-     * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function stepThree(Request $request, Division $division)
-    {
-        $isTesting = $request['is_testing'];
-
-        if ( ! $isTesting) {
+        if ( ! ($request->inDemoMode)) {
             // create or update member record
             $member = $this->createMember($request, $division);
 
@@ -109,11 +61,7 @@ class RecruitingController extends Controller
             if ($division->settings()->get('slack_alert_created_member')) {
                 $division->notify(new NewMemberRecruited($member, $division));
             }
-
-            $this->showToast("Member #{$request['member_id']} added to the tracker!");
         }
-
-        return view('recruit.step-three', compact('division', 'isTesting', 'request'));
     }
 
     /**
@@ -163,25 +111,28 @@ class RecruitingController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param $abbreviation
+     * @return array
      */
-    public function stepFour(Request $request, Division $division)
-    {
-        return view('recruit.step-four', compact('division', 'request'));
-    }
-
-    public function stepFive(Division $division, Request $request)
-    {
-        return view('recruit.step-five', compact('division'));
-    }
-
-    public function platoonsAndSquads($abbreviation)
+    public function searchPlatoons($abbreviation)
     {
         $division = Division::whereAbbreviation($abbreviation)->first();
 
         return $this->getPlatoonsAndSquadsFor($division);
+    }
+
+    /**
+     * @param $division
+     * @return array
+     */
+    private function getPlatoonsAndSquadsFor($division)
+    {
+        return [
+            'data' => [
+                'platoons' => $division->platoons->pluck('name', 'id'),
+                'squads' => $division->squads->pluck('name', 'id')
+            ]
+        ];
     }
 
     /**
@@ -210,9 +161,9 @@ class RecruitingController extends Controller
      */
     public function doThreadCheck(Request $request)
     {
-        $division = Division::find($request->division);
+        $division = Division::whereAbbreviation($request->division)->first();
         $threads = $division->settings()->get('recruiting_threads');
-        $isTesting = $request['isTesting'];
+        $isTesting = $request->isTesting;
 
         foreach ($threads as $key => $thread) {
             $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
@@ -222,20 +173,6 @@ class RecruitingController extends Controller
             sleep(2);
         }
 
-        return view('recruit.partials.thread-check', compact('division', 'threads', 'isTesting'));
-    }
-
-    /**
-     * @param $division
-     * @return array
-     */
-    private function getPlatoonsAndSquadsFor($division)
-    {
-        return [
-            'data' => [
-                'platoons' => $division->platoons->pluck('name', 'id'),
-                'squads' => $division->squads->pluck('name', 'id')
-            ]
-        ];
+        return $threads;
     }
 }

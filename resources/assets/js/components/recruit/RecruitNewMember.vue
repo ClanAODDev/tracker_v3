@@ -1,7 +1,7 @@
 <template>
     <div>
-        <step-one></step-one>
-        <!--<step-two></step-two>-->
+        <step-one v-show="store.currentStep === 'step-one'"></step-one>
+        <step-two v-show="store.currentStep === 'step-two'"></step-two>
         <!--<step-three></step-three>-->
         <!--<step-four></step-four>-->
         <!--<step-five></step-five>-->
@@ -10,16 +10,17 @@
 
 <script>
     import store from '../store.js';
+    import toastr from 'toastr';
 
     import StepOne from './StepOne.vue';
-    //    import StepTwo from './StepOne.vue';
+    import StepTwo from './StepTwo.vue';
     //    import StepOne from './StepOne.vue';
     //    import StepOne from './StepOne.vue';
 
     export default {
 
         components: {
-            StepOne
+            StepOne, StepTwo
         },
 
         data() {
@@ -31,11 +32,12 @@
         props: ['division'],
 
         mounted () {
-            this.prepareRecruitingProcess()
+            this.prepareRecruitingProcess();
         },
 
         methods: {
             prepareRecruitingProcess: function () {
+                store.division.abbreviation = this.division;
                 store.getDivisionData(this.division);
             }
         },

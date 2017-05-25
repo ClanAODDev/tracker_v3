@@ -3389,14 +3389,4 @@ img.division-icon-small {
     top: 38px;
 }
 
-.step-container {
-    display: none;
-    margin: 50px 0;
-    clear: both;
-}
-
-.step-container.step-one {
-    margin: 0;
-    display: block;
-}
 /*# sourceMappingURL=style.css.map */

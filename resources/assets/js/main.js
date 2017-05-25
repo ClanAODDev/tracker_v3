@@ -142,16 +142,10 @@ let Tracker = Tracker || {};
 
             GeneralInit: function () {
 
-                toastr.options = {
-                    "preventDuplicates": true,
-                    "progressBar": true,
-                    "positionClass": "toast-bottom-right",
-                };
-
                 var clipboard = new Clipboard('.copy-to-clipboard');
 
                 clipboard.on('success', function (e) {
-                    alert('Copied!');
+                    toastr.success('Copied!');
                     e.clearSelection();
                 });
 
