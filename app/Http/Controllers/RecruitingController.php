@@ -63,6 +63,8 @@ class RecruitingController extends Controller
             $division->notify(new NewMemberRecruited($member, $division));
         }
 
+        $this->showToast('Your recruitment has successfully been completed!');
+
     }
 
     /**
