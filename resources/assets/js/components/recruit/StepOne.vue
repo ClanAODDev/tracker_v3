@@ -134,6 +134,7 @@
         methods: {
             validateStep: function () {
                 this.$validator.validateAll().then(() => {
+                    store.getDivisionThreads(store.division.abbreviation);
                     store.currentStep = 'step-two';
                 }).catch(() => {
                     toastr.error('Something is wrong with your member information', 'Uh oh...');
