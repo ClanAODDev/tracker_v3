@@ -4,7 +4,7 @@
         <create-welcome-post v-if="store.division.settings.welcome_area !== undefined"></create-welcome-post>
 
         <hr />
-        <a :href="base_path + '/v3tracker/'" class="btn btn-success pull-right">Finish</a>
+        <a :href="base_url + '/v3tracker/'" class="btn btn-success pull-right">Finish</a>
         <button class="pull-left btn btn-default" type="button" @click="store.currentStep = 'step-three'">Back</button>
     </div>
 </template>
