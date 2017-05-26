@@ -57,10 +57,6 @@
                     return;
                 }
 
-                if (!store.inDemoMode) {
-                    store.createMember();
-                }
-
                 store.currentStep = 'step-three';
             },
 

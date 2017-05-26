@@ -69,11 +69,17 @@
                     }
                 });
 
-                if (!complete && !store.inDemoMode) {
+                if (store.inDemoMode) {
+                    store.currentStep = 'step-four';
+                    return;
+                }
+
+                if (!complete) {
                     toastr.error('Mark all tasks complete as you do them');
                     return;
                 }
 
+                store.createMember();
                 store.currentStep = 'step-four';
             },
         }
