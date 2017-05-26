@@ -4,8 +4,8 @@
         <create-welcome-post v-if="store.division.settings.welcome_area !== undefined"></create-welcome-post>
 
         <hr />
-        <a :href="store.base_url + '/v3tracker/'" class="btn btn-success pull-right">Finish</a>
-        <button class="pull-left btn btn-default" type="button" @click="store.currentStep = 'step-three'">Back</button>
+        <button class="pull-right btn btn-success" type="button" @click="validateStep">Finish</button>
+        <button class="pull-left btn btn-default" type="button" @click="currentStep = 'step-three'">Back</button>
     </div>
 </template>
 
@@ -19,6 +19,17 @@
         components: {
             'request-member-status': RequestMemberStatus,
             'create-welcome-post': CreateWelcomePost
+        },
+
+        methods: {
+            validateStep: function () {
+                if (!store.didUserOpenRequest) {
+                    toastr.error('You must request member status to complete this process', 'Heads up!');
+                    return;
+                }
+
+                window.location(store.base_url);
+            }
         },
 
         data: function () {
