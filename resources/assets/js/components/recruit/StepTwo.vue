@@ -68,9 +68,5 @@
                 store.currentStep = 'step-one';
             }
         },
-
-        mounted() {
-
-        }
     }
 </script>

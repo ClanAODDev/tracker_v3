@@ -94,7 +94,8 @@
                             <label for="squad">{{ store.locality.squads }}</label>
                             <select name="squad" id="squad" class="form-control" v-model="store.squad"
                                     :disabled="! store.division.squads.length">
-                                <option value="" v-if="! store.division.squads.length" selected>No squads available</option>
+                                <option value="" v-if="! store.division.squads.length" selected>No squads available
+                                </option>
                                 <option value="" selected v-else>Select a squad...</option>
                                 <option :value="squad.id" v-for="squad in store.division.squads">
                                     {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{ (squad.leader) ? squad.leader.name : 'TBA' }}
@@ -131,8 +132,6 @@
     export default {
 
         methods: {
-            // using traditional syntax here because fat arrow
-            // treats 'this' differently. figure it out later...
             validateStep: function () {
                 this.$validator.validateAll().then(() => {
                     store.currentStep = 'step-two';
@@ -160,7 +159,7 @@
                 store.ingame_name = 'test-user';
 
                 if (store.inDemoMode) {
-//                    toastr.success('Demo mode enabled!', 'Success!');
+                    toastr.success('Demo mode enabled!', 'Success!');
                 }
             },
         },

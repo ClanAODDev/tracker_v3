@@ -25,11 +25,5 @@
                 store
             }
         },
-
-        methods: {
-            validateStep: function () {
-
-            }
-        }
     }
 </script>
