@@ -28,7 +28,7 @@
                     return;
                 }
 
-                window.location(store.base_url);
+                window.location.href = store.base_url;
             }
         },
 
