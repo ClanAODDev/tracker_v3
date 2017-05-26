@@ -1,5 +1,5 @@
 <template>
-    <div class="step-container step-one">
+    <form @submit.prevent="validateStep">
 
         <h3>Getting Started</h3>
 
@@ -17,6 +17,8 @@
         <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1: Member Data</h3>
         <hr />
 
+        <progress-bar progress="20"></progress-bar>
+
         <div class="alert text-center">
             <i class="fa fa-question-circle text-accent"></i>
             Training, or just want to look around?
@@ -27,105 +29,104 @@
             </button>
         </div>
 
-        <form @submit.prevent="validateStep">
+        <div class="panel panel-filled">
+            <div class="panel-heading">
+                <strong class="text-uppercase">Information</strong>
+            </div>
+            <div class="panel-body">
 
-            <div class="panel panel-filled">
-                <div class="panel-heading">
-                    <strong class="text-uppercase">Information</strong>
+                <p>Please be careful and ensure member information is entered accurately. Forum names can be changed when the member status request is submitted, and changed names will sync with the tracker automatically.</p>
+
+                <div class="row">
+
+                    <div class="col-md-4 form-group"
+                         :class="{'input': true, 'has-warning': errors.has('member_id') }">
+                        <label for="member_id">Forum Member Id</label>
+                        <input type="number" class="form-control" name="member_id" v-model="store.member_id"
+                               id="member_id" v-validate="'required|max:5'" @change="this.resetThreadsOnIdChange"
+                               :disabled="store.inDemoMode" />
+                        <span v-show="errors.has('member_id')"
+                              class="help-block">{{ errors.first('member_id') }}</span>
+                    </div>
+
+                    <div class="col-md-4 form-group"
+                         :class="{'input': true, 'has-warning': errors.has('forum_name') }">
+                        <label for="forum_name">Forum Name</label>
+                        <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
+                               @blur="forumNameToIngameName" id="forum_name" v-validate="'required'"
+                               :disabled="store.inDemoMode" />
+                        <span v-show="errors.has('forum_name')"
+                              class="help-block">{{ errors.first('forum_name') }}</span>
+                    </div>
+
+                    <div class="col-md-4 form-group"
+                         :class="{'input': true, 'has-warning': errors.has('ingame_name') }">
+                        <label for="ingame_name">Ingame Name</label>
+                        <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
+                               v-validate="'required'" id="ingame_name" :disabled="store.inDemoMode" />
+                        <span v-show="errors.has('ingame_name')"
+                              class="help-block">{{ errors.first('ingame_name') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-t-xl">
+            <div class="panel panel-filled" v-if="store.division.platoons">
+                <div class="panel-heading text-uppercase">
+                    <strong>Assignment</strong>
                 </div>
                 <div class="panel-body">
-
-                    <p>Please be careful and ensure member information is entered accurately. Forum names can be changed when the member status request is submitted, and changed names will sync with the tracker automatically.</p>
+                    <p>Depending on your division's configuration, a {{ store.locality.platoon }} and {{ store.locality.squad }} assignment may be required.</p>
 
                     <div class="row">
-
-                        <div class="col-md-4 form-group"
-                             :class="{'input': true, 'has-warning': errors.has('member_id') }">
-                            <label for="member_id">Forum Member Id</label>
-                            <input type="number" class="form-control" name="member_id" v-model="store.member_id"
-                                   id="member_id" v-validate="'required|max:5'" @change="this.resetThreadsOnIdChange"
-                                   :disabled="store.inDemoMode" />
-                            <span v-show="errors.has('member_id')"
-                                  class="help-block">{{ errors.first('member_id') }}</span>
+                        <div class="col-sm-6 form-group">
+                            <label for="platoon">{{ store.locality.platoons }}</label>
+                            <select name="platoon" id="platoon" class="form-control" v-model="store.platoon"
+                                    @change="store.getPlatoonSquads(store.platoon)">
+                                <option value="">Select a platoon...</option>
+                                <option :value="id" v-for="(name, id, index) in store.division.platoons">
+                                    {{ name }}
+                                </option>
+                            </select>
                         </div>
-
-                        <div class="col-md-4 form-group"
-                             :class="{'input': true, 'has-warning': errors.has('forum_name') }">
-                            <label for="forum_name">Forum Name</label>
-                            <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
-                                   @blur="forumNameToIngameName" id="forum_name" v-validate="'required'"
-                                   :disabled="store.inDemoMode" />
-                            <span v-show="errors.has('forum_name')"
-                                  class="help-block">{{ errors.first('forum_name') }}</span>
-                        </div>
-
-                        <div class="col-md-4 form-group"
-                             :class="{'input': true, 'has-warning': errors.has('ingame_name') }">
-                            <label for="ingame_name">Ingame Name</label>
-                            <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
-                                   v-validate="'required'" id="ingame_name" :disabled="store.inDemoMode" />
-                            <span v-show="errors.has('ingame_name')"
-                                  class="help-block">{{ errors.first('ingame_name') }}</span>
+                        <div class="col-sm-6 form-group">
+                            <label for="squad">{{ store.locality.squads }}</label>
+                            <select name="squad" id="squad" class="form-control" v-model="store.squad"
+                                    :disabled="! store.division.squads.length">
+                                <option value="" v-if="! store.division.squads.length" selected>No squads available</option>
+                                <option value="" selected v-else>Select a squad...</option>
+                                <option :value="squad.id" v-for="squad in store.division.squads">
+                                    {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{ (squad.leader) ? squad.leader.name : 'TBA' }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="m-t-xl">
-                <div class="panel panel-filled" v-if="store.division.platoons">
-                    <div class="panel-heading text-uppercase">
-                        <strong>Assignment</strong>
-                    </div>
-                    <div class="panel-body">
-                        <p>Depending on your division's configuration, a {{ store.locality.platoon }} and {{ store.locality.squad }} assignment may be required.</p>
-
-                        <div class="row">
-                            <div class="col-sm-6 form-group">
-                                <label for="platoon">{{ store.locality.platoons }}</label>
-                                <select name="platoon" id="platoon" class="form-control" v-model="store.platoon"
-                                        @change="store.getPlatoonSquads(store.platoon)">
-                                    <option value="">Select a platoon...</option>
-                                    <option :value="id" v-for="(name, id, index) in store.division.platoons">
-                                        {{ name }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-sm-6 form-group">
-                                <label for="squad">{{ store.locality.squads }}</label>
-                                <select name="squad" id="squad" class="form-control"
-                                        :disabled="! store.division.squads.length">
-                                    <option v-if="! store.division.squads.length">No squads available</option>
-                                    <option :value="squad.id" v-for="squad in store.division.squads">
-                                        {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{ (squad.leader) ? squad.leader.name : 'TBA' }}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+            <div class="panel panel-filled panel-c-danger" v-else>
+                <div class="panel-heading text-uppercase">
+                    <strong>Assignment</strong>
                 </div>
-
-                <div class="panel panel-filled panel-c-danger" v-else>
-                    <div class="panel-heading text-uppercase">
-                        <strong>Assignment</strong>
-                    </div>
-                    <div class="panel-body">
-                        <p>
-                            <i class="fa fa-exclamation-triangle text-danger"></i> Your division has no {{ store.locality.platoons }}, so assignment is not unavailable. A division leader will need to create one.
-                        </p>
-                    </div>
+                <div class="panel-body">
+                    <p>
+                        <i class="fa fa-exclamation-triangle text-danger"></i> Your division has no {{ store.locality.platoons }}, so assignment is not unavailable. A division leader will need to create one.
+                    </p>
                 </div>
             </div>
+        </div>
 
-            <button type="submit" class="btn btn-success pull-right">
-                Continue <i class="fa fa-arrow-right"></i>
-            </button>
-        </form>
-    </div>
+        <button type="submit" class="btn btn-success pull-right">
+            Continue <i class="fa fa-arrow-right"></i>
+        </button>
+    </form>
 </template>
 
 <script>
     import store from '../store.js';
     import toastr from 'toastr';
+    import ProgressBar from './ProgressBar.vue';
 
     export default {
 
@@ -136,7 +137,7 @@
                 this.$validator.validateAll().then(() => {
                     store.currentStep = 'step-two';
                 }).catch(() => {
-                    toastr.error('Something is wrong with your memnber information', 'Uh oh...');
+                    toastr.error('Something is wrong with your member information', 'Uh oh...');
                     return false;
                 });
             },
@@ -159,19 +160,20 @@
                 store.ingame_name = 'test-user';
 
                 if (store.inDemoMode) {
-                    toastr.success('Demo mode enabled!', 'Success!');
+//                    toastr.success('Demo mode enabled!', 'Success!');
                 }
             },
         },
 
-        mounted() {
+        components: {
+            'progress-bar': ProgressBar
         },
 
-        data: () => ({
-
-            store
-
-        })
+        data: function () {
+            return {
+                store
+            }
+        },
     }
 
 </script>

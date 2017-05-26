@@ -189,7 +189,7 @@ var Tracker = Tracker || {};
                 });
             };
 
-            var sparkResize;
+            var sparkResize = void 0;
 
             $(window).resize(function () {
                 clearTimeout(sparkResize);

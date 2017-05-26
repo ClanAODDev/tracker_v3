@@ -51,17 +51,18 @@ class RecruitingController extends Controller
      * @param Request $request
      * @param Division $division
      */
-    public function submitRecruitment(Request $request, Division $division)
+    public function submitRecruitment(Request $request)
     {
-        if ( ! ($request->inDemoMode)) {
-            // create or update member record
-            $member = $this->createMember($request, $division);
+        $division = Division::whereAbbreviation($request->division)->first();
 
-            // notify slack of recruitment
-            if ($division->settings()->get('slack_alert_created_member')) {
-                $division->notify(new NewMemberRecruited($member, $division));
-            }
+        // create or update member record
+        $member = $this->createMember($request);
+
+        // notify slack of recruitment
+        if ($division->settings()->get('slack_alert_created_member')) {
+            $division->notify(new NewMemberRecruited($member, $division));
         }
+
     }
 
     /**
@@ -71,8 +72,9 @@ class RecruitingController extends Controller
      * @param $division
      * @return
      */
-    private function createMember($request, $division)
+    private function createMember($request)
     {
+        $division = Division::whereAbbreviation($request->division)->first();
         $member = Member::firstOrNew(['clan_id' => $request->member_id]);
 
         $member->name = $request->forum_name;
@@ -101,11 +103,12 @@ class RecruitingController extends Controller
             $this->showErrorToast('Your division does not have a default ingame handle, so the ingame name could not be stored');
         }
 
+        // handle assignments
         $member->platoon()->associate(Platoon::find($request->platoon));
         $member->squad()->associate(Squad::find($request->squad));
+        $member->save();
 
         $member->recordActivity('recruited');
-
 
         return $member;
     }
@@ -118,21 +121,40 @@ class RecruitingController extends Controller
     {
         $division = Division::whereAbbreviation($abbreviation)->first();
 
-        return $this->getPlatoonsAndSquadsFor($division);
+        return $this->getPlatoons($division);
     }
 
     /**
      * @param $division
      * @return array
      */
-    private function getPlatoonsAndSquadsFor($division)
+    private function getPlatoons($division)
     {
         return [
             'data' => [
                 'platoons' => $division->platoons->pluck('name', 'id'),
-                'squads' => $division->squads->pluck('name', 'id')
+                'settings' => $division->settings
             ]
         ];
+    }
+
+    /**
+     * Fetch a division's recruitment tasks
+     *
+     * @param $abbreviation
+     * @return mixed
+     */
+    public function getTasks(Request $request)
+    {
+        $division = Division::whereAbbreviation($request->division)->first();
+        $tasks = $division->settings()->get('recruiting_tasks');
+
+        return collect($tasks)->map(function ($task) {
+            return [
+                'complete' => false,
+                'description' => $task['task_description']
+            ];
+        });
     }
 
     /**
@@ -163,7 +185,6 @@ class RecruitingController extends Controller
     {
         $division = Division::whereAbbreviation($request->division)->first();
         $threads = $division->settings()->get('recruiting_threads');
-        $isTesting = $request->isTesting;
 
         foreach ($threads as $key => $thread) {
             $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');

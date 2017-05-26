@@ -192,9 +192,9 @@ let Tracker = Tracker || {};
                             region = sparkline.getCurrentRegionFields();
                         console.log("Clicked on x=" + region.x + " y=" + region.y);
                     });
-                }
+                };
 
-                var sparkResize;
+                let sparkResize;
 
                 $(window).resize(function () {
                     clearTimeout(sparkResize);

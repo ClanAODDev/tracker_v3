@@ -2,9 +2,8 @@
     <div>
         <step-one v-show="store.currentStep === 'step-one'"></step-one>
         <step-two v-show="store.currentStep === 'step-two'"></step-two>
-        <!--<step-three></step-three>-->
-        <!--<step-four></step-four>-->
-        <!--<step-five></step-five>-->
+        <step-three v-show="store.currentStep === 'step-three'"></step-three>
+        <step-four v-show="store.currentStep === 'step-four'"></step-four>
     </div>
 </template>
 
@@ -14,13 +13,13 @@
 
     import StepOne from './StepOne.vue';
     import StepTwo from './StepTwo.vue';
-    //    import StepOne from './StepOne.vue';
-    //    import StepOne from './StepOne.vue';
+    import StepThree from './StepThree.vue';
+    import StepFour from './StepFour.vue';
 
     export default {
 
         components: {
-            StepOne, StepTwo
+            StepOne, StepTwo, StepThree, StepFour
         },
 
         data() {
@@ -38,7 +37,8 @@
         methods: {
             prepareRecruitingProcess: function () {
                 store.division.abbreviation = this.division;
-                store.getDivisionData(this.division);
+                store.getPlatoons(this.division);
+                store.getTasks(this.division);
             }
         },
     }

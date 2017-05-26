@@ -9,8 +9,12 @@ Auth::routes();
 Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
+/**
+ * ajax endpointds
+ */
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
+Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-leader', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
@@ -43,6 +47,7 @@ Route::group(['prefix' => 'statistics'], function () {
 
 // initial recruiting screen
 Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
+Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recruiting.addMember');
 
 /**
  * Division endpoints
