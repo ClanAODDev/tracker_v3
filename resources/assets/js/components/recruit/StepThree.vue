@@ -79,7 +79,6 @@
                     return;
                 }
 
-                store.createMember();
                 store.currentStep = 'step-four';
             },
         }

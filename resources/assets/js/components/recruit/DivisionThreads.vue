@@ -18,7 +18,7 @@
             </div>
 
             <div class="panel-body m-t-n" v-if="thread.comments">
-                {{ thread.comments }}
+                <span v-html="thread.comments"></span>
             </div>
         </div>
     </div>

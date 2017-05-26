@@ -4,10 +4,11 @@
         <create-welcome-post v-if="store.division.settings.welcome_area !== undefined"></create-welcome-post>
 
         <hr />
-        <a :href="base_url + '/v3tracker/'" class="btn btn-success pull-right">Finish</a>
+        <a :href="store.base_url + '/v3tracker/'" class="btn btn-success pull-right">Finish</a>
         <button class="pull-left btn btn-default" type="button" @click="store.currentStep = 'step-three'">Back</button>
     </div>
 </template>
+
 <script>
     import store from '../store.js';
     import RequestMemberStatus from './RequestMemberStatus.vue';

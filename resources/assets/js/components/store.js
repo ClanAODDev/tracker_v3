@@ -1,14 +1,16 @@
 let store = {};
-let base_url = window.Laravel.appPath;
 
 export default store
+
+store.base_url = window.Laravel.appPath;
 
 // are we in test mode?
 store.inDemoMode = false;
 store.loadingThreads = false;
 store.threadsIncomplete = true;
 
-// step
+// application states
+store.didUserOpenRequest = false;
 store.currentStep = 'step-one';
 
 // member data
@@ -42,7 +44,7 @@ store.locality = {
  * @param division
  */
 store.getPlatoons = (division) => {
-    axios.get(base_url + '/division-platoons/' + division)
+    axios.get(store.base_url + '/division-platoons/' + division)
         .then(function (response) {
             store.division.platoons = response.data.data.platoons;
             store.division.settings = response.data.data.settings;
@@ -74,7 +76,7 @@ store.checkIfIncomplete = function (threads) {
  */
 store.getDivisionThreads = (division) => {
     store.loadingThreads = true;
-    axios.post(base_url + '/search-division-threads', {
+    axios.post(store.base_url + '/search-division-threads', {
         division: division,
         string: store.member_id,
         isTesting: store.inDemoMode,
@@ -93,7 +95,7 @@ store.getDivisionThreads = (division) => {
  * @param platoon
  */
 store.getPlatoonSquads = (platoon) => {
-    axios.post(base_url + '/platoon-squads/', {
+    axios.post(store.base_url + '/platoon-squads/', {
         platoon: platoon
     }).then(function (response) {
         store.division.squads = response.data;
@@ -108,7 +110,7 @@ store.getPlatoonSquads = (platoon) => {
  * @param division
  */
 store.getTasks = (division) => {
-    axios.post(base_url + '/division-tasks/', {
+    axios.post(store.base_url + '/division-tasks/', {
         division: division
     }).then(function (response) {
         store.division.tasks = response.data;
@@ -121,7 +123,7 @@ store.getTasks = (division) => {
  * pushes a request to create a new member
  */
 store.createMember = () => {
-    axios.post(base_url + '/add-member/', {
+    axios.post(store.base_url + '/add-member/', {
         division: store.division.abbreviation,
         member_id: store.member_id,
         forum_name: store.forum_name,

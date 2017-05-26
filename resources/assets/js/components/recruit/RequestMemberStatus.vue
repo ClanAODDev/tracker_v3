@@ -20,8 +20,9 @@
 
             <div class="col-sm-6 text-center">
                 <div class="m-t-md visible-xs-block"></div>
-                <a href="http://www.clanaod.net/forums/misc.php?do=form&fid=39" target="_blank" class="btn btn-accent">
-                    <i class="fa fa-external-link text-accent" aria-hidden="true"></i> Open Member Status Form
+                <a href="http://www.clanaod.net/forums/misc.php?do=form&fid=39" target="_blank" class="btn btn-accent"
+                   @click="userOpenedRequest">
+                    <i :class="store.didUserOpenRequest ? 'fa fa-check text-success' : 'fa fa-times text-danger'" aria-hidden="true"></i> Open Member Status Form
                 </a>
             </div>
         </div>
@@ -37,8 +38,14 @@
         components: {
             'progress-bar': ProgressBar
         },
+        methods: {
+            userOpenedRequest: function () {
+                store.didUserOpenRequest = true;
+            }
+        },
         data: function () {
             return {
+                didUserOpenRequest: false,
                 store
             }
         },
