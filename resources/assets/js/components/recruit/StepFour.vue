@@ -5,7 +5,7 @@
 
         <hr />
         <button class="pull-right btn btn-success" type="button" @click="validateStep">Finish</button>
-        <button class="pull-left btn btn-default" type="button" @click="currentStep = 'step-three'">Back</button>
+        <button class="pull-left btn btn-default" type="button" @click="store.currentStep = 'step-three'">Back</button>
     </div>
 </template>
 
