@@ -50,7 +50,7 @@ store.getPlatoons = (division) => {
             store.division.settings = response.data.data.settings;
         })
         .catch(function (error) {
-            toastr.error(error, 'Something went wrong!')
+            toastr.error(error, 'Something went wrong while fetching division platoons')
         });
 };
 
@@ -85,7 +85,7 @@ store.getDivisionThreads = (division) => {
         store.division.threads = response.data;
         store.checkIfIncomplete(store.division.threads);
     }).catch(function (error) {
-        toastr.error(error, 'Something went wrong!')
+        toastr.error(error, 'Something went wrong while fetching division threads')
     });
 };
 
@@ -100,7 +100,7 @@ store.getPlatoonSquads = (platoon) => {
     }).then(function (response) {
         store.division.squads = response.data;
     }).catch(function (error) {
-        toastr.error(error, 'Something went wrong!')
+        toastr.error(error, "Something went wrong while fetching platoon squads")
     });
 };
 
@@ -115,7 +115,7 @@ store.getTasks = (division) => {
     }).then(function (response) {
         store.division.tasks = response.data;
     }).catch(function (error) {
-        toastr.error(error, 'Something went wrong!')
+        toastr.error(error, 'Division tasks could not be retrieved')
     });
 };
 
@@ -133,6 +133,6 @@ store.createMember = () => {
     }).then(function (response) {
         toastr.success('Your recruit has been added to the tracker');
     }).catch(function (error) {
-        toastr.error(error, 'Something went wrong!')
+        toastr.error(error, 'The creation process could not be completed')
     });
 };
