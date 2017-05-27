@@ -39,7 +39,6 @@ class RecruitingController extends Controller
 
     /**
      * @param Division $division
-     * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function form(Division $division)
@@ -49,7 +48,6 @@ class RecruitingController extends Controller
 
     /**
      * @param Request $request
-     * @param Division $division
      */
     public function submitRecruitment(Request $request)
     {
@@ -71,7 +69,6 @@ class RecruitingController extends Controller
      * Handle member creation on recruitment
      *
      * @param $request
-     * @param $division
      * @return
      */
     private function createMember($request)
@@ -143,7 +140,7 @@ class RecruitingController extends Controller
     /**
      * Fetch a division's recruitment tasks
      *
-     * @param $abbreviation
+     * @param Request $request
      * @return mixed
      */
     public function getTasks(Request $request)
