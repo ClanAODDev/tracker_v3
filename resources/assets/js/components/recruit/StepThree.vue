@@ -1,6 +1,8 @@
 <template>
     <form @submit.prevent="validateStep">
 
+        <demo-mode-notice></demo-mode-notice>
+
         <div class="panel">
             <h3><i class="fa fa-check-circle-o text-accent"></i> Step 3: In-processing</h3>
             <progress-bar progress="60"></progress-bar>
@@ -18,7 +20,7 @@
                             <input type="checkbox" :checked="task.complete">
                         </td>
                         <td>
-                            <label :for="'task' + index">{{ task.description }}</label>
+                            <div v-html="task.description"></div>
                         </td>
                     </tr>
                     </tbody>

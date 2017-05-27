@@ -1,5 +1,6 @@
 <template>
     <div>
+        <demo-mode-notice></demo-mode-notice>
         <request-member-status></request-member-status>
         <create-welcome-post v-if="store.division.settings.welcome_area !== undefined"></create-welcome-post>
 
