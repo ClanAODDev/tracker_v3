@@ -44,13 +44,13 @@ store.locality = {
  * @param division
  */
 store.getPlatoons = (division) => {
-    axios.get(store.base_url + '/division-platoons/' + division)
-        .then(function (response) {
+    axios.get (store.base_url + '/division-platoons/' + division)
+        .then (function (response) {
             store.division.platoons = response.data.data.platoons;
             store.division.settings = response.data.data.settings;
         })
-        .catch(function (error) {
-            toastr.error(error, 'Something went wrong while fetching division platoons')
+        .catch (function (error) {
+            toastr.error (error, 'Something went wrong while fetching division platoons')
         });
 };
 
@@ -60,7 +60,7 @@ store.getPlatoons = (division) => {
  * @param threads
  */
 store.checkIfIncomplete = function (threads) {
-    threads.forEach(function (thread) {
+    threads.forEach (function (thread) {
         if (!thread.status) {
             store.threadsIncomplete = true;
             return;
@@ -76,16 +76,16 @@ store.checkIfIncomplete = function (threads) {
  */
 store.getDivisionThreads = (division) => {
     store.loadingThreads = true;
-    axios.post(store.base_url + '/search-division-threads', {
+    axios.post (store.base_url + '/search-division-threads', {
         division: division,
         string: store.member_id,
         isTesting: store.inDemoMode,
-    }).then(function (response) {
+    }).then (function (response) {
         store.loadingThreads = false;
         store.division.threads = response.data;
-        store.checkIfIncomplete(store.division.threads);
-    }).catch(function (error) {
-        toastr.error(error, 'Something went wrong while fetching division threads')
+        store.checkIfIncomplete (store.division.threads);
+    }).catch (function (error) {
+        toastr.error (error, 'Something went wrong while fetching division threads')
     });
 };
 
@@ -95,12 +95,12 @@ store.getDivisionThreads = (division) => {
  * @param platoon
  */
 store.getPlatoonSquads = (platoon) => {
-    axios.post(store.base_url + '/platoon-squads/', {
+    axios.post (store.base_url + '/platoon-squads/', {
         platoon: platoon
-    }).then(function (response) {
+    }).then (function (response) {
         store.division.squads = response.data;
-    }).catch(function (error) {
-        toastr.error(error, "Something went wrong while fetching platoon squads")
+    }).catch (function (error) {
+        toastr.error (error, "Something went wrong while fetching platoon squads")
     });
 };
 
@@ -110,12 +110,12 @@ store.getPlatoonSquads = (platoon) => {
  * @param division
  */
 store.getTasks = (division) => {
-    axios.post(store.base_url + '/division-tasks/', {
+    axios.post (store.base_url + '/division-tasks/', {
         division: division
-    }).then(function (response) {
+    }).then (function (response) {
         store.division.tasks = response.data;
-    }).catch(function (error) {
-        toastr.error(error, 'Division tasks could not be retrieved')
+    }).catch (function (error) {
+        toastr.error (error, 'Division tasks could not be retrieved')
     });
 };
 
@@ -123,16 +123,16 @@ store.getTasks = (division) => {
  * pushes a request to create a new member
  */
 store.createMember = () => {
-    axios.post(store.base_url + '/add-member/', {
+    axios.post (store.base_url + '/add-member/', {
         division: store.division.abbreviation,
         member_id: store.member_id,
         forum_name: store.forum_name,
         ingame_name: store.ingame_name,
         platoon: store.platoon,
         squad: store.squad
-    }).then(function (response) {
-        toastr.success('Your recruit has been added to the tracker');
-    }).catch(function (error) {
-        toastr.error(error, 'The creation process could not be completed')
+    }).then (function (response) {
+        toastr.success ('Your recruit has been added to the tracker');
+    }).catch (function (error) {
+        toastr.error (error, 'The creation process could not be completed')
     });
 };
