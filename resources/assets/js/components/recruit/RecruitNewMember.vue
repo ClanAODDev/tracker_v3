@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    import store from '../store.js';
+    import store from './store.js';
     import toastr from 'toastr';
 
     import StepOne from './StepOne.vue';

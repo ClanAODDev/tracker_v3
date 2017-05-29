@@ -15,7 +15,6 @@ elixir(function (mix) {
             'libs/jquery/jquery-2.1.1.min.js',
             'libs/jquery/jquery-ui.min.js',
 
-            'libs/jquery/jquery.easing.min.js',
             'libs/jquery/jquery.bootstrap.wizard.min.js',
             'libs/jquery/jquery.powertip.min.js',
             'libs/jquery/jquery.repeater.min.js',
@@ -52,6 +51,7 @@ elixir(function (mix) {
 
     mix.webpack('passport.js');
     mix.webpack('recruiting.js');
+    mix.webpack('manage-member.js');
 });
 
 

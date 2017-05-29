@@ -41,7 +41,7 @@
     </form>
 </template>
 <script>
-    import store from '../store.js';
+    import store from './store.js';
 
     import TSInfo from './TsInfo.vue';
     import RecapInfo from './RecapInfo.vue';

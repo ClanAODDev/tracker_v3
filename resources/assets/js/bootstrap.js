@@ -38,5 +38,5 @@ window.axios.defaults.headers.common = {
 window.toastr.options = {
     "preventDuplicates": true,
     "progressBar": true,
-    "positionClass": "toast-bottom-right",
+    "positionClass": "toast-top-right",
 };

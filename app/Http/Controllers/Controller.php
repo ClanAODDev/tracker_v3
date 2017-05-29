@@ -20,11 +20,7 @@ class Controller extends BaseController
     {
         Toastr::success(
             $toastMessage,
-            "Success",
-            [
-                'positionClass' => 'toast-bottom-right',
-                'progressBar' => true
-            ]
+            "Success"
         );
     }
 
@@ -34,8 +30,7 @@ class Controller extends BaseController
             $toastMessage,
             "Uh oh...",
             [
-                'positionClass' => 'toast-bottom-right',
-                'progressBar' => true
+                'timeOut' => 10000
             ]
         );
     }

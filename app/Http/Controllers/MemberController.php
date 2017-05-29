@@ -7,6 +7,7 @@ use App\Member;
 use App\Notifications\MemberRemoved;
 use App\Position;
 use App\Repositories\MemberRepository;
+use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Toastr;
@@ -132,16 +133,11 @@ class MemberController extends Controller
         $this->authorize('update', $member);
 
         $division = $member->primaryDivision;
-
-        $platoons = $division->platoons;
-
-        $squads = $division->squads()->with('platoon')->get();
-
+        $roles = Role::all()->pluck('label', 'id');
         $positions = Position::all()->pluck('name', 'id');
 
         return view('member.edit', compact(
-            'member', 'division', 'platoons',
-            'positions', 'squads'
+            'member', 'division', 'positions', 'roles'
         ));
     }
 

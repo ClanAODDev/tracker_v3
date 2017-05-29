@@ -1,8 +1,21 @@
+/**
+ * JS Store
+ * Using a single source of truth to act as a DTO between
+ * Vue components. This allows us to simplify the process
+ * of maintaining application state
+ */
+
 let store = {};
 
 export default store
 
 store.base_url = window.Laravel.appPath;
+
+/**
+ * =====================
+ * Recruiting handlers
+ * =====================
+ */
 
 // are we in test mode?
 store.inDemoMode = false;
@@ -136,3 +149,9 @@ store.createMember = () => {
         toastr.error (error, 'The creation process could not be completed')
     });
 };
+
+/**
+ * =====================
+ * End Recruiting
+ * =====================
+ */

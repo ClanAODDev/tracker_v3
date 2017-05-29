@@ -27,26 +27,47 @@
 
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a data-toggle="tab" href="#general" aria-expanded="true"> General</a></li>
-                            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">This is second tab</a></li>
+                            <li class="active">
+                                <a data-toggle="tab" href="#member" aria-expanded="true">
+                                    <i class="fa fa-user text-info"></i> Information
+                                </a>
+                            </li>
+
+                            <li>
+                                <a data-toggle="tab" href="#user" aria-expanded="false">
+                                    <i class="fa fa-lock text-danger"></i> Account
+                                </a>
+                            </li>
+
                         </ul>
-                        <div class="tab-content">
-                            <div id="general" class="tab-pane active">
+                        <div class="tab-content" id="profile-container">
+                            <div id="member" class="tab-pane active">
                                 <div class="panel-body">
-                                    @include('member.forms.edit-member-form')
+                                    <manage-member
+                                            :member-id="{{ $member->id }}"
+                                            :positions="{{ $positions }}"
+                                            :position="{{ $member->position->id }}"></manage-member>
                                 </div>
                             </div>
-                            <div id="tab-2" class="tab-pane">
+
+                            <div id="user" class="tab-pane">
                                 <div class="panel-body">
-                                    <strong class="c-white">Donec quam felis</strong>
-
-                                    <p>Thousand unknown plants are noticed by me: when I hear the buzz of the little world among the stalks, and grow familiar with the countless indescribable forms of the insects
-                                        and flies, then I feel the presence of the Almighty, who formed us in his own image, and the breath </p>
-
-                                    <p>I am alone, and feel the charm of existence in this spot, which was created for the bliss of souls like mine. I am so happy, my dear friend, so absorbed in the exquisite
-                                        sense of mere tranquil existence, that I neglect my talents. I should be incapable of drawing a single stroke at the present moment; and yet.</p>
+                                    @if($member->user)
+                                        <manage-user-account
+                                                :user-id="{{ $member->user->id }}"
+                                                :roles="{{ $roles }}"
+                                                :role="{{ $member->user->role->id }}"
+                                                username="{{ $member->user->name }}"
+                                                e-mail="{{ $member->user->email }}">
+                                        </manage-user-account>
+                                    @else
+                                        <h4><i class="fa fa-times-circle-o text-warning"
+                                               aria-hidden="true"></i> No User Account</h4>
+                                        <p>There is no user account associated with this profile. This member will have to first register in order to manage these settings.</p>
+                                    @endif
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -60,4 +81,8 @@
         @endcan
     </div>
 
+@stop
+
+@section('footer_scripts')
+    <script src="{!! asset('/js/manage-member.js?v=4.4') !!}"></script>
 @stop

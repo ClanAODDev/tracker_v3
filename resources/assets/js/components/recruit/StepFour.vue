@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import store from '../store.js';
+    import store from './store.js';
     import RequestMemberStatus from './RequestMemberStatus.vue';
     import CreateWelcomePost from './CreateWelcomePost.vue';
 

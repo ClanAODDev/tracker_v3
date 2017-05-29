@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import store from '../store';
+    import store from './store';
     import DemoModeNotice from './DemoModeNotice.vue';
     import DivisionThreads from './DivisionThreads.vue';
     import ProgressBar from './ProgressBar.vue';

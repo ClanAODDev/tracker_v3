@@ -125,7 +125,7 @@
 </template>
 
 <script>
-    import store from '../store.js';
+    import store from './store.js';
     import toastr from 'toastr';
     import ProgressBar from './ProgressBar.vue';
 
