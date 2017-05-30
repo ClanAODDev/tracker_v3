@@ -102,11 +102,14 @@ class User extends Authenticatable
         return ($this->developer);
     }
 
-    public function assignRole($role)
+    /**
+     * Assign a role to a user
+     *
+     * @param $role
+     */
+    public function assignRole(Role $role)
     {
-        $this->role()->associate(
-            Role::whereName($role)->firstOrFail()
-        )->save();
+        $this->role()->associate($role)->save();
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 //Auth::onceUsingId(4);
@@ -18,6 +19,7 @@ Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTa
 Route::post('search-leader', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
+Route::post('update-role', 'UserController@updateRole');
 
 
 // Members endpoints

@@ -19,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Platoon::class => \App\Policies\PlatoonPolicy::class,
         \App\Division::class => \App\Policies\DivisionPolicy::class,
         \App\Note::class => \App\Policies\NotePolicy::class,
+        \App\User::class => \App\Policies\UserPolicy::class,
     ];
 
     /**

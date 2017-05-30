@@ -153,6 +153,8 @@ class MemberController extends Controller
         //
     }
 
+
+
     /**
      * Remove member from AOD
      *

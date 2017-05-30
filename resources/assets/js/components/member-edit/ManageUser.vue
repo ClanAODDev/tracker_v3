@@ -8,12 +8,12 @@
         </div>
         <div class="form-group">
             <label for="email">E-Mail</label>
-            <input type="email" class="form-control"
-                   v-model="email" id="email" :value="email" name="email" />
+            <input type="email" class="form-control" v-model="email" id="email"
+                   :value="email" name="email" disabled />
         </div>
         <div class="form-group">
             <label for="role">Account Role</label>
-            <select name="role" id="role" v-model="currentRole" class="form-control">
+            <select name="role" id="role" v-model="currentRole" class="form-control" @change="assignRole">
                 <option v-for="(role, id) in roles" :value="id" :selected="currentRole">
                     {{ role }}
                 </option>
@@ -45,12 +45,15 @@
             assignRole: function () {
                 this.doUpdatingRole ();
                 axios.post (window.Laravel.appPath + '/update-role', {
-                    member: this.member_id,
-                    position: null
+                    user: this.userId,
+                    role: parseInt(this.currentRole)
                 }).then (function (response) {
-                    // do update of user role
+                    toastr.success("You successfully updated the user's role!", 'Success');
                 }).catch (function (error) {
-                    toastr.error (error, 'Something went wrong while updating user role', {timeOut: 10000})
+                    if (error.response.status === 403) {
+                        toastr.error ('You are not authorized', {timeOut: 10000});
+                    }
+                    toastr.error (error, 'Something went wrong while updating user role', {timeOut: 10000});
                 });
                 this.doUpdatingRole ();
             }

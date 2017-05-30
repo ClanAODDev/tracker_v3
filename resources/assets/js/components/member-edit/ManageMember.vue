@@ -39,10 +39,13 @@
                 this.doUpdatingPosition ();
                 axios.post (window.Laravel.appPath + '/update-position', {
                     member: this.member_id,
-                    position: null
+                    position: this.currentPosition
                 }).then (function (response) {
                     // do update of member position
                 }).catch (function (error) {
+                    if (error.response.status === 403) {
+                        toastr.error ('You are not authorized', {timeOut: 10000});
+                    }
                     toastr.error (error, 'Something went wrong while updating member position', {timeOut: 10000})
                 });
                 this.doUpdatingPosition ();
