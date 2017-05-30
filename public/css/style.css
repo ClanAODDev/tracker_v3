@@ -2268,7 +2268,6 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 }
 
 .progress-bar {
-    background-color: #1bbf89;
     text-align: right;
     padding-right: 10px;
     color: #333;

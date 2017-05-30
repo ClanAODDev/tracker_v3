@@ -44,7 +44,7 @@
                     // do update of member position
                 }).catch (function (error) {
                     if (error.response.status === 403) {
-                        toastr.error ('You are not authorized', {timeOut: 10000});
+                        toastr.error ('No change was made', 'You are not authorized', {timeOut: 10000});
                         return;
                     }
                     toastr.error (error, 'Something went wrong while updating member position', {timeOut: 10000})

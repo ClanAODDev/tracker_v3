@@ -26,9 +26,7 @@ class UserPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole(['admin'])
-            || $user->isDeveloper()
-        ) {
+        if ($user->isDeveloper()) {
             return true;
         }
     }
@@ -39,6 +37,11 @@ class UserPolicy
      */
     public function update(User $user, $role_id)
     {
+        // can't edit yourself
+        if ($user->id === auth()->user()->id) {
+            return false;
+        }
+
         // you can only give access less than your own
         if ($role_id >= auth()->user()->role->id) {
             return false;
