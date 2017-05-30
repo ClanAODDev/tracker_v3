@@ -14,12 +14,14 @@
     import store from './store.js';
     import RequestMemberStatus from './RequestMemberStatus.vue';
     import CreateWelcomePost from './CreateWelcomePost.vue';
+    import DemoModeNotice from './DemoModeNotice.vue';
 
     export default {
 
         components: {
             'request-member-status': RequestMemberStatus,
-            'create-welcome-post': CreateWelcomePost
+            'create-welcome-post': CreateWelcomePost,
+            'demo-mode-notice': DemoModeNotice
         },
 
         methods: {
