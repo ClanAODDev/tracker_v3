@@ -2,10 +2,14 @@
 
 namespace App\Policies;
 
-use App\Role;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class UserPolicy
+ *
+ * @package App\Policies
+ */
 class UserPolicy
 {
     use HandlesAuthorization;
@@ -26,29 +30,29 @@ class UserPolicy
      */
     public function before(User $user)
     {
-        if ($user->isDeveloper()) {
+        if ($user->isDeveloper() || $user->isRole(['admin'])) {
             return true;
         }
     }
 
     /**
-     * @param $role_id
+     * @param User $user
+     * @param User $userOfMember
      * @return bool
      */
-    public function update(User $user, $role_id)
+    public function update(User $user, User $userOfMember)
     {
-        // can't edit yourself
-        if ($user->id === auth()->user()->id) {
+        // can't update yourself
+        if ($user->id === $userOfMember->id) {
             return false;
         }
 
-        // you can only give access less than your own
-        if ($role_id >= auth()->user()->role->id) {
+        // cannot update a user of the same or higher role
+        if ($user->role->id <= $userOfMember->role->id) {
             return false;
         }
 
-        // only SGT+ can give role adjustments
-        return auth()->user()->member->isRank(['sgt', 'ssgt'])
-            && auth()->user()->isRole('sr_ldr');
+        // senior leaders who are sgts and ssgts can update user accounts
+        return $user->isRole('sr_ldr') && $user->member->isRank(['sgt', 'ssgt']);
     }
 }

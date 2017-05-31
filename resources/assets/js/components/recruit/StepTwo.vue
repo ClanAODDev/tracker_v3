@@ -5,8 +5,6 @@
 
         <h3><i class="fa fa-pencil-square-o text-accent"></i> Step 2: Member Agreement</h3>
 
-        <progress-bar progress="40"></progress-bar>
-
         <p>AOD members are required to read and reply to a handful of threads posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
 
         <button class="btn btn-default refresh-button m-t-lg"
@@ -58,9 +56,11 @@
                 }
 
                 store.currentStep = 'step-three';
+                store.progress = 75;
             },
 
             backToStepOne: () => {
+                store.progress = 25;
                 store.currentStep = 'step-one';
             }
         },

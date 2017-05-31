@@ -110,6 +110,17 @@ class MemberController extends Controller
     }
 
     /**
+     * Assigns a position to the given member
+     * @param Request $request
+     */
+    public function updatePosition(Request $request)
+    {
+        $member = Member::find($request->member);
+        $this->authorize('update', $member);
+        $member->assignPosition(Position::find($request->position));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param Member $member
@@ -120,11 +131,10 @@ class MemberController extends Controller
         $this->authorize('update', $member);
 
         $division = $member->primaryDivision;
-        $roles = Role::all()->pluck('label', 'id');
         $positions = Position::all()->pluck('name', 'id');
 
-        return view('member.edit', compact(
-            'member', 'division', 'positions', 'roles'
+        return view('member.edit-member', compact(
+            'member', 'division', 'positions'
         ));
     }
 

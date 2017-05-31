@@ -10,8 +10,7 @@
                 </option>
             </select>
             <small class="help-block">
-                Positions are used to denote a member's responsibility within the division. Positions do not grant account access. Modify
-                <a href="#user">User Account</a> settings to control account access.
+                Positions are used to denote a member's responsibility within the division. Positions do not grant account access.
             </small>
         </div>
         <div class="col-sm-6">
@@ -38,10 +37,10 @@
             assignPosition: function () {
                 this.doUpdatingPosition ();
                 axios.post (window.Laravel.appPath + '/update-position', {
-                    member: this.member_id,
+                    member: this.memberId,
                     position: this.currentPosition
-                }).then (function (response) {
-                    // do update of member position
+                }).then (function () {
+                    toastr.success("You successfully updated the member's position!", 'Success');
                 }).catch (function (error) {
                     if (error.response.status === 403) {
                         toastr.error ('No change was made', 'You are not authorized', {timeOut: 10000});

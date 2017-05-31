@@ -173,7 +173,7 @@ class RecruitingController extends Controller
      */
     public function getSquadsFor(Platoon $platoon)
     {
-        return $platoon->squads->load('leader');
+        return $platoon->squads->load('leader', 'members');
     }
 
     /**

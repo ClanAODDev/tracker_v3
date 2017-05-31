@@ -11,7 +11,7 @@ Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
 
 /**
- * ajax endpointds
+ * ajax endpoints
  */
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
@@ -20,12 +20,14 @@ Route::post('search-leader', 'MemberController@searchAutoComplete')->name('membe
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 Route::post('update-role', 'UserController@updateRole');
+Route::post('update-position', 'MemberController@updatePosition');
 
 
 // Members endpoints
 Route::group(['prefix' => 'members'], function () {
     Route::get('{member}', 'MemberController@show')->name('member');
-    Route::get('{member}/edit', 'MemberController@edit')->name('editMember');
+    Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
+    Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
     Route::post('search/{name}', 'MemberController@search');
     Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
 

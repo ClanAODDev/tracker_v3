@@ -31,6 +31,7 @@
                     return;
                 }
 
+                store.progress = 100;
                 window.location.href = store.base_url;
             }
         },

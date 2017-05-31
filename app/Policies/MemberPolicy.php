@@ -28,6 +28,12 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
+        // can't edit yourself
+
+        if ($member->id === auth()->user()->member_id) {
+            return false;
+        }
+
         $userDivision = $user->member->primaryDivision;
         $memberDivision = $member->primaryDivision;
 

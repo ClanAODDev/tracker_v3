@@ -17,8 +17,6 @@
         <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1: Member Data</h3>
         <hr />
 
-        <progress-bar progress="20"></progress-bar>
-
         <div class="alert text-center">
             <i class="fa fa-question-circle text-accent"></i>
             Training, or just want to look around?
@@ -99,6 +97,7 @@
                                 <option value="" selected v-else>Select a squad...</option>
                                 <option :value="squad.id" v-for="squad in store.division.squads">
                                     {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{ (squad.leader) ? squad.leader.name : 'TBA' }}
+                                    ({{ squad.members.length }} members)
                                 </option>
                             </select>
                         </div>
@@ -136,6 +135,7 @@
                 this.$validator.validateAll().then(() => {
                     store.getDivisionThreads(store.division.abbreviation);
                     store.currentStep = 'step-two';
+                    store.progress = 50;
                 }).catch(() => {
                     toastr.error('Something is wrong with your member information', 'Uh oh...');
                     return false;

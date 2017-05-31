@@ -23,5 +23,9 @@
         @include('help.partials.navigation')
         @include('help.partials.general')
 
+        <div class="panel m-t-xl">
+            @include('help.partials.access-roles')
+        </div>
+
     </div>
 @stop

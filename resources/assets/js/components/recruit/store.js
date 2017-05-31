@@ -25,6 +25,7 @@ store.threadsIncomplete = true;
 // application states
 store.didUserOpenRequest = false;
 store.currentStep = 'step-one';
+store.progress = 25;
 
 // member data
 store.member_id = '';

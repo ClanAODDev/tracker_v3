@@ -33,12 +33,6 @@
                                 </a>
                             </li>
 
-                            <li>
-                                <a data-toggle="tab" href="#user" aria-expanded="false">
-                                    <i class="fa fa-lock text-danger"></i> Account
-                                </a>
-                            </li>
-
                         </ul>
                         <div class="tab-content" id="profile-container">
                             <div id="member" class="tab-pane active">
@@ -52,19 +46,7 @@
 
                             <div id="user" class="tab-pane">
                                 <div class="panel-body">
-                                    @if($member->user)
-                                        <manage-user-account
-                                                :user-id="{{ $member->user->id }}"
-                                                :roles="{{ $roles }}"
-                                                :role="{{ $member->user->role->id }}"
-                                                username="{{ $member->user->name }}"
-                                                e-mail="{{ $member->user->email }}">
-                                        </manage-user-account>
-                                    @else
-                                        <h4><i class="fa fa-times-circle-o text-warning"
-                                               aria-hidden="true"></i> No User Account</h4>
-                                        <p>There is no user account associated with this profile. This member will have to first register in order to manage these settings.</p>
-                                    @endif
+
                                 </div>
                             </div>
 

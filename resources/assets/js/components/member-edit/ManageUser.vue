@@ -19,36 +19,18 @@
                 </option>
             </select>
         </div>
-
-        <div class="panel panel-filled m-t-xl">
-            <div class="panel-heading">Access role list</div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <role-descriptions :role="currentRole"></role-descriptions>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
 <script>
-    import RoleDescriptions from './partials/role-description.vue';
-
     export default {
-        components: {
-            RoleDescriptions
-        },
         methods: {
-            doUpdatingRole: function () {
-                this.updatingRole = !this.updatingRole;
-            },
             assignRole: function () {
-                this.doUpdatingRole ();
                 axios.post (window.Laravel.appPath + '/update-role', {
                     user: this.userId,
-                    role: parseInt(this.currentRole)
+                    role: this.currentRole
                 }).then (function (response) {
-                    toastr.success("You successfully updated the user's role!", 'Success');
+                    toastr.success ("You successfully updated the user's role!", 'Success');
                 }).catch (function (error) {
                     if (error.response.status === 403) {
                         toastr.error ('No change was made', 'You are not authorized', {timeOut: 10000});
@@ -56,12 +38,10 @@
                     }
                     toastr.error (error, 'Something went wrong while updating user role', {timeOut: 10000});
                 });
-                this.doUpdatingRole ();
             }
         },
         data() {
             return {
-                updatingRole: false,
                 currentRole: this.role,
                 email: this.eMail,
             }

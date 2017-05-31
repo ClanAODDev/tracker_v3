@@ -59,14 +59,6 @@ class Member extends Model
     }
 
     /**
-     * relationship - member belongs to a rank
-     */
-    public function rank()
-    {
-        return $this->belongsTo(Rank::class);
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function notes()
@@ -78,11 +70,17 @@ class Member extends Model
      * @param $position
      * @return Model
      */
-    public function assignPosition($position)
+    public function assignPosition(Position $position)
     {
-        return $this->position()->associate(
-            Position::whereName(strtolower($position))->firstOrFail()
-        );
+        return $this->position()->associate($position)->save();
+    }
+
+    /**
+     * relationship - member belongs to a position
+     */
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
     }
 
     /**
@@ -97,11 +95,11 @@ class Member extends Model
     }
 
     /**
-     * relationship - member belongs to a position
+     * relationship - member belongs to a rank
      */
-    public function position()
+    public function rank()
     {
-        return $this->belongsTo(Position::class);
+        return $this->belongsTo(Rank::class);
     }
 
     /**

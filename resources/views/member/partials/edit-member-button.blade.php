@@ -8,6 +8,14 @@
             <li>
                 <a href="{{ route('editMember', $member->clan_id) }}"> Edit member</a>
             </li>
+
+            @if ($member->user)
+                @can('update', $member->user)
+                    <li>
+                        <a href="{{ route('editUser', $member->clan_id) }}"> Edit account</a>
+                    </li>
+                @endcan
+            @endif
             <li class="divider"></li>
         @endcan
 

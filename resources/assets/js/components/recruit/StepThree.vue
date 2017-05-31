@@ -5,7 +5,6 @@
 
         <div class="panel">
             <h3><i class="fa fa-check-circle-o text-accent"></i> Step 3: In-processing</h3>
-            <progress-bar progress="60"></progress-bar>
             <p>You are almost finished with your recruit. Below are tasks required by your division in order to in-process your new member.</p>
         </div>
 
@@ -73,6 +72,7 @@
 
                 if (store.inDemoMode) {
                     store.currentStep = 'step-four';
+                    store.progress = 100;
                     return;
                 }
 
@@ -83,6 +83,7 @@
 
                 store.createMember();
                 store.currentStep = 'step-four';
+                store.progress = 100;
             },
         }
     }
