@@ -45,7 +45,10 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         // cannot grant role greater than or equal to your own
-        if ($request->role >= auth()->user()->role->id) {
+        // disregard for developers
+        if ( ! auth()->user()->isDeveloper()
+            && $request->role >= auth()->user()->role_id
+        ) {
             return response()->json(['error' => 'Not authorized.'], 403);
         }
 
@@ -53,3 +56,4 @@ class UserController extends Controller
     }
 
 }
+
