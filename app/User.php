@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Activities\RecordsActivity;
 use App\Settings\UserSettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +52,22 @@ class User extends Authenticatable
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    /**
+     * Record new activity for the user.
+     *
+     * @param  string $name
+     * @param  mixed $related
+     * @return mixed
+     * @throws \Exception
+     */
+    public function recordActivity($name, $related)
+    {
+        if (! method_exists($related, 'recordActivity')) {
+            throw new \Exception('..');
+        }
+        return $related->recordActivity($name);
     }
 
     /**

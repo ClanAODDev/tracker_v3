@@ -45,18 +45,15 @@ trait RecordsActivity
     public function recordActivity($event) //$post->recordActivity('favorited')
     {
         if (auth()->check()) {
-            $user = auth()->user();
+            $actor = auth()->user();
 
             $this->activity()->create([
                 'name' => $this->getActivityName($event),
-                'user_id' => $user->id,
+                'user_id' => $actor->id,
                 'subject_id' => $this->id,
                 'subject_type' => get_class($this),
-                'division_id' => $user->member->primaryDivision->id
+                'division_id' => $actor->member->primaryDivision->id
             ]);
-
-            // @TODO: Add slack hook for notifications
-            // use activity name?
         }
     }
 
