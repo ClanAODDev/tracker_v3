@@ -25,7 +25,7 @@ class UserController extends Controller
         $division = $member->primaryDivision;
 
         $roles = auth()->user()->isDeveloper() || auth()->user()->isRole('admin')
-            ? Role::all()->pluck('label', 'if')
+            ? Role::all()->pluck('label', 'id')
             : Role::where('id', '<', auth()->user()->role->id)->pluck('label', 'id');
 
         return view('member.edit-user',
