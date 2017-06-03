@@ -15,6 +15,12 @@
                         <a href="{{ route('editUser', $member->clan_id) }}"> Edit account</a>
                     </li>
                 @endcan
+
+                @if (auth()->user()->isRole('admin'))
+                    <li>
+                        <a href="{{ route('impersonate', $member->user) }}"> Impersonate User</a>
+                    </li>
+                @endif
             @endif
             <li class="divider"></li>
         @endcan

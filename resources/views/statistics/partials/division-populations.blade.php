@@ -18,10 +18,15 @@
         <tbody>
         @foreach ($cencuses as $division)
             <tr>
-                <td>{{ $division->name }}</td>
+                <td>
+                    <a href="{{ route('division.census', $division->abbreviation) }}">
+                        <i class="fa fa-search"></i>
+                    </a>
+                    {{ $division->name }}
+                </td>
                 <td class="text-center no-sort">
                     <span class="census-pie"
-                         data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyActive]) }}">
+                          data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyActive]) }}">
                     </span>
                     <small class="slight">
                         {{ round($division->weeklyActive / $division->total * 100, 1) }}%

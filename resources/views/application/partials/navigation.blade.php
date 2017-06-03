@@ -1,5 +1,4 @@
 <ul class="nav luna-nav">
-
     <li class="{{ set_active('home') }}">
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
@@ -19,17 +18,25 @@
     @endif
 
     <li>
+
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
-            User CP<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+            User CP
+            @if (session('impersonating'))
+                <i class="fa fa-user-secret text-danger" title="Currently Impersonating"></i>
+            @endif
+
+            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
         <ul id="user-cp" class="nav nav-second collapse">
+
             <li><a href="{{ route('member', auth()->user()->member->clan_id) }}">
                     {{ auth()->user()->name }}
                     <small class="text-muted text-uppercase">[{{ auth()->user()->role->name }}]</small>
                 </a></li>
-            {{--<li><a href="usage.html">Settings</a></li>--}}
-            <li><a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a></li>
+
+            <li><a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a>
+            </li>
             <li><a href="#"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
             </li>

@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-//Auth::onceUsingId(4);
-
 Auth::routes();
 
+/**
+ * Application endpoints
+ */
 Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
+Route::get('/impersonate-end/', 'AppController@endImpersonation')->name('end-impersonation');
+Route::get('/impersonate/{user}', 'AppController@impersonate')->name('impersonate');
 
 /**
  * ajax endpoints

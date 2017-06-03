@@ -15,12 +15,12 @@ class MustBeAdmin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->isRole('admin') or
+        if ($request->user()->isRole('admin') ||
             $request->user()->isDeveloper()
         ) {
             return $next($request);
         }
 
-        abort(403, 'You are not authorized to access this area.');
+        abort(403);
     }
 }
