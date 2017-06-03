@@ -10,9 +10,12 @@ Vue.component(
     require('./components/member-edit/ManageUser.vue')
 );
 
-const app = new Vue({
-    el: '#profile-container',
 
-    mounted () {
-    }
+Vue.component(
+    'manage-handles',
+    require('./components/member-edit/ManageHandles.vue')
+);
+
+const app = new Vue({
+    el: '#profile-container'
 });

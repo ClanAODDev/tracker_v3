@@ -6,7 +6,8 @@
             <th class="no-sort"></th>
             <th>Division</th>
             <th class="no-sort text-center">Icon</th>
-            <th class="text-center text-center">Status</th>
+            <th class="text-center">Status</th>
+            <th class="text-center no-sort">Handle</th>
             <th class="no-sort text-center">Abbr</th>
             <th class="no-sort">Desc</th>
         </tr>
@@ -47,10 +48,18 @@
                 </td>
 
                 <td class="text-center">
+                    @if($division->handle_id)
+                        <i class="fa fa-check text-success"></i>
+                    @else
+                        <i class="fa fa-times text-danger"></i>
+                    @endif
+                </td>
+
+                <td class="text-center">
                     <code>{{ $division->abbreviation }}</code>
                 </td>
 
-                <td class="col-xs-5">
+                <td class="col-xs-4">
                     {{ $division->description }}
                 </td>
 

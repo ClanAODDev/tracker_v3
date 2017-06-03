@@ -1,4 +1,4 @@
-<h3 class="m-b-xs text-uppercase m-t-xxxl">
+<h3 class="m-b-xs text-uppercase m-t-xxxl" id="platoons">
     {{ str_plural($division->locality('platoon')) }}
 
     @can('create', [App\Platoon::class, $division])

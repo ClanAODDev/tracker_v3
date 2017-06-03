@@ -21,7 +21,7 @@ class AdminController extends Controller
     public function index()
     {
         $divisions = Division::all();
-        $handles = Handle::with('divisions')->get();
+        $handles = Handle::withCount('divisions')->get();
         $defaultTags = Tag::where('default', true)->get();
         $allTags = Tag::with('notes', 'division')->get();
         $users = User::with('role', 'member.rank')->get();

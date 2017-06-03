@@ -148,6 +148,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::delete('{division}', 'Admin\DivisionController@destroy')->name('adminDeleteDivision');
     });
 
+    // edit default tags
+    Route::put('tags', 'Admin\TagController@update')->name('adminUpdateTags');
+    Route::patch('tags', 'Admin\TagController@update');
+
     // edit handle
     Route::get('handles/{handle}/edit', 'Admin\HandleController@edit')->name('adminEditHandle');
     Route::put('handles/{handle}', 'Admin\HandleController@update')->name('adminUpdateHandle');

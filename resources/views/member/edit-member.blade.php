@@ -20,6 +20,8 @@
 
     <div class="container-fluid">
         @include ('application.partials.back-breadcrumb', ['page' => 'profile'])
+        @include ('member.partials.notices')
+
 
         <div class="row">
             <div class="col-md-12">
@@ -29,24 +31,31 @@
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a data-toggle="tab" href="#member" aria-expanded="true">
-                                    <i class="fa fa-user text-info"></i> Information
+                                    <i class="fa fa-user"></i> Information
                                 </a>
                             </li>
-
+                            <li>
+                                <a data-toggle="tab" href="#handles" aria-expanded="true">
+                                    <i class="fa fa-gamepad"></i> Handles
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content" id="profile-container">
                             <div id="member" class="tab-pane active">
                                 <div class="panel-body">
-                                    <manage-member
-                                            :member-id="{{ $member->id }}"
-                                            :positions="{{ $positions }}"
-                                            :position="{{ $member->position->id }}"></manage-member>
+                                    <manage-member :member-id="{{ $member->id }}"
+                                                   :positions="{{ $positions }}"
+                                                   :position="{{ $member->position->id }}"
+                                    ></manage-member>
                                 </div>
                             </div>
 
-                            <div id="user" class="tab-pane">
+                            <div id="handles" class="tab-pane">
                                 <div class="panel-body">
-
+                                    <manage-handles :all-handles="{{ $allHandles  }}"
+                                                    :my-handles="{{ $member->handles }}"
+                                                    :member-id="{{ $member->id }}"
+                                    ></manage-handles>
                                 </div>
                             </div>
 

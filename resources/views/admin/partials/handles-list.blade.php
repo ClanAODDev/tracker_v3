@@ -21,14 +21,7 @@
                 </td>
                 <td>{{ $handle->name }}</td>
                 <td>
-                    @foreach ($handle->divisions as $division)
-                        <a href="{{ route('division', $division->abbreviation) }}"
-                           class="label label-default text-uppercase slight m-r-xs"
-                           title="{{ $division->name }}"
-                        >
-                            {{ $division->abbreviation }}
-                        </a>
-                    @endforeach
+                    <div class="label label-default">{{ $handle->divisions_count }}</div>
                 </td>
                 <td>{{ $handle->url }}</td>
                 <td>{{ var_export($handle->visible, true) }}</td>

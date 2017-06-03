@@ -1,7 +1,8 @@
 <div class="panel">
     <div class="panel-body">
-        <form id="default-tags" method="post"
-              action="#">
+        <p>Default tags are tags provided to all divisions to prevent duplication. If a division-created tag is used in multiple divisions, then that is a good indication that it should be converted to a default tag (and all instances of the tag label switched)</p>
+
+        <form id="default-tags" method="post" action="{{ route('adminUpdateTags') }}">
 
             <div class="panel repeater">
                 <div class="panel-body">

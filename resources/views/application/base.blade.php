@@ -19,9 +19,9 @@
         <section class="search-results closed text-center"></section>
 
         <section class="content">
-            @if (session('impersonating'))
-                @include ('application.partials.impersonation')
-            @endif
+            {{--@if (session('impersonating'))--}}
+                {{--@include ('application.partials.impersonation')--}}
+            {{--@endif--}}
 
             @yield('content')
         </section>

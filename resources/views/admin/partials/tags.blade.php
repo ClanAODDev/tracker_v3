@@ -1,3 +1,5 @@
+<h4>Clan Default Tags</h4>
+<hr />
 @foreach ($defaultTags as $tag)
     <div class="col-xs-6" data-repeater-item>
         <div class="form-group">

@@ -21,12 +21,11 @@
         <tbody>
 
         @foreach($members as $member)
-            <tr role="row">
+            <tr role="row" style="cursor:pointer;"
+                onclick="window.location.href = '{{ route('member', $member->clan_id) }}'">
                 <td class="col-hidden">{{ $member->rank_id }}</td>
                 <td class="col-hidden">{{ $member->last_activity }}</td>
-                <td class="">{!! $member->present()->nameWithIcon !!} <a
-                            href="{{ route('member', $member->clan_id) }}"><i
-                                class="fa fa-search text-muted pull-right" title="View profile"></i></a></td>
+                <td>{!! $member->present()->nameWithIcon !!}</td>
                 <td class="text-center">{{ $member->rank->abbreviation }}</td>
                 <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
                 <td class="text-center">

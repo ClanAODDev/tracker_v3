@@ -16,7 +16,7 @@
                     </li>
                 @endcan
 
-                @if (auth()->user()->isRole('admin'))
+                @if (auth()->user()->isRole('admin') && !(session('impersonating')))
                     <li>
                         <a href="{{ route('impersonate', $member->user) }}"> Impersonate User</a>
                     </li>

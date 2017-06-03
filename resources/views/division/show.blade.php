@@ -17,9 +17,10 @@
     @endcomponent
 
     <div class="container-fluid">
-            @include ('division.partials.census-short')
-            @include('division.partials.leadership')
-            @include('division.partials.staff-sergeants')
-            @include('division.partials.platoons')
+        @include ('division.partials.notices')
+        @include ('division.partials.census-short')
+        @include('division.partials.leadership')
+        @include('division.partials.staff-sergeants')
+        @include('division.partials.platoons')
     </div>
 @stop

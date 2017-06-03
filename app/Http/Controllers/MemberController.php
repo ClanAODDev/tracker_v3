@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Handle;
 use App\Http\Requests\DeleteMember;
 use App\Member;
 use App\Notifications\MemberRemoved;
@@ -131,10 +132,11 @@ class MemberController extends Controller
         $this->authorize('update', $member);
 
         $division = $member->primaryDivision;
-        $positions = Position::all()->pluck('name', 'id');
+        $positions = Position::all()->pluck('id', 'name');
+        $allHandles = Handle::all()->pluck('id', 'name');
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions'
+            'member', 'division', 'positions', 'allHandles'
         ));
     }
 

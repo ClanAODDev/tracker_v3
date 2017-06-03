@@ -3084,7 +3084,8 @@ div.dt-button-info h2 {
 }
 
 .alert-success .alert-link {
-    color: #1bbf89;
+    color: #fff;
+    font-weight: 700;
 }
 
 .alert-warning {
@@ -3094,7 +3095,8 @@ div.dt-button-info h2 {
 }
 
 .alert-warning .alert-link {
-    color: #fff;
+    color: #000;
+    font-weight: 700;
 }
 
 .alert-info {
@@ -3104,7 +3106,9 @@ div.dt-button-info h2 {
 }
 
 .alert-info .alert-link {
-    color: #56C0E0;
+    opacity: .8;
+    color: #fff;
+    font-weight: 700;
 }
 
 .alert-danger {
@@ -3114,7 +3118,9 @@ div.dt-button-info h2 {
 }
 
 .alert-danger .alert-link {
-    color: #DB524B;
+    opacity: .8;
+    color: #fff;
+    font-weight: 700;
 }
 
 .toast-success {

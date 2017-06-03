@@ -40,6 +40,13 @@
             <li><a href="#"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
             </li>
+
+            @if (session('impersonating'))
+                <li>
+                    <a href="{{ route('end-impersonation') }}"><i class="fa fa-user-secret text-danger"></i> End Impersonation </a>
+                </li>
+            @endif
+
         </ul>
     </li>
 

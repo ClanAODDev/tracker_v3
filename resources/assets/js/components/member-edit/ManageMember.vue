@@ -5,7 +5,7 @@
             </label>
             <select v-model="currentPosition" id="positions" name="positions" class="form-control"
                     @change="assignPosition">
-                <option v-for="(position, id) in positions" :value="id" :selected="currentPosition">
+                <option v-for="(id, position) in positions" :value="id" :selected="currentPosition">
                     {{ position }}
                 </option>
             </select>

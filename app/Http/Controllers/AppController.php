@@ -47,6 +47,7 @@ class AppController extends Controller
 
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
+        $this->showToast('You are now impersonating ' . $user->name);
 
         Auth::login($user);
 
@@ -61,13 +62,14 @@ class AppController extends Controller
     public function endImpersonation()
     {
         $this->middleware(['auth', 'admin']);
-        
+
         if (session('impersonating') && session('impersonatingUser')) {
             Auth::login(User::find(session('impersonatingUser')));
             session()->forget(['impersonating', 'impersonatingUser']);
+            $this->showToast('Impersonation ended');
         }
 
-        return redirect('/');
+        return redirect()->back();
     }
 }
 

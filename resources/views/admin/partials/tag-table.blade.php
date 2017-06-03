@@ -16,8 +16,19 @@
                     <tr>
                         <td>{{ $tag->id }}</td>
                         <td>{{ $tag->name }}</td>
-                        <td>{{ $tag->division->name or "Default" }}</td>
-                        <td>{{ count($tag->noteCount) }}</td>
+                        <td>
+                            @if ($tag->division)
+                                <a href="{{ route('editDivision', $tag->division->abbreviation) }}#division-tags">
+                                    <i class="fa fa-tags"></i>
+                                </a>
+                            @endif
+                            {{ $tag->division->name or "Default" }}
+                        </td>
+                        <td>
+                        <span class="label label-default">
+                                {{ count($tag->noteCount) }}
+                            </span>
+                        </td>
                     </tr>
 
                 @endforeach
