@@ -118,6 +118,7 @@ class Division extends Model
     protected $fillable = [
         'settings',
         'name',
+        'handle_id',
         'description',
         'active',
         'abbreviation'

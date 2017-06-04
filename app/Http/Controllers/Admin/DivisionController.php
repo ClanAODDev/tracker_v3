@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Division;
+use App\Handle;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateDivisionForm;
 use App\Http\Requests\CreateDivision;
@@ -13,7 +14,9 @@ class DivisionController extends Controller
     {
         $this->authorize('show', $division);
 
-        return view('admin.modify-division', compact('division'));
+        $handles = Handle::all()->pluck('label', 'id');
+
+        return view('admin.modify-division', compact('division', 'handles'));
     }
 
     public function store(CreateDivision $form)

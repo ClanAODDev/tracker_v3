@@ -17,6 +17,15 @@
 
     <div class="row">
         <div class="col-xs-12">
+            <div class="form-group {{ $errors->has('handle_id') ? ' has-error' : null }}">
+                <label for="handle_id" class="form-label">Primary Handle</label>
+                {!! Form::select('handle_id', $handles, null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
             <div class="form-group {{ $errors->has('description') ? ' has-error' : null }}">
                 <label for="description" class="form-label">Description</label>
                 {!! Form::text('description', null, ['class' => 'form-control', 'required' => 'required']) !!}
