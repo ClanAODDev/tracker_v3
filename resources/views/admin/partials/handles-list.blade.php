@@ -19,12 +19,19 @@
                         <i class="fa fa-wrench"></i>
                     </a>
                 </td>
-                <td>{{ $handle->name }}</td>
+                <td>{{ $handle->label }}</td>
                 <td>
                     <div class="label label-default">{{ $handle->divisions_count }}</div>
                 </td>
-                <td>{{ $handle->url }}</td>
-                <td>{{ var_export($handle->visible, true) }}</td>
+                <td>
+                    @if ($handle->url)
+                        <code>{{ $handle->url }}</code>
+                    @endif
+                </td>
+                <td class="slight text-uppercase text-{{ $handle->visible ? 'success' : 'muted' }}"
+                    title="Visible on member profile">
+                    {{ var_export($handle->visible, true) }}
+                </td>
             </tr>
         @endforeach
         </tbody>
