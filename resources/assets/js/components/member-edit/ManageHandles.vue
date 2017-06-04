@@ -5,13 +5,13 @@
 
         <p>Here you can manage all of a member's ingame handles. All divisions have a default primary ingame handle, so if this member belongs to you, ensure that it exists and is accurate.</p>
 
-        <p>To add a handle, first <code>show all disabled</code> and activate the handle(s) you wish to add. Then provide values, and finally, save your changes.</p>
+        <p>To add a handle, first <code>show all</code> and activate the handle(s) you wish to add. Then provide values, and finally, save your changes.</p>
 
         <div class="btn-group m-t-lg">
             <button class="btn-default btn" @click="showDisabled = !showDisabled">
                 <i class="fa fa-eye" v-if="showDisabled"></i>
                 <i class="fa fa-eye-slash" v-else="showDisabled"></i>
-                Show disabled
+                Show all
             </button>
             <button class="btn btn-default pull-right" type="submit" @click="storeHandles"
                     :disabled="!changesMade" :class="changesMade ? 'btn-success' : ''">
