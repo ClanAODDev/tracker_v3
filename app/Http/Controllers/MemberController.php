@@ -150,7 +150,8 @@ class MemberController extends Controller
         $handles = Handle::all()->map(function ($handle) use ($member) {
             $newHandle = [
                 'id' => $handle->id,
-                'name' => $handle->name,
+                'label' => $handle->label,
+                'type' => $handle->type,
                 'comments' => $handle->comments,
                 'enabled' => false,
             ];
@@ -158,14 +159,14 @@ class MemberController extends Controller
             if ($member->handles->contains($handle->id)) {
                 $newHandle['enabled'] = true;
                 $newHandle['value'] = $member->handles->filter(function ($myHandle) use ($handle) {
-                    return $handle->name === $myHandle->name;
+                    return $handle->type === $myHandle->type;
                 })->first()->pivot->value;
             }
 
             return $newHandle;
         });
 
-        return $handles;
+        return $handles->sortBy('type')->values();
     }
 
     /**
@@ -197,6 +198,7 @@ class MemberController extends Controller
         }
 
         $member->handles()->sync($handles);
+        $this->showToast('Member handles have been updated!');
     }
 
     /**
@@ -206,11 +208,8 @@ class MemberController extends Controller
      * @param DeleteMember $form
      * @return Response
      */
-    public
-    function destroy(
-        Member $member,
-        DeleteMember $form
-    ) {
+    public function destroy(Member $member, DeleteMember $form)
+    {
         $division = $member->primaryDivision;
 
         if ($division->settings()->get('slack_alert_removed_member')) {

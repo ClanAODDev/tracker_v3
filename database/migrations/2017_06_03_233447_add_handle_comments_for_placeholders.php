@@ -15,6 +15,8 @@ class AddHandleCommentsForPlaceholders extends Migration
     {
         Schema::table('handles', function ($table) {
             $table->string('comments')->after('name')->nullable();
+            $table->string('type')->after('name');
+            $table->renameColumn('name', 'label');
         });
     }
 
