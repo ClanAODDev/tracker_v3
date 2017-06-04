@@ -53,7 +53,7 @@ class UserController extends Controller
         }
 
         $user->assignRole(Role::find($request->role));
-        $user->recordActivity('roleGrantedFor', $user->member);
+        $user->recordActivity('role_granted_to', $user->member);
     }
 
 }

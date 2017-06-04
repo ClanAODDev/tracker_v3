@@ -37,6 +37,9 @@
             </tr>
             </tbody>
         </table>
+        <div class="alert alert-warning" v-if="!myHandles.length">
+            No handles currently exist. A clan administrator must create them.
+        </div>
         <button class="btn btn-default" type="submit" @click="storeHandles"
                 :disabled="!changesMade" :class="changesMade ? 'btn-success' : ''">
             <i class="fa fa-save"></i>
