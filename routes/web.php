@@ -21,6 +21,7 @@ Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->na
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 Route::post('update-role', 'UserController@updateRole');
 Route::post('update-position', 'MemberController@updatePosition');
+Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
 
 
 // Members endpoints

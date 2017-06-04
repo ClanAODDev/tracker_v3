@@ -179,7 +179,7 @@
 }
 
 .select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #949ba2
+    color: #949ba2;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -2616,6 +2616,10 @@ a.list-group-item {
 a.list-group-item:hover {
     color: #777;
     background-color: #3d404c;
+}
+
+input::placeholder  {
+    opacity: .3;
 }
 
 /* Nestable list */

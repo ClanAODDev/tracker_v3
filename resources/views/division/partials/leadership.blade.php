@@ -16,7 +16,7 @@
         </div>
     @empty
         <div class="col-md-12">
-            <div class="panel panel-filled panel-c-accent text-muted">
+            <div class="panel panel-filled panel-c-accent">
                 <div class="panel-body">
                     <h4 class="m-b-none text-uppercase">
                         No leadership assigned

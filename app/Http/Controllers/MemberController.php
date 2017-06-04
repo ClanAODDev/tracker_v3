@@ -8,7 +8,6 @@ use App\Member;
 use App\Notifications\MemberRemoved;
 use App\Position;
 use App\Repositories\MemberRepository;
-use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Toastr;
@@ -112,6 +111,7 @@ class MemberController extends Controller
 
     /**
      * Assigns a position to the given member
+     *
      * @param Request $request
      */
     public function updatePosition(Request $request)
@@ -133,11 +133,39 @@ class MemberController extends Controller
 
         $division = $member->primaryDivision;
         $positions = Position::all()->pluck('id', 'name');
-        $allHandles = Handle::all()->pluck('id', 'name');
+
+        $handles = $this->getHandles($member);
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions', 'allHandles'
+            'member', 'division', 'positions', 'handles'
         ));
+    }
+
+    /**
+     * @param Member $member
+     * @return \Illuminate\Support\Collection
+     */
+    private function getHandles(Member $member)
+    {
+        $handles = Handle::all()->map(function ($handle) use ($member) {
+            $newHandle = [
+                'id' => $handle->id,
+                'name' => $handle->name,
+                'comments' => $handle->comments,
+                'enabled' => false,
+            ];
+
+            if ($member->handles->contains($handle->id)) {
+                $newHandle['enabled'] = true;
+                $newHandle['value'] = $member->handles->filter(function ($myHandle) use ($handle) {
+                    return $handle->name === $myHandle->name;
+                })->first()->pivot->value;
+            }
+
+            return $newHandle;
+        });
+
+        return $handles;
     }
 
     /**
@@ -153,14 +181,36 @@ class MemberController extends Controller
     }
 
     /**
+     * Sync player handles
+     *
+     * @param Request $request
+     */
+    public function updateHandles(Request $request)
+    {
+        $member = Member::find($request->member_id);
+        $handles = [];
+
+        foreach ($request->handles as $handle) {
+            $handles[$handle['id']] = [
+                'value' => $handle['value']
+            ];
+        }
+
+        $member->handles()->sync($handles);
+    }
+
+    /**
      * Remove member from AOD
      *
      * @param Member $member
      * @param DeleteMember $form
      * @return Response
      */
-    public function destroy(Member $member, DeleteMember $form)
-    {
+    public
+    function destroy(
+        Member $member,
+        DeleteMember $form
+    ) {
         $division = $member->primaryDivision;
 
         if ($division->settings()->get('slack_alert_removed_member')) {

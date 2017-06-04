@@ -1,6 +1,6 @@
 <h4 class="m-t-lg">
-    Ingame Aliases
-    <a href="#" class="btn btn-default pull-right btn-sm">
+    Ingame Handles
+    <a href="{{ route('editMember', $member->clan_id) . '#handles' }}" class="btn btn-default pull-right btn-sm">
         <i class="fa fa-cog text-accent"></i> Manage
     </a>
 </h4>
@@ -24,8 +24,15 @@
             </div>
         </div>
     @empty
-        <div class="col-xs-12 text-muted">
-            No in-game aliases
+        <div class="col-xs-12">
+            <div class="panel panel-filled panel-c-warning">
+                <div class="panel-body">
+                    <h4 class="m-b-none text-uppercase">
+                        No ingame handles
+                    </h4>
+                    <span class="slight">See division NCO for assistance with ingame handles</span>
+                </div>
+            </div>
         </div>
     @endforelse
 </div>

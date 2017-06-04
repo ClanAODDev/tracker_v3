@@ -22,7 +22,6 @@
         @include ('application.partials.back-breadcrumb', ['page' => 'profile'])
         @include ('member.partials.notices')
 
-
         <div class="row">
             <div class="col-md-12">
                 <div class="panel">
@@ -52,10 +51,11 @@
 
                             <div id="handles" class="tab-pane">
                                 <div class="panel-body">
-                                    <manage-handles :all-handles="{{ $allHandles  }}"
-                                                    :my-handles="{{ $member->handles }}"
+
+                                    <manage-handles :handles="{{ $handles  }}"
                                                     :member-id="{{ $member->id }}"
                                     ></manage-handles>
+
                                 </div>
                             </div>
 

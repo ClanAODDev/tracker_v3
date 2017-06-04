@@ -1,47 +1,48 @@
 <template>
     <div>
-        <table class="table table-striped">
+
+        <table class="table table-condensed">
             <thead>
             <tr>
                 <th>Handle Type</th>
-                <th>Value</th>
-                <th>Action</th>
+                <th>Handle Value</th>
+                <th class="text-center">Active</th>
             </tr>
             </thead>
             <tbody>
 
             <tr v-for="handle in myHandles">
-                <td class="col-md-3">
+                <td class="col-md-3" :class="!handle.enabled ? 'text-muted' : ''">
                     {{ handle.name }}
                 </td>
-
-                <td class="col-md-6">
-                    <input type="text" class="form-control" :value="handle.value" />
+                <td class="col-md-8">
+                    <input type="text" class="form-control" :value="handle.value"
+                           :disabled="!handle.enabled" v-model="handle.value"
+                           :placeholder="handle.comments ? handle.comments : 'Enter value'"
+                           :required="handle.enabled" @keydown="changesMade = true"
+                    />
                 </td>
 
-                <td class="col-md-3">
-                    <!-- remove action -->
-                    <button class="btn btn-danger btn-block">
-                        <i class="fa fa-trash text-danger"></i>
+                <td class="col-md-1">
+                    <button class="btn btn-success btn-block" v-if="handle.enabled"
+                            @click="toggleHandle(handle)">
+                        <i class="fa fa-check text-success"></i>
                     </button>
-                </td>
-            </tr>
+                    <button class="btn btn-danger btn-block" type="button"
+                            @click="handle.enabled = !handle.enabled" v-else>
+                        <i class="fa fa-times text-danger"></i>
+                    </button>
 
-            <tr>
-                <td class="col-md-3 c-white">Add new alias</td>
-                <td class="col-md-6">
-                    <select id="alias-selector" class="form-control">
-                        <option value="" disabled="" selected="selected">Select an alias type</option>
-                        <option :value="id" v-for="(id, name) in allHandles">{{ name }}</option>
-                    </select>
-                </td>
-                <td class="col-md-3">
-                    <button class="btn btn-success btn-block add-alias">
-                        <i class="fa fa-plus fa-lg"></i></button>
                 </td>
             </tr>
             </tbody>
         </table>
+        <button class="btn btn-default" type="submit" @click="storeHandles"
+                :disabled="!changesMade" :class="changesMade ? 'btn-success' : ''">
+            <i class="fa fa-save"></i>
+            Save Handles
+        </button>
+
     </div>
 </template>
 
@@ -49,23 +50,38 @@
     export default {
         data() {
             return {
-                handles: []
+                myHandles: [],
+                changesMade: false,
             }
         },
 
         mounted() {
-            this.getMyHandles ();
+            this.myHandles = this.handles;
         },
 
         methods: {
-            /**
-             * accepts prop value and populates handles
-             */
-            getMyHandles: function () {
-                this.handles = this.myHandles;
+            toggleHandle: function (handle) {
+                this.changesMade = true;
+                handle.enabled = ! handle.enabled;
+            },
+            storeHandles: function () {
+                let handles = this.myHandles.filter (function (handle) {
+                    return handle.enabled && handle.value;
+                });
+
+                axios.post (window.Laravel.appPath + '/update-handles', {
+                    member_id: this.memberId,
+                    handles: handles
+                }).then (function (response) {
+                    toastr.success ('Member handles have been updated!');
+                }).catch (function (error) {
+                    toastr.error (error, 'Something went wrong')
+                });
+
+                this.changesMade = false;
             }
         },
 
-        props: ['allHandles', 'myHandles', 'member-id', 'division-primary']
+        props: ['handles', 'member-id']
     }
 </script>

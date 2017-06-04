@@ -42,7 +42,7 @@
             @endcan
         </div>
 
-        @include ('member.partials.aliases')
+        @include ('member.partials.handles')
         @include ('member.partials.part-time-divisions')
     </div>
 

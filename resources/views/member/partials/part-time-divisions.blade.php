@@ -1,4 +1,4 @@
-<h4 class="m-t-lg">
+<h4 class="m-t-xl">
     Part-Time Divisions
     <a href="#" class="btn btn-default btn-sm pull-right">
         <i class="fa fa-cog text-accent"></i> Manage
@@ -21,8 +21,15 @@
             </a>
         </div>
     @empty
-        <div class="col-md-12 text-muted">
-            Not a part-time member of any divisions
+        <div class="col-md-12">
+            <div class="panel panel-filled panel-c-info">
+                <div class="panel-body">
+                    <h4 class="m-b-none text-uppercase">
+                        Not part-time in any divisions
+                    </h4>
+                    <span class="slight">Division NCOs can add part-time members</span>
+                </div>
+            </div>
         </div>
     @endforelse
 </div>
