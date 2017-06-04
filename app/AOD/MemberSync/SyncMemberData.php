@@ -71,6 +71,8 @@ class SyncMemberData
         // accounts for forum member, prospective member ranks which we don't use
         $member->rank_id = ($record['aodrankval'] - 2 <= 0) ? 1 : $record['aodrankval'] - 2;
 
+        $member->posts = $record['postcount'];
+
         $member->save();
 
         // set member's active division
