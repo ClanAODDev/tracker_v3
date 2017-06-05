@@ -18,10 +18,18 @@
 
     <div class="container-fluid">
 
+        <div class="row">
+            <div class="col-xs-12 m-b-xl">
+                @foreach ($divisions as $division)
+                    <a href="#{{ $division->name }}" class="btn btn-accent m-b m-r">{{ $division->name }}</a>
+                @endforeach
+            </div>
+        </div>
+
         @foreach ($divisions as $division)
-            <div class="panel panel-filled m-b-xl">
+            <div class="panel panel-filled m-b-xl" id="{{ $division->name }}">
                 <div class="panel-heading">
-                    {{ $division->name }}
+                    {{ $division->name }} Division
                 </div>
                 <div class="panel-body">
                     <table class="table adv-datatable table-hover">
@@ -35,11 +43,13 @@
                         </thead>
                         <tbody>
                         @foreach ($division->activeMembers as $member)
-                            <tr style="cursor:pointer;" onclick="window.location.href = '{{ route('member', $member->clan_id) }}'">
+                            <tr style="cursor:pointer;"
+                                onclick="window.location.href = '{{ route('member', $member->clan_id) }}'">
                                 <td>
                                     {{ $member->name }}
                                 </td>
-                                <td>{{ $member->rank_id }} <span class="text-muted slight">({{ $member->rank->abbreviation }})</span></td>
+                                <td>{{ $member->rank_id }} <span
+                                            class="text-muted slight">({{ $member->rank->abbreviation }})</span></td>
                                 <td>{{ $member->join_date }}</td>
                                 <td>{{ $member->last_activity->format('Y-m-d') }}</td>
                             </tr>
