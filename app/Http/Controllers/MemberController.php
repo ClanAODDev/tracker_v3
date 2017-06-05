@@ -100,7 +100,7 @@ class MemberController extends Controller
         $division = $member->primaryDivision;
 
         // hide admin notes from non-admin users
-        $notes = $member->notes()->with('author')->get()
+        $notes = $member->notes()->with('author', 'tags')->get()
             ->filter(function ($note) {
                 if ($note->type == 'sr_ldr') {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
