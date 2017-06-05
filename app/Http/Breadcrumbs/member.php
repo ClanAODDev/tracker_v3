@@ -7,14 +7,14 @@ Breadcrumbs::register('member', function ($breadcrumbs, $member, $division) {
         $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     }
 
-    if ($member->platoon) {
+    if ($member->platoon_id) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
             route('platoon', [$division->abbreviation, $member->platoon->id])
         );
     }
 
-    if ($member->squad) {
+    if ($member->squad_id) {
         $breadcrumbs->push(ucwords($member->squad->name));
     }
 
