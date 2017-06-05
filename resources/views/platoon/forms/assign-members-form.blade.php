@@ -6,10 +6,11 @@
             <div class="panel-heading">Unassigned Members
                 <span class="unassigned-count badge pull-right">{{ $division->unassigned->count() }}</span>
             </div>
-            <div class="panel-body unassigned-members" id="selectable" style="max-height: 300px; overflow-y: scroll;">
+            <input type="text" id="search-collection" class="form-control" />
+            <div class="panel-body unassigned-members collection" id="selectable" style="max-height: 300px; overflow-y: scroll;">
                 @forelse ($division->unassigned as $member)
-                    <li style="cursor: pointer;" class="list-group-item clearfix" data-member-id="{{ $member->id }}">
-                        {{ $member->present()->rankName }}
+                    <li style="cursor: pointer;" class="list-group-item clearfix collection-item" data-member-id="{{ $member->id }}">
+                        {{ $member->name }}
                     </li>
                 @empty
                     <p class="text-muted">No unassigned members available</p>
