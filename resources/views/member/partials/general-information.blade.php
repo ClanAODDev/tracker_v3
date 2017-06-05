@@ -1,7 +1,8 @@
 <h4>Quick Info</h4>
 <hr />
 
-<div class="row m-b-xl">
+<div class="row">
+
     @component('application.components.data-block')
         @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
         @slot('title') days since last <span class="c-white">forum activity </span>@endslot
@@ -26,4 +27,5 @@
         @slot('data') {{ $member->posts }} @endslot
         @slot('title') forum <span class="c-white">post count</span> @endslot
     @endcomponent
+
 </div>

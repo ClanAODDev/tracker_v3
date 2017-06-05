@@ -2,7 +2,7 @@
     <div>
         <h3 class="m-t-xl"><i class="fa fa-mail-reply-all text-accent"></i> Step 5: Create Welcome Post</h3>
 
-        <div v-if="store.division.settings.use_welcome_thread">
+        <div v-if="store.division.settings.use_welcome_thread === 'on'">
             <p>This division uses a welcome thread for all new recruit introductions. Click the button below to create a post and introduce your new recruit to the other members of the division.</p>
 
             <div class="text-center p-lg bs-example">
