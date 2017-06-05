@@ -99,6 +99,10 @@ class MemberController extends Controller
     {
         $division = $member->primaryDivision;
 
+        if ( ! $division) {
+            abort(409, 'No primary division');
+        }
+
         // hide admin notes from non-admin users
         $notes = $member->notes()->with('author', 'tags')->get()
             ->filter(function ($note) {
