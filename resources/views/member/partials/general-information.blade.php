@@ -1,36 +1,29 @@
-<h4>Quick Info</h4><hr />
-<div class="panel m-t-md panel-filled">
+<h4>Quick Info</h4>
+<hr />
 
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-3 col-xs-6 text-center">
-                <h4 class="no-margins">
-                    {{ $member->last_activity->diffForHumans() }}
-                </h4>
-                Last <span class="c-white">Forum</span> Activity
-            </div>
+<div class="row m-b-xl">
+    @component('application.components.data-block')
+        @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
+        @slot('title') days since last <span class="c-white">forum activity </span>@endslot
+    @endcomponent
 
-            <div class="col-md-3 col-xs-6 text-center">
-                <h4 class="no-margins">
-                    {{ $member->last_activity->diffForHumans() }}
-                </h4>
-                Last <span class="c-white">Teamspeak</span> Activity
-            </div>
+    @component('application.components.data-block')
+        @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
+        @slot('title') days since last <span class="c-white">TS activity </span> @endslot
+    @endcomponent
 
-            <div class="col-md-3 col-xs-6 text-center">
-                <h4 class="no-margins">
-                    {{ $member->join_date }}
-                </h4>
-                Member <span class="c-white">Join</span> Date
-            </div>
+    @component('application.components.data-block')
+        @slot('data') {{ $member->join_date }} @endslot
+        @slot('title') Member <span class="c-white">join date</span> @endslot
+    @endcomponent
 
-            <div class="col-md-3 col-xs-6 text-center">
-                <h4 class="no-margins">
-                    {{ $member->last_promoted }}
-                </h4>
-                Last <span class="c-white">Promotion</span> Date
-            </div>
-        </div>
+    @component('application.components.data-block')
+        @slot('data') {{ $member->last_promoted }} @endslot
+        @slot('title') Last <span class="c-white">promotion date</span> @endslot
+    @endcomponent
 
-    </div>
+    @component('application.components.data-block')
+        @slot('data') {{ $member->posts }} @endslot
+        @slot('title') forum <span class="c-white">post count</span> @endslot
+    @endcomponent
 </div>

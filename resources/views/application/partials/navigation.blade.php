@@ -11,6 +11,10 @@
         <a href="{{ route('help') }}">Documentation</a>
     </li>
 
+    <li class="{{ set_active('members') }}">
+        <a href="{{ route('members') }}">Members</a>
+    </li>
+
     @if(Auth::user()->isRole('admin'))
         <li class="{{ set_active('admin') }}">
             <a href="{{ route('admin') }}">Admin CP</a>

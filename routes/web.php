@@ -26,6 +26,8 @@ Route::post('update-handles', 'MemberController@updateHandles')->name('updateMem
 
 // Members endpoints
 Route::group(['prefix' => 'members'], function () {
+    Route::get('', 'MemberController@index')->name('members');
+
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');

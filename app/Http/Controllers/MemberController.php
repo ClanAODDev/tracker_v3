@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Division;
 use App\Handle;
 use App\Http\Requests\DeleteMember;
 use App\Member;
@@ -35,7 +36,11 @@ class MemberController extends Controller
      */
     public function index()
     {
-        //
+        $divisions = Division::with('activeMembers', 'activeMembers.rank')
+            ->whereActive(true)
+            ->get();
+
+        return view('member.index', compact('divisions'));
     }
 
     /**

@@ -24,11 +24,7 @@
 
         {!! Breadcrumbs::render('member', $member, $division) !!}
 
-        <div class="row">
-            <div class="col-md-12">
-                @include ('member.partials.general-information')
-            </div>
-        </div>
+        @include ('member.partials.general-information')
 
         <div class="row m-b-lg m-t-n">
             @can('create', \App\Note::class)
