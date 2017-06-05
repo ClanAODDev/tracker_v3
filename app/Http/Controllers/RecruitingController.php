@@ -32,7 +32,10 @@ class RecruitingController extends Controller
      */
     public function index()
     {
-        $divisions = Division::active()->get()->pluck('name', 'abbreviation');
+        $divisions = Division::active()
+            ->get()
+            ->sortBy('name')
+            ->pluck('name', 'abbreviation');
 
         return view('recruit.index', compact('divisions'));
     }
