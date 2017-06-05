@@ -21,13 +21,13 @@
         <div class="row">
             <div class="col-xs-12 m-b-xl">
                 @foreach ($divisions as $division)
-                    <a href="#{{ $division->name }}" class="btn btn-accent m-b m-r">{{ $division->name }}</a>
+                    <a href="#{{ $division->abbreviation }}" class="btn btn-default m-b m-r">{{ $division->name }}</a>
                 @endforeach
             </div>
         </div>
 
         @foreach ($divisions as $division)
-            <div class="panel panel-filled m-b-xl" id="{{ $division->name }}">
+            <div class="panel panel-filled m-b-xl" id="{{ $division->abbreviation }}">
                 <div class="panel-heading">
                     {{ $division->name }} Division
                 </div>
