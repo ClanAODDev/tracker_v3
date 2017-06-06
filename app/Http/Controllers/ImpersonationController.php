@@ -19,6 +19,10 @@ class ImpersonationController extends Controller
      */
     public function impersonate(User $user)
     {
+        if ($user->isDeveloper()) {
+            abort(403, 'You cannot impersonate that user');
+        }
+
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
 

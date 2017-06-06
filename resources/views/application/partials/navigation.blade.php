@@ -34,14 +34,19 @@
 
         <ul id="user-cp" class="nav nav-second collapse">
 
-            <li><a href="{{ route('member', auth()->user()->member->clan_id) }}">
+            <li>
+                <a href="{{ route('member', auth()->user()->member->clan_id) }}">
                     {{ auth()->user()->name }}
                     <small class="text-muted text-uppercase">[{{ auth()->user()->role->name }}]</small>
-                </a></li>
-
-            <li><a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a>
+                </a>
             </li>
-            <li><a href="#"
+
+            <li>
+                <a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a>
+            </li>
+
+            <li>
+                <a href="#"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
             </li>
 
