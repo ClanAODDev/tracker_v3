@@ -9,6 +9,11 @@ use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use App\Tag;
 
+/**
+ * Class DivisionController
+ *
+ * @package App\Http\Controllers
+ */
 class DivisionController extends Controller
 {
     /**
@@ -122,6 +127,11 @@ class DivisionController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @param Division $division
+     * @param Member $member
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function removePartTime(Division $division, Member $member)
     {
         $division->partTimeMembers()->detach($member);
@@ -130,6 +140,10 @@ class DivisionController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function partTime(Division $division)
     {
         $partTime = $division->partTimeMembers;
@@ -137,6 +151,10 @@ class DivisionController extends Controller
         return view('division.part_time', compact('division', 'partTime'));
     }
 
+    /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function census(Division $division)
     {
         $censuses = $division->census->sortByDesc('created_at')->take(52);

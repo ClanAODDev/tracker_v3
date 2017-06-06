@@ -1,4 +1,4 @@
-<h4 class="m-t-lg">
+<h4 class="m-t-xl">
     Ingame Handles
     <a href="{{ route('editMember', $member->clan_id) . '#handles' }}" class="btn btn-default pull-right btn-sm">
         <i class="fa fa-cog text-accent"></i> Manage
