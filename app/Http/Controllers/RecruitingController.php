@@ -9,6 +9,7 @@ use App\Notifications\NewMemberRecruited;
 use App\Platoon;
 use App\Squad;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 /**
@@ -18,6 +19,8 @@ use Illuminate\Http\Request;
  */
 class RecruitingController extends Controller
 {
+
+    use AuthorizesRequests;
 
     /**
      * RecruitingController constructor.
