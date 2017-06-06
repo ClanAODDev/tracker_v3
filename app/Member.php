@@ -70,9 +70,15 @@ class Member extends Model
      * @param $position
      * @return Model
      */
-    public function assignPosition(Position $position)
+    public function assignPosition($position)
     {
-        return $this->position()->associate($position)->save();
+        if ($position instanceof Position) {
+            return $this->position()->associate($position);
+        }
+
+        return $this->position()->associate(
+            Position::whereName(strtolower($position))->firstOrFail()
+        );
     }
 
     /**

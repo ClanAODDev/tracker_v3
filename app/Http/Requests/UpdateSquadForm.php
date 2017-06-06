@@ -5,6 +5,11 @@ namespace App\Http\Requests;
 use App\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdateSquadForm
+ *
+ * @package App\Http\Requests
+ */
 class UpdateSquadForm extends FormRequest
 {
     /**
@@ -48,6 +53,9 @@ class UpdateSquadForm extends FormRequest
         ];
     }
 
+    /**
+     * Save the squad
+     */
     public function persist()
     {
         $this->squad->update(
@@ -60,10 +68,14 @@ class UpdateSquadForm extends FormRequest
 
         if ($this->leader_id) {
             $this->assignLeaderTo($this->squad);
+        } else {
+            $this->resetLeaderOf($this->squad);
         }
     }
 
     /**
+     * Assign members to a squad
+     *
      * @param $squad
      */
     private function assignMembersTo($squad)
@@ -76,6 +88,8 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
+     * Assign a leader
+     *
      * @param $squad
      */
     private function assignLeaderTo($squad)
@@ -87,6 +101,17 @@ class UpdateSquadForm extends FormRequest
         $leader->squad()->associate($squad)
             ->platoon()->associate($this->route('platoon'))
             ->assignPosition("squad leader")
+            ->save();
+    }
+
+    /**
+     * Reset the leader
+     *
+     * @param $squad
+     */
+    private function resetLeaderOf($squad)
+    {
+        $squad->leader()->dissociate()
             ->save();
     }
 }

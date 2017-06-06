@@ -5,6 +5,11 @@ namespace App\Http\Requests;
 use App\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class UpdatePlatoonForm
+ *
+ * @package App\Http\Requests
+ */
 class UpdatePlatoonForm extends FormRequest
 {
 
@@ -47,6 +52,9 @@ class UpdatePlatoonForm extends FormRequest
         ];
     }
 
+    /**
+     * Save the platoon
+     */
     public function persist()
     {
         $this->platoon->update(
@@ -54,25 +62,54 @@ class UpdatePlatoonForm extends FormRequest
         );
 
         if ($this->member_ids) {
-            collect(json_decode($this->member_ids))->each(function ($memberId) {
+            $this->assignMembersTo($this->platoon);
+        }
+
+        if ($this->leader_id) {
+            $this->assignLeaderTo($this->platoon);
+        } else {
+            $this->resetLeaderFor($this->platoon);
+        }
+    }
+
+    /**
+     * Assign members to a platoon
+     *
+     * @param $platoon
+     */
+    private function assignMembersTo($platoon)
+    {
+        collect(json_decode($this->member_ids))
+            ->each(function ($memberId) use ($platoon) {
                 $member = Member::find($memberId);
-                $member->platoon()->associate($this->platoon);
+                $member->platoon()->associate($platoon);
                 $member->save();
             });
-        }
+    }
 
-        /**
-         * Assign leader as leader of platoon
-         * Place member inside platoon
-         * Assign platoon leader position
-         */
-        if ($this->leader_id) {
-            $leader = Member::whereClanId($this->leader_id)->firstOrFail();
+    /**
+     * Assign a member as platoon leader
+     *
+     * @param $platoon
+     */
+    private function assignLeaderTo($platoon)
+    {
+        $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
-            $this->platoon->leader()->associate($leader);
-            $leader->platoon()->associate($this->platoon);
-            $leader->squad()->dissociate();
-            $leader->assignPosition("platoon leader")->save();
-        }
+        $this->platoon->leader()->associate($leader);
+        $leader->platoon()->associate($platoon);
+        $leader->squad()->dissociate();
+
+        $leader->assignPosition('platoon leader')->save();
+    }
+
+    /**
+     * Reset the leader for a platoon
+     *
+     * @param $platoon
+     */
+    private function resetLeaderFor($platoon)
+    {
+        $platoon->leader()->dissociate()->save();
     }
 }
