@@ -1,9 +1,12 @@
 <h4 class="m-t-xl">
     Part-Time Divisions
-    <a href="{{ route('editMember', $member->clan_id) . '#part-time' }}" class="btn btn-default btn-sm pull-right">
-        <i class="fa fa-cog text-accent"></i> Manage
-    </a>
-</h4><hr />
+    @can ('update', $member)
+        <a href="{{ route('editMember', $member->clan_id) . '#part-time' }}" class="btn btn-default btn-sm pull-right">
+            <i class="fa fa-cog text-accent"></i> Manage
+        </a>
+    @endcan
+</h4>
+<hr />
 <div class="row">
     @forelse ($member->partTimeDivisions as $division)
         <div class="col-md-4">

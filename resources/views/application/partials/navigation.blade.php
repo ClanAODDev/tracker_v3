@@ -47,20 +47,24 @@
 
             @if (session('impersonating'))
                 <li>
-                    <a href="{{ route('end-impersonation') }}"><i class="fa fa-user-secret text-danger"></i> End Impersonation </a>
+                    <a href="{{ route('end-impersonation') }}"><i
+                                class="fa fa-user-secret text-danger"></i> End Impersonation </a>
                 </li>
             @endif
 
         </ul>
     </li>
 
-    <li>
-        <a href="#tools" data-toggle="collapse" aria-expanded="false">
-            Tools<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-        </a>
-        <ul id="tools" class="nav nav-second collapse">
-            {{--class="{{ set_active('home') }}"--}}
-            <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
-        </ul>
-    </li>
+    @if (auth()->user()->role_id > 1)
+        <li>
+            <a href="#tools" data-toggle="collapse" aria-expanded="false">
+                Tools<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+            </a>
+            <ul id="tools" class="nav nav-second collapse">
+                @can('create', App\Member::class)
+                    <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
+                @endcan
+            </ul>
+        </li>
+    @endif
 </ul>

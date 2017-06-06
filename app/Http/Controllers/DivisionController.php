@@ -113,6 +113,15 @@ class DivisionController extends Controller
     }
 
     /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function partTime(Division $division)
+    {
+        return view('division.part_time', compact('division', 'partTime'));
+    }
+
+    /**
      * Assign a member as part-time to a division
      *
      * @param Division $division
@@ -123,6 +132,8 @@ class DivisionController extends Controller
     {
         $division->partTimeMembers()->attach($member->id, ['primary' => false]);
         $this->showToast("{$member->name} added as part-time member to {$division->name}!");
+
+        $member->recordActivity('add_part_time');
 
         return redirect()->back();
     }
@@ -137,18 +148,9 @@ class DivisionController extends Controller
         $division->partTimeMembers()->detach($member);
         $this->showToast("{$member->name} removed from {$division->name} part-timers!");
 
+        $member->recordActivity('remove_part_time');
+
         return redirect()->back();
-    }
-
-    /**
-     * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function partTime(Division $division)
-    {
-        $partTime = $division->partTimeMembers;
-
-        return view('division.part_time', compact('division', 'partTime'));
     }
 
     /**

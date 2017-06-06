@@ -25,6 +25,8 @@ class RecruitingController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $this->authorize('create', Member::class);
     }
 
     /**
@@ -46,6 +48,7 @@ class RecruitingController extends Controller
      */
     public function form(Division $division)
     {
+
         return view('recruit.form', compact('division'));
     }
 
@@ -54,6 +57,8 @@ class RecruitingController extends Controller
      */
     public function submitRecruitment(Request $request)
     {
+
+
         $division = Division::whereAbbreviation($request->division)->first();
 
         // create or update member record
@@ -76,6 +81,7 @@ class RecruitingController extends Controller
      */
     private function createMember($request)
     {
+
         $division = Division::whereAbbreviation($request->division)->first();
         $member = Member::firstOrNew(['clan_id' => $request->member_id]);
 

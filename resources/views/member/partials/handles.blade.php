@@ -1,8 +1,11 @@
 <h4 class="m-t-xl">
     Ingame Handles
-    <a href="{{ route('editMember', $member->clan_id) . '#handles' }}" class="btn btn-default pull-right btn-sm">
-        <i class="fa fa-cog text-accent"></i> Manage
-    </a>
+
+    @can ('update', $member)
+        <a href="{{ route('editMember', $member->clan_id) . '#handles' }}" class="btn btn-default pull-right btn-sm">
+            <i class="fa fa-cog text-accent"></i> Manage
+        </a>
+    @endcan
 </h4>
 <hr />
 <div class="row">
@@ -12,7 +15,8 @@
                 <div class="panel-body">
                     <small class="c-white slight text-uppercase">
                         {{ $handle->label }}
-                    </small><br />
+                    </small>
+                    <br />
                     <span class="text-uppercase">
                         {{ $handle->pivot->value }}
                     </span>

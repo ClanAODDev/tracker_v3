@@ -11,8 +11,10 @@
     </div>
 
     <div class="panel-body">
-        <a href="{{ route('recruiting.form', [$myDivision->abbreviation]) }}"
-           class="btn btn-default btn-squared">Add New Recruit</a>
+        @can ('create', App\Member::class)
+            <a href="{{ route('recruiting.form', [$myDivision->abbreviation]) }}"
+               class="btn btn-default btn-squared">Add New Recruit</a>
+        @endcan
         <a href="{{ route('division', $myDivision->abbreviation) }}"
            class="btn btn-default btn-squared">View My Division</a>
     </div>
