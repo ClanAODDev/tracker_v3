@@ -7,8 +7,8 @@ Auth::routes();
  */
 Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
-Route::get('/impersonate-end/', 'AppController@endImpersonation')->name('end-impersonation');
-Route::get('/impersonate/{user}', 'AppController@impersonate')->name('impersonate');
+Route::get('/impersonate-end/', 'ImpersonationController@endImpersonation')->name('end-impersonation');
+Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('impersonate');
 
 /**
  * ajax endpoints
