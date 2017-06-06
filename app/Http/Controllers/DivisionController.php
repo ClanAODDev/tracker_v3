@@ -130,6 +130,7 @@ class DivisionController extends Controller
      */
     public function assignPartTime(Division $division, Member $member)
     {
+        $this->authorize('update', $member);
         $division->partTimeMembers()->attach($member->id, ['primary' => false]);
         $this->showToast("{$member->name} added as part-time member to {$division->name}!");
 
@@ -145,6 +146,7 @@ class DivisionController extends Controller
      */
     public function removePartTime(Division $division, Member $member)
     {
+        $this->authorize('update', $member);
         $division->partTimeMembers()->detach($member);
         $this->showToast("{$member->name} removed from {$division->name} part-timers!");
 
