@@ -13,11 +13,7 @@
     @foreach($activityLog as $event)
         <tr>
             <td class="text-muted">{{ $event->id }}</td>
-            <td>{{ $event->user->name }}
-                <a href="{{ route('member', $event->user->member->clan_id) }}">
-                    <i class="fa fa-arrow-circle-right"></i>
-                </a>
-            </td>
+            <td>{{ $event->user->name }}</td>
             <td>{{ $event->name }}</td>
             <td>{{ $event->subject_id }}</td>
             <td>{{ $event->created_at->format('Y-m-d H:i A') }}</td>
