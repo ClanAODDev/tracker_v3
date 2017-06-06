@@ -128,6 +128,7 @@ class MemberController extends Controller
         $member = Member::find($request->member);
         $this->authorize('update', $member);
         $member->assignPosition(Position::find($request->position));
+        $member->save();
     }
 
     /**
