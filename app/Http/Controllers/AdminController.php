@@ -24,7 +24,7 @@ class AdminController extends Controller
         $handles = Handle::withCount('divisions')->get();
         $defaultTags = Tag::where('default', true)->get();
         $allTags = Tag::with('notes', 'division')->get();
-        $users = User::with('role', 'member.rank')->get();
+        $users = User::with('role', 'member.rank', 'member')->get();
         $activityLog = Activity::with([
             'subject' => function ($query) {
                 // provide context even if a subject is "trashed"
