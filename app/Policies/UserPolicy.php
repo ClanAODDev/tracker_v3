@@ -3,7 +3,7 @@
 namespace App\Policies;
 
 use App\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
  * Class UserPolicy
@@ -12,7 +12,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
  */
 class UserPolicy
 {
-    use HandlesAuthorization;
+    use AuthorizesRequests;
 
     /**
      * Create a new policy instance.
@@ -21,7 +21,7 @@ class UserPolicy
      */
     public function __construct()
     {
-        //
+
     }
 
     /**
@@ -54,5 +54,10 @@ class UserPolicy
 
         // senior leaders who are sgts and ssgts can update user accounts
         return $user->isRole('sr_ldr') && $user->member->isRank(['sgt', 'ssgt']);
+    }
+
+    public function canImpersonate($userBeingImpersonated)
+    {
+        return false;
     }
 }

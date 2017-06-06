@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
 class ImpersonationController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Impersonate a given user
      *
@@ -15,10 +18,8 @@ class ImpersonationController extends Controller
      */
     public function impersonate(User $user)
     {
-        $this->middleware(['auth', 'admin']);
-        
-        if ($user->isDeveloper()) {
-            abort(403, 'You cannot impersonate that user');
+        if ( ! $this->canImpersonate($user)) {
+            abort(403);
         }
 
         session(['impersonating' => true]);
@@ -29,6 +30,25 @@ class ImpersonationController extends Controller
         Auth::login($user);
 
         return redirect('/');
+    }
+
+    /**
+     * @param $user
+     * @return bool
+     */
+    private function canImpersonate($user)
+    {
+        // only admins can impersonate
+        if ( ! auth()->user()->isRole('admin')) {
+            return false;
+        }
+
+        // can't impersonate developers
+        if ($user->isDeveloper()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
