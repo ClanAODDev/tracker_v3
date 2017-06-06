@@ -38,9 +38,9 @@
                     @include ('member.partials.notes-hidden')
                 @endcan
             </div>
-
-            @include ('member.partials.handles')
-            @include ('member.partials.part-time-divisions')
         </div>
+        
+    @include ('member.partials.handles')
+    @include ('member.partials.part-time-divisions')
 
 @stop
