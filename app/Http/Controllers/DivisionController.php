@@ -116,7 +116,7 @@ class DivisionController extends Controller
      */
     public function assignPartTime(Division $division, Member $member)
     {
-        $division->partTimeMembers()->sync($member->id, ['primary' => false]);
+        $division->partTimeMembers()->attach($member->id, ['primary' => false]);
         $this->showToast("{$member->name} added as part-time member to {$division->name}!");
 
         return redirect()->back();
