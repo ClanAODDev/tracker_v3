@@ -28,8 +28,6 @@ class RecruitingController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
-        $this->authorize('create', Member::class);
     }
 
     /**
@@ -37,6 +35,8 @@ class RecruitingController extends Controller
      */
     public function index()
     {
+        $this->authorize('create', Member::class);
+
         $divisions = Division::active()
             ->get()
             ->sortBy('name')
@@ -51,6 +51,7 @@ class RecruitingController extends Controller
      */
     public function form(Division $division)
     {
+        $this->authorize('create', Member::class);
 
         return view('recruit.form', compact('division'));
     }
@@ -60,7 +61,7 @@ class RecruitingController extends Controller
      */
     public function submitRecruitment(Request $request)
     {
-
+        $this->authorize('create', Member::class);
 
         $division = Division::whereAbbreviation($request->division)->first();
 

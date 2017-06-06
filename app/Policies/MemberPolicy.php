@@ -20,6 +20,20 @@ class MemberPolicy
     }
 
     /**
+     * @param User $user
+     * @return bool
+     */
+    public function create(User $user)
+    {
+        // member role cannot recruit members
+        if ($user->role_id > 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Can the user update the given member?
      *
      * @param User $user
