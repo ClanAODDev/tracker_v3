@@ -36,6 +36,9 @@
 
             <li>
                 <a href="{{ route('member', auth()->user()->member->clan_id) }}">
+                    @if (auth()->user()->isDeveloper())
+                        <i class="fa fa-shield text-danger" title="Dev mode enabled"></i>
+                    @endif
                     {{ auth()->user()->name }}
                     <small class="text-muted text-uppercase">[{{ auth()->user()->role->name }}]</small>
                 </a>
