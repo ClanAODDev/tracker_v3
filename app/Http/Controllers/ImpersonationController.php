@@ -7,11 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ImpersonationController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'admin']);
-    }
-
     /**
      * Impersonate a given user
      *
@@ -20,6 +15,8 @@ class ImpersonationController extends Controller
      */
     public function impersonate(User $user)
     {
+        $this->middleware(['auth', 'admin']);
+        
         if ($user->isDeveloper()) {
             abort(403, 'You cannot impersonate that user');
         }
@@ -41,8 +38,6 @@ class ImpersonationController extends Controller
      */
     public function endImpersonation()
     {
-        $this->middleware(['auth', 'admin']);
-
         if (session('impersonating') && session('impersonatingUser')) {
             Auth::login(User::find(session('impersonatingUser')));
             session()->forget(['impersonating', 'impersonatingUser']);
