@@ -45,14 +45,9 @@ class AppController extends Controller
     {
         $this->middleware(['auth', 'admin']);
 
-        if ($user->id === auth()->user()->id) {
-            $this->showErrorToast("You can't impersonate yourself, silly!");
-
-            return redirect('/');
-        }
-
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
+
         $this->showToast('You are now impersonating ' . $user->name);
 
         Auth::login($user);
