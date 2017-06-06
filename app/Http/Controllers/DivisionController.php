@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Http\Requests\UpdateDivision;
+use App\Member;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use App\Tag;
-use Illuminate\Http\Request;
 
 class DivisionController extends Controller
 {
@@ -105,6 +105,29 @@ class DivisionController extends Controller
         }
 
         return back();
+    }
+
+    /**
+     * Assign a member as part-time to a division
+     *
+     * @param Division $division
+     * @param Member $member
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function assignPartTime(Division $division, Member $member)
+    {
+        $division->partTimeMembers()->sync($member->id, ['primary' => false]);
+        $this->showToast("{$member->name} added as part-time member to {$division->name}!");
+
+        return redirect()->back();
+    }
+
+    public function removePartTime(Division $division, Member $member)
+    {
+        $division->partTimeMembers()->detach($member);
+        $this->showToast("{$member->name} removed from {$division->name} part-timers!");
+
+        return redirect()->back();
     }
 
     public function partTime(Division $division)

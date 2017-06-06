@@ -1,7 +1,7 @@
-@if (! $member->handles->contains($division->handle) && $division->handle)
+@if (! $member->handles->contains($primaryDivision->handle) && $primaryDivision->handle)
     <div class="alert alert-warning">
-        The {{ $division->name }} division requires a
-        <code>{{ $division->handle->label }}</code> handle, but {{ $member->name }} does not have one. You should add it now.
+        The {{ $primaryDivision->name }} division requires a
+        <code>{{ $primaryDivision->handle->label }}</code> handle, but {{ $member->name }} does not have one. You should add it now.
     </div>
 @endif
 

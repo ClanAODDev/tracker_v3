@@ -3,8 +3,8 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            @if ($division)
-                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+            @if ($primaryDivision)
+                <img src="{{ getDivisionIconPath($primaryDivision->abbreviation) }}" />
             @else
                 <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;" />
             @endif
@@ -38,6 +38,11 @@
                                     <i class="fa fa-gamepad"></i> Handles
                                 </a>
                             </li>
+                            <li>
+                                <a data-toggle="tab" href="#part-time" aria-expanded="true">
+                                    <i class="fa fa-clock-o"></i> Part-time
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content" id="profile-container">
                             <div id="member" class="tab-pane active">
@@ -56,6 +61,54 @@
                                                     :member-id="{{ $member->id }}"
                                     ></manage-handles>
 
+                                </div>
+                            </div>
+
+                            <div id="part-time" class="tab-pane">
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <h4>Available Divisions</h4>
+                                            <hr />
+                                            @foreach ($divisions as $division)
+                                                <div class="col-md-6">
+                                                    <a href="{{ route('assignPartTimer', [$division->abbreviation, $member->clan_id]) }}"
+                                                       class="panel panel-filled">
+                                                        <div class="panel-body">
+                                                            <small class="text-uppercase">
+                                                                {{ $division->name }}
+                                                                <div class="pull-right">
+                                                                    <img src="{{ getDivisionIconPath($division->abbreviation) }}"
+                                                                         class="division-icon-medium" />
+                                                                </div>
+                                                            </small>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <h4>Part-time Divisions</h4>
+                                            <hr />
+                                            @foreach ($member->partTimeDivisions as $division)
+                                                <div class="col-md-6">
+                                                    <a href="{{ route('removePartTimer', [$division->abbreviation, $member->clan_id]) }}"
+                                                       class="panel panel-filled">
+                                                        <div class="panel-body">
+                                                            <small class="text-uppercase">
+                                                                {{ $division->name }}
+                                                                <div class="pull-right">
+                                                                    <img src="{{ getDivisionIconPath($division->abbreviation) }}"
+                                                                         class="division-icon-medium" />
+                                                                </div>
+                                                            </small>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

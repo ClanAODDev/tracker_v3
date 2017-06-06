@@ -1,6 +1,6 @@
 <h4 class="m-t-xl">
     Part-Time Divisions
-    <a href="#" class="btn btn-default btn-sm pull-right">
+    <a href="{{ route('editMember', $member->clan_id) . '#part-time' }}" class="btn btn-default btn-sm pull-right">
         <i class="fa fa-cog text-accent"></i> Manage
     </a>
 </h4><hr />

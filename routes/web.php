@@ -73,6 +73,12 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::patch('{division}', 'DivisionController@update');
     Route::delete('{division}', 'DivisionController@destroy')->name('deleteDivision');
 
+    Route::get('{division}/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
+    Route::get('{division}/part-timers', 'DivisionController@partTime')->name('partTimers');
+    Route::get('{division}/part-timers/{member}', 'DivisionController@assignPartTime')->name('assignPartTimer');
+    Route::get('{division}/part-timers/{member}/remove', 'DivisionController@removePartTime')->name('removePartTimer');
+    Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
+
     /**
      * Recruiting Process
      */
@@ -96,7 +102,6 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::patch('{platoon}', 'PlatoonController@update');
         Route::delete('{platoon}', 'PlatoonController@destroy')->name('deletePlatoon');
 
-
         /**
          * squads
          */
@@ -111,14 +116,6 @@ Route::group(['prefix' => 'divisions/'], function () {
         });
 
     });
-
-
-    /**
-     * Misc Routes
-     */
-    Route::get('{division}/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
-    Route::get('{division}/part-timers', 'DivisionController@partTime')->name('partTimers');
-    Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
 });
 
 

@@ -140,13 +140,19 @@ class MemberController extends Controller
     {
         $this->authorize('update', $member);
 
-        $division = $member->primaryDivision;
+        $primaryDivision = $member->primaryDivision;
         $positions = Position::all()->pluck('id', 'name');
+
+        $divisions = Division::active()->get()->except(
+            $member->partTimeDivisions->pluck('id')->toArray()
+        )->filter(function ($division) use ($member, $primaryDivision) {
+            return $division->id !== $primaryDivision->id;
+        });
 
         $handles = $this->getHandles($member);
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions', 'handles'
+            'member', 'primaryDivision', 'positions', 'handles', 'divisions'
         ));
     }
 
