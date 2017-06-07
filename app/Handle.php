@@ -10,6 +10,13 @@ class Handle extends Model
         'visible' => 'boolean',
     ];
 
+    protected $fillable = [
+        'label',
+        'type',
+        'comment',
+        'url',
+    ];
+
     public function divisions()
     {
         return $this->hasMany(Division::class);

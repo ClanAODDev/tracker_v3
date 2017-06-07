@@ -153,9 +153,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::patch('tags', 'Admin\TagController@update');
 
     // edit handle
+    Route::post('handles', 'Admin\HandleController@store')->name('adminStoreHandle');
+    Route::get('handles/create', 'Admin\HandleController@create')->name('adminCreateHandle');
     Route::get('handles/{handle}/edit', 'Admin\HandleController@edit')->name('adminEditHandle');
     Route::put('handles/{handle}', 'Admin\HandleController@update')->name('adminUpdateHandle');
     Route::patch('handles/{handle}', 'Admin\HandleController@update');
+    Route::delete('handles/{handle}', 'Admin\HandleController@delete')->name('adminDeleteHandle');
 });
 
 /*

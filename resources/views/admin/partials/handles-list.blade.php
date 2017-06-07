@@ -4,9 +4,8 @@
         <tr>
             <th class="no-sort"></th>
             <th>Name</th>
-            <th>Divisions</th>
+            <th class="text-center">Divisions</th>
             <th>URL</th>
-            <th>Visible</th>
         </tr>
         </thead>
 
@@ -20,17 +19,13 @@
                     </a>
                 </td>
                 <td>{{ $handle->label }}</td>
-                <td>
-                    <div class="label label-default">{{ $handle->divisions_count }}</div>
+                <td class="text-center">
+                    {{ $handle->divisions_count }}
                 </td>
                 <td>
                     @if ($handle->url)
                         <code>{{ $handle->url }}</code>
                     @endif
-                </td>
-                <td class="slight text-uppercase text-{{ $handle->visible ? 'success' : 'muted' }}"
-                    title="Visible on member profile">
-                    {{ var_export($handle->visible, true) }}
                 </td>
             </tr>
         @endforeach
