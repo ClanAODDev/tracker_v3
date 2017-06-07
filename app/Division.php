@@ -221,6 +221,11 @@ class Division extends Model
         return $this->members()->wherePivot('primary', false);
     }
 
+    public function sergeants()
+    {
+        return $this->activeMembers()->where('rank_id', '>', 8);
+    }
+
     /**
      * relationship - division has many members
      */
@@ -246,7 +251,8 @@ class Division extends Model
      */
     public function activeMembers()
     {
-        return $this->members()->wherePivot('primary', true);
+        return $this->members()->wherePivot('primary', true)
+            ->orderBy('rank_id', 'desc');
     }
 
     /**
@@ -351,7 +357,8 @@ class Division extends Model
     public function leaders()
     {
         return $this->activeMembers()
-            ->whereIn('position_id', [5, 6]);
+            ->whereIn('position_id', [5, 6])
+            ->orderBy('position_id', 'desc');
     }
 
     /**

@@ -13,8 +13,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Toastr;
 
+/**
+ * Class MemberController
+ *
+ * @package App\Http\Controllers
+ */
 class MemberController extends Controller
 {
+    /**
+     * @var MemberRepository
+     */
     protected $member;
 
     /**
@@ -246,5 +254,19 @@ class MemberController extends Controller
         return redirect()->route('division', [
             $division->abbreviation
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sergeants()
+    {
+        $divisions = Division::active()
+            ->with('sergeants', 'sergeants.rank')
+            ->withCount('sergeants')
+            ->orderBy('name')
+            ->get();
+
+        return view('member.sergeants', compact('divisions'));
     }
 }

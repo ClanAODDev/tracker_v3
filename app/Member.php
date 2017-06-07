@@ -24,8 +24,6 @@ class Member extends Model
      */
     protected static $recordEvents = [
         'created',
-        'updated',
-        'deleted'
     ];
 
     /**
