@@ -6,11 +6,14 @@
             <div class="panel-heading">Unassigned Members
                 <span class="unassigned-count badge pull-right">{{ $platoon->unassigned->count() }}</span>
             </div>
-            <div class="panel-body unassigned-members" id="selectable" style="max-height: 300px; overflow-y: scroll;">
+            <div class="panel-body unassigned-members collection" id="selectable"
+                 style="max-height: 300px; overflow-y: scroll;">
+                <div class="form-group">
+                    <input type="text" id="search-collection" class="form-control" placeholder="Filter members..." />
+                </div>
                 @forelse ($platoon->unassigned as $member)
-                    <li style="cursor: pointer;" class="list-group-item clearfix" data-member-id="{{ $member->id }}">
-                        {{ $member->present()->rankName }}
-                    </li>
+                    <li class="list-group-item collection-item"
+                        data-member-id="{{ $member->id }}">{{ $member->present()->rankName() }}</li>
                 @empty
                     <p class="text-muted">No unassigned members available</p>
                 @endforelse
