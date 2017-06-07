@@ -37,7 +37,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Rank</th>
-                            <th class="hidden-sm">Join date</th>
+                            <th class="hidden-sm hidden-xs">Join date</th>
                             <th>Last forum activity</th>
                         </tr>
                         </thead>
@@ -50,7 +50,7 @@
                                 </td>
                                 <td>{{ $member->rank_id }} <span
                                             class="text-muted slight">({{ $member->rank->abbreviation }})</span></td>
-                                <td class="hidden-sm">{{ $member->join_date }}</td>
+                                <td class="hidden-sm hidden-xs">{{ $member->join_date }}</td>
                                 <td>{{ $member->last_activity->format('Y-m-d') }}</td>
                             </tr>
 
