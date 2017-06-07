@@ -11,9 +11,6 @@
         <a href="{{ route('help') }}">Documentation</a>
     </li>
 
-    <li class="{{ set_active('members') }}">
-        <a href="{{ route('members') }}">Members</a>
-    </li>
 
     @if(Auth::user()->isRole('admin'))
         <li class="{{ set_active('admin') }}">
@@ -75,4 +72,16 @@
             </ul>
         </li>
     @endif
+
+    <li class="nav-category">
+        Members
+    </li>
+
+    <li class="{{ set_active('members') }}">
+        <a href="{{ route('members') }}">All Members</a>
+    </li>
+
+    <li class="{{ set_active('sergeants') }}">
+        <a href="{{ route('sergeants') }}">Sergeants</a>
+    </li>
 </ul>
