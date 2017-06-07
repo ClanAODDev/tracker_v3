@@ -35,6 +35,10 @@
                            class="col-lg-3 panel panel-filled m-r m-b">
                             <span class="panel-body">
                                     {!! $member->present()->nameWithIcon(true) !!}
+                                <br />
+                                <span class="slight text-muted text-uppercase">
+                                    {{ $member->position->name }}
+                                </span>
                             </span>
                         </a>
 
