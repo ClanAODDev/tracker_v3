@@ -3,7 +3,7 @@
         <div class="panel-tools">
             <i class="fa fa-chevron-up toggle-icon"></i>
         </div>
-        <i class="fa fa-trash text-danger"></i> Delete Division
+        <i class="fa fa-trash text-danger"></i> Delete Handle
     </div>
     <div class="panel-body">
         <p>
