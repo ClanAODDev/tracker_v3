@@ -1,9 +1,6 @@
 @extends('application.base')
 
 @section('content')
-
-
-@section('content')
     @component ('application.components.view-heading')
         @slot ('currentPage')
             v3
@@ -21,31 +18,32 @@
 
     <div class="container-fluid">
 
-        <h3>Sergeants+</h3>
-        <hr />
-
         @foreach ($divisions as $division)
-            <div class="panel panel-filled m-b-xl">
-                <div class="panel-heading" id="{{ $division->abbreviation }}">
-                    <h4>{{ $division->name }} ({{ $division->sergeants_count }})</h4>
-                    <hr class="m-b-none" />
-                </div>
-                <div class="panel-body">
+
+
+            <div class="row m-b-xl">
+                <div class="col-md-12">
+                    <h4>
+                        <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium" />
+                        {{ $division->name }} ({{ $division->sergeants_count }})
+                    </h4>
+                    <hr />
 
                     @foreach ( $division->sergeants as $member)
 
                         <a href="{{ route('member', $member->clan_id) }}"
-                           class="col-lg-3 panel panel-filled m-r">
-                            <div class="panel-body">
-                                {!! $member->present()->nameWithIcon(true) !!}
-                            </div>
-
+                           class="col-lg-3 panel panel-filled m-r m-b">
+                            <span class="panel-body">
+                                    {!! $member->present()->nameWithIcon(true) !!}
+                            </span>
                         </a>
+
+
                     @endforeach
 
                 </div>
             </div>
         @endforeach
-    </div>
 
+    </div>
 @stop

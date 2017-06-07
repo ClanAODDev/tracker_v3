@@ -28,9 +28,11 @@
                 <div class="col-sm-4">
                     <a href="{{ route('recruiting.form', [$abbreviation]) }}" class="panel panel-filled">
                         <div class="panel-body">
-                            <img src="{{ getDivisionIconPath($abbreviation) }}"
-                                 class="division-icon-small" />
-                            {{ $name }}
+                            <h4>
+                                <img src="{{ getDivisionIconPath($abbreviation) }}"
+                                     class="division-icon-medium" />
+                                {{ $name }}
+                            </h4>
                         </div>
                     </a>
                 </div>
