@@ -121,6 +121,7 @@ let Tracker = Tracker || {};
                         // toggle items that don't meet criteria
                         let isMatch = exp.test($(this).text());
                         $(this).toggle(isMatch);
+
                     });
                 });
             },
