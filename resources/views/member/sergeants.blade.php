@@ -25,7 +25,7 @@
         <hr />
 
         @foreach ($divisions as $division)
-            <div class="panel panel-filled">
+            <div class="panel panel-filled m-b-xl">
                 <div class="panel-heading" id="{{ $division->abbreviation }}">
                     <h4>{{ $division->name }} ({{ $division->sergeants_count }})</h4>
                     <hr class="m-b-none" />
