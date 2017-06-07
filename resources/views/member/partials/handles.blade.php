@@ -11,7 +11,7 @@
 <div class="row">
     @forelse ($member->handles as $handle)
         <div class="col-md-4">
-            <div class="panel panel-filled panel-c-accent">
+            <div class="panel panel-filled">
                 <div class="panel-body">
                     <small class="c-white slight text-uppercase">
                         {{ $handle->label }}

@@ -5,6 +5,7 @@
 
     @component('application.components.data-block')
         @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
+
         @slot('title') days since last <span class="c-white">forum activity </span>@endslot
     @endcomponent
 

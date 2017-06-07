@@ -21,40 +21,31 @@
 
     <div class="container-fluid">
 
-        <div class="row">
-            <div class="col-sm-3 hidden-xs pull-right" id="division-nav">
-                @foreach($divisions as $division)
-                    <a href="#{{ $division->abbreviation }}" class="list-group-item">
-                        {{ $division->name }}
-                    </a>
-                @endforeach
+        <h3>Sergeants+</h3>
+        <hr />
+
+        @foreach ($divisions as $division)
+            <div class="panel panel-filled">
+                <div class="panel-heading" id="{{ $division->abbreviation }}">
+                    <h4>{{ $division->name }} ({{ $division->sergeants_count }})</h4>
+                    <hr class="m-b-none" />
+                </div>
+                <div class="panel-body">
+
+                    @foreach ( $division->sergeants as $member)
+
+                        <a href="{{ route('member', $member->clan_id) }}"
+                           class="col-lg-3 panel panel-filled m-r">
+                            <div class="panel-body">
+                                {!! $member->present()->nameWithIcon(true) !!}
+                            </div>
+
+                        </a>
+                    @endforeach
+
+                </div>
             </div>
-
-            <div class="col-sm-9">
-                @foreach ($divisions as $division)
-                    <div class="panel">
-                        <div class="panel-heading" id="{{ $division->abbreviation }}">
-                            <h4>{{ $division->name }} ({{ $division->sergeants_count }})</h4>
-                        </div>
-                        <div class="panel-body">
-
-                            @foreach ( $division->sergeants as $member)
-
-                                <a href="{{ route('member', $member->clan_id) }}"
-                                   class="col-lg-5 panel panel-filled m-r">
-                                    <div class="panel-body">
-                                        {{ $member->present()->rankName }}
-                                    </div>
-
-                                </a>
-                            @endforeach
-
-                        </div>
-                    </div>
-                @endforeach
-
-                    <div class="alert alert-danger alert-dismissible fade in" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <h4>Oh snap! You got an error!</h4> <p>Change this and that and try again. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p> <p> <button type="button" class="btn btn-danger">Take this action</button> <button type="button" class="btn btn-default">Or do this</button> </p> </div>
-            </div>
-        </div>
+        @endforeach
     </div>
+
 @stop

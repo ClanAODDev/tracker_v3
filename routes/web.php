@@ -24,10 +24,12 @@ Route::post('update-position', 'MemberController@updatePosition');
 Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
 
 
+
 // Members endpoints
+Route::get('sergeants', 'MemberController@sergeants')->name('sergeants');
+
 Route::group(['prefix' => 'members'], function () {
     Route::get('', 'MemberController@index')->name('members');
-    Route::get('sergeants', 'MemberController@sergeants')->name('sergeants');
 
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');

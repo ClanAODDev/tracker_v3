@@ -52,11 +52,11 @@ class MemberPresenter extends Presenter
                 ? "<i class=\"{$this->member->position->icon}\"></i>"
                 : null;
 
-            $rank = ($this->member->rank->abbreviation and $showRank)
-                ? $this->member->rank->abbreviation
-                : null;
+            $name = ($showRank)
+                ? $this->rankName()
+                : $this->member->name;
 
-            return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$rank} {$this->member->name}</span>";
+            return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$name}</span>";
         }
 
         return $this->member->name;
@@ -69,6 +69,10 @@ class MemberPresenter extends Presenter
      */
     public function rankName()
     {
+        if ($this->member->rank_id === 14) {
+            return $this->member->name;
+        }
+
         return $this->member->rank->abbreviation . " " . $this->member->name;
     }
 }
