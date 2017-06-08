@@ -1,4 +1,5 @@
 <ul class="nav luna-nav">
+
     <li class="{{ set_active('home') }}">
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
@@ -10,23 +11,29 @@
     <li>
 
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
-            User
+            {{ auth()->user()->name }}
             @if (session('impersonating'))
-                <i class="fa fa-user-secret text-danger" title="Currently Impersonating"></i>
+                <i class="fa fa-user-secret text-info" title="Currently Impersonating"></i>
             @endif
-
+            @if (auth()->user()->isDeveloper())
+                <i class="fa fa-shield text-danger" title="Dev mode enabled"></i>
+            @endif
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
         <ul id="user-cp" class="nav nav-second collapse">
+            @if (session('impersonating'))
+                <li>
+                    <a href="{{ route('end-impersonation') }}">
+                        <strong>End Impersonation</strong>
+                        <i class="fa fa-user-secret"></i>
+                    </a>
+                </li>
+            @endif
 
             <li>
                 <a href="{{ route('member', auth()->user()->member->clan_id) }}">
-                    @if (auth()->user()->isDeveloper())
-                        <i class="fa fa-shield text-danger" title="Dev mode enabled"></i>
-                    @endif
-                    {{ auth()->user()->name }}
-                    <small class="text-muted text-uppercase">{{ auth()->user()->role->name }}</small>
+                    Member Profile
                 </a>
             </li>
 
@@ -42,16 +49,9 @@
 
             <li>
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fa fa-lock text-muted"></i> Logout
+                    Logout <i class="fa fa-lock text-muted"></i>
                 </a>
             </li>
-
-            @if (session('impersonating'))
-                <li>
-                    <a href="{{ route('end-impersonation') }}"><i
-                                class="fa fa-user-secret text-danger"></i> End Impersonation </a>
-                </li>
-            @endif
 
         </ul>
     </li>
@@ -92,4 +92,13 @@
     <li class="{{ set_active('help') }}">
         <a href="{{ route('help') }}">Changelog</a>
     </li>
+
+    <li style="pointer-events: none;">
+        <a href="#">
+            <small class="text-muted text-uppercase slight">
+                <strong>{{ auth()->user()->role->name }}</strong>
+            </small>
+        </a>
+    </li>
+
 </ul>
