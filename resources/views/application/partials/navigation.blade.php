@@ -7,21 +7,10 @@
         <a href="{{ route('statistics') }}">Statistics</a>
     </li>
 
-    <li class="{{ set_active('help') }}">
-        <a href="{{ route('help') }}">Documentation</a>
-    </li>
-
-
-    @if(Auth::user()->isRole('admin'))
-        <li class="{{ set_active('admin') }}">
-            <a href="{{ route('admin') }}">Admin CP</a>
-        </li>
-    @endif
-
     <li>
 
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
-            User CP
+            User
             @if (session('impersonating'))
                 <i class="fa fa-user-secret text-danger" title="Currently Impersonating"></i>
             @endif
@@ -37,7 +26,7 @@
                         <i class="fa fa-shield text-danger" title="Dev mode enabled"></i>
                     @endif
                     {{ auth()->user()->name }}
-                    <small class="text-muted text-uppercase">[{{ auth()->user()->role->name }}]</small>
+                    <small class="text-muted text-uppercase">{{ auth()->user()->role->name }}</small>
                 </a>
             </li>
 
@@ -45,9 +34,16 @@
                 <a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a>
             </li>
 
+            @if(Auth::user()->isRole('admin'))
+                <li class="{{ set_active('admin') }}">
+                    <a href="{{ route('admin') }}">Admin CP</a>
+                </li>
+            @endif
+
             <li>
-                <a href="#"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa fa-lock text-muted"></i> Logout
+                </a>
             </li>
 
             @if (session('impersonating'))
@@ -83,5 +79,17 @@
 
     <li class="{{ set_active('sergeants') }}">
         <a href="{{ route('sergeants') }}">Sergeants</a>
+    </li>
+
+    <li class="nav-category">
+        Application
+    </li>
+
+    <li class="{{ set_active('help') }}">
+        <a href="{{ route('help') }}">Documentation</a>
+    </li>
+
+    <li class="{{ set_active('help') }}">
+        <a href="{{ route('help') }}">Changelog</a>
     </li>
 </ul>
