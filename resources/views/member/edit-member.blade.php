@@ -67,48 +67,7 @@
                             <div id="part-time" class="tab-pane">
                                 <div class="panel-body">
 
-                                    <div class="row">
-                                        <div class="col-xs-6">
-                                            <h4>Available Divisions</h4>
-                                            <hr />
-                                            @foreach ($divisions as $division)
-                                                <div class="col-md-6">
-                                                    <a href="{{ route('assignPartTimer', [$division->abbreviation, $member->clan_id]) }}"
-                                                       class="panel panel-filled">
-                                                        <div class="panel-body">
-                                                            <small class="text-uppercase">
-                                                                {{ $division->name }}
-                                                                <div class="pull-right">
-                                                                    <img src="{{ getDivisionIconPath($division->abbreviation) }}"
-                                                                         class="division-icon-medium" />
-                                                                </div>
-                                                            </small>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="col-xs-6">
-                                            <h4>Part-time Divisions</h4>
-                                            <hr />
-                                            @foreach ($member->partTimeDivisions as $division)
-                                                <div class="col-md-6">
-                                                    <a href="{{ route('removePartTimer', [$division->abbreviation, $member->clan_id]) }}"
-                                                       class="panel panel-filled">
-                                                        <div class="panel-body">
-                                                            <small class="text-uppercase">
-                                                                {{ $division->name }}
-                                                                <div class="pull-right">
-                                                                    <img src="{{ getDivisionIconPath($division->abbreviation) }}"
-                                                                         class="division-icon-medium" />
-                                                                </div>
-                                                            </small>
-                                                        </div>
-                                                    </a>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
+                                    @include ('member.partials.edit-part-time')
                                 </div>
                             </div>
 

@@ -118,7 +118,15 @@ class DivisionController extends Controller
      */
     public function partTime(Division $division)
     {
-        return view('division.part_time', compact('division', 'partTime'));
+        $members = $division->partTimeMembers()->with('rank', 'handles')->get()
+            ->each(function ($member) use ($division) {
+                // filter out handles that don't match current division primary handle
+                $member->handles = $member->handles->filter(function ($handle) use ($division) {
+                    return $handle->id === $division->handle_id;
+                });
+            });
+
+        return view('division.part-time', compact('division', 'members'));
     }
 
     /**
@@ -126,7 +134,7 @@ class DivisionController extends Controller
      *
      * @param Division $division
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
      */
     public function assignPartTime(Division $division, Member $member)
     {
@@ -142,7 +150,7 @@ class DivisionController extends Controller
     /**
      * @param Division $division
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|string
      */
     public function removePartTime(Division $division, Member $member)
     {
