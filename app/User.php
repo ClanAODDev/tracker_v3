@@ -8,6 +8,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * Class User
+ *
+ * @package App
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
@@ -34,14 +39,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'email',
     ];
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'developer' => 'boolean',
         'settings' => 'json',
     ];
 
+    /**
+     * @var array
+     */
     protected $dates = [
         'last_login_at'
     ];
@@ -163,4 +173,5 @@ class User extends Authenticatable
     {
         return ucfirst($value);
     }
+
 }

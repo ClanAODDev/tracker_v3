@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Handle;
+use App\Mail\ExternalRecruitment;
+use App\Mail\WelcomeEmail;
 use App\Member;
 use App\Notifications\NewMemberRecruited;
 use App\Platoon;
@@ -11,6 +13,7 @@ use App\Squad;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Class RecruitingController
@@ -68,6 +71,10 @@ class RecruitingController extends Controller
         // create or update member record
         $member = $this->createMember($request);
 
+        if ($request->division != auth()->user()->member->primaryDivision) {
+            $this->notifyLeadershipOfExternalRecruitment($member, $division);
+        }
+
         // notify slack of recruitment
         if ($division->settings()->get('slack_alert_created_member')) {
             $division->notify(new NewMemberRecruited($member, $division));
@@ -123,6 +130,17 @@ class RecruitingController extends Controller
         $member->recordActivity('recruited');
 
         return $member;
+    }
+
+    /**
+     * @param Member $member
+     * @param Division $division
+     */
+    private function notifyLeadershipOfExternalRecruitment(Member $member, Division $division)
+    {
+        $division->leaders->each(function ($leader) use ($member) {
+            Mail::to($leader->user)->send(new ExternalRecruitment($member, auth()->user()));
+        });
     }
 
     /**
