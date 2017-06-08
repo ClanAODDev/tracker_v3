@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\WelcomeEmail;
 use App\Member;
+use App\Notifications\WelcomeUser;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Mail;
 use Validator;
 
 class RegisterController extends Controller
@@ -84,13 +83,15 @@ class RegisterController extends Controller
          */
         $member = Member::where('name', $data['name'])->first();
 
-        Mail::to($data['email'])->send(new WelcomeEmail($data));
-
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'member_id' => $member->id,
         ]);
+
+        $user->notify(new WelcomeUser($user));
+
+        return $user;
     }
 }
