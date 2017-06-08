@@ -69,7 +69,6 @@
                 @can('create', App\Member::class)
                     <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
                 @endcan
-                <li><a href="{{ route('partTimers', $division->abbreviation) }}">Manage Part Time</a></li>
             </ul>
         </li>
     @endif
