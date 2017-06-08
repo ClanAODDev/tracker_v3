@@ -37,8 +37,6 @@
             <div class="col-md-12">
                 @can('create', \App\Note::class)
                     @include ('member.partials.notes')
-                @else
-                    @include ('member.partials.notes-hidden')
                 @endcan
             </div>
         </div>

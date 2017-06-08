@@ -16,6 +16,9 @@
     @endcomponent
 
     <div class="container-fluid">
+
+        {!! Breadcrumbs::render('part-timers', $division) !!}
+
         @if (count($members))
             <table class="table adv-datatable table-hover">
                 <thead>
