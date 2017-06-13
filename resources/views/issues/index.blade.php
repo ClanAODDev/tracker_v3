@@ -35,8 +35,6 @@
                             <span class="text-muted pull-right">Issue #{{ $issue['number'] }}</span>
                         </div>
                         <div class="panel-body">
-
-                            {{ dump($issue) }}
                             {{ $issue['body'] }}
                         </div>
                     </div>
@@ -52,15 +50,19 @@
                 <div class="panel panel-filled panel-c-info">
                     <div class="panel-heading">Report an issue</div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <label for="title">Issue Title</label>
-                            <input type="text" class="form-control" name="title" />
-                        </div>
-                        <div class="form-group">
-                            <label for="body">Issue Details</label>
-                            <textarea name="body" id="body" class="form-control" rows="5" style="resize: vertical;"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Submit</button>
+                        <form action="{{ route('github.create-issue') }}" id="create-issue" method="post">
+                            {{ csrf_field() }}
+                            <div class="form-group">
+                                <label for="title">Issue Title</label>
+                                <input type="text" class="form-control" name="title" />
+                            </div>
+                            <div class="form-group">
+                                <label for="body">Issue Details</label>
+                                <textarea name="body" id="body" class="form-control" rows="5"
+                                          style="resize: vertical;"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </form>
                     </div>
                 </div>
 

@@ -60,6 +60,7 @@ Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
 Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recruiting.addMember');
 
 Route::get('issues', 'IssuesController@index')->name('github.issues');
+Route::post('issues', 'IssuesController@create')->name('github.create-issue');
 
 /**
  * Division endpoints
