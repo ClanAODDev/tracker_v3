@@ -49,8 +49,13 @@
                     </div>
                 @endforelse
 
-                <div class="panel panel-filled panel-c-info">
-                    <div class="panel-heading">Report an issue</div>
+                <div class="panel panel-filled panel-c-info collapsed">
+                    <div class="panel-heading panel-toggle">
+                        Report an issue
+                        <div class="panel-tools">
+                            <i class="fa fa-chevron-up toggle-icon"></i>
+                        </div>
+                    </div>
                     <div class="panel-body">
                         <form action="{{ route('github.create-issue') }}" id="create-issue" method="post">
                             {{ csrf_field() }}
