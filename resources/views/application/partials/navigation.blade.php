@@ -94,7 +94,7 @@
     </li>
 
     <li class="{{ set_active('issues') }}">
-        <a href="{{ route('github.issues') }}">Bug Reports</a>
+        <a href="{{ route('github.issues') }}">Issue Reports</a>
     </li>
 
     <li class="{{ set_active('help') }}">

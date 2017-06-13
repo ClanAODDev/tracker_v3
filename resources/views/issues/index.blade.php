@@ -22,6 +22,8 @@
                 <h4>Bug Reports</h4>
                 <p>If you encounter issues or problems while using the tracker, please report them here. In your report, please be as specific as possible about the details of the error. Ex. the steps you took before the error, any odd behavior you noticed, the URL, etc.</p>
 
+                <p>You can also report feature / change requests through this form.</p>
+
                 <p>Please review existing reports to ensure you are not creating a duplicate.</p>
                 <hr />
 
@@ -52,6 +54,14 @@
                     <div class="panel-body">
                         <form action="{{ route('github.create-issue') }}" id="create-issue" method="post">
                             {{ csrf_field() }}
+                            <div class="form-group">
+                                <label for="labels">Issue Type</label>
+                                <select name="labels" id="labels" class="form-control">
+                                    <option value="bug">Bug / Error</option>
+                                    <option value="feature request">Feature Request</option>
+                                    <option value="question">Question</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="title">Issue Title</label>
                                 <input type="text" class="form-control" name="title" />

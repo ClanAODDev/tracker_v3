@@ -7,6 +7,11 @@ use GrahamCampbell\GitHub\Facades\GitHub;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Class IssuesController
+ *
+ * @package App\Http\Controllers
+ */
 class IssuesController extends Controller
 {
     /**
@@ -21,13 +26,17 @@ class IssuesController extends Controller
         return view('issues.index', compact('issues'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function create(Request $request)
     {
         try {
             GitHub::issues()->create('flashadvocate', 'tracker_v3', [
                 'title' => $request->title,
                 'body' => $request->body . "\r\n\r\nReported by: " . auth()->user()->name,
-                'labels' => ['bug']
+                'labels' => [$request->labels]
             ]);
         } catch (RuntimeException $exception) {
 
