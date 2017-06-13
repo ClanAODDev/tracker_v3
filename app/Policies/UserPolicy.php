@@ -60,4 +60,9 @@ class UserPolicy
     {
         return false;
     }
+
+    public function manageIssues(User $user)
+    {
+        return $user->isRole(['sr_ldr']);
+    }
 }

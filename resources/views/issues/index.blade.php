@@ -64,12 +64,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="title">Issue Title</label>
-                                <input type="text" class="form-control" name="title" />
+                                <input type="text" class="form-control" name="title" required />
                             </div>
                             <div class="form-group">
                                 <label for="body">Issue Details</label>
                                 <textarea name="body" id="body" class="form-control" rows="5"
-                                          style="resize: vertical;"></textarea>
+                                          style="resize: vertical;" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-success">Submit</button>
                         </form>

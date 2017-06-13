@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Github\Exception\RuntimeException;
 use GrahamCampbell\GitHub\Facades\GitHub;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -14,6 +16,10 @@ use Illuminate\Support\Facades\Log;
  */
 class IssuesController extends Controller
 {
+
+    use AuthorizesRequests;
+
+
     /**
      * Display a listing of the resource.
      *
@@ -21,6 +27,8 @@ class IssuesController extends Controller
      */
     public function index()
     {
+        $this->authorize('manage-issues', User::class);
+
         $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3', ['labels' => 'bug']);
 
         return view('issues.index', compact('issues'));
@@ -32,6 +40,8 @@ class IssuesController extends Controller
      */
     public function create(Request $request)
     {
+        $this->authorize('manage-issues', User::class);
+
         try {
             GitHub::issues()->create('flashadvocate', 'tracker_v3', [
                 'title' => $request->title,
