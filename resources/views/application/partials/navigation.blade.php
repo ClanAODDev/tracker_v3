@@ -22,6 +22,14 @@
         </a>
 
         <ul id="user-cp" class="nav nav-second collapse">
+            <li class="no-select">
+                <a href="#">
+                    <small class="text-muted text-uppercase slight">
+                        Role: <strong>{{ auth()->user()->role->name }}</strong>
+                    </small>
+                </a>
+            </li>
+
             @if (session('impersonating'))
                 <li>
                     <a href="{{ route('end-impersonation') }}">
@@ -92,13 +100,4 @@
     <li class="{{ set_active('help') }}">
         <a href="{{ route('help') }}">Changelog</a>
     </li>
-
-    <li style="pointer-events: none;">
-        <a href="#">
-            <small class="text-muted text-uppercase slight">
-                <strong>{{ auth()->user()->role->name }}</strong>
-            </small>
-        </a>
-    </li>
-
 </ul>

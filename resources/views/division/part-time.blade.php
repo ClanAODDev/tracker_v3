@@ -61,7 +61,7 @@
                 </tbody>
             </table>
         @else
-            <h4><i class="fa fa-times-circle-o fa-2x text-danger"></i> No Part-Time Members</h4>
+            <h4><i class="fa fa-times-circle-o text-danger"></i> No Part-Time Members</h4>
             <p>This division currently has no part-time members assigned. To assign a member, use the search bar at the top of the page to find their profile, edit their member information, and select your division in the part-time tab.</p>
         @endif
 

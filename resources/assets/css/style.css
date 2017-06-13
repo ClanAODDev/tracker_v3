@@ -602,6 +602,14 @@
 
 /** end select **/
 
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
 .btn:active,
 .btn.active {
     box-shadow: none;
