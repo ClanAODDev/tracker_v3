@@ -177,6 +177,7 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Whossun\Toastr\ToastrServiceProvider::class,
+        GrahamCampbell\GitHub\GitHubServiceProvider::class,
 
     ],
 
@@ -232,6 +233,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Toastr' => Whossun\Toastr\Facades\Toastr::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
+        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
 
     ],
 
