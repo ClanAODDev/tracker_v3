@@ -26,7 +26,7 @@ class IssuesController extends Controller
         try {
             GitHub::issues()->create('flashadvocate', 'tracker_v3', [
                 'title' => $request->title,
-                'body' => $request->body,
+                'body' => $request->body . "\r\n\r\nReported by: " . auth()->user()->name,
                 'labels' => ['bug']
             ]);
         } catch (RuntimeException $exception) {
