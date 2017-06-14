@@ -17,7 +17,6 @@
         @endslot
     @endcomponent
 
-
     <div class="container-fluid">
         @include ('application.partials.back-breadcrumb', ['page' => 'profile', 'link' => route('member', $member->clan_id)])
         @include ('member.partials.notices')

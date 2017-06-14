@@ -102,8 +102,4 @@
     <li class="{{ set_active('help') }}">
         <a href="{{ route('help') }}">Documentation</a>
     </li>
-
-    <li class="{{ set_active('help') }}">
-        <a href="{{ route('help') }}">Changelog</a>
-    </li>
 </ul>

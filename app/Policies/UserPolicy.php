@@ -15,16 +15,6 @@ class UserPolicy
     use AuthorizesRequests;
 
     /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * @param User $user
      * @return bool
      */
@@ -46,7 +36,7 @@ class UserPolicy
         if ($user->id === $userOfMember->id) {
             return false;
         }
-
+        
         // cannot update a user of the same or higher role
         if ($user->role->id <= $userOfMember->role->id) {
             return false;
