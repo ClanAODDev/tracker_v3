@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-xs-12 m-b-xl">
                 @foreach ($divisions as $division)
-                    <a href="#{{ $division->abbreviation }}" class="btn btn-default m-b m-r">{{ $division->name }}</a>
+                    <a href="#{{ $division->abbreviation }}" class="btn btn-default m-b m-r smooth-scroll">{{ $division->name }}</a>
                 @endforeach
             </div>
         </div>
