@@ -23,7 +23,6 @@ class DivisionStructureController extends Controller
      */
     public function show(Division $division)
     {
-
         Twig::setLoader(new Twig_Loader_String());
 
         try {
@@ -44,15 +43,17 @@ class DivisionStructureController extends Controller
         $data = new \stdClass();
         $data->structure = $division->structure;
         $data->name = $division->name;
-        $data->leaders = $division->leaders();
+        $data->leaders = $division->leaders()->with('position', 'rank');
         $data->generalSergeants = $division->generalSergeants();
         $data->platoons = $division->platoons()->with([
             'squads.members.handles' => function ($query) use ($division) {
-                // filtering handles for just the relevant one
-                // todo: figure out why this gets returned as a collection...
                 $query->where('id', $division->handle_id);
             }
-        ], 'squads', 'squads.members', 'squads.members.rank')->get();
+        ], [
+            'leader.handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            }
+        ], 'squads', 'squads.members', 'squads.members.rank', 'leader.rank', 'squads.leader.rank')->get();
 
         return $data;
     }
@@ -113,7 +114,7 @@ class DivisionStructureController extends Controller
                             $query->where('id', $division->handle_id);
                         }
                     ],
-                    'squads', 'squads.members', 'squads.members.rank'
+                    'leaders.position', 'squads', 'squads.members', 'squads.members.rank'
                 )->get()
             ]
         ]);

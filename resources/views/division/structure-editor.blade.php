@@ -9,7 +9,6 @@
         @slot ('heading')
             <span class="hidden-xs">{{ $division->name }}</span>
             <span class="visible-xs">{{ $division->abbreviation }}</span>
-            @include('division.partials.edit-division-button', ['division' => $division])
         @endslot
         @slot ('subheading')
             {{ $division->description }}
@@ -19,8 +18,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <p>Enter your twig template in the text area below. </p>
                 <form action="{{ route('division.update-structure', $division->abbreviation) }}" method="post">
-                <textarea name="structure" id="structure" class="form-control" rows="20"
+                <textarea name="structure" id="structure" class="form-control" rows="10"
                           style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
                 >{{ $division->structure }}</textarea>
                 </form>
