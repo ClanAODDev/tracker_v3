@@ -54,7 +54,14 @@
 
         <h3 class="m-t-xl" id="iterator-loop">Iterator loop variables</h3>
         <p>Loops have a <code>loop</code> variable that can be used to perform various conditional actions. For example, if you want to limit squads to 2 per row, you can leverage the loop variable and the modulus 'is divisibleBy() method:</p>
+
+        <p>Note that the <code>index</code> property starts at <code>1</code> by default, reflecting the current iteration. If you want the index to start at 0, use <code>index0</code> instead.</p>
         <pre><code class="language-twig">@include('help.snippets.iterator-1')</code></pre>
+
+        <p class="m-t-lg m-b-lg">
+            You can access other properties pertaining to the loop as well:
+        </p>
+        <pre><code class="language-twig">@include('help.snippets.iterator-2')</code></pre>
 
         <h3 class="m-t-xl" id="properties">Available Properties</h3>
         <hr />
