@@ -118,6 +118,8 @@ class DivisionStructureController extends Controller
         $division->structure = $request->structure;
         $division->save();
 
+        $this->showToast('Division structure was successfully updated!');
+
         return redirect(route('division.structure', $division->abbreviation));
     }
 
