@@ -117,6 +117,8 @@ class DivisionStructureController extends Controller
 
         $division->structure = $request->structure;
         $division->save();
+
+        return redirect(route('division.structure', $division->abbreviation));
     }
 
     /**
