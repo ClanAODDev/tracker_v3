@@ -3,10 +3,10 @@
 Auth::routes();
 
 
-Route::get('/divisions/{division}/division-structure/edit',
+Route::get('/divisions/{division}/structure/edit',
     'DivisionStructureController@modify')->name('division.edit-structure');
-Route::get('/divisions/{division}/division-structure', 'DivisionStructureController@show')->name('division.structure');
-Route::post('/divisions/{division}/division-structure',
+Route::get('/divisions/{division}/structure', 'DivisionStructureController@show')->name('division.structure');
+Route::post('/divisions/{division}/structure',
     'DivisionStructureController@update')->name('division.update-structure');
 
 /**

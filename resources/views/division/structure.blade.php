@@ -27,7 +27,7 @@
                     <a class="btn btn-default"
                        href="{{ route('division.edit-structure', $division->abbreviation) }}">Back to editor</a>
                 @endcan
-                
+
                 <button data-clipboard-target="#structure" class="copy-to-clipboard btn-success btn">Copy Contents
                 </button>
             </div>
