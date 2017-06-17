@@ -53,7 +53,7 @@
         <h4 class="m-t-xl">Squad</h4>
         @include('help.partials.squad-properties')
 
-        <h4>Member</h4>
+        <h4 class="m-t-xl">Member</h4>
         @include('help.partials.member-properties')
     </div>
 @stop
