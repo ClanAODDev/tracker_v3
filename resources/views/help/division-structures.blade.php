@@ -21,6 +21,7 @@
         <div class="btn-group m-b-xl">
             <a href="#basic-syntax" class="btn btn-default">Basic syntax</a>
             <a href="#loops" class="btn btn-default">Loops and nesting</a>
+            <a href="#iterator-loop" class="btn btn-default">Iterator loop variable</a>
             <a href="#properties" class="btn btn-default">Available properties</a>
         </div>
 
@@ -50,6 +51,10 @@
 
         <p class="m-t-lg m-b-lg">Ultimately, we will want to output the squad members of each squad. As you might have guessed, this requires one additional nested control structure. Note the added bb-code for context.</p>
         <pre><code class="language-twig">@include('help.snippets.list')</code></pre>
+
+        <h3 class="m-t-xl">Iterator loop variables</h3>
+        <p>Loops have a <code>loop</code> variable that can be used to perform various conditional actions. For example, if you want to limit squads to 2 per row, you can leverage the loop variable and the modulus 'is divisibleBy() method:</p>
+        <pre><code class="language-twig">@include('help.snippets.iterator-1')</code></pre>
 
         <h3 class="m-t-xl" id="properties">Available Properties</h3>
         <hr />
