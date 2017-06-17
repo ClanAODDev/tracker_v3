@@ -23,5 +23,11 @@
            class="btn btn-default btn-squared">
             Part-Timers
         </a>
+        @can ('manageDivisionStructure', auth()->user())
+            <a href="{{ route('division.structure', $myDivision->abbreviation) }}"
+               class="btn btn-default btn-squared">
+                Structure
+            </a>
+        @endcan
     </div>
 </div>

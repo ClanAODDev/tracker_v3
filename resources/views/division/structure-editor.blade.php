@@ -60,14 +60,21 @@
 
         $('[name=generate-code]').click(function (e) {
 
+          let button = $(this)
+          button.attr('disabled', true)
+          setTimeout(function () {
+            button.removeAttr('disabled')
+          }, 3000)
+
           $.post('{{ route('division.update-structure', $division->abbreviation) }}',
             {structure: $('#code').val()}
           ).done(function () {
-            toastr.success('Structure template has been saved!')
+            toastr.success('Structure template has been saved!', 'Success!')
               {{--window.location.href = "{{ route('division.structure', $division->abbreviation) }}"--}}
           }).fail(function (error) {
             toastr.error(error.message)
           })
+
         })
       })
     </script>
