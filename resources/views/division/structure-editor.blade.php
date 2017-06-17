@@ -19,7 +19,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <form action="{{ route('updateDivisionStructure', $division->abbreviation) }}" method="post">
+                <form action="{{ route('division.update-structure', $division->abbreviation) }}" method="post">
                 <textarea name="structure" id="structure" class="form-control" rows="20"
                           style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
                 >{{ $division->structure }}</textarea>

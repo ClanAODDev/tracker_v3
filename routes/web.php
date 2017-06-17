@@ -1,13 +1,13 @@
 <?php
 
-use App\Division;
-use TwigBridge\Facade\Twig;
-
 Auth::routes();
 
 
-Route::get('/divisions/{division}/division-structure/edit', 'DivisionStructureController@modify');
-Route::get('/divisions/{division}/division-structure', 'DivisionStructureController@show');
+Route::get('/divisions/{division}/division-structure/edit',
+    'DivisionStructureController@modify')->name('division.edit-structure');
+Route::get('/divisions/{division}/division-structure', 'DivisionStructureController@show')->name('division.structure');
+Route::post('/divisions/{division}/division-structure',
+    'DivisionStructureController@update')->name('division.update-structure');
 
 /**
  * Application endpoints
