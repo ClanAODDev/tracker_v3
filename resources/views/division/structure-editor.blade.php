@@ -38,28 +38,36 @@
     </div>
 
     <script>
-      $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+
+      $(function () {
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        })
+
+        var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
+          mode: {name: 'twig', htmlMode: true},
+          lineNumbers: true,
+          theme: 'dracula'
+        })
+
+        cm.on('change', handleSave)
+
+        function handleSave () {
+          cm.save()
         }
-      })
 
-      var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
-        mode: {name: 'twig', htmlMode: true},
-        lineNumbers: true,
-        theme: 'dracula'
-      })
+        $('[name=generate-code]').click(function (e) {
 
-      $('[name=generate-code]').click(function (e) {
-        // save the contents of the codemirror to the textarea
-        cm.save()
-        $.post('{{ route('division.update-structure', $division->abbreviation) }}',
-          {structure: $('#code').val()}
-        ).done(function () {
-          toastr.success('Structure template has been saved!')
-            {{--window.location.href = "{{ route('division.structure', $division->abbreviation) }}"--}}
-        }).fail(function (error) {
-          toastr.error(error.message)
+          $.post('{{ route('division.update-structure', $division->abbreviation) }}',
+            {structure: $('#code').val()}
+          ).done(function () {
+            toastr.success('Structure template has been saved!')
+              {{--window.location.href = "{{ route('division.structure', $division->abbreviation) }}"--}}
+          }).fail(function (error) {
+            toastr.error(error.message)
+          })
         })
       })
     </script>
