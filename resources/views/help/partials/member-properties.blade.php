@@ -42,5 +42,10 @@
         <td>ingame name URL based on primary division</td>
         <td><code>string</code></td>
     </tr>
+    <tr>
+        <td><code>member.handles[0].fullUrl</code></td>
+        <td>helper property combining the URL and the handle value</td>
+        <td><code>string</code></td>
+    </tr>
     </tbody>
 </table>
