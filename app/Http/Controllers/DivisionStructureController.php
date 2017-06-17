@@ -133,7 +133,7 @@ class DivisionStructureController extends Controller
             "division" => [
                 "name" => $division->name,
                 "leaders" => $division->leaders,
-                "generalSergeants" => $division->generalSergeants(),
+                "generalSergeants" => $division->generalSergeants,
                 "platoons" => $division->platoons()->with(
                     [
                         'squads.members.handles' => function ($query) use ($division) {
