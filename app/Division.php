@@ -112,6 +112,10 @@ class Division extends Model
         'settings' => 'json',
     ];
 
+    protected $hidden = [
+      'structure'
+    ];
+
     /**
      * @var array
      */

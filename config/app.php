@@ -178,6 +178,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Whossun\Toastr\ToastrServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
+        TwigBridge\ServiceProvider::class,
 
     ],
 
@@ -234,6 +235,7 @@ return [
         'Toastr' => Whossun\Toastr\Facades\Toastr::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
+        'Twig' => TwigBridge\Facade\Twig::class,
 
     ],
 

@@ -183,6 +183,7 @@ class Member extends Model
         return $this->belongsToMany(Handle::class)->withPivot('value');
     }
 
+
     /**
      * -------------------------------------
      * Policy object refers to these methods

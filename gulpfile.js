@@ -35,6 +35,7 @@ elixir(function (mix) {
 
             'libs/sparkline.js',
             'libs/CopyClipboard.js',
+            'libs/prism.js',
 
             'libs/dataTables/jquery.dataTables.min.js',
             'libs/dataTables/dataTables.bootstrap.js',

@@ -22,6 +22,7 @@
         @include('help.partials.search')
         @include('help.partials.navigation')
         @include('help.partials.general')
+        @include('help.partials.division-structures')
 
         <div class="panel m-t-xl">
             @include('help.partials.access-roles')

@@ -1,6 +1,13 @@
 <?php
 
+use App\Division;
+use TwigBridge\Facade\Twig;
+
 Auth::routes();
+
+
+Route::get('/divisions/{division}/division-structure/edit', 'DivisionStructureController@modify');
+Route::get('/divisions/{division}/division-structure', 'DivisionStructureController@show');
 
 /**
  * Application endpoints
@@ -22,7 +29,6 @@ Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->na
 Route::post('update-role', 'UserController@updateRole');
 Route::post('update-position', 'MemberController@updatePosition');
 Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
-
 
 
 // Members endpoints
@@ -49,6 +55,7 @@ Route::group(['prefix' => 'members'], function () {
 
 Route::group(['prefix' => 'help'], function () {
     Route::get('/', 'HelpController@index')->name('help');
+    Route::get('/division-structures', 'HelpController@divisionStructures')->name('divisionStructures');
 });
 
 Route::group(['prefix' => 'statistics'], function () {
