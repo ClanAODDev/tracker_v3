@@ -57,8 +57,8 @@ class DivisionStructureController extends Controller
         $data = new \stdClass();
         $data->structure = $division->structure;
         $data->name = $division->name;
-        $data->leaders = $division->leaders()->with('position', 'rank');
-        $data->generalSergeants = $division->generalSergeants();
+        $data->leaders = $division->leaders()->with('position', 'rank')->get();
+        $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
         $data->platoons = $division->platoons()->with([
             'squads.members.handles' => function ($query) use ($division) {
                 $query->where('id', $division->handle_id);
