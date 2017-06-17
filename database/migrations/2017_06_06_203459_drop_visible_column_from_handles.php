@@ -17,7 +17,7 @@ class DropVisibleColumnFromHandles extends Migration
             Schema::table('handles', function (Blueprint $table) {
                 $table->dropColumn('visible');
             });
-        });
+        };
     }
 
     /**
