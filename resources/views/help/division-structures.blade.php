@@ -44,55 +44,16 @@
         <pre><code class="language-twig">@include('help.snippets.list')</code></pre>
 
         <h3 class="m-t-xl">Available Properties</h3>
+        <h4 class="m-t-xl">Division</h4>
+        @include('help.partials.division-properties')
+
+        <h4 class="m-t-xl">Platoon</h4>
+        @include('help.partials.platoon-properties')
+
+        <h4 class="m-t-xl">Squad</h4>
+        @include('help.partials.squad-properties')
+
         <h4>Member</h4>
-        <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th>Element</th>
-                <th>Description</th>
-                <th>Type</th>
-            </tr>
-            </thead>
-            <tr>
-                <td><code>member.name</code></td>
-                <td>forum name</td>
-                <td><code>string</code></td>
-            </tr>
-            <tr>
-                <td><code>member.rank.name</code></td>
-                <td>full rank (ex. Sergeant, Corporal, etc)</td>
-                <td><code>string</code></td>
-            </tr>
-            <tr>
-                <td><code>member.rank.abbreviation</code></td>
-                <td>shorthand rank (ex. Sgt, Cpl, etc)</td>
-                <td><code>string</code></td>
-            </tr>
-            <tr>
-                <td><code>member.recruiter_id</code></td>
-                <td>forum id of member's recruiter</td>
-                <td><code>integer</code></td>
-            </tr>
-            <tr>
-                <td><code>member.position.name</code></td>
-                <td>position currently held by member</td>
-                <td><code>string</code></td>
-            </tr>
-            <tr>
-                <td><code>member.handles[0].pivot.value</code></td>
-                <td>Member's ingame name based on primary division</td>
-                <td><code>string</code></td>
-            </tr>
-            <tr>
-                <td><code>member.handles[0].pivot.value</code></td>
-                <td>ingame name based on primary division</td>
-                <td><code>string</code></td>
-            </tr>
-            <tr>
-                <td><code>member.handles[0].url</code></td>
-                <td>ingame name URL based on primary division</td>
-                <td><code>string</code></td>
-            </tr>
-        </table>
+        @include('help.partials.member-properties')
     </div>
 @stop
