@@ -29,7 +29,7 @@ class DivisionStructureController extends Controller
         try {
             $compiledData = $this->compileDivisionData($division);
 
-            return Twig::render($data->structure, ['division' => $compiledData]);
+            return Twig::render($division->structure, ['division' => $compiledData]);
         } catch (Twig_Error $error) {
             return $this->handleTwigError($error);
         }
