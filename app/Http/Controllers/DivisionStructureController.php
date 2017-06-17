@@ -98,7 +98,7 @@ class DivisionStructureController extends Controller
      */
     public function modify(Division $division)
     {
-        $this->authorize('manageDivisionStructure');
+        $this->authorize('manageDivisionStructure', auth()->user());
 
         if ( ! auth()->user()->isRole(['sr_ldr', 'admin'])) {
             abort(403);
@@ -113,7 +113,8 @@ class DivisionStructureController extends Controller
      */
     public function update(Request $request, Division $division)
     {
-        $this->authorize('manageDivisionStructure');
+        $this->authorize('manageDivisionStructure', auth()->user());
+
         $division->structure = $request->structure;
         $division->save();
     }

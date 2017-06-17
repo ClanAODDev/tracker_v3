@@ -23,12 +23,13 @@
                               rows="10" style="resize: vertical;">{{ $data }}</textarea>
                 </div>
 
-                @can ('manageDivisionStructure')
+                @can ('manageDivisionStructure', auth()->user())
                     <a class="btn btn-default"
-                       href="{{ route('division.edit-structure', $division->abbreviation) }}">Back to editor</a>
+                       href="{{ route('division.edit-structure', $division->abbreviation) }}">
+                        <i class="fa fa-wrench text-accent"></i> Go to editor</a>
                 @endcan
 
-                <button data-clipboard-target="#structure" class="copy-to-clipboard btn-success btn">Copy Contents
+                <button data-clipboard-target="#structure" class="copy-to-clipboard btn-success btn"><i class="fa fa-clone"></i> Copy Contents
                 </button>
             </div>
         </div>
