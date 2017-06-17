@@ -14,7 +14,7 @@ class AddDivisionStructureToDivisions extends Migration
     public function up()
     {
         Schema::table('divisions', function ($table) {
-            $table->string('structure')->after('settings')->nullable();
+            $table->longtext('structure')->after('settings')->nullable();
         });
     }
 
@@ -25,6 +25,8 @@ class AddDivisionStructureToDivisions extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('divisions', function ($table) {
+            $table->dropColumn('structure');
+        });
     }
 }
