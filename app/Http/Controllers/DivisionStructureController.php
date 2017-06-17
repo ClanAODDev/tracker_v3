@@ -27,27 +27,34 @@ class DivisionStructureController extends Controller
         Twig::setLoader(new Twig_Loader_String());
 
         try {
-            $data = new \stdClass();
-            $data->structure = $division->structure;
-            $data->name = $division->name;
-            $data->leaders = $division->leaders();
-            $data->generalSergeants = $division->generalSergeants();
-            $data->platoons = $division->platoons()->with(
-                [
-                    'squads.members.handles' => function ($query) use ($division) {
-                        // filtering handles for just the relevant one
-                        $query->where('id', $division->handle_id);
-                    }
-                ],
-                'squads', 'squads.members', 'squads.members.rank'
-            )->get();
+            $compiledData = $this->compileDivisionData($division);
 
-            $division = $data;
-
-            return Twig::render($data->structure, compact('division'));
+            return Twig::render($data->structure, ['division' => $compiledData]);
         } catch (Twig_Error $error) {
             return $this->handleTwigError($error);
         }
+    }
+
+    /**
+     * @param Division $division
+     * @return \stdClass
+     */
+    private function compileDivisionData(Division $division)
+    {
+        $data = new \stdClass();
+        $data->structure = $division->structure;
+        $data->name = $division->name;
+        $data->leaders = $division->leaders();
+        $data->generalSergeants = $division->generalSergeants();
+        $data->platoons = $division->platoons()->with([
+            'squads.members.handles' => function ($query) use ($division) {
+                // filtering handles for just the relevant one
+                // todo: figure out why this gets returned as a collection...
+                $query->where('id', $division->handle_id);
+            }
+        ], 'squads', 'squads.members', 'squads.members.rank')->get();
+
+        return $data;
     }
 
     /**

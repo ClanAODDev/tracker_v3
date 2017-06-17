@@ -19,10 +19,12 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <form action="{{ route('updateDivisionStructure', $division->abbreviation) }}" method="post">
                 <textarea name="structure" id="structure" class="form-control" rows="20"
                           style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
                 >{{ $division->structure }}</textarea>
-                <button class="btn btn-default" name="generate-code">Generate BB-Code</button>
+                </form>
+
             </div>
         </div>
         <div class="row">
@@ -36,9 +38,9 @@
 @stop
 
 <script>
-$('name[generate-code]').click(function (e) {
-    e.preventDefault();
+    $ ('name[generate-code]').click (function (e) {
+        e.preventDefault ();
 
 //    $.ajax('')
-})
+    })
 </script>
