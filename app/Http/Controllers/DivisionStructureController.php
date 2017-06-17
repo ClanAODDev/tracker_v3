@@ -59,6 +59,11 @@ class DivisionStructureController extends Controller
         $data->name = $division->name;
         $data->leaders = $division->leaders()->with('position', 'rank')->get();
         $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
+        $data->partTimeMembers = $division->partTimeMembers()->with([
+            'handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            }, 'rank'])->get();
+        // todo: add leaves of absence
         $data->platoons = $division->platoons()->with([
             'squads.members.handles' => function ($query) use ($division) {
                 $query->where('id', $division->handle_id);
