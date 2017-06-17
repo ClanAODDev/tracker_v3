@@ -132,7 +132,7 @@ class DivisionStructureController extends Controller
         return json_encode([
             "division" => [
                 "name" => $division->name,
-                "leaders" => $division->leaders(),
+                "leaders" => $division->leaders,
                 "generalSergeants" => $division->generalSergeants(),
                 "platoons" => $division->platoons()->with(
                     [
