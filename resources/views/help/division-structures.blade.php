@@ -26,16 +26,7 @@
             <code>{# comments #}</code>. Output statements are used to echo strings, like name, or rank abbreviation, or position name. Control structures allow you to iterate over items, or operate on conditionals. An example of this would be:
         </p>
 
-        <pre><code class="language-twig">{# outputs the division name #}
-                @{{ division.name }}
-
-                {# does this platoon have a logo? #}
-{% if platoon.logo %}
-    [img] @{{ platoon.logo }} [/img]
-{% else %}
-    No platoon logo
-{% endif %}
-</code></pre>
+        <pre><code class="language-twig">@include('help.snippets.syntax')</code></pre>
 
         <p>Control structures typically have a beginning element and an ending element. <code>for</code> and
             <code>if</code> are the primary types of control structures.</p>
@@ -43,37 +34,14 @@
         <h3 class="m-t-xl">Loops and nesting</h3>
         <p>In order to properly build a division structure with tracker data, nested loops are required. A loop is a control structure that iterates over a series of items. Nesting loops entails using a control structure inside of another control structure. In order to access a division's squads, you must first iterate over the platoons. Consider the following example:</p>
 
-        <pre><code class="language-twig">{% for platoon in division.platoons %}
-    {% for squad in platoon.squads %}
-        {# echo something here #}
-    {% endfor %}
-{% endfor %}</code></pre>
+        <pre><code class="language-twig">@include('help.snippets.loops')</code></pre>
 
         <p class="m-t-lg m-b-lg">This becomes more interesting as you wrap the twig logic with bb-code. In this example, I may want to output the platoon name and the squad name, respectively.</p>
 
-        <pre><code class="language-twig">{% for platoon in division.platoons %}
-                @{{ platoon.name }}
-                {% for squad in platoon.squads %}
-                @{{ squad.name }}
-                {% endfor %}
-{% endfor %}</code></pre>
+        <pre><code class="language-twig">@include('help.snippets.nested')</code></pre>
 
         <p class="m-t-lg m-b-lg">Ultimately, we will want to output the squad members of each squad. As you might have guessed, this requires one additional nested control structure. Note the added bb-code for context.</p>
-        <pre><code class="language-twig">[list]
-{% for platoon in division.platoons %}
-    [*] @{{ platoon.name }}
-                [list]
-    {% for squad in platoon.squads %}
-        [*] @{{ squad.name }}
-                [list]
-        {% for member in squad.members %}
-            [*] @{{ member.name }}
-                {% endfor %}
-        [/list]
-    {% endfor %}
-    [/list]
-{% endfor %}
-[/list]</code></pre>
+        <pre><code class="language-twig">@include('help.snippets.list')</code></pre>
 
         <h3 class="m-t-xl">Available Properties</h3>
         <h4>Member</h4>
@@ -107,7 +75,7 @@
             </tr>
             <tr>
                 <td><code>member.position.name</code></td>
-                <td>position currently held by member (primarily for division leadership)</td>
+                <td>position currently held by member</td>
                 <td><code>string</code></td>
             </tr>
             <tr>
