@@ -1,3 +1,7 @@
+<link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/codemirror.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/theme/dracula.min.css">
+
 @extends('application.base')
 
 @section('content')
@@ -20,7 +24,7 @@
             <div class="col-md-12">
                 <p>Enter your twig template in the text area below. </p>
                 <form action="{{ route('division.update-structure', $division->abbreviation) }}" method="post">
-                <textarea name="structure" id="structure" class="form-control" rows="10"
+                <textarea name="structure" id="code" name="code" class="form-control" rows="10"
                           style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
                 >{{ $division->structure }}</textarea>
                 </form>
@@ -34,13 +38,18 @@
         </div>
     </div>
 
+    <script>
+
+      CodeMirror.fromTextArea(document.getElementById('code'), {
+        mode: {name: 'twig', htmlMode: true},
+        lineNumbers: true,
+        theme: 'dracula'
+      })
+
+      $('name[generate-code]').click(function (e) {
+        e.preventDefault()
+
+      });
+    </script>
 
 @stop
-
-<script>
-    $ ('name[generate-code]').click (function (e) {
-        e.preventDefault ();
-
-//    $.ajax('')
-    })
-</script>
