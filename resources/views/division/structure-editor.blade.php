@@ -31,25 +31,37 @@
 
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <pre><code name="generated-structure">{# Generated #}</code></pre>
-            </div>
-        </div>
+
+        <button type="button" name="generate-code" class="btn btn-success">Save</button>
+        <a href="{{ route('division.structure', $division->abbreviation) }}" type="button"
+           class="btn btn-default">View Generated Code</a>
     </div>
 
     <script>
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      })
 
-      CodeMirror.fromTextArea(document.getElementById('code'), {
+      var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
         mode: {name: 'twig', htmlMode: true},
         lineNumbers: true,
         theme: 'dracula'
       })
 
-      $('name[generate-code]').click(function (e) {
-        e.preventDefault()
-
-      });
+      $('[name=generate-code]').click(function (e) {
+        // save the contents of the codemirror to the textarea
+        cm.save()
+        $.post('{{ route('division.update-structure', $division->abbreviation) }}',
+          {structure: $('#code').val()}
+        ).done(function () {
+          toastr.success('Structure template has been saved!')
+            {{--window.location.href = "{{ route('division.structure', $division->abbreviation) }}"--}}
+        }).fail(function (error) {
+          toastr.error(error.message)
+        })
+      })
     </script>
 
 @stop

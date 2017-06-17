@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Handle extends Model
 {
     use HasCustomAttributes;
-    
+
     protected $casts = [
         'visible' => 'boolean',
     ];

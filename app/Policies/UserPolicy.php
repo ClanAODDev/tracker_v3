@@ -51,6 +51,11 @@ class UserPolicy
         return false;
     }
 
+    public function manageDivisionStructure(User $user)
+    {
+        return $user->isRole(['sr_ldr']);
+    }
+
     public function manageIssues(User $user)
     {
         return $user->isRole(['sr_ldr']);

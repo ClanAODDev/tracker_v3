@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Twig_Error;
 use Twig_Error_Syntax;
@@ -17,6 +18,17 @@ use TwigBridge\Facade\Twig;
  */
 class DivisionStructureController extends Controller
 {
+
+    use AuthorizesRequests;
+
+    /**
+     * DivisionStructureController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth', 'activeDivision']);
+    }
+
     /**
      * @param Division $division
      * @return string
@@ -28,10 +40,12 @@ class DivisionStructureController extends Controller
         try {
             $compiledData = $this->compileDivisionData($division);
 
-            return Twig::render($division->structure, ['division' => $compiledData]);
+            $data = Twig::render($division->structure, ['division' => $compiledData]);
         } catch (Twig_Error $error) {
-            return $this->handleTwigError($error);
+            $data = $this->handleTwigError($error);
         }
+
+        return view('division.structure', compact('data', 'division'));
     }
 
     /**
@@ -48,12 +62,15 @@ class DivisionStructureController extends Controller
         $data->platoons = $division->platoons()->with([
             'squads.members.handles' => function ($query) use ($division) {
                 $query->where('id', $division->handle_id);
-            }
+            },
+            'squads.members.rank',
+            'squads.leader.rank',
+            'leader.rank'
         ], [
             'leader.handles' => function ($query) use ($division) {
                 $query->where('id', $division->handle_id);
             }
-        ], 'squads', 'squads.members', 'squads.members.rank', 'leader.rank', 'squads.leader.rank')->get();
+        ])->get();
 
         return $data;
     }
@@ -81,6 +98,8 @@ class DivisionStructureController extends Controller
      */
     public function modify(Division $division)
     {
+        $this->authorize('manageDivisionStructure');
+
         if ( ! auth()->user()->isRole(['sr_ldr', 'admin'])) {
             abort(403);
         }
@@ -94,12 +113,15 @@ class DivisionStructureController extends Controller
      */
     public function update(Request $request, Division $division)
     {
+        $this->authorize('manageDivisionStructure');
         $division->structure = $request->structure;
         $division->save();
-
-        //return view('')
     }
 
+    /**
+     * @param Division $division
+     * @return string
+     */
     public function twigfiddleJson(Division $division)
     {
         return json_encode([
