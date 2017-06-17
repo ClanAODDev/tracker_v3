@@ -52,7 +52,7 @@
         <p class="m-t-lg m-b-lg">Ultimately, we will want to output the squad members of each squad. As you might have guessed, this requires one additional nested control structure. Note the added bb-code for context.</p>
         <pre><code class="language-twig">@include('help.snippets.list')</code></pre>
 
-        <h3 class="m-t-xl">Iterator loop variables</h3>
+        <h3 class="m-t-xl" id="iterator-loop">Iterator loop variables</h3>
         <p>Loops have a <code>loop</code> variable that can be used to perform various conditional actions. For example, if you want to limit squads to 2 per row, you can leverage the loop variable and the modulus 'is divisibleBy() method:</p>
         <pre><code class="language-twig">@include('help.snippets.iterator-1')</code></pre>
 
