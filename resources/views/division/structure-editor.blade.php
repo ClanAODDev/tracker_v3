@@ -19,22 +19,23 @@
         @endslot
     @endcomponent
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <p>Enter your twig template in the text area below. </p>
-                <form action="{{ route('division.update-structure', $division->abbreviation) }}" method="post">
-                <textarea name="structure" id="code" name="code" class="form-control" rows="10"
-                          style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
-                >{{ $division->structure }}</textarea>
-                </form>
+    <form action="{{ route('division.update-structure', $division->abbreviation) }}" method="post">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <p>Enter your twig template in the text area below. </p>
 
+                    <textarea name="structure" id="code" name="code" class="form-control" rows="10"
+                              style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
+                    >{{ $division->structure }}</textarea>
+
+                </div>
             </div>
-        </div>
 
-        <button type="button" name="generate-code" class="btn btn-success">Save</button>
-        <a href="{{ route('division.structure', $division->abbreviation) }}" type="button"
-           class="btn btn-default">View Generated Code</a>
+            <button type="submit" name="generate-code" class="btn btn-success">Save</button>
+            <a href="{{ route('division.structure', $division->abbreviation) }}" type="button"
+               class="btn btn-default">View Generated Code</a>
+    </form>
     </div>
 
     <script>
@@ -57,25 +58,6 @@
         function handleSave () {
           cm.save()
         }
-
-        $('[name=generate-code]').click(function (e) {
-
-          let button = $(this)
-          button.attr('disabled', true)
-          setTimeout(function () {
-            button.removeAttr('disabled')
-          }, 3000)
-
-          $.post('{{ route('division.update-structure', $division->abbreviation) }}',
-            {structure: $('#code').val()}
-          ).done(function () {
-            toastr.success('Structure template has been saved!', 'Success!')
-              {{--window.location.href = "{{ route('division.structure', $division->abbreviation) }}"--}}
-          }).fail(function (error) {
-            toastr.error(error.message)
-          })
-
-        })
       })
     </script>
 

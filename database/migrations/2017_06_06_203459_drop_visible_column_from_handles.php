@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class DropVisibleColumnFromHandles extends Migration
 {
@@ -13,8 +13,10 @@ class DropVisibleColumnFromHandles extends Migration
      */
     public function up()
     {
-        Schema::table('handles', function (Blueprint $table) {
-            $table->dropColumn('visible');
+        if (Schema::hasColumn('divisions', 'locality')) {
+            Schema::table('handles', function (Blueprint $table) {
+                $table->dropColumn('visible');
+            });
         });
     }
 
