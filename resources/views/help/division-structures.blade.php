@@ -65,7 +65,7 @@
 
         <h3 class="m-t-xl" id="properties">Available Properties</h3>
         <hr />
-        <h4 class="m-t-xl">Division</h4>
+        <h4>Division</h4>
         @include('help.partials.division-properties')
 
         <h4 class="m-t-xl">Platoon</h4>
