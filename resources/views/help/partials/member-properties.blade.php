@@ -38,11 +38,6 @@
         <td><code>string</code></td>
     </tr>
     <tr>
-        <td><code>member.handles[0].pivot.value</code></td>
-        <td>ingame name based on primary division</td>
-        <td><code>string</code></td>
-    </tr>
-    <tr>
         <td><code>member.handles[0].url</code></td>
         <td>ingame name URL based on primary division</td>
         <td><code>string</code></td>
