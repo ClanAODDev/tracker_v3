@@ -66,6 +66,7 @@ class DivisionStructureController extends Controller
     /**
      * @param Request $request
      * @param Division $division
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(Request $request, Division $division)
     {
@@ -113,6 +114,7 @@ class DivisionStructureController extends Controller
         $data = new \stdClass();
         $data->structure = $division->structure;
         $data->name = $division->name;
+        $data->locality = $this->getLocality($division);
         $data->leaders = $division->leaders()->with('position', 'rank')->get();
         $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
         $data->partTimeMembers = $division->partTimeMembers()->with([
@@ -153,5 +155,15 @@ class DivisionStructureController extends Controller
         }
 
         return $error->getMessage();
+    }
+
+    private function getLocality(Division $division)
+    {
+        return [
+            'squad' => $division->locality('squad'),
+            'platoon' => $division->locality('platoon'),
+            'squad leader' => $division->locality('squad leader'),
+            'platoon leader' => $division->locality('platoon leader'),
+        ];
     }
 }

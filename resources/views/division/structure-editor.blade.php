@@ -25,17 +25,19 @@
             <div class="row">
                 <div class="col-md-12">
                     <p>Enter your twig template in the text area below. </p>
-
                     <textarea name="structure" id="code" name="code" class="form-control" rows="10"
                               style="font-family: Menlo, Monaco, Consolas, monospace; resize: vertical;"
                     >{{ $division->structure }}</textarea>
-
                 </div>
             </div>
 
-            <button type="submit" name="generate-code" class="btn btn-success">Save</button>
-            <a href="{{ route('division.structure', $division->abbreviation) }}" type="button"
-               class="btn btn-default">View Generated Code</a>
+            <div class="row">
+                <div class="col-md-12 m-t-md">
+                    <button type="submit" name="generate-code" class="btn btn-success"><i class="fa fa-save text-accent"></i> Save</button>
+                </div>
+            </div>
+
+
         </div>
     </form>
 

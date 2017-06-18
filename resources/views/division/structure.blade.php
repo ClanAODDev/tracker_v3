@@ -18,6 +18,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <h4>Generated Structure</h4>
                 <div class="form-group">
                     <textarea name="structure" id="structure" class="form-control"
                               rows="10" style="resize: vertical;">{{ $data }}</textarea>
