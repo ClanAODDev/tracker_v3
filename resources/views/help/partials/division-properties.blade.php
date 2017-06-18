@@ -27,5 +27,10 @@
         <td>A collection of all part-time members</td>
         <td><code>array</code></td>
     </tr>
+    <tr>
+        <td><code>division.locality</code></td>
+        <td>Accessor for localization. Ex. <code>division.locality.squad</code></td>
+        <td><code>array</code></td>
+    </tr>
     </tbody>
 </table>
