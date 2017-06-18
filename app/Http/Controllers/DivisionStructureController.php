@@ -50,6 +50,68 @@ class DivisionStructureController extends Controller
 
     /**
      * @param Division $division
+     * @return \stdClass
+     */
+    private function compileDivisionData(Division $division)
+    {
+        $data = new \stdClass();
+        $data->structure = $division->structure;
+        $data->name = $division->name;
+        $data->locality = $this->getLocality($division);
+        $data->leaders = $division->leaders()->orderBy('position_id', 'desc')->with('position', 'rank')->get();
+        $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
+        $data->partTimeMembers = $division->partTimeMembers()->with([
+            'handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            },
+            'rank'
+        ])->get();
+
+        $data->platoons = $division->platoons()->with([
+            'squads.members.handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            },
+            'squads.members.rank',
+            'squads.leader.rank',
+            'leader.rank'
+        ], [
+            'leader.handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            }
+        ])->get();
+
+        return $data;
+    }
+
+    private function getLocality(Division $division)
+    {
+        return [
+            'squad' => $division->locality('squad'),
+            'platoon' => $division->locality('platoon'),
+            'squadLeader' => $division->locality('squad leader'),
+            'platoonLeader' => $division->locality('platoon leader'),
+        ];
+    }
+
+    /**
+     * @param $error
+     * @return string
+     */
+    private function handleTwigError($error)
+    {
+        if ($error instanceof Twig_Error_Syntax) {
+            return $error->getMessage();
+        }
+
+        if ($error instanceof Twig_Sandbox_SecurityError) {
+            return "You attempted to use an unauthorized tag, filter, or method";
+        }
+
+        return $error->getMessage();
+    }
+
+    /**
+     * @param Division $division
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function modify(Division $division)
@@ -103,67 +165,5 @@ class DivisionStructureController extends Controller
                 )->get()
             ]
         ]);
-    }
-
-    /**
-     * @param Division $division
-     * @return \stdClass
-     */
-    private function compileDivisionData(Division $division)
-    {
-        $data = new \stdClass();
-        $data->structure = $division->structure;
-        $data->name = $division->name;
-        $data->locality = $this->getLocality($division);
-        $data->leaders = $division->leaders()->with('position', 'rank')->get();
-        $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
-        $data->partTimeMembers = $division->partTimeMembers()->with([
-            'handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            },
-            'rank'
-        ])->get();
-
-        $data->platoons = $division->platoons()->with([
-            'squads.members.handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            },
-            'squads.members.rank',
-            'squads.leader.rank',
-            'leader.rank'
-        ], [
-            'leader.handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            }
-        ])->get();
-
-        return $data;
-    }
-
-    /**
-     * @param $error
-     * @return string
-     */
-    private function handleTwigError($error)
-    {
-        if ($error instanceof Twig_Error_Syntax) {
-            return $error->getMessage();
-        }
-
-        if ($error instanceof Twig_Sandbox_SecurityError) {
-            return "You attempted to use an unauthorized tag, filter, or method";
-        }
-
-        return $error->getMessage();
-    }
-
-    private function getLocality(Division $division)
-    {
-        return [
-            'squad' => $division->locality('squad'),
-            'platoon' => $division->locality('platoon'),
-            'squad leader' => $division->locality('squad leader'),
-            'platoon leader' => $division->locality('platoon leader'),
-        ];
     }
 }
