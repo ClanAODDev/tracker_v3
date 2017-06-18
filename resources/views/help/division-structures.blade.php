@@ -18,10 +18,11 @@
     @endcomponent
 
     <div class="container-fluid">
-        <div class="btn-group m-b-xl">
+        <div class="m-b-xl">
             <a href="#basic-syntax" class="btn btn-default">Basic syntax</a>
             <a href="#loops" class="btn btn-default">Loops and nesting</a>
             <a href="#iterator-loop" class="btn btn-default">Iterator loop variable</a>
+            <a href="#empty-cases" class="btn btn-default">Handling empty properties and arrays</a>
             <a href="#properties" class="btn btn-default">Available properties</a>
         </div>
 
@@ -63,6 +64,11 @@
             You can access other properties pertaining to the loop as well:
         </p>
         <pre><code class="language-twig">@include('help.snippets.iterator-2')</code></pre>
+
+        <h3 class="m-t-xl" id="empty-cases">Handling Empty Properties and Arrays</h3>
+        <hr />
+        <p>Often you will run into a situation where the array or property you're trying to print could possibly be empty. In these cases, you may wish to do nothing, or you might want to provide an alternative. Here's how you manage that:</p>
+        <pre><code class="language-twig">@include('help.snippets.empty-cases')</code></pre>
 
         <h3 class="m-t-xl" id="properties">Available Properties</h3>
         <hr />

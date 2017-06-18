@@ -23,7 +23,7 @@ class Division extends Model
     /**
      * @var array
      */
-    protected static $recordEvents = ['created', 'updated', 'deleted'];
+    protected static $recordEvents = ['created', 'deleted'];
 
     /**
      * @var array

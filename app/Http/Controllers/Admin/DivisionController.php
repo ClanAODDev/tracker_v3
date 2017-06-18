@@ -57,6 +57,7 @@ class DivisionController extends Controller
         $form->persist();
 
         $this->showToast("Division was updated!");
+        $division->recordActivity('updated_admin_settings');
 
         return redirect(route('admin') . '#divisions');
     }
