@@ -7,5 +7,5 @@
 {% for member in partTimeMembers %}
 	[b]@{{ member.name }}[/b]
 {% else %}
-	[color=red]No part-time members assigned
+	[color=red]No part-time members assigned[/color]
 {% endfor %}
