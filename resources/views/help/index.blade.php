@@ -18,9 +18,7 @@
     @endcomponent
 
     <div class="container-fluid">
-
-        @include('help.partials.search')
-        @include('help.partials.navigation')
+        
         @include('help.partials.general')
         @include('help.partials.division-structures')
 

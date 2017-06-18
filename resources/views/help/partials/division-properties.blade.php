@@ -29,7 +29,12 @@
     </tr>
     <tr>
         <td><code>division.locality</code></td>
-        <td>Accessor for localization. Ex. <code>division.locality.squad</code></td>
+        <td>Accessor for localization. Available localizations:<br />
+            <code>division.locality.squad</code><br />
+            <code>division.locality.platoon</code><br />
+            <code>division.locality.squadLeader</code><br />
+            <code>division.locality.platoonLeader</code>
+        </td>
         <td><code>array</code></td>
     </tr>
     </tbody>
