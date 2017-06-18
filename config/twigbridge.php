@@ -179,6 +179,7 @@ return [
             'elixir',
             'head',
             'last',
+            'ordSuffix',
         ],
 
         /*
