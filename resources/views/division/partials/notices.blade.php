@@ -1,6 +1,6 @@
 @if (! $division->handle)
     <div class="alert alert-danger">
-        <i class="fa fa-gamepad"></i>p
+        <i class="fa fa-gamepad"></i>
         <strong>{{ $division->name }}</strong> does not have a primary handle. Contact clan leadership to resolve this.
     </div>
 @endif
