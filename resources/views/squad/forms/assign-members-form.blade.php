@@ -13,7 +13,9 @@
                 </div>
                 @forelse ($platoon->unassigned as $member)
                     <li class="list-group-item collection-item"
-                        data-member-id="{{ $member->id }}">{{ $member->present()->rankName() }}</li>
+                        data-member-id="{{ $member->id }}">{{ $member->name }}
+                        <small class="text-muted">{{ $member->rank->abbreviation }}</small>
+                    </li>
                 @empty
                     <p class="text-muted">No unassigned members available</p>
                 @endforelse

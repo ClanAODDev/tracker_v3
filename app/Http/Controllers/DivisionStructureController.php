@@ -50,55 +50,6 @@ class DivisionStructureController extends Controller
 
     /**
      * @param Division $division
-     * @return \stdClass
-     */
-    private function compileDivisionData(Division $division)
-    {
-        $data = new \stdClass();
-        $data->structure = $division->structure;
-        $data->name = $division->name;
-        $data->leaders = $division->leaders()->with('position', 'rank')->get();
-        $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
-        $data->partTimeMembers = $division->partTimeMembers()->with([
-            'handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            }, 'rank'])->get();
-        // todo: add leaves of absence
-        $data->platoons = $division->platoons()->with([
-            'squads.members.handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            },
-            'squads.members.rank',
-            'squads.leader.rank',
-            'leader.rank'
-        ], [
-            'leader.handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            }
-        ])->get();
-
-        return $data;
-    }
-
-    /**
-     * @param $error
-     * @return string
-     */
-    private function handleTwigError($error)
-    {
-        if ($error instanceof Twig_Error_Syntax) {
-            return $error->getMessage();
-        }
-
-        if ($error instanceof Twig_Sandbox_SecurityError) {
-            return "You attempted to use an unauthorized tag, filter, or method";
-        }
-
-        return $error->getMessage();
-    }
-
-    /**
-     * @param Division $division
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function modify(Division $division)
@@ -150,5 +101,56 @@ class DivisionStructureController extends Controller
                 )->get()
             ]
         ]);
+    }
+
+    /**
+     * @param Division $division
+     * @return \stdClass
+     */
+    private function compileDivisionData(Division $division)
+    {
+        $data = new \stdClass();
+        $data->structure = $division->structure;
+        $data->name = $division->name;
+        $data->leaders = $division->leaders()->with('position', 'rank')->get();
+        $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
+        $data->partTimeMembers = $division->partTimeMembers()->with([
+            'handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            },
+            'rank'
+        ])->get();
+
+        $data->platoons = $division->platoons()->with([
+            'squads.members.handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            },
+            'squads.members.rank',
+            'squads.leader.rank',
+            'leader.rank'
+        ], [
+            'leader.handles' => function ($query) use ($division) {
+                $query->where('id', $division->handle_id);
+            }
+        ])->get();
+
+        return $data;
+    }
+
+    /**
+     * @param $error
+     * @return string
+     */
+    private function handleTwigError($error)
+    {
+        if ($error instanceof Twig_Error_Syntax) {
+            return $error->getMessage();
+        }
+
+        if ($error instanceof Twig_Sandbox_SecurityError) {
+            return "You attempted to use an unauthorized tag, filter, or method";
+        }
+
+        return $error->getMessage();
     }
 }

@@ -36,8 +36,8 @@
             <button type="submit" name="generate-code" class="btn btn-success">Save</button>
             <a href="{{ route('division.structure', $division->abbreviation) }}" type="button"
                class="btn btn-default">View Generated Code</a>
+        </div>
     </form>
-    </div>
 
     <script>
 

@@ -6,14 +6,16 @@
             <div class="panel-heading">Unassigned Members
                 <span class="unassigned-count badge pull-right">{{ $division->unassigned->count() }}</span>
             </div>
+            <div class="form-group">
+                <input type="text" id="search-collection" class="form-control" placeholder="Filter members..." />
+            </div>
             <div class="panel-body unassigned-members collection" id="selectable"
                  style="max-height: 300px; overflow-y: scroll;">
-                <div class="form-group">
-                    <input type="text" id="search-collection" class="form-control" placeholder="Filter members..." />
-                </div>
                 @forelse ($division->unassigned as $member)
                     <li class="list-group-item collection-item"
-                        data-member-id="{{ $member->id }}">{{ $member->present()->rankName() }}</li>
+                        data-member-id="{{ $member->id }}">{{ $member->name }}
+                        <small class="text-muted">{{ $member->rank->abbreviation }}</small>
+                    </li>
                 @empty
                     <p class="text-muted">No unassigned members available</p>
                 @endforelse
@@ -34,45 +36,45 @@
 <input type="hidden" id="assigned-member-ids" name="member_ids" />
 
 <script>
-    $ (".unassigned-members li").click (function () {
-        assignMember ($ (this), $ ('.assigned-members'));
-        updateMembers ();
-    });
+  $('.unassigned-members li').click(function () {
+    assignMember($(this), $('.assigned-members'))
+    updateMembers()
+  })
 
-    $ (".assigned-members").on ("click", "li", function () {
-        assignMember ($ (this), $ ('.unassigned-members'));
-        updateMembers ();
-    });
+  $('.assigned-members').on('click', 'li', function () {
+    assignMember($(this), $('.unassigned-members'))
+    updateMembers()
+  })
 
-    /**
-     * Parse assigned members
-     */
-    function updateMembers () {
-        let ids = [],
-            assigned = $ ('.assigned-members li'),
-            unassigned = $ ('.unassigned-members li');
+  /**
+   * Parse assigned members
+   */
+  function updateMembers () {
+    let ids = [],
+      assigned = $('.assigned-members li'),
+      unassigned = $('.unassigned-members li')
 
-        assigned.each (function () {
-            ids.push ($ (this).data ('member-id'));
-        });
+    assigned.each(function () {
+      ids.push($(this).data('member-id'))
+    })
 
-        $ (".assigned-count").text (assigned.length);
-        $ (".unassigned-count").text (unassigned.length);
+    $('.assigned-count').text(assigned.length)
+    $('.unassigned-count').text(unassigned.length)
 
-        $ ("#assigned-member-ids").val (JSON.stringify (ids));
-    }
+    $('#assigned-member-ids').val(JSON.stringify(ids))
+  }
 
-    function assignMember (member, list) {
-        let item = member.clone ();
+  function assignMember (member, list) {
+    let item = member.clone()
 
-        $ (list).append (item);
-        item.effect ('highlight');
-        member.remove ();
+    $(list).append(item)
+    item.effect('highlight')
+    member.remove()
 
-        $ (".assigned-members").stop ().animate ({
-            scrollTop: $ ('.assigned-members').prop ("scrollHeight")
-        }, 1000);
-    }
+    $('.assigned-members').stop().animate({
+      scrollTop: $('.assigned-members').prop('scrollHeight')
+    }, 1000)
+  }
 </script>
 
 

@@ -1,5 +1,27 @@
 <?php
 
+function ordSuffix($n)
+{
+    $str = "$n";
+    $t = $n > 9 ? substr($str, -2, 1) : 0;
+    $u = substr($str, -1);
+    if ($t == 1) {
+        return $str . 'th';
+    } else {
+        switch ($u) {
+            case 1:
+                return $str . 'st';
+            case 2:
+                return $str . 'nd';
+            case 3:
+                return $str . 'rd';
+            default:
+                return $str . 'th';
+        }
+    }
+}
+
+
 /**
  * Perform an AOD forum function (pm or email)
  *
