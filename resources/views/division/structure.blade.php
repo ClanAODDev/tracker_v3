@@ -16,7 +16,7 @@
     @endcomponent
 
     <div class="container-fluid">
-        {!! Breadcrumbs::render('division-structure', $division->abbreviation) !!}
+        {!! Breadcrumbs::render('division-structure', $division) !!}
 
         <div class="row">
             <div class="col-md-12">
