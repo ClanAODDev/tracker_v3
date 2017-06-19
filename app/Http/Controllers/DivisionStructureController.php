@@ -81,6 +81,8 @@ class DivisionStructureController extends Controller
             }
         ])->get();
 
+        $data->platoons = $this->filterSquadLeads($data);
+
         return $data;
     }
 
@@ -92,6 +94,21 @@ class DivisionStructureController extends Controller
             'squadLeader' => $division->locality('squad leader'),
             'platoonLeader' => $division->locality('platoon leader'),
         ];
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    private function filterSquadLeads($data)
+    {
+        return $data->platoons->each(function ($platoon) {
+            $platoon->squads = $platoon->squads->each(function ($squad) {
+                $squad->members = $squad->members->filter(function ($member) use ($squad) {
+                    return $member->clan_id !== $squad->leader_id;
+                });
+            });
+        });
     }
 
     /**
