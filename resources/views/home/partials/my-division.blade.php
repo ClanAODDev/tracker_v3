@@ -3,7 +3,8 @@
     <div class="panel-heading">
 
         <h2 class="m-b-none text-uppercase">
-            {{ $myDivision->name }}
+            <span style="cursor: pointer;"
+                  onclick="window.location.href='{{ route('division', $myDivision->abbreviation) }}'">{{ $myDivision->name }}</span>
             @include('division.partials.edit-division-button', ['division' => $myDivision])
         </h2>
 
@@ -15,13 +16,9 @@
             <a href="{{ route('recruiting.form', [$myDivision->abbreviation]) }}"
                class="btn btn-default btn-squared">Add New Recruit</a>
         @endcan
-        <a href="{{ route('division', $myDivision->abbreviation) }}"
-           class="btn btn-default btn-squared">
-            Visit My Division
-        </a>
         <a href="{{ route('partTimers', $myDivision->abbreviation) }}"
            class="btn btn-default btn-squared">
-            Part-Timers
+            Part Timers
         </a>
         @can ('manageDivisionStructure', auth()->user())
             <a href="{{ route('division.structure', $myDivision->abbreviation) }}"
