@@ -28,6 +28,7 @@ class CreatePlatoonForm extends FormRequest
         return [
             'name' => 'required',
             'logo' => 'nullable|url',
+            'order' => 'required|integer',
             'leader_id' => [
                 'exists:members,clan_id',
                 'unique:platoons,leader_id'
@@ -57,6 +58,7 @@ class CreatePlatoonForm extends FormRequest
         $platoon = new Platoon;
 
         $platoon->name = $this->name;
+        $platoon->order = $this->order;
         $platoon->division()->associate($this->route('division'));
         $platoon->save();
 

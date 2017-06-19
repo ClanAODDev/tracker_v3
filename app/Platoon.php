@@ -17,7 +17,8 @@ class Platoon extends Model
     protected $fillable = [
         'name',
         'leader_id',
-        'logo'
+        'logo',
+        'order'
     ];
 
     protected $with = [

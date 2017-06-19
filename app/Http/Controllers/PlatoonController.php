@@ -37,7 +37,12 @@ class PlatoonController extends Controller
 
         $division->load('unassigned.rank');
 
-        return view('platoon.create', compact('division'));
+        $lastSort = Platoon::whereDivisionId($division->id)
+            ->latest()->first();
+
+        $lastSort = ($lastSort) ? $lastSort->order + 100 : 100;
+
+        return view('platoon.create', compact('division', 'lastSort'));
     }
 
     /**
@@ -147,10 +152,7 @@ class PlatoonController extends Controller
 
         $division->load('unassigned.rank')->withCount('unassigned')->get();
 
-        return view(
-            'platoon.edit',
-            compact('division', 'platoon')
-        );
+        return view('platoon.edit', compact('division', 'platoon', 'lastSort'));
     }
 
     /**

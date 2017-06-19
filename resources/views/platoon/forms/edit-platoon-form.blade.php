@@ -38,6 +38,11 @@
                     {!! Form::text('logo', null, ['class' => 'form-control', 'placeholder' => 'https://']) !!}
                 </div>
 
+                <div class="form-group">
+                    <label for="order" class="form-label">{{ $division->locality('platoon') }} Sort Order</label>
+                    {!! Form::number('order', isset($lastSort) ? $lastSort : null, ['class' => 'form-control']) !!}
+                </div>
+
                 <div class="row">
                     <div class="col-xs-8">
                         {!! Form::label('leader', 'Search') !!}
@@ -46,7 +51,8 @@
                         <div class="form-group m-t-md">
                             {!! Form::label('is_tba', 'Leader TBA') !!}
                             <div style="margin-right:5px;float: left;">
-                                <input id="is_tba" type="checkbox" {{ (empty($platoon->leader_id)) ? "checked" : null }} />
+                                <input id="is_tba"
+                                       type="checkbox" {{ (empty($platoon->leader_id)) ? "checked" : null }} />
                             </div>
                         </div>
                     </div>
