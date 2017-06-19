@@ -21,12 +21,12 @@
         <div class="m-b-xl">
             <h4>Contents</h4>
             <ul>
-                <li><a href="#basic-syntax">Basic syntax</a></li>
-                <li><a href="#loops">Loops and nesting</a></li>
-                <li><a href="#iterator-loop">Iterator loop variable</a></li>
-                <li><a href="#empty-cases">Handling empty properties and arrays</a></li>
-                <li><a href="#replace">String replacement and filters</a></li>
-                <li><a href="#properties">Available properties</a></li>
+                <li><a class="smooth-scroll" href="#basic-syntax">Basic syntax</a></li>
+                <li><a class="smooth-scroll" href="#loops">Loops and nesting</a></li>
+                <li><a class="smooth-scroll" href="#iterator-loop">Iterator loop variable</a></li>
+                <li><a class="smooth-scroll" href="#empty-cases">Handling empty properties and arrays</a></li>
+                <li><a class="smooth-scroll" href="#replace">String replacement and filters</a></li>
+                <li><a class="smooth-scroll" href="#properties">Available properties</a></li>
             </ul>
         </div>
 
