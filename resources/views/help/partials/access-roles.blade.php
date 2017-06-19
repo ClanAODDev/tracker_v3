@@ -32,6 +32,7 @@
         <td>
             <ul>
                 <li>Can manage own division platoons, squads, members</li>
+                <li>Can render division structure template</li>
             </ul>
         </td>
     </tr>
@@ -43,7 +44,7 @@
                 <li>Can remove any member (requires SGT+ forum permissions)</li>
                 <li>Can change own division settings (must be CO/XO)</li>
                 <li>Can give user account access (up to one below current role)</li>
-                <li>Can render, edit division structure template</li>
+                <li>Can edit division structure template</li>
             </ul>
         </td>
     </tr>
