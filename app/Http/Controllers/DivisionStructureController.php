@@ -60,10 +60,17 @@ class DivisionStructureController extends Controller
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->locality = $this->getLocality($division);
-        $data->leaders = $division->leaders()
-            ->with('position', 'rank')->get();
+        $data->generalSergeants = $division->generalSergeants()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'rank'
+        ])->get();
 
-        $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
+        $data->leaders = $division->leaders()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'position',
+            'rank'
+        ])->get();
+
         $data->partTimeMembers = $division->partTimeMembers()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank'
@@ -77,7 +84,37 @@ class DivisionStructureController extends Controller
             'leader.rank',
         ])->get();
 
+        /**
+         * ensure squad leaders don't appear in squads
+         */
         $data->platoons = $this->filterSquadLeads($data);
+
+        /**
+         * have to do some funky things to get handles organized:
+         * divisions only need the primary handle for a member
+         */
+
+        $data->leaders = $data->leaders->each($this->getMemberHandle());
+        $data->partTimeMembers = $data->partTimeMembers->each($this->getMemberHandle());
+        $data->generalSergeants = $data->generalSergeants->each($this->getMemberHandle());
+
+        // platoon->leader->handle
+        $data->platoons = $data->platoons->each(function ($platoon) {
+            if ($platoon->leader) {
+                $platoon->leader->handle = $platoon->leader->handles->first();
+            }
+        });
+
+        // squad->leader->handle
+        // squad->member->handle
+        $data->platoons = $data->platoons->each(function ($platoon) {
+            $platoon->squads = $platoon->squads->each(function ($squad) {
+                if ($squad->leader) {
+                    $squad->leader->handle = $squad->leader->handles->first();
+                }
+                $squad->members = $squad->members->each($this->getMemberHandle());
+            });
+        });
 
         return $data;
     }
@@ -118,6 +155,16 @@ class DivisionStructureController extends Controller
                 });
             });
         });
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getMemberHandle()
+    {
+        return function ($member) {
+            $member->handle = $member->handles->first();
+        };
     }
 
     /**

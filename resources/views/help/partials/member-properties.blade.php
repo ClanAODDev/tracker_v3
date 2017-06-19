@@ -33,17 +33,17 @@
         <td><code>string</code></td>
     </tr>
     <tr>
-        <td><code>member.handles[0].pivot.value</code></td>
-        <td>Member's ingame name based on primary division</td>
+        <td><code>member.handle.pivot.value</code></td>
+        <td>ingame name based on primary division</td>
         <td><code>string</code></td>
     </tr>
     <tr>
-        <td><code>member.handles[0].url</code></td>
+        <td><code>member.handle.url</code></td>
         <td>ingame name URL based on primary division</td>
         <td><code>string</code></td>
     </tr>
     <tr>
-        <td><code>member.handles[0].fullUrl</code></td>
+        <td><code>member.handle.fullUrl</code></td>
         <td>helper property combining the URL and the handle value</td>
         <td><code>string</code></td>
     </tr>
