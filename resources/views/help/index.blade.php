@@ -18,7 +18,7 @@
     @endcomponent
 
     <div class="container-fluid">
-        
+
         @include('help.partials.general')
         @include('help.partials.division-structures')
 

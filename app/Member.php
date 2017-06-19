@@ -148,7 +148,8 @@ class Member extends Model
      */
     public function divisions()
     {
-        return $this->belongsToMany(Division::class)->withPivot('primary')->withTimestamps();
+        return $this->belongsToMany(Division::class)
+            ->withPivot('primary')->withTimestamps();
     }
 
     /**
@@ -176,7 +177,7 @@ class Member extends Model
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function handles()
     {

@@ -235,7 +235,9 @@ class Division extends Model
      */
     public function members()
     {
-        return $this->belongsToMany(Member::class)->withPivot('primary')->withTimestamps();
+        return $this->belongsToMany(Member::class)
+            ->withPivot('primary')
+            ->withTimestamps();
     }
 
     /**
@@ -255,8 +257,7 @@ class Division extends Model
      */
     public function activeMembers()
     {
-        return $this->members()->wherePivot('primary', true)
-            ->orderBy('rank_id', 'desc');
+        return $this->members()->wherePivot('primary', true);
     }
 
     /**
@@ -361,8 +362,8 @@ class Division extends Model
     public function leaders()
     {
         return $this->activeMembers()
-            ->whereIn('position_id', [5, 6])
-            ->orderBy('position_id', 'desc');
+            ->orderBy('position_id', 'desc')
+            ->whereIn('position_id', [5, 6]);
     }
 
     /**

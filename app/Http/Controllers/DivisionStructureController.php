@@ -58,7 +58,8 @@ class DivisionStructureController extends Controller
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->locality = $this->getLocality($division);
-        $data->leaders = $division->leaders()->orderBy('position_id', 'desc')->with('position', 'rank')->get();
+        $data->leaders = $division->leaders()
+            ->with('position', 'rank')->get();
         $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
         $data->partTimeMembers = $division->partTimeMembers()->with([
             'handles' => function ($query) use ($division) {
