@@ -13,10 +13,6 @@
 <div class="row">
     @forelse ($platoons as $platoon)
         <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-9"></div>
-                <div class="col-md-3"></div>
-            </div>
             <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}"
                class="panel panel-filled">
                 <div class="panel-body">
