@@ -19,11 +19,15 @@
 
     <div class="container-fluid">
         <div class="m-b-xl">
-            <a href="#basic-syntax" class="btn btn-default">Basic syntax</a>
-            <a href="#loops" class="btn btn-default">Loops and nesting</a>
-            <a href="#iterator-loop" class="btn btn-default">Iterator loop variable</a>
-            <a href="#empty-cases" class="btn btn-default">Handling empty properties and arrays</a>
-            <a href="#properties" class="btn btn-default">Available properties</a>
+            <h4>Contents</h4>
+            <ul>
+                <li><a href="#basic-syntax">Basic syntax</a></li>
+                <li><a href="#loops">Loops and nesting</a></li>
+                <li><a href="#iterator-loop">Iterator loop variable</a></li>
+                <li><a href="#empty-cases">Handling empty properties and arrays</a></li>
+                <li><a href="#replace">String replacement and filters</a></li>
+                <li><a href="#properties">Available properties</a></li>
+            </ul>
         </div>
 
         <p>Divisions can customize their division structures with ease by making use of Twig, a templating engine, in conjunction with normal bb-code for styling. Read the following documentation on how to get started using Twig and what data is available for divisions to use.</p>
@@ -55,9 +59,13 @@
 
         <h3 class="m-t-xl" id="iterator-loop">Iterator loop variables</h3>
         <hr />
-        <p>Loops have a <code>loop</code> variable that can be used to perform various conditional actions. For example, if you want to limit squads to 2 per row, you can leverage the loop variable and the modulus <code>is divisible by()</code> method:</p>
+        <p>Loops have a
+            <code>loop</code> variable that can be used to perform various conditional actions. For example, if you want to limit squads to 2 per row, you can leverage the loop variable and the modulus
+            <code>is divisible by()</code> method:</p>
 
-        <p>Note that the <code>index</code> property starts at <code>1</code> by default, reflecting the current iteration. If you want the index to start at 0, use <code>index0</code> instead.</p>
+        <p>Note that the <code>index</code> property starts at
+            <code>1</code> by default, reflecting the current iteration. If you want the index to start at 0, use
+            <code>index0</code> instead.</p>
         <pre><code class="language-twig line-numbers">@include('help.snippets.iterator-1')</code></pre>
 
         <p class="m-t-lg m-b-lg">
@@ -69,6 +77,15 @@
         <hr />
         <p>Often you will run into a situation where the array or property you're trying to print could possibly be empty. In these cases, you may wish to do nothing, or you might want to provide an alternative. Here's how you manage that:</p>
         <pre><code class="language-twig line-numbers">@include('help.snippets.empty-cases')</code></pre>
+
+        <h3 class="m-t-xl" id="replace">String Replacement And Filters</h3>
+        <hr />
+        <p>Sometimes a string may not contain exactly what you need to output. For example, Overwatch tracks members by their battlenet name, or <code>MyName#9999</code>. But in order to link to the public profile, the <code>#</code> character must be replaced by a <code>-</code> character.</p>
+        <p>To facilitate this, we can use a filter <code>replace()</code> method:</p>
+        <p>Note: the hyphens in the twig tags are whitespace delimiters. Ex. <code>{%-</code> indicates that leading whitespace should be trimmed. <code>-%}</code> indicates that trailing whitespace should be trimmed. This allows us to omit line breaks in the resulting code.</p>
+        <pre><code class="language-twig line-numbers">@include('help.snippets.replace')</code></pre>
+        <p class="m-t-lg m-b-lg">Additional filters allow us to make other transformations</p>
+        <pre><code class="language-twig line-numbers">@include('help.snippets.transform')</code></pre>
 
         <h3 class="m-t-xl" id="properties">Available Properties</h3>
         <hr />
