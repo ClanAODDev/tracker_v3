@@ -206,7 +206,7 @@ class DivisionStructureController extends Controller
      */
     public function update(Request $request, Division $division)
     {
-        $this->authorize('manageDivisionStructure', auth()->user());
+        $this->authorize('viewDivisionStructure', auth()->user());
 
         $division->structure = $request->structure;
         $division->save();

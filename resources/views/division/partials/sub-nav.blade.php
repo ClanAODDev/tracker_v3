@@ -6,5 +6,8 @@
         <a href="{{ route('division.census', $division->abbreviation) }}" class="btn btn-default ">
             Census Data
         </a>
+        <a href="{{ route('division.structure', $division->abbreviation) }}" class="btn btn-default ">
+            Structure
+        </a>
     </div>
 </div>
