@@ -53,12 +53,12 @@ class UserPolicy
 
     public function viewDivisionStructure(User $user)
     {
-        return $user->isRole(['jr_ldr', 'sr_ldr', 'admin']);
+        return $user->isRole(['jr_ldr', 'sr_ldr']);
     }
 
     public function manageDivisionStructure(User $user)
     {
-        return $user->isRole(['sr_ldr', 'admin']);
+        return $user->isRole(['sr_ldr']);
     }
 
     public function manageIssues(User $user)

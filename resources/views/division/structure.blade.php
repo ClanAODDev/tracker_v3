@@ -23,6 +23,7 @@
                     <textarea name="structure" id="structure" class="form-control"
                               rows="10" style="resize: vertical;">{{ $data }}</textarea>
                 </div>
+                <span class="text-muted pull-right">{{ strlen($data) }} characters</span>
 
                 @can ('manageDivisionStructure', auth()->user())
                     <a class="btn btn-default"
@@ -30,7 +31,8 @@
                         <i class="fa fa-wrench text-accent"></i> Go to editor</a>
                 @endcan
 
-                <button data-clipboard-target="#structure" class="copy-to-clipboard btn-success btn"><i class="fa fa-clone"></i> Copy Contents
+                <button data-clipboard-target="#structure" class="copy-to-clipboard btn-success btn"><i
+                            class="fa fa-clone"></i> Copy Contents
                 </button>
             </div>
         </div>
