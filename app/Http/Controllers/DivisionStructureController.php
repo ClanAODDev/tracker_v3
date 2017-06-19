@@ -36,7 +36,7 @@ class DivisionStructureController extends Controller
     public function show(Division $division)
     {
         $this->authorize('manageDivisionStructure', auth()->user());
-        
+
         Twig::setLoader(new Twig_Loader_String());
 
         try {
@@ -62,25 +62,19 @@ class DivisionStructureController extends Controller
         $data->locality = $this->getLocality($division);
         $data->leaders = $division->leaders()
             ->with('position', 'rank')->get();
+
         $data->generalSergeants = $division->generalSergeants()->with('rank')->get();
         $data->partTimeMembers = $division->partTimeMembers()->with([
-            'handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            },
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank'
         ])->get();
 
         $data->platoons = $division->platoons()->with([
-            'squads.members.handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            },
+            'squads.members.handles' => $this->filterHandlesToPrimaryHandle($division),
+            'leader.handles' => $this->filterHandlesToPrimaryHandle($division),
             'squads.members.rank',
             'squads.leader.rank',
-            'leader.rank'
-        ], [
-            'leader.handles' => function ($query) use ($division) {
-                $query->where('id', $division->handle_id);
-            }
+            'leader.rank',
         ])->get();
 
         $data->platoons = $this->filterSquadLeads($data);
@@ -96,6 +90,19 @@ class DivisionStructureController extends Controller
             'squadLeader' => $division->locality('squad leader'),
             'platoonLeader' => $division->locality('platoon leader'),
         ];
+    }
+
+    /**
+     * Eager loading filter
+     *
+     * @param $division
+     * @return \Closure
+     */
+    private function filterHandlesToPrimaryHandle($division)
+    {
+        return function ($query) use ($division) {
+            $query->where('id', $division->handle_id);
+        };
     }
 
     /**
