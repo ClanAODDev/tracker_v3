@@ -16,6 +16,8 @@
     @endcomponent
 
     <div class="container-fluid">
+        {!! Breadcrumbs::render('division-structure', $division->abbreviation) !!}
+
         <div class="row">
             <div class="col-md-12">
                 <h4>Generated Structure</h4>
