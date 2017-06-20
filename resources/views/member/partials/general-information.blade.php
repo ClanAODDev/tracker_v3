@@ -33,7 +33,7 @@
         @component('application.components.data-block')
             @slot('data')
                 <a href="{{ route('member', [$member->recruiter_id]) }}">
-                    {{ $member->recruiter->name }}
+                    {{ $member->recruiter->present()->rankName }}
                 </a>
             @endslot
             @slot('title') clan <span class="c-white">recruiter</span> @endslot
