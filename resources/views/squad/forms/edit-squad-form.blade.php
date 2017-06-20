@@ -6,9 +6,10 @@
 
             <p>Assigning a {{ $division->locality('squad leader') }}</p>
             <ul>
-                <li><span class="text-success">DOES</span> move them to this {{ $division->locality('squad') }}
-                    <code>{{ $squad->name }}</code></li>
-                <li><span class="text-success">DOES</span> move them to this {{ $division->locality('squad') }}</li>
+                <li>
+                    <span class="text-success">DOES</span> move them to this {{ $division->locality('squad') }}
+                    {!! isset($squad) ? "<code>{$squad->name}</code>" : null !!}
+                </li>
                 <li><span class="text-success">DOES</span> change their position to
                     <code>{{ $division->locality('squad leader') }}</code></li>
                 <br />
@@ -35,7 +36,8 @@
                         <div class="form-group m-t-md">
                             {!! Form::label('is_tba', 'Leader TBA') !!}
                             <div style="margin-right:5px;float: left;">
-                                <input id="is_tba" type="checkbox" {{ (empty($squad->leader_id)) ? "checked" : null }} />
+                                <input id="is_tba"
+                                       type="checkbox" {{ (empty($squad->leader_id)) ? "checked" : null }} />
                             </div>
                         </div>
                     </div>
