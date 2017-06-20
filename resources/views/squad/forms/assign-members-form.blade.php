@@ -5,6 +5,9 @@
         <div class="panel panel-filled">
             <div class="panel-heading">Unassigned Members
                 <span class="unassigned-count badge pull-right">{{ $platoon->unassigned->count() }}</span>
+                <div class="form-group m-b-none m-t-lg">
+                    <input type="text" id="search-collection" class="form-control" placeholder="Filter members..." />
+                </div>
             </div>
             <div class="panel-body unassigned-members collection" id="selectable"
                  style="max-height: 300px; overflow-y: scroll;">
