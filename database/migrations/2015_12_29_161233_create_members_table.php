@@ -23,7 +23,7 @@ class CreateMembersTable extends Migration
             $table->timestamp('join_date')->nullable();
             $table->timestamp('last_forum_login')->nullable();
             $table->timestamp('last_promoted')->nullable();
-            $table->mediumInteger('recruiter_id');
+            $table->mediumInteger('recruiter_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
