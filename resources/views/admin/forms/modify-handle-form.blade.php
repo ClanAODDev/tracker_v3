@@ -29,7 +29,7 @@
         <div class="col-xs-12">
             <div class="form-group {{ $errors->has('url') ? ' has-error' : null }}">
                 <label for="url" class="form-label">Handle URL</label>
-                {!! Form::text('url', null, ['class' => 'form-control', 'required' => 'required']) !!}
+                {!! Form::text('url', null, ['class' => 'form-control']) !!}
             </div>
         </div>
     </div>
