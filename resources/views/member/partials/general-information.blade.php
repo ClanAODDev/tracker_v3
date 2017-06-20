@@ -29,4 +29,15 @@
         @slot('title') forum <span class="c-white">post count</span> @endslot
     @endcomponent
 
+    @if ($member->recruiter)
+        @component('application.components.data-block')
+            @slot('data')
+                <a href="{{ route('member', [$member->recruiter_id]) }}">
+                    {{ $member->recruiter->name }}
+                </a>
+            @endslot
+            @slot('title') clan <span class="c-white">recruiter</span> @endslot
+        @endcomponent
+    @endif
+
 </div>

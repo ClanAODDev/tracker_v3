@@ -173,7 +173,7 @@ class Member extends Model
      */
     public function recruiter()
     {
-        return $this->hasOne(Member::class);
+        return $this->belongsTo(Member::class, 'recruiter_id', 'clan_id');
     }
 
     /**
