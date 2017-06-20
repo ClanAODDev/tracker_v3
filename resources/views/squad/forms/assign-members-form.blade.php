@@ -11,9 +11,6 @@
             </div>
             <div class="panel-body unassigned-members collection" id="selectable"
                  style="max-height: 300px; overflow-y: scroll;">
-                <div class="form-group">
-                    <input type="text" id="search-collection" class="form-control" placeholder="Filter members..." />
-                </div>
                 @forelse ($platoon->unassigned as $member)
                     <li class="list-group-item collection-item"
                         data-member-id="{{ $member->id }}">{{ $member->name }}
