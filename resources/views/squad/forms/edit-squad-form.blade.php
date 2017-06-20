@@ -6,8 +6,8 @@
 
             <p>Assigning a {{ $division->locality('squad leader') }}</p>
             <ul>
-                <li><span class="text-success">DOES</span> move them to this {{ $division->locality('platoon') }}
-                    <code>{{ $platoon->name }}</code></li>
+                <li><span class="text-success">DOES</span> move them to this {{ $division->locality('squad') }}
+                    <code>{{ $squad->name }}</code></li>
                 <li><span class="text-success">DOES</span> move them to this {{ $division->locality('squad') }}</li>
                 <li><span class="text-success">DOES</span> change their position to
                     <code>{{ $division->locality('squad leader') }}</code></li>

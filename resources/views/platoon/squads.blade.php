@@ -37,7 +37,7 @@
                     @can('create', [App\Squad::class, $division])
                         <li role="presentation" class="pull-right slight">
                             <a href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
-                                <i class="fa fa-plus text-success"></i> New Squad</a>
+                                <i class="fa fa-plus text-success"></i> New {{ $division->locality('squad') }}</a>
                         </li>
                     @endcan
                 </ul>

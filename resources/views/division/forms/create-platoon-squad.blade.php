@@ -16,7 +16,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="name"
-                                   class="control-label">{{ $type }} Name</label>
+                                   class="control-label">{{ $division->locality($type) }} Name</label>
                             <input type="text" id="name" name="name"
                                    value="{{ old('name') }}" class="form-control" required />
                         </div>
