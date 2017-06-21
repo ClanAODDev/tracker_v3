@@ -59,6 +59,8 @@ class DivisionStructureController extends Controller
         $data = new \stdClass();
         $data->structure = $division->structure;
         $data->name = $division->name;
+        $data->memberCount = $division->members->count();
+
         $data->locality = $this->getLocality($division);
         $data->generalSergeants = $division->generalSergeants()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
@@ -81,6 +83,7 @@ class DivisionStructureController extends Controller
             'leader.handles' => $this->filterHandlesToPrimaryHandle($division),
             'squads.members.rank',
             'squads.leader.rank',
+            'squads.leader.handles',
             'leader.rank',
         ])->get();
 
@@ -236,7 +239,7 @@ class DivisionStructureController extends Controller
                         }
                     ],
                     'leaders.position', 'squads', 'squads.members', 'squads.members.rank'
-                )->get()
+                )->sortBy('order', 'asc')->get()
             ]
         ]);
     }
