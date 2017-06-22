@@ -56,7 +56,7 @@
             @endif
 
             <li>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a href="#" onclick="event.preventDefault() document.getElementById('logout-form').submit()">
                     Logout <i class="fa fa-lock text-muted"></i>
                 </a>
             </li>
@@ -103,3 +103,33 @@
         <a href="{{ route('help') }}">Documentation</a>
     </li>
 </ul>
+
+<style>
+    .navbar-fixed-top + .content-container {
+        margin-top: 70px;
+    }
+
+    .content-container {
+        margin: 0 130px;
+    }
+
+    #top-link-block.affix-top {
+        position: absolute; /* allows it to "slide" up into view */
+        bottom: -82px; /* negative of the offset - height of link element */
+        left: 10px; /* padding from the left side of the window */
+    }
+
+    #top-link-block.affix {
+        position: fixed; /* keeps it on the bottom once in view */
+        bottom: 18px; /* height of link element */
+        left: 10px; /* padding from the left side of the window */
+    }
+</style>
+
+{{--back to top--}}
+<span id="top-link-block" class="hidden">
+    <a href="#top" class="btn btn-default smooth-scroll"
+       onclick="$('html,body').animate({scrollTop:0},'slow'); return false">
+        <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
+    </a>
+</span><!-- /top-link-block -->
