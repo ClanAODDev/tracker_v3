@@ -74,6 +74,8 @@ class CreateDivision extends FormRequest
             return $division->pivot->primary;
         })->first();
 
-        $currentDivision->members()->detach($member);
+        if ($currentDivision) {
+            $currentDivision->members()->detach($member);
+        }
     }
 }
