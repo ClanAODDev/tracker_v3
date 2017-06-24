@@ -40,7 +40,8 @@ function registerDivisionSubPages()
         'create-platoon',
         'division-census',
         'manage-division',
-        'division-structure'
+        'division-structure',
+        'leaves-of-absence',
     ];
 
     foreach ($divisionStaticSubPages as $page) {

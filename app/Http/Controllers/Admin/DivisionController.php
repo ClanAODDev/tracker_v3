@@ -43,7 +43,9 @@ class DivisionController extends Controller
     {
         $this->authorize('create', Division::class);
 
-        return view('admin.create-division');
+        $handles = Handle::all()->pluck('label', 'id');
+
+        return view('admin.create-division', compact('handles'));
 
     }
 

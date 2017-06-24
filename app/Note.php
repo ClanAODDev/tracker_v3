@@ -68,6 +68,11 @@ class Note extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function leave()
+    {
+        return $this->hasOne(Leave::class);
+    }
+
     /**
      * Get tag ids for this note
      *

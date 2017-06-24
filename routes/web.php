@@ -92,6 +92,8 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/part-timers/{member}/remove', 'DivisionController@removePartTime')->name('removePartTimer');
     Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
 
+    Route::get('{division}/leave', 'LeaveController@index')->name('division.leaves');
+
     /**
      * Recruiting Process
      */

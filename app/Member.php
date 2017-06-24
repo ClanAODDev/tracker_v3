@@ -4,6 +4,7 @@ namespace App;
 
 use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -174,6 +175,32 @@ class Member extends Model
     public function recruiter()
     {
         return $this->belongsTo(Member::class, 'recruiter_id', 'clan_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function leaveOfAbsence()
+    {
+        return $this->hasOne(Leave::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function expiredLeave()
+    {
+        return $this->hasOne(Leave::class)
+            ->where('end_date', '<', Carbon::today());
+    }
+
+    /**
+     * @return mixed
+     */
+    public function activeLeave()
+    {
+        return $this->hasOne(Leave::class)
+            ->where('end_date', '>', Carbon::today());
     }
 
     /**
