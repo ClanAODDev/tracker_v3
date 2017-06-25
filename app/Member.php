@@ -75,6 +75,17 @@ class Member extends Model
             return $this->position()->associate($position);
         }
 
+        // reset assignments for specific positions
+        if (in_array($this->position->name, [
+            "Commanding Officer",
+            "Executive Officer",
+            "General Sergeant",
+            "Clan Admin",
+        ])) {
+            $this->platoon_id = 0;
+            $this->squad_id = 0;
+        }
+
         return $this->position()->associate(
             Position::whereName(strtolower($position))->firstOrFail()
         );
