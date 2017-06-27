@@ -15,13 +15,11 @@ class CreateLeavesTable extends Migration
     {
         Schema::create('leaves', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('member_id')->unsigned()->index();
-            $table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
-            $table->integer('approver_id')->unsigned()->index();
+            $table->integer('member_id')->unsigned()->index()->unique();
+            $table->integer('approver_id')->unsigned()->index()->nullable();
             $table->integer('requester_id')->unsigned()->index();
-            $table->enum('reason', ['military', 'education', 'emergency', 'personal']);
+            $table->enum('reason', ['military', 'medical', 'education', 'travel', 'other'])->default('other');
             $table->integer('note_id')->unsigned();
-            $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->boolean('extended')->nullable();
             $table->timestamps();

@@ -63,16 +63,6 @@ var Platoon = Platoon || {};
                 }
             }
 
-            // handle leader assignment completion for
-            // platoons and squads
-            $('#leader').bootcomplete({
-                url: window.Laravel.appPath + '/search-leader/',
-                minLength: 3,
-                idField: true,
-                method: 'POST',
-                dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
-            });
-
         },
     }
 })(jQuery);

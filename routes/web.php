@@ -23,7 +23,7 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
 Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
-Route::post('search-leader', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
+Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 Route::post('update-role', 'UserController@updateRole');
@@ -42,6 +42,11 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
     Route::post('search/{name}', 'MemberController@search');
     Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
+
+    // member leave
+    Route::get('{member}/leave/{leave}/edit', 'LeaveController@edit')->name('member.edit-leave');
+    Route::put('{member}/leave', 'LeaveController@update')->name('member.update-leave');
+    Route::patch('{member}/leave', 'LeaveController@update');
 
     // member notes
     Route::group(['prefix' => '{member}/notes'], function () {
@@ -93,6 +98,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
 
     Route::get('{division}/leave', 'LeaveController@index')->name('division.leaves');
+    Route::post('{division}/leave', 'LeaveController@store')->name('member.store-leave');
 
     /**
      * Recruiting Process

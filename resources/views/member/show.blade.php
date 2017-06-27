@@ -23,6 +23,7 @@
     <div class="container-fluid">
 
         {!! Breadcrumbs::render('member', $member, $division) !!}
+        @include ('member.partials.notices')
 
         <div class="row m-b-xl">
             <div class="col-md-12">

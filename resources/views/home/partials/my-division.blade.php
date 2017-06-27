@@ -26,5 +26,10 @@
                 Structure
             </a>
         @endcan
+
+            <a href="{{ route('division.leaves', $myDivision->abbreviation) }}"
+            class="btn btn-default btn-squared">
+                Leave
+            </a>
     </div>
 </div>

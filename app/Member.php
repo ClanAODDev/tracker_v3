@@ -193,7 +193,7 @@ class Member extends Model
      */
     public function leaveOfAbsence()
     {
-        return $this->hasOne(Leave::class);
+        return $this->hasOne(Leave::class, 'member_id', 'clan_id');
     }
 
     /**

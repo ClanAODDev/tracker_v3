@@ -155,11 +155,11 @@ let Tracker = Tracker || {};
 
       // Only enable if the document has a long scroll bar
       // Note the window height + offset
-      if ( ($(window).height() + 100) < $(document).height() ) {
+      if (($(window).height() + 100) < $(document).height()) {
         $('#top-link-block').removeClass('hidden').affix({
           // how far to scroll down before link "slides" into view
-          offset: {top:100}
-        });
+          offset: {top: 100}
+        })
       }
 
       this.smoothScroll()
@@ -264,6 +264,14 @@ let Tracker = Tracker || {};
         event.preventDefault()
         var hpanel = $(event.target).closest('div.panel')
         hpanel.remove()
+      })
+
+      $('.search-member').bootcomplete({
+        url: window.Laravel.appPath + '/search-member/',
+        minLength: 3,
+        idField: true,
+        method: 'POST',
+        dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
       })
 
     },

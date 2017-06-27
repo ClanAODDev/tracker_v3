@@ -41,7 +41,7 @@ function registerDivisionSubPages()
         'division-census',
         'manage-division',
         'division-structure',
-        'leaves-of-absence',
+        'leaves-of-absence'
     ];
 
     foreach ($divisionStaticSubPages as $page) {
