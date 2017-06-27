@@ -12,7 +12,9 @@ Breadcrumbs::register('member', function ($breadcrumbs, $member, $division) {
     }
 
     if ($member->squad_id !== 0) {
-        $breadcrumbs->push($member->squad->name);
+        $breadcrumbs->push($member->squad->name,
+            route('platoonSquads', [$division->abbreviation, $member->platoon->id])
+        );
     }
 
     $breadcrumbs->push('View profile');
@@ -65,7 +67,9 @@ Breadcrumbs::register('member-leave', function ($breadcrumbs, $member, $division
     }
 
     if ($member->squad_id !== 0) {
-        $breadcrumbs->push($member->squad->name);
+        $breadcrumbs->push($member->squad->name,
+            route('platoonSquads', [$division->abbreviation, $member->platoon->id])
+        );
     }
 
     $breadcrumbs->push(
