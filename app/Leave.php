@@ -87,4 +87,9 @@ class Leave extends Model
     {
         return Carbon::today() > $this->end_date->format('Y-m-d');
     }
+
+    public function getShortDateAttribute()
+    {
+        return $this->end_date->format('Y-m-d');
+    }
 }
