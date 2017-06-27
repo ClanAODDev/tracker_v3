@@ -49,7 +49,7 @@
     </tr>
     <tr>
         <td><code>member.leave</code></td>
-        <td>Leave object populated when the member has an active leave of absence. Available properties for leave are: <code>member.leave.end_date</code>, <code>member.leave.reason</code>, <code>member.leave.extended</code> (true if the LOA has been extended from its original date), <code>member.leave.approved</code> (</td>
+        <td>Leave object populated when the member has an active leave of absence. Available properties for leave are: <code>member.leave.date</code> (date LOA ends), <code>member.leave.reason</code>, <code>member.leave.extended</code> (true if the LOA has been extended from its original date), <code>member.leave.approved</code> (</td>
         <td><code>string</code></td>
     </tr>
     </tbody>

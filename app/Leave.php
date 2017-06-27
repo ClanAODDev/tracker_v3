@@ -19,17 +19,23 @@ class Leave extends Model
     /**
      * @var array
      */
+    protected static $recordEvents = [
+        'created',
+        'updated',
+        'deleted'
+    ];
+    /**
+     * @var array
+     */
     protected $casts = [
         'extended'
     ];
-
     /**
      * @var array
      */
     protected $dates = [
         'end_date'
     ];
-
     /**
      * @var array
      */
@@ -37,15 +43,6 @@ class Leave extends Model
         'reason',
         'end_date',
         'extended'
-    ];
-
-    /**
-     * @var array
-     */
-    protected static $recordEvents = [
-        'created',
-        'updated',
-        'deleted'
     ];
 
     /**
@@ -88,7 +85,12 @@ class Leave extends Model
         return Carbon::today() > $this->end_date->format('Y-m-d');
     }
 
-    public function getShortDateAttribute()
+    /**
+     * Returns end date in a short format
+     *
+     * @return mixed
+     */
+    public function getDateAttribute()
     {
         return $this->end_date->format('Y-m-d');
     }
