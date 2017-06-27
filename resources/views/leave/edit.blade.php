@@ -56,6 +56,7 @@
         <div class="m-t-xl">
             {!! Form::model($leave, ['method' => 'patch', 'route' => ['leave.update', $member->clan_id]]) !!}
             <input type="hidden" value="{{ $leave->id }}" name="leave_id" />
+            <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}" />
             @include('leave.forms.edit-leave')
 
             @if (! $leave->approver)
@@ -76,6 +77,12 @@
             <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to the note associated with this leave request, you can access that below.</p>
             <a href="{{ route('editNote', [$member->clan_id, $leave->note->id]) }}"
                class="btn btn-accent">Edit Note</a>
+        </div>
+
+        <div class="m-t-xl">
+            {!! Form::model($leave, ['method' => 'delete', 'route' => ['leave.delete', $member->clan_id, $leave->id]]) !!}
+            @include('leave.forms.delete-leave')
+            {!! Form::close() !!}
         </div>
     </div>
 

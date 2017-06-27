@@ -7,7 +7,6 @@ use App\Http\Requests\CreateLeave;
 use App\Http\Requests\UpdateLeave;
 use App\Leave;
 use App\Member;
-use Illuminate\Http\Request;
 
 /**
  * Class LeaveController
@@ -65,6 +64,12 @@ class LeaveController extends Controller
      */
     public function update(UpdateLeave $form, Member $member)
     {
+        if ($form->approve_leave && ($form->requester_id == auth()->user()->id)) {
+            return redirect()->back()
+                ->withErrors(['member_id' => "You cannot approve an LOA that you requested"])
+                ->withInput();
+        }
+
         $form->persist();
 
         $this->showToast('Leave of absence updated!');
@@ -90,7 +95,7 @@ class LeaveController extends Controller
     /**
      * @param CreateLeave $form
      * @param Division $division
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return LeaveController|\Illuminate\Http\RedirectResponse
      */
     public function store(CreateLeave $form, Division $division)
     {

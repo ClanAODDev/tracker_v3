@@ -47,6 +47,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('{member}/leave/{leave}/edit', 'LeaveController@edit')->name('leave.edit');
     Route::put('{member}/leave', 'LeaveController@update')->name('leave.update');
     Route::patch('{member}/leave', 'LeaveController@update');
+    Route::delete('{member}/leave/{leave}', 'LeaveController@delete')->name('leave.delete');
 
     // member notes
     Route::group(['prefix' => '{member}/notes'], function () {
