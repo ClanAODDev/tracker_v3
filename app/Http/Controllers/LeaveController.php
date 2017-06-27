@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Http\Requests\CreateLeave;
+use App\Http\Requests\UpdateLeave;
 use App\Leave;
 use App\Member;
 use Illuminate\Http\Request;
@@ -41,23 +42,30 @@ class LeaveController extends Controller
         ));
     }
 
+    /**
+     * @param Member $member
+     * @param Leave $leave
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function delete(Member $member, Leave $leave)
     {
         $this->authorize('update', $member);
 
+        $leave->delete();
+
+        $this->showToast('Leave successfully deleted!');
+
+        return redirect(route('leave.index', $member->primaryDivision->abbreviation));
     }
 
-    public function update(Request $request, Member $member)
+    /**
+     * @param UpdateLeave $form
+     * @param Member $member
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(UpdateLeave $form, Member $member)
     {
-        $this->authorize('update', $member);
-
-        $leave = Leave::findOrFail($request->leave_id);
-
-        if ($request->approve_leave) {
-            $leave->approver()->associate(auth()->user());
-        }
-
-        $leave->update($request->all());
+        $form->persist();
 
         $this->showToast('Leave of absence updated!');
 
@@ -65,6 +73,11 @@ class LeaveController extends Controller
 
     }
 
+    /**
+     * @param Member $member
+     * @param Leave $leave
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(Member $member, Leave $leave)
     {
         $this->authorize('update', $member);
@@ -75,6 +88,11 @@ class LeaveController extends Controller
         return view('leave.edit', compact('division', 'member', 'leave'));
     }
 
+    /**
+     * @param CreateLeave $form
+     * @param Division $division
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function store(CreateLeave $form, Division $division)
     {
         if ($form->member_id && ! $this->isMemberOfDivision($division, $form)) {
@@ -90,6 +108,11 @@ class LeaveController extends Controller
         return redirect(route('leave.index', $division->abbreviation));
     }
 
+    /**
+     * @param Division $division
+     * @param $request
+     * @return bool
+     */
     public function isMemberOfDivision(Division $division, $request)
     {
         $member = Member::whereClanId($request->member_id)->first();

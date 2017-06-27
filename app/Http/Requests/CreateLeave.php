@@ -30,7 +30,7 @@ class CreateLeave extends FormRequest
     public function rules()
     {
         return [
-            'end_date' => 'after:today',
+            'end_date' => 'date|after:today',
             'member_id' => [
                 'exists:members,clan_id',
                 'unique:leaves,member_id'

@@ -27,7 +27,7 @@
             </a>
         @endcan
 
-            <a href="{{ route('division.leaves', $myDivision->abbreviation) }}"
+            <a href="{{ route('leave.index', $myDivision->abbreviation) }}"
             class="btn btn-default btn-squared">
                 Leave
             </a>

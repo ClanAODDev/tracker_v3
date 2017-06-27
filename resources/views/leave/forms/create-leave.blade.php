@@ -7,7 +7,7 @@
             <i class="fa fa-search pull-right"
                style="position: absolute; right: 20px; top: 35px;"></i>
         </div>
-        <div class="form-group">
+        <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">
             {!! Form::label('end_date', 'Leave End Date') !!}
             {{ Form::date('end_date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
         </div>
