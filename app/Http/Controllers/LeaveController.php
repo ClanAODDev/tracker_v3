@@ -70,7 +70,6 @@ class LeaveController extends Controller
         $this->showToast('Leave of absence updated!');
 
         return redirect(route('leave.index', [$member->primaryDivision->abbreviation]));
-
     }
 
     /**
