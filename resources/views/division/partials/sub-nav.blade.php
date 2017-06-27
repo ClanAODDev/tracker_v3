@@ -9,7 +9,7 @@
         <a href="{{ route('division.structure', $division->abbreviation) }}" class="btn btn-default ">
             Structure
         </a>
-        <a href="{{ route('division.leaves', $division->abbreviation) }}" class="btn btn-default ">
+        <a href="{{ route('leave.index', $division->abbreviation) }}" class="btn btn-default ">
             Leaves of Absence
         </a>
     </div>

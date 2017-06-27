@@ -113,7 +113,7 @@ class Division extends Model
     ];
 
     protected $hidden = [
-      'structure'
+        'structure'
     ];
 
     /**
@@ -149,7 +149,6 @@ class Division extends Model
         }
 
         return ($countPosts) ? true : false;
-
     }
 
     /**
@@ -225,11 +224,6 @@ class Division extends Model
         return $this->members()->wherePivot('primary', false);
     }
 
-    public function sergeants()
-    {
-        return $this->activeMembers()->where('rank_id', '>', 8);
-    }
-
     /**
      * relationship - division has many members
      */
@@ -238,6 +232,19 @@ class Division extends Model
         return $this->belongsToMany(Member::class)
             ->withPivot('primary')
             ->withTimestamps();
+    }
+
+    public function sergeants()
+    {
+        return $this->activeMembers()->where('rank_id', '>', 8);
+    }
+
+    /**
+     * Gets active members of a division
+     */
+    public function activeMembers()
+    {
+        return $this->members()->wherePivot('primary', true);
     }
 
     /**
@@ -250,14 +257,6 @@ class Division extends Model
 
         return $this->activeMembers()
             ->where('last_activity', '>=', $date);
-    }
-
-    /**
-     * Gets active members of a division
-     */
-    public function activeMembers()
-    {
-        return $this->members()->wherePivot('primary', true);
     }
 
     /**

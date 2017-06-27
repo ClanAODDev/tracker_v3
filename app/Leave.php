@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Activities\RecordsActivity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Leave extends Model
 {
+
+    use RecordsActivity;
 
     /**
      * @var array
@@ -34,6 +37,15 @@ class Leave extends Model
         'reason',
         'end_date',
         'extended'
+    ];
+
+    /**
+     * @var array
+     */
+    protected static $recordEvents = [
+        'created',
+        'updated',
+        'deleted'
     ];
 
     /**
@@ -68,6 +80,9 @@ class Leave extends Model
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return bool
+     */
     public function getExpiredAttribute()
     {
         return Carbon::today() > $this->end_date->format('Y-m-d');

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Leave;
+use App\Member;
 use App\Note;
 use App\Tag;
 use Illuminate\Foundation\Http\FormRequest;
@@ -16,7 +17,9 @@ class CreateLeave extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $member = Member::whereClanId($this->member_id)->first();
+
+        return $this->user()->can('update', [$member]);
     }
 
     /**
@@ -27,6 +30,7 @@ class CreateLeave extends FormRequest
     public function rules()
     {
         return [
+            'end_date' => 'after:today',
             'member_id' => [
                 'exists:members,clan_id',
                 'unique:leaves,member_id'

@@ -2,7 +2,7 @@
     <div class="col-xs-6">
         <div class="form-group">
             {!! Form::label('end_date', 'Leave End Date') !!}
-            {{ Form::date('end_date', $leave->end_date->format('Y-m-d'), ['class' => 'form-control']) }}
+            {{ Form::date('end_date', $leave->end_date->format('Y-m-d'), ['class' => 'form-control', 'placeholder' => 'mm/dd/yyyy']) }}
         </div>
     </div>
 

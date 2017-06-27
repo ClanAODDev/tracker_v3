@@ -53,19 +53,21 @@
             </table>
         </div>
 
-        {!! Form::model($leave, ['method' => 'patch', 'route' => ['member.update-leave', $member->clan_id]]) !!}
-        <input type="hidden" value="{{ $leave->id }}" name="leave_id" />
-        @include('member.forms.edit-leave')
+        <div class="m-t-xl">
+            {!! Form::model($leave, ['method' => 'patch', 'route' => ['leave.update', $member->clan_id]]) !!}
+            <input type="hidden" value="{{ $leave->id }}" name="leave_id" />
+            @include('leave.forms.edit-leave')
 
-        @if (! $leave->approver)
-            <div class="form-group">
-                <input type="checkbox" id="approve_leave" name="approve_leave" /> <label
-                        for="approve_leave">Approve leave of absence?</label>
-            </div>
-        @endif
-        {!! Form::close() !!}
-        <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
-           class="btn btn-default">View Forum Thread</a>
+            @if (! $leave->approver)
+                <div class="form-group">
+                    <input type="checkbox" id="approve_leave" name="approve_leave" /> <label
+                            for="approve_leave">Approve leave of absence?</label>
+                </div>
+            @endif
+            {!! Form::close() !!}
+            <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
+               class="btn btn-default">View Forum Thread</a>
+        </div>
 
         <div class="m-t-xl">
             <label for="note-body">Leave Justification</label>

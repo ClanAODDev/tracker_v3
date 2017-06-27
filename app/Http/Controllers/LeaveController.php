@@ -30,19 +30,27 @@ class LeaveController extends Controller
     public function index(Division $division)
     {
         $membersWithLeave = $division->members()->whereHas('leaveOfAbsence')
-            ->with('activeLeave', 'rank')->get();
+            ->with('leaveOfAbsence', 'rank')->get();
 
         $expiredLeave = (bool) count($membersWithLeave->filter(function ($member) {
             return $member->leaveOfAbsence->expired;
         }));
 
-        return view('division.leaves', compact(
+        return view('leave.index', compact(
             'division', 'membersWithLeave', 'expiredLeave'
         ));
     }
 
+    public function delete(Member $member, Leave $leave)
+    {
+        $this->authorize('update', $member);
+
+    }
+
     public function update(Request $request, Member $member)
     {
+        $this->authorize('update', $member);
+
         $leave = Leave::findOrFail($request->leave_id);
 
         if ($request->approve_leave) {
@@ -53,24 +61,40 @@ class LeaveController extends Controller
 
         $this->showToast('Leave of absence updated!');
 
-        return redirect(route('division.leaves', [$member->primaryDivision->abbreviation]));
+        return redirect(route('leave.index', [$member->primaryDivision->abbreviation]));
 
     }
 
     public function edit(Member $member, Leave $leave)
     {
+        $this->authorize('update', $member);
+
         $leave->load('note', 'approver', 'requester');
         $division = $member->primaryDivision;
 
-        return view('member.edit-leave', compact('division', 'member', 'leave'));
+        return view('leave.edit', compact('division', 'member', 'leave'));
     }
 
     public function store(CreateLeave $form, Division $division)
     {
+        if ($form->member_id && ! $this->isMemberOfDivision($division, $form)) {
+            return redirect()->back()
+                ->withErrors(['member_id' => "Member {$form->member_id} not assigned to this division!"])
+                ->withInput();
+        }
+
         $form->persist();
 
         $this->showToast('Leave of absence created!');
 
-        return redirect(route('division', $division->abbreviation));
+        return redirect(route('leave.index', $division->abbreviation));
+    }
+
+    public function isMemberOfDivision(Division $division, $request)
+    {
+        $member = Member::whereClanId($request->member_id)->first();
+
+        return $member->primaryDivision instanceof Division &&
+            $member->primaryDivision->id === $division->id;
     }
 }

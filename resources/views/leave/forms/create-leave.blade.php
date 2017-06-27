@@ -31,9 +31,8 @@
             </div>
         </div>
 
-        <label for="note_body">Leave Note Body</label>
-        <textarea name="note_body" id="note_body" class="form-control" rows="5"
-                  style="resize: vertical;" required></textarea>
+        {!! Form::label('note_body', 'Leave Note Body') !!}
+        {!! Form::textarea('note_body', null, ['class' => "form-control", 'rows' => 5, 'style' => 'resize: vertical;', 'required' => 'required']) !!}
     </div>
 </div>
 <button class="btn btn-success pull-right" type="submit">Submit</button>

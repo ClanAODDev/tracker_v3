@@ -44,8 +44,8 @@ Route::group(['prefix' => 'members'], function () {
     Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
 
     // member leave
-    Route::get('{member}/leave/{leave}/edit', 'LeaveController@edit')->name('member.edit-leave');
-    Route::put('{member}/leave', 'LeaveController@update')->name('member.update-leave');
+    Route::get('{member}/leave/{leave}/edit', 'LeaveController@edit')->name('leave.edit');
+    Route::put('{member}/leave', 'LeaveController@update')->name('leave.update');
     Route::patch('{member}/leave', 'LeaveController@update');
 
     // member notes
@@ -97,8 +97,8 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/part-timers/{member}/remove', 'DivisionController@removePartTime')->name('removePartTimer');
     Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
 
-    Route::get('{division}/leave', 'LeaveController@index')->name('division.leaves');
-    Route::post('{division}/leave', 'LeaveController@store')->name('member.store-leave');
+    Route::get('{division}/leave', 'LeaveController@index')->name('leave.index');
+    Route::post('{division}/leave', 'LeaveController@store')->name('leave.store');
 
     /**
      * Recruiting Process
