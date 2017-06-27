@@ -15,4 +15,18 @@
         </div>
     </div>
 </div>
-<button class="btn btn-success pull-right" type="submit">Submit Changes</button>
+
+<div class="row">
+    <div class="col-md-6">
+        @if (! $leave->approver)
+            <div class="form-group">
+                <input type="checkbox" id="approve_leave" name="approve_leave" /> <label
+                        for="approve_leave">Approve leave of absence?</label>
+            </div>
+        @endif
+    </div>
+    <div class="col-md-6 text-right">
+        <a href="{{ route('leave.index', $division->abbreviation) }}" class="btn btn-default">Cancel</a>
+        <button class="btn btn-success" type="submit">Submit Changes</button>
+    </div>
+</div>

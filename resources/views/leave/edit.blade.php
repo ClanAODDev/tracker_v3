@@ -58,13 +58,6 @@
             <input type="hidden" value="{{ $leave->id }}" name="leave_id" />
             <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}" />
             @include('leave.forms.edit-leave')
-
-            @if (! $leave->approver)
-                <div class="form-group">
-                    <input type="checkbox" id="approve_leave" name="approve_leave" /> <label
-                            for="approve_leave">Approve leave of absence?</label>
-                </div>
-            @endif
             {!! Form::close() !!}
             <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
                class="btn btn-default">View Forum Thread</a>
