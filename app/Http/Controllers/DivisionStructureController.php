@@ -60,6 +60,8 @@ class DivisionStructureController extends Controller
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->memberCount = $division->members->count();
+        $data->leave = $division->members()->whereHas('leaveOfAbsence')
+            ->with('leaveOfAbsence', 'rank')->get();
 
         $data->locality = $this->getLocality($division);
         $data->generalSergeants = $division->generalSergeants()->with([
@@ -127,8 +129,8 @@ class DivisionStructureController extends Controller
         return [
             'squad' => $division->locality('squad'),
             'platoon' => $division->locality('platoon'),
-            'squadLeader' => $division->locality('squad leader'),
-            'platoonLeader' => $division->locality('platoon leader'),
+            'squad_leader' => $division->locality('squad leader'),
+            'platoon_leader' => $division->locality('platoon leader'),
         ];
     }
 
