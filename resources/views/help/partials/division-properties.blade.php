@@ -32,8 +32,14 @@
         <td>Accessor for localization. Available localizations:<br />
             <code>division.locality.squad</code><br />
             <code>division.locality.platoon</code><br />
-            <code>division.locality.squadLeader</code><br />
-            <code>division.locality.platoonLeader</code>
+            <code>division.locality.squad_leader</code><br />
+            <code>division.locality.platoon_leader</code>
+        </td>
+        <td><code>array</code></td>
+    </tr>
+    <tr>
+        <td><code>division.leave</code></td>
+        <td>Accessor for leaves of absence. Treat these as member objects. Ex., <code>for member in division.leave</code>
         </td>
         <td><code>array</code></td>
     </tr>

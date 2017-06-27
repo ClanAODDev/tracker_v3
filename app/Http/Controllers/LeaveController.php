@@ -30,11 +30,11 @@ class LeaveController extends Controller
      */
     public function index(Division $division)
     {
-        $membersWithLeave = $division->members()->whereHas('leaveOfAbsence')
-            ->with('leaveOfAbsence', 'rank')->get();
+        $membersWithLeave = $division->members()->whereHas('leave')
+            ->with('leave', 'rank')->get();
 
         $expiredLeave = (bool) count($membersWithLeave->filter(function ($member) {
-            return $member->leaveOfAbsence->expired;
+            return $member->leave->expired;
         }));
 
         return view('leave.index', compact(

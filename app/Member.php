@@ -191,7 +191,7 @@ class Member extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function leaveOfAbsence()
+    public function leave()
     {
         return $this->hasOne(Leave::class, 'member_id', 'clan_id');
     }

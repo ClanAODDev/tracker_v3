@@ -60,8 +60,8 @@ class DivisionStructureController extends Controller
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->memberCount = $division->members->count();
-        $data->leave = $division->members()->whereHas('leaveOfAbsence')
-            ->with('leaveOfAbsence', 'rank')->get();
+
+        $data->leave = $this->getLeave($division);
 
         $data->locality = $this->getLocality($division);
         $data->generalSergeants = $division->generalSergeants()->with([
@@ -122,6 +122,22 @@ class DivisionStructureController extends Controller
         });
 
         return $data;
+    }
+
+    /**
+     * Filters leave, omitting unapproved leave
+     *
+     * @param $division
+     * @return mixed
+     */
+    private function getLeave($division)
+    {
+        $leave = $division->members()->whereHas('leave')
+            ->with('leave', 'rank')->get();
+
+        return $leave->filter(function ($member) {
+            return $member->leave->approver;
+        });
     }
 
     private function getLocality(Division $division)

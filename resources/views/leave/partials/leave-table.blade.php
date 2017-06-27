@@ -11,9 +11,9 @@
     </thead>
     <tbody>
     @foreach ($membersWithLeave as $member)
-        <tr class="{{ $member->leaveOfAbsence->expired ? 'text-danger' : null }}">
+        <tr class="{{ $member->leave->expired ? 'text-danger' : null }}">
             <td>
-                <a href="{{ route('leave.edit', [$member->clan_id, $member->leaveOfAbsence->id]) }}"
+                <a href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}"
                    class="btn btn-default">
                     <i class="fa fa-search"></i>
                 </a>
@@ -22,25 +22,25 @@
                 {{ $member->name }}
                 <span class="text-muted">{{ $member->rank->abbreviation }}</span>
             </td>
-            <td title="{{ $member->leaveOfAbsence->end_date->diffForHumans() }}">
-                @if($member->leaveOfAbsence->expired)
+            <td title="{{ $member->leave->end_date->diffForHumans() }}">
+                @if($member->leave->expired)
                     <i class="fa fa-exclamation-triangle text-danger" title="Expired"></i>
                 @endif
-                {{ $member->leaveOfAbsence->end_date->format('Y-m-d') }}
+                {{ $member->leave->end_date->format('Y-m-d') }}
             </td>
             <td>
-                @if ($member->leaveOfAbsence->approver)
-                    {{ $member->leaveOfAbsence->approver->name }}
+                @if ($member->leave->approver)
+                    {{ $member->leave->approver->name }}
                 @else
                     <div class="text-accent">Needs approval</div>
                 @endif
             </td>
             <td>
-                {{ ucwords($member->leaveOfAbsence->reason) }}
+                {{ ucwords($member->leave->reason) }}
             </td>
             <td>
                 <a target="_blank"
-                   href="{{ doForumFunction([$member->leaveOfAbsence->note->forum_thread_id], 'showThread') }}">
+                   href="{{ doForumFunction([$member->leave->note->forum_thread_id], 'showThread') }}">
                     View Thread <i class="fa fa-external-link text-accent"></i>
                 </a>
             </td>
