@@ -5,6 +5,7 @@ namespace App;
 use App\Activities\RecordsActivity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Leave
@@ -14,7 +15,9 @@ use Illuminate\Database\Eloquent\Model;
 class Leave extends Model
 {
 
-    use RecordsActivity;
+    use RecordsActivity,
+        SoftDeletes;
+
 
     /**
      * @var array

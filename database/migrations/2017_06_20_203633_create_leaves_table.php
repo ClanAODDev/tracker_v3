@@ -23,11 +23,7 @@ class CreateLeavesTable extends Migration
             $table->dateTime('end_date');
             $table->boolean('extended')->nullable();
             $table->timestamps();
-
-            // member
-            // approver
-            // requester
-            // note
+            $table->softDeletes();
         });
     }
 

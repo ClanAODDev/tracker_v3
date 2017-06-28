@@ -16,9 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Member extends Model
 {
 
-    use Member\HasCustomAttributes;
-    use RecordsActivity;
-    use SoftDeletes;
+    use Member\HasCustomAttributes,
+        RecordsActivity,
+        SoftDeletes;
 
     /**
      * @var array
