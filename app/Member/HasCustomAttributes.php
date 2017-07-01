@@ -21,19 +21,6 @@ trait HasCustomAttributes
     }
 
     /**
-     * Gets member's primary division
-     */
-    public function getPrimaryDivisionAttribute()
-    {
-        return $this->divisions()->wherePivot('primary', true)->first();
-    }
-
-    public function getPartTimeDivisionsAttribute()
-    {
-        return $this->divisions()->wherePivot('primary', false)->get();
-    }
-
-    /**
      * @param $value
      * @return string
      */

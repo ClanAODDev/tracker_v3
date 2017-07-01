@@ -76,9 +76,7 @@ class SyncMemberData
         $member->save();
 
         // set member's active division
-        self::$activeMembers[$member->id] = [
-            'primary' => true,
-        ];
+        self::$activeMembers[] = $member->id;
     }
 
     /**

@@ -112,6 +112,9 @@ class Division extends Model
         'settings' => 'json',
     ];
 
+    /**
+     * @var array
+     */
     protected $hidden = [
         'structure'
     ];
@@ -128,6 +131,11 @@ class Division extends Model
         'abbreviation'
     ];
 
+    /**
+     * @param $string
+     * @param $thread
+     * @return bool
+     */
     public static function threadCheck($string, $thread)
     {
         $ch = curl_init();
@@ -221,7 +229,16 @@ class Division extends Model
      */
     public function partTimeMembers()
     {
-        return $this->members()->wherePivot('primary', false);
+        return $this->belongsToMany(Member::class, 'division_parttimer')
+            ->withTimestamps();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function sergeants()
+    {
+        return $this->members()->where('rank_id', '>', 8);
     }
 
     /**
@@ -229,22 +246,7 @@ class Division extends Model
      */
     public function members()
     {
-        return $this->belongsToMany(Member::class)
-            ->withPivot('primary')
-            ->withTimestamps();
-    }
-
-    public function sergeants()
-    {
-        return $this->activeMembers()->where('rank_id', '>', 8);
-    }
-
-    /**
-     * Gets active members of a division
-     */
-    public function activeMembers()
-    {
-        return $this->members()->wherePivot('primary', true);
+        return $this->hasMany(Member::class);
     }
 
     /**
@@ -255,7 +257,7 @@ class Division extends Model
     {
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
 
-        return $this->activeMembers()
+        return $this->members()
             ->where('last_activity', '>=', $date);
     }
 
@@ -264,8 +266,7 @@ class Division extends Model
      */
     public function generalSergeants()
     {
-        return $this->activeMembers()
-            ->wherePositionId(4);
+        return $this->members()->wherePositionId(4);
     }
 
     /**

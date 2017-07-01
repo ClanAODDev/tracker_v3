@@ -156,12 +156,23 @@ class Member extends Model
     }
 
     /**
+     * Handle Staff Sergeant assignments
+     * division/
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function partTimeDivisions()
+    {
+        return $this->belongsToMany(Division::class, 'parttimers');
+    }
+
+    /**
      * relationship - member has many divisions
      */
-    public function divisions()
+    public function division()
     {
-        return $this->belongsToMany(Division::class)
-            ->withPivot('primary')->withTimestamps();
+        return $this->belongsTo(Division::class)
+            ->withTimestamps();
     }
 
     /**
