@@ -22,7 +22,7 @@ class UserController extends Controller
         $this->authorize('update', $member->user);
 
         $user = $member->user;
-        $division = $member->primaryDivision;
+        $division = $member->division;
 
         $roles = auth()->user()->isDeveloper()
             ? Role::all()->pluck('label', 'id')

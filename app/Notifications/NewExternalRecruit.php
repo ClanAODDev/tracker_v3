@@ -67,7 +67,7 @@ class NewExternalRecruit extends Notification
         $to = ($this->division->settings()->get('slack_channel'))
             ?: '@' . $user->name;
 
-        $message = "*EXTERNAL RECRUIT*\n{$user->name} from {$user->member->primaryDivision->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!";
+        $message = "*EXTERNAL RECRUIT*\n{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!";
 
         return (new SlackMessage())
             ->success()

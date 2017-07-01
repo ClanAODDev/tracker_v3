@@ -52,7 +52,7 @@ trait RecordsActivity
                 'user_id' => $actor->id,
                 'subject_id' => $this->id,
                 'subject_type' => get_class($this),
-                'division_id' => $actor->member->primaryDivision->id
+                'division_id' => $actor->member->division->id
             ]);
         }
     }

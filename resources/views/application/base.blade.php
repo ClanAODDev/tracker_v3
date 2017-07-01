@@ -5,7 +5,7 @@
     @include('application.header')
 </head>
 
-@if (Auth::check() && Auth::user()->member->primaryDivision)
+@if (Auth::check() && Auth::user()->member->division)
     <body>
     {!! Toastr::message() !!}
     <div class="wrapper">

@@ -46,7 +46,7 @@ class MemberRemoved extends Notification
      */
     public function toSlack()
     {
-        $division = $this->member->primaryDivision;
+        $division = $this->member->division;
         $to = ($division->settings()->get('slack_channel'))
             ?: '@' . auth()->user()->name;
 

@@ -9,7 +9,7 @@ class ActivitiesController extends Controller
 {
     public function byUser(User $user)
     {
-        $division = $user->member->primaryDivision;
+        $division = $user->member->division;
 
         $activity = $user->activity()->with([
             'subject' => function ($query) {

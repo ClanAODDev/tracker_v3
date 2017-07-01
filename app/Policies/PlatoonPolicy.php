@@ -37,7 +37,7 @@ class PlatoonPolicy
     public function update(User $user, Platoon $platoon)
     {
         // moderators (CPLs) can affect platoons within their division
-        if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $platoon->division->id) {
+        if ($user->isRole('jr_ldr') && $user->member->division->id == $platoon->division->id) {
             return true;
         }
 
@@ -63,7 +63,7 @@ class PlatoonPolicy
     public function create(User $user, Division $division)
     {
         // CPLs can create platoons within their own division
-        if ($user->isRole('jr_ldr') && $user->member->primaryDivision->id == $division->id) {
+        if ($user->isRole('jr_ldr') && $user->member->division->id == $division->id) {
             return true;
         }
     }

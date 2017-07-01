@@ -31,7 +31,7 @@ class NoteController extends Controller
     {
         $this->authorize('delete', $member);
 
-        $division = $member->primaryDivision;
+        $division = $member->division;
         $tags = $division->availableTags->pluck('name', 'id');
 
         return view('member.edit-note', compact(

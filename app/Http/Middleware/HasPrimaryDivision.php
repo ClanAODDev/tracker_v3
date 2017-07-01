@@ -19,7 +19,7 @@ class HasPrimaryDivision
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ( ! $user->member->primaryDivision) {
+            if ( ! $user->member->division) {
                 //Auth::logout();
                 abort(408);
             }

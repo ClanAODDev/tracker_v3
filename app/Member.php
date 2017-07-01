@@ -171,8 +171,7 @@ class Member extends Model
      */
     public function division()
     {
-        return $this->belongsTo(Division::class)
-            ->withTimestamps();
+        return $this->belongsTo(Division::class);
     }
 
     /**
@@ -267,7 +266,7 @@ class Member extends Model
      */
     public function isDivisionLeader(Division $division)
     {
-        if ($this->primaryDivision->id === $division->id &&
+        if ($this->division->id === $division->id &&
             in_array($this->position_id, [5, 6])
         ) {
             return true;

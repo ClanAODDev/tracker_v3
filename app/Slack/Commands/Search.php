@@ -56,8 +56,8 @@ class Search extends Base implements Command
 
         if ($this->members) {
             foreach ($this->members as $member) {
-                $division = ($member->primaryDivision)
-                    ? "{$member->primaryDivision->name} Division"
+                $division = ($member->division)
+                    ? "{$member->division->name} Division"
                     : "Ex-AOD";
 
                 $links = [
@@ -68,7 +68,7 @@ class Search extends Base implements Command
                 $this->content[] = [
                     'title' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'text' => "Profiles: " . implode(', ', $links),
-                    'color' => ($member->primaryDivision) ? '#88C53E' : '#ff0000',
+                    'color' => ($member->division) ? '#88C53E' : '#ff0000',
                 ];
             }
         }

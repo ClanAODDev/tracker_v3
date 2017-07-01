@@ -76,8 +76,8 @@ class PlatoonController extends Controller
     {
         $member = Member::whereClanId($request->leader_id)->first();
 
-        return $member->primaryDivision instanceof Division &&
-            $member->primaryDivision->id === $division->id;
+        return $member->division instanceof Division &&
+            $member->division->id === $division->id;
     }
 
     /**

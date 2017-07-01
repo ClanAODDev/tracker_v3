@@ -129,7 +129,7 @@ class RecruitingController extends Controller
      */
     private function handleNotification(Request $request, $member, $division)
     {
-        if ($request->division != auth()->user()->member->primaryDivision) {
+        if ($request->division != auth()->user()->member->division) {
             return auth()->user()->notify(new NewExternalRecruit($member, $division));
         }
 

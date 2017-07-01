@@ -105,7 +105,7 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        $division = $member->primaryDivision;
+        $division = $member->division;
 
         if ( ! $division) {
             abort(409, 'No primary division');
@@ -149,19 +149,19 @@ class MemberController extends Controller
     {
         $this->authorize('update', $member);
 
-        $primaryDivision = $member->primaryDivision;
+        $division = $member->division;
         $positions = Position::all()->pluck('id', 'name');
 
         $divisions = Division::active()->get()->except(
             $member->partTimeDivisions->pluck('id')->toArray()
-        )->filter(function ($division) use ($member, $primaryDivision) {
-            return $division->id !== $primaryDivision->id;
+        )->filter(function ($division) use ($member, $division) {
+            return $division->id !== $division->id;
         });
 
         $handles = $this->getHandles($member);
 
         return view('member.edit-member', compact(
-            'member', 'primaryDivision', 'positions', 'handles', 'divisions'
+            'member', 'division', 'positions', 'handles', 'divisions'
         ));
     }
 
@@ -234,7 +234,7 @@ class MemberController extends Controller
      */
     public function destroy(Member $member, DeleteMember $form)
     {
-        $division = $member->primaryDivision;
+        $division = $member->division;
 
         if ($division->settings()->get('slack_alert_removed_member')) {
             $division->notify(new MemberRemoved($member, $form->input('removal-reason')));

@@ -54,7 +54,7 @@ class LeaveController extends Controller
 
         $this->showToast('Leave successfully deleted!');
 
-        return redirect(route('leave.index', $member->primaryDivision->abbreviation));
+        return redirect(route('leave.index', $member->division->abbreviation));
     }
 
     /**
@@ -74,7 +74,7 @@ class LeaveController extends Controller
 
         $this->showToast('Leave of absence updated!');
 
-        return redirect(route('leave.index', [$member->primaryDivision->abbreviation]));
+        return redirect(route('leave.index', [$member->division->abbreviation]));
     }
 
     /**
@@ -87,7 +87,7 @@ class LeaveController extends Controller
         $this->authorize('update', $member);
 
         $leave->load('note', 'approver', 'requester');
-        $division = $member->primaryDivision;
+        $division = $member->division;
 
         return view('leave.edit', compact('division', 'member', 'leave'));
     }
@@ -121,7 +121,7 @@ class LeaveController extends Controller
     {
         $member = Member::whereClanId($request->member_id)->first();
 
-        return $member->primaryDivision instanceof Division &&
-            $member->primaryDivision->id === $division->id;
+        return $member->division instanceof Division &&
+            $member->division->id === $division->id;
     }
 }
