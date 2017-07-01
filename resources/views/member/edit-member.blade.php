@@ -3,8 +3,8 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            @if ($primaryDivision)
-                <img src="{{ getDivisionIconPath($primaryDivision->abbreviation) }}" />
+            @if ($division)
+                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
             @else
                 <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;" />
             @endif
