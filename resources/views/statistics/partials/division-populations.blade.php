@@ -29,7 +29,11 @@
                           data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyActive]) }}">
                     </span>
                     <small class="slight">
-                        {{ round($division->weeklyActive / $division->total * 100, 1) }}%
+                        @if ($division->total > 0)
+                            {{ round($division->weeklyActive / $division->total * 100, 1) }}%
+                        @else
+                            0%
+                        @endif
                     </small>
                 </td>
                 <td class="text-center">{{ $division->census->last()->count}}</td>
