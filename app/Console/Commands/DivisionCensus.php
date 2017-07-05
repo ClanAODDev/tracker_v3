@@ -59,7 +59,7 @@ class DivisionCensus extends Command
     {
         $census = new Census();
         $census->division()->associate($division);
-        $census->count = $division->activeMembers->count();
+        $census->count = $division->members->count();
         $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();
         $census->save();
     }

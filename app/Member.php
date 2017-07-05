@@ -30,7 +30,19 @@ class Member extends Model
     /**
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'name',
+        'clan_id',
+        'platoon_id',
+        'squad_id',
+        'position_id',
+        'division_id',
+        'posts',
+        'join_date',
+        'last_activity',
+        'last_promoted',
+        'recruiter_id'
+    ];
 
     /**
      * @var array
@@ -156,25 +168,6 @@ class Member extends Model
     }
 
     /**
-     * Handle Staff Sergeant assignments
-     * division/
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function partTimeDivisions()
-    {
-        return $this->belongsToMany(Division::class, 'parttimers');
-    }
-
-    /**
-     * relationship - member has many divisions
-     */
-    public function division()
-    {
-        return $this->belongsTo(Division::class);
-    }
-
-    /**
      * relationship - member belongs to a platoon
      */
     public function platoon()
@@ -188,6 +181,26 @@ class Member extends Model
     public function squad()
     {
         return $this->belongsTo(Squad::class);
+    }
+
+    /**
+     * Handle Staff Sergeant assignments
+     * division/
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function partTimeDivisions()
+    {
+        return $this->belongsToMany(Division::class, 'division_parttimer')
+            ->withTimestamps();
+    }
+
+    /**
+     * relationship - member has many divisions
+     */
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
     }
 
     /**

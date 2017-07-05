@@ -42,7 +42,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($division->activeMembers as $member)
+                        @foreach ($division->members as $member)
                             <tr style="cursor:pointer;"
                                 onclick="window.location.href = '{{ route('member', $member->clan_id) }}'">
                                 <td>

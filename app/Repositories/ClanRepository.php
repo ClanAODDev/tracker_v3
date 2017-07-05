@@ -38,39 +38,6 @@ class ClanRepository
     }
 
     /**
-     * Measure recruit count
-     *
-     * @param $rank
-     * @return mixed
-     * @throws \Exception
-     */
-    public function rankDemographic($rank)
-    {
-        if ( ! is_int($rank) && ! is_array($rank)) {
-            throw new \Exception('Rank provided to rank demographic must be an integer or an array');
-        }
-
-        if (is_array($rank)) {
-            $rankIds = implode(',', $rank);
-            $where = "WHERE rank_id IN ({$rankIds})";
-        } else {
-            $where = "WHERE rank_id = {$rank}";
-        }
-
-        $data = collect(DB::select(
-            DB::raw("
-                SELECT count(*) as count FROM members
-                INNER JOIN division_member
-                ON member_id = members.id
-                {$where}
-                AND division_member.primary = 1
-            ")
-        ))->first();
-
-        return $data->count;
-    }
-
-    /**
      * Breakdown of ranks across clan
      *
      * @return array

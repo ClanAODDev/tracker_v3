@@ -18,7 +18,7 @@
         <td><code>object</code></td>
     </tr>
     <tr>
-        <td><code>division.activeMembers</code></td>
+        <td><code>division.division</code></td>
         <td>A collection of all active members</td>
         <td><code>array</code></td>
     </tr>

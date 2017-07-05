@@ -13,6 +13,8 @@ class SyncMemberData
 
     protected static $activeMembers = [];
 
+    protected static $currentMembers = [];
+
     /**
      * Performs update operation on divisions and members and also
      * syncs division membership (adds, removes)
@@ -23,7 +25,12 @@ class SyncMemberData
             // log activity
             Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
 
+            // reset array
             self::$activeMembers = [];
+
+            self::$currentMembers = Member::whereDivisionId($division->id)
+                ->get()->pluck('id')->toArray();
+
             $divisionInfo = new GetDivisionInfo($division->name);
 
             if ( ! is_object($divisionInfo)) {
@@ -36,11 +43,10 @@ class SyncMemberData
                 self::doMemberUpdate($member, $division);
             }
 
-            // add new members, detach removed members
-            $members = $division->members()->sync(self::$activeMembers);
+            echo "{$division->name} members synced" . PHP_EOL;
 
             // trash removed members
-            self::doRemovalCleanup($members);
+            self::doRemovalCleanup();
         }
     }
 
@@ -48,13 +54,16 @@ class SyncMemberData
      * Updates an individual member and queues as an active primary member
      *
      * @param $record
+     * @param $division
      */
-    private static function doMemberUpdate($record)
+    private static function doMemberUpdate($record, $division)
     {
         // are we updating or creating?
         $member = Member::firstOrCreate([
             'clan_id' => $record['userid'],
         ]);
+
+        $member->division_id = $division->id;
 
         // have they been recently promoted?
         if ($member->rank_id < ($record['aodrankval'] - 2) && $member->rank_id > 0) {
@@ -71,24 +80,29 @@ class SyncMemberData
         // accounts for forum member, prospective member ranks which we don't use
         $member->rank_id = ($record['aodrankval'] - 2 <= 0) ? 1 : $record['aodrankval'] - 2;
 
+        // forum post count
         $member->posts = $record['postcount'];
 
+        // persist
         $member->save();
 
-        // set member's active division
+
+        // populate our active members
         self::$activeMembers[] = $member->id;
+
     }
 
     /**
      * Handles cleanup of members removed from a division (platoon, squad info wiped)
-     *
-     * @param array $members
      */
-    private static function doRemovalCleanup(array $members)
+    private static function doRemovalCleanup()
     {
-        $detached = $members['detached'];
+        $removed = array_diff(
+            self::$currentMembers,
+            self::$activeMembers
+        );
 
-        foreach ($detached as $index => $id) {
+        foreach ($removed as $index => $id) {
             $member = Member::find($id);
 
             if ($member instanceof Member) {
@@ -99,10 +113,13 @@ class SyncMemberData
 
     private static function resetMember($member)
     {
+
         // reset member data
         $member->squad_id = 0;
         $member->platoon_id = 0;
         $member->position_id = 1;
+        $member->division_id = 0;
+
         $member->save();
 
         // reset any leadership assignments

@@ -361,7 +361,7 @@ class Division extends Model
      */
     public function leaders()
     {
-        return $this->activeMembers()
+        return $this->members()
             ->orderBy('position_id', 'desc')
             ->whereIn('position_id', [5, 6]);
     }

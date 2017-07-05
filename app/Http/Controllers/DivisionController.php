@@ -140,7 +140,7 @@ class DivisionController extends Controller
     public function assignPartTime(Division $division, Member $member)
     {
         $this->authorize('update', $member);
-        $division->partTimeMembers()->attach($member->id, ['primary' => false]);
+        $division->partTimeMembers()->attach($member->id);
         $this->showToast("{$member->name} added as part-time member to {$division->name}!");
 
         $member->recordActivity('add_part_time');

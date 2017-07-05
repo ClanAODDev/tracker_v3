@@ -90,6 +90,7 @@ class RecruitingController extends Controller
         $division = Division::whereAbbreviation($request->division)->first();
         $member = Member::firstOrNew(['clan_id' => $request->member_id]);
 
+        // update member properties
         $member->name = $request->forum_name;
         $member->join_date = Carbon::today();
         $member->last_activity = Carbon::today();
@@ -99,11 +100,7 @@ class RecruitingController extends Controller
         $member->save();
 
         // assign to division
-        $member->divisions()->sync([
-            $division->id => [
-                'primary' => true
-            ]
-        ]);
+        $member->division()->associate($division);
 
         // handle ingame name assignment
         $member->handles()->syncWithoutDetaching([

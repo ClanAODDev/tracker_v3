@@ -44,9 +44,7 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $divisions = Division::with('activeMembers', 'activeMembers.rank')
-            ->whereActive(true)
-            ->get();
+        $divisions = Division::with('members', 'members.rank')->get();
 
         return view('member.index', compact('divisions'));
     }
@@ -152,10 +150,15 @@ class MemberController extends Controller
         $division = $member->division;
         $positions = Position::all()->pluck('id', 'name');
 
+
+        /**
+         * omit divisions the member is already part-time in
+         * omit member's primary division from list of available divisions
+         **/
         $divisions = Division::active()->get()->except(
             $member->partTimeDivisions->pluck('id')->toArray()
-        )->filter(function ($division) use ($member, $division) {
-            return $division->id !== $division->id;
+        )->filter(function ($division) use ($member) {
+            return $division->id !== $member->division->id;
         });
 
         $handles = $this->getHandles($member);

@@ -1,18 +1,18 @@
 <h1>
     <i class="pe pe-7s-joy text-warning"> </i>
 
-    {{ number_format($division->activeMembers->count()) }}
+    {{ number_format($division->members->count()) }}
 
     @if($previousCensus)
-        @if($division->activeMembers->count() < $previousCensus->count)
+        @if($division->members->count() < $previousCensus->count)
             <span class="slight">
                     <i class="fa fa-play fa-rotate-90 c-white"></i>
-                {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
+                {{ percent($previousCensus->count, $division->members->count()) }}%
                 </span>
         @else
             <span class="slight">
                     <i class="fa fa-play fa-rotate-270 text-warning"></i>
-                {{ percent($previousCensus->count, $division->activeMembers->count()) }}%
+                {{ percent($previousCensus->count, $division->members->count()) }}%
                 </span>
         @endif
     @endif
