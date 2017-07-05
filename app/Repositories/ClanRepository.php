@@ -31,8 +31,8 @@ class ClanRepository
      */
     public function totalActiveMembers()
     {
-        $members = DB::table('division_member')
-            ->where('primary', '1')->count();
+        $members = DB::table('members')
+            ->where('division_id', '!=', '0')->count();
 
         return $members;
     }
@@ -52,9 +52,7 @@ class ClanRepository
                 FROM members
                   JOIN ranks
                     ON ranks.id = members.rank_id
-                  JOIN division_member
-                    ON member_id = members.id
-                WHERE division_member.primary = 1
+                WHERE members.division_id != 0
                 GROUP BY rank_id
                 ORDER BY ranks.id ASC 
             ")
