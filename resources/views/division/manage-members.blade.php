@@ -17,25 +17,30 @@
     @endcomponent
 
     <div class="container-fluid">
+        {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
         <h4><i class="fa fa-cubes"></i> Manage Squad Assignments</h4>
         <p>Drag members between squads to assign them. Only squad members will be shown; squad leaders cannot be reassigned from this view.</p>
         <p>If you wish to reassign an entire squad to a new platoon, you can perform that function from the
             <code>Edit Squad</code> view. </p>
+        <p>To more easily access manipulate members, you can drag squads to reorder them</p>
 
         <div class="m-t-xl">
+            <a href="{{ route('platoon', [$division->abbreviation, $platoon]) }}" class="btn btn-default">Cancel</a>
             <a class="btn btn-success"
-               href="{{ route('createSquad', [$division->abbreviation, $platoon->id]) }}">
+               href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
                 <i class="fa fa-plus"></i> Create Squad
             </a>
         </div>
 
+        <hr />
+
         <div class="m-t-xl">
 
-            <div class="row mod-plt">
+            <div class="row mod-plt sortable-squad">
                 @foreach ($platoon->squads as $squad)
                     <div class="col-md-3">
-                        <h5>
+                        <h5 class="grabbable"><i class="fa fa-drag-handle text-muted"></i>
                             <strong>{{ $squad->name or "Untitled" }}</strong>
                             @if ($squad->leader)
                                 <small>{{ $squad->leader->present()->rankName }}</small>
@@ -60,6 +65,8 @@
     </div>
 
     <script>
+      $('.sortable-squad').sortable()
+
       $('.draggable').draggable({
         connectToSortable: 'ul',
         revert: 'invalid',

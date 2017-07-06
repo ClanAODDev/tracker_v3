@@ -1,35 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-
 Auth::routes();
 
-Route::post('/members/assign-squad', function (Request $request) {
-    $member = App\Member::find($request->member_id);
-    $member->squad()->associate(App\Squad::find($request->squad_id));
-    $member->save();
-
-    return response()->json([
-        'success' => true
-    ]);
-});
-
-
-Route::get('/divisions/{division}/platoons/{platoon}/manage', function ($division, $platoon) {
-    $platoon->load(
-        'squads', 'squads.members', 'squads.leader',
-        'squads.leader.rank', 'squads.members.rank'
-    );
-
-    $platoon->squads = $platoon->squads->each(function ($squad) {
-        $squad->members = $squad->members->filter(function ($member) {
-            return $member->position_id === 1;
-        });
-    });
-
-    return view('division.manage-members', compact('division', 'platoon'));
-});
-
+Route::post('/members/assign-squad', 'SquadController@assignMember');
 
 /**
  * Application endpoints
@@ -146,11 +119,13 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('{platoon}', 'PlatoonController@show')->name('platoon');
         Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
         Route::get('{platoon}/squads', 'PlatoonController@squads')->name('platoonSquads');
+        Route::get('{platoon}/manage', 'PlatoonController@manageSquads')->name('platoon.manage-squads');
 
         Route::post('', 'PlatoonController@store')->name('savePlatoon');
         Route::put('{platoon}', 'PlatoonController@update')->name('updatePlatoon');
         Route::patch('{platoon}', 'PlatoonController@update');
         Route::delete('{platoon}', 'PlatoonController@destroy')->name('deletePlatoon');
+
 
         /**
          * squads

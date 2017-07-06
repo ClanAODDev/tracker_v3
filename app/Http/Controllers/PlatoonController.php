@@ -200,4 +200,20 @@ class PlatoonController extends Controller
 
         return redirect()->route('division', $division->abbreviation);
     }
+
+    public function manageSquads($division, $platoon)
+    {
+        $platoon->load(
+            'squads', 'squads.members', 'squads.leader',
+            'squads.leader.rank', 'squads.members.rank'
+        );
+
+        $platoon->squads = $platoon->squads->each(function ($squad) {
+            $squad->members = $squad->members->filter(function ($member) {
+                return $member->position_id === 1;
+            });
+        });
+
+        return view('division.manage-members', compact('division', 'platoon'));
+    }
 }

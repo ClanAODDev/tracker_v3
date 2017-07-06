@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateSquadForm;
 use App\Member;
 use App\Platoon;
 use App\Squad;
+use Illuminate\Http\Request;
 use Toastr;
 
 class SquadController extends Controller
@@ -133,5 +134,22 @@ class SquadController extends Controller
         $this->showToast('Squad has been deleted');
 
         return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
+    }
+
+    /**
+     * Assign a member to a squad
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function assignMember(Request $request)
+    {
+        $member = Member::find($request->member_id);
+        $member->squad()->associate(Squad::find($request->squad_id));
+        $member->save();
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 }
