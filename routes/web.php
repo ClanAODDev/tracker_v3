@@ -1,13 +1,35 @@
 <?php
 
+use Illuminate\Http\Request;
+
 Auth::routes();
 
+Route::post('/members/assign-squad', function (Request $request) {
+    $member = App\Member::find($request->member_id);
+    $member->squad()->associate(App\Squad::find($request->squad_id));
+    $member->save();
 
-Route::get('/divisions/{division}/structure/edit',
-    'DivisionStructureController@modify')->name('division.edit-structure');
-Route::get('/divisions/{division}/structure', 'DivisionStructureController@show')->name('division.structure');
-Route::post('/divisions/{division}/structure',
-    'DivisionStructureController@update')->name('division.update-structure');
+    return response()->json([
+        'success' => true
+    ]);
+});
+
+
+Route::get('/divisions/{division}/platoons/{platoon}/manage', function ($division, $platoon) {
+    $platoon->load(
+        'squads', 'squads.members', 'squads.leader',
+        'squads.leader.rank', 'squads.members.rank'
+    );
+
+    $platoon->squads = $platoon->squads->each(function ($squad) {
+        $squad->members = $squad->members->filter(function ($member) {
+            return $member->position_id === 1;
+        });
+    });
+
+    return view('division.manage-members', compact('division', 'platoon'));
+});
+
 
 /**
  * Application endpoints
@@ -100,6 +122,12 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     Route::get('{division}/leave', 'LeaveController@index')->name('leave.index');
     Route::post('{division}/leave', 'LeaveController@store')->name('leave.store');
+
+    Route::get('/divisions/{division}/structure/edit',
+        'DivisionStructureController@modify')->name('division.edit-structure');
+    Route::get('/divisions/{division}/structure', 'DivisionStructureController@show')->name('division.structure');
+    Route::post('/divisions/{division}/structure',
+        'DivisionStructureController@update')->name('division.update-structure');
 
     /**
      * Recruiting Process
