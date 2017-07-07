@@ -7,8 +7,6 @@ let Platoon = Platoon || {};
     handleSquadMembers: function () {
       $('.sortable-squad').sortable({
         revert: 'invalid',
-        placeholder: 'ui-state-highlight',
-        forcePlaceholderSize: true,
       })
 
       $('.draggable').draggable({
@@ -30,7 +28,7 @@ let Platoon = Platoon || {};
           senderLength = $(ui.sender).find('li').length
           receiverLength = $(this).find('li').length
           if (undefined === targetSquad) {
-            alert('You cannot move players to this list')
+            toastr.error('You cannot move members to the unassigned list')
             $('.mod-plt .sortable').sortable('cancel')
           } else {
             // is genpop empty?

@@ -182,7 +182,7 @@ class PlatoonController extends Controller
 
         $this->showToast($toastMessage);
 
-        return redirect()->route('division', $division->abbreviation);
+        return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
 
     /**

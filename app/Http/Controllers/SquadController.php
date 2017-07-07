@@ -151,7 +151,10 @@ class SquadController extends Controller
             $member->platoon()->dissociate();
             $member->squad()->dissociate();
         } else {
-            $member->squad()->associate(Squad::find($request->squad_id));
+            // ensure they are assigned to current platoon
+            $squad = Squad::find($request->squad_id);
+            $member->platoon()->associate($squad->platoon);
+            $member->squad()->associate($squad);
         }
 
         $member->save();

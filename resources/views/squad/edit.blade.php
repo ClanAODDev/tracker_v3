@@ -9,7 +9,6 @@
         @endslot
         @slot ('heading')
             {{ $platoon->name }}
-            @include('platoon.partials.edit-platoon-button', ['division' => $division])
         @endslot
         @slot ('subheading')
             {{ $division->name }} Division
