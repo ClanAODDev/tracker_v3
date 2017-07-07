@@ -14,7 +14,7 @@
     <div class="panel-body">
         @can ('create', App\Member::class)
             <a href="{{ route('recruiting.form', [$myDivision->abbreviation]) }}"
-               class="btn btn-default btn-squared">Add New Recruit</a>
+               class="btn btn-default btn-squared">Add Recruit</a>
         @endcan
         <a href="{{ route('partTimers', $myDivision->abbreviation) }}"
            class="btn btn-default btn-squared">
