@@ -204,7 +204,7 @@ class PlatoonController extends Controller
     public function manageSquads($division, $platoon)
     {
         $platoon->load(
-            'squads', 'squads.members', 'squads.leader',
+            'squads', 'squads.members', 'squads.leader', 'unassigned.rank',
             'squads.leader.rank', 'squads.members.rank'
         );
 
