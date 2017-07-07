@@ -19,7 +19,7 @@
     <div class="container-fluid">
         {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
-        <h4><i class="fa fa-cubes"></i> Manage Squad Assignments</h4>
+        <h4>Manage Squad Assignments</h4>
         <p>Drag members between squads to assign them. Only squad members will be shown; squad leaders cannot be reassigned from this view.</p>
         <p>If you wish to reassign an entire squad to a new platoon, you can perform that function from the
             <code>Edit Squad</code> view. </p>
@@ -64,57 +64,8 @@
         </div>
     </div>
 
-    <script>
-      $('.sortable-squad').sortable()
+@stop
 
-      $('.draggable').draggable({
-        connectToSortable: 'ul',
-        revert: 'invalid',
-        scroll: true,
-        scrollSensitivity: 100
-      })
-
-      var itemMoved, targetSquad, senderLength, receiverLength
-      $('.mod-plt .sortable').sortable({
-        connectWith: 'ul',
-        placeholder: 'ui-state-highlight',
-        receive: function (event, ui) {
-          itemMoved = $(ui.item).attr('data-member-id')
-          targetSquad = $(this).attr('data-squad-id')
-          senderLength = $(ui.sender).find('li').length
-          receiverLength = $(this).find('li').length
-          if (undefined === targetSquad) {
-            alert('You cannot move players to this list')
-            $('.mod-plt .sortable').sortable('cancel')
-          } else {
-            // is genpop empty?
-            if ($('.genpop').find('li').length < 1) {
-              $('.genpop').fadeOut()
-            }
-            // update squad counts
-            $(ui.sender).parent().find('.count').text(senderLength)
-            $(this).parent().find('.count').text(receiverLength)
-            $.ajax({
-              type: 'POST',
-              url: window.Laravel.appPath + '/members/assign-squad',
-              data: {
-                member_id: itemMoved,
-                squad_id: targetSquad,
-                _token: $('meta[name=csrf-token]').attr('content')
-              },
-              dataType: 'json',
-              success: function (response) {
-                console.log(response)
-                toastr.success('Member reassigned!')
-              },
-              error: function (response) {
-                console.log(response)
-              }
-            })
-          }
-        }
-      })
-
-    </script>
-
+@section('footer_scripts')
+    <script src="{!! asset('/js/platoon.js') !!}"></script>
 @stop

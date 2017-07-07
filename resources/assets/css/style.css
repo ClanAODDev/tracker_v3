@@ -33,7 +33,10 @@
 }
 
 .ui-state-highlight {
-    opacity: .5;
+    background-color: #222;
+    opacity: .3;
+    height: 40px;
+    list-style: none;
 }
 
 .select2-container {
@@ -1906,6 +1909,10 @@ sup {
 
 ul.sortable {
     padding-left: 0;
+}
+
+ul.sortable li:hover {
+    opacity: .5;
 }
 
 .navbar {
