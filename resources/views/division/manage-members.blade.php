@@ -40,13 +40,13 @@
 
         <div class="panel panel-filled panel-c-warning">
             <div class="panel-heading">
-                <i class="fa fa-exclamation-circle text-warning"></i> Unassign from platoon and squad
+                <i class="fa fa-trash-o text-warning"></i> Unassign from platoon and squad
             </div>
             <div class="panel-body">
                 <div class="mod-plt sortable-squad">
                     <div class="col-md-3">
                         <ul class="sortable" data-squad-id="0"
-                            style="border: thin dashed rgba(255,255,255,.3); padding: 15px;"></ul>
+                            style="border: thin dashed rgba(255,255,255,.3); padding: 15px; border-radius: 5px;"></ul>
                     </div>
                 </div>
             </div>

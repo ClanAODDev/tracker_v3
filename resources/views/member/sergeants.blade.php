@@ -18,14 +18,18 @@
 
     <div class="container-fluid">
 
-        @foreach ($divisions as $division)
+        <h3><i class="fa fa-shield text-accent"></i> Sergeants by division</h3>
+        <hr />
 
+        @foreach ($divisions as $division)
 
             <div class="row m-b-xl">
                 <div class="col-md-12">
                     <h4>
                         <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium" />
-                        {{ $division->name }} ({{ $division->sergeants_count }})
+                        {{ $division->name }}
+                        <span class="badge">{{ $division->sergeants_count }}</span>
+                        <small class="pull-right text-muted">{{ count($division->members) }} Members</small>
                     </h4>
                     <hr />
 
