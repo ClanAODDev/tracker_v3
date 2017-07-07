@@ -35,6 +35,22 @@
 
         <hr />
 
+        <div class="row">
+            <div class="panel panel-filled panel-c-warning">
+                <div class="panel-heading">
+                    <i class="fa fa-circle-o-notch"></i> Unassign from platoon
+                </div>
+                <div class="panel-body">
+                    <p>Drag members here to remove them from the current platoon. They will be listed in the "unassigned" section of the platoon edit view.</p>
+                    <div class="mod-plt sortable-squad">
+                        <div class="col-md-3">
+                            <ul class="sortable" data-squad-id="0"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="m-t-xl">
 
             <div class="row mod-plt sortable-squad">

@@ -6,7 +6,9 @@ let Platoon = Platoon || {};
 
     handleSquadMembers: function () {
       $('.sortable-squad').sortable({
-        revert: 'invalid'
+        revert: 'invalid',
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
       })
 
       $('.draggable').draggable({
@@ -20,6 +22,7 @@ let Platoon = Platoon || {};
       $('.mod-plt .sortable').sortable({
         connectWith: 'ul',
         placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
         revert: 'invalid',
         receive: function (event, ui) {
           itemMoved = $(ui.item).attr('data-member-id')
@@ -36,7 +39,7 @@ let Platoon = Platoon || {};
             }
             // update squad counts
             $(ui.sender).parent().find('.count').text(senderLength)
-            $(this).parent().find('.count').text(receiverLength)
+            $(this).parent().find('.count').text(receiverLength).effect('highlight')
             $.ajax({
               type: 'POST',
               url: window.Laravel.appPath + '/members/assign-squad',

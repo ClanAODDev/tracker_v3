@@ -145,7 +145,15 @@ class SquadController extends Controller
     public function assignMember(Request $request)
     {
         $member = Member::find($request->member_id);
-        $member->squad()->associate(Squad::find($request->squad_id));
+
+        // if squad id is zero, user wants to unassign member
+        if ($request->squad_id == 0) {
+            $member->platoon()->dissociate();
+            $member->squad()->dissociate();
+        } else {
+            $member->squad()->associate(Squad::find($request->squad_id));
+        }
+
         $member->save();
 
         return response()->json([
