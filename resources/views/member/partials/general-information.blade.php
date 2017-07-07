@@ -29,7 +29,7 @@
         @slot('title') forum <span class="c-white">post count</span> @endslot
     @endcomponent
 
-    @if ($member->recruiter)
+    @if ($member->recruiter && $member->recruiter_id !== 0)
         @component('application.components.data-block')
             @slot('data')
                 <a href="{{ route('member', [$member->recruiter_id]) }}">
