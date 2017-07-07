@@ -18,9 +18,6 @@
 
     <div class="container-fluid">
 
-        <h3><i class="fa fa-shield text-accent"></i> Sergeants by division</h3>
-        <hr />
-
         @foreach ($divisions as $division)
 
             <div class="row m-b-xl">
@@ -36,9 +33,10 @@
                     @foreach ( $division->sergeants as $member)
 
                         <a href="{{ route('member', $member->clan_id) }}"
-                           class="col-lg-3 panel panel-filled m-r m-b">
+                           class="col-lg-3 panel panel-filled m-r m-b"
+                           style="border-left-color: {{ $member->rank->color }}; border-left-width: 2px;">
                             <span class="panel-body">
-                                    {!! $member->present()->nameWithIcon(true) !!}
+                                    {!! $member->present()->rankName !!}
                                 <br />
                                 <span class="slight text-muted text-uppercase">
                                     {{ $member->position->name }}
