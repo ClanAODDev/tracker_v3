@@ -5,7 +5,9 @@ let Platoon = Platoon || {};
   Platoon = {
 
     handleSquadMembers: function () {
-      $('.sortable-squad').sortable()
+      $('.sortable-squad').sortable({
+        revert: 'invalid'
+      })
 
       $('.draggable').draggable({
         connectToSortable: 'ul',
@@ -18,6 +20,7 @@ let Platoon = Platoon || {};
       $('.mod-plt .sortable').sortable({
         connectWith: 'ul',
         placeholder: 'ui-state-highlight',
+        revert: 'invalid',
         receive: function (event, ui) {
           itemMoved = $(ui.item).attr('data-member-id')
           targetSquad = $(this).attr('data-squad-id')

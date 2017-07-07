@@ -33,8 +33,8 @@
 }
 
 .ui-state-highlight {
-    background-color: #222;
-    opacity: .3;
+    background-color: #555;
+    opacity: .1;
     height: 40px;
     list-style: none;
 }
