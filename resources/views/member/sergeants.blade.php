@@ -26,7 +26,7 @@
                         <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium" />
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }}</span>
-                        <small class="pull-right text-muted">{{ count($division->members) }} Members</small>
+                        <small class="pull-right text-muted">{{ count($division->members_count) }} Members</small>
                     </h4>
                     <hr />
 
