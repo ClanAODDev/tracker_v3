@@ -1,13 +1,5 @@
 <ul class="nav luna-nav">
 
-    <li class="{{ set_active('home') }}">
-        <a href="{{ route('home') }}">Dashboard</a>
-    </li>
-
-    <li class="{{ set_active('statistics') }}">
-        <a href="{{ route('statistics') }}">Statistics</a>
-    </li>
-
     <li>
 
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
@@ -64,19 +56,18 @@
         </ul>
     </li>
 
-    @if (auth()->user()->role_id > 1)
-        <li>
-            <a href="#tools" data-toggle="collapse" aria-expanded="false">
-                Tools<span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-            </a>
-            <ul id="tools" class="nav nav-second collapse">
-                @can('create', App\Member::class)
-                    <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
-                @endcan
-            </ul>
-        </li>
-    @endif
+    <li class="{{ set_active('home') }}">
+        <a href="{{ route('home') }}">Dashboard</a>
+    </li>
 
+    <li class="{{ set_active('statistics') }}">
+        <a href="{{ route('statistics') }}">Statistics</a>
+    </li>
+
+    @can('create', App\Member::class)
+        <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
+    @endcan
+    
     <li class="nav-category">
         Members
     </li>
@@ -107,7 +98,7 @@
 {{--back to top--}}
 <span id="top-link-block" class="hidden">
     <a href="#top" class="btn btn-default smooth-scroll"
-       onclick="$('html,body').animate({scrollTop:0},'slow'); return false">
+       onclick="$('html,body').animate({scrollTop:0},'slow') return false">
         <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
     </a>
 </span><!-- /top-link-block -->
