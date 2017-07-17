@@ -107,12 +107,12 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     Route::get('{division}/inactive-members', function (Request $request, $division) {
 
-
         $inactive = $division->members()
             ->whereFlaggedForInactivity(false)
             ->where('last_activity', '<', \Carbon\Carbon::today()->subDays(
                 $division->settings()->inactivity_days
             ))
+            ->whereDoesntHave('leave')
             ->with('rank')
             ->get();
 
