@@ -27,9 +27,14 @@
             </a>
         @endcan
 
-            <a href="{{ route('leave.index', $myDivision->abbreviation) }}"
-            class="btn btn-default btn-squared">
-                Leave
+        <a href="{{ route('leave.index', $myDivision->abbreviation) }}"
+           class="btn btn-default btn-squared">
+            Leave
+        </a>
+
+            <a href="{{ route('division.inactive-members', $myDivision->abbreviation) }}"
+               class="btn btn-default btn-squared">
+                Inactive Members
             </a>
     </div>
 </div>

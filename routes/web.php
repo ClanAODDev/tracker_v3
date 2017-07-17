@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 Auth::routes();
 
 Route::post('/members/assign-squad', 'SquadController@assignMember');
@@ -96,11 +98,32 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/leave', 'LeaveController@index')->name('leave.index');
     Route::post('{division}/leave', 'LeaveController@store')->name('leave.store');
 
-    Route::get('/divisions/{division}/structure/edit',
+    Route::get('{division}/structure/edit',
         'DivisionStructureController@modify')->name('division.edit-structure');
-    Route::get('/divisions/{division}/structure', 'DivisionStructureController@show')->name('division.structure');
-    Route::post('/divisions/{division}/structure',
+    Route::get('{division}/structure', 'DivisionStructureController@show')->name('division.structure');
+    Route::post('{division}/structure',
         'DivisionStructureController@update')->name('division.update-structure');
+
+
+    Route::get('{division}/inactive-members', function (Request $request, $division) {
+
+
+        $inactive = $division->members()
+            ->whereFlaggedForInactivity(false)
+            ->where('last_activity', '<', \Carbon\Carbon::today()->subDays(
+                $division->settings()->inactivity_days
+            ))
+            ->with('rank')
+            ->get();
+
+        if ($request->platoon) {
+            $inactive = $inactive->where('platoon_id', $request->platoon);
+        }
+
+        $flagged = $division->members()->whereFlaggedForInactivity(true);
+
+        return view('division.inactive-members', compact('division', 'inactive', 'flagged', 'request'));
+    })->middleware('auth')->name('division.inactive-members');
 
     /**
      * Recruiting Process

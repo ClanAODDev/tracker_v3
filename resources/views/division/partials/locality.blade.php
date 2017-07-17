@@ -1,6 +1,6 @@
 <tr>
-    <th>Old String</th>
-    <th>New String</th>
+    <th>Replace</th>
+    <th>With</th>
 </tr>
 @foreach($division->settings()->locality as $translation)
 

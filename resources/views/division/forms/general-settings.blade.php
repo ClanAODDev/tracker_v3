@@ -26,6 +26,14 @@
         </div>
     </div>
 
+    <div class="col-md-6">
+        <label for="inactivity_days" class="control-label">Inactivity (days)</label>
+        <input type="number" id="inactivity_days" name="inactivity_days"
+               value="{{ $division->settings()->inactivity_days }}" class="form-control" required />
+
+        <span class="help-block"><small>Number of days before a member is considered inactive.</small></span>
+    </div>
+
     {{ csrf_field() }}
 
     <button type="submit" class="btn btn-success pull-right">Save changes</button>

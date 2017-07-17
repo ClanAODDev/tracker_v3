@@ -10,7 +10,10 @@
             Structure
         </a>
         <a href="{{ route('leave.index', $division->abbreviation) }}" class="btn btn-default ">
-            Leaves of Absence
+            Leave
+        </a>
+        <a href="{{ route('division.inactive-members', $division->abbreviation) }}" class="btn btn-default ">
+            Inactive Members
         </a>
     </div>
 </div>

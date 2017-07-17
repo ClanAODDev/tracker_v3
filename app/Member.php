@@ -27,6 +27,10 @@ class Member extends Model
         'created',
     ];
 
+    protected $casts = [
+        'flagged_for_inactivity' => 'boolean'
+    ];
+
     /**
      * @var array
      */
