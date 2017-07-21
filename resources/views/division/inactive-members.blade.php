@@ -27,12 +27,12 @@
 
         <hr />
 
-        <div class="panel panel-filled m-b-xl">
+        <div class="panel panel-filled m-b-xl panel-c-info">
             <div class="panel-body">
                 <div class="row m-t-xs">
                     <form method="get">
                         <div class="col-md-3">
-                            <h4>Filter</h4>
+                            <h4>Filter by {{ $division->locality('platoon') }}</h4>
                         </div>
                         <div class="col-md-4">
                             <select name="platoon" id="platoon" class="form-control">
