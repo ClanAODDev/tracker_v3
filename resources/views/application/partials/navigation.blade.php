@@ -67,7 +67,7 @@
     @can('create', App\Member::class)
         <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
     @endcan
-    
+
     <li class="nav-category">
         Members
     </li>

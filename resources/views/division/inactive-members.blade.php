@@ -22,7 +22,8 @@
         <p>Members listed here have activity that has reached or exceeded the number of days defined by the division leadership. Use this page to attempt to communicate with inactive members, and also to process their removal from the clan.</p>
 
         <p>{{ $division->name }} division inactivity set to
-            <code>{{ $division->settings()->inactivity_days }} days</code></p>
+            <code>{{ $division->settings()->inactivity_days }} days</code>
+        </p>
 
         <hr />
 
@@ -74,9 +75,9 @@
                         </td>
                         <td class="text-center">
                             @if (! $member->flaggedForInactivity)
-                                <a href="#" class="btn btn-warning">
+                                <a href="#" class="btn btn-warning btn-xs">
                                     <i class="fa fa-flag"></i>
-                                   Flag
+                                    Flag
                                 </a>
                             @endif
                         </td>
