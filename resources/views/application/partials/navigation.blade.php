@@ -98,7 +98,7 @@
 {{--back to top--}}
 <span id="top-link-block" class="hidden">
     <a href="#top" class="btn btn-default smooth-scroll"
-       onclick="$('html,body').animate({scrollTop:0},'slow') return false">
+       onclick="$('html,body').animate({scrollTop:0},'slow'); return false;">
         <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
     </a>
 </span><!-- /top-link-block -->
