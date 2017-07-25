@@ -120,7 +120,7 @@ Route::group(['prefix' => 'divisions/'], function () {
             $inactive = $inactive->where('platoon_id', $request->platoon);
         }
 
-        $flagged = $division->members()->whereFlaggedForInactivity(true);
+        $flagged = $division->members()->whereFlaggedForInactivity(true)->get();
 
         return view('division.inactive-members', compact('division', 'inactive', 'flagged', 'request'));
     })->middleware('auth')->name('division.inactive-members');

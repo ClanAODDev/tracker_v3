@@ -163,10 +163,12 @@ class Member extends Model
      */
     public function resetPositionsAndAssignments()
     {
-        $this->divisions()->detach();
+        $this->division()->dissociate();
         $this->position()->dissociate();
         $this->platoon()->dissociate();
         $this->squad()->dissociate();
+
+        $this->flaggedForInactivity = false;
 
         $this->save();
     }
@@ -208,7 +210,7 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function recruiter()
     {

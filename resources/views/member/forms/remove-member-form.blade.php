@@ -18,7 +18,6 @@
         </ul>
 
         <p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>
-        {{ method_field('DELETE') }}
         <div class="form-group">
                     <textarea class="form-control" name="removal-reason" placeholder="Reason"
                               id="removal-reason" required></textarea>
