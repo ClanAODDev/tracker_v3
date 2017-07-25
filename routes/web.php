@@ -105,7 +105,7 @@ Route::group(['prefix' => 'divisions/'], function () {
         'DivisionStructureController@update')->name('division.update-structure');
 
 
-    Route::get('{division}/inactive-members', function (Request $request, $division) {
+    Route::get('{division}/inactive-members/{platoon?}', function (Request $request, $division) {
 
         $inactive = $division->members()
             ->whereFlaggedForInactivity(false)
@@ -117,7 +117,7 @@ Route::group(['prefix' => 'divisions/'], function () {
             ->get();
 
         if ($request->platoon) {
-            $inactive = $inactive->where('platoon_id', $request->platoon);
+            $inactive = $inactive->where('platoon_id', $request->platoon->id);
         }
 
         $flagged = $division->members()->whereFlaggedForInactivity(true)->get();
