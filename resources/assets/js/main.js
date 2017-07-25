@@ -174,6 +174,7 @@ let Tracker = Tracker || {};
       $('table.basic-datatable').DataTable({
         paging: false,
         bFilter: false,
+        stateSave: true,
         bInfo: false,
         order: [],
         columnDefs: [

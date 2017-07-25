@@ -3,9 +3,9 @@
         <div class="row m-t-xs">
             <form method="get">
                 <div class="col-md-3">
-                    <h4><i class="fa fa-filter text-info"></i> Filter by {{ $division->locality('platoon') }}</h4>
+                    <h5><i class="fa fa-filter text-info"></i> Filter by {{ $division->locality('platoon') }}</h5>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-5">
 
                     <select name="platoon" id="platoon" class="form-control"
                             onChange="top.location.href=this.options[this.selectedIndex].value">
@@ -15,9 +15,9 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4 text-right">
+                <div class="col-md-3 text-right">
                     <a href="{{ route('division.inactive-members', $division->abbreviation) }}"
-                       class="btn btn-default">Reset</a>
+                       class="btn btn-default">Reset Filter</a>
                 </div>
             </form>
         </div>

@@ -30,6 +30,8 @@
         </h4>
         <p>Leaves of absence are reserved for members who need to take extended leave for extenuating circumstances. It should not be something that is used on the whim. Division leadership should ensure that members are not abusing LOAs.</p>
 
+        <p>If an LOA is extended, be sure to update the associated note with the appropriate details if anything has changed.</p>
+
         <div class="panel panel-filled panel-c-info m-t-xl">
 
             <table class="table">
