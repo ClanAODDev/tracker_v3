@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-center animated fadeInDown">
+    <div class="container-center">
 
         <div class="view-header">
             <div class="header-icon">
