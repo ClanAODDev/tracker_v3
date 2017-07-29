@@ -31,7 +31,7 @@
         <input type="number" id="inactivity_days" name="inactivity_days"
                value="{{ $division->settings()->inactivity_days }}" class="form-control" required />
 
-        <span class="help-block"><small>Number of days before a member is considered inactive.</small></span>
+        <span class="help-block"><small>Number of days before a member is considered inactiveMembers.</small></span>
     </div>
 
     {{ csrf_field() }}

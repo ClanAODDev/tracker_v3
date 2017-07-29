@@ -245,13 +245,8 @@ class MemberController extends Controller
 
         $form->persist();
 
-        Toastr::success(
-            ucwords($member->name) . " has been removed from the {$division->name} Division!",
-            "Success",
-            [
-                'positionClass' => 'toast-top-right',
-                'progressBar' => true
-            ]
+        $this->showToast(
+            ucwords($member->name) . " has been removed from the {$division->name} Division!"
         );
 
         return redirect()->route('division', [

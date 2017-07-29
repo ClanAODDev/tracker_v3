@@ -27,6 +27,11 @@ Route::post('update-role', 'UserController@updateRole');
 Route::post('update-position', 'MemberController@updatePosition');
 Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
 
+Route::group(['prefix' => 'inactive-members'], function () {
+    Route::get('{member}/flag-inactive', 'InactiveMemberController@create')->name('member.flag-inactive');
+    Route::delete('{member}', 'InactiveMemberController@removeMember')->name('member.drop-for-inactivity');
+});
+
 
 // Members endpoints
 Route::get('sergeants', 'MemberController@sergeants')->name('sergeants');
@@ -104,26 +109,8 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::post('{division}/structure',
         'DivisionStructureController@update')->name('division.update-structure');
 
-
-    Route::get('{division}/inactive-members/{platoon?}', function (Request $request, $division) {
-
-        $inactive = $division->members()
-            ->whereFlaggedForInactivity(false)
-            ->where('last_activity', '<', \Carbon\Carbon::today()->subDays(
-                $division->settings()->inactivity_days
-            ))
-            ->whereDoesntHave('leave')
-            ->with('rank')
-            ->get();
-
-        if ($request->platoon) {
-            $inactive = $inactive->where('platoon_id', $request->platoon->id);
-        }
-
-        $flagged = $division->members()->whereFlaggedForInactivity(true)->get();
-
-        return view('division.inactive-members', compact('division', 'inactive', 'flagged', 'request'));
-    })->middleware('auth')->name('division.inactive-members');
+    Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
+        ->name('division.inactive-members');
 
     /**
      * Recruiting Process

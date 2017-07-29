@@ -2,9 +2,19 @@
      style="background-image: url({{ asset('images/headers/' . $myDivision->abbreviation . ".png") }})">
     <div class="panel-heading">
 
-        <h2 class="m-b-none text-uppercase">
-            <span style="cursor: pointer;"
-                  onclick="window.location.href='{{ route('division', $myDivision->abbreviation) }}'">{{ $myDivision->name }}</span>
+        <style>
+            .my-division h2 a {
+                color: #fff;
+            }
+
+            .my-division h2 a:hover {
+                color: #f6a821;
+                text-decoration: none;
+            }
+        </style>
+
+        <h2 class="m-b-none text-uppercase my-division">
+            <a href="{{ route('division', $myDivision->abbreviation) }}">{{ $myDivision->name }}</a>
             @include('division.partials.edit-division-button', ['division' => $myDivision])
         </h2>
 
@@ -32,9 +42,9 @@
             Leave
         </a>
 
-            <a href="{{ route('division.inactive-members', $myDivision->abbreviation) }}"
-               class=" btn btn-default m-t-sm ">
-                Inactive Members
-            </a>
+        <a href="{{ route('division.inactive-members', $myDivision->abbreviation) }}"
+           class=" btn btn-default m-t-sm ">
+            Inactive Members
+        </a>
     </div>
 </div>

@@ -24,7 +24,7 @@
                 <h4>Update {{ $division->name }}</h4>
                 <div>
                     <p>Division name should match the real name of the division on the AOD forums.</p>
-                    <p>Marking a division inactive will:</p>
+                    <p>Marking a division inactiveMembers will:</p>
                     <ul>
                         <li>Stop data syncing from the AOD forums for that division</li>
                         <li>Remove the division from the tracker listing</li>

@@ -60,10 +60,6 @@
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
 
-    <li class="{{ set_active('statistics') }}">
-        <a href="{{ route('statistics') }}">Statistics</a>
-    </li>
-
     @can('create', App\Member::class)
         <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
     @endcan
@@ -78,6 +74,10 @@
 
     <li class="{{ set_active('sergeants') }}">
         <a href="{{ route('sergeants') }}">Sergeants</a>
+    </li>
+
+    <li class="{{ set_active('statistics') }}">
+        <a href="{{ route('statistics') }}">Statistics</a>
     </li>
 
     <li class="nav-category">

@@ -11,7 +11,7 @@
                             onChange="top.location.href=this.options[this.selectedIndex].value">
                         <option value="">None selected</option>
                         @foreach ($division->platoons as $platoon)
-                            <option {{ ($request->platoon && $request->platoon->id == $platoon->id ? 'selected' : null) }} value="{{ route('division.inactive-members', [$division->abbreviation, $platoon->id]) }}">{{ $platoon->name }}</option>
+                            <option {{ (request()->platoon && request()->platoon->id == $platoon->id ? 'selected' : null) }} value="{{ route('division.inactive-members', [$division->abbreviation, $platoon->id]) }}">{{ $platoon->name }}</option>
                         @endforeach
                     </select>
                 </div>

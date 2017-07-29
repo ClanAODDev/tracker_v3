@@ -168,7 +168,7 @@ class Member extends Model
         $this->platoon()->dissociate();
         $this->squad()->dissociate();
 
-        $this->flaggedForInactivity = false;
+        $this->flagged_for_inactivity = false;
 
         $this->save();
     }
