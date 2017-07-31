@@ -274,7 +274,8 @@ class Division extends Model
      */
     public function staffSergeants()
     {
-        return $this->belongsToMany(Member::class, 'division_staffSergeants');
+        return $this->belongsToMany(Member::class, 'division_staffSergeants')
+            ->withTimestamps();
     }
 
     /**

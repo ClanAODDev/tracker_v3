@@ -154,7 +154,8 @@ class Member extends Model
      */
     public function ssgtAssignment()
     {
-        return $this->belongsToMany(Division::class, 'staff_sergeants');
+        return $this->belongsToMany(Division::class, 'division_staffSergeants')
+            ->withTimestamps();
     }
 
     /**
