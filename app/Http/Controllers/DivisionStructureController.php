@@ -35,7 +35,7 @@ class DivisionStructureController extends Controller
      */
     public function show(Division $division)
     {
-        $this->authorize('manageDivisionStructure', auth()->user());
+        $this->authorize('viewDivisionStructure', auth()->user());
 
         Twig::setLoader(new Twig_Loader_String());
 
