@@ -27,6 +27,10 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'aod' => [
+        'token' => env('AOD_TOKEN')
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

@@ -120,4 +120,11 @@ return [
     // Allow Markdown in all fields
     // 'markdown_in_attachments' => ['pretext', 'text', 'title', 'fields', 'fallback']
 
+
+    /**
+     * AOD Slack Tokens
+     */
+
+    'tokens' => env('SLACK_TOKENS'),
+
 ];

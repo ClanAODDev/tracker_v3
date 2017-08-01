@@ -44,6 +44,6 @@ class MakeAODToken extends Command
     {
         $currentMinute = floor(time() / 60) * 60;
 
-        return md5($currentMinute . config('AOD_TOKEN'));
+        return md5($currentMinute . config('app.aod.token'));
     }
 }

@@ -31,7 +31,7 @@ class GetDivisionInfo
     {
         $this->division = $division;
 
-        if ( ! getenv('AOD_TOKEN')) {
+        if ( ! config('app.aod.token')) {
             Log::critical("ERROR: AOD Token not defined in configuration.");
             exit;
         } else {
@@ -102,7 +102,7 @@ class GetDivisionInfo
     {
         $currentMinute = floor(time() / 60) * 60;
 
-        return md5($currentMinute . config('AOD_TOKEN'));
+        return md5($currentMinute . config('app.aod.token'));
     }
 
     /**
