@@ -86,7 +86,6 @@ class RecruitingController extends Controller
      */
     private function createMember($request)
     {
-
         $division = Division::whereAbbreviation($request->division)->first();
         $member = Member::firstOrNew(['clan_id' => $request->member_id]);
 
@@ -97,10 +96,8 @@ class RecruitingController extends Controller
         $member->recruiter_id = auth()->user()->member->clan_id;
         $member->rank_id = 1;
         $member->position_id = 1;
+        $member->division_id = $division->id;
         $member->save();
-
-        // assign to division
-        $member->division()->associate($division);
 
         // handle ingame name assignment
         $member->handles()->syncWithoutDetaching([

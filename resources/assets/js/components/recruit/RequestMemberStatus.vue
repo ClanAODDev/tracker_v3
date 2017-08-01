@@ -7,8 +7,6 @@
         <p>Note: if you need to <span class="text-accent">change</span> the member's forum name, include it as the "name" in your request. Otherwise,
             <span class="text-accent">leave the name field blank</span>.</p>
 
-        <p><span class="text-danger">Member status request disabled for testing purposes</span></p>
-
         <div class="row p-lg bs-example">
             <div class="col-sm-4 text-center">
 
@@ -31,8 +29,7 @@
 
             <div class="col-sm-4 text-center">
                 <div class="m-t-md visible-xs-block"></div>
-                <!--http://www.clanaod.net/forums/misc.php?do=form&fid=39-->
-                <a href="#" target="_blank"
+                <a href="http://www.clanaod.net/forums/misc.php?do=form&fid=39" target="_blank"
                    :class="store.didUserOpenRequest ? 'btn btn-success' : 'btn btn-danger'"
                    @click="userOpenedRequest">
                     <i :class="store.didUserOpenRequest ? 'fa fa-check text-success' : 'fa fa-times text-danger'"

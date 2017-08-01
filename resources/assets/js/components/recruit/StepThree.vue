@@ -81,7 +81,6 @@
                     return;
                 }
 
-                store.createMember();
                 store.currentStep = 'step-four';
                 store.progress = 100;
             },

@@ -20,6 +20,9 @@
         <div class="text-muted" v-if="! store.division.threads.length && ! store.loadingThreads">
             <p>Run the thread check to poll the AOD forums.</p>
         </div>
+
+        <hr />
+        <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure they understand and agree to all of AOD's requirements before continuing further in the process. </p>
         <hr />
 
         <button class="btn btn-success pull-right" type="submit">Continue</button>
@@ -28,41 +31,41 @@
 </template>
 
 <script>
-    import store from './store';
-    import DemoModeNotice from './DemoModeNotice.vue';
-    import DivisionThreads from './DivisionThreads.vue';
-    import ProgressBar from './ProgressBar.vue';
+  import store from './store'
+  import DemoModeNotice from './DemoModeNotice.vue'
+  import DivisionThreads from './DivisionThreads.vue'
+  import ProgressBar from './ProgressBar.vue'
 
-    export default {
-        components: {
-            'progress-bar': ProgressBar,
-            'demo-mode-notice': DemoModeNotice,
-            'division-threads': DivisionThreads,
-        },
+  export default {
+    components: {
+      'progress-bar': ProgressBar,
+      'demo-mode-notice': DemoModeNotice,
+      'division-threads': DivisionThreads,
+    },
 
-        computed: {},
+    computed: {},
 
-        data: function () {
-            return {
-                store
-            }
-        },
+    data: function () {
+      return {
+        store
+      }
+    },
 
-        methods: {
-            validateStep: function () {
-                if (store.threadsIncomplete) {
-                    toastr.error('Recruit has not completed all threads!', 'Uh oh...');
-                    return;
-                }
+    methods: {
+      validateStep: function () {
+        if (store.threadsIncomplete) {
+          toastr.error('Recruit has not completed all threads!', 'Uh oh...')
+          return
+        }
 
-                store.currentStep = 'step-three';
-                store.progress = 75;
-            },
+        store.currentStep = 'step-three'
+        store.progress = 75
+      },
 
-            backToStepOne: () => {
-                store.progress = 25;
-                store.currentStep = 'step-one';
-            }
-        },
-    }
+      backToStepOne: () => {
+        store.progress = 25
+        store.currentStep = 'step-one'
+      }
+    },
+  }
 </script>

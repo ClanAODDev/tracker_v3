@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 Auth::routes();
 
 Route::post('/members/assign-squad', 'SquadController@assignMember');
