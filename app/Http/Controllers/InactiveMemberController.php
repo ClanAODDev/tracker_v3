@@ -46,8 +46,12 @@ class InactiveMemberController extends Controller
      */
     public function create(Member $member)
     {
+        $this->authorize('update', $member);
+
         $member->flagged_for_inactivity = true;
         $member->save();
+
+        $member->recordActivity('flagged');
 
         $this->showToast($member->name . " successfully flagged for removal");
 
@@ -56,6 +60,8 @@ class InactiveMemberController extends Controller
 
     public function removeMember(Member $member, DeleteMember $form)
     {
+        $this->authorize('delete', $member);
+
         $division = $member->division;
 
         $form->persist();
@@ -63,6 +69,8 @@ class InactiveMemberController extends Controller
         $this->showToast(
             ucwords($member->name) . " has been removed from the {$division->name} Division!"
         );
+
+        $member->recordActivity('removed');
 
         return redirect(route('division.inactive-members', [
             $division->abbreviation
