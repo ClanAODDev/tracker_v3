@@ -3,5 +3,6 @@
 <p>{{ $recruiter->name}} from {{ $recruiter->division->name }} recently recruited a member into your division, so we thought we'd let you know the details so you can follow up.</p>
 <p>
     <strong>New recruit information</strong>
-    {{ $recruit->name }} ({{ $recruit->clan_id }}) - <a href="{{ route('member', $recruit->clan_id) }}">View profile on tracker</a>
+    {{ $recruit->name }} ({{ $recruit->clan_id }}) - <a
+            href="{{ route('member', $recruit->clan_id) }}">View profile on tracker</a>
 </p>

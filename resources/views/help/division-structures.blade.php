@@ -80,9 +80,14 @@
 
         <h3 class="m-t-xl" id="replace">String Replacement And Filters</h3>
         <hr />
-        <p>Sometimes a string may not contain exactly what you need to output. For example, Overwatch tracks members by their battlenet name, or <code>MyName#9999</code>. But in order to link to the public profile, the <code>#</code> character must be replaced by a <code>-</code> character.</p>
+        <p>Sometimes a string may not contain exactly what you need to output. For example, Overwatch tracks members by their battlenet name, or
+            <code>MyName#9999</code>. But in order to link to the public profile, the
+            <code>#</code> character must be replaced by a <code>-</code> character.</p>
         <p>To facilitate this, we can use a filter <code>replace()</code> method:</p>
-        <p>Note: the hyphens in the twig tags are whitespace delimiters. Ex. <code>{%-</code> indicates that leading whitespace should be trimmed. <code>-%}</code> indicates that trailing whitespace should be trimmed. This allows us to omit line breaks in the resulting code.</p>
+        <p>Note: the hyphens in the twig tags are whitespace delimiters. Ex.
+            <code>{%-</code> indicates that leading whitespace should be trimmed.
+            <code>-%}</code> indicates that trailing whitespace should be trimmed. This allows us to omit line breaks in the resulting code.
+        </p>
         <pre><code class="language-twig line-numbers">@include('help.snippets.replace')</code></pre>
         <p class="m-t-lg m-b-lg">Additional filters allow us to make other transformations</p>
         <pre><code class="language-twig line-numbers">@include('help.snippets.transform')</code></pre>

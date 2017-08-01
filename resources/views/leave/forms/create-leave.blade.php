@@ -44,5 +44,5 @@
     idField: true,
     method: 'POST',
     dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
-  })
+  });
 </script>

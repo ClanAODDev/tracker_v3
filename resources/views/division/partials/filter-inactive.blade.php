@@ -6,7 +6,7 @@
         <div class="col-md-5">
 
             <select name="platoon" id="platoon" class="form-control"
-                    onChange="top.location.href=this.options[this.selectedIndex].value">
+                    onChange="top.location.href=this.options[this.selectedIndex].value;">
                 <option value="">None selected</option>
                 @foreach ($division->platoons as $platoon)
                     <option {{ (request()->platoon && request()->platoon->id == $platoon->id ? 'selected' : null) }} value="{{ route('division.inactive-members', [$division->abbreviation, $platoon->id]) }}">{{ $platoon->name }}</option>

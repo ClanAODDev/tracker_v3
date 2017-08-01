@@ -22,7 +22,8 @@
                 <h4>Bug/Issue Reports</h4>
                 <p>If you encounter issues or problems while using the tracker, please report them here. In your report, please be as specific as possible about the details of the error. Ex. the steps you took before the error, any odd behavior you noticed, the URL, etc.</p>
 
-                <p>You can also report feature / change requests through this form. Please review existing reports to ensure you are not creating a duplicate. Note however, that <strong>only bug reports are shown</strong>.</p>
+                <p>You can also report feature / change requests through this form. Please review existing reports to ensure you are not creating a duplicate. Note however, that
+                    <strong>only bug reports are shown</strong>.</p>
                 <hr />
 
                 <div class="row">

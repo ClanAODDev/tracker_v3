@@ -21,7 +21,8 @@
         <div class="row">
             <div class="col-xs-12 m-b-xl">
                 @foreach ($divisions as $division)
-                    <a href="#{{ $division->abbreviation }}" class="btn btn-default m-b m-r smooth-scroll">{{ $division->name }}</a>
+                    <a href="#{{ $division->abbreviation }}"
+                       class="btn btn-default m-b m-r smooth-scroll">{{ $division->name }}</a>
                 @endforeach
             </div>
         </div>
@@ -44,7 +45,7 @@
                         <tbody>
                         @foreach ($division->members as $member)
                             <tr style="cursor:pointer;"
-                                onclick="window.location.href = '{{ route('member', $member->clan_id) }}'">
+                                onclick="window.location.href = '{{ route('member', $member->clan_id) }}';">
                                 <td>
                                     {{ $member->name }}
                                 </td>

@@ -58,12 +58,12 @@
 </div>
 
 <script>
-    // omit leader field if using TBA
-    $("#is_tba").click(function () {
-        if ($('#is_tba').is(':checked')) {
-            $("#leader").prop("disabled", true);
-        } else {
-            $("#leader").prop("disabled", false)
-        }
-    });
+  // omit leader field if using TBA
+  $('#is_tba').click(function () {
+    if ($('#is_tba').is(':checked')) {
+      $('#leader').prop('disabled', true);
+    } else {
+      $('#leader').prop('disabled', false);
+    }
+  });
 </script>

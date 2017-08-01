@@ -3,7 +3,7 @@
 
 {# does this platoon have a logo? #}
 {% if platoon.logo %}
-	[img] @{{ platoon.logo }} [/img]
+[img] @{{ platoon.logo }} [/img]
 {% else %}
-	No platoon logo
+No platoon logo
 {% endif %}

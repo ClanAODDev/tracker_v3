@@ -31,9 +31,9 @@
                 @include ('member.partials.general-information')
             </div>
         </div>
-        
-    @include ('member.partials.handles')
-    @include ('member.partials.part-time-divisions')
+
+        @include ('member.partials.handles')
+        @include ('member.partials.part-time-divisions')
 
         <div class="row m-t-xl">
             <div class="col-md-12">

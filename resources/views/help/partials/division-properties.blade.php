@@ -39,7 +39,8 @@
     </tr>
     <tr>
         <td><code>division.leave</code></td>
-        <td>Accessor for leaves of absence. Treat these as member objects. Ex., <code>for member in division.leave</code>
+        <td>Accessor for leaves of absence. Treat these as member objects. Ex.,
+            <code>for member in division.leave</code>
         </td>
         <td><code>array</code></td>
     </tr>

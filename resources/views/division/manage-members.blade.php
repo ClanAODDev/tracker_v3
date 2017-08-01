@@ -45,7 +45,8 @@
             <div class="panel-body">
                 <div class="mod-plt sortable-squad">
                     <div class="col-md-3">
-                        <ul class="sortable" data-squad-id="0" style="border: thin dashed rgba(255,255,255,.3); padding: 15px; border-radius: 5px;"></ul>
+                        <ul class="sortable" data-squad-id="0"
+                            style="border: thin dashed rgba(255,255,255,.3); padding: 15px; border-radius: 5px;"></ul>
                     </div>
                 </div>
             </div>

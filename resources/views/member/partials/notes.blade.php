@@ -8,7 +8,8 @@
         </span>
     @endcan
 
-</h4><hr />
+</h4>
+<hr />
 @if (count($notes))
     <div class="v-timeline">
         @foreach ($notes as $note)
@@ -35,5 +36,5 @@
 @endcan
 
 @if ($errors->count())
-    <script>$("#create-member-note").modal();</script>
+    <script>$('#create-member-note').modal();</script>
 @endif

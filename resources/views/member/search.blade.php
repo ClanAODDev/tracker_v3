@@ -3,7 +3,8 @@
        style="padding-left: 30px; margin-bottom: 0;">
         <div class="panel-body">
             <h4 class="m-b-none">
-                {!! $member->present()->rankName !!} <small class="slight text-muted">[{{ $member->clan_id }}]</small>
+                {!! $member->present()->rankName !!}
+                <small class="slight text-muted">[{{ $member->clan_id }}]</small>
             </h4>
         </div>
     </a>

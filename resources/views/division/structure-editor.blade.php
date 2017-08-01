@@ -33,10 +33,11 @@
 
             <div class="row">
                 <div class="col-md-12 m-t-md">
-                    <button type="submit" name="generate-code" class="btn btn-success"><i class="fa fa-save text-accent"></i> Save</button>
+                    <button type="submit" name="generate-code" class="btn btn-success"><i
+                                class="fa fa-save text-accent"></i> Save
+                    </button>
                 </div>
             </div>
-
 
         </div>
     </form>
@@ -48,20 +49,20 @@
           headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
-        })
+        });
 
         var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
           mode: {name: 'twig', htmlMode: true},
           lineNumbers: true,
           theme: 'dracula'
-        })
+        });
 
-        cm.on('change', handleSave)
+        cm.on('change', handleSave);
 
         function handleSave () {
-          cm.save()
+          cm.save();
         }
-      })
+      });
     </script>
 
 @stop

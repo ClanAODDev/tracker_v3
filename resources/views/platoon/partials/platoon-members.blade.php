@@ -22,7 +22,7 @@
 
         @foreach($members as $member)
             <tr role="row" style="cursor:pointer;"
-                onclick="window.location.href = '{{ route('member', $member->clan_id) }}'">
+                onclick="window.location.href = '{{ route('member', $member->clan_id) }}';">
                 <td class="col-hidden">{{ $member->rank_id }}</td>
                 <td class="col-hidden">{{ $member->last_activity }}</td>
                 <td>{!! $member->present()->nameWithIcon !!}</td>

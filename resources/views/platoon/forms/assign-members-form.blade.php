@@ -37,14 +37,14 @@
 
 <script>
   $('.unassigned-members li').click(function () {
-    assignMember($(this), $('.assigned-members'))
-    updateMembers()
-  })
+    assignMember($(this), $('.assigned-members'));
+    updateMembers();
+  });
 
   $('.assigned-members').on('click', 'li', function () {
-    assignMember($(this), $('.unassigned-members'))
-    updateMembers()
-  })
+    assignMember($(this), $('.unassigned-members'));
+    updateMembers();
+  });
 
   /**
    * Parse assigned members
@@ -52,28 +52,28 @@
   function updateMembers () {
     let ids = [],
       assigned = $('.assigned-members li'),
-      unassigned = $('.unassigned-members li')
+      unassigned = $('.unassigned-members li');
 
     assigned.each(function () {
-      ids.push($(this).data('member-id'))
-    })
+      ids.push($(this).data('member-id'));
+    });
 
-    $('.assigned-count').text(assigned.length)
-    $('.unassigned-count').text(unassigned.length)
+    $('.assigned-count').text(assigned.length);
+    $('.unassigned-count').text(unassigned.length);
 
-    $('#assigned-member-ids').val(JSON.stringify(ids))
+    $('#assigned-member-ids').val(JSON.stringify(ids));
   }
 
   function assignMember (member, list) {
-    let item = member.clone()
+    let item = member.clone();
 
-    $(list).append(item)
-    item.effect('highlight')
-    member.remove()
+    $(list).append(item);
+    item.effect('highlight');
+    member.remove();
 
     $('.assigned-members').stop().animate({
       scrollTop: $('.assigned-members').prop('scrollHeight')
-    }, 1000)
+    }, 1000);
   }
 </script>
 

@@ -35,43 +35,43 @@
 <input type="hidden" id="assigned-member-ids" name="member_ids" />
 
 <script>
-    $(".unassigned-members li").click(function () {
-        assignMember($(this), $('.assigned-members'));
-        updateMembers();
+  $('.unassigned-members li').click(function () {
+    assignMember($(this), $('.assigned-members'));
+    updateMembers();
+  });
+
+  $('.assigned-members').on('click', 'li', function () {
+    assignMember($(this), $('.unassigned-members'));
+    updateMembers();
+  });
+
+  /**
+   * Parse assigned members
+   */
+  function updateMembers () {
+    let ids = [],
+      assigned = $('.assigned-members li'),
+      unassigned = $('.unassigned-members li');
+
+    assigned.each(function () {
+      ids.push($(this).data('member-id'));
     });
 
-    $(".assigned-members").on("click", "li", function () {
-        assignMember($(this), $('.unassigned-members'));
-        updateMembers();
-    });
+    $('.assigned-count').text(assigned.length);
+    $('.unassigned-count').text(unassigned.length);
 
-    /**
-     * Parse assigned members
-     */
-    function updateMembers() {
-        let ids = [],
-            assigned = $('.assigned-members li'),
-            unassigned = $('.unassigned-members li');
+    $('#assigned-member-ids').val(JSON.stringify(ids));
+  }
 
-        assigned.each(function () {
-            ids.push($(this).data('member-id'));
-        });
+  function assignMember (member, list) {
+    let item = member.clone();
 
-        $(".assigned-count").text(assigned.length);
-        $(".unassigned-count").text(unassigned.length);
+    $(list).append(item);
+    item.effect('highlight');
+    member.remove();
 
-        $("#assigned-member-ids").val(JSON.stringify(ids));
-    }
-
-    function assignMember(member, list) {
-        let item = member.clone();
-
-        $(list).append(item);
-        item.effect('highlight');
-        member.remove();
-
-        $(".assigned-members").stop().animate({
-            scrollTop: $('.assigned-members').prop("scrollHeight")
-        }, 1000);
-    }
+    $('.assigned-members').stop().animate({
+      scrollTop: $('.assigned-members').prop('scrollHeight')
+    }, 1000);
+  }
 </script>

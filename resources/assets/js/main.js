@@ -5,26 +5,26 @@ let Tracker = Tracker || {};
   Tracker = {
 
     Setup: function () {
-      Tracker.GeneralInit()
-      Tracker.SearchMembers()
-      Tracker.SearchCollection()
+      Tracker.GeneralInit();
+      Tracker.SearchMembers();
+      Tracker.SearchCollection();
 
       // misc functionality, visual
-      Tracker.InitRepeater()
-      Tracker.InitTabActivate()
-      Tracker.ResetLocality()
+      Tracker.InitRepeater();
+      Tracker.InitTabActivate();
+      Tracker.ResetLocality();
     },
     /**
      * Handle member search
      * @constructor
      */
     SearchMembers: function () {
-      this.TriggerFilter(document.getElementById('member-search'), this.GetSearchResults, 1000)
+      this.TriggerFilter(document.getElementById('member-search'), this.GetSearchResults, 1000);
       $('#searchclear').click(function () {
-        $('section.search-results').addClass('closed').removeClass('open')
-        $('#member-search').val('')
-        $('#searchclear').css('display', 'none')
-      })
+        $('section.search-results').addClass('closed').removeClass('open');
+        $('#member-search').val('');
+        $('#searchclear').css('display', 'none');
+      });
     },
     /**
      * Handle repeater fields
@@ -34,7 +34,7 @@ let Tracker = Tracker || {};
     InitRepeater: function () {
       $('.repeater').repeater({
         isFirstItemUndeletable: true,
-      })
+      });
     },
     /**
      * Handle tab activation on URL navigation
@@ -42,12 +42,12 @@ let Tracker = Tracker || {};
      * @constructor
      */
     InitTabActivate: function () {
-      $('.nav-tabs').stickyTabs()
+      $('.nav-tabs').stickyTabs();
 
       // handle sparklines that aren't visible on the dom initially
       $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        $.sparkline_display_visible()
-      })
+        $.sparkline_display_visible();
+      });
     },
 
     /**
@@ -59,18 +59,18 @@ let Tracker = Tracker || {};
      * @constructor
      */
     TriggerFilter: function (textArea, callback, delay) {
-      var timer = null
+      var timer = null;
       if ($('#member-search').length) {
         textArea.onkeypress = function () {
           if (timer) {
-            window.clearTimeout(timer)
+            window.clearTimeout(timer);
           }
           timer = window.setTimeout(function () {
-            timer = null
-            callback()
-          }, delay)
-        }
-        textArea = null
+            timer = null;
+            callback();
+          }, delay);
+        };
+        textArea = null;
       }
     },
 
@@ -82,18 +82,18 @@ let Tracker = Tracker || {};
     GetSearchResults: function () {
       if ($('#member-search').val()) {
         var name = $('input#member-search').val(),
-          base_url = window.Laravel.appPath
+          base_url = window.Laravel.appPath;
 
         $.ajax({
           url: base_url + '/search/members/' + name,
           type: 'GET',
           success: function (response) {
-            window.scrollTo(0, 0)
-            $('#searchclear').css('display', 'block')
-            $('section.search-results').html(response)
-            $('section.search-results').addClass('open').removeClass('closed')
+            window.scrollTo(0, 0);
+            $('#searchclear').css('display', 'block');
+            $('section.search-results').html(response);
+            $('section.search-results').addClass('open').removeClass('closed');
           }
-        })
+        });
       }
     },
 
@@ -105,7 +105,7 @@ let Tracker = Tracker || {};
      * @constructor
      */
     FormatNumber: function (num) {
-      return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+      return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
     },
 
     /**
@@ -117,14 +117,14 @@ let Tracker = Tracker || {};
       $('#search-collection').keyup(function () {
         let value = $(this).val(),
           exp = new RegExp('^' + value, 'i'),
-          items = '.collection .collection-item'
+          items = '.collection .collection-item';
         $(items).each(function () {
           // toggle items that don't meet criteria
-          let isMatch = exp.test($(this).text())
-          $(this).toggle(isMatch)
+          let isMatch = exp.test($(this).text());
+          $(this).toggle(isMatch);
 
-        })
-      })
+        });
+      });
     },
 
     ResetLocality: function () {
@@ -132,23 +132,23 @@ let Tracker = Tracker || {};
         $('[data-locality-entry]').each(function () {
 
           var new_string = $(this).find('[data-new-string]'),
-            old_string = $(this).find('[data-old-string]')
+            old_string = $(this).find('[data-old-string]');
 
           if (new_string.val() !== old_string.val()) {
-            new_string.effect('highlight', 1000)
-            new_string.val(old_string.val())
+            new_string.effect('highlight', 1000);
+            new_string.val(old_string.val());
           }
-        })
-      })
+        });
+      });
     },
 
     smoothScroll: function () {
       $('.smooth-scroll').click(function (e) {
-        e.preventDefault()
-        var targetId = $(this).attr('href')
-        var top = $(targetId).offset().top - 90
-        $('html, body').stop().animate({scrollTop: top}, 750)
-      })
+        e.preventDefault();
+        var targetId = $(this).attr('href');
+        var top = $(targetId).offset().top - 90;
+        $('html, body').stop().animate({scrollTop: top}, 750);
+      });
 
     },
 
@@ -157,11 +157,11 @@ let Tracker = Tracker || {};
       // handle primary nav collapse
       $('.left-nav-toggle a').click(function () {
         if ($('body').hasClass('nav-toggle')) {
-          $.get('/primary-nav/decollapse')
+          $.get('/primary-nav/decollapse');
         } else {
-          $.get('/primary-nav/collapse')
+          $.get('/primary-nav/collapse');
         }
-      })
+      });
 
       // Only enable if the document has a long scroll bar
       // Note the window height + offset
@@ -169,17 +169,17 @@ let Tracker = Tracker || {};
         $('#top-link-block').removeClass('hidden').affix({
           // how far to scroll down before link "slides" into view
           offset: {top: 100}
-        })
+        });
       }
 
-      this.smoothScroll()
+      this.smoothScroll();
 
-      var clipboard = new Clipboard('.copy-to-clipboard')
+      var clipboard = new Clipboard('.copy-to-clipboard');
 
       clipboard.on('success', function (e) {
-        toastr.success('Copied!')
-        e.clearSelection()
-      })
+        toastr.success('Copied!');
+        e.clearSelection();
+      });
 
       $('table.basic-datatable').DataTable({
         paging: false,
@@ -190,14 +190,14 @@ let Tracker = Tracker || {};
         columnDefs: [
           {targets: 'no-sort', orderable: false}
         ]
-      })
+      });
 
       $('table.adv-datatable').DataTable({
         order: [],
         columnDefs: [
           {targets: 'no-sort', orderable: false}
         ]
-      })
+      });
 
       var sparklineCharts = function () {
         $('[census-data]').sparkline(
@@ -209,7 +209,7 @@ let Tracker = Tracker || {};
             height: 50,
             width: '100%'
           }
-        )
+        );
 
         $('.census-pie').each(function () {
           $(this).sparkline(
@@ -217,65 +217,65 @@ let Tracker = Tracker || {};
               type: 'pie',
               sliceColors: ['#404652', '#f7af3e']
             }
-          )
-        })
+          );
+        });
 
         $('[census-data]').bind('sparklineClick', function (ev) {
           var sparkline = ev.sparklines[0],
-            region = sparkline.getCurrentRegionFields()
-          console.log('Clicked on x=' + region.x + ' y=' + region.y)
-        })
-      }
+            region = sparkline.getCurrentRegionFields();
+          console.log('Clicked on x=' + region.x + ' y=' + region.y);
+        });
+      };
 
-      let sparkResize
+      let sparkResize;
 
       $(window).resize(function () {
-        clearTimeout(sparkResize)
-        sparkResize = setTimeout(sparklineCharts, 100)
-      })
+        clearTimeout(sparkResize);
+        sparkResize = setTimeout(sparklineCharts, 100);
+      });
 
-      sparklineCharts()
+      sparklineCharts();
 
       // Handle minimalize left menu
       $('.left-nav-toggle a').on('click', function (event) {
-        event.preventDefault()
-        $('body').toggleClass('nav-toggle')
-        clearTimeout(sparkResize)
-        sparkResize = setTimeout(sparklineCharts, 100)
-      })
+        event.preventDefault();
+        $('body').toggleClass('nav-toggle');
+        clearTimeout(sparkResize);
+        sparkResize = setTimeout(sparklineCharts, 100);
+      });
 
       // Hide all open sub nav menu list
       $('.nav-second').on('show.bs.collapse', function () {
-        $('.nav-second.in').collapse('hide')
-      })
+        $('.nav-second.in').collapse('hide');
+      });
 
       // Handle panel toggle
       $('.panel-toggle').on('click', function (event) {
-        event.preventDefault()
-        var hpanel = $(event.target).closest('div.panel')
-        var icon = $(event.target).closest('i.toggle-icon')
-        var iconNotLinked = $(event.target).find('i.toggle-icon')
-        var body = hpanel.find('div.panel-body')
-        var footer = hpanel.find('div.panel-footer')
-        body.slideToggle(300)
-        footer.slideToggle(200)
+        event.preventDefault();
+        var hpanel = $(event.target).closest('div.panel');
+        var icon = $(event.target).closest('i.toggle-icon');
+        var iconNotLinked = $(event.target).find('i.toggle-icon');
+        var body = hpanel.find('div.panel-body');
+        var footer = hpanel.find('div.panel-footer');
+        body.slideToggle(300);
+        footer.slideToggle(200);
 
         // Toggle icon from up to down
-        icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down')
-        iconNotLinked.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down')
-        hpanel.toggleClass('').toggleClass('panel-collapse')
+        icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+        iconNotLinked.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+        hpanel.toggleClass('').toggleClass('panel-collapse');
         setTimeout(function () {
-          hpanel.resize()
-          hpanel.find('[id^=map-]').resize()
-        }, 50)
-      })
+          hpanel.resize();
+          hpanel.find('[id^=map-]').resize();
+        }, 50);
+      });
 
       // Handle panel close
       $('.panel-close').on('click', function (event) {
-        event.preventDefault()
-        var hpanel = $(event.target).closest('div.panel')
-        hpanel.remove()
-      })
+        event.preventDefault();
+        var hpanel = $(event.target).closest('div.panel');
+        hpanel.remove();
+      });
 
       $('.search-member').bootcomplete({
         url: window.Laravel.appPath + '/search-member/',
@@ -283,13 +283,13 @@ let Tracker = Tracker || {};
         idField: true,
         method: 'POST',
         dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
-      })
+      });
 
     },
 
-  }
+  };
 
-})(jQuery)
+})(jQuery);
 
-Tracker.Setup()
+Tracker.Setup();
 

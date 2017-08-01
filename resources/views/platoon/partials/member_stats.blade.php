@@ -14,32 +14,32 @@
 
 <script>
 
-    var ctx = document.getElementById("platoonChart");
+  var ctx = document.getElementById('platoonChart');
 
-    var myDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            datasets: [
-                {
-                    data: $("#platoonChart").data('values'),
-                    backgroundColor: $("#platoonChart").data('colors'),
-                    borderWidth: 0,
-                }],
-            labels: $("#platoonChart").data('labels'),
+  var myDoughnutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [
+        {
+          data: $('#platoonChart').data('values'),
+          backgroundColor: $('#platoonChart').data('colors'),
+          borderWidth: 0,
+        }],
+      labels: $('#platoonChart').data('labels'),
+    },
+    options: {
+      rotation: 1 * Math.PI,
+      circumference: 1 * Math.PI,
+      legend: {
+        position: 'bottom',
+        labels: {
+          boxWidth: 5,
+          fontColor: '#949ba2'
         },
-        options: {
-            rotation: 1 * Math.PI,
-            circumference: 1 * Math.PI,
-            legend: {
-                position: 'bottom',
-                labels: {
-                    boxWidth: 5,
-                    fontColor: '#949ba2'
-                },
-                label: {
-                    fullWidth: false
-                }
-            }
+        label: {
+          fullWidth: false
         }
-    });
+      }
+    }
+  });
 </script>
