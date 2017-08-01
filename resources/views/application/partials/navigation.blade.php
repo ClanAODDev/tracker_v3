@@ -48,7 +48,7 @@
             @endif
 
             <li>
-                <a href="#" onclick="event.preventDefault() document.getElementById('logout-form').submit();">
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Logout <i class="fa fa-lock text-muted"></i>
                 </a>
             </li>
