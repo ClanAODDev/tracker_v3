@@ -190,7 +190,7 @@ class Division extends Model
      */
     public function routeNotificationForSlack()
     {
-        return env('SLACK_WEBHOOK');
+        return config('SLACK_WEBHOOK');
     }
 
     /**
