@@ -28,7 +28,7 @@
 
     @component('application.components.link-block')
         @slot('link')
-            https://www.clanaod.net/forums/search.php?do=finduser&userid={{ $member->clan_id }}&contenttype=vBForum_Post&showposts=1
+            https://www.clanaod.net/forums/search.php?do=finduser&amp;userid={{ $member->clan_id }}&amp;contenttype=vBForum_Post&amp;showposts=1
         @endslot
         @slot('data') {{ $member->posts }} @endslot
         @slot('title') forum <span class="c-white">post count</span> @endslot
