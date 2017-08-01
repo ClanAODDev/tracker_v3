@@ -26,7 +26,10 @@
         @slot('title') Last <span class="c-white">promotion date</span> @endslot
     @endcomponent
 
-    @component('application.components.data-block')
+    @component('application.components.link-block')
+        @slot('link')
+            https://www.clanaod.net/forums/search.php?do=finduser&userid={{ $member->clan_id }}&contenttype=vBForum_Post&showposts=1
+        @endslot
         @slot('data') {{ $member->posts }} @endslot
         @slot('title') forum <span class="c-white">post count</span> @endslot
     @endcomponent
