@@ -22,7 +22,9 @@
         </div>
 
         <hr />
-        <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure they understand and agree to all of AOD's requirements before continuing further in the process. </p>
+        <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
+            <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure they understand and agree to all of AOD's requirements before continuing further in the process.
+        </p>
         <hr />
 
         <button class="btn btn-success pull-right" type="submit">Continue</button>
@@ -31,10 +33,10 @@
 </template>
 
 <script>
-  import store from './store'
-  import DemoModeNotice from './DemoModeNotice.vue'
-  import DivisionThreads from './DivisionThreads.vue'
-  import ProgressBar from './ProgressBar.vue'
+  import store from './store';
+  import DemoModeNotice from './DemoModeNotice.vue';
+  import DivisionThreads from './DivisionThreads.vue';
+  import ProgressBar from './ProgressBar.vue';
 
   export default {
     components: {
@@ -48,24 +50,24 @@
     data: function () {
       return {
         store
-      }
+      };
     },
 
     methods: {
       validateStep: function () {
         if (store.threadsIncomplete) {
-          toastr.error('Recruit has not completed all threads!', 'Uh oh...')
-          return
+          toastr.error('Recruit has not completed all threads!', 'Uh oh...');
+          return;
         }
 
-        store.currentStep = 'step-three'
-        store.progress = 75
+        store.currentStep = 'step-three';
+        store.progress = 75;
       },
 
       backToStepOne: () => {
-        store.progress = 25
-        store.currentStep = 'step-one'
+        store.progress = 25;
+        store.currentStep = 'step-one';
       }
     },
-  }
+  };
 </script>

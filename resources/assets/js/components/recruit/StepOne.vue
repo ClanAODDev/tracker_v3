@@ -124,56 +124,56 @@
 </template>
 
 <script>
-    import store from './store.js';
-    import toastr from 'toastr';
-    import ProgressBar from './ProgressBar.vue';
+  import store from './store.js';
+  import toastr from 'toastr';
+  import ProgressBar from './ProgressBar.vue';
 
-    export default {
+  export default {
 
-        methods: {
-            validateStep: function () {
-                this.$validator.validateAll().then(() => {
-                    store.getDivisionThreads(store.division.abbreviation);
-                    store.currentStep = 'step-two';
-                    store.progress = 50;
-                }).catch(() => {
-                    toastr.error('Something is wrong with your member information', 'Uh oh...');
-                    return false;
-                });
-            },
+    methods: {
+      validateStep: function () {
+        this.$validator.validateAll().then(() => {
+          store.getDivisionThreads(store.division.abbreviation);
+          store.currentStep = 'step-two';
+          store.progress = 50;
+        }).catch(() => {
+          toastr.error('Something is wrong with your member information', 'Uh oh...');
+          return false;
+        });
+      },
 
-            resetThreadsOnIdChange: () => {
-                store.division.threads = [];
-            },
+      resetThreadsOnIdChange: () => {
+        store.division.threads = [];
+      },
 
-            forumNameToIngameName: () => {
-                store.ingame_name = store.forum_name;
-            },
+      forumNameToIngameName: () => {
+        store.ingame_name = store.forum_name;
+      },
 
-            /**
-             * Provide dummy data for training
-             */
-            toggleDemoMode: () => {
-                store.inDemoMode = !store.inDemoMode;
-                store.member_id = 99999;
-                store.forum_name = 'test-user';
-                store.ingame_name = 'test-user';
+      /**
+       * Provide dummy data for training
+       */
+      toggleDemoMode: () => {
+        store.inDemoMode = !store.inDemoMode;
+        store.member_id = 99999;
+        store.forum_name = 'test-user';
+        store.ingame_name = 'test-user';
 
-                if (store.inDemoMode) {
-                    toastr.success('Demo mode enabled!', 'Success!');
-                }
-            },
-        },
+        if (store.inDemoMode) {
+          toastr.success('Demo mode enabled!', 'Success!');
+        }
+      },
+    },
 
-        components: {
-            'progress-bar': ProgressBar
-        },
+    components: {
+      'progress-bar': ProgressBar
+    },
 
-        data: function () {
-            return {
-                store
-            }
-        },
-    }
+    data: function () {
+      return {
+        store
+      };
+    },
+  };
 
 </script>

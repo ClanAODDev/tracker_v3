@@ -45,7 +45,7 @@
 </template>
 
 <script>
-    export default {
-        props: ['position']
-    }
+  export default {
+    props: ['position']
+  };
 </script>

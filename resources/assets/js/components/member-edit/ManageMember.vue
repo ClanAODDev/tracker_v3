@@ -20,42 +20,42 @@
 </template>
 
 <script>
-    import PositionDescription from './partials/position-description.vue';
+  import PositionDescription from './partials/position-description.vue';
 
-    export default {
-        components: {
-            'position-description': PositionDescription,
-        },
-        props: ['positions', 'position', 'member-id'],
-        mounted() {
+  export default {
+    components: {
+      'position-description': PositionDescription,
+    },
+    props: ['positions', 'position', 'member-id'],
+    mounted() {
 
-        },
-        methods: {
-            doUpdatingPosition: function () {
-                this.updatingPosition = !this.updatingPosition;
-            },
-            assignPosition: function () {
-                this.doUpdatingPosition ();
-                axios.post (window.Laravel.appPath + '/update-position', {
-                    member: this.memberId,
-                    position: this.currentPosition
-                }).then (function () {
-                    toastr.success("You successfully updated the member's position!", 'Success');
-                }).catch (function (error) {
-                    if (error.response.status === 403) {
-                        toastr.error ('No change was made', 'You are not authorized', {timeOut: 10000});
-                        return;
-                    }
-                    toastr.error (error, 'Something went wrong while updating member position', {timeOut: 10000})
-                });
-                this.doUpdatingPosition ();
-            }
-        },
-        data() {
-            return {
-                updatingPosition: false,
-                currentPosition: this.position
-            }
-        }
+    },
+    methods: {
+      doUpdatingPosition: function () {
+        this.updatingPosition = !this.updatingPosition;
+      },
+      assignPosition: function () {
+        this.doUpdatingPosition();
+        axios.post(window.Laravel.appPath + '/update-position', {
+          member: this.memberId,
+          position: this.currentPosition
+        }).then(function () {
+          toastr.success('You successfully updated the member\'s position!', 'Success');
+        }).catch(function (error) {
+          if (error.response.status === 403) {
+            toastr.error('No change was made', 'You are not authorized', {timeOut: 10000});
+            return;
+          }
+          toastr.error(error, 'Something went wrong while updating member position', {timeOut: 10000});
+        });
+        this.doUpdatingPosition();
+      }
+    },
+    data() {
+      return {
+        updatingPosition: false,
+        currentPosition: this.position
+      };
     }
+  };
 </script>

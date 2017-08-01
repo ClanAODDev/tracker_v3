@@ -9,39 +9,39 @@
 </template>
 
 <script>
-    import store from './store.js';
-    import toastr from 'toastr';
+  import store from './store.js';
+  import toastr from 'toastr';
 
-    import ProgressBar from './ProgressBar.vue';
-    import StepOne from './StepOne.vue';
-    import StepTwo from './StepTwo.vue';
-    import StepThree from './StepThree.vue';
-    import StepFour from './StepFour.vue';
+  import ProgressBar from './ProgressBar.vue';
+  import StepOne from './StepOne.vue';
+  import StepTwo from './StepTwo.vue';
+  import StepThree from './StepThree.vue';
+  import StepFour from './StepFour.vue';
 
-    export default {
+  export default {
 
-        components: {
-            StepOne, StepTwo, StepThree, StepFour, ProgressBar
-        },
+    components: {
+      StepOne, StepTwo, StepThree, StepFour, ProgressBar
+    },
 
-        data() {
-            return {
-                store
-            }
-        },
+    data() {
+      return {
+        store
+      };
+    },
 
-        props: ['division'],
+    props: ['division'],
 
-        mounted () {
-            this.prepareRecruitingProcess();
-        },
+    mounted () {
+      this.prepareRecruitingProcess();
+    },
 
-        methods: {
-            prepareRecruitingProcess: function () {
-                store.division.abbreviation = this.division;
-                store.getPlatoons(this.division);
-                store.getTasks(this.division);
-            }
-        },
-    }
+    methods: {
+      prepareRecruitingProcess: function () {
+        store.division.abbreviation = this.division;
+        store.getPlatoons(this.division);
+        store.getTasks(this.division);
+      }
+    },
+  };
 </script>

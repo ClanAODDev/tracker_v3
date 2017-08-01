@@ -55,57 +55,57 @@
 </template>
 
 <script>
-    export default {
-        /*
-         * The component's data.
-         */
-        data() {
-            return {
-                tokens: []
-            };
-        },
+  export default {
+      /*
+       * The component's data.
+       */
+    data() {
+      return {
+        tokens: []
+      };
+    },
 
-        /**
-         * Prepare the component (Vue 1.x).
-         */
-        ready() {
-            this.prepareComponent();
-        },
+    /**
+     * Prepare the component (Vue 1.x).
+     */
+    ready() {
+      this.prepareComponent();
+    },
 
-        /**
-         * Prepare the component (Vue 2.x).
-         */
-        mounted() {
-            this.prepareComponent();
-        },
+    /**
+     * Prepare the component (Vue 2.x).
+     */
+    mounted() {
+      this.prepareComponent();
+    },
 
-        methods: {
-            /**
-             * Prepare the component (Vue 2.x).
-             */
-            prepareComponent() {
-                this.getTokens();
-            },
+    methods: {
+      /**
+       * Prepare the component (Vue 2.x).
+       */
+      prepareComponent() {
+        this.getTokens();
+      },
 
-            /**
-             * Get all of the authorized tokens for the user.
-             */
-            getTokens() {
-                this.$http.get(window.Laravel.appPath + '/oauth/tokens')
-                    .then(response => {
-                        this.tokens = response.data;
-                    });
-            },
+      /**
+       * Get all of the authorized tokens for the user.
+       */
+      getTokens() {
+        this.$http.get(window.Laravel.appPath + '/oauth/tokens')
+          .then(response => {
+            this.tokens = response.data;
+          });
+      },
 
-            /**
-             * Revoke the given token.
-             */
-            revoke(token) {
-                this.$http.delete(window.Laravel.appPath + '/oauth/tokens/' + token.id)
-                    .then(response => {
-                        this.getTokens();
-                    });
-            }
-        }
+      /**
+       * Revoke the given token.
+       */
+      revoke(token) {
+        this.$http.delete(window.Laravel.appPath + '/oauth/tokens/' + token.id)
+          .then(response => {
+            this.getTokens();
+          });
+      }
     }
+  };
 </script>

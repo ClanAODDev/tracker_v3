@@ -5,7 +5,9 @@
 
         <p>Here you can manage all of a member's ingame handles. All divisions have a default primary ingame handle, so if this member belongs to you, ensure that it exists and is accurate.</p>
 
-        <p>To add a handle, first <code>show all</code> and activate the handle(s) you wish to add. Then provide values, and finally, save your changes.</p>
+        <p>To add a handle, first
+            <code>show all</code> and activate the handle(s) you wish to add. Then provide values, and finally, save your changes.
+        </p>
 
         <div class="btn-group m-t-lg">
             <button class="btn-default btn" @click="showDisabled = !showDisabled">
@@ -55,50 +57,50 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                myHandles: [],
-                changesMade: false,
-                showDisabled: false,
-            }
-        },
+  export default {
+    data() {
+      return {
+        myHandles: [],
+        changesMade: false,
+        showDisabled: false,
+      };
+    },
 
-        mounted() {
-            this.myHandles = this.handles;
+    mounted() {
+      this.myHandles = this.handles;
 
-            let divisionHandle = this.divisionHandle,
-                hasDivisionHandle = this.myHandles.filter (function (handle) {
-                        return divisionHandle === handle.type
-                    }).length > 0;
+      let divisionHandle = this.divisionHandle,
+        hasDivisionHandle = this.myHandles.filter(function (handle) {
+            return divisionHandle === handle.type;
+          }).length > 0;
 
-            console.log (hasDivisionHandle);
+      console.log(hasDivisionHandle);
 
-        },
+    },
 
-        methods: {
-            toggleHandle: function (handle) {
-                this.changesMade = true;
-                handle.enabled = !handle.enabled;
-            },
-            storeHandles: function () {
-                let handles = this.myHandles.filter (function (handle) {
-                    return handle.enabled && handle.value;
-                });
+    methods: {
+      toggleHandle: function (handle) {
+        this.changesMade = true;
+        handle.enabled = !handle.enabled;
+      },
+      storeHandles: function () {
+        let handles = this.myHandles.filter(function (handle) {
+          return handle.enabled && handle.value;
+        });
 
-                axios.post (window.Laravel.appPath + '/update-handles', {
-                    member_id: this.memberId,
-                    handles: handles
-                }).then (function (response) {
-                    window.location.reload ();
-                }).catch (function (error) {
-                    toastr.error (error, 'Something went wrong')
-                });
+        axios.post(window.Laravel.appPath + '/update-handles', {
+          member_id: this.memberId,
+          handles: handles
+        }).then(function (response) {
+          window.location.reload();
+        }).catch(function (error) {
+          toastr.error(error, 'Something went wrong');
+        });
 
-                this.changesMade = false;
-            }
-        },
+        this.changesMade = false;
+      }
+    },
 
-        props: ['handles', 'member-id', 'division-handle']
-    }
+    props: ['handles', 'member-id', 'division-handle']
+  };
 </script>

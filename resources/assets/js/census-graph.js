@@ -1,66 +1,66 @@
 // Flot charts data and options
-var data2 = $("#flot-line-chart").data('populations'),
-    data1 = $("#flot-line-chart").data('weekly-active'),
-    comments = $("#flot-line-chart").data('comments');
+var data2 = $('#flot-line-chart').data('populations'),
+  data1 = $('#flot-line-chart').data('weekly-active'),
+  comments = $('#flot-line-chart').data('comments');
 
 var chartUsersOptions = {
 
-    series: {
+  series: {
 
-        points: {
-            show: true,
-            radius: 2,
-            symbol: "circle"
-        },
-
-        splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 1,
-        }
+    points: {
+      show: true,
+      radius: 2,
+      symbol: 'circle'
     },
 
-    grid: {
-        tickColor: "#404652",
-        borderWidth: 1,
-        hoverable: true,
-        color: '#000',
-        borderColor: '#404652',
-    },
+    splines: {
+      show: true,
+      tension: 0.4,
+      lineWidth: 1,
+      fill: 1,
+    }
+  },
 
-    comment: {
-        show: true,
+  grid: {
+    tickColor: '#404652',
+    borderWidth: 1,
+    hoverable: true,
+    color: '#000',
+    borderColor: '#404652',
+  },
 
-        hoverable: false,
-    },
+  comment: {
+    show: true,
 
-    tooltip: {
-        show: false
-    },
+    hoverable: false,
+  },
 
-    sidenote: {
-        show: false
-    },
+  tooltip: {
+    show: false
+  },
 
-    xaxis: {
-        axisLabel: 'Weeks'
-    },
+  sidenote: {
+    show: false
+  },
 
-    comments: comments,
+  xaxis: {
+    axisLabel: 'Weeks'
+  },
 
-    colors: ["#f7af3e", "#DE9536"]
+  comments: comments,
+
+  colors: ['#f7af3e', '#DE9536']
 };
 
-$.plot($("#flot-line-chart"), [data2, data1], chartUsersOptions);
+$.plot($('#flot-line-chart'), [data2, data1], chartUsersOptions);
 
 $(window).resize(function () {
-    $.plot($("#flot-line-chart"), [data2, data1], chartUsersOptions);
+  $.plot($('#flot-line-chart'), [data2, data1], chartUsersOptions);
 });
 
-$("input[type=checkbox]").change(function (event) {
-    var option = {};
-    option['comment'] = {show: $(this).is(':checked')};
-    $.extend(true, chartUsersOptions, option);
-    $.plot($("#flot-line-chart"), [data2, data1], chartUsersOptions);
+$('input[type=checkbox]').change(function (event) {
+  var option = {};
+  option['comment'] = {show: $(this).is(':checked')};
+  $.extend(true, chartUsersOptions, option);
+  $.plot($('#flot-line-chart'), [data2, data1], chartUsersOptions);
 });

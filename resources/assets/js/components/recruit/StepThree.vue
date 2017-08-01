@@ -40,50 +40,50 @@
     </form>
 </template>
 <script>
-    import store from './store.js';
+  import store from './store.js';
 
-    import TSInfo from './TsInfo.vue';
-    import RecapInfo from './RecapInfo.vue';
-    import DemoModeNotice from './DemoModeNotice.vue';
-    import ProgressBar from './ProgressBar.vue';
+  import TSInfo from './TsInfo.vue';
+  import RecapInfo from './RecapInfo.vue';
+  import DemoModeNotice from './DemoModeNotice.vue';
+  import ProgressBar from './ProgressBar.vue';
 
-    export default {
-        data: function () {
-            return {
-                store
-            }
-        },
+  export default {
+    data: function () {
+      return {
+        store
+      };
+    },
 
-        components: {
-            'demo-mode-notice': DemoModeNotice,
-            'ts-info': TSInfo,
-            'recap-info': RecapInfo,
-            'progress-bar': ProgressBar
-        },
+    components: {
+      'demo-mode-notice': DemoModeNotice,
+      'ts-info': TSInfo,
+      'recap-info': RecapInfo,
+      'progress-bar': ProgressBar
+    },
 
-        methods: {
-            validateStep: function () {
-                let complete = true;
-                store.division.tasks.forEach(function (task) {
-                    if (!task.complete) {
-                        complete = false;
-                    }
-                });
+    methods: {
+      validateStep: function () {
+        let complete = true;
+        store.division.tasks.forEach(function (task) {
+          if (!task.complete) {
+            complete = false;
+          }
+        });
 
-                if (store.inDemoMode) {
-                    store.currentStep = 'step-four';
-                    store.progress = 100;
-                    return;
-                }
-
-                if (!complete) {
-                    toastr.error('Mark all tasks complete as you do them');
-                    return;
-                }
-
-                store.currentStep = 'step-four';
-                store.progress = 100;
-            },
+        if (store.inDemoMode) {
+          store.currentStep = 'step-four';
+          store.progress = 100;
+          return;
         }
+
+        if (!complete) {
+          toastr.error('Mark all tasks complete as you do them');
+          return;
+        }
+
+        store.currentStep = 'step-four';
+        store.progress = 100;
+      },
     }
+  };
 </script>

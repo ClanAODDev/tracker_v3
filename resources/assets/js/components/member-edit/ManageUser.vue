@@ -23,29 +23,29 @@
 </template>
 
 <script>
-    export default {
-        methods: {
-            assignRole: function () {
-                axios.post (window.Laravel.appPath + '/update-role', {
-                    user: this.userId,
-                    role: this.currentRole
-                }).then (function (response) {
-                    toastr.success ("You successfully updated the user's role!", 'Success');
-                }).catch (function (error) {
-                    if (error.response.status === 403) {
-                        toastr.error ('No change was made', 'You are not authorized', {timeOut: 10000});
-                        return;
-                    }
-                    toastr.error (error, 'Something went wrong while updating user role', {timeOut: 10000});
-                });
-            }
-        },
-        data() {
-            return {
-                currentRole: this.role,
-                email: this.eMail,
-            }
-        },
-        props: ['e-mail', 'user-id', 'username', 'roles', 'role']
-    }
+  export default {
+    methods: {
+      assignRole: function () {
+        axios.post(window.Laravel.appPath + '/update-role', {
+          user: this.userId,
+          role: this.currentRole
+        }).then(function (response) {
+          toastr.success('You successfully updated the user\'s role!', 'Success');
+        }).catch(function (error) {
+          if (error.response.status === 403) {
+            toastr.error('No change was made', 'You are not authorized', {timeOut: 10000});
+            return;
+          }
+          toastr.error(error, 'Something went wrong while updating user role', {timeOut: 10000});
+        });
+      }
+    },
+    data() {
+      return {
+        currentRole: this.role,
+        email: this.eMail,
+      };
+    },
+    props: ['e-mail', 'user-id', 'username', 'roles', 'role']
+  };
 </script>

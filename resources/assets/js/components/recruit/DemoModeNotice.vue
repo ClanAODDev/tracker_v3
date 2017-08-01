@@ -8,11 +8,11 @@
 </template>
 
 <script>
-    import store from './store';
+  import store from './store';
 
-    export default {
-        data: () => ({
-            store
-        })
-    };
+  export default {
+    data: () => ({
+      store
+    })
+  };
 </script>

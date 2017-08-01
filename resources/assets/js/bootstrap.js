@@ -35,12 +35,12 @@ window.Vue.prototype.authorize = function (handler) {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common = {
-    'X-CSRF-TOKEN': window.Laravel.csrfToken,
-    'X-Requested-With': 'XMLHttpRequest'
+  'X-CSRF-TOKEN': window.Laravel.csrfToken,
+  'X-Requested-With': 'XMLHttpRequest'
 };
 
 window.toastr.options = {
-    "preventDuplicates": true,
-    "progressBar": true,
-    "positionClass": "toast-top-right",
+  'preventDuplicates': true,
+  'progressBar': true,
+  'positionClass': 'toast-top-right',
 };

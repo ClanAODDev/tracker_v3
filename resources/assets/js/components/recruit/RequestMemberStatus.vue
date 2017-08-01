@@ -4,7 +4,8 @@
 
         <p>Your new recruit has been added to the Tracker, but you still need to submit a member status request to have their AOD permissions approved. To do that, use the button below to open the status request form.</p>
 
-        <p>Note: if you need to <span class="text-accent">change</span> the member's forum name, include it as the "name" in your request. Otherwise,
+        <p>Note: if you need to <span
+                class="text-accent">change</span> the member's forum name, include it as the "name" in your request. Otherwise,
             <span class="text-accent">leave the name field blank</span>.</p>
 
         <div class="row p-lg bs-example">
@@ -42,23 +43,23 @@
 </template>
 
 <script>
-    import store from './store.js';
-    import ProgressBar from './ProgressBar.vue';
+  import store from './store.js';
+  import ProgressBar from './ProgressBar.vue';
 
-    export default {
-        components: {
-            'progress-bar': ProgressBar
-        },
-        methods: {
-            userOpenedRequest: function () {
-                store.didUserOpenRequest = true;
-            }
-        },
-        data: function () {
-            return {
-                didUserOpenRequest: false,
-                store
-            }
-        },
-    }
+  export default {
+    components: {
+      'progress-bar': ProgressBar
+    },
+    methods: {
+      userOpenedRequest: function () {
+        store.didUserOpenRequest = true;
+      }
+    },
+    data: function () {
+      return {
+        didUserOpenRequest: false,
+        store
+      };
+    },
+  };
 </script>
