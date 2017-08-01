@@ -20,7 +20,7 @@
 
         <section class="content">
             {{--@if (session('impersonating'))--}}
-                {{--@include ('application.partials.impersonation')--}}
+            {{--@include ('application.partials.impersonation')--}}
             {{--@endif--}}
 
             @yield('content')
