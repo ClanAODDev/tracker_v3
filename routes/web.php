@@ -199,8 +199,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
  * Application UI
  */
 Route::group(['prefix' => 'primary-nav'], function () {
-    Route::get('collapse', function () { session(['primary_nav_collapsed' => false]); });
-    Route::get('decollapse', function () { session(['primary_nav_collapsed' => true]); });
+    Route::get('collapse', function () { session(['primary_nav_collapsed' => true]); });
+    Route::get('decollapse', function () { session(['primary_nav_collapsed' => false]); });
 });
 
 

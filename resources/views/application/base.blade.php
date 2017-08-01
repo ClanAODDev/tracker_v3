@@ -6,7 +6,7 @@
 </head>
 
 @if (Auth::check() && Auth::user()->member->division)
-    <body class="{{ session('primary_nav_collapsed') == true ? 'nav-toggle' : null }}">
+    <body class="{{ session('primary_nav_collapsed') === true ? 'nav-toggle' : null }}">
     {!! Toastr::message() !!}
     <div class="wrapper">
         <nav class="navbar navbar-default navbar-fixed-top">
