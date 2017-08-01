@@ -7,11 +7,10 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
         @endslot
         @slot ('heading')
-            <span class="hidden-xs">Part Time Members</span>
-            <span class="visible-xs">{{ $division->abbreviation }}</span>
+            Part-Timers
         @endslot
         @slot ('subheading')
-            {{ $division->description }}
+            {{ $division->name }}
         @endslot
     @endcomponent
 

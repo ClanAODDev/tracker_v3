@@ -88,6 +88,7 @@ let Tracker = Tracker || {};
           url: base_url + '/search/members/' + name,
           type: 'GET',
           success: function (response) {
+            window.scrollTo(0, 0);
             $('#searchclear').css('display', 'block')
             $('section.search-results').html(response)
             $('section.search-results').addClass('open').removeClass('closed')

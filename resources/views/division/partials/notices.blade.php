@@ -5,7 +5,7 @@
     </div>
 @endif
 
-@if ($division->unassigned)
+@if (count($division->unassigned) > 0)
     {{-- only show notice if user is capable of taking action --}}
     @can('create', [App\Platoon::class, $division])
         <div class="alert alert-warning">

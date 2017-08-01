@@ -7,11 +7,11 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
         @endslot
         @slot ('heading')
-            <span class="hidden-xs">{{ $division->name }}</span>
-            <span class="visible-xs">{{ $division->abbreviation }}</span>
+            <span class="hidden-xs">Leaves of Absence</span>
+            <span class="visible-xs">Leave</span>
         @endslot
         @slot ('subheading')
-            {{ $division->description }}
+            {{ $division->name }}
         @endslot
     @endcomponent
 

@@ -10,7 +10,8 @@
             <i class="pe page-header-icon pe-7s-users"></i>
         @endslot
         @slot ('heading')
-            AOD Tracker
+            <span class="hidden-xs">Add New Recruit</span>
+            <span class="visible-xs">Recruiting</span>
         @endslot
         @slot ('subheading')
             Add a new member to AOD

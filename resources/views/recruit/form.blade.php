@@ -7,11 +7,10 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
         @endslot
         @slot ('heading')
-            <span class="hidden-xs">{{ $division->name }}</span>
-            <span class="visible-xs">{{ $division->abbreviation }}</span>
+            Add New Recruit
         @endslot
         @slot ('subheading')
-            Recruit New Member
+            {{ $division->name }}
         @endslot
     @endcomponent
 

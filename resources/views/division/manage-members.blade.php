@@ -19,40 +19,39 @@
     <div class="container-fluid">
         {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
-        <h4>Manage Squad Assignments</h4>
-        <p>Drag members between squads to assign them. Only squad members will be shown; squad leaders cannot be reassigned from this view.</p>
-        <p>If you wish to reassign an entire squad to a new platoon, you can perform that function from the
-            <code>Edit Squad</code> view. </p>
+        <h4>Manage {{ $division->locality('Squad') }} Assignments</h4>
+        <p>Drag members between {{ str_plural($division->locality('squad')) }} to assign them. Only {{ $division->locality('Squad') }} members will be shown; squad leaders cannot be reassigned from this view.</p>
+        <p>If you wish to reassign an entire {{ $division->locality('Squad') }} to a new platoon, you can perform that function from the
+            <code>Edit {{ $division->locality('Squad') }}</code> view. </p>
 
         <div class="m-t-xl">
             <a href="{{ route('platoon', [$division->abbreviation, $platoon]) }}" class="btn btn-default">Cancel</a>
             <a class="btn btn-success"
                href="{{ route('createSquad', [$division->abbreviation, $platoon]) }}">
-                <i class="fa fa-plus"></i> Create Squad
+                <i class="fa fa-plus"></i> Create {{ $division->locality('squad') }}
             </a>
         </div>
 
         <hr />
 
         <p class="alert alert-warning"><i
-                    class="fa fa-exclamation-circle"></i> You can rearrange squads to more easily move members between them. To do so, click and drag the squad name.
+                    class="fa fa-exclamation-circle"></i> You can rearrange {{ str_plural($division->locality('squad')) }} to more easily move members between them. To do so, click and drag the {{ $division->locality('squad') }} name.
         </p>
 
         <div class="panel panel-filled panel-c-warning">
             <div class="panel-heading">
-                <i class="fa fa-trash-o text-warning"></i> Unassign from platoon and squad
+                <i class="fa fa-trash-o text-warning"></i> Unassign from {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}
             </div>
             <div class="panel-body">
                 <div class="mod-plt sortable-squad">
                     <div class="col-md-3">
-                        <ul class="sortable" data-squad-id="0"
-                            style="border: thin dashed rgba(255,255,255,.3); padding: 15px; border-radius: 5px;"></ul>
+                        <ul class="sortable" data-squad-id="0" style="border: thin dashed rgba(255,255,255,.3); padding: 15px; border-radius: 5px;"></ul>
                     </div>
                 </div>
             </div>
             <div class="panel-footer">
                 <p>Drag members here to
-                    <em class="text-warning">immediately unassign</em> them from their current platoon and squad.
+                    <em class="text-warning">immediately unassign</em> them from their current {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}.
                 </p>
             </div>
         </div>

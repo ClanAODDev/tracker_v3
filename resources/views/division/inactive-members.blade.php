@@ -8,10 +8,10 @@
         @endslot
         @slot ('heading')
             <span class="hidden-xs">Inactive Members</span>
-            <span class="visible-xs">{{ $division->abbreviation }}</span>
+            <span class="visible-xs">Inactive</span>
         @endslot
         @slot ('subheading')
-            {{ $division->description }}
+            {{ $division->name }}
         @endslot
     @endcomponent
 

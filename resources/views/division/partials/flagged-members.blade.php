@@ -13,12 +13,13 @@
         @foreach ($flaggedMembers as $member)
             <tr>
                 <td>
+                    <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search"></i></a>
                     {{ $member->name }}
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
                 <td><code>{{ $member->last_activity->diffInDays() }}</code></td>
                 <td>
-                    @can ('delete', App\Member::class)
+                    @can ('delete', $member)
                         {!! Form::model($member, ['method' => 'delete', 'route' => ['member.drop-for-inactivity', $member->clan_id]]) !!}
                         <input type="hidden" value="inactivity" name="removal-reason" />
                         <button type="submit" class="btn btn-danger btn-xs">

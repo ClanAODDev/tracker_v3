@@ -19,7 +19,9 @@
     @endcomponent
 
     <div class="container-fluid">
-        @include('division.partials.sub-nav')
+        @include('division.partials.tools-links')
+        <div class="m-b-xl"></div>
+
         @include ('division.partials.census-short')
         @include('division.partials.leadership')
         @include('division.partials.staff-sergeants')

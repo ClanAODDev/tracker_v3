@@ -4,15 +4,17 @@
 <div class="row">
 
     @component('application.components.data-block')
-        @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
-
-        @slot('title') days since last <span class="c-white">forum activity </span>@endslot
+        @slot('data') {{ $member->last_activity->diffInDays() }} days @endslot
+        @slot('title')since last <span class="c-white">forum activity </span>@endslot
+        @slot('color')
+            {{ $member->last_activity->diffInDays() > $member->division->settings()->inactivity_days ? "panel-c-danger" : null }}
+        @endslot
     @endcomponent
 
-    @component('application.components.data-block')
-        @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
-        @slot('title') days since last <span class="c-white">TS activity </span> @endslot
-    @endcomponent
+    {{-- @component('application.components.data-block')
+         @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
+         @slot('title') days since last <span class="c-white">TS activity </span> @endslot
+     @endcomponent--}}
 
     @component('application.components.data-block')
         @slot('data') {{ $member->join_date }} @endslot
@@ -30,12 +32,9 @@
     @endcomponent
 
     @if ($member->recruiter && $member->recruiter_id !== 0)
-        @component('application.components.data-block')
-            @slot('data')
-                <a href="{{ route('member', [$member->recruiter_id]) }}">
-                    {{ $member->recruiter->present()->rankName }}
-                </a>
-            @endslot
+        @component('application.components.link-block')
+            @slot('link'){{ route('member', [$member->recruiter_id]) }}@endslot
+            @slot('data'){{ $member->recruiter->present()->rankName }}@endslot
             @slot('title') clan <span class="c-white">recruiter</span> @endslot
         @endcomponent
     @endif

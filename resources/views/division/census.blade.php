@@ -7,11 +7,10 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
         @endslot
         @slot ('heading')
-            {{ $division->name }} Division
-            @include('division.partials.edit-division-button', ['division' => $division])
+            Census Data
         @endslot
         @slot ('subheading')
-            Census data and statistics
+            {{ $division->name }}
         @endslot
     @endcomponent
 
