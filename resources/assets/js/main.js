@@ -157,9 +157,9 @@ let Tracker = Tracker || {};
       // handle primary nav collapse
       $('.left-nav-toggle a').click(function () {
         if ($('body').hasClass('nav-toggle')) {
-          $.get('/primary-nav/decollapse');
+          $.get(window.Laravel.appPath + '/primary-nav/decollapse');
         } else {
-          $.get('/primary-nav/collapse');
+          $.get(window.Laravel.appPath + '/primary-nav/collapse');
         }
       });
 
