@@ -154,6 +154,15 @@ let Tracker = Tracker || {};
 
     GeneralInit: function () {
 
+      // handle primary nav collapse
+      $('.left-nav-toggle a').click(function () {
+        if ($('body').hasClass('nav-toggle')) {
+          $.get('/primary-nav/decollapse')
+        } else {
+          $.get('/primary-nav/collapse')
+        }
+      })
+
       // Only enable if the document has a long scroll bar
       // Note the window height + offset
       if (($(window).height() + 100) < $(document).height()) {

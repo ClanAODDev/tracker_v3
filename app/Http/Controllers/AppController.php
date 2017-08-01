@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Division;
-use App\User;
 use Auth;
 use Mail;
 
@@ -35,8 +34,3 @@ class AppController extends Controller
         ));
     }
 }
-
-/* Toastr::success('You have successfully logged in!', 'Hello, ' . strtoupper(Auth::user()->name), [
-        'positionClass' => 'toast-top-right',
-        'progressBar' => true
-    ]);*/

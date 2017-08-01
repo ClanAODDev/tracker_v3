@@ -11,35 +11,36 @@
 </template>
 
 <script>
-    import store from './store.js';
-    import RequestMemberStatus from './RequestMemberStatus.vue';
-    import CreateWelcomePost from './CreateWelcomePost.vue';
-    import DemoModeNotice from './DemoModeNotice.vue';
+  import store from './store.js'
+  import RequestMemberStatus from './RequestMemberStatus.vue'
+  import CreateWelcomePost from './CreateWelcomePost.vue'
+  import DemoModeNotice from './DemoModeNotice.vue'
 
-    export default {
+  export default {
 
-        components: {
-            'request-member-status': RequestMemberStatus,
-            'create-welcome-post': CreateWelcomePost,
-            'demo-mode-notice': DemoModeNotice
-        },
+    components: {
+      'request-member-status': RequestMemberStatus,
+      'create-welcome-post': CreateWelcomePost,
+      'demo-mode-notice': DemoModeNotice
+    },
 
-        methods: {
-            validateStep: function () {
-                if (!store.didUserOpenRequest) {
-                    toastr.error('You must request member status to complete this process', 'Heads up!');
-                    return;
-                }
+    methods: {
+      validateStep: function () {
+        if (!store.didUserOpenRequest) {
+          toastr.error('You must request member status to complete this process', 'Heads up!')
+          return
+        }
 
-                store.progress = 100;
-                window.location.href = store.base_url;
-            }
-        },
+        store.progress = 100
+        store.createMember()
+        window.location.href = store.base_url
+      }
+    },
 
-        data: function () {
-            return {
-                store
-            }
-        },
-    }
+    data: function () {
+      return {
+        store
+      }
+    },
+  }
 </script>
