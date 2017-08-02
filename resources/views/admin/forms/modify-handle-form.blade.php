@@ -34,6 +34,6 @@
         </div>
     </div>
 
-    <a href="{{ route('admin') }}#handles" class="btn btn-default">Cancel</a>
+    <a href="{{ route('admin') }}" class="btn btn-default">Cancel</a>
     {!! Form::submit('Save Handle', ['class' => 'btn btn-default pull-right']) !!}
 </div>

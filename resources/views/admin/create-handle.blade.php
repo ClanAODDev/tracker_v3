@@ -22,8 +22,8 @@
             <div class="col-md-6">
                 <h4>Create New Handle</h4>
                 <div>
-                    <p>Handles are used to track ingame member aliases. Before creating a new handle, ensure that the handle type you wish to create does not already exist. Additionally, use the comments field to specify the unique identifier for your type. Ideally, this is either alphanumerical or numerical.</p>
-                    <p>Handles <span class="text-accent">should not</span> be entire URLs.</p>
+                    <p>Handles are used to track ingame member aliases. Before creating a new handle, ensure that the handle type you wish to create does not already exist. Additionally, use the comments field to provide an example. Ex.
+                        <code>JohnDoe#97363</code></p>
                 </div>
             </div>
 

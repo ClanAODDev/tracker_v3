@@ -4,7 +4,9 @@
             <h4 class="m-b-sm">
                 {{ $data }}
             </h4>
-            <div class="small text-uppercase">{{ $title }}</div>
+            @if (isset($title))
+                <div class="small text-uppercase">{{ $title }}</div>
+            @endif
         </div>
     </a>
 </div>

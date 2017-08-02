@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use Exception;
 use Github\Exception\RuntimeException;
 use GrahamCampbell\GitHub\Facades\GitHub;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -30,13 +29,9 @@ class IssuesController extends Controller
     {
         $this->authorize('manage-issues', User::class);
 
-        try {
-            $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3', ['labels' => 'bug']);
+        $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3', ['labels' => 'bug']);
 
-            return view('issues.index', compact('issues'));
-        } catch (Exception $exception) {
-            return view('issues.index', ['issues' => [], 'error' => $exception->getMessage()]);
-        }
+        return view('issues.index', compact('issues'));
     }
 
     /**

@@ -25,8 +25,8 @@
                     <h4>
                         <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium" />
                         {{ $division->name }}
-                        <span class="badge">{{ $division->sergeants_count }}</span>
-                        <small class="pull-right text-muted">{{ count($division->members_count) }} Members</small>
+                        <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
+                        <span class="badge">{{ $division->members_count }} Members</span>
                     </h4>
                     <hr />
 
@@ -42,9 +42,21 @@
                                 </span>
                             </span>
                         </a>
-
-
                     @endforeach
+
+                    {{--@foreach($division->staffSergeants as $member)
+
+                        <a href="{{ route('member', $member->clan_id) }}"
+                           class="col-lg-3 panel panel-filled m-r m-b">
+                            <span class="panel-body">
+                                    {!! $member->present()->rankName !!}
+                                <br />
+                                <span class="slight text-muted text-uppercase">
+                                    Assigned Staff Sergeant
+                                </span>
+                            </span>
+                        </a>
+                    @endforeach--}}
 
                 </div>
             </div>

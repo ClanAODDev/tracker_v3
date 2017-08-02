@@ -45,6 +45,6 @@
         </div>
     </div>
 
-    <a href="{{ route('admin') }}#divisions" class="btn btn-default">Cancel</a>
+    <a href="{{ route('admin') }}" class="btn btn-default">Cancel</a>
     {!! Form::submit('Save Division', ['class' => 'btn btn-default pull-right']) !!}
 </div>

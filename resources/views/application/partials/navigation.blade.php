@@ -79,11 +79,8 @@
         <li class="nav-category">
             Admin
         </li>
-        <li class="{{ set_active('admin') }}">
+        <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
             <a href="{{ route('admin') }}">Admin CP</a>
-        </li>
-        <li class="{{ set_active('admin/divisions/create') }}">
-            <a href="{{ route('adminCreateDivision') }}">Create New Division</a>
         </li>
     @endif
 

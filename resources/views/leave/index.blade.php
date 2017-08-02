@@ -39,8 +39,8 @@
 
         @include('application.partials.errors')
 
-        <div class="panel panel-filled panel-c-accent collapsed">
-            <div class="panel-heading panel-toggle">
+        <div class="panel panel-filled panel-c-accent">
+            <div class="panel-heading">
                 Create Request
             </div>
             <div class="panel-body">

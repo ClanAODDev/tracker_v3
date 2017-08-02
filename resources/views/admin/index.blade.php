@@ -19,6 +19,21 @@
     <div class="container-fluid">
 
         <div class="row">
+            @component('application.components.link-block')
+                @slot('link'){{ route('adminCreateDivision') }}@endslot
+                @slot('color') panel-c-accent @endslot
+                @slot('data') Create New Division @endslot
+            @endcomponent
+            @component('application.components.link-block')
+                @slot('link'){{ route('adminCreateHandle') }}@endslot
+                @slot('color') panel-c-accent @endslot
+                @slot('data') Create New Handle @endslot
+            @endcomponent
+        </div>
+
+        <h4 class="m-t-xl">Manage Tracker</h4>
+        <hr />
+        <div class="row">
             <div class="col-xs-12">
 
                 {{-- Edit profile nav --}}

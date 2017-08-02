@@ -21,9 +21,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6">
-                <h4>Update {{ $handle->label }}</h4>
+                <h4>Update Handle</h4>
                 <div>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta dolores, dolorum earum eum illo non nulla obcaecati odio pariatur porro provident recusandae repellat saepe voluptatem? Beatae eligendi hic perferendis.
+                    <p>Handles are used to track ingame member aliases. Before creating a new handle, ensure that the handle type you wish to create does not already exist. Additionally, use the comments field to provide an example. Ex. <code>JohnDoe#97363</code></p>
                 </div>
             </div>
 

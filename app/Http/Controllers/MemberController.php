@@ -119,8 +119,12 @@ class MemberController extends Controller
                 return true;
             });
 
+        $partTimeDivisions = $member->partTimeDivisions()
+            ->whereActive(true)
+            ->get();
+
         return view('member.show', compact(
-            'member', 'division', 'notes'
+            'member', 'division', 'notes', 'partTimeDivisions'
         ));
     }
 
@@ -149,7 +153,6 @@ class MemberController extends Controller
 
         $division = $member->division;
         $positions = Position::all()->pluck('id', 'name');
-
 
         /**
          * omit divisions the member is already part-time in
@@ -261,6 +264,7 @@ class MemberController extends Controller
     {
         $divisions = Division::active()
             ->with('sergeants', 'sergeants.rank', 'sergeants.position')
+            // ->with('staffSergeants','staffSergeants.rank')
             ->withCount('members')
             ->withCount('sergeants')
             ->orderBy('name')

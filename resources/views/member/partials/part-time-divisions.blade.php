@@ -8,7 +8,7 @@
 </h4>
 <hr />
 <div class="row">
-    @forelse ($member->partTimeDivisions as $division)
+    @forelse ($partTimeDivisions as $division)
         <div class="col-md-4">
             <a href="{{ route('division', $division->abbreviation) }}" class="panel panel-filled">
                 <div class="panel-body">
