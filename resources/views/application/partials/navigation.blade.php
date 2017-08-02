@@ -1,10 +1,10 @@
 <ul class="nav luna-nav">
 
-    <li class="{{ set_active('home') }}">
+    <li class="{{ set_active(['home', '/']) }}">
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
 
-    <li>
+    <li class="{{ set_active('members/' . auth()->user()->member->clan_id) }}">
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
             {{ auth()->user()->name }}
             @if (session('impersonating'))
@@ -54,7 +54,9 @@
     </li>
 
     @can('create', App\Member::class)
-        <li><a href="{{ route('recruiting.initial') }}">Add New Recruit</a></li>
+        <li class="{{ set_active('recruit') }}">
+            <a href="{{ route('recruiting.initial') }}">Add New Recruit</a>
+        </li>
     @endcan
 
     <li class="nav-category">
@@ -79,6 +81,9 @@
         </li>
         <li class="{{ set_active('admin') }}">
             <a href="{{ route('admin') }}">Admin CP</a>
+        </li>
+        <li class="{{ set_active('admin/divisions/create') }}">
+            <a href="{{ route('adminCreateDivision') }}">Create New Division</a>
         </li>
     @endif
 
