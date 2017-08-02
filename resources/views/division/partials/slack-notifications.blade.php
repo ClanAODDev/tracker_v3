@@ -1,9 +1,5 @@
 <table class="table table-hover table-striped table-bordered">
     <tr>
-        <th colspan="2" class="text-muted text-uppercase">Member</th>
-    </tr>
-
-    <tr>
         <td>
             <label for="slack_alert_created_member">When a new member is recruited</label>
         </td>
@@ -18,8 +14,6 @@
         <td>
             <label for="slack_alert_removed_member">
                 When a member is removed
-                <i class="fa fa-exclamation-triangle text-danger"
-                   aria-hidden="true" title="Potentially spammy"></i>
             </label>
         </td>
         <td>
@@ -30,27 +24,7 @@
         </td>
     </tr>
 
-    <tr>
-        <td>
-            <label for="slack_alert_updated_member">
-                When a member's profile is edited
-                <i class="fa fa-exclamation-triangle text-danger"
-                   aria-hidden="true" title="Potentially spammy"></i>
-            </label>
-        </td>
-        <td>
-            <input type='hidden' value='0' name="slack_alert_updated_member">
-            <input id="slack_alert_updated_member" disabled="disabled"
-                   name="slack_alert_updated_member"
-                   type="checkbox" {{ checked($division->settings()->slack_alert_updated_member) }}/>
-        </td>
-    </tr>
-
-    <tr>
-        <th colspan="2" class="text-muted text-uppercase">Division</th>
-    </tr>
-
-    <tr>
+    {{--<tr>
         <td>
             <label for="slack_alert_created_request">
                 When a request is submitted
@@ -60,8 +34,9 @@
             <input type='hidden' value='0' name="slack_alert_created_request">
             <input id="slack_alert_created_request" disabled="disabled"
                    name="slack_alert_created_request"
-                   type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} /></td>
-    </tr>
+                   type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} />
+        </td>
+    </tr>--}}
 
     <tr>
         <td>

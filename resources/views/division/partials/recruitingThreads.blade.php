@@ -3,13 +3,13 @@
         <tr>
             <td class="col-xs-6">
                 <input type="text" name="threads[{{ $loop->index }}][thread_name]"
-                       class="form-control" placeholder="Name"
+                       class="form-control" placeholder="Thread Name"
                        value="{{ $thread['thread_name'] }}" required />
             </td>
 
             <td class="col-xs-6">
                 <input type="number" name="threads[{{ $loop->index }}][thread_id]"
-                       class="form-control" placeholder="Id"
+                       class="form-control" placeholder="Thread Id"
                        value="{{ $thread['thread_id'] }}" required />
             </td>
 

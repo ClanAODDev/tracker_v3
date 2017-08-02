@@ -23,7 +23,7 @@ class AdminController extends Controller
         $divisions = Division::all();
         $handles = Handle::withCount('divisions')->get();
         $defaultTags = Tag::where('default', true)->get();
-        $allTags = Tag::with('notes', 'division')->get();
+        $allTags = Tag::with('notes', 'division')->orderBy('division_id')->get();
         $users = User::with('role', 'member.rank', 'member')->get();
         $activityLog = Activity::with(
             [

@@ -1,11 +1,14 @@
 <ul class="nav luna-nav">
 
-    <li>
+    <li class="{{ set_active('home') }}">
+        <a href="{{ route('home') }}">Dashboard</a>
+    </li>
 
+    <li>
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
             {{ auth()->user()->name }}
             @if (session('impersonating'))
-                <i class="fa fa-user-secret text-info" title="Currently Impersonating"></i>
+                <i class="fa fa-user-secret text-accent" title="Currently Impersonating"></i>
             @endif
             @if (auth()->user()->isDeveloper())
                 <i class="fa fa-shield text-danger" title="Dev mode enabled"></i>
@@ -25,8 +28,8 @@
             @if (session('impersonating'))
                 <li>
                     <a href="{{ route('end-impersonation') }}">
-                        <strong>End Impersonation</strong>
-                        <i class="fa fa-user-secret"></i>
+                        <strong class="text-danger">End Impersonation</strong>
+                        <i class="fa fa-user-secret "></i>
                     </a>
                 </li>
             @endif
@@ -41,12 +44,6 @@
                 <a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a>
             </li>
 
-            @if(Auth::user()->isRole('admin'))
-                <li class="{{ set_active('admin') }}">
-                    <a href="{{ route('admin') }}">Admin CP</a>
-                </li>
-            @endif
-
             <li>
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Logout <i class="fa fa-lock text-muted"></i>
@@ -54,10 +51,6 @@
             </li>
 
         </ul>
-    </li>
-
-    <li class="{{ set_active('home') }}">
-        <a href="{{ route('home') }}">Dashboard</a>
     </li>
 
     @can('create', App\Member::class)
@@ -79,6 +72,15 @@
     <li class="{{ set_active('statistics') }}">
         <a href="{{ route('statistics') }}">Statistics</a>
     </li>
+
+    @if(Auth::user()->isRole('admin'))
+        <li class="nav-category">
+            Admin
+        </li>
+        <li class="{{ set_active('admin') }}">
+            <a href="{{ route('admin') }}">Admin CP</a>
+        </li>
+    @endif
 
     <li class="nav-category">
         Application
