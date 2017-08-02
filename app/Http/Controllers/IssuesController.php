@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Exception;
 use Github\Exception\RuntimeException;
 use GrahamCampbell\GitHub\Facades\GitHub;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -23,23 +24,29 @@ class IssuesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|string
      */
     public function index()
     {
         $this->authorize('manage-issues', User::class);
 
-        $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3', ['labels' => 'bug']);
+        try {
+            $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3', ['labels' => 'bug']);
 
-        return view('issues.index', compact('issues'));
+            return view('issues.index', compact('issues'));
+        } catch (Exception $exception) {
+            return view('issues.index', ['issues' => [], 'error' => $exception->getMessage()]);
+        }
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function create(Request $request)
-    {
+    public
+    function create(
+        Request $request
+    ) {
         $this->authorize('manage-issues', User::class);
 
         try {

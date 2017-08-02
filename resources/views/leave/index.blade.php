@@ -35,11 +35,12 @@
             <p class="text-muted">No active leaves of absence</p>
         @endif
 
-        <hr class="m-t-xl m-b-xl" />
+        <hr class="m-t-xl" />
 
         @include('application.partials.errors')
-        <div class="panel panel-filled panel-c-accent">
-            <div class="panel-heading">
+
+        <div class="panel panel-filled panel-c-accent collapsed">
+            <div class="panel-heading panel-toggle">
                 Create Request
             </div>
             <div class="panel-body">
@@ -49,6 +50,7 @@
                     {!! Form::close() !!}
                 </form>
             </div>
+            <div class="panel-footer"><span class="text-accent">*</span> - required</div>
         </div>
     </div>
 @stop

@@ -39,10 +39,14 @@
                 {{ ucwords($member->leave->reason) }}
             </td>
             <td>
-                <a target="_blank"
-                   href="{{ doForumFunction([$member->leave->note->forum_thread_id], 'showThread') }}">
-                    View Thread <i class="fa fa-external-link text-accent"></i>
-                </a>
+                @if($member->leave->note)
+                    <a target="_blank"
+                       href="{{ doForumFunction([$member->leave->note->forum_thread_id], 'showThread') }}">
+                        View Thread <i class="fa fa-external-link text-accent"></i>
+                    </a>
+                @else
+                    <span class="text-muted">Note deleted</span>
+                @endif
             </td>
         </tr>
     @endforeach

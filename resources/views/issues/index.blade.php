@@ -17,6 +17,12 @@
     @endcomponent
 
     <div class="container-fluid">
+        @if($error)
+            <div class="alert alert-danger">
+                <h4>Something went wrong</h4>
+                <p>{{ $error }}</p></div>
+        @endif
+
         <div class="row">
             <div class="col-md-12">
                 <h4>Bug/Issue Reports</h4>
