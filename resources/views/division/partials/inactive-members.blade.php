@@ -21,11 +21,15 @@
                     <code>{{ $member->last_activity->diffInDays() }}</code>
                 </td>
                 <td class="text-center">
-                    <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
-                       class="btn btn-warning btn-xs">
-                        <i class="fa fa-flag"></i>
-                        Flag
-                    </a>
+                    @can ('update', $member)
+                        <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
+                           class="btn btn-warning btn-xs">
+                            <i class="fa fa-flag"></i>
+                            Flag
+                        </a>
+                    @else
+                        <span class="text-muted">No available actions</span>
+                    @endcan
                 </td>
             </tr>
         @endforeach
