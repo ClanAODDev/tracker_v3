@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Activities\RecordsActivity;
+use App\Notifications\ResetPasswordNotification;
 use App\Settings\UserSettings;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -172,6 +172,11 @@ class User extends Authenticatable
     public function getNameAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
 }
