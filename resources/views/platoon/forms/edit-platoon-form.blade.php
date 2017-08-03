@@ -25,6 +25,8 @@
     </div>
 
     <div class="col-sm-6">
+        @include('application.partials.errors')
+
         <div class="panel panel-filled">
             <div class="panel-body">
 
@@ -71,7 +73,6 @@
             </div>
         </div>
 
-        @include('application.partials.errors')
 
     </div>
 </div>

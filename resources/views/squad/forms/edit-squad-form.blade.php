@@ -19,6 +19,7 @@
     </div>
 
     <div class="col-sm-6">
+        @include('application.partials.errors')
         <div class="panel panel-filled">
             <div class="panel-body">
 
@@ -55,9 +56,6 @@
                 <button type="submit" class="btn btn-success pull-right">Save</button>
             </div>
         </div>
-
-        @include('application.partials.errors')
-
     </div>
 </div>
 
