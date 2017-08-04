@@ -137,18 +137,20 @@ store.getTasks = (division) => {
  * pushes a request to create a new member
  */
 store.createMember = () => {
-  axios.post(store.base_url + '/add-member/', {
-    division: store.division.abbreviation,
-    member_id: store.member_id,
-    forum_name: store.forum_name,
-    ingame_name: store.ingame_name,
-    platoon: store.platoon,
-    squad: store.squad
-  }).then(function (response) {
-    toastr.success('Your recruit has been added to the tracker');
-  }).catch(function (error) {
-    toastr.error(error, 'The creation process could not be completed');
-  });
+  if (!store.inDemoMode) {
+    axios.post(store.base_url + '/add-member/', {
+      division: store.division.abbreviation,
+      member_id: store.member_id,
+      forum_name: store.forum_name,
+      ingame_name: store.ingame_name,
+      platoon: store.platoon,
+      squad: store.squad
+    }).then(function (response) {
+      toastr.success('Your recruit has been added to the tracker');
+    }).catch(function (error) {
+      toastr.error(error, 'The creation process could not be completed');
+    });
+  }
 };
 
 /**
