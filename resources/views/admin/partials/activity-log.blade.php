@@ -4,7 +4,7 @@
         <th>#</th>
         <th>User</th>
         <th>Action</th>
-        <th>Subject ID</th>
+        <th>Subject</th>
         <th>Date</th>
     </tr>
     </thead>
