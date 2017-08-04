@@ -64,7 +64,7 @@ class ImpersonationController extends Controller
             $user = User::find(session('impersonatingUser'));
             Auth::login($user);
             session()->forget(['impersonating', 'impersonatingUser']);
-            $user->activity('stop_impersonating');
+            $user->activity('stop_impersonation');
             $this->showToast('Impersonation ended');
         }
 
