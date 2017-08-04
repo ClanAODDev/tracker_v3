@@ -25,6 +25,8 @@ class ImpersonationController extends Controller
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
 
+        $user->activity('start_impersonation');
+
         $this->showToast('You are now impersonating ' . $user->name);
 
         Auth::login($user);
@@ -59,8 +61,10 @@ class ImpersonationController extends Controller
     public function endImpersonation()
     {
         if (session('impersonating') && session('impersonatingUser')) {
-            Auth::login(User::find(session('impersonatingUser')));
+            $user = User::find(session('impersonatingUser'));
+            Auth::login($user);
             session()->forget(['impersonating', 'impersonatingUser']);
+            $user->activity('stop_impersonating');
             $this->showToast('Impersonation ended');
         }
 
