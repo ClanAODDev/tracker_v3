@@ -11,7 +11,7 @@
         <div class="alert alert-warning">
             <i class="fa fa-users"></i>
             There are unassigned members in this division. Edit a
-            <a href="#platoons" class="alert-link">{{ $division->locality('platoon') }}</a> to assign them
+            <a href="#platoons" class="alert-link smooth-scroll">{{ $division->locality('platoon') }}</a> to assign them
         </div>
     @endcan
 @endif
