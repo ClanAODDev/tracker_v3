@@ -23,6 +23,11 @@
                         </li>
                     @endunless
                 @endif
+
+            @else
+                <li>
+                    <a href="#" disabled> No account</a>
+                </li>
             @endif
             <li class="divider"></li>
         @endcan
