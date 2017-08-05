@@ -19,7 +19,7 @@
             </a>
         </div>
 
-        <form class="navbar-form navbar-left">
+        <form class="navbar-form navbar-left" onsubmit="return false;">
             {{ csrf_field() }}
             <input type="text" class="form-control" id="member-search" name="search"
                    placeholder="Search for a player..." />
