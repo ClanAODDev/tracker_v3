@@ -15,7 +15,7 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
 /**
  * ajax endpoints
  */
-Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
+Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
@@ -96,7 +96,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/part-timers', 'DivisionController@partTime')->name('partTimers');
     Route::get('{division}/part-timers/{member}', 'DivisionController@assignPartTime')->name('assignPartTimer');
     Route::get('{division}/part-timers/{member}/remove', 'DivisionController@removePartTime')->name('removePartTimer');
-//    Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
+    Route::get('{division}/statistics', 'DivisionController@statistics')->name('divisionStats');
 
     Route::get('{division}/leave', 'LeaveController@index')->name('leave.index');
     Route::post('{division}/leave', 'LeaveController@store')->name('leave.store');
