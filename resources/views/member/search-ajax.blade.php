@@ -2,11 +2,10 @@
     <a class="panel" href="{{ route('member', $member->clan_id) }}"
        style="padding-left: 30px; margin-bottom: 0;">
         <div class="panel-body">
-            <h4 class="m-b-none">
+            <h5 class="m-b-none">
                 {!! $member->present()->rankName !!}
-                <small class="slight text-muted">[{{ $member->clan_id }}]</small>
-                <small class="pull-right">{{ $member->division->name or "Ex-AOD" }}</small>
-            </h4>
+            </h5>
+            <small class="slight">{{ $member->division->name or "Ex-AOD" }} [{{ $member->clan_id }}]</small>
         </div>
     </a>
 @empty
