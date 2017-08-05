@@ -26,7 +26,7 @@
 
             @else
                 <li>
-                    <a href="#" disabled> No account</a>
+                    <a href="#" class="text-muted" disabled> No account</a>
                 </li>
             @endif
             <li class="divider"></li>
