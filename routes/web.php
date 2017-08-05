@@ -27,6 +27,7 @@ Route::post('update-handles', 'MemberController@updateHandles')->name('updateMem
 
 Route::group(['prefix' => 'inactive-members'], function () {
     Route::get('{member}/flag-inactive', 'InactiveMemberController@create')->name('member.flag-inactive');
+    Route::get('{member}/unflag-inactive', 'InactiveMemberController@destroy')->name('member.unflag-inactive');
     Route::delete('{member}', 'InactiveMemberController@removeMember')->name('member.drop-for-inactivity');
 });
 

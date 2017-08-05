@@ -4,7 +4,7 @@
         <tr>
             <th>Member Name</th>
             <th>Last Seen
-                <small class="text-muted">Days ago</small>
+                <small class="text-muted">Days</small>
             </th>
             <th class="no-sort"></th>
         </tr>
@@ -23,8 +23,8 @@
                 <td class="text-center">
                     @can ('update', $member)
                         <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
-                           class="btn btn-warning btn-xs">
-                            <i class="fa fa-flag"></i>
+                           class="btn btn-warning">
+                            <i class="fa fa-flag btn-sm"></i>
                             Flag
                         </a>
                     @else
