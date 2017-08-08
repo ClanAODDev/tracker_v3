@@ -230,6 +230,8 @@ class Division extends Model
     public function partTimeMembers()
     {
         return $this->belongsToMany(Member::class, 'division_parttimer')
+            ->orderByDesc('rank_id')
+            ->orderBy('name')
             ->withTimestamps();
     }
 
