@@ -165,9 +165,9 @@ class Member extends Model
     public function resetPositionsAndAssignments()
     {
         $this->division()->dissociate();
-        $this->position()->dissociate();
         $this->platoon()->dissociate();
         $this->squad()->dissociate();
+        $this->position_id = 1;
 
         $this->flagged_for_inactivity = false;
 

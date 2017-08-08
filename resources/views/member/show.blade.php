@@ -16,7 +16,7 @@
             @include('member.partials.edit-member-button', ['member' => $member])
         @endslot
         @slot ('subheading')
-            {{ $member->position->name  }}
+            {{ $member->position->name or "No Position" }}
         @endslot
     @endcomponent
 
