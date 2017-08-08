@@ -62,6 +62,7 @@ let Tracker = Tracker || {};
       var timer = null;
       if ($('#member-search').length) {
         textArea.onkeypress = function () {
+          $('.results-loader').removeClass('hidden');
           if (timer) {
             window.clearTimeout(timer);
           }
@@ -89,6 +90,7 @@ let Tracker = Tracker || {};
           type: 'GET',
           success: function (response) {
             window.scrollTo(0, 0);
+            $('.results-loader').addClass('hidden');
             $('#searchclear').css('display', 'block');
             $('section.search-results').html(response);
             $('section.search-results').addClass('open').removeClass('closed');

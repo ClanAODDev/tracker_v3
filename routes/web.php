@@ -15,7 +15,7 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
 /**
  * ajax endpoints
  */
-Route::get('search/members/{name}', 'MemberController@search')->name('memberSearch');
+Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
@@ -27,6 +27,7 @@ Route::post('update-handles', 'MemberController@updateHandles')->name('updateMem
 
 Route::group(['prefix' => 'inactive-members'], function () {
     Route::get('{member}/flag-inactive', 'InactiveMemberController@create')->name('member.flag-inactive');
+    Route::get('{member}/unflag-inactive', 'InactiveMemberController@destroy')->name('member.unflag-inactive');
     Route::delete('{member}', 'InactiveMemberController@removeMember')->name('member.drop-for-inactivity');
 });
 

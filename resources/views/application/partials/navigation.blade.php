@@ -1,5 +1,4 @@
 <ul class="nav luna-nav">
-
     <li class="{{ set_active(['home', '/']) }}">
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
@@ -61,6 +60,10 @@
 
     <li class="nav-category">
         Members
+    </li>
+
+    <li class="{{ set_active('search/members') }} visible-xs">
+        <a href="{{ route('memberSearch') }}">Search</a>
     </li>
 
     <li class="{{ set_active('members') }}">

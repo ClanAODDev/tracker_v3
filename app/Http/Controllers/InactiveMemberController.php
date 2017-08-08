@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteMember;
 use App\Member;
-use App\Notifications\MemberRemoved;
 use Carbon\Carbon;
 
 class InactiveMemberController extends Controller
@@ -58,6 +57,26 @@ class InactiveMemberController extends Controller
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
 
+    /**
+     * Remove a flag from an inactive member
+     *
+     * @param Member $member
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy(Member $member)
+    {
+        $this->authorize('update', $member);
+
+        $member->flagged_for_inactivity = false;
+        $member->save();
+
+        $member->recordActivity('unflagged');
+
+        $this->showToast($member->name . " successfully unflagged");
+
+        return redirect(route('division.inactive-members', $member->division->abbreviation));
+    }
+
     public function removeMember(Member $member, DeleteMember $form)
     {
         $this->authorize('delete', $member);
@@ -73,7 +92,7 @@ class InactiveMemberController extends Controller
         $member->recordActivity('removed');
 
         return redirect(route('division.inactive-members', [
-            $division->abbreviation
-        ]) . '#flagged');
+                $division->abbreviation
+            ]) . '#flagged');
     }
 }

@@ -56,12 +56,24 @@ class MemberController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @internal param $name
      */
-    public function search($name)
+    public function search($name = null)
     {
-        $members = Member::where('name', 'LIKE', "%{$name}%")
-            ->with('rank')->get();
+        if ( ! $name) {
+            $name = request()->name;
+        }
 
-        return view('member.search', compact('members', 'request'));
+        if ($name) {
+            $members = Member::where('name', 'LIKE', "%{$name}%")
+                ->with('rank', 'division')->get();
+        } else {
+            $members = [];
+        }
+
+        if (request()->ajax()) {
+            return view('member.search-ajax', compact('members'));
+        }
+
+        return view('member.search', compact('members'));
     }
 
     /**

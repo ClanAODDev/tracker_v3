@@ -7,6 +7,10 @@
        class=" btn btn-default m-t-sm ">
         Part Timers
     </a>
+    <a href="{{ route('division.census', $division->abbreviation) }}"
+       class="btn btn-default m-t-sm">
+        Census
+    </a>
     @can ('viewDivisionStructure', auth()->user())
         <a href="{{ route('division.structure', $division->abbreviation) }}"
            class=" btn btn-default m-t-sm ">
