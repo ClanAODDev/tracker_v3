@@ -26,6 +26,7 @@ class InactiveMemberController extends Controller
             ))
             ->whereDoesntHave('leave')
             ->with('rank')
+            ->orderBy('last_activity')
             ->get();
 
         if (request()->platoon) {
