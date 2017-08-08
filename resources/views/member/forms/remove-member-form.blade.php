@@ -26,7 +26,7 @@
         {{ csrf_field() }}
     </div>
     <div class="panel-footer">
-        <button type="submit" title="Remove player from AOD" data-memberId="{{ $member->clan_id }}"
+        <button type="submit" title="Remove player from AOD" data-member-id="{{ $member->clan_id }}"
                 class="btn btn-danger remove-member">Submit<span class="hidden-sm hidden-xs"> removal</span></button>
     </div>
 </div>

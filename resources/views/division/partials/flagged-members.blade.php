@@ -34,7 +34,7 @@
                             {!! Form::model($member, ['method' => 'delete', 'route' => ['member.drop-for-inactivity', $member->clan_id]]) !!}
                             <input type="hidden" value="inactivity" name="removal-reason" />
                             <button type="submit" class="btn btn-danger btn-sm remove-member"
-                                    data-memberId="{{ $member->clan_id }}">
+                                    data-member-id="{{ $member->clan_id }}">
                                 <i class="fa fa-trash text-danger"></i> Remove
                             </button>
                             {!! Form::close() !!}

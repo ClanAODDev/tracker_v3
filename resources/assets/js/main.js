@@ -174,7 +174,7 @@ let Tracker = Tracker || {};
     GeneralInit: function () {
 
       $('.remove-member').click(function (e) {
-        let member = $(this).data('memberId'),
+        let member = $(this).data('member-id'),
           removeUrl = 'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=' + member,
           windowName = 'Tracker | Remove Member',
           settings = 'width=900,height=600,scrollbars=yes';
