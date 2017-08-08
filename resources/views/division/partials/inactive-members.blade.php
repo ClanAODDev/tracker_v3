@@ -20,11 +20,15 @@
                 <td>
                     <code>{{ $member->last_activity->diffInDays() }}</code>
                 </td>
+                <td>
+                    <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank"
+                       class="btn btn-default btn-sm">Forum PM</a>
+                </td>
                 <td class="text-center">
                     @can ('update', $member)
                         <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
-                           class="btn btn-warning">
-                            <i class="fa fa-flag btn-sm"></i>
+                           class="btn btn-warning btn-sm">
+                            <i class="fa fa-flag"></i>
                             Flag
                         </a>
                     @else
