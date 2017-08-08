@@ -30,7 +30,7 @@
       };
     },
 
-    props: ['division'],
+    props: ['division', 'handleName'],
 
     mounted () {
       this.prepareRecruitingProcess();
@@ -38,6 +38,7 @@
 
     methods: {
       prepareRecruitingProcess: function () {
+        store.handleName = this.handleName;
         store.division.abbreviation = this.division;
         store.getPlatoons(this.division);
         store.getTasks(this.division);

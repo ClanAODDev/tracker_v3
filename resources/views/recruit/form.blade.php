@@ -15,10 +15,11 @@
     @endcomponent
 
     <div class="container-fluid" id="recruiting-container">
-        <recruiting-process division="{{ $division->abbreviation }}"></recruiting-process>
+        <recruiting-process division="{{ $division->abbreviation }}"
+                            handle-name="{{ $division->handle->label or 'Ingame Name' }}"></recruiting-process>
     </div>
 @stop
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/recruiting.js?v=4.4') !!}"></script>
+    <script src="{!! asset('/js/recruiting.js?v=4.5') !!}"></script>
 @stop

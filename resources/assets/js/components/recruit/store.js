@@ -35,6 +35,7 @@ store.platoon = '';
 store.squad = '';
 
 // division data
+store.handleName = '';
 store.division = {
   abbreviation: '',
   settings: [],

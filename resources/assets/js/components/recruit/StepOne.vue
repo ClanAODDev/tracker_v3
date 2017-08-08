@@ -59,7 +59,7 @@
 
                     <div class="col-md-4 form-group"
                          :class="{'input': true, 'has-warning': errors.has('ingame_name') }">
-                        <label for="ingame_name">Ingame Name</label>
+                        <label for="ingame_name">{{ store.handleName }}</label>
                         <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
                                v-validate="'required'" id="ingame_name" :disabled="store.inDemoMode" />
                         <span v-show="errors.has('ingame_name')"
