@@ -2,4 +2,4 @@
     {{ csrf_field() }}
 </form>
 
-<script src="{{ asset('/js/main.js?v=3.1') }}"></script>
+<script src="{{ asset('/js/main.js?v=3.2') }}"></script>

@@ -154,7 +154,33 @@ let Tracker = Tracker || {};
 
     },
 
+    /**
+     * Window opener
+     *
+     * @param url
+     * @param name
+     * @param args
+     */
+    windowOpener: function (url, name, args) {
+      if (typeof(popupWin) != 'object' || popupWin.closed) {
+        popupWin = window.open(url, name, args);
+      } else {
+        popupWin.location.href = url;
+      }
+
+      popupWin.focus();
+    },
+
     GeneralInit: function () {
+
+      $('.remove-member').click(function (e) {
+        let member = $(this).data('memberId'),
+          removeUrl = 'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=' + member,
+          windowName = 'Tracker | Remove Member',
+          settings = 'width=900,height=600,scrollbars=yes';
+
+        Tracker.windowOpener(removeUrl, windowName, settings);
+      });
 
       // handle primary nav collapse
       $('.left-nav-toggle a').click(function () {

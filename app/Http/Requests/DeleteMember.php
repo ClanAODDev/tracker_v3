@@ -30,6 +30,7 @@ class DeleteMember extends FormRequest
 
     public function persist()
     {
+        // TODO: create note when removed
         $this->route('member')->resetPositionsAndAssignments();
         $this->route('member')->delete();
     }
