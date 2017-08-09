@@ -117,10 +117,6 @@ class MemberController extends Controller
     {
         $division = $member->division;
 
-        if ( ! $division) {
-            abort(409, 'No primary division');
-        }
-
         // hide admin notes from non-admin users
         $notes = $member->notes()->with('author', 'tags')->get()
             ->filter(function ($note) {
@@ -173,7 +169,11 @@ class MemberController extends Controller
         $divisions = Division::active()->get()->except(
             $member->partTimeDivisions->pluck('id')->toArray()
         )->filter(function ($division) use ($member) {
-            return $division->id !== $member->division->id;
+            if ($member->division) {
+                return $division->id !== $member->division->id;
+            }
+
+            return $division;
         });
 
         $handles = $this->getHandles($member);

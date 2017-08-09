@@ -1,12 +1,13 @@
 <h4>
     Member Notes
-
-    @can('create', App\Note::class)
-        <span class="pull-right">
+    @if ($division)
+        @can('create', App\Note::class)
+            <span class="pull-right">
             <a href="#" class="btn-add-note btn btn-default btn-sm" data-toggle="modal"
                data-target="#create-member-note"><i class="fa fa-comment text-accent"></i> Add note</a>
         </span>
-    @endcan
+        @endcan
+    @endif
 
 </h4>
 <hr />
@@ -24,17 +25,18 @@
     </div>
 @endif
 
-
-@can ('create', App\Note::class)
-    <div class="modal fade" id="create-member-note">
-        <div class="modal-dialog" role="document" style="background-color: #000;">
-            {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
-            @include('member.forms.note-form', ['action' => 'Add Member Note'])
-            {!! Form::close() !!}
+@if ($division)
+    @can ('create', App\Note::class)
+        <div class="modal fade" id="create-member-note">
+            <div class="modal-dialog" role="document" style="background-color: #000;">
+                {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
+                @include('member.forms.note-form', ['action' => 'Add Member Note'])
+                {!! Form::close() !!}
+            </div>
         </div>
-    </div>
-@endcan
+    @endcan
 
-@if ($errors->count())
-    <script>$('#create-member-note').modal();</script>
+    @if ($errors->count())
+        <script>$('#create-member-note').modal();</script>
+    @endif
 @endif

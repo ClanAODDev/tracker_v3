@@ -7,7 +7,9 @@
         @slot('data') {{ $member->last_activity->diffInDays() }} days @endslot
         @slot('title')since last <span class="c-white">forum activity </span>@endslot
         @slot('color')
-            {{ $member->last_activity->diffInDays() > $member->division->settings()->inactivity_days ? "panel-c-danger" : null }}
+            @if($division)
+                {{ $member->last_activity->diffInDays() > $division->settings()->inactivity_days ? "panel-c-danger" : null }}
+            @endif
         @endslot
     @endcomponent
 
