@@ -79,3 +79,7 @@
         No {{ str_plural($division->locality('squad')) }} currently exist
     </div>
 @endforelse
+
+<div class="panel-footer">
+    <strong style="color: magenta;" title="Direct Recruit">*</strong> - recruited by the current leader
+</div>
