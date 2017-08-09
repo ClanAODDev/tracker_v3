@@ -61,7 +61,7 @@ class ImpersonationController extends Controller
     public function endImpersonation()
     {
         if (session('impersonating') && session('impersonatingUser')) {
-            $user = User::find(session('impersonatingUser'))->first();
+            $user = User::find(session('impersonatingUser'));
             // need to log end of impersonation
             Auth::login($user);
             session()->forget(['impersonating', 'impersonatingUser']);
