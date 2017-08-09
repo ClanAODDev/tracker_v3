@@ -51,9 +51,14 @@
                         <tr>
                             <td class="col-hidden">{{ $member->rank_id }}</td>
                             <td class="col-hidden">{{ $member->last_activity }}</td>
-                            <td class="">{!! $member->present()->nameWithIcon !!} <a
-                                        href="{{ route('member', $member->clan_id) }}"><i
-                                            class="fa fa-search text-muted pull-right" title="View profile"></i></a>
+                            <td>
+                                @if ($squad->leader && $squad->leader->clan_id == $member->recruiter_id)
+                                    <strong style="color: magenta;" title="Direct Recruit">*</strong>
+                                @endif
+                                {!! $member->present()->nameWithIcon !!}
+                                <a href="{{ route('member', $member->clan_id) }}">
+                                    <i class="fa fa-search text-muted pull-right" title="View profile"></i>
+                                </a>
                             </td>
                             <td class="text-center">{{ $member->rank->abbreviation }}</td>
                             <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
