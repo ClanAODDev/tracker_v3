@@ -91,7 +91,7 @@
         Application
     </li>
 
-    @can('manage-issues', App\User::class)
+    @can('manage-issues', auth()->user())
         <li class="{{ set_active('issues') }}">
             <a href="{{ route('github.issues') }}">Issue Reports</a>
         </li>

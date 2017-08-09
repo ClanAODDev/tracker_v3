@@ -63,6 +63,6 @@ class UserPolicy
 
     public function manageIssues(User $user)
     {
-        return $user->isRole(['jr_ldr, sr_ldr']);
+        return $user->isRole(['jr_ldr', 'sr_ldr']);
     }
 }
