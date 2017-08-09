@@ -28,7 +28,7 @@ class ActivitiesController extends Controller
                 // provide context even if a subject is "trashed"
                 $query->withTrashed();
             }
-        ])->get();
+        ])->orderByDesc('created_at')->get();
 
         return view('activity.show', compact('activity', 'division'));
     }
