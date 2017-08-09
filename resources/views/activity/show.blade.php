@@ -10,7 +10,6 @@
         @endslot
         @slot ('heading')
             {{ $division->name }} Division
-            @include('division.partials.edit-division-button', ['division' => $division])
         @endslot
         @slot ('subheading')
             {{ $division->description }}
