@@ -28,6 +28,7 @@ return [
     'env' => env('APP_ENV', 'production'),
 
     'aod' => [
+        'slack_webhook' => env('SLACK_WEBHOOK'),
         'token' => env('AOD_TOKEN')
     ],
 
