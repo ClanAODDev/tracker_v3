@@ -1,6 +1,6 @@
 <td>
     <i class="fa fa-user text-danger"></i>
-    {{ $event->user->name }} removed {{ $event->subject->name }} from AOD
+    {{ $event->user->name or "Somebody" }} removed {{ $event->subject->name }} from AOD
 </td>
 <td>
     <span class="pull-right text-muted">{{ $event->created_at->diffForHumans() }}</span>
