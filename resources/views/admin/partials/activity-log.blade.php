@@ -13,7 +13,7 @@
     @foreach($activityLog as $event)
         <tr>
             <td class="text-muted">{{ $event->id }}</td>
-            <td>{{ $event->user->name }}</td>
+            <td>{{ $event->user->name or "Somebody" }}</td>
             <td>{{ $event->name }}</td>
             <td>{{ $event->subject->name or "ID #" . $event->subject_id }}</td>
             <td>{{ $event->created_at->format('Y-m-d H:i A') }}</td>
