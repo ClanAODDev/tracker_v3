@@ -13,18 +13,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Leave extends Model
 {
-
-    use RecordsActivity;
-
-
-    /**
-     * @var array
-     */
-    protected static $recordEvents = [
-        'created',
-        'updated',
-        'deleted'
-    ];
     /**
      * @var array
      */
