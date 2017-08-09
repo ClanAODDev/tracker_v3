@@ -27,8 +27,7 @@ class ActivitiesController extends Controller
             'subject' => function ($query) {
                 // provide context even if a subject is "trashed"
                 $query->withTrashed();
-            },
-            'user'
+            }
         ])->get();
 
         return view('activity.show', compact('activity', 'division'));
