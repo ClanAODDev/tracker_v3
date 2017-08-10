@@ -3,9 +3,8 @@
         <thead>
         <tr>
             <th>Member Name</th>
-            <th>Last Seen
-                <small class="text-muted">Days</small>
-            </th>
+            <th>Last Forum Activity</th>
+            <th>Last TS Activity</th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
         </tr>
@@ -19,7 +18,10 @@
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
                 <td>
-                    <code>{{ $member->last_activity->diffInDays() }}</code>
+                    <code>{{ $member->last_activity->diffInDays() }} Days</code>
+                </td>
+                <td>
+                    <code>{!! $member->last_ts_activity !!}</code>
                 </td>
                 <td>
                     <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank"

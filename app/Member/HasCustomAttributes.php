@@ -19,10 +19,10 @@ trait HasCustomAttributes
         }
 
         if ($value == null) {
-            return "<span class='text-warning'>NO TS UNIQUE ID SET</span>";
+            return "<span class='text-danger'>NO TS UNIQUE ID SET</span>";
         }
 
-        return Carbon::parse($value)->diffInDays() . " DAYS";
+        return Carbon::parse($value)->diffInDays() . " Days";
     }
 
     /**
