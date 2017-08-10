@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="{{ asset('vendor/datatables/datatables.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-<script src="{{ asset('js/libs.js') }}"></script>
+<script src="{{ asset('js/libs.js?v=2.0') }}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
