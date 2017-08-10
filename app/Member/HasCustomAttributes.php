@@ -12,6 +12,19 @@ trait HasCustomAttributes
         return "http://www.clanaod.net/forums/member.php?u=" . $this->clan_id;
     }
 
+    public function getLastTsActivityAttribute($value)
+    {
+        if ($value == "0000-00-00 00:00:00") {
+            return "<span class='text-danger'>UNIQUE ID MISMATCH</span>";
+        }
+
+        if ($value == null) {
+            return "<span class='text-warning'>NO TS UNIQUE ID SET</span>";
+        }
+
+        return Carbon::parse($value)->diffInDays();
+    }
+
     /**
      * Accessor for name - enforce proper casing
      */

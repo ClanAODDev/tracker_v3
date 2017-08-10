@@ -44,6 +44,7 @@ class Member extends Model
         'posts',
         'join_date',
         'last_activity',
+        'last_ts_activity',
         'last_promoted',
         'recruiter_id'
     ];
@@ -55,6 +56,7 @@ class Member extends Model
         'join_date',
         'last_activity',
         'last_promoted',
+        'last_ts_activity',
     ];
 
     /**

@@ -83,6 +83,9 @@ class SyncMemberData
         // forum post count
         $member->posts = $record['postcount'];
 
+        // teamspeak activity data
+        $member->last_ts_activity = "{$record['lastts_connect']} {$record['lastts_connect_time']}";
+
         // persist
         $member->save();
 

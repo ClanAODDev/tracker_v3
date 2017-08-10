@@ -13,10 +13,10 @@
         @endslot
     @endcomponent
 
-    {{-- @component('application.components.data-block')
-         @slot('data') {{ $member->last_activity->diffInDays() }} @endslot
-         @slot('title') days since last <span class="c-white">TS activity </span> @endslot
-     @endcomponent--}}
+     @component('application.components.data-block')
+         @slot('data') {!! $member->last_ts_activity !!} @endslot
+         @slot('title') last <span class="c-white">TS activity </span> @endslot
+     @endcomponent
 
     @component('application.components.data-block')
         @slot('data') {{ $member->join_date }} @endslot
