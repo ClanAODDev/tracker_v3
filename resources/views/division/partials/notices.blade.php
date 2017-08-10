@@ -10,7 +10,7 @@
     @can('create', [App\Platoon::class, $division])
         <div class="alert alert-warning">
             <i class="fa fa-users"></i>
-            There are unassigned members in this division. Edit a
+            There are <code>{{ count($division->unassigned) }}</code> unassigned members in this division. Edit a
             <a href="#platoons" class="alert-link smooth-scroll">{{ $division->locality('platoon') }}</a> to assign them
         </div>
     @endcan
