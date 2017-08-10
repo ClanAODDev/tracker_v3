@@ -22,7 +22,7 @@ trait HasCustomAttributes
             return "<span class='text-warning'>NO TS UNIQUE ID SET</span>";
         }
 
-        return Carbon::parse($value)->diffInDays();
+        return Carbon::parse($value)->diffInDays() . " DAYS";
     }
 
     /**
