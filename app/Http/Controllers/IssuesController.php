@@ -29,7 +29,8 @@ class IssuesController extends Controller
     {
         $this->authorize('manage-issues', User::class);
 
-        $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3', ['labels' => 'bug']);
+        // , ['labels' => 'bug']
+        $issues = GitHub::issues()->all('flashadvocate', 'tracker_v3');
 
         return view('issues.index', compact('issues'));
     }
