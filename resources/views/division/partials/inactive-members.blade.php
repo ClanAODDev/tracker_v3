@@ -3,8 +3,8 @@
         <thead>
         <tr>
             <th>Member Name</th>
-            <th>Last Forum Activity</th>
-            <th>Last TS Activity</th>
+            <th>Last Forum Activity <small class="slight">Days</small></th>
+            <th>Last TS Activity <small class="slight">Days</small></th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
         </tr>
@@ -18,7 +18,7 @@
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
                 <td>
-                    <code>{{ $member->last_activity->diffInDays() }} Days</code>
+                    <code>{{ $member->last_activity->diffInDays() }}</code>
                 </td>
                 <td>
                     <code>{!! $member->last_ts_activity !!}</code>
