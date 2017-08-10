@@ -13,5 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         'slack',
+        'oauth/authorize',
+        'oauth/clients',
     ];
 }

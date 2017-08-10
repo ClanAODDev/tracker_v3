@@ -272,7 +272,7 @@
        * Get all of the OAuth clients for the user.
        */
       getClients() {
-        this.$http.get('/oauth/clients')
+        this.$http.get(window.Laravel.appPath + '/oauth/clients')
           .then(response => {
             this.clients = response.data;
           });
@@ -290,7 +290,7 @@
        */
       store() {
         this.persistClient(
-          'post', '/oauth/clients',
+          'post', window.Laravel.appPath + '/oauth/clients',
           this.createForm, '#modal-create-client'
         );
       },
@@ -311,7 +311,7 @@
        */
       update() {
         this.persistClient(
-          'put', '/oauth/clients/' + this.editForm.id,
+          'put', window.Laravel.appPath + '/oauth/clients/' + this.editForm.id,
           this.editForm, '#modal-edit-client'
         );
       },
@@ -345,7 +345,7 @@
        * Destroy the given client.
        */
       destroy(client) {
-        this.$http.delete('/oauth/clients/' + client.id)
+        this.$http.delete(window.Laravel.appPath + '/oauth/clients/' + client.id)
           .then(response => {
             this.getClients();
           });
