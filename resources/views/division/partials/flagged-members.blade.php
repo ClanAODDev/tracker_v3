@@ -1,5 +1,5 @@
 @if (count($flaggedMembers) > 0)
-    <table class="table basic-datatable table-hover">
+    <table class="table adv-datatable table-hover">
         <thead>
         <tr>
             <th>Name</th>

@@ -7,6 +7,7 @@
                 <small class="text-muted">Days</small>
             </th>
             <th class="no-sort"></th>
+            <th class="no-sort"></th>
         </tr>
         </thead>
         <tbody class="sortable">
