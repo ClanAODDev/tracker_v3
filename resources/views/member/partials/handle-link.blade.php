@@ -1,4 +1,4 @@
-<a href="{{ $handle->url . $handle->value }}" class="panel panel-filled panel-c-success">
+<a href="{{ $handle->url }}{{ $handle->pivot->value }}" class="panel panel-filled panel-c-success">
     <div class="panel-body ">
         <small class="c-white slight text-uppercase">
             {{ $handle->label }}
