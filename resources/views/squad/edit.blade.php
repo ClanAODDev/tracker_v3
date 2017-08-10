@@ -26,10 +26,12 @@
             {!! Form::model($squad, ['method' => 'delete', 'route' => ['deleteSquad', $division->abbreviation, $platoon, $squad]]) !!}
             @include('squad.forms.delete-squad-form')
             {!! Form::close() !!}
-            <hr />
         @endcan
 
-        @include ('squad.partials.feed')
+        @if(count($squad->activity))
+            <hr />
+            @include ('squad.partials.feed')
+        @endif
 
     </div>
 

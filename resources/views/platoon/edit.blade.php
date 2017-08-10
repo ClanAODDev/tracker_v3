@@ -28,11 +28,12 @@
             @include('platoon.forms.delete-platoon-form')
             {!! Form::close() !!}
 
-            <hr />
-
         @endcan
 
-        @include ('platoon.partials.feed')
+        @if(count($platoon->activity))
+            <hr />
+            @include ('platoon.partials.feed')
+        @endif
     </div>
 
 
