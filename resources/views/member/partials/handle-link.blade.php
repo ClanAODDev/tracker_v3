@@ -3,6 +3,7 @@
         <small class="c-white slight text-uppercase">
             {{ $handle->label }}
         </small>
+        <span class="text-right"><i class="fa fa-link"></i></span>
         <br />
         <span class="text-uppercase">{{ $handle->pivot->value }}</span>
     </div>
