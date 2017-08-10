@@ -14,7 +14,7 @@ class AddTeamspeakDatetimeToMembers extends Migration
     public function up()
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->timestamp('last_ts_activity')->after('last_activity')->nullable();
+            $table->datetime('last_ts_activity')->after('last_activity')->nullable();
         });
     }
 
