@@ -17,10 +17,10 @@
                     {{ $member->name }}
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
-                <td>
+                <td class="text-center">
                     <code>{{ $member->last_activity->diffInDays() }}</code>
                 </td>
-                <td>
+                <td class="text-center">
                     <code>{!! $member->last_ts_activity !!}</code>
                 </td>
                 <td>
