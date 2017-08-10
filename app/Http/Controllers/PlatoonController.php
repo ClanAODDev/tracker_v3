@@ -38,7 +38,8 @@ class PlatoonController extends Controller
         $division->load('unassigned.rank');
 
         $lastSort = Platoon::whereDivisionId($division->id)
-            ->latest()->first();
+            ->orderByDesc('id')
+            ->first();
 
         $lastSort = ($lastSort) ? $lastSort->order + 100 : 100;
 
