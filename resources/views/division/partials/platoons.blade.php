@@ -22,7 +22,21 @@
                     </h4>
 
                     @if ($platoon->leader)
-                        <p class="list-group-item-text">{{ $platoon->leader->present()->rankName }}</p>
+                        <p class="list-group-item-text">
+                            {{ $platoon->leader->present()->rankName }}
+                        </p>
+                        <p class="m-t-md">
+                            <small class="slight text-muted">
+                                @foreach ($platoon->squads as $squad)
+                                    @if ($squad->leader)
+                                        <span class="badge">{{ $squad->leader->present()->rankName }}</span>
+                                    @else
+                                        <span class="badge">TBA</span>
+                                    @endif
+                                @endforeach
+                            </small>
+                        </p>
+
                     @else
                         <p class="list-group-item-text">Unfilled</p>
                     @endif
