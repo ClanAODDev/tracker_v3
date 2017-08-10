@@ -21,9 +21,9 @@
 
         <h4>Manage {{ $division->locality('Squad') }} Assignments</h4>
         <p>Drag members between {{ str_plural($division->locality('squad')) }} to assign them. Only {{ $division->locality('Squad') }} members will be shown; squad leaders cannot be reassigned from this view.</p>
-        <p>If you wish to reassign an entire {{ $division->locality('Squad') }} to a new platoon, you can perform that function from the
-            <code>Edit {{ $division->locality('Squad') }}</code> view. </p>
-
+        {{-- <p>If you wish to reassign an entire {{ $division->locality('Squad') }} to a new platoon, you can perform that function from the
+             <code>Edit {{ $division->locality('Squad') }}</code> view. </p>
+ --}}
         <div class="m-t-xl">
             <a href="{{ route('platoon', [$division->abbreviation, $platoon]) }}" class="btn btn-default">Cancel</a>
             <a class="btn btn-success"
