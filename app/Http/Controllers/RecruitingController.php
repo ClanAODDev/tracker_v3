@@ -69,8 +69,10 @@ class RecruitingController extends Controller
         // create or update member record
         $member = $this->createMember($request);
 
+        dd($this->handleNotification($request, $member, $division));
+
         // notify slack of recruitment
-        if ($division->settings()->get('slack_alert_created_member')) {
+        if ($division->settings()->get('slack_alert_created_member') == "on") {
             $this->handleNotification($request, $member, $division);
         }
 
@@ -123,12 +125,11 @@ class RecruitingController extends Controller
      */
     private function handleNotification(Request $request, $member, $division)
     {
-        if ($request->division != auth()->user()->member->division) {
-            return auth()->user()->notify(new NewExternalRecruit($member, $division));
+        if ($division != auth()->user()->member->division) {
+            return $division->notify(new NewExternalRecruit($member, $division));
         }
 
         return $division->notify(new NewMemberRecruited($member, $division));
-
     }
 
     /**

@@ -5,7 +5,7 @@
 
         <h3><i class="fa fa-pencil-square-o text-accent"></i> Step 2: Member Agreement</h3>
 
-        <p>AOD members are required to read and reply to a handful of threads posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
+        <p>AOD members are required to read and reply to posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
 
         <button class="btn btn-default refresh-button m-t-lg"
                 :disabled="store.loadingThreads"
@@ -21,10 +21,6 @@
             <p>Run the thread check to poll the AOD forums.</p>
         </div>
 
-        <hr />
-        <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
-            <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure they understand and agree to all of AOD's requirements before continuing further in the process.
-        </p>
         <hr />
 
         <button class="btn btn-success pull-right" type="submit">Continue</button>

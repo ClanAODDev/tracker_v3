@@ -32,7 +32,6 @@
         }
 
         store.progress = 100;
-        store.createMember();
         window.location.href = store.base_url;
       }
     },
