@@ -17,10 +17,12 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
+window.VueResource = require('vue-resource');
 window.toastr = require('toastr');
 
 import VeeValidate from 'vee-validate';
 window.Vue.use(VeeValidate);
+window.Vue.use(VueResource);
 
 window.Vue.prototype.authorize = function (handler) {
 

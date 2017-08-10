@@ -1,13 +1,13 @@
-const elixir = require('laravel-elixir')
+const elixir = require('laravel-elixir');
 
-require('laravel-elixir-vue-2')
-require('laravel-elixir-webpack-official')
+require('laravel-elixir-vue-2');
+require('laravel-elixir-webpack-official');
 
 // elixir.config.sourcemaps = false;
 
 elixir(function (mix) {
 
-  mix.styles('style.css')
+  mix.styles('style.css');
 
   mix.scripts(
     [
@@ -44,15 +44,15 @@ elixir(function (mix) {
       'libs/dataTables/dataTables.tableTools.min.js',
     ],
 
-    'public/js/libs.js', 'resources/assets/js')
+    'public/js/libs.js', 'resources/assets/js');
 
-  mix.webpack('main.js')
-  mix.webpack('platoon.js')
-  mix.webpack('division.js')
-  mix.webpack('census-graph.js')
-  mix.webpack('passport.js')
-  mix.webpack('recruiting.js')
-  mix.webpack('manage-member.js')
-})
+  mix.webpack('main.js');
+  mix.webpack('platoon.js');
+  mix.webpack('division.js');
+  mix.webpack('census-graph.js');
+  mix.webpack('passport.js');
+  mix.webpack('recruiting.js');
+  mix.webpack('manage-member.js');
+});
 
 
