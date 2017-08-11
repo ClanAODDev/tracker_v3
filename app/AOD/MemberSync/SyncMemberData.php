@@ -84,7 +84,7 @@ class SyncMemberData
         $member->posts = $record['postcount'];
 
         // teamspeak activity data
-        $member->last_ts_activity = "{$record['lastts_connect']} {$record['lastts_connect_time']}";
+        $member->last_ts_activity = "{$record['lastts_connect']}";
 
         // persist
         $member->save();

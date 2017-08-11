@@ -16,7 +16,7 @@
     @component('application.components.data-block')
         @slot('data')
             @if ($member->tsInvalid)
-                {{ $member->tsInvalid }}
+                MISCONFIGURATION
             @else
                 {{ Carbon::parse($member->last_ts_activity)->diffInDays() }} DAYS
             @endif

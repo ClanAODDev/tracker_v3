@@ -12,27 +12,9 @@ trait HasCustomAttributes
         return "http://www.clanaod.net/forums/member.php?u=" . $this->clan_id;
     }
 
-    public function getTsInvalidAttribute()
+    public function getTsInvalidAttribute($value)
     {
-        if ($this->last_ts_activity < Carbon::createFromDate('1980')) {
-            return "UNIQUE ID MISMATCH";
-        }
-
-        if ($this->last_ts_activity == null) {
-            return "NO TS UNIQUE ID";
-        }
-
-        return false;
-    }
-
-    public function getMismatchedTeamspeakIdAttribute()
-    {
-        return $this->last_ts_activity == '0000-00-00 00:00:00';
-    }
-
-    public function getNullTeamspeakIdAttribute()
-    {
-        return $this->last_ts_activity == null;
+        return carbon_date_or_null_if_zero($value) == null;
     }
 
     /**

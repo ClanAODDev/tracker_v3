@@ -138,6 +138,11 @@ function checked($arg)
     }
 }
 
+function carbon_date_or_null_if_zero($value)
+{
+    return (is_null($value) || Carbon::parse($value)->timestamp <= 0) ? null : $value;
+}
+
 /**
  * Provides visual feedback for a member's last activity
  * based on division activity threshold

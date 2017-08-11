@@ -198,4 +198,14 @@ class DivisionController extends Controller
             'comments', 'censuses'
         ));
     }
+
+    public function showTsReport($division)
+    {
+        $issues = Member::whereDivisionId($division->id)->get()
+            ->filter(function ($member) {
+                return ! carbon_date_or_null_if_zero($member->last_ts_activity);
+            });
+
+        return view('division.ts-report', compact('division', 'issues'));
+    }
 }

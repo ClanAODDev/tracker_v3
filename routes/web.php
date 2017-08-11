@@ -118,17 +118,8 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('form', 'RecruitingController@form')->name('recruiting.form');
     });
 
-    Route::get('{division}/ts-report', function ($division) {
-        $mismatches = App\Member::whereDivisionId($division->id)
-            ->whereLastTsActivity('0000-00-00 00:00:00')
-            ->get();
 
-        $nulls = App\Member::whereDivisionId($division->id)
-            ->whereLastTsActivity(null)
-            ->get();
-
-        return view('division.ts-report', compact('division', 'mismatches', 'nulls'));
-    })->name('division.ts-report');
+    Route::get('{division}/ts-report', 'DivisionController@showTsReport')->name('division.ts-report');
 
     /**
      * platoons

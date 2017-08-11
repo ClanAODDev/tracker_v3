@@ -41,9 +41,8 @@
                         <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
                         <th class='text-center'><strong>Forum Activity</strong></th>
                         <th class='text-center no-sort' style="pointer-events: none;"><strong>TS Activity</strong></th>
-                        <th class='text-center'>
-                            <string>Last Promoted</string>
-                        </th>
+                        <th class='text-center'><string>Last Promoted</string></th>
+                        <th class="nosearch">adsf</th>
                     </tr>
                     </thead>
 
@@ -74,6 +73,7 @@
                                 @endif
                             </td>
                             <td class="text-center">{{ $member->last_promoted }}</td>
+                            <td>asdf</td>
                         </tr>
                     @endforeach
                     </tbody>
