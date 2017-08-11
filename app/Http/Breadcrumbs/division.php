@@ -43,7 +43,8 @@ function registerDivisionSubPages()
         'division-structure',
         'leaves-of-absence',
         'inactive-members',
-        'teamspeak-report'
+        'teamspeak-report',
+        'promotions'
     ];
 
     foreach ($divisionStaticSubPages as $page) {

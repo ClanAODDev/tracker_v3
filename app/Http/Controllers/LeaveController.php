@@ -99,6 +99,8 @@ class LeaveController extends Controller
      */
     public function store(CreateLeave $form, Division $division)
     {
+        $this->validate('update', $form->member);
+
         if ($form->member_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['member_id' => "Member {$form->member_id} not assigned to this division!"])

@@ -19,16 +19,16 @@ class PlatoonRepository
         $twoWeeksAgo = Carbon::now()->subDays(14);
         $oneMonthAgo = Carbon::now()->subDays(30);
 
-        $twoWeeks = $platoon->members()->where('last_activity', '>=', $twoWeeksAgo);
+        $twoWeeks = $platoon->members()->where('last_activity', '>=', $twoWeeksAgo)->count();
 
         $oneMonth = $platoon->members()->where('last_activity', '<=', $twoWeeksAgo)
-            ->where('last_activity', '>=', $oneMonthAgo);
+            ->where('last_activity', '>=', $oneMonthAgo)->count();
 
-        $moreThanOneMonth = $platoon->members()->where('last_activity', '<=', $oneMonthAgo);
+        $moreThanOneMonth = $platoon->members()->where('last_activity', '<=', $oneMonthAgo)->count();
 
         return [
             'labels' => ['Current', '14 days', '30 days'],
-            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
+            'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth],
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
     }

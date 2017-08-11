@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Division;
+use Carbon\Carbon;
 use DB;
 
 class DivisionRepository
@@ -22,17 +23,33 @@ class DivisionRepository
         return $censuses;
     }
 
+    public function getPromotionsData(Division $division)
+    {
+        $members = $division->members()
+            ->whereBetween('last_promoted', [
+                Carbon::now()->startOfMonth(),
+                Carbon::now()->endOfMonth()
+            ])->get();
+
+        return [
+            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
+            'values' => [$members->groupBy('rank.name')],
+            'colors' => ['#28b62c', '#ff851b', '#ff4136']
+        ];
+
+    }
+
     public function getDivisionActivity(Division $division)
     {
         $twoWeeksAgo = Carbon::now()->subDays(14);
         $oneMonthAgo = Carbon::now()->subDays(30);
 
-        $twoWeeks = $division->activeMembers()->where('last_activity', '>=', $twoWeeksAgo);
+        $twoWeeks = $division->members()->where('last_activity', '>=', $twoWeeksAgo);
 
-        $oneMonth = $division->activeMembers()->where('last_activity', '<=', $twoWeeksAgo)
+        $oneMonth = $division->members()->where('last_activity', '<=', $twoWeeksAgo)
             ->where('last_activity', '>=', $oneMonthAgo);
 
-        $moreThanOneMonth = $division->activeMembers()->where('last_activity', '<=', $oneMonthAgo);
+        $moreThanOneMonth = $division->members()->where('last_activity', '<=', $oneMonthAgo);
 
         return [
             'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],

@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+
 Auth::routes();
 
 Route::post('/members/assign-squad', 'SquadController@assignMember');
@@ -111,6 +113,35 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
+
+    Route::get('{division}/promotions', function ($division) {
+        $members = $division->members()
+            ->with('rank')
+            ->whereBetween('last_promoted', [
+                Carbon::now()->startOfMonth(),
+                Carbon::now()->endOfMonth()
+            ])->orderByDesc('rank_id')->get();
+
+        return view('division.promotions', compact('members', 'division'));
+    })->middleware(['auth']);
+
+    Route::get('{division}/promotions/{month?}/{year?}', function ($division, $month, $year = null) {
+        $year = $year ?: " 2017";
+
+        try {
+            $members = $division->members()
+                ->with('rank')
+                ->whereBetween('last_promoted', [
+                    Carbon::parse($month . " {$year}")->startOfMonth(),
+                    Carbon::parse($month . " {$year}")->endOfMonth()
+                ])->orderByDesc('rank_id')
+                ->get();
+        } catch (Exception $e) {
+            $members = collect([]);
+        }
+
+        return view('division.promotions', compact('members', 'division'));
+    })->middleware(['auth']);
 
     /**
      * Recruiting Process
