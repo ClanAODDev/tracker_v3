@@ -47,6 +47,7 @@
                 <thead>
                 <tr>
                     <th>Member</th>
+                    <th>Last Forum Activity</th>
                     <th>Forum Profile</th>
                 </tr>
                 </thead>
@@ -56,6 +57,9 @@
                         <td>
                             <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search"></i></a>
                             {{ $member->present()->rankName }}
+                        </td>
+                        <td>
+                            {{ $member->last_activity->diffInDays() }}
                         </td>
                         <td>
                             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}">
