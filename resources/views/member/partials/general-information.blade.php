@@ -13,10 +13,25 @@
         @endslot
     @endcomponent
 
-     @component('application.components.data-block')
-         @slot('data') {!! $member->last_ts_activity !!} DAYS @endslot
-         @slot('title') since last <span class="c-white">TS activity </span> @endslot
-     @endcomponent
+    @component('application.components.data-block')
+        @slot('data')
+            @if ($member->tsInvalid)
+                {{ $member->tsInvalid }}
+            @else
+                {{ Carbon::parse($member->last_ts_activity)->diffInDays() }} DAYS
+            @endif
+        @endslot
+        @slot('color')
+            {{ $member->tsInvalid ? "panel-c-danger" : null }}
+        @endslot
+        @slot('title')
+            @if ($member->tsInvalid)
+                Teamspeak Error
+            @else
+                since last <span class="c-white">TS activity </span>
+            @endif
+        @endslot
+    @endcomponent
 
     @component('application.components.data-block')
         @slot('data') {{ $member->join_date }} @endslot

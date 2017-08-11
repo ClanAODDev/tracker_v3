@@ -43,6 +43,7 @@
                 @foreach ($mismatches as $member)
                     <tr>
                         <td>
+                            <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search"></i></a>
                             {{ $member->present()->rankName }}
                         </td>
                         <td>
@@ -64,7 +65,8 @@
             <div class="panel panel-filled">
                 <div class="panel-body">
                     <p>
-                        <strong class="text-accent">The problem: </strong> This occurs when a member does not have a unique id stored in the forum profile. To fix, reach out to the member and have them properly complete their TS unique id information on the forums.</p>
+                        <strong class="text-accent">The problem: </strong> This occurs when a member does not have a unique id stored in the forum profile. To fix, reach out to the member and have them properly complete their TS unique id information on the forums.
+                    </p>
                 </div>
             </div>
 
