@@ -43,7 +43,16 @@ class UserPolicy
         }
 
         // senior leaders who are sgts and ssgts can update user accounts
-        return $user->isRole('sr_ldr') && $user->member->isRank(['sgt', 'ssgt']);
+        if ($user->isRole('sr_ldr') && $user->member->isRank(['sgt', 'ssgt'])) {
+            return true;
+        }
+
+        // jr leaders can create officers
+        if ($user->isRole('jr_ldr') && ($userOfMember->role_id < $user->role_id)) {
+            return true;
+        }
+        
+        return false;
     }
 
     public function canImpersonate($userBeingImpersonated)
