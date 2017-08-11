@@ -14,7 +14,7 @@ trait HasCustomAttributes
 
     public function getTsInvalidAttribute()
     {
-        if ($this->last_ts_activity == "0000-00-00 00:00:00") {
+        if ($this->last_ts_activity < Carbon::createFromDate('1980')) {
             return "UNIQUE ID MISMATCH";
         }
 
