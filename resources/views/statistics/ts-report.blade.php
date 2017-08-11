@@ -61,7 +61,7 @@
                             {{ $member->present()->rankName }}
                         </td>
                         <td>
-                            {{ $member->last_activity->diffInDays() }}
+                            {{ $member->last_activity->diffForHumans() }}
                         </td>
                         <td>
                             {{ $member->division->name }}
