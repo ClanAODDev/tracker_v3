@@ -64,8 +64,7 @@
             <div class="panel panel-filled">
                 <div class="panel-body">
                     <p>
-                        <strong class="text-accent">The problem: </strong> This occurs when the forum member profile unique id does not match what the user last logged in with. Ensure the member doesn't have multiple identities. SGTs+ can verify these values match through the ModCP and on TS via
-                        <code>Permissions > Channel Groups Of Client</code></p>
+                        <strong class="text-accent">The problem: </strong> This occurs when a member does not have a unique id stored in the forum profile. To fix, reach out to the member and have them properly complete their TS unique id information on the forums.</p>
                 </div>
             </div>
 
