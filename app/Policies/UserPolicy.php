@@ -51,7 +51,7 @@ class UserPolicy
         if ($user->isRole('jr_ldr') && ($userOfMember->role_id < $user->role_id)) {
             return true;
         }
-        
+
         return false;
     }
 
