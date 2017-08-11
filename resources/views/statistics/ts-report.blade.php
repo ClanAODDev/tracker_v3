@@ -63,7 +63,7 @@
                             {{ $member->division->name }}
                         </td>
                         <td>
-                            <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}">{{ $member->clan_id }}</a>
+                            <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}">{{ $member->clan_id }} <i class="fa fa-link"></i></a>
                         </td>
                     </tr>
                 @endforeach
