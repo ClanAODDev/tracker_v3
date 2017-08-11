@@ -1,3 +1,12 @@
+@if (count($division->mismatchedTSMembers) || count($division->nullTSMembers))
+    <div class="alert alert-danger">
+        <i class="fa fa-exclamation-triangle"></i>
+        Members in your division are improperly configured for Teamspeak. Please review the
+        <a href="{{ route('division.ts-report', $division->abbreviation) }}"
+           class="alert-link">Teamspeak Report</a> to resolve these issues.
+    </div>
+@endif
+
 @if (! $division->handle)
     <div class="alert alert-danger">
         <i class="fa fa-gamepad"></i>

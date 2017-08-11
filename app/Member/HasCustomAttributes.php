@@ -15,11 +15,11 @@ trait HasCustomAttributes
     public function getLastTsActivityAttribute($value)
     {
         if ($value == "0000-00-00 00:00:00") {
-            return "<span class='text-danger'>UNIQUE ID MISMATCH</span>";
+            return "UNIQUE ID MISMATCH";
         }
 
         if ($value == null) {
-            return "<span class='text-danger'>NO TS UNIQUE ID SET</span>";
+            return "NO TS UNIQUE ID";
         }
 
         return Carbon::parse($value)->diffInDays();

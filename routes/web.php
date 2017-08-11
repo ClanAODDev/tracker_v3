@@ -118,6 +118,17 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('form', 'RecruitingController@form')->name('recruiting.form');
     });
 
+    Route::get('{division}/ts-report', function ($division) {
+        $mismatches = App\Member::whereDivisionId($division->id)
+            ->whereLastTsActivity('0000-00-00 00:00:00')
+            ->get();
+
+        $nulls = App\Member::whereDivisionId($division->id)
+            ->whereLastTsActivity(null)
+            ->get();
+
+        return view('division.ts-report', compact('division', 'mismatches', 'nulls'));
+    })->name('division.ts-report');
 
     /**
      * platoons
@@ -200,8 +211,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
  * Application UI
  */
 Route::group(['prefix' => 'primary-nav'], function () {
-    Route::get('collapse', function () { session(['primary_nav_collapsed' => true]); });
-    Route::get('decollapse', function () { session(['primary_nav_collapsed' => false]); });
+    Route::get('collapse', function () {
+        session(['primary_nav_collapsed' => true]);
+    });
+    Route::get('decollapse', function () {
+        session(['primary_nav_collapsed' => false]);
+    });
 });
 
 

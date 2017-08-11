@@ -159,6 +159,26 @@ class Division extends Model
         return ($countPosts) ? true : false;
     }
 
+    public function mismatchedTSMembers()
+    {
+        return $this->members()
+            ->whereLastTsActivity('0000-00-00 00:00:00');
+    }
+
+    public function nullTSMembers()
+    {
+        return $this->members()
+            ->whereLastTsActivity(null);
+    }
+
+    /**
+     * relationship - division has many members
+     */
+    public function members()
+    {
+        return $this->hasMany(Member::class);
+    }
+
     /**
      * @return DivisionPresenter
      */
@@ -241,14 +261,6 @@ class Division extends Model
     public function sergeants()
     {
         return $this->members()->where('rank_id', '>', 8);
-    }
-
-    /**
-     * relationship - division has many members
-     */
-    public function members()
-    {
-        return $this->hasMany(Member::class);
     }
 
     /**

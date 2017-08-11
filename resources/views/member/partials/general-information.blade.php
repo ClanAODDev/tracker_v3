@@ -14,8 +14,8 @@
     @endcomponent
 
      @component('application.components.data-block')
-         @slot('data') {!! $member->last_ts_activity !!} @endslot
-         @slot('title') last <span class="c-white">TS activity </span> @endslot
+         @slot('data') {!! $member->last_ts_activity !!} DAYS @endslot
+         @slot('title') since last <span class="c-white">TS activity </span> @endslot
      @endcomponent
 
     @component('application.components.data-block')
