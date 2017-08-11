@@ -17,9 +17,7 @@ class CreateLeave extends FormRequest
      */
     public function authorize()
     {
-        $member = Member::whereClanId($this->member_id)->first();
-
-        return $this->user()->can('update', [$member]);
+        return true;
     }
 
     /**
