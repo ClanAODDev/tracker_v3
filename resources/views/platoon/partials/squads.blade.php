@@ -39,7 +39,8 @@
                         <th><strong>Member</strong></th>
                         <th class='nosearch text-center'><strong>Rank</strong></th>
                         <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
-                        <th class='text-center'><strong>Last Activity</strong></th>
+                        <th class='text-center'><strong>Forum Activity</strong></th>
+                        <th class='text-center no-sort'><strong>TS Activity</strong></th>
                         <th class='text-center'>
                             <string>Last Promoted</string>
                         </th>
@@ -64,6 +65,13 @@
                             <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
                             <td class="text-center">
                                 <span class="{{ getActivityClass($member->last_activity, $division) }}">{{ $member->present()->lastActive }}</span>
+                            </td>
+                            <td class="text-center">
+                                @if ($member->tsInvalid)
+                                    <span class="text-danger">{{ $member->tsInvalid }}</span>
+                                @else
+                                    {{ Carbon::parse($member->last_ts_activity)->diffForHumans() }}
+                                @endif
                             </td>
                             <td class="text-center">{{ $member->last_promoted }}</td>
                         </tr>
