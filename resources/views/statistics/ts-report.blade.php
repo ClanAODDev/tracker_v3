@@ -48,8 +48,8 @@
                 <thead>
                 <tr>
                     <th>Member</th>
-                    <th>Division</th>
                     <th>Last Forum Activity</th>
+                    <th>Division</th>
                     <th>Forum Profile</th>
                 </tr>
                 </thead>
