@@ -6,6 +6,7 @@ use App\Division;
 use App\Member;
 use App\Platoon;
 use App\Squad;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
@@ -108,7 +109,7 @@ class SyncMemberData
         foreach ($removed as $index => $id) {
             $member = Member::find($id);
 
-            if ($member instanceof Member) {
+            if ($member instanceof Member && $member->updated_at < Carbon::today()->subWeek(4)) {
                 self::resetMember($member);
             }
         }
