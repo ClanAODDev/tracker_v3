@@ -19,7 +19,7 @@
 
         {!! Breadcrumbs::render('promotions', $division) !!}
 
-        @if ($members)
+        @if (count($members))
             <div class="row">
                 <div class="col-md-6">
                     @foreach ($members->groupBy('rank.name') as $rank=>$members)
@@ -54,7 +54,7 @@
 
 
         @else
-            <p>No promotions found</p>
+            <p>No promotions found.</p>
         @endif
 
     </div>
