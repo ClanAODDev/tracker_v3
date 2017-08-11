@@ -20,7 +20,7 @@
 
         <p>Below is a report of your division members' Teamspeak Unique IDs. If you have members listed below, it is important to get with those individuals and resolve these issues as soon as possible.</p>
 
-        <div class="panel panel-filled">
+        <div class="panel panel-filled m-t-xl">
             <div class="panel-heading">
                 Potential Problems
             </div>
