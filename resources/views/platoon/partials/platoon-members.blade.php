@@ -12,7 +12,8 @@
             <th class='no-search text-center'><strong>Rank</strong></th>
             <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
             <th class='text-center'><strong>Forum Activity</strong></th>
-            <th class='text-center no-sort' style="pointer-events: none;"><strong>TS Activity</strong></th>
+            <th class='text-center'><strong>TS Activity</strong></th>
+            <th class="col-hidden">Ts activity Dates</th>
             <th class='text-center'>
                 <string>Last Promoted</string>
             </th>
@@ -34,11 +35,12 @@
                 </td>
                 <td class="text-center">
                     @if ($member->tsInvalid)
-                        <span class="text-danger">{{ $member->tsInvalid }}</span>
+                        <span class="text-danger">MISCONFIGURATION</span>
                     @else
                         {{ Carbon::parse($member->last_ts_activity)->diffForHumans() }}
                     @endif
                 </td>
+                <td class="col-hidden">{{ $member->last_ts_activity }}</td>
                 <td class="text-center">{{ $member->last_promoted }}</td>
             </tr>
         @endforeach

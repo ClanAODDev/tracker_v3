@@ -12,9 +12,9 @@ trait HasCustomAttributes
         return "http://www.clanaod.net/forums/member.php?u=" . $this->clan_id;
     }
 
-    public function getTsInvalidAttribute($value)
+    public function getTsInvalidAttribute()
     {
-        return carbon_date_or_null_if_zero($value) == null;
+        return (carbon_date_or_null_if_zero($this->last_ts_activity) == null);
     }
 
     /**

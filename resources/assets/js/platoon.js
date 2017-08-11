@@ -88,8 +88,13 @@ let Platoon = Platoon || {};
         }, {
           // sort activity by last login date
           'iDataSort': 1, 'aTargets': [5]
-        }],
-        stateSave: true, paging: false,
+        },
+          {
+            // sort ts activity by date
+            'iDataSort': 7, 'aTargets': [6]
+          }
+        ],
+        stateSave: false, paging: false,
       });
 
       $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');
