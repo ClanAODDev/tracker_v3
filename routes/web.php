@@ -65,20 +65,9 @@ Route::group(['prefix' => 'help'], function () {
     Route::get('/division-structures', 'HelpController@divisionStructures')->name('divisionStructures');
 });
 
-Route::get('clan-ts-report', function () {
-    $invalidDates = function ($member) {
-        return ! carbon_date_or_null_if_zero($member->last_ts_activity);
-    };
-
-    $issues = App\Member::whereHas('division')
-        ->with('rank', 'division')->get()
-        ->filter($invalidDates);
-
-    return view('statistics.ts-report', compact('issues'));
-});
-
 Route::group(['prefix' => 'statistics'], function () {
     Route::get('/', 'ClanStatisticsController@show')->name('statistics');
+    Route::get('/clan-ts-report', 'ClanStatisticsController@showTsReport')->name('clan-ts-report');
 });
 
 // initial recruiting screen

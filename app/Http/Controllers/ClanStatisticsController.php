@@ -53,4 +53,20 @@ class ClanStatisticsController extends Controller
             'cencuses', 'rankDemographic'
         ));
     }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showTsReport()
+    {
+        $invalidDates = function ($member) {
+            return ! carbon_date_or_null_if_zero($member->last_ts_activity);
+        };
+
+        $issues = \App\Member::whereHas('division')
+            ->with('rank', 'division')->get()
+            ->filter($invalidDates);
+
+        return view('statistics.ts-report', compact('issues'));
+    }
 }
