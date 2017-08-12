@@ -6,6 +6,7 @@
             <th class="no-sort"></th>
             <th class="text-center">Population</th>
             <th class="text-center">Weekly Active</th>
+            <th class="text-center">Weekly TS Active</th>
             <th>Notes</th>
         </tr>
         </thead>
@@ -27,6 +28,7 @@
                 </td>
                 <td class="text-center">{{ $census->count }}</td>
                 <td class="text-center">{{ $census->weekly_active_count }}</td>
+                <td class="text-center">{{ $census->weekly_ts_count }}</td>
                 <td>{{ $census->notes }}</td>
             </tr>
         @endforeach
