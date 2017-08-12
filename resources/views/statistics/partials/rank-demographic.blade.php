@@ -12,6 +12,7 @@
                 <td class="text-center">{{ $rank->count }}</td>
                 <td class="text-center">
                     <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#f6a821']) }}"
                           data-counts="{{ json_encode([$rank->difference, $rank->count]) }}"></span>
                     <small class="slight">{{ round($rank->count / $memberCount * 100, 1) }}%</small>
                 </td>
