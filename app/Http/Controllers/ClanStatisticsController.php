@@ -42,6 +42,8 @@ class ClanStatisticsController extends Controller
                 $division->weeklyTsActive = $division->census->last()->weekly_ts_count;
             });
 
+        $mismatchedTSMembers = $this->clan->teamspeakReport();
+
         // break down rank distribution
         $rankDemographic = collect($this->clan->allRankDemographic());
         $rankDemographic->each(function ($rank) use ($memberCount) {
@@ -50,7 +52,7 @@ class ClanStatisticsController extends Controller
 
         return view('statistics.show')->with(compact(
             'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
-            'cencuses', 'rankDemographic'
+            'cencuses', 'rankDemographic', 'mismatchedTSMembers'
         ));
     }
 

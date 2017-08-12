@@ -19,6 +19,14 @@
 
     <div class="container-fluid">
 
+        <div class="alert alert-default">
+            <i class="fa fa-exclamation-triangle text-danger"></i>
+            There are
+            <code>{{ count($mismatchedTSMembers) }}</code> members improperly configured for Teamspeak. Please review the
+            <a href="{{ route('clan.ts-report') }}"
+               class="alert-link">Teamspeak Report</a> to resolve these issues.
+        </div>
+
         <div class="row m-b-lg">
             <div class="col-md-12">
                 <p>Tracker data is synced with the Clan AOD forums once every hour. Census statistics are polled once a week. Division specific populations include annotations which may be viewed on individual division pages.</p>

@@ -44,9 +44,6 @@ class DivisionRepository
         return Member::whereDivisionId($division->id)->get()
             ->filter(function ($member) {
                 return ! carbon_date_or_null_if_zero($member->last_ts_activity);
-            })
-            ->filter(function ($member) {
-                return $member->created_at < Carbon::now()->subDays(2);
             });
     }
 

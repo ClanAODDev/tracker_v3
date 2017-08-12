@@ -70,7 +70,7 @@ Route::group(['prefix' => 'help'], function () {
 
 Route::group(['prefix' => 'statistics'], function () {
     Route::get('/', 'ClanStatisticsController@show')->name('statistics');
-    Route::get('/clan-ts-report', 'ClanStatisticsController@showTsReport')->name('clan-ts-report');
+    Route::get('/clan-ts-report', 'ClanStatisticsController@showTsReport')->name('clan.ts-report');
 });
 
 // initial recruiting screen

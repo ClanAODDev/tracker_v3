@@ -2,10 +2,23 @@
 
 namespace App\Repositories;
 
+use App\Member;
 use Illuminate\Support\Facades\DB;
 
 class ClanRepository
 {
+
+    /**
+     * @param Division $division
+     * @return mixed
+     */
+    public function teamspeakReport()
+    {
+        return Member::whereHas('division')->get()
+            ->filter(function ($member) {
+                return ! carbon_date_or_null_if_zero($member->last_ts_activity);
+            });
+    }
 
     /**
      * Get clan population totals groups by date ranges (typically weekly)
