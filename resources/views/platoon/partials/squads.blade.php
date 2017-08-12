@@ -56,10 +56,11 @@
                             <td class="col-hidden">{{ $member->last_activity }}</td>
                             <td>
                                 @if ($squad->leader && $squad->leader->clan_id == $member->recruiter_id)
-                                    <strong style="color: magenta;" title="Direct Recruit">*</strong>
+                                    <strong style="color: magenta;" title="Direct Recruit"><i
+                                                class="fa fa-asterisk"></i></strong>
                                 @endif
                                 @if ($member->leave)
-                                    <span class="text-accent" title="On Leave">*</span>
+                                    <span class="text-accent" title="On Leave"><i class="fa fa-asterisk"></i></span>
                                 @endif
                                 {!! $member->present()->nameWithIcon !!}
                             </td>
@@ -92,8 +93,10 @@
 @endforelse
 
 <div class="panel-footer">
-    <small class="slight" title="Direct Recruit"><span
-                style="color: magenta;">*</span> - recruited by the current leader
-    </small>
-    <small class="slight" title="Direct Recruit"><span class="text-accent">*</span> - On Leave</small>
+    <span class="slight badge" title="Direct Recruit"><span
+                style="color: magenta;"><i class="fa fa-asterisk"></i></span> - Recruited by the current leader
+    </span>
+    <span class="slight badge" title="Direct Recruit">
+        <span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave
+    </span>
 </div>

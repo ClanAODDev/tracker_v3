@@ -28,7 +28,9 @@
                 <td class="col-hidden">{{ $member->rank_id }}</td>
                 <td class="col-hidden">{{ $member->last_activity }}</td>
                 <td>
-                    @if ($member->leave)<span class="text-accent" title="On Leave">*</span>@endif
+                    @if ($member->leave)<span class="text-accent" title="On Leave"><i
+                                class="fa fa-asterisk"></i></span>
+                    @endif
                     {!! $member->present()->nameWithIcon !!}
                 </td>
                 <td class="text-center">{{ $member->rank->abbreviation }}</td>
@@ -51,6 +53,6 @@
     </table>
 </div>
 <div class="panel-footer">
-    <small class="slight"><span class="text-accent">*</span> - On Leave</small>
+    <small class="slight"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave</small>
 </div>
 
