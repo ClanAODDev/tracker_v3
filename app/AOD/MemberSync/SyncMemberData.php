@@ -77,15 +77,13 @@ class SyncMemberData
         // handle timestamps
         $member->join_date = $record['joindate'];
         $member->last_activity = "{$record['lastactivity']} {$record['lastactivity_time']}";
+        $member->last_ts_activity = "{$record['lastts_connect']} {$record['lastts_connect_time']}";
 
         // accounts for forum member, prospective member ranks which we don't use
         $member->rank_id = ($record['aodrankval'] - 2 <= 0) ? 1 : $record['aodrankval'] - 2;
 
-        // forum post count
         $member->posts = $record['postcount'];
-
-        // teamspeak activity data
-        $member->last_ts_activity = "{$record['lastts_connect']}";
+        $member->ts_unique_id = $record['tsid'];
 
         // persist
         $member->save();

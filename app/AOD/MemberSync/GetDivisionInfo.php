@@ -85,6 +85,7 @@ class GetDivisionInfo
             'type' => 'json',
             'division' => $this->division,
             'authcode2' => $token,
+            'extra' => '1'
         ];
 
         return $this->source . http_build_query($arguments);
