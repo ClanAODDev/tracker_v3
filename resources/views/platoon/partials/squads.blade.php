@@ -50,17 +50,18 @@
 
                     <tbody>
                     @foreach($squad->members as $member)
-                        <tr>
+                        <tr role="row" style="cursor:pointer;"
+                            onclick="window.location.href = '{{ route('member', $member->clan_id) }}';">
                             <td class="col-hidden">{{ $member->rank_id }}</td>
                             <td class="col-hidden">{{ $member->last_activity }}</td>
                             <td>
                                 @if ($squad->leader && $squad->leader->clan_id == $member->recruiter_id)
                                     <strong style="color: magenta;" title="Direct Recruit">*</strong>
                                 @endif
+                                @if ($member->leave)
+                                    <span class="text-accent" title="On Leave">*</span>
+                                @endif
                                 {!! $member->present()->nameWithIcon !!}
-                                <a href="{{ route('member', $member->clan_id) }}">
-                                    <i class="fa fa-search text-muted pull-right" title="View profile"></i>
-                                </a>
                             </td>
                             <td class="text-center">{{ $member->rank->abbreviation }}</td>
                             <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
@@ -91,5 +92,8 @@
 @endforelse
 
 <div class="panel-footer">
-    <strong style="color: magenta;" title="Direct Recruit">*</strong> - recruited by the current leader
+    <small class="slight" style="color: magenta;" title="Direct Recruit">*</small>
+    - recruited by the current leader
+    <small class="slight" title="Direct Recruit"><span class="text-accent">*</span></small>
+    - On Leave
 </div>

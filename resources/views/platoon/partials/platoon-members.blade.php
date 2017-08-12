@@ -27,7 +27,10 @@
                 onclick="window.location.href = '{{ route('member', $member->clan_id) }}';">
                 <td class="col-hidden">{{ $member->rank_id }}</td>
                 <td class="col-hidden">{{ $member->last_activity }}</td>
-                <td>{!! $member->present()->nameWithIcon !!}</td>
+                <td>
+                    @if ($member->leave)<span class="text-accent" title="On Leave">*</span>@endif
+                    {!! $member->present()->nameWithIcon !!}
+                </td>
                 <td class="text-center">{{ $member->rank->abbreviation }}</td>
                 <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
                 <td class="text-center">
@@ -46,5 +49,8 @@
         @endforeach
         </tbody>
     </table>
+</div>
+<div class="panel-footer">
+    <small class="slight"><span class="text-accent">*</span> - On Leave</small>
 </div>
 
