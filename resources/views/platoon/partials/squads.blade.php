@@ -92,6 +92,8 @@
 @endforelse
 
 <div class="panel-footer">
-    <small class="slight" style="color: magenta;" title="Direct Recruit">* - recruited by the current leader</small>
+    <small class="slight" title="Direct Recruit"><span
+                style="color: magenta;">*</span> - recruited by the current leader
+    </small>
     <small class="slight" title="Direct Recruit"><span class="text-accent">*</span> - On Leave</small>
 </div>
