@@ -3,7 +3,6 @@
         <thead>
         <tr>
             <th>Date</th>
-            <th class="no-sort"></th>
             <th class="text-center">Population</th>
             <th class="text-center">Weekly Active</th>
             <th class="text-center">Weekly TS Active</th>
@@ -18,17 +17,21 @@
 
             <tr>
                 <td>{{ $census->created_at->format('m/d/Y') }}</td>
-                <td class="text-center no-sort">
+                <td class="text-center">{{ $census->count }}</td>
+                <td class="text-center">
+                    {{ $census->weekly_active_count }}
                     <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
                           data-counts="{{ json_encode([$popMinus, $census->weekly_active_count]) }}">
                     </span>
-                    <small class="slight">
-                        {{ round($census->weekly_active_count / $census->count * 100, 1) }}%
-                    </small>
                 </td>
-                <td class="text-center">{{ $census->count }}</td>
-                <td class="text-center">{{ $census->weekly_active_count }}</td>
-                <td class="text-center">{{ $census->weekly_ts_count }}</td>
+                <td class="text-center">
+                    {{ $census->weekly_ts_count }}
+                    <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
+                          data-counts="{{ json_encode([$popMinus, $census->weekly_ts_count ]) }}">
+                    </span>
+                </td>
                 <td>{{ $census->notes }}</td>
             </tr>
         @endforeach
