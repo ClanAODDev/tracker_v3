@@ -1987,7 +1987,7 @@ ul.sortable li:hover {
 }
 
 .navbar-form input.form-control::-webkit-input-placeholder {
-    color: rgba(0, 0, 0, .3) !important;
+    color: rgba(0, 0, 0, 1) !important;
 }
 
 .navbar-form input.form-control:-moz-placeholder {
