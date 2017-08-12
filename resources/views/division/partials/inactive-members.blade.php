@@ -3,8 +3,12 @@
         <thead>
         <tr>
             <th>Member Name</th>
-            <th>Last Forum Activity <small class="slight">Days</small></th>
-            <th>Last TS Activity <small class="slight">Days</small></th>
+            <th>Last Forum Activity
+                <small class="slight">Days</small>
+            </th>
+            <th>Last TS Activity
+                <small class="slight">Days</small>
+            </th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
         </tr>
@@ -17,11 +21,15 @@
                     {{ $member->name }}
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
-                <td class="text-center">
+                <td>
                     <code>{{ $member->last_activity->diffInDays() }}</code>
                 </td>
-                <td class="text-center">
-                    <code>{!! $member->last_ts_activity !!}</code>
+                <td>
+                    @if ($member->tsInvalid)
+                        <code title="Misconfiguration"><span class="text-danger">00000</span></code>
+                    @else
+                        <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                    @endif
                 </td>
                 <td>
                     <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank"
