@@ -30,7 +30,7 @@
         </li>
         <li>
             <a href="{{ route('leave.index', $division->abbreviation) }}">
-                Leave
+                Manage Leaves of Absence
             </a>
         </li>
 

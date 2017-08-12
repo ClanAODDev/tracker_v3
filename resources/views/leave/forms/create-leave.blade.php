@@ -9,7 +9,7 @@
         </div>
         <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">
             {!! Form::label('end_date', 'Leave End Date') !!} <span class="text-accent">*</span>
-            {{ Form::date('end_date', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required']) }}
+            {{ Form::date('end_date', null, ['class' => 'form-control', 'required' => 'required', 'YYYY/MM/DD']) }}
         </div>
         <div class="form-group">
             {!! Form::label('note_thread_id', 'Forum Thread ID') !!}
