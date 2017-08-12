@@ -27,10 +27,8 @@ class GetDivisionInfo
      *
      * @param $division
      */
-    public function __construct($division)
+    public function __construct()
     {
-        $this->division = $division;
-
         if ( ! config('app.aod.token')) {
             Log::critical("ERROR: AOD Token not defined in configuration.");
             exit;
@@ -83,7 +81,6 @@ class GetDivisionInfo
 
         $arguments = [
             'type' => 'json',
-            'division' => $this->division,
             'authcode2' => $token,
             'extra' => '1'
         ];

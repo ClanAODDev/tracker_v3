@@ -22,9 +22,21 @@ class SyncMemberData
      */
     public static function execute()
     {
+        $divisionInfo = new GetDivisionInfo();
+
+        $syncData = collect($divisionInfo->data)->groupBy(function ($item, $key) {
+            return strtolower($item['aoddivision']);
+        });
+
+        if ( ! count($syncData)) {
+            Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
+            exit;
+        }
+
+
         foreach (Division::active()->get() as $division) {
             // log activity
-            Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - fetching {$division->name}");
+            Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - syncing {$division->name}");
 
             // reset array
             self::$activeMembers = [];
@@ -32,15 +44,7 @@ class SyncMemberData
             self::$currentMembers = Member::whereDivisionId($division->id)
                 ->get()->pluck('id')->toArray();
 
-            $divisionInfo = new GetDivisionInfo($division->name);
-
-            if ( ! is_object($divisionInfo)) {
-                Log::critical(date('Y-m-d H:i:s') . " - Could not sync $division->name");
-                Log::critical($divisionInfo);
-                exit;
-            }
-
-            foreach ($divisionInfo->data as $member) {
+            foreach ($syncData[strtolower($division->name)] as $member) {
                 self::doMemberUpdate($member, $division);
             }
 
