@@ -31,11 +31,11 @@
 
                     <button class="btn btn-success btn-block" v-if="handle.enabled"
                             @click="toggleHandle(handle)">
-                        <i class="fa fa-check text-success"></i>
+                        <i class="fa fa-check text-success"></i> ACTIVATED
                     </button>
                     <button class="btn btn-danger btn-block" type="button"
                             @click="handle.enabled = !handle.enabled" v-else>
-                        <i class="fa fa-times text-danger"></i>
+                        <i class="fa fa-times text-danger"></i> DEACTIVATED
                     </button>
 
                 </td>

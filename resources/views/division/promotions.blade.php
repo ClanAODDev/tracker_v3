@@ -19,6 +19,14 @@
 
         {!! Breadcrumbs::render('promotions', $division) !!}
 
+        <select name="promotion-periods" id="promotion-periods">
+            @foreach ($promotionPeriods as $period)
+                <option data-month="{{ $period->month }}" data-year="{{ $period->year }}">
+                    {{ $period->month }} {{ $period->year }}
+                </option>
+            @endforeach
+        </select>
+
         @if (count($members))
             <div class="row">
                 <div class="col-md-6">

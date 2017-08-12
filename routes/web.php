@@ -1,5 +1,6 @@
 <?php
 
+use App\Repositories\MemberRepository;
 use Carbon\Carbon;
 
 Auth::routes();
@@ -114,7 +115,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
 
-    Route::get('{division}/promotions', function ($division) {
+    Route::get('{division}/promotions', function ($division, MemberRepository $memberRepository) {
         $members = $division->members()
             ->with('rank')
             ->whereBetween('last_promoted', [
@@ -122,7 +123,9 @@ Route::group(['prefix' => 'divisions/'], function () {
                 Carbon::now()->endOfMonth()
             ])->orderByDesc('rank_id')->get();
 
-        return view('division.promotions', compact('members', 'division'));
+        $promotionPeriods = $memberRepository->promotionPeriods();
+
+        return view('division.promotions', compact('members', 'division', 'promotionPeriods'));
     })->middleware(['auth']);
 
     Route::get('{division}/promotions/{month?}/{year?}', function ($division, $month, $year = null) {
