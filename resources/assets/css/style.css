@@ -3139,6 +3139,10 @@ div.dt-button-info h2 {
     resize: vertical;
 }
 
+.alert-default {
+    border-color: rgba(255, 255, 255, .1);
+}
+
 .alert-success {
     color: #ffffff;
     border-color: #1bbf89;

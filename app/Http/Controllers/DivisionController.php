@@ -8,6 +8,7 @@ use App\Member;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use App\Tag;
+use Carbon\Carbon;
 
 /**
  * Class DivisionController
@@ -206,7 +207,7 @@ class DivisionController extends Controller
                 return ! carbon_date_or_null_if_zero($member->last_ts_activity);
             })
             ->filter(function ($member) {
-
+                return $member->created_at < Carbon::now()->subDays(2);
             });
 
         return view('division.ts-report', compact('division', 'issues'));
