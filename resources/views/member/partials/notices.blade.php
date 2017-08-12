@@ -8,18 +8,19 @@
     @endif
 @endcan
 
-@if ($member->leaveOfAbsence)
-    @if ($member->leaveOfAbsence->approver)
+
+@if ($member->leave)
+    @if ($member->leave->approver)
         <div class="alert alert-warning">
             Member has a leave of absence in place.
             <a class="alert-link"
-               href="{{ route('member.edit-leave', [$member->clan_id, $member->leaveOfAbsence->id]) }}">View Details</a>
+               href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}">View Details</a>
         </div>
     @else
         <div class="alert alert-warning">
             Member has a leave of absence request that has not yet been approved.
             <a class="alert-link"
-               href="{{ route('member.edit-leave', [$member->clan_id, $member->leaveOfAbsence->id]) }}">View Details</a>
+               href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}">View Details</a>
         </div>
     @endif
 @endif
