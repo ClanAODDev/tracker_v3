@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use App\Member;
 use App\Repositories\ClanRepository;
+use Carbon\Carbon;
 
 class ClanStatisticsController extends Controller
 {
@@ -63,9 +65,14 @@ class ClanStatisticsController extends Controller
             return ! carbon_date_or_null_if_zero($member->last_ts_activity);
         };
 
-        $issues = \App\Member::whereHas('division')
+        $newMembers = function ($member) {
+            return $member->created_at < Carbon::now()->subDays(2);
+        };
+
+        $issues = Member::whereHas('division')
             ->with('rank', 'division')->get()
-            ->filter($invalidDates);
+            ->filter($invalidDates)
+            ->filter($newMembers);
 
         return view('statistics.ts-report', compact('issues'));
     }
