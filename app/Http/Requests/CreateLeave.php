@@ -6,6 +6,7 @@ use App\Leave;
 use App\Member;
 use App\Note;
 use App\Tag;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateLeave extends FormRequest
@@ -62,7 +63,7 @@ class CreateLeave extends FormRequest
 
         $leave = Leave::create([
             'reason' => $this->leave_type,
-            'end_date' => $this->end_date,
+            'end_date' => Carbon::parse($this->end_date),
             'extended' => false
         ]);
 
