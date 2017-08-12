@@ -36,7 +36,8 @@
 <input type="hidden" id="assigned-member-ids" name="member_ids" />
 
 <script>
-  $('.unassigned-members li').click(function () {
+
+  $('.unassigned-members').on('click', 'li', function () {
     assignMember($(this), $('.assigned-members'));
     updateMembers();
   });
