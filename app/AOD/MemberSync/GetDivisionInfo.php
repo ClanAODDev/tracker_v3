@@ -43,7 +43,6 @@ class GetDivisionInfo
      * Fetches member data per division
      *
      * @return mixed
-     * @internal param $agent2
      */
     protected function fetchData()
     {
@@ -77,8 +76,6 @@ class GetDivisionInfo
 
     /**
      * @return string
-     * @internal param $division
-     * @internal param $token
      */
     protected function jsonUrl()
     {
