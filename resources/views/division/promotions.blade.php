@@ -24,6 +24,9 @@
         @if ($year && $month && count($members))
             <h4>{{ $month }} {{ $year }} Promotions</h4>
             <hr />
+        @elseif (count($members))
+            <h4>{{ Carbon::now()->format('F Y') }} Promotions</h4>
+            <hr />
         @endif
 
         @if (count($members))
