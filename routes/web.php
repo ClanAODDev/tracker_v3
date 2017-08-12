@@ -115,36 +115,32 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
 
-    Route::get('{division}/promotions', function ($division, MemberRepository $memberRepository) {
-        $members = $division->members()
-            ->with('rank')
-            ->whereBetween('last_promoted', [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfMonth()
-            ])->orderByDesc('rank_id')->get();
+    Route::get('{division}/promotions/{month?}/{year?}',
+        function ($division, $month = null, $year = null, MemberRepository $memberRepository) {
 
-        $promotionPeriods = $memberRepository->promotionPeriods();
-
-        return view('division.promotions', compact('members', 'division', 'promotionPeriods'));
-    })->middleware(['auth']);
-
-    Route::get('{division}/promotions/{month?}/{year?}', function ($division, $month, $year = null) {
-        $year = $year ?: " 2017";
-
-        try {
-            $members = $division->members()
-                ->with('rank')
-                ->whereBetween('last_promoted', [
+            try {
+                $dates = ($month && $year) ? [
                     Carbon::parse($month . " {$year}")->startOfMonth(),
                     Carbon::parse($month . " {$year}")->endOfMonth()
-                ])->orderByDesc('rank_id')
-                ->get();
-        } catch (Exception $e) {
-            $members = collect([]);
-        }
+                ] : [
+                    Carbon::now()->startOfMonth(),
+                    Carbon::now()->endOfMonth()
+                ];
 
-        return view('division.promotions', compact('members', 'division'));
-    })->middleware(['auth']);
+                $members = $division->members()
+                    ->with('rank')
+                    ->whereBetween('last_promoted', $dates)
+                    ->orderByDesc('rank_id')->get();
+            } catch (Exception $exception) {
+                $members = [];
+            }
+
+            $promotionPeriods = $memberRepository->promotionPeriods();
+
+            return view('division.promotions', compact('members', 'division', 'promotionPeriods', 'year', 'month'));
+
+
+        })->middleware(['auth'])->name('division.promotions');
 
     /**
      * Recruiting Process
