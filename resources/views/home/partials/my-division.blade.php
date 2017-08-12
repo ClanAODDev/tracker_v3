@@ -1,5 +1,3 @@
-@include('division.partials.notices', ['division' => $myDivision])
-
 <div class="panel panel-c-accent panel-filled division-header"
      style="background-image: url({{ asset('images/headers/' . $myDivision->abbreviation . ".png") }})">
     <div class="panel-heading">
@@ -27,3 +25,5 @@
         @include('division.partials.tools-links', ['division' => $myDivision])
     </div>
 </div>
+
+@include('division.partials.notices', ['division' => $myDivision])
