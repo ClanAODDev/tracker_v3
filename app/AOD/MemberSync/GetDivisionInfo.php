@@ -43,7 +43,7 @@ class GetDivisionInfo
      * Fetches member data per division
      *
      * @return mixed
-     * @internal param $agent
+     * @internal param $agent2
      */
     protected function fetchData()
     {
@@ -87,7 +87,7 @@ class GetDivisionInfo
         $arguments = [
             'type' => 'json',
             'division' => $this->division,
-            'authcode' => $token,
+            'authcode2' => $token,
         ];
 
         return $this->source . http_build_query($arguments);
