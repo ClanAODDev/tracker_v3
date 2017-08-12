@@ -276,6 +276,18 @@ class Division extends Model
     }
 
     /**
+     * @param $days
+     * @return $this
+     */
+    public function membersActiveOnTsSinceDaysAgo($days)
+    {
+        $date = Carbon::now()->subDays($days)->format('Y-m-d');
+
+        return $this->members()
+            ->where('last_ts_activity', '>=', $date);
+    }
+
+    /**
      * @return mixed
      */
     public function generalSergeants()

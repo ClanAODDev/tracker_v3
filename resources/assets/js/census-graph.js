@@ -1,5 +1,6 @@
 // Flot charts data and options
 var data2 = $('#flot-line-chart').data('populations'),
+  data3 = $('#flot-line-chart').data('weekly-ts'),
   data1 = $('#flot-line-chart').data('weekly-active'),
   comments = $('#flot-line-chart').data('comments');
 
@@ -17,7 +18,7 @@ var chartUsersOptions = {
       show: true,
       tension: 0.4,
       lineWidth: 1,
-      fill: 1,
+      fill: .10,
     }
   },
 
@@ -49,18 +50,18 @@ var chartUsersOptions = {
 
   comments: comments,
 
-  colors: ['#f7af3e', '#DE9536']
+  colors: ['#0F83C9', '#1bbf89', '#f7af3e']
 };
 
-$.plot($('#flot-line-chart'), [data2, data1], chartUsersOptions);
+$.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
 
 $(window).resize(function () {
-  $.plot($('#flot-line-chart'), [data2, data1], chartUsersOptions);
+  $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
 });
 
 $('input[type=checkbox]').change(function (event) {
   var option = {};
   option['comment'] = {show: $(this).is(':checked')};
   $.extend(true, chartUsersOptions, option);
-  $.plot($('#flot-line-chart'), [data2, data1], chartUsersOptions);
+  $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
 });

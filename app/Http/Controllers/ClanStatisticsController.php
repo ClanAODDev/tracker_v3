@@ -36,12 +36,10 @@ class ClanStatisticsController extends Controller
             })
             // calculate population and weekly active
             ->each(function ($division) {
-                $count = $division->census->last()->count;
-                $weeklyActive = $division->census->last()->weekly_active_count;
-
-                $division->total = $count;
-                $division->popMinusActive = $count - $weeklyActive;
-                $division->weeklyActive = $weeklyActive;
+                $division->total = $division->census->last()->count;
+                $division->popMinusActive = $division->census->last()->count - $division->census->last()->weekly_active_count;
+                $division->weeklyActive = $division->census->last()->weekly_active_count;
+                $division->weeklyTsActive = $division->census->last()->weekly_ts_count;
             });
 
         // break down rank distribution

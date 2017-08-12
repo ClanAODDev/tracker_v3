@@ -243,7 +243,7 @@ let Tracker = Tracker || {};
           $(this).sparkline(
             $(this).data('counts'), {
               type: 'pie',
-              sliceColors: ['#404652', '#f7af3e']
+              sliceColors: $(this).data('colors')
             }
           );
         });

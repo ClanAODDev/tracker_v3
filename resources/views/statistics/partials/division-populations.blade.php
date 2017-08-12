@@ -8,10 +8,10 @@
 
         <thead>
         <tr>
-            <th class="col-xs-3">Division</th>
-            <th class="no-sort col-xs-3"></th>
-            <th class="text-center col-xs-3">Population</th>
-            <th class="text-center col-xs-3">Weekly Active</th>
+            <th class="col-xs-4">Division</th>
+            <th class="text-center col-xs-2">Population</th>
+            <th class="text-center col-xs-2">Weekly Active</th>
+            <th class="text-center col-xs-2">Weekly TS Active</th>
         </tr>
         </thead>
 
@@ -24,20 +24,21 @@
                     </a>
                     {{ $division->name }}
                 </td>
-                <td class="text-center no-sort">
+                <td class="text-center">{{ $division->census->last()->count}}</td>
+                <td class="text-center">
+                    {{ $division->census->last()->weekly_active_count }}
                     <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
                           data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyActive]) }}">
                     </span>
-                    <small class="slight">
-                        @if ($division->total > 0)
-                            {{ round($division->weeklyActive / $division->total * 100, 1) }}%
-                        @else
-                            0%
-                        @endif
-                    </small>
                 </td>
-                <td class="text-center">{{ $division->census->last()->count}}</td>
-                <td class="text-center">{{ $division->census->last()->weekly_active_count }}</td>
+                <td class="text-center">
+                    {{ $division->census->last()->weekly_ts_count }}
+                    <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
+                          data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyTsActive]) }}">
+                    </span>
+                </td>
             </tr>
         @endforeach
         </tbody>

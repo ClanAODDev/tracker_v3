@@ -182,6 +182,10 @@ class DivisionController extends Controller
             return [$key, $census->weekly_active_count];
         });
 
+        $weeklyTsActive = $censuses->values()->map(function ($census, $key) {
+            return [$key, $census->weekly_ts_count];
+        });
+
         $comments = $censuses->values()
             ->filter(function ($census) use ($censuses) {
                 return ($census->notes);
@@ -195,7 +199,7 @@ class DivisionController extends Controller
 
         return view('division.census', compact(
             'division', 'populations', 'weeklyActive',
-            'comments', 'censuses'
+            'comments', 'censuses', 'weeklyTsActive'
         ));
     }
 
