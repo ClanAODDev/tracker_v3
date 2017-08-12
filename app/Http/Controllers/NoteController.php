@@ -69,6 +69,18 @@ class NoteController extends Controller
     public function delete(Member $member, Note $note)
     {
         $this->authorize('delete', $note);
+
+        // check for existing leave with associated note
+        $leave = \App\Leave::whereHas('note')
+            ->whereNoteId($note->id)
+            ->first();
+
+        if (count($leave)) {
+            return redirect()->back()
+                ->withErrors(['' => "Note cannot be deleted. A leave of absence associated to this note still exists!"])
+                ->withInput();
+        }
+
         $note->delete();
         $this->showToast('Note deleted successfully');
 
