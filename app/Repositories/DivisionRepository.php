@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Division;
+use App\Member;
 use Carbon\Carbon;
 use DB;
 
@@ -36,7 +37,17 @@ class DivisionRepository
             'values' => [$members->groupBy('rank.name')],
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
+    }
 
+    public function teamspeakReport(Division $division)
+    {
+        return Member::whereDivisionId($division->id)->get()
+            ->filter(function ($member) {
+                return ! carbon_date_or_null_if_zero($member->last_ts_activity);
+            })
+            ->filter(function ($member) {
+                return $member->created_at < Carbon::now()->subDays(2);
+            });
     }
 
     public function getDivisionActivity(Division $division)
