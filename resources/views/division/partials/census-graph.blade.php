@@ -34,5 +34,5 @@
 </div>
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/census-graph.js') !!}"></script>
+    <script src="{!! asset('/js/census-graph.js?v=2') !!}"></script>
 @endsection
