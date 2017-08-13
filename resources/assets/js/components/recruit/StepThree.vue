@@ -36,12 +36,12 @@
         <hr />
 
         <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
-            <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure they understand and agree to all of AOD's requirements before continuing further in the process.
+            <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure all of your information is correct before continuing further in the process.
         </p>
         <hr />
 
         <button type="submit" class="btn btn-success pull-right">Continue</button>
-        <button class="pull-left btn btn-default" type="button" disabled>Back</button>
+        <button class="pull-left btn btn-default" type="button">Back</button>
     </form>
 </template>
 <script>

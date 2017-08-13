@@ -3,9 +3,17 @@
 
         <h3>Getting Started</h3>
 
-        <p>This is an introductory content paragraph for divisions to provide specific instructions regarding a recruitment process. This is a good place to talk about division-specific policies that may make or break interest, ie., division in-game requirements, must join platoon, must wear tags, etc.</p>
+        <p>If you haven't already brought your recruit into Teamspeak, you can share that information with them by visiting the teamspeak information page. Additionally, you can acquire the forum member id via the member list, sorted by join date.
+        </p>
 
-        <p>Additionally, recruiters should mention the clan-wide membership requirements:</p>
+        <p>
+            <a href="https://www.clanaod.net/forums/showthread.php?t=97502" target="_blank"
+               class="btn btn-default">Teamspeak Information</a>
+            <a class="btn btn-default m-l-sm" target="_blank"
+               href="https://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate&pp=30">New Forum Members</a>
+        </p>
+
+        <p class="m-t-lg">Additionally, you should mention the clan-wide membership requirements as part of your recruitment:</p>
 
         <ul class="c-white">
             <li>Maintain minimum forum activity. Inactivity can result in removal from AOD</li>

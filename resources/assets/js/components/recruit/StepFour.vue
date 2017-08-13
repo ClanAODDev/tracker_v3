@@ -2,11 +2,12 @@
     <div>
         <demo-mode-notice></demo-mode-notice>
         <request-member-status></request-member-status>
-        <create-welcome-post v-if="store.division.settings.welcome_area !== undefined"></create-welcome-post>
+        <create-welcome-post v-if="store.division.settings.welcome_area != ''"></create-welcome-post>
+        <send-welcome-pm v-if="store.division.settings.welcome_pm != ''"></send-welcome-pm>
 
         <hr />
         <button class="pull-right btn btn-success" type="button" @click="validateStep">Finish</button>
-        <button class="pull-left btn btn-default" type="button" @click="store.currentStep = 'step-three'">Back</button>
+        <button class="pull-left btn btn-default" type="button" disabled>Back</button>
     </div>
 </template>
 
@@ -14,6 +15,7 @@
   import store from './store.js';
   import RequestMemberStatus from './RequestMemberStatus.vue';
   import CreateWelcomePost from './CreateWelcomePost.vue';
+  import SendWelcomePM from './SendWelcomePM.vue';
   import DemoModeNotice from './DemoModeNotice.vue';
 
   export default {
@@ -21,7 +23,8 @@
     components: {
       'request-member-status': RequestMemberStatus,
       'create-welcome-post': CreateWelcomePost,
-      'demo-mode-notice': DemoModeNotice
+      'demo-mode-notice': DemoModeNotice,
+      'send-welcome-pm': SendWelcomePM,
     },
 
     methods: {

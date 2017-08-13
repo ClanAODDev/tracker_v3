@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3><i class="fa fa-plus-square text-accent"></i> Step 4: Member Status Request</h3>
+        <h3><i class="fa fa-plus-square text-accent"></i> Member Status Request</h3>
 
         <p>Your new recruit has been added to the Tracker, but you still need to submit a member status request to have their AOD permissions approved. To do that, use the button below to open the status request form.</p>
 
