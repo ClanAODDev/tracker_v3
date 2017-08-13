@@ -1,4 +1,4 @@
-@if (count($division->mismatchedTSMembers) || count($division->nullTSMembers))
+@if (count($division->mismatchedTSMembers))
     <div class="alert alert-default">
         <i class="fa fa-exclamation-triangle text-danger"></i>
         There are <code>{{ count($division->mismatchedTSMembers) }}</code> members improperly configured for Teamspeak. Please review the

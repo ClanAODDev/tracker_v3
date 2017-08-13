@@ -162,13 +162,8 @@ class Division extends Model
     public function mismatchedTSMembers()
     {
         return $this->members()
-            ->whereLastTsActivity('0000-00-00 00:00:00');
-    }
-
-    public function nullTSMembers()
-    {
-        return $this->members()
-            ->whereLastTsActivity(null);
+            ->whereLastTsActivity('0000-00-00 00:00:00')
+            ->orWhereLastTsActivity(null);
     }
 
     /**
