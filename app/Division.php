@@ -165,7 +165,7 @@ class Division extends Model
             ->whereLastTsActivity('0000-00-00 00:00:00')
             ->orWhereLastTsActivity(null)
             ->filter(function ($member) {
-                return ! $member->join_date > Carbon::today()->subDays(5);
+                return $member->join_date > Carbon::today()->subDays(5);
             });
     }
 
