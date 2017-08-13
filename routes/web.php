@@ -116,31 +116,7 @@ Route::group(['prefix' => 'divisions/'], function () {
         ->name('division.inactive-members');
 
     Route::get('{division}/promotions/{month?}/{year?}',
-        function ($division, $month = null, $year = null, MemberRepository $memberRepository) {
-
-            try {
-                $dates = ($month && $year) ? [
-                    Carbon::parse($month . " {$year}")->startOfMonth(),
-                    Carbon::parse($month . " {$year}")->endOfMonth()
-                ] : [
-                    Carbon::now()->startOfMonth(),
-                    Carbon::now()->endOfMonth()
-                ];
-
-                $members = $division->members()
-                    ->with('rank')
-                    ->whereBetween('last_promoted', $dates)
-                    ->orderByDesc('rank_id')->get();
-            } catch (Exception $exception) {
-                $members = [];
-            }
-
-            $promotionPeriods = $memberRepository->promotionPeriods();
-
-            return view('division.promotions', compact('members', 'division', 'promotionPeriods', 'year', 'month'));
-
-
-        })->middleware(['auth'])->name('division.promotions');
+        'PromotionsController@show')->middleware(['auth'])->name('division.promotions');
 
     /**
      * Recruiting Process
