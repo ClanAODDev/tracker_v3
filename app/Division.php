@@ -163,7 +163,10 @@ class Division extends Model
     {
         return $this->members()
             ->whereLastTsActivity('0000-00-00 00:00:00')
-            ->orWhereLastTsActivity(null);
+            ->orWhereLastTsActivity(null)
+            ->filter(function ($member) {
+                return ! $member->join_date > Carbon::today()->subDays(5);
+            });
     }
 
     /**
