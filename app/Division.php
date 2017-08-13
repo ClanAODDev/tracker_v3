@@ -162,10 +162,10 @@ class Division extends Model
     public function mismatchedTSMembers()
     {
         return $this->members()
-            ->whereLastTsActivity('0000-00-00 00:00:00')
-            ->orWhereLastTsActivity(null)
-            ->filter(function ($member) {
-                return $member->join_date > Carbon::today()->subDays(5);
+            ->where('join_date', '<', Carbon::today()->subDays(5))
+            ->where(function ($query) {
+                $query->where('last_ts_activity', null)
+                    ->orWhere('last_ts_activity', '0000-00-00 00:00:00');
             });
     }
 
