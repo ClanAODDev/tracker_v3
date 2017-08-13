@@ -21,5 +21,5 @@
 @stop
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/recruiting.js?v=4.61') !!}"></script>
+    <script src="{!! asset('/js/recruiting.js?v=4.7') !!}"></script>
 @stop
