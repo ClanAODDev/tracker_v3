@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Activity;
 use App\Http\Requests\DeleteMember;
 use App\Member;
 use Carbon\Carbon;
@@ -33,9 +34,21 @@ class InactiveMemberController extends Controller
             $inactiveMembers = $inactiveMembers->where('platoon_id', request()->platoon->id);
         }
 
-        $flaggedMembers = $division->members()->whereFlaggedForInactivity(true)->get();
+        $flagActivity = Activity::whereDivisionId($division->id)
+            ->where(function ($query) {
+                $query->where('name', 'flagged_member')
+                    ->orWhere('name', 'unflagged_member');
+            })->orderByDesc('created_at')
+            ->with('subject', 'subject.rank')
+            ->get();
 
-        return view('division.inactive-members', compact('division', 'inactiveMembers', 'flaggedMembers'));
+        $flaggedMembers = $division->members()
+            ->with('rank')
+            ->whereFlaggedForInactivity(true)->get();
+
+        return view('division.inactive-members', compact(
+            'division', 'inactiveMembers', 'flaggedMembers', 'flagActivity'
+        ));
     }
 
     /**
