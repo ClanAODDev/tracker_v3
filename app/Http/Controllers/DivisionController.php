@@ -205,7 +205,7 @@ class DivisionController extends Controller
 
     public function showTsReport($division)
     {
-        $issues = $this->division->teamspeakReport($division);
+        $issues = $division->mismatchedTSMembers;
 
         return view('division.ts-report', compact('division', 'issues'));
     }

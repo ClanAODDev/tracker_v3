@@ -39,14 +39,6 @@ class DivisionRepository
         ];
     }
 
-    public function teamspeakReport(Division $division)
-    {
-        return Member::whereDivisionId($division->id)->get()
-            ->filter(function ($member) {
-                return ! carbon_date_or_null_if_zero($member->last_ts_activity);
-            });
-    }
-
     public function getDivisionActivity(Division $division)
     {
         $twoWeeksAgo = Carbon::now()->subDays(14);
