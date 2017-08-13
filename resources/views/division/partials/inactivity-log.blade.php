@@ -1,9 +1,7 @@
 @if(count($flagActivity))
-    <hr />
+
+    <h4 class="m-t-xl">Activity Log</h4><hr />
     <div class="panel panel-filled panel-c-accent">
-        <div class="panel-heading">
-            Activity Log
-        </div>
         <div class="panel-body">
             <table class="table table-hover adv-datatable">
                 <thead>
