@@ -37,6 +37,8 @@
             <a href="{{ $member->handle->getFullUrl }}">
                 {{ $member->handle->pivot->value }}
             </a>
+        @else
+            <span class="text-danger">N/A</span>
         @endif
     </td>
 </tr>
