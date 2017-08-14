@@ -1,9 +1,7 @@
-<a href="{{ route('division.members', $division->abbreviation) }}" class="btn btn-default">Members</a>
-
 <div class="dropdown" style="display: inline-block;">
     <button class="btn btn-default dropdown-toggle" type="button" id="tools" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="true">
-        Tools
+        <i class="fa fa-wrench text-accent"></i> Tools
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="tools">
@@ -43,7 +41,7 @@
     <button class="btn btn-default dropdown-toggle" type="button" id="reports" data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="true">
-        Reports
+        <i class="fa fa-paperclip text-accent"></i> Reports
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" aria-labelledby="reports">
@@ -57,3 +55,7 @@
         </li>
     </ul>
 </div>
+
+<a href="{{ route('division.members', $division->abbreviation) }}" class="btn btn-default">
+    <i class="fa fa-users text-accent"></i> Members
+</a>
