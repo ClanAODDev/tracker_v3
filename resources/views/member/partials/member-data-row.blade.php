@@ -34,9 +34,13 @@
     <td class="text-center">{{ $member->last_promoted }}</td>
     <td class="col-hidden">
         @if ($member->handle)
-            <a href="{{ $member->handle->getFullUrl }}">
-                {{ $member->handle->pivot->value }}
-            </a>
+            @if ($member->handle->url)
+                <a href="{{ $member->handle->getFullUrl }}">
+                    {{ $member->handle->pivot->value }}
+                </a>
+            @else
+                <code>{{ $member->handle->pivot->value }}</code>
+            @endif
         @else
             <span class="text-danger">N/A</span>
         @endif
