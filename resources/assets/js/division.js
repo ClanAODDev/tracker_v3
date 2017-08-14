@@ -11,7 +11,7 @@ var Division = Division || {};
     initAutocomplete: function () {
 
       $('#leader').bootcomplete({
-        url: window.Laravel.appPath + '/search-leader/',
+        url: window.Laravel.appPath + '/search-member/',
         minLength: 3,
         idField: true,
         method: 'POST',

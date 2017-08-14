@@ -4,69 +4,80 @@ let Platoon = Platoon || {};
 
   Platoon = {
 
+    setup: function () {
+      this.handleMembers();
+      this.handleSquadMembers();
+      this.handleForumActivityChart();
+      this.handleTSActivityChart();
+      this.initAutocomplete();
+    },
+
     handleForumActivityChart: function () {
 
       var ctx = $('.forum-activity-chart');
 
-      var myDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          datasets: [
-            {
-              data: ctx.data('values'),
-              backgroundColor: ctx.data('colors'),
-              borderWidth: 0,
-            }],
-          labels: ctx.data('labels'),
-        },
-        options: {
-          rotation: 1 * Math.PI,
-          circumference: 1 * Math.PI,
-          legend: {
-            position: 'bottom',
-            labels: {
-              boxWidth: 5,
-              fontColor: '#949ba2'
-            },
-            label: {
-              fullWidth: false
+      if (ctx.length) {
+        var myDoughnutChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [
+              {
+                data: ctx.data('values'),
+                backgroundColor: ctx.data('colors'),
+                borderWidth: 0,
+              }],
+            labels: ctx.data('labels'),
+          },
+          options: {
+            rotation: 1 * Math.PI,
+            circumference: 1 * Math.PI,
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 5,
+                fontColor: '#949ba2'
+              },
+              label: {
+                fullWidth: false
+              }
             }
           }
-        }
-      });
+        });
+      }
     },
     handleTSActivityChart: function () {
 
       var ctx = $('.ts-activity-chart');
 
-      var myDoughnutChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          datasets: [
-            {
-              data: ctx.data('values'),
-              backgroundColor: ctx.data('colors'),
-              borderWidth: 0,
-            }],
-          labels: ctx.data('labels'),
-        },
-        options: {
-          rotation: 1 * Math.PI,
-          circumference: 1 * Math.PI,
-          legend: {
-            position: 'bottom',
-            labels: {
-              boxWidth: 5,
-              fontColor: '#949ba2'
-            },
-            label: {
-              fullWidth: false
+      if (ctx.length) {
+        var myDoughnutChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [
+              {
+                data: ctx.data('values'),
+                backgroundColor: ctx.data('colors'),
+                borderWidth: 0,
+              }],
+            labels: ctx.data('labels'),
+          },
+          options: {
+            rotation: 1 * Math.PI,
+            circumference: 1 * Math.PI,
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 5,
+                fontColor: '#949ba2'
+              },
+              label: {
+                fullWidth: false
+              }
             }
           }
-        }
-      });
+        });
+      }
     },
-
     handleSquadMembers: function () {
       $('.sortable-squad').sortable({
         revert: 'invalid',
@@ -121,11 +132,14 @@ let Platoon = Platoon || {};
         }
       });
     },
-    setup: function () {
-      this.handleMembers();
-      this.handleSquadMembers();
-      this.handleForumActivityChart();
-      this.handleTSActivityChart();
+    initAutocomplete: function () {
+      $('#leader').bootcomplete({
+        url: window.Laravel.appPath + '/search-member/',
+        minLength: 3,
+        idField: true,
+        method: 'POST',
+        dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
+      });
     },
 
     handleMembers: function () {
@@ -141,37 +155,49 @@ let Platoon = Platoon || {};
       /**
        * Handle platoons, squads
        */
-      $('table.members-table').DataTable({
-        autoWidth: true, bInfo: false,
-        columnDefs: [{
-          targets: 'no-search', searchable: false
-        }, {
-          targets: 'col-hidden', visible: false, searchable: false
-        }, {
-          // sort rank by rank id
-          'iDataSort': 0, 'aTargets': [3]
-        }, {
-          // sort activity by last login date
-          'iDataSort': 1, 'aTargets': [5]
-        },
-          {
-            // sort ts activity by date
-            'iDataSort': 7, 'aTargets': [6]
-          }
-        ],
-        stateSave: false, paging: false,
-      });
+      if ($('.members-table').length) {
+        var dataTable = $('table.members-table').DataTable({
+          autoWidth: true, bInfo: false,
+          columnDefs: [{
+            targets: 'no-search', searchable: false
+          }, {
+            targets: 'col-hidden', visible: false, searchable: false
+          }, {
+            // sort rank by rank id
+            'iDataSort': 0, 'aTargets': [3]
+          }, {
+            // sort activity by last login date
+            'iDataSort': 1, 'aTargets': [5]
+          },
+            {
+              // sort ts activity by date
+              'iDataSort': 7, 'aTargets': [6]
+            }
+          ],
+          stateSave: true, paging: false,
+        });
 
-      $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');
+        $('a.toggle-vis').on('click', function (e) {
+          e.preventDefault();
 
-      $('#playerFilter input').attr({
-        'placeholder': 'Search Players',
-        'class': 'form-control'
-      });
+          // Get the column API object
+          var column = dataTable.column($(this).attr('data-column'));
 
-      $('.dataTables_filter label').remove();
+          // Toggle the visibility
+          column.visible(!column.visible());
+        });
 
-      $('.no-sort').removeClass('sorting');
+        $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');
+
+        $('#playerFilter input').attr({
+          'placeholder': 'Search Players',
+          'class': 'form-control'
+        });
+
+        $('.dataTables_filter label').remove();
+
+        $('.no-sort').removeClass('sorting');
+      }
 
       // omit leader field if using TBA
       $('#is_tba').click(function () {

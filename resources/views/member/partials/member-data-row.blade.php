@@ -32,4 +32,11 @@
     </td>
     <td class="col-hidden">{{ $member->last_ts_activity }}</td>
     <td class="text-center">{{ $member->last_promoted }}</td>
+    <td class="col-hidden">
+        @if ($member->handle)
+            <a href="{{ $member->handle->getFullUrl }}">
+                {{ $member->handle->pivot->value }}
+            </a>
+        @endif
+    </td>
 </tr>

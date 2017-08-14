@@ -90,9 +90,14 @@ class PlatoonController extends Controller
      */
     public function show(Division $division, Platoon $platoon)
     {
-        $members = $platoon->members()
-            ->with('rank', 'position', 'leave')->get()
-            ->sortByDesc('rank_id');
+        $members = $platoon->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'rank',
+            'position',
+            'leave'
+        ])->get()->sortByDesc('rank_id');
+
+        $members = $members->each($this->getMemberHandle());
 
         $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
         $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
@@ -101,6 +106,28 @@ class PlatoonController extends Controller
             'platoon.show',
             compact('platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph')
         );
+    }
+
+
+    /**
+     * @param $division
+     * @return \Closure
+     */
+    private function filterHandlesToPrimaryHandle($division)
+    {
+        return function ($query) use ($division) {
+            $query->where('id', $division->handle_id);
+        };
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getMemberHandle()
+    {
+        return function ($member) {
+            $member->handle = $member->handles->first();
+        };
     }
 
     /**
