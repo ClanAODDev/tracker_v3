@@ -2,8 +2,6 @@
 
 @section('content')
 
-    @include ('division.partials.notices')
-
     @component ('application.components.division-heading', [$division])
         @slot ('icon')
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
@@ -19,6 +17,7 @@
     @endcomponent
 
     <div class="container-fluid">
+        @include ('division.partials.notices')
         @include('division.partials.tools-links')
         <div class="m-b-xl"></div>
 
