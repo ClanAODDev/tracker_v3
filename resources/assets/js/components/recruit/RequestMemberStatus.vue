@@ -14,7 +14,7 @@
                 <label>AOD Name</label>
                 <code>{{ store.forum_name }}</code>
                 <button class="btn btn-xs btn-default copy-to-clipboard" type="button"
-                        :data-clipboard-text="store.ingame_name">
+                        :data-clipboard-text="store.forum_name">
                     <i class="fa fa-clone"></i>
                 </button>
             </div>
