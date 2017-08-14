@@ -17,5 +17,6 @@
     </table>
 </div>
 <div class="panel-footer">
-    <small class="slight"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave</small>
+    <small class="slight badge"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave</small>
+    <small class="slight badge"><span style="color: magenta"><i class="fa fa-asterisk"></i></span> - Direct Recruit</small>
 </div>
