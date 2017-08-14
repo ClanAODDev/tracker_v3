@@ -102,7 +102,7 @@ class SquadController extends Controller
 
         $this->showToast(ucwords($division->locality('squad')) . " has been created!");
 
-        return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
+        return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
 
     /**
@@ -139,9 +139,10 @@ class SquadController extends Controller
      * @param UpdateSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
+     * @param Squad $squad
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon)
+    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
     {
         if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
@@ -153,7 +154,7 @@ class SquadController extends Controller
 
         $this->showToast('Squad has been updated');
 
-        return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
+        return redirect()->route('squad.show', [$division->abbreviation, $platoon, $squad]);
     }
 
     /**

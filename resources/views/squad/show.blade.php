@@ -9,6 +9,7 @@
         @endslot
         @slot ('heading')
             {{ $squad->name }}
+            @include('squad.partials.edit-squad-button', ['division' => $division])
         @endslot
         @slot ('subheading')
             {{ $division->name }} Division
@@ -20,6 +21,7 @@
         {!! Breadcrumbs::render('squad', $division, $platoon, $squad) !!}
 
         {{--@include('platoon.partials.alerts')--}}
+
 
         <div class="row">
             <div class="col-md-9">
