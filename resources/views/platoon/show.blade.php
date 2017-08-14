@@ -26,11 +26,11 @@
             <div class="col-md-9">
                 <ul class="nav nav-tabs">
                     <li role="presentation" class="active">
-                        <a href="#"><i class="fa fa-cube fa-lg"></i></a>
+                        <a href="#"><i class="fa fa-cube fa-lg"></i> {{ $division->locality('Platoon') }}</a>
                     </li>
                     <li role="presentation">
                         <a href="{{ route('platoonSquads', [$division->abbreviation, $platoon]) }}">
-                            <i class="fa fa-cubes fa-lg"></i>
+                            <i class="fa fa-cubes fa-lg"></i> {{ str_plural($division->locality('Squad')) }}
                         </a>
                     </li>
                     @unless (count($platoon->squads))

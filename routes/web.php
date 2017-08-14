@@ -39,8 +39,6 @@ Route::group(['prefix' => 'inactive-members'], function () {
 Route::get('sergeants', 'MemberController@sergeants')->name('sergeants');
 
 Route::group(['prefix' => 'members'], function () {
-    Route::get('', 'MemberController@index')->name('members');
-
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
@@ -117,6 +115,8 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     Route::get('{division}/promotions/{month?}/{year?}',
         'PromotionsController@show')->middleware(['auth'])->name('division.promotions');
+
+    Route::get('{division}/members', 'DivisionController@members')->name('division.members');
 
     /**
      * Recruiting Process

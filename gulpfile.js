@@ -48,6 +48,7 @@ elixir(function (mix) {
 
   mix.webpack('main.js');
   mix.webpack('platoon.js');
+  mix.webpack('members.js');
   mix.webpack('division.js');
   mix.webpack('census-graph.js');
   mix.webpack('passport.js');

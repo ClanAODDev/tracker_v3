@@ -29,7 +29,7 @@ class ClanStatisticsController extends Controller
         $lastYearCensus = $censusCounts->reverse();
 
         // fetch all divisions and eager load census data
-        $cencuses = Division::active()->with('census')->get()
+        $censuses = Division::active()->with('census')->get()
             // filter out divisions without census information
             ->filter(function ($division) {
                 return count($division->census);
@@ -52,7 +52,7 @@ class ClanStatisticsController extends Controller
 
         return view('statistics.show')->with(compact(
             'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
-            'cencuses', 'rankDemographic', 'mismatchedTSMembers'
+            'censuses', 'rankDemographic', 'mismatchedTSMembers'
         ));
     }
 

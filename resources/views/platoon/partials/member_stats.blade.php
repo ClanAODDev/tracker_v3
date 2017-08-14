@@ -1,45 +1,29 @@
-<div class="panel panel-filled hidden-xs hidden-sm m-t-xl">
-    <div class="panel-heading">
-        <h1 class="m-b-n">
+<div class="panel panel-filled">
+    <div class="panel-body">
+        <h1>
             <i class="pe pe-7s-users pe-lg text-warning"></i> {{ $platoon->members->count() }}
             <small class="slight">Members</small>
         </h1>
     </div>
+</div>
+<div class="panel panel-filled hidden-xs hidden-sm">
+    <div class="panel-heading">
+        Forum Activity
+    </div>
     <div class="panel-body">
-        <canvas id="platoonChart" data-labels="{{ json_encode($activityGraph['labels']) }}"
-                data-values="{{ json_encode($activityGraph['values']) }}"
-                data-colors="{{ json_encode($activityGraph['colors']) }}"></canvas>
+        <canvas class="forum-activity-chart"
+                data-labels="{{ json_encode($forumActivityGraph['labels']) }}"
+                data-values="{{ json_encode($forumActivityGraph['values']) }}"
+                data-colors="{{ json_encode($forumActivityGraph['colors']) }}"></canvas>
     </div>
 </div>
-
-<script>
-
-  var ctx = document.getElementById('platoonChart');
-
-  var myDoughnutChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [
-        {
-          data: $('#platoonChart').data('values'),
-          backgroundColor: $('#platoonChart').data('colors'),
-          borderWidth: 0,
-        }],
-      labels: $('#platoonChart').data('labels'),
-    },
-    options: {
-      rotation: 1 * Math.PI,
-      circumference: 1 * Math.PI,
-      legend: {
-        position: 'bottom',
-        labels: {
-          boxWidth: 5,
-          fontColor: '#949ba2'
-        },
-        label: {
-          fullWidth: false
-        }
-      }
-    }
-  });
-</script>
+<div class="panel panel-filled hidden-xs hidden-sm">
+    <div class="panel-heading">
+        TS Activity
+    </div>
+    <div class="panel-body">
+        <canvas class="ts-activity-chart" data-labels="{{ json_encode($tsActivityGraph['labels']) }}"
+                data-values="{{ json_encode($tsActivityGraph['values']) }}"
+                data-colors="{{ json_encode($tsActivityGraph['colors']) }}"></canvas>
+    </div>
+</div>

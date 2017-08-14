@@ -28,11 +28,11 @@
                 <ul class="nav nav-tabs">
                     <li role="presentation">
                         <a href="{{ route('platoon', [$division->abbreviation, $platoon]) }}">
-                            <i class="fa fa-cube fa-lg"></i>
+                            <i class="fa fa-cube fa-lg"></i> {{ $division->locality('Platoon') }}
                         </a>
                     </li>
                     <li role="presentation" class="active">
-                        <a href="#"><i class="fa fa-cubes fa-lg"></i></a>
+                        <a href="#"><i class="fa fa-cubes fa-lg"></i> {{ str_plural($division->locality('Squad')) }}</a>
                     </li>
                     @can('create', [App\Squad::class, $division])
                         <li role="presentation" class="pull-right slight">

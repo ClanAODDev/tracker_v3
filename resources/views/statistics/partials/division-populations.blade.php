@@ -16,7 +16,7 @@
         </thead>
 
         <tbody>
-        @foreach ($cencuses as $division)
+        @foreach ($censuses as $division)
             <tr>
                 <td>
                     <a href="{{ route('division.census', $division->abbreviation) }}">

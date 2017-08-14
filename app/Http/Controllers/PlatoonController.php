@@ -91,28 +91,16 @@ class PlatoonController extends Controller
     public function show(Division $division, Platoon $platoon)
     {
         $members = $platoon->members()
-            ->with('rank', 'position')->get()
+            ->with('rank', 'position', 'leave')->get()
             ->sortByDesc('rank_id');
 
-        $activityGraph = $this->activityGraphData($platoon);
+        $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
+        $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
 
         return view(
             'platoon.show',
-            compact('platoon', 'members', 'division', 'activityGraph')
+            compact('platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph')
         );
-    }
-
-    /**
-     * Generates data for platoon activity
-     *
-     * @param Platoon $platoon
-     * @return mixed
-     */
-    private function activityGraphData(Platoon $platoon)
-    {
-        $data = $this->platoon->getPlatoonActivity($platoon);
-
-        return $data;
     }
 
     /**
@@ -122,11 +110,12 @@ class PlatoonController extends Controller
      */
     public function squads(Division $division, Platoon $platoon)
     {
-        $activityGraph = $this->activityGraphData($platoon);
+        $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
+        $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
 
         $squads = $platoon->squads()
             ->with(
-                'members', 'members.rank', 'members.position',
+                'members', 'members.rank', 'members.position', 'members.leave',
                 'leader', 'leader.rank', 'leader.position'
             )->get()->sortByDesc('members.rank_id');
 
@@ -135,8 +124,8 @@ class PlatoonController extends Controller
             ->get();
 
         return view('platoon.squads', compact(
-            'platoon', 'division', 'squads',
-            'unassigned', 'activityGraph'
+            'platoon', 'division', 'squads', 'unassigned',
+            'forumActivityGraph', 'tsActivityGraph'
         ));
     }
 

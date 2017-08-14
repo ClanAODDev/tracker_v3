@@ -1,3 +1,5 @@
+<a href="{{ route('division.members', $division->abbreviation) }}" class="btn btn-default">Members</a>
+
 <div class="dropdown" style="display: inline-block;">
     <button class="btn btn-default dropdown-toggle" type="button" id="tools" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="true">

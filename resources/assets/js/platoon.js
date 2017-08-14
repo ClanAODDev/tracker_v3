@@ -4,6 +4,69 @@ let Platoon = Platoon || {};
 
   Platoon = {
 
+    handleForumActivityChart: function () {
+
+      var ctx = $('.forum-activity-chart');
+
+      var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [
+            {
+              data: ctx.data('values'),
+              backgroundColor: ctx.data('colors'),
+              borderWidth: 0,
+            }],
+          labels: ctx.data('labels'),
+        },
+        options: {
+          rotation: 1 * Math.PI,
+          circumference: 1 * Math.PI,
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 5,
+              fontColor: '#949ba2'
+            },
+            label: {
+              fullWidth: false
+            }
+          }
+        }
+      });
+    },
+    handleTSActivityChart: function () {
+
+      var ctx = $('.ts-activity-chart');
+
+      var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [
+            {
+              data: ctx.data('values'),
+              backgroundColor: ctx.data('colors'),
+              borderWidth: 0,
+            }],
+          labels: ctx.data('labels'),
+        },
+        options: {
+          rotation: 1 * Math.PI,
+          circumference: 1 * Math.PI,
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 5,
+              fontColor: '#949ba2'
+            },
+            label: {
+              fullWidth: false
+            }
+          }
+        }
+      });
+    },
+
     handleSquadMembers: function () {
       $('.sortable-squad').sortable({
         revert: 'invalid',
@@ -61,6 +124,8 @@ let Platoon = Platoon || {};
     setup: function () {
       this.handleMembers();
       this.handleSquadMembers();
+      this.handleForumActivityChart();
+      this.handleTSActivityChart();
     },
 
     handleMembers: function () {

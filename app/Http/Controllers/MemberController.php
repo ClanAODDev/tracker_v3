@@ -38,18 +38,6 @@ class MemberController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $divisions = Division::with('members', 'members.rank')->get();
-
-        return view('member.index', compact('divisions'));
-    }
-
-    /**
      * Search for a member
      *
      * @param $name

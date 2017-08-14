@@ -66,10 +66,6 @@
         <a href="{{ route('memberSearch') }}">Search</a>
     </li>
 
-    <li class="{{ set_active('members') }}">
-        <a href="{{ route('members') }}">All Members</a>
-    </li>
-
     <li class="{{ set_active('sergeants') }}">
         <a href="{{ route('sergeants') }}">Sergeants</a>
     </li>

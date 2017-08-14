@@ -203,10 +203,29 @@ class DivisionController extends Controller
         ));
     }
 
-    public function showTsReport($division)
+    /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function showTsReport(Division $division)
     {
         $issues = $division->mismatchedTSMembers;
 
         return view('division.ts-report', compact('division', 'issues'));
+    }
+
+    /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function members(Division $division)
+    {
+        $members = $division->members()->with('rank', 'position', 'leave')->get();
+        $forumActivityGraph = $this->division->getDivisionActivity($division);
+        $tsActivityGraph = $this->division->getDivisionTSActivity($division);
+
+        return view('division.members', compact(
+            'division', 'members', 'forumActivityGraph', 'tsActivityGraph'
+        ));
     }
 }

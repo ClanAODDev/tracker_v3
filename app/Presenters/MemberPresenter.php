@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Member;
+use Carbon\Carbon;
 
 class MemberPresenter extends Presenter
 {
@@ -28,14 +29,21 @@ class MemberPresenter extends Presenter
             : $this->member->last_promoted->format('M d, Y');
     }
 
-    public function lastActive()
+    public function lastActive($value)
     {
-        if ($this->member->last_activity->diffInDays() < 1) {
-            return "Today";
+        $value = $value instanceof Carbon ? $value : Carbon::parse($value);
+
+        if (! $value) {
+
         }
 
-        return $this->member->last_activity->diffForHumans();
+//        if ($value->diffInDays() < 1) {
+//            return "Today";
+//        }
+
+        return $value->diffForHumans();
     }
+
 
     /**
      * Returns member's name with position icon

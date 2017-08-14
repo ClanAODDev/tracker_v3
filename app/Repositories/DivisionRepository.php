@@ -57,6 +57,24 @@ class DivisionRepository
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
     }
+    public function getDivisionTSActivity(Division $division)
+    {
+        $twoWeeksAgo = Carbon::now()->subDays(14);
+        $oneMonthAgo = Carbon::now()->subDays(30);
+
+        $twoWeeks = $division->members()->where('last_ts_activity', '>=', $twoWeeksAgo);
+
+        $oneMonth = $division->members()->where('last_ts_activity', '<=', $twoWeeksAgo)
+            ->where('last_ts_activity', '>=', $oneMonthAgo);
+
+        $moreThanOneMonth = $division->members()->where('last_ts_activity', '<=', $oneMonthAgo);
+
+        return [
+            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
+            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
+            'colors' => ['#28b62c', '#ff851b', '#ff4136']
+        ];
+    }
 
     public function getRankDemographic(Division $division)
     {
