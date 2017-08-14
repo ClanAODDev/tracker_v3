@@ -21,7 +21,7 @@
                 <td><code>{{ $member->last_activity->diffInDays() }}</code></td>
                 <td>
                     @can ('update', $member)
-                        <a href="{{ route('member.unflag-inactive', $member->clan_id) }}"
+                        <a href="{{ route('member.unflag-inactive', $member->clan_id) . "#flagged" }}"
                            class="btn btn-warning btn-sm">
                             <i class="fa fa-flag"></i>
                             Unflag
