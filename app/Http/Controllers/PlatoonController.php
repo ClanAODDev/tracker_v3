@@ -141,10 +141,16 @@ class PlatoonController extends Controller
         $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
 
         $squads = $platoon->squads()
-            ->with(
-                'members', 'members.rank', 'members.position', 'members.leave',
-                'leader', 'leader.rank', 'leader.position'
-            )->get()->sortByDesc('members.rank_id');
+            ->with([
+                'members.handles' => $this->filterHandlesToPrimaryHandle($division),
+                'members',
+                'members.rank',
+                'members.position',
+                'members.leave',
+                'leader',
+                'leader.rank',
+                'leader.position'
+            ])->get()->sortByDesc('members.rank_id');
 
         $unassigned = $platoon->unassigned()
             ->with('rank', 'position')

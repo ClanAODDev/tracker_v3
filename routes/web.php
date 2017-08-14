@@ -151,6 +151,7 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::group(['prefix' => '{platoon}/squads/'], function () {
             Route::get('/create', 'SquadController@create')->name('createSquad');
             Route::get('{squad}/edit', 'SquadController@edit')->name('editSquad');
+            Route::get('{squad}', 'SquadController@show')->name('squad.show');
 
             Route::post('', 'SquadController@store')->name('storeSquad');
             Route::put('{squad}', 'SquadController@update')->name('updateSquad');

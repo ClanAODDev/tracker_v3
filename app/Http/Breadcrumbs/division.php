@@ -20,12 +20,11 @@ Breadcrumbs::register('platoon', function ($breadcrumbs, $division, $platoon) {
 });
 
 // Home > Division > Platoon > Squad
-Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon) {
+Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon, $squad) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     $breadcrumbs->push($platoon->name, route('platoon', [$division->abbreviation, $platoon->id]));
-    $breadcrumbs->push('All Squads', route('platoonSquads', [$division->abbreviation, $platoon->id]));
-    $breadcrumbs->push('Squad');
+    $breadcrumbs->push($squad->name ?: "Untitled");
 });
 
 /**

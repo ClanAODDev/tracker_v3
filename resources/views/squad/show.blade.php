@@ -8,8 +8,7 @@
             </a>
         @endslot
         @slot ('heading')
-            {{ $platoon->name }}
-            @include('platoon.partials.edit-platoon-button', ['division' => $division])
+            {{ $squad->name }}
         @endslot
         @slot ('subheading')
             {{ $division->name }} Division
@@ -18,18 +17,18 @@
 
     <div class="container-fluid">
 
-        {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
+        {!! Breadcrumbs::render('squad', $division, $platoon, $squad) !!}
 
-        @include('platoon.partials.alerts')
+        {{--@include('platoon.partials.alerts')--}}
 
         <div class="row">
             <div class="col-md-9">
                 <div class="panel panel-filled">
-                    @include('platoon.partials.platoon-members')
+                    @include('squad.partials.squad-members')
                 </div>
             </div>
             <div class="col-md-3">
-                @include('platoon.partials.member_stats')
+                @include('squad.partials.member-stats')
                 @include('platoon.partials.squads')
             </div>
         </div>

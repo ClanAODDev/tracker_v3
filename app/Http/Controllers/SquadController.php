@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateSquadForm;
 use App\Member;
 use App\Platoon;
 use App\Squad;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Toastr;
 
@@ -26,9 +27,45 @@ class SquadController extends Controller
      * @param Platoon $platoon
      * @return \Illuminate\Http\Response
      */
-    public function index(Division $division, Platoon $platoon)
+    public function show(Division $division, Platoon $platoon, Squad $squad)
     {
+        $members = $squad->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'rank',
+            'position',
+            'leave'
+        ])->get()->sortByDesc('rank_id');
 
+        $members = $members->each($this->getMemberHandle());
+
+        $forumActivityGraph = $this->getSquadForumActivity($squad);
+        $tsActivityGraph = $this->getSquadTSActivity($squad);
+
+        return view(
+            'squad.show',
+            compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph')
+        );
+    }
+
+    /**
+     * @param $division
+     * @return \Closure
+     */
+    private function filterHandlesToPrimaryHandle($division)
+    {
+        return function ($query) use ($division) {
+            $query->where('id', $division->handle_id);
+        };
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getMemberHandle()
+    {
+        return function ($member) {
+            $member->handle = $member->handles->first();
+        };
     }
 
     /**
@@ -162,5 +199,42 @@ class SquadController extends Controller
         return response()->json([
             'success' => true
         ]);
+    }
+
+    public function getSquadForumActivity(Squad $squad)
+    {
+        $twoWeeksAgo = Carbon::now()->subDays(14);
+        $oneMonthAgo = Carbon::now()->subDays(30);
+
+        $twoWeeks = $squad->members()->where('last_activity', '>=', $twoWeeksAgo)->count();
+
+        $oneMonth = $squad->members()->where('last_activity', '<=', $twoWeeksAgo)
+            ->where('last_activity', '>=', $oneMonthAgo)->count();
+
+        $moreThanOneMonth = $squad->members()->where('last_activity', '<=', $oneMonthAgo)->count();
+
+        return [
+            'labels' => ['Current', '14 days', '30 days'],
+            'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth],
+            'colors' => ['#28b62c', '#ff851b', '#ff4136']
+        ];
+    }
+    public function getSquadTSActivity(Squad $squad)
+    {
+        $twoWeeksAgo = Carbon::now()->subDays(14);
+        $oneMonthAgo = Carbon::now()->subDays(30);
+
+        $twoWeeks = $squad->members()->where('last_ts_activity', '>=', $twoWeeksAgo)->count();
+
+        $oneMonth = $squad->members()->where('last_ts_activity', '<=', $twoWeeksAgo)
+            ->where('last_ts_activity', '>=', $oneMonthAgo)->count();
+
+        $moreThanOneMonth = $squad->members()->where('last_ts_activity', '<=', $oneMonthAgo)->count();
+
+        return [
+            'labels' => ['Current', '14 days', '30 days'],
+            'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth],
+            'colors' => ['#28b62c', '#ff851b', '#ff4136']
+        ];
     }
 }
