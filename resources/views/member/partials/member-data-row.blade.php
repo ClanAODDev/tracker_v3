@@ -35,7 +35,7 @@
     <td class="col-hidden">
         @if ($member->handle)
             @if ($member->handle->url)
-                <a href="{{ $member->handle->getFullUrl() }}">
+                <a href="{{ $member->handle->fullUrl() }}">
                     {{ $member->handle->pivot->value }}
                 </a>
             @else
