@@ -20,11 +20,21 @@ class InactiveMemberController extends Controller
      */
     public function index($division)
     {
+        $queryingTsInactives = strpos(request()->path(), 'inactive-members-ts');
+
         $inactiveMembers = $division->members()
             ->whereFlaggedForInactivity(false)
-            ->where('last_activity', '<', Carbon::today()->subDays(
-                $division->settings()->inactivity_days
-            ))
+            ->where(function ($query) use ($division, $queryingTsInactives) {
+                if ($queryingTsInactives) {
+                    $query->where('last_ts_activity', '<', Carbon::today()->subDays(
+                        $division->settings()->inactivity_days
+                    ));
+                } else {
+                    $query->where('last_activity', '<', Carbon::today()->subDays(
+                        $division->settings()->inactivity_days
+                    ));
+                }
+            })
             ->whereDoesntHave('leave')
             ->with('rank')
             ->orderBy('last_activity')
@@ -47,7 +57,8 @@ class InactiveMemberController extends Controller
             ->whereFlaggedForInactivity(true)->get();
 
         return view('division.inactive-members', compact(
-            'division', 'inactiveMembers', 'flaggedMembers', 'flagActivity'
+            'queryingTsInactives', 'division', 'inactiveMembers', 'flaggedMembers',
+            'flagActivity'
         ));
     }
 
@@ -57,8 +68,10 @@ class InactiveMemberController extends Controller
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function create(Member $member)
-    {
+    public
+    function create(
+        Member $member
+    ) {
         $this->authorize('update', $member);
 
         $member->flagged_for_inactivity = true;
@@ -77,8 +90,10 @@ class InactiveMemberController extends Controller
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function destroy(Member $member)
-    {
+    public
+    function destroy(
+        Member $member
+    ) {
         $this->authorize('update', $member);
 
         $member->flagged_for_inactivity = false;
@@ -91,8 +106,11 @@ class InactiveMemberController extends Controller
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
 
-    public function removeMember(Member $member, DeleteMember $form)
-    {
+    public
+    function removeMember(
+        Member $member,
+        DeleteMember $form
+    ) {
         $this->authorize('delete', $member);
 
         $division = $member->division;

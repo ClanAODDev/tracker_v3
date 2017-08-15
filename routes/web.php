@@ -112,6 +112,8 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
+    Route::get('{division}/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')
+        ->name('division.inactive-members-ts');
 
     Route::get('{division}/promotions/{month?}/{year?}',
         'PromotionsController@show')->middleware(['auth'])->name('division.promotions');

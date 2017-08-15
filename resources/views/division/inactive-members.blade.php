@@ -28,10 +28,34 @@
 
         <hr />
 
+        <div class="panel">
+            <div class="panel-body">
+                <strong class="c-white">
+                    @if ($queryingTsInactives)
+                        Teamspeak Inactivity
+                    @else
+                        Forum Inactivity
+                    @endif
+                </strong>
+                <span class="pull-right">
+                    Filter by:
+                    <a href="{{ route('division.inactive-members', $division->abbreviation) }}"
+                       class="btn btn-info {{ set_active('divisions/*/inactive-members') }}">By Forum Activity</a>
+                    <a href="{{ route('division.inactive-members-ts', $division->abbreviation) }}"
+                       class="btn btn-info {{ set_active('divisions/*/inactive-members-ts') }}">By TS Activity</a>
+                </span>
+            </div>
+        </div>
+
         <div class="tabs-container">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#inactive" aria-expanded="true"> Inactive</a></li>
-                <li><a data-toggle="tab" href="#flagged" aria-expanded="false">Flagged</a></li>
+                <li class="active">
+                    <a data-toggle="tab" href="#inactive"
+                       aria-expanded="true"> Inactive <span class="badge">{{ count($inactiveMembers) }}</span></a></li>
+                <li>
+                    <a data-toggle="tab" href="#flagged"
+                       aria-expanded="false">Flagged <span class="badge">{{ count($flaggedMembers) }}</span>
+                    </a></li>
             </ul>
             <div class="tab-content">
                 <div id="inactive" class="tab-pane active">
