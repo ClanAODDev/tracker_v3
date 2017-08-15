@@ -59,19 +59,21 @@ class UpdateSquadForm extends FormRequest
      */
     public function persist()
     {
-        $this->squad->update(
-            $this->only(['name', 'leader_id'])
-        );
 
         if ($this->member_ids) {
             $this->assignMembersTo($this->squad);
         }
 
         if ($this->leader_id) {
+            $this->resetLeaderOf($this->squad);
             $this->assignLeaderTo($this->squad);
         } else {
             $this->resetLeaderOf($this->squad);
         }
+
+        $this->squad->update(
+            $this->only(['name', 'leader_id'])
+        );
     }
 
     /**
@@ -89,6 +91,20 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
+     * Reset the leader
+     *
+     * @param $squad
+     */
+    private function resetLeaderOf($squad)
+    {
+        if ($squad->leader) {
+            $squad->leader->assignPosition('member')->save();
+            $squad->leader->squad = $squad;
+            $squad->leader()->dissociate()->save();
+        }
+    }
+
+    /**
      * Assign a leader
      *
      * @param $squad
@@ -102,17 +118,6 @@ class UpdateSquadForm extends FormRequest
         $leader->squad()->associate($squad)
             ->platoon()->associate($this->route('platoon'))
             ->assignPosition("squad leader")
-            ->save();
-    }
-
-    /**
-     * Reset the leader
-     *
-     * @param $squad
-     */
-    private function resetLeaderOf($squad)
-    {
-        $squad->leader()->dissociate()
             ->save();
     }
 }
