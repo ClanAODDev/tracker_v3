@@ -1,5 +1,5 @@
 <h1>
-    <i class="pe pe-7s-joy text-warning"> </i>
+    <i class="pe pe-7s-users text-warning"> </i>
 
     {{ number_format($division->members->count()) }}
 
