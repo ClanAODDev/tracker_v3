@@ -63,7 +63,7 @@ class Platoon extends Model
     {
         return $this->members()
             ->whereSquadId(0)
-            ->whereIn('position_id', [1]);
+            ->whereNotIn('position_id', [3]);
     }
 
     /**

@@ -1,7 +1,7 @@
 @can('update', $platoon)
     <div class="pull-right">
         <a href="{{ route('platoon.manage-squads', [$division->abbreviation, $platoon]) }}" title="Manage squads"
-           class="btn btn-default "><i class="fa fa-cogs text-accent"></i>
+           class="btn btn-default "><i class="fa fa-users text-accent"></i>
             Manage {{ $division->locality('squad') }} Members
         </a>
 

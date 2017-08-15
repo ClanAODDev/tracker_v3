@@ -4,7 +4,7 @@
         @foreach ($platoon->squads as $squad)
             <a class="btn btn-default"
                href="{{ route('squad.show', [$division->abbreviation, $platoon, $squad]) }}">
-                {{ $squad->name }} - #{{ $squad->id }}<br />
+                {{ str_limit($squad->name, 23) }}<br />
                 <small class="slight">
                     @if ($squad->leader)
                         {{ $squad->leader->present()->rankName }}
