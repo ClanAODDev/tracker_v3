@@ -58,19 +58,20 @@ class UpdatePlatoonForm extends FormRequest
      */
     public function persist()
     {
-        $this->platoon->update(
-            $this->all()
-        );
-
         if ($this->member_ids) {
             $this->assignMembersTo($this->platoon);
         }
 
         if ($this->leader_id) {
+            $this->resetLeaderFor($this->platoon);
             $this->assignLeaderTo($this->platoon);
         } else {
             $this->resetLeaderFor($this->platoon);
         }
+
+        $this->platoon->update(
+            $this->all()
+        );
     }
 
     /**
@@ -111,6 +112,8 @@ class UpdatePlatoonForm extends FormRequest
      */
     private function resetLeaderFor($platoon)
     {
+        $platoon->leader->assignPosition('member')->save();
+
         $platoon->leader()->dissociate()->save();
     }
 }
