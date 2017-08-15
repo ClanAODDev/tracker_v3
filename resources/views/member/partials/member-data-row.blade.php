@@ -1,5 +1,4 @@
-<tr role="row" style="cursor:pointer;"
-    onclick="window.location.href = '{{ route('member', $member->clan_id) }}';">
+<tr role="row">
     <td class="col-hidden">{{ $member->rank_id }}</td>
     <td class="col-hidden">{{ $member->last_activity }}</td>
     <td>
@@ -13,6 +12,9 @@
                     class="fa fa-asterisk"></i></span>
         @endif
         {!! $member->present()->nameWithIcon !!}
+        <span class="pull-right" title="View Profile">
+            <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search text-accent"></i></a>
+        </span>
     </td>
     <td class="text-center">{{ $member->rank->abbreviation }}</td>
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
