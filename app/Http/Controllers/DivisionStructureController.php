@@ -85,7 +85,7 @@ class DivisionStructureController extends Controller
             'leader.handles' => $this->filterHandlesToPrimaryHandle($division),
             'squads.members.rank',
             'squads.leader.rank',
-            'squads.leader.handles',
+            'squads.leader.handles' => $this->filterHandlesToPrimaryHandle($division),
             'leader.rank',
         ])->get();
 
