@@ -56,9 +56,17 @@ class InactiveMemberController extends Controller
             ->with('rank')
             ->whereFlaggedForInactivity(true)->get();
 
+        /**
+         * Using this to determine the active route, whether filtering
+         * by teamspeak or forum. Used in platoon filter options, reset
+         * filter button
+         */
+        $requestPath = ($queryingTsInactives)
+            ? 'division.inactive-members-ts' : 'division.inactive-members';
+
         return view('division.inactive-members', compact(
             'queryingTsInactives', 'division', 'inactiveMembers', 'flaggedMembers',
-            'flagActivity'
+            'flagActivity', 'requestPath'
         ));
     }
 

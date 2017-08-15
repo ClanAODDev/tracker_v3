@@ -40,9 +40,9 @@
                 <span class="pull-right">
                     Filter by:
                     <a href="{{ route('division.inactive-members', $division->abbreviation) }}"
-                       class="btn btn-info {{ set_active('divisions/*/inactive-members') }}">By Forum Activity</a>
+                       class="btn btn-info {{ set_active(['divisions/*/inactive-members/*', 'divisions/*/inactive-members']) }}">By Forum Activity</a>
                     <a href="{{ route('division.inactive-members-ts', $division->abbreviation) }}"
-                       class="btn btn-info {{ set_active('divisions/*/inactive-members-ts') }}">By TS Activity</a>
+                       class="btn btn-info {{ set_active(['divisions/*/inactive-members-ts/*', 'divisions/*/inactive-members-ts']) }}">By TS Activity</a>
                 </span>
             </div>
         </div>
