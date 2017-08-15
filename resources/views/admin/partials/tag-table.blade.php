@@ -25,9 +25,7 @@
                             {{ $tag->division->name or "Default" }}
                         </td>
                         <td>
-                        <span class="label label-default">
-                                {{ count($tag->noteCount) }}
-                            </span>
+                            <span class="label label-default">{{ count($tag->notes) }}</span>
                         </td>
                     </tr>
 

@@ -6,13 +6,11 @@
 
             <div class="panel repeater">
                 <div class="panel-body">
-
                     {{ method_field('PATCH') }}
                     <div data-repeater-list="default_tags" class="row">
                         @include('admin.partials.tags')
                     </div>
                     {{ csrf_field() }}
-
                 </div>
 
                 <div class="pull-right">
