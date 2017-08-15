@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="col-md-3">
-                @include('squad.partials.member-stats')
                 @include('platoon.partials.squads')
+                @include('squad.partials.member-stats')
             </div>
         </div>
 

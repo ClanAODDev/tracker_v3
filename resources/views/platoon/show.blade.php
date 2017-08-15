@@ -29,8 +29,8 @@
                 </div>
             </div>
             <div class="col-md-3">
-                @include('platoon.partials.member_stats')
                 @include('platoon.partials.squads')
+                @include('platoon.partials.member_stats')
             </div>
         </div>
 
