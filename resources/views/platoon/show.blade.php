@@ -24,7 +24,10 @@
 
         <div class="row">
             <div class="col-md-9">
-                <div class="panel panel-filled">
+                <div class="panel panel-filled ld-loading">
+                    <div class="loader">
+                        <div class="loader-bar"></div>
+                    </div>
                     @include('platoon.partials.platoon-members')
                 </div>
             </div>

@@ -157,7 +157,15 @@ let Platoon = Platoon || {};
        */
       if ($('.members-table').length) {
         var dataTable = $('table.members-table').DataTable({
+          'initComplete': function (settings, json) {
+            setTimeout(function () {
+              $('.ld-loading').removeClass('ld-loading');
+            }, 2000);
+          },
           autoWidth: true, bInfo: false,
+          oLanguage: {
+            sLengthMenu: '' // _MENU_
+          },
           columnDefs: [{
             targets: 'no-search', searchable: false
           }, {
@@ -174,7 +182,7 @@ let Platoon = Platoon || {};
               'iDataSort': 7, 'aTargets': [6]
             }
           ],
-          stateSave: true, paging: false,
+          stateSave: true, paging: true,
         });
 
         $('a.toggle-vis').on('click', function (e) {

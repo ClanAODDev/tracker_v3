@@ -13,7 +13,7 @@
         @endif
         {!! $member->present()->nameWithIcon !!}
         <span class="pull-right" title="View Profile">
-            <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search text-accent"></i></a>
+            <a href="{{ route('member', $member->clan_id) }}" class="btn btn-default btn-xs"><i class="fa fa-search text-accent"></i></a>
         </span>
     </td>
     <td class="text-center">{{ $member->rank->abbreviation }}</td>
