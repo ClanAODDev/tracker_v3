@@ -3776,7 +3776,7 @@ pre.code-toolbar > .toolbar span:focus {
 .loader {
     display: none;
     position: absolute;
-    top: 45%;
+    top: 5%;
     left: 0;
     right: 0;
     z-index: 100;

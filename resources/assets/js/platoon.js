@@ -182,7 +182,7 @@ let Platoon = Platoon || {};
               'iDataSort': 7, 'aTargets': [6]
             }
           ],
-          stateSave: true, paging: true,
+          stateSave: true, paging: false,
         });
 
         $('a.toggle-vis').on('click', function (e) {

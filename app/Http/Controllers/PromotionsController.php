@@ -29,9 +29,16 @@ class PromotionsController extends Controller
             $members = [];
         }
 
+        $ranks = $members->pluck('rank.abbreviation')->unique();
+        $counts = $members->groupBy('rank_id')->each(function ($rank) {
+            $rank->count = count($rank);
+        })->pluck('count');
+
         $promotionPeriods = $this->member->promotionPeriods();
 
-        return view('division.promotions', compact('members', 'division', 'promotionPeriods', 'year', 'month'));
+        return view('division.promotions', compact(
+            'members', 'division', 'promotionPeriods', 'year', 'month',
+            'ranks', 'counts'));
     }
 
     /**

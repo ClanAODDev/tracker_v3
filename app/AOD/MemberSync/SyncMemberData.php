@@ -68,6 +68,12 @@ class SyncMemberData
             'clan_id' => $record['userid'],
         ]);
 
+        // are we dealing with a transfer?
+        if ($member->division_id !== $division->id) {
+            self::wipePositionAndAssignment($member);
+        }
+
+        // begin the assignment process
         $member->division_id = $division->id;
 
         // have they been recently promoted?
@@ -99,6 +105,16 @@ class SyncMemberData
     }
 
     /**
+     * @param $member
+     */
+    private static function wipePositionAndAssignment($member)
+    {
+        $member->squad_id = 0;
+        $member->platoon_id = 0;
+        $member->position_id = 1;
+    }
+
+    /**
      * Handles cleanup of members removed from a division (platoon, squad info wiped)
      */
     private static function doRemovalCleanup()
@@ -121,9 +137,7 @@ class SyncMemberData
     {
 
         // reset member data
-        $member->squad_id = 0;
-        $member->platoon_id = 0;
-        $member->position_id = 1;
+        self::wipePositionAndAssignment($member);
         $member->division_id = 0;
 
         $member->save();

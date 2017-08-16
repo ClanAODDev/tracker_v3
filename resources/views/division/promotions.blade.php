@@ -37,3 +37,8 @@
 
     </div>
 @stop
+
+@section('footer_scripts')
+    <script src="{!! asset('/js/division.js?v=2.2') !!}"></script>
+@stop
+
