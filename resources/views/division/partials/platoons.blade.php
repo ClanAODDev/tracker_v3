@@ -13,35 +13,36 @@
 <div class="row">
     @forelse ($platoons as $platoon)
         <div class="col-md-6">
-            <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}"
-               class="panel panel-filled">
-                <div class="panel-body">
-                    <h4 class="m-b-none">
-                        {{ $platoon->name }}
-                        <label class="badge pull-right">{{ $platoon->members_count }} Assigned</label>
-                    </h4>
 
-                    @if ($platoon->leader)
-                        <p class="list-group-item-text">
-                            {{ $platoon->leader->present()->rankName }}
+                <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}"
+                   class="panel panel-filled">
+                    <div class="panel-body">
+                        <h4 class="m-b-none">
+                            {{ $platoon->name }}
+                            <label class="badge pull-right">{{ $platoon->members_count }} Assigned</label>
+                        </h4>
+
+                        @if ($platoon->leader)
+                            <p class="list-group-item-text">
+                                {{ $platoon->leader->present()->rankName }}
+                            </p>
+                        @else
+                            <p class="list-group-item-text">TBA</p>
+                        @endif
+
+                        <p class="m-t-md text-center">
+                            <span class="slight">
+                                @foreach ($platoon->squads as $squad)
+                                    @if ($squad->leader)
+                                        <span class="badge">{{ $squad->leader->name}}</span>
+                                    @else
+                                        <span class="badge">TBA</span>
+                                    @endif
+                                @endforeach
+                            </span>
                         </p>
-                    @else
-                        <p class="list-group-item-text">TBA</p>
-                    @endif
-
-                    <p class="m-t-md">
-                        <small class="slight text-muted">
-                            @foreach ($platoon->squads as $squad)
-                                @if ($squad->leader)
-                                    <span class="badge">{{ $squad->leader->present()->rankName }}</span>
-                                @else
-                                    <span class="badge">TBA</span>
-                                @endif
-                            @endforeach
-                        </small>
-                    </p>
-                </div>
-            </a>
+                    </div>
+                </a>
         </div>
     @empty
         <div class="col-md-12">
