@@ -36,7 +36,7 @@ Route::group(['prefix' => 'inactive-members'], function () {
 
 
 // Members endpoints
-Route::get('sergeants', 'MemberController@sergeants')->name('sergeants');
+Route::get('sergeants', 'DivisionController@sergeants')->name('sergeants');
 
 Route::group(['prefix' => 'members'], function () {
     Route::get('{member}', 'MemberController@show')->name('member');
