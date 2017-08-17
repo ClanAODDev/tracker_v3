@@ -65,6 +65,27 @@ class MemberController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sergeants()
+    {
+        $divisions = Division::active()
+            ->with([
+                'sergeants' => function ($query) {
+                    $query->orderByDesc('rank_id');
+                },
+                'sergeants.rank',
+                'sergeants.position'
+            ])
+            ->with('staffSergeants', 'staffSergeants.rank')
+            ->withCount('members')
+            ->withCount('sergeants')
+            ->get();
+
+        return view('member.sergeants', compact('divisions'));
+    }
+
+    /**
      * Endpoint for Bootcomplete
      *
      * @param Request $request

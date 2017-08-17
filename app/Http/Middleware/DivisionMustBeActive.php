@@ -15,7 +15,7 @@ class DivisionMustBeActive
      */
     public function handle($request, Closure $next)
     {
-        if ($request->division->active) {
+        if ($request->division->active && $request->division) {
             return $next($request);
         }
 

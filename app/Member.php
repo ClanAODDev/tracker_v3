@@ -135,6 +135,8 @@ class Member extends Model
         return $this->belongsTo(Rank::class);
     }
 
+
+
     /**
      * Enforce a singleton relationship for squad leaders
      *
