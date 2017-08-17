@@ -263,11 +263,16 @@ class MemberController extends Controller
     public function sergeants()
     {
         $divisions = Division::active()
-            ->with('sergeants', 'sergeants.rank', 'sergeants.position')
+            ->with([
+                'sergeants' => function ($query) {
+                    $query->orderByDesc('rank_id');
+                },
+                'sergeants.rank',
+                'sergeants.position'
+            ])
             ->with('staffSergeants', 'staffSergeants.rank')
             ->withCount('members')
             ->withCount('sergeants')
-            ->orderBy('rank_id')
             ->get();
 
         return view('member.sergeants', compact('divisions'));
