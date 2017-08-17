@@ -15,7 +15,7 @@
         <div class="col-md-6">
 
                 <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}"
-                   class="panel panel-filled">
+                   class="panel panel-filled panel-c-accent">
                     <div class="panel-body">
                         <h4 class="m-b-none">
                             {{ $platoon->name }}
