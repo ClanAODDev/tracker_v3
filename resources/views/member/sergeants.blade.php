@@ -44,7 +44,7 @@
                         </a>
                     @endforeach
 
-                    {{--@foreach($division->staffSergeants as $member)
+                    @foreach($division->staffSergeants as $member)
 
                         <a href="{{ route('member', $member->clan_id) }}"
                            class="col-lg-3 panel panel-filled m-r m-b">
@@ -56,7 +56,7 @@
                                 </span>
                             </span>
                         </a>
-                    @endforeach--}}
+                    @endforeach
 
                 </div>
             </div>
