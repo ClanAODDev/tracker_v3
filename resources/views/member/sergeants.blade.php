@@ -47,7 +47,7 @@
                     @foreach($division->staffSergeants as $member)
 
                         <a href="{{ route('member', $member->clan_id) }}"
-                           class="col-lg-3 panel panel-filled m-r m-b">
+                           class="col-lg-3 panel panel-filled panel-c-info m-r m-b">
                             <span class="panel-body">
                                     {!! $member->present()->rankName !!}
                                 <br />
