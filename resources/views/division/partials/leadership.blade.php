@@ -4,7 +4,7 @@
 <div class="row">
     @forelse($divisionLeaders as $leader)
         <div class="col-md-4">
-            <a href="{{ route('member', $leader->clan_id) }}" class="panel panel-filled panel-c-accent">
+            <a href="{{ route('member', $leader->clan_id) }}" class="panel panel-filled panel-c-danger">
                 <div class="panel-body">
                     <h4 class="m-b-none">
                         {!! $leader->present()->rankName !!}
