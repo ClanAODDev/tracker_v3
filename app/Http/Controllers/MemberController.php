@@ -264,7 +264,7 @@ class MemberController extends Controller
     {
         $divisions = Division::active()
             ->with('sergeants', 'sergeants.rank', 'sergeants.position')
-            // ->with('staffSergeants','staffSergeants.rank')
+            ->with('staffSergeants', 'staffSergeants.rank')
             ->withCount('members')
             ->withCount('sergeants')
             ->orderBy('name')
