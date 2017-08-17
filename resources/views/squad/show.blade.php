@@ -49,6 +49,7 @@
                     <a href="{{ doForumFunction($chunk->pluck('clan_id')->toArray(), 'pm') }}"
                        target="_blank" class="btn btn-default">
                         <i class="fa fa-link text-accent"></i> Group {{ $loop->iteration }}
+                        ({{ count($chunk) }})
                     </a>
                 @endforeach
             </p>
