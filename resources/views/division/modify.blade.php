@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-md-3 hidden-xs hidden-sm">
                             <div class="panel">
-                                @include('division.forms.descriptions.slack')
+                                @include ('division.forms.descriptions.slack')
                             </div>
                         </div>
                     </div>
