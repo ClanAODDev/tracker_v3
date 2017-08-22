@@ -48,6 +48,7 @@
                             <li>New recruits will be flagged as pending to prevent the forum sync from erroneously resetting assignment information (because they are not listed as active). Pending member (and Ex-AOD) statuses will now reflect on the member profile page.</li>
                         </ul>
                     </li>
+                    <li>Added member name variable <code>@{{ name }}</code> to division welcome PM</li>
                 </ul>
             </div>
         </div>
