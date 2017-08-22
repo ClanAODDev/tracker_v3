@@ -96,6 +96,10 @@
     <li class="{{ set_active('help') }}">
         <a href="{{ route('help') }}">Documentation</a>
     </li>
+
+    <li class="{{ set_active('changelog') }}">
+        <a href="{{ route('changelog') }}">Changelog</a>
+    </li>
 </ul>
 
 {{--back to top--}}
