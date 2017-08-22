@@ -18,6 +18,8 @@
         @slot ('subheading')
             @if ($member->isPending)
                 Pending member
+            @elseif ($member->division_id == 0)
+                Ex-AOD
             @else
                 {{ $member->position->name or "No Position" }}
             @endif
