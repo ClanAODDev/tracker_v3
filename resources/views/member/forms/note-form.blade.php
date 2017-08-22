@@ -1,5 +1,5 @@
 @include('application.partials.errors')
-@if ($note->leave)
+@if (isset($note) && $note->leave)
     <div class="alert alert-warning">
         <strong>Note:</strong> This note is associated with a leave request and cannot be deleted until the LOA is revoked.
         <a class="alert-link"
