@@ -12,7 +12,7 @@ return [
      |
      */
 
-    'enabled' => env('APP_DEBUGBAR', false),
+    'enabled' => env('APP_DEBUGBAR', null),
 
     /*
      |--------------------------------------------------------------------------
