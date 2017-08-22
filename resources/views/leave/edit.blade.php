@@ -67,8 +67,11 @@
 
         <div class="m-t-xl">
             <label for="note-body">Leave Justification</label>
-            <textarea name="note-body" id="note-body" rows="4" class="form-control"
-                      disabled>{{ $leave->note->body }}</textarea>
+            <div class="panel panel-filled">
+                <div class="panel-body">
+                    {{ $leave->note->body }}
+                </div>
+            </div>
             <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to the note associated with this leave request, you can access that below.</p>
             <a href="{{ route('editNote', [$member->clan_id, $leave->note->id]) }}"
                class="btn btn-accent">Edit Note</a>
