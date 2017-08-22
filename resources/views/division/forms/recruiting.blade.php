@@ -59,6 +59,7 @@
                 <div class="panel-body">
                     <textarea class="form-control resize-vertical" name="welcome_pm" id="welcome_pm" cols="30"
                               rows="10">{{ $division->settings() ->get('welcome_pm')}}</textarea>
+                    <span class="help-block m-t-md" for="welcome_pm">Use <code>@{{ name }}</code> to insert the new recruit's name into your message</span>
                 </div>
             </div>
         </div>
