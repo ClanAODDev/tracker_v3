@@ -5,7 +5,7 @@
         <p>A welcome PM has been prepared to send to your new recruit. Simply copy the message below, and click the button below to open a private message to submit to your new recruit.</p>
 
         <textarea name="welcome_pm" id="welcome_pm" class="form-control"
-                  rows="5">{{ store.division.settings.welcome_pm }}</textarea>
+                  rows="5">{{ formulateWelcomePM() }}</textarea>
 
         <div class="text-center p-lg bs-example">
             <button data-clipboard-target="#welcome_pm" class="copy-to-clipboard btn-success btn"><i
@@ -29,5 +29,14 @@
         store
       };
     },
+
+    methods: {
+      formulateWelcomePM: function () {
+        var message = store.division.settings.welcome_pm;
+        if (message) {
+          return message.replace(/{{ name }}/g, store.forum_name);
+        }
+      },
+    }
   };
 </script>

@@ -30,8 +30,7 @@
                 <ul>
                     <li>Added application changelog</li>
                     <li>Implemented
-                        <mark>Reset member assignments</mark>
-                        function on the member profile page to resolve erroneous platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as well as convenience for members transferring out of a division.
+                        <code>Reset member assignments</code> function on the member profile page to resolve erroneous platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as well as convenience for members transferring out of a division.
                     </li>
                     <li>Added unassigned members area to division view, deprecating the unassigned member area in the platoon edit view. This will be removed in a later update.
                         <ul>
@@ -49,6 +48,7 @@
                             <li>New recruits will be flagged as pending to prevent the forum sync from erroneously resetting assignment information (because they are not listed as active). Pending member (and Ex-AOD) statuses will now reflect on the member profile page.</li>
                         </ul>
                     </li>
+                    <li>Added member name variable <code>@{{ name }}</code> to division welcome PM</li>
                 </ul>
             </div>
         </div>
