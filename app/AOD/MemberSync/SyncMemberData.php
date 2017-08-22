@@ -94,6 +94,7 @@ class SyncMemberData
 
         $member->posts = $record['postcount'];
         $member->ts_unique_id = $record['tsid'];
+        $member->pending_member = false;
 
         // persist
         $member->save();
@@ -127,7 +128,7 @@ class SyncMemberData
         foreach ($removed as $index => $id) {
             $member = Member::find($id);
 
-            if ($member instanceof Member && $member->updated_at < Carbon::today()->subWeek(4)) {
+            if ($member instanceof Member && !$member->isPending) {
                 self::resetMember($member);
             }
         }
