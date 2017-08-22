@@ -17,9 +17,9 @@
         @endslot
         @slot ('subheading')
             @if ($member->isPending)
-                Pending member
+                <span class="text-accent">Pending member</span>
             @elseif ($member->division_id == 0)
-                Ex-AOD
+                <span class="text-muted">Ex-AOD</span>
             @else
                 {{ $member->position->name or "No Position" }}
             @endif
