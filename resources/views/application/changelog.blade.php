@@ -39,6 +39,9 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        Fix issue where leave type isn't properly selected, or updated when editing an existing leave of absence.
+                    </li>
                 </ul>
             </div>
         </div>
