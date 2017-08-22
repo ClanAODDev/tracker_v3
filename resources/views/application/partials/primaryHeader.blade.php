@@ -8,8 +8,8 @@
             </div>
         </div>
         <a class="navbar-brand" href="{{ route('home') }}">
-            AOD TRACKER
-            <span>v3.1</span>
+            TRACKER
+            <span>3.1</span>
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
