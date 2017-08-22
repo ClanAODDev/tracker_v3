@@ -42,6 +42,7 @@
                     <li>
                         Fix issue where leave type isn't properly selected, or updated when editing an existing leave of absence.
                     </li>
+                    <li>Add notice to member note when that note is associated with an existing leave of absence.</li>
                 </ul>
             </div>
         </div>
