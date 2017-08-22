@@ -16,7 +16,13 @@
             @include('member.partials.edit-member-button', ['member' => $member])
         @endslot
         @slot ('subheading')
-            {{ $member->position->name or "No Position" }}
+            @if ($member->isPending)
+                Pending member
+            @elseif ($member->division_id == 0)
+                Ex-AOD
+            @else
+                {{ $member->position->name or "No Position" }}
+            @endif
         @endslot
     @endcomponent
 

@@ -39,6 +39,15 @@ trait HasCustomAttributes
     }
 
     /**
+     * Is a pending member?
+     * @return mixed
+     */
+    public function getIsPendingAttribute()
+    {
+        return $this->pending_member;
+    }
+
+    /**
      * @param $value
      * @return string
      */

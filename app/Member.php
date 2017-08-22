@@ -28,6 +28,7 @@ class Member extends Model
     ];
 
     protected $casts = [
+        'pending_member' => 'boolean',
         'flagged_for_inactivity' => 'boolean'
     ];
 

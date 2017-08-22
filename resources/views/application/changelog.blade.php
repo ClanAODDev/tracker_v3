@@ -42,6 +42,13 @@
                     <li>
                         Fix issue where leave type isn't properly selected, or updated when editing an existing leave of absence.
                     </li>
+                    <li>Add notice to member note when that note is associated with an existing leave of absence.</li>
+                    <li>
+                        Add pending member status attribute
+                        <ul>
+                            <li>New recruits will be flagged as pending to prevent the forum sync from erroneously resetting assignment information (because they are not listed as active). Pending member (and Ex-AOD) statuses will now reflect on the member profile page.</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
