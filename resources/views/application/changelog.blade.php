@@ -30,8 +30,7 @@
                 <ul>
                     <li>Added application changelog</li>
                     <li>Implemented
-                        <mark>Reset member assignments</mark>
-                        function on the member profile page to resolve erroneous platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as well as convenience for members transferring out of a division.
+                        <code>Reset member assignments</code> function on the member profile page to resolve erroneous platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as well as convenience for members transferring out of a division.
                     </li>
                     <li>Added unassigned members area to division view, deprecating the unassigned member area in the platoon edit view. This will be removed in a later update.
                         <ul>
