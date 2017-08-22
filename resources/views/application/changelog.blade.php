@@ -25,9 +25,10 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
-                <h4>22 August 2017</h4>
+                <h4>22 August 2017 - 3.1.0</h4>
                 <hr />
-                <ul class="">
+                <ul>
+                    <li>Added application changelog</li>
                     <li>Implemented
                         <mark>Reset member assignments</mark>
                         function on the member profile page to resolve erroneous platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as well as convenience for members transferring out of a division.
