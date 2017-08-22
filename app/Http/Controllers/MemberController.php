@@ -7,6 +7,7 @@ use App\Handle;
 use App\Http\Requests\DeleteMember;
 use App\Member;
 use App\Notifications\MemberRemoved;
+use App\Platoon;
 use App\Position;
 use App\Repositories\MemberRepository;
 use Illuminate\Http\Request;
@@ -276,5 +277,33 @@ class MemberController extends Controller
         return redirect()->route('division', [
             $division->abbreviation
         ]);
+    }
+
+    public function assignPlatoon($member)
+    {
+        $platoon = Platoon::find(request()->platoon_id);
+        $member->platoon_id = $platoon->id;
+        $member->save();
+    }
+
+    public function confirmUnassign($member)
+    {
+        $division = $member->division;
+        return view('member.confirm-unassign', compact('member', 'division'));
+    }
+
+    /**
+     * @param $member
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function unassignMember($member)
+    {
+        $member->squad_id = 0;
+        $member->platoon_id = 0;
+        $member->save();
+
+        $this->showToast('Member assignments reset successfully');
+
+        return redirect()->route('member', $member->clan_id);
     }
 }

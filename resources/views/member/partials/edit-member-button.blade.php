@@ -39,5 +39,13 @@
         <li>
             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}" target="_blank">View forum profile</a>
         </li>
+
+        @can('update', $member)
+            <li class="divider"></li>
+            <li>
+                <a href="{{ route('member.confirm-reset', $member->clan_id) }}"> Reset Assignments</a>
+            </li>
+        @endcan
     </ul>
 </div>
+

@@ -26,4 +26,9 @@
         @include('division.partials.staff-sergeants')
         @include('division.partials.platoons')
     </div>
+
+@stop
+
+@section('footer_scripts')
+    <script src="{!! asset('/js/division.js?v=1.3') !!}"></script>
 @stop

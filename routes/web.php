@@ -39,6 +39,14 @@ Route::group(['prefix' => 'inactive-members'], function () {
 Route::get('sergeants', 'MemberController@sergeants')->name('sergeants');
 
 Route::group(['prefix' => 'members'], function () {
+    // reset assignments
+    Route::get('{member}/confirm-reset', 'MemberController@confirmUnassign')->name('member.confirm-reset');
+    Route::post('{member}/unassign', 'MemberController@unassignMember')->name('member.unassign');
+    Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
+
+
+
+
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
@@ -77,6 +85,8 @@ Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recru
 
 Route::get('issues', 'IssuesController@index')->name('github.issues');
 Route::post('issues', 'IssuesController@create')->name('github.create-issue');
+
+Route::get('changelog', 'AppController@changelog')->name('changelog');
 
 /**
  * Division endpoints

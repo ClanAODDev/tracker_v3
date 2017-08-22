@@ -17,6 +17,11 @@ class AppController extends Controller
         $this->middleware('auth');
     }
 
+    public function changeLog()
+    {
+        return view('application.changelog');
+    }
+
     /**
      * Show the application dashboard.
      *

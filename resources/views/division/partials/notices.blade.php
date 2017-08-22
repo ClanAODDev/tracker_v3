@@ -20,7 +20,7 @@
         <div class="alert alert-default">
             <i class="fa fa-users text-info"></i>
             There are <code>{{ count($division->unassigned) }}</code> unassigned members in
-            <strong>{{ $division->name }}</strong>. Edit a
+            <strong>{{ $division->name }}</strong>. Drag members into a
             <a href="{{ route('division', $division->abbreviation) }}/#platoons"
                class="alert-link">{{ $division->locality('platoon') }}</a> to assign them
         </div>
