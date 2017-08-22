@@ -20,7 +20,7 @@
 
         {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
-        @include('platoon.partials.alerts')
+        @include('platoon.partials.notices')
 
         <div class="row">
             <div class="col-md-9">
