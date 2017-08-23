@@ -14,7 +14,7 @@ class DivisionRepository
     {
         $censuses = collect(DB::select(
             DB::raw("    
-                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, date_format(created_at,'%y-%m-%d') as date 
+                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date 
                 FROM censuses WHERE division_id = {$division->id} 
                 GROUP BY date(created_at) 
                 ORDER BY date DESC LIMIT {$limit};

@@ -25,6 +25,18 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>23 August 2017 - 3.1.1</h4>
+                <hr />
+                <ul>
+                    <li>Division census report updated to show a range of dates. Hover tooltip shows the exact day and member count. Notes have been omitted until a more viable solution is implemented. Graph ordering was also modified to appear left to right.</li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
+
                 <h4>22 August 2017 - 3.1.0</h4>
                 <hr />
                 <ul>

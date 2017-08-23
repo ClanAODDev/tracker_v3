@@ -11,7 +11,7 @@
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('reason') ? ' has-error' : null }}">
             {!! Form::label('reason', 'Leave Type') !!}<span class="text-accent">*</span>
-            {!! Form::select('reason[]', ['military' => 'Military', 'medical' => 'Medical', 'education' => 'Education', 'travel' => 'Travel', 'other' => 'Other'], null, ['class' => 'form-control']) !!}
+            {!! Form::select('reason', ['military' => 'Military', 'medical' => 'Medical', 'education' => 'Education', 'travel' => 'Travel', 'other' => 'Other'], null, ['class' => 'form-control']) !!}
         </div>
     </div>
 </div>

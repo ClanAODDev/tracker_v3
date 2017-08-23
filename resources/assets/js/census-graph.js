@@ -25,32 +25,29 @@ var chartUsersOptions = {
   grid: {
     tickColor: '#404652',
     borderWidth: 1,
-    hoverable: true,
     color: '#000',
     borderColor: '#404652',
   },
 
   comment: {
     show: true,
-
-    hoverable: false,
   },
 
-  tooltip: {
-    show: false
-  },
+  tooltip: false,
 
-  sidenote: {
-    show: false
+  tooltippage: {
+    show: true,
+    content: "%x - %y members"
   },
 
   xaxis: {
-    axisLabel: 'Weeks'
+    mode: "time",
+    timeformat: "%m/%d",
   },
 
   comments: comments,
 
-  colors: ['#0F83C9', '#1bbf89', '#f7af3e']
+  colors: ['#1bbf89', '#0F83C9', '#f7af3e']
 };
 
 $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
