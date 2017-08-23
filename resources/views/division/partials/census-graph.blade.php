@@ -21,10 +21,10 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-4 text-center">
-                <i class="fa fa-dot-circle-o text-success"></i> - Division Population
+                <i class="fa fa-dot-circle-o text-info"></i> - Division Population
             </div>
             <div class="col-md-4 text-center">
-                <i class="fa fa-dot-circle-o text-info"></i> - Weekly Active
+                <i class="fa fa-dot-circle-o text-success"></i> - Weekly Active
             </div>
             <div class="col-md-4 text-center">
                 <i class="fa fa-dot-circle-o text-warning"></i> - Weekly TS Active

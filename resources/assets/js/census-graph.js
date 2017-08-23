@@ -50,7 +50,7 @@ var chartUsersOptions = {
 
   comments: comments,
 
-  colors: ['#0F83C9', '#1bbf89', '#f7af3e']
+  colors: ['#1bbf89', '#0F83C9', '#f7af3e']
 };
 
 $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);

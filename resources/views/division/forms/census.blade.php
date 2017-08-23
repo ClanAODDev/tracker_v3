@@ -28,7 +28,7 @@
                 <td class="text-center">
                     {{ $census->weekly_ts_count }}
                     <span class="census-pie"
-                          data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
+                          data-colors="{{ json_encode(['#404652', '#f7af3e']) }}"
                           data-counts="{{ json_encode([$popMinus, $census->weekly_ts_count ]) }}">
                     </span>
                 </td>
