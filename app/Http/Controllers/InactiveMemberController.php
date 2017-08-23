@@ -76,10 +76,8 @@ class InactiveMemberController extends Controller
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public
-    function create(
-        Member $member
-    ) {
+    public function create(Member $member)
+    {
         $this->authorize('update', $member);
 
         $member->flagged_for_inactivity = true;
@@ -98,10 +96,8 @@ class InactiveMemberController extends Controller
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public
-    function destroy(
-        Member $member
-    ) {
+    public function destroy(Member $member)
+    {
         $this->authorize('update', $member);
 
         $member->flagged_for_inactivity = false;
@@ -114,11 +110,8 @@ class InactiveMemberController extends Controller
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
 
-    public
-    function removeMember(
-        Member $member,
-        DeleteMember $form
-    ) {
+    public function removeMember(Member $member, DeleteMember $form)
+    {
         $this->authorize('delete', $member);
 
         $division = $member->division;

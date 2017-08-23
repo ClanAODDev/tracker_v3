@@ -10,6 +10,7 @@ use App\Notifications\MemberRemoved;
 use App\Platoon;
 use App\Position;
 use App\Repositories\MemberRepository;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Toastr;
