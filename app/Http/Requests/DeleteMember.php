@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Note;
+use App\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
@@ -30,8 +32,25 @@ class DeleteMember extends FormRequest
 
     public function persist()
     {
-        // TODO: create note when removed
-        $this->route('member')->resetPositionsAndAssignments();
-        $this->route('member')->delete();
+        $this->createRemovalNote();
+        $member = $this->route('member');
+        $member->resetPositionsAndAssignments();
+        $member->division_id = 0;
+
+        $member->save();
+
+    }
+
+    private function createRemovalNote()
+    {
+        if ($this->input('removal-reason') == 'inactivity') {
+            $note = Note::create();
+            $note->type = 'negative';
+            $note->body = "Member removed for inactivity";
+            $note->author()->associate(auth()->user());
+            $note->tags()->sync([Tag::whereName('inactivity removal')->first()->id]);
+            $note->member()->associate($this->route('member'));
+            $note->save();
+        }
     }
 }
