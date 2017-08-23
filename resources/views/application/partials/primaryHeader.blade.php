@@ -9,7 +9,7 @@
         </div>
         <a class="navbar-brand" href="{{ route('home') }}">
             TRACKER
-            <span>v3.1</span>
+            <span>v3.1.1</span>
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">

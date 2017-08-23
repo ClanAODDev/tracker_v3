@@ -8,6 +8,7 @@ use App\Member;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use App\Tag;
+use Carbon\Carbon;
 
 /**
  * Class DivisionController
@@ -175,21 +176,22 @@ class DivisionController extends Controller
         $censuses = $division->census->sortByDesc('created_at')->take(52);
 
         $populations = $censuses->values()->map(function ($census, $key) {
-            return [$key, $census->count];
+            return [$census->javascriptTimestamp, $census->count];
         });
 
         $weeklyActive = $censuses->values()->map(function ($census, $key) {
-            return [$key, $census->weekly_active_count];
+            return [$census->javascriptTimestamp, $census->weekly_active_count];
         });
 
         $weeklyTsActive = $censuses->values()->map(function ($census, $key) {
-            return [$key, $census->weekly_ts_count];
+            return [$census->javascriptTimestamp, $census->weekly_ts_count];
         });
 
         $comments = $censuses->values()
             ->filter(function ($census) use ($censuses) {
                 return ($census->notes);
             })->map(function ($census, $key) use ($censuses) {
+
                 return [
                     'x' => $key,
                     'y' => $censuses->values()->pluck('count'),

@@ -6,7 +6,7 @@
             <th class="text-center">Population</th>
             <th class="text-center">Weekly Active</th>
             <th class="text-center">Weekly TS Active</th>
-            <th>Notes</th>
+            {{--<th>Notes</th>--}}
         </tr>
         </thead>
         @foreach ($censuses as $census)
@@ -32,7 +32,7 @@
                           data-counts="{{ json_encode([$popMinus, $census->weekly_ts_count ]) }}">
                     </span>
                 </td>
-                <td>{{ $census->notes }}</td>
+                {{--<td>{{ $census->notes }}</td>--}}
             </tr>
         @endforeach
     </table>
