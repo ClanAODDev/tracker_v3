@@ -42,7 +42,7 @@ var chartUsersOptions = {
 
   xaxis: {
     mode: "time",
-    timeformat: "%m/%d",
+    timeformat: "%m/%d/%y",
   },
 
   comments: comments,
