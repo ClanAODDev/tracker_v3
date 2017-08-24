@@ -209,7 +209,7 @@ class SquadController extends Controller
 
         $this->showToast('Squad has been deleted');
 
-        return redirect()->route('platoonSquads', [$division->abbreviation, $platoon]);
+        return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
 
     /**
