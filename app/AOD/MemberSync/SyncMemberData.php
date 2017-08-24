@@ -69,6 +69,8 @@ class SyncMemberData
         ]);
 
         // are we dealing with a transfer?
+        // if so, clean up position, assignments, but retain
+        // part-time divisions
         if ($member->division_id !== $division->id) {
             self::wipePositionAndAssignment($member);
         }
@@ -98,7 +100,6 @@ class SyncMemberData
 
         // persist
         $member->save();
-
 
         // populate our active members
         self::$activeMembers[] = $member->id;
@@ -138,10 +139,7 @@ class SyncMemberData
     {
 
         // reset member data
-        self::wipePositionAndAssignment($member);
-        $member->division_id = 0;
-
-        $member->save();
+        $member->resetPositionsAndAssignments();
 
         // reset any leadership assignments
         $assignments = collect([
