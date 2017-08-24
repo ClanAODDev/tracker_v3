@@ -30,27 +30,30 @@ class DeleteMember extends FormRequest
         ];
     }
 
+    /**
+     * Persist the form
+     */
     public function persist()
     {
-        $this->createRemovalNote();
         $member = $this->route('member');
+        $this->createRemovalNote($member);
         $member->resetPositionsAndAssignments();
-        $member->division_id = 0;
-
-        $member->save();
-
     }
 
-    private function createRemovalNote()
+    /**
+     * @param $member
+     */
+    private function createRemovalNote($member)
     {
         if ($this->input('removal-reason') == 'inactivity') {
-            $note = Note::create();
-            $note->type = 'negative';
-            $note->body = "Member removed for inactivity";
-            $note->author()->associate(auth()->user());
+            $note = Note::create([
+                'type' => 'negative',
+                'body' => 'Member removed for inactivity',
+                'author_id' => auth()->user()->id,
+                'member_id' => $member->clan_id
+            ]);
+
             $note->tags()->sync([Tag::whereName('inactivity removal')->first()->id]);
-            $note->member()->associate($this->route('member'));
-            $note->save();
         }
     }
 }
