@@ -30,7 +30,7 @@
         <div class="modal fade" id="create-member-note">
             <div class="modal-dialog" role="document" style="background-color: #000;">
                 {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
-                @include('member.forms.note-form', ['action' => 'Add Member Note'])
+                @include('member.forms.note-form', ['action' => 'Add Member Note', 'create' => true])
                 {!! Form::close() !!}
             </div>
         </div>
