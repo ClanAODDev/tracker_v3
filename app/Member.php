@@ -223,6 +223,11 @@ class Member extends Model
         return $this->belongsTo(Member::class, 'recruiter_id', 'clan_id');
     }
 
+    public function recruits()
+    {
+        return $this->hasMany(Member::class, 'recruiter_id', 'clan_id');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
