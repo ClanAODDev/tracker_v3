@@ -138,6 +138,8 @@ class MemberController extends Controller
                 return true;
             });
 
+        $member->load('recruits', 'recruits.division', 'recruits.rank');
+
         $partTimeDivisions = $member->partTimeDivisions()
             ->whereActive(true)
             ->get();
