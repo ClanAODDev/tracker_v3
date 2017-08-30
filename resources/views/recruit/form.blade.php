@@ -18,6 +18,12 @@
         <recruiting-process division="{{ $division->abbreviation }}"
                             handle-name="{{ $division->handle->label or 'Ingame Name' }}"></recruiting-process>
     </div>
+
+    <script>
+      window.onbeforeunload = function () {
+        return 'Are you sure you want to leave this page?';
+      };
+    </script>
 @stop
 
 @section('footer_scripts')
