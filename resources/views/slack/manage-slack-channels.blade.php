@@ -19,10 +19,10 @@
 
     <div class="container-fluid">
         <div class="alert alert-warning">
-            <strong>Note</strong>: Archiving a channel hides it from view, but does not delete the channel. The Slack API cannot delete channels; a team owner must physically delete the channel through the Slack interface.
+            <strong>Note</strong>: Archiving a channel hides it from view, but does not delete the channel. An admin must physically delete the channel through the Slack interface.
         </div>
 
-        <p>Division channels should be used sparingly. Advise your members that they can <i class="fa fa-star text-accent"></i> a channel to make it easier to see in the channel listing. Divisions that abuse these abilities will lose access to create channels.</p>
+        <p>Division channels should be used sparingly. Advise your members that they can <code><i class="fa fa-star text-accent"></i> Star</code> a channel to make it easier to see in the channel listing.</p>
 
         <hr />
 

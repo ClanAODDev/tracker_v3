@@ -28,7 +28,7 @@
         <form action="{{ route('slack.archive-channel') }}"
               method="post" id="archive-channel">
             <input type="hidden" value="{{ $channel->getId() }}" name="channel_id" />
-            <a href="{{ route('slack.index') }}" class="btn btn-default">Cancel</a>
+            <a href="{{ route('slack.channel-index') }}" class="btn btn-default">Cancel</a>
             <button type="submit" class="btn btn-success">Archive Channel</button>
             {{ csrf_field() }}
         </form>
