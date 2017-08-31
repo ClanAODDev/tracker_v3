@@ -2,9 +2,10 @@
 
 @section('content')
 
+@section('content')
     @component ('application.components.view-heading')
         @slot ('currentPage')
-            Admin CP
+            v3
         @endslot
         @slot ('icon')
             <img src="{{ asset('images/logo_v2.svg') }}" width="50px" />
@@ -13,7 +14,7 @@
             AOD Tracker
         @endslot
         @slot ('subheading')
-            Manage Slack Channels
+            Confirm Archive of Channel
         @endslot
     @endcomponent
 

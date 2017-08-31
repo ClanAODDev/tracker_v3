@@ -178,6 +178,19 @@ Route::get('users/{username}/activity', 'ActivitiesController@byUser');
 Route::get('developers', 'DeveloperController@index')->name('developer');
 
 
+
+Route::group(['prefix' => 'slack/manage'], function () {
+    Route::get('', 'SlackChannelController@index')
+        ->name('slack.index');
+    Route::post('', 'SlackChannelController@store')->name('slack.store-channel');
+    Route::get('/confirm-archive/{channel}', 'SlackChannelController@confirmArchive')
+        ->name('slack.confirm-archive-channel');
+    Route::get('/unarchive/{channel}', 'SlackChannelController@unarchive')
+        ->name('slack.unarchive-channel');
+    Route::post('/archive', 'SlackChannelController@archive')->name('slack.archive-channel');
+
+});
+
 /**
  * Slack handler
  */
@@ -192,16 +205,6 @@ Route::post('slack', [
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
-
-    Route::group(['prefix' => 'slack'], function () {
-        Route::get('/', 'Admin\SlackChannelController@index')->name('slack.index');
-        Route::post('/', 'Admin\SlackChannelController@create')->name('slack.create-channel');
-        Route::get('/confirm-archive/{channel}', 'Admin\SlackChannelController@confirmArchive')
-            ->name('slack.confirm-archive-channel');
-        Route::get('/unarchive/{channel}', 'Admin\SlackChannelController@unarchive')
-            ->name('slack.unarchive-channel');
-        Route::post('/archive', 'Admin\SlackChannelController@archive')->name('slack.archive-channel');
-    });
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');
