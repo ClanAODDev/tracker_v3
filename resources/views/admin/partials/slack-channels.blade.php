@@ -11,6 +11,9 @@
         <tr>
             <td>
                 #{{ $channel->getName() }}
+                @if ($channel->isArchived())
+                    <div class="label label-danger">Archived</div>
+                @endif
             </td>
             <td class="text-muted">
                 {{ Carbon::instance($channel->getCreated())->format('Y-m-d') }}
@@ -22,9 +25,10 @@
                         <i class="fa fa-archive text-danger"></i> Archive
                     </a>
                 @else
-                    <button class="btn btn-default pull-right" disabled>
-                        <i class="fa fa-archive text-muted"></i> Archived
-                    </button>
+                    <a href="{{ route('slack.unarchive-channel', $channel->getId()) }}"
+                       class="btn btn-default pull-right center-block">
+                        <i class="fa fa-archive"></i> Un-archive
+                    </a>
                 @endunless
             </td>
         </tr>

@@ -198,6 +198,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::post('/', 'Admin\SlackChannelController@create')->name('slack.create-channel');
         Route::get('/confirm-archive/{channel}', 'Admin\SlackChannelController@confirmArchive')
             ->name('slack.confirm-archive-channel');
+        Route::get('/unarchive/{channel}', 'Admin\SlackChannelController@unarchive')
+            ->name('slack.unarchive-channel');
         Route::post('/archive', 'Admin\SlackChannelController@archive')->name('slack.archive-channel');
     });
 

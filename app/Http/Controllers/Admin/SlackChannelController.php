@@ -8,6 +8,7 @@ use CL\Slack\Payload\ChannelsArchivePayload;
 use CL\Slack\Payload\ChannelsCreatePayload;
 use CL\Slack\Payload\ChannelsInfoPayload;
 use CL\Slack\Payload\ChannelsListPayload;
+use CL\Slack\Payload\ChannelsUnarchivePayload;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,11 @@ class SlackChannelController extends Controller
         $this->middleware(['admin', 'auth']);
     }
 
+    /**
+     * List all slack channels
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $payload = new ChannelsListPayload();
@@ -38,6 +44,11 @@ class SlackChannelController extends Controller
         }
     }
 
+    /**
+     * Create a slack channel
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function create()
     {
         $payload = new ChannelsCreatePayload();
@@ -62,6 +73,12 @@ class SlackChannelController extends Controller
         }
     }
 
+    /**
+     * Confirm archiving request
+     *
+     * @param $channel
+     * @return $this|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function confirmArchive($channel)
     {
         $payload = new ChannelsInfoPayload();
@@ -78,6 +95,11 @@ class SlackChannelController extends Controller
         }
     }
 
+    /**
+     * Archive a slack channel
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function archive()
     {
         $payload = new ChannelsArchivePayload();
@@ -88,6 +110,33 @@ class SlackChannelController extends Controller
             $this->showToast("Channel was archived!");
             Log::info(auth()->user()->name
                 . " archived a slack channel - "
+                . request()->channel_id . " - " . Carbon::now());
+
+            return redirect()->route('slack.index');
+        } else {
+            return redirect()->back()->withErrors([
+                'slack-error' => $response->getError(),
+                'slack-error-detail' => $response->getErrorExplanation()
+            ])->withInput();
+        }
+    }
+
+    /**
+     * Unarchive a slack channel
+     *
+     * @param $channel
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
+    public function unarchive($channel)
+    {
+        $payload = new ChannelsUnarchivePayload();
+        $payload->setChannelId($channel);
+        $response = $this->client->send($payload);
+
+        if ($response->isOk()) {
+            $this->showToast("Channel was unarchived!");
+            Log::info(auth()->user()->name
+                . " unarchived a slack channel - "
                 . request()->channel_id . " - " . Carbon::now());
 
             return redirect()->route('slack.index');
