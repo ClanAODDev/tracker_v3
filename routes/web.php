@@ -45,8 +45,6 @@ Route::group(['prefix' => 'members'], function () {
     Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
 
 
-
-
     Route::get('{member}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
@@ -194,6 +192,14 @@ Route::post('slack', [
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
+
+    Route::group(['prefix' => 'slack'], function () {
+        Route::get('/', 'Admin\SlackChannelController@index')->name('slack.index');
+        Route::post('/', 'Admin\SlackChannelController@create')->name('slack.create-channel');
+        Route::get('/confirm-archive/{channel}', 'Admin\SlackChannelController@confirmArchive')
+            ->name('slack.confirm-archive-channel');
+        Route::post('/archive', 'Admin\SlackChannelController@archive')->name('slack.archive-channel');
+    });
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');

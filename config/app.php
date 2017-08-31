@@ -143,7 +143,6 @@ return [
         /*
          * Laravel Framework Service Providers...
          */
-        //Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
         Illuminate\Bus\BusServiceProvider::class,
@@ -167,7 +166,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        //Maknz\Slack\SlackServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -184,6 +182,8 @@ return [
         Whossun\Toastr\ToastrServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         TwigBridge\ServiceProvider::class,
+
+        App\Providers\SlackApiClientProvider::class
 
     ],
 
