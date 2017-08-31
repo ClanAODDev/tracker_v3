@@ -21,12 +21,12 @@
             <td>
                 @unless ($channel->isArchived())
                     <a href="{{ route('slack.confirm-archive-channel', $channel->getId()) }}"
-                       class="btn btn-danger pull-right center-block">
+                       class="btn btn-danger pull-right btn-block">
                         <i class="fa fa-archive text-danger"></i> Archive
                     </a>
                 @else
                     <a href="{{ route('slack.unarchive-channel', $channel->getId()) }}"
-                       class="btn btn-default pull-right center-block">
+                       class="btn btn-default pull-right btn-block">
                         <i class="fa fa-archive"></i> Un-archive
                     </a>
                 @endunless
