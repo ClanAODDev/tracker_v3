@@ -19,7 +19,7 @@ class SlackChannelController extends Controller
     public function __construct()
     {
         $this->client = new ApiClient(config('services.slack.token'));
-        $this->middleware(['admin']);
+        $this->middleware(['admin', 'auth']);
     }
 
     public function index()
