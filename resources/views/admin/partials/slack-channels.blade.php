@@ -1,4 +1,4 @@
-<table class="table table-hover">
+<table class="table table-hover adv-datatable">
     <thead>
     <tr>
         <th>Channel</th>
@@ -13,7 +13,7 @@
                 #{{ $channel->getName() }}
             </td>
             <td class="text-muted">
-                {{ Carbon::instance($channel->getCreated())->diffForHumans() }}
+                {{ Carbon::instance($channel->getCreated())->format('Y-m-d') }}
             </td>
             <td>
                 @unless ($channel->isArchived())
