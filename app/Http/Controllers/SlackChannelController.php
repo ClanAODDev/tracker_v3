@@ -130,7 +130,7 @@ class SlackChannelController extends Controller
                 . " archived a slack channel - "
                 . request()->channel_id . " - " . Carbon::now());
 
-            return redirect()->route('slack.index');
+            return redirect()->route('slack.channel-index');
         } else {
             return redirect()->back()->withErrors([
                 'slack-error' => $response->getError(),
@@ -159,7 +159,7 @@ class SlackChannelController extends Controller
                 . " unarchived a slack channel - "
                 . request()->channel_id . " - " . Carbon::now());
 
-            return redirect()->route('slack.index');
+            return redirect()->route('slack.channel-index');
         } else {
             return redirect()->back()->withErrors([
                 'slack-error' => $response->getError(),
