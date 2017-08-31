@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use CL\Slack\Payload\ChannelsArchivePayload;
 use CL\Slack\Payload\ChannelsCreatePayload;
 use CL\Slack\Payload\ChannelsInfoPayload;
 use CL\Slack\Payload\ChannelsListPayload;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SlackChannelController extends Controller
 {
@@ -47,6 +49,9 @@ class SlackChannelController extends Controller
 
         if ($response->isOk()) {
             $this->showToast("{$channelName} was created!");
+            Log::info(auth()->user()->name
+                . " created a slack channel - {$channelName} - "
+                . Carbon::now());
 
             return redirect()->back();
         } else {
@@ -81,6 +86,9 @@ class SlackChannelController extends Controller
 
         if ($response->isOk()) {
             $this->showToast("Channel was archived!");
+            Log::info(auth()->user()->name
+                . " archived a slack channel - "
+                . request()->channel_id . " - " . Carbon::now());
 
             return redirect()->route('slack.index');
         } else {
