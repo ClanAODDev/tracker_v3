@@ -27,9 +27,9 @@ class SlackChannelController extends Controller
         $payload = new ChannelsListPayload();
 
         $response = $this->client->send($payload);
-        $channels = collect($response->getChannels())->filter(function ($channel) {
-            return ! $channel->isArchived();
-        });
+        $channels = collect($response->getChannels())->groupBy(function ($item, $key) {
+            return $item->isArchived();
+        })->flatten();
 
         if ($response->isOk()) {
             return view('admin.manage-slack-channels', compact('channels'));

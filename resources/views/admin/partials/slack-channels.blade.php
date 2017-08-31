@@ -2,6 +2,7 @@
     <thead>
     <tr>
         <th>Channel</th>
+        <th>Created</th>
         <th></th>
     </tr>
     </thead>
@@ -11,10 +12,20 @@
             <td>
                 #{{ $channel->getName() }}
             </td>
+            <td class="text-muted">
+                {{ Carbon::instance($channel->getCreated())->diffForHumans() }}
+            </td>
             <td>
-                <a href="{{ route('slack.confirm-archive-channel', $channel->getId()) }}" class="btn btn-danger pull-right">
-                    <i class="fa fa-archive text-danger"></i> Archive Channel
-                </a>
+                @unless ($channel->isArchived())
+                    <a href="{{ route('slack.confirm-archive-channel', $channel->getId()) }}"
+                       class="btn btn-danger pull-right center-block">
+                        <i class="fa fa-archive text-danger"></i> Archive
+                    </a>
+                @else
+                    <button class="btn btn-default pull-right" disabled>
+                        <i class="fa fa-archive text-muted"></i> Archived
+                    </button>
+                @endunless
             </td>
         </tr>
     @endforeach
