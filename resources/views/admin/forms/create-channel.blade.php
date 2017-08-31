@@ -19,7 +19,7 @@
 
 <script>
   function updateChannelName () {
-    $('.channel-name-output').text(slugify($('#division').val() + '-' + $('input[name="channel-name"]').val()));
+    $('.channel-name-output').text('#' + slugify($('#division').val() + '-' + $('input[name="channel-name"]').val()));
   }
 
   function slugify (text) {
