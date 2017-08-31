@@ -47,7 +47,7 @@
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <label for="name">Channel Name</label>
-                                <input type="text" name="channel-name" class="form-control"
+                                <input type="text" name="channel-name" class="form-control" autocomplete="off"
                                        onkeyup="updateChannelName();" required />
                             </div>
                             <button type="submit" class="btn btn-default">
