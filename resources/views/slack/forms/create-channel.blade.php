@@ -1,3 +1,5 @@
+@include('application.partials.errors')
+
 <div class="form-group">
     <label for="division">Division</label>
     <select name="division" id="division" class="form-control">
