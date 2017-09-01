@@ -6,20 +6,20 @@
         @endforeach
     </select>
 </div>
-
 {{ csrf_field() }}
-<div class="form-group">
-    <label for="name">Channel Name</label>
-    <input type="text" name="channel-name" class="form-control" autocomplete="off"
-           onkeyup="updateChannelName();" required />
-</div>
-<button type="submit" class="btn btn-default">
+
+@include('slack.forms.channel-name')
+
+<button type="submit" class="btn btn-default submit-button" disabled>
     Create <span class="channel-name-output"></span>
 </button>
 
 <script>
   function updateChannelName () {
-    $('.channel-name-output').text('#' + slugify($('#division').val() + '-' + $('input[name="channel-name"]').val()));
+    let division = $('#division').val(),
+      channel = $('[name=channel-name]').val();
+    $('.channel-name-output').text('#' + slugify(division + '-' + $('input[name="channel-name"]').val()));
+    $('.submit-button').prop('disabled', (channel.length < 3));
   }
 
   function slugify (text) {
