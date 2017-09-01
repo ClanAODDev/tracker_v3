@@ -17,11 +17,12 @@ use Illuminate\Support\Facades\Log;
 
 class SlackChannelController extends Controller
 {
+
     private $client;
 
-    public function __construct()
+    public function __construct(ApiClient $client)
     {
-        $this->client = new ApiClient(config('services.slack.token'));
+        $this->client = $client;
         $this->middleware('auth');
     }
 

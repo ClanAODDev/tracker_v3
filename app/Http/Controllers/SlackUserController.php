@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 
 class SlackUserController extends Controller
 {
-    public function __construct()
+    private $client;
+
+    public function __construct(ApiClient $client)
     {
-        $this->client = new ApiClient(config('services.slack.token'));
+        $this->client = $client;
         $this->middleware('auth');
     }
 
@@ -39,7 +41,7 @@ class SlackUserController extends Controller
 
         if (auth()->user()->isRole('sr_ldr')) {
             $users = $users->filter(function ($user) {
-               return $user->member->division_id === auth()->user()->member->division_id;
+                return $user->member->division_id === auth()->user()->member->division_id;
             });
         }
 
