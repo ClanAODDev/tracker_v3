@@ -75,9 +75,8 @@ class UserPolicy
         return $user->isRole(['jr_ldr', 'sr_ldr']);
     }
 
-    public function manageSlackChannels(User $user)
+    public function manageSlack(User $user)
     {
-
         return $user->isRole('sr_ldr') && $user->member->position_id == 6;
     }
 }

@@ -20,6 +20,8 @@ class SlackUserController extends Controller
      */
     public function index()
     {
+        $this->authorize('manageSlack', auth()->user());
+
         $payload = new UsersListPayload();
         $response = $this->client->send($payload);
         $emails = $response->getUsers();
@@ -34,6 +36,12 @@ class SlackUserController extends Controller
 
         $matchingCount = collect($results)->count();
         $users = User::whereIn('email', $results)->with('member.rank', 'member.position')->get();
+
+        if (auth()->user()->isRole('sr_ldr')) {
+            $users = $users->filter(function ($user) {
+               return $user->member->division_id === auth()->user()->member->division_id;
+            });
+        }
 
         return view('slack.users', compact('users', 'matchingCount'));
     }

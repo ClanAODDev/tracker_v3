@@ -180,7 +180,7 @@ Route::get('developers', 'DeveloperController@index')->name('developer');
 
 Route::group(['prefix' => 'slack'], function () {
 
-    Route::group(['prefix' => '/users', 'middleware' => 'admin'], function () {
+    Route::group(['prefix' => '/users'], function () {
         Route::get('', 'SlackUserController@index')->name('slack.user-index');
     });
 

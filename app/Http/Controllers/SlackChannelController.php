@@ -33,7 +33,7 @@ class SlackChannelController extends Controller
      */
     public function index()
     {
-        $this->authorize('manageSlackChannels', auth()->user());
+        $this->authorize('manageSlack', auth()->user());
         $payload = new ChannelsListPayload();
         $division = auth()->user()->member->division;
 
@@ -63,7 +63,7 @@ class SlackChannelController extends Controller
      */
     public function store()
     {
-        $this->authorize('manageSlackChannels', auth()->user());
+        $this->authorize('manageSlack', auth()->user());
 
         $payload = new ChannelsCreatePayload();
         $channelName = str_slug(request()->get('division') . "-" . request()->get('channel-name'));
@@ -95,7 +95,7 @@ class SlackChannelController extends Controller
      */
     public function confirmArchive($channel)
     {
-        $this->authorize('manageSlackChannels', auth()->user());
+        $this->authorize('manageSlack', auth()->user());
 
         $payload = new ChannelsInfoPayload();
         $payload->setChannelId($channel);
@@ -118,7 +118,7 @@ class SlackChannelController extends Controller
      */
     public function archive()
     {
-        $this->authorize('manageSlackChannels', auth()->user());
+        $this->authorize('manageSlack', auth()->user());
 
         $payload = new ChannelsArchivePayload();
         $payload->setChannelId(request()->channel_id);
@@ -147,7 +147,7 @@ class SlackChannelController extends Controller
      */
     public function unarchive($channel)
     {
-        $this->authorize('manageSlackChannels', auth()->user());
+        $this->authorize('manageSlack', auth()->user());
 
         $payload = new ChannelsUnarchivePayload();
         $payload->setChannelId($channel);

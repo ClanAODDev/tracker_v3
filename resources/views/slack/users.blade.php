@@ -13,15 +13,24 @@
             AOD Tracker
         @endslot
         @slot ('subheading')
-            Manage Slack Users
+            <i class="fa fa-slack"></i> Manage Slack Users
         @endslot
     @endcomponent
 
     <div class="container-fluid">
-        <div class="alert alert-warning">
-            There are
-            <code>{{ $matchingCount - count($users) }}</code> accounts unlinked with Slack, or emails that do not correspond to a user on Slack
+        @unless (auth()->user()->isRole('sr_ldr'))
+            <div class="alert alert-warning">
+                There are
+                <code>{{ $matchingCount - count($users) }}</code> accounts unlinked with Slack, or emails that do not correspond to a user on Slack
+            </div>
+        @endunless
+
+        <div class="panel panel-filled m-b-lg">
+            <div class="panel-body">
+                <p>The following users are listed as having accounts on Slack that match a user account on the tracker. If a Slack user for your division is not listed, they may have registered with a different email. Encourage members to use the same email for forum, slack, and tracker accounts.</p>
+            </div>
         </div>
+
         <table class="table table-hover adv-datatable">
             <thead>
             <tr>
