@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Slack\ArchiveChannel;
 use App\Http\Requests\Slack\CreateChannel;
 use App\Http\Requests\Slack\UnarchiveChannel;
 use Carbon\Carbon;
-use CL\Slack\Payload\ChannelsArchivePayload;
-use CL\Slack\Payload\ChannelsCreatePayload;
 use CL\Slack\Payload\ChannelsInfoPayload;
 use CL\Slack\Payload\ChannelsListPayload;
-use CL\Slack\Payload\ChannelsUnarchivePayload;
-use CL\Slack\Payload\ChatPostMessagePayload;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
