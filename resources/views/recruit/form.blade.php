@@ -13,7 +13,6 @@
             {{ $division->name }}
         @endslot
     @endcomponent
-    xoxp-44621983313-81512977463-233691291297-b7574ec09d742a43ee9f0a39280ed923
     <div class="container-fluid" id="recruiting-container">
         <recruiting-process division="{{ $division->abbreviation }}"
                             handle-name="{{ $division->handle->label or 'Ingame Name' }}"></recruiting-process>
