@@ -36,7 +36,7 @@ class UserPolicy
         if ($user->id === $userOfMember->id) {
             return false;
         }
-        
+
         // cannot update a user of the same or higher role
         if ($user->role->id <= $userOfMember->role->id) {
             return false;
@@ -73,5 +73,10 @@ class UserPolicy
     public function manageIssues(User $user)
     {
         return $user->isRole(['jr_ldr', 'sr_ldr']);
+    }
+
+    public function manageSlack(User $user)
+    {
+        return $user->isRole('sr_ldr') && $user->member->position_id == 6;
     }
 }

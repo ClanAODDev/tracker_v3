@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\AOD\MemberSync\SyncMemberData;
 use App\Division;
 use Auth;
 use Mail;
+
 
 class AppController extends Controller
 {

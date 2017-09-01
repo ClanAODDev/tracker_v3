@@ -83,6 +83,19 @@
         </li>
     @endif
 
+    @can('manageSlack', auth()->user())
+        <li class="nav-category">
+            Slack
+        </li>
+        <li class="{{ set_active('slack/users') }}">
+            <a href="{{ route('slack.user-index') }}">Users</a>
+        </li>
+        <li class="{{ set_active('slack/channels') }}">
+            <a href="{{ route('slack.channel-index') }}">Channels</a>
+        </li>
+
+    @endcan
+
     <li class="nav-category">
         Application
     </li>

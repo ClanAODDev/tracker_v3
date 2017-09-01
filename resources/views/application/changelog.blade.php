@@ -25,6 +25,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>31 August 2017 - 3.2.0</h4>
+                <hr />
+                <ul>
+                    <li>Slack management tools (for users, channels) implemented for division commanders and clan administration.</li>
+                    <li>Recruit information added to member profiles. Members without recruits will not have this section.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>23 August 2017 - 3.1.1</h4>
                 <hr />
                 <ul>
