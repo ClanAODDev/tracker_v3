@@ -65,7 +65,7 @@ Route::group(['prefix' => 'members'], function () {
         Route::delete('{note}', 'NoteController@delete')->name('deleteNote');
     });
 
-    Route::get('{member}/{slug?}', 'MemberController@show')->name('member');
+    Route::get('{member}-{slug?}', 'MemberController@show')->name('member');
 });
 
 

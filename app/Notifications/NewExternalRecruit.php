@@ -62,7 +62,7 @@ class NewExternalRecruit extends Notification
             ->attachment(function ($attachment) {
                 $attachment->title('View Member Profile')
                     ->content(
-                        route('member', $this->member->clan_id)
+                        route('member', $this->member->getUrlParams())
                     );
             });
     }
