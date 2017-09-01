@@ -48,7 +48,7 @@
                         <tr>
                             <td>
                                 {{ $user->name }} <span class="text-muted">{{ $user->member->rank->abbreviation }}</span>
-                                <a href="{{ route('member', $user->member->clan_id) }}" class="pull-right">
+                                <a href="{{ route('member', $user->member->getUrlParams()) }}" class="pull-right">
                                     <i class="fa fa-search text-accent"></i>
                                 </a>
                             </td>
