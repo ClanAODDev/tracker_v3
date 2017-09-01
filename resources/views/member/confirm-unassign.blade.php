@@ -26,7 +26,7 @@
 <hr />
         <form action="{{ route('member.unassign', $member->clan_id) }}"
               method="post" id="member-reset-form">
-            <a href="{{ route('member', $member->clan_id) }}" class="btn btn-default">Cancel</a>
+            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default">Cancel</a>
             <button type="submit" class="btn btn-success">Reset Assignments</button>
             {{ csrf_field() }}
         </form>

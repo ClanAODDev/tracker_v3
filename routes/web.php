@@ -45,7 +45,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
 
 
-    Route::get('{member}', 'MemberController@show')->name('member');
+    Route::get('{member}/{slug?}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
     Route::post('search/{name}', 'MemberController@search');

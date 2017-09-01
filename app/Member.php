@@ -324,4 +324,12 @@ class Member extends Model
 
         return $this->rank->abbreviation === $rank;
     }
+
+    public function getUrlParams()
+    {
+        return [
+            $this->clan_id,
+            $this->rank->abbreviation . '-' . $this->name
+        ];
+    }
 }

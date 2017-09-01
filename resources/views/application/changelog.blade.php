@@ -30,6 +30,7 @@
                 <ul>
                     <li>Slack management tools (for users, channels) implemented for division commanders and clan administration.</li>
                     <li>Recruit information added to member profiles. Members without recruits will not have this section.</li>
+                    <li>Added member rank and name to profile view slug for improved deeplinking</li>
                 </ul>
             </div>
         </div>

@@ -18,7 +18,7 @@
     @endcomponent
 
     <div class="container-fluid">
-        @include ('application.partials.back-breadcrumb', ['page' => 'profile', 'link' => route('member', $member->clan_id)])
+        @include ('application.partials.back-breadcrumb', ['page' => 'profile', 'link' => route('member', $member->getUrlParams())])
 
         <div class="row">
             <div class="col-md-12">

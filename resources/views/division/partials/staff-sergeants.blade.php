@@ -4,7 +4,7 @@
 <div class="row">
     @forelse ($staffSergeants as $staffSergeant)
         <div class="col-md-4">
-            <a href="{{ route('member', $staffSergeant->clan_id) }}" class="panel panel-filled panel-c-info">
+            <a href="{{ route('member', $staffSergeant->getUrlParams()) }}" class="panel panel-filled panel-c-info">
                 <div class="panel-body">
                     <h4 class="m-b-none">
                         {!! $staffSergeant->present()->rankName !!}

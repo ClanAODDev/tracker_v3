@@ -307,6 +307,6 @@ class MemberController extends Controller
 
         $this->showToast('Member assignments reset successfully');
 
-        return redirect()->route('member', $member->clan_id);
+        return redirect()->route('member', $member->getUrlParams());
     }
 }
