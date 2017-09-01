@@ -13,7 +13,7 @@
             AOD Tracker
         @endslot
         @slot ('subheading')
-            <i class="fa fa-slack"></i> Manage Slack Channels
+            Manage Slack Channels
         @endslot
     @endcomponent
 

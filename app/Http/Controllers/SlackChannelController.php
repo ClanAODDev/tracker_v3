@@ -45,13 +45,14 @@ class SlackChannelController extends Controller
 
         if ( ! auth()->user()->isRole('admin')) {
             $channels = collect($channels)->filter(function ($item, $key) use ($division) {
-                return str_contains($item->getName(), $division->abbreviation . '-');
+                return str_contains($item->getName(), $division->abbreviation . '-')
+                    || str_contains($item->getName(), str_slug($division->name));
                 // || str_contains($item->getName(), str_slug($division->name)
             })->flatten();
         }
 
         if ($response->isOk()) {
-            return view('slack.manage-slack-channels', compact('channels', 'division'));
+            return view('slack.channels', compact('channels', 'division'));
         } else {
             return view('errors.500');
         }
