@@ -45,7 +45,6 @@ Route::group(['prefix' => 'members'], function () {
     Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
 
 
-    Route::get('{member}/{slug?}', 'MemberController@show')->name('member');
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
     Route::post('search/{name}', 'MemberController@search');
@@ -65,7 +64,10 @@ Route::group(['prefix' => 'members'], function () {
         Route::patch('{note}', 'NoteController@update');
         Route::delete('{note}', 'NoteController@delete')->name('deleteNote');
     });
+
+    Route::get('{member}/{slug?}', 'MemberController@show')->name('member');
 });
+
 
 Route::group(['prefix' => 'help'], function () {
     Route::get('/', 'HelpController@index')->name('help');
