@@ -52,7 +52,7 @@ class NoteController extends Controller
         $this->syncTags($note, $request->input('tag_list'));
         $this->showToast('Note saved successfully');
 
-        return redirect()->route('member', $member->clan_id);
+        return redirect()->route('member', $member->getUrlParams());
     }
 
     /**
@@ -84,6 +84,6 @@ class NoteController extends Controller
         $note->delete();
         $this->showToast('Note deleted successfully');
 
-        return redirect()->route('member', $member->clan_id);
+        return redirect()->route('member', $member->getUrlParams());
     }
 }

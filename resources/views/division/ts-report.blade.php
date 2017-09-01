@@ -55,7 +55,7 @@
                 @foreach ($issues as $member)
                     <tr>
                         <td>
-                            <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search"></i></a>
+                            <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
                             {{ $member->present()->rankName }}
                         </td>
                         <td>

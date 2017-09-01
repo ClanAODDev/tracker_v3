@@ -17,7 +17,7 @@
         @foreach ($inactiveMembers as $member)
             <tr>
                 <td>
-                    <a href="{{ route('member', $member->clan_id) }}"><i class="fa fa-search"></i></a>
+                    <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
                     {{ $member->name }}
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>

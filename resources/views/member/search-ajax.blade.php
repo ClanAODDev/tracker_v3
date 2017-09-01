@@ -1,5 +1,5 @@
 @forelse($members as $member)
-    <a class="panel" href="{{ route('member', $member->clan_id) }}"
+    <a class="panel" href="{{ route('member', $member->getUrlParams()) }}"
        style="padding-left: 30px; margin-bottom: 0;">
         <div class="panel-body">
             <h5 class="m-b-none">

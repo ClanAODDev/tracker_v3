@@ -34,7 +34,7 @@
             @endif
 
             <li>
-                <a href="{{ route('member', auth()->user()->member->clan_id) }}">
+                <a href="{{ route('member', auth()->user()->member->getUrlParams()) }}">
                     Member Profile
                 </a>
             </li>

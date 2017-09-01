@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    @yield('metadata')
     <title>AOD | Tracker v3</title>
     @include('application.header')
 </head>

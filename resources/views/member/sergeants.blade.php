@@ -32,7 +32,7 @@
 
                     @foreach ( $division->sergeants as $member)
 
-                        <a href="{{ route('member', $member->clan_id) }}"
+                        <a href="{{ route('member', $member->getUrlParams()) }}"
                            class="col-lg-3 panel panel-filled panel-c-accent m-r m-b">
                             <span class="panel-body">
                                     {!! $member->present()->rankName !!}
@@ -46,7 +46,7 @@
 
                     @foreach($division->staffSergeants as $member)
 
-                        <a href="{{ route('member', $member->clan_id) }}"
+                        <a href="{{ route('member', $member->getUrlParams()) }}"
                            class="col-lg-3 panel panel-filled panel-c-info m-r m-b">
                             <span class="panel-body">
                                     {!! $member->present()->rankName !!}
