@@ -1,5 +1,12 @@
 @extends('application.base')
 
+@section('metadata')
+    <meta property="og:title" content="{{ $member->present()->rankName }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://example.com" />
+    <meta property="og:image" content="http://example.com/images/image.jpg" />
+@stop
+
 @section('content')
 
     @component ('application.components.division-heading')

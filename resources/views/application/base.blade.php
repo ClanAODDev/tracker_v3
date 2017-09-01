@@ -3,6 +3,7 @@
 <head>
     <title>AOD | Tracker v3</title>
     @include('application.header')
+    @yield('metadata')
 </head>
 
 @if (Auth::check() && Auth::user()->member->division)
