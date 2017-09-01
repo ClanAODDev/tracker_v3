@@ -1,11 +1,8 @@
 {{ csrf_field() }}
 <input type="hidden" name="division" id="division" value="{{ $division->abbreviation }}" />
 
-<div class="form-group">
-    <label for="name">Channel Name</label>
-    <input type="text" name="channel-name" class="form-control" autocomplete="off"
-           onkeyup="updateChannelName();" required />
-</div>
+@include('slack.forms.channel-name')
+
 <button type="submit" class="btn btn-default">
     Create <span class="channel-name-output"></span>
 </button>
