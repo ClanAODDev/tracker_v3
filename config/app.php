@@ -183,8 +183,6 @@ return [
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         TwigBridge\ServiceProvider::class,
 
-        App\Providers\SlackApiClientProvider::class
-
     ],
 
     /*
