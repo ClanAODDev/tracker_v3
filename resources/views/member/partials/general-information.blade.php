@@ -16,7 +16,9 @@
     @component('application.components.data-block')
         @slot('data')
             @if ($member->tsInvalid)
-                MISCONFIGURATION
+                TS MISCONFIGURATION
+            @elseif ($member->isPending)
+                <span class="text-muted">UNAVAILABLE</span>
             @else
                 {{ Carbon::parse($member->last_ts_activity)->diffInDays() }} DAYS
             @endif
@@ -25,11 +27,7 @@
             {{ $member->tsInvalid ? "panel-c-danger" : null }}
         @endslot
         @slot('title')
-            @if ($member->tsInvalid)
-                Teamspeak Error
-            @else
-                since last <span class="c-white">TS activity </span>
-            @endif
+            since last <span class="c-white">TS activity </span>
         @endslot
     @endcomponent
 
