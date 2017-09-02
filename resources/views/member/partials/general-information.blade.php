@@ -15,10 +15,10 @@
 
     @component('application.components.data-block')
         @slot('data')
-            @if ($member->tsInvalid)
-                TS MISCONFIGURATION
-            @elseif ($member->isPending)
+            @if ($member->isPending)
                 <span class="text-muted">UNAVAILABLE</span>
+            @elseif ($member->tsInvalid)
+                TS MISCONFIGURATION
             @else
                 {{ Carbon::parse($member->last_ts_activity)->diffInDays() }} DAYS
             @endif
