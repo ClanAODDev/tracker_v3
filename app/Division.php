@@ -166,10 +166,9 @@ class Division extends Model
             ->where(function ($query) {
                 $query->where('last_ts_activity', null)
                     ->orWhere('last_ts_activity', '0000-00-00 00:00:00');
-            })->filter(function ($member) {
-                return $member->join_date > Carbon::today()->subDays(5);
             });
     }
+
 
     /**
      * relationship - division has many members
