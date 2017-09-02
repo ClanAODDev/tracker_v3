@@ -15,7 +15,6 @@
 
     @component('application.components.data-block')
         @slot('data')
-<<<<<<< HEAD
             @if ($member->isPending)
                 <span class="text-muted">UNAVAILABLE</span>
             @elseif ($member->tsInvalid)
