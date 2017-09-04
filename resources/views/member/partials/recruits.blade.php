@@ -16,7 +16,7 @@
                 <td>
                     {{ $recruit->present()->rankName }}
                     <span class="pull-right">
-                    <a href="{{ route('member', $recruit->clan_id) }}">
+                    <a href="{{ route('member', $recruit->getUrlParams()) }}">
                         <i class="fa fa-search"></i>
                     </a>
                 </span>

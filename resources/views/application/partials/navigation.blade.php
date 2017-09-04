@@ -111,7 +111,7 @@
     </li>
 
     <li class="{{ set_active('changelog') }}">
-        <a href="{{ route('changelog') }}">Changelog</a>
+        <a href="{{ route('changelog') }}">Changelog <span class="label label-success">v3.2.1</span></a>
     </li>
 </ul>
 
