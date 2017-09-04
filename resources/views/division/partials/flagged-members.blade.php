@@ -2,9 +2,11 @@
     <table class="table adv-datatable table-hover">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Last Seen
-                <small class="text-muted">Days ago</small>
+            <th>Last Forum Activity
+                <small class="slight">Days</small>
+            </th>
+            <th>Last TS Activity
+                <small class="slight">Days</small>
             </th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
@@ -18,7 +20,16 @@
                     {{ $member->name }}
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
-                <td><code>{{ $member->last_activity->diffInDays() }}</code></td>
+                <td>
+                    <code>{{ $member->last_activity->diffInDays() }}</code>
+                </td>
+                <td>
+                    @if ($member->tsInvalid)
+                        <code title="Misconfiguration"><span class="text-danger">00000</span></code>
+                    @else
+                        <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                    @endif
+                </td>
                 <td>
                     @can ('update', $member)
                         <a href="{{ route('member.unflag-inactive', $member->clan_id) . "#flagged" }}"

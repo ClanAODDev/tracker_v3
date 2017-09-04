@@ -1,5 +1,4 @@
 @if (count($member->recruits))
-
     <h4 class="m-t-xl">Recruiting History</h4>
     <hr />
     <table class="table adv-datatable table-striped">
