@@ -36,7 +36,7 @@ class InactiveMemberController extends Controller
                 }
             })
             ->whereDoesntHave('leave')
-            ->with('rank')
+            ->with('rank', 'squad')
             ->orderBy('last_activity')
             ->get();
 
