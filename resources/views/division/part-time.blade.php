@@ -9,7 +9,7 @@
         @slot ('heading')
             Part-Timers
 
-            <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal">
+            <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#mass-pm-modal">
                 <i class="fa fa-bullhorn text-accent"></i> <span
                         class="hidden-xs hidden-sm">Mass PM Part-Timers</span>
             </button>

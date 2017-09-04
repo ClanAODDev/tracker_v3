@@ -46,7 +46,7 @@
                        class="btn btn-default {{ set_active(['divisions/*/inactive-members/*', 'divisions/*/inactive-members']) }}">Filter By Forum Activity</a>
                     <a href="{{ route('division.inactive-members-ts', $division->abbreviation) }}"
                        class="btn btn-default {{ set_active(['divisions/*/inactive-members-ts/*', 'divisions/*/inactive-members-ts']) }}">Filter By TS Activity</a>
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#mass-pm-modal">
                         <i class="fa fa-bullhorn text-accent"></i> <span
                                 class="hidden-xs hidden-sm">Mass PM Inactives</span>
                     </button>
