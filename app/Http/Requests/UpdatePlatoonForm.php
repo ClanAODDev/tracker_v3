@@ -67,7 +67,7 @@ class UpdatePlatoonForm extends FormRequest
         if ( ! $this->leader && ! $this->leader_id) {
             // reset existing leader if there is one
             if ($this->platoon->leader) {
-                $this->resetLeaderFor($this->platoon);
+                $this->resetLeaderOf($this->platoon);
             }
         }
 
@@ -75,7 +75,7 @@ class UpdatePlatoonForm extends FormRequest
         if ($this->leader_id) {
             // is there an existing leader?
             if ($this->platoon->leader) {
-                $this->resetLeaderFor($this->platoon);
+                $this->resetLeaderOf($this->platoon);
             }
 
             // set the new leader
@@ -108,7 +108,7 @@ class UpdatePlatoonForm extends FormRequest
      *
      * @param $platoon
      */
-    private function resetLeaderFor($platoon)
+    private function resetLeaderOf($platoon)
     {
         $platoon->leader->assignPosition('member')->save();
 

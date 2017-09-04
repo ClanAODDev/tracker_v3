@@ -9,7 +9,7 @@
         </div>
         <a class="navbar-brand" href="{{ route('home') }}">
             TRACKER
-            <span>v3.2.0</span>
+            @include('application.partials.version')
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">

@@ -64,11 +64,23 @@ class UpdateSquadForm extends FormRequest
             $this->assignMembersTo($this->squad);
         }
 
+        // setting squad to TBA
+        if ( ! $this->leader && ! $this->leader_id) {
+            // reset existing leader if there is one
+            if ($this->squad->leader) {
+                $this->resetLeaderOf($this->squad);
+            }
+        }
+
+        // setting a new leader
         if ($this->leader_id) {
-            $this->resetLeaderOf($this->squad);
+            // is there an existing leader?
+            if ($this->squad->leader) {
+                $this->resetLeaderOf($this->squad);
+            }
+
+            // set the new leader
             $this->assignLeaderTo($this->squad);
-        } else {
-            $this->resetLeaderOf($this->squad);
         }
 
         $this->squad->update(

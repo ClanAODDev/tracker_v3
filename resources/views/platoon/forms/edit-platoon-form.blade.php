@@ -77,8 +77,6 @@
     </div>
 </div>
 
-@include ('platoon.forms.assign-members-form')
-
 {{ csrf_field() }}
 
 @section('footer_scripts')

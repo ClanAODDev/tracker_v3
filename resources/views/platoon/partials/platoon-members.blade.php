@@ -18,5 +18,7 @@
 </div>
 
 <div class="panel-footer">
-    <small class="slight"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave</small>
+    <small class="slight"><span style="color: lightslategrey" title="On Leave"><i
+                    class="fa fa-asterisk"></i></span> - On Leave
+    </small>
 </div>

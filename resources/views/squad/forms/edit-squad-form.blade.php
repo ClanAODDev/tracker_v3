@@ -59,8 +59,6 @@
     </div>
 </div>
 
-@include ('squad.forms.assign-members-form')
-
 {{ csrf_field() }}
 
 @section('footer_scripts')

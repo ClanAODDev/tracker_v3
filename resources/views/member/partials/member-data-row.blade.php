@@ -1,4 +1,4 @@
-<tr role="row">
+<tr role="row" class="{{ ($member->leave) ? 'text-muted' : null }}">
     <td class="col-hidden">{{ $member->rank_id }}</td>
     <td class="col-hidden">{{ $member->last_activity }}</td>
     <td>
@@ -8,12 +8,13 @@
                             class="fa fa-asterisk"></i></strong>
             @endif
         @endif
-        @if ($member->leave)<span class="text-accent" title="On Leave"><i
-                    class="fa fa-asterisk"></i></span>
+        @if ($member->leave)
+            <span style="color: lightslategrey" title="On Leave"><i class="fa fa-asterisk"></i></span>
         @endif
         {!! $member->present()->nameWithIcon !!}
         <span class="pull-right" title="View Profile">
-            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default btn-xs"><i class="fa fa-search text-accent"></i></a>
+            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default btn-xs"><i
+                        class="fa fa-search text-accent"></i></a>
         </span>
     </td>
     <td class="text-center">{{ $member->rank->abbreviation }}</td>

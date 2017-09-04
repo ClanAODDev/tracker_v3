@@ -25,6 +25,20 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>3 Sept 2017 - 3.2.1</h4>
+                <hr />
+                <ul>
+                    <li>Minor logic issues fixed with assigning platoon leaders, squad leaders</li>
+                    <li>Removed deprecated member assignment functionality in Manage Platoon, Manage Squad views</li>
+                    <li>Members on leave now appear "dimmed" in member lists. Leave icon is now a grey color.</li>
+                    <li>Added a mass-pm button on part-timers management view</li>
+                    <li>Member profile page routes now include a slug that displays rank and name to make linking to member profiles more accessible.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>31 August 2017 - 3.2.0</h4>
                 <hr />
                 <ul>
