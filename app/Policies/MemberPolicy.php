@@ -42,10 +42,9 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        // can't edit yourself
-
+        // can edit yourself
         if ($member->id === auth()->user()->member_id) {
-            return false;
+            return true;
         }
 
         $userDivision = $user->member->division;
