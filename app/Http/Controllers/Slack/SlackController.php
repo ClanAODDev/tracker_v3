@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Slack;
 
+use App\Http\Controllers\Controller;
 use App\SlackSlashCommand;
 use Illuminate\Http\Request;
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Slack;
 
+use App\Http\Controllers\Controller;
 use App\User;
 use CL\Slack\Payload\UsersListPayload;
 use CL\Slack\Transport\ApiClient;
