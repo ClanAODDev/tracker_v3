@@ -35,6 +35,7 @@
                     <li>Member profile page routes now include a slug that displays rank and name to make linking to member profiles more accessible.</li>
                     <li>Users can now edit their own member profile, to manage position, handles, part-time status.</li>
                     <li>Squad information now listed on the inactive members section. TS activity has been added to the flagged view.</li>
+                    <li>List division inactive by percentage instead of raw number. Number can still be viewed by hovering over the sparkline graph</li>
                 </ul>
             </div>
         </div>

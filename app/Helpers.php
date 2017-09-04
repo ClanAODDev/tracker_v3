@@ -210,7 +210,7 @@ function percent($old_member_count, $new_member_count)
         return 0;
     }
 
-    return number_format((1 - $old_member_count / $new_member_count) * 100, 2); // yields 0.76
+    return number_format(($old_member_count / $new_member_count) * 100, 2); // yields 0.76
 }
 
 function curl_last_url($ch, &$maxredirect = null)
