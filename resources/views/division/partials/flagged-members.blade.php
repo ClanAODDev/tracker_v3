@@ -1,5 +1,5 @@
 @if (count($flaggedMembers) > 0)
-    <table class="table adv-datatable table-hover">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th>Last Forum Activity
