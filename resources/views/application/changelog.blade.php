@@ -33,6 +33,8 @@
                     <li>Members on leave now appear "dimmed" in member lists. Leave icon is now a grey color.</li>
                     <li>Added a mass-pm button on part-timers management view</li>
                     <li>Member profile page routes now include a slug that displays rank and name to make linking to member profiles more accessible.</li>
+                    <li>Users can now edit their own member profile, to manage position, handles, part-time status.</li>
+                    <li>Squad information now listed on the inactive members section. TS activity has been added to the flagged view.</li>
                 </ul>
             </div>
         </div>
