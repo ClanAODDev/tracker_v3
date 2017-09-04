@@ -62,13 +62,27 @@ class UpdatePlatoonForm extends FormRequest
             $this->assignMembersTo($this->platoon);
         }
 
-        if ($this->leader_id) {
-            $this->resetLeaderFor($this->platoon);
-            $this->assignLeaderTo($this->platoon);
-        } else {
-            $this->resetLeaderFor($this->platoon);
+
+        // setting platoon to TBA
+        if ( ! $this->leader && ! $this->leader_id) {
+            // reset existing leader if there is one
+            if ($this->platoon->leader) {
+                $this->resetLeaderFor($this->platoon);
+            }
         }
 
+        // setting a new leader
+        if ($this->leader_id) {
+            // is there an existing leader?
+            if ($this->platoon->leader) {
+                $this->resetLeaderFor($this->platoon);
+            }
+
+            // set the new leader
+            $this->assignLeaderTo($this->platoon);
+        }
+
+        // handle all the other updates
         $this->platoon->update(
             $this->all()
         );
@@ -90,6 +104,18 @@ class UpdatePlatoonForm extends FormRequest
     }
 
     /**
+     * Reset the leader for a platoon
+     *
+     * @param $platoon
+     */
+    private function resetLeaderFor($platoon)
+    {
+        $platoon->leader->assignPosition('member')->save();
+
+        $platoon->leader()->dissociate()->save();
+    }
+
+    /**
      * Assign a member as platoon leader
      *
      * @param $platoon
@@ -103,17 +129,5 @@ class UpdatePlatoonForm extends FormRequest
         $leader->squad()->dissociate();
 
         $leader->assignPosition('platoon leader')->save();
-    }
-
-    /**
-     * Reset the leader for a platoon
-     *
-     * @param $platoon
-     */
-    private function resetLeaderFor($platoon)
-    {
-        $platoon->leader->assignPosition('member')->save();
-
-        $platoon->leader()->dissociate()->save();
     }
 }
