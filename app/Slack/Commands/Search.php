@@ -21,8 +21,6 @@ class Search extends Base implements Command
 
     private $forumProfile = "https://www.clanaod.net/forums/member.php?u=";
 
-    private $trackerProfile = "https://www.clanaod.net/v3tracker/members/";
-
     /**
      * @return array
      */
@@ -60,9 +58,11 @@ class Search extends Base implements Command
                     ? "{$member->division->name} Division"
                     : "Ex-AOD";
 
+                $memberLink = route('member', $member->getUrlParams());
+
                 $links = [
                     "<{$this->forumProfile}{$member->clan_id}|Forum>",
-                    "<{$this->trackerProfile}{$member->clan_id}|Tracker>"
+                    "<{$memberLink}|Tracker>"
                 ];
 
                 $this->content[] = [
