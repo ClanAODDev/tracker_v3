@@ -26,7 +26,6 @@
                     </span>
                 </td>
                 <td class="text-center slight">
-                    {{ dd($census) }}
                     {{ number_format($census->weekly_ts_count / $census->count * 100, 1) }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
