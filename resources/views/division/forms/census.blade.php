@@ -26,10 +26,11 @@
                     </span>
                 </td>
                 <td class="text-center slight">
-                    {{ number_format($census->weekly_ts_active / $census->count * 100, 1) }}%
+                    {{ dd($census) }}
+                    {{ number_format($census->weekly_ts_count / $census->count * 100, 1) }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
-                          data-counts="{{ json_encode([$popMinus, $census->weekly_ts_active]) }}">
+                          data-counts="{{ json_encode([$popMinus, $census->weekly_ts_count]) }}">
                     </span>
                 </td>
                 {{--<td>{{ $census->notes }}</td>--}}
