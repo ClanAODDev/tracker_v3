@@ -28,7 +28,7 @@ class SyncMemberData
             return strtolower($item['aoddivision']);
         });
 
-        if ( ! count($syncData)) {
+        if (! count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }
@@ -103,7 +103,6 @@ class SyncMemberData
 
         // populate our active members
         self::$activeMembers[] = $member->id;
-
     }
 
     /**

@@ -31,13 +31,17 @@ class AdminController extends Controller
                     // provide context even if a subject is "trashed"
                     $query->withTrashed();
                 }
-            ], 'member')->orderByDesc('id')->get();
+            ],
+            'member'
+        )->orderByDesc('id')->get();
 
         return view('admin.index', compact(
-            'divisions', 'users', 'handles', 'allTags',
-            'activityLog', 'defaultTags'
+            'divisions',
+            'users',
+            'handles',
+            'allTags',
+            'activityLog',
+            'defaultTags'
         ));
     }
-
-
 }

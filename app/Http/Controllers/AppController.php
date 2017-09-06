@@ -6,7 +6,6 @@ use App\Division;
 use Auth;
 use Mail;
 
-
 class AppController extends Controller
 {
     /**

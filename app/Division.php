@@ -144,7 +144,7 @@ class Division extends Model
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         $getPosts = curl_exec($ch);
         $countPosts = stripos($getPosts, $string);
-        if ( ! $countPosts) {
+        if (! $countPosts) {
             $url = parse_url(curl_last_url($ch));
             $query = $url['query'];
             parse_str($query, $url_array);
@@ -351,7 +351,7 @@ class Division extends Model
 
         $locality = collect($this->settings()->locality);
 
-        if ( ! $locality->count()) {
+        if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -363,7 +363,7 @@ class Division extends Model
             }
         });
 
-        if ( ! $results) {
+        if (! $results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);

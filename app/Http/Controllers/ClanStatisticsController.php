@@ -51,8 +51,13 @@ class ClanStatisticsController extends Controller
         });
 
         return view('statistics.show')->with(compact(
-            'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
-            'censuses', 'rankDemographic', 'mismatchedTSMembers'
+            'memberCount',
+            'previousCensus',
+            'lastYearCensus',
+            'memberCount',
+            'censuses',
+            'rankDemographic',
+            'mismatchedTSMembers'
         ));
     }
 

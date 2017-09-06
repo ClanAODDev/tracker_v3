@@ -28,7 +28,8 @@ class UserController extends Controller
             ? Role::all()->pluck('label', 'id')
             : Role::where('id', '<', auth()->user()->role->id)->pluck('label', 'id');
 
-        return view('member.edit-user',
+        return view(
+            'member.edit-user',
             compact('user', 'division', 'member', 'roles')
         );
     }
@@ -46,7 +47,7 @@ class UserController extends Controller
 
         // cannot grant role greater than or equal to your own
         // disregard for developers
-        if ( ! auth()->user()->isDeveloper()
+        if (! auth()->user()->isDeveloper()
             && $request->role >= auth()->user()->role_id
         ) {
             return response()->json(['error' => 'Not authorized.'], 403);
@@ -55,6 +56,4 @@ class UserController extends Controller
         $user->assignRole(Role::find($request->role));
         $user->recordActivity('role_granted_to', $user->member);
     }
-
 }
-

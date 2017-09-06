@@ -18,7 +18,7 @@ class ImpersonationController extends Controller
      */
     public function impersonate(User $user)
     {
-        if ( ! $this->canImpersonate($user)) {
+        if (! $this->canImpersonate($user)) {
             abort(403);
         }
 
@@ -41,7 +41,7 @@ class ImpersonationController extends Controller
     private function canImpersonate($user)
     {
         // only admins can impersonate
-        if ( ! auth()->user()->isRole('admin')) {
+        if (! auth()->user()->isRole('admin')) {
             return false;
         }
 

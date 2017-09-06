@@ -12,7 +12,7 @@ class ImpersonateUsersTest extends TestCase
     /** @test */
     function non_admins_cannot_impersonate_users()
     {
-        $user = factory('App\User')->create();
+        $user = factory(\App\User::class)->create();
         $this->get(route('impersonate', $user))->assertRedirect('/login');
         $this->actingAs($user)
             ->get(route('impersonate', $user))
@@ -22,8 +22,8 @@ class ImpersonateUsersTest extends TestCase
     /** @test */
     function admins_can_impersonate_users()
     {
-        $user = factory('App\User')->states('admin')->create();
-        $admin = factory('App\User')->create();
+        $user = factory(\App\User::class)->states('admin')->create();
+        $admin = factory(\App\User::class)->create();
 
         $this->actingAs($admin)->get(route('impersonate', $user));
 

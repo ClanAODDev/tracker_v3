@@ -30,7 +30,7 @@ class SlackUserController extends Controller
         $emails = $response->getUsers();
 
         $results = collect($emails)->map(function ($user) {
-            if ( ! $user->isDeleted() && $user->getProfile()->getEmail() !== null) {
+            if (! $user->isDeleted() && $user->getProfile()->getEmail() !== null) {
                 return $user->getProfile()->getEmail();
             }
         })->flatten()->filter(function ($email) {

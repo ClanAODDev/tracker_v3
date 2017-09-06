@@ -157,8 +157,12 @@ class PlatoonController extends Controller
             ->get();
 
         return view('platoon.squads', compact(
-            'platoon', 'division', 'squads', 'unassigned',
-            'forumActivityGraph', 'tsActivityGraph'
+            'platoon',
+            'division',
+            'squads',
+            'unassigned',
+            'forumActivityGraph',
+            'tsActivityGraph'
         ));
     }
 
@@ -227,8 +231,12 @@ class PlatoonController extends Controller
     public function manageSquads($division, $platoon)
     {
         $platoon->load(
-            'squads', 'squads.members', 'squads.leader', 'unassigned.rank',
-            'squads.leader.rank', 'squads.members.rank'
+            'squads',
+            'squads.members',
+            'squads.leader',
+            'unassigned.rank',
+            'squads.leader.rank',
+            'squads.members.rank'
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {

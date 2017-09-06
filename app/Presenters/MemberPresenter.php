@@ -34,7 +34,6 @@ class MemberPresenter extends Presenter
         $value = $value instanceof Carbon ? $value : Carbon::parse($value);
 
         if (! $value) {
-
         }
 
 //        if ($value->diffInDays() < 1) {

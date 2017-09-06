@@ -48,7 +48,7 @@ class MemberController extends Controller
      */
     public function search($name = null)
     {
-        if ( ! $name) {
+        if (! $name) {
             $name = request()->name;
         }
 
@@ -145,7 +145,10 @@ class MemberController extends Controller
             ->get();
 
         return view('member.show', compact(
-            'member', 'division', 'notes', 'partTimeDivisions'
+            'member',
+            'division',
+            'notes',
+            'partTimeDivisions'
         ));
     }
 
@@ -192,7 +195,11 @@ class MemberController extends Controller
         $handles = $this->getHandles($member);
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions', 'handles', 'divisions'
+            'member',
+            'division',
+            'positions',
+            'handles',
+            'divisions'
         ));
     }
 

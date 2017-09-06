@@ -35,7 +35,10 @@ class NoteController extends Controller
         $tags = $division->availableTags->pluck('name', 'id');
 
         return view('member.edit-note', compact(
-            'note', 'division', 'member', 'tags'
+            'note',
+            'division',
+            'member',
+            'tags'
         ));
     }
 

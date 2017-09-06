@@ -46,7 +46,6 @@ class Search extends Base implements Command
             $this->members = Member::where('name', 'LIKE', "%{$terms[0]}%")
                 ->orWhere('name', 'LIKE', "%{$terms[1]}%")
                 ->get();
-
         } else {
             $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
         }

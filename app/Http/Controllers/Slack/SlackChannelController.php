@@ -41,7 +41,7 @@ class SlackChannelController extends Controller
             return $item->isArchived();
         })->flatten();
 
-        if ( ! auth()->user()->isRole('admin')) {
+        if (! auth()->user()->isRole('admin')) {
             $channels = collect($channels)->filter(function ($item, $key) use ($division) {
                 return str_contains($item->getName(), $division->abbreviation . '-')
                     || str_contains($item->getName(), str_slug($division->name));

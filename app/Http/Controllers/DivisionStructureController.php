@@ -213,7 +213,7 @@ class DivisionStructureController extends Controller
     {
         $this->authorize('manageDivisionStructure', auth()->user());
 
-        if ( ! auth()->user()->isRole(['sr_ldr', 'admin'])) {
+        if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
             abort(403);
         }
 
@@ -256,7 +256,10 @@ class DivisionStructureController extends Controller
                             $query->where('id', $division->handle_id);
                         }
                     ],
-                    'leaders.position', 'squads', 'squads.members', 'squads.members.rank'
+                    'leaders.position',
+                    'squads',
+                    'squads.members',
+                    'squads.members.rank'
                 )->sortBy('order', 'asc')->get()
             ]
         ]);
