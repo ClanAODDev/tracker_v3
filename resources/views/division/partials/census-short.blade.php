@@ -7,12 +7,14 @@
         @if($division->members->count() < $previousCensus->count)
             <span class="slight">
                     <i class="fa fa-play fa-rotate-90 c-white"></i>
-                {{ percent($previousCensus->count, $division->members->count()) }}%
+                {{-- show percent difference --}}
+                {{ number_format((1 - $previousCensus->count / $division->members()->count()) * 100, 2) }}%
                 </span>
         @else
             <span class="slight">
                     <i class="fa fa-play fa-rotate-270 text-warning"></i>
-                {{ percent($previousCensus->count, $division->members->count()) }}%
+                {{-- show percent difference --}}
+                {{ number_format((1 - $previousCensus->count / $division->members()->count()) * 100, 2) }}%
                 </span>
         @endif
     @endif
