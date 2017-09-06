@@ -3,20 +3,17 @@
 
     {{ number_format($division->members->count()) }}
 
+
+
     @if($previousCensus)
-        @if($division->members->count() < $previousCensus->count)
-            <span class="slight">
-                    <i class="fa fa-play fa-rotate-90 c-white"></i>
-                {{-- show percent difference --}}
-                {{ number_format((1 - $previousCensus->count / $division->members()->count()) * 100, 2) }}%
-                </span>
-        @else
-            <span class="slight">
-                    <i class="fa fa-play fa-rotate-270 text-warning"></i>
-                {{-- show percent difference --}}
-                {{ number_format((1 - $previousCensus->count / $division->members()->count()) * 100, 2) }}%
-                </span>
-        @endif
+        <div class="slight" style="display: inline-block">
+            @if($division->members->count() < $previousCensus->count)
+                <i class="fa fa-play fa-rotate-90 c-white"></i>
+            @else
+                <i class="fa fa-play fa-rotate-270 text-warning"></i>
+            @endif
+            {{ abs(number_format((1 - $previousCensus->count / $division->members->count()) * 100, 2)) }}%
+        </div>
     @endif
 </h1>
 
