@@ -25,6 +25,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>6 Sept 2017 - 3.2.2</h4>
+                <hr />
+                <ul>
+                    <li>Added flagged member bb-code for sharing members removed</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>3 Sept 2017 - 3.2.1</h4>
                 <hr />
                 <ul>
