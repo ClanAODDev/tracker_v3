@@ -55,7 +55,6 @@ class DivisionController extends Controller
                 'slack-error-detail' => $response->getErrorExplanation()
             ])->withInput();
         }
-
     }
 
     /**
@@ -90,8 +89,13 @@ class DivisionController extends Controller
         $staffSergeants = $division->staffSergeants()->with('rank')->get();
 
         return view('division.show', compact(
-            'division', 'previousCensus', 'platoons', 'lastYearCensus',
-            'divisionLeaders', 'generalSergeants', 'staffSergeants'
+            'division',
+            'previousCensus',
+            'platoons',
+            'lastYearCensus',
+            'divisionLeaders',
+            'generalSergeants',
+            'staffSergeants'
         ));
     }
 
@@ -118,8 +122,12 @@ class DivisionController extends Controller
         $defaultTags = Tag::whereDefault(true)->get();
 
         return view('division.modify', compact(
-            'division', 'censuses', 'weeklyActive',
-            'populations', 'comments', 'defaultTags'
+            'division',
+            'censuses',
+            'weeklyActive',
+            'populations',
+            'comments',
+            'defaultTags'
         ));
     }
 
@@ -229,8 +237,12 @@ class DivisionController extends Controller
             })->values();
 
         return view('division.census', compact(
-            'division', 'populations', 'weeklyActive',
-            'comments', 'censuses', 'weeklyTsActive'
+            'division',
+            'populations',
+            'weeklyActive',
+            'comments',
+            'censuses',
+            'weeklyTsActive'
         ));
     }
 
@@ -256,7 +268,10 @@ class DivisionController extends Controller
         $tsActivityGraph = $this->division->getDivisionTSActivity($division);
 
         return view('division.members', compact(
-            'division', 'members', 'forumActivityGraph', 'tsActivityGraph'
+            'division',
+            'members',
+            'forumActivityGraph',
+            'tsActivityGraph'
         ));
     }
 }

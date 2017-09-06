@@ -46,7 +46,6 @@ class DivisionController extends Controller
         $handles = Handle::all()->pluck('label', 'id');
 
         return view('admin.create-division', compact('handles'));
-
     }
 
     /**

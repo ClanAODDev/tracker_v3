@@ -29,7 +29,7 @@ class GetDivisionInfo
      */
     public function __construct()
     {
-        if ( ! config('app.aod.token')) {
+        if (! config('app.aod.token')) {
             Log::critical("ERROR: AOD Token not defined in configuration.");
             exit;
         } else {
@@ -58,7 +58,7 @@ class GetDivisionInfo
 
         curl_close($ch);
 
-        if ( ! is_object($data)) {
+        if (! is_object($data)) {
             Log::critical("ERROR: Member sync returning invalid: {$this->jsonUrl()}");
             Log::critical($results);
             exit;
@@ -127,5 +127,3 @@ class GetDivisionInfo
         return $prepared;
     }
 }
-
-

@@ -114,19 +114,25 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/leave', 'LeaveController@index')->name('leave.index');
     Route::post('{division}/leave', 'LeaveController@store')->name('leave.store');
 
-    Route::get('{division}/structure/edit',
-        'DivisionStructureController@modify')->name('division.edit-structure');
+    Route::get(
+        '{division}/structure/edit',
+        'DivisionStructureController@modify'
+    )->name('division.edit-structure');
     Route::get('{division}/structure', 'DivisionStructureController@show')->name('division.structure');
-    Route::post('{division}/structure',
-        'DivisionStructureController@update')->name('division.update-structure');
+    Route::post(
+        '{division}/structure',
+        'DivisionStructureController@update'
+    )->name('division.update-structure');
 
     Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
     Route::get('{division}/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members-ts');
 
-    Route::get('{division}/promotions/{month?}/{year?}',
-        'PromotionsController@show')->middleware(['auth'])->name('division.promotions');
+    Route::get(
+        '{division}/promotions/{month?}/{year?}',
+        'PromotionsController@show'
+    )->middleware(['auth'])->name('division.promotions');
 
     Route::get('{division}/members', 'DivisionController@members')->name('division.members');
 
@@ -170,7 +176,6 @@ Route::group(['prefix' => 'divisions/'], function () {
             Route::patch('{squad}', 'SquadController@update');
             Route::delete('{squad}', 'SquadController@destroy')->name('deleteSquad');
         });
-
     });
 });
 
@@ -196,8 +201,6 @@ Route::group(['prefix' => 'slack'], function () {
             ->name('slack.unarchive-channel');
         Route::post('/archive', 'Slack\SlackChannelController@archive')->name('slack.archive-channel');
     });
-
-
 });
 
 /**

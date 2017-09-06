@@ -75,7 +75,6 @@ class RecruitingController extends Controller
         }
 
         $this->showToast('Your recruitment has successfully been completed!');
-
     }
 
     /**

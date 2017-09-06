@@ -37,8 +37,14 @@ class PromotionsController extends Controller
         $promotionPeriods = $this->member->promotionPeriods();
 
         return view('division.promotions', compact(
-            'members', 'division', 'promotionPeriods', 'year', 'month',
-            'ranks', 'counts'));
+            'members',
+            'division',
+            'promotionPeriods',
+            'year',
+            'month',
+            'ranks',
+            'counts'
+        ));
     }
 
     /**
