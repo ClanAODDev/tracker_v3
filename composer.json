@@ -21,11 +21,11 @@
         "laravelcollective/html": "5.5.*",
         "whossun/laravel-toastr": "^1.0",
         "laravel/tinker": "~1.0",
-        "graham-campbell/github": "^5.1",
         "php-http/guzzle6-adapter": "^1.1",
         "rcrowe/twigbridge": "^0.9.4",
         "cleentfaar/slack": "^0.20.1",
-        "fideloper/proxy": "~3.3"
+        "fideloper/proxy": "~3.3",
+        "graham-campbell/github": "^6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
