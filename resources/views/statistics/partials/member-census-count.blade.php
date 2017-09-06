@@ -6,17 +6,14 @@
 
             {{ number_format($memberCount) }}
 
-            @if($memberCount < $previousCensus->count)
-                <span class="slight">
+            <div class="slight" style="display: inline-block">
+                @if($memberCount < $previousCensus->count)
                     <i class="fa fa-play fa-rotate-90 c-white"></i>
-                    {{ percent($previousCensus->count, $memberCount) }}%
-                </span>
-            @else
-                <span class="slight">
+                @else
                     <i class="fa fa-play fa-rotate-270 text-warning"></i>
-                    {{ percent($previousCensus->count, $memberCount) }}%
-                </span>
-            @endif
+                @endif
+                {{ abs(number_format((1 - $previousCensus->count / $memberCount) * 100, 2)) }}%
+            </div>
         </h1>
 
         <div class="small">
