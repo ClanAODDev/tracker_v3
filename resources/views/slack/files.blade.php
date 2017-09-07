@@ -21,11 +21,25 @@
 
         <h4>Manage Slack Files</h4>
         <hr />
-        <p>Listed below are all files found for the Slack team. Keep in mind that this does not include files </p>
+
+        <div class="panel panel-filled">
+            <div class="panel-heading">Storage</div>
+            <div class="panel-body">
+                <h4>{{ $percentUsage }}% <small>{{ bytesToHuman($storage) }}</small></h4>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" style="width: {{ $percentUsage }}%" aria-valuenow="{{ $percentUsage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <p>Listed below are all files found for the Slack team. Keep in mind that this does not include files shared in private conversations or channels. Purging is capped at 100 files per request, so use with caution.</p>
 
         <div class="row">
             <div class="col-md-12">
-                <a href="{{ route('slack.files.purge') }}" class="btn btn-danger"><i class="fa fa-trash"></i> Mass Purge</a>
+                <a href="{{ route('slack.files.purge') }}" class="btn btn-danger">
+                    <i class="fa fa-trash"></i> Mass Purge
+                </a>
             </div>
         </div>
 

@@ -33,7 +33,15 @@ class SlackFilesController extends SlackController
 
         $response = $this->client->files->list();
 
-        return view('slack.files', ['files' => $response['files']]);
+        $storage = array_sum(collect($response['files'])->map(function ($file) {
+            return $file['size'];
+        })->toArray());
+
+        $percentUsage = number_format(($storage / 5368709120) * 100, 1);
+
+        return view('slack.files', compact('storage', 'percentUsage'))->with(
+            ['files' => $response['files']]
+        );
 
     }
 
