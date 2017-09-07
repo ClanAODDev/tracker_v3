@@ -33,6 +33,10 @@ class NoteController extends Controller
 
         $division = $member->division;
 
+        if (! $division) {
+            return redirect(404);
+        }
+
         $tags = $division->availableTags->pluck('name', 'id');
 
         return view('member.edit-note', compact(
