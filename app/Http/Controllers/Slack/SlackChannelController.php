@@ -31,6 +31,10 @@ class SlackChannelController extends SlackController
 
         $response = $this->client->channels->list();
 
+        if ( ! $response['ok']) {
+            return $this->getSlackErrorResponse($response);
+        }
+
         $channels = $response['channels'];
 
         if ( ! auth()->user()->isRole('admin')) {
@@ -40,11 +44,8 @@ class SlackChannelController extends SlackController
             });
         }
 
-        if ($response['ok']) {
-            return view('slack.channels', compact('channels', 'division'));
-        } else {
-            return view('errors.500');
-        }
+        return view('slack.channels', compact('channels', 'division'));
+
     }
 
     /**
@@ -56,16 +57,17 @@ class SlackChannelController extends SlackController
     public function store(CreateChannel $form)
     {
         $response = $form->persist($this->client);
-        $channelName = "{$form['division']}-{$form['channel-name']}";
 
-        if ($response['ok']) {
-            $this->showToast("{$channelName} was created!");
-            $this->logSlackAction(" created a slack channel - {$channelName}");
-
-            return redirect()->back();
-        } else {
+        if ( ! $response['ok']) {
             return $this->getSlackErrorResponse($response);
         }
+
+        $channelName = "{$form['division']}-{$form['channel-name']}";
+
+        $this->showToast("{$channelName} was created!");
+        $this->logSlackAction(" created a slack channel - {$channelName}");
+
+        return redirect()->back();
     }
 
 
@@ -81,11 +83,12 @@ class SlackChannelController extends SlackController
 
         $response = $this->client->channels->info(['channel' => $channel]);
 
-        if ($response['ok']) {
-            return view('slack.confirm-archive', ['channel' => $response['channel']]);
-        } else {
+        if ( ! $response['ok']) {
             return $this->getSlackErrorResponse($response);
         }
+
+        return view('slack.confirm-archive', ['channel' => $response['channel']]);
+
     }
 
     /**
@@ -98,14 +101,15 @@ class SlackChannelController extends SlackController
     {
         $response = $form->persist($this->client);
 
-        if ($response['ok']) {
-            $this->showToast("Channel was archived!");
-            $this->logSlackAction("archived a slack channel - " . request()->channel_id);
-
-            return redirect()->route('slack.channel-index');
-        } else {
+        if ( ! $response['ok']) {
             return $this->getSlackErrorResponse($response);
         }
+
+        $this->showToast("Channel was archived!");
+        $this->logSlackAction("archived a slack channel - " . request()->channel_id);
+
+        return redirect()->route('slack.channel-index');
+
     }
 
     /**
@@ -119,14 +123,15 @@ class SlackChannelController extends SlackController
     {
         $response = $form->persist($this->client, $channel);
 
-        if ($response['ok']) {
-            $this->showToast("Channel was unarchived!");
-            $this->logSlackAction("unarchived a slack channel - " . request()->channel_id);
-
-            return redirect()->route('slack.channel-index');
-        } else {
+        if ( ! $response['ok']) {
             return $this->getSlackErrorResponse($response);
         }
+
+        $this->showToast("Channel was unarchived!");
+        $this->logSlackAction("unarchived a slack channel - " . request()->channel_id);
+
+        return redirect()->route('slack.channel-index');
+
     }
 
     public function sendMessage()

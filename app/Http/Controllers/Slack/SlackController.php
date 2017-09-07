@@ -23,11 +23,10 @@ class SlackController extends Controller
      */
     protected function getSlackErrorResponse($response)
     {
-        dd($response);
         if ( ! isset($response['error'])) {
-            redirect()->back()->withErrors([
-                'slack-error' => "Error information not returned",
-            ])->withInput();
+            $this->showErrorToast('Something went terribly wrong.');
+
+            return redirect()->route('home');
         }
 
         switch ($response['error']) {
@@ -42,8 +41,8 @@ class SlackController extends Controller
                 break;
         }
 
-        return redirect()->back()->withErrors([
-            'slack-error' => $message,
-        ])->withInput();
+        $this->showErrorToast('Something went terribly wrong. Slack error code: ' . $response['error']);
+
+        return redirect()->route('home');
     }
 }
