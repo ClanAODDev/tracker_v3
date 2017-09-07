@@ -47,7 +47,8 @@ class InactiveMemberController extends Controller
         $flagActivity = Activity::whereDivisionId($division->id)
             ->where(function ($query) {
                 $query->where('name', 'flagged_member')
-                    ->orWhere('name', 'unflagged_member');
+                    ->orWhere('name', 'unflagged_member')
+                    ->orWhere('name', 'removed_member');
             })->orderByDesc('created_at')
             ->with('subject', 'subject.rank')
             ->get();
