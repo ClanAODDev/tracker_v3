@@ -20,14 +20,15 @@
 
     <div class="container-fluid">
 
+        @include('application.partials.errors')
+
         <h4><i class="fa fa-exclamation-triangle text-danger"></i> Archive Channel</h4>
-        <p>You are about to archive the <code>#{{ $channel->getName() }}</code> channel.</p>
+        <p>You are about to archive the <code>#{{ $channel['name'] }}</code> channel.</p>
         <p> Are you sure?</p>
         <hr />
-        @include('application.partials.errors')
         <form action="{{ route('slack.archive-channel') }}"
               method="post" id="archive-channel">
-            <input type="hidden" value="{{ $channel->getId() }}" name="channel_id" />
+            <input type="hidden" value="{{ $channel['id'] }}" name="channel_id" />
             <a href="{{ route('slack.channel-index') }}" class="btn btn-default">Cancel</a>
             <button type="submit" class="btn btn-success">Archive Channel</button>
             {{ csrf_field() }}
