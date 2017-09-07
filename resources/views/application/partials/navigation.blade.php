@@ -94,6 +94,13 @@
             <a href="{{ route('slack.channel-index') }}">Channels</a>
         </li>
 
+        @if (auth()->user()->isRole('admin'))
+            <li class="{{ set_active('slack/files') }}">
+                <a href="{{ route('slack.files') }}">Files</a>
+            </li>
+        @endif
+
+
     @endcan
 
     <li class="nav-category">
