@@ -54,6 +54,12 @@ class SlackFilesController extends SlackController
     {
         $response = $this->client->files->list();
 
+        if ( ! count($response['files'])) {
+            $this->showErrorToast('No files to delete!');
+
+            return redirect()->route('slack.files');
+        }
+
         foreach ($response['files'] as $file) {
             $this->client->files->delete(['file' => $file['id']]);
         }
