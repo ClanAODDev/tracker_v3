@@ -51,7 +51,7 @@
 
     @if ($member->recruiter && $member->recruiter_id !== 0)
         @component('application.components.link-block')
-            @slot('link'){{ route('member', $member->recruit->getUrlParams()) }}@endslot
+            @slot('link'){{ route('member', $member->recruiter->getUrlParams()) }}@endslot
             @slot('data'){{ $member->recruiter->present()->rankName }}@endslot
             @slot('title') clan <span class="c-white">recruiter</span> @endslot
         @endcomponent
