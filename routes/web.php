@@ -186,6 +186,12 @@ Route::group(['prefix' => 'slack'], function () {
         Route::get('', 'Slack\SlackUserController@index')->name('slack.user-index');
     });
 
+    Route::group(['prefix' => '/files'], function () {
+        Route::get('', 'Slack\SlackFilesController@index')->name('slack.files');
+        Route::get('/purge', 'Slack\SlackFilesController@purgeAll')->name('slack.files.purge');
+        Route::get('/{fileId}/delete', 'Slack\SlackFilesController@destroy')->name('slack.files.delete');
+    });
+
     Route::group(['prefix' => '/channels'], function () {
         Route::get('', 'Slack\SlackChannelController@index')
             ->name('slack.channel-index');

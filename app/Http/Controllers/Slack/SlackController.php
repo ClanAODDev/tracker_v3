@@ -2,42 +2,48 @@
 
 namespace App\Http\Controllers\Slack;
 
-use App\Http\Controllers\Controller;
-use App\SlackSlashCommand;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class SlackController extends Controller
 {
-
     /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param $message
      */
-    public function index(Request $request)
+    protected function logSlackAction($message)
     {
-        if ( ! $this->isValid($request)) {
-            return response()->json([
-                'text' => 'Unrecognized command. Sorry!',
-            ]);
-        }
-
-        $command = array_first(
-            explode(':', $request->text)
-        );
-
-        $response = SlackSlashCommand::handle($command, $request->all());
-
-        return response()->json($response);
+        Log::info(auth()->user()->name . $message . Carbon::now());
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @param $response
+     * @return SlackChannelController|\Illuminate\Http\RedirectResponse
      */
-    protected function isValid(Request $request)
+    protected function getSlackErrorResponse($response)
     {
-        if (array_has($request->all(), 'text')) {
-            return true;
+        dd($response);
+        if ( ! isset($response['error'])) {
+            redirect()->back()->withErrors([
+                'slack-error' => "Error information not returned",
+            ])->withInput();
         }
+
+        switch ($response['error']) {
+            case 'name_taken':
+                $message = "Name taken";
+                break;
+            case 'channel_not_found':
+                $message = "Channel not found";
+                break;
+            default:
+                $message = "Unknown slack error";
+                break;
+        }
+
+        return redirect()->back()->withErrors([
+            'slack-error' => $message,
+        ])->withInput();
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Slack;
 use CL\Slack\Payload\ChannelsCreatePayload;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Foundation\Http\FormRequest;
+use wrapi\slack\slack;
 
 class CreateChannel extends FormRequest
 {
@@ -30,12 +31,12 @@ class CreateChannel extends FormRequest
         ];
     }
 
-    public function persist(ApiClient $client)
+    public function persist(slack $client)
     {
-        $payload = new ChannelsCreatePayload();
         $channelName = str_slug(request()->get('division') . "-" . request()->get('channel-name'));
-        $payload->setName($channelName);
 
-        return $client->send($payload);
+        return $client->channels->create([
+            'name' => $channelName
+        ]);
     }
 }

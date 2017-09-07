@@ -22,7 +22,9 @@
             <strong>Note</strong>: Archiving a channel hides it from view, but does not delete the channel. An admin must physically delete the channel through the Slack interface.
         </div>
 
-        <p>Division channels should be used sparingly. Advise your members that they can <code><i class="fa fa-star text-accent"></i> Star</code> a channel to make it easier to see in the channel listing.</p>
+        <p>Division channels should be used sparingly. Advise your members that they can <code><i
+                        class="fa fa-star text-accent"></i> Star</code> a channel to make it easier to see in the channel listing.
+        </p>
 
         <hr />
 
@@ -40,6 +42,7 @@
                 </div>
             </div>
             <div class="col-md-4">
+                @include('application.partials.errors')
                 <div class="panel panel-filled panel-c-info">
                     <div class="panel-heading">Create Channel</div>
                     <div class="panel-body">

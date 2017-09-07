@@ -5,6 +5,7 @@ namespace App\Http\Requests\Slack;
 use CL\Slack\Payload\ChannelsArchivePayload;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Foundation\Http\FormRequest;
+use wrapi\slack\slack;
 
 class ArchiveChannel extends FormRequest
 {
@@ -30,10 +31,10 @@ class ArchiveChannel extends FormRequest
         ];
     }
 
-    public function persist(ApiClient $client)
+    public function persist(slack $client)
     {
-        $payload = new ChannelsArchivePayload();
-        $payload->setChannelId(request()->channel_id);
-        return $client->send($payload);
+        return $client->channels->archive([
+            'channel' => $this->channel_id
+        ]);
     }
 }

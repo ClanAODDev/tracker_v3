@@ -6,6 +6,7 @@ use Auth;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
+use wrapi\slack\slack;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,8 +44,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // register slack api client
-        $this->app->singleton(ApiClient::class, function () {
-            return new ApiClient(config('services.slack.token'));
+        $this->app->singleton(slack::class, function () {
+            return new slack(config('services.slack.token'));
         });
     }
 }

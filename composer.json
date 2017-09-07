@@ -24,7 +24,8 @@
     "graham-campbell/github": "^5.1",
     "php-http/guzzle6-adapter": "^1.1",
     "rcrowe/twigbridge": "^0.9.4",
-    "cleentfaar/slack": "^0.20.1"
+    "doctrine/annotations": "1.4",
+    "wrapi/slack": "^0.1.5"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
