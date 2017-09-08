@@ -202,8 +202,6 @@ Route::group(['prefix' => 'slack'], function () {
             ->name('slack.unarchive-channel');
         Route::post('/archive', 'Slack\SlackChannelController@archive')->name('slack.archive-channel');
     });
-
-
 });
 
 /**
@@ -213,7 +211,6 @@ Route::post('slack', [
     'as' => 'slack.commands',
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');
-
 
 /**
  * Admin Routes

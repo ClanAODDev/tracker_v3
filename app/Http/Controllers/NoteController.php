@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateNote;
 use App\Member;
 use App\Note;
+use App\Tag;
 use Illuminate\Http\Request;
 
 class NoteController extends Controller
@@ -33,11 +34,13 @@ class NoteController extends Controller
 
         $division = $member->division;
 
-        if (! $division) {
+        if ( ! $division) {
             return redirect(404);
         }
 
-        $tags = $division->availableTags->pluck('name', 'id');
+        $tags = ($division)
+            ? $division->availableTags->pluck('name', 'id')
+            : Tag::all()->whereDefault(true)->get()->pluck('name', 'id');
 
         return view('member.edit-note', compact(
             'note', 'division', 'member', 'tags'

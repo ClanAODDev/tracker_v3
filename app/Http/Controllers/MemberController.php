@@ -138,6 +138,10 @@ class MemberController extends Controller
                 return true;
             });
 
+        $tags = ($division)
+            ? $division->availableTags->pluck('name', 'id')
+            : Tag::where('default', true)->get()->pluck('name', 'id');
+
         $member->load('recruits', 'recruits.division', 'recruits.rank');
 
         $partTimeDivisions = $member->partTimeDivisions()
@@ -145,7 +149,7 @@ class MemberController extends Controller
             ->get();
 
         return view('member.show', compact(
-            'member', 'division', 'notes', 'partTimeDivisions'
+            'tags', 'member', 'division', 'notes', 'partTimeDivisions'
         ));
     }
 

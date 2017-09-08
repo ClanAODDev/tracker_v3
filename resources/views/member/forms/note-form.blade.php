@@ -11,7 +11,7 @@
 
         <div class="form-group {{ $errors->has('tag_list') ? ' has-error' : null }}">
             {!! Form::label('tag_list', 'Tags', ['class' => 'slight text-muted']) !!}
-            {!! Form::select('tag_list[]', $division->availableTags()->pluck('name', 'id'), null, ['id' => 'select-tags', 'class' => 'form-control', 'multiple', 'style' => 'width: 100%;']) !!}
+            {!! Form::select('tag_list[]', $tags, null, ['id' => 'select-tags', 'class' => 'form-control', 'multiple', 'style' => 'width: 100%;']) !!}
         </div>
 
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">

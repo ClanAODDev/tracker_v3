@@ -29,6 +29,7 @@
                 <hr />
                 <ul>
                     <li>Added flagged member bb-code for sharing members removed</li>
+                    <li>Notes can now be added to Ex-AOD members.</li>
                 </ul>
             </div>
         </div>
