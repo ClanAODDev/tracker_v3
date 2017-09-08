@@ -211,7 +211,7 @@ Route::group(['prefix' => 'slack'], function () {
  */
 Route::post('slack', [
     'as' => 'slack.commands',
-    'uses' => 'Slack\SlackController@index',
+    'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');
 
 
