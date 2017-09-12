@@ -101,6 +101,12 @@ class SyncMemberData
         // persist
         $member->save();
 
+        if ($member->user) {
+            $user = $member->user;
+            $user->name = $member->name;
+            $user->save();
+        }
+
         // populate our active members
         self::$activeMembers[] = $member->id;
 
