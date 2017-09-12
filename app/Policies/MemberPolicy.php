@@ -90,8 +90,13 @@ class MemberPolicy
         return true;
     }
 
-    public function managePartTime(User $user)
+    public function managePartTime(User $user, Member $member)
     {
+        // can edit yourself
+        if ($member->id === auth()->user()->member_id) {
+            return true;
+        }
+
         if ( $user->isRole('jr_ldr')) {
             return true;
         }
@@ -99,8 +104,13 @@ class MemberPolicy
         return false;
     }
 
-    public function manageIngameHandles(User $user)
+    public function manageIngameHandles(User $user, Member $member)
     {
+        // can edit yourself
+        if ($member->id === auth()->user()->member_id) {
+            return true;
+        }
+
         if ( $user->isRole('jr_ldr')) {
             return true;
         }
