@@ -107,6 +107,40 @@ class MemberController extends Controller
         });
     }
 
+    public function editHandles(Member $member)
+    {
+        $this->authorize('manageIngameHandles', $member);
+
+        $handles = $this->getHandles($member);
+
+        $division = $member->division;
+
+        return view('member.manage-ingame-handles', compact('handles', 'member', 'division'));
+    }
+
+    public function editPartTime(Member $member)
+    {
+        $this->authorize('managePartTime', $member);
+
+        $division = $member->division;
+
+        /**
+         * omit divisions the member is already part-time in
+         * omit member's primary division from list of available divisions
+         **/
+        $divisions = Division::active()->get()->except(
+            $member->partTimeDivisions->pluck('id')->toArray()
+        )->filter(function ($division) use ($member) {
+            if ($member->division) {
+                return $division->id !== $member->division->id;
+            }
+
+            return $division;
+        });
+
+        return view('member.manage-part-time', compact('member', 'division', 'divisions'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -177,26 +211,12 @@ class MemberController extends Controller
         $this->authorize('update', $member);
 
         $division = $member->division;
+
         $positions = Position::all()->pluck('id', 'name');
 
-        /**
-         * omit divisions the member is already part-time in
-         * omit member's primary division from list of available divisions
-         **/
-        $divisions = Division::active()->get()->except(
-            $member->partTimeDivisions->pluck('id')->toArray()
-        )->filter(function ($division) use ($member) {
-            if ($member->division) {
-                return $division->id !== $member->division->id;
-            }
-
-            return $division;
-        });
-
-        $handles = $this->getHandles($member);
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions', 'handles', 'divisions'
+            'member', 'division', 'positions'
         ));
     }
 
@@ -296,6 +316,7 @@ class MemberController extends Controller
     public function confirmUnassign($member)
     {
         $division = $member->division;
+
         return view('member.confirm-unassign', compact('member', 'division'));
     }
 

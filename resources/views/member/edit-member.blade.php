@@ -23,22 +23,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel">
-
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a data-toggle="tab" href="#member" aria-expanded="true">
                                     <i class="fa fa-user"></i> Information
-                                </a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#handles" aria-expanded="false">
-                                    <i class="fa fa-gamepad"></i> Handles
-                                </a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#part-time" aria-expanded="false">
-                                    <i class="fa fa-clock-o"></i> Part-time
                                 </a>
                             </li>
                         </ul>
@@ -71,20 +60,6 @@
                                             @endif
                                         </tr>
                                     </table>
-                                </div>
-                            </div>
-
-                            <div id="handles" class="tab-pane">
-                                <div class="panel-body">
-                                    <manage-handles :handles="{{ $handles  }}"
-                                                    :member-id="{{ $member->id }}"
-                                    ></manage-handles>
-                                </div>
-                            </div>
-
-                            <div id="part-time" class="tab-pane">
-                                <div class="panel-body">
-                                    @include ('member.partials.edit-part-time')
                                 </div>
                             </div>
                         </div>

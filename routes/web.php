@@ -1,8 +1,5 @@
 <?php
 
-use App\Repositories\MemberRepository;
-use Carbon\Carbon;
-
 Auth::routes();
 
 Route::post('/members/assign-squad', 'SquadController@assignMember');
@@ -47,6 +44,8 @@ Route::group(['prefix' => 'members'], function () {
 
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
+    Route::get('{member}/edit-part-time', 'MemberController@editPartTime')->name('member.edit-part-time');
+    Route::get('{member}/edit-handles', 'MemberController@editHandles')->name('member.edit-handles');
     Route::post('search/{name}', 'MemberController@search');
     Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
 

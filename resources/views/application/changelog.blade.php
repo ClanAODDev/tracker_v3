@@ -25,6 +25,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>12 Sept 2017 - 3.2.3</h4>
+                <hr />
+                <ul>
+                    <li>Ingame handle and part-time management has been moved out of the "Edit Member" area, and into their own areas. You can still navigate to these areas via the respective "Manage" buttons on a member profile. Additionally, junior leaders can now access these areas.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>6 Sept 2017 - 3.2.2</h4>
                 <hr />
                 <ul>

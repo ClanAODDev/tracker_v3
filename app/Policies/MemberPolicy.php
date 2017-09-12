@@ -89,4 +89,22 @@ class MemberPolicy
 
         return true;
     }
+
+    public function managePartTime(User $user)
+    {
+        if ( $user->isRole('jr_ldr')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function manageIngameHandles(User $user)
+    {
+        if ( $user->isRole('jr_ldr')) {
+            return true;
+        }
+
+        return false;
+    }
 }

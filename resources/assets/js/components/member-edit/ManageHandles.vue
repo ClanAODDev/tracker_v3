@@ -1,15 +1,6 @@
 <template>
     <div>
-
-        <h4>Manage Ingame Handles</h4>
-
-        <p>Here you can manage all of a member's ingame handles. All divisions have a default primary ingame handle, so if this member belongs to you, ensure that it exists and is accurate.</p>
-
-        <p>To add a handle, first
-            <code>show all</code> and activate the handle(s) you wish to add. Then provide values, and finally, save your changes.
-        </p>
-
-        <div class="btn-group m-t-lg">
+        <div class="btn-group">
             <button class="btn-default btn" @click="showDisabled = !showDisabled">
                 <i class="fa fa-eye" v-if="showDisabled"></i>
                 <i class="fa fa-eye-slash" v-else="showDisabled"></i>
@@ -22,36 +13,48 @@
             </button>
         </div>
 
-        <table class="table m-t-sm table-bordered">
-            <tbody>
+        <div class="panel panel-filled m-t-lg">
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Status</th>
+                        <th>Handle Type</th>
+                        <th>Handle Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-            <!-- hide handles unless they are enabled or showDisabled is true -->
-            <tr v-for="handle in myHandles" v-show="! handle.enabled ? showDisabled : true">
-                <td class="col-md-1">
+                    <!-- hide handles unless they are enabled or showDisabled is true -->
+                    <tr v-for="handle in myHandles" v-show="! handle.enabled ? showDisabled : true">
+                        <td class="col-md-1">
 
-                    <button class="btn btn-success btn-block" v-if="handle.enabled"
-                            @click="toggleHandle(handle)">
-                        <i class="fa fa-check text-success"></i> ACTIVATED
-                    </button>
-                    <button class="btn btn-danger btn-block" type="button"
-                            @click="handle.enabled = !handle.enabled" v-else>
-                        <i class="fa fa-times text-danger"></i> DEACTIVATED
-                    </button>
+                            <button class="btn btn-success btn-block" v-if="handle.enabled"
+                                    @click="toggleHandle(handle)">
+                                <i class="fa fa-check text-success"></i>
+                            </button>
+                            <button class="btn btn-danger btn-block" type="button"
+                                    @click="handle.enabled = !handle.enabled" v-else>
+                                <i class="fa fa-times text-danger"></i>
+                            </button>
 
-                </td>
-                <td class="col-md-3" :class="!handle.enabled ? 'text-muted' : ''">
-                    {{ handle.label }}
-                </td>
-                <td class="col-md-8">
-                    <input type="text" class="form-control" :value="handle.value"
-                           :disabled="!handle.enabled" v-model="handle.value"
-                           :placeholder="handle.comments ? handle.comments : 'Enter value'"
-                           :required="handle.enabled" @keydown="changesMade = true"
-                    />
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                        </td>
+                        <td class="col-md-3" :class="!handle.enabled ? 'text-muted' : ''">
+                            {{ handle.label }}
+                        </td>
+                        <td class="col-md-8">
+                            <input type="text" class="form-control" :value="handle.value"
+                                   :disabled="!handle.enabled" v-model="handle.value"
+                                   :placeholder="handle.enabled ? 'Enter handle value' : 'Activate to enter a value'"
+                                   :required="handle.enabled" @keydown="changesMade = true"
+
+                            />
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </template>

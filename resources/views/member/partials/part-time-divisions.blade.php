@@ -1,7 +1,8 @@
 <h4 class="m-t-xl">
     Part-Time Divisions
-    @can ('update', $member)
-        <a href="{{ route('editMember', $member->clan_id) . '#part-time' }}" class="btn btn-default btn-sm pull-right">
+    @can ('managePartTime', $member)
+        <a href="{{ route('member.edit-part-time', $member->clan_id) }}"
+           class="btn btn-default btn-sm pull-right">
             <i class="fa fa-cog text-accent"></i> Manage
         </a>
     @endcan
