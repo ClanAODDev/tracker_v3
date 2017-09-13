@@ -31,6 +31,7 @@
                     <li>Ingame handle and part-time management has been moved out of the "Edit Member" area, and into their own areas. You can still navigate to these areas via the respective "Manage" buttons on a member profile. Additionally, junior leaders can now access these areas.</li>
                     <li>Corrected bug where assigning a platoon leader who was previously a squad leader would not properly reset the losing squad.</li>
                     <li>Ingame name field no longer auto-populates with forum name in recruitment process</li>
+                    <li>"Leaving page" warning no longer appears on the final step of the recruiting process.</li>
                 </ul>
             </div>
         </div>

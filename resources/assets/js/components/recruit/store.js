@@ -154,6 +154,14 @@ store.createMember = () => {
   }
 };
 
+window.onbeforeunload = function (e) {
+  if (store.currentStep !== 'step-four') {
+    let dialogText = 'You are about to leave the recruiting process. Are you sure?';
+    e.returnValue = dialogText;
+    return dialogText;
+  }
+};
+
 /**
  * =====================
  * End Recruiting
