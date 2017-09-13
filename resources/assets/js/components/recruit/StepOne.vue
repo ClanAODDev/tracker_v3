@@ -59,7 +59,7 @@
                          :class="{'input': true, 'has-warning': errors.has('forum_name') }">
                         <label for="forum_name">Forum Name</label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
-                               @blur="forumNameToIngameName" id="forum_name" v-validate="'required'"
+                               id="forum_name" v-validate="'required'"
                                :disabled="store.inDemoMode" />
                         <span v-show="errors.has('forum_name')"
                               class="help-block">{{ errors.first('forum_name') }}</span>

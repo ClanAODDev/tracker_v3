@@ -20,8 +20,6 @@ class UpdateSquadForm extends FormRequest
     public function authorize()
     {
         return $this->user()->can('update', $this->route('squad'));
-
-        $this->squad = $squad;
     }
 
     /**

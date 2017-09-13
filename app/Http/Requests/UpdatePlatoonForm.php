@@ -124,9 +124,15 @@ class UpdatePlatoonForm extends FormRequest
     {
         $leader = Member::whereClanId($this->leader_id)->firstOrFail();
 
+        if ($leader->squad) {
+            $squad = $leader->squad;
+            $squad->leader()->dissociate()->save();
+            $leader->squad()->dissociate()->save();
+        }
+
         $this->platoon->leader()->associate($leader);
+
         $leader->platoon()->associate($platoon);
-        $leader->squad()->dissociate();
 
         $leader->assignPosition('platoon leader')->save();
     }

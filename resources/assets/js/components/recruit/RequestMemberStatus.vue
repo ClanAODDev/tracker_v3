@@ -32,7 +32,7 @@
                 <div class="m-t-md visible-xs-block"></div>
                 <a href="http://www.clanaod.net/forums/misc.php?do=form&fid=39" target="_blank"
                    :class="store.didUserOpenRequest ? 'btn btn-success' : 'btn btn-danger'"
-                   @click="userOpenedRequest">
+                   @click.middle="userOpenedRequest" @click="userOpenedRequest">
                     <i :class="store.didUserOpenRequest ? 'fa fa-check text-success' : 'fa fa-times text-danger'"
                        aria-hidden="true"></i> Open Member Status Form
                 </a>
