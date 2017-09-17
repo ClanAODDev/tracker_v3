@@ -31,7 +31,8 @@ class AppController extends Controller
     {
         $myDivision = Auth::user()->member->division;
 
-        $activeDivisions = Division::active()->withCount('members')->orderBy('name')->get();
+        $activeDivisions = Division::active()->withCount('members')
+            ->orderBy('name')->get();
         $divisions = $activeDivisions->except($myDivision->id);
 
         return view('home.show', compact(

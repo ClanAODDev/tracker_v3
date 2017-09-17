@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        $divisions = Division::all();
+        $divisions = Division::orderBy('name')->get();
         $handles = Handle::withCount('divisions')->get();
         $defaultTags = Tag::where('default', true)->get();
         $allTags = Tag::with('notes', 'division')->orderBy('division_id')->get();
