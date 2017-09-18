@@ -2,7 +2,7 @@
     <div class="col-md-9">
         <div class="panel panel-filled">
             <div class="panel-body">
-                @foreach ($members->groupBy('rank.name') as $rank=>$members)
+                @foreach ($members->groupBy('rank.name') as $rank=>$rankGroup)
                     <div class="panel m-b-none">
                         <div class="panel-body">
                             <table class="table table-condensed">
@@ -12,7 +12,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($members as $member)
+                                @foreach ($rankGroup as $member)
                                     <tr>
                                         <td>{{ $member->name }}</td>
                                         <td class="text-right text-muted slight">{{ $member->last_promoted }}</td>
@@ -38,6 +38,18 @@
                         data-labels="{{ json_encode($ranks->values()) }}"
                         data-values="{{ json_encode($counts) }}"
                 ></canvas>
+            </div>
+        </div>
+
+        <div class="panel panel-filled">
+            <div class="panel-heading">Share Promotions</div>
+            <div class="panel-body">
+
+                <pre id="bb-code-promos">@include('division.partials.promo-bb-code')</pre>
+
+                <button data-clipboard-target="#bb-code-promos" class="copy-to-clipboard btn-success btn"><i
+                            class="fa fa-clone"></i> Copy BB-Code
+                </button>
             </div>
         </div>
     </div>

@@ -44,7 +44,7 @@ Breadcrumbs::register('member-note', function ($breadcrumbs, $member, $division)
 
     $breadcrumbs->push(
         $member->name,
-        route('member', [$member->clan_id])
+        route('member', $member->getUrlParams())
     );
 
     $breadcrumbs->push('Edit Note');

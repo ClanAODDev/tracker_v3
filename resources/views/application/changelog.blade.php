@@ -25,6 +25,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>17 Sept 2017 - 3.2.4</h4>
+                <hr />
+                <ul>
+                    <li>Added bb-code for sharing promotions on promotions reports page, also added a default select option to promotions period dropdown</li>
+                    <li>Fixed erroneous inactive (flagged) members view</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>12 Sept 2017 - 3.2.3</h4>
                 <hr />
                 <ul>
