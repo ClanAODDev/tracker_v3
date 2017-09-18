@@ -2,6 +2,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
+            <th>Member</th>
             <th>Last Forum Activity
                 <small class="slight">Days</small>
             </th>

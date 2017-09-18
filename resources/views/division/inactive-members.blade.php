@@ -38,8 +38,6 @@
                        aria-expanded="false">Flagged <span class="badge">{{ count($flaggedMembers) }}</span>
                     </a>
                 </li>
-                <li class="text-center">
-                </li>
                 <li class="pull-right">
                     <span class="btn-group-sm btn-group">
                     <a href="{{ route('division.inactive-members', $division->abbreviation) }}"
