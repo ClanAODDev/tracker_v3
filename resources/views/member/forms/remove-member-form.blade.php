@@ -17,11 +17,11 @@
             <li>Opens the AOD Member Removal form, performing forum removal from AOD</li>
         </ul>
 
-        <p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>
-        <div class="form-group">
-                    <textarea class="form-control" name="removal-reason" placeholder="Reason"
-                              id="removal-reason" required></textarea>
-        </div>
+        {{--<p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>--}}
+        {{--<div class="form-group">--}}
+                    {{--<textarea class="form-control" name="removal-reason" placeholder="Reason"--}}
+                              {{--id="removal-reason" required></textarea>--}}
+        {{--</div>--}}
 
         {{ csrf_field() }}
     </div>
