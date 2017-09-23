@@ -20,7 +20,7 @@
                                 @endforeach
                                 <tr>
                                     <td class="text-accent">Total</td>
-                                    <td class="text-accent text-right">{{ $members->count() }}</td>
+                                    <td class="text-accent text-right">{{ $rankGroup->count() }}</td>
                                 </tr>
                                 </tbody>
                             </table>
