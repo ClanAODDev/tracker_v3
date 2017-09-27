@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Division;
 use App\Member;
 use App\Rank;
 use App\User;
@@ -50,14 +51,11 @@ class MemberPolicy
         $userDivision = $user->member->division;
         $memberDivision = $member->division;
 
-        // Officers can update anyone within own platoon (or squad)
-        if ($user->isRole('officer') && $user->member->platoon == $member->platoon) {
-            return true;
-        }
-
-        // Jr leaders (CPl) can update anyone within division
-        if ($user->isRole('jr_ldr') && $userDivision->id == $memberDivision->id) {
-            return true;
+        // Jr leaders (CPl), and officers can update anyone within division
+        if ($memberDivision instanceof Division) {
+            if ($user->isRole(['jr_ldr', 'officer']) && $userDivision->id == $memberDivision->id) {
+                return true;
+            }
         }
 
         return false;
@@ -97,7 +95,7 @@ class MemberPolicy
             return true;
         }
 
-        if ( $user->isRole('jr_ldr')) {
+        if ($user->isRole('jr_ldr')) {
             return true;
         }
 
@@ -111,7 +109,7 @@ class MemberPolicy
             return true;
         }
 
-        if ( $user->isRole('jr_ldr')) {
+        if ($user->isRole('jr_ldr')) {
             return true;
         }
 

@@ -10,7 +10,8 @@
     "chart.js": "^2.0.0",
     "gulp": "^3.9.1",
     "jquery.repeater": "^1.2.1",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "vue-template-compiler": "^2.4.4"
   },
   "devDependencies": {
     "axios": "^0.15.2",
