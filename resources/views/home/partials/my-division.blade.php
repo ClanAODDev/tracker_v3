@@ -1,5 +1,5 @@
 <div class="panel panel-c-accent panel-filled division-header"
-     style="background-image: url({{ asset('images/headers/' . $myDivision->abbreviation . ".png") }})">
+     style="background-image: url({{ asset('images/headers/' . $myDivision->abbreviation . ".png?") }})">
     <div class="panel-heading">
 
         <style>
