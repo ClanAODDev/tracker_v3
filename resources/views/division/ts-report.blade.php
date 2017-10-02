@@ -49,6 +49,9 @@
                     <th>Member</th>
                     <th>Last Forum Activity</th>
                     <th>Forum Profile</th>
+                    @if (auth()->user()->isRole(['sr_ldr', 'admin']))
+                        <th>TS ID (forums)</th>
+                    @endif
                 </tr>
                 </thead>
                 <tbody>
@@ -66,6 +69,9 @@
                                 <i class="fa fa-link"></i> {{ $member->clan_id }}
                             </a>
                         </td>
+                        @if (auth()->user()->isRole(['sr_ldr', 'admin']))
+                            <td><code>{{ $member->ts_unique_id ?: "None set" }}</code></td>
+                        @endif
                     </tr>
                 @endforeach
                 </tbody>
