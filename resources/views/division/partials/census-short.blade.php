@@ -7,12 +7,14 @@
 
     @if($previousCensus)
         <div class="slight" style="display: inline-block">
-            @if($division->members->count() < $previousCensus->count)
-                <i class="fa fa-play fa-rotate-90 c-white"></i>
-            @else
-                <i class="fa fa-play fa-rotate-270 text-warning"></i>
+            @if ($previousCensus && $division->members->count())
+                @if($division->members->count() < $previousCensus->count)
+                    <i class="fa fa-play fa-rotate-90 c-white"></i>
+                @else
+                    <i class="fa fa-play fa-rotate-270 text-warning"></i>
+                @endif
+                {{ abs(number_format((1 - $previousCensus->count / $division->members->count()) * 100, 2)) }}%
             @endif
-            {{ abs(number_format((1 - $previousCensus->count / $division->members->count()) * 100, 2)) }}%
         </div>
     @endif
 </h1>
