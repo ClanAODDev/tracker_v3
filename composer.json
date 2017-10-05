@@ -25,7 +25,8 @@
     "php-http/guzzle6-adapter": "^1.1",
     "rcrowe/twigbridge": "^0.9.4",
     "doctrine/annotations": "1.4",
-    "wrapi/slack": "^0.1.5"
+    "wrapi/slack": "^0.1.5",
+    "appstract/laravel-blade-directives": "^0.4.4"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
