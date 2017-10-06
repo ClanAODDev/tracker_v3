@@ -39,6 +39,7 @@ class Division extends Model
         'division_structure' => '',
         'welcome_area' => '',
         'welcome_pm' => '',
+        'inactivity_days' => 30,
         'activity_threshold' => [
             [
                 'days' => 30,
