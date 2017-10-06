@@ -53,29 +53,6 @@ class CreateDivision extends FormRequest
     {
         $member = Member::whereClanId($this->leader_id)->first();
         $member->assignPosition('Commanding Officer')->save();
-
-        $this->unassignFromExistingDivision($member);
-
-        $member->divisions()->sync([
-            $division->id => [
-                'primary' => true
-            ]
-        ]);
-    }
-
-    /**
-     * Detaches member from their existing primary division
-     *
-     * @param $member
-     */
-    private function unassignFromExistingDivision($member)
-    {
-        $currentDivision = $member->divisions->filter(function ($division) {
-            return $division->pivot->primary;
-        })->first();
-
-        if ($currentDivision) {
-            $currentDivision->members()->detach($member);
-        }
+        $member->division_id = $division->id;
     }
 }
