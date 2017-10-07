@@ -34,7 +34,7 @@ class SlackUserController extends SlackController
 
         // omit disabled accounts, slackbot
         $results = collect($response['members'])->map(function ($user) {
-            if ( ! $user['deleted'] && $user['name'] !== 'slackbot' && !$user['is_bot']) {c
+            if ( ! $user['deleted'] && $user['name'] !== 'slackbot' && !$user['is_bot']) {
                 return $user['profile']['email'];
             }
         })->flatten()->filter(function ($email) {
