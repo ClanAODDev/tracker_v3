@@ -44,8 +44,8 @@ class CreateNote extends FormRequest
     public function persist()
     {
         $note = new Note($this->all());
-        $note->member()->associate($this->route('member'));
-        $note->author()->associate(auth()->id());
+        $note->member_id = $this->route('member')->id;
+        $note->author_id = auth()->id();
         $note->save();
 
         $note->tags()->attach($this->input('tag_list'));
