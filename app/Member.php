@@ -168,7 +168,6 @@ class Member extends Model
      */
     public function resetPositionsAndAssignments()
     {
-        $this->partTimeDivisions()->sync([]);
         $this->division()->dissociate();
         $this->platoon()->dissociate();
         $this->squad()->dissociate();

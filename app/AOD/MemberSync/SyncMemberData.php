@@ -12,9 +12,11 @@ use Illuminate\Support\Facades\Log;
 class SyncMemberData
 {
 
-    protected static $activeMembers = [];
+    protected static $activeClanMembers = [];
 
-    protected static $currentMembers = [];
+    protected static $activeDivisionMembers = [];
+
+    protected static $currentDivisionMembers = [];
 
     /**
      * Performs update operation on divisions and members and also
@@ -28,30 +30,34 @@ class SyncMemberData
             return strtolower($item['aoddivision']);
         });
 
+        self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
+
         if ( ! count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }
 
-
         foreach (Division::active()->get() as $division) {
-            // log activity
-            Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - syncing {$division->name}");
+            if ($syncData->keys()->contains(strtolower($division->name))) {
+                // log activity
+                Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - syncing {$division->name}");
 
-            // reset array
-            self::$activeMembers = [];
+                // reset array
+                self::$activeDivisionMembers = [];
 
-            self::$currentMembers = Member::whereDivisionId($division->id)
-                ->get()->pluck('id')->toArray();
+                self::$currentDivisionMembers = Member::whereDivisionId($division->id)->get()
+                    ->pluck('id')
+                    ->toArray();
 
-            foreach ($syncData[strtolower($division->name)] as $member) {
-                self::doMemberUpdate($member, $division);
+                foreach ($syncData[strtolower($division->name)] as $member) {
+                    self::doMemberUpdate($member, $division);
+                }
+
+                echo "{$division->name} members synced" . PHP_EOL;
+
+                // trash removed members
+                self::doRemovalCleanup();
             }
-
-            echo "{$division->name} members synced" . PHP_EOL;
-
-            // trash removed members
-            self::doRemovalCleanup();
         }
     }
 
@@ -108,8 +114,7 @@ class SyncMemberData
         }
 
         // populate our active members
-        self::$activeMembers[] = $member->id;
-
+        self::$activeDivisionMembers[] = $member->id;
     }
 
     /**
@@ -128,20 +133,26 @@ class SyncMemberData
     private static function doRemovalCleanup()
     {
         $removed = array_diff(
-            self::$currentMembers,
-            self::$activeMembers
+            self::$currentDivisionMembers,
+            self::$activeDivisionMembers
         );
 
         foreach ($removed as $index => $id) {
             $member = Member::find($id);
 
-            if ($member instanceof Member && !$member->isPending) {
-                self::resetMember($member);
+            // did they transfer to another division?
+            if (self::$activeClanMembers->contains($member->clan_id)) {
+                self::hardResetMember($member);
+            } else {
+                if ($member instanceof Member && ! $member->isPending) {
+                    $member->partTimeDivisions()->sync([]);
+                    self::hardResetMember($member);
+                }
             }
         }
     }
 
-    private static function resetMember($member)
+    private static function hardResetMember($member)
     {
 
         // reset member data
@@ -149,8 +160,8 @@ class SyncMemberData
 
         // reset any leadership assignments
         $assignments = collect([
-            Squad::whereLeaderId($member->leader_id)->first(),
-            Platoon::whereLeaderId($member->leader_id)->first()
+            Squad::whereLeaderId($member->clan_id)->first(),
+            Platoon::whereLeaderId($member->clan_id)->first()
         ]);
 
         if ($assignments->count()) {
