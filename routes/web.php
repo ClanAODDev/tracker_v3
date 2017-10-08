@@ -129,6 +129,8 @@ Route::group(['prefix' => 'divisions/'], function () {
 
     Route::get('{division}/members', 'DivisionController@members')->name('division.members');
 
+    Route::get('{division}/notes/{tag?}', 'DivisionNoteController@index')->name('division.notes');
+
     /**
      * Recruiting Process
      */

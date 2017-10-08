@@ -182,6 +182,7 @@ return [
         Whossun\Toastr\ToastrServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         TwigBridge\ServiceProvider::class,
+        Appstract\BladeDirectives\BladeDirectivesServiceProvider::class,
 
     ],
 

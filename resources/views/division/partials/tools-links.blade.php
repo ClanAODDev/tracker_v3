@@ -33,11 +33,14 @@
                 Manage Leaves of Absence
             </a>
         </li>
+        <li>
+            <a href="{{ route('division.notes', $division->abbreviation) }}">View Notes</a>
+        </li>
 
     </ul>
 </div>
 
-<div class="dropdown"  style="display: inline-block;">
+<div class="dropdown" style="display: inline-block;">
     <button class="btn btn-default dropdown-toggle" type="button" id="reports" data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="true">

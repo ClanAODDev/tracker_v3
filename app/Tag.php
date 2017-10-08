@@ -16,7 +16,12 @@ class Tag extends Model
         'default' => 'boolean'
     ];
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'slug'];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     /**
      * Get all notes with a particular tag
