@@ -18,20 +18,23 @@
 
     <div class="container-fluid">
 
-        <div class="row">
-            <div class="panel">
-                <div class="panel-body">
-                    @forelse ($tags as $tag)
-                        <a class="btn btn-default"
-                           href="{{ route('division.notes', [$division->abbreviation, $tag->slug]) }}">
-                            {{ $tag->name }}
-                        </a>
-                    @endforelse
-                    <a href="{{ route('division.notes', $division->abbreviation) }}"
-                       class="btn btn-default text-muted">Reset Filter</a>
+        @if (count($tags))
+            <div class="row">
+                <div class="panel">
+                    <div class="panel-body">
+                        <a href="{{ route('division.notes', $division->abbreviation) }}"
+                           class="btn btn-default text-muted">Reset Filter</a>
+                        @foreach ($tags as $tag)
+                            <a class="btn btn-default"
+                               href="{{ route('division.notes', [$division->abbreviation, $tag->slug]) }}">
+                                {{ $tag->name }}
+                            </a>
+                        @endforeach
+
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         <h3>{{ $filter->name or "All Notes" }} ({{ count($notes) }})</h3>
         <hr />
@@ -39,7 +42,8 @@
         <div class="row">
             <div class="col-md-12">
                 @forelse ($notes as $note)
-                    <a href="{{ route('member', $note->member->getUrlParams()) }}" class="panel panel-filled note {{ $note->type }}">
+                    <a href="{{ route('member', $note->member->getUrlParams()) }}"
+                       class="panel panel-filled note {{ $note->type }}">
                         <div class="panel-heading">
                             {{ $note->member->name }} - {{ $note->updated_at->format('M d, Y')}}
                             <div class="pull-right">
