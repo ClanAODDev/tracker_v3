@@ -80,7 +80,7 @@ class Member extends Model
      */
     public function notes()
     {
-        return $this->hasMany(Note::class, 'member_id', 'clan_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Note::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
     /**

@@ -93,7 +93,7 @@ Route::get('changelog', 'AppController@changelog')->name('changelog');
 Route::group(['prefix' => 'divisions/'], function () {
 
     /**
-     * divisions
+     * division
      */
     Route::get('{division}', 'DivisionController@show')->name('division');
     Route::get('{division}/edit', 'DivisionController@edit')->name('editDivision');

@@ -170,7 +170,6 @@ class Division extends Model
             });
     }
 
-
     /**
      * relationship - division has many members
      */
@@ -179,6 +178,14 @@ class Division extends Model
         return $this->hasMany(Member::class);
     }
 
+    public function notes()
+    {
+        return $this->hasManyThrough(
+            Note::class,
+            Member::class
+        );
+    }
+    
     /**
      * @return DivisionPresenter
      */
