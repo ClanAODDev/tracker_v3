@@ -21,12 +21,12 @@
         <div class="row">
             <div class="panel">
                 <div class="panel-body">
-                    @foreach ($tags as $tag)
+                    @forelse ($tags as $tag)
                         <a class="btn btn-default"
                            href="{{ route('division.notes', [$division->abbreviation, $tag->slug]) }}">
                             {{ $tag->name }}
                         </a>
-                    @endforeach
+                    @endforelse
                     <a href="{{ route('division.notes', $division->abbreviation) }}"
                        class="btn btn-default text-muted">Reset Filter</a>
                 </div>

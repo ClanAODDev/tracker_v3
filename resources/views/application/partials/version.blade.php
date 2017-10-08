@@ -1,1 +1,1 @@
-<span>v3.2.4</span>
+<span>v3.2.5</span>

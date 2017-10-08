@@ -25,6 +25,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>09 Oct 2017 - 3.2.5</h4>
+                <hr />
+                <ul>
+                    <li>Added ability to explore division notes, and filter by tag</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>17 Sept 2017 - 3.2.4</h4>
                 <hr />
                 <ul>
