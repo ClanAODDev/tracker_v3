@@ -177,7 +177,7 @@ let Tracker = Tracker || {};
         let member = $(this).data('member-id'),
           removeUrl = 'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=' + member,
           windowName = 'Tracker | Remove Member',
-          settings = 'width=900,heightc=600,scrollbars=yes';
+          settings = 'width=900,height=600,scrollbars=yes';
 
         Tracker.windowOpener(removeUrl, windowName, settings);
       });
