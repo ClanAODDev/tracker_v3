@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-107795217-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag () {dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-107795217-1');
+    </script>
+
     @yield('metadata')
     <title>AOD | Tracker v3</title>
     @include('application.header')
