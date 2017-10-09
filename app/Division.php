@@ -183,7 +183,7 @@ class Division extends Model
         return $this->hasManyThrough(
             Note::class,
             Member::class
-        )->with('tags', 'member');
+        )->with('tags', 'member', 'author');
     }
 
     /**

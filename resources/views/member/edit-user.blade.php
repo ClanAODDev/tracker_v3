@@ -52,14 +52,6 @@
                 </div>
             </div>
         </div>
-
-        @can('delete', $member)
-            @if ($member->division)
-                {!! Form::model($member, ['method' => 'delete', 'route' => ['deleteMember', $member->clan_id]]) !!}
-                @include('member.forms.remove-member-form')
-                {!! Form::close() !!}
-            @endif
-        @endcan
     </div>
 
 @stop

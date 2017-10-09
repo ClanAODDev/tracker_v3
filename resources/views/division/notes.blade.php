@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <div class="panel-body">
-                            {{ $note->body }}
+                            {{ $note->body }} <span class="text-muted">- {{ $note->author->name }}</span>
                         </div>
                     </a>
                 @empty
