@@ -8,7 +8,7 @@
             </a>
         @endslot
         @slot ('heading')
-            {{ $platoon->name }}
+            {{ $platoon->name or "Untitled " . $division->locality('platoon') }}
             @include('platoon.partials.edit-platoon-button', ['division' => $division])
         @endslot
         @slot ('subheading')
