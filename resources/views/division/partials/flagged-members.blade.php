@@ -44,7 +44,8 @@
                     <div class="btn-group-xs">
                         @can ('delete', $member)
                             {!! Form::model($member, ['method' => 'delete', 'route' => ['member.drop-for-inactivity', $member->clan_id]]) !!}
-                            <input type="hidden" value="inactivity" name="removal-reason" />
+                            <input type="hidden" value="Member removed for inactivity" name="removal_reason" />
+                            <input type="hidden" value="99" name="tag_list[]" />
                             <button type="submit" class="btn btn-danger btn-sm remove-member"
                                     data-member-id="{{ $member->clan_id }}">
                                 <i class="fa fa-trash text-danger"></i> Remove

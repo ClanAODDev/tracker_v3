@@ -26,7 +26,8 @@ class DeleteMember extends FormRequest
     public function rules()
     {
         return [
-            'removal-reason' => 'required'
+            'tag_list' => 'required|array|min:1',
+            'removal_reason' => 'required'
         ];
     }
 
@@ -45,15 +46,14 @@ class DeleteMember extends FormRequest
      */
     private function createRemovalNote($member)
     {
-        if ($this->input('removal-reason') == 'inactivity') {
-            $note = Note::create([
-                'type' => 'negative',
-                'body' => 'Member removed for inactivity',
-                'author_id' => auth()->user()->id,
-                'member_id' => $member->clan_id
-            ]);
+        $note = Note::create([
+            'type' => 'negative',
+            'body' => $this->input('removal_reason'),
+            'author_id' => auth()->id(),
+            'member_id' => $member->id
+        ]);
 
-            $note->tags()->sync([Tag::whereName('inactivity removal')->first()->id]);
-        }
+        $note->tags()->attach($this->input('tag_list'));
     }
+
 }

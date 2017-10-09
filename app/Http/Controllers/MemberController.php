@@ -214,9 +214,12 @@ class MemberController extends Controller
 
         $positions = Position::all()->pluck('id', 'name');
 
+        $tags = ($division)
+            ? $division->availableTags->pluck('name', 'id')
+            : Tag::whereDefault(true)->get()->pluck('name', 'id');
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions'
+            'member', 'division', 'positions', 'tags'
         ));
     }
 

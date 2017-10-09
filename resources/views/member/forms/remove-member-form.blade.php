@@ -17,11 +17,16 @@
             <li>Opens the AOD Member Removal form, performing forum removal from AOD</li>
         </ul>
 
-        {{--<p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>--}}
-        {{--<div class="form-group">--}}
-                    {{--<textarea class="form-control" name="removal-reason" placeholder="Reason"--}}
-                              {{--id="removal-reason" required></textarea>--}}
-        {{--</div>--}}
+        <p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>
+        <div class="form-group {{ $errors->has('tag_list') ? ' has-error' : null }}">
+            {!! Form::label('tag_list', 'Tags') !!}
+            {!! Form::select('tag_list[]', $tags, null, ['id' => 'select-tags', 'class' => 'form-control', 'multiple', 'style' => 'width: 100%;']) !!}
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('removal_reason', 'Reason') !!}
+            {!! Form::textarea('removal_reason', null, ['class' => 'form-control', 'required' => 'required', 'rows' => 3, 'value' => 'Member removed. Reason: ']) !!}
+        </div>
 
         {{ csrf_field() }}
     </div>
@@ -30,3 +35,10 @@
                 class="btn btn-danger remove-member">Submit<span class="hidden-sm hidden-xs"> removal</span></button>
     </div>
 </div>
+
+<script type="text/javascript">
+  $('#select-tags').select2({
+    maximumSelectionLength: 2,
+    placeholder: 'Select tag(s)'
+  });
+</script>

@@ -40,7 +40,7 @@ class NoteController extends Controller
 
         $tags = ($division)
             ? $division->availableTags->pluck('name', 'id')
-            : Tag::all()->whereDefault(true)->get()->pluck('name', 'id');
+            : Tag::whereDefault(true)->get()->pluck('name', 'id');
 
         return view('member.edit-note', compact(
             'note', 'division', 'member', 'tags'
