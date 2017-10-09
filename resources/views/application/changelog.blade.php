@@ -29,6 +29,7 @@
                 <hr />
                 <ul>
                     <li>Added ability to explore division notes, and filter by tag</li>
+                    <li>Tags and notes are now available when removing an individual member via their profile</li>
                 </ul>
             </div>
         </div>
