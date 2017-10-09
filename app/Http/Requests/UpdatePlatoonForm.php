@@ -35,7 +35,7 @@ class UpdatePlatoonForm extends FormRequest
                 "unique:platoons,leader_id,{$this->platoon->id}",
                 'exists:members,clan_id',
             ],
-            'name' => 'required|max:40',
+            'name' => 'max:40',
             'logo' => 'nullable|url'
         ];
     }

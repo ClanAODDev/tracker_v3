@@ -35,7 +35,7 @@ class UpdateSquadForm extends FormRequest
                 'unique:squads,leader_id,' . $this->squad->id,
                 'exists:members,clan_id',
             ],
-            'name' => 'required|max:40',
+            'name' => 'max:40',
         ];
     }
 
