@@ -12,10 +12,9 @@
                 </div>
                 <div class="vertical-date pull-right text-muted">
                     @if ($note->updated_at > $note->created_at)
-                        <i class="fa fa-pencil text-muted" title="Edited"></i>
-                        {{ $note->updated_at->format('d M Y') }}
+                        Updated on {{ $note->updated_at->format('d M Y') }}
                     @else
-                        {{ $note->created_at->format('d M Y') }}
+                        Posted on {{ $note->created_at->format('d M Y') }}
                     @endif
 
                 </div>
