@@ -9,7 +9,6 @@ use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use App\Tag;
 use Carbon\Carbon;
-use CL\Slack\Payload\ChannelsCreatePayload;
 use Illuminate\Support\Facades\Log;
 
 /**

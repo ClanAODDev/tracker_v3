@@ -59,6 +59,7 @@ class UpdateDivision extends FormRequest
             $tag = new Tag;
             $tag->name = $tagName;
             $tag->division()->associate($this->division);
+            $tag->slug = str_slug($tagName);
             $tag->save();
         });
     }

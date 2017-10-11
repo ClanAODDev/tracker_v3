@@ -20,7 +20,7 @@
                 <td>{{ $census->created_at->format('m/d/Y') }}</td>
                 <td class="text-center">{{ $census->count }}</td>
                 <td class="text-center slight">
-                    {{ $census->count > 0 ? number_format($census->weekly_ts_count / $census->count * 100, 1) : 0 }}%
+                    {{ $census->count > 0 ? number_format($census->weekly_active_count / $census->count * 100, 1) : 0 }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
                           data-counts="{{ json_encode([$popMinus, $census->weekly_active_count]) }}">

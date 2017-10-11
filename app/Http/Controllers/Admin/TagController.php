@@ -54,6 +54,7 @@ class TagController extends Controller
             $tag->name = $tagName;
             $tag->division_id = 0;
             $tag->default = true;
+            $tag->slug = str_slug($tagName);
             $tag->save();
         });
     }
