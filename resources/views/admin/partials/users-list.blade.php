@@ -19,8 +19,8 @@
                 <tr>
                     <td>
                         <a title="View Profile" class="btn btn-default"
-                           href="{{ route('member', $user->member->clan_id) }}"><i
-                                    class="fa fa-user"></i>
+                           href="{{ route('member', $user->member->getUrlParams()) }}">
+                            <i class="fa fa-user"></i>
                         </a>
                     </td>
                     <td>
