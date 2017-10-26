@@ -16,7 +16,7 @@ trait IngameReports
      *
      * @return array
      */
-    public function destiny2(): array
+    public function destiny2()
     {
         $clans = [
             2726986,
@@ -32,7 +32,7 @@ trait IngameReports
      * @param Client $client
      * @return array
      */
-    protected function fetchDestiny2ClanData(array $clans, Client $client): array
+    protected function fetchDestiny2ClanData(array $clans, Client $client)
     {
         $clanData = [];
 
