@@ -141,9 +141,17 @@ Route::group(['prefix' => 'divisions/'], function () {
         ->name('division.ts-report');
     Route::get('{division}/retention', 'Division\ReportController@retentionReport')
         ->name('division.retention-report');
-    Route::get('{division}/census', 'Division\ReportController@censusReport')->name('division.census');
+    Route::get('{division}/census', 'Division\ReportController@censusReport')
+        ->name('division.census');
     Route::get('{division}/promotions/{month?}/{year?}',
-        'Division\ReportController@promotionsReport')->middleware(['auth'])->name('division.promotions');
+        'Division\ReportController@promotionsReport')->middleware(['auth'])
+        ->name('division.promotions');
+    Route::get('{division}/ingame-report',
+        'Division\ReportController@ingameReport')->middleware(['auth'])
+        ->name('division.ingame-reports');
+
+//    Route::get('{division}/retention/', 'Division\ReportController@retentionReport')->middleware(['auth'])
+//        ->name('division.retention');
 
     /**
      * platoons

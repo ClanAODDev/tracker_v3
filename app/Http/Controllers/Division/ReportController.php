@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Division;
 
+use App\Activity;
 use App\Division;
 use App\Repositories\MemberRepository;
 use Carbon\Carbon;
@@ -10,6 +11,8 @@ use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
+    use IngameReports;
+
     public function __construct()
     {
         $this->middleware(['auth', 'activeDivision']);
@@ -17,7 +20,37 @@ class ReportController extends Controller
 
     public function retentionReport(Division $division)
     {
+        /* $activities = $division
+             ->activity()
+             ->whereName('recruited_member')
+             ->groupBy('user_id')
+             ->get();
 
+         $groupCount = $activities->map(function ($item, $key) {
+             dd($item);
+             return collect($item)->count();
+         });
+
+         dump($groupCount);die;
+
+         return view('division.reports.retention-report', compact('activities', 'division'));*/
+    }
+
+    /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function ingameReport(Division $division)
+    {
+        $method = camel_case($division->name);
+
+        if (method_exists($this, $method)) {
+            $data = $this->$method();
+        } else {
+            $data = [];
+        }
+
+        return view('division.reports.ingame-report', compact('division', 'data'));
     }
 
     /**

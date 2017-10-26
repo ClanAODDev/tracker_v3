@@ -20,7 +20,9 @@
 
         <p>Below is a report of your division members' Teamspeak Unique IDs. If you have members listed below, it is important to get with those individuals and resolve these issues as soon as possible.</p>
 
-
+        @foreach ($activities as $activity)
+            {{ dump($activity) }} <br />
+        @endforeach
     </div>
 
 @stop

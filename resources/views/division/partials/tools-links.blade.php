@@ -56,6 +56,13 @@
         <li>
             <a href="{{ route('division.promotions', $division->abbreviation) }}">Promotions</a>
         </li>
+
+        <?php $file = camel_case($division->name); ?>
+        @if (file_exists(resource_path("views/division/reports/ingame-reports/{$file}.blade.php")))
+            <li>
+                <a href="{{ route('division.ingame-reports', $division->abbreviation) }}">Ingame Report</a>
+            </li>
+        @endif
     </ul>
 </div>
 
