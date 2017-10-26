@@ -45,6 +45,7 @@ function registerDivisionSubPages()
         'leaves-of-absence',
         'inactive-members',
         'teamspeak-report',
+        'retention-report',
         'promotions',
         'members',
     ];

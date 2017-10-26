@@ -97,7 +97,6 @@ Route::group(['prefix' => 'divisions/'], function () {
      */
     Route::get('{division}', 'DivisionController@show')->name('division');
     Route::get('{division}/edit', 'DivisionController@edit')->name('editDivision');
-    Route::get('{division}/census', 'DivisionController@census')->name('division.census');
 
     Route::post('', 'DivisionController@store')->name('storeDivision');
     Route::put('{division}', 'DivisionController@update')->name('updateDivision');
@@ -124,9 +123,6 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members-ts');
 
-    Route::get('{division}/promotions/{month?}/{year?}',
-        'PromotionsController@show')->middleware(['auth'])->name('division.promotions');
-
     Route::get('{division}/members', 'DivisionController@members')->name('division.members');
 
     Route::get('{division}/notes/{tag?}', 'DivisionNoteController@index')->name('division.notes');
@@ -138,8 +134,16 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('form', 'RecruitingController@form')->name('recruiting.form');
     });
 
-
-    Route::get('{division}/ts-report', 'DivisionController@showTsReport')->name('division.ts-report');
+    /**
+     * Division Reports
+     */
+    Route::get('{division}/ts-report', 'Division\ReportController@tsReport')
+        ->name('division.ts-report');
+    Route::get('{division}/retention', 'Division\ReportController@retentionReport')
+        ->name('division.retention-report');
+    Route::get('{division}/census', 'Division\ReportController@censusReport')->name('division.census');
+    Route::get('{division}/promotions/{month?}/{year?}',
+        'Division\ReportController@promotionsReport')->middleware(['auth'])->name('division.promotions');
 
     /**
      * platoons

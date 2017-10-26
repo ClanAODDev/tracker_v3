@@ -200,55 +200,6 @@ class DivisionController extends Controller
      * @param Division $division
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function census(Division $division)
-    {
-        $censuses = $division->census->sortByDesc('created_at')->take(52);
-
-        $populations = $censuses->values()->map(function ($census, $key) {
-            return [$census->javascriptTimestamp, $census->count];
-        });
-
-        $weeklyActive = $censuses->values()->map(function ($census, $key) {
-            return [$census->javascriptTimestamp, $census->weekly_active_count];
-        });
-
-        $weeklyTsActive = $censuses->values()->map(function ($census, $key) {
-            return [$census->javascriptTimestamp, $census->weekly_ts_count];
-        });
-
-        $comments = $censuses->values()
-            ->filter(function ($census) use ($censuses) {
-                return ($census->notes);
-            })->map(function ($census, $key) use ($censuses) {
-
-                return [
-                    'x' => $key,
-                    'y' => $censuses->values()->pluck('count'),
-                    'contents' => $census->notes
-                ];
-            })->values();
-
-        return view('division.census', compact(
-            'division', 'populations', 'weeklyActive',
-            'comments', 'censuses', 'weeklyTsActive'
-        ));
-    }
-
-    /**
-     * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function showTsReport(Division $division)
-    {
-        $issues = $division->mismatchedTSMembers;
-
-        return view('division.ts-report', compact('division', 'issues'));
-    }
-
-    /**
-     * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function members(Division $division)
     {
         $members = $division->members()->with('rank', 'position', 'leave')->get();
