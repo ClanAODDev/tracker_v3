@@ -5,6 +5,7 @@
 
     <h4>{{ $clan['clan-info']->detail->name }}
         <small>{{ $clan['clan-info']->detail->motto }}</small>
+        <span class="pull-right">{{ count($clan['clan-members']) }} Members</span>
     </h4>
     <div class="panel panel-filled">
         <table class="table table-hover basic-datatable">
