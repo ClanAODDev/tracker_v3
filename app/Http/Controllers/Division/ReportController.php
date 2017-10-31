@@ -25,12 +25,14 @@ class ReportController extends Controller
      */
     public function retentionReport(Division $division)
     {
-        $start = new Carbon('first day of this month');
-        $end = new Carbon('last day of this month');
+        $range = [
+            'start' => new Carbon('first day of this month'),
+            'end' => new Carbon('last day of this month')
+        ];
 
         $activity = collect(Activity::whereName('recruited_member')
             ->whereDivisionId($division->id)
-            ->whereBetween('created_at', [$start, $end])
+            ->whereBetween('created_at', [$range['start'], $range['end']])
             ->with('user.member')
             ->with('user.member.rank')
             ->get())
@@ -47,7 +49,8 @@ class ReportController extends Controller
             return $item['recruits'];
         })->sum();
 
-        return view('division.reports.retention-report', compact('division', 'members', 'totalRecruitCount'));
+        return view('division.reports.retention-report', compact('division', 'members', 'totalRecruitCount',
+            'range'));
     }
 
     /**

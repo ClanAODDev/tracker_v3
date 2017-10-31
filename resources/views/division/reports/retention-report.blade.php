@@ -20,9 +20,9 @@
 
         <p>This report provides recruiting and removal information. Only recruits done for the current division are included.</p>
 
+        <p><strong>Range:</strong> <code>{{ $range['start']->format('M d') }} - {{ $range['end']->format('M d') }}</code></p>
+
         <hr />
-
-
 
         <div class="row">
             <div class="col-md-6">

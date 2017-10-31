@@ -25,6 +25,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>30 Oct 2017 - 3.2.6</h4>
+                <hr />
+                <ul>
+                    <li>Added division ingame report functionality (boilerplate, not all divisions will have supported ingame report functionality)</li>
+                    <li>Added division retention information. Initially, only the current month's recruitment data will be available. Soon, by-month query and removals will be available.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>09 Oct 2017 - 3.2.5</h4>
                 <hr />
                 <ul>
