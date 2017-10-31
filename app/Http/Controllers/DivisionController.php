@@ -150,7 +150,9 @@ class DivisionController extends Controller
      */
     public function partTime(Division $division)
     {
-        $members = $division->partTimeMembers()->with('rank', 'handles')->get()
+        $members = $division->partTimeMembers()->with('rank', 'handles')
+            ->where('members.division_id', '!=', 0)
+            ->get()
             ->each(function ($member) use ($division) {
                 // filter out handles that don't match current division primary handle
                 $member->handles = $member->handles->filter(function ($handle) use ($division) {
