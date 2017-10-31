@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Division;
 
 use App\Activity;
 use App\Division;
+use App\Member;
 use App\Repositories\MemberRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,22 +19,35 @@ class ReportController extends Controller
         $this->middleware(['auth', 'activeDivision']);
     }
 
+    /**
+     * @param Division $division
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function retentionReport(Division $division)
     {
-        /* $activities = $division
-             ->activity()
-             ->whereName('recruited_member')
-             ->groupBy('user_id')
-             ->get();
+        $start = new Carbon('first day of this month');
+        $end = new Carbon('last day of this month');
 
-         $groupCount = $activities->map(function ($item, $key) {
-             dd($item);
-             return collect($item)->count();
-         });
+        $activity = collect(Activity::whereName('recruited_member')
+            ->whereDivisionId($division->id)
+            ->whereBetween('created_at', [$start, $end])
+            ->with('user.member')
+            ->with('user.member.rank')
+            ->get())
+            ->groupBy('user_id');
 
-         dump($groupCount);die;
+        $members = $activity->map(function ($item) {
+            return [
+                'recruits' => count($item),
+                'member' => $item->first()->user->member
+            ];
+        })->sortByDesc('recruits');
 
-         return view('division.reports.retention-report', compact('activities', 'division'));*/
+        $totalRecruitCount = $members->map(function ($item) {
+            return $item['recruits'];
+        })->sum();
+
+        return view('division.reports.retention-report', compact('division', 'members', 'totalRecruitCount'));
     }
 
     /**

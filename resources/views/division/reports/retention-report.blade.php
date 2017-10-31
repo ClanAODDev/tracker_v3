@@ -18,11 +18,31 @@
 
         {!! Breadcrumbs::render('retention-report', $division) !!}
 
-        <p>Below is a report of your division members' Teamspeak Unique IDs. If you have members listed below, it is important to get with those individuals and resolve these issues as soon as possible.</p>
+        <p>This report provides recruiting and removal information. Only recruits done for the current division are included.</p>
 
-        @foreach ($activities as $activity)
-            {{ dump($activity) }} <br />
-        @endforeach
+        <hr />
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-filled">
+                    <div class="panel-heading">
+                        Recruiting Count
+                        <span class="pull-right">{{ $totalRecruitCount }}</span>
+                    </div>
+                    @foreach ($members as $item)
+                        <li class="list-group-item">
+                            <a href="{{ route('member', $item['member']->getUrlParams()) }}">
+                                {{ $item['member']->present()->rankName }}
+                            </a>
+                            <span class="pull-right badge">{{ $item['recruits'] }}</span>
+                        </li>
+                    @endforeach
+                </div>
+            </div>
+            <div class="col-md-6"></div>
+        </div>
     </div>
 
 @stop
