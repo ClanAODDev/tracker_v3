@@ -12,7 +12,7 @@ Breadcrumbs::register('member', function ($breadcrumbs, $member, $division) {
     }
 
     if ($member->squad_id !== 0 && $member->squad) {
-        $breadcrumbs->push($member->squad->name,
+        $breadcrumbs->push($member->squad->name ?: "Untitled",
             route('squad.show', [$division->abbreviation, $member->platoon->id, $member->squad])
         );
     }
