@@ -20,8 +20,10 @@ trait IngameReports
     {
         $clans = [
             2726986,
-            2054476
+            2054476,
+            2871880
         ];
+
         $client = new Client();
 
         return $this->fetchDestiny2ClanData($clans, $client);
