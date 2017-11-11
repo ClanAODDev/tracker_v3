@@ -324,6 +324,12 @@ class Member extends Model
         return $this->rank->abbreviation === $rank;
     }
 
+//    public function getDivisionHandleAttribute()
+//    {
+//        return $this->handles->where('id', $this->division->handle->id)
+//            ->pluck('pivot.value')->first();
+//    }
+
     public function getUrlParams()
     {
         return [

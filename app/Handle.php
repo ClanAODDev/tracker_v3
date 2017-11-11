@@ -25,6 +25,11 @@ class Handle extends Model
         return $this->hasMany(Division::class);
     }
 
+//    public function divisionHandle($handleId)
+//    {
+//        return $this->handles()->wherePivot('handle_id', $handleId);
+//    }
+
     public function member()
     {
         return $this->belongsTo(Member::class);

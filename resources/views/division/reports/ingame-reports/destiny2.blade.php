@@ -13,6 +13,7 @@
             <tr>
                 <th>Ingame Name</th>
                 <th>Bungie Id</th>
+                <th>Online</th>
             </tr>
             </thead>
             <tbody>
@@ -26,6 +27,11 @@
                             </a>
                         @else
                             <span class='text-danger'>No Bungie Account</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($member->isOnline)
+                            <i class="fa fa-check text-success"></i>
                         @endif
                     </td>
                 </tr>

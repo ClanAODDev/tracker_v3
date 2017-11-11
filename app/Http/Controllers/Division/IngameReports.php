@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Division;
 
+use App\Division;
+use App\Handle;
 use GuzzleHttp\Client;
 
 /**
@@ -36,6 +38,14 @@ trait IngameReports
      */
     protected function fetchDestiny2ClanData(array $clans, Client $client)
     {
+        $division = request()->route('division');
+
+        $fullTimers = $division->members()->with([
+            'handles' => function ($query) use ($division) {
+                $query->whereHandleId($division->handle_id);
+            }
+        ])->get();
+
         $clanData = [];
 
         foreach ($clans as $clan) {
@@ -45,11 +55,23 @@ trait IngameReports
             $clanInformation = $this->getBungieInfo($clanUrl, $client);
             $memberData = $this->getBungieInfo($memberUrl, $client);
 
+            $bungieIds[] = collect($memberData->results)->pluck('bungieNetUserInfo.membershipId');
+
             $clanData[] = [
                 'clan-info' => $clanInformation,
                 'clan-members' => $memberData->results
             ];
         }
+
+//        dd(array_diff(
+//            $fullTimers->pluck('divisionHandle', 'name')->toArray(),
+//            array_flatten($bungieIds)
+//        ));
+
+//        array_diff()
+
+
+//        dd(array_flatten($bungieIds));
 
         return $clanData;
     }
