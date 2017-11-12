@@ -4,7 +4,7 @@
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
     @foreach ($data as $clan)
-        <li role="presentation">
+        <li role="presentation" class="{{ $loop->iteration == 1 ? 'active' : null }}">
             <a href="#clan-{{ $clan['clan-info']->detail->groupId }}" aria-controls="home" role="tab"
                data-toggle="tab">{{ $clan['clan-info']->detail->motto }} ({{ count($clan['clan-members']) }})</a>
         </li>
@@ -14,8 +14,8 @@
 <!-- Tab panes -->
 <div class="tab-content">
     @foreach ($data as $clan)
-        <div role="tabpanel" class="tab-pane" id="clan-{{ $clan['clan-info']->detail->groupId }}">
-            <div class="panel panel-filled">
+        <div role="tabpanel" class="tab-pane {{ $loop->iteration == 1 ? 'active' : null }}" id="clan-{{ $clan['clan-info']->detail->groupId }}">
+            <div class="panel">
                 <div class="panel-body">
                     <table class="table table-hover adv-datatable">
                         <thead>
