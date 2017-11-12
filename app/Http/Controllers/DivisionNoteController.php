@@ -25,6 +25,8 @@ class DivisionNoteController extends Controller
             })
             : $division->notes;
 
+        $notes = $notes->sortByDesc('created_at');
+
         return view('division.notes', compact('division', 'tags', 'notes'))->with(['filter' => $tag]);
     }
 
