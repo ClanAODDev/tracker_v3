@@ -23,7 +23,7 @@ class DivisionNoteController extends Controller
             ? $division->notes->filter(function ($note) use ($tag) {
                 return $note->tags->contains($tag->id);
             })
-            : $division->notes;
+            : $division->notes->load('member.rank');
 
         $notes = $notes->sortByDesc('created_at');
 
