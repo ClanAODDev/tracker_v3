@@ -295,8 +295,7 @@ class MemberController extends Controller
         $division = $member->division;
 
         if ($division->settings()->get('slack_alert_removed_member')) {
-//            $division->notify(new MemberRemoved($member, $form->input('removal-reason')));
-            $division->notify(new MemberRemoved($member));
+            $division->notify(new MemberRemoved($member, $form->input('removal-reason')));
         }
 
         $form->persist();
