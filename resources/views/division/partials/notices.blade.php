@@ -1,7 +1,7 @@
 @if (count($division->mismatchedTSMembers))
     <div class="alert alert-default">
         <i class="fa fa-exclamation-triangle text-danger"></i>
-        There are <code>{{ count($division->mismatchedTSMembers) }}</code> members improperly configured for Teamspeak. Please review the
+        You have <code>{{ count($division->mismatchedTSMembers) }}</code> {{ str_plural('member', count($division->mismatchedTSMembers)) }} improperly configured for Teamspeak. Please review the
         <a href="{{ route('division.ts-report', $division->abbreviation) }}"
            class="alert-link">Teamspeak Report</a> to resolve these issues.
     </div>
