@@ -23,7 +23,8 @@ trait IngameReports
         $clans = [
             2726986,
             2054476,
-            2871880
+            2871880,
+            2939996
         ];
 
         $client = new Client();

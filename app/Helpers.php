@@ -11,6 +11,20 @@ function bytesToHuman($bytes)
     return round($bytes, 2) . ' ' . $units[$i];
 }
 
+function bungieMemberType($type)
+{
+    switch ($type) {
+        case 5:
+            return 'Owner';
+        case 3:
+            return 'Admin';
+        case 2:
+            return 'Member';
+        case 1:
+            return 'Prospective';
+    }
+}
+
 function ordSuffix($n)
 {
     $str = "$n";

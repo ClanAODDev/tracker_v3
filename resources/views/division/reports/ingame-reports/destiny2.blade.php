@@ -23,6 +23,8 @@
                             <th>Ingame Name</th>
                             <th>Bungie Id</th>
                             <th>Online</th>
+                            <th>Type</th>
+                            <th>Join Date</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -43,6 +45,8 @@
                                         <i class="fa fa-check text-success"></i>
                                     @endif
                                 </td>
+                                <td><code>{{ $member->memberType }}</code> {{ bungieMemberType($member->memberType) }}</td>
+                                <td>{{ Carbon::parse($member->joinDate)->diffForHumans() }}</td>
                             </tr>
                         @endforeach
                         </tbody>
