@@ -14,7 +14,8 @@
 <!-- Tab panes -->
 <div class="tab-content">
     @foreach ($data as $clan)
-        <div role="tabpanel" class="tab-pane {{ $loop->iteration == 1 ? 'active' : null }}" id="clan-{{ $clan['clan-info']->detail->groupId }}">
+        <div role="tabpanel" class="tab-pane {{ $loop->iteration == 1 ? 'active' : null }}"
+             id="clan-{{ $clan['clan-info']->detail->groupId }}">
             <div class="panel">
                 <div class="panel-body">
                     <table class="table table-hover adv-datatable">
@@ -45,8 +46,11 @@
                                         <i class="fa fa-check text-success"></i>
                                     @endif
                                 </td>
-                                <td><code>{{ $member->memberType }}</code> {{ bungieMemberType($member->memberType) }}</td>
-                                <td>{{ Carbon::parse($member->joinDate)->diffForHumans() }}</td>
+                                <td><code>{{ $member->memberType }}</code> {{ bungieMemberType($member->memberType) }}
+                                </td>
+                                <td title="{{ Carbon::parse($member->joinDate)->diffForHumans() }}">
+                                    {{ Carbon::parse($member->joinDate)->format('M d, Y }}
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>

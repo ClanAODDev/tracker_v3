@@ -47,6 +47,8 @@ trait IngameReports
             }
         ])->get();
 
+        dd($fullTimers->first()->handle);
+
         $clanData = [];
 
         foreach ($clans as $clan) {
