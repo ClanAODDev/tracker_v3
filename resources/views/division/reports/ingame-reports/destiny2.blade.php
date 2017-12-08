@@ -49,7 +49,7 @@
                                 <td><code>{{ $member->memberType }}</code> {{ bungieMemberType($member->memberType) }}
                                 </td>
                                 <td title="{{ Carbon::parse($member->joinDate)->diffForHumans() }}">
-                                    {{ Carbon::parse($member->joinDate)->format('M d, Y }}
+                                    {{ Carbon::parse($member->joinDate)->format('Y-m-d') }}
                                 </td>
                             </tr>
                         @endforeach
