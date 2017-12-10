@@ -48,6 +48,7 @@ class FireteamController extends Controller
         Fireteam::create([
             'name' => $request->name,
             'type' => $request->type,
+            'players_needed' => $request->players_needed,
             'description' => $request->description,
             'owner_id' => auth()->user()->member_id,
             'owner_light' => $request->light,
