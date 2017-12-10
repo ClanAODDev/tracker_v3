@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tools;
 
 use App\Fireteam;
+use App\Notifications\FireteamCreated;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -90,7 +91,7 @@ class FireteamController extends Controller
 
         // handle event when fireteam is full
         if ($fireteam->players_needed == $fireteam->players_count) {
-            dump('full!');
+            $fireteam->owner()->user()->notify(new FireteamCreated($fireteam->owner()->user()));
         }
 
         $this->validate($request, [
