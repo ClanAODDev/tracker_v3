@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tools;
 use App\Fireteam;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Laracasts\Flash\Flash;
 
 class FireteamController extends Controller
 {
@@ -72,13 +71,13 @@ class FireteamController extends Controller
         $player = auth()->user()->member;
 
         if ($fireteam->players->contains($player)) {
-            return redirect()->back()->withErrors([
+            return redirect()->route('fireteams.index')->withErrors([
                 'You are already a member of that fireteam!'
             ]);
         }
 
         if ($fireteam->owner_id === $player->id) {
-            return redirect()->back()->withErrors([
+            return redirect()->route('fireteams.index')->withErrors([
                 'You cannot join your own fireteam!'
             ]);
         }
