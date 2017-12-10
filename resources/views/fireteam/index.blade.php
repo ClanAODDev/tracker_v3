@@ -195,7 +195,7 @@
 
     <script>
       function updateFireteamForm (fireteamId) {
-        let route = '/fireteams/' + fireteamId;
+        let route = '{{ route('fireteams.index') }}/' + fireteamId;
         $('#join-fireteam-form').attr('action', route);
       }
     </script>

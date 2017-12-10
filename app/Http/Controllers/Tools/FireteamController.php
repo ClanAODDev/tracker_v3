@@ -44,6 +44,12 @@ class FireteamController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'max:100',
+            'owner_light' => 'max:500,min:1',
+            'description' => 'max:300'
+        ]);
+
         Fireteam::create([
             'name' => $request->name,
             'type' => $request->type,
@@ -86,7 +92,10 @@ class FireteamController extends Controller
         if ($fireteam->players_needed == $fireteam->players()->count()) {
             dump('full!');
         }
-
+        
+        $this->validate($request, [
+            'light' => 'max:500,min:1',
+        ]);
 
         $fireteam->players()->attach($player, ['light' => $request->light]);
 
