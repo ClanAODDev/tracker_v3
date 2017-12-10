@@ -60,7 +60,7 @@
                         @endforeach
 
                         @if ($fireteam->slotsAvailable)
-                            @for ($i = 0; $i = $fireteam->slotsAvailable; $i++)
+                            @for ($i = 1; $i <= $fireteam->slotsAvailable; $i++)
                                 <a href="#" data-toggle="modal" data-target="#join-fireteam"
                                    class="btn btn-success btn-xs"
                                    onclick="updateFireteamForm({{ $fireteam->id }});">

@@ -41,7 +41,7 @@ class Fireteam extends Model
     public function getSlotsAvailableAttribute()
     {
         // count the owner as a slot
-        return $this->players_needed - $this->players_count - 1;
+        return $this->players_needed - $this->players_count;
     }
 
     public function getSpotsColorAttribute()

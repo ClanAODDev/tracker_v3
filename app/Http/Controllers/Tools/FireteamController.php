@@ -89,7 +89,7 @@ class FireteamController extends Controller
         }
 
         // handle event when fireteam is full
-        if ($fireteam->players_needed == $fireteam->players()->count()) {
+        if ($fireteam->players_needed == $fireteam->players_count) {
             dump('full!');
         }
 
