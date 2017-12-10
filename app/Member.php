@@ -137,7 +137,6 @@ class Member extends Model
     }
 
 
-
     /**
      * Enforce a singleton relationship for squad leaders
      *
@@ -181,22 +180,6 @@ class Member extends Model
     }
 
     /**
-     * relationship - member belongs to a platoon
-     */
-    public function platoon()
-    {
-        return $this->belongsTo(Platoon::class);
-    }
-
-    /**
-     * relationship - member belongs to a squad
-     */
-    public function squad()
-    {
-        return $this->belongsTo(Squad::class);
-    }
-
-    /**
      * Handle Staff Sergeant assignments
      * division/
      *
@@ -206,6 +189,30 @@ class Member extends Model
     {
         return $this->belongsToMany(Division::class, 'division_parttimer')
             ->withTimestamps();
+    }
+
+    /**
+     * relationship - member belongs to a platoon
+     */
+    public function platoon()
+    {
+        return $this->belongsTo(Platoon::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fireteams()
+    {
+        return $this->hasMany('App\Fireteam');
+    }
+
+    /**
+     * relationship - member belongs to a squad
+     */
+    public function squad()
+    {
+        return $this->belongsTo(Squad::class);
     }
 
     /**

@@ -254,6 +254,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 });
 
 
+Route::get('fireteams/type/{type}', 'Tools\FireteamController@index')->name('fireteams.byType');
+Route::get('fireteams/{fireteam}/leave', 'Tools\FireteamController@leave')->name('fireteams.leave');
+Route::resource('fireteams', 'Tools\FireteamController');
+
+
 /**
  * Application UI
  */

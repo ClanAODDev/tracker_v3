@@ -11,6 +11,22 @@
     user-select: none;
 }
 
+.spotsLeft.spotsGray {
+    background: #37414E;
+}
+
+.spotsLeft.spotsRed {
+    background: #944444;
+}
+
+.spotsLeft.spotsOrange {
+    background: #925233;
+}
+
+.spotsLeft.spotsGreen {
+    background: #537B49;
+}
+
 /* (Optional) Apply a "closed-hand" cursor during drag operation. */
 .grabbable:active {
     cursor: grabbing;
