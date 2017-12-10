@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Tools;
 
 use App\Fireteam;
-use App\Notifications\FireteamCreated;
+use App\Mail\FireteamCanceled;
+use App\Mail\FireteamCreated;
+use App\Mail\FireteamFilled;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class FireteamController extends Controller
 {
@@ -61,6 +64,8 @@ class FireteamController extends Controller
             'starts_at' => date('Y-m-d H:i:s'),
         ]);
 
+        Mail::to($request->user())->send(new FireteamCreated($request));
+
         $this->showToast('Your fireteam has been created!');
 
         return redirect(route('fireteams.index'));
@@ -89,16 +94,21 @@ class FireteamController extends Controller
             ]);
         }
 
-        // handle event when fireteam is full
-        if ($fireteam->players_needed == $fireteam->players_count) {
-            $fireteam->owner()->user()->notify(new FireteamCreated($fireteam->owner()->user()));
-        }
-
         $this->validate($request, [
             'light' => 'max:3,min:1',
         ]);
 
         $fireteam->players()->attach($player, ['light' => $request->light]);
+
+        $updatedFireteam = Fireteam::find($fireteam->id);
+
+        // handle event when fireteam is full
+        if ($fireteam->players_needed == $updatedFireteam->players_count) {
+            Mail::to($fireteam->owner->user)->send(new FireteamFilled($updatedFireteam));
+            $updatedFireteam->players->each(function ($player) use ($updatedFireteam) {
+                Mail::to($player->user)->send(new FireteamFilled($updatedFireteam));
+            });
+        }
 
         $this->showToast('You have successfully joined the fireteam!');
 
@@ -120,7 +130,13 @@ class FireteamController extends Controller
         }
 
         $fireteam->delete();
+
         $this->showToast('Your fireteam has been cancelled!');
+
+        Mail::to($fireteam->owner->user)->send(new FireteamCanceled($fireteam));
+        $fireteam->players->each(function ($player) use ($fireteam) {
+            Mail::to($player->user)->send(new FireteamCanceled($fireteam));
+        });
 
         return redirect()->route('fireteams.index');
     }

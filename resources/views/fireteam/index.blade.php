@@ -49,13 +49,13 @@
                     <div class="panel-body">
                         <a class="badge" href="{{ route('member', $fireteam->owner->getUrlParams()) }}">
                             <i class="fa fa-circle text-muted"></i> {{ $fireteam->owner->name }}
-                            <span style="color: #41eacf">✦ {{ $fireteam->owner_light }}</span>
+                            <span style="color: #41eacf">&#x2726; {{ $fireteam->owner_light }}</span>
                         </a>
 
                         @foreach ($fireteam->players as $member)
                             <a class="badge" href="{{ route('member', $member->getUrlParams()) }}">
                                 <i class="fa fa-circle text-muted"></i> {{ $member->name }}
-                                <span style="color: #41eacf">✦ {{ $member->pivot->light }}</span>
+                                <span style="color: #41eacf">&#x2726; {{ $member->pivot->light }}</span>
                             </a>
                         @endforeach
 
@@ -83,7 +83,7 @@
 
                                 @if (auth()->user()->member_id === $fireteam->owner_id)
                                     <a class="badge btn-xs" target="_blank"
-                                       href="{{ doForumFunction($fireteam->players->pluck('member_id')->toArray(), 'pm') }}">
+                                       href="{{ doForumFunction($fireteam->players->pluck('clan_id')->toArray(), 'pm') }}">
                                         <i class="fa fa-comment"></i> PM Fireteam
                                     </a>
                                     <div class="pull-right">
