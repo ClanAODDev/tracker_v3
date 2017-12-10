@@ -74,29 +74,30 @@
                             </div>
                         @endif
 
-                        @if ($fireteam->players->contains(auth()->user()->member_id))
-                            <a href="{{ route('fireteams.leave', $fireteam->id) }}"
-                               class="btn btn-warning m-t-lg">Leave Fireteam</a>
-                        @endif
+                        <div class="row m-t-md">
+                            <div class="col-md-12">
+                                @if ($fireteam->players->contains(auth()->user()->member_id))
+                                    <a href="{{ route('fireteams.leave', $fireteam->id) }}"
+                                       class="btn btn-warning m-t-lg">Leave Fireteam</a>
+                                @endif
 
-
-
-                        @if (auth()->user()->member_id === $fireteam->owner_id)
-                            <a class="badge btn-xs" target="_blank"
-                               href="{{ doForumFunction($fireteam->players->pluck('member_id')->toArray(), 'pm') }}">
-                                <i class="fa fa-comment"></i> PM Fireteam
-                            </a>
-
-                            <div class="pull-right">
-                                <form action="{{ route('fireteams.destroy', $fireteam->id) }}" method="post">
-                                    {{ method_field('delete') }}
-                                    {{ csrf_field() }}
-                                    <button type="submit" class="btn btn-default"
-                                            onclick="return confirm('Are you sure you want to cancel this fireteam?');">Cancel Fireteam
-                                    </button>
-                                </form>
+                                @if (auth()->user()->member_id === $fireteam->owner_id)
+                                    <a class="badge btn-xs" target="_blank"
+                                       href="{{ doForumFunction($fireteam->players->pluck('member_id')->toArray(), 'pm') }}">
+                                        <i class="fa fa-comment"></i> PM Fireteam
+                                    </a>
+                                    <div class="pull-right">
+                                        <form action="{{ route('fireteams.destroy', $fireteam->id) }}" method="post">
+                                            {{ method_field('delete') }}
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-default"
+                                                    onclick="return confirm('Are you sure you want to cancel this fireteam?');">Cancel Fireteam
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
-                        @endif
+                        </div>
 
                     </div>
                 </div>
