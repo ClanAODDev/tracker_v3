@@ -17,7 +17,8 @@ class Fireteam extends Model
         'type',
         'description',
         'owner_id',
-        'owner_light'
+        'owner_light',
+        'players_needed'
     ];
 
     protected static function boot()
