@@ -92,9 +92,9 @@ class FireteamController extends Controller
         if ($fireteam->players_needed == $fireteam->players()->count()) {
             dump('full!');
         }
-        
+
         $this->validate($request, [
-            'light' => 'max:500,min:1',
+            'light' => 'max:3,min:1',
         ]);
 
         $fireteam->players()->attach($player, ['light' => $request->light]);
