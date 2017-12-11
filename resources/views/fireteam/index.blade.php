@@ -26,9 +26,6 @@
             @forelse ($fireteams as $fireteam)
                 <div class="panel panel-filled collapsed">
                     <div class="panel-heading">
-                        <div class="panel-tools">
-                            <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
-                        </div>
                         <h4 class="text-uppercase">
                             <a href="{{ route('fireteams.byType', $fireteam->type) }}"
                                class="badge text-uppercase pull-right">{{ $fireteam->type }}</a>
@@ -36,15 +33,16 @@
                                class="pull-left m-r-sm" style="color: white; z-index:9999">
                                 {{ $fireteam->name }}
                             </a>
+                            <div class="panel-toggle">
 
-                            @if ($fireteam->slotsAvailable > 0)
-                                <small class="label {{ $fireteam->spotsColor }} text-uppercase">
-                                    {{ $fireteam->slotsAvailable }} {{ str_plural('slot', $fireteam->slotsAvailable) }} Left
-                                </small>
-                            @else
-                                <small class="label label-default text-muted">No Slots</small>
-                            @endif
-
+                                @if ($fireteam->slotsAvailable > 0)
+                                    <small class="label {{ $fireteam->spotsColor }} text-uppercase">
+                                        {{ $fireteam->slotsAvailable }} {{ str_plural('slot', $fireteam->slotsAvailable) }} Left
+                                    </small>
+                                @else
+                                    <small class="label label-default text-muted">No Slots</small>
+                                @endif
+                            </div>
                         </h4>
                     </div>
 
