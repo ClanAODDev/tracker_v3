@@ -47,13 +47,13 @@
                     <div class="panel-body">
                         <a class="badge" href="{{ route('member', $fireteam->owner->getUrlParams()) }}">
                             <i class="fa fa-circle text-muted"></i> {{ $fireteam->owner->name }}
-                            <span style="color: #41eacf">&#x2726; {{ $fireteam->owner_light }}</span>
+                            <span style="color: #41eacf">&#x2727; {{ $fireteam->owner_light }}</span>
                         </a>
 
                         @foreach ($fireteam->players as $member)
                             <a class="badge" href="{{ route('member', $member->getUrlParams()) }}">
                                 <i class="fa fa-circle text-muted"></i> {{ $member->name }}
-                                <span style="color: #41eacf">&#x2726; {{ $member->pivot->light }}</span>
+                                <span style="color: #41eacf">&#x2727; {{ $member->pivot->light }}</span>
                             </a>
                         @endforeach
 
@@ -126,7 +126,7 @@
                             </div>
                             <div class="col-xs-6">
                                 <label for="light">
-                                    <span style="color: #41eacf">✦</span> Your light level
+                                    <span style="color: #41eacf">&#x2727;</span> Your light level
                                 </label>
                                 <input type="number" class="form-control" name="light" required />
                             </div>
@@ -160,7 +160,7 @@
                         <h4 class="modal-title text-uppercase">Join Fireteam</h4>
                         <div class="form-group m-t-md">
                             <label for="light">
-                                <span style="color: #41eacf">✦</span> Your current light level
+                                <span style="color: #41eacf">&#x2727;</span> Your current light level
                             </label>
                             <input type="number" class="form-control" name="light" required />
                         </div>
