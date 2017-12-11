@@ -18,9 +18,20 @@
 
     <div class="container-fluid">
         @include('application.partials.errors')
-
         <a href="{{ route('fireteams.index') }}" class="btn btn-default"> <i
                     class="fa fa-arrow-left"></i> Back to Fireteams</a>
+
+        @if ($fireteam->players_needed == $fireteam->players_count && !$fireteam->confirmed)
+            <div class="alert alert-warning m-t-md">
+                <strong>Fireteam is full.</strong> Waiting for fireteam leader to confirm...
+            </div>
+        @endif
+
+        @if($fireteam->confirmed)
+            <div class="alert alert-success m-t-md">
+                <strong>Fireteam is confirmed.</strong> All party members should convene on Teamspeak at the desginated date and time.
+            </div>
+        @endif
 
         <h2 class="text-uppercase m-t-lg">
             @if ($fireteam->confirmed)
@@ -96,34 +107,41 @@
             </div>
         @endif
 
-        <div class="row m-t-md">
-            <div class="col-md-12">
-                @if ($fireteam->players->contains(auth()->user()->member_id))
-                    <a href="{{ route('fireteams.leave', $fireteam->id) }}"
-                       class="btn btn-warning m-t-lg">Leave Fireteam</a>
-                @endif
-
-                @if (auth()->user()->member_id === $fireteam->owner_id)
-                    <form action="{{ route('fireteams.destroy', $fireteam->id) }}" method="post">
-                        {{ method_field('delete') }}
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Are you sure you want to cancel this fireteam?');">Cancel Fireteam
-                        </button>
-                    </form>
-
-                    @if ($fireteam->players_needed == $fireteam->players_count)
-                        <form action="{{ route('fireteams.confirm', $fireteam->id) }}" method="post">
-                            {{ csrf_field() }}
-                            <button type="submit" class="btn btn-success pull-right"
-                                    onclick="return confirm('Are you sure you want to confirm and close this fireteam?');">Confirm Fireteam
-                            </button>
-                        </form>
+        @if (!$fireteam->confirmed)
+            <div class="row m-t-md">
+                <div class="col-md-12">
+                    @if ($fireteam->players->contains(auth()->user()->member_id))
+                        <a href="{{ route('fireteams.leave', $fireteam->id) }}"
+                           class="btn btn-warning m-t-lg">Leave Fireteam</a>
                     @endif
 
-                @endif
+                    @if (auth()->user()->member_id === $fireteam->owner_id)
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <form action="{{ route('fireteams.destroy', $fireteam->id) }}" method="post">
+                                    {{ method_field('delete') }}
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Are you sure you want to cancel this fireteam?');">Cancel Fireteam
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-xs-6">
+                                @if ($fireteam->players_needed == $fireteam->players_count)
+                                    <form action="{{ route('fireteams.confirm', $fireteam->id) }}" method="post">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-success pull-right"
+                                                onclick="return confirm('Are you sure you want to confirm and close this fireteam?');">Confirm Fireteam
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+
+                    @endif
+                </div>
             </div>
-        </div>
+        @endif
 
     </div>
 

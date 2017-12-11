@@ -24,11 +24,7 @@
 
         <div class="fireteams m-t-lg">
             @forelse ($fireteams as $fireteam)
-                @php
-                    $isOwner = $fireteam->owner_id == auth()->user()->member_id;
-                    $isMember = $fireteam->players->contains(auth()->user()->member)
-                @endphp
-                <div class="panel panel-filled collapsed {{ $isOwner ? 'panel-c-success' : null }} {{ $isMember ? 'panel-c-info' : null }}">
+                <div class="panel panel-filled collapsed">
                     <div class="panel-heading">
                         <h4 class="text-uppercase">
                             <a href="{{ route('fireteams.byType', $fireteam->type) }}"
@@ -76,10 +72,12 @@
                             </div>
                         @endif
 
-                        @if ($fireteam->players->contains(auth()->user()->member_id))
-                            <a href="{{ route('fireteams.leave', $fireteam->id) }}"
-                               class="btn btn-warning btn-xs pull-right">Leave Fireteam</a>
-                        @endif
+                        @auth
+                            @if ($fireteam->players->contains(auth()->user()->member_id))
+                                <a href="{{ route('fireteams.leave', $fireteam->id) }}"
+                                   class="btn btn-warning btn-xs pull-right">Leave Fireteam</a>
+                            @endif
+                        @endauth
 
                     </div>
                 </div>
@@ -121,6 +119,7 @@
                                     <option value="raid">Raid</option>
                                     <option value="crucible">Crucible</option>
                                     <option value="strikes">Strikes</option>
+                                    <option value="nightfall">Nightfall</option>
                                     <option value="trials of the nine">Trials of the Nine</option>
                                     <option value="down for anything">Down for anything</option>
                                 </select>
