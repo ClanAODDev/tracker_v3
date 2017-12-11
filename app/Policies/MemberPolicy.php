@@ -99,6 +99,12 @@ class MemberPolicy
             return true;
         }
 
+        if ($user->isRole('officer')) {
+            if ($member->platoon && $user->member->platoon) {
+                return $member->platoon_id == $user->member->platoon_id;
+            }
+        }
+
         return false;
     }
 
@@ -111,6 +117,12 @@ class MemberPolicy
 
         if ($user->isRole('jr_ldr')) {
             return true;
+        }
+
+        if ($user->isRole('officer')) {
+            if ($member->platoon && $user->member->platoon) {
+                return $member->platoon_id == $user->member->platoon_id;
+            }
         }
 
         return false;
