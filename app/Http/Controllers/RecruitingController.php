@@ -112,7 +112,7 @@ class RecruitingController extends Controller
         // handle assignments
         $member->platoon_id = $request->platoon;
         $member->squad_id = $request->squad;
-        
+
         $member->save();
 
         $member->recordActivity('recruited');

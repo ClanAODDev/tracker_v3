@@ -69,9 +69,7 @@
                          :class="{'input': true, 'has-warning': errors.has('ingame_name') }">
                         <label for="ingame_name">{{ store.handleName }}</label>
                         <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
-                               v-validate="'required'" id="ingame_name" :disabled="store.inDemoMode" />
-                        <span v-show="errors.has('ingame_name')"
-                              class="help-block">{{ errors.first('ingame_name') }}</span>
+                               id="ingame_name" :disabled="store.inDemoMode" />
                     </div>
                 </div>
             </div>
@@ -140,7 +138,11 @@
 
     methods: {
       validateStep: function () {
-        this.$validator.validateAll().then(() => {
+        this.$validator.validateAll().then((result) => {
+          if (!result) {
+            toastr.error('Something is wrong with your member information', 'Uh oh...');
+            return false;
+          }
           store.getDivisionThreads(store.division.abbreviation);
           store.currentStep = 'step-two';
           store.progress = 50;
