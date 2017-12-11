@@ -62,7 +62,8 @@ class FireteamController extends Controller
     {
         $this->validate($request, [
             'name' => 'max:100',
-            'owner_light' => 'max:500,min:1',
+            'players_needed' => 'required|numeric|digits_between:1,5|min:1|max:5',
+            'light' => 'required|numeric|min:1|max:400',
             'description' => 'max:300'
         ]);
 
@@ -107,7 +108,7 @@ class FireteamController extends Controller
         }
 
         $this->validate($request, [
-            'light' => 'max:3,min:1',
+            'light' => 'required|numeric|min:1|max:400',
         ]);
 
         $fireteam->players()->attach($player, ['light' => $request->light]);

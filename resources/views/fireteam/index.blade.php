@@ -26,21 +26,25 @@
             @forelse ($fireteams as $fireteam)
                 <div class="panel panel-filled collapsed">
                     <div class="panel-heading">
+                        <div class="panel-tools">
+                            <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
+                        </div>
                         <h4 class="text-uppercase">
                             <a href="{{ route('fireteams.byType', $fireteam->type) }}"
                                class="badge text-uppercase pull-right">{{ $fireteam->type }}</a>
-                            <a href="{{ route('fireteams.show', $fireteam->id) }}" class="pull-left m-r-sm">
-                                <i class="fa fa-search"></i></a>
-                            <div class="panel-toggle">
+                            <a href="{{ route('fireteams.show', $fireteam->id) }}"
+                               class="pull-left m-r-sm" style="color: white; z-index:9999">
                                 {{ $fireteam->name }}
-                                @if ($fireteam->slotsAvailable > 0)
-                                    <small class="label {{ $fireteam->spotsColor }} text-uppercase">
-                                        {{ $fireteam->slotsAvailable }} {{ str_plural('slot', $fireteam->slotsAvailable) }} Left
-                                    </small>
-                                @else
-                                    <small class="label label-default text-muted">No Slots</small>
-                                @endif
-                            </div>
+                            </a>
+
+                            @if ($fireteam->slotsAvailable > 0)
+                                <small class="label {{ $fireteam->spotsColor }} text-uppercase">
+                                    {{ $fireteam->slotsAvailable }} {{ str_plural('slot', $fireteam->slotsAvailable) }} Left
+                                </small>
+                            @else
+                                <small class="label label-default text-muted">No Slots</small>
+                            @endif
+
                         </h4>
                     </div>
 
@@ -73,10 +77,10 @@
                         @endif
 
                         @auth
-                            @if ($fireteam->players->contains(auth()->user()->member_id))
-                                <a href="{{ route('fireteams.leave', $fireteam->id) }}"
-                                   class="btn btn-warning btn-xs pull-right">Leave Fireteam</a>
-                            @endif
+                        @if ($fireteam->players->contains(auth()->user()->member_id))
+                            <a href="{{ route('fireteams.leave', $fireteam->id) }}"
+                               class="btn btn-warning btn-xs pull-right">Leave Fireteam</a>
+                        @endif
                         @endauth
 
                     </div>
