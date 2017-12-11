@@ -101,15 +101,18 @@ class RecruitingController extends Controller
         $member->save();
 
         // handle ingame name assignment
-        $member->handles()->syncWithoutDetaching([
-            Handle::find($division->handle_id)->id => [
-                'value' => $request->ingame_name
-            ]
-        ]);
+        if ($request->ingame_name) {
+            $member->handles()->syncWithoutDetaching([
+                Handle::find($division->handle_id)->id => [
+                    'value' => $request->ingame_name
+                ]
+            ]);
+        }
 
         // handle assignments
-        $member->platoon()->associate(Platoon::find($request->platoon));
-        $member->squad()->associate(Squad::find($request->squad));
+        $member->platoon_id = $request->platoon;
+        $member->squad_id = $request->squad;
+        
         $member->save();
 
         $member->recordActivity('recruited');

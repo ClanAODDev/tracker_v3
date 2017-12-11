@@ -89,7 +89,6 @@
                             href="{{ route('fireteams.index') }}">Reset search</a>?</p>
             @endforelse
         </div>
-
         <hr>
 
         <a href="{{ route('fireteams.index') }}" class="btn btn-default">Show all Fireteams</a>
