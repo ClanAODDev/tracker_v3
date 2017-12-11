@@ -11,15 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Fireteam extends Model
 {
-
-    protected $fillable = [
-        'name',
-        'type',
-        'description',
-        'owner_id',
-        'owner_light',
-        'players_needed'
-    ];
+    protected $guarded = [];
 
     protected static function boot()
     {

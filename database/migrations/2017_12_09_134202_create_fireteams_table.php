@@ -20,6 +20,7 @@ class CreateFireteamsTable extends Migration
             $table->integer('owner_id')->unsigned();
             $table->integer('players_needed');
             $table->integer('owner_light');
+            $table->boolean('confirmed')->default(false);
             $table->dateTime('starts_at');
             $table->enum('type', [
                     'nightfall',

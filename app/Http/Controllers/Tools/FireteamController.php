@@ -4,15 +4,24 @@ namespace App\Http\Controllers\Tools;
 
 use App\Fireteam;
 use App\Mail\FireteamCanceled;
+use App\Mail\FireteamConfirmed;
 use App\Mail\FireteamCreated;
 use App\Mail\FireteamFilled;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * Class FireteamController
+ *
+ * @package App\Http\Controllers\Tools
+ */
 class FireteamController extends Controller
 {
 
+    /**
+     * FireteamController constructor.
+     */
     public function __construct()
     {
         $this->middleware(['auth']);
@@ -26,12 +35,13 @@ class FireteamController extends Controller
      */
     public function index($type = null)
     {
-        $fireteams = Fireteam::latest()->with([
-            'players',
-            'owner',
-            'owner.rank',
-            'players.rank'
-        ]);
+        $fireteams = Fireteam::latest()->whereConfirmed(false)
+            ->with([
+                'players',
+                'owner',
+                'owner.rank',
+                'players.rank'
+            ]);
 
         if ($type) {
             $fireteams = $fireteams->whereType($type);
@@ -54,7 +64,7 @@ class FireteamController extends Controller
             'description' => 'max:300'
         ]);
 
-        Fireteam::create([
+        $fireteam = Fireteam::create([
             'name' => $request->name,
             'type' => $request->type,
             'players_needed' => $request->players_needed,
@@ -68,7 +78,7 @@ class FireteamController extends Controller
 
         $this->showToast('Your fireteam has been created!');
 
-        return redirect(route('fireteams.index'));
+        return redirect(route('fireteams.show', $fireteam->id));
     }
 
     /**
@@ -83,13 +93,13 @@ class FireteamController extends Controller
         $player = auth()->user()->member;
 
         if ($fireteam->players->contains($player)) {
-            return redirect()->route('fireteams.index')->withErrors([
+            return redirect()->back()->withErrors([
                 'You are already a member of that fireteam!'
             ]);
         }
 
         if ($fireteam->owner_id === $player->id) {
-            return redirect()->route('fireteams.index')->withErrors([
+            return redirect()->back()->withErrors([
                 'You cannot join your own fireteam!'
             ]);
         }
@@ -102,17 +112,33 @@ class FireteamController extends Controller
 
         $updatedFireteam = Fireteam::find($fireteam->id);
 
-        // handle event when fireteam is full
+        // alert owner the fireteam is full
         if ($fireteam->players_needed == $updatedFireteam->players_count) {
             Mail::to($fireteam->owner->user)->send(new FireteamFilled($updatedFireteam));
-            $updatedFireteam->players->each(function ($player) use ($updatedFireteam) {
-                Mail::to($player->user)->send(new FireteamFilled($updatedFireteam));
-            });
         }
 
         $this->showToast('You have successfully joined the fireteam!');
 
-        return redirect()->route('fireteams.index');
+        return redirect()->route('fireteams.show', $fireteam->id);
+    }
+
+    /**
+     * @param Fireteam $fireteam
+     */
+    public function confirm(Fireteam $fireteam)
+    {
+        $fireteam->update([
+            'confirmed' => true
+        ]);
+
+        // alert players
+        $fireteam->players->each(function ($player) use ($fireteam) {
+            Mail::to($player->user)->send(new FireteamConfirmed($fireteam));
+        });
+
+        $this->showToast('Your fireteam has been confirmed! All fireteam members have been alerted.');
+
+        return redirect()->route('fireteams.show', $fireteam->id);
     }
 
     /**
@@ -141,6 +167,10 @@ class FireteamController extends Controller
         return redirect()->route('fireteams.index');
     }
 
+    /**
+     * @param Fireteam $fireteam
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function leave(Fireteam $fireteam)
     {
         if ( ! $fireteam->players->contains(auth()->user()->member_id)) {
@@ -155,7 +185,12 @@ class FireteamController extends Controller
         return redirect()->route('fireteams.index');
     }
 
-    public function show()
+    /**
+     * @param Fireteam $fireteam
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function show(Fireteam $fireteam)
     {
+        return view('fireteam.show', compact('fireteam'));
     }
 }

@@ -19,81 +19,111 @@
     <div class="container-fluid">
         @include('application.partials.errors')
 
-        <h2>FIND A FIRETEAM</h2>
-        <p>Search existing fireteams and join a slot, or create your own</p>
+        <a href="{{ route('fireteams.index') }}" class="btn btn-default"> <i
+                    class="fa fa-arrow-left"></i> Back to Fireteams</a>
+
+        <h2 class="text-uppercase m-t-lg">
+            @if ($fireteam->confirmed)
+                <i class="fa fa-check text-success"></i>
+            @endif
+            {{ $fireteam->name }}
+            <a href="{{ route('fireteams.byType', $fireteam->type) }}"
+               class="badge text-uppercase">{{ $fireteam->type }}</a>
+        </h2>
 
         <div class="fireteams m-t-lg">
-            @forelse ($fireteams as $fireteam)
-                @php
-                    $isOwner = $fireteam->owner_id == auth()->user()->member_id;
-                    $isMember = $fireteam->players->contains(auth()->user()->member)
-                @endphp
-                <div class="panel panel-filled collapsed {{ $isOwner ? 'panel-c-success' : null }} {{ $isMember ? 'panel-c-info' : null }}">
-                    <div class="panel-heading">
-                        <h4 class="text-uppercase">
-                            <a href="{{ route('fireteams.byType', $fireteam->type) }}"
-                               class="badge text-uppercase pull-right">{{ $fireteam->type }}</a>
-                            <a href="{{ route('fireteams.show', $fireteam->id) }}" class="pull-left m-r-sm">
-                                <i class="fa fa-search"></i></a>
-                            <div class="panel-toggle">
-                                {{ $fireteam->name }}
-                                @if ($fireteam->slotsAvailable > 0)
-                                    <small class="label {{ $fireteam->spotsColor }} text-uppercase">
-                                        {{ $fireteam->slotsAvailable }} {{ str_plural('slot', $fireteam->slotsAvailable) }} Left
-                                    </small>
-                                @else
-                                    <small class="label label-default text-muted">No Slots</small>
-                                @endif
-                            </div>
-                        </h4>
-                    </div>
 
-                    <div class="panel-body">
+            <h4>
+                Fireteam Members
+                @if ($fireteam->players()->count() > 0)
+                    <a class="badge" target="_blank" title="PM Fireteam"
+                       href="{{ doForumFunction($fireteam->players->pluck('clan_id')->toArray(), 'pm') }}">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                @endif
+                <div class="pull-right">
+                    @if ($fireteam->slotsAvailable > 0)
+                        <div class="label {{ $fireteam->spotsColor }} text-uppercase">
+                            {{ $fireteam->slotsAvailable }} {{ str_plural('slot', $fireteam->slotsAvailable) }} Left
+                        </div>
+                    @else
+                        <div class="label label-default text-muted">No Slots Available</div>
+                    @endif
+                </div>
+            </h4>
+            <table class="table table-hover">
+                <tr>
+                    <td>
                         <a class="badge" href="{{ route('member', $fireteam->owner->getUrlParams()) }}">
                             <i class="fa fa-circle text-muted"></i> {{ $fireteam->owner->name }}
                             <span style="color: #41eacf">&#x2726; {{ $fireteam->owner_light }}</span>
                         </a>
+                    </td>
+                </tr>
 
-                        @foreach ($fireteam->players as $member)
+                @foreach ($fireteam->players as $member)
+                    <tr>
+                        <td>
                             <a class="badge" href="{{ route('member', $member->getUrlParams()) }}">
-                                <i class="fa fa-circle text-muted"></i> {{ $member->name }}
+                                <i class="fa fa-circle text-muted"></i>
+                                {{ $member->name }}
                                 <span style="color: #41eacf">&#x2726; {{ $member->pivot->light }}</span>
                             </a>
-                        @endforeach
+                        </td>
+                    </tr>
+                @endforeach
 
-                        @if ($fireteam->slotsAvailable)
-                            @for ($i = 1; $i <= $fireteam->slotsAvailable; $i++)
-                                <a href="#" data-toggle="modal" data-target="#join-fireteam"
-                                   class="btn btn-success btn-xs"
+                @if ($fireteam->slotsAvailable)
+                    @for ($i = 1; $i <= $fireteam->slotsAvailable; $i++)
+                        <tr>
+                            <td>
+                                <a class="badge" href="#" data-toggle="modal" data-target="#join-fireteam"
                                    onclick="updateFireteamForm({{ $fireteam->id }});">
-                                    <i class="fa fa-circle-o text-success"></i> Slot Open</a>
-                            @endfor
-                        @endif
-
-                        @if ($fireteam->description)
-                            <div class="bs-example m-t-md">
-                                <p>{{ $fireteam->description }}</p>
-                            </div>
-                        @endif
-
-                        @if ($fireteam->players->contains(auth()->user()->member_id))
-                            <a href="{{ route('fireteams.leave', $fireteam->id) }}"
-                               class="btn btn-warning btn-xs pull-right">Leave Fireteam</a>
-                        @endif
-
-                    </div>
-                </div>
-            @empty
-                <h4 class="text-uppercase">No fireteams found</h4>
-                <p>Either there are no fireteams, or none match your search criteria. <a
-                            href="{{ route('fireteams.index') }}">Reset search</a>?</p>
-            @endforelse
+                                    <i class="fa fa-circle-o text-success"></i> Spot Open</a>
+                            </td>
+                        </tr>
+                    @endfor
+                @endif
+            </table>
         </div>
 
-        <hr>
+        @if ($fireteam->description)
+            <div class="panel panel-filled m-t-xl">
+                <div class="panel-heading">Fireteam Details</div>
+                <div class="panel-body">
+                    <p>{{ $fireteam->description }}</p>
+                </div>
+            </div>
+        @endif
 
-        <a href="{{ route('fireteams.index') }}" class="btn btn-default">Show all Fireteams</a>
-        <a href="#" data-toggle="modal" data-target="#create-fireteam" class="btn btn-success">Create Fireteam</a>
+        <div class="row m-t-md">
+            <div class="col-md-12">
+                @if ($fireteam->players->contains(auth()->user()->member_id))
+                    <a href="{{ route('fireteams.leave', $fireteam->id) }}"
+                       class="btn btn-warning m-t-lg">Leave Fireteam</a>
+                @endif
+
+                @if (auth()->user()->member_id === $fireteam->owner_id)
+                    <form action="{{ route('fireteams.destroy', $fireteam->id) }}" method="post">
+                        {{ method_field('delete') }}
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-danger"
+                                onclick="return confirm('Are you sure you want to cancel this fireteam?');">Cancel Fireteam
+                        </button>
+                    </form>
+
+                    @if ($fireteam->players_needed == $fireteam->players_count)
+                        <form action="{{ route('fireteams.confirm', $fireteam->id) }}" method="post">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-success pull-right"
+                                    onclick="return confirm('Are you sure you want to confirm and close this fireteam?');">Confirm Fireteam
+                            </button>
+                        </form>
+                    @endif
+
+                @endif
+            </div>
+        </div>
 
     </div>
 
@@ -150,7 +180,6 @@
             </form>
         </div>
     </div>
-
     <div class="modal fade in" id="join-fireteam" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <form action="#" method="post" id="join-fireteam-form">
@@ -166,8 +195,8 @@
                             <input type="number" class="form-control" name="light" required />
                         </div>
 
-                        <div class="form-group">
-                            <p>By joining this fireteam, you agree to participate at the time the event is scheduled for. You will receive an email notification when the fireteam leader confirms the fireteam.</p>
+                        <div class="form-group text-warning">
+                            <p>By joining this fireteam, you agree to participate at the time the event is scheduled for. You will receive email notification when all slots are filled.</p>
                         </div>
                     </div>
                     <div class="modal-footer">
