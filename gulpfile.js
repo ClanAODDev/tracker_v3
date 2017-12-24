@@ -55,6 +55,7 @@ elixir(function (mix) {
   mix.webpack('passport.js');
   mix.webpack('recruiting.js');
   mix.webpack('manage-member.js');
+  mix.webpack('fireteams.js');
 });
 
 

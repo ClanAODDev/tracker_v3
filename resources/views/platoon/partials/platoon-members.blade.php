@@ -1,6 +1,6 @@
 <div class='panel-body border-bottom'>
     <div id='playerFilter'></div>
-    @include ('platoon.partials.members-table-toggle')
+    @include ('member.partials.members-table-toggle')
     <div class="table-responsive">
 
         <table class='table table-hover members-table'>

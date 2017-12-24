@@ -199,12 +199,41 @@ class DivisionController extends Controller
     }
 
     /**
+     * @return \Closure
+     */
+    private function getMemberHandle()
+    {
+        return function ($member) {
+            $member->handle = $member->handles->first();
+        };
+    }
+
+    /**
+     * @param $division
+     * @return \Closure
+     */
+    private function filterHandlesToPrimaryHandle($division)
+    {
+        return function ($query) use ($division) {
+            $query->where('id', $division->handle_id);
+        };
+    }
+
+    /**
      * @param Division $division
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function members(Division $division)
     {
-        $members = $division->members()->with('rank', 'position', 'leave')->get();
+        $members = $division->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'rank',
+            'position',
+            'leave'
+        ])->get()->sortByDesc('rank_id');
+
+        $members = $members->each($this->getMemberHandle());
+
         $forumActivityGraph = $this->division->getDivisionActivity($division);
         $tsActivityGraph = $this->division->getDivisionTSActivity($division);
 
