@@ -18,9 +18,9 @@ class Note extends Model
     ];
 
     protected static $noteTypes = [
+        'misc' => 'Misc',
         'negative' => 'Negative',
         'positive' => 'Positive',
-        'misc' => 'Misc',
     ];
 
     protected $fillable = [
