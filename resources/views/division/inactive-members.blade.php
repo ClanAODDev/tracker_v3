@@ -71,7 +71,7 @@
                 <div class="panel-heading">Share Flagged Members ({{ count($flaggedMembers) }})</div>
                 <div class="panel-body">
                     <pre name="bb-code-flagged" id="bb-code-flagged"
-                         style="max-height: 100px; overflow-y: scroll">[list]@foreach ($flaggedMembers as $member)[*][profile={{ $member->clan_id }}]{{ $member->present()->rankName }}[/profile] - Seen {{ $member->last_activity->diffForHumans() }}@endforeach[/list]</pre>
+                         style="max-height: 100px; overflow-y: scroll">[list]@foreach ($flaggedMembers as $member)[*][profile={{ $member->clan_id }}]{{ $member->present()->rankName }}[/profile] - Seen {{ $member->last_activity->diffInDays() }} days ago @endforeach[/list]</pre>
                     <button data-clipboard-target="#bb-code-flagged" class="copy-to-clipboard btn-success btn"><i
                                 class="fa fa-clone"></i> Copy BB-Code
                     </button>
