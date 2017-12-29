@@ -15,9 +15,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Member extends Model
 {
+
     use Member\HasCustomAttributes,
         RecordsActivity,
         SoftDeletes;
+
+    /**
+     * @var array
+     */
+    protected static $recordEvents = [
+        'recruited',
+    ];
 
     protected $casts = [
         'pending_member' => 'boolean',
