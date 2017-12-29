@@ -20,13 +20,6 @@ class Member extends Model
         RecordsActivity,
         SoftDeletes;
 
-    /**
-     * @var array
-     */
-    protected static $recordEvents = [
-        'recruited',
-    ];
-
     protected $casts = [
         'pending_member' => 'boolean',
         'flagged_for_inactivity' => 'boolean'
