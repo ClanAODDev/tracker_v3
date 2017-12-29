@@ -29,6 +29,7 @@
                 <tr>
                     <th>Member Name</th>
                     <th>Ingame Name</th>
+                    <th>Removed</th>
                     <th class="no-sort col-xs-1"></th>
                 </tr>
                 </thead>
@@ -41,16 +42,26 @@
                             <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                         </td>
                         <td>
-                            @forelse ($member->handles as $handle)
-                                <code>{{ $handle->pivot->value }}</code>
-                                @if ($handle->url)
-                                    <a href="{{ $handle->url }}{{ $handle->pivot->value }}" target="_blank">
+                            @if ($member->handle)
+                                <code>{{ $member->handle->pivot->value }}</code>
+                                @if ($member->handle->url)
+                                    <a href="{{ $member->handle->url }}{{ $member->handle->pivot->value }}"
+                                       target="_blank">
                                         <i class="fa fa-external-link"></i>
                                     </a>
                                 @endif
-                            @empty
+                            @else
                                 <span class="text-muted slight">NONE FOR DIVISION</span>
-                            @endforelse
+                            @endif
+                        </td>
+                        <td>
+                            <small>
+                                @if ($member->division_id === 0)
+                                    <i class="fa fa-times text-danger"></i> REMOVED FROM AOD
+                                    @else
+                                    <span class="text-muted">ACTIVE</span>
+                                @endif
+                            </small>
                         </td>
                         <td class="text-center">
                             @can ('create', App\Member::class)
@@ -68,22 +79,21 @@
             <h4><i class="fa fa-times-circle-o text-danger"></i> No Part-Time Members</h4>
             <p>This division currently has no part-time members assigned. To assign a member, use the search bar at the top of the page to find their profile, edit their member information, and select your division in the part-time tab.</p>
         @endif
-    </div>
 
-    @component('application.components.modal', ['showSaveButton' => false])
-        @slot('title')
-            Mass Forum PM ({{ count($members) }})
-        @endslot
-        @slot('body')
-            <p>The Clan AOD forums has a maximum number of 20 recipients per PM. To assist with this limitation, members have been chunked into groups for your convenience.</p>
-            <p class="m-t-md">
-                @foreach ($members->chunk(20) as $chunk)
-                    <a href="{{ doForumFunction($chunk->pluck('clan_id')->toArray(), 'pm') }}"
-                       target="_blank" class="btn btn-default">
-                        <i class="fa fa-link text-accent"></i> Group {{ $loop->iteration }}
-                    </a>
-                @endforeach
-            </p>
-        @endslot
+        @component('application.components.modal', ['showSaveButton' => false])
+            @slot('title')
+                Mass Forum PM ({{ count($members) }})
+            @endslot
+            @slot('body')
+                <p>The Clan AOD forums has a maximum number of 20 recipients per PM. To assist with this limitation, members have been chunked into groups for your convenience.</p>
+                <p class="m-t-md">
+                    @foreach ($members->chunk(20) as $chunk)
+                        <a href="{{ doForumFunction($chunk->pluck('clan_id')->toArray(), 'pm') }}"
+                           target="_blank" class="btn btn-default">
+                            <i class="fa fa-link text-accent"></i> Group {{ $loop->iteration }}
+                        </a>
+                    @endforeach
+                </p>
+    @endslot
     @endcomponent
 @stop

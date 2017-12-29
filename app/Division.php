@@ -160,6 +160,14 @@ class Division extends Model
         return ($countPosts) ? true : false;
     }
 
+    /**
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'abbreviation';
+    }
+
     public function mismatchedTSMembers()
     {
         return $this->members()
@@ -249,17 +257,6 @@ class Division extends Model
     public function scopeActive($query)
     {
         return $query->whereActive(true);
-    }
-
-    /**
-     * Gets part time members of a division
-     */
-    public function partTimeMembers()
-    {
-        return $this->belongsToMany(Member::class, 'division_parttimer')
-            ->orderByDesc('rank_id')
-            ->orderBy('name')
-            ->withTimestamps();
     }
 
     /**
@@ -398,6 +395,17 @@ class Division extends Model
         return $this->members()
             ->orderBy('position_id', 'desc')
             ->whereIn('position_id', [5, 6]);
+    }
+
+    /**
+     * Gets part time members of a division
+     */
+    public function partTimeMembers()
+    {
+        return $this->belongsToMany(Member::class, 'division_parttimer')
+            ->orderByDesc('rank_id')
+            ->orderBy('name')
+            ->withTimestamps();
     }
 
     /**

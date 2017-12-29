@@ -151,16 +151,15 @@ class DivisionController extends Controller
     public function partTime(Division $division)
     {
         $members = $division->partTimeMembers()->with('rank', 'handles')
-            ->where('members.division_id', '!=', 0)
             ->get()
             ->each(function ($member) use ($division) {
                 // filter out handles that don't match current division primary handle
-                $member->handles = $member->handles->filter(function ($handle) use ($division) {
+                $member->handle = $member->handles->filter(function ($handle) use ($division) {
                     return $handle->id === $division->handle_id;
-                });
+                })->first();
             });
 
-        return view('division.part-time', compact('division', 'members'));
+        return view('division.part-time', compact('division', 'members', 'removedPartTimers'));
     }
 
     /**
@@ -199,27 +198,6 @@ class DivisionController extends Controller
     }
 
     /**
-     * @return \Closure
-     */
-    private function getMemberHandle()
-    {
-        return function ($member) {
-            $member->handle = $member->handles->first();
-        };
-    }
-
-    /**
-     * @param $division
-     * @return \Closure
-     */
-    private function filterHandlesToPrimaryHandle($division)
-    {
-        return function ($query) use ($division) {
-            $query->where('id', $division->handle_id);
-        };
-    }
-
-    /**
      * @param Division $division
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -240,5 +218,26 @@ class DivisionController extends Controller
         return view('division.members', compact(
             'division', 'members', 'forumActivityGraph', 'tsActivityGraph'
         ));
+    }
+
+    /**
+     * @param $division
+     * @return \Closure
+     */
+    private function filterHandlesToPrimaryHandle($division)
+    {
+        return function ($query) use ($division) {
+            $query->where('id', $division->handle_id);
+        };
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getMemberHandle()
+    {
+        return function ($member) {
+            $member->handle = $member->handles->first();
+        };
     }
 }
