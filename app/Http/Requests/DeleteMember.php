@@ -38,7 +38,7 @@ class DeleteMember extends FormRequest
     {
         $member = $this->route('member');
         $this->createRemovalNote($member);
-        $member->resetPositionsAndAssignments();
+        $member->resetPositionAndAssignments();
     }
 
     /**

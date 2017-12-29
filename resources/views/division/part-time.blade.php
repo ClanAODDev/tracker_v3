@@ -29,7 +29,7 @@
                 <tr>
                     <th>Member Name</th>
                     <th>Ingame Name</th>
-                    <th>Removed</th>
+                    <th>Status</th>
                     <th class="no-sort col-xs-1"></th>
                 </tr>
                 </thead>

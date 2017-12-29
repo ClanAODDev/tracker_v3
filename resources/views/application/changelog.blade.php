@@ -29,6 +29,9 @@
                 <hr />
                 <ul>
                     <li>Added AOD status to 'Manage Part Time' report, allowing leadership to see if an assigned part-timer has been removed from AOD, and prune them appropriately.</li>
+                    <ul>
+                        <li><strong>Note:</strong> In order to ensure divisions have the chance to clean up part-timers from internal systems (ingame organizations), part-time membership will no longer be automatically reset when a member is removed from AOD.</li>
+                    </ul>
                 </ul>
             </div>
         </div>

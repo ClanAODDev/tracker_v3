@@ -165,15 +165,12 @@ class Member extends Model
      * Resets member's positions and division assignments
      * including part-time divisions
      */
-    public function resetPositionsAndAssignments()
+    public function resetPositionAndAssignments()
     {
         $this->division_id = 0;
         $this->platoon_id = 0;
         $this->squad_id = 0;
         $this->position_id = 1;
-
-        $this->partTimeDivisions()->sync([]);
-
         $this->flagged_for_inactivity = false;
 
         $this->save();
