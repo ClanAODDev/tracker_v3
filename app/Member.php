@@ -17,15 +17,7 @@ class Member extends Model
 {
 
     use Member\HasCustomAttributes,
-        RecordsActivity,
         SoftDeletes;
-
-    /**
-     * @var array
-     */
-    protected static $recordEvents = [
-        'created',
-    ];
 
     protected $casts = [
         'pending_member' => 'boolean',
