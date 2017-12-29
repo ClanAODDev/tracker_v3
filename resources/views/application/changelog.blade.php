@@ -25,6 +25,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>28 Dec 2017 - 3.2.7</h4>
+                <hr />
+                <ul>
+                    <li>Added AOD status to 'Manage Part Time' report, allowing leadership to see if an assigned part-timer has been removed from AOD, and prune them appropriately.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>30 Oct 2017 - 3.2.6</h4>
                 <hr />
                 <ul>
