@@ -31,7 +31,10 @@ return [
 
     'aod' => [
         'slack_webhook' => env('SLACK_WEBHOOK'),
-        'token' => env('AOD_TOKEN')
+        'token' => env('AOD_TOKEN'),
+        'ingame-reports' => [
+            'destiny-2-clans' => env('DESTINY_CLANS')
+        ]
     ],
 
     /*
