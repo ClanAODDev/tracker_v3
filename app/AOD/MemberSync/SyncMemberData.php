@@ -152,11 +152,11 @@ class SyncMemberData
         }
     }
 
-    private static function hardResetMember($member)
+    private static function hardResetMember(Member $member)
     {
 
         // reset member data
-        $member->resetPositionsAndAssignments();
+        $member->resetPositionAndAssignments();
 
         // reset any leadership assignments
         $assignments = collect([
