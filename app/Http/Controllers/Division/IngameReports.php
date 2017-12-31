@@ -20,7 +20,12 @@ trait IngameReports
      */
     public function destiny2()
     {
-        $clans = explode(',', config('app.aod.ingame-reports.destiny-2-clans', []));
+        $clans = explode(',', config('app.aod.ingame-reports.destiny-2-clans'));
+
+        // no config for destiny clans
+        if (empty($clans[0])) {
+            return [];
+        }
 
         $client = new Client();
 
