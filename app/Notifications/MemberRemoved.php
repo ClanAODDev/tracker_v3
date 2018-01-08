@@ -46,20 +46,18 @@ class MemberRemoved extends Notification
     public function toSlack()
     {
         $division = $this->member->division;
-        $to = ($division->settings()->get('slack_channel'))
-            ?: '@' . auth()->user()->name;
 
-        $reason = (request('removal_reason')) ?: "None provided";
+        $to = ($division->settings()->get('slack_channel')) ?: '@' . auth()->user()->name;
+
+        $message = "{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by "
+            . auth()->user()->name;
 
         return (new SlackMessage())
-            ->success()
-            ->to($to)
-            ->content("{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name)->attachment(function (
-                $attachment
-            ) use ($reason) {
+            ->success()->to($to)
+            ->content($message)
+            ->attachment(function ($attachment) {
                 $attachment->title('Reason')
-                    ->content($reason);
+                    ->content((request('removal_reason')) ?: "None provided");
             });
-
     }
 }
