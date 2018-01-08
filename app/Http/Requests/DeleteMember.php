@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Note;
+use App\Notifications\MemberRemoved;
 use App\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,6 +38,11 @@ class DeleteMember extends FormRequest
     public function persist()
     {
         $member = $this->route('member');
+
+        if ($member->division->settings()->get('slack_alert_removed_member')) {
+            $member->division->notify(new MemberRemoved($member, $this->removal_reason));
+        }
+
         $this->createRemovalNote($member);
         $member->resetPositionAndAssignments();
     }
@@ -48,7 +54,7 @@ class DeleteMember extends FormRequest
     {
         $note = Note::create([
             'type' => 'negative',
-            'body' => $this->input('removal_reason'),
+            'body' => $this->removal_reason,
             'author_id' => auth()->id(),
             'member_id' => $member->id
         ]);
