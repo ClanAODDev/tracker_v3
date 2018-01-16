@@ -213,10 +213,6 @@ class DivisionStructureController extends Controller
     {
         $this->authorize('manageDivisionStructure', auth()->user());
 
-        if ( ! auth()->user()->isRole(['sr_ldr', 'admin'])) {
-            abort(403);
-        }
-
         return view('division.structure-editor', compact('division'));
     }
 
