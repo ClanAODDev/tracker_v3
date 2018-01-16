@@ -47,11 +47,11 @@
                         <i class="fa fa-slack fa-lg"></i> <span class="hidden-xs hidden-sm">Slack</span>
                     </a>
                 </li>
-                <li>
+               {{-- <li>
                     <a data-toggle="tab" href="#division-tags">
                         <i class="fa fa-tags fa-lg"></i> <span class="hidden-xs hidden-sm">Tags</span>
                     </a>
-                </li>
+                </li>--}}
             </ul>
 
             <div class="tab-content">
@@ -121,7 +121,7 @@
                     </div>
                 </div>
 
-                <div id="division-tags" class="tab-pane">
+                {{--<div id="division-tags" class="tab-pane">
                     <div class="row">
                         <div class="col-md-9">
                             <div class="panel-body">
@@ -134,7 +134,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>--}}
 
             </div>
         </div>

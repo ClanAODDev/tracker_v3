@@ -33,10 +33,10 @@ class UpdateDivision extends FormRequest
     {
         $this->route('division')->settings()->merge($this->all());
 
-        if ($this->division_tags) {
+       /* if ($this->division_tags) {
             $this->cleanTags();
             $this->createNewTags();
-        }
+        }*/
     }
 
     /**

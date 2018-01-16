@@ -25,17 +25,10 @@ class AdminController extends Controller
         $defaultTags = Tag::where('default', true)->get();
         $allTags = Tag::with('notes', 'division')->orderBy('division_id')->get();
         $users = User::with('role', 'member.rank', 'member')->get();
-        $activityLog = Activity::with(
-            [
-                'subject' => function ($query) {
-                    // provide context even if a subject is "trashed"
-                    $query->withTrashed();
-                }
-            ], 'member')->orderByDesc('id')->get();
+
 
         return view('admin.index', compact(
-            'divisions', 'users', 'handles', 'allTags',
-            'activityLog', 'defaultTags'
+            'divisions', 'users', 'handles', 'allTags', 'defaultTags'
         ));
     }
 
