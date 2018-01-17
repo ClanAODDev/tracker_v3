@@ -78,6 +78,8 @@ class DivisionController extends Controller
         $censusCounts = $this->division->censusCounts($division);
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
+        $division->over90DaysCount = $division->members()->where('last_activity', '<',
+            Carbon::now()->subDays(90)->format('Y-m-d'))->count();
 
         $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
         $platoons = $division->platoons()

@@ -1,3 +1,11 @@
+@if($division->over90DaysCount)
+    <div class="alert alert-default">
+        <i class="fa fa-exclamation-circle text-danger"></i>
+        You have
+        <code>{{ $division->over90DaysCount }}</code> outstanding inactive {{ str_plural('member', $division->over90DaysCount) }}. AOD does not permit divisions to maintain members whose last forum activity exceeds 90 days.
+    </div>
+@endif
+
 @if (count($division->mismatchedTSMembers))
     <div class="alert alert-default">
         <i class="fa fa-exclamation-triangle text-danger"></i>
@@ -19,7 +27,8 @@
     @can('create', [App\Platoon::class, $division])
         <div class="alert alert-default">
             <i class="fa fa-users text-info"></i>
-            You have <code>{{ count($division->unassigned) }}</code> unassigned {{ str_plural('member', count($division->unassigned)) }} in
+            You have
+            <code>{{ count($division->unassigned) }}</code> unassigned {{ str_plural('member', count($division->unassigned)) }} in
             <strong>{{ $division->name }}</strong>. Drag members into a
             <a href="{{ route('division', $division->abbreviation) }}/#platoons"
                class="alert-link">{{ $division->locality('platoon') }}</a> to assign them
