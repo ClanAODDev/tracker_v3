@@ -32,6 +32,7 @@ return [
     'aod' => [
         'slack_webhook' => env('SLACK_WEBHOOK'),
         'token' => env('AOD_TOKEN'),
+        'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
         'ingame-reports' => [
             'destiny-2-clans' => env('DESTINY_CLANS')
         ]
