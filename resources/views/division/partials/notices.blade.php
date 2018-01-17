@@ -1,14 +1,13 @@
 @if($division->outstandingInactives)
     <div class="alert alert-default">
-        <i class="fa fa-exclamation-circle text-danger"></i>
         You have
-        <code>{{ $division->outstandingInactives }}</code> outstanding inactive {{ str_plural('member', $division->outstandingInactives) }}. AOD does not permit divisions to maintain members whose last forum activity exceeds 90 days.
+        <code>{{ $division->outstandingInactives }}</code> outstanding inactive {{ str_plural('member', $division->outstandingInactives) }}. AOD does not allow divisions to maintain members whose last forum activity exceeds {{ config('app.aod.maximum_days_inactive') }} days except where a leave of absence exists. Please
+        <a href="{{ route('division.inactive-members', $division) }}">process these members</a> out of AOD.
     </div>
 @endif
 
 @if (count($division->mismatchedTSMembers))
     <div class="alert alert-default">
-        <i class="fa fa-exclamation-triangle text-danger"></i>
         You have
         <code>{{ count($division->mismatchedTSMembers) }}</code> {{ str_plural('member', count($division->mismatchedTSMembers)) }} improperly configured for Teamspeak. Please review the
         <a href="{{ route('division.ts-report', $division->abbreviation) }}">Teamspeak Report</a> to resolve these issues.
@@ -17,7 +16,6 @@
 
 @if (! $division->handle)
     <div class="alert alert-default">
-        <i class="fa fa-gamepad text-warning"></i>
         Your division does not have a primary handle. Contact clan leadership to resolve this.
     </div>
 @endif

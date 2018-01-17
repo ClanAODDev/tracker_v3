@@ -24,7 +24,13 @@
                         <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                     </td>
                     <td>
-                        <code>{{ $member->last_activity->diffInDays() }}</code>
+                        @if ($member->last_activity->diffInDays() > config('app.aod.maximum_days_inactive'))
+                            <code title="Exceeds clan maximum">
+                                <span class="text-danger">{{ $member->last_activity->diffInDays() }}</span>
+                            </code>
+                        @else
+                            <code>{{ $member->last_activity->diffInDays() }}</code>
+                        @endif
                     </td>
                     <td>
                         @if ($member->tsInvalid)

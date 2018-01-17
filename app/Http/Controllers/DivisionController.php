@@ -79,8 +79,10 @@ class DivisionController extends Controller
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
-        $division->outstandingInactives = $division->members()->where('last_activity', '<',
-            Carbon::now()->subDays(config('app.aod.maximum_days_inactive'))->format('Y-m-d'))->count();
+        $maxDays = config('app.aod.maximum_days_inactive');
+        $division->outstandingInactives = $division->members()
+            ->whereDoesntHave('leave')
+            ->where('last_activity', '<', Carbon::now()->subDays($maxDays)->format('Y-m-d'))->count();
 
         $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
         $platoons = $division->platoons()
