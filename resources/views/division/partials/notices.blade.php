@@ -1,7 +1,7 @@
 @if($division->outstandingInactives)
     <div class="alert alert-default">
         You have
-        <code>{{ $division->outstandingInactives }}</code> outstanding inactive {{ str_plural('member', $division->outstandingInactives) }}. AOD does not allow divisions to maintain members whose last forum activity exceeds {{ config('app.aod.maximum_days_inactive') }} days except where a leave of absence exists. Please
+        <code>{{ $division->outstandingInactives }}</code> outstanding inactive {{ str_plural('member', $division->outstandingInactives) }}. AOD does not allow divisions to maintain members whose last forum activity exceeds <code>{{ config('app.aod.maximum_days_inactive') }}</code> days except where a leave of absence exists. Please
         <a href="{{ route('division.inactive-members', $division) }}">process these members</a> out of AOD.
     </div>
 @endif
