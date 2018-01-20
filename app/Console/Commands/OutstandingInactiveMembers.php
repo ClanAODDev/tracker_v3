@@ -63,7 +63,7 @@ class OutstandingInactiveMembers extends Command
                 $division->name,
                 $outstandingCount,
                 $inactiveCount - $outstandingCount,
-                $inactiveCount + $outstandingCount
+                $inactiveCount
             ];
         }
 
