@@ -41,7 +41,7 @@ class OutstandingInactiveMembers extends Command
     {
         $divisions = Division::active()->orderBy('name')->get();
 
-        $headers = ['Division', '> 90', '< 90', 'Total'];
+        $headers = ['Division', '> 90', '> Div. Max', 'Total'];
         $clanMax = config('app.aod.maximum_days_inactive');
 
         $data = [];
