@@ -5,12 +5,9 @@ namespace App\Slack\Commands;
 use App\Division;
 use App\Slack\Base;
 use App\Slack\Command;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class OutstandingMemberReport extends Base implements Command
 {
-    use DispatchesJobs;
-
     /**
      * Handle performing our member sync
      */
@@ -45,7 +42,7 @@ class OutstandingMemberReport extends Base implements Command
         }
 
         return [
-            'text' => $data
+            'text' => print_r($data, true)
         ];
     }
 }
