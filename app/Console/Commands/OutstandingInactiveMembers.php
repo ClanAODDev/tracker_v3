@@ -41,7 +41,7 @@ class OutstandingInactiveMembers extends Command
     {
         $divisions = Division::active()->orderBy('name')->get();
 
-        $headers = ['Division', 'Outstanding Members', 'Total Inactive'];
+        $headers = ['Division', 'Outstanding > 90', 'Inactive < 90', 'Total'];
         $clanMax = config('app.aod.maximum_days_inactive');
 
         $data = [];
@@ -59,7 +59,12 @@ class OutstandingInactiveMembers extends Command
                 ->where('last_activity', '<', Carbon::now()->subDays($divisionMax)->format('Y-m-d'))
                 ->count();
 
-            $data[] = [$division->name, $outstandingCount, $inactiveCount-$outstandingCount];
+            $data[] = [
+                $division->name,
+                $outstandingCount,
+                $inactiveCount - $outstandingCount,
+                $inactiveCount + $outstandingCount
+            ];
         }
 
         $this->table($headers, $data);
