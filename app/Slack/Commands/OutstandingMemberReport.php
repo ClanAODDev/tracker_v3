@@ -2,7 +2,7 @@
 
 namespace App\Slack\Commands;
 
-use App\Jobs\SyncMemberData;
+use App\Division;
 use App\Slack\Base;
 use App\Slack\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
