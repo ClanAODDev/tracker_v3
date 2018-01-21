@@ -240,6 +240,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::delete('{division}', 'Admin\DivisionController@destroy')->name('adminDeleteDivision');
     });
 
+    Route::group(['prefix' => 'reports'], function () {
+        Route::get('outstanding-inactives',
+            'AdminController@outstandingMembersReport')->name('admin.reports.outstanding');
+    });
+
     // edit default tags
     Route::put('tags', 'Admin\TagController@update')->name('adminUpdateTags');
     Route::patch('tags', 'Admin\TagController@update');

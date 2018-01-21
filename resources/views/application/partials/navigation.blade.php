@@ -81,6 +81,9 @@
         <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
             <a href="{{ route('admin') }}">Admin CP</a>
         </li>
+        <li class="{{ set_active(['admin/reports/outstanding-inactives']) }}">
+            <a href="{{ route('admin.reports.outstanding') }}">Outstanding Inactives</a>
+        </li>
     @endif
 
     @can('manageSlack', auth()->user())
