@@ -53,9 +53,8 @@ class AdminController extends Controller
                 ->count();
 
             $division->outstanding_members = $outstandingCount;
-            $division->inactive_members = $inactiveCount - $outstandingCount;
-            $division->percent_inactive = number_format(($inactiveCount - $outstandingCount) / $division->members_count * 100,
-                1);
+            $division->inactive_members = $inactiveCount;
+            $division->percent_inactive = number_format($inactiveCount / $division->members_count * 100, 1);
 
             return $division;
         });
