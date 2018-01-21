@@ -30,6 +30,7 @@
                 <ul>
                     <li>Added division outstanding inactive report for administrators</li>
                     <li>Added ability to reorder division recruiting tasks</li>
+                    <li class="text-warning">Disabled tag management across application. Tags will likely be incorporated into note bodies, and the ability / requirement to set a specific tag will be removed completely.</li>
                 </ul>
             </div>
         </div>
