@@ -15,8 +15,10 @@
                 </div>
 
                 <div class="panel-body">
-                    <table data-repeater-list="recruiting_tasks" class="table">
+                    <table data-repeater-list="recruiting_tasks" class="table" id="sortable">
+                        <tbody>
                         @include('division.partials.recruitingTasks')
+                        </tbody>
                     </table>
                 </div>
 
@@ -71,3 +73,9 @@
 
     {{ csrf_field() }}
 </form>
+
+<script>
+  $(function () {
+    $('#sortable tbody').sortable();
+  });
+</script>
