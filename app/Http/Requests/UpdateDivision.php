@@ -24,8 +24,10 @@ class UpdateDivision extends FormRequest
      */
     public function rules()
     {
-        return [
+        $clanMaxDaysInactivity = config('app.aod.maximum_days_inactive');
 
+        return [
+            'inactivity_days' => "max:{$clanMaxDaysInactivity}"
         ];
     }
 

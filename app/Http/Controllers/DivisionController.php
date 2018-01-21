@@ -137,6 +137,12 @@ class DivisionController extends Controller
      */
     public function update(UpdateDivision $form, Division $division)
     {
+
+
+        $this->validate(request(), [
+            'inactivity_days' => 'numeric|max:90'
+        ]);
+
         $form->persist();
 
         $this->showToast('Changes saved successfully');

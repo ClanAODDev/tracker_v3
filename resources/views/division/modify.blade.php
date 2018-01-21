@@ -18,6 +18,8 @@
 
         {!! Breadcrumbs::render('manage-division', $division) !!}
 
+        @include('application.partials.errors')
+
         {{-- Edit profile nav --}}
         <div class="tabs-container">
 
@@ -120,22 +122,6 @@
                         </div>
                     </div>
                 </div>
-
-                {{--<div id="division-tags" class="tab-pane">
-                    <div class="row">
-                        <div class="col-md-9">
-                            <div class="panel-body">
-                                @include('division.forms.tags')
-                            </div>
-                        </div>
-                        <div class="col-md-3 hidden-xs hidden-sm">
-                            <div class="panel">
-                                @include('division.forms.descriptions.tags')
-                            </div>
-                        </div>
-                    </div>
-                </div>--}}
-
             </div>
         </div>
 

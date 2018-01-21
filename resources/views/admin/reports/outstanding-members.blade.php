@@ -22,6 +22,8 @@
             <code>{{ config('app.aod.maximum_days_inactive') }} days</code>. Additionally, divisions can define a specific number of days before a member is listed as inactive, typically between 30-45 days.
         </p>
 
+        <p>Percent inactive represents the percentage of the division that consists of inactive members.</p>
+
         <table class="table table-striped basic-datatable">
             <thead>
             <tr>
