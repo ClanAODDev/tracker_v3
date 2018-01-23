@@ -51,8 +51,6 @@
                                 <i class="fa fa-trash text-danger"></i> Remove
                             </button>
                             {!! Form::close() !!}
-                        @else
-                            <span class="text-muted">No available actions</span>
                         @endcan
                     </div>
                 </td>

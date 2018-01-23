@@ -44,7 +44,10 @@
                     </td>
                     <td>{{ $division->outstanding_members }}</td>
                     <td>{{ $division->inactive_members }}</td>
-                    <td>{{ $division->percent_inactive }}%
+                    <td>
+                        <a href="{{ route('division.inactive-members', $division) }}">
+                            {{ $division->percent_inactive }}%
+                        </a>
                         <span class="census-pie"
                               data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
                               data-counts="{{ json_encode([$division->members_count-$division->inactive_members, $division->inactive_members]) }}">

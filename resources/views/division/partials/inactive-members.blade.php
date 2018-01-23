@@ -51,8 +51,6 @@
                                 <i class="fa fa-flag"></i>
                                 Flag
                             </a>
-                        @else
-                            <span class="text-muted">No available actions</span>
                         @endcan
                     </td>
                 </tr>
