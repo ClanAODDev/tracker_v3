@@ -29,38 +29,4 @@ class AdminController extends Controller
             'divisions', 'users', 'handles'
         ));
     }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function outstandingMembersReport()
-    {
-        $clanMax = config('app.aod.maximum_days_inactive');
-
-        $divisions = Division::active()->orderBy('name')->withCount('members')->get();
-
-        $divisions->map(function ($division) use ($clanMax) {
-            $divisionMax = $division->settings()->get('inactivity_days');
-
-            $members = $division->members()->whereDoesntHave('leave')->get();
-
-            $outstandingCount = $members
-                ->where('last_activity', '<', Carbon::now()->subDays($clanMax)->format('Y-m-d'))
-                ->count();
-
-            $inactiveCount = $members
-                ->where('last_activity', '<', Carbon::now()->subDays($divisionMax)->format('Y-m-d'))
-                ->count();
-
-            $division->outstanding_members = $outstandingCount;
-            $division->inactive_members = $inactiveCount;
-            $division->percent_inactive = number_format($inactiveCount / $division->members_count * 100, 1);
-
-            return $division;
-        });
-
-        return view('admin.reports.outstanding-members', compact('divisions'));
-    }
-
-
 }

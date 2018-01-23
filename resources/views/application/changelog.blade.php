@@ -25,15 +25,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
-                <h4>20 Jan 2018 - 3.2.8</h4>
+                <h4>20 Jan 2018 - 3.2.9</h4>
                 <hr />
                 <ul>
-                    <li>Added division outstanding inactive report for administrators</li>
+                    <li>Added division outstanding inactive report, migrated ts report and census report to own navigation dropdown</li>
                     <li>Added ability to reorder division recruiting tasks</li>
                     <li class="text-warning">Disabled tag management across application. Tags will likely be incorporated into note bodies, and the ability / requirement to set a specific tag will be removed completely.</li>
                 </ul>
             </div>
         </div>
+
         <div class="row m-t-xl">
             <div class="col-md-12">
                 <h4>28 Dec 2017 - 3.2.7</h4>

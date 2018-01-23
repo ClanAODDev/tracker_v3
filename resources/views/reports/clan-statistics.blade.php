@@ -23,7 +23,7 @@
             <i class="fa fa-exclamation-triangle text-danger"></i>
             There are
             <code>{{ count($mismatchedTSMembers) }}</code> members improperly configured for Teamspeak. Please review the
-            <a href="{{ route('clan.ts-report') }}"
+            <a href="{{ route('reports.clan-ts-report') }}"
                class="alert-link">Teamspeak Report</a> to resolve these issues.
         </div>
 
@@ -35,11 +35,11 @@
 
         <div class="row">
             <div class="col-md-8">
-                @include('statistics.partials.member-census-count')
-                @include('statistics.partials.division-populations')
+                @include('reports.partials.member-census-count')
+                @include('reports.partials.division-populations')
             </div>
             <div class="col-md-4">
-                @include('statistics.partials.rank-demographic')
+                @include('reports.partials.rank-demographic')
             </div>
         </div>
     </div>

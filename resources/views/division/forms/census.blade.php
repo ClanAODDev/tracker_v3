@@ -11,7 +11,6 @@
         </thead>
         @foreach ($censuses as $census)
 
-
             @php
                 $popMinus = $census->count - $census->weekly_active_count;
             @endphp

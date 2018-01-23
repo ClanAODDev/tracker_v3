@@ -73,11 +73,6 @@ Route::group(['prefix' => 'help'], function () {
     Route::get('/division-structures', 'HelpController@divisionStructures')->name('divisionStructures');
 });
 
-Route::group(['prefix' => 'statistics'], function () {
-    Route::get('/', 'ClanStatisticsController@show')->name('statistics');
-    Route::get('/clan-ts-report', 'ClanStatisticsController@showTsReport')->name('clan.ts-report');
-});
-
 // initial recruiting screen
 Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
 Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recruiting.addMember');
@@ -225,6 +220,15 @@ Route::post('slack', [
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');
 
+
+/** Reports */
+Route::group(['prefix' => 'reports'], function () {
+    Route::get('outstanding-inactives',
+        'ReportsController@outstandingMembersReport')->name('reports.outstanding-inactives');
+    Route::get('/clan-census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
+    Route::get('/clan-ts-report', 'ReportsController@clanTsReport')->name('reports.clan-ts-report');
+});
+
 /**
  * Admin Routes
  */
@@ -238,11 +242,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         Route::put('{division}', 'Admin\DivisionController@update')->name('adminUpdateDivision');
         Route::patch('{division}', 'Admin\DivisionController@update');
         Route::delete('{division}', 'Admin\DivisionController@destroy')->name('adminDeleteDivision');
-    });
-
-    Route::group(['prefix' => 'reports'], function () {
-        Route::get('outstanding-inactives',
-            'AdminController@outstandingMembersReport')->name('admin.reports.outstanding');
     });
 
     // edit default tags

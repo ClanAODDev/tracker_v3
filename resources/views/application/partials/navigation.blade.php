@@ -70,8 +70,24 @@
         <a href="{{ route('sergeants') }}">Sergeants</a>
     </li>
 
-    <li class="{{ set_active('statistics') }}">
-        <a href="{{ route('statistics') }}">Statistics</a>
+    <li class="{{ set_active('reports/*') }}">
+        <a href="#reports" data-toggle="collapse" aria-expanded="false">
+            Clan Reports
+            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+        </a>
+
+        <ul id="reports" class="nav nav-second {{ request()->is('reports/*') ? 'expanded' : 'collapse' }}">
+
+            <li class="{{ set_active('reports/clan-census') }}">
+                <a href="{{ route('reports.clan-census') }}">Clan Census Data</a>
+            </li>
+            <li class="{{ set_active('reports/clan-ts-report') }}">
+                <a href="{{ route('reports.clan-ts-report') }}">TS Misconfiguration</a>
+            </li>
+            <li class="{{ set_active('reports/outstanding-inactives') }}">
+                <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
+            </li>
+        </ul>
     </li>
 
     @if(Auth::user()->isRole('admin'))
@@ -80,9 +96,6 @@
         </li>
         <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
             <a href="{{ route('admin') }}">Admin CP</a>
-        </li>
-        <li class="{{ set_active(['admin/reports/outstanding-inactives']) }}">
-            <a href="{{ route('admin.reports.outstanding') }}">Outstanding Inactives</a>
         </li>
     @endif
 
