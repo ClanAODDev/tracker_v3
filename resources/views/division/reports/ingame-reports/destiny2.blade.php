@@ -85,7 +85,7 @@
           }
         });
       }, time);
-      time += 300;
+      time += 750;
     });
       /*
        $('.ingame-report').DataTable({
