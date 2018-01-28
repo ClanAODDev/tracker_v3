@@ -18,11 +18,11 @@ trait IngameReports
      *
      * @return array
      */
-    public function destiny2()
+    public function destiny2($clanId = null)
     {
         $clans = explode(',', config('app.aod.ingame-reports.destiny-2-clans'));
 
-        $requestedClan = request('clanId') ?: $clans[0];
+        $requestedClan = $clanId ?: $clans[0];
 
         // invalid clan id
         if ( ! in_array($requestedClan, $clans)) {

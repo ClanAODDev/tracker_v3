@@ -141,7 +141,7 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/promotions/{month?}/{year?}',
         'Division\ReportController@promotionsReport')->middleware(['auth'])
         ->name('division.promotions');
-    Route::get('{division}/ingame-report',
+    Route::get('{division}/ingame-report/{customAttr?}',
         'Division\ReportController@ingameReport')->middleware(['auth'])
         ->name('division.ingame-reports');
 

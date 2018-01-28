@@ -57,12 +57,12 @@ class ReportController extends Controller
      * @param Division $division
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function ingameReport(Division $division)
+    public function ingameReport(Division $division, $customAttr = null)
     {
         $method = camel_case($division->name);
 
         if (method_exists($this, $method)) {
-            $data = $this->$method();
+            $data = $this->$method($customAttr);
         } else {
             $data = [];
         }

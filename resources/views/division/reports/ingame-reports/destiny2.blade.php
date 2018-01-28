@@ -1,6 +1,6 @@
 <!-- Nav tabs -->
 @foreach (explode(',', config('app.aod.ingame-reports.destiny-2-clans')) as $clan)
-    <a href="{{ route('division.ingame-reports', $division) }}?clanId={{ $clan }}"
+    <a href="{{ route('division.ingame-reports', [$division, $clan]) }}"
        class="btn btn-default">
         {{ $clan }}
     </a>
@@ -70,7 +70,7 @@
       setTimeout(function () {
         let d2Id = $this.data('membership-id'),
           url = 'https://www.bungie.net/Platform/Destiny2/4/profile/' + d2Id + '/?components=100',
-          apiKey = "{{ config('app.aod.api-keys.bungie') }}";
+          apiKey = '{{ config('app.aod.api-keys.bungie') }}';
         $.ajax({
           type: 'GET',
           url: url,
