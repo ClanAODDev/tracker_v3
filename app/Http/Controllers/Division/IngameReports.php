@@ -22,59 +22,36 @@ trait IngameReports
     {
         $clans = explode(',', config('app.aod.ingame-reports.destiny-2-clans'));
 
+        // invalid clan id
+        if ( ! in_array(request('clanId'), $clans)) {
+            return [];
+        }
+
         // no config for destiny clans
         if (empty($clans[0])) {
             return [];
         }
 
-        $client = new Client();
-
-        return $this->fetchDestiny2ClanData($clans, $client);
+        return $this->fetchDestiny2ClanData(request('clanId'), new Client());
     }
 
     /**
-     * @param array $clans
+     * @param $clan
      * @param Client $client
      * @return array
      */
-    protected function fetchDestiny2ClanData(array $clans, Client $client)
+    protected function fetchDestiny2ClanData($clan, Client $client)
     {
-        $division = request()->route('division');
+        $clanUrl = "https://bungie.net/Platform/GroupV2/{$clan}";
+        $memberUrl = "{$clanUrl}/Members/?currentPage=1";
 
-        $fullTimers = $division->members()->with([
-            'handles' => function ($query) use ($division) {
-                $query->whereHandleId($division->handle_id);
-            }
-        ])->get();
+        $clanInformation = $this->getBungieInfo($clanUrl, $client);
+        $memberData = $this->getBungieInfo($memberUrl, $client);
 
-        $clanData = [];
-
-        foreach ($clans as $clan) {
-            $clanUrl = "https://bungie.net/Platform/GroupV2/{$clan}";
-            $memberUrl = "{$clanUrl}/Members/?currentPage=1";
-
-            $clanInformation = $this->getBungieInfo($clanUrl, $client);
-            $memberData = $this->getBungieInfo($memberUrl, $client);
-
-            $bungieIds[] = collect($memberData->results)->pluck('bungieNetUserInfo.membershipId');
-
-            $clanData[] = [
-                'clan-info' => $clanInformation,
-                'clan-members' => $memberData->results
-            ];
-        }
-
-//        dd(array_diff(
-//            $fullTimers->pluck('divisionHandle', 'name')->toArray(),
-//            array_flatten($bungieIds)
-//        ));
-
-//        array_diff()
-
-
-//        dd(array_flatten($bungieIds));
-
-        return $clanData;
+        return [
+            'clan-info' => $clanInformation,
+            'clan-members' => $memberData->results
+        ];
     }
 
     /**
