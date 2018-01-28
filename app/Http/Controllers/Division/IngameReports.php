@@ -52,7 +52,7 @@ trait IngameReports
 
         return [
             'clan-info' => $clanInformation,
-            'clan-members' => $memberData->results
+            'clan-members' => collect($memberData->results)->sortBy('destinyUserInfo.displayName')
         ];
     }
 
