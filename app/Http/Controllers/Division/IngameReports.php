@@ -22,8 +22,10 @@ trait IngameReports
     {
         $clans = explode(',', config('app.aod.ingame-reports.destiny-2-clans'));
 
+        $requestedClan = request('clanId') ?: $clans[0];
+
         // invalid clan id
-        if ( ! in_array(request('clanId'), $clans)) {
+        if ( ! in_array($requestedClan, $clans)) {
             return [];
         }
 
@@ -32,7 +34,7 @@ trait IngameReports
             return [];
         }
 
-        return $this->fetchDestiny2ClanData(request('clanId'), new Client());
+        return $this->fetchDestiny2ClanData($requestedClan, new Client());
     }
 
     /**
