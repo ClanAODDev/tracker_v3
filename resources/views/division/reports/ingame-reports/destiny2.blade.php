@@ -65,7 +65,7 @@
 
 //    let table = $('.ingame-report').DataTable();
 
-    let time = 500;
+    let time = 1000;
     $('.lastPlayed').each(function (index) {
       let $this = $(this);
       setTimeout(function () {
@@ -85,7 +85,7 @@
           }
         });
       }, time);
-      time += 750;
+      time += 1000;
     });
       /*
        $('.ingame-report').DataTable({
