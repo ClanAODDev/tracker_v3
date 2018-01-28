@@ -39,19 +39,20 @@
                     <td>
                         {{ $division->name }}
                         <a href="{{ route('division', $division) }}" class="pull-right btn btn-default btn-xs">
-                            <i class="fa fa-search text-warning"></i>
+                            <i class="fa fa-search"></i>
                         </a>
                     </td>
                     <td>{{ $division->outstanding_members }}</td>
                     <td>{{ $division->inactive_members }}</td>
                     <td>
-                        <a href="{{ route('division.inactive-members', $division) }}">
-                            {{ $division->percent_inactive }}%
-                        </a>
+                        {{ $division->percent_inactive }}%
                         <span class="census-pie"
                               data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
                               data-counts="{{ json_encode([$division->members_count-$division->inactive_members, $division->inactive_members]) }}">
                     </span>
+                        <a href="{{ route('division.inactive-members', $division) }}" class="btn btn-default pull-right btn-xs">
+                            <i class="fa fa-search"></i>
+                        </a>
                     </td>
                 </tr>
             @endforeach
