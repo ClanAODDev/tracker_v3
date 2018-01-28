@@ -8,7 +8,6 @@
 
 <hr>
 
-
 <h4>{{ $data['clan-info']->detail->name }} ({{ count($data['clan-members']) }})</h4>
 <hr />
 
@@ -69,12 +68,13 @@
     $('.lastPlayed').each(function (index) {
       let $this = $(this);
       setTimeout(function () {
-        let d2Id = $this.data('membership-id');
-        let url = 'https://www.bungie.net/Platform/Destiny2/4/profile/' + d2Id + '/?components=100';
+        let d2Id = $this.data('membership-id'),
+          url = 'https://www.bungie.net/Platform/Destiny2/4/profile/' + d2Id + '/?components=100',
+          apiKey = "{{ config('app.aod.api-keys.bungie') }}";
         $.ajax({
           type: 'GET',
           url: url,
-          headers: {'X-API-KEY': '94ac5e6e5f0842218c17777759627876'}
+          headers: {'X-API-KEY': apiKey}
         }).success(function (data) {
           if (data.Response) {
             let dateInfo = new Date(data.Response.profile.data.dateLastPlayed);
