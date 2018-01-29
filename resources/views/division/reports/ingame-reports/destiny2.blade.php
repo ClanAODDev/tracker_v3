@@ -60,37 +60,5 @@
 </div>
 
 <script>
-  $(function () {
-
-//    let table = $('.ingame-report').DataTable();
-
-    let time = 1000;
-    $('.lastPlayed').each(function (index) {
-      let $this = $(this);
-      setTimeout(function () {
-        let d2Id = $this.data('membership-id'),
-          url = 'https://www.bungie.net/Platform/Destiny2/4/profile/' + d2Id + '/?components=100',
-          apiKey = '{{ config('app.aod.api-keys.bungie') }}';
-        $.ajax({
-          type: 'GET',
-          url: url,
-          headers: {'X-API-KEY': apiKey}
-        }).success(function (data) {
-          if (data.Response) {
-            let dateInfo = new Date(data.Response.profile.data.dateLastPlayed);
-            let dateLastPlayed = dateInfo.getFullYear() + '-' + (dateInfo.getMonth() + 1) + '-' + dateInfo.getDate();
-            $this.text(dateLastPlayed).effect('highlight');
-          } else {
-            $this.html('<span class="text-danger">ERROR</span>').effect('highlight');
-          }
-        });
-      }, time);
-      time += 1000;
-    });
-      /*
-       $('.ingame-report').DataTable({
-       'paging': false,
-       });*/
-
-  });
+  $(function(){let time=1000;$('.lastPlayed').each(function(index){let $this=$(this);setTimeout(function(){let d2Id=$this.data('membership-id'),url='https://www.bungie.net/Platform/Destiny2/4/profile/'+d2Id+'/?components=100',apiKey='{{ config('app.aod.api-keys.bungie') }}';$.ajax({type:'GET',url:url,headers:{'X-API-KEY':apiKey}}).success(function(data){if(data.Response){let dateInfo=new Date(data.Response.profile.data.dateLastPlayed);let dateLastPlayed=dateInfo.getFullYear()+'-'+(dateInfo.getMonth()+1)+'-'+dateInfo.getDate();$this.text(dateLastPlayed).effect('highlight')}else{$this.html('<span class="text-danger">ERROR</span>').effect('highlight')}})},time);time+=1000})})
 </script>
