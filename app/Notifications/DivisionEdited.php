@@ -41,14 +41,14 @@ class DivisionEdited extends Notification
 
     public function toSlack()
     {
-        $to = ($this->division->settings()->get('slack_channel'))
-            ?: '@' . auth()->user()->name;
+        $to = $this->division->settings()->get('slack_channel');
+        if ($to) {
+            $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
 
-        $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
-
-        return (new SlackMessage())
-            ->success()
-            ->to($to)
-            ->content("{$authoringUser} updated division settings for {$this->division->name}");
+            return (new SlackMessage())
+                ->success()
+                ->to($to)
+                ->content("{$authoringUser} updated division settings for {$this->division->name}");
+        }
     }
 }
