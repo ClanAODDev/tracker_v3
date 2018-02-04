@@ -44,9 +44,11 @@ class DivisionEdited extends Notification
         $to = ($this->division->settings()->get('slack_channel'))
             ?: '@' . auth()->user()->name;
 
+        $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
+
         return (new SlackMessage())
             ->success()
             ->to($to)
-            ->content(auth()->user()->name . " updated division settings for " . $this->division->name);
+            ->content("{$authoringUser} updated division settings for {$this->division->name}");
     }
 }
