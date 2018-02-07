@@ -62,6 +62,20 @@ return [
             'engine' => null,
         ],
 
+        'aod_forums' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('AOD_DB_DATABASE', 'clanaodn_forums'),
+            'username' => env('AOD_DB_USERNAME', 'clanaodn_tadmin'),
+            'password' => env('AOD_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
