@@ -16,29 +16,21 @@
             </div>
         </div>
 
+        @include('application.partials.errors')
+
         <div class="panel panel-filled">
             <div class="panel-body">
                 <form method="POST" action="{{ url('/login') }}">
                     {!! csrf_field() !!}
 
-                    <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                        <label class="control-label" for="email">E-mail</label>
-                        <input type="text" name="email" id="email" class="form-control">
-                        @if ($errors->has('email'))
-                            <span class="help-block small">
-                                <strong>{{ $errors->first('email') }}</strong>
-                            </span>
-                        @endif
+                    <div class="form-group">
+                        <label class="control-label" for="username">AOD Username</label>
+                        <input type="text" name="username" id="username" class="form-control">
                     </div>
 
-                    <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
-                        <label class="control-label" for="password">Password</label>
+                    <div class="form-group">
+                        <label class="control-label" for="password">AOD Password</label>
                         <input type="password" name="password" id="password" class="form-control">
-                        @if ($errors->has('password'))
-                            <span class="help-block small">
-                                <strong>{{ $errors->first('password') }}</strong>
-                            </span>
-                        @endif
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember" id="remember"> <label for="remember">Remember Me</label>
