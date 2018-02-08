@@ -23,8 +23,7 @@ trait AuthenticatesWithAOD
     private function validatesCredentials($request)
     {
         try {
-            $results = DB::connection('aod_forums')
-                ->select("CALL check_user(':username', ':password')", [
+            $results = DB::connection('aod_forums')->select("CALL check_user(:username, :password)", [
                     'username' => $request->username,
                     'password' => md5($request->password)
                 ]);

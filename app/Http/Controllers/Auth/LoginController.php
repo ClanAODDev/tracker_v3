@@ -73,7 +73,7 @@ class LoginController extends Controller
 
             if ($user = User::whereName($username)->first()) {
                 // TODO: update user with any new permissions, email changes
-                
+
                 Auth::login($user);
 
                 return true;
