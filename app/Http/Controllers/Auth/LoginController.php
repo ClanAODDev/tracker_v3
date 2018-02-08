@@ -8,13 +8,12 @@ use Auth;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 
 
 class LoginController extends Controller
 {
 
-    use ThrottlesLogins;
+    use ThrottlesLogins, AuthenticatesWithAOD;
     /**
      * Where to redirect users after login / registration.
      *
@@ -34,7 +33,7 @@ class LoginController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function login(Request $request)
     {
@@ -58,7 +57,7 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
-        return $this->sendFailedLoginResponse($request);
+        return $this->sendFailedLoginResponse();
     }
 
     private function attemptLogin($request)
@@ -67,11 +66,17 @@ class LoginController extends Controller
             Auth::login(User::whereName('Guybrush')->first());
         }
 
-        if ($this->validatesAODCredentials($request)) {
+        if ($this->validatesCredentials($request)) {
             $username = str_replace('aod_', '', strtolower($request->username));
+
             if ($user = User::whereName($username)->first()) {
+                // TODO: update user with any new permissions, email changes
                 Auth::login($user);
 
+                return true;
+            }
+
+            if ($this->registerNewUser($username)) {
                 return true;
             }
         }
@@ -80,24 +85,13 @@ class LoginController extends Controller
     }
 
     /**
-     * Authenticates with AOD Community Service
-     *
-     * @param $request
-     * @return bool
+     * @param $username
      */
-    private function validatesAODCredentials($request)
+    private function registerNewUser($username)
     {
-        $password = md5($request->password);
-        $query = "CALL check_user('{$request->username}', '{$password}')";
-        $results = DB::connection('aod_forums')->select($query);
-
-        if ( ! empty($results)) {
-            // TODO: should store group information eventually
-            // returns integer
-            return (array_first($results)->valid);
-        }
-
-        return false;
+        $user = new User;
+        $user->name = $username;
+        $user->email = $this->email;
     }
 
     /**
