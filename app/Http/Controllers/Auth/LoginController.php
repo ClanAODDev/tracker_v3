@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Member;
 use App\User;
 use Auth;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -72,6 +73,7 @@ class LoginController extends Controller
 
             if ($user = User::whereName($username)->first()) {
                 // TODO: update user with any new permissions, email changes
+                
                 Auth::login($user);
 
                 return true;
@@ -90,9 +92,15 @@ class LoginController extends Controller
      */
     private function registerNewUser($username)
     {
+        $member = Member::whereClanId($this->clanId)->firstOrFail();
+
         $user = new User;
         $user->name = $username;
         $user->email = $this->email;
+        $user->member_id = $member->id;
+        $user->save();
+
+        return Auth::login($user);
     }
 
     /**

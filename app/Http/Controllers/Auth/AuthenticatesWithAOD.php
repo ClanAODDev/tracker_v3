@@ -10,6 +10,8 @@ trait AuthenticatesWithAOD
 
     public $email;
 
+    public $clanId;
+
     public $roles = [];
 
     /**
@@ -20,11 +22,12 @@ trait AuthenticatesWithAOD
      */
     private function validatesCredentials($request)
     {
-        $password = md5($request->password);
-
         try {
-            $query = "CALL check_user('{$request->username}', '{$password}')";
-            $results = DB::connection('aod_forums')->select($query);
+            $results = DB::connection('aod_forums')
+                ->select("CALL check_user(':username', ':password')", [
+                    'username' => $request->username,
+                    'password' => md5($request->password)
+                ]);
         } catch (Exception $exception) {
             return false;
         }
@@ -32,16 +35,26 @@ trait AuthenticatesWithAOD
         if ( ! empty($results)) {
             $member = array_first($results);
 
-            $this->email = $member->email;
-            // TODO: handle roles and perms...
-            $this->roles = array_merge(
-                explode(',', $member->membergroupids),
-                [$member->usergroupid]
-            );
+            $this->setMemberAttributes($member);
 
             return ($member->valid);
         }
 
         return false;
+    }
+
+    /**
+     * @param $member
+     */
+    protected function setMemberAttributes($member)
+    {
+        $this->clanId = $member->userid;
+
+        $this->email = $member->email;
+
+        $this->roles = array_merge(
+            explode(',', $member->membergroupids),
+            [$member->usergroupid]
+        );
     }
 }
