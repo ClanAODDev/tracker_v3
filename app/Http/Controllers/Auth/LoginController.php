@@ -87,13 +87,12 @@ class LoginController extends Controller
     {
         $password = md5($request->password);
         $query = "CALL check_user('{$request->username}', '{$password}')";
-
         $results = DB::connection('aod_forums')->select($query);
 
         if ( ! empty($results)) {
             // TODO: should store group information eventually
             // returns integer
-            return ($results['valid']);
+            return (array_first($results)->valid);
         }
 
         return false;
