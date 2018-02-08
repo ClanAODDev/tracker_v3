@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 trait AuthenticatesWithAOD
@@ -20,8 +21,13 @@ trait AuthenticatesWithAOD
     private function validatesCredentials($request)
     {
         $password = md5($request->password);
-        $query = "CALL check_user('{$request->username}', '{$password}')";
-        $results = DB::connection('aod_forums')->select($query);
+
+        try {
+            $query = "CALL check_user('{$request->username}', '{$password}')";
+            $results = DB::connection('aod_forums')->select($query);
+        } catch (Exception $exception) {
+            return false;
+        }
 
         if ( ! empty($results)) {
             $member = array_first($results);
@@ -38,5 +44,4 @@ trait AuthenticatesWithAOD
 
         return false;
     }
-
 }

@@ -7,7 +7,6 @@ use App\User;
 use Auth;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 
 class LoginController extends Controller
@@ -64,6 +63,8 @@ class LoginController extends Controller
     {
         if (app()->environment() === 'local') {
             Auth::login(User::whereName('Guybrush')->first());
+
+            return true;
         }
 
         if ($this->validatesCredentials($request)) {

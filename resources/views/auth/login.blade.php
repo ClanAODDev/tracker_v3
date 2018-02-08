@@ -11,7 +11,7 @@
             <div class="header-title">
                 <h3>AOD Tracker</h3>
                 <small>
-                    Please enter your credentials.
+                    Please enter your <strong>AOD Forum Credentials</strong>.
                 </small>
             </div>
         </div>
@@ -24,24 +24,22 @@
                     {!! csrf_field() !!}
 
                     <div class="form-group">
-                        <label class="control-label" for="username">AOD Username</label>
+                        <label class="control-label" for="username">Username</label>
                         <input type="text" name="username" id="username" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label" for="password">AOD Password</label>
+                        <label class="control-label" for="password">Password</label>
                         <input type="password" name="password" id="password" class="form-control">
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember" id="remember"> <label for="remember">Remember Me</label>
                     </div>
-                    <div>
-                        <button class="btn btn-accent pull-right">Login</button>
-                        <div class="btn-group">
-                            <a class="btn btn-default" href="{{ url('/register') }}">Register</a>
-                            <a class="btn btn-default" href="{{ url('/password/reset') }}">Forgot</a>
-                        </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-accent btn-block">Login</button>
                     </div>
+
                 </form>
             </div>
         </div>
