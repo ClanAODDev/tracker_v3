@@ -66,8 +66,10 @@ class LoginController extends Controller
         if (app()->environment() === 'local') {
             Auth::login(User::whereName('Guybrush')->first());
         }
+
         if ($this->validatesAODCredentials($request)) {
-            if ($user = User::whereName($request->username)->first()) {
+            $username = str_replace('aod_', '', strtolower($request->username));
+            if ($user = User::whereName($username)->first()) {
                 Auth::login($user);
 
                 return true;
