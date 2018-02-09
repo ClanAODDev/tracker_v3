@@ -23,8 +23,6 @@ class LoginController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -52,9 +50,6 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse();
@@ -72,8 +67,7 @@ class LoginController extends Controller
             $username = str_replace('aod_', '', strtolower($request->username));
 
             if ($user = User::whereName($username)->first()) {
-                // TODO: update user with any new permissions, email changes
-
+                $this->checkForUpdates($user);
                 Auth::login($user);
 
                 return true;
@@ -85,6 +79,18 @@ class LoginController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     * Update user's email if updated
+     *
+     * @param $user
+     */
+    private function checkForUpdates($user)
+    {
+        if ($user->email !== $this->email) {
+            $user->update(['email' => $this->email]);
+        }
     }
 
     /**

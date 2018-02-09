@@ -23,7 +23,8 @@ trait AuthenticatesWithAOD
     private function validatesCredentials($request)
     {
         try {
-            $results = DB::connection('aod_forums')->select("CALL check_user(:username, :password)", [
+            $results = DB::connection('aod_forums')
+                ->select("CALL check_user(:username, :password)", [
                     'username' => $request->username,
                     'password' => md5($request->password)
                 ]);
@@ -52,7 +53,7 @@ trait AuthenticatesWithAOD
         $this->email = $member->email;
 
         $this->roles = array_merge(
-            explode(',', $member->membergroupids),
+            array_map('intval', explode(',', $member->membergroupids)),
             [$member->usergroupid]
         );
     }
