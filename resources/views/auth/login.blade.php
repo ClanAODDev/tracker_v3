@@ -36,8 +36,10 @@
                         <input type="checkbox" name="remember" id="remember"> <label for="remember">Remember Me</label>
                     </div>
 
-                    <div class="text-center">
-                        <button class="btn btn-accent btn-block">Login</button>
+                    <div>
+                        <a href="https://www.clanaod.net/forums/register.php" class="btn-default btn">Register</a>
+                        <a href="https://www.clanaod.net/forums/login.php?do=lostpw" class="btn-default btn">Forgot</a>
+                        <button class="btn btn-accent pull-right">Log In</button>
                     </div>
 
                 </form>
