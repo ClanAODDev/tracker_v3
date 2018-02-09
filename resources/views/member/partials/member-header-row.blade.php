@@ -21,4 +21,6 @@
     </th>
     {{--9--}}
     <th class="col-hidden">Handle</th>
+    {{--10--}}
+    <th class="col-hidden">Posts</th>
 </tr>

@@ -48,4 +48,7 @@
             <span class="text-danger">N/A</span>
         @endif
     </td>
+    <td class="col-hidden">
+        {{ $member->posts }}
+    </td>
 </tr>

@@ -7,5 +7,6 @@
         <a class="toggle-vis btn btn-default" data-column="6">TS Activity</a>
         <a class="toggle-vis btn btn-default" href="#" data-column="8">Promoted</a>
         <a class="toggle-vis btn btn-default" href="#" data-column="9">Handle</a>
+        <a class="toggle-vis btn btn-default" href="#" data-column="10">Posts</a>
     </div>
 </div>
