@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         Commands\MemberSync::class,
         Commands\DivisionCensus::class,
         Commands\MakeAODToken::class,
+        Commands\SgtActivity::class
     ];
 
     /**

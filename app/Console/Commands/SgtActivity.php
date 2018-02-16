@@ -12,7 +12,7 @@ class SgtActivity extends Command
      *
      * @var string
      */
-    protected $signature = 'report:sgt_activity';
+    protected $signature = 'report:sgt-activity';
 
     /**
      * The console command description.
