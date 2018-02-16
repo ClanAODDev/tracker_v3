@@ -25,6 +25,26 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>16 Feb 2018 - 3.3.0</h4>
+                <hr />
+                <ul>
+                    <li>Login mechanism now leverages AOD Forum authentication system. Users will login to the tracker using their forum username and password.</li>
+                    <ul>
+                        <li>
+                            Tracker and forum accounts will continue to be separate. However, when authenticating as a new user to the Tracker, an account will automatically be generated. Management of account access will continue to be managed through the tracker.
+                        </li>
+                        <li>
+                            <em>In a later update</em>, account access will be granted based on the forum member groups a user belongs to.
+                        </li>
+                        <li>Password resets and account registration will be handled directly through the AOD forums. Just as before, users that do not already have a forum account will not be able to log into the tracker.</li>
+                        <li>Users exceeding 5 failed login attempts will be locked out for 60 seconds.</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>20 Jan 2018 - 3.2.9</h4>
                 <hr />
                 <ul>
@@ -42,7 +62,9 @@
                 <ul>
                     <li>Added AOD status to 'Manage Part Time' report, allowing leadership to see if an assigned part-timer has been removed from AOD, and prune them appropriately.</li>
                     <ul>
-                        <li><strong>Note:</strong> In order to ensure divisions have the chance to clean up part-timers from internal systems (ingame organizations), part-time membership will no longer be automatically reset when a member is removed from AOD.</li>
+                        <li>
+                            <strong>Note:</strong> In order to ensure divisions have the chance to clean up part-timers from internal systems (ingame organizations), part-time membership will no longer be automatically reset when a member is removed from AOD.
+                        </li>
                     </ul>
                 </ul>
             </div>
