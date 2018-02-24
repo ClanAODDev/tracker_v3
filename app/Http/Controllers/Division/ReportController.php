@@ -39,10 +39,12 @@ class ReportController extends Controller
             ->groupBy('user_id');
 
         $members = $activity->map(function ($item) {
-            return [
-                'recruits' => count($item),
-                'member' => $item->first()->user->member
-            ];
+            if ($item->first()->user) {
+                return [
+                    'recruits' => count($item),
+                    'member' => $item->first()->user->member
+                ];
+            }
         })->sortByDesc('recruits');
 
         $totalRecruitCount = $members->map(function ($item) {
