@@ -22,7 +22,7 @@
     <div class="container-fluid">
 
         <h4><i class="fa fa-exclamation-triangle text-danger"></i> Reset Member Assignments</h4>
-        <p>You are about to reset this member's {{ $division->locality('platoon') }} and {{ $division->locality('squad') }} assignment information. Are you sure?</p>
+        <p>You are about to reset this member's assignment information. Are you sure?</p>
 <hr />
         <form action="{{ route('member.unassign', $member->clan_id) }}"
               method="post" id="member-reset-form">
