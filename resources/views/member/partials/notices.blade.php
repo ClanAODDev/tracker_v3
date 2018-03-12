@@ -1,6 +1,6 @@
 @if ($member->isPending)
     <div class="alert alert-warning">
-       This member's status request is currently pending. Some details, like teamspeak activity, may not be available until the request is approved. This is normal, and should be resolved within a few hours.
+       This member's status request is currently pending. Some details, like teamspeak activity, may not be available until the request is approved.
     </div>
 @endif
 @can ('update', $member->clan_id)
