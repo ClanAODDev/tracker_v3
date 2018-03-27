@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Division;
 
 use App\Activity;
 use App\Division;
-use App\Member;
+use App\Http\Controllers\Controller;
+use App\Repositories\DivisionRepository;
 use App\Repositories\MemberRepository;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class ReportController extends Controller
 {
     use IngameReports;
 
-    public function __construct()
+    public function __construct(DivisionRepository $division)
     {
+        $this->division = $division;
+
         $this->middleware(['auth', 'activeDivision']);
     }
 
@@ -51,8 +52,22 @@ class ReportController extends Controller
             return $item['recruits'];
         })->sum();
 
-        return view('division.reports.retention-report', compact('division', 'members', 'totalRecruitCount',
-            'range'));
+        $recruits = $this->division->recruitsLast6Months($division->id)->map(function ($record) {
+            return [$record->date, $record->recruits];
+        });
+
+        $removals = $this->division->removalsLast6Months($division->id)->map(function ($record) {
+            return [$record->date, $record->removals];
+        });
+
+        $population = $this->division->populationLast6Months($division->id)->map(function ($record) {
+            return [$record->date, $record->count];
+        });
+
+        return view('division.reports.retention-report', compact(
+            'division', 'members', 'totalRecruitCount',
+            'population', 'range', 'recruits', 'removals'
+        ));
     }
 
     /**

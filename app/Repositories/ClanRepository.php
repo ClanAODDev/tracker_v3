@@ -59,9 +59,7 @@ class ClanRepository
     {
         return DB::select(
             DB::raw("
-                SELECT
-                  ranks.abbreviation,
-                  count(*) AS count
+                SELECT ranks.abbreviation, count(*) AS count
                 FROM members
                   JOIN ranks
                     ON ranks.id = members.rank_id

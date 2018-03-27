@@ -30,6 +30,11 @@ class DivisionController extends Controller
         $this->middleware(['auth', 'activeDivision']);
     }
 
+    /**
+     * @param Division $division
+     * @return $this|\Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function storeSlackChannel(Division $division)
     {
         $this->authorize('createSlackChannels', auth()->user());
@@ -60,7 +65,7 @@ class DivisionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function index()
     {
@@ -104,6 +109,7 @@ class DivisionController extends Controller
      *
      * @param Division $division
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Division $division)
     {
@@ -133,6 +139,7 @@ class DivisionController extends Controller
      * @param UpdateDivision $form
      * @param Division $division
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      * @internal param Request $request
      */
     public function update(UpdateDivision $form, Division $division)
@@ -173,6 +180,7 @@ class DivisionController extends Controller
      * @param Division $division
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function assignPartTime(Division $division, Member $member)
     {
@@ -190,6 +198,7 @@ class DivisionController extends Controller
      * @param Division $division
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|string
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function removePartTime(Division $division, Member $member)
     {

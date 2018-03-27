@@ -37,15 +37,13 @@ var chartUsersOptions = {
 
   tooltippage: {
     show: true,
-    content: "%x - %y members"
+    content: '%x - %y members'
   },
 
   xaxis: {
-    mode: "time",
-    timeformat: "%m/%d/%y",
+    mode: 'time',
+    timeformat: '%m/%d/%y',
   },
-
-  comments: comments,
 
   colors: ['#1bbf89', '#0F83C9', '#f7af3e']
 };
@@ -53,12 +51,5 @@ var chartUsersOptions = {
 $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
 
 $(window).resize(function () {
-  $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
-});
-
-$('input[type=checkbox]').change(function (event) {
-  var option = {};
-  option['comment'] = {show: $(this).is(':checked')};
-  $.extend(true, chartUsersOptions, option);
   $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);
 });

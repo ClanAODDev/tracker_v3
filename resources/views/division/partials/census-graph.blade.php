@@ -8,7 +8,6 @@
                  data-populations="{{ $populations }}"
                  data-weekly-active="{{ $weeklyActive }}"
                  data-weekly-ts="{{ $weeklyTsActive }}"
-                 data-comments="{{ $comments }}"
             ></div>
         </div>
     </div>

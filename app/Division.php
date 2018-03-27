@@ -145,6 +145,7 @@ class Division extends Model
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         $getPosts = curl_exec($ch);
         $countPosts = stripos($getPosts, $string);
+
         if ( ! $countPosts) {
             $url = parse_url(curl_last_url($ch));
             $query = $url['query'];

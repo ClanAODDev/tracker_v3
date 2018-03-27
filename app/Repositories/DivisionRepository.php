@@ -3,13 +3,22 @@
 namespace App\Repositories;
 
 use App\Division;
-use App\Member;
 use Carbon\Carbon;
 use DB;
 
+/**
+ * Class DivisionRepository
+ *
+ * @package App\Repositories
+ */
 class DivisionRepository
 {
 
+    /**
+     * @param Division $division
+     * @param int $limit
+     * @return \Illuminate\Support\Collection
+     */
     public function censusCounts(Division $division, $limit = 52)
     {
         $censuses = collect(DB::select(
@@ -24,6 +33,10 @@ class DivisionRepository
         return $censuses;
     }
 
+    /**
+     * @param Division $division
+     * @return array
+     */
     public function getPromotionsData(Division $division)
     {
         $members = $division->members()
@@ -39,6 +52,10 @@ class DivisionRepository
         ];
     }
 
+    /**
+     * @param Division $division
+     * @return array
+     */
     public function getDivisionActivity(Division $division)
     {
         $twoWeeksAgo = Carbon::now()->subDays(14);
@@ -57,6 +74,11 @@ class DivisionRepository
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
     }
+
+    /**
+     * @param Division $division
+     * @return array
+     */
     public function getDivisionTSActivity(Division $division)
     {
         $twoWeeksAgo = Carbon::now()->subDays(14);
@@ -76,18 +98,24 @@ class DivisionRepository
         ];
     }
 
+    /**
+     * @param Division $division
+     * @return array
+     */
     public function getRankDemographic(Division $division)
     {
-        $ranks = DB::select(
-            DB::raw("
-               SELECT ranks.abbreviation, count(*) as count
-               FROM members
-               JOIN ranks ON ranks.id = members.rank_id
-               JOIN division_member ON member_id = members.id
-               WHERE division_id = {$division->id}
-               GROUP BY rank_id
-               ")
-        );
+        $ranks = DB::select('ranks.abbreviation')
+            ->addSelect(DB::raw('count(*) as count'))
+            ->from('members')
+            ->join('ranks', function ($join) {
+                $join->on('ranks.id', '=', 'members.rank_id');
+            })
+            ->join('division_member', function ($join) {
+                $join->on('member_id', '=', 'members.id');
+            })
+            ->where('division_id', '=', $division->id)
+            ->groupBy('rank_id')
+            ->get();
 
         $labels = [];
         $values = [];
@@ -105,6 +133,62 @@ class DivisionRepository
         return $data;
     }
 
+    /**
+     * @param $divisionId
+     * @return mixed
+     */
+    public function recruitsLast6Months($divisionId)
+    {
+        return DB::table('activities')
+            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
+            ->selectRaw('count(*) as recruits')
+            ->from('activities')
+            ->where('activities.name', '=', 'recruited_member')
+            ->where('division_id', '=', $divisionId)
+            ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->groupby('date')
+            ->orderBy('activities.created_at', 'ASC')
+            ->get();
+    }
+
+    /**
+     * @param $divisionId
+     * @return mixed
+     */
+    public function removalsLast6Months($divisionId)
+    {
+        return DB::table('activities')
+            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
+            ->selectRaw('count(*) as removals')
+            ->from('activities')
+            ->where('activities.name', '=', 'removed_member')
+            ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->where('division_id', '=', $divisionId)
+            ->groupby('date')
+            ->orderBy('activities.created_at', 'ASC')
+            ->get();
+    }
+
+    /**
+     * @param $divisionId
+     * @return mixed
+     */
+    public function populationLast6Months($divisionId)
+    {
+        return DB::table('censuses')
+            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
+            ->selectRaw('count')
+            ->from('censuses')
+            ->where('division_id', '=', $divisionId)
+            ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->groupby('date')
+            ->orderBy('created_at', 'ASC')
+            ->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function withoutSsgts()
     {
         return Division::doesntHave('staffSergeants')->get();
