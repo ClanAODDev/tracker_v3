@@ -3,6 +3,7 @@
     <tr>
         <th class="no-sort"></th>
         <th>Name</th>
+        <th>Initially Requested</th>
         <th>End Date</th>
         <th>Approver</th>
         <th>Reason</th>
@@ -22,6 +23,7 @@
                 {{ $member->name }}
                 <span class="text-muted">{{ $member->rank->abbreviation }}</span>
             </td>
+            <td>{{ $member->leave->created_at->format('Y-m-d') }}</td>
             <td title="{{ $member->leave->end_date->diffForHumans() }}">
                 @if($member->leave->expired)
                     <i class="fa fa-exclamation-triangle text-danger" title="Expired"></i>

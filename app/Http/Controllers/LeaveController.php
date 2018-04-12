@@ -45,6 +45,8 @@ class LeaveController extends Controller
      * @param Member $member
      * @param Leave $leave
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function delete(Member $member, Leave $leave)
     {

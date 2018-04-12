@@ -38,6 +38,7 @@
                         </li>
                         <li>Password resets and account registration will be handled directly through the AOD forums. Just as before, users that do not already have a forum account will not be able to log into the tracker.</li>
                         <li>Users exceeding 5 failed login attempts will be locked out for 60 seconds.</li>
+                        <li>Added initial request date for leaves of absence listing</li>
                     </ul>
                 </ul>
             </div>
