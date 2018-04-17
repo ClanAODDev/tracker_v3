@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class DivisionNoteController extends Controller
 {
+
+    /**
+     * DivisionNoteController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
