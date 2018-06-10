@@ -24,7 +24,7 @@
 <script src="{{ asset('js/libs.js?v=2.0') }}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-<script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
