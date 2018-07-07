@@ -146,8 +146,8 @@ class DivisionRepository
             ->where('activities.name', '=', 'recruited_member')
             ->where('division_id', '=', $divisionId)
             ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->orderBy('activities.created_at')
             ->groupby('date')
-            ->orderByDesc('activities.created_at')
             ->get();
     }
 
