@@ -192,6 +192,8 @@ return [
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         TwigBridge\ServiceProvider::class,
         Appstract\BladeDirectives\BladeDirectivesServiceProvider::class,
+        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
+        BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class,
 
     ],
 
@@ -249,6 +251,7 @@ return [
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
         'Twig' => TwigBridge\Facade\Twig::class,
+        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
 
     ],
 

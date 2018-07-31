@@ -26,7 +26,8 @@
     "rcrowe/twigbridge": "^0.9.4",
     "doctrine/annotations": "1.4",
     "wrapi/slack": "^0.1.5",
-    "appstract/laravel-blade-directives": "^0.4.5"
+    "appstract/laravel-blade-directives": "^0.4.5",
+    "sentry/sentry-laravel": "^0.9.1"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
@@ -36,7 +37,8 @@
     "laravel/browser-kit-testing": "^1.0",
     "barryvdh/laravel-ide-helper": "^2.3",
     "laracasts/generators": "dev-master",
-    "laravel/dusk": "^1.0"
+    "laravel/dusk": "^1.0",
+    "beyondcode/laravel-er-diagram-generator": "^0.2.2"
   },
   "autoload": {
     "classmap": [
