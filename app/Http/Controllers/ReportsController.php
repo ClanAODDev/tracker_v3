@@ -101,7 +101,7 @@ class ReportsController extends Controller
 
             $division->outstanding_members = $outstandingCount;
             $division->inactive_members = $inactiveCount;
-            $division->percent_inactive = number_format($inactiveCount / $division->members_count * 100, 1);
+            $division->percent_inactive = number_format($inactiveCount / max($division->members_count, 1) * 100, 1);
 
             return $division;
         });
