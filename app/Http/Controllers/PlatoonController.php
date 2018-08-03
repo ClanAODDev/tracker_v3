@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatePlatoonForm;
 use App\Member;
 use App\Platoon;
 use App\Repositories\PlatoonRepository;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Toastr;
 
 class PlatoonController extends Controller
@@ -30,6 +31,7 @@ class PlatoonController extends Controller
      *
      * @param Division $division
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Division $division)
     {
@@ -86,7 +88,7 @@ class PlatoonController extends Controller
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|StreamedResponse
      */
     public function show(Division $division, Platoon $platoon)
     {
@@ -101,6 +103,10 @@ class PlatoonController extends Controller
 
         $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
         $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
+
+        if (request('get_csv') == 1) {
+            return $this->exportAsCSV($members);
+        }
 
         return view(
             'platoon.show',
@@ -238,5 +244,51 @@ class PlatoonController extends Controller
         });
 
         return view('platoon.manage-members', compact('division', 'platoon'));
+    }
+
+    /**
+     * Export platoon members as CSV
+     *
+     * @param $members
+     * @return StreamedResponse
+     */
+    private function exportAsCSV($members)
+    {
+        $csv_data = $members->reduce(function ($data, $member) {
+            $data[] = [
+                $member->name,
+                $member->rank->abbreviation,
+                $member->join_date,
+                $member->last_activity,
+                $member->last_ts_activity,
+                $member->last_promoted,
+                $member->handle->pivot->value ?? 'N/A',
+                $member->posts,
+            ];
+
+            return $data;
+        }, [
+            [
+                'Name',
+                'Rank',
+                'Join Date',
+                'Last Forum Activity',
+                'Last TS Activity',
+                'Last Promoted',
+                'Member Handle',
+                'Member Forum Posts'
+            ],
+        ]);
+
+        return new StreamedResponse(function () use ($csv_data) {
+            $handle = fopen('php://output', 'w');
+            foreach ($csv_data as $row) {
+                fputcsv($handle, $row);
+            }
+            fclose($handle);
+        }, 200, [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=members.csv',
+        ]);
     }
 }

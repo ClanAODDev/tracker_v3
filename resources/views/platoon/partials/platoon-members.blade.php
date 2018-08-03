@@ -7,7 +7,6 @@
             <thead>
             @include ('member.partials.member-header-row')
             </thead>
-
             <tbody>
             @foreach ($members as $member)
                 @include ('member.partials.member-data-row')
