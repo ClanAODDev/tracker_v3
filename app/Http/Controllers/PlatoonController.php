@@ -104,10 +104,6 @@ class PlatoonController extends Controller
         $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
         $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
 
-        if (request('get_csv') == 1) {
-            return $this->exportAsCSV($members);
-        }
-
         return view(
             'platoon.show',
             compact('platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph')
@@ -249,11 +245,21 @@ class PlatoonController extends Controller
     /**
      * Export platoon members as CSV
      *
-     * @param $members
+     * @param Division $division
+     * @param Platoon $platoon
      * @return StreamedResponse
      */
-    private function exportAsCSV($members)
+    public function exportAsCSV(Division $division, Platoon $platoon)
     {
+        $members = $platoon->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'rank',
+            'position',
+            'leave'
+        ])->get()->sortByDesc('rank_id');
+
+        $members = $members->each($this->getMemberHandle());
+
         $csv_data = $members->reduce(function ($data, $member) {
             $data[] = [
                 $member->name,

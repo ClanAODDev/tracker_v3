@@ -158,6 +158,7 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
         Route::get('{platoon}/squads', 'PlatoonController@squads')->name('platoonSquads');
         Route::get('{platoon}/manage', 'PlatoonController@manageSquads')->name('platoon.manage-squads');
+        Route::get('{platoon}/csv', 'PlatoonController@exportAsCsv')->name('platoon.export-csv');
 
         Route::post('', 'PlatoonController@store')->name('savePlatoon');
         Route::put('{platoon}', 'PlatoonController@update')->name('updatePlatoon');
