@@ -25,6 +25,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>02 Aug 2018 - 3.3.1</h4>
+                <hr />
+                <ul>
+                    <li>Added ability to export platoons to CSV format (see footer of platoon page)</li>
+                    <li>Minor bugfix to prevent empty divisions from breaking reports</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>16 Feb 2018 - 3.3.0</h4>
                 <hr />
                 <ul>
