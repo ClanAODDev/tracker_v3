@@ -42,6 +42,7 @@
     <script type="text/javascript">
       $('#select-tags').select2({
         maximumSelectionLength: 2,
+        minimumInputLength: 1,
         placeholder: 'Select tag(s)'
       });
     </script>

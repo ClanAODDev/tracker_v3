@@ -56,6 +56,13 @@ class NoteController extends Controller
     public function update(Request $request, Member $member, Note $note)
     {
         $this->authorize('delete', $member);
+
+        $this->validate(request(), [
+            'tag_list' => 'required|array|between:1,2'
+        ], [
+            'tag_list.required' => 'You must provide at least one tag'
+        ]);
+
         $note->update(request()->all());
         $this->syncTags($note, $request->input('tag_list'));
         $this->showToast('Note saved successfully');
