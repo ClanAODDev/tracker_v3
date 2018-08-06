@@ -258,13 +258,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('handles/{handle}', 'Admin\HandleController@delete')->name('adminDeleteHandle');
 });
 
-
-Route::get('fireteams/type/{type}', 'Tools\FireteamController@index')->name('fireteams.byType');
-Route::get('fireteams/{fireteam}/leave', 'Tools\FireteamController@leave')->name('fireteams.leave');
-Route::post('fireteams/{fireteam}/confirm', 'Tools\FireteamController@confirm')->name('fireteams.confirm');
-Route::resource('fireteams', 'Tools\FireteamController');
-
-
 /**
  * Application UI
  */
