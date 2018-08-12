@@ -133,38 +133,6 @@ class PlatoonController extends Controller
     }
 
     /**
-     * @param Division $division
-     * @param Platoon $platoon
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function squads(Division $division, Platoon $platoon)
-    {
-        $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
-        $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
-
-        $squads = $platoon->squads()
-            ->with([
-                'members.handles' => $this->filterHandlesToPrimaryHandle($division),
-                'members',
-                'members.rank',
-                'members.position',
-                'members.leave',
-                'leader',
-                'leader.rank',
-                'leader.position'
-            ])->get()->sortByDesc('members.rank_id');
-
-        $unassigned = $platoon->unassigned()
-            ->with('rank', 'position')
-            ->get();
-
-        return view('platoon.squads', compact(
-            'platoon', 'division', 'squads', 'unassigned',
-            'forumActivityGraph', 'tsActivityGraph'
-        ));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param Division $division

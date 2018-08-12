@@ -156,7 +156,6 @@ Route::group(['prefix' => 'divisions/'], function () {
         Route::get('/create', 'PlatoonController@create')->name('createPlatoon');
         Route::get('{platoon}', 'PlatoonController@show')->name('platoon');
         Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
-        Route::get('{platoon}/squads', 'PlatoonController@squads')->name('platoonSquads');
         Route::get('{platoon}/manage', 'PlatoonController@manageSquads')->name('platoon.manage-squads');
         Route::get('{platoon}/csv', 'PlatoonController@exportAsCsv')->name('platoon.export-csv');
 
@@ -235,6 +234,8 @@ Route::group(['prefix' => 'reports'], function () {
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
+
+    Route::get('member-requests', 'MemberRequestController@index')->name('member-request.index');
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');
