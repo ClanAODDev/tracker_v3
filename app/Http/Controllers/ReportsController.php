@@ -51,8 +51,13 @@ class ReportsController extends Controller
         });
 
         return view('reports.clan-statistics')->with(compact(
-            'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
-            'censuses', 'rankDemographic', 'mismatchedTSMembers'
+            'memberCount',
+            'previousCensus',
+            'lastYearCensus',
+            'memberCount',
+            'censuses',
+            'rankDemographic',
+            'mismatchedTSMembers'
         ));
     }
 

@@ -82,6 +82,5 @@ trait RecordsActivity
      */
     public static function feed()
     {
-
     }
 }

@@ -252,7 +252,10 @@ class DivisionStructureController extends Controller
                             $query->where('id', $division->handle_id);
                         }
                     ],
-                    'leaders.position', 'squads', 'squads.members', 'squads.members.rank'
+                    'leaders.position',
+                    'squads',
+                    'squads.members',
+                    'squads.members.rank'
                 )->sortBy('order', 'asc')->get()
             ]
         ]);

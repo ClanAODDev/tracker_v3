@@ -40,5 +40,4 @@ class Tag extends Model
     {
         return $this->belongsTo(Division::class);
     }
-
 }

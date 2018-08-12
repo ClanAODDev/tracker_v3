@@ -32,7 +32,7 @@ class SyncMemberData
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
 
-        if ( ! count($syncData)) {
+        if (! count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }

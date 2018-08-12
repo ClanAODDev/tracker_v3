@@ -29,8 +29,7 @@ class CreateFireteamsTable extends Migration
                     'raid',
                     'crucible',
                     'down for anything'
-                ]
-            );
+                ]);
             $table->timestamps();
         });
     }

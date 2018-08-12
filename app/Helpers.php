@@ -266,10 +266,12 @@ function curl_last_url($ch, &$maxredirect = null)
             }
         } while ($code && --$mr);
         curl_close($rch);
-        if ( ! $mr) {
+        if (! $mr) {
             if ($maxredirect === null) {
-                trigger_error('Too many redirects. When following redirects, libcurl hit the maximum amount.',
-                    E_USER_WARNING);
+                trigger_error(
+                    'Too many redirects. When following redirects, libcurl hit the maximum amount.',
+                    E_USER_WARNING
+                );
             } else {
                 $maxredirect = 0;
             }
@@ -281,4 +283,3 @@ function curl_last_url($ch, &$maxredirect = null)
 
     return $newurl;
 }
-

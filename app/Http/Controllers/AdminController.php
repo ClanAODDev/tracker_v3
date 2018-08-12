@@ -26,7 +26,9 @@ class AdminController extends Controller
         $users = User::with('role', 'member.rank', 'member')->get();
 
         return view('admin.index', compact(
-            'divisions', 'users', 'handles'
+            'divisions',
+            'users',
+            'handles'
         ));
     }
 }

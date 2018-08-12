@@ -44,8 +44,7 @@ class DivisionNoteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public
-    function create()
+    public function create()
     {
         //
     }
@@ -56,8 +55,7 @@ class DivisionNoteController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public
-    function store(
+    public function store(
         Request $request
     ) {
         //
@@ -69,8 +67,7 @@ class DivisionNoteController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function show(
+    public function show(
         $id
     ) {
         //
@@ -82,8 +79,7 @@ class DivisionNoteController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function edit(
+    public function edit(
         $id
     ) {
         //
@@ -96,8 +92,7 @@ class DivisionNoteController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function update(
+    public function update(
         Request $request,
         $id
     ) {
@@ -110,8 +105,7 @@ class DivisionNoteController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public
-    function destroy(
+    public function destroy(
         $id
     ) {
         //

@@ -61,5 +61,4 @@ class DeleteMember extends FormRequest
 
         $note->tags()->attach($this->input('tag_list'));
     }
-
 }
