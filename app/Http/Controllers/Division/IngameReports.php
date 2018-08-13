@@ -64,7 +64,7 @@ trait IngameReports
     protected function getBungieInfo($url, Client $client)
     {
         return json_decode($client->request('GET', $url, [
-            'headers' => ['X-API-Key' => config('services.bungie.api_key')]
+            'headers' => ['X-API-Key' => config('core.bungie.api_key')]
         ])->getBody()->getContents())->Response;
     }
 }

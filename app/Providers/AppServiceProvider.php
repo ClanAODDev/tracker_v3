@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
 
         // register slack api client
         $this->app->singleton(slack::class, function () {
-            return new slack(config('services.slack.token'));
+            return new slack(config('core.slack.token'));
         });
     }
 }
