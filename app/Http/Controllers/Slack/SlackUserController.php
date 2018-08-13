@@ -28,13 +28,13 @@ class SlackUserController extends SlackController
 
         $response = $this->client->users->list();
 
-        if ( ! $response['ok']) {
+        if (! $response['ok']) {
             return $this->getSlackErrorResponse($response);
         }
 
         // omit disabled accounts, slackbot
         $results = collect($response['members'])->map(function ($user) {
-            if ( ! $user['deleted'] && $user['name'] !== 'slackbot' && !$user['is_bot']) {
+            if (! $user['deleted'] && $user['name'] !== 'slackbot' && !$user['is_bot']) {
                 return $user['profile']['email'];
             }
         })->flatten()->filter(function ($email) {

@@ -25,7 +25,7 @@ trait IngameReports
         $requestedClan = $clanId ?: $clans[0];
 
         // invalid clan id
-        if ( ! in_array($requestedClan, $clans)) {
+        if (! in_array($requestedClan, $clans)) {
             return [];
         }
 
@@ -64,7 +64,7 @@ trait IngameReports
     protected function getBungieInfo($url, Client $client)
     {
         return json_decode($client->request('GET', $url, [
-            'headers' => ['X-API-Key' => config('services.bungie.api_key')]
+            'headers' => ['X-API-Key' => config('core.bungie.api_key')]
         ])->getBody()->getContents())->Response;
     }
 }

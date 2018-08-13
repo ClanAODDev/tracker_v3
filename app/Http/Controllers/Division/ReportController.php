@@ -65,8 +65,13 @@ class ReportController extends Controller
         });
 
         return view('division.reports.retention-report', compact(
-            'division', 'members', 'totalRecruitCount',
-            'population', 'range', 'recruits', 'removals'
+            'division',
+            'members',
+            'totalRecruitCount',
+            'population',
+            'range',
+            'recruits',
+            'removals'
         ));
     }
 
@@ -110,8 +115,14 @@ class ReportController extends Controller
         $promotionPeriods = $repository->promotionPeriods();
 
         return view('division.reports.promotions', compact(
-            'members', 'division', 'promotionPeriods', 'year', 'month',
-            'ranks', 'counts'));
+            'members',
+            'division',
+            'promotionPeriods',
+            'year',
+            'month',
+            'ranks',
+            'counts'
+        ));
     }
 
     /**
@@ -182,8 +193,12 @@ class ReportController extends Controller
             })->values();
 
         return view('division.reports.census', compact(
-            'division', 'populations', 'weeklyActive',
-            'comments', 'censuses', 'weeklyTsActive'
+            'division',
+            'populations',
+            'weeklyActive',
+            'comments',
+            'censuses',
+            'weeklyTsActive'
         ));
     }
 }

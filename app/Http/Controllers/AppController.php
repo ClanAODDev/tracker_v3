@@ -7,7 +7,6 @@ use Auth;
 use Carbon\Carbon;
 use Mail;
 
-
 class AppController extends Controller
 {
     /**

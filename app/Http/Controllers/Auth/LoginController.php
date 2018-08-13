@@ -9,7 +9,6 @@ use Auth;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 
-
 class LoginController extends Controller
 {
 

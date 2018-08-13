@@ -34,7 +34,7 @@ class NoteController extends Controller
 
         $division = $member->division;
 
-        if ( ! $division) {
+        if (! $division) {
             return redirect(404);
         }
 
@@ -43,7 +43,10 @@ class NoteController extends Controller
             : Tag::whereDefault(true)->get()->pluck('name', 'id');
 
         return view('member.edit-note', compact(
-            'note', 'division', 'member', 'tags'
+            'note',
+            'division',
+            'member',
+            'tags'
         ));
     }
 

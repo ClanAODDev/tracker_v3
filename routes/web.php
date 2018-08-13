@@ -107,11 +107,15 @@ Route::group(['prefix' => 'divisions/'], function () {
     Route::get('{division}/leave', 'LeaveController@index')->name('leave.index');
     Route::post('{division}/leave', 'LeaveController@store')->name('leave.store');
 
-    Route::get('{division}/structure/edit',
-        'DivisionStructureController@modify')->name('division.edit-structure');
+    Route::get(
+        '{division}/structure/edit',
+        'DivisionStructureController@modify'
+    )->name('division.edit-structure');
     Route::get('{division}/structure', 'DivisionStructureController@show')->name('division.structure');
-    Route::post('{division}/structure',
-        'DivisionStructureController@update')->name('division.update-structure');
+    Route::post(
+        '{division}/structure',
+        'DivisionStructureController@update'
+    )->name('division.update-structure');
 
     Route::get('{division}/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
@@ -138,11 +142,15 @@ Route::group(['prefix' => 'divisions/'], function () {
         ->name('division.retention-report');
     Route::get('{division}/census', 'Division\ReportController@censusReport')
         ->name('division.census');
-    Route::get('{division}/promotions/{month?}/{year?}',
-        'Division\ReportController@promotionsReport')->middleware(['auth'])
+    Route::get(
+        '{division}/promotions/{month?}/{year?}',
+        'Division\ReportController@promotionsReport'
+    )->middleware(['auth'])
         ->name('division.promotions');
-    Route::get('{division}/ingame-report/{customAttr?}',
-        'Division\ReportController@ingameReport')->middleware(['auth'])
+    Route::get(
+        '{division}/ingame-report/{customAttr?}',
+        'Division\ReportController@ingameReport'
+    )->middleware(['auth'])
         ->name('division.ingame-reports');
 
 //    Route::get('{division}/retention/', 'Division\ReportController@retentionReport')->middleware(['auth'])
@@ -178,7 +186,6 @@ Route::group(['prefix' => 'divisions/'], function () {
             Route::patch('{squad}', 'SquadController@update');
             Route::delete('{squad}', 'SquadController@destroy')->name('deleteSquad');
         });
-
     });
 });
 
@@ -223,8 +230,10 @@ Route::post('slack', [
 
 /** Reports */
 Route::group(['prefix' => 'reports'], function () {
-    Route::get('outstanding-inactives',
-        'ReportsController@outstandingMembersReport')->name('reports.outstanding-inactives');
+    Route::get(
+        'outstanding-inactives',
+        'ReportsController@outstandingMembersReport'
+    )->name('reports.outstanding-inactives');
     Route::get('/clan-census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
     Route::get('/clan-ts-report', 'ReportsController@clanTsReport')->name('reports.clan-ts-report');
 });

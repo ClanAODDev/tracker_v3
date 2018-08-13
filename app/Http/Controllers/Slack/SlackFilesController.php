@@ -33,7 +33,7 @@ class SlackFilesController extends SlackController
 
         $response = $this->client->files->list();
 
-        if ( ! $response['ok']) {
+        if (! $response['ok']) {
             return $this->getSlackErrorResponse($response);
         }
 
@@ -46,8 +46,6 @@ class SlackFilesController extends SlackController
         return view('slack.files', compact('storage', 'percentUsage'))->with(
             ['files' => $response['files']]
         );
-
-
     }
 
     /**
@@ -59,7 +57,7 @@ class SlackFilesController extends SlackController
     {
         $response = $this->client->files->list();
 
-        if ( ! count($response['files'])) {
+        if (! count($response['files'])) {
             $this->showErrorToast('No files to delete!');
 
             return redirect()->route('slack.files');

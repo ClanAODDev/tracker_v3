@@ -6,7 +6,6 @@ use App\Division;
 use App\Member;
 use App\Repositories\ClanRepository;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class ReportsController extends Controller
 {
@@ -51,8 +50,13 @@ class ReportsController extends Controller
         });
 
         return view('reports.clan-statistics')->with(compact(
-            'memberCount', 'previousCensus', 'lastYearCensus', 'memberCount',
-            'censuses', 'rankDemographic', 'mismatchedTSMembers'
+            'memberCount',
+            'previousCensus',
+            'lastYearCensus',
+            'memberCount',
+            'censuses',
+            'rankDemographic',
+            'mismatchedTSMembers'
         ));
     }
 

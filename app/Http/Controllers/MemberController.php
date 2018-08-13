@@ -48,7 +48,7 @@ class MemberController extends Controller
      */
     public function search($name = null)
     {
-        if ( ! $name) {
+        if (! $name) {
             $name = request()->name;
         }
 
@@ -183,7 +183,11 @@ class MemberController extends Controller
             ->get();
 
         return view('member.show', compact(
-            'tags', 'member', 'division', 'notes', 'partTimeDivisions'
+            'tags',
+            'member',
+            'division',
+            'notes',
+            'partTimeDivisions'
         ));
     }
 
@@ -219,7 +223,10 @@ class MemberController extends Controller
             : Tag::whereDefault(true)->get()->pluck('name', 'id');
 
         return view('member.edit-member', compact(
-            'member', 'division', 'positions', 'tags'
+            'member',
+            'division',
+            'positions',
+            'tags'
         ));
     }
 

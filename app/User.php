@@ -104,7 +104,7 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
-        if ( ! $this->role instanceof Role) {
+        if (! $this->role instanceof Role) {
             return false;
         }
 
@@ -178,5 +178,4 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
-
 }

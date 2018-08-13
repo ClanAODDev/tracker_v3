@@ -21,9 +21,9 @@ class UnarchiveChannel extends FormRequest
 
     public function persist($client, $channel)
     {
-       return $client->channels->unarchive([
+        return $client->channels->unarchive([
            'channel' => $channel
-       ]);
+        ]);
     }
 
     /**

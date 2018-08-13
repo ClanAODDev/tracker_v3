@@ -69,8 +69,13 @@ class InactiveMemberController extends Controller
             ? 'division.inactive-members-ts' : 'division.inactive-members';
 
         return view('division.inactive-members', compact(
-            'queryingTsInactives', 'division', 'inactiveMembers', 'flaggedMembers',
-            'flagActivity', 'requestPath', 'inactiveTag'
+            'queryingTsInactives',
+            'division',
+            'inactiveMembers',
+            'flaggedMembers',
+            'flagActivity',
+            'requestPath',
+            'inactiveTag'
         ));
     }
 

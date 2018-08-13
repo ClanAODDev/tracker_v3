@@ -14,9 +14,5 @@ class ClanStatisticsController extends Controller
 
     public function __construct(ClanRepository $clanRepository)
     {
-
-
     }
-
-
 }

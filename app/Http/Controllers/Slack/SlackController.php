@@ -23,7 +23,7 @@ class SlackController extends Controller
      */
     protected function getSlackErrorResponse($response)
     {
-        if ( ! isset($response['error'])) {
+        if (! isset($response['error'])) {
             $this->showErrorToast('Something went terribly wrong.');
 
             return redirect()->route('home');

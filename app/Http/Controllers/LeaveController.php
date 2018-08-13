@@ -37,7 +37,9 @@ class LeaveController extends Controller
         }));
 
         return view('leave.index', compact(
-            'division', 'membersWithLeave', 'expiredLeave'
+            'division',
+            'membersWithLeave',
+            'expiredLeave'
         ));
     }
 

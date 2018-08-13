@@ -18,7 +18,7 @@ class DivisionPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($user->isDeveloper()) {
             return true;
         }
     }
@@ -35,6 +35,10 @@ class DivisionPolicy
          * is the user a senior leader?
          * is the user a SGT in the division?
          */
+
+        if ($user->isRole('admin')) {
+            return true;
+        }
 
         if ($user->member->isDivisionLeader($division) &&
             $user->isRole('sr_ldr')
@@ -57,6 +61,15 @@ class DivisionPolicy
         if ($user->member->isDivisionLeader($division) &&
             $user->isRole('sr_ldr')
         ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function show(User $user)
+    {
+        if ($user->isRole('admin')) {
             return true;
         }
 

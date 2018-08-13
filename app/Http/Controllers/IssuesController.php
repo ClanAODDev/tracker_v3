@@ -39,8 +39,7 @@ class IssuesController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public
-    function create(
+    public function create(
         Request $request
     ) {
         $this->authorize('manage-issues', User::class);
@@ -52,7 +51,6 @@ class IssuesController extends Controller
                 'labels' => [$request->labels]
             ]);
         } catch (RuntimeException $exception) {
-
             $this->showErrorToast('Something went wrong...');
 
             Log::error("Github issue report error - " . $exception->getMessage());

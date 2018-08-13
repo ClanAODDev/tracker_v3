@@ -314,7 +314,7 @@ class Member extends Model
      */
     public function isRank($rank)
     {
-        if ( ! $this->rank instanceof Rank) {
+        if (! $this->rank instanceof Rank) {
             return false;
         }
 

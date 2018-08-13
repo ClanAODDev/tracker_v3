@@ -62,7 +62,7 @@ trait RecordsActivity
      */
     public function activity()
     {
-        return $this->morphMany('App\Activity', 'subject')
+        return $this->morphMany(\App\Activity::class, 'subject')
             ->orderBy('created_at', 'desc');
     }
 
@@ -82,6 +82,5 @@ trait RecordsActivity
      */
     public static function feed()
     {
-
     }
 }
