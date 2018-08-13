@@ -184,14 +184,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-//        Laravel\Passport\PassportServiceProvider::class,
-//        Collective\Html\HtmlServiceProvider::class,
+        /**
+         * Custom Providers
+         * Check for auto-discovery
+         */
         Whossun\Toastr\ToastrServiceProvider::class,
-//        GrahamCampbell\GitHub\GitHubServiceProvider::class,
-//        TwigBridge\ServiceProvider::class,
-//        Appstract\BladeDirectives\BladeDirectivesServiceProvider::class,
-//        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
-//        BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class,
 
     ],
 
@@ -242,14 +239,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        // custom aliases
-//        'Form' => Collective\Html\FormFacade::class,
-//        'Html' => Collective\Html\HtmlFacade::class,
+        /**
+         * Custom Aliases
+         * Check for auto-discovery
+         */
         'Toastr' => Whossun\Toastr\Facades\Toastr::class,
-
-//        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
-//        'Twig' => TwigBridge\Facade\Twig::class,
-//        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
 
     ],
 
