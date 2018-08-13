@@ -6,7 +6,6 @@ use App\Division;
 use App\Member;
 use App\Repositories\ClanRepository;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class ReportsController extends Controller
 {

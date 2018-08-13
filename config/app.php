@@ -183,16 +183,15 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
-        Laravel\Passport\PassportServiceProvider::class,
-        Collective\Html\HtmlServiceProvider::class,
+
+//        Laravel\Passport\PassportServiceProvider::class,
+//        Collective\Html\HtmlServiceProvider::class,
         Whossun\Toastr\ToastrServiceProvider::class,
-        GrahamCampbell\GitHub\GitHubServiceProvider::class,
-        TwigBridge\ServiceProvider::class,
-        Appstract\BladeDirectives\BladeDirectivesServiceProvider::class,
-        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
-        BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class,
+//        GrahamCampbell\GitHub\GitHubServiceProvider::class,
+//        TwigBridge\ServiceProvider::class,
+//        Appstract\BladeDirectives\BladeDirectivesServiceProvider::class,
+//        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
+//        BeyondCode\ErdGenerator\ErdGeneratorServiceProvider::class,
 
     ],
 
@@ -244,13 +243,13 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         // custom aliases
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
+//        'Form' => Collective\Html\FormFacade::class,
+//        'Html' => Collective\Html\HtmlFacade::class,
         'Toastr' => Whossun\Toastr\Facades\Toastr::class,
-        'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
-        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
-        'Twig' => TwigBridge\Facade\Twig::class,
-        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
+
+//        'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
+//        'Twig' => TwigBridge\Facade\Twig::class,
+//        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
 
     ],
 
