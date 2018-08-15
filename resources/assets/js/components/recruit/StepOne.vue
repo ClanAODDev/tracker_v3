@@ -57,9 +57,9 @@
 
                     <div class="col-md-4 form-group"
                          :class="{'input': true, 'has-warning': errors.has('forum_name') }">
-                        <label for="forum_name">Forum Name</label>
+                        <label for="forum_name">Desired Forum Name <span class="text-info">*</span></label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
-                               id="forum_name" v-validate="'required'"
+                               id="forum_name" v-validate="{ required: true, regex: /^((?!AOD_|aod_).)*$/}"
                                :disabled="store.inDemoMode" />
                         <span v-show="errors.has('forum_name')"
                               class="help-block">{{ errors.first('forum_name') }}</span>
@@ -72,6 +72,9 @@
                                id="ingame_name" :disabled="store.inDemoMode" />
                     </div>
                 </div>
+            </div>
+            <div class="panel-footer">
+                <p class="text-info">* Provide the forum name the member wishes to use. If it is different than the member's current name, it will be updated to match.</p>
             </div>
         </div>
 

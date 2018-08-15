@@ -16,7 +16,7 @@
             @include('member.partials.edit-member-button', ['member' => $member])
         @endslot
         @slot ('subheading')
-            @if ($member->isPending)
+            @if ($member->isPending())
                 <span class="text-accent"><i class="fa fa-hourglass"></i>  Pending member</span>
             @elseif ($member->division_id == 0)
                 <span class="text-muted"><i class="fa fa-user-times"></i> Ex-AOD</span>

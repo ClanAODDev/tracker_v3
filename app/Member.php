@@ -195,14 +195,6 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function fireteams()
-    {
-        return $this->hasMany('App\Fireteam');
-    }
-
-    /**
      * relationship - member belongs to a squad
      */
     public function squad()
@@ -251,18 +243,30 @@ class Member extends Model
     /**
      * @return mixed
      */
+    public function isPending()
+    {
+        if ($this->memberRequest) {
+            return $this->memberRequest()->whereApprovedAt(null)->exists();
+        }
+
+        return false;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function memberRequest()
+    {
+        return $this->hasOne('App\MemberRequest', 'member_id', 'clan_id');
+    }
+
+    /**
+     * @return mixed
+     */
     public function activeLeave()
     {
         return $this->hasOne(Leave::class)
             ->where('end_date', '>', Carbon::today());
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function handles()
-    {
-        return $this->belongsToMany(Handle::class)->withPivot('value');
     }
 
 
@@ -271,6 +275,14 @@ class Member extends Model
      * Policy object refers to these methods
      * -------------------------------------
      */
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function handles()
+    {
+        return $this->belongsToMany(Handle::class)->withPivot('value');
+    }
 
     /**
      * @param Squad $squad
@@ -314,7 +326,7 @@ class Member extends Model
      */
     public function isRank($rank)
     {
-        if (! $this->rank instanceof Rank) {
+        if ( ! $this->rank instanceof Rank) {
             return false;
         }
 
@@ -328,17 +340,27 @@ class Member extends Model
         return $this->rank->abbreviation === $rank;
     }
 
-//    public function getDivisionHandleAttribute()
-//    {
-//        return $this->handles->where('id', $this->division->handle->id)
-//            ->pluck('pivot.value')->first();
-//    }
-
     public function getUrlParams()
     {
         return [
             $this->clan_id,
             $this->rank->abbreviation . '-' . $this->name
         ];
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function memberRequests()
+    {
+        return $this->hasMany('App\MemberRequest', 'requester_id', 'clan_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function approvedRequests()
+    {
+        return $this->hasMany('App\MemberRequest', 'approver_id', 'clan_id');
     }
 }

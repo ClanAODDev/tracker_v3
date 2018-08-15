@@ -97,6 +97,12 @@
         <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
             <a href="{{ route('admin') }}">Admin CP</a>
         </li>
+        <li class="{{ set_active('admin/member-requests') }}">
+            <a href="{{ route('member-request.index') }}">
+                Member Requests <span class="badge text-info">{{ \App\MemberRequest::pending()->count() }}</span>
+            </a>
+        </li>
+
     @endif
 
     @can('manageSlack', auth()->user())

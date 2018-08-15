@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Division;
 use App\Handle;
 use App\Member;
+use App\MemberRequest;
 use App\Notifications\NewExternalRecruit;
 use App\Notifications\NewMemberRecruited;
 use App\Platoon;
-use App\Squad;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
@@ -59,6 +59,7 @@ class RecruitingController extends Controller
 
     /**
      * @param Request $request
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function submitRecruitment(Request $request)
     {
@@ -68,6 +69,9 @@ class RecruitingController extends Controller
 
         // create or update member record
         $member = $this->createMember($request);
+
+        // request member status
+        $this->createRequest($member, $division);
 
         // notify slack of recruitment
         if ($division->settings()->get('slack_alert_created_member') == "on") {
@@ -117,6 +121,21 @@ class RecruitingController extends Controller
         $member->recordActivity('recruited');
 
         return $member;
+    }
+
+    /**
+     * Create a member status request
+     *
+     * @param $member
+     * @param $division
+     */
+    private function createRequest($member, $division)
+    {
+        MemberRequest::create([
+            'requester_id' => auth()->user()->member->clan_id,
+            'member_id' => $member->clan_id,
+            'division_id' => $division->id,
+        ]);
     }
 
     /**

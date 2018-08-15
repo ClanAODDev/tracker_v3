@@ -244,7 +244,9 @@ Route::group(['prefix' => 'reports'], function () {
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
 
-    Route::get('member-requests', 'MemberRequestController@index')->name('member-request.index');
+    Route::get('member-requests', 'Admin\MemberRequestController@index')->name('member-request.index');
+    Route::post('member-requests/approve/{requestId}', 'Admin\MemberRequestController@approve')
+        ->name('member-request.approve');
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');

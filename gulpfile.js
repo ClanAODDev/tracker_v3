@@ -54,8 +54,8 @@ elixir(function (mix) {
   mix.webpack('census-graph.js');
   mix.webpack('passport.js');
   mix.webpack('recruiting.js');
+  mix.webpack('admin.js');
   mix.webpack('manage-member.js');
-  mix.webpack('fireteams.js');
 });
 
 

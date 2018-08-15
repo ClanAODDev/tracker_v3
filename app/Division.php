@@ -416,4 +416,12 @@ class Division extends Model
     {
         return $this->active;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function memberRequests()
+    {
+        return $this->hasMany(MemberRequest::class);
+    }
 }

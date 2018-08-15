@@ -173,6 +173,12 @@ let Tracker = Tracker || {};
 
     GeneralInit: function () {
 
+      $('.approve-request').click(function (e) {
+        let settings = 'width=900,height=600,scrollbars=yes';
+
+        Tracker.windowOpener($(this).data('path'), 'Tracker | Approve Member', settings);
+      });
+
       $('.remove-member').click(function (e) {
         let member = $(this).data('member-id'),
           removeUrl = 'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=' + member,

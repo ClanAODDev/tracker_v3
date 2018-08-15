@@ -266,7 +266,7 @@ function curl_last_url($ch, &$maxredirect = null)
             }
         } while ($code && --$mr);
         curl_close($rch);
-        if (! $mr) {
+        if ( ! $mr) {
             if ($maxredirect === null) {
                 trigger_error(
                     'Too many redirects. When following redirects, libcurl hit the maximum amount.',
@@ -282,4 +282,22 @@ function curl_last_url($ch, &$maxredirect = null)
     }
 
     return $newurl;
+}
+
+/**
+ * @param \App\MemberRequest $request
+ * @return string
+ */
+function approveMemberPath(App\MemberRequest $request)
+{
+    $base = "http://www.clanaod.net/forums/modcp/aodmember.php?do=addaod&";
+
+    $args = [
+        'userid' => $request->member->clan_id,
+        'aodname' => "AOD_" . $request->member->name,
+        'division' => $request->division->name,
+        'rank' => $request->member->rank->name,
+    ];
+
+    return $base . http_build_query($args);
 }

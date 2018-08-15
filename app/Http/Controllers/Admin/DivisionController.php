@@ -10,6 +10,11 @@ use App\Http\Requests\CreateDivision;
 
 class DivisionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function edit(Division $division)
     {
         $this->authorize('show', $division);
