@@ -28,7 +28,7 @@ class DivisionNoteController extends Controller
     {
         $tags = $division->notes->pluck('tags')->flatten()->unique('slug');
 
-        $notes = ($tag->exists)
+        $notes = (request('tag') && $tag->exists)
             ? $division->notes->filter(function ($note) use ($tag) {
                 return $note->tags->contains($tag->id);
             })
