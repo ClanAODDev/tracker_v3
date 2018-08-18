@@ -83,6 +83,11 @@ Route::post('issues', 'IssuesController@create')->name('github.create-issue');
 Route::get('changelog', 'AppController@changelog')->name('changelog');
 
 /**
+ * Member requests
+ */
+Route::get('member-requests', 'MemberRequestController@index')->name('member-requests.index');
+
+/**
  * Division endpoints
  */
 Route::group(['prefix' => 'divisions/{division}'], function () {
@@ -130,8 +135,8 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     /**
      * Member requests
      */
-    Route::get('/member-requests', 'Division\MemberRequestsController@index')->name('division.member-requests');
-    Route::post('/member-requests/cancel/{memberRequest}', 'Division\MemberRequestsController@cancel')->name('division.member-requests.cancel');
+    Route::get('/member-requests', 'Division\MemberRequestController@index')->name('division.member-requests');
+    Route::post('/member-requests/cancel/{memberRequest}', 'Division\MemberRequestController@cancel')->name('division.member-requests.cancel');
 
     /**
      * Recruiting Process
@@ -245,6 +250,7 @@ Route::group(['prefix' => 'reports'], function () {
     Route::get('/clan-census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
     Route::get('/clan-ts-report', 'ReportsController@clanTsReport')->name('reports.clan-ts-report');
 });
+
 
 /**
  * Admin Routes

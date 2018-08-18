@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Division;
 use App\Http\Controllers\Controller;
 use App\MemberRequest;
 
-class MemberRequestsController extends Controller
+class MemberRequestController extends Controller
 {
     public function __construct()
     {
