@@ -23,6 +23,29 @@
             </div>
         </div>
 
+        {{--<div class="row m-t-xl">
+            <div class="col-md-12">
+                <h4>12 Aug 2018 - 3.4.0</h4>
+                <hr />
+                <ul>
+                    <li>Implement member status requests</li>
+                    <ul>
+                        <li>Administrators will now process member status requests through the tracker. A member's status will reflect whether or not status has been approved by an administrator.</li>
+                    </ul>
+                </ul>
+            </div>
+        </div>--}}
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
+                <h4>18 Aug 2018 - 3.4.0</h4>
+                <hr />
+                <ul>
+                    <li>Update application framework to 5.5</li>
+                </ul>
+            </div>
+        </div>
+
         <div class="row m-t-xl">
             <div class="col-md-12">
                 <h4>02 Aug 2018 - 3.3.1</h4>
