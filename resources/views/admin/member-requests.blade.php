@@ -17,33 +17,15 @@
     @endcomponent
 
     <div class="container-fluid">
-        <div id="admin-container">
+
+        <h2>Member Requests</h2>
+        <p>Approving a request will open a new window, where the member will be processed into AOD. Simultaneously, the request will be approved and the requester will be notified.</p>
+
+        <div id="admin-container" class="m-t-lg">
             <member-requests :requests="{{ $pending }}">
-                <i class="fa fa-refresh fa-spinner text-info"></i> Loading...
+                <i class="fa fa-refresh fa-spin text-info"></i> Loading...
             </member-requests>
         </div>
-
-        @if (count($approved))
-            <h4 class="m-t-lg">PAST REQUESTS</h4>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Member</th>
-                    <th>Division</th>
-                    <th>Approved by</th>
-                    <th>Date Approved</th>
-                </tr>
-                </thead>
-                @foreach ($approved as $request)
-                    <tr>
-                        <td><code>AOD_{{ $request->member->name }}</code></td>
-                        <td>{{ $request->division->name }}</td>
-                        <td>{{ $request->approver->name }}</td>
-                        <td>{{ $request->updated_at }}</td>
-                    </tr>
-                @endforeach
-            </table>
-        @endif
     </div>
 
 @stop

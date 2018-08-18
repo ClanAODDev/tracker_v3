@@ -146,9 +146,9 @@ store.createMember = () => {
       platoon: store.platoon,
       squad: store.squad
     }).then(function (response) {
-      toastr.success('Your recruit has been added to the tracker');
+      toastr.success('Your recruit has been added to the tracker and a member status has been submitted!');
     }).catch(function (error) {
-      toastr.error(error, 'The creation process could not be completed');
+      toastr.error(error, 'The creation process could not be completed...');
     });
   }
 };

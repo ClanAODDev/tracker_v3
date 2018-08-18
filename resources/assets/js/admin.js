@@ -2,7 +2,7 @@ require('./bootstrap');
 
 Vue.component(
   'member-requests',
-  require('./components/admin/ApproveRequests.vue')
+  require('./components/admin/MemberRequests.vue')
 );
 
 const app = new Vue({

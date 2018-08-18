@@ -355,12 +355,4 @@ class Member extends Model
     {
         return $this->hasMany('App\MemberRequest', 'requester_id', 'clan_id');
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function approvedRequests()
-    {
-        return $this->hasMany('App\MemberRequest', 'approver_id', 'clan_id');
-    }
 }

@@ -294,9 +294,10 @@ function approveMemberPath(App\MemberRequest $request)
 
     $args = [
         'userid' => $request->member->clan_id,
-        'aodname' => "AOD_" . $request->member->name,
         'division' => $request->division->name,
         'rank' => $request->member->rank->name,
+        // left empty and at the end so it can be adjusted
+        'aodname' => "",
     ];
 
     return $base . http_build_query($args);

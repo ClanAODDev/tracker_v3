@@ -23,23 +23,32 @@ class MemberRequestController extends Controller
         $this->authorize('manage', MemberRequest::class);
 
         $pending = MemberRequest::pending()
-            ->with('member', 'requester', 'division')
+            ->with('member', 'member.rank', 'requester', 'division')
             ->get();
 
         $approved = MemberRequest::approved()
-            ->with('member', 'approver', 'division')
+            ->with('member', 'member.rank', 'approver', 'division')
             ->get();
 
         return view('admin.member-requests', compact('pending', 'approved'));
     }
 
-    public function approve($requestId)
+    public function approve(MemberRequest $memberRequest)
+    {
+        $this->authorize('manage', MemberRequest::class);
+
+        $memberRequest->approve();
+
+        return $request;
+    }
+
+    public function deny($requestId)
     {
         $this->authorize('manage', MemberRequest::class);
 
         $request = MemberRequest::findOrFail($requestId);
 
-        $request->approve();
+        $request->deny();
 
         return $request;
     }

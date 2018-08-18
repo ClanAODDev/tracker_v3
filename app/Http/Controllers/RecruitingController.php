@@ -99,7 +99,6 @@ class RecruitingController extends Controller
         $member->recruiter_id = auth()->user()->member->clan_id;
         $member->rank_id = 1;
         $member->position_id = 1;
-        $member->pending_member = true;
         $member->division_id = $division->id;
         $member->save();
 

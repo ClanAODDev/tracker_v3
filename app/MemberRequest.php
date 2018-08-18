@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class MemberRequest extends Model
 {
-    protected $appends = ['approvePath'];
+    protected $appends = ['approvePath', 'timeWaiting'];
 
     protected $guarded = [];
+
+    protected $dates = ['approved_at', 'denied_at', 'cancelled_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -48,7 +50,9 @@ class MemberRequest extends Model
      */
     public function scopePending($query)
     {
-        return $query->whereApprovedAt(null);
+        return $query->whereApprovedAt(null)
+            ->whereDeniedAt(null)
+            ->whereCancelledAt(null);
     }
 
     /**
@@ -58,6 +62,15 @@ class MemberRequest extends Model
     public function scopeApproved($query)
     {
         return $query->where('approved_at', '!=', null);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeDenied($query)
+    {
+        return $query->where('denied_at', '!=', null);
     }
 
     /**
@@ -77,5 +90,30 @@ class MemberRequest extends Model
             'approver_id' => auth()->user()->member->clan_id,
             'approved_at' => now()
         ]);
+    }
+
+    /**
+     * Deny a member request
+     */
+    public function deny()
+    {
+        $this->update([
+            'denied_at' => now()
+        ]);
+    }
+
+    /**
+     * Cancel a member request
+     */
+    public function cancel()
+    {
+        $this->update([
+            'cancelled_at' => now()
+        ]);
+    }
+
+    public function getTimeWaitingAttribute()
+    {
+        return $this->created_at->diffForHumans(null, true);
     }
 }
