@@ -26,13 +26,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
-
-        try {
-
-            $this->checkForAODSession();
-        } catch (\Exception $exception) {
-            dump($exception);
-        }
     }
 
     /**
@@ -42,8 +35,6 @@ class LoginController extends Controller
      */
     private function checkForAODSession()
     {
-        dump(\URL::previous());
-
         if ( ! isset($_COOKIE['aod_sessionhash'])) {
             return;
         }
@@ -251,7 +242,14 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        // $this->checkForAODSession();
+        dump(request()->server('HTTP_REFERER'));
+        
+        try {
+            $this->checkForAODSession();
+        } catch (\Exception $exception) {
+            dump($exception);
+        }
+
         return view('auth.login');
     }
 
