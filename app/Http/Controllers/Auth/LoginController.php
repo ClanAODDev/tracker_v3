@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\User;
-use http\Exception;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 
@@ -26,56 +25,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
-    }
-
-    /**
-     * Check if an AOD session exists
-     *
-     * @return bool|\Illuminate\Http\RedirectResponse|void
-     */
-    private function checkForAODSession()
-    {
-        if ( ! isset($_COOKIE['aod_sessionhash'])) {
-            return;
-        }
-
-        $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
-
-        if ( ! $data) {
-            return;
-        }
-
-        if (in_array($data->loggedin, [1, 2])) {
-            $username = str_replace('aod_', '', strtolower($data->username));
-
-            if ($user = User::whereName($username)->first()) {
-                \Auth::login($user);
-
-                return redirect()->intended();
-            }
-
-            if ($this->registerNewUser($username)) {
-                return redirect()->intended();
-            }
-        }
-
-    }
-
-    /**
-     * @param $aod_sessionhash
-     * @return bool|null
-     */
-    private function requestSessionInfo($aod_sessionhash)
-    {
-        try {
-            $results = \DB::connection('aod_forums')
-                ->select("CALL check_session('{$aod_sessionhash}')");
-
-            return $results[0] ?? false;
-
-        } catch (Exception $exception) {
-            return false;
-        }
     }
 
     /**
@@ -138,12 +87,6 @@ class LoginController extends Controller
 
     private function attemptLogin($request)
     {
-        if (app()->environment() === 'local') {
-            Auth::login(User::whereName('Guybrush')->first());
-
-            return true;
-        }
-
         if ($this->validatesCredentials($request)) {
             $username = str_replace('aod_', '', strtolower($request->username));
 
@@ -242,13 +185,13 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        dump(request()->server('HTTP_REFERER'));
-        
-        try {
-            $this->checkForAODSession();
-        } catch (\Exception $exception) {
-            dump($exception);
-        }
+//        dump(request()->server('HTTP_REFERER'));
+//
+//        try {
+//            $this->checkForAODSession();
+//        } catch (\Exception $exception) {
+//            dump($exception);
+//        }
 
         return view('auth.login');
     }
