@@ -27,7 +27,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
 
-        $this->checkForAODSession();
+        try {
+            $this->checkForAODSession();
+        } catch (\Exception $exception) {
+            dump($exception);
+        }
     }
 
     /**
@@ -39,7 +43,7 @@ class LoginController extends Controller
             $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
 
             if (in_array($data->loggedin, [1, 2])) {
-                $username = tr_replace('aod_', '', strtolower($data->username));
+                $username = str_replace('aod_', '', strtolower($data->username));
 
                 if ($user = User::whereName($username)->first()) {
                     \Auth::login($user);
