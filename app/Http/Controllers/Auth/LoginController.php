@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\User;
-use Auth;
+use http\Exception;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 
@@ -26,11 +26,74 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
+
+        $this->checkForAODSession();
+    }
+
+    /**
+     *      * Check if an AOD session exists
+     *           */
+    private function checkForAODSession()
+    {
+        if (isset($_COOKIE['aod_sessionhash']) && $hash = $_COOKIE['aod_sessionhash']) {
+            $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
+
+            if (in_array($data->loggedin, [1, 2])) {
+                $username = tr_replace('aod_', '', strtolower($data->username));
+
+                if ($user = User::whereName($username)->first()) {
+                    \Auth::login($user);
+
+                    return redirect()->intended();
+                }
+
+                if ($this->registerNewUser($username)) {
+                    return redirect()->intended();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $aod_sessionhash
+     * @return bool|null
+     */
+    private function requestSessionInfo($aod_sessionhash)
+    {
+        try {
+            $results = \DB::connection('aod_forums')
+                ->select("CALL heck_session('{$aod_sessionhash}')");
+
+            return $results[0];
+
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $username
+     * @return bool
+     */
+    private function registerNewUser($username)
+    {
+        $member = Member::whereClanId($this->clanId)->firstOrFail();
+
+        $user = new User;
+        $user->name = $username;
+        $user->email = $this->email;
+        $user->member_id = $member->id;
+        $user->save();
+
+        Auth::login($user);
+
+        return true;
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
     {
@@ -90,24 +153,6 @@ class LoginController extends Controller
         if ($user->email !== $this->email) {
             $user->update(['email' => $this->email]);
         }
-    }
-
-    /**
-     * @param $username
-     */
-    private function registerNewUser($username)
-    {
-        $member = Member::whereClanId($this->clanId)->firstOrFail();
-
-        $user = new User;
-        $user->name = $username;
-        $user->email = $this->email;
-        $user->member_id = $member->id;
-        $user->save();
-
-        Auth::login($user);
-
-        return true;
     }
 
     /**
@@ -178,6 +223,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        // $this->checkForAODSession();
         return view('auth.login');
     }
 
