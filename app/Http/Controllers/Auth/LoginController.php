@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Member;
 use App\User;
 use http\Exception;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -39,23 +38,26 @@ class LoginController extends Controller
      *           */
     private function checkForAODSession()
     {
-        if (isset($_COOKIE['aod_sessionhash']) && $hash = $_COOKIE['aod_sessionhash']) {
-            $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
+        if ( ! isset($_COOKIE['aod_sessionhash'])) {
+            return false;
+        }
 
-            if (in_array($data->loggedin, [1, 2])) {
-                $username = str_replace('aod_', '', strtolower($data->username));
+        $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
 
-                if ($user = User::whereName($username)->first()) {
-                    \Auth::login($user);
+        if (in_array($data->loggedin, [1, 2])) {
+            $username = str_replace('aod_', '', strtolower($data->username));
 
-                    return redirect()->intended();
-                }
+            if ($user = User::whereName($username)->first()) {
+                \Auth::login($user);
 
-                if ($this->registerNewUser($username)) {
-                    return redirect()->intended();
-                }
+                return redirect()->intended();
+            }
+
+            if ($this->registerNewUser($username)) {
+                return redirect()->intended();
             }
         }
+
     }
 
     /**
@@ -81,17 +83,31 @@ class LoginController extends Controller
      */
     private function registerNewUser($username)
     {
-        $member = Member::whereClanId($this->clanId)->firstOrFail();
+        if ($member = $this->isCurrentAODMember($username)) {
 
-        $user = new User;
-        $user->name = $username;
-        $user->email = $this->email;
-        $user->member_id = $member->id;
-        $user->save();
+            $user = new User;
+            $user->name = $username;
+            $user->email = $this->email;
+            $user->member_id = $member->id;
+            $user->save();
 
-        Auth::login($user);
+            Auth::login($user);
 
-        return true;
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isCurrentAODMember($username)
+    {
+        $member = Member::whereClanId($this->clanId)->first();
+
+        if ($member->exists()) {
+            return $member;
+        }
+
+        return false;
     }
 
     /**
