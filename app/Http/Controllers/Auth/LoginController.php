@@ -62,7 +62,7 @@ class LoginController extends Controller
     {
         try {
             $results = \DB::connection('aod_forums')
-                ->select("CALL heck_session('{$aod_sessionhash}')");
+                ->select("CALL check_session('{$aod_sessionhash}')");
 
             return $results[0];
 
