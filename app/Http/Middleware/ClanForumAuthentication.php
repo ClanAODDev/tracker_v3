@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\User;
+use Auth;
 use Closure;
 
 class ClanForumAuthentication
@@ -17,10 +18,10 @@ class ClanForumAuthentication
     public function handle($request, Closure $next)
     {
         if (app()->environment() === 'local') {
-            \Auth::login(User::whereName('Guybrush')->first());
+            Auth::login(User::whereName('Guybrush')->first());
         }
 
-        if (\Auth::guest()) {
+        if (Auth::guest()) {
 
             $sessionData = $this->getAODSession();
 
@@ -40,7 +41,7 @@ class ClanForumAuthentication
                 );
             }
 
-            \Auth::login($user);
+            Auth::login($user);
         }
 
         return $next($request);
@@ -86,6 +87,7 @@ class ClanForumAuthentication
     {
         if ($authUser = User::whereClanId($shibUid)->first()) {
             $this->handleRoleAssignment($authUser);
+
             return $authUser;
         }
 
