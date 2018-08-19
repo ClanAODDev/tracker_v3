@@ -86,7 +86,7 @@ class LoginController extends Controller
      */
     private function registerNewUser($username)
     {
-        if ($member = $this->isCurrentAODMember($username)) {
+        if ($member = $this->isCurrentAODMember()) {
 
             $user = new User;
             $user->name = $username;
@@ -102,15 +102,13 @@ class LoginController extends Controller
         return false;
     }
 
-    private function isCurrentAODMember($username)
+    /**
+     * @param $username
+     * @return bool
+     */
+    private function isCurrentAODMember()
     {
-        $member = Member::whereClanId($this->clanId)->first();
-
-        if ($member->exists()) {
-            return $member;
-        }
-
-        return false;
+        return Member::whereClanId($this->clanId)->first() ?? false;
     }
 
     /**
