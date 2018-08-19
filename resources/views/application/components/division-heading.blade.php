@@ -3,7 +3,7 @@
         {{ $icon }}
     </div>
     <div class="header-title">
-        <h3 class="m-b-xs">
+        <h3 class="m-b-xs text-uppercase">
             {{ $heading }}
         </h3>
         <small class="slight">

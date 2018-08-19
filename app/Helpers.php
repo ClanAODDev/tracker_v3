@@ -1,5 +1,7 @@
 <?php
 
+use App\MemberRequest;
+
 function bytesToHuman($bytes)
 {
     $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
@@ -51,7 +53,7 @@ function ordSuffix($n)
  * Perform an AOD forum function (pm or email)
  *
  * @param array $ids
- * @param $action
+ * @param $action (email, showThread, forumProfile, pm, createThread, replyToThread)
  * @return mixed
  */
 function doForumFunction(array $ids, $action)
@@ -285,17 +287,17 @@ function curl_last_url($ch, &$maxredirect = null)
 }
 
 /**
- * @param \App\MemberRequest $request
+ * @param MemberRequest $memberRequest
  * @return string
  */
-function approveMemberPath(App\MemberRequest $request)
+function approveMemberPath(MemberRequest $memberRequest)
 {
     $base = "http://www.clanaod.net/forums/modcp/aodmember.php?do=addaod&";
 
     $args = [
-        'userid' => $request->member->clan_id,
-        'division' => $request->division->name,
-        'rank' => $request->member->rank->name,
+        'userid' => $memberRequest->member->clan_id,
+        'division' => $memberRequest->division->name,
+        'rank' => $memberRequest->member->rank->name,
         // left empty and at the end so it can be adjusted
         'aodname' => "",
     ];

@@ -10,6 +10,13 @@ class MemberRequestPolicy
 {
     use HandlesAuthorization;
 
+    public function before()
+    {
+        if (auth()->user()->isDeveloper()) {
+            return true;
+        }
+    }
+
     /**
      * @param User $user
      * @return bool
@@ -23,6 +30,33 @@ class MemberRequestPolicy
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param MemberRequest $memberRequest
+     * @return bool
+     */
+    public function edit(User $user, MemberRequest $memberRequest)
+    {
+        if ($memberRequest->isApproved() || ! $memberRequest->isCancelled()) {
+            return false;
+        }
+
+        if ($user->isRole(['sr_ldr', 'admin'])) {
+            return true;
+        }
+
+        if ($memberRequest->requester_id === $user->member->clan_id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
+     * @param MemberRequest $request
+     * @return bool
+     */
     public function cancel(User $user, MemberRequest $request) {
         if ($user->isRole(['sr_ldr', 'admin'])) {
             return true;

@@ -246,7 +246,7 @@ class Member extends Model
     public function isPending()
     {
         if ($this->memberRequest) {
-            return $this->memberRequest()->whereApprovedAt(null)->exists();
+            return $this->memberRequest()->pending()->exists();
         }
 
         return false;

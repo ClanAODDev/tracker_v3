@@ -1,26 +1,25 @@
-
-<h4 class="m-t-xl">DENIED <span class="badge">{{ $requests['denied']->count() }}</span></h4>
-
-@if ($requests['denied']->count())
-    <div class="panel panel-filled" id="{{ $division->abbreviation }}">
+@if ($requests['cancelled']->count())
+    <h4 class="m-t-xl">CANCELLED <span class="badge">{{ $requests['cancelled']->count() }}</span></h4>
+    <div class="panel panel-filled panel-c-danger" id="{{ $division->abbreviation }}">
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                 <tr>
                     <th>Member Name</th>
                     <th>Recruiter Name</th>
+                    <th>Cancelled</th>
+                    <th class="text-center">Resubmit</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ($requests['denied'] as $request)
+                @foreach ($requests['cancelled'] as $request)
                     <tr>
-                        <td>{{ $request->member->name }}</td>
+                        <td>{{ $request->name }}</td>
                         <td>{{ $request->requester->name }}</td>
+                        <td>{{ $request->cancelled_at->diffForHumans() }}</td>
                         <td>
-                            <form action="{{ route('division.member-requests.cancel', [$division, $request->id]) }}" method="post">
-                                {{ csrf_field() }}
-                                <button type="submit" class="btn btn-block btn-danger">Cancel</button>
-                            </form>
+                            <a href="{{ route('division.member-requests.edit', [$division, $request]) }}"
+                               class="btn btn-success btn-block"><i class="fa fa-refresh"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -28,6 +27,4 @@
             </table>
         </div>
     </div>
-@else
-    <p><span class="text-success">Success!</span> No member requests are currently pending</p>
 @endif

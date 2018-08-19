@@ -4,6 +4,7 @@ namespace App\AOD\MemberSync;
 
 use App\Division;
 use App\Member;
+use App\MemberRequest;
 use App\Platoon;
 use App\Squad;
 use Carbon\Carbon;
@@ -31,6 +32,8 @@ class SyncMemberData
         });
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
+
+        // handle cleanup of member requests, mark error if approved_at is older than an hour
 
         if (! count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
@@ -102,7 +105,6 @@ class SyncMemberData
 
         $member->posts = $record['postcount'];
         $member->ts_unique_id = $record['tsid'];
-        $member->pending_member = false;
 
         // persist
         $member->save();

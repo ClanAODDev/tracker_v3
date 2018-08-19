@@ -29,7 +29,7 @@
             <a href="{{ route('division.inactive-members', $division) }}">Manage Inactives</a>
         </li>
             <li>
-                <a href="{{ route('division.member-requests', $division) }}">Member Requests</a>
+                <a href="{{ route('division.member-requests.index', $division) }}">Member Requests</a>
             </li>
         <li>
             <a href="{{ route('leave.index', $division) }}">

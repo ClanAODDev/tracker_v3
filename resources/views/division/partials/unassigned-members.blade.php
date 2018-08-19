@@ -1,4 +1,4 @@
-@if (count($division->unassigned))
+@if ($division->unassigned->count())
     <div class="panel panel-c-accent panel-filled unassigned-container">
         <div class="panel-body">
             <h5>Unassigned members</h5>

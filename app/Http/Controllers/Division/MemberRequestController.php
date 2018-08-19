@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Division;
 
+use App\Division;
 use App\Http\Controllers\Controller;
 use App\MemberRequest;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class MemberRequestController extends Controller
 {
@@ -12,22 +15,44 @@ class MemberRequestController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         if (auth()->user()->isRole(['sr_ldr', 'admin'])) {
-            $requests = collect([
-                'denied' => request()->division->memberRequests()->denied()->get(),
-                'pending' => request()->division->memberRequests()->pending()->get()
-            ]);
+            $requests = request()->division->memberRequests()->with('member', 'requester')->get();
         } else {
-            $requests = collect([
-                'denied' => auth()->user()->member->memberRequests()->denied()->get(),
-                'pending' => auth()->user()->member->memberRequests()->pending()->get(),
-            ]);
+            $requests = auth()->user()->member->memberRequests()->with('member', 'requester')->get();
         }
+
+        $requests = collect([
+            'pending' => $requests->filter(function ($request) {
+                return $request->approved_at === null && $request->cancelled_at === null;
+            }),
+            'cancelled' => $requests->filter(function ($request) {
+                return $request->cancelled_at != null;
+            }),
+        ]);
+
 
         return view('division.member-requests', compact('requests'))
             ->with(['division' => request()->division]);
+    }
+
+    /**
+     * @param Division $division
+     * @param MemberRequest $memberRequest
+     * @return MemberRequest
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit(Division $division, MemberRequest $memberRequest)
+    {
+        $this->authorize('edit', $memberRequest);
+
+        $memberRequest->load('member', 'requester', 'division');
+
+        return view('division.member-request.edit', compact('memberRequest', 'division'));
     }
 
     public function cancel($division, MemberRequest $memberRequest)
@@ -38,6 +63,39 @@ class MemberRequestController extends Controller
 
         $this->showToast('Member request has been cancelled!');
 
-        return redirect(route('division.member-requests', $division));
+        return redirect(route('division.member-requests.index', $division));
+    }
+
+    public function destroy(MemberRequest $memberRequest)
+    {
+        $this->authorize('destroy', $memberRequest);
+
+        $memberRequest->delete();
+
+        $this->showToast('Member request has been destroyed!');
+
+        return redirect(route('division.member-requests.index'));
+    }
+
+    public function update(Division $division, MemberRequest $memberRequest, Request $request)
+    {
+        $this->authorize('edit', $memberRequest);
+
+        $request->validate([
+            'name' => Rule::unique('members')->ignore($memberRequest->member->id),
+            'division' => 'required',
+        ]);
+
+        $memberRequest->update([
+            'cancelled_at' => null,
+        ]);
+
+        $memberRequest->member->update([
+            'name' => $request->name,
+        ]);
+
+        $this->showToast('Member request resubmitted!');
+
+        return redirect(route('division.member-requests.index', $division));
     }
 }

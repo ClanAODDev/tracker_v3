@@ -11,7 +11,7 @@
                     <th>Division</th>
                     <th class="text-center">Waiting for</th>
                     <th class="text-center col-xs-2">Approve</th>
-                    <th class="text-center col-xs-2">Deny</th>
+                    <th class="text-center col-xs-2">Cancel</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -19,7 +19,7 @@
                 <member-request :data="request"
                                 v-for="(request, index) in requests"
                                 @approved="(e) => { return approve(e, request, index)}"
-                                @denied="deny(request, index)"
+                                @cancelled="cancel(request, index)"
                                 :key="request.id"></member-request>
                 </tbody>
 
@@ -51,7 +51,7 @@
         console.log(event.path);
         let settings = 'width=900,height=600,scrollbars=yes';
         window.open(event.path, 'Tracker | Approve Member', settings, true);
-        axios.post(window.Laravel.appPath + '/admin/member-requests/approve/' + request.id)
+        axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
           .then((response) => {
             this.dataRequests.splice(index, 1);
             toastr.success('Approved!');
@@ -63,8 +63,8 @@
           });
       },
 
-      deny (request, index) {
-        axios.post(window.Laravel.appPath + '/admin/member-requests/deny/' + request.id)
+      cancel (request, index) {
+        axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/cancel')
           .then((response) => {
             this.dataRequests.splice(index, 1);
             toastr.success('Denied!');

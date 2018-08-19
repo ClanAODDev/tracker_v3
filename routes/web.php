@@ -83,11 +83,6 @@ Route::post('issues', 'IssuesController@create')->name('github.create-issue');
 Route::get('changelog', 'AppController@changelog')->name('changelog');
 
 /**
- * Member requests
- */
-Route::get('member-requests', 'MemberRequestController@index')->name('member-requests.index');
-
-/**
  * Division endpoints
  */
 Route::group(['prefix' => 'divisions/{division}'], function () {
@@ -112,14 +107,10 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     Route::get('/leave', 'LeaveController@index')->name('leave.index');
     Route::post('/leave', 'LeaveController@store')->name('leave.store');
 
-    Route::get(
-        '/structure/edit',
-        'DivisionStructureController@modify'
+    Route::get('/structure/edit', 'DivisionStructureController@modify'
     )->name('division.edit-structure');
     Route::get('/structure', 'DivisionStructureController@show')->name('division.structure');
-    Route::post(
-        '/structure',
-        'DivisionStructureController@update'
+    Route::post('/structure', 'DivisionStructureController@update'
     )->name('division.update-structure');
 
     Route::get('/inactive-members/{platoon?}', 'InactiveMemberController@index')
@@ -135,8 +126,16 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     /**
      * Member requests
      */
-    Route::get('/member-requests', 'Division\MemberRequestController@index')->name('division.member-requests');
-    Route::post('/member-requests/cancel/{memberRequest}', 'Division\MemberRequestController@cancel')->name('division.member-requests.cancel');
+    Route::get('/member-requests', 'Division\MemberRequestController@index')
+        ->name('division.member-requests.index');
+    Route::get('/member-requests/{memberRequest}/edit', 'Division\MemberRequestController@edit')
+        ->name('division.member-requests.edit');
+    Route::post('/member-requests/{memberRequest}/cancel', 'Division\MemberRequestController@cancel')
+        ->name('division.member-requests.cancel');
+    Route::patch('/member-requests/{memberRequest}', 'Division\MemberRequestController@update')
+        ->name('division.member-requests.update');
+    Route::delete('/member-requests/{memberRequest}/delete', 'Division\MemberRequestController@destroy')
+        ->name('division.member-requests.delete');
 
     /**
      * Recruiting Process
@@ -259,10 +258,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'AdminController@index')->name('admin');
 
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
-    Route::post('member-requests/approve/{requestId}', 'Admin\MemberRequestController@approve')
-        ->name('member-request.approve');
-    Route::post('member-requests/deny/{requestId}', 'Admin\MemberRequestController@deny')
-        ->name('member-request.approve');
+    Route::post('member-requests/{requestId}/approve', 'Admin\MemberRequestController@approve')
+        ->name('admin.member-request.approve');
+    Route::post('member-requests/{requestId}/cancel', 'Admin\MemberRequestController@cancel')
+        ->name('admin.member-request.cancel');
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');

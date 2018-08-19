@@ -20,7 +20,6 @@ class CreateMemberRequestsTable extends Migration
             $table->unsignedInteger('division_id');
             $table->unsignedInteger('approver_id')->nullable();
             $table->timestamp('approved_at')->nullable();
-            $table->timestamp('denied_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
         });

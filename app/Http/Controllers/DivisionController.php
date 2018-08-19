@@ -79,6 +79,8 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
+        $division->load('unassigned.rank');
+
         $censusCounts = $this->division->censusCounts($division);
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();

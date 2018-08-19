@@ -23,7 +23,7 @@
             </button>
         </td>
         <td>
-            <button @click="deny()"
+            <button @click="cancel()"
                     class="btn btn-danger btn-block">
                 <i class="fa fa-trash text-danger"></i>
             </button>
@@ -41,9 +41,9 @@
       approve () {
         this.$emit('approved', {id: this.id, path: this.path});
       },
-      deny () {
+      cancel () {
         if (confirm('Are you sure?')) {
-          this.$emit('denied', this.id);
+          this.$emit('cancelled', this.id);
         }
       },
       buildPath () {
@@ -54,7 +54,7 @@
       return {
         editing: false,
         id: this.data.id,
-        name: 'AOD_' + this.data.member.name,
+        name: this.data.name,
         division: this.data.division.name,
         path: ''
       };

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MemberRequest extends Model
 {
-    protected $appends = ['approvePath', 'timeWaiting'];
+    protected $appends = ['approvePath', 'timeWaiting', 'name'];
 
     protected $guarded = [];
 
@@ -50,9 +50,8 @@ class MemberRequest extends Model
      */
     public function scopePending($query)
     {
-        return $query->whereApprovedAt(null)
-            ->whereDeniedAt(null)
-            ->whereCancelledAt(null);
+        return $query->where('approved_at', null)
+            ->where('cancelled_at', null);
     }
 
     /**
@@ -65,12 +64,28 @@ class MemberRequest extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function isApproved()
+    {
+        return $this->approved_at != null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return $this->cancelled_at != null;
+    }
+
+    /**
      * @param $query
      * @return mixed
      */
-    public function scopeDenied($query)
+    public function scopeCancelled($query)
     {
-        return $query->where('denied_at', '!=', null);
+        return $query->where('cancelled_at', '!=', null);
     }
 
     /**
@@ -88,17 +103,8 @@ class MemberRequest extends Model
     {
         $this->update([
             'approver_id' => auth()->user()->member->clan_id,
-            'approved_at' => now()
-        ]);
-    }
-
-    /**
-     * Deny a member request
-     */
-    public function deny()
-    {
-        $this->update([
-            'denied_at' => now()
+            'approved_at' => now(),
+            'cancelled_at' => null,
         ]);
     }
 
@@ -115,5 +121,13 @@ class MemberRequest extends Model
     public function getTimeWaitingAttribute()
     {
         return $this->created_at->diffForHumans(null, true);
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        return "AOD_" . $this->member->name;
     }
 }
