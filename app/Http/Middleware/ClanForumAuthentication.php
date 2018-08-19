@@ -45,7 +45,7 @@ class ClanForumAuthentication
             Auth::login($user);
         }
 
-        return $next($request);
+        return redirect()->intended();
     }
 
     /**
