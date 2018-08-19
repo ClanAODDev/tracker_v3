@@ -94,7 +94,7 @@ class LoginController extends Controller
             $user->member_id = $member->id;
             $user->save();
 
-            Auth::login($user);
+            \Auth::login($user);
 
             return true;
         }
