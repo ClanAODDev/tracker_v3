@@ -88,8 +88,6 @@ class ClanForumAuthentication
     public function registerNewUser($username, $email, $clanId)
     {
         if ($authUser = User::whereName($username)->first()) {
-            $this->handleRoleAssignment($authUser);
-
             return $authUser;
         }
 
