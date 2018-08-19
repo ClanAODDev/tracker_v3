@@ -37,18 +37,18 @@ class LoginController extends Controller
     /**
      * Check if an AOD session exists
      *
-     * @return bool|\Illuminate\Http\RedirectResponse
+     * @return bool|\Illuminate\Http\RedirectResponse|void
      */
     private function checkForAODSession()
     {
         if ( ! isset($_COOKIE['aod_sessionhash'])) {
-            return false;
+            return;
         }
 
         $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
 
         if ( ! $data) {
-            return false;
+            return;
         }
 
         if (in_array($data->loggedin, [1, 2])) {
@@ -56,6 +56,8 @@ class LoginController extends Controller
 
             if ($user = User::whereName($username)->first()) {
                 \Auth::login($user);
+
+                dump(\URL::previous());
 
                 return redirect()->intended();
             }
