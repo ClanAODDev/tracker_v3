@@ -47,6 +47,10 @@ class LoginController extends Controller
 
         $data = $this->requestSessionInfo($_COOKIE['aod_sessionhash']);
 
+        if ( ! $data) {
+            return false;
+        }
+
         if (in_array($data->loggedin, [1, 2])) {
             $username = str_replace('aod_', '', strtolower($data->username));
 
