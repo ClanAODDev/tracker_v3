@@ -2,6 +2,8 @@
 
 Auth::routes();
 
+Route::get('forumAuth', function() {})->middleware('forumAuth')->name('auth.aod');
+
 Route::post('/members/assign-squad', 'SquadController@assignMember');
 
 /**

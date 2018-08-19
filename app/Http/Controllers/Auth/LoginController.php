@@ -29,8 +29,40 @@ class LoginController extends Controller
     }
 
     /**
+     * @param $username
+     * @return bool
+     */
+    private function registerNewUser($username)
+    {
+        if ($member = $this->isCurrentAODMember()) {
+
+            $user = new User;
+            $user->name = $username;
+            $user->email = $this->email;
+            $user->member_id = $member->id;
+            $user->save();
+
+            \Auth::login($user);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $username
+     * @return bool
+     */
+    private function isCurrentAODMember()
+    {
+        return Member::whereClanId($this->clanId)->first() ?? false;
+    }
+
+    /**
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request)
     {
@@ -56,12 +88,6 @@ class LoginController extends Controller
 
     private function attemptLogin($request)
     {
-        if (app()->environment() === 'local') {
-            Auth::login(User::whereName('Guybrush')->first());
-
-            return true;
-        }
-
         if ($this->validatesCredentials($request)) {
             $username = str_replace('aod_', '', strtolower($request->username));
 
@@ -90,24 +116,6 @@ class LoginController extends Controller
         if ($user->email !== $this->email) {
             $user->update(['email' => $this->email]);
         }
-    }
-
-    /**
-     * @param $username
-     */
-    private function registerNewUser($username)
-    {
-        $member = Member::whereClanId($this->clanId)->firstOrFail();
-
-        $user = new User;
-        $user->name = $username;
-        $user->email = $this->email;
-        $user->member_id = $member->id;
-        $user->save();
-
-        Auth::login($user);
-
-        return true;
     }
 
     /**
