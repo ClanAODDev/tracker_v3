@@ -186,14 +186,6 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-//        dump(request()->server('HTTP_REFERER'));
-//
-//        try {
-//            $this->checkForAODSession();
-//        } catch (\Exception $exception) {
-//            dump($exception);
-//        }
-
         return view('auth.login');
     }
 

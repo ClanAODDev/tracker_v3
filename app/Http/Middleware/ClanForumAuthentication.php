@@ -26,15 +26,18 @@ class ClanForumAuthentication
 
             $sessionData = $this->getAODSession();
 
-            dump($sessionData);
+            if ( ! is_object($sessionData)) {
+                return redirect()->guest('login');
+            }
 
             if ( ! in_array($sessionData->loggedin, [1, 2])) {
-                return redirect()->guest('login');
+                return false;
             }
 
             $username = str_replace('aod_', '', strtolower($sessionData->username));
 
-            if ($member = \App\Member::whereClanId($sessionData->userid)) {
+            if ($member = \App\Member::whereClanId($sessionData->userid)->first()) {
+
                 $user = $this->registerNewUser(
                     $username,
                     $sessionData->email,
