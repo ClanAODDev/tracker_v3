@@ -73,7 +73,7 @@ class LoginController extends Controller
             $results = \DB::connection('aod_forums')
                 ->select("CALL check_session('{$aod_sessionhash}')");
 
-            return $results[0];
+            return $results[0] ?? false;
 
         } catch (Exception $exception) {
             return false;
