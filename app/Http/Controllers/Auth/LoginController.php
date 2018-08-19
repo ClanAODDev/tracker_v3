@@ -28,6 +28,7 @@ class LoginController extends Controller
         $this->middleware('guest', ['except' => 'logout']);
 
         try {
+
             $this->checkForAODSession();
         } catch (\Exception $exception) {
             dump($exception);
@@ -41,6 +42,8 @@ class LoginController extends Controller
      */
     private function checkForAODSession()
     {
+        dump(\URL::previous());
+
         if ( ! isset($_COOKIE['aod_sessionhash'])) {
             return;
         }
@@ -56,8 +59,6 @@ class LoginController extends Controller
 
             if ($user = User::whereName($username)->first()) {
                 \Auth::login($user);
-
-                dump(\URL::previous());
 
                 return redirect()->intended();
             }
