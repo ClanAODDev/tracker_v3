@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Member;
 use App\User;
 use http\Exception;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -34,8 +35,10 @@ class LoginController extends Controller
     }
 
     /**
-     *      * Check if an AOD session exists
-     *           */
+     * Check if an AOD session exists
+     *
+     * @return bool|\Illuminate\Http\RedirectResponse
+     */
     private function checkForAODSession()
     {
         if ( ! isset($_COOKIE['aod_sessionhash'])) {
