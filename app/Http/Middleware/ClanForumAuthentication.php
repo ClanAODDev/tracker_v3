@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\User;
 use Auth;
 use Closure;
+use Exception;
 
 class ClanForumAuthentication
 {
@@ -25,17 +26,17 @@ class ClanForumAuthentication
 
             $sessionData = $this->getAODSession();
 
-            if ( ! property_exists($sessionData, 'loggedin')) {
-                return redirect()->guest('login');
-            }
+            dump($sessionData);
 
             if ( ! in_array($sessionData->loggedin, [1, 2])) {
                 return redirect()->guest('login');
             }
 
+            $username = str_replace('aod_', '', strtolower($sessionData->username));
+
             if ($member = \App\Member::whereClanId($sessionData->userid)) {
                 $user = $this->registerNewUser(
-                    $sessionData->username,
+                    $username,
                     $sessionData->email,
                     $sessionData->userid
                 );
@@ -82,10 +83,11 @@ class ClanForumAuthentication
      * @param $username
      * @param $email
      * @param $clanId
+     * @return \App\User||void
      */
     public function registerNewUser($username, $email, $clanId)
     {
-        if ($authUser = User::whereClanId($shibUid)->first()) {
+        if ($authUser = User::whereName($username)->first()) {
             $this->handleRoleAssignment($authUser);
 
             return $authUser;
@@ -96,20 +98,5 @@ class ClanForumAuthentication
         $user->email = $email;
         $user->member_id = $clanId;
         $user->save();
-    }
-
-    public function something($session)
-    {
-        $username = str_replace('aod_', '', strtolower($session->username));
-
-        if ($user = User::whereName($username)->first()) {
-            \Auth::login($user);
-
-            return redirect()->intended();
-        }
-
-        if ($this->registerNewUser($username)) {
-            return redirect()->intended();
-        }
     }
 }
