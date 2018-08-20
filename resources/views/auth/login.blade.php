@@ -45,14 +45,6 @@
                 </form>
             </div>
         </div>
-
-        @if (isset($_COOKIE['aod_sessionhash']) || app()->environment() == 'local')
-            <div class="text-center">
-                <a href="{{ route('auth.aod') }}" class="btn btn-primary"><i
-                            class="fa fa-key text-primary"></i> Continue with ClanAOD Auth
-                </a>
-            </div>
-        @endif
     </div>
 
 @endsection

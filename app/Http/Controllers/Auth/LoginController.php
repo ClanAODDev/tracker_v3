@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Facades\App\AOD\ClanForumSession;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\User;
@@ -200,6 +201,8 @@ class LoginController extends Controller
         $this->guard()->logout();
 
         $request->session()->invalidate();
+
+        ClanForumSession::destroy();
 
         return redirect('/');
     }
