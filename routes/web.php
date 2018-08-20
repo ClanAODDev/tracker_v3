@@ -1,8 +1,9 @@
 <?php
 
+include_once('extra/requests-graphic.php');
+
 Auth::routes();
 
-//Route::get('forumAuth', function() {})->middleware('forumAuth')->name('auth.aod');
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::post('/members/assign-squad', 'SquadController@assignMember');
