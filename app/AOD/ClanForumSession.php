@@ -34,7 +34,7 @@ class ClanForumSession
             $member = \App\Member::whereClanId($sessionData->userid)->first();
 
             if ( ! $member) {
-                abort(503, 'Not authorized');
+                abort(403, 'Not authorized');
             }
 
             $user = $this->registerNewUser(
