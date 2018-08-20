@@ -266,6 +266,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         ->name('admin.member-request.approve');
     Route::post('member-requests/{requestId}/cancel', 'Admin\MemberRequestController@cancel')
         ->name('admin.member-request.cancel');
+    Route::post('member-requests/{request}/requeue', 'Admin\MemberRequestController@requeue')
+        ->name('admin.member-request.requeue');
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');
