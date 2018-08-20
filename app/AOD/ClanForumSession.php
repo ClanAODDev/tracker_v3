@@ -19,8 +19,6 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
-            //dump($sessionData);
-
             if ( ! is_object($sessionData)) {
                 return false;
             }
@@ -73,7 +71,9 @@ class ClanForumSession
             $results = \DB::connection('aod_forums')
                 ->select("CALL check_session('{$_COOKIE[$this->sessionKey]}')");
 
-            return $results[0];
+            return isset($results[0])
+                ? $results[0]
+                : null;
 
         } catch (Exception $exception) {
             return false;
@@ -97,13 +97,5 @@ class ClanForumSession
         $user->email = $email;
         $user->member_id = $clanId;
         $user->save();
-    }
-
-    /**
-     * Destroy AOD session hash
-     */
-    public function destroy()
-    {
-        $_COOKIE[$this->sessionKey] = null;
     }
 }
