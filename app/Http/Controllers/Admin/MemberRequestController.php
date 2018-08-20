@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\MemberRequest;
+use App\Notifications\MemberRequestApproved;
+use App\Notifications\MemberRequestDenied;
 
 class MemberRequestController extends Controller
 {
@@ -39,6 +41,16 @@ class MemberRequestController extends Controller
 
         $request = MemberRequest::find($requestId);
 
+        try {
+            if ($request->division->settings()->get('slack_alert_member_approved') == "on") {
+                $request->division->notify(new MemberRequestApproved($request));
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        $request->division->notify(new MemberRequestApproved($request));
+
         $request->approve();
 
         return $request;
@@ -50,11 +62,21 @@ class MemberRequestController extends Controller
 
         $this->validate(request(), [
             'notes' => 'required|max:1000'
+        ], [
+            'notes.required' => 'You must provide a justification!'
         ]);
 
         $request = MemberRequest::find($requestId);
 
         $request->cancel();
+
+        try {
+            if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
+                $request->division->notify(new MemberRequestDenied($request));
+            }
+        } catch (\Exception $e) {
+            //
+        }
 
         return $request;
     }

@@ -52,4 +52,32 @@
         </td>
     </tr>
 
+    <tr>
+        <td>
+            <label for="slack_alert_member_approved">
+                When a member request is approved
+            </label>
+        </td>
+        <td>
+            <input type='hidden' value='0' name="slack_alert_member_approved">
+            <input id="slack_alert_member_approved"
+                   name="slack_alert_member_approved"
+                   type="checkbox" {{ checked($division->settings()->slack_alert_member_approved) }} />
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <label for="slack_alert_member_denied">
+                When a member request is denied
+            </label>
+        </td>
+        <td>
+            <input type='hidden' value='0' name="slack_alert_member_denied">
+            <input id="slack_alert_member_denied"
+                   name="slack_alert_member_denied"
+                   type="checkbox" {{ checked($division->settings()->slack_alert_member_denied) }} />
+        </td>
+    </tr>
+
 </table>
