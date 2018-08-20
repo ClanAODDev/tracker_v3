@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use Facades\App\AOD\ClanForumSession;
 
 class RedirectIfAuthenticated
 {
@@ -17,6 +18,10 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        if (ClanForumSession::exists()) {
+            return redirect()->intended();
+        }
+
         if (Auth::guard($guard)->check()) {
             return redirect('/');
         }
