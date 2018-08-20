@@ -29,18 +29,21 @@
             <span class="text-success">All done!</span> There are no more requests to approve at this time.
         </p>
         <modal v-show="isModalVisible"
-               @close="closeModal"
-        >
+               @close="closeModal">
             <template slot="header">
                 <h4>Cancel Member Request</h4>
             </template>
             <template slot="body">
                 <label for="notes">Reason for cancellation</label>
                 <textarea name="notes" id="notes" rows="3" class="form-control" v-model="notes"
+                          required
                           style="resize: vertical" maxlength="100"></textarea>
+                <form-error v-if="errors.notes" :errors="errors">
+                    @{{ errors.notes }}
+                </form-error>
             </template>
             <template slot="footer">
-                <button class="btn btn-success"
+                <button class="btn btn-warning"
                         @click="cancelConfirm">
                     Cancel Request
                 </button>
@@ -76,6 +79,7 @@
       },
       closeModal () {
         this.isModalVisible = false;
+        this.notes = null;
       },
       approve (event, request, index) {
         console.log(event.path);
@@ -86,10 +90,8 @@
             this.dataRequests.splice(index, 1);
             toastr.success('Approved!');
           })
-          .catch(error => {
-            toastr.error(
-              error.response.status + ' - ' + error.response.statusText
-            );
+          .catch((error) => {
+            toastr.error('Something went wrong...');
           });
       },
 
@@ -105,13 +107,16 @@
         })
           .then((response) => {
             this.dataRequests.splice(this.requestIndex, 1);
-            toastr.error('Request cancelled!');
-            this.hideModal();
+            toastr.warning('Request cancelled!');
+            this.closeModal();
+            this.notes = '';
           })
           .catch(error => {
-            toastr.error(
-              error.response.status + ' - ' + error.response.statusText
-            );
+            if (error.response.data.errors.notes) {
+              toastr.error(error.response.data.errors.notes);
+            } else {
+              toastr.error('Something went wrong');
+            }
           });
       }
     }

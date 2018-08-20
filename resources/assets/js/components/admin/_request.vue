@@ -19,13 +19,13 @@
         <td>
             <button @click="approve()"
                     class="btn btn-success btn-block">
-                <i class="fa fa-check text-success"></i>
+                <i class="fa fa-check"></i>
             </button>
         </td>
         <td>
             <button @click="cancel()"
-                    class="btn btn-danger btn-block">
-                <i class="fa fa-trash text-danger"></i>
+                    class="btn btn-warning btn-block">
+                <i class="fa fa-times"></i>
             </button>
         </td>
     </tr>
