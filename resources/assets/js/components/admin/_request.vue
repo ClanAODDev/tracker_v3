@@ -42,9 +42,7 @@
         this.$emit('approved', {id: this.id, path: this.path});
       },
       cancel () {
-        if (confirm('Are you sure?')) {
-          this.$emit('cancelled', this.id);
-        }
+        this.$emit('cancelled', this.id);
       },
       buildPath () {
         this.path = this.data.approvePath + this.name;
@@ -56,7 +54,8 @@
         id: this.data.id,
         name: this.data.name,
         division: this.data.division.name,
-        path: ''
+        path: '',
+        notes: '',
       };
     },
   };

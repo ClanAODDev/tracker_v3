@@ -114,7 +114,9 @@ class MemberRequest extends Model
     public function cancel()
     {
         $this->update([
-            'cancelled_at' => now()
+            'cancelled_at' => now(),
+            'canceller_id' => auth()->user()->member->clan_id,
+            'notes' => request('notes'),
         ]);
     }
 
@@ -129,5 +131,13 @@ class MemberRequest extends Model
     public function getNameAttribute()
     {
         return "AOD_" . $this->member->name;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function canceller()
+    {
+        return $this->belongsTo('App\Member', 'canceller_id', 'clan_id');
     }
 }

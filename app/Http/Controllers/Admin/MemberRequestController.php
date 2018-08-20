@@ -48,6 +48,10 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
+        $this->validate(request(), [
+            'notes' => 'required|max:1000'
+        ]);
+
         $request = MemberRequest::find($requestId);
 
         $request->cancel();

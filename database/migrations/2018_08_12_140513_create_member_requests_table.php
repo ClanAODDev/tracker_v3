@@ -21,6 +21,8 @@ class CreateMemberRequestsTable extends Migration
             $table->unsignedInteger('approver_id')->nullable();
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
+            $table->unsignedInteger('canceller_id')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
 
