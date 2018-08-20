@@ -19,11 +19,14 @@
     <div class="container-fluid">
 
         <h2>Member Requests</h2>
-        <p>Approving a request will open a new window to complete in-processing on the Clan AOD forums. Simultaneously, the request will be approved and the requester will be notified. <span class="text-accent">Denied requests</span> will be sent back to the requester for modification.</p>
+        <p>Approving a request will open a new window to complete in-processing on the Clan AOD forums. Simultaneously, the request will be approved and the requester will be notified.
+            <span class="text-accent">Denied requests</span> will be sent back to the requester for modification.</p>
         <div id="admin-container" class="m-t-lg">
-            <member-requests :requests="{{ $pending }}">
+            <member-requests :pending="{{ $pending }}">
                 <i class="fa fa-refresh fa-spin text-info"></i> Loading...
             </member-requests>
+
+            @include('admin.partials.approved-requests')
         </div>
     </div>
 

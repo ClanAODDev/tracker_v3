@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h4>PENDING REQUESTS <span class="badge">{{ dataRequests.length }}</span></h4>
+        <h4>PENDING REQUESTS <span class="badge">{{ dataPending.length }}</span></h4>
         <hr />
-        <div class="panel panel-filled" v-if="requests.length > 0">
+        <div class="panel panel-filled" v-if="dataPending.length > 0">
             <table class="table">
                 <thead>
                 <tr>
@@ -17,7 +17,7 @@
                 <tbody>
 
                 <member-request :data="request"
-                                v-for="(request, index) in requests"
+                                v-for="(request, index) in pending"
                                 @approved="(e) => { return approve(e, request, index)}"
                                 @cancelled="cancel(request, index)"
                                 :key="request.id"></member-request>
@@ -28,6 +28,8 @@
         <p v-else>
             <span class="text-success">All done!</span> There are no more requests to approve at this time.
         </p>
+
+
         <modal v-show="isModalVisible"
                @close="closeModal">
             <template slot="header">
@@ -38,9 +40,6 @@
                 <textarea name="notes" id="notes" rows="3" class="form-control" v-model="notes"
                           required
                           style="resize: vertical" maxlength="100"></textarea>
-                <form-error v-if="errors.notes" :errors="errors">
-                    @{{ errors.notes }}
-                </form-error>
             </template>
             <template slot="footer">
                 <button class="btn btn-warning"
@@ -63,10 +62,10 @@
       'member-request': request,
       modal
     },
-    props: ['requests'],
+    props: ['pending'],
     data: function () {
       return {
-        dataRequests: this.requests,
+        dataPending: this.pending,
         isModalVisible: false,
         notes: '',
         requestIndex: null,
@@ -74,20 +73,23 @@
       };
     },
     methods: {
+
       showModal () {
         this.isModalVisible = true;
       },
+
       closeModal () {
         this.isModalVisible = false;
         this.notes = null;
       },
+
       approve (event, request, index) {
-        console.log(event.path);
         let settings = 'width=900,height=600,scrollbars=yes';
         window.open(event.path, 'Tracker | Approve Member', settings, true);
+
         axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
           .then((response) => {
-            this.dataRequests.splice(index, 1);
+            this.dataPending.splice(index, 1);
             toastr.success('Approved!');
           })
           .catch((error) => {
