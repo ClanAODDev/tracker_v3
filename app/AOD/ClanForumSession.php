@@ -19,6 +19,8 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
+            //dump($sessionData);
+
             if ( ! is_object($sessionData)) {
                 return false;
             }
@@ -29,16 +31,19 @@ class ClanForumSession
 
             $username = str_replace('aod_', '', strtolower($sessionData->username));
 
-            if ($member = \App\Member::whereClanId($sessionData->userid)->first()) {
+            $member = \App\Member::whereClanId($sessionData->userid)->first();
 
-                $user = $this->registerNewUser(
-                    $username,
-                    $sessionData->email,
-                    $sessionData->userid
-                );
-
-                Auth::login($user);
+            if ( ! $member) {
+                abort(503, 'Not authorized');
             }
+
+            $user = $this->registerNewUser(
+                $username,
+                $sessionData->email,
+                $sessionData->userid
+            );
+
+            Auth::login($user);
 
             return true;
         }
@@ -66,9 +71,9 @@ class ClanForumSession
     {
         try {
             $results = \DB::connection('aod_forums')
-                ->select("CALL check_session('{$this->sessionKey}')");
+                ->select("CALL check_session('{$_COOKIE[$this->sessionKey]}')");
 
-            return $results[0] ?? false;
+            return $results[0];
 
         } catch (Exception $exception) {
             return false;
