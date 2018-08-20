@@ -28,6 +28,7 @@
             <div class="panel-body">
 
                 <form action="{{ route('division.member-requests.update', [$division, $memberRequest]) }}"
+                      id="submit-request"
                       method="post">
                     {{ method_field('patch') }}
                     {{ csrf_field() }}
@@ -110,10 +111,13 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="text-left">
-                    <form action="{{ route('division.member-requests.delete', [$division, $memberRequest]) }}" method="post">
+                    <form action="{{ route('division.member-requests.delete', [$division, $memberRequest]) }}"
+                          method="post">
                         {{ csrf_field() }}
                         {{ method_field('delete') }}
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i> Delete</button>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i
+                                    class="fa fa-trash"></i> Delete
+                        </button>
                     </form>
                 </div>
             </div>
@@ -122,7 +126,9 @@
                 <div class="text-right">
                     <a href="{{ route('division.member-requests.index', $division) }}"
                        class="btn btn-default">Cancel</a>
-                    <button class="btn btn-success" type="submit">Submit Request</button>
+                    <button class="btn btn-success" type="submit"
+                            onclick="$('#submit-request').submit();">Submit Request
+                    </button>
                 </div>
             </div>
         </div>
