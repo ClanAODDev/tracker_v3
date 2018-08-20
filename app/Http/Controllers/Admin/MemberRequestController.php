@@ -49,8 +49,6 @@ class MemberRequestController extends Controller
             //
         }
 
-        $request->division->notify(new MemberRequestApproved($request));
-
         $request->approve();
 
         return $request;
@@ -79,5 +77,21 @@ class MemberRequestController extends Controller
         }
 
         return $request;
+    }
+
+    /**
+     * @param MemberRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function requeue(MemberRequest $request)
+    {
+        $request->update([
+            'approved_at' => null,
+            'approver_id' => null,
+        ]);
+
+        $this->showToast('Request returned to pending. Cancel as appropriate.');
+
+        return redirect(route('admin.member-request.index'));
     }
 }
