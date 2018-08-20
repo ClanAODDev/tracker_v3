@@ -23,7 +23,9 @@ class MemberRequestController extends Controller
         if (auth()->user()->isRole(['sr_ldr', 'admin'])) {
             $requests = request()->division->memberRequests()->with('member', 'requester')->get();
         } else {
-            $requests = auth()->user()->member->memberRequests()->with('member', 'requester')->get();
+            $requests = auth()->user()->member->memberRequests()
+                ->whereDivisionId(request()->division->id)
+                ->with('member', 'requester')->get();
         }
 
         $requests = collect([
@@ -66,15 +68,15 @@ class MemberRequestController extends Controller
         return redirect(route('division.member-requests.index', $division));
     }
 
-    public function destroy(MemberRequest $memberRequest)
+    public function destroy(Division $division, MemberRequest $memberRequest)
     {
-        $this->authorize('destroy', $memberRequest);
+        $this->authorize('edit', $memberRequest);
 
         $memberRequest->delete();
 
         $this->showToast('Member request has been destroyed!');
 
-        return redirect(route('division.member-requests.index'));
+        return redirect(route('division.member-requests.index', $division));
     }
 
     public function update(Division $division, MemberRequest $memberRequest, Request $request)

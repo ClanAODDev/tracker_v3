@@ -44,9 +44,9 @@
                             <div class="form-group">
                                 <label for="division">Division</label>
                                 <select name="division" id="division" class="form-control">
-                                    @foreach (\App\Division::active()->get() as $division)
-                                        <option value="{{ $division->id }}"
-                                                {{ $memberRequest->division_id === $division->id ? 'selected' : null }}>{{ $division->name }}</option>
+                                    @foreach (\App\Division::active()->get() as $d)
+                                        <option value="{{ $d->id }}"
+                                                {{ $memberRequest->division_id === $d->id ? 'selected' : null }}>{{ $d->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -113,7 +113,7 @@
                     <form action="{{ route('division.member-requests.delete', [$division, $memberRequest]) }}" method="post">
                         {{ csrf_field() }}
                         {{ method_field('delete') }}
-                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')"><i class="fa fa-trash"></i> Delete</button>
                     </form>
                 </div>
             </div>
