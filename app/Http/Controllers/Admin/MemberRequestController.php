@@ -103,6 +103,11 @@ class MemberRequestController extends Controller
      */
     public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
+        $member = \App\Member::whereClanId($memberRequest->member_id)
+            ->first()->update([
+                'name' => $request->newName
+            ]);
+
         $memberRequest->division->notify(
             new MemberNameChanged([
                 'oldName' => $request->oldName,
