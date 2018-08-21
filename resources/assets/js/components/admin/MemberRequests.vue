@@ -20,6 +20,7 @@
                                 v-for="(request, index) in pending"
                                 @approved="(e) => { return approve(e, request, index)}"
                                 @cancelled="cancel(request, index)"
+                                @name-changed="(e) => {return notifyOfNameChange(e, oldName, newName) }"
                                 :key="request.id"></member-request>
                 </tbody>
 
@@ -28,7 +29,6 @@
         <p v-else>
             <span class="text-success">All done!</span> There are no more requests to approve at this time.
         </p>
-
 
         <modal v-show="isModalVisible"
                @close="closeModal">
@@ -70,6 +70,8 @@
         notes: '',
         requestIndex: null,
         request: null,
+        oldName: null,
+        newName: null,
       };
     },
     methods: {
@@ -81,6 +83,13 @@
       closeModal () {
         this.isModalVisible = false;
         this.notes = null;
+      },
+
+      notifyOfNameChange(event) {
+        axios.post(window.Laravel.appPath + '/admin/member-requests/' + event.id + '/name-change', {
+          oldName: event.oldName,
+          newName: event.newName,
+        });
       },
 
       approve (event, request, index) {

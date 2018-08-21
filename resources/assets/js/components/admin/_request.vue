@@ -40,6 +40,10 @@
     methods: {
       approve () {
         this.$emit('approved', {id: this.id, path: this.path});
+
+        if (this.name !== this.data.name) {
+          this.$emit('name-changed', {oldName: this.data.name, newName: this.name, id: this.id});
+        }
       },
       cancel () {
         this.$emit('cancelled', this.id);

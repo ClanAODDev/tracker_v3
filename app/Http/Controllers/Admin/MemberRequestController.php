@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\MemberRequest;
+use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
 use App\Notifications\MemberRequestDenied;
+use Illuminate\Http\Request;
 
 class MemberRequestController extends Controller
 {
@@ -80,12 +82,12 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param MemberRequest $request
+     * @param MemberRequest $memberRequest
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function requeue(MemberRequest $request)
+    public function requeue(MemberRequest $memberRequest)
     {
-        $request->update([
+        $memberRequest->update([
             'approved_at' => null,
             'approver_id' => null,
         ]);
@@ -93,5 +95,19 @@ class MemberRequestController extends Controller
         $this->showToast('Request returned to pending. Cancel as appropriate.');
 
         return redirect(route('admin.member-request.index'));
+    }
+
+    /**
+     * @param Request $request
+     * @param MemberRequest $memberRequest
+     */
+    public function handleNameChange(Request $request, MemberRequest $memberRequest)
+    {
+        $memberRequest->division->notify(
+            new MemberNameChanged([
+                'oldName' => $request->oldName,
+                'newName' => $request->newName,
+            ], $memberRequest->division)
+        );
     }
 }
