@@ -41,6 +41,6 @@ class MemberNameChanged extends Notification
         return (new SlackMessage())
             ->success()
             ->to($to)
-            ->content("*MEMBER STATUS - NAME CHANGE*\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}. Please inform the member of this change.");
+            ->content("*MEMBER STATUS - NAME CHANGE*\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}`. Please inform the member of this change.");
     }
 }
