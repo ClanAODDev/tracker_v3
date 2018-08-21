@@ -1,7 +1,8 @@
 <template>
     <div>
         <progress-bar></progress-bar>
-        <step-one v-show="store.currentStep === 'step-one'"></step-one>
+        <step-one v-show="store.currentStep === 'step-one'"
+                  :ranks="this.ranks"></step-one>
         <step-two v-show="store.currentStep === 'step-two'"></step-two>
         <step-three v-show="store.currentStep === 'step-three'"></step-three>
         <step-four v-show="store.currentStep === 'step-four'"></step-four>
@@ -10,7 +11,6 @@
 
 <script>
   import store from './store.js';
-  import toastr from 'toastr';
 
   import ProgressBar from './ProgressBar.vue';
   import StepOne from './StepOne.vue';
@@ -24,13 +24,13 @@
       StepOne, StepTwo, StepThree, StepFour, ProgressBar
     },
 
-    data() {
+    data () {
       return {
         store
       };
     },
 
-    props: ['division', 'handleName'],
+    props: ['division', 'handleName', 'ranks'],
 
     mounted () {
       this.prepareRecruitingProcess();

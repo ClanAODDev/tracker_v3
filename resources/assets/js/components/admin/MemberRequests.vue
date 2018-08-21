@@ -107,8 +107,8 @@
         axios.post(window.Laravel.appPath + '/admin/member-requests/' + this.request.id + '/cancel', {
           'notes': this.notes
         })
-          .then((response) => {
-            this.dataRequests.splice(this.requestIndex, 1);
+          .then(response => {
+            this.dataPending.splice(this.requestIndex, 1);
             toastr.warning('Request cancelled!');
             this.closeModal();
             this.notes = '';

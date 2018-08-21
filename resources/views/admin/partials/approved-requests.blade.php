@@ -26,13 +26,14 @@
                         {{ $request->approved_at }}
                     </td>
                     <td>
-                        <a href="{{ $request->approvePath . $request->name }}"><i class="fa fa-hammer"></i></a>
+                        <a class="btn btn-info btn-block" target="_blank"
+                           href="{{ $request->approvePath . $request->name }}"><i class="fa fa-user-plus"></i></a>
                     </td>
                     <td>
                         <form action="{{ route('admin.member-request.requeue', $request) }}"
                               method="post">
                             {{ csrf_field() }}
-                            <button class="btn btn-info btn-block" type="submit">
+                            <button class="btn btn-warning btn-block" type="submit">
                                 <i class="fa fa-refresh"></i>
                             </button>
                         </form>

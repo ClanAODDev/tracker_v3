@@ -97,7 +97,7 @@ class RecruitingController extends Controller
         $member->join_date = Carbon::today();
         $member->last_activity = Carbon::today();
         $member->recruiter_id = auth()->user()->member->clan_id;
-        $member->rank_id = 1;
+        $member->rank_id = $request->rank;
         $member->position_id = 1;
         $member->division_id = $division->id;
         $member->save();

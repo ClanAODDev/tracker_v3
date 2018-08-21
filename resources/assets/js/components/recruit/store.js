@@ -29,6 +29,7 @@ store.progress = 25;
 // member data
 store.member_id = '';
 store.ingame_name = '';
+store.rank = '';
 store.forum_name = '';
 store.platoon = '';
 store.squad = '';
@@ -144,6 +145,7 @@ store.createMember = () => {
       forum_name: store.forum_name,
       ingame_name: store.ingame_name,
       platoon: store.platoon,
+      rank: store.rank,
       squad: store.squad
     }).then(function (response) {
       toastr.success('Your recruit has been added to the tracker and a member status has been submitted!');

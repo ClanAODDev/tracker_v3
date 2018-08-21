@@ -14,7 +14,7 @@ Route::get('requests-count.png', function () {
 
     $requests = \App\MemberRequest::pending();
 
-    imagettftext($im, 30, 0, 230, 40, $orange, $bigfont, $requests->count()+34);
+    imagettftext($im, 30, 0, 230, 40, $orange, $bigfont, $requests->count());
 
     imagepng($im);
     imagedestroy($im);

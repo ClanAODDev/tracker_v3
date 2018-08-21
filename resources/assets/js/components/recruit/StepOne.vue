@@ -71,6 +71,16 @@
                         <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
                                id="ingame_name" :disabled="store.inDemoMode" />
                     </div>
+
+                    <div class="col-md-4 form-group">
+                        <label for="rank">Rank</label>
+                        <select name="rank" id="rank" class="form-control" v-model="store.rank"
+                        v-validate="{ required: true }">
+                            <option :value="id"
+                                    v-for="(rank,id) in this.ranks"
+                            >{{ rank }}</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="panel-footer">
@@ -138,6 +148,8 @@
   import ProgressBar from './ProgressBar.vue';
 
   export default {
+
+    props: ['ranks'],
 
     methods: {
       validateStep: function () {
