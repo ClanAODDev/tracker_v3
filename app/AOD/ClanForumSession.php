@@ -48,7 +48,7 @@ class ClanForumSession
             $user = $this->registerNewUser(
                 $username,
                 $sessionData->email,
-                $sessionData->userid
+                $member->id
             );
 
             Auth::login($user);
@@ -107,5 +107,7 @@ class ClanForumSession
         $user->email = $email;
         $user->member_id = $clanId;
         $user->save();
+
+        return $user;
     }
 }
