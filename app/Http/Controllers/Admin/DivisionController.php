@@ -26,6 +26,8 @@ class DivisionController extends Controller
 
     public function store(CreateDivision $form)
     {
+        $this->authorize('create', Division::class);
+
         $form->persist();
 
         $this->showToast("New division has been created!");
@@ -60,6 +62,8 @@ class DivisionController extends Controller
      */
     public function update(UpdateDivisionForm $form, Division $division)
     {
+        $this->authorize('update', $division);
+
         $form->persist();
 
         $this->showToast("Division was updated!");
