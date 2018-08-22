@@ -202,8 +202,6 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        ClanForumSession::destroy();
-
         return redirect('/');
     }
 }

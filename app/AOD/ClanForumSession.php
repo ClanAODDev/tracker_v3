@@ -12,13 +12,13 @@ class ClanForumSession
      *
      * @var string
      */
-    protected $stored_procedure = 'check_session';
+    public $storedProcedure = 'check_session';
 
     /**
      * Key containing AOD forum session data
      * @var string
      */
-    protected $sessionKey = 'aod_sessionhash';
+    public $sessionKey = 'aod_sessionhash';
 
     public function exists()
     {
