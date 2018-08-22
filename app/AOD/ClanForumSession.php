@@ -97,6 +97,8 @@ class ClanForumSession
         $user->email = $email;
         $user->member_id = $clanId;
         $user->save();
+
+        return $user;
     }
 
     /**
