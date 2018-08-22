@@ -19,7 +19,7 @@
         <td>
             <button @click="approve()"
                     class="btn btn-success btn-block">
-                <i class="fa fa-check"></i>
+                <i class="fa fa-user-plus"></i>
             </button>
         </td>
         <td>
