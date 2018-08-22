@@ -7,7 +7,17 @@ use Auth;
 
 class ClanForumSession
 {
+    /**
+     * Stored procedure that validates forum session
+     *
+     * @var string
+     */
+    protected $stored_procedure = 'check_session';
 
+    /**
+     * Key containing AOD forum session data
+     * @var string
+     */
     protected $sessionKey = 'aod_sessionhash';
 
     public function exists()
@@ -18,8 +28,6 @@ class ClanForumSession
 
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
-
-            //dump($sessionData);
 
             if ( ! is_object($sessionData)) {
                 return false;
@@ -71,9 +79,11 @@ class ClanForumSession
     {
         try {
             $results = \DB::connection('aod_forums')
-                ->select("CALL check_session('{$_COOKIE[$this->sessionKey]}')");
+                ->select("CALL {$this->storedProcedure}('{$_COOKIE[$this->sessionKey]}')");
 
-            return $results[0];
+            return array_key_exists(0, $results)
+                ? $results[0]
+                : null;
 
         } catch (Exception $exception) {
             return false;
@@ -99,13 +109,5 @@ class ClanForumSession
         $user->save();
 
         return $user;
-    }
-
-    /**
-     * Destroy AOD session hash
-     */
-    public function destroy()
-    {
-        $_COOKIE[$this->sessionKey] = null;
     }
 }
