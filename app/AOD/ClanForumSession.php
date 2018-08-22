@@ -40,7 +40,7 @@ class ClanForumSession
             $user = $this->registerNewUser(
                 $username,
                 $sessionData->email,
-                $sessionData->userid
+                $member->id
             );
 
             Auth::login($user);
