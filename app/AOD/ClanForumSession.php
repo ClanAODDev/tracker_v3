@@ -7,7 +7,17 @@ use Auth;
 
 class ClanForumSession
 {
+    /**
+     * Stored procedure that validates forum session
+     *
+     * @var string
+     */
+    protected $stored_procedure = 'check_session';
 
+    /**
+     * Key containing AOD forum session data
+     * @var string
+     */
     protected $sessionKey = 'aod_sessionhash';
 
     public function exists()
@@ -69,7 +79,7 @@ class ClanForumSession
     {
         try {
             $results = \DB::connection('aod_forums')
-                ->select("CALL check_session('{$_COOKIE[$this->sessionKey]}')");
+                ->select("CALL {$this->storedProcedure}('{$_COOKIE[$this->sessionKey]}')");
 
             return isset($results[0])
                 ? $results[0]
