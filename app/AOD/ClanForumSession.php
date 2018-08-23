@@ -12,13 +12,13 @@ class ClanForumSession
      *
      * @var string
      */
-    protected $stored_procedure = 'check_session';
+    public $storedProcedure = 'check_session';
 
     /**
      * Key containing AOD forum session data
      * @var string
      */
-    protected $sessionKey = 'aod_sessionhash';
+    public $sessionKey = 'aod_sessionhash';
 
     public function exists()
     {
@@ -81,7 +81,7 @@ class ClanForumSession
             $results = \DB::connection('aod_forums')
                 ->select("CALL {$this->storedProcedure}('{$_COOKIE[$this->sessionKey]}')");
 
-            return isset($results[0])
+            return array_key_exists(0, $results)
                 ? $results[0]
                 : null;
 

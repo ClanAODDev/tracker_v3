@@ -39,11 +39,19 @@ class SgtActivity extends Command
     public function handle()
     {
         $sgts = Member::where('rank_id', '>=', 9)
+            ->where('division_id', '!=', 0)
+            ->where('division_id', '!=', 7)
             ->select('name', 'last_activity', 'last_ts_activity')
-            ->orderBy('last_activity')->get()->toArray();
+            ->orderBy('last_activity')->get();
 
         $headers = ['name', 'forum activity', 'ts activity'];
 
-        $this->table($headers, $sgts);
+        $this->table($headers, $sgts->map(function ($sgt) {
+            return [
+                'name' => $sgt->name,
+                'last_forum_activity' => \Carbon::parse($sgt->last_activity)->diffForHumans(),
+                'last_ts_activity' => \Carbon::parse($sgt->last_ts_activity)->diffForHumans(),
+            ];
+        }));
     }
 }
