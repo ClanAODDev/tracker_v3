@@ -39,6 +39,7 @@ class SgtActivity extends Command
     public function handle()
     {
         $sgts = Member::where('rank_id', '>=', 9)
+            ->where('division_id', '!=', 0)
             ->select('name', 'last_activity', 'last_ts_activity')
             ->orderBy('last_activity')->get()->toArray();
 
