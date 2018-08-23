@@ -40,6 +40,7 @@ class SgtActivity extends Command
     {
         $sgts = Member::where('rank_id', '>=', 9)
             ->where('division_id', '!=', 0)
+            ->where('division_id', '!=', 7)
             ->select('name', 'last_activity', 'last_ts_activity')
             ->orderBy('last_activity')->get()->toArray();
 
