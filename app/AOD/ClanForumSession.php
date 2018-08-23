@@ -85,7 +85,7 @@ class ClanForumSession
                 ? $results[0]
                 : null;
 
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }
