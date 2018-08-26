@@ -56,6 +56,7 @@ class Kernel extends HttpKernel
         'forumAuth' => \App\Http\Middleware\ClanForumAuthentication::class,
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
