@@ -257,7 +257,7 @@ class Member extends Model
      */
     public function memberRequest()
     {
-        return $this->hasOne('App\MemberRequest', 'member_id', 'clan_id');
+        return $this->hasOne(\App\MemberRequest::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -353,6 +353,6 @@ class Member extends Model
      */
     public function memberRequests()
     {
-        return $this->hasMany('App\MemberRequest', 'requester_id', 'clan_id');
+        return $this->hasMany(\App\MemberRequest::class, 'requester_id', 'clan_id');
     }
 }

@@ -17,7 +17,7 @@ class MemberRequest extends Model
      */
     public function member()
     {
-        return $this->belongsTo('App\Member', 'member_id', 'clan_id');
+        return $this->belongsTo(\App\Member::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -25,7 +25,7 @@ class MemberRequest extends Model
      */
     public function requester()
     {
-        return $this->belongsTo('App\Member', 'requester_id', 'clan_id');
+        return $this->belongsTo(\App\Member::class, 'requester_id', 'clan_id');
     }
 
     /**
@@ -33,7 +33,7 @@ class MemberRequest extends Model
      */
     public function approver()
     {
-        return $this->belongsTo('App\Member', 'approver_id', 'clan_id');
+        return $this->belongsTo(\App\Member::class, 'approver_id', 'clan_id');
     }
 
     /**
@@ -41,7 +41,7 @@ class MemberRequest extends Model
      */
     public function division()
     {
-        return $this->belongsTo('App\Division');
+        return $this->belongsTo(\App\Division::class);
     }
 
     /**
@@ -138,6 +138,6 @@ class MemberRequest extends Model
      */
     public function canceller()
     {
-        return $this->belongsTo('App\Member', 'canceller_id', 'clan_id');
+        return $this->belongsTo(\App\Member::class, 'canceller_id', 'clan_id');
     }
 }
