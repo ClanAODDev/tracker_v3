@@ -29,11 +29,11 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
-            if ( ! is_object($sessionData)) {
+            if (! is_object($sessionData)) {
                 return false;
             }
 
-            if ( ! in_array($sessionData->loggedin, [1, 2])) {
+            if (! in_array($sessionData->loggedin, [1, 2])) {
                 return false;
             }
 
@@ -41,7 +41,7 @@ class ClanForumSession
 
             $member = \App\Member::whereClanId($sessionData->userid)->first();
 
-            if ( ! $member) {
+            if (! $member) {
                 abort(403, 'Not authorized');
             }
 
@@ -62,7 +62,7 @@ class ClanForumSession
      */
     private function getAODSession()
     {
-        if ( ! isset($_COOKIE[$this->sessionKey])) {
+        if (! isset($_COOKIE[$this->sessionKey])) {
             return false;
         }
 
@@ -84,7 +84,6 @@ class ClanForumSession
             return array_key_exists(0, $results)
                 ? $results[0]
                 : null;
-
         } catch (\Exception $exception) {
             return false;
         }
