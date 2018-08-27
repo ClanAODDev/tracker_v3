@@ -17,7 +17,7 @@
         "barryvdh/laravel-debugbar": "^3.0",
         "guzzlehttp/guzzle": "^6.3",
         "league/csv": "^8.1",
-        "laravel/passport": "3.0.*",
+        "laravel/passport": "~5.0",
         "laravelcollective/html": "5.6.*",
         "whossun/laravel-toastr": "^1.0",
         "laravel/tinker": "~1.0",
