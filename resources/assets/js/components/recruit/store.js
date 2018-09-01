@@ -114,7 +114,7 @@ store.getPlatoonSquads = (platoon) => {
   if (store.platoon == '') {
     return;
   }
-  
+
   axios.post(store.base_url + '/platoon-squads/', {
     platoon: platoon
   }).then(function (response) {
