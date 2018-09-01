@@ -46,7 +46,7 @@
                 <div class="row">
 
                     <div class="col-md-4 form-group"
-                         :class="{'input': true, 'has-warning': errors.has('member_id') }">
+                         :class="{'input': true, 'has-warning': !store.validMemberId }">
                         <label for="member_id">Forum Member Id</label>
                         <input type="number" class="form-control" name="member_id"
                                v-model="store.member_id"
