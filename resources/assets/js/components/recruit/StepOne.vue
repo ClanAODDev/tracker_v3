@@ -169,7 +169,7 @@
 
         this.$validator.validateAll().then((result) => {
 
-          if (!store.validMemberId) {
+          if (!store.validMemberId && !store.inDemoMode) {
             toastr.error('Oops, your member id appears to be invalid!');
             return false;
           }
@@ -209,6 +209,7 @@
       toggleDemoMode: () => {
         store.inDemoMode = !store.inDemoMode;
         store.member_id = 99999;
+        store.rank = 1;
         store.forum_name = 'test-user';
         store.ingame_name = 'test-user';
 
