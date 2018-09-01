@@ -234,4 +234,20 @@ class RecruitingController extends Controller
 
         return $threads;
     }
+
+    /**
+     * @param $memberId
+     * @return array
+     */
+    public function validateMember($memberId)
+    {
+//        if (app()->environment() === 'local') {
+//            return ['isMember' => false];
+//        }
+
+        $result = \DB::connection('aod_forums')
+            ->select("CALL get_user({$memberId})");
+
+        return ['isMember' => empty($result)];
+    }
 }

@@ -33,6 +33,7 @@ store.rank = '';
 store.forum_name = '';
 store.platoon = '';
 store.squad = '';
+store.validMemberId = false;
 
 // division data
 store.handleName = '';
@@ -59,6 +60,10 @@ store.locality = {
  * @param division
  */
 store.getPlatoons = (division) => {
+  if (!store.platoon_id) {
+    return;
+  }
+
   axios.get(store.base_url + '/division-platoons/' + division)
     .then(function (response) {
       store.division.platoons = response.data.data.platoons;

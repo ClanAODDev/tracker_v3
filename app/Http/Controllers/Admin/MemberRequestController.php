@@ -115,4 +115,14 @@ class MemberRequestController extends Controller
             ], $memberRequest->division)
         );
     }
+
+    /**
+     * @param Request $request
+     * @param MemberRequest $memberRequest
+     * @return array
+     */
+    public function isAlreadyMember(Request $request, MemberRequest $memberRequest)
+    {
+        return ['isMember' => $memberRequest->approved_at !== null];
+    }
 }
