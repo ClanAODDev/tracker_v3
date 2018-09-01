@@ -60,10 +60,6 @@ store.locality = {
  * @param division
  */
 store.getPlatoons = (division) => {
-  if (!store.platoon_id) {
-    return;
-  }
-
   axios.get(store.base_url + '/division-platoons/' + division)
     .then(function (response) {
       store.division.platoons = response.data.data.platoons;
@@ -115,6 +111,10 @@ store.getDivisionThreads = (division) => {
  * @param platoon
  */
 store.getPlatoonSquads = (platoon) => {
+  if (store.platoon == '') {
+    return;
+  }
+  
   axios.post(store.base_url + '/platoon-squads/', {
     platoon: platoon
   }).then(function (response) {
