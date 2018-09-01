@@ -130,6 +130,11 @@ class RecruitingController extends Controller
      */
     private function createRequest($member, $division)
     {
+        // don't allow duplicate pending requests
+        if (MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
+            return;
+        }
+
         MemberRequest::create([
             'requester_id' => auth()->user()->member->clan_id,
             'member_id' => $member->clan_id,
@@ -233,5 +238,25 @@ class RecruitingController extends Controller
         }
 
         return $threads;
+    }
+
+    /**
+     * @param $memberId
+     * @return array
+     */
+    public function validateMember($memberId)
+    {
+        if (app()->environment() === 'local') {
+            if ($memberId == 31832) {
+                return ['isMember' => true];
+            }
+
+            return ['isMember' => false];
+        }
+
+        $result = \DB::connection('aod_forums')
+            ->select("CALL get_user({$memberId})");
+
+        return ['isMember' => ! empty($result)];
     }
 }

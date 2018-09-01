@@ -21,6 +21,8 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
  */
 Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
+Route::post('validate-member/{memberId}', 'RecruitingController@validateMember')
+    ->name('validate');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
@@ -268,6 +270,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
         ->name('admin.member-request.requeue');
     Route::post('member-requests/{memberRequest}/name-change', 'Admin\MemberRequestController@handleNameChange')
         ->name('admin.member-request.name-change');
+    Route::get('member-requests/{memberRequest}/validate',
+        'Admin\MemberRequestController@isAlreadyMember')
+        ->name('admin.member-request.validate');
 
     Route::group(['prefix' => 'divisions'], function () {
         Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');

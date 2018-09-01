@@ -33,6 +33,7 @@ store.rank = '';
 store.forum_name = '';
 store.platoon = '';
 store.squad = '';
+store.validMemberId = false;
 
 // division data
 store.handleName = '';
@@ -110,6 +111,10 @@ store.getDivisionThreads = (division) => {
  * @param platoon
  */
 store.getPlatoonSquads = (platoon) => {
+  if (store.platoon == '') {
+    return;
+  }
+
   axios.post(store.base_url + '/platoon-squads/', {
     platoon: platoon
   }).then(function (response) {
