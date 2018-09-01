@@ -241,8 +241,12 @@ class RecruitingController extends Controller
      */
     public function validateMember($memberId)
     {
-        if (app()->environment() === 'local' && $memberId == 31832) {
-            return ['isMember' => true];
+        if (app()->environment() === 'local') {
+            if ($memberId == 31832) {
+                return ['isMember' => true];
+            }
+
+            return ['isMember' => false];
         }
 
         $result = \DB::connection('aod_forums')
