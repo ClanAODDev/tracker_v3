@@ -248,6 +248,6 @@ class RecruitingController extends Controller
         $result = \DB::connection('aod_forums')
             ->select("CALL get_user({$memberId})");
 
-        return ['isMember' => empty($result)];
+        return ['isMember' => ! empty($result)];
     }
 }
