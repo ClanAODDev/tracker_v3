@@ -72,14 +72,18 @@
                                id="ingame_name" :disabled="store.inDemoMode" />
                     </div>
 
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-4 form-group"
+                         :class="{'input': true, 'has-warning': errors.has('rank') }">
                         <label for="rank">Rank</label>
                         <select name="rank" id="rank" class="form-control" v-model="store.rank"
                         v-validate="{ required: true }">
                             <option :value="id"
+                                    :selected="id === 1 ? 'selected' : null"
                                     v-for="(rank,id) in this.ranks"
                             >{{ rank }}</option>
                         </select>
+                        <span v-show="errors.has('rank')"
+                              class="help-block">{{ errors.first('rank') }}</span>
                     </div>
                 </div>
             </div>
