@@ -21,7 +21,7 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
  */
 Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
-Route::get('validate-member/{memberId}', 'RecruitingController@validateMember')
+Route::post('validate-member/{memberId}', 'RecruitingController@validateMember')
     ->name('validate');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');

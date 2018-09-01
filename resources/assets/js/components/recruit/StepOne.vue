@@ -189,7 +189,7 @@
       },
 
       validateMemberId: function () {
-        axios.get(window.Laravel.appPath + '/validate-member/' + store.member_id)
+        axios.post(window.Laravel.appPath + '/validate-member/' + store.member_id)
           .then((response) => {
             store.validMemberId = response.data.isMember == true;
           });
