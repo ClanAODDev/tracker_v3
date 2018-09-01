@@ -130,6 +130,11 @@ class RecruitingController extends Controller
      */
     private function createRequest($member, $division)
     {
+        // don't allow duplicate pending requests
+        if (MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
+            return;
+        }
+
         MemberRequest::create([
             'requester_id' => auth()->user()->member->clan_id,
             'member_id' => $member->clan_id,
