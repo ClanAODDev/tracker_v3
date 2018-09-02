@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th>Member Name</th>
-                <th>Recruiter</th>
+                <th>Approver</th>
                 <th>Division</th>
                 <th class="text-center">Approved at</th>
                 <th class="text-center col-xs-2">Reprocess</th>
@@ -20,7 +20,7 @@
                     <td>
                         <code>{{ $request->member->name }}</code>
                     </td>
-                    <td>{{ $request->requester->name }}</td>
+                    <td>{{ $request->approver->name }}</td>
                     <td>{{ $request->division->name }}</td>
                     <td class="text-center {{ $request->approved_at <= now()->subHour(3) ? 'text-danger' : 'null' }}">
                         {{ $request->approved_at }}
