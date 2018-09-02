@@ -25,12 +25,13 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
-                <h4>12 Aug 2018 - 3.4.0</h4>
+                <h4>1 Sept 2018 - 3.5.0</h4>
                 <hr />
                 <ul>
                     <li>Implement member status requests</li>
                     <ul>
                         <li>Administrators will now process member status requests through the tracker. A member's status will reflect whether or not status has been approved by an administrator. Status can be viewed or managed via Division tools > Member Requests.</li>
+                        <li>Bugfix: addressed issue with member sync that could reset a member's assignment information while waiting to be approved.</li>
                     </ul>
                 </ul>
             </div>
