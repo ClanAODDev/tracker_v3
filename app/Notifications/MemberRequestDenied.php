@@ -41,7 +41,7 @@ class MemberRequestDenied extends Notification
     {
         $to = ($this->request->division->settings()->get('slack_channel')) ?: '@' . $this->request->requester->name;
 
-        $message = "*MEMBER STATUS REQUEST*\nA member status request for {$this->request->member->name} was denied. The reason for the denial was:\n\n```\n{$this->request->notes}\n```";
+        $message = "*MEMBER STATUS REQUEST*\nA member status request for `{$this->request->member->name}` was denied. The reason for the denial was:\n\n```\n{$this->request->notes}\n```";
 
         $path = route('division.member-requests.index', $this->request->division);
 
