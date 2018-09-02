@@ -20,7 +20,7 @@
 
         <h2>Member Requests</h2>
         <p>Approving a request will open a new window to complete in-processing on the Clan AOD forums. Simultaneously, the request will be approved and the requester will be notified.
-            <span class="text-accent">Denied requests</span> will be sent back to the requester for modification.</p>
+            Denied requests will be sent back to the requester for modification.</p>
 
         <p class="text-accent">Ensure popups are not blocked for this domain. An additional screen will appear during approval that takes you to Clan AOD forum MODCP.</p>
         <div id="admin-container" class="m-t-lg">
