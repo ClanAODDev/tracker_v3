@@ -4,10 +4,8 @@ namespace App\AOD\MemberSync;
 
 use App\Division;
 use App\Member;
-use App\MemberRequest;
 use App\Platoon;
 use App\Squad;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
@@ -35,7 +33,7 @@ class SyncMemberData
 
         self::cleanUpMemberRequests();
 
-        if (! count($syncData)) {
+        if ( ! count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }
@@ -141,6 +139,10 @@ class SyncMemberData
 
         foreach ($removed as $index => $id) {
             $member = Member::find($id);
+
+            if ($member->memberRequest) {
+                continue;
+            }
 
             // did they transfer to another division?
             if (self::$activeClanMembers->contains($member->clan_id)) {
