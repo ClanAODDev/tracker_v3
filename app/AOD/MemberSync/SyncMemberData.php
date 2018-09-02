@@ -140,15 +140,11 @@ class SyncMemberData
         foreach ($removed as $index => $id) {
             $member = Member::find($id);
 
-            if ($member->memberRequest) {
-                continue;
-            }
-
             // did they transfer to another division?
             if (self::$activeClanMembers->contains($member->clan_id)) {
                 self::hardResetMember($member);
             } else {
-                if ($member instanceof Member && ! $member->isPending) {
+                if ($member instanceof Member && ! $member->memberRequest) {
                     $member->partTimeDivisions()->sync([]);
                     self::hardResetMember($member);
                 }
