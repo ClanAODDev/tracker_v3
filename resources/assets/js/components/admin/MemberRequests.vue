@@ -102,7 +102,7 @@
           .then((response) => {
 
             if ( ! response.data.isMember) {
-              window.open(event.path, 'Tracker | Approve Member', settings, true);
+              window.open(event.path, '_blank', settings, true);
               axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
                 .then((response) => {
                   this.dataPending.splice(index, 1);
