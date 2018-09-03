@@ -35,5 +35,5 @@
 @stop
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/admin.js?v=1.2') !!}"></script>
+    <script src="{!! asset('/js/admin.js?v=1.3') !!}"></script>
 @stop
