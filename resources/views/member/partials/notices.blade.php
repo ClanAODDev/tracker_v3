@@ -1,4 +1,4 @@
-@if ($member->memberRequest()->exists())
+@if ($member->memberRequest()->exists() && $member->memberRequest->approved_at == null)
     <div class="alert alert-warning">
        This member's status request is currently pending. Some details, like teamspeak activity, may not be available until the request is approved.
     </div>

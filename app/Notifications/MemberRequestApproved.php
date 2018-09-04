@@ -41,7 +41,7 @@ class MemberRequestApproved extends Notification
     {
         $to = ($this->request->division->settings()->get('slack_channel')) ?: '@' . $this->request->requester->name;
 
-        $message = "*MEMBER STATUS REQUEST*\nA member status request for {$this->request->member->name} was approved!";
+        $message = "*MEMBER STATUS REQUEST*\nA member status request for `{$this->request->member->name}` was approved!";
 
         return (new SlackMessage())
             ->success()

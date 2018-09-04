@@ -4,10 +4,8 @@ namespace App\AOD\MemberSync;
 
 use App\Division;
 use App\Member;
-use App\MemberRequest;
 use App\Platoon;
 use App\Squad;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
@@ -35,7 +33,7 @@ class SyncMemberData
 
         self::cleanUpMemberRequests();
 
-        if (! count($syncData)) {
+        if ( ! count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }
@@ -146,7 +144,7 @@ class SyncMemberData
             if (self::$activeClanMembers->contains($member->clan_id)) {
                 self::hardResetMember($member);
             } else {
-                if ($member instanceof Member && ! $member->isPending) {
+                if ($member instanceof Member && ! $member->memberRequest) {
                     $member->partTimeDivisions()->sync([]);
                     self::hardResetMember($member);
                 }

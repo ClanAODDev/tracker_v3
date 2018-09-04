@@ -93,7 +93,6 @@
       },
 
       approve (event, request, index) {
-        let settings = 'width=900,height=600,scrollbars=yes';
 
         /**
          * Check if member was already approved
@@ -102,7 +101,7 @@
           .then((response) => {
 
             if ( ! response.data.isMember) {
-              window.open(event.path, 'Tracker | Approve Member', settings, true);
+              window.open(event.path, '_blank', null);
               axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
                 .then((response) => {
                   this.dataPending.splice(index, 1);
