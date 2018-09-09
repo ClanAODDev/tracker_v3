@@ -25,6 +25,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>9 Sept 2018 - 3.6.0</h4>
+                <hr />
+                <ul>
+                    <li>Upgrade framework to 5.6</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>1 Sept 2018 - 3.5.0</h4>
                 <hr />
                 <ul>
