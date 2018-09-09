@@ -97,6 +97,15 @@ class MemberRequest extends Model
     }
 
     /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeErrors($query)
+    {
+        return $query->where('approved_at', '<=', now()->subHour(3));
+    }
+
+    /**
      * Approve a member request
      */
     public function approve()
