@@ -36,7 +36,6 @@ class LoginController extends Controller
     private function registerNewUser($username)
     {
         if ($member = $this->isCurrentAODMember()) {
-
             $user = new User;
             $user->name = $username;
             $user->email = $this->email;

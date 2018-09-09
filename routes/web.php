@@ -113,11 +113,9 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     Route::get('/leave', 'LeaveController@index')->name('leave.index');
     Route::post('/leave', 'LeaveController@store')->name('leave.store');
 
-    Route::get('/structure/edit', 'DivisionStructureController@modify'
-    )->name('division.edit-structure');
+    Route::get('/structure/edit', 'DivisionStructureController@modify')->name('division.edit-structure');
     Route::get('/structure', 'DivisionStructureController@show')->name('division.structure');
-    Route::post('/structure', 'DivisionStructureController@update'
-    )->name('division.update-structure');
+    Route::post('/structure', 'DivisionStructureController@update')->name('division.update-structure');
 
     Route::get('/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
