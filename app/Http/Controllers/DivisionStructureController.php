@@ -40,7 +40,11 @@ class DivisionStructureController extends Controller
             $compiledData = $this->compileDivisionData($division);
 
             $templates = array('structure' => $division->structure);
-            $env = new \Twig_Environment(new $twigLoaderArray($templates), $options);
+            
+            $env = new \Twig_Environment(new \Twig_Loader_Array($templates), [
+                'autoescape' => false
+            ]);
+
             $data = $env->render('structure', ['division' => $compiledData]);
         } catch (Twig_Error $error) {
             $data = $this->handleTwigError($error);
