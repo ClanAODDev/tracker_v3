@@ -29,12 +29,10 @@ class DivisionStructureController extends Controller
 
     /**
      * @param Division $division
-     * @param $options
-     * @param $twigLoaderArray
      * @return string
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Division $division, $options, $twigLoaderArray)
+    public function show(Division $division)
     {
         $this->authorize('viewDivisionStructure', auth()->user());
 
