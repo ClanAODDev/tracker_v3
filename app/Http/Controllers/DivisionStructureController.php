@@ -7,9 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Twig_Error;
 use Twig_Error_Syntax;
-use Twig_Loader_String;
 use Twig_Sandbox_SecurityError;
-use TwigBridge\Facade\Twig;
 
 /**
  * Class DivisionStructureController
@@ -31,18 +29,21 @@ class DivisionStructureController extends Controller
 
     /**
      * @param Division $division
+     * @param $options
+     * @param $twigLoaderArray
      * @return string
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Division $division)
+    public function show(Division $division, $options, $twigLoaderArray)
     {
         $this->authorize('viewDivisionStructure', auth()->user());
-
-        Twig::setLoader(new Twig_Loader_String());
 
         try {
             $compiledData = $this->compileDivisionData($division);
 
-            $data = Twig::render($division->structure, ['division' => $compiledData]);
+            $templates = array('structure' => $division->structure);
+            $env = new \Twig_Environment(new $twigLoaderArray($templates), $options);
+            $data = $env->render('structure', ['division' => $compiledData]);
         } catch (Twig_Error $error) {
             $data = $this->handleTwigError($error);
         }

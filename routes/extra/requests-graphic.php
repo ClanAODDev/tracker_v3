@@ -15,13 +15,13 @@ Route::get('requests-count.png', function () {
     $dimensions = imagettfbbox(20, 0, $bigfont, $requestsCount);
     $textWidth = abs($dimensions[4] - $dimensions[0]);
     $x = imagesx($im) - $textWidth;
-#991A22
+
     imagettftext($im, 20, 0, $x - 10, 25, $orange, $bigfont, $requestsCount);
 
-    if ($errors > 0) {
+    if ($errors > 0)  {
         imagettftext($im, 6, 0, $x - 50, 20, $red, $tinyfont, "({$errors} ERR)");
     }
-    
+
     imagepng($im);
     imagedestroy($im);
 });
