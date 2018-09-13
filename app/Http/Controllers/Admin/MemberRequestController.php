@@ -43,12 +43,10 @@ class MemberRequestController extends Controller
 
         $request = MemberRequest::find($requestId);
 
-
         if ($request->division->settings()->get('slack_alert_member_approved') == "on") {
             $request->division->notify(new MemberRequestApproved($request));
         }
-
-
+        
         $request->approve();
 
         return $request;
