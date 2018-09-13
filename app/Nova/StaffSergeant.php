@@ -31,6 +31,11 @@ class StaffSergeant extends Resource
         'id',
     ];
 
+    public static function label()
+    {
+        return "Staff Sergeants";
+    }
+
     /**
      * Get the fields displayed by the resource.
      *

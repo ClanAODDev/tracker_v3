@@ -76,6 +76,24 @@ class DivisionPolicy
         return false;
     }
 
+    public function viewAny(User $user)
+    {
+        if ($user->isRole('admin')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function view(User $user)
+    {
+        if ($user->isRole('admin')) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function create(User $user)
     {
         if ($user->isRole('admin')) {

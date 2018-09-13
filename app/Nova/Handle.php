@@ -3,8 +3,10 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Handle extends Resource
@@ -21,7 +23,7 @@ class Handle extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'label';
 
     /**
      * The columns that should be searched.
@@ -29,7 +31,7 @@ class Handle extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'label',
     ];
 
     /**
@@ -43,7 +45,13 @@ class Handle extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsToMany::make('Divisions'),
+            Text::make('label'),
+
+            Text::make('type'),
+            Text::make('comments'),
+            Text::make('url')->hideFromIndex(),
+
+            HasMany::make('Divisions', 'divisions'),
         ];
     }
 

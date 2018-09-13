@@ -61,6 +61,16 @@ class MemberPolicy
         return false;
     }
 
+    public function view()
+    {
+        return true;
+    }
+
+    public function viewAny()
+    {
+        return true;
+    }
+
     /**
      * Determines policy for removing members
      *
@@ -76,7 +86,7 @@ class MemberPolicy
         }
 
         // prevent exploiting ability to change rank to SGT
-        if (! $user->isRole(['admin', 'sr_ldr'])) {
+        if ( ! $user->isRole(['admin', 'sr_ldr'])) {
             return false;
         }
 

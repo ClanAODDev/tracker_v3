@@ -4,13 +4,18 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Rank
+ *
+ * @package App
+ */
 class Rank extends Model
 {
     /**
-     * relationship - rank has one member
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function member()
+    public function members()
     {
-        return $this->hasOne(Member::class);
+        return $this->hasMany(Member::class);
     }
 }
