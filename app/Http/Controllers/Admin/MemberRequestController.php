@@ -43,13 +43,11 @@ class MemberRequestController extends Controller
 
         $request = MemberRequest::find($requestId);
 
-        try {
-            if ($request->division->settings()->get('slack_alert_member_approved') == "on") {
-                $request->division->notify(new MemberRequestApproved($request));
-            }
-        } catch (\Exception $e) {
-            //
+
+        if ($request->division->settings()->get('slack_alert_member_approved') == "on") {
+            $request->division->notify(new MemberRequestApproved($request));
         }
+
 
         $request->approve();
 
@@ -70,12 +68,8 @@ class MemberRequestController extends Controller
 
         $request->cancel();
 
-        try {
-            if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
-                $request->division->notify(new MemberRequestDenied($request));
-            }
-        } catch (\Exception $e) {
-            //
+        if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
+            $request->division->notify(new MemberRequestDenied($request));
         }
 
         return $request;
