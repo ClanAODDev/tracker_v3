@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
@@ -47,14 +48,11 @@ class StaffSergeant extends Resource
         return [
             ID::make()->sortable(),
 
-            BelongsTo::make('Division')
-                ->rules('required')
-                ->sortable(),
+            BelongsTo::make('division')
+                ->rules('required'),
 
-            BelongsTo::make('Member')
-                ->rules('required')
-                ->searchable()
-                ->sortable(),
+            BelongsTo::make('member')
+                ->rules('required'),
         ];
     }
 
@@ -77,7 +75,9 @@ class StaffSergeant extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ByDivision(),
+        ];
     }
 
     /**

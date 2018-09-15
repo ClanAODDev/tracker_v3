@@ -35,6 +35,10 @@ class User extends Resource
         'id', 'name', 'email',
     ];
 
+    public static $with = [
+        'member', 'role'
+    ];
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -59,6 +63,10 @@ class User extends Resource
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
             BelongsTo::make('Role'),
+
+            HasOne::make('Member'),
+
+
         ];
     }
 

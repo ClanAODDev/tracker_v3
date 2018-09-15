@@ -2,10 +2,12 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -66,6 +68,8 @@ class Member extends Resource
 
             BelongsTo::make('Division'),
 
+            HasOne::make('User'),
+
         ];
     }
 
@@ -88,7 +92,9 @@ class Member extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ByDivision(),
+        ];
     }
 
     /**
