@@ -20,7 +20,9 @@
 
         <h2>Member Requests</h2>
         <p>Approving a request will open a new window to complete in-processing on the Clan AOD forums. Simultaneously, the request will be approved and the requester will be notified.
-            <span class="text-accent">Denied requests</span> will be sent back to the requester for modification.</p>
+            Denied requests will be sent back to the requester for modification.</p>
+
+        <p class="text-accent">Ensure popups are not blocked for this domain. An additional screen will appear during approval that takes you to Clan AOD forum MODCP.</p>
         <div id="admin-container" class="m-t-lg">
             <member-requests :pending="{{ $pending }}">
                 <i class="fa fa-refresh fa-spin text-info"></i> Loading...
@@ -33,5 +35,5 @@
 @stop
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/admin.js?v=1.0') !!}"></script>
+    <script src="{!! asset('/js/admin.js?v=1.3') !!}"></script>
 @stop

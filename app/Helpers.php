@@ -268,7 +268,7 @@ function curl_last_url($ch, &$maxredirect = null)
             }
         } while ($code && --$mr);
         curl_close($rch);
-        if ( ! $mr) {
+        if (! $mr) {
             if ($maxredirect === null) {
                 trigger_error(
                     'Too many redirects. When following redirects, libcurl hit the maximum amount.',

@@ -12,6 +12,7 @@
     "gulp": "^3.9.1",
     "jquery.repeater": "^1.2.1",
     "toastr": "^2.1.2",
+    "vue-focus": "^2.1.0",
     "vue-template-compiler": "^2.4.4",
     "vuefire": "^1.4.5"
   },

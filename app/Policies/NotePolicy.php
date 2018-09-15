@@ -37,6 +37,11 @@ class NotePolicy
         return $this->create();
     }
 
+    public function edit()
+    {
+        //
+    }
+
     /**
      * Only officers and above can create notes
      *

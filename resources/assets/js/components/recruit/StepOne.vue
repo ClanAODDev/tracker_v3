@@ -46,13 +46,16 @@
                 <div class="row">
 
                     <div class="col-md-4 form-group"
-                         :class="{'input': true, 'has-warning': errors.has('member_id') }">
+                         :class="{'input': true, 'has-warning': !store.validMemberId }">
                         <label for="member_id">Forum Member Id</label>
-                        <input type="number" class="form-control" name="member_id" v-model="store.member_id"
-                               id="member_id" v-validate="'required|max:5'" @change="this.resetThreadsOnIdChange"
-                               :disabled="store.inDemoMode" />
-                        <span v-show="errors.has('member_id')"
-                              class="help-block">{{ errors.first('member_id') }}</span>
+                        <input type="number" class="form-control" name="member_id"
+                               v-model="store.member_id"
+                               id="member_id" v-validate="'required|max:5'"
+                               @change="this.resetThreadsOnIdChange"
+                               :disabled="store.inDemoMode"
+                               @blur="validateMemberId" />
+                        <span v-show="!store.validMemberId"
+                              class="help-block">Enter a valid member id</span>
                     </div>
 
                     <div class="col-md-4 form-group"
@@ -72,14 +75,23 @@
                                id="ingame_name" :disabled="store.inDemoMode" />
                     </div>
 
-                    <div class="col-md-4 form-group">
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-4 form-group"
+                         :class="{'input': true, 'has-warning': errors.has('rank') }">
                         <label for="rank">Rank</label>
                         <select name="rank" id="rank" class="form-control" v-model="store.rank"
-                        v-validate="{ required: true }">
+                                v-validate="{ required: true }">
                             <option :value="id"
+                                    :selected="id === 1 ? 'selected' : null"
                                     v-for="(rank,id) in this.ranks"
-                            >{{ rank }}</option>
+                            >{{ rank }}
+                            </option>
                         </select>
+                        <span v-show="errors.has('rank')"
+                              class="help-block">{{ errors.first('rank') }}</span>
                     </div>
                 </div>
             </div>
@@ -146,14 +158,22 @@
   import store from './store.js';
   import toastr from 'toastr';
   import ProgressBar from './ProgressBar.vue';
+  import { focus } from 'vue-focus';
 
   export default {
-
+    directives: {focus: focus},
     props: ['ranks'],
 
     methods: {
       validateStep: function () {
+
         this.$validator.validateAll().then((result) => {
+
+          if (!store.validMemberId && !store.inDemoMode) {
+            toastr.error('Oops, your member id appears to be invalid!');
+            return false;
+          }
+
           if (!result) {
             toastr.error('Something is wrong with your member information', 'Uh oh...');
             return false;
@@ -165,6 +185,14 @@
           toastr.error('Something is wrong with your member information', 'Uh oh...');
           return false;
         });
+
+      },
+
+      validateMemberId: function () {
+        axios.post(window.Laravel.appPath + '/validate-member/' + store.member_id)
+          .then((response) => {
+            store.validMemberId = response.data.isMember == true;
+          });
       },
 
       resetThreadsOnIdChange: () => {
@@ -181,6 +209,7 @@
       toggleDemoMode: () => {
         store.inDemoMode = !store.inDemoMode;
         store.member_id = 99999;
+        store.rank = 1;
         store.forum_name = 'test-user';
         store.ingame_name = 'test-user';
 

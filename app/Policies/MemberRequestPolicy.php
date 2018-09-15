@@ -57,7 +57,8 @@ class MemberRequestPolicy
      * @param MemberRequest $request
      * @return bool
      */
-    public function cancel(User $user, MemberRequest $request) {
+    public function cancel(User $user, MemberRequest $request)
+    {
         if ($user->isRole(['sr_ldr', 'admin'])) {
             return true;
         }

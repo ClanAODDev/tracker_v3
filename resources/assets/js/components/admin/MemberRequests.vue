@@ -85,7 +85,7 @@
         this.notes = null;
       },
 
-      notifyOfNameChange(event) {
+      notifyOfNameChange (event) {
         axios.post(window.Laravel.appPath + '/admin/member-requests/' + event.id + '/name-change', {
           oldName: event.oldName,
           newName: event.newName,
@@ -93,16 +93,27 @@
       },
 
       approve (event, request, index) {
-        let settings = 'width=900,height=600,scrollbars=yes';
-        window.open(event.path, 'Tracker | Approve Member', settings, true);
 
-        axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
+        /**
+         * Check if member was already approved
+         */
+        axios.get(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/validate')
           .then((response) => {
-            this.dataPending.splice(index, 1);
-            toastr.success('Approved!');
-          })
-          .catch((error) => {
-            toastr.error('Something went wrong...');
+
+            if ( ! response.data.isMember) {
+              window.open(event.path, '_blank', null);
+              axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
+                .then((response) => {
+                  this.dataPending.splice(index, 1);
+                  toastr.success('Approved!');
+                })
+                .catch((error) => {
+                  toastr.error('Something went wrong...');
+                });
+            } else {
+              toastr.warning('Member already approved. Cleaning up...');
+              this.dataPending.splice(index, 1);
+            }
           });
       },
 
