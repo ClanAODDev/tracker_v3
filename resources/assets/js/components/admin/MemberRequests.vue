@@ -100,8 +100,14 @@
         axios.get(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/validate')
           .then((response) => {
 
-            if ( ! response.data.isMember) {
-              window.open(event.path, '_blank', null);
+            if (!response.data.isMember) {
+              let popup = window.open(event.path, '_blank', null);
+
+              if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+                toastr.error('Something prevented the modcp popup from opening.', 'Oops!');
+                return false;
+              }
+
               axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
                 .then((response) => {
                   this.dataPending.splice(index, 1);
