@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'name' => 'Tracker Administration',
+    'name' => 'Clan AOD Tracker',
 
     /*
     |--------------------------------------------------------------------------
