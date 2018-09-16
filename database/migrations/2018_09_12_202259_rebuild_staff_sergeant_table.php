@@ -20,6 +20,7 @@ class RebuildStaffSergeantTable extends Migration
             $table->unsignedInteger('division_id');
             $table->unsignedInteger('member_id');
             $table->timestamps();
+            $table->unique(['division_id', 'member_id']);
         });
 
     }
