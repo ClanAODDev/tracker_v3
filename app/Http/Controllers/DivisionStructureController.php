@@ -45,7 +45,7 @@ class DivisionStructureController extends Controller
                 'autoescape' => false
             ]);
 
-            $env->addFUnction(new \Twig_SimpleFunction('ordSuffix', function ($value) {
+            $env->addFunction(new \Twig_SimpleFunction('ordSuffix', function ($value) {
                 return ordSuffix($value);
             }));
 
