@@ -256,44 +256,24 @@ Route::group(['prefix' => 'reports'], function () {
 
 
 /**
- * Admin Routes
+ * Admin / Member Request routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
-    Route::get('/', 'AdminController@index')->name('admin');
-
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
-    Route::post('member-requests/{requestId}/approve', 'Admin\MemberRequestController@approve')
-        ->name('admin.member-request.approve');
+    Route::post('member-requests/{requestId}/approve',
+        'Admin\MemberRequestController@approve')->name('admin.member-request.approve');
+
     Route::post('member-requests/{requestId}/cancel', 'Admin\MemberRequestController@cancel')
         ->name('admin.member-request.cancel');
+
     Route::post('member-requests/{memberRequest}/requeue', 'Admin\MemberRequestController@requeue')
         ->name('admin.member-request.requeue');
+
     Route::post('member-requests/{memberRequest}/name-change', 'Admin\MemberRequestController@handleNameChange')
         ->name('admin.member-request.name-change');
-    Route::get('member-requests/{memberRequest}/validate',
-        'Admin\MemberRequestController@isAlreadyMember')
+
+    Route::get('member-requests/{memberRequest}/validate','Admin\MemberRequestController@isAlreadyMember')
         ->name('admin.member-request.validate');
-
-    Route::group(['prefix' => 'divisions'], function () {
-        Route::post('', 'Admin\DivisionController@store')->name('adminStoreDivision');
-        Route::get('{division}/edit', 'Admin\DivisionController@edit')->name('adminEditDivision');
-        Route::get('create', 'Admin\DivisionController@create')->name('adminCreateDivision');
-        Route::put('{division}', 'Admin\DivisionController@update')->name('adminUpdateDivision');
-        Route::patch('{division}', 'Admin\DivisionController@update');
-        Route::delete('{division}', 'Admin\DivisionController@destroy')->name('adminDeleteDivision');
-    });
-
-    // edit default tags
-    Route::put('tags', 'Admin\TagController@update')->name('adminUpdateTags');
-    Route::patch('tags', 'Admin\TagController@update');
-
-    // edit handle
-    Route::post('handles', 'Admin\HandleController@store')->name('adminStoreHandle');
-    Route::get('handles/create', 'Admin\HandleController@create')->name('adminCreateHandle');
-    Route::get('handles/{handle}/edit', 'Admin\HandleController@edit')->name('adminEditHandle');
-    Route::put('handles/{handle}', 'Admin\HandleController@update')->name('adminUpdateHandle');
-    Route::patch('handles/{handle}', 'Admin\HandleController@update');
-    Route::delete('handles/{handle}', 'Admin\HandleController@delete')->name('adminDeleteHandle');
 });
 
 /**
