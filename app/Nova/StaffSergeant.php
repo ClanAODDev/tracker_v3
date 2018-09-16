@@ -5,6 +5,7 @@ namespace App\Nova;
 use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
 
 class StaffSergeant extends Resource
@@ -46,13 +47,16 @@ class StaffSergeant extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
+            ID::make('ID'),
 
             BelongsTo::make('division')
                 ->rules('required'),
 
             BelongsTo::make('member')
-                ->rules('required'),
+                ->rules('required')
+                ->searchable(),
+
+            Date::make('Created At')
         ];
     }
 
