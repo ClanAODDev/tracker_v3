@@ -97,30 +97,31 @@
         /**
          * Check if member was already approved
          */
-        axios.get(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/validate')
-          .then((response) => {
+        axios.get(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/validate').then((response) => {
 
-            if (!response.data.isMember) {
-              let popup = window.open(event.path, '_blank', null);
+          if (!response.data.isMember) {
 
-              if (!popup || popup.closed || typeof popup.closed == 'undefined') {
-                toastr.error('Something prevented the modcp popup from opening.', 'Oops!');
-                return false;
-              }
-
-              axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
-                .then((response) => {
-                  this.dataPending.splice(index, 1);
-                  toastr.success('Approved!');
-                })
-                .catch((error) => {
-                  toastr.error('Something went wrong...');
-                });
-            } else {
-              toastr.warning('Member already approved. Cleaning up...');
-              this.dataPending.splice(index, 1);
+            /**
+             * Ensure popup was created
+             */
+            let popup = window.open(event.path, '_blank', null);
+            if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+              toastr.error('Something prevented the modcp popup from opening.', 'Oops!');
+              return false;
             }
-          });
+
+            axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
+              .then((response) => {
+                this.dataPending.splice(index, 1);
+                toastr.success('Approved!');
+              }).catch((error) => {
+              toastr.error('Something went wrong...');
+            });
+          } else {
+            toastr.warning('Member already approved. Cleaning up...');
+            this.dataPending.splice(index, 1);
+          }
+        });
       },
 
       cancel (request, index) {
