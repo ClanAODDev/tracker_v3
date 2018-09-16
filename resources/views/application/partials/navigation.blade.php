@@ -95,7 +95,7 @@
             Admin
         </li>
         <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
-            <a href="{{ route('admin') }}">Admin CP</a>
+            <a href="/admin">Admin CP</a>
         </li>
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">

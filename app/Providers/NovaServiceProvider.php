@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
@@ -41,8 +42,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewNova', function ($user) {
-            return $user->isDeveloper();
+        Gate::define('viewNova', function (User $user) {
+            return $user->isRole('admin');
         });
     }
 
