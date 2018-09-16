@@ -45,6 +45,10 @@ class DivisionStructureController extends Controller
                 'autoescape' => false
             ]);
 
+            $env->addFUnction(new \Twig_SimpleFunction('ordSuffix', function ($value) {
+                return ordSuffix($value);
+            }));
+
             $data = $env->render('structure', ['division' => $compiledData]);
         } catch (Twig_Error $error) {
             $data = $this->handleTwigError($error);
