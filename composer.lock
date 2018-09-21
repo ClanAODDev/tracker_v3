@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4e406d583a4e2ab7c972e62f09938b8",
+    "content-hash": "f00ae1bfaf6deff211aac5dcfd54e3c7",
     "packages": [
         {
             "name": "appstract/laravel-blade-directives",
@@ -1873,12 +1873,17 @@
         },
         {
             "name": "laravel/nova",
-            "version": "dev-master",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:laravel/nova.git",
+                "reference": "5f41e1a9c2422ce4460a5697d55ab1dcfc354054"
+            },
             "dist": {
-                "type": "path",
-                "url": "./nova",
-                "reference": "6b34fd3882e3cff2dc99d288393e92025bc93094",
-                "shasum": null
+                "type": "zip",
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-5f41e1a9c2422ce4460a5697d55ab1dcfc354054-zip-b537fe.zip",
+                "reference": "5f41e1a9c2422ce4460a5697d55ab1dcfc354054",
+                "shasum": "201eedd8f05ff691dcc2e0681b5bca47706a8042"
             },
             "require": {
                 "cakephp/chronos": "~1.0",
@@ -1932,7 +1937,8 @@
             "keywords": [
                 "admin",
                 "laravel"
-            ]
+            ],
+            "time": "2018-09-20T20:37:39+00:00"
         },
         {
             "name": "laravel/passport",
@@ -2694,16 +2700,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.0.3",
+            "version": "v4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "bd088dc940a418f09cda079a9b5c7c478890fb8d"
+                "reference": "fa6ee28600d21d49b2b4e1006b48426cec8e579c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/bd088dc940a418f09cda079a9b5c7c478890fb8d",
-                "reference": "bd088dc940a418f09cda079a9b5c7c478890fb8d",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/fa6ee28600d21d49b2b4e1006b48426cec8e579c",
+                "reference": "fa6ee28600d21d49b2b4e1006b48426cec8e579c",
                 "shasum": ""
             },
             "require": {
@@ -2741,7 +2747,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-07-15T17:25:16+00:00"
+            "time": "2018-09-18T07:03:24+00:00"
         },
         {
             "name": "palanik/wrapi",
@@ -2900,16 +2906,16 @@
         },
         {
             "name": "php-http/client-common",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/client-common.git",
-                "reference": "9accb4a082eb06403747c0ffd444112eda41a0fd"
+                "reference": "949ee8a8cba5fa2abe839c87bf7b885ac3330589"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/client-common/zipball/9accb4a082eb06403747c0ffd444112eda41a0fd",
-                "reference": "9accb4a082eb06403747c0ffd444112eda41a0fd",
+                "url": "https://api.github.com/repos/php-http/client-common/zipball/949ee8a8cba5fa2abe839c87bf7b885ac3330589",
+                "reference": "949ee8a8cba5fa2abe839c87bf7b885ac3330589",
                 "shasum": ""
             },
             "require": {
@@ -2931,7 +2937,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7-dev"
+                    "dev-master": "1.8-dev"
                 }
             },
             "autoload": {
@@ -2957,7 +2963,7 @@
                 "http",
                 "httplug"
             ],
-            "time": "2017-11-30T11:06:59+00:00"
+            "time": "2018-06-22T12:36:17+00:00"
         },
         {
             "name": "php-http/discovery",

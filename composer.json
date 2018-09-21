@@ -9,8 +9,8 @@
     "type": "project",
     "repositories": [
         {
-            "type": "path",
-            "url": "./nova"
+            "type": "composer",
+            "url": "https://nova.laravel.com"
         }
     ],
     "require": {
@@ -35,7 +35,7 @@
         "appstract/laravel-blade-directives": "^0.4.5",
         "sentry/sentry-laravel": "^0.9.1",
         "fideloper/proxy": "~4.0",
-        "laravel/nova": "*"
+        "laravel/nova": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
