@@ -60,29 +60,9 @@ class Note extends Model
         return $this->belongsTo(Member::class);
     }
 
-    /**
-     * Get tags for a note
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany(Tag::class);
-    }
-
     public function leave()
     {
         return $this->hasOne(Leave::class);
-    }
-
-    /**
-     * Get tag ids for this note
-     *
-     * @return array
-     */
-    public function getTagListAttribute()
-    {
-        return $this->tags->pluck('id')->all();
     }
 
     /**
