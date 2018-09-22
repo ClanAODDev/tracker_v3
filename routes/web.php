@@ -260,23 +260,6 @@ Route::group(['prefix' => 'reports'], function () {
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
-    Route::get('fix-tags', function () {
-
-
-        foreach (App\Note::whereHas('tags')->with('tags')->get() as $note) {
-
-            $tags = $note->tags->pluck('name')->toArray();
-            $note->body .= "\r\n\r\n" . implode(',', $tags);
-            $note->save();
-
-            $note->tags()->detach();
-
-        }
-
-        App\Tag::all()->each->delete();
-    });
-
-
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
     Route::post('member-requests/{requestId}/approve',
         'Admin\MemberRequestController@approve')->name('admin.member-request.approve');
