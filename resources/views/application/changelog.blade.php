@@ -25,6 +25,22 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>9 Sept 2018 - 3.7.0</h4>
+                <hr />
+                <ul>
+                    <li>Drop tag support from the tracker</li>
+                    <ul>
+                        <li>Existing tags have been appended to note bodies to preserve context</li>
+                    </ul>
+                    <li>Add "AOD Forums" link to navigation bar</li>
+                    <li>Allow line breaks in notes</li>
+                    <li>Update Nova to 1.1.3</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>9 Sept 2018 - 3.6.0</h4>
                 <hr />
                 <ul>
