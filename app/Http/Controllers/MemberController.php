@@ -6,11 +6,9 @@ use App\Division;
 use App\Handle;
 use App\Http\Requests\DeleteMember;
 use App\Member;
-use App\Notifications\MemberRemoved;
 use App\Platoon;
 use App\Position;
 use App\Repositories\MemberRepository;
-use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Toastr;
@@ -48,7 +46,7 @@ class MemberController extends Controller
      */
     public function search($name = null)
     {
-        if (! $name) {
+        if ( ! $name) {
             $name = request()->name;
         }
 
@@ -118,6 +116,34 @@ class MemberController extends Controller
         return view('member.manage-ingame-handles', compact('handles', 'member', 'division'));
     }
 
+    /**
+     * @param Member $member
+     * @return \Illuminate\Support\Collection
+     */
+    private function getHandles(Member $member)
+    {
+        $handles = Handle::all()->map(function ($handle) use ($member) {
+            $newHandle = [
+                'id' => $handle->id,
+                'label' => $handle->label,
+                'type' => $handle->type,
+                'comments' => $handle->comments,
+                'enabled' => false,
+            ];
+
+            if ($member->handles->contains($handle->id)) {
+                $newHandle['enabled'] = true;
+                $newHandle['value'] = $member->handles->filter(function ($myHandle) use ($handle) {
+                    return $handle->type === $myHandle->type;
+                })->first()->pivot->value;
+            }
+
+            return $newHandle;
+        });
+
+        return $handles->sortBy('type')->values();
+    }
+
     public function editPartTime(Member $member)
     {
         $this->authorize('managePartTime', $member);
@@ -163,7 +189,7 @@ class MemberController extends Controller
         $division = $member->division;
 
         // hide admin notes from non-admin users
-        $notes = $member->notes()->with('author', 'tags')->get()
+        $notes = $member->notes()->with('author')->get()
             ->filter(function ($note) {
                 if ($note->type == 'sr_ldr') {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
@@ -172,10 +198,6 @@ class MemberController extends Controller
                 return true;
             });
 
-        $tags = ($division)
-            ? $division->availableTags->pluck('name', 'id')
-            : Tag::where('default', true)->get()->pluck('name', 'id');
-
         $member->load('recruits', 'recruits.division', 'recruits.rank');
 
         $partTimeDivisions = $member->partTimeDivisions()
@@ -183,7 +205,6 @@ class MemberController extends Controller
             ->get();
 
         return view('member.show', compact(
-            'tags',
             'member',
             'division',
             'notes',
@@ -195,6 +216,7 @@ class MemberController extends Controller
      * Assigns a position to the given member
      *
      * @param Request $request
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function updatePosition(Request $request)
     {
@@ -209,6 +231,7 @@ class MemberController extends Controller
      *
      * @param Member $member
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Member $member)
     {
@@ -218,44 +241,11 @@ class MemberController extends Controller
 
         $positions = Position::all()->pluck('id', 'name');
 
-        $tags = ($division)
-            ? $division->availableTags->pluck('name', 'id')
-            : Tag::whereDefault(true)->get()->pluck('name', 'id');
-
         return view('member.edit-member', compact(
             'member',
             'division',
-            'positions',
-            'tags'
+            'positions'
         ));
-    }
-
-    /**
-     * @param Member $member
-     * @return \Illuminate\Support\Collection
-     */
-    private function getHandles(Member $member)
-    {
-        $handles = Handle::all()->map(function ($handle) use ($member) {
-            $newHandle = [
-                'id' => $handle->id,
-                'label' => $handle->label,
-                'type' => $handle->type,
-                'comments' => $handle->comments,
-                'enabled' => false,
-            ];
-
-            if ($member->handles->contains($handle->id)) {
-                $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(function ($myHandle) use ($handle) {
-                    return $handle->type === $myHandle->type;
-                })->first()->pivot->value;
-            }
-
-            return $newHandle;
-        });
-
-        return $handles->sortBy('type')->values();
     }
 
     /**

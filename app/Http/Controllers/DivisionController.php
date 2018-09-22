@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateDivision;
 use App\Member;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
-use App\Tag;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -59,15 +58,6 @@ class DivisionController extends Controller
                 'slack-error-detail' => $response->getErrorExplanation()
             ])->withInput();
         }
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return void
-     */
-    public function index()
-    {
     }
 
     /**
@@ -131,15 +121,12 @@ class DivisionController extends Controller
             return [$key, $census->weekly_active_count];
         });
 
-        $defaultTags = Tag::whereDefault(true)->get();
-
         return view('division.modify', compact(
             'division',
             'censuses',
             'weeklyActive',
             'populations',
-            'comments',
-            'defaultTags'
+            'comments'
         ));
     }
 

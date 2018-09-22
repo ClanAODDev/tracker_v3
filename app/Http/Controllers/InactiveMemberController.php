@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\Http\Requests\DeleteMember;
 use App\Member;
-use App\Tag;
 use Carbon\Carbon;
 
 class InactiveMemberController extends Controller
@@ -58,8 +57,6 @@ class InactiveMemberController extends Controller
             ->with('rank')
             ->whereFlaggedForInactivity(true)->get();
 
-        $inactiveTag = Tag::whereSlug('inactivity-removal')->first()->id;
-
         /**
          * Using this to determine the active route, whether filtering
          * by teamspeak or forum. Used in platoon filter options, reset
@@ -74,8 +71,7 @@ class InactiveMemberController extends Controller
             'inactiveMembers',
             'flaggedMembers',
             'flagActivity',
-            'requestPath',
-            'inactiveTag'
+            'requestPath'
         ));
     }
 
@@ -84,6 +80,7 @@ class InactiveMemberController extends Controller
      *
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Member $member)
     {
@@ -104,6 +101,7 @@ class InactiveMemberController extends Controller
      *
      * @param Member $member
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Member $member)
     {

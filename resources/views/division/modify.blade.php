@@ -49,11 +49,6 @@
                         <i class="fa fa-slack fa-lg"></i> <span class="hidden-xs hidden-sm">Slack</span>
                     </a>
                 </li>
-               {{-- <li>
-                    <a data-toggle="tab" href="#division-tags">
-                        <i class="fa fa-tags fa-lg"></i> <span class="hidden-xs hidden-sm">Tags</span>
-                    </a>
-                </li>--}}
             </ul>
 
             <div class="tab-content">

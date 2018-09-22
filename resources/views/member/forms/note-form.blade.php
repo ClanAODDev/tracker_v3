@@ -8,12 +8,6 @@
 <div class="panel panel-filled">
     <div class="panel-heading">{{ $action }}</div>
     <div class="panel-body">
-
-        <div class="form-group {{ $errors->has('tag_list') ? ' has-error' : null }}">
-            {!! Form::label('tag_list', 'Tags', ['class' => 'slight text-muted']) !!}
-            {!! Form::select('tag_list[]', $tags, null, ['id' => 'select-tags', 'class' => 'form-control', 'multiple', 'style' => 'width: 100%;']) !!}
-        </div>
-
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
             {!! Form::label('body', 'Content', ['class' => 'slight text-muted']) !!}
             {!! Form::textarea('body', null, ['class' => 'form-control resize-vertical', 'required', 'rows' => 2]) !!}
@@ -37,13 +31,3 @@
         </div>
     </div>
 </div>
-
-@section('footer_scripts')
-    <script type="text/javascript">
-      $('#select-tags').select2({
-        maximumSelectionLength: 2,
-        minimumInputLength: 1,
-        placeholder: 'Select tag(s)'
-      });
-    </script>
-@endsection

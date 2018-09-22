@@ -56,17 +56,6 @@
                         </a>
                     </li>
 
-                    {{--<li>
-                        <a href="#crons" data-toggle="tab" aria-expanded="false">
-                            <i class="fa fa-cog fa-lg text-muted"></i> <span class="hidden-xs">Activity Log</span>
-                        </a>
-                    </li>--}}
-
-                    {{--<li>
-                        <a href="#tags" data-toggle="tab" aria-expanded="false">
-                            <i class="fa fa-tags fa-lg text-muted"></i> <span class="hidden-xs">Tags</span>
-                        </a>
-                    </li>--}}
                 </ul>
                 {{-- end profile edit nav --}}
                 <div class="margin-top-20">
@@ -90,20 +79,6 @@
                                 @include('admin.partials.handles-list')
                             </div>
                         </div>
-
-                        {{--<div class="tab-pane" id="crons">
-                            <div class="panel-body">
-                                @include('admin.partials.activity-log')
-                            </div>
-                        </div>--}}
-
-                        {{--<div class="tab-pane" id="tags">
-                            <div class="panel-body">
-                                @include('admin.forms.tags')
-                                @include('admin.partials.tag-table')
-                            </div>
-                        </div>--}}
-
                     </div>
                 </div>
             </div>

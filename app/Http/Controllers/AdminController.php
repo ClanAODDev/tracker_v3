@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
 use App\Division;
 use App\Handle;
 use App\Repositories\ClanRepository;
-use App\Tag;
 use App\User;
-use Carbon\Carbon;
 
 class AdminController extends Controller
 {

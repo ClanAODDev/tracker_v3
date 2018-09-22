@@ -18,10 +18,6 @@
         </ul>
 
         <p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>
-        <div class="form-group {{ $errors->has('tag_list') ? ' has-error' : null }}">
-            {!! Form::label('tag_list', 'Tags') !!}
-            {!! Form::select('tag_list[]', $tags, null, ['id' => 'select-tags', 'class' => 'form-control', 'multiple', 'style' => 'width: 100%;']) !!}
-        </div>
 
         <div class="form-group">
             {!! Form::label('removal_reason', 'Reason') !!}
@@ -35,10 +31,3 @@
                 class="btn btn-danger remove-member">Submit<span class="hidden-sm hidden-xs"> removal</span></button>
     </div>
 </div>
-
-<script type="text/javascript">
-  $('#select-tags').select2({
-    maximumSelectionLength: 2,
-    placeholder: 'Select tag(s)'
-  });
-</script>

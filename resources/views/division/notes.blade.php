@@ -18,23 +18,30 @@
 
     <div class="container-fluid">
 
-        @if (count($tags))
-            <div class="row">
-                <div class="panel">
-                    <div class="panel-body">
-                        <a href="{{ route('division.notes', $division->abbreviation) }}"
-                           class="btn btn-default text-muted">Reset Filter</a>
-                        @foreach ($tags as $tag)
-                            <a class="btn btn-default"
-                               href="{{ route('division.notes', [$division->abbreviation, $tag->slug]) }}">
-                                {{ $tag->name }}
-                            </a>
-                        @endforeach
+        <div class="row">
+            <div class="panel">
+                <div class="panel-body">
+                    <a class="btn btn-default"
+                       href="{{ route('division.notes', $division->abbreviation) }}?type=misc">
+                        Misc
+                    </a>
 
-                    </div>
+                    <a class="btn btn-default"
+                           href="{{ route('division.notes', $division->abbreviation) }}?type=negative">
+                        Negative
+                    </a>
+
+                    <a class="btn btn-default"
+                       href="{{ route('division.notes', $division->abbreviation) }}?type=Positive">
+                        Positive
+                    </a>
+
+                    <a href="{{ route('division.notes', $division->abbreviation) }}"
+                       class="btn btn-default text-muted">Reset Filter</a>
+
                 </div>
             </div>
-        @endif
+        </div>
 
         <h3>{{ $filter->name or "All Notes" }} ({{ count($notes) }})</h3>
         <hr />
@@ -46,13 +53,6 @@
                        class="panel panel-filled note {{ $note->type }}">
                         <div class="panel-heading">
                             {{ $note->member->name }} - {{ $note->updated_at->format('M d, Y')}}
-                            <div class="pull-right">
-                                @forelse ($note->tags as $tag)
-                                    <div class="label label-default">{{ $tag->name }}</div>
-                                @empty
-                                    <div class="label label-default text-muted">No tags</div>
-                                @endforelse
-                            </div>
                         </div>
                         <div class="panel-body">
                             {{ $note->body }} <span class="text-muted">- {{ $note->author->name }}</span>

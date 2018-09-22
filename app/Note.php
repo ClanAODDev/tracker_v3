@@ -30,7 +30,7 @@ class Note extends Model
         'author_id',
         'member_id'
     ];
-    
+
 
     /**
      * @return array
@@ -83,5 +83,15 @@ class Note extends Model
     public function getTagListAttribute()
     {
         return $this->tags->pluck('id')->all();
+    }
+
+    /**
+     * Check to see if note has been changed
+     *
+     * @return bool
+     */
+    public function changed()
+    {
+        return $this->updated_at != $this->created_at;
     }
 }
