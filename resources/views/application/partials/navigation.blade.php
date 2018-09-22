@@ -3,6 +3,10 @@
         <a href="{{ route('home') }}">Dashboard</a>
     </li>
 
+    <li>
+        <a href="https://clanaod.net/forums">AOD Forums</a>
+    </li>
+
     <li class="{{ set_active('members/' . auth()->user()->member->clan_id) }}">
         <a href="#user-cp" data-toggle="collapse" aria-expanded="false">
             {{ auth()->user()->name }}
