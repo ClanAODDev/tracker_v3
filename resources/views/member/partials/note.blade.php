@@ -1,44 +1,22 @@
 <div class="vertical-timeline-block note">
 
     <div class="vertical-timeline-icon">
-       @include('member.partials.note-icon')
+        @include('member.partials.note-icon')
     </div>
 
-    <div class="vertical-timeline-content panel collapsed">
+    <div class="vertical-timeline-content panel">
         <div class="p-sm">
-            <div class="panel-toggle">
-                <div class="panel-tools m-l-sm">
-                    <i class="fa fa-chevron-up toggle-icon"></i>
-                </div>
-                <div class="vertical-date pull-right text-muted">
-                    @if ($note->updated_at > $note->created_at)
-                        Updated on {{ $note->updated_at->format('d M Y') }}
-                    @else
-                        Posted on {{ $note->created_at->format('d M Y') }}
-                    @endif
-
-                </div>
-
-                @if ($note['type'] == 'sr_ldr')
-                    <span class="label label-default slight">SGT+</span>
-                @endif
-
-                @forelse ($note->tags as $tag)
-                    <span class="label label-default slight text-uppercase">{{ $tag->name }}</span>
-                @empty
-                    <span class="label label-default slight text-uppercase">NO TAG</span>
-                @endforelse
-
-            </div>
-
             <div class="panel-body">
-                <p>{{ $note->body }} </p>
-
+                <p style="margin: 0;">{!! nl2br($note->body) !!}
+                </p>
             </div>
-            <div class="panel-footer">
-                <span class="text-muted">{{ $note->author->name }}</span>
 
-                <div class="pull-right text-muted">
+            <div class="panel-footer">
+                <div class="slight">
+
+                    <a href="{{ route('member', $note->author->member->getUrlParams()) }}">{{ $note->author->name }}</a>
+                    &mdash;
+                    {{ $note->created_at->diffForHumans() }}
 
                     @if ($note->forum_thread_id)
                         <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}"
@@ -52,7 +30,6 @@
                         @endcan
                     @endif
                 </div>
-
             </div>
         </div>
     </div>
