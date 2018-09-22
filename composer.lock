@@ -1873,17 +1873,17 @@
         },
         {
             "name": "laravel/nova",
-            "version": "v1.1.1",
+            "version": "v1.1.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:laravel/nova.git",
-                "reference": "5f41e1a9c2422ce4460a5697d55ab1dcfc354054"
+                "reference": "128428b44cacd13acd04cd9ec5c3f877c4dd7f6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-5f41e1a9c2422ce4460a5697d55ab1dcfc354054-zip-b537fe.zip",
-                "reference": "5f41e1a9c2422ce4460a5697d55ab1dcfc354054",
-                "shasum": "201eedd8f05ff691dcc2e0681b5bca47706a8042"
+                "url": "https://nova.laravel.com/dist/laravel/nova/laravel-nova-128428b44cacd13acd04cd9ec5c3f877c4dd7f6b-zip-d3f762.zip",
+                "reference": "128428b44cacd13acd04cd9ec5c3f877c4dd7f6b",
+                "shasum": "1605f542b8a65834fe380a3c5d509290e82fd0ce"
             },
             "require": {
                 "cakephp/chronos": "~1.0",
@@ -1938,7 +1938,7 @@
                 "admin",
                 "laravel"
             ],
-            "time": "2018-09-20T20:37:39+00:00"
+            "time": "2018-09-21T19:30:33+00:00"
         },
         {
             "name": "laravel/passport",
