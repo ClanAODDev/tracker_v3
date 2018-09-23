@@ -197,8 +197,6 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        ClanForumSession::destroy();
-
         $this->guard()->logout();
 
         $request->session()->invalidate();
