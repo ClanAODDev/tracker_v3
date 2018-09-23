@@ -194,7 +194,7 @@ class Division extends Model
         return $this->hasManyThrough(
             Note::class,
             Member::class
-        )->with('tags', 'member', 'author');
+        )->with('member', 'author');
     }
 
     /**
@@ -317,24 +317,6 @@ class Division extends Model
     public function handle()
     {
         return $this->belongsTo(Handle::class);
-    }
-
-    /**
-     * Get default tags as well as division tags
-     */
-    public function availableTags()
-    {
-        return $this->tags()
-            ->whereDivisionId($this->id)
-            ->orWhere('default', true);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function tags()
-    {
-        return $this->hasMany(Tag::class);
     }
 
     /**

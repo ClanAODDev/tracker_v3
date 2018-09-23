@@ -58,7 +58,6 @@ class CreateLeave extends FormRequest
 
         $note->member()->associate($this->member_id);
         $note->author()->associate(auth()->user());
-        $note->tags()->attach(Tag::whereName('Leave Request')->first());
         $note->save();
 
         $leave = Leave::create([
