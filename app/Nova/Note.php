@@ -2,30 +2,28 @@
 
 namespace App\Nova;
 
-use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\HasOne;
-use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Date;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Member extends Resource
+class Note extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Member';
+    public static $model = 'App\Note';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'body';
 
     /**
      * The columns that should be searched.
@@ -33,19 +31,8 @@ class Member extends Resource
      * @var array
      */
     public static $search = [
-        'clan_id',
-        'name',
+        'id',
     ];
-
-    /**
-     * @param NovaRequest $request
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        return $query->where('division_id', '!=', 0);
-    }
 
     /**
      * Get the fields displayed by the resource.
@@ -56,19 +43,22 @@ class Member extends Resource
     public function fields(Request $request)
     {
         return [
-//            ID::make()->sortable(),
+            ID::make()->sortable(),
 
-            Number::make('Clan Id')->sortable(),
+            BelongsTo::make('Member', 'member'),
 
-            Text::make('Name'),
+            BelongsTo::make('Author', 'author', 'App\Nova\User'),
 
-            BelongsTo::make('Rank'),
+            Select::make('type')->options([
+                'misc' => 'Misc',
+                'negative' => 'Negative',
+                'positive' => 'Positive',
+                'sr_ldr' => 'SGT+'
+            ])->displayUsingLabels()->sortable(),
 
-            BelongsTo::make('Division'),
+            Date::make('Created At'),
 
-            HasOne::make('User'),
-
-            HasMany::make('Notes'),
+            Text::make('body'),
 
         ];
     }
@@ -92,9 +82,7 @@ class Member extends Resource
      */
     public function filters(Request $request)
     {
-        return [
-            new ByDivision(),
-        ];
+        return [];
     }
 
     /**
