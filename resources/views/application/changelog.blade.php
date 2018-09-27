@@ -35,6 +35,8 @@
                     <li>Add "AOD Forums" link to navigation bar</li>
                     <li>Allow line breaks in notes</li>
                     <li>Update Nova to 1.1.3</li>
+                    <li>Users cannot edit their own accounts</li>
+                    <li>Add assigned division Staff Sergeants (staffSergeants) to division structure data</li>
                 </ul>
             </div>
         </div>

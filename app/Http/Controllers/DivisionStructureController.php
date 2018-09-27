@@ -76,6 +76,10 @@ class DivisionStructureController extends Controller
             'rank'
         ])->get();
 
+        $data->staffSergeants = $division->staffSergeants()->with([
+            'rank'
+        ])->get();
+
         $data->leaders = $division->leaders()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'position',
@@ -109,6 +113,7 @@ class DivisionStructureController extends Controller
         $data->leaders = $data->leaders->each($this->getMemberHandle());
         $data->partTimeMembers = $data->partTimeMembers->each($this->getMemberHandle());
         $data->generalSergeants = $data->generalSergeants->each($this->getMemberHandle());
+//        $data->staffSergeants = $data->staffSergeants->each($this->getMemberHandle());
 
         // platoon->leader->handle
         $data->platoons = $data->platoons->each(function ($platoon) {
@@ -252,6 +257,7 @@ class DivisionStructureController extends Controller
                 "name" => $division->name,
                 "leaders" => $division->leaders,
                 "generalSergeants" => $division->generalSergeants,
+                "staffSergeants" => $division->staffSergeants,
                 "platoons" => $division->platoons()->with(
                     [
                         'squads.members.handles' => function ($query) use ($division) {
