@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function before(User $user)
     {
-        if ($user->isDeveloper() || $user->isRole(['admin'])) {
+        if ($user->isDeveloper()) {
             return true;
         }
     }
@@ -37,6 +37,10 @@ class UserPolicy
             return false;
         }
 
+        if ($user->isRole(['admin'])) {
+            return true;
+        }
+
         // cannot update a user of the same or higher role
         if ($user->role->id <= $userOfMember->role->id) {
             return false;
@@ -49,6 +53,60 @@ class UserPolicy
 
         // jr leaders can create officers
         if ($user->isRole('jr_ldr') && ($userOfMember->role_id < $user->role_id)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function viewAny(User $user)
+    {
+        if ($user->isRole(['admin'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function view(User $user)
+    {
+        if ($user->isRole(['admin'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function create(User $user)
+    {
+        if ($user->isRole(['admin'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function delete(User $user)
+    {
+        if ($user->isRole(['admin'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function restore(User $user)
+    {
+        if ($user->isRole(['admin'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function forceDelete(User $user)
+    {
+        if ($user->isRole(['admin'])) {
             return true;
         }
 

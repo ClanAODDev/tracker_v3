@@ -69,11 +69,10 @@ class User extends Resource
 
             DateTime::make('Last Logged In', 'last_login_at')
                 ->hideWhenUpdating()
+                ->hideFromIndex()
                 ->sortable(),
 
             HasOne::make('Member'),
-
-
         ];
     }
 
