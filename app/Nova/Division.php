@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\SetDefaultSettings;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
@@ -62,6 +63,7 @@ class Division extends Resource
                 return [
                     Text::make('description')->hideFromIndex(),
                     Boolean::make('active')->sortable(),
+                    Code::make('settings')->json()->hideWhenUpdating(),
                 ];
             }),
 
@@ -109,6 +111,8 @@ class Division extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new SetDefaultSettings(),
+        ];
     }
 }
