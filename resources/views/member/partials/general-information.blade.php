@@ -37,7 +37,7 @@
     @endcomponent
 
     @component('application.components.data-block')
-        @slot('data') {{ $member->last_promoted }} @endslot
+        @slot('data') {{ $member->last_promoted_at }} @endslot
         @slot('title') Last <span class="c-white">promotion date</span> @endslot
     @endcomponent
 
