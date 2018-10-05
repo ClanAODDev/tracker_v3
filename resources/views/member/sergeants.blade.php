@@ -27,37 +27,52 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
+                        <span class="badge bg-info">{{ ratio($division->sergeants_count, $division->members_count)  }}</span>
                     </h4>
-                    <hr />
 
-                    @foreach ( $division->sergeants as $member)
+                    <div class="panel panel-filled">
+                        <table class="table basicDataTable table-hover">
+                            @foreach ( $division->sergeants as $member)
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('member', $member->getUrlParams()) }}">
+                                            {!! $member->present()->rankName !!}
+                                        </a>
+                                    </td>
+                                    <td>{{ $member->last_promoted }}</td>
+                                    <td class="slight text-uppercase">{{ $member->position->name }}</td>
+                                </tr>
+                            @endforeach
+                            @foreach($division->staffSergeants as $member)
 
-                        <a href="{{ route('member', $member->getUrlParams()) }}"
-                           class="col-lg-3 panel panel-filled panel-c-accent m-r m-b">
-                            <span class="panel-body">
-                                    {!! $member->present()->rankName !!}
-                                <br />
-                                <span class="slight text-muted text-uppercase">
-                                    {{ $member->position->name }}
-                                </span>
-                            </span>
-                        </a>
-                    @endforeach
+                                <tr>
+                                    <td>
+                                        <a href="{{ route('member', $member->getUrlParams()) }}">
+                                            {!! $member->present()->rankName !!}
+                                        </a>
+                                    </td>
+                                    <td>{{ $member->last_promoted }}</td>
+                                    <td class="slight text-uppercase" style="color: cyan">
+                                        Assigned Staff Sergeant
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
 
-                    @foreach($division->staffSergeants as $member)
+                    {{--@foreach ( $division->sergeants as $member)--}}
 
-                        <a href="{{ route('member', $member->getUrlParams()) }}"
-                           class="col-lg-3 panel panel-filled panel-c-info m-r m-b">
-                            <span class="panel-body">
-                                    {!! $member->present()->rankName !!}
-                                <br />
-                                <span class="slight text-muted text-uppercase">
-                                    Assigned Staff Sergeant
-                                </span>
-                            </span>
-                        </a>
-                    @endforeach
-
+                    {{--<a href="{{ route('member', $member->getUrlParams()) }}"--}}
+                    {{--class="col-lg-3 panel panel-filled panel-c-accent m-r m-b">--}}
+                    {{--<span class="panel-body">--}}
+                    {{--{!! $member->present()->rankName !!}--}}
+                    {{--<br />--}}
+                    {{--<span class="slight text-muted text-uppercase">--}}
+                    {{--{{ $member->position->name }}--}}
+                    {{--</span>--}}
+                    {{--</span>--}}
+                    {{--</a>--}}
+                    {{--@endforeach--}}
                 </div>
             </div>
         @endforeach

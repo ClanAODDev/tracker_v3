@@ -34,7 +34,7 @@
         @endif
     </td>
     <td class="col-hidden">{{ $member->last_ts_activity }}</td>
-    <td class="text-center">{{ $member->last_promoted }}</td>
+    <td class="text-center">{{ $member->last_promoted_at }}</td>
     <td class="col-hidden">
         @if ($member->handle)
             @if ($member->handle->url)
