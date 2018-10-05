@@ -228,7 +228,7 @@ function getNameOfClass($class)
  */
 function set_active($path, $active = 'active')
 {
-    return call_user_func_array('Request::is', (array) $path) ? $active : '';
+    return call_user_func_array('Request::is', (array)$path) ? $active : '';
 }
 
 function percent($old_member_count, $new_member_count)
@@ -304,3 +304,41 @@ function approveMemberPath(MemberRequest $memberRequest)
 
     return $base . http_build_query($args);
 }
+
+function gcd($a, $b)
+{
+    $_a = abs($a);
+    $_b = abs($b);
+
+    while ($_b != 0) {
+
+        $remainder = $_a % $_b;
+        $_a = $_b;
+        $_b = $remainder;
+    }
+
+    return $a;
+}
+
+function ratio()
+{
+    $inputs = func_get_args();
+    $c = func_num_args();
+    if ($c < 1) {
+        return '';
+    }
+    if ($c == 1) {
+        return $inputs[0];
+    }
+    $gcd = gcd($inputs[0], $inputs[1]);
+    for ($i = 2; $i < $c; $i++) {
+        $gcd = gcd($gcd, $inputs[$i]);
+    }
+    $var = $inputs[0] / $gcd;
+    for ($i = 1; $i < $c; $i++) {
+        $var .= ':' . round(($inputs[$i] / $gcd));
+    }
+
+    return $var;
+}
+
