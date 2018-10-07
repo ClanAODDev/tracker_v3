@@ -63,7 +63,7 @@ class Division extends Resource
                 return [
                     Text::make('description')->hideFromIndex(),
                     Boolean::make('active')->sortable(),
-                    Code::make('settings')->json()->hideWhenUpdating(),
+//                    Code::make('settings')->json()->hideWhenUpdating(),
                 ];
             }),
 
