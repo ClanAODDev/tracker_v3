@@ -27,7 +27,7 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
-                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count)  }}</span>
+
                     </h4>
 
                     <div class="panel panel-filled">
