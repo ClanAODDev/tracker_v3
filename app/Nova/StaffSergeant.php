@@ -17,6 +17,10 @@ class StaffSergeant extends Resource
      */
     public static $model = 'App\StaffSergeant';
 
+    public static $with = [
+        'division', 'member'
+    ];
+
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
@@ -35,7 +39,7 @@ class StaffSergeant extends Resource
 
     public static function label()
     {
-        return "Staff Sergeants";
+        return "SSgt Assignments";
     }
 
     /**
