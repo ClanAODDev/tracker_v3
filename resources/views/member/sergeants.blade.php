@@ -27,16 +27,24 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
+                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count) }}</span>
 
                     </h4>
 
-                    <div class="panel panel-filled">
-                        <table class="table basic-datatable table-hover">
+                    <div class="panel panel-filled pt-0">
+                        <table class="table table-hover basic-datatable">
+                            <thead>
                             <tr>
-                                <th></th>
-                                <th>Last Promoted</th>
+                                <th>Member</th>
                                 <th>Position</th>
+                                <th>Last Promoted</th>
+                                <th>Last Trained</th>
+                                <th>Trained By</th>
+                                <th>XO Since</th>
+                                <th>CO Since</th>
                             </tr>
+                            </thead>
+                            <tbody>
                             @foreach ( $division->sergeants as $member)
                                 <tr>
                                     <td>
@@ -44,8 +52,12 @@
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
-                                    <td>{{ $member->last_promoted }}</td>
                                     <td class="slight text-uppercase">{{ $member->position->name }}</td>
+                                    <td>{{ $member->last_promoted }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             @endforeach
                             @foreach($division->staffSergeants as $member)
@@ -56,12 +68,17 @@
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
-                                    <td>{{ $member->last_promoted }}</td>
                                     <td class="slight text-uppercase" style="color: cyan">
                                         Assigned Staff Sergeant
                                     </td>
+                                    <td>{{ $member->last_promoted }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             @endforeach
+                            </tbody>
                         </table>
                     </div>
 
@@ -84,3 +101,4 @@
 
     </div>
 @stop
+
