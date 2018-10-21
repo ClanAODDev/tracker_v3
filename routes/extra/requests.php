@@ -18,10 +18,40 @@ Route::get('requests-count.png', function () {
 
     imagettftext($im, 20, 0, $x - 10, 25, $orange, $bigfont, $requestsCount);
 
-    if ($errors > 0)  {
+    if ($errors > 0) {
         imagettftext($im, 6, 0, $x - 50, 20, $red, $tinyfont, "({$errors} ERR)");
     }
 
     imagepng($im);
     imagedestroy($im);
+});
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('vegas', function () {
+        $optedIn = DB::table('opt_in')
+            ->where('member_id', auth()->user()->member->clan_id)
+            ->exists();
+
+        return view('pages.vegas-opt-in', compact('optedIn'));
+    })->middleware('auth')->name('vegas-survey');
+
+    Route::post('vegas/opt-in', function () {
+        $user = auth()->user()->member;
+
+        DB::insert('insert into opt_in (member_id, created_at, updated_at) values (?, ?, ?)', [
+            $user->clan_id,
+            now(),
+            now()
+        ]);
+
+        return redirect(route('vegas-survey'));
+    })->middleware('auth');
+
+    Route::delete('vegas/opt-out', function () {
+        $user = auth()->user()->member;
+        DB::delete('delete from opt_in where member_id = ? LIMIT 1', [$user->clan_id]);
+
+        return redirect(route('vegas-survey'));
+    });
 });

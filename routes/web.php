@@ -1,6 +1,6 @@
 <?php
 
-include_once('extra/requests-graphic.php');
+include_once('extra/requests.php');
 
 Auth::routes();
 
