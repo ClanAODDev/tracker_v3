@@ -29,6 +29,7 @@ Route::get('requests-count.png', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('vegas', function () {
+        dd(\App\VegasAttendee::all());
         $optedIn = DB::table('opt_in')
             ->where('member_id', auth()->user()->member->clan_id)
             ->exists();

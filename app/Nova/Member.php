@@ -81,7 +81,9 @@ class Member extends Resource
      */
     public function cards(Request $request)
     {
-        return [];
+        return [
+            (new Metrics\MembersByMonth())->width('full')
+        ];
     }
 
     /**
