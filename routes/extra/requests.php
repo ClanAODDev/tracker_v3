@@ -28,11 +28,9 @@ Route::get('requests-count.png', function () {
     imagedestroy($im);
 });
 
-Route::get('/mailable', function () {
-    return new App\Mail\VegasNotify();
-});
-
-
+/**
+ * Vegas Attendee Opt-in
+ */
 Route::middleware('auth')->group(function () {
     Route::get('vegas2019', function () {
         $optedIn = DB::table('opt_in')
