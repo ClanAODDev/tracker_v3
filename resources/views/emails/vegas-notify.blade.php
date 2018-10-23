@@ -2,11 +2,19 @@
 ![AOD Logo][logo]
 # Hello, {{ auth()->user()->name }}!
 
-Just wanted to **confirm your interest** in attending the AOD US Fall 2019 Meetup currently planned to take place in Las Vegas, NV.
+We’re writing to **confirm your interest** in attending the fall 2019 AOD Live meetup currently planned to take place in Las Vegas, Nevada.
 
-We're excited to be able to make this event possible. However, we have not solidified exactly what the timeline will look like, nor have we agreed on any logistics. At this point, we are solely gauging interest before we move forward.
+We’re excited to be able to make this event possible and look forward to sharing more information as it is available. By opting into the AOD Live event you will be included in future communication containing more schedule and logistics information.
 
-Please keep any details regarding the meetup to yourself, and do not discuss specifics with other members. If you decide you would like to **not** be considered as a potential attendee, you can opt out of future notifications via the button below.
+We have not confirmed specific dates or venues at this time, so the most you can plan for is the September through November timeframe in 2019. At this point we are solely gauging interest and building a distribution list for those seriously planning on going.
+
+Please keep any details regarding the meetup to yourself and family members who may go with you. Please do not assume other members have event information. While it may seem odd, trust that safety and the integrity of the event is paramount, and history shows the best way to keep everything cozy is to share the most specific information with those who will be present.
+
+If at any time you decide you cannot make it, please use the Opt Out button below to update your response or visit [https://tracker.clanaod.net/vegas2019](https://tracker.clanaod.net/vegas2019).
+
+For questions, contact [AOD_Silencer77] via forum message.
+
+We can’t wait hang out in person, so start saving now!
 
 @component('mail::button', ['url' => route('vegas-survey')])
 Opt Out
@@ -15,7 +23,8 @@ Opt Out
 Thanks,<br>
 Clan AOD Leadership
 
-[logo]: {{asset('images/aod-logo-modern.png')}} "Logo"
+[logo]: {{ asset('images/aod-logo-modern.png') }} "Logo"
+[AOD_Silencer77]: {!! doForumFunction(['20755'], 'pm') !!}
 @endcomponent
 
 

@@ -20,10 +20,17 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-                <p>Interested in attending the <span
-                            class="text-accent">AOD US Las Vegas 2019</span> meetup? Hit the button below so we know you're planning on taking part.
+                <p>Seriously considering going to the <strong class="text-info">AOD Live meetup</strong> in Las Vegas, Nevada planned for the fall of 2019? Use the button below to get additional details as they come available.
                 </p>
-                <p>Information about the AOD US Meetup will be distributed as the event gets closer. Details regarding the event are expected to be kept confidential.</p>
+                <p>Planning discussions and information and about the AOD Live meetup will only include those who are opted in. Expect more detail to be shared as the event gets closer. Our goal is to give you enough information to plan thoroughly without compromising the event by sharing broadly.</p>
+
+                <p>If things change and you cannot attend, tell us by opting out. Once again, please keep details of AOD Live events strictly confidential to members you know are planning to attend and family who may join you.
+                </p>
+
+                <p>For questions, contact <a href="{{ doForumFunction(['20755'], 'pm') }}" class="text-accent">AOD_Silencer77</a> via forum message.
+                </p>
+
+                <hr>
 
                 @unless($optedIn)
 
