@@ -16,6 +16,7 @@ class CreateOptInTable extends Migration
         Schema::create('opt_in', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('member_id')->unique();
+            $table->timestamp('opted_out')->nullable();
             $table->timestamps();
         });
     }

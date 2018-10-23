@@ -27,12 +27,12 @@
 
                 @unless($optedIn)
 
-                    <form action="{{ url('vegas/opt-in') }}" method="post">
+                    <form action="{{ url('vegas2019/opt-in') }}" method="post">
                         {{ csrf_field() }}
                         <button class="btn btn-success" type="submit"><i class="fa fa-check"></i> Opt In</button>
                     </form>
                 @else
-                    <form action="{{ url('vegas/opt-out') }}" method="post">
+                    <form action="{{ url('vegas2019/opt-out') }}" method="post">
                         {{ method_field('DELETE') }}
                         {{ csrf_field() }}
                         <span class="btn btn-success mr-3" style="pointer-events: none"><i

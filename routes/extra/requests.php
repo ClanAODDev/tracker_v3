@@ -1,5 +1,7 @@
 <?php
 
+use Facades\App\VegasAttendee;
+
 Route::get('requests-count.png', function () {
     header('Content-Type: image/png');
     date_default_timezone_set('America/New_York');
@@ -26,31 +28,41 @@ Route::get('requests-count.png', function () {
     imagedestroy($im);
 });
 
+Route::get('/mailable', function () {
+    return new App\Mail\VegasNotify();
+});
+
 
 Route::middleware('auth')->group(function () {
-    Route::get('vegas', function () {
+    Route::get('vegas2019', function () {
         $optedIn = DB::table('opt_in')
             ->where('member_id', auth()->user()->member->clan_id)
+            ->whereOptedOut(null)
             ->exists();
 
         return view('pages.vegas-opt-in', compact('optedIn'));
     })->middleware('auth')->name('vegas-survey');
 
-    Route::post('vegas/opt-in', function () {
+    Route::post('vegas2019/opt-in', function () {
         $user = auth()->user()->member;
 
-        DB::insert('insert into opt_in (member_id, created_at, updated_at) values (?, ?, ?)', [
-            $user->clan_id,
-            now(),
-            now()
-        ]);
+        if ($attendee = \App\VegasAttendee::whereMemberId($user->clan_id)->first()) {
+            $attendee->opted_out = null;
+            $attendee->save();
+        } else {
+            Mail::to(auth()->user())->send(new \App\Mail\VegasNotify());
+            VegasAttendee::optIn();
+        }
 
         return redirect(route('vegas-survey'));
     })->middleware('auth');
 
-    Route::delete('vegas/opt-out', function () {
+    Route::delete('vegas2019/opt-out', function () {
         $user = auth()->user()->member;
-        DB::delete('delete from opt_in where member_id = ? LIMIT 1', [$user->clan_id]);
+
+        VegasAttendee::whereMemberId($user->clan_id)
+            ->first()
+            ->optOut();
 
         return redirect(route('vegas-survey'));
     });

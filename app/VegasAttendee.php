@@ -10,6 +10,27 @@ class VegasAttendee extends Model
 
     public $with = ['member'];
 
+    public $fillable = ['member_id'];
+
+    /**
+     * Opt in to event
+     */
+    public function optIn()
+    {
+        $user = auth()->user();
+        $this->member_id = $user->member->clan_id;
+        $this->save();
+    }
+
+    /**
+     * Opt out of event
+     */
+    public function optOut()
+    {
+        $this->opted_out = now();
+        $this->save();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
