@@ -10,7 +10,18 @@ Route::get('requests-count.png', function () {
     $tinyfont = public_path('fonts/copy0855.ttf');
     $tinyboldfont = public_path('fonts/copy0866.ttf');
     $bigfont = public_path('fonts/din-black.otf');
-    $im = imagecreatefromjpeg(asset('images/dynamic-images/bgs/pending-requests.jpg'));
+    
+    $context = [
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ];
+
+    $response = file_get_contents(asset('images/dynamic-images/bgs/pending-requests.jpg'), false,
+        stream_context_create($context));
+
+    $im = imagecreatefromstring($response);
     $orange = imagecolorallocate($im, 255, 108, 0);
     $red = imagecolorallocate($im, 153, 26, 34);
     $requestsCount = \App\MemberRequest::pending()->count();
