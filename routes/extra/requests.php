@@ -1,6 +1,7 @@
 <?php
 
 use Facades\App\VegasAttendee;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('requests-count.png', function () {
     header('Content-Type: image/png');
@@ -48,7 +49,7 @@ Route::middleware('auth')->group(function () {
             $attendee->opted_out = null;
             $attendee->save();
         } else {
-            Mail::to(auth()->user())->send(new \App\Mail\VegasNotify());
+            Mail::to($user)->send(new \App\Mail\VegasNotify());
             VegasAttendee::optIn();
         }
 

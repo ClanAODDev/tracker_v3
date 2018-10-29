@@ -5,7 +5,6 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class VegasNotify extends Mailable
 {
@@ -18,6 +17,8 @@ class VegasNotify extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.vegas-notify');
+        $user = auth()->user();
+
+        return $this->markdown('emails.vegas-notify', compact('user'));
     }
 }

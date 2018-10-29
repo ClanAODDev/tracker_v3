@@ -1,6 +1,6 @@
 @component('mail::message')
 ![AOD Logo][logo]
-# Hello, {{ auth()->user()->name }}!
+# Hello, {{ $user->name }}!
 
 We’re writing to **confirm your interest** in attending the fall 2019 AOD Live meetup currently planned to take place in Las Vegas, Nevada.
 
