@@ -233,8 +233,11 @@ class RecruitingController extends Controller
             $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
             $threads[$key]['status'] = ($request->isTesting)
                 ? true
-                : $division->threadCheck($request['string'], $threads[$key]['url']);
-            sleep(2);
+                : $division->threadCheckForString(
+                    $request['string'],
+                    $threads[$key]['url']
+                );
+            sleep(1);
         }
 
         return $threads;

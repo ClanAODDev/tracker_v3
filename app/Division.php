@@ -139,7 +139,7 @@ class Division extends Model
      * @param $thread
      * @return bool
      */
-    public static function threadCheck($string, $thread)
+    public static function threadCheckForString($string, $thread)
     {
         $ch = curl_init();
 
