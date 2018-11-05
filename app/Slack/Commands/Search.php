@@ -65,9 +65,9 @@ class Search extends Base implements Command
                 ];
 
                 $this->content[] = [
-                    'title' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
-                    'text' => "Profiles: " . implode(', ', $links),
-                    'color' => ($member->division) ? '#88C53E' : '#ff0000',
+                    'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
+                    'value' => "Profiles: " . implode(', ', $links),
+//                    'color' => ($member->division) ? '#88C53E' : '#ff0000',
                 ];
             }
         }
@@ -82,18 +82,8 @@ class Search extends Base implements Command
             return [
                 "embed" => [
                     'color' => '3447003',
-                    'title' => 'This be an embed',
-
-                    'fields' => [
-                        [
-                            "name" => "Masked links",
-                            "value" => "You can put [masked links](http://google.com) inside of rich embeds."
-                        ],
-                        [
-                            "name" => "Masked links",
-                            "value" => "You can put [masked links](http://google.com) inside of rich embeds."
-                        ],
-                    ]
+                    'title' => 'The following members were found:',
+                    'fields' => $this->content
                 ]
             ];
         }
