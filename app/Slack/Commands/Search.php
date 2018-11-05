@@ -60,8 +60,8 @@ class Search extends Base implements Command
                 $memberLink = route('member', $member->getUrlParams());
 
                 $links = [
-                    "<{$this->forumProfile}{$member->clan_id}|Forum>",
-                    "<{$memberLink}|Tracker>"
+                    "[Forum]({$this->forumProfile}{$member->clan_id})",
+                    "[Tracker]({$memberLink})"
                 ];
 
                 $this->content[] = [
