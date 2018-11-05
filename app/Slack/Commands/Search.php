@@ -80,18 +80,20 @@ class Search extends Base implements Command
 
         if ($this->members->count() >= 1) {
             return [
-                'color' => '3447003',
-                'title' => 'This be an embed',
-                'text' => "The following members were found:",
-                'fields' => [
-                    [
-                        "name" => "Masked links",
-                        "value" => "You can put [masked links](http://google.com) inside of rich embeds."
-                    ],
-                    [
-                        "name" => "Masked links",
-                        "value" => "You can put [masked links](http://google.com) inside of rich embeds."
-                    ],
+                "embed" => [
+                    'color' => '3447003',
+                    'title' => 'This be an embed',
+
+                    'fields' => [
+                        [
+                            "name" => "Masked links",
+                            "value" => "You can put [masked links](http://google.com) inside of rich embeds."
+                        ],
+                        [
+                            "name" => "Masked links",
+                            "value" => "You can put [masked links](http://google.com) inside of rich embeds."
+                        ],
+                    ]
                 ]
             ];
         }
