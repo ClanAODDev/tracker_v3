@@ -31,6 +31,7 @@ return [
 
     'aod' => [
         'slack_webhook' => env('SLACK_WEBHOOK'),
+        'discord_webhook' => env('DISCORD_WEBHOOK'),
         'token' => env('AOD_TOKEN'),
         'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
         'ingame-reports' => [

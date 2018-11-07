@@ -77,3 +77,14 @@ Route::middleware('auth')->group(function () {
         return redirect(route('vegas-survey'));
     });
 });
+
+Route::middleware(['auth', 'admin'])->get('/test-the-webhook', function () {
+   $division = App\Division::first();
+   try {
+       $division->notify(new \App\Notifications\TestingWebhook());
+
+       return "Success!";
+   } catch (Exception $exception) {
+       return $exception;
+   }
+});

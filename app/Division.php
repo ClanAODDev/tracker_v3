@@ -152,7 +152,7 @@ class Division extends Model
         $getPosts = curl_exec($ch);
         $countPosts = stripos($getPosts, $string);
 
-        if (! $countPosts) {
+        if ( ! $countPosts) {
             $url = parse_url(curl_last_url($ch));
             $query = $url['query'];
             parse_str($query, $url_array);
@@ -233,6 +233,14 @@ class Division extends Model
     public function routeNotificationForSlack()
     {
         return config('app.aod.slack_webhook');
+    }
+
+    /**
+     * @return \Illuminate\Config\Repository|mixed
+     */
+    public function routeNotificationForWebhook()
+    {
+        return config('app.aod.discord_webhook');
     }
 
     /**
@@ -345,7 +353,7 @@ class Division extends Model
 
         $locality = collect($this->settings()->locality);
 
-        if (! $locality->count()) {
+        if ( ! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -357,7 +365,7 @@ class Division extends Model
             }
         });
 
-        if (! $results) {
+        if ( ! $results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);
