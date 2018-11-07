@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class TestingWebhook extends Notification
 {
@@ -28,8 +26,15 @@ class TestingWebhook extends Notification
         $json = json_encode([
             'username' => 'Blimey',
             'embed' => [
-                'name' => 'A name',
-                'value' => "A value"
+                'title' => 'This is a title... and here are some fields...',
+                'author' => [
+                    'name' => 'AOD Tracker'
+                ],
+                'color' => 10181046,
+                'fields' => [
+                    'name' => 'A name',
+                    'value' => "A value"
+                ]
             ]
         ]);
 
