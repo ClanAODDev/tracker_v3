@@ -10,7 +10,7 @@ Route::get('requests-count.png', function () {
     $tinyfont = public_path('fonts/copy0855.ttf');
     $tinyboldfont = public_path('fonts/copy0866.ttf');
     $bigfont = public_path('fonts/din-black.otf');
-    
+
     $context = [
         'ssl' => [
             'verify_peer' => false,
@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
             $attendee->opted_out = null;
             $attendee->save();
         } else {
-            Mail::to($user)->send(new \App\Mail\VegasNotify());
+            Mail::to(auth()->user())->send(new \App\Mail\VegasNotify());
             VegasAttendee::optIn();
         }
 
