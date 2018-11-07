@@ -19,6 +19,7 @@ class VegasNotify extends Mailable
     {
         $user = auth()->user();
 
-        return $this->markdown('emails.vegas-notify', compact('user'));
+        return $this->subject('Clan AOD - Confirming your interest...')
+            ->markdown('emails.vegas-notify', compact('user'));
     }
 }
