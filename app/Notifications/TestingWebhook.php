@@ -32,8 +32,10 @@ class TestingWebhook extends Notification
                 ],
                 'color' => 10181046,
                 'fields' => [
-                    'name' => 'A name',
-                    'value' => "A value"
+                    [
+                        'name' => 'A name',
+                        'value' => "A value"
+                    ]
                 ]
             ]
         ]);
