@@ -23,6 +23,11 @@ class VegasAttendee extends Resource
      */
     public static $title = 'id';
 
+    public static function label()
+    {
+        return "Vegas Attendees";
+    }
+
     /**
      * The columns that should be searched.
      *
