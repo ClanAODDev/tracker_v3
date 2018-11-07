@@ -24,19 +24,12 @@ class TestingWebhook extends Notification
     public function toWebhook($notifiable)
     {
         $json = json_encode([
-            'username' => 'Blimey',
             'embed' => [
-                'title' => 'This is a title... and here are some fields...',
+                'title' => 'AOD_Archangel recruited AOD_WeDGE into the **Battlefield Division**',
                 'author' => [
                     'name' => 'AOD Tracker'
                 ],
                 'color' => 10181046,
-                'fields' => [
-                    [
-                        'name' => 'A name',
-                        'value' => "A value"
-                    ]
-                ]
             ]
         ]);
 
