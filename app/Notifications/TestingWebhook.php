@@ -38,7 +38,7 @@ class TestingWebhook extends Notification
 //        $data = "\"general\" \"{$message}\" ";
 
         return [
-            'content' => "!relay \"{$json}\"",
+            'content' => "!relay general '{$json}'",
         ];
     }
 }
