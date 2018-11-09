@@ -79,12 +79,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->get('/test-the-webhook', function () {
-   $division = App\Division::first();
-   try {
-       $division->notify(new \App\Notifications\TestingWebhook($division));
+    $division = App\Division::active()->first();
+    try {
+        $division->notify(new \App\Notifications\TestingWebhook($division));
 
-       return "Success!";
-   } catch (Exception $exception) {
-       return $exception;
-   }
+        return "Success!";
+    } catch (Exception $exception) {
+        return $exception;
+    }
 });
