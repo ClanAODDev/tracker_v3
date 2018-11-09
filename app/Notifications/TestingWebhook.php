@@ -12,6 +12,16 @@ class TestingWebhook extends Notification
     use Queueable;
 
     /**
+     * Create a new notification instance.
+     *
+     * @param $division
+     */
+    public function __construct($division)
+    {
+        $this->division = $division;
+    }
+
+    /**
      * Get the notification's delivery channels.
      *
      * @param  mixed $notifiable
