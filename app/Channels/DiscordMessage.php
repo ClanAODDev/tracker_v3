@@ -86,13 +86,13 @@ class DiscordMessage
             throw new \Exception('A message must be defined');
         }
 
-        if ( ! empty($this->fields)) {
+        if (empty($this->fields)) {
             return [
                 'content' => "!relay {$this->channel} {$this->message}"
             ];
         }
 
-        $body = ! empty($this->fields)
+        $body = empty($this->fields)
             ? $this->message
             : json_encode([
                 'embed' => [
@@ -106,7 +106,7 @@ class DiscordMessage
             ]);
 
         return [
-            'content' => "! relay {$this->channel} {$body}"
+            'content' => "!relay {$this->channel} {$body}"
         ];
     }
 }
