@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -23,22 +24,14 @@ class TestingWebhook extends Notification
 
     public function toWebhook($notifiable)
     {
-        $json = json_encode([
-            'embed' => [
-                'title' => 'AOD_Archangel recruited AOD_WeDGE into the **Battlefield Division**',
-                'author' => [
-                    'name' => 'AOD Tracker'
-                ],
-                'color' => 10181046,
-            ]
-        ]);
+        $channel = str_slug($this->division->name) . '-officers';
 
-        $message = "This is a test";
+        $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
 
-//        $data = "\"general\" \"{$message}\" ";
-
-        return [
-            'content' => "!relay general '{$json}'",
-        ];
+        return (new DiscordMessage())
+            ->to($channel)
+            ->message("{$authoringUser} updated division settings for {$this->division->name}")
+            ->success()
+            ->send();
     }
 }
