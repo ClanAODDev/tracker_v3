@@ -9,13 +9,14 @@ namespace App\Channels;
  */
 class DiscordMessage
 {
-
     /**
      * Color codes
      */
     CONST SUCCESS = 3066993;
     CONST ERROR = 15158332;
     CONST INFO = 10181046;
+
+    private $fields = [];
 
     /**
      * Use info-coded color
@@ -85,13 +86,13 @@ class DiscordMessage
             throw new \Exception('A message must be defined');
         }
 
-        if ( ! $this->fields) {
+        if ( ! empty($this->fields)) {
             return [
                 'content' => "!relay {$this->channel} {$this->message}"
             ];
         }
 
-        $body = ! $this->fields
+        $body = ! empty($this->fields)
             ? $this->message
             : json_encode([
                 'embed' => [
