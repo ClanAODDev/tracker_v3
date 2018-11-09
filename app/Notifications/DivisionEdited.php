@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\DiscordMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -37,6 +38,24 @@ class DivisionEdited extends Notification
     public function via($notifiable)
     {
         return ['slack'];
+    }
+
+    /**
+     * @param $notifiable
+     * @return array
+     * @throws \Exception
+     */
+    public function toWebhook($notifiable)
+    {
+        $channel = str_slug($this->division->name) . '-officers';
+
+        $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
+
+        return (new DiscordMessage())
+            ->to($channel)
+            ->message("\:tools: **{$authoringUser}** updated division settings for **{$this->division->name}**")
+            ->success()
+            ->send();
     }
 
     public function toSlack()
