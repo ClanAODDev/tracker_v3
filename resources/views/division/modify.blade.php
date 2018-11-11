@@ -46,7 +46,7 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#slack-settings">
-                        <i class="fa fa-slack fa-lg"></i> <span class="hidden-xs hidden-sm">Slack</span>
+                        <i class="fab fa-discord"></i> <span class="hidden-xs hidden-sm">Discord</span>
                     </a>
                 </li>
             </ul>

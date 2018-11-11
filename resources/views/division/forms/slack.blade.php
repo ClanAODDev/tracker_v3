@@ -1,5 +1,5 @@
-<form id="slack-settings" method="post"
-      action="{{ route('updateDivision', $division->abbreviation) }}#slack-settings">
+<form id="discord-settings" method="post"
+      action="{{ route('updateDivision', $division->abbreviation) }}#discord-settings">
 
     {{ method_field('PATCH') }}
 
@@ -16,7 +16,7 @@
         </div>
 
         <div class="col-md-6">
-            <label for="slack-notifications-table">Slack Notifications</label>
+            <label for="slack-notifications-table">Officer Notifications</label>
             <div class="table-responsive" id="slack-notifications-table">
                 @include ('division.partials.slack-notifications')
             </div>
