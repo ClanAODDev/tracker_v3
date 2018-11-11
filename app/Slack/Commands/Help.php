@@ -35,9 +35,8 @@ class Help extends Base implements Command
     public function handle()
     {
         return [
-            'title' => "The following commands are currently available.",
             'embed' => [
-                'title' => $this->message,
+                'title' => 'The following commands are currently available.',
                 'author' => [
                     'name' => 'AOD Tracker'
                 ],
