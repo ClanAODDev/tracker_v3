@@ -35,10 +35,17 @@ class Help extends Base implements Command
     public function handle()
     {
         return [
-            'text' => "The following commands are currently available.",
-            'attachments' => collect($this->commands)->map(function ($command) {
+            'title' => "The following commands are currently available.",
+            'embed' => [
+                'title' => $this->message,
+                'author' => [
+                    'name' => 'AOD Tracker'
+                ],
+                'color' => 10181046,
+                'fields' => collect($this->commands)->map(function ($command) {
                 return [
-                    'text' => "{$command['name']}: {$command['description']}.\r\n Ex. {$command['usage']}\r\n\r\n"
+                    'name' => "{$command['name']}: {$command['description']}",
+                    'value' => "Ex. {$command['usage']}\r\n\r\n"
                 ];
             }),
         ];
