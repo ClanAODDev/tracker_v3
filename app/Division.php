@@ -134,6 +134,18 @@ class Division extends Model
         'abbreviation'
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        /**
+         * Handle default settings population
+         */
+        static::creating(function (Division $division) {
+            $division->settings = $division->defaultSettings;
+        });
+    }
+
     /**
      * @param $string
      * @param $thread
