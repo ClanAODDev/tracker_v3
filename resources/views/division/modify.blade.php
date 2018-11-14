@@ -45,7 +45,7 @@
                     </a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#slack-settings">
+                    <a data-toggle="tab" href="#discord-settings">
                         <i class="fab fa-discord"></i> <span class="hidden-xs hidden-sm">Discord</span>
                     </a>
                 </li>
@@ -103,16 +103,16 @@
                     </div>
                 </div>
 
-                <div id="slack-settings" class="tab-pane">
+                <div id="discord-settings" class="tab-pane">
                     <div class="row">
                         <div class="col-md-9">
                             <div class="panel-body">
-                                @include('division.forms.slack')
+                                @include('division.forms.discord')
                             </div>
                         </div>
                         <div class="col-md-3 hidden-xs hidden-sm">
                             <div class="panel">
-                                @include ('division.forms.descriptions.slack')
+                                @include ('division.forms.descriptions.discord')
                             </div>
                         </div>
                     </div>

@@ -24,20 +24,6 @@
         </td>
     </tr>
 
-    {{--<tr>
-        <td>
-            <label for="slack_alert_created_request">
-                When a request is submitted
-            </label>
-        </td>
-        <td>
-            <input type='hidden' value='0' name="slack_alert_created_request">
-            <input id="slack_alert_created_request" disabled="disabled"
-                   name="slack_alert_created_request"
-                   type="checkbox" {{ checked($division->settings()->slack_alert_created_request) }} />
-        </td>
-    </tr>--}}
-
     <tr>
         <td>
             <label for="slack_alert_division_edited">
