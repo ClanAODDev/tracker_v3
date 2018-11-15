@@ -14,7 +14,7 @@
                 <i class="fa fa-user-secret text-accent" title="Currently Impersonating"></i>
             @endif
             @if (auth()->user()->isDeveloper())
-                <i class="fa fa-shield text-danger" title="Dev mode enabled"></i>
+                <i class="fa fa-user-shield text-danger" title="Dev mode enabled"></i>
             @endif
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
