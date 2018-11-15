@@ -4,7 +4,7 @@
         <td class="col-xs-11">
 
             <div class="input-group">
-                <i class="fa fa-bars input-group-addon text-muted" style="cursor: move"></i>
+                <i class="fas fa-bars input-group-addon text-muted" style="cursor: move"></i>
                 <input type="text" name="tasks[{{ $loop->index }}][task_description]"
                        class="form-control" placeholder="Task description"
                        value="{{ $task['task_description'] }}" required />
