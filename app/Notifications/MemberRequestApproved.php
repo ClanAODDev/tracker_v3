@@ -47,7 +47,7 @@ class MemberRequestApproved extends Notification
 
         $approver = auth()->user()->member;
 
-        $message = "*MEMBER STATUS REQUEST*\nA member status request for `{$this->request->member->name}` was approved by {$approver->name}!";
+        $message = "*MEMBER STATUS REQUEST* - :thumbsup: A member status request for `{$this->request->member->name}` was approved by {$approver->name}!";
 
         return (new DiscordMessage())
             ->to($channel)
