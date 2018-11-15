@@ -4,8 +4,6 @@ namespace App\Channels;
 
 use App\Exceptions\WebHookFailedException;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notifiable;
@@ -32,6 +30,7 @@ class WebhookChannel
      * @param Notifiable $notifiable
      * @param Notification $notification
      * @throws WebHookFailedException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function send($notifiable, Notification $notification)
     {

@@ -2,9 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Channels\DiscordMessage;
+use App\Channels\WebhookChannel;
 use App\MemberRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class MemberRequestApproved extends Notification
@@ -31,23 +32,27 @@ class MemberRequestApproved extends Notification
      */
     public function via($notifiable)
     {
-        return ['slack'];
+        return [WebhookChannel::class];
     }
 
     /**
      * @return mixed
+     * @throws \Exception
      */
-    public function toSlack()
+    public function toWebhook()
     {
-        $to = ($this->request->division->settings()->get('slack_channel')) ?: '@' . $this->request->requester->name;
+        $division = $this->request->division;
+
+        $channel = str_slug($division->name) . '-officers';
 
         $approver = auth()->user()->member;
 
         $message = "*MEMBER STATUS REQUEST*\nA member status request for `{$this->request->member->name}` was approved by {$approver->name}!";
 
-        return (new SlackMessage())
+        return (new DiscordMessage())
+            ->to($channel)
+            ->message($message)
             ->success()
-            ->to($to)
-            ->content($message);
+            ->send();
     }
 }

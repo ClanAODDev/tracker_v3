@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\DiscordMessage;
+use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -37,7 +38,7 @@ class DivisionEdited extends Notification
      */
     public function via($notifiable)
     {
-        return ['slack'];
+        return [WebhookChannel::class];
     }
 
     /**
@@ -53,7 +54,7 @@ class DivisionEdited extends Notification
 
         return (new DiscordMessage())
             ->to($channel)
-            ->message("\:tools: **{$authoringUser}** updated division settings for **{$this->division->name}**")
+            ->message(":tools: **{$authoringUser}** updated division settings for **{$this->division->name}**")
             ->success()
             ->send();
     }

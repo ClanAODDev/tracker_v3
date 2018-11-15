@@ -21,6 +21,13 @@ class Search extends Base implements Command
 
     private $forumProfile = "https://www.clanaod.net/forums/member.php?u=";
 
+    public function __construct($data)
+    {
+        parent::__construct($data);
+
+        $this->request = $data;
+    }
+
     /**
      * @return array
      */
@@ -31,6 +38,7 @@ class Search extends Base implements Command
                 'text' => "Your search criteria must be 3 characters or more",
             ];
         }
+
 
         // are we handling multiple names?
         if (strstr($this->params, ',')) {
@@ -67,7 +75,6 @@ class Search extends Base implements Command
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => "Profiles: " . implode(', ', $links),
-//                    'color' => ($member->division) ? '#88C53E' : '#ff0000',
                 ];
             }
         }
@@ -81,41 +88,12 @@ class Search extends Base implements Command
         if ($this->members->count() >= 1) {
             return [
                 "embed" => [
-                    'color' => '3447003',
+                    'color' => 10181046,
                     'title' => 'The following members were found:',
                     'fields' => $this->content
                 ]
             ];
         }
-
-        /**
-         * color: 3447003,
-         * author: {
-         * name: client.user.username,
-         * icon_url: client.user.avatarURL
-         * },
-         * title: "This is an embed",
-         * url: "http://google.com",
-         * description: "This is a test embed to showcase what they look like and what they can do.",
-         * fields: [{
-         * name: "Fields",
-         * value: "They can have different fields with small headlines."
-         * },
-         * {
-         * name: "Masked links",
-         * value: "You can put [masked links](http://google.com) inside of rich embeds."
-         * },
-         * {
-         * name: "Markdown",
-         * value: "You can put all the *usual* **__Markdown__** inside of them."
-         * }
-         * ],
-         * timestamp: new Date(),
-         * footer: {
-         * icon_url: client.user.avatarURL,
-         * text: "© Example"
-         * }
-         */
 
         return [
             'text' => "No results were found",

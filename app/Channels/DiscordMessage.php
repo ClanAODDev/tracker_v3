@@ -62,6 +62,17 @@ class DiscordMessage
     }
 
     /**
+     * @param $fields
+     * @return $this
+     */
+    public function fields($fields)
+    {
+        $this->fields = $fields;
+
+        return $this;
+    }
+
+    /**
      * @param $message
      * @return $this
      */
@@ -82,7 +93,7 @@ class DiscordMessage
             throw new \Exception('A channel must be defined');
         }
 
-        if ( ! $this->message) {
+        if ( ! isset($this->message) && empty($this->fields)) {
             throw new \Exception('A message must be defined');
         }
 
@@ -94,19 +105,18 @@ class DiscordMessage
 
         $body = empty($this->fields)
             ? $this->message
-            : json_encode([
+            : "'" . json_encode([
                 'embed' => [
-                    'title' => $this->message,
+                    'color' => $this->color ?? 0,
                     'author' => [
                         'name' => 'AOD Tracker'
                     ],
-                    'color' => $this->color ?? 0,
-                    'fields' => $this->fields ?? []
+                    'fields' => $this->fields
                 ]
-            ]);
+            ]) . "'";
 
         return [
-            'content' => "!relay {$this->channel} {$body}"
+            'content' => "!relay {$this->channel}" . $body
         ];
     }
 }

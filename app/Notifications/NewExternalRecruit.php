@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\DiscordMessage;
+use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class NewExternalRecruit extends Notification
@@ -40,30 +40,32 @@ class NewExternalRecruit extends Notification
      */
     public function via($notifiable)
     {
-        return ['slack'];
+        return [WebhookChannel::class];
     }
 
     /**
-     * @return mixed
+     * @return array
+     * @throws \Exception
      */
-    public function toSlack()
+    public function toWebhook()
     {
+        $channel = str_slug($this->division->name) . '-officers';
+
         $user = auth()->user();
 
-        $to = ($this->division->settings()->get('slack_channel'))
-            ?: '@' . $user->name;
-
-        $message = "*EXTERNAL RECRUIT*\n{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!";
-
-        return (new SlackMessage())
-            ->success()
-            ->to($to)
-            ->content($message)
-            ->attachment(function ($attachment) {
-                $attachment->title('View Member Profile')
-                    ->content(
-                        route('member', $this->member->getUrlParams())
-                    );
-            });
+        return (new DiscordMessage())
+            ->error()
+            ->to($channel)
+            ->fields([
+                [
+                    'name' => '**EXTERNAL RECRUIT**',
+                    'value' => "{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!"
+                ],
+                [
+                    'name' => 'View member profile',
+                    'value' => route('member', $this->member->getUrlParams())
+                ]
+            ])
+            ->send();
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Channels\DiscordMessage;
+use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -30,19 +32,21 @@ class MemberNameChanged extends Notification
 
     public function via($notifiable)
     {
-        return ['slack'];
+        return [WebhookChannel::class];
     }
 
-    public function toSlack()
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    public function toWebhook()
     {
-        $to = ($this->division->settings()->get('slack_channel'))
-            ?: '@' . auth()->user()->name;
+        $channel = str_slug($this->division->name) . '-officers';
 
-        return (new SlackMessage())
+        return (new DiscordMessage())
+            ->to($channel)
+            ->message(":tools: \"**MEMBER STATUS - NAME CHANGE**\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}`. Please inform the member of this change.")
             ->success()
-            ->to($to)
-            ->content("*MEMBER STATUS - NAME CHANGE*\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}`. Please inform the member of this change.");
+            ->send();
     }
-
-
 }

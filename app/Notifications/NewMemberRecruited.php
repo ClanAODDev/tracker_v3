@@ -2,9 +2,9 @@
 
 namespace App\Notifications;
 
-use App\Platoon;
+use App\Channels\DiscordMessage;
+use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class NewMemberRecruited extends Notification
@@ -41,28 +41,30 @@ class NewMemberRecruited extends Notification
      */
     public function via($notifiable)
     {
-        return ['slack'];
+        return [WebhookChannel::class];
     }
 
     /**
-     * @return mixed
+     * @return array
+     * @throws \Exception
      */
-    public function toSlack()
+    public function toWebhook()
     {
-        $to = ($this->division->settings()->get('slack_channel'))
-            ?: '@' . auth()->user()->name;
+        $channel = str_slug($this->division->name) . '-officers';
 
-        $message = " just recruited `{$this->member->name}` into the {$this->division->name} Division!";
-
-        return (new SlackMessage())
+        return (new DiscordMessage())
             ->success()
-            ->to($to)
-            ->content(auth()->user()->name . $message)
-            ->attachment(function ($attachment) {
-                $attachment->title('View Member Profile')
-                    ->content(
-                        route('member', $this->member->getUrlParams())
-                    );
-            });
+            ->to($channel)
+            ->fields([
+                [
+                    'name' => "**NEW MEMBER RECRUITED**",
+                    'value=' => auth()->user()->name . " just recruited `{$this->member->name}` into the {$this->division->name} Division!"
+                ],
+                [
+                    'name' => 'View Member Profile',
+                    'value' => route('member', $this->member->getUrlParams())
+                ]
+            ])
+            ->send();
     }
 }

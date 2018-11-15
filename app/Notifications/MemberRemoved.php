@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Channels\DiscordMessage;
+use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -37,27 +39,19 @@ class MemberRemoved extends Notification
      */
     public function via($notifiable)
     {
-        return ['slack'];
+        return [WebhookChannel::class];
     }
 
-    /**
-     * @return mixed
-     */
-    public function toSlack()
+    public function toWebhook()
     {
         $division = $this->member->division;
 
-        $to = ($division->settings()->get('slack_channel')) ?: '@' . auth()->user()->name;
+        $channel = str_slug($division->name) . '-officers';
 
-        $message = "{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by "
-            . auth()->user()->name;
-
-        return (new SlackMessage())
-            ->success()->to($to)
-            ->content($message)
-            ->attachment(function ($attachment) {
-                $attachment->title('Reason')
-                    ->content((request('removal_reason')) ?: "None provided");
-            });
+        return (new DiscordMessage())
+            ->to($channel)
+            ->message("{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name)
+            ->success()
+            ->send();
     }
 }
