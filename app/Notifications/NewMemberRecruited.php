@@ -58,7 +58,7 @@ class NewMemberRecruited extends Notification
             ->fields([
                 [
                     'name' => "**NEW MEMBER RECRUITED**",
-                    'value=' => ':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$this->division->name} Division!"
+                    'value' => ':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$this->division->name} Division!"
                 ],
                 [
                     'name' => 'View Member Profile',
