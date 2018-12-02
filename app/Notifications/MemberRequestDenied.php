@@ -48,6 +48,8 @@ class MemberRequestDenied extends Notification
 
         $path = route('division.member-requests.index', $this->request->division);
 
+        $notes = addslashes($this->request->notes);
+
         return (new DiscordMessage())
             ->error()
             ->to($channel)
@@ -58,7 +60,7 @@ class MemberRequestDenied extends Notification
                 ],
                 [
                     'name' => 'The reason for the denial was:',
-                    'value' => "{$this->request->notes} - [View Member Requests]({$path})"
+                    'value' => "{$notes} - [View Member Requests]({$path})"
                 ]
             ])
             ->send();
