@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use App\Note;
 
 class DivisionNoteController extends Controller
 {
@@ -23,6 +24,8 @@ class DivisionNoteController extends Controller
      */
     public function index(Division $division)
     {
+        $this->authorize('show', Note::class);
+
         $notes = ($type = request('type'))
             ? $division->notes()->whereType($type)->get()
             : $division->notes()->get();
