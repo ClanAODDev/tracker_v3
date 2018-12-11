@@ -9,10 +9,14 @@
         @slot ('heading')
             Part-Timers
 
-            <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#mass-pm-modal">
-                <i class="fa fa-bullhorn text-accent"></i> <span
-                        class="hidden-xs hidden-sm">Mass PM Part-Timers</span>
-            </button>
+            @can ('create', App\Member::class)
+                <button type="button" class="btn btn-default pull-right" data-toggle="modal"
+                        data-target="#mass-pm-modal">
+                    <i class="fa fa-bullhorn text-accent"></i> <span
+                            class="hidden-xs hidden-sm">Mass PM Part-Timers</span>
+                </button>
+            @endcan
+
         @endslot
         @slot ('subheading')
             {{ $division->name }}
@@ -58,7 +62,7 @@
                             <small>
                                 @if ($member->division_id === 0)
                                     <i class="fa fa-times text-danger"></i> REMOVED FROM AOD
-                                    @else
+                                @else
                                     <span class="text-muted">ACTIVE</span>
                                 @endif
                             </small>
