@@ -11,7 +11,6 @@ namespace App\Slack\Commands;
 use App\Member;
 use App\Slack\Base;
 use App\Slack\Command;
-use Carbon\Carbon;
 
 class Search extends Base implements Command
 {
@@ -109,12 +108,8 @@ class Search extends Base implements Command
     private function buildActivityBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
-        $tsActivity = $member->last_ts_activity
-            ? Carbon::createFromTimestamp($member->last_ts_activity)->diffForHumans()
-            : "None";
 
-        return $member->division_id != 0
-            ? PHP_EOL . "Forum activity: {$forumActivity}" . PHP_EOL . "TS activity: {$tsActivity}"
-            : null;
+        return PHP_EOL . "Forum activity: {$forumActivity}";
+
     }
 }
