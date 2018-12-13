@@ -79,14 +79,10 @@ class Search extends Base implements Command
                     "[Tracker]({$memberLink})"
                 ];
 
-                $forumActivity = $member->last_activity->diffForHumans();
-                $tsActivity = Carbon::createFromTimestamp($member->last_ts_activity)->diffForHumans();
-
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
-                    'value' => "Profiles: " . implode(', ', $links)
-                        . PHP_EOL . "Forum activity: {$forumActivity}"
-                        . PHP_EOL . "TS activity: {$tsActivity}",
+                    'value' => "Profiles: " . implode(', ', $links) . $this->buildActivityBlock($member)
+
                 ];
             }
         }
@@ -104,5 +100,21 @@ class Search extends Base implements Command
         return [
             'text' => "No results were found",
         ];
+    }
+
+    /**
+     * @param $member
+     * @return string|null
+     */
+    private function buildActivityBlock($member)
+    {
+        $forumActivity = $member->last_activity->diffForHumans();
+        $tsActivity = $member->last_ts_activity
+            ? Carbon::createFromTimestamp($member->last_ts_activity)->diffForHumans()
+            : "None";
+
+        return $member->division_id != 0
+            ? PHP_EOL . "Forum activity: {$forumActivity}" . PHP_EOL . "TS activity: {$tsActivity}"
+            : null;
     }
 }
