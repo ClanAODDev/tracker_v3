@@ -72,14 +72,14 @@ class Search extends Base implements Command
                     "[Tracker]({$memberLink})"
                 ];
 
-                $forumActivity = $member->last_activity->diffInDays();
-                $tsActivity = $member->last_ts_activity->diffInDays();
+                $forumActivity = $member->last_activity->diffForHumans();
+                $tsActivity = $member->last_ts_activity->diffForHumans();
 
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => "Profiles: " . implode(', ', $links)
-                        . PHP_EOL . "**Forum activity**: {$forumActivity}"
-                        . PHP_EOL . "**TS activity**: {$tsActivity}",
+                        . PHP_EOL . "Forum activity: {$forumActivity}"
+                        . PHP_EOL . "TS activity: {$tsActivity}",
                 ];
             }
         }
