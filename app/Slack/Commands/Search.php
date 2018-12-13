@@ -11,6 +11,7 @@ namespace App\Slack\Commands;
 use App\Member;
 use App\Slack\Base;
 use App\Slack\Command;
+use Carbon\Carbon;
 
 class Search extends Base implements Command
 {
@@ -58,6 +59,12 @@ class Search extends Base implements Command
             $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
         }
 
+        // count before iterating
+        if ($this->members->count() > 10) {
+            return [
+                'text' => 'More than 10 members were found. Please narrow your search terms.'
+            ];
+        }
 
         if ($this->members) {
             foreach ($this->members as $member) {
@@ -73,7 +80,7 @@ class Search extends Base implements Command
                 ];
 
                 $forumActivity = $member->last_activity->diffForHumans();
-                $tsActivity = $member->last_ts_activity->diffForHumans();
+                $tsActivity = Carbon::createFromTimestamp($member->last_ts_activity)->diffForHumans();
 
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
@@ -82,12 +89,6 @@ class Search extends Base implements Command
                         . PHP_EOL . "TS activity: {$tsActivity}",
                 ];
             }
-        }
-
-        if ($this->members->count() > 10) {
-            return [
-                'text' => 'More than 10 members were found. Please narrow your search terms.'
-            ];
         }
 
         if ($this->members->count() >= 1) {
