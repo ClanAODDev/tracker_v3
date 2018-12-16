@@ -43,7 +43,7 @@ class MemberRequestApproved extends Notification
     {
         $division = $this->request->division;
 
-        $channel = str_slug($division->name) . '-officers';
+        $channel = $division->settings()->get('slack_channel');
 
         $approver = auth()->user()->member;
 

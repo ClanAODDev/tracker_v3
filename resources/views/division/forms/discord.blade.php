@@ -5,8 +5,13 @@
 
     <div class="row">
         <div class="col-md-6">
-            <p>All notifications will be sent to your division's officer channel, shown below.</p>
-            <p><code>#{{ str_slug($division->name) . '-officers' }}</code></p>
+            <div class="form-group">
+                <label for="slack_channel" class="control-label">Channel</label>
+                <input type="text" id="slack_channel" name="slack_channel"
+                       placeholder="#channel-name"
+                       value="{{ $division->settings()->slack_channel }}" class="form-control" />
+                <span class="help-block"><small>Enter the channel you wish to post updates to. Notifications should be sent to your officer channel.</small></span>
+            </div>
         </div>
 
         <div class="col-md-6">

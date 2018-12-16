@@ -46,7 +46,7 @@ class MemberRemoved extends Notification
     {
         $division = $this->member->division;
 
-        $channel = str_slug($division->name) . '-officers';
+        $channel = $division->settings()->get('slack_channel');
 
         return (new DiscordMessage())
             ->to($channel)
