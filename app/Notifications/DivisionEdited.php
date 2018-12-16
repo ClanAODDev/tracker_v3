@@ -48,7 +48,7 @@ class DivisionEdited extends Notification
      */
     public function toWebhook($notifiable)
     {
-        $channel = str_slug($this->division->name) . '-officers';
+        $channel = $this->division->settings()->get('slack_channel');
 
         $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
 

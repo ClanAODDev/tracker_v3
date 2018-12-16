@@ -50,7 +50,7 @@ class NewMemberRecruited extends Notification
      */
     public function toWebhook()
     {
-        $channel = str_slug($this->division->name) . '-officers';
+        $channel = $this->division->settings()->get('slack_channel');
 
         return (new DiscordMessage())
             ->success()

@@ -44,7 +44,7 @@ class MemberRequestDenied extends Notification
     {
         $division = $this->request->division;
 
-        $channel = str_slug($division->name) . '-officers';
+        $channel = $division->settings()->get('slack_channel');
 
         $path = route('division.member-requests.index', $this->request->division);
 
