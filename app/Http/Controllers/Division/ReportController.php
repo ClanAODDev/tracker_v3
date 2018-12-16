@@ -27,8 +27,10 @@ class ReportController extends Controller
     public function retentionReport(Division $division)
     {
         $range = [
-            'start' => new Carbon('first day of this month'),
-            'end' => new Carbon('last day of this month')
+            'start' => request('start') ?? (new Carbon('first day of this month'))
+                    ->format('Y-m-d'),
+            'end' => request('end') ?? (new Carbon('last day of this month'))
+                    ->format('Y-m-d')
         ];
 
         $activity = collect(Activity::whereName('recruited_member')
@@ -89,7 +91,7 @@ class ReportController extends Controller
             $data = [];
         }
 
-        return view('division.reports.ingame-report', compact('division', 'data'));
+        return view('division.reports.ingame-report', compact('division', 'data', 'range'));
     }
 
     /**

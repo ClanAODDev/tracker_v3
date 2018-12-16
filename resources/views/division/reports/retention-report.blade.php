@@ -49,8 +49,36 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-filled">
+                    <div class="panel-body">
+                        <form>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label for="start">Start date</label>
+                                        <input type="date" class="form-control" name="start"
+                                               id="start" placeholder="yyyy-mm-dd"
+                                               value="{{ $range['start'] }}">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label for="end">End date</label>
+                                        <input type="date" class="form-control"
+                                               name="end" id="end" placeholder="yyyy-mm-dd"
+                                               value="{{ $range['end'] }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-default pull-right">Submit</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-filled">
                     <div class="panel-heading">
-                        Recruiting Count For {{ Carbon::now()->format('F Y') }}
+                        Recruiting Counts
                         <span class="pull-right">{{ $totalRecruitCount }}</span>
                     </div>
                     @foreach ($members as $item)
@@ -63,7 +91,6 @@
                     @endforeach
                 </div>
             </div>
-            <div class="col-md-6"></div>
         </div>
     </div>
 
@@ -76,10 +103,10 @@
             if (!a) {
               var t = o;
               if ((a = []).push({x: !0, number: !0, required: !0}), a.push({
-                  y: !0,
-                  number: !0,
-                  required: !0
-                }), t.bars.show || t.lines.show && t.lines.fill) {
+                y: !0,
+                number: !0,
+                required: !0
+              }), t.bars.show || t.lines.show && t.lines.fill) {
                 var u = !!(t.bars.show && t.bars.zero || t.lines.show && t.lines.zero);
                 a.push({
                   y: !0,
@@ -179,7 +206,7 @@
 
           xaxis: {
             mode: 'categories',
-            tickLength:0,
+            tickLength: 0,
           },
 
           colors: ['#1bbf89', '#f7af3e', '#0F83C9']
