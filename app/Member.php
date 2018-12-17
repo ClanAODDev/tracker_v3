@@ -55,6 +55,10 @@ class Member extends Model
         'join_date',
         'last_activity',
         'last_promoted',
+        // sgt info
+        'last_trained_at',
+        'xo_at',
+        'co_at'
     ];
 
     /**

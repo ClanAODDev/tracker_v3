@@ -5,11 +5,13 @@ namespace App\Nova;
 use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Panel;
 
 class Member extends Resource
 {
@@ -67,6 +69,17 @@ class Member extends Resource
             BelongsTo::make('Division'),
 
             HasOne::make('User'),
+
+            Number::make('Recruiter', 'recruiter_id')->hideFromIndex(),
+
+            new Panel('SGT Info', function () {
+                return [
+                    Date::make('Last Trained', 'last_trained_at')->hideFromIndex(),
+                    Number::make('Trained By', 'last_trained_by')->hideFromIndex(),
+                    Date::make('XO Since', 'xo_at')->hideFromIndex(),
+                    Date::make('CO Since', 'co_at')->hideFromIndex(),
+                ];
+            }),
 
             HasMany::make('Notes'),
 
