@@ -48,7 +48,7 @@
                                             @if ($member->recruiter)
                                                 <td>
                                                     {{ $member->recruiter->present()->rankName  }}
-                                                    <a href="{{ route('member', $member->recruiter->clan_id) }}">
+                                                    <a href="{{ route('member', $member->getUrlParams()) }}">
                                                         <i class="fa fa-search text-accent"></i>
                                                     </a>
                                                 </td>
