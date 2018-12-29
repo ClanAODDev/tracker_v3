@@ -38,10 +38,10 @@
                                 <th>Member</th>
                                 <th>Position</th>
                                 <th>Last Promoted</th>
-                                <th>Last Trained</th>
-                                <th>Trained By</th>
-                                <th>XO Since</th>
-                                <th>CO Since</th>
+                                <th class="hidden-sm hidden-xs">Last Trained</th>
+                                <th class="hidden-sm hidden-xs">Trained By</th>
+                                <th class="hidden-sm hidden-xs">XO Since</th>
+                                <th class="hidden-sm hidden-xs">CO Since</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -54,10 +54,10 @@
                                     </td>
                                     <td class="slight text-uppercase">{{ $member->position->name }}</td>
                                     <td>{{ $member->last_promoted }}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $member->last_trained_at }}</td>
+                                    <td>{{ $member->last_trained_by ? $member->last_trained_by->name : '' }}</td>
+                                    <td>{{ $member->xo_at }}</td>
+                                    <td>{{ $member->co_at }}</td>
                                 </tr>
                             @endforeach
                             @foreach($division->staffSergeants as $member)
