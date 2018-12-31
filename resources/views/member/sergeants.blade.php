@@ -27,25 +27,24 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
-
-                        <span class="badge"
-                              title="Sergeants to Members Ratio">{{ ratio($division->sergeants_count, $division->members_count) }}</span>
+                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count)  }}</span>
                     </h4>
 
-                    <div class="panel panel-filled pt-0">
-                        <table class="table table-hover basic-datatable">
+                    <div class="panel panel-filled">
+                        <table class="table basic-datatable table-hover">
                             <thead>
                             <tr>
                                 <th>Member</th>
                                 <th>Position</th>
                                 <th>Last Promoted</th>
                                 <th class="hidden-sm hidden-xs">Last Trained</th>
-                                <th class="hidden-sm hidden-xs">Trained By</th>
                                 <th class="hidden-sm hidden-xs">XO Since</th>
                                 <th class="hidden-sm hidden-xs">CO Since</th>
                             </tr>
                             </thead>
+
                             <tbody>
+
                             @foreach ( $division->sergeants as $member)
                                 <tr>
                                     <td>
@@ -56,7 +55,6 @@
                                     <td class="slight text-uppercase">{{ $member->position->name }}</td>
                                     <td>{{ $member->last_promoted_at ?? '--' }}</td>
                                     <td>{{ $member->last_trained_at }}</td>
-                                    <td>{{ $member->last_trained_by ? $member->last_trained_by->name : '' }}</td>
                                     <td>{{ $member->xo_at }}</td>
                                     <td>{{ $member->co_at }}</td>
                                 </tr>
@@ -75,7 +73,6 @@
                                     </td>
                                     <td>{{ $member->last_promoted_at ?? '--' }}</td>
                                     <td>{{ $member->last_trained_at }}</td>
-                                    <td>{{ $member->last_trained_by ? $member->last_trained_by->name : '' }}</td>
                                     <td>{{ $member->xo_at }}</td>
                                     <td>{{ $member->co_at }}</td>
                                 </tr>
@@ -83,20 +80,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    {{--@foreach ( $division->sergeants as $member)--}}
-
-                    {{--<a href="{{ route('member', $member->getUrlParams()) }}"--}}
-                    {{--class="col-lg-3 panel panel-filled panel-c-accent m-r m-b">--}}
-                    {{--<span class="panel-body">--}}
-                    {{--{!! $member->present()->rankName !!}--}}
-                    {{--<br />--}}
-                    {{--<span class="slight text-muted text-uppercase">--}}
-                    {{--{{ $member->position->name }}--}}
-                    {{--</span>--}}
-                    {{--</span>--}}
-                    {{--</a>--}}
-                    {{--@endforeach--}}
                 </div>
             </div>
         @endforeach

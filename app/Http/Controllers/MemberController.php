@@ -75,7 +75,7 @@ class MemberController extends Controller
                     $query->orderByDesc('rank_id');
                 },
                 'sergeants.rank',
-                'sergeants.position'
+                'sergeants.position',
             ])
             ->with('staffSergeants', 'staffSergeants.rank')
             ->withCount('members')
