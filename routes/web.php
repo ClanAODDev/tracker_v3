@@ -254,6 +254,10 @@ Route::group(['prefix' => 'reports'], function () {
     Route::get('/clan-ts-report', 'ReportsController@clanTsReport')->name('reports.clan-ts-report');
 });
 
+Route::group(['prefix' => 'training'], function () {
+   Route::get('', 'TrainingController@index')->name('training.index');
+});
+
 
 /**
  * Admin / Member Request routes

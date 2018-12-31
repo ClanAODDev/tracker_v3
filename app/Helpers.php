@@ -334,6 +334,7 @@ function ratio()
     for ($i = 2; $i < $c; $i++) {
         $gcd = gcd($gcd, $inputs[$i]);
     }
+
     $var = max($inputs[0], 1) / max($gcd, 1);
     for ($i = 1; $i < $c; $i++) {
         $var .= ':' . round(($inputs[$i] / max($gcd, 1)));
