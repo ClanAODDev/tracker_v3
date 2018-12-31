@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class MemberRequest extends Model
@@ -54,6 +55,11 @@ class MemberRequest extends Model
             ->where('cancelled_at', null);
     }
 
+    public function scopePastGracePeriod($query)
+    {
+        return $query->where('created_at', '<=', Carbon::now()->subHour(2));
+    }
+
     /**
      * @param $query
      * @return mixed
@@ -102,7 +108,7 @@ class MemberRequest extends Model
      */
     public function scopeErrors($query)
     {
-        return $query->where('approved_at', '<=', now()->subHour(3));
+        return $query->where('approved_at', '<=', now()->subHour(4));
     }
 
     /**

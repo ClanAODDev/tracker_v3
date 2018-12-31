@@ -39,7 +39,9 @@ return [
         ],
         'api-keys' => [
             'bungie' => env('BUNGIE_API_KEY')
-        ]
+        ],
+        // in hours
+        'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
     ],
 
     /*
