@@ -158,6 +158,15 @@ class User extends Authenticatable
     }
 
     /**
+     * SSG+
+     * @return bool
+     */
+    public function canTrainMembers()
+    {
+        return $this->member->rank_id > 9;
+    }
+
+    /**
      * @return UserSettings
      */
     public function settings()

@@ -54,7 +54,7 @@ class Member extends Model
     protected $dates = [
         'join_date',
         'last_activity',
-        'last_promoted',
+        'last_promoted_at',
         // sgt info
         'last_trained_at',
         'xo_at',
@@ -104,6 +104,14 @@ class Member extends Model
         ])) {
             $this->platoon_id = 0;
             $this->squad_id = 0;
+        }
+
+        if ($this->position->name == 'Executive Officer') {
+            $this->xo_since = now();
+        }
+
+        if ($this->position->name == 'Commanding Officer') {
+            $this->co_since = now();
         }
 
         return $this->position()->associate(

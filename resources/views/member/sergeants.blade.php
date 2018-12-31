@@ -27,8 +27,9 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
-                        <span class="badge" title="Sergeants to Members Ratio">{{ ratio($division->sergeants_count, $division->members_count) }}</span>
 
+                        <span class="badge"
+                              title="Sergeants to Members Ratio">{{ ratio($division->sergeants_count, $division->members_count) }}</span>
                     </h4>
 
                     <div class="panel panel-filled pt-0">
@@ -53,13 +54,14 @@
                                         </a>
                                     </td>
                                     <td class="slight text-uppercase">{{ $member->position->name }}</td>
-                                    <td>{{ $member->last_promoted }}</td>
+                                    <td>{{ $member->last_promoted_at ?? '--' }}</td>
                                     <td>{{ $member->last_trained_at }}</td>
                                     <td>{{ $member->last_trained_by ? $member->last_trained_by->name : '' }}</td>
                                     <td>{{ $member->xo_at }}</td>
                                     <td>{{ $member->co_at }}</td>
                                 </tr>
                             @endforeach
+
                             @foreach($division->staffSergeants as $member)
 
                                 <tr>
@@ -71,7 +73,7 @@
                                     <td class="slight text-uppercase" style="color: cyan">
                                         Assigned Staff Sergeant
                                     </td>
-                                    <td>{{ $member->last_promoted }}</td>
+                                    <td>{{ $member->last_promoted_at ?? '--' }}</td>
                                     <td>{{ $member->last_trained_at }}</td>
                                     <td>{{ $member->last_trained_by ? $member->last_trained_by->name : '' }}</td>
                                     <td>{{ $member->xo_at }}</td>
