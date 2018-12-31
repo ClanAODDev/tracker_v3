@@ -103,31 +103,12 @@
         </li>
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
-                Member Requests <span class="badge text-info">{{ \App\MemberRequest::pending()->count() }}</span>
+                Member Requests <span
+                        class="badge text-info">{{ \App\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
             </a>
         </li>
 
     @endif
-
-    @can('manageSlack', auth()->user())
-        <li class="nav-category">
-            Slack
-        </li>
-        <li class="{{ set_active('slack/users') }}">
-            <a href="{{ route('slack.user-index') }}">Users</a>
-        </li>
-        <li class="{{ set_active('slack/channels') }}">
-            <a href="{{ route('slack.channel-index') }}">Channels</a>
-        </li>
-
-        @if (auth()->user()->isRole('admin'))
-            <li class="{{ set_active('slack/files') }}">
-                <a href="{{ route('slack.files') }}">Files</a>
-            </li>
-        @endif
-
-
-    @endcan
 
     <li class="nav-category">
         Application

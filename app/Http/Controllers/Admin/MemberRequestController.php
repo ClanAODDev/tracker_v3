@@ -27,6 +27,7 @@ class MemberRequestController extends Controller
         $this->authorize('manage', MemberRequest::class);
 
         $pending = MemberRequest::pending()
+            ->pastGracePeriod()
             ->with('member', 'member.rank', 'requester', 'division')
             ->get();
 
