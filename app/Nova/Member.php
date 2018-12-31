@@ -39,6 +39,11 @@ class Member extends Resource
         'name',
     ];
 
+    public static $with = [
+        'rank',
+        'division'
+    ];
+
     /**
      * @param NovaRequest $request
      * @param \Illuminate\Database\Eloquent\Builder $query
