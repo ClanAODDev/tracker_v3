@@ -122,6 +122,11 @@ class Division extends Model
         'structure'
     ];
 
+    protected $withCount = [
+        'sergeants',
+        'members'
+    ];
+
     /**
      * @var array
      */
@@ -292,6 +297,11 @@ class Division extends Model
     public function sergeants()
     {
         return $this->members()->where('rank_id', '>', 8);
+    }
+
+    public function getSergeantsCountAttribute()
+    {
+        return $this->members()->whereIn('rank_id', [9, 10])->count();
     }
 
     /**
