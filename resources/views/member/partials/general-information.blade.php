@@ -68,20 +68,27 @@
             @slot('title') Last <span class="c-white">Rank Training</span> @endslot
         @endcomponent
 
-        @component('application.components.data-block')
-            @slot('data') {{ $member->last_trained_by ? $member->last_trained_by->name : '--' }} @endslot
-            @slot('title') Last <span class="c-white">Trained By</span> @endslot
-        @endcomponent
+        @if( $member->trainer)
+            @component('application.components.link-block')
+                @slot('link'){{ route('member', $member->trainer->getUrlParams()) }}@endslot
+                @slot('data') {{$member->trainer->name }} @endslot
+                @slot('title') Last <span class="c-white">Trained By</span> @endslot
+            @endcomponent
+        @endif
 
-        @component('application.components.data-block')
-            @slot('data') {{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }} @endslot
-            @slot('title') <span class="c-white">XO Since</span> @endslot
-        @endcomponent
+        @if($member->xo_at)
+            @component('application.components.data-block')
+                @slot('data') {{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }} @endslot
+                @slot('title') <span class="c-white">XO Since</span> @endslot
+            @endcomponent
+        @endif
 
+        @if ($member->co_at)
             @component('application.components.data-block')
                 @slot('data') {{ $member->co_at ? $member->co_at->format('Y-m-d') : '--' }} @endslot
                 @slot('title') <span class="c-white">CO Since</span> @endslot
             @endcomponent
+        @endif
     </div>
 @endif
 
