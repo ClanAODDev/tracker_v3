@@ -24,7 +24,7 @@ Route::get('requests-count.png', function () {
     $im = imagecreatefromstring($response);
     $orange = imagecolorallocate($im, 255, 108, 0);
     $red = imagecolorallocate($im, 153, 26, 34);
-    $requestsCount = \App\MemberRequest::pending()->count();
+    $requestsCount = \App\MemberRequest::pending()->pastGracePeriod()->count();
     $errors = \App\MemberRequest::errors()->count();
     $dimensions = imagettfbbox(20, 0, $bigfont, $requestsCount);
     $textWidth = abs($dimensions[4] - $dimensions[0]);
