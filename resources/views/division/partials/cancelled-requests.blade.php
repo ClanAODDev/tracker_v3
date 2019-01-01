@@ -1,5 +1,5 @@
 @if ($requests['cancelled']->count())
-    <h4 class="m-t-xl">CANCELLED <span class="badge">{{ $requests['cancelled']->count() }}</span></h4>
+    <h4 class="m-t-xl">CANCELLED/DENIED <span class="badge">{{ $requests['cancelled']->count() }}</span></h4>
     <div class="panel panel-filled panel-c-danger" id="{{ $division->abbreviation }}">
         <div class="table-responsive">
             <table class="table table-hover">
