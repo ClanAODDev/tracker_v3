@@ -44,7 +44,6 @@
         "laravel/browser-kit-testing": "^2.0",
         "barryvdh/laravel-ide-helper": "^2.3",
         "laracasts/generators": "dev-master",
-        "laravel/dusk": "^3.0",
         "beyondcode/laravel-er-diagram-generator": "^0.2.2",
         "filp/whoops": "~2.0",
         "nunomaduro/collision": "~1.1"
