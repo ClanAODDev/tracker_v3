@@ -17,11 +17,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
         'role_id' => 1,
         'settings' => [],
         'developer' => false,
-        'member_id' => App\Member::inRandomOrder()->first(),
+        'member_id' => function () {
+            return factory('App\Member')->create()->clan_id;
+        },
         'remember_token' => str_random(10),
     ];
 });
