@@ -304,7 +304,7 @@ class Division extends Model
      */
     public function sgtAndSsgt()
     {
-        return $this->members()->where('rank_id', '>', 8);
+        return $this->members()->whereIn('rank_id', [9, 10]);
     }
 
     /**
