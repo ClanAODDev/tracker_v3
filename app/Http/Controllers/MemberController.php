@@ -78,6 +78,7 @@ class MemberController extends Controller
                 'sergeants.position',
             ])
             ->with('staffSergeants', 'staffSergeants.rank')
+            ->withCount('sgtAndSsgt')
             ->get()->sortBy('name');
 
         return view('member.sergeants', compact('divisions'));

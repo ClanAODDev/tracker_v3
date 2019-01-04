@@ -25,9 +25,9 @@
                     <h4>
                         <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium" />
                         {{ $division->name }}
-                        <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
+                        <span class="badge">{{ $division->sgt_and_ssgt_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
-                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count) }}</span>
+                        <span class="badge">{{ ratio($division->sgt_and_ssgt_count, $division->members_count) }}</span>
 
                     </h4>
 
@@ -39,7 +39,6 @@
                                 <th>Position</th>
                                 <th>Last Promoted</th>
                                 <th>Last Trained</th>
-                                <th>Trained By</th>
                                 <th>XO Since</th>
                                 <th>CO Since</th>
                             </tr>

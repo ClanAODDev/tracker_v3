@@ -299,9 +299,12 @@ class Division extends Model
         return $this->members()->where('rank_id', '>', 8);
     }
 
-    public function getSergeantsCountAttribute()
+    /**
+     * Count of Sgts and SSGs
+     */
+    public function sgtAndSsgt()
     {
-        return $this->members()->whereIn('rank_id', [9, 10])->count();
+        return $this->members()->where('rank_id', '>', 8);
     }
 
     /**
