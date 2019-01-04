@@ -28,7 +28,7 @@ Route::post('search-member', 'MemberController@searchAutoComplete')->name('membe
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
 Route::post('update-role', 'UserController@updateRole');
-Route::post('update-position', 'MemberController@updatePosition');
+Route::post('update-position', 'MemberController@updatePosition')->name('member.position.update');
 Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
 
 Route::group(['prefix' => 'inactive-members'], function () {
