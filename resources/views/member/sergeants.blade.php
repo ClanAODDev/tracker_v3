@@ -27,7 +27,7 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
-                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count)  }}</span>
+{{--                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count)  }}</span>--}}
                     </h4>
 
                     <div class="panel panel-filled">
@@ -53,10 +53,10 @@
                                         </a>
                                     </td>
                                     <td class="slight text-uppercase">{{ $member->position->name }}</td>
-                                    <td>{{ $member->last_promoted_at ?? '--' }}</td>
-                                    <td>{{ $member->last_trained_at }}</td>
-                                    <td>{{ $member->xo_at }}</td>
-                                    <td>{{ $member->co_at }}</td>
+                                    <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
+                                    <td>{{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}</td>
+                                    <td>{{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }}</td>
+                                    <td>{{ $member->co_at ? $member->co_at->format('Y-m-d') : '--' }}</td>
                                 </tr>
                             @endforeach
 
@@ -71,10 +71,10 @@
                                     <td class="slight text-uppercase" style="color: cyan">
                                         Assigned Staff Sergeant
                                     </td>
-                                    <td>{{ $member->last_promoted_at ?? '--' }}</td>
-                                    <td>{{ $member->last_trained_at }}</td>
-                                    <td>{{ $member->xo_at }}</td>
-                                    <td>{{ $member->co_at }}</td>
+                                    <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
+                                    <td>{{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}</td>
+                                    <td>{{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }}</td>
+                                    <td>{{ $member->co_at ? $member->co_at->format('Y-m-d') : '--' }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
