@@ -27,24 +27,24 @@
                         {{ $division->name }}
                         <span class="badge">{{ $division->sergeants_count }} Sergeants</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
-{{--                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count)  }}</span>--}}
+                        <span class="badge">{{ ratio($division->sergeants_count, $division->members_count) }}</span>
+
                     </h4>
 
-                    <div class="panel panel-filled">
-                        <table class="table basic-datatable table-hover">
+                    <div class="panel panel-filled pt-0">
+                        <table class="table table-hover basic-datatable">
                             <thead>
                             <tr>
                                 <th>Member</th>
                                 <th>Position</th>
                                 <th>Last Promoted</th>
-                                <th class="hidden-sm hidden-xs">Last Trained</th>
-                                <th class="hidden-sm hidden-xs">XO Since</th>
-                                <th class="hidden-sm hidden-xs">CO Since</th>
+                                <th>Last Trained</th>
+                                <th>Trained By</th>
+                                <th>XO Since</th>
+                                <th>CO Since</th>
                             </tr>
                             </thead>
-
                             <tbody>
-
                             @foreach ( $division->sergeants as $member)
                                 <tr>
                                     <td>
