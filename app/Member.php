@@ -91,10 +91,6 @@ class Member extends Model
      */
     public function assignPosition($position)
     {
-        if ($position instanceof Position) {
-            return $this->position()->associate($position);
-        }
-
         // reset assignments for specific positions
         if (in_array($this->position->name, [
             "Commanding Officer",
@@ -107,11 +103,17 @@ class Member extends Model
         }
 
         if ($this->position->name == 'Executive Officer') {
-            $this->xo_since = now();
+            $this->xo_at = now();
+            $this->co_at = null;
         }
 
         if ($this->position->name == 'Commanding Officer') {
-            $this->co_since = now();
+            $this->co_at = now();
+            $this->xo_at = null;
+        }
+
+        if ($position instanceof Position) {
+            return $this->position()->associate($position);
         }
 
         return $this->position()->associate(
