@@ -20,7 +20,7 @@
     <div class="container-fluid">
         <div class="row m-b-lg">
             <div class="col-md-12">
-                <p>Tracker data is synced with the Clan AOD forums once every hour. Census statistics are polled once a week. Division specific populations include annotations which may be viewed on individual division pages.</p>
+                <p>Division turnover consists of the count of new members in a 30/60/90 day window. Each column is inclusive, and is based on the current division population.</p>
             </div>
         </div>
 
