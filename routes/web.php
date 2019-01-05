@@ -256,7 +256,7 @@ Route::group(['prefix' => 'reports'], function () {
 });
 
 Route::group(['prefix' => 'training'], function () {
-   Route::get('', 'TrainingController@index')->name('training.index');
+    Route::get('', 'TrainingController@index')->name('training.index');
 });
 
 
