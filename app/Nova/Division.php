@@ -61,7 +61,7 @@ class Division extends Resource
 
             new Panel('Extra stuff', function () {
                 return [
-                    Text::make('description')->hideFromIndex(),
+                    Text::make('description')->rules(['required'])->hideFromIndex(),
                     Boolean::make('active')->sortable(),
 //                    Code::make('settings')->json()->hideWhenUpdating(),
                 ];
