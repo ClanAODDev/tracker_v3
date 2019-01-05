@@ -91,6 +91,11 @@
             <li class="{{ set_active('reports/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>
+            @if (auth()->user()->isRole('admin'))
+                <li class="{{ set_active('reports/division-turnover') }}">
+                    <a href="{{ route('reports.division-turnover') }}">Division Turnover</a>
+                </li>
+            @endif
         </ul>
     </li>
 

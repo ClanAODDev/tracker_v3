@@ -112,4 +112,20 @@ class ReportsController extends Controller
 
         return view('reports.outstanding-members', compact('divisions'));
     }
+
+    /**
+     * @return mixed
+     */
+    public function divisionTurnoverReport()
+    {
+        $divisions = Division::active()
+            ->withCount(
+                'members',
+                'newMembersLast30',
+                'newMembersLast60',
+                'newMembersLast90'
+            )->get();
+
+        return view('reports.division-turnover', compact('divisions'));
+    }
 }

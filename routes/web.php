@@ -243,9 +243,10 @@ Route::post('slack', [
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');
 
-
 /** Reports */
 Route::group(['prefix' => 'reports'], function () {
+    Route::middleware('admin')->get('division-turnover', 'ReportsController@divisionTurnoverReport')
+        ->name('reports.division-turnover');
     Route::get(
         'outstanding-inactives',
         'ReportsController@outstandingMembersReport'

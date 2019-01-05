@@ -210,6 +210,34 @@ class Division extends Model
         return $this->hasMany(Member::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function newMembersLast30()
+    {
+        return $this->hasMany(Member::class)
+            ->where('join_date', '>', Carbon::now()->subDays(30));
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function newMembersLast60()
+    {
+        return $this->hasMany(Member::class)
+            ->where('join_date', '>', Carbon::now()->subDays(60));
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function newMembersLast90()
+    {
+        return $this->hasMany(Member::class)
+            ->where('join_date', '>', Carbon::now()->subDays(90));
+
+    }
+
     public function notes()
     {
         return $this->hasManyThrough(
