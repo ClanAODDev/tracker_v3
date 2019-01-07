@@ -75,12 +75,12 @@ class NoteController extends Controller
         // check for existing leave with associated note
         $leave = \App\Leave::whereHas('note')
             ->whereNoteId($note->id)
-            ->first();
+            ->exists();
 
-        if (count($leave)) {
-            return redirect()->back()
-                ->withErrors(['' => "Note cannot be deleted. A leave of absence associated to this note still exists!"])
-                ->withInput();
+        if ($leave) {
+            $this->showErrorToast('Note cannot be deleted. A leave of absence associated to this note still exists!');
+
+            return redirect(route('member', $member->getUrlParams()));
         }
 
         $note->delete();
