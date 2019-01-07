@@ -37,7 +37,8 @@
                     <li>Member status requests will now have a <code>2 hour</code> window before being approved by leadership. This window will allow divisions to make changes to requests (specifically member names) before being processed.</li>
                     <li>Hotfix addressing leaves of absence whose associated notes were not being assigned to the correct member id.</li>
                     <li>Allow divisions to change their discord channel name in the event it does not match the typical convention.</li>
-                    <l>Added division turnover report for clan leadership.</l>
+                    <li>Fixed bug preventing notes from being deleted by authorized users.</li>
+                    <li>Added division turnover report for clan leadership.</li>
                 </ul>
             </div>
         </div>
