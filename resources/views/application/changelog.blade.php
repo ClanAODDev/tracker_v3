@@ -25,6 +25,25 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>6 Jan 2019 - 3.8.0</h4>
+                <hr />
+                <ul>
+                    <li>Training information for SGT+ is now maintained by the tracker. This information can be viewed either clan-wide via the
+                        <a href="{{ route('sergeants') }}">Sergeants</a> index, or by visiting  a member's profile. Leadership information will only display for current Sergeants+</li>
+                    <ul>
+                        <li>Speak to a MSGT+ for updates to a member's `last trained` date.</li>
+                        <li>CO and XO appointment dates are updated whenever a member is assigned to that position via the tracker.</li>
+                    </ul>
+                    <li>Member status requests will now have a <code>2 hour</code> window before being approved by leadership. This window will allow divisions to make changes to requests (specifically member names) before being processed.</li>
+                    <li>Hotfix addressing leaves of absence whose associated notes were not being assigned to the correct member id.</li>
+                    <li>Allow divisions to change their discord channel name in the event it does not match the typical convention.</li>
+                    <l>Added division turnover report for clan leadership.</l>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>9 Sept 2018 - 3.7.0</h4>
                 <hr />
                 <ul>
