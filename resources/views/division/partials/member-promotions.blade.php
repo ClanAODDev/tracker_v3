@@ -15,7 +15,7 @@
                                 @foreach ($rankGroup as $member)
                                     <tr>
                                         <td>{{ $member->name }}</td>
-                                        <td class="text-right text-muted slight">{{ $member->last_promoted }}</td>
+                                        <td class="text-right text-muted slight">{{ $member->last_promoted_at }}</td>
                                     </tr>
                                 @endforeach
                                 <tr>
