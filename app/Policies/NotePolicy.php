@@ -55,4 +55,13 @@ class NotePolicy
 
         return true;
     }
+
+    public function delete()
+    {
+        if (auth()->user()->isRole('member')) {
+            return false;
+        }
+
+        return true;
+    }
 }
