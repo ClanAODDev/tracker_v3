@@ -54,11 +54,9 @@ class CreateLeave extends FormRequest
             'body' => $this->note_body,
             'forum_thread_id' => $this->note_thread_id,
             'type' => 'misc',
+            'author_id' => auth()->user(),
+            'member_id' => $this->member_id
         ]);
-
-        $note->member()->associate($this->member_id);
-        $note->author()->associate(auth()->user());
-        $note->save();
 
         $leave = Leave::create([
             'reason' => $this->leave_type,
