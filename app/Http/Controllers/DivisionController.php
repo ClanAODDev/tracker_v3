@@ -30,37 +30,6 @@ class DivisionController extends Controller
     }
 
     /**
-     * @param Division $division
-     * @return $this|\Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function storeSlackChannel(Division $division)
-    {
-        $this->authorize('createSlackChannels', auth()->user());
-
-        $payload = new ChannelsCreatePayload();
-        $channelName = str_slug(request()->get('division') . "-" . request()->get('channel-name'));
-
-        $payload->setName($channelName);
-
-        $response = $this->client->send($payload);
-
-        if ($response->isOk()) {
-            $this->showToast("{$channelName} was created!");
-            Log::info(auth()->user()->name
-                . " created a slack channel - {$channelName} - "
-                . Carbon::now());
-
-            return redirect()->back();
-        } else {
-            return redirect()->back()->withErrors([
-                'slack-error' => $response->getError(),
-                'slack-error-detail' => $response->getErrorExplanation()
-            ])->withInput();
-        }
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param Division $division
