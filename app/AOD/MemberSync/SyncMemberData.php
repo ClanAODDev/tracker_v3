@@ -87,7 +87,7 @@ class SyncMemberData
 
         // have they been recently promoted?
         if ($member->rank_id < ($record['aodrankval'] - 2) && $member->rank_id > 0) {
-            $member->last_promoted = \Carbon::now();
+            $member->last_promoted_at = \Carbon::now();
         }
 
         // drop aod prefix
