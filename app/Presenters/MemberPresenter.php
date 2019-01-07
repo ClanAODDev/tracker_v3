@@ -24,9 +24,9 @@ class MemberPresenter extends Presenter
 
     public function lastPromoted()
     {
-        return ! $this->member->last_promoted
+        return ! $this->member->last_promoted_at
             ? "Never"
-            : $this->member->last_promoted->format('M d, Y');
+            : $this->member->last_promoted_at->format('Y-m-d');
     }
 
     public function lastActive($value)

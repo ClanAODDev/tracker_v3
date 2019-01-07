@@ -24,8 +24,8 @@ class MemberRepository
     public function promotionPeriods()
     {
         return collect(DB::select(
-            DB::raw(" SELECT Year(last_promoted) AS year, MONTHNAME(STR_TO_DATE(Month(last_promoted), '%m')) AS month
-                      FROM members GROUP BY Year(last_promoted), Month(last_promoted)
+            DB::raw("SELECT Year(last_promoted_at) AS year, MONTHNAME(STR_TO_DATE(Month(last_promoted_at), '%m')) AS month
+                      FROM members GROUP BY Year(last_promoted_at), Month(last_promoted_at)
                       ORDER BY year DESC
             ")
         ))

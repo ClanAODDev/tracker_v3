@@ -37,7 +37,7 @@
     @endcomponent
 
     @component('application.components.data-block')
-        @slot('data') {{ (isset($member->last_promoted_at)) ? $member->last_promoted_at->format('Y-m-d') : 'Never' }} @endslot
+        @slot('data') {{ $member->present()->lastPromoted() }} @endslot
         @slot('title') Last <span class="c-white">promotion date</span> @endslot
     @endcomponent
 

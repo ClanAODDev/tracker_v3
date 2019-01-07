@@ -39,6 +39,8 @@
                     <li>Allow divisions to change their discord channel name in the event it does not match the typical convention.</li>
                     <li>Fixed bug preventing notes from being deleted by authorized users.</li>
                     <li>Added division turnover report for clan leadership.</li>
+                    <li>Fixed breaking change affecting promotion reports for divisions.</li>
+                    <li>Added the ability to filter retention data to specific periods of time.</li>
                 </ul>
             </div>
         </div>

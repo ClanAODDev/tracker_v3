@@ -239,7 +239,7 @@ class PlatoonController extends Controller
                 $member->join_date,
                 $member->last_activity,
                 $member->last_ts_activity,
-                $member->last_promoted,
+                $member->last_promoted_at,
                 $member->handle->pivot->value ?? 'N/A',
                 $member->posts,
             ];

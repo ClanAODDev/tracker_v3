@@ -106,7 +106,7 @@ class ReportController extends Controller
         try {
             $members = $this->getMemberPromotions($division, $month, $year);
         } catch (\Exception $exception) {
-            $members = [];
+            $members = collect([]);
         }
 
         $ranks = $members->pluck('rank.abbreviation')->unique();
@@ -145,7 +145,7 @@ class ReportController extends Controller
 
         $members = $division->members()
             ->with('rank')
-            ->whereBetween('last_promoted', $dates)
+            ->whereBetween('last_promoted_at', $dates)
             ->orderByDesc('rank_id')->get();
 
         return $members;

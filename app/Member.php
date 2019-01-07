@@ -44,7 +44,7 @@ class Member extends Model
         'join_date',
         'last_activity',
         'last_ts_activity',
-        'last_promoted',
+        'last_promoted_at',
         'recruiter_id'
     ];
 
