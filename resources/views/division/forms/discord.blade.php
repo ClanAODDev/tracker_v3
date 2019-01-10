@@ -8,7 +8,7 @@
             <div class="form-group">
                 <label for="slack_channel" class="control-label">Channel</label>
                 <input type="text" id="slack_channel" name="slack_channel"
-                       placeholder="#channel-name"
+                       placeholder="division-name-officers"
                        value="{{ $division->settings()->slack_channel }}" class="form-control" />
                 <span class="help-block"><small>Enter the channel you wish to post updates to. Notifications should be sent to your officer channel.</small></span>
             </div>
