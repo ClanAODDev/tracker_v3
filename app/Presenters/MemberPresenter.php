@@ -22,10 +22,10 @@ class MemberPresenter extends Presenter
         $this->member = $member;
     }
 
-    public function lastPromoted()
+    public function lastPromoted($emptyVal = 'Never')
     {
         return ! $this->member->last_promoted_at
-            ? "Never"
+            ? $emptyVal ?? 'Never'
             : $this->member->last_promoted_at->format('Y-m-d');
     }
 
