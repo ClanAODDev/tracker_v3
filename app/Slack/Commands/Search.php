@@ -59,7 +59,8 @@ class Search extends Base implements Command
         } else {
             if (strstr($this->params, 'discord')) {
                 $this->searchingByDiscord = true;
-                $this->members = Member::where('discord', 'LIKE', "%{$this->params}%")->get();
+                $value = str_replace(' discord', '', $this->params);
+                $this->members = Member::where('discord', 'LIKE', "%{$value}%")->get();
             } else {
                 $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
             }
