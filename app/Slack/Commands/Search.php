@@ -57,9 +57,9 @@ class Search extends Base implements Command
                 ->orWhere('name', 'LIKE', "%{$terms[1]}%")
                 ->get();
         } else {
-            if (strstr($this->params, 'discord')) {
+            if (strstr($this->params, '--discord')) {
                 $this->searchingByDiscord = true;
-                $value = str_replace(' discord', '', $this->params);
+                $value = str_replace(' --discord', '', $this->params);
                 $this->members = Member::where('discord', 'LIKE', "%{$value}%")->get();
             } else {
                 $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
@@ -90,9 +90,7 @@ class Search extends Base implements Command
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => "Profiles: "
                     . implode(', ', $links)
-                    . $this->buildActivityBlock($member)
-                    . ($this->searchingByDiscord) ? $this->buildDiscordBlock($member) : null
-
+                    . $this->buildActivityAndDiscordBlock($member)
                 ];
             }
         }
@@ -116,20 +114,17 @@ class Search extends Base implements Command
      * @param $member
      * @return string|null
      */
-    private function buildActivityBlock($member)
+    private function buildActivityAndDiscordBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
 
-        return PHP_EOL . "Forum activity: {$forumActivity}";
+        $string = PHP_EOL . "Forum activity: {$forumActivity}";
 
-    }
+        if ($this->searchingByDiscord) {
+            $string .= PHP_EOL . "Discord: `{$member->discord}`";
+        }
 
-    /**
-     * @param $member
-     * @return string
-     */
-    private function buildDiscordBlock($member)
-    {
-        return PHP_EOL . "Discord: `{$member->discord}`";
+        return $string;
+
     }
 }
