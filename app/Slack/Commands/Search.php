@@ -91,7 +91,7 @@ class Search extends Base implements Command
                     'value' => "Profiles: "
                     . implode(', ', $links)
                     . $this->buildActivityBlock($member)
-                    . ($this->searchingByDiscord) ?? $this->buildDiscordBlock($member)
+                    . ($this->searchingByDiscord) ? $this->buildDiscordBlock($member) : null
 
                 ];
             }
