@@ -12,7 +12,7 @@ use App\Member;
 use App\Slack\Base;
 use App\Slack\Command;
 
-class Search extends Base implements Command
+class SearchDiscord extends Base implements Command
 {
 
     private $members;
@@ -39,29 +39,11 @@ class Search extends Base implements Command
             ];
         }
 
-        // are we handling multiple names?
-        if (strstr($this->params, ',')) {
-            $criteria = [];
-            $terms = explode(',', $this->params);
-
-            if (count($terms) > 2) {
-                return [
-                    'text' => "Your search criteria can only be a maximum of two terms.",
-                ];
-            }
-
-            $this->members = Member::where('name', 'LIKE', "%{$terms[0]}%")
-                ->orWhere('name', 'LIKE', "%{$terms[1]}%")
-                ->get();
-        } else {
-            $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
-        }
+        $this->members = Member::where('discord', 'LIKE', "%{$this->params}%")->get();
 
         // count before iterating
         if ($this->members->count() > 10) {
-            return [
-                'text' => 'More than 10 members were found. Please narrow your search terms.'
-            ];
+            return ['text' => 'More than 10 members were found. Please narrow your search terms.'];
         }
 
         if ($this->members) {
@@ -81,7 +63,7 @@ class Search extends Base implements Command
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => "Profiles: "
                         . implode(', ', $links)
-                        . $this->buildActivityBlock($member)
+                        . $this->buildActivityAndDiscordBlock($member)
                 ];
             }
         }
@@ -105,10 +87,12 @@ class Search extends Base implements Command
      * @param $member
      * @return string|null
      */
-    private function buildActivityBlock($member)
+    private function buildActivityAndDiscordBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
+        $string = PHP_EOL . "Forum activity: {$forumActivity}";
+        $string .= PHP_EOL . "Discord: `{$member->discord}`";
 
-        return PHP_EOL . "Forum activity: {$forumActivity}";
+        return $string;
     }
 }
