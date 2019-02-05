@@ -19,6 +19,8 @@ class Search extends Base implements Command
 
     private $content = [];
 
+    private $searchingByDiscord = false;
+
     private $forumProfile = "https://www.clanaod.net/forums/member.php?u=";
 
     public function __construct($data)
@@ -55,7 +57,12 @@ class Search extends Base implements Command
                 ->orWhere('name', 'LIKE', "%{$terms[1]}%")
                 ->get();
         } else {
-            $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
+            if (strstr($this->params, 'discord')) {
+                $this->searchingByDiscord = true;
+                $this->members = Member::where('discord', 'LIKE', "%{$this->params}%")->get();
+            } else {
+                $this->members = Member::where('name', 'LIKE', "%{$this->params}%")->get();
+            }
         }
 
         // count before iterating
@@ -80,7 +87,10 @@ class Search extends Base implements Command
 
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
-                    'value' => "Profiles: " . implode(', ', $links) . $this->buildActivityBlock($member)
+                    'value' => "Profiles: "
+                    . implode(', ', $links)
+                    . $this->buildActivityBlock($member)
+                    . ($this->searchingByDiscord) ?? $this->buildDiscordBlock($member)
 
                 ];
             }
@@ -111,5 +121,14 @@ class Search extends Base implements Command
 
         return PHP_EOL . "Forum activity: {$forumActivity}";
 
+    }
+
+    /**
+     * @param $member
+     * @return string
+     */
+    private function buildDiscordBlock($member)
+    {
+        return PHP_EOL . "Discord: `{$member->discord}`";
     }
 }
