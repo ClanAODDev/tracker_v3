@@ -19,6 +19,12 @@ class Help extends Base implements Command
             'description' => 'Search for members in AOD. Can search for up to two names. Can search for a portion of a name. Cannot return more than 10 results at a time.',
             'usage' => '!tracker search:archan,kid_a',
         ],
+
+        [
+            'name' => 'Search members by discord username',
+            'description' => 'Search for members in AOD via discord tag. Cannot return more than 10 results at a time.',
+            'usage' => '!tracker search:sulifex --discord'
+        ]
     ];
 
     /**
