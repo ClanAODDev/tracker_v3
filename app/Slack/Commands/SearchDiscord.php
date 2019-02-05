@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dcdeaton
- * Date: 4/12/2016
- * Time: 7:02 PM
- */
+
 
 namespace App\Slack\Commands;
 
@@ -12,6 +7,11 @@ use App\Member;
 use App\Slack\Base;
 use App\Slack\Command;
 
+/**
+ * Class SearchDiscord
+ *
+ * @package App\Slack\Commands
+ */
 class SearchDiscord extends Base implements Command
 {
 
