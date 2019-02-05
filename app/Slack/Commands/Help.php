@@ -23,7 +23,7 @@ class Help extends Base implements Command
         [
             'name' => 'Search members by discord username',
             'description' => 'Search for members in AOD via discord tag. Cannot return more than 10 results at a time.',
-            'usage' => '!tracker search:sulifex --discord'
+            'usage' => '!tracker search-discord:sulifex'
         ]
     ];
 
