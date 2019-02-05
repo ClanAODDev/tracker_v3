@@ -27,8 +27,8 @@ class Help extends Base implements Command
         ],
 
         [
-            'name' => 'Search members by discord username',
-            'description' => 'Search for members in AOD via discord tag. Cannot return more than 10 results at a time.',
+            'name' => 'Search members by TS Unique ID',
+            'description' => 'Search for members in AOD via TS unique ID. Cannot return more than 10 results at a time.',
             'usage' => '!tracker search-teamspeak:unique-id-string-here'
         ]
     ];
