@@ -103,6 +103,7 @@ class SyncMemberData
 
         $member->posts = $record['postcount'];
         $member->ts_unique_id = $record['tsid'];
+        $member->discord = $record['discordtag'];
 
         // persist
         $member->save();
