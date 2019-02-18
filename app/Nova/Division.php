@@ -60,9 +60,9 @@ class Division extends Resource
 
             BelongsTo::make('Handle'),
 
-            Date::make('Created At'),
+            Date::make('Created At')->sortable(),
 
-            Date::make('Updated At'),
+            Date::make('Updated At')->sortable(),
 
             new Panel('Extra stuff', function () {
                 return [
