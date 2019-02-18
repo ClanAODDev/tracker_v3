@@ -27,10 +27,14 @@ class DivisionNoteController extends Controller
         $this->authorize('show', Note::class);
 
         $notes = ($type = request('type'))
-            ? $division->notes()->whereType($type)->get()
-            : $division->notes()->get();
+            ? $division->notes()->whereType($type)
+            : $division->notes();
 
-        $notes = $notes->load('member.rank')->sortByDesc('created_at');
+        // omit own notes for security
+        $notes = $notes
+            ->where('member_id', '!=', auth()->user()->member_id)
+            ->with('member.rank')->orderByDesc('created_at')
+            ->get();
 
         return view('division.notes', compact('division', 'notes'))
             ->with(['filter' => $type]);
