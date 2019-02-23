@@ -94,8 +94,7 @@ class DivisionController extends Controller
             'division',
             'censuses',
             'weeklyActive',
-            'populations',
-            'comments'
+            'populations'
         ));
     }
 

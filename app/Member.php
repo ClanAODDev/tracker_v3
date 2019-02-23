@@ -92,7 +92,7 @@ class Member extends Model
     public function assignPosition($position)
     {
         // reset assignments for specific positions
-        if (in_array($this->position->name, [
+        if (in_array($position->name, [
             "Commanding Officer",
             "Executive Officer",
             "General Sergeant",
@@ -102,12 +102,12 @@ class Member extends Model
             $this->squad_id = 0;
         }
 
-        if ($this->position->name == 'Executive Officer') {
+        if ($position->name == 'Executive Officer') {
             $this->xo_at = now();
             $this->co_at = null;
         }
 
-        if ($this->position->name == 'Commanding Officer') {
+        if ($position->name == 'Commanding Officer') {
             $this->co_at = now();
             $this->xo_at = null;
         }
