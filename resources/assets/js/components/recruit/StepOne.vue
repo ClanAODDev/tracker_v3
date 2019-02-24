@@ -8,8 +8,9 @@
 
         <p>
             <a href="https://www.clanaod.net/forums/showthread.php?t=97502" target="_blank"
-               class="btn btn-default">Teamspeak Information</a>
-            <a href="https://www.clanaod.net/forums/showthread.php?t=208233">Discord Information</a>
+               class="btn btn-default">Teamspeak Info</a>
+            <a class="btn btn-default" target="_blank"
+               href="https://www.clanaod.net/forums/showthread.php?t=208233">Discord Info</a>
             <a class="btn btn-default m-l-sm" target="_blank"
                href="https://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate&pp=30">New Forum Members</a>
         </p>
