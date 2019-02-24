@@ -91,8 +91,12 @@ class Member extends Model
      */
     public function assignPosition($position)
     {
+        $newPosition = $position instanceof Position
+            ? $this->position()->associate($position)
+            : Position::whereName(strtolower($position))->firstOrFail();
+
         // reset assignments for specific positions
-        if (in_array($position->name, [
+        if (in_array($newPosition->name, [
             "Commanding Officer",
             "Executive Officer",
             "General Sergeant",
@@ -102,23 +106,17 @@ class Member extends Model
             $this->squad_id = 0;
         }
 
-        if ($position->name == 'Executive Officer') {
+        if ($newPosition->name == 'Executive Officer') {
             $this->xo_at = now();
             $this->co_at = null;
         }
 
-        if ($position->name == 'Commanding Officer') {
+        if ($newPosition->name == 'Commanding Officer') {
             $this->co_at = now();
             $this->xo_at = null;
         }
 
-        if ($position instanceof Position) {
-            return $this->position()->associate($position);
-        }
-
-        return $this->position()->associate(
-            Position::whereName(strtolower($position))->firstOrFail()
-        );
+        return $this->position()->associate($newPosition);
     }
 
     /**
