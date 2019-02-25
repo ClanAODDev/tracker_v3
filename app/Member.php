@@ -92,7 +92,7 @@ class Member extends Model
     public function assignPosition($position)
     {
         $newPosition = $position instanceof Position
-            ? $this->position()->associate($position)
+            ? $position
             : Position::whereName(strtolower($position))->firstOrFail();
 
         // reset assignments for specific positions
