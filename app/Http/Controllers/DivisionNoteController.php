@@ -34,7 +34,14 @@ class DivisionNoteController extends Controller
         $notes = $notes
             ->where('member_id', '!=', auth()->user()->member_id)
             ->with('member.rank')->orderByDesc('created_at')
-            ->get();
+            ->get()
+            ->filter(function ($note) {
+                if ($note->type == 'sr_ldr') {
+                    return auth()->user()->isRole(['sr_ldr', 'admin']);
+                }
+
+                return true;
+            });
 
         return view('division.notes', compact('division', 'notes'))
             ->with(['filter' => $type]);
