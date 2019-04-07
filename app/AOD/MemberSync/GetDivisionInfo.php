@@ -2,6 +2,7 @@
 
 namespace App\AOD\MemberSync;
 
+use App\Services\AOD;
 use Log;
 
 /**
@@ -21,15 +22,12 @@ class GetDivisionInfo
      */
     protected $source = "https://www.clanaod.net/forums/aodinfo.php?";
 
-
     /**
      * GetDivisionInfo constructor.
-     *
-     * @param $division
      */
     public function __construct()
     {
-        if (! config('app.aod.token')) {
+        if ( ! config('app.aod.token')) {
             Log::critical("ERROR: AOD Token not defined in configuration.");
             exit;
         } else {
@@ -44,25 +42,13 @@ class GetDivisionInfo
      */
     protected function fetchData()
     {
-        $agent = "AOD Division Tracker";
+        $data = AOD::request($this->source, [
+            'extra' => 1,
+            'type' => 'json'
+        ]);
 
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-        curl_setopt($ch, CURLOPT_URL, $this->jsonUrl());
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-        $results = curl_exec($ch);
-        $data = json_decode(utf8_encode($results));
-
-        curl_close($ch);
-
-        if (! is_object($data)) {
+        if ( ! is_object($data)) {
             Log::critical("ERROR: Member sync returning invalid: {$this->jsonUrl()}");
-            Log::critical($results);
             exit;
         }
 
@@ -72,34 +58,6 @@ class GetDivisionInfo
         }
 
         return $this->prepareData($data);
-    }
-
-    /**
-     * @return string
-     */
-    protected function jsonUrl()
-    {
-        $token = $this->generateToken();
-
-        $arguments = [
-            'type' => 'json',
-            'authcode2' => $token,
-            'extra' => '1'
-        ];
-
-        return $this->source . http_build_query($arguments);
-    }
-
-    /**
-     * Generates authentication token for AOD API
-     *
-     * @return string
-     */
-    protected function generateToken()
-    {
-        $currentMinute = floor(time() / 60) * 60;
-
-        return md5($currentMinute . config('app.aod.token'));
     }
 
     /**
