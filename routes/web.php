@@ -247,6 +247,8 @@ Route::post('slack', [
 Route::group(['prefix' => 'reports'], function () {
     Route::middleware('admin')->get('division-turnover', 'ReportsController@divisionTurnoverReport')
         ->name('reports.division-turnover');
+    Route::get('no-discord', 'ReportsController@usersWithoutDiscordReport')
+        ->name('reports.discord');
     Route::get(
         'outstanding-inactives',
         'ReportsController@outstandingMembersReport'
