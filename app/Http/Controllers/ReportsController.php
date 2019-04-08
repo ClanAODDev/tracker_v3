@@ -114,6 +114,24 @@ class ReportsController extends Controller
     }
 
     /**
+     * Users with empty discord tag
+     */
+    public function usersWithoutDiscordReport()
+    {
+        $divisions = Division::active()->get();
+
+        $data = [];
+
+        foreach ($divisions as $division) {
+            foreach ($division->members->where('discord', '') as $member) {
+                $data[$division->name][] =  "{$member->clan_id}, {$member->name}";
+            }
+        }
+
+        dd($data);
+    }
+
+    /**
      * @return mixed
      */
     public function divisionTurnoverReport()
