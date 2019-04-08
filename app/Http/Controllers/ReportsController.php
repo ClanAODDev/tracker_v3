@@ -124,11 +124,11 @@ class ReportsController extends Controller
 
         foreach ($divisions as $division) {
             foreach ($division->members->where('discord', '') as $member) {
-                $data[$division->name][] =  "{$member->clan_id}, {$member->name}";
+                $data[$division->name][] =  [$member->clan_id => "{$member->name}"];
             }
         }
 
-        dd($data);
+        return $data;
     }
 
     /**
