@@ -18,7 +18,7 @@ Route::group(
         // Basic information about a specific division
         Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show');
 
-        // Teamspeak population count
         Route::get('ts-count', 'API\v1\ClanController@teamspeakPopulationCount');
+        Route::get('discord-count', 'API\v1\ClanController@discordPopulationCount');
     }
 );

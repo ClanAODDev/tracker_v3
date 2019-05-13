@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Services\AOD;
+use Illuminate\Http\JsonResponse;
 
 class ClanController extends ApiController
 {
@@ -16,14 +17,26 @@ class ClanController extends ApiController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function teamspeakPopulationCount()
     {
-        $data = AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population&');
+        $data = AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population_json&');
 
         return $this->respond([
-            'data' => strip_tags(preg_replace('/\r|\n/', '', $data))
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function discordPopulationCount()
+    {
+        $data = AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
+
+        return $this->respond([
+            'data' => $data
         ]);
     }
 }
