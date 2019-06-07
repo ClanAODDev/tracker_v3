@@ -6,7 +6,7 @@
             @if ($division)
                 <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
             @else
-                <img src="{{ asset('images/logo_v2.svg') }}" class="division-icon-large" />
+                <img class="division-icon-large" src="{{ asset('images/logo_v2.svg') }}" />
             @endif
         @endslot
         @slot ('heading')
