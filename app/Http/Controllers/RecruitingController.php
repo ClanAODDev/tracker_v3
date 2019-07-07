@@ -268,13 +268,17 @@ class RecruitingController extends Controller
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @param int $memberId
      * @return array
      */
-    public function validateMemberName($name)
+    public function validateMemberName()
     {
+        $name = request('name');
+        $memberId = request('member_id');
+        
         $result = DB::connection('aod_forums')
-            ->select("CALL user_exists('{$name}', NULL)");
+            ->select("CALL user_exists('{$name}', {$memberId})");
 
         return ['memberExists' => !empty($result)];
     }
