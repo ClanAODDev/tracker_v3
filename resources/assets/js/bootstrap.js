@@ -17,6 +17,12 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
+
+window.Vue.config.devtools = false;
+window.Vue.config.debug = false;
+window.Vue.config.silent = true;
+
+
 window.VueResource = require('vue-resource');
 window.toastr = require('toastr');
 
@@ -47,7 +53,3 @@ window.toastr.options = {
   'positionClass': 'toast-top-right',
 };
 
-
-Vue.config.devtools = false;
-Vue.config.debug = false;
-Vue.config.silent = true;
