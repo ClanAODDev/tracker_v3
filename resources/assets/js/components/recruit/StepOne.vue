@@ -210,11 +210,13 @@
             },
 
             validateMemberDoesNotExist: function () {
-                if (store.forum_name) {
-                    axios.post(window.Laravel.appPath + '/validate-name/' + store.forum_name.toLowerCase())
-                        .then((response) => {
-                            store.validMemberName = response.data.memberExists == false;
-                        });
+                if (store.forum_name && store.member_id) {
+                    axios.post(window.Laravel.appPath + '/validate-name/', {
+                        name: store.forum_name.toLowerCase(),
+                        member_id: store.member_id
+                    }).then((response) => {
+                        store.validMemberName = response.data.memberExists == false;
+                    });
                 }
             },
 

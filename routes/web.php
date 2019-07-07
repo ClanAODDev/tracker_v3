@@ -23,7 +23,7 @@ Route::get('search/members/{name?}', 'MemberController@search')->name('memberSea
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
 Route::post('validate-id/{memberId}', 'RecruitingController@validateMemberId')
     ->name('validate-id');
-Route::post('validate-name/{name}', 'RecruitingController@validateMemberName')->name('validate-name');
+Route::post('validate-name', 'RecruitingController@validateMemberName')->name('validate-name');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
