@@ -184,6 +184,10 @@
 
                     console.log('running validation');
 
+                    console.log('invalid member id?', !store.validMemberId && !store.inDemoMode);
+
+                    console.log('invalid member name?', !store.validMemberName && !store.inDemoMode);
+
                     if (!store.validMemberId && !store.inDemoMode) {
                         toastr.error('Oops, your member id appears to be invalid!');
                         return false;
