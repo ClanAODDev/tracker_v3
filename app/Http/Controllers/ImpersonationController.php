@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 
 class ImpersonationController extends Controller
@@ -14,11 +16,11 @@ class ImpersonationController extends Controller
      * Impersonate a given user
      *
      * @param User $user
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function impersonate(User $user)
     {
-        if (! $this->canImpersonate($user)) {
+        if (!$this->canImpersonate($user)) {
             abort(403);
         }
 
@@ -41,7 +43,7 @@ class ImpersonationController extends Controller
     private function canImpersonate($user)
     {
         // only admins can impersonate
-        if (! auth()->user()->isRole('admin')) {
+        if (!auth()->user()->isRole('admin')) {
             return false;
         }
 
@@ -56,7 +58,7 @@ class ImpersonationController extends Controller
     /**
      * End an impersonation
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function endImpersonation()
     {

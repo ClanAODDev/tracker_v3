@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class ApiController
@@ -18,7 +19,7 @@ class ApiController extends Controller
 
     /**
      * @param string $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function respondNotFound($message = 'Not found.')
     {
@@ -27,7 +28,7 @@ class ApiController extends Controller
 
     /**
      * @param $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function respondWithError($message)
     {
@@ -42,7 +43,7 @@ class ApiController extends Controller
     /**
      * @param $data
      * @param array $headers
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function respond($data, $headers = [])
     {
@@ -70,7 +71,7 @@ class ApiController extends Controller
 
     /**
      * @param string $message
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function respondInternalError($message = 'Internal Error')
     {

@@ -7,6 +7,12 @@ use App\Http\Requests\CreateLeave;
 use App\Http\Requests\UpdateLeave;
 use App\Leave;
 use App\Member;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class LeaveController
@@ -25,14 +31,14 @@ class LeaveController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(Division $division)
     {
         $membersWithLeave = $division->members()->whereHas('leave')
             ->with('leave', 'rank')->get();
 
-        $expiredLeave = (bool) count($membersWithLeave->filter(function ($member) {
+        $expiredLeave = (bool)count($membersWithLeave->filter(function ($member) {
             return $member->leave->expired;
         }));
 
@@ -46,9 +52,9 @@ class LeaveController extends Controller
     /**
      * @param Member $member
      * @param Leave $leave
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Exception
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse|Redirector
+     * @throws Exception
+     * @throws AuthorizationException
      */
     public function delete(Member $member, Leave $leave)
     {
@@ -64,7 +70,7 @@ class LeaveController extends Controller
     /**
      * @param UpdateLeave $form
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function update(UpdateLeave $form, Member $member)
     {
@@ -84,7 +90,7 @@ class LeaveController extends Controller
     /**
      * @param Member $member
      * @param Leave $leave
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function edit(Member $member, Leave $leave)
     {
@@ -99,11 +105,11 @@ class LeaveController extends Controller
     /**
      * @param CreateLeave $form
      * @param Division $division
-     * @return LeaveController|\Illuminate\Http\RedirectResponse
+     * @return LeaveController|RedirectResponse
      */
     public function store(CreateLeave $form, Division $division)
     {
-        if ($form->member_id && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->member_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['member_id' => "Member {$form->member_id} not assigned to this division!"])
                 ->withInput();

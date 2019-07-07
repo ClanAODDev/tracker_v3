@@ -2,6 +2,8 @@
 
 namespace App\Nova\Filters;
 
+use App\Division;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
@@ -10,10 +12,10 @@ class ByDivision extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  mixed  $value
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param Request $request
+     * @param Builder $query
+     * @param mixed $value
+     * @return Builder
      */
     public function apply(Request $request, $query, $value)
     {
@@ -23,12 +25,12 @@ class ByDivision extends Filter
     /**
      * Get the filter's available options.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return array
      */
     public function options(Request $request)
     {
-        return \App\Division::active()
+        return Division::active()
             ->orderBy('name')
             ->pluck('id', 'name')
             ->toArray();

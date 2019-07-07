@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Member;
+use Carbon;
 use Illuminate\Console\Command;
 
 class SgtActivity extends Command
@@ -49,8 +50,8 @@ class SgtActivity extends Command
         $this->table($headers, $sgts->map(function ($sgt) {
             return [
                 'name' => $sgt->name,
-                'last_forum_activity' => \Carbon::parse($sgt->last_activity)->diffForHumans(),
-                'last_ts_activity' => \Carbon::parse($sgt->last_ts_activity)->diffForHumans(),
+                'last_forum_activity' => Carbon::parse($sgt->last_activity)->diffForHumans(),
+                'last_ts_activity' => Carbon::parse($sgt->last_ts_activity)->diffForHumans(),
             ];
         }));
     }

@@ -6,6 +6,11 @@ use App\Activity;
 use App\Http\Requests\DeleteMember;
 use App\Member;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 class InactiveMemberController extends Controller
 {
@@ -16,7 +21,7 @@ class InactiveMemberController extends Controller
 
     /**
      * @param $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index($division)
     {
@@ -79,8 +84,8 @@ class InactiveMemberController extends Controller
      * Flags a member for inactivity
      *
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse|Redirector
+     * @throws AuthorizationException
      */
     public function create(Member $member)
     {
@@ -100,8 +105,8 @@ class InactiveMemberController extends Controller
      * Remove a flag from an inactive member
      *
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse|Redirector
+     * @throws AuthorizationException
      */
     public function destroy(Member $member)
     {

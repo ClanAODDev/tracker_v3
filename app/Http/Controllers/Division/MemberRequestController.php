@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Division;
 use App\Division;
 use App\Http\Controllers\Controller;
 use App\MemberRequest;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class MemberRequestController extends Controller
 {
@@ -16,7 +19,7 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -46,7 +49,7 @@ class MemberRequestController extends Controller
      * @param Division $division
      * @param MemberRequest $memberRequest
      * @return MemberRequest
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function edit(Division $division, MemberRequest $memberRequest)
     {

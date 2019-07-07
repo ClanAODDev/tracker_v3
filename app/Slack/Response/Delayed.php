@@ -22,7 +22,7 @@ class Delayed
     {
         $client = new Client;
 
-        if (! empty($data['response_url'])) {
+        if (!empty($data['response_url'])) {
             $client->post($data['response_url'], [
                 'json' => [
                     'text' => $message

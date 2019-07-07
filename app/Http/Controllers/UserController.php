@@ -7,6 +7,7 @@ use App\Role;
 use App\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class UserController
@@ -38,7 +39,7 @@ class UserController extends Controller
      * Updates a given user's role
      *
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function updateRole(Request $request)
     {
@@ -47,7 +48,7 @@ class UserController extends Controller
 
         // cannot grant role greater than or equal to your own
         // disregard for developers
-        if (! auth()->user()->isDeveloper()
+        if (!auth()->user()->isDeveloper()
             && $request->role >= auth()->user()->role_id
         ) {
             return response()->json(['error' => 'Not authorized.'], 403);

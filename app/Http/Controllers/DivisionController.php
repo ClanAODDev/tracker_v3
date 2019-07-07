@@ -8,7 +8,14 @@ use App\Member;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Closure;
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 /**
  * Class DivisionController
@@ -33,7 +40,7 @@ class DivisionController extends Controller
      * Display the specified resource.
      *
      * @param Division $division
-     * @return \Illuminate\Http\Response
+     * @return Response
      * @internal param int $id
      */
     public function show(Division $division)
@@ -73,8 +80,8 @@ class DivisionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Division $division
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function edit(Division $division)
     {
@@ -103,8 +110,8 @@ class DivisionController extends Controller
      *
      * @param UpdateDivision $form
      * @param Division $division
-     * @return \Illuminate\Http\Response
-     * @throws \Exception
+     * @return Response
+     * @throws Exception
      * @internal param Request $request
      */
     public function update(UpdateDivision $form, Division $division)
@@ -123,7 +130,7 @@ class DivisionController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function partTime(Division $division)
     {
@@ -144,8 +151,8 @@ class DivisionController extends Controller
      *
      * @param Division $division
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|string
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse|Redirector|string
+     * @throws AuthorizationException
      */
     public function assignPartTime(Division $division, Member $member)
     {
@@ -162,8 +169,8 @@ class DivisionController extends Controller
     /**
      * @param Division $division
      * @param Member $member
-     * @return \Illuminate\Http\RedirectResponse|string
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse|string
+     * @throws AuthorizationException
      */
     public function removePartTime(Division $division, Member $member)
     {
@@ -178,7 +185,7 @@ class DivisionController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function members(Division $division)
     {
@@ -204,7 +211,7 @@ class DivisionController extends Controller
 
     /**
      * @param $division
-     * @return \Closure
+     * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
     {
@@ -214,7 +221,7 @@ class DivisionController extends Controller
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
     private function getMemberHandle()
     {

@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Member;
 use App\MemberRequest;
 use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
 use App\Notifications\MemberRequestDenied;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 
 class MemberRequestController extends Controller
 {
@@ -20,7 +25,7 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -76,7 +81,7 @@ class MemberRequestController extends Controller
 
     /**
      * @param MemberRequest $memberRequest
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function requeue(MemberRequest $memberRequest)
     {
@@ -96,7 +101,7 @@ class MemberRequestController extends Controller
      */
     public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
-        $member = \App\Member::whereClanId($memberRequest->member_id)
+        $member = Member::whereClanId($memberRequest->member_id)
             ->first()->update([
                 'name' => $request->newName
             ]);

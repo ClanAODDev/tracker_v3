@@ -9,6 +9,10 @@ use App\Http\Requests\UpdatePlatoonForm;
 use App\Member;
 use App\Platoon;
 use App\Repositories\PlatoonRepository;
+use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Toastr;
 
@@ -30,8 +34,8 @@ class PlatoonController extends Controller
      * Show the form for creating a new resource.
      *
      * @param Division $division
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function create(Division $division)
     {
@@ -53,11 +57,11 @@ class PlatoonController extends Controller
      *
      * @param CreatePlatoonForm $form
      * @param Division $division
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader' => "Member {$form->leader_id} not to this division!"])
                 ->withInput();
@@ -88,7 +92,7 @@ class PlatoonController extends Controller
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response|StreamedResponse
+     * @return Response|StreamedResponse
      */
     public function show(Division $division, Platoon $platoon)
     {
@@ -113,7 +117,7 @@ class PlatoonController extends Controller
 
     /**
      * @param $division
-     * @return \Closure
+     * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
     {
@@ -123,7 +127,7 @@ class PlatoonController extends Controller
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
     private function getMemberHandle()
     {
@@ -137,7 +141,7 @@ class PlatoonController extends Controller
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Division $division, Platoon $platoon)
     {
@@ -154,11 +158,11 @@ class PlatoonController extends Controller
      * @param UpdatePlatoonForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @return RedirectResponse|Response
      */
     public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
@@ -183,7 +187,7 @@ class PlatoonController extends Controller
      *
      * @param DeletePlatoonForm $form
      * @param Division $division
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function destroy(DeletePlatoonForm $form, Division $division)
     {

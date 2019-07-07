@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Facades\App\AOD\ClanForumSession;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\User;
 use Auth;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class LoginController extends Controller
 {
@@ -42,7 +47,7 @@ class LoginController extends Controller
             $user->member_id = $member->id;
             $user->save();
 
-            \Auth::login($user);
+            Auth::login($user);
 
             return true;
         }
@@ -61,8 +66,8 @@ class LoginController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
-     * @throws \Illuminate\Validation\ValidationException
+     * @return Factory|RedirectResponse|Response|View
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -121,8 +126,8 @@ class LoginController extends Controller
     /**
      * Send the response after the user was authenticated.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -137,8 +142,8 @@ class LoginController extends Controller
     /**
      * The user has been authenticated.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  mixed $user
+     * @param Request $request
+     * @param mixed $user
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
@@ -149,7 +154,7 @@ class LoginController extends Controller
     /**
      * Get the guard to be used during authentication.
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return StatefulGuard
      */
     protected function guard()
     {
@@ -164,7 +169,7 @@ class LoginController extends Controller
     /**
      * Get the failed login response instance.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     protected function sendFailedLoginResponse()
     {
@@ -182,7 +187,7 @@ class LoginController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function showLoginForm()
     {
@@ -192,8 +197,8 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function logout(Request $request)
     {

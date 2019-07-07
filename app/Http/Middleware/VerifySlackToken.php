@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 
 class VerifySlackToken
 {
@@ -10,15 +11,15 @@ class VerifySlackToken
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         $app_tokens = explode(',', config('slack.tokens'));
 
-        if (in_array($request->token, $app_tokens) && ! empty($request->token)) {
+        if (in_array($request->token, $app_tokens) && !empty($request->token)) {
             return $next($request);
         }
 

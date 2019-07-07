@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Division;
 
-use App\Division;
-use App\Handle;
 use GuzzleHttp\Client;
 
 /**
@@ -25,7 +23,7 @@ trait IngameReports
         $requestedClan = $clanId ?: $clans[0];
 
         // invalid clan id
-        if (! in_array($requestedClan, $clans)) {
+        if (!in_array($requestedClan, $clans)) {
             return [];
         }
 

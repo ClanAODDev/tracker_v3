@@ -3,6 +3,8 @@
 namespace App\Nova\Metrics;
 
 use App\VegasAttendee;
+use DateInterval;
+use DateTimeInterface;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Value;
 
@@ -11,7 +13,7 @@ class VegasOptIn extends Value
     /**
      * Calculate the value of the metric.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return mixed
      */
     public function calculate(Request $request)
@@ -39,7 +41,7 @@ class VegasOptIn extends Value
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return  DateTimeInterface|DateInterval|float|int
      */
     public function cacheFor()
     {
