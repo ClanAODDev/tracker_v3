@@ -82,7 +82,7 @@ class UpdateSquadForm extends FormRequest
         }
 
         $this->squad->update(
-            $this->only(['name', 'leader_id'])
+            $this->only(['name', 'leader_id', 'logo'])
         );
     }
 
