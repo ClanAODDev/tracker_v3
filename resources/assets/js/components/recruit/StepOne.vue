@@ -73,7 +73,7 @@
                                @blur="validateMemberDoesNotExist"
                                :disabled="store.inDemoMode"/>
                         <span v-show="!store.validMemberName"
-                              class="help-block">Invalid member name</span>
+                              class="help-block">Enter a valid member name</span>
                     </div>
 
                     <div class="col-md-4 form-group"
