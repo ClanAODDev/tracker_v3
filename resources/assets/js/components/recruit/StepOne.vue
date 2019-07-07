@@ -207,7 +207,7 @@
             },
 
             validateMemberDoesNotExist: function () {
-                axios.post(window.Laravel.appPath + '/validate-name' + store.forum_name)
+                axios.post(window.Laravel.appPath + '/validate-name/' + store.forum_name.toLowerCase())
                     .then((response) => {
                         store.validMemberName = response.data.memberExists == true;
                     })
