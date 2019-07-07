@@ -6,6 +6,8 @@ use App\Division;
 use App\Member;
 use App\Repositories\ClanRepository;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 class ReportsController extends Controller
 {
@@ -16,7 +18,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function clanCensusReport()
     {
@@ -61,12 +63,12 @@ class ReportsController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function clanTsReport()
     {
         $invalidDates = function ($member) {
-            return ! carbon_date_or_null_if_zero($member->last_ts_activity);
+            return !carbon_date_or_null_if_zero($member->last_ts_activity);
         };
 
         $newMembers = function ($member) {
@@ -82,7 +84,7 @@ class ReportsController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function outstandingMembersReport()
     {
@@ -124,7 +126,7 @@ class ReportsController extends Controller
 
         foreach ($divisions as $division) {
             foreach ($division->members->where('discord', '') as $member) {
-                $data[$division->name][] =  [$member->clan_id => "{$member->name}"];
+                $data[$division->name][] = [$member->clan_id => "{$member->name}"];
             }
         }
 

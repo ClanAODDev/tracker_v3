@@ -32,7 +32,7 @@ trait AuthenticatesWithAOD
             return false;
         }
 
-        if (! empty($results)) {
+        if (!empty($results)) {
             $member = array_first($results);
 
             $this->setMemberAttributes($member);

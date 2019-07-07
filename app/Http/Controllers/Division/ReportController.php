@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Repositories\DivisionRepository;
 use App\Repositories\MemberRepository;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 class ReportController extends Controller
 {
@@ -22,7 +25,7 @@ class ReportController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function retentionReport(Division $division)
     {
@@ -79,7 +82,7 @@ class ReportController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function ingameReport(Division $division, $customAttr = null)
     {
@@ -99,13 +102,13 @@ class ReportController extends Controller
      * @param $division
      * @param null $month
      * @param null $year
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function promotionsReport(MemberRepository $repository, $division, $month = null, $year = null)
     {
         try {
             $members = $this->getMemberPromotions($division, $month, $year);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $members = collect([]);
         }
 
@@ -153,7 +156,7 @@ class ReportController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function tsReport(Division $division)
     {
@@ -164,7 +167,7 @@ class ReportController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function censusReport(Division $division)
     {

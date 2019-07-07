@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Division;
 use App\Note;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
 class DivisionNoteController extends Controller
 {
@@ -20,7 +22,7 @@ class DivisionNoteController extends Controller
      * Display a listing of the resource.
      *
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index(Division $division)
     {

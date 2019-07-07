@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Division;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 use Mail;
 
 class AppController extends Controller
@@ -25,7 +27,7 @@ class AppController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {

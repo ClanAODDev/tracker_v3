@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Division;
 use App\Transformers\DivisionTransformer;
+use Illuminate\Http\JsonResponse;
 
 class DivisionController extends ApiController
 {
@@ -25,7 +26,7 @@ class DivisionController extends ApiController
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index()
     {
@@ -40,7 +41,7 @@ class DivisionController extends ApiController
     {
         $division = Division::whereAbbreviation($abbreviation)->first();
 
-        if (! $division) {
+        if (!$division) {
             return $this->respondNotFound('Division could not be found');
         }
 

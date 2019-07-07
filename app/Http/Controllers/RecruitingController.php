@@ -10,8 +10,12 @@ use App\Notifications\NewExternalRecruit;
 use App\Notifications\NewMemberRecruited;
 use App\Platoon;
 use Carbon\Carbon;
+use DB;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * Class RecruitingController
@@ -48,7 +52,7 @@ class RecruitingController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function form(Division $division)
     {
@@ -59,7 +63,7 @@ class RecruitingController extends Controller
 
     /**
      * @param Request $request
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function submitRecruitment(Request $request)
     {
@@ -222,7 +226,7 @@ class RecruitingController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function doThreadCheck(Request $request)
     {
@@ -257,10 +261,10 @@ class RecruitingController extends Controller
             return ['isMember' => false];
         }
 
-        $result = \DB::connection('aod_forums')
+        $result = DB::connection('aod_forums')
             ->select("CALL get_user({$memberId})");
 
-        return ['isMember' => ! empty($result)];
+        return ['isMember' => !empty($result)];
     }
 
     /**
@@ -269,9 +273,9 @@ class RecruitingController extends Controller
      */
     public function validateMemberName($name)
     {
-        $result = \DB::connection('aod_forums')
+        $result = DB::connection('aod_forums')
             ->select("CALL user_exists('{$name}')");
 
-        return ['memberExists' => ! empty($result)];
+        return ['memberExists' => !empty($result)];
     }
 }

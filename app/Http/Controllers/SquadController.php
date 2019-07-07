@@ -10,7 +10,11 @@ use App\Member;
 use App\Platoon;
 use App\Squad;
 use Carbon\Carbon;
+use Closure;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Toastr;
 
 class SquadController extends Controller
@@ -25,7 +29,7 @@ class SquadController extends Controller
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Division $division, Platoon $platoon, Squad $squad)
     {
@@ -49,7 +53,7 @@ class SquadController extends Controller
 
     /**
      * @param $division
-     * @return \Closure
+     * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
     {
@@ -59,7 +63,7 @@ class SquadController extends Controller
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
     private function getMemberHandle()
     {
@@ -111,7 +115,7 @@ class SquadController extends Controller
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create(Division $division, Platoon $platoon)
     {
@@ -126,11 +130,11 @@ class SquadController extends Controller
      * @param CreateSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(CreateSquadForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
@@ -162,7 +166,7 @@ class SquadController extends Controller
      * @param Division $division
      * @param Platoon $platoon
      * @param Squad $squad
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Division $division, Platoon $platoon, Squad $squad)
     {
@@ -178,11 +182,11 @@ class SquadController extends Controller
      * @param Division $division
      * @param Platoon $platoon
      * @param Squad $squad
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
     {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
@@ -201,7 +205,7 @@ class SquadController extends Controller
      * @param DeleteSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(DeleteSquadForm $form, Division $division, Platoon $platoon)
     {
@@ -216,7 +220,7 @@ class SquadController extends Controller
      * Assign a member to a squad
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function assignMember(Request $request)
     {
