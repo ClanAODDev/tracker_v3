@@ -11,7 +11,7 @@
             @endif
         @endslot
         @slot ('heading')
-            {{ $platoon->name }}
+            {{ $squad->name }}
         @endslot
         @slot ('subheading')
             {{ $division->name }} Division
