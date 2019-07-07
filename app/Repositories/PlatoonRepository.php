@@ -32,6 +32,7 @@ class PlatoonRepository
             'colors' => ['#28b62c', '#ff851b', '#ff4136']
         ];
     }
+
     public function getPlatoonTSActivity(Platoon $platoon)
     {
         $twoWeeksAgo = Carbon::now()->subDays(14);

@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MemberRequest extends Model
 {
@@ -14,35 +15,35 @@ class MemberRequest extends Model
     protected $dates = ['approved_at', 'denied_at', 'cancelled_at'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function member()
     {
-        return $this->belongsTo(\App\Member::class, 'member_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function requester()
     {
-        return $this->belongsTo(\App\Member::class, 'requester_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'requester_id', 'clan_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function approver()
     {
-        return $this->belongsTo(\App\Member::class, 'approver_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'approver_id', 'clan_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function division()
     {
-        return $this->belongsTo(\App\Division::class);
+        return $this->belongsTo(Division::class);
     }
 
     /**
@@ -149,10 +150,10 @@ class MemberRequest extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function canceller()
     {
-        return $this->belongsTo(\App\Member::class, 'canceller_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'canceller_id', 'clan_id');
     }
 }

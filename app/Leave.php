@@ -2,9 +2,9 @@
 
 namespace App;
 
-use App\Activities\RecordsActivity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Leave
@@ -35,7 +35,7 @@ class Leave extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function member()
     {
@@ -43,7 +43,7 @@ class Leave extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function note()
     {
@@ -51,7 +51,7 @@ class Leave extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function requester()
     {
@@ -59,7 +59,7 @@ class Leave extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function approver()
     {

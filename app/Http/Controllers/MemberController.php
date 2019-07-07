@@ -9,9 +9,13 @@ use App\Member;
 use App\Platoon;
 use App\Position;
 use App\Repositories\MemberRepository;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Toastr;
+use Illuminate\Support\Collection;
+use Illuminate\View\View;
 
 /**
  * Class MemberController
@@ -41,12 +45,12 @@ class MemberController extends Controller
      * Search for a member
      *
      * @param $name
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      * @internal param $name
      */
     public function search($name = null)
     {
-        if ( ! $name) {
+        if (!$name) {
             $name = request()->name;
         }
 
@@ -65,7 +69,7 @@ class MemberController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function sergeants()
     {
@@ -117,7 +121,7 @@ class MemberController extends Controller
 
     /**
      * @param Member $member
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     private function getHandles(Member $member)
     {
@@ -169,7 +173,7 @@ class MemberController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -180,7 +184,7 @@ class MemberController extends Controller
      * Display the specified resource.
      *
      * @param Member $member
-     * @return \Illuminate\Http\Response
+     * @return Response
      * @internal param int $id
      */
     public function show(Member $member)
@@ -215,7 +219,7 @@ class MemberController extends Controller
      * Assigns a position to the given member
      *
      * @param Request $request
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function updatePosition(Request $request)
     {
@@ -229,8 +233,8 @@ class MemberController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Member $member
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Response
+     * @throws AuthorizationException
      */
     public function edit(Member $member)
     {
@@ -250,9 +254,9 @@ class MemberController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -317,7 +321,7 @@ class MemberController extends Controller
 
     /**
      * @param $member
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function unassignMember($member)
     {

@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Leave;
-use App\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateLeave extends FormRequest

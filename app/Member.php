@@ -6,6 +6,10 @@ use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -78,7 +82,7 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function notes()
     {
@@ -152,7 +156,7 @@ class Member extends Model
      *
      * Prevents members from being a squad leader of more than one squad
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function squadLeaderOf()
     {
@@ -163,7 +167,7 @@ class Member extends Model
      * Handle Staff Sergeant assignments
      * division/
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function ssgtAssignment()
     {
@@ -190,7 +194,7 @@ class Member extends Model
      * Handle Staff Sergeant assignments
      * division/
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function partTimeDivisions()
     {
@@ -223,7 +227,7 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function recruiter()
     {
@@ -241,7 +245,7 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function leave()
     {
@@ -270,11 +274,11 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function memberRequest()
     {
-        return $this->hasOne(\App\MemberRequest::class, 'member_id', 'clan_id');
+        return $this->hasOne(MemberRequest::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -294,7 +298,7 @@ class Member extends Model
      */
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function handles()
     {
@@ -343,7 +347,7 @@ class Member extends Model
      */
     public function isRank($rank)
     {
-        if (! $this->rank instanceof Rank) {
+        if (!$this->rank instanceof Rank) {
             return false;
         }
 
@@ -366,10 +370,10 @@ class Member extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function memberRequests()
     {
-        return $this->hasMany(\App\MemberRequest::class, 'requester_id', 'clan_id');
+        return $this->hasMany(MemberRequest::class, 'requester_id', 'clan_id');
     }
 }

@@ -6,7 +6,12 @@ use App\Activities\RecordsActivity;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Carbon\Carbon;
+use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
@@ -169,7 +174,7 @@ class Division extends Model
         $getPosts = curl_exec($ch);
         $countPosts = stripos($getPosts, $string);
 
-        if ( ! $countPosts) {
+        if (!$countPosts) {
             $url = parse_url(curl_last_url($ch));
             $query = $url['query'];
             parse_str($query, $url_array);
@@ -211,7 +216,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function newMembersLast30()
     {
@@ -220,7 +225,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function newMembersLast60()
     {
@@ -229,13 +234,12 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function newMembersLast90()
     {
         return $this->hasMany(Member::class)
             ->where('join_date', '>', Carbon::now()->subDays(90));
-
     }
 
     public function notes()
@@ -255,7 +259,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function census()
     {
@@ -265,7 +269,7 @@ class Division extends Model
     /**
      * Get division's squads
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
     public function squads()
     {
@@ -281,7 +285,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Config\Repository|mixed
+     * @return Repository|mixed
      */
     public function routeNotificationForWebhook()
     {
@@ -291,7 +295,7 @@ class Division extends Model
     /**
      * Division has many platoons
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function platoons()
     {
@@ -301,7 +305,7 @@ class Division extends Model
     /**
      * Division has many activity entries
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activity()
     {
@@ -368,7 +372,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function staffSergeants()
     {
@@ -377,7 +381,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function handle()
     {
@@ -403,10 +407,9 @@ class Division extends Model
      */
     public function locality($string)
     {
-
         $locality = collect($this->settings()->locality);
 
-        if ( ! $locality->count()) {
+        if (!$locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -418,7 +421,7 @@ class Division extends Model
             }
         });
 
-        if ( ! $results) {
+        if (!$results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);
@@ -467,7 +470,7 @@ class Division extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function memberRequests()
     {

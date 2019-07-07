@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class MemberRemoved extends Notification
@@ -34,7 +33,7 @@ class MemberRemoved extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)

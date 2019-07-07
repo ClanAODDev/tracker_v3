@@ -1,6 +1,8 @@
 <?php
 
 use App\MemberRequest;
+use App\Settings\UserSettings;
+use Illuminate\Foundation\Application;
 
 function bytesToHuman($bytes)
 {
@@ -58,7 +60,6 @@ function ordSuffix($n)
  */
 function doForumFunction(array $ids, $action)
 {
-
     switch ($action) {
         case "email":
             $path = "https://www.clanaod.net/forums/sendmessage.php?";
@@ -95,11 +96,11 @@ function doForumFunction(array $ids, $action)
  * Get user settings
  *
  * @param null $key
- * @return \Illuminate\Foundation\Application|mixed
+ * @return Application|mixed
  */
 function UserSettings($key = null)
 {
-    $settings = app(\App\Settings\UserSettings::class);
+    $settings = app(UserSettings::class);
 
     return $key ? $settings->get($key) : $settings;
 }
@@ -268,7 +269,7 @@ function curl_last_url($ch, &$maxredirect = null)
             }
         } while ($code && --$mr);
         curl_close($rch);
-        if ( ! $mr) {
+        if (!$mr) {
             if ($maxredirect === null) {
                 trigger_error(
                     'Too many redirects. When following redirects, libcurl hit the maximum amount.',
@@ -311,7 +312,6 @@ function gcd($a, $b)
     $_b = abs($b);
 
     while ($_b != 0) {
-
         $remainder = $_a % $_b;
         $_a = $_b;
         $_b = $remainder;
@@ -342,4 +342,3 @@ function ratio()
 
     return $var;
 }
-

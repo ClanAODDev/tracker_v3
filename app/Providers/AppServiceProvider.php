@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Settings\UserSettings;
 use Auth;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use CL\Slack\Transport\ApiClient;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
+use Schema;
 use wrapi\slack\slack;
 
 class AppServiceProvider extends ServiceProvider
@@ -17,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \Schema::defaultStringLength(191);
+        Schema::defaultStringLength(191);
     }
 
     /**
@@ -32,11 +35,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if ($this->app->environment() !== 'production') {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
+            $this->app->register(IdeHelperServiceProvider::class);
         }
 
         // register user settings
-        $this->app->singleton(\App\Settings\UserSettings::class, function () {
+        $this->app->singleton(UserSettings::class, function () {
             return Auth::user()->settings();
         });
 

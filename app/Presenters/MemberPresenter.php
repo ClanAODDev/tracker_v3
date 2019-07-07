@@ -24,7 +24,7 @@ class MemberPresenter extends Presenter
 
     public function lastPromoted($emptyVal = 'Never')
     {
-        return ! $this->member->last_promoted_at
+        return !$this->member->last_promoted_at
             ? $emptyVal ?? 'Never'
             : $this->member->last_promoted_at->format('Y-m-d');
     }
@@ -33,7 +33,7 @@ class MemberPresenter extends Presenter
     {
         $value = $value instanceof Carbon ? $value : Carbon::parse($value);
 
-        if (! $value) {
+        if (!$value) {
         }
 
 //        if ($value->diffInDays() < 1) {

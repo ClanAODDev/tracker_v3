@@ -4,11 +4,9 @@ namespace App\Notifications;
 
 use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
+use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class MemberNameChanged extends Notification
 {
@@ -37,7 +35,7 @@ class MemberNameChanged extends Notification
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function toWebhook()
     {
