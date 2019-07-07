@@ -2,6 +2,8 @@ require('./bootstrap');
 
 
 
+
+
 Vue.component(
     'recruiting-process',
     require('./components/recruit/RecruitNewMember.vue')
