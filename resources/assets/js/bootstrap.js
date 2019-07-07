@@ -46,3 +46,8 @@ window.toastr.options = {
   'progressBar': true,
   'positionClass': 'toast-top-right',
 };
+
+
+Vue.config.devtools = false;
+Vue.config.debug = false;
+Vue.config.silent = true;
