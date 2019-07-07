@@ -27,5 +27,10 @@
         <td>The member assigned as the squad leader (see member)</td>
         <td><code>object</code></td>
     </tr>
+    <tr>
+        <td><code>squad.logo</code></td>
+        <td>URL of the squad's logo (nullable)</td>
+        <td><code>string</code></td>
+    </tr>
     </tbody>
 </table>
