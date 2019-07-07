@@ -182,6 +182,8 @@
 
                 this.$validator.validateAll().then((result) => {
 
+                    console.log('running validation');
+
                     if (!store.validMemberId && !store.inDemoMode) {
                         toastr.error('Oops, your member id appears to be invalid!');
                         return false;
@@ -196,6 +198,7 @@
                         toastr.error('Something is wrong with your member information', 'Uh oh...');
                         return false;
                     }
+
                     store.getDivisionThreads(store.division.abbreviation);
                     store.currentStep = 'step-two';
                     store.progress = 50;
