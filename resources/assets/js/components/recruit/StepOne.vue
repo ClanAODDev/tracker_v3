@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="col-md-4 form-group"
-                         :class="{'input': true, 'has-warning': !store.validMemberId && store.forum_name !== '' }">
+                         :class="{'input': true, 'has-warning': !store.validMemberName && store.forum_name !== '' }">
                         <label for="forum_name">Desired Forum Name <span class="text-info">*</span></label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
                                id="forum_name" v-validate="{ required: true, regex: /^((?!AOD_|aod_).)*$/}"
