@@ -72,8 +72,8 @@
                                id="forum_name" v-validate="{ required: true, regex: /^((?!AOD_|aod_).)*$/}"
                                @blur="validateMemberDoesNotExist"
                                :disabled="store.inDemoMode"/>
-                        <span v-show="errors.has('forum_name')"
-                              class="help-block">{{ errors.first('forum_name') }}</span>
+                        <span v-show="!store.validMemberName"
+                              class="help-block">This name is already taken by an AOD member</span>
                     </div>
 
                     <div class="col-md-4 form-group"
