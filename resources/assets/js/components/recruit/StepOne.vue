@@ -66,13 +66,13 @@
                     </div>
 
                     <div class="col-md-4 form-group"
-                         :class="{'input': true, 'has-warning': errors.has('forum_name') }">
+                         :class="{'input': true, 'has-warning': !store.validMemberId && store.forum_name !== '' }">
                         <label for="forum_name">Desired Forum Name <span class="text-info">*</span></label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
                                id="forum_name" v-validate="{ required: true, regex: /^((?!AOD_|aod_).)*$/}"
                                @blur="validateMemberDoesNotExist"
                                :disabled="store.inDemoMode"/>
-                        <span v-show="!store.validMemberName"
+                        <span v-show="!store.validMemberName && store.forum_name !== ''"
                               class="help-block">This name is already taken by an AOD member</span>
                     </div>
 
@@ -208,17 +208,21 @@
             },
 
             validateMemberDoesNotExist: function () {
-                axios.post(window.Laravel.appPath + '/validate-name/' + store.forum_name.toLowerCase())
-                    .then((response) => {
-                        store.validMemberName = response.data.memberExists == false;
-                    })
+                if (store.forum_name) {
+                    axios.post(window.Laravel.appPath + '/validate-name/' + store.forum_name.toLowerCase())
+                        .then((response) => {
+                            store.validMemberName = response.data.memberExists == false;
+                        });
+                }
             },
 
             validateMemberId: function () {
-                axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
-                    .then((response) => {
-                        store.validMemberId = response.data.isMember == true;
-                    });
+                if (store.member_id) {
+                    axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
+                        .then((response) => {
+                            store.validMemberId = response.data.isMember == true;
+                        });
+                }
             },
 
             resetThreadsOnIdChange: () => {
