@@ -247,7 +247,7 @@ class RecruitingController extends Controller
      * @param $memberId
      * @return array
      */
-    public function validateMember($memberId)
+    public function validateMemberId($memberId)
     {
         if (app()->environment() === 'local') {
             if ($memberId == 31832) {
@@ -261,5 +261,17 @@ class RecruitingController extends Controller
             ->select("CALL get_user({$memberId})");
 
         return ['isMember' => ! empty($result)];
+    }
+
+    /**
+     * @param $name
+     * @return array
+     */
+    public function validateMemberName($name)
+    {
+        $result = \DB::connection('aod_forums')
+            ->select("CALL user_exists({$name})");
+
+        return ['memberExists' => ! empty($result)];
     }
 }

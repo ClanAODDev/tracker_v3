@@ -3,7 +3,9 @@
 
         <h3>Getting Started</h3>
 
-        <p>If you haven't already brought your recruit into Teamspeak, you can share that information with them by visiting the teamspeak information page. Additionally, you can acquire the forum member id via the member list, sorted by join date.
+        <p>If you haven't already brought your recruit into Teamspeak, you can share that information with them by
+            visiting the teamspeak information page. Additionally, you can acquire the forum member id via the member
+            list, sorted by join date.
         </p>
 
         <p>
@@ -15,7 +17,8 @@
                href="https://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate&pp=30">New Forum Members</a>
         </p>
 
-        <p class="m-t-lg">Additionally, you should mention the clan-wide membership requirements as part of your recruitment:</p>
+        <p class="m-t-lg">Additionally, you should mention the clan-wide membership requirements as part of your
+            recruitment:</p>
 
         <ul class="c-white">
             <li>Maintain minimum forum activity. Inactivity can result in removal from AOD</li>
@@ -25,7 +28,7 @@
         </ul>
 
         <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1: Member Data</h3>
-        <hr />
+        <hr/>
 
         <div class="alert text-center">
             <i class="fa fa-question-circle text-accent"></i>
@@ -43,7 +46,9 @@
             </div>
             <div class="panel-body">
 
-                <p>Please be careful and ensure member information is entered accurately. Forum names can be changed when the member status request is submitted, and changed names will sync with the tracker automatically.</p>
+                <p>Please be careful and ensure member information is entered accurately. Forum names can be changed
+                    when the member status request is submitted, and changed names will sync with the tracker
+                    automatically.</p>
 
                 <div class="row">
 
@@ -55,7 +60,7 @@
                                id="member_id" v-validate="'required|max:5'"
                                @change="this.resetThreadsOnIdChange"
                                :disabled="store.inDemoMode"
-                               @blur="validateMemberId" />
+                               @blur="validateMemberId"/>
                         <span v-show="!store.validMemberId"
                               class="help-block">Enter a valid member id</span>
                     </div>
@@ -65,7 +70,8 @@
                         <label for="forum_name">Desired Forum Name <span class="text-info">*</span></label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
                                id="forum_name" v-validate="{ required: true, regex: /^((?!AOD_|aod_).)*$/}"
-                               :disabled="store.inDemoMode" />
+                               @blur="validateMemberDoesNotExist"
+                               :disabled="store.inDemoMode"/>
                         <span v-show="errors.has('forum_name')"
                               class="help-block">{{ errors.first('forum_name') }}</span>
                     </div>
@@ -74,7 +80,7 @@
                          :class="{'input': true, 'has-warning': errors.has('ingame_name') }">
                         <label for="ingame_name">{{ store.handleName }}</label>
                         <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
-                               id="ingame_name" :disabled="store.inDemoMode" />
+                               id="ingame_name" :disabled="store.inDemoMode"/>
                     </div>
 
                 </div>
@@ -98,7 +104,8 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <p class="text-info">* Provide the forum name the member wishes to use. If it is different than the member's current name, it will be updated to match.</p>
+                <p class="text-info">* Provide the forum name the member wishes to use. If it is different than the
+                    member's current name, it will be updated to match.</p>
             </div>
         </div>
 
@@ -108,7 +115,8 @@
                     <strong>Assignment</strong>
                 </div>
                 <div class="panel-body">
-                    <p>Depending on your division's configuration, a {{ store.locality.platoon }} and {{ store.locality.squad }} assignment may be required.</p>
+                    <p>Depending on your division's configuration, a {{ store.locality.platoon }} and {{
+                        store.locality.squad }} assignment may be required.</p>
 
                     <div class="row">
                         <div class="col-sm-6 form-group">
@@ -129,7 +137,8 @@
                                 </option>
                                 <option value="" selected v-else>Select a squad...</option>
                                 <option :value="squad.id" v-for="squad in store.division.squads">
-                                    {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{ (squad.leader) ? squad.leader.name : 'TBA' }}
+                                    {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{ (squad.leader) ?
+                                    squad.leader.name : 'TBA' }}
                                     ({{ squad.members.length }} members)
                                 </option>
                             </select>
@@ -144,7 +153,9 @@
                 </div>
                 <div class="panel-body">
                     <p>
-                        <i class="fa fa-exclamation-triangle text-danger"></i> Your division has no {{ store.locality.platoons }}, so assignment is not unavailable. A division leader will need to create one.
+                        <i class="fa fa-exclamation-triangle text-danger"></i> Your division has no {{
+                        store.locality.platoons }}, so assignment is not unavailable. A division leader will need to
+                        create one.
                     </p>
                 </div>
             </div>
@@ -157,79 +168,91 @@
 </template>
 
 <script>
-  import store from './store.js';
-  import toastr from 'toastr';
-  import ProgressBar from './ProgressBar.vue';
-  import { focus } from 'vue-focus';
+    import store from './store.js';
+    import toastr from 'toastr';
+    import ProgressBar from './ProgressBar.vue';
+    import {focus} from 'vue-focus';
 
-  export default {
-    directives: {focus: focus},
-    props: ['ranks'],
+    export default {
+        directives: {focus: focus},
+        props: ['ranks'],
 
-    methods: {
-      validateStep: function () {
+        methods: {
+            validateStep: function () {
 
-        this.$validator.validateAll().then((result) => {
+                this.$validator.validateAll().then((result) => {
 
-          if (!store.validMemberId && !store.inDemoMode) {
-            toastr.error('Oops, your member id appears to be invalid!');
-            return false;
-          }
+                    if (!store.validMemberId && !store.inDemoMode) {
+                        toastr.error('Oops, your member id appears to be invalid!');
+                        return false;
+                    }
 
-          if (!result) {
-            toastr.error('Something is wrong with your member information', 'Uh oh...');
-            return false;
-          }
-          store.getDivisionThreads(store.division.abbreviation);
-          store.currentStep = 'step-two';
-          store.progress = 50;
-        }).catch(() => {
-          toastr.error('Something is wrong with your member information', 'Uh oh...');
-          return false;
-        });
+                    if (!store.validMemberName && !store.inDemoMode) {
+                        toastr.error('That forum name appears to already be taken.');
+                        return false;
+                    }
 
-      },
+                    if (!result) {
+                        toastr.error('Something is wrong with your member information', 'Uh oh...');
+                        return false;
+                    }
+                    store.getDivisionThreads(store.division.abbreviation);
+                    store.currentStep = 'step-two';
+                    store.progress = 50;
+                }).catch(() => {
+                    toastr.error('Something is wrong with your member information', 'Uh oh...');
+                    return false;
+                });
 
-      validateMemberId: function () {
-        axios.post(window.Laravel.appPath + '/validate-member/' + store.member_id)
-          .then((response) => {
-            store.validMemberId = response.data.isMember == true;
-          });
-      },
+            },
 
-      resetThreadsOnIdChange: () => {
-        store.division.threads = [];
-      },
+            validateMemberDoesNotExist: function () {
+                axios.post(window.Laravel.appPath + '/validate-name' + store.forum_name)
+                    .then((response) => {
+                        store.validMemberName = response.data.memberExists == true;
+                    })
+            },
 
-      forumNameToIngameName: () => {
-        store.ingame_name = store.forum_name;
-      },
+            validateMemberId: function () {
+                axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
+                    .then((response) => {
+                        store.validMemberId = response.data.isMember == true;
+                    });
+            },
 
-      /**
-       * Provide dummy data for training
-       */
-      toggleDemoMode: () => {
-        store.inDemoMode = !store.inDemoMode;
-        store.member_id = 99999;
-        store.rank = 1;
-        store.forum_name = 'test-user';
-        store.ingame_name = 'test-user';
+            resetThreadsOnIdChange: () => {
+                store.division.threads = [];
+            },
 
-        if (store.inDemoMode) {
-          toastr.success('Demo mode enabled!', 'Success!');
-        }
-      },
-    },
+            forumNameToIngameName: () => {
+                store.ingame_name = store.forum_name;
+            },
 
-    components: {
-      'progress-bar': ProgressBar
-    },
+            /**
+             * Provide dummy data for training
+             */
+            toggleDemoMode: () => {
+                store.inDemoMode = !store.inDemoMode;
+                store.member_id = 99999;
+                store.rank = 1;
+                store.forum_name = 'test-user';
+                store.ingame_name = 'test-user';
 
-    data: function () {
-      return {
-        store
-      };
-    },
-  };
+                if (store.inDemoMode) {
+                    toastr.success('Demo mode enabled!', 'Success!');
+                }
+            },
+        },
+
+        components: {
+            'progress-bar': ProgressBar
+        },
+
+        data: function () {
+            return {
+                store
+            };
+        },
+    };
 
 </script>

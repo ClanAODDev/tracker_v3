@@ -21,8 +21,9 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
  */
 Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
-Route::post('validate-member/{memberId}', 'RecruitingController@validateMember')
-    ->name('validate');
+Route::post('validate-id/{memberId}', 'RecruitingController@validateMemberId')
+    ->name('validate-id');
+Route::post('validate-name/{name}', 'RecruitingController@validateMemberName')->name('validate-name');
 Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
@@ -258,7 +259,7 @@ Route::group(['prefix' => 'reports'], function () {
 });
 
 Route::group(['prefix' => 'training'], function () {
-   Route::get('', 'TrainingController@index')->name('training.index');
+    Route::get('', 'TrainingController@index')->name('training.index');
 });
 
 
