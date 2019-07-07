@@ -22,7 +22,8 @@ class Squad extends Model
 
     protected $fillable = [
         'leader_id',
-        'name'
+        'name',
+        'logo'
     ];
 
     /**
