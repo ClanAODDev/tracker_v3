@@ -274,7 +274,7 @@ class RecruitingController extends Controller
     public function validateMemberName($name)
     {
         $result = DB::connection('aod_forums')
-            ->select("CALL user_exists('{$name}')");
+            ->select("CALL user_exists('{$name}', NULL)");
 
         return ['memberExists' => !empty($result)];
     }
