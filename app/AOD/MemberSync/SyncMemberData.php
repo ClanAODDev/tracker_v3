@@ -4,13 +4,14 @@ namespace App\AOD\MemberSync;
 
 use App\Division;
 use App\Member;
+use App\MemberRequest;
 use App\Platoon;
 use App\Squad;
+use Carbon;
 use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
 {
-
     protected static $activeClanMembers = [];
 
     protected static $activeDivisionMembers = [];
@@ -33,7 +34,7 @@ class SyncMemberData
 
         self::cleanUpMemberRequests();
 
-        if ( ! count($syncData)) {
+        if (!count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }
@@ -87,7 +88,7 @@ class SyncMemberData
 
         // have they been recently promoted?
         if ($member->rank_id < ($record['aodrankval'] - 2) && $member->rank_id > 0) {
-            $member->last_promoted_at = \Carbon::now();
+            $member->last_promoted_at = Carbon::now();
         }
 
         // drop aod prefix
@@ -145,7 +146,7 @@ class SyncMemberData
             if (self::$activeClanMembers->contains($member->clan_id)) {
                 self::hardResetMember($member);
             } else {
-                if ($member instanceof Member && ! $member->memberRequest) {
+                if ($member instanceof Member && !$member->memberRequest) {
                     $member->partTimeDivisions()->sync([]);
                     self::hardResetMember($member);
                 }
@@ -179,7 +180,7 @@ class SyncMemberData
      */
     private static function cleanUpMemberRequests()
     {
-        $requestsToPrune = \App\MemberRequest::approved()
+        $requestsToPrune = MemberRequest::approved()
             ->whereIn('member_id', self::$activeClanMembers)
             ->get();
 

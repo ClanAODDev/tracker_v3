@@ -4,6 +4,8 @@ namespace App;
 
 use App\Notifications\ResetPasswordNotification;
 use App\Settings\UserSettings;
+use Exception;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -67,21 +69,21 @@ class User extends Authenticatable
     /**
      * Record new activity for the user.
      *
-     * @param  string $name
-     * @param  mixed $related
+     * @param string $name
+     * @param mixed $related
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function recordActivity($name, $related)
     {
-        if (! method_exists($related, 'recordActivity')) {
-            throw new \Exception('..');
+        if (!method_exists($related, 'recordActivity')) {
+            throw new Exception('..');
         }
         return $related->recordActivity($name);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function activity()
     {
@@ -89,7 +91,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function notes()
     {
@@ -104,7 +106,7 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
-        if (! $this->role instanceof Role) {
+        if (!$this->role instanceof Role) {
             return false;
         }
 

@@ -4,6 +4,7 @@ namespace App;
 
 use App\Activities\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 
@@ -47,7 +48,7 @@ class Platoon extends Model
     /**
      * Leader of a platoon
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function leader()
     {

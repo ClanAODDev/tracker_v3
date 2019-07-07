@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Member;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class ClanRepository
@@ -16,7 +17,7 @@ class ClanRepository
     {
         return Member::whereHas('division')->get()
             ->filter(function ($member) {
-                return ! carbon_date_or_null_if_zero($member->last_ts_activity);
+                return !carbon_date_or_null_if_zero($member->last_ts_activity);
             });
     }
 
@@ -24,7 +25,7 @@ class ClanRepository
      * Get clan population totals groups by date ranges (typically weekly)
      *
      * @param int $limit
-     * @return \Illuminate\Support\Collection|mixed
+     * @return Collection|mixed
      */
     public function censusCounts($limit = 52)
     {

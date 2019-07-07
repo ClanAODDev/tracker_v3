@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateNote;
+use App\Leave;
 use App\Member;
 use App\Note;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class NoteController extends Controller
 {
     /**
      * @param CreateNote $form
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function store(CreateNote $form)
     {
@@ -25,8 +30,8 @@ class NoteController extends Controller
     /**
      * @param Member $member
      * @param Note $note
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return Factory|View
+     * @throws AuthorizationException
      */
     public function edit(Member $member, Note $note)
     {
@@ -34,7 +39,7 @@ class NoteController extends Controller
 
         $division = $member->division;
 
-        if ( ! $division) {
+        if (!$division) {
             return redirect(404);
         }
 
@@ -49,8 +54,8 @@ class NoteController extends Controller
      * @param Request $request
      * @param Member $member
      * @param Note $note
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function update(Request $request, Member $member, Note $note)
     {
@@ -73,7 +78,7 @@ class NoteController extends Controller
         $this->authorize('delete', $note);
 
         // check for existing leave with associated note
-        $leave = \App\Leave::whereHas('note')
+        $leave = Leave::whereHas('note')
             ->whereNoteId($note->id)
             ->exists();
 

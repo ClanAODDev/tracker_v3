@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Division;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class DivisionRepository
@@ -187,7 +188,7 @@ class DivisionRepository
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @return Collection|static[]
      */
     public function withoutSsgts()
     {

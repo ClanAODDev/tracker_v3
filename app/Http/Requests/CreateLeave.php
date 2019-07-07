@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Leave;
-use App\Member;
 use App\Note;
 use App\Tag;
 use Carbon\Carbon;

@@ -86,7 +86,7 @@ class MemberPolicy
         }
 
         // prevent exploiting ability to change rank to SGT
-        if ( ! $user->isRole(['admin', 'sr_ldr'])) {
+        if (!$user->isRole(['admin', 'sr_ldr'])) {
             return false;
         }
 

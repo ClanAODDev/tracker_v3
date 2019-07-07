@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -32,7 +34,7 @@ class Handler extends ExceptionHandler
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
-     * @param  \Exception $exception
+     * @param Exception $exception
      * @return void
      * @throws Exception
      */
@@ -51,8 +53,8 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param Request $request
+     * @param Exception $exception
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $exception)
@@ -64,9 +66,9 @@ class Handler extends ExceptionHandler
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Illuminate\Auth\AuthenticationException $e
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param AuthenticationException $e
+     * @return Response
      */
     protected function unauthenticated($request, AuthenticationException $e)
     {

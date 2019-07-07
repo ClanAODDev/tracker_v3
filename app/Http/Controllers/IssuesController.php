@@ -6,7 +6,9 @@ use App\User;
 use Github\Exception\RuntimeException;
 use GrahamCampbell\GitHub\Facades\GitHub;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -16,14 +18,13 @@ use Illuminate\Support\Facades\Log;
  */
 class IssuesController extends Controller
 {
-
     use AuthorizesRequests;
 
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response|string
+     * @return Response|string
      */
     public function index()
     {
@@ -37,7 +38,7 @@ class IssuesController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
     public function create(
         Request $request

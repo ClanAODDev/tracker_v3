@@ -37,7 +37,7 @@ class MemberRequestPolicy
      */
     public function edit(User $user, MemberRequest $memberRequest)
     {
-        if ($memberRequest->isApproved() || ! $memberRequest->isCancelled()) {
+        if ($memberRequest->isApproved() || !$memberRequest->isCancelled()) {
             return false;
         }
 

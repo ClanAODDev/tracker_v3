@@ -2,6 +2,8 @@
 
 namespace App\Channels;
 
+use Exception;
+
 /**
  * Class DiscordMessage
  *
@@ -12,9 +14,9 @@ class DiscordMessage
     /**
      * Color codes
      */
-    CONST SUCCESS = 3066993;
-    CONST ERROR = 15158332;
-    CONST INFO = 10181046;
+    const SUCCESS = 3066993;
+    const ERROR = 15158332;
+    const INFO = 10181046;
 
     private $fields = [];
 
@@ -85,16 +87,16 @@ class DiscordMessage
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function send()
     {
-        if ( ! $this->channel) {
-            throw new \Exception('A channel must be defined');
+        if (!$this->channel) {
+            throw new Exception('A channel must be defined');
         }
 
-        if ( ! isset($this->message) && empty($this->fields)) {
-            throw new \Exception('A message must be defined');
+        if (!isset($this->message) && empty($this->fields)) {
+            throw new Exception('A message must be defined');
         }
 
         if (empty($this->fields)) {

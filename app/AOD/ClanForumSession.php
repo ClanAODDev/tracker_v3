@@ -2,8 +2,11 @@
 
 namespace App\AOD;
 
+use App\Member;
 use App\User;
 use Auth;
+use DB;
+use Exception;
 
 class ClanForumSession
 {
@@ -29,19 +32,19 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
-            if (! is_object($sessionData)) {
+            if (!is_object($sessionData)) {
                 return false;
             }
 
-            if (! in_array($sessionData->loggedin, [1, 2])) {
+            if (!in_array($sessionData->loggedin, [1, 2])) {
                 return false;
             }
 
             $username = str_replace('aod_', '', strtolower($sessionData->username));
 
-            $member = \App\Member::whereClanId($sessionData->userid)->first();
+            $member = Member::whereClanId($sessionData->userid)->first();
 
-            if (! $member) {
+            if (!$member) {
                 abort(403, 'Not authorized');
             }
 
@@ -62,7 +65,7 @@ class ClanForumSession
      */
     private function getAODSession()
     {
-        if (! isset($_COOKIE[$this->sessionKey])) {
+        if (!isset($_COOKIE[$this->sessionKey])) {
             return false;
         }
 
@@ -78,13 +81,13 @@ class ClanForumSession
     private function callStoredProcedure()
     {
         try {
-            $results = \DB::connection('aod_forums')
+            $results = DB::connection('aod_forums')
                 ->select("CALL {$this->storedProcedure}('{$_COOKIE[$this->sessionKey]}')");
 
             return array_key_exists(0, $results)
                 ? $results[0]
                 : null;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
     }
@@ -93,7 +96,7 @@ class ClanForumSession
      * @param $username
      * @param $email
      * @param $clanId
-     * @return \App\User||void
+     * @return User||void
      */
     public function registerNewUser($username, $email, $clanId)
     {

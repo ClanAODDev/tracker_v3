@@ -138,7 +138,8 @@ class UserPolicy
         return $user->isRole('sr_ldr') && $user->member->position_id == 6;
     }
 
-    public function train(User $user) {
+    public function train(User $user)
+    {
         return $user->canTrainMembers();
     }
 }

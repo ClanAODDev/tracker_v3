@@ -3,6 +3,7 @@
 namespace App\Activities;
 
 use App\Activity;
+use ReflectionClass;
 
 /**
  * Trait RecordsActivity
@@ -62,7 +63,7 @@ trait RecordsActivity
      */
     public function activity()
     {
-        return $this->morphMany(\App\Activity::class, 'subject')
+        return $this->morphMany(Activity::class, 'subject')
             ->orderBy('created_at', 'desc');
     }
 
@@ -72,7 +73,7 @@ trait RecordsActivity
      */
     protected function getActivityName($action)
     {
-        $name = strtolower((new \ReflectionClass($this))->getShortName());
+        $name = strtolower((new ReflectionClass($this))->getShortName());
 
         return "{$action}_{$name}";
     }

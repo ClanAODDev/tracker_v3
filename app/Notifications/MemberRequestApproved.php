@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
 use App\MemberRequest;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -27,7 +28,7 @@ class MemberRequestApproved extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -37,7 +38,7 @@ class MemberRequestApproved extends Notification
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function toWebhook()
     {

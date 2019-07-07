@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Division;
+use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
+use stdClass;
+use Twig_Environment;
 use Twig_Error;
 use Twig_Error_Syntax;
+use Twig_Loader_Array;
 use Twig_Sandbox_SecurityError;
+use Twig_SimpleFunction;
 
 /**
  * Class DivisionStructureController
@@ -16,7 +26,6 @@ use Twig_Sandbox_SecurityError;
  */
 class DivisionStructureController extends Controller
 {
-
     use AuthorizesRequests;
 
     /**
@@ -30,7 +39,7 @@ class DivisionStructureController extends Controller
     /**
      * @param Division $division
      * @return string
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function show(Division $division)
     {
@@ -39,13 +48,13 @@ class DivisionStructureController extends Controller
         try {
             $compiledData = $this->compileDivisionData($division);
 
-            $templates = array('structure' => $division->structure);
+            $templates = ['structure' => $division->structure];
 
-            $env = new \Twig_Environment(new \Twig_Loader_Array($templates), [
+            $env = new Twig_Environment(new Twig_Loader_Array($templates), [
                 'autoescape' => false
             ]);
 
-            $env->addFunction(new \Twig_SimpleFunction('ordSuffix', function ($value) {
+            $env->addFunction(new Twig_SimpleFunction('ordSuffix', function ($value) {
                 return ordSuffix($value);
             }));
 
@@ -59,11 +68,11 @@ class DivisionStructureController extends Controller
 
     /**
      * @param Division $division
-     * @return \stdClass
+     * @return stdClass
      */
     private function compileDivisionData(Division $division)
     {
-        $data = new \stdClass();
+        $data = new stdClass();
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->memberCount = $division->members->count();
@@ -166,7 +175,7 @@ class DivisionStructureController extends Controller
      * Eager loading filter
      *
      * @param $division
-     * @return \Closure
+     * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
     {
@@ -191,7 +200,7 @@ class DivisionStructureController extends Controller
     }
 
     /**
-     * @return \Closure
+     * @return Closure
      */
     private function getMemberHandle()
     {
@@ -219,7 +228,7 @@ class DivisionStructureController extends Controller
 
     /**
      * @param Division $division
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function modify(Division $division)
     {
@@ -231,7 +240,7 @@ class DivisionStructureController extends Controller
     /**
      * @param Request $request
      * @param Division $division
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
     public function update(Request $request, Division $division)
     {

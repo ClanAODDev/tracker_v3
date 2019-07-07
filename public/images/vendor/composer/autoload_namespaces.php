@@ -5,6 +5,6 @@
 $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
-return array(
-    'Flynsarmy\\DbBladeCompiler\\' => array($vendorDir . '/flynsarmy/db-blade-compiler/src'),
-);
+return [
+    'Flynsarmy\\DbBladeCompiler\\' => [$vendorDir . '/flynsarmy/db-blade-compiler/src'],
+];

@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
@@ -35,7 +36,7 @@ class NewExternalRecruit extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -45,7 +46,7 @@ class NewExternalRecruit extends Notification
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function toWebhook()
     {
