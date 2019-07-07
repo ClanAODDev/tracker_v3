@@ -182,14 +182,16 @@
 
                 this.$validator.validateAll().then((result) => {
 
-                    if (!store.validMemberId && !store.inDemoMode) {
-                        toastr.error('Oops, your member id appears to be invalid!');
-                        return false;
-                    }
+                    if (!store.inDemoMode) {
+                        if (!store.validMemberId) {
+                            toastr.error('Oops, your member id appears to be invalid!');
+                            return false;
+                        }
 
-                    if (!store.validMemberName && !store.inDemoMode) {
-                        toastr.error('That forum name appears to already be taken.');
-                        return false;
+                        if (!store.validMemberName) {
+                            toastr.error('That forum name appears to already be taken.');
+                            return false;
+                        }
                     }
 
                     if (!result) {
