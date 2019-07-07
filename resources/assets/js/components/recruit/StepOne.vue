@@ -182,12 +182,6 @@
 
                 this.$validator.validateAll().then((result) => {
 
-                    console.log('running validation');
-
-                    console.log('invalid member id?', !store.validMemberId && !store.inDemoMode);
-
-                    console.log('invalid member name?', !store.validMemberName && !store.inDemoMode);
-
                     if (!store.validMemberId && !store.inDemoMode) {
                         toastr.error('Oops, your member id appears to be invalid!');
                         return false;
@@ -216,7 +210,7 @@
             validateMemberDoesNotExist: function () {
                 axios.post(window.Laravel.appPath + '/validate-name/' + store.forum_name.toLowerCase())
                     .then((response) => {
-                        store.validMemberName = response.data.memberExists == true;
+                        store.validMemberName = response.data.memberExists == false;
                     })
             },
 
