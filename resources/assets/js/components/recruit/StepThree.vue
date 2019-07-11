@@ -68,7 +68,7 @@
 
     methods: {
       validateStep: function () {
-        let complete = true;
+        /*let complete = true;
         store.division.tasks.forEach(function (task) {
           if (!task.complete) {
             complete = false;
@@ -84,7 +84,7 @@
         if (!complete) {
           toastr.error('Mark all tasks complete as you do them');
           return;
-        }
+        }*/
 
         store.currentStep = 'step-four';
         store.createMember();
