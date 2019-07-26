@@ -65,7 +65,6 @@ class NewMemberRecruited extends Notification
                     'name' => 'View Member Profile',
                     'value' => route('member', $this->member->getUrlParams())
                 ]
-            ])
-            ->send();
+            ])->send();
     }
 }
