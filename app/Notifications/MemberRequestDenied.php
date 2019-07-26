@@ -46,8 +46,6 @@ class MemberRequestDenied extends Notification
 
         $channel = $division->settings()->get('slack_channel');
 
-        $path = route('division.member-requests.index', $this->request->division);
-
         $notes = addslashes($this->request->notes);
 
         return (new DiscordMessage())
@@ -60,9 +58,12 @@ class MemberRequestDenied extends Notification
                 ],
                 [
                     'name' => 'The reason for the denial was:',
-                    'value' => "{$notes} - [View Member Requests]({$path})"
+                    'value' => "{$notes}"
+                ],
+                [
+                    'name' => 'Manage member requests',
+                    'value' => route('division.member-requests.index', $this->request->division)
                 ]
-            ])
-            ->send();
+            ])->send();
     }
 }
