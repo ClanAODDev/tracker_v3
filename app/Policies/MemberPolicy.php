@@ -45,7 +45,7 @@ class MemberPolicy
     {
         // can edit yourself
         if ($member->id === auth()->user()->member_id) {
-            return true;
+            return false;
         }
 
         $userDivision = $user->member->division;
