@@ -10,7 +10,7 @@
 
 <hr/>
 
-@can('manageUnassigned')
+@can('manageUnassigned', App\User::class)
     @include('division.partials.unassigned-members')
 @endcan
 
