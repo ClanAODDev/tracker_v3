@@ -123,6 +123,11 @@ class UserPolicy
         return $user->isRole(['jr_ldr', 'sr_ldr', 'admin']);
     }
 
+    public function manageUnassigned(User $user)
+    {
+        return $user->isRole(['jr_ldr', 'sr_ldr']);
+    }
+
     public function manageDivisionStructure(User $user)
     {
         return $user->isRole(['jr_ldr', 'sr_ldr']);
