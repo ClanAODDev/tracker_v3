@@ -8,9 +8,11 @@
     @endcan
 </h3>
 
-<hr />
+<hr/>
 
-@include('division.partials.unassigned-members')
+@can('manageUnassigned')
+    @include('division.partials.unassigned-members')
+@endcan
 
 <div class="row">
 
