@@ -37,8 +37,10 @@ class DeleteMember extends FormRequest
     {
         $member = $this->route('member');
 
-        if ($member->division->settings()->get('slack_alert_removed_member')) {
-            $member->division->notify(new MemberRemoved($member));
+        if ($member->division()->exists()) {
+            if ($member->division->settings()->get('slack_alert_removed_member')) {
+                $member->division->notify(new MemberRemoved($member));
+            }
         }
 
         $this->createRemovalNote($member);
