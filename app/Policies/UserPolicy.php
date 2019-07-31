@@ -128,11 +128,6 @@ class UserPolicy
         return $user->isRole(['jr_ldr', 'sr_ldr']);
     }
 
-    public function manageDivisionStructure(User $user)
-    {
-        return $user->isRole(['jr_ldr', 'sr_ldr']);
-    }
-
     public function manageIssues(User $user)
     {
         return $user->isRole(['jr_ldr', 'sr_ldr']);

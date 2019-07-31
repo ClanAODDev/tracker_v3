@@ -4,7 +4,7 @@
 
     @component ('application.components.division-heading', [$division])
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
         @endslot
         @slot ('heading')
             <span class="hidden-xs">Division Structure</span>
@@ -27,11 +27,9 @@
                 </div>
                 <span class="text-muted pull-right">{{ strlen($data) }} characters</span>
 
-                @can ('manageDivisionStructure', auth()->user())
-                    <a class="btn btn-default"
-                       href="{{ route('division.edit-structure', $division->abbreviation) }}">
-                        <i class="fa fa-wrench text-accent"></i> Go to editor</a>
-                @endcan
+                <a class="btn btn-default"
+                   href="{{ route('division.edit-structure', $division->abbreviation) }}">
+                    <i class="fa fa-wrench text-accent"></i> Go to editor</a>
 
                 <button data-clipboard-target="#structure" class="copy-to-clipboard btn-success btn"><i
                             class="fa fa-clone"></i> Copy Contents
