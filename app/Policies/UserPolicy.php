@@ -125,7 +125,7 @@ class UserPolicy
 
     public function manageUnassigned(User $user)
     {
-        return $user->isRole(['jr_ldr', 'sr_ldr']);
+        return $user->isRole(['jr_ldr', 'sr_ldr', 'admin']);
     }
 
     public function manageIssues(User $user)
