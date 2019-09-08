@@ -39,6 +39,11 @@ class DivisionCensus extends Command
      */
     public function handle()
     {
+        if ($this->censusAlreadyPerformed()) {
+            $this->alert('Census already performed. No action taken.');
+            exit;
+        }
+
         $divisions = Division::active()->get();
 
         $this->comment('Beginning division census...');
@@ -63,5 +68,15 @@ class DivisionCensus extends Command
         $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();
         $census->weekly_ts_count = $division->membersActiveOnTsSinceDaysAgo(8)->count();
         $census->save();
+    }
+
+    /**
+     * @return bool
+     */
+    private function censusAlreadyPerformed()
+    {
+        $census = Census::latest()->first();
+
+        return $census->created_at->format('Y-m-d') == now()->format('Y-m-d');
     }
 }
