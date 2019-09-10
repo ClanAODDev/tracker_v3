@@ -23,7 +23,7 @@ class DivisionRepository
     public function censusCounts(Division $division, $limit = 52)
     {
         $censuses = collect(DB::select(
-            DB::raw("    
+            DB::raw("
                 SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date 
                 FROM censuses WHERE division_id = {$division->id} 
                 GROUP BY date(created_at) 
