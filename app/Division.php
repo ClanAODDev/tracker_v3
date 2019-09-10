@@ -364,11 +364,12 @@ class Division extends Model
     }
 
     /**
+     * Includes general sgt (4) and admin (7)
      * @return mixed
      */
     public function generalSergeants()
     {
-        return $this->members()->wherePositionId(4);
+        return $this->members()->whereIn('position_id', [4, 7]);
     }
 
     /**
