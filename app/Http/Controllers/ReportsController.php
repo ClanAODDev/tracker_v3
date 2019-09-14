@@ -142,7 +142,7 @@ class ReportsController extends Controller
             echo $division->name . PHP_EOL;
             $members = $division->members()->whereHas('user')->get();
             foreach ($members as $member) {
-                echo "{$member->rankName},{$member->user->role_id}" . PHP_EOL;
+                echo "{$member->present()->rankName()},{$member->user->role_id}" . PHP_EOL;
             }
             echo "---------- END OF DIVISION ----------";
         }
