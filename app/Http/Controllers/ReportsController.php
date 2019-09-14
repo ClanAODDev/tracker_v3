@@ -138,9 +138,9 @@ class ReportsController extends Controller
      */
     public function divisionUsersWithAccess()
     {
-        foreach (Division::active() as $division) {
+        foreach (Division::active()->get() as $division) {
             echo $division->name . PHP_EOL;
-            $members = Member::whereHas('user')->get();
+            $members = $division->members()->whereHas('user')->get();
             foreach ($members as $member) {
                 echo "{$member->rankName},{$member->user->role_id}" . PHP_EOL;
             }
