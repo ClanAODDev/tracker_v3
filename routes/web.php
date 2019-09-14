@@ -178,7 +178,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
      * platoons
      */
     Route::group(['prefix' => '/platoons/'], function () {
-
         Route::get('/create', 'PlatoonController@create')->name('createPlatoon');
         Route::get('{platoon}', 'PlatoonController@show')->name('platoon');
         Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
@@ -213,7 +212,6 @@ Route::get('developers', 'DeveloperController@index')->name('developer');
 
 
 Route::group(['prefix' => 'slack'], function () {
-
     Route::group(['prefix' => '/users'], function () {
         Route::get('', 'Slack\SlackUserController@index')->name('slack.user-index');
     });
@@ -248,6 +246,10 @@ Route::post('slack', [
 Route::group(['prefix' => 'reports'], function () {
     Route::middleware('admin')->get('division-turnover', 'ReportsController@divisionTurnoverReport')
         ->name('reports.division-turnover');
+
+    Route::middleware('admin')->get('division-roles', 'ReportsController@divisionUsersWithAccess')
+        ->name('reports.division-roles');
+
     Route::get('no-discord', 'ReportsController@usersWithoutDiscordReport')
         ->name('reports.discord');
     Route::get(
@@ -267,10 +269,11 @@ Route::group(['prefix' => 'training'], function () {
  * Admin / Member Request routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
-
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
-    Route::post('member-requests/{requestId}/approve',
-        'Admin\MemberRequestController@approve')->name('admin.member-request.approve');
+    Route::post(
+        'member-requests/{requestId}/approve',
+        'Admin\MemberRequestController@approve'
+    )->name('admin.member-request.approve');
 
     Route::post('member-requests/{requestId}/cancel', 'Admin\MemberRequestController@cancel')
         ->name('admin.member-request.cancel');
