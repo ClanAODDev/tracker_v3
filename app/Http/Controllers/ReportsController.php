@@ -134,6 +134,21 @@ class ReportsController extends Controller
     }
 
     /**
+     * @return void
+     */
+    public function divisionUsersWithAccess()
+    {
+        foreach (Division::active() as $division) {
+            echo $division->name . PHP_EOL;
+            $members = Member::whereHas('user')->get();
+            foreach ($members as $member) {
+                echo "{$member->rankName},{$member->user->role_id}" . PHP_EOL;
+            }
+            echo "---------- END OF DIVISION ----------";
+        }
+    }
+
+    /**
      * @return mixed
      */
     public function divisionTurnoverReport()
