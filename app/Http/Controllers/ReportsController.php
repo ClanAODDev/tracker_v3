@@ -150,7 +150,7 @@ class ReportsController extends Controller
             }));
 
             $sortedMembers->each(function ($member) {
-                echo $member->present()->rankName() . ", {$member->role_id}" . PHP_EOL;
+                echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
             });
 
             echo "---------- END OF DIVISION ----------" . PHP_EOL . PHP_EOL . PHP_EOL;
