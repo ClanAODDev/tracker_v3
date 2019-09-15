@@ -144,9 +144,24 @@ class ReportsController extends Controller
                 $query->where('role_id', '<', 2);
             })->get();
 
+            $members = [];
+
             foreach ($members as $member) {
-                echo "{$member->present()->rankName()},{$member->user->role_id}" . PHP_EOL;
+                $members[] = [
+                    'rank_id' => $member->rank_id,
+                    'member' => $member->present()->rankName(),
+                    'role_id' => $member->role_id
+                ];
             }
+
+            $sortedMembers = collect(Arr::sort($members, function ($member) {
+                return $member->rank_id;
+            }));
+
+            $sortedMembers->each(function ($member) {
+                echo "{$member['member']}, {$member['role_id']}" . PHP_EOL;
+            });
+
             echo "---------- END OF DIVISION ----------" . PHP_EOL . PHP_EOL . PHP_EOL;
         }
     }
