@@ -7,6 +7,7 @@ use App\Member;
 use App\Repositories\ClanRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Arr;
 use Illuminate\View\View;
 
 class ReportsController extends Controller
