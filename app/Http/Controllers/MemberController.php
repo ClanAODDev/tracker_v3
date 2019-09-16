@@ -297,7 +297,7 @@ class MemberController extends Controller
         $form->persist();
 
         $this->showToast(
-            ucwords($member->name) . " has been removed from the {$division->name} Division!"
+            ucwords($member->name ?? 'Member') . " has been removed."
         );
 
         return redirect()->route('division', [
