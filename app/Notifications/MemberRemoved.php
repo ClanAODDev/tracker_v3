@@ -41,6 +41,10 @@ class MemberRemoved extends Notification
         return [WebhookChannel::class];
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function toWebhook()
     {
         $division = $this->member->division;
@@ -48,9 +52,17 @@ class MemberRemoved extends Notification
         $channel = $division->settings()->get('slack_channel');
 
         return (new DiscordMessage())
+            ->info()
             ->to($channel)
-            ->message("{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name)
-            ->success()
-            ->send();
+            ->fields([
+                [
+                    'name' => "**MEMBER REMOVED**",
+                    'value' => "{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name
+                ],
+                /*[
+                    'name' => 'Reason:',
+                    'value' => "{$notes}"
+                ],*/
+            ])->send();
     }
 }
