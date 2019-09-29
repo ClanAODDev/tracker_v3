@@ -57,7 +57,7 @@ class MemberRemoved extends Notification
             ->fields([
                 [
                     'name' => "**MEMBER REMOVED**",
-                    'value' => "{$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name
+                    'value' => ":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name
                 ],
                 /*[
                     'name' => 'Reason:',
