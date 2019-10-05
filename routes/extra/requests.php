@@ -35,8 +35,7 @@ Route::get('requests-count.png', function () {
     $textWidth = abs($dimensions[4] - $dimensions[0]);
     $x = imagesx($im) - $textWidth;
 
-
-    imagettftext($im, 20, 0, $x - 10, 25, $orange, $bigfont, $requestsCount);
+    imagettftext($im, 20, 0, $x - 10, 63, $orange, $bigfont, $requestsCount);
     imagettftext($im, 20, 0, $x - 10, 25, $orange, $bigfont, $ticketsCount);
 
     if ($errors > 0) {
