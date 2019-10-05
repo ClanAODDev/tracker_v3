@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Ticket;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class TicketController extends Controller
 {
@@ -15,7 +14,11 @@ class TicketController extends Controller
      */
     public function index()
     {
+        $openTickets = Ticket::open()->with('type', 'caller', 'owner')->latest()->get();
 
+        $closedTickets = Ticket::closed()->with('type', 'caller', 'owner')->latest()->get();
+
+        return view('help.tickets.index', compact('openTickets', 'closedTickets'));
     }
 
     /**
@@ -31,7 +34,7 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,7 +45,7 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -53,7 +56,7 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -64,8 +67,8 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -76,7 +79,7 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
