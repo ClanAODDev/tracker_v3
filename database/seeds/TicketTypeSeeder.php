@@ -12,11 +12,11 @@ class TicketTypeSeeder extends Seeder
     public function run()
     {
         DB::table('ticket_types')->insert([
-            ['name' => 'Misc', 'slug' => 'misc', 'description' => "Use this if your ticket does not fit an existing type"],
-            ['name' => 'Moderator Change', 'slug' => 'mod-change', 'description' => "Request a change of your division's moderators."],
-            ['name' => 'Forum Change', 'slug' => 'forum-change', 'description' => "Request a change to your forums"],
-            ['name' => 'Award Request', 'slug' => 'awards', 'description' => "Request to add or update a division award"],
-            ['name' => 'Rename Member', 'slug' => 'renames', 'description' => "Request a member rename"],
+            ['name' => 'Misc', 'slug' => 'misc', 'description' => "Miscellaneous admin help request"],
+            ['name' => 'Forum Change', 'slug' => 'forum-changes', 'description' => "Change to your forums"],
+            ['name' => 'Awards/Medals', 'slug' => 'awards', 'description' => "Add or update a division award"],
+            ['name' => 'Member Rename', 'slug' => 'renames', 'description' => "Request a member rename"],
+            ['name' => 'Teamspeak Change', 'slug' => 'teamspeak-changes', 'description' => "Change to Teamspeak"],
         ]);
     }
 }
