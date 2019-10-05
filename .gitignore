@@ -22,4 +22,4 @@ composer.phar
 *.map
 yarn.lock
 .php_cs.cache
-/data/
+/data
