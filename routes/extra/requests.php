@@ -29,17 +29,11 @@ Route::get('requests-count.png', function () {
 
     $requestsCount = \App\MemberRequest::pending()->pastGracePeriod()->count();
     $errors = \App\MemberRequest::errors()->count();
-    $ticketsCount = \App\Ticket::open()->count();
 
     // calculate X for number of requests
     $dimensionsRequests = imagettfbbox(20, 0, $bigfont, $requestsCount);
     $textWidthRequests = abs($dimensionsRequests[4] - $dimensionsRequests[0]);
     $xRequests = imagesx($im) - $textWidthRequests;
-
-    // calculate X for number of tickets
-    $dimensionsTickets = imagettfbbox(20, 0, $bigfont, $ticketsCount);
-    $textWidthTickets = abs($dimensionsTickets[4] - $dimensionsTickets[0]);
-    $xTickets = imagesx($im) - $textWidthTickets;
 
     imagettftext($im, 20, 0, $xRequests - 10, 25, $orange, $bigfont, $requestsCount);
 
