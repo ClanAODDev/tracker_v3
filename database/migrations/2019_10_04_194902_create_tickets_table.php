@@ -15,10 +15,13 @@ class CreateTicketsTable extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('resolved');
+            $table->enum('state', ['new', 'assigned', 'resolved']);
+            $table->unsignedInteger('type_id')->default(1);
+            $table->longText('description');
             $table->unsignedInteger('caller_id');
-            $table->unsignedInteger('owner_id');
-            $table->dateTime('resolved_at');
+            $table->unsignedInteger('owner_id')->nullable();
+            $table->unsignedInteger('division_id');
+            $table->dateTime('resolved_at')->nullable();
             $table->timestamps();
         });
     }
