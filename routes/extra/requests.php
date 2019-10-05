@@ -31,12 +31,18 @@ Route::get('requests-count.png', function () {
     $errors = \App\MemberRequest::errors()->count();
     $ticketsCount = \App\Ticket::open()->count();
 
-    $dimensions = imagettfbbox(20, 0, $bigfont, $requestsCount);
-    $textWidth = abs($dimensions[4] - $dimensions[0]);
-    $x = imagesx($im) - $textWidth;
+    // calculate X for number of requests
+    $dimensionsRequests = imagettfbbox(20, 0, $bigfont, $requestsCount);
+    $textWidthRequests = abs($dimensionsRequests[4] - $dimensionsRequests[0]);
+    $xRequests = imagesx($im) - $textWidthRequests;
 
-    imagettftext($im, 20, 0, $x - 10, 63, $orange, $bigfont, $requestsCount);
-    imagettftext($im, 20, 0, $x - 10, 25, $orange, $bigfont, $ticketsCount);
+    // calculate X for number of tickets
+    $dimensionsTickets = imagettfbbox(20, 0, $bigfont, $ticketsCount);
+    $textWidthTickets = abs($dimensionsTickets[4] - $dimensionsTickets[0]);
+    $xTickets = imagesx($im) - $textWidthTickets;
+
+    imagettftext($im, 20, 0, $xRequests - 10, 63, $orange, $bigfont, $requestsCount);
+    imagettftext($im, 20, 0, $xTickets - 10, 25, $orange, $bigfont, $ticketsCount);
 
     if ($errors > 0) {
         imagettftext($im, 6, 0, $x - 50, 20, $red, $tinyfont, "({$errors} ERR)");
