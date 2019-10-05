@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
+    protected $guarded = [];
+
+    protected $dates = [
+        'resolved_at'
+    ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function type()
+    {
+        return $this->belongsTo('App\TicketType');
+    }
+
     /**
      * @return BelongsTo
      */
@@ -27,13 +41,13 @@ class Ticket extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeActive($query)
+    public function scopeOpen($query)
     {
-        return $query->where('resolved', false);
+        return $query->where('state', '!=', 'resolved');
     }
 
-    public function scopeResolved($query)
+    public function scopeClosed($query)
     {
-        return $query->where('resolved', true);
+        return $query->where('state', '=', 'resolved');
     }
 }
