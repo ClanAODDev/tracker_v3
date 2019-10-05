@@ -1,0 +1,25 @@
+networks:
+  backend:
+    driver: bridge
+services:
+  core_services:
+    container_name: core
+    image: creativitykills/nginx-php-server
+    networks:
+      backend: null
+    ports:
+    - 44678:80/tcp
+    volumes:
+    - /Users/dcdeaton/projects/tracker_v3:/var/www:rw
+  mysql:
+    container_name: db_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    image: mysql:5.7
+    networks:
+      backend: null
+    ports:
+    - 33062:3306/tcp
+    volumes:
+    - /Users/dcdeaton/projects/tracker-v3/data/mysql:/var/lib/mysql:rw
+version: '3.0'
