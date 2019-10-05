@@ -3,26 +3,28 @@
 namespace App\Nova;
 
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Ticket extends Resource
+class TicketType extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'App\Ticket';
+    public static $model = 'App\TicketType';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -30,8 +32,13 @@ class Ticket extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'description'
+        'name',
     ];
+
+    public static function label()
+    {
+        return "Ticket Types";
+    }
 
     /**
      * Get the fields displayed by the resource.
@@ -43,8 +50,9 @@ class Ticket extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Ticket Type', 'type_id'),
-            HasOne::make('Caller'),
+            Text::make('Name'),
+            Text::make('Slug'),
+            HasMany::make('Ticket'),
         ];
     }
 
