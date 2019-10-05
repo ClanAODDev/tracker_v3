@@ -269,6 +269,9 @@ Route::group(['prefix' => 'training'], function () {
  * Admin / Member Request routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
+    Route::get('tickets', 'Admin\TicketController@index')->name('admin.tickets');
+
+
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
     Route::post(
         'member-requests/{requestId}/approve',
