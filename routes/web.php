@@ -264,14 +264,15 @@ Route::group(['prefix' => 'training'], function () {
     Route::get('', 'TrainingController@index')->name('training.index');
 });
 
+Route::group(['prefix' => 'help', 'middleware' => ['auth']], function () {
+    Route::get('tickets', 'TicketController@index')->name('tickets');
+});
+
 
 /**
  * Admin / Member Request routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
-    Route::get('tickets', 'Admin\TicketController@index')->name('admin.tickets');
-
-
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
     Route::post(
         'member-requests/{requestId}/approve',
