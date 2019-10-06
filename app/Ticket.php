@@ -38,6 +38,14 @@ class Ticket extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function division()
+    {
+        return $this->belongsTo('App\Division');
+    }
+
+    /**
      * @param $query
      * @return mixed
      */
