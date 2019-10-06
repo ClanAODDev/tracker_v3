@@ -10,15 +10,16 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param bool $showClosed
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($showClosed = false)
     {
-        $openTickets = Ticket::open()->with('type', 'caller', 'owner')->latest()->get();
+        $tickets = $showClosed
+            ? Ticket::closed()->with('type', 'caller', 'owner', 'division')->latest()->get()
+            : Ticket::open()->with('type', 'caller', 'owner', 'division')->latest()->get();
 
-        $closedTickets = Ticket::closed()->with('type', 'caller', 'owner')->latest()->get();
-
-        return view('help.tickets.index', compact('openTickets', 'closedTickets'));
+        return view('help.tickets.index', compact('tickets'));
     }
 
     /**
