@@ -19,69 +19,42 @@
 
     <div class="container-fluid">
 
-        <h4>OPEN TICKETS <span class="badge">{{ $openTickets->count() }}</span></h4>
-        <div class="row">
-            <div class="panel panel-filled">
-                <div class="table-responsive">
-                    <table class="table table-hover basic-datatable">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Type</th>
-                            <th>Caller</th>
-                            <th>Owned By</th>
-                            <th>Updated At</th>
+        <h3>TICKETS <span class="badge">{{ $tickets->count() }}</span></h3>
+        <hr>
+        <div class="panel">
+            <div class="table-responsive">
+                <table class="table table-hover adv-datatable">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="text-center">State</th>
+                        <th>Type</th>
+                        <th>Caller</th>
+                        <th>Division</th>
+                        <th>Assigned To</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach ($tickets as $ticket)
+                        <tr >
+                            <td>{{ $ticket->id }}</td>
+                            <td class="text-center">
+                                @include('help.tickets.partials.state-box')
+                            </td>
+                            <td>
+                                {{ $ticket->type->name }}
+                            </td>
+                            <td>{{ $ticket->caller->name }}</td>
+                            <td>{{ $ticket->division->name }}</td>
+                            @if($ticket->owner)
+                                <td class="text-accent">{{ $ticket->owner->name }}</td>
+                            @else
+                                <td class="text-muted">--</td>
+                            @endif
                         </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($openTickets as $ticket)
-                            <tr>
-                                <td>{{ $ticket->id }}</td>
-                                <td class="text-info">{{ $ticket->type->name }}</td>
-                                <td>{{ $ticket->caller->name }}</td>
-                                @if($ticket->owner)
-                                    <td class="text-accent">{{ $ticket->owner->name }}</td>
-                                @else
-                                    <td class="text-muted">--</td>
-                                @endif
-                                <td>{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <hr/>
-
-        <h4 class="m-t-lg">RESOLVED TICKETS <span class="badge">{{ $closedTickets->count() }}</span></h4>
-        <div class="row">
-            <div class="panel panel-filled m-b-xl">
-                <div class="table-responsive">
-                    <table class="table table-hover basic-datatable">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Type</th>
-                            <th>Caller</th>
-                            <th>Owned By</th>
-                            <th>Updated At</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($closedTickets as $ticket)
-                            <tr>
-                                <td>{{ $ticket->id }}</td>
-                                <td>{{ $ticket->type->name }}</td>
-                                <td>{{ $ticket->caller->name }}</td>
-                                <td>{{ $ticket->owner->name ?? "Unassigned" }}</td>
-                                <td>{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
