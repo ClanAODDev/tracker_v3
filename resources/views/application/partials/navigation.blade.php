@@ -60,6 +60,10 @@
         <li class="{{ set_active('recruit') }}">
             <a href="{{ route('recruiting.initial') }}">Add New Recruit</a>
         </li>
+        
+        <li class="{{ set_active('help/tickets' )}}">
+            <a href="{{ route('tickets.index') }}">Admin Support</a>
+        </li>
     @endcan
 
     <li class="nav-category">
@@ -130,7 +134,7 @@
     </li>
 
     <li class="{{ set_active('changelog') }}">
-        <a href="{{ route('changelog') }}">Changelog <span class="label label-success">NEW</span></a>
+        <a href="{{ route('changelog') }}">Changelog </a>
     </li>
 </ul>
 
