@@ -7,7 +7,6 @@
                 <tr>
                     <th>Member Name</th>
                     <th>Recruiter Name</th>
-                    <th>Cancelled By</th>
                     <th>When</th>
                     <th class="text-center">Review</th>
                 </tr>
@@ -17,7 +16,6 @@
                     <tr>
                         <td>{{ $request->name }}</td>
                         <td>{{ $request->requester->name }}</td>
-                        <td>{{ $request->canceller->name }}</td>
                         <td>{{ $request->cancelled_at->diffForHumans() }}</td>
                         <td>
                             <a href="{{ route('division.member-requests.edit', [$division, $request]) }}"
