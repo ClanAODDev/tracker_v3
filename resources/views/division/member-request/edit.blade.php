@@ -88,14 +88,7 @@
 
                 @if ($memberRequest->notes)
                     <div class="row">
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label for="canceller">Cancelled by</label>
-                                <input type="text" class="form-control" value="{{ $memberRequest->canceller->name }}"
-                                       disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-7">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="notes">Reason for cancellation</label>
                                 <textarea name="notes" id="notes" rows="3" disabled
