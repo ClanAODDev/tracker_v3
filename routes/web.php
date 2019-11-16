@@ -266,8 +266,11 @@ Route::group(['prefix' => 'training'], function () {
 
 Route::group(['prefix' => 'help', 'middleware' => ['auth']], function () {
     Route::get('tickets', 'TicketController@index')->name('tickets.index');
-    Route::get('tickets/{showClosed?}', 'TicketController@index')->name('tickets.index');
     Route::get('tickets/{ticket}', 'TicketController@show')->name('tickets.show');
+    Route::get('tickets/{showClosed?}', 'TicketController@index')->name('tickets.index');
+    Route::post('tickets', 'TicketController@store')->name('tickets.store');
+    // assumes self assignment
+    Route::post('tickets/{ticket}/own', 'TicketController@ownTicket')->name('tickets.own');
 });
 
 

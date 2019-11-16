@@ -6,6 +6,8 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Ticket extends Resource
@@ -43,8 +45,16 @@ class Ticket extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Ticket Type', 'type_id'),
-            HasOne::make('Caller'),
+            BelongsTo::make('Caller', null, 'App\Nova\User')->searchable(),
+            BelongsTo::make('Type', null, 'App\Nova\TicketType'),
+            BelongsTo::make('Owner', null, 'App\Nova\User')->searchable(),
+            Textarea::make('Description')->alwaysShow(),
+            Select::make('State')->options([
+                'new' => 'New',
+                'assigned' => 'Assigned',
+                'resolved' => 'Resolved'
+            ]),
+
         ];
     }
 

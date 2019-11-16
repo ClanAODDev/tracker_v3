@@ -2,11 +2,14 @@
 
 namespace App;
 
+use App\Activities\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
+    use RecordsActivity;
+
     protected $guarded = [];
 
     protected $dates = [
@@ -54,8 +57,27 @@ class Ticket extends Model
         return $query->where('state', '!=', 'resolved');
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeClosed($query)
     {
         return $query->where('state', '=', 'resolved');
+    }
+
+    /**
+     * @param User $user
+     */
+    public function assignTo(User $user)
+    {
+        $this->owner()->associate($user->id);
+        $this->save();
+    }
+
+    public function ownTicketToMe()
+    {
+        $this->owner()->associate(auth()->id());
+        $this->save();
     }
 }

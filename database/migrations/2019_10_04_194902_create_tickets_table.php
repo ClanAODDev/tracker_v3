@@ -22,6 +22,7 @@ class CreateTicketsTable extends Migration
             $table->unsignedInteger('owner_id')->nullable();
             $table->unsignedInteger('division_id');
             $table->dateTime('resolved_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

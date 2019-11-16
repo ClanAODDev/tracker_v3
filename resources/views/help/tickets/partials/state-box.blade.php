@@ -1,9 +1,7 @@
-<div>
-    @if ($ticket->state == 'new')
-        <small class="label label-success">NEW</small>
-    @elseif ($ticket->state == 'assigned')
-        <small class="label label-warning">IN PROGRESS</small>
-    @else
-        <small class="label label-default">RESOLVED</small>
-    @endif
-</div>
+@if ($ticket->state == 'new')
+    <div class="slight text-success">NEW</div>
+@elseif ($ticket->state == 'assigned')
+    <div class="slight text-warning">IN PROGRESS</div>
+@else
+    <div class="slight text-default">RESOLVED</div>
+@endif

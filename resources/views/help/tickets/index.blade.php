@@ -19,7 +19,7 @@
 
     <div class="container-fluid">
 
-        <h3>TICKETS <span class="badge">{{ $tickets->count() }}</span></h3>
+        <h3>ADMIN TICKETS <span class="badge">{{ $tickets->count() }}</span></h3>
         <hr>
         <div class="panel">
             <div class="table-responsive">
@@ -27,16 +27,16 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th class="text-center">State</th>
+                        <th>Status</th>
                         <th>Type</th>
                         <th>Caller</th>
-                        <th>Division</th>
                         <th>Assigned To</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach ($tickets as $ticket)
-                        <tr >
+                        <tr>
                             <td>{{ $ticket->id }}</td>
                             <td class="text-center">
                                 @include('help.tickets.partials.state-box')
@@ -45,12 +45,27 @@
                                 {{ $ticket->type->name }}
                             </td>
                             <td>{{ $ticket->caller->name }}</td>
-                            <td>{{ $ticket->division->name }}</td>
                             @if($ticket->owner)
                                 <td class="text-accent">{{ $ticket->owner->name }}</td>
                             @else
                                 <td class="text-muted">--</td>
                             @endif
+
+                            <td>
+                                <form action="{{ route('tickets.own', $ticket) }}" class="btn-group clearfix"
+                                      method="post">
+
+                                    @if (auth()->user()->isRole(['admin']) && $ticket->owner_id != auth()->id())
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-default btn-sm"
+                                                @click="return toastr.confirm('Are you sure');">Own to me
+                                        </button>
+                                    @endif
+                                    <a href="{{ route('tickets.show', $ticket) }}"
+                                       class="btn btn-default btn-sm">View</a>
+                                </form>
+
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

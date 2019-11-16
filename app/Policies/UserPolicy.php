@@ -142,4 +142,9 @@ class UserPolicy
     {
         return $user->canTrainMembers();
     }
+
+    public function canAssignTickets(User $user)
+    {
+        return $user->isRole('admin');
+    }
 }

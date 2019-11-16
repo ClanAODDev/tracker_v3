@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Ticket;
+use App\User;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -51,7 +52,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        return $ticket;
+        return view('help.tickets.show', compact('ticket'));
     }
 
     /**
@@ -86,5 +87,22 @@ class TicketController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * @param User $user
+     * @param Ticket $ticket
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function ownTicket(Ticket $ticket)
+    {
+        $this->authorize('canAssignTickets', auth()->user());
+
+        $ticket->ownTicketToMe();
+
+        $this->showToast('Ticket has been assigned to you');
+
+        return redirect()->route('tickets.show', $ticket);
     }
 }

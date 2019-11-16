@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class TicketType extends Resource
@@ -50,8 +51,9 @@ class TicketType extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make('Name'),
-            Text::make('Slug'),
+            Text::make('Name')->rules(['required']),
+            Text::make('Slug')->rules(['required']),
+            Textarea::make('Description')->rules(['required']),
             HasMany::make('Ticket'),
         ];
     }
