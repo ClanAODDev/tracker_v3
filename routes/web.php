@@ -264,6 +264,11 @@ Route::group(['prefix' => 'training'], function () {
     Route::get('', 'TrainingController@index')->name('training.index');
 });
 
+Route::group(['prefix' => 'help', 'middleware' => ['auth']], function () {
+    Route::get('tickets', 'TicketController@index')->name('tickets.index');
+    Route::get('tickets/{ticket}', 'TicketController@show')->name('tickets.show');
+});
+
 
 /**
  * Admin / Member Request routes
