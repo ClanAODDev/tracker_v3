@@ -80,7 +80,10 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
+<<<<<<< HEAD
             'url' => env('DATABASE_URL'),
+=======
+>>>>>>> Default config files
             'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'forge'),
@@ -91,6 +94,7 @@ return [
             'prefix_indexes' => true,
         ],
 
+<<<<<<< HEAD
         'aod_forums' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -105,6 +109,8 @@ return [
             'engine' => null,
         ]
 
+=======
+>>>>>>> Default config files
     ],
 
     /*
@@ -153,6 +159,16 @@ return [
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
+<<<<<<< HEAD
+=======
+            'database' => env('REDIS_DB', 0),
+        ],
+
+        'cache' => [
+            'host' => env('REDIS_HOST', '127.0.0.1'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+>>>>>>> Default config files
             'database' => env('REDIS_CACHE_DB', 1),
         ],
 
