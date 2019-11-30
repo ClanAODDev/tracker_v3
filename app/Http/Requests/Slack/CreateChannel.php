@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Slack;
 
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use wrapi\slack\slack;
