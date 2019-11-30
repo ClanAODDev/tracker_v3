@@ -10,7 +10,7 @@
         @forelse ($activity as $event)
             <tr title="{{ $event->created_at }}">
                 <td>
-                    {{ $event->user->name or $event->user_id }}
+                    {{ $event->user->name ?? $event->user_id }}
                     {{ $event->name }}
                     <span class="badge">{{ $event->created_at->diffForHumans() }}</span>
                 </td>

@@ -21,7 +21,7 @@
             @elseif ($member->division_id == 0)
                 <span class="text-muted"><i class="fa fa-user-times"></i> Ex-AOD</span>
             @else
-                {{ $member->position->name or "No Position" }}
+                {{ $member->position->name ?? "No Position" }}
             @endif
         @endslot
     @endcomponent

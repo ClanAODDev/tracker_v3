@@ -16,7 +16,7 @@
     <div class="container-fluid" id="recruiting-container">
         <recruiting-process division="{{ $division->abbreviation }}"
                             :ranks="{{ \App\Rank::all()->pluck('abbreviation', 'id') }}"
-                            handle-name="{{ $division->handle->label or 'Ingame Name' }}"></recruiting-process>
+                            handle-name="{{ $division->handle->label ?? 'Ingame Name' }}"></recruiting-process>
     </div>
 @stop
 
