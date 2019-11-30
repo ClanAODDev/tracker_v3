@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\ClanForumAuthentication;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\EncryptCookies;
@@ -17,7 +18,6 @@ use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-        \App\Http\Middleware\CheckForMaintenanceMode::class,
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
 use Illuminate\Http\Middleware\SetCacheHeaders;

@@ -84,9 +84,10 @@ Route::group(['prefix' => 'help'], function () {
 Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
 Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recruiting.addMember');
 
+/** Disable for now
 Route::get('issues', 'IssuesController@index')->name('github.issues');
 Route::post('issues', 'IssuesController@create')->name('github.create-issue');
-
+**/
 Route::get('changelog', 'AppController@changelog')->name('changelog');
 
 /**
