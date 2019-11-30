@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Division;
 
+use Illuminate\Support\Str;
 use App\Activity;
 use App\Division;
 use App\Http\Controllers\Controller;
