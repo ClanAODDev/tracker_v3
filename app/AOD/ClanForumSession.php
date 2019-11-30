@@ -75,14 +75,14 @@ class ClanForumSession
     }
 
     /**
-     * @param $aod_sessionhash
+     * @param $aod_session
      * @return bool|null
      */
-    private function callStoredProcedure()
+    private function callStoredProcedure($aod_session)
     {
         try {
             $results = DB::connection('aod_forums')
-                ->select("CALL {$this->storedProcedure}('{$_COOKIE[$this->sessionKey]}')");
+                ->select("CALL {$this->storedProcedure}('{$aod_session}')");
 
             return array_key_exists(0, $results)
                 ? $results[0]
