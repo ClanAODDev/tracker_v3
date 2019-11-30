@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <h3>{{ $filter->name or "All Notes" }} ({{ count($notes) }})</h3>
+        <h3>{{ $filter->name ?? "All Notes" }} ({{ count($notes) }})</h3>
         <hr />
 
         <div class="row">
