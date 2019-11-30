@@ -14,7 +14,6 @@ use App\Slack\Command;
  */
 class SearchDiscord extends Base implements Command
 {
-
     private $members;
 
     private $content = [];

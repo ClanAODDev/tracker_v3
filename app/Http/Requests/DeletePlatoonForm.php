@@ -51,7 +51,6 @@ class DeletePlatoonForm extends FormRequest
     private function cleanUpSquads()
     {
         $this->platoon->squads->each(function ($squad) {
-
             $squad->members->each(function ($member) use ($squad) {
                 $member->squad()->dissociate()->save();
                 $squad->leader()->dissociate()->save();

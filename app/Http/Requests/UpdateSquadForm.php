@@ -57,7 +57,6 @@ class UpdateSquadForm extends FormRequest
      */
     public function persist()
     {
-
         if ($this->member_ids) {
             $this->assignMembersTo($this->squad);
         }

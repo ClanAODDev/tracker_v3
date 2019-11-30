@@ -6,7 +6,6 @@ use App\User;
 
 class UserSettings
 {
-
     use Settable;
 
     protected $user;

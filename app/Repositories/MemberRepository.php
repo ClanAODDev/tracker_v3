@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class MemberRepository
 {
-
     public function search($name)
     {
         return Member::where('name', 'LIKE', "%{$name}%")

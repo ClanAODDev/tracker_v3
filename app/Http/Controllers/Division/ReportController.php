@@ -189,7 +189,6 @@ class ReportController extends Controller
             ->filter(function ($census) use ($censuses) {
                 return ($census->notes);
             })->map(function ($census, $key) use ($censuses) {
-
                 return [
                     'x' => $key,
                     'y' => $censuses->values()->pluck('count'),
