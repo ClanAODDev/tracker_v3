@@ -5,9 +5,7 @@ namespace App\Providers;
 use App\Settings\UserSettings;
 use Auth;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
-use CL\Slack\Transport\ApiClient;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Dusk\DuskServiceProvider;
 use Schema;
 use wrapi\slack\slack;
 

@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Squad extends Model
 {
-
     use RecordsActivity;
     use SoftDeletes;
 

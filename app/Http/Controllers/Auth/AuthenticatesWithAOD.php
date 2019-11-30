@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 trait AuthenticatesWithAOD
 {
-
     public $email;
 
     public $clanId;
