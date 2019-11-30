@@ -14,7 +14,6 @@ use App\Slack\Command;
  */
 class SearchTeamspeak extends Base implements Command
 {
-
     private $members;
 
     private $content = [];

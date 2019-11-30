@@ -6,7 +6,6 @@ use App\Division;
 
 class DivisionSettings
 {
-
     use Settable;
 
     protected $division;

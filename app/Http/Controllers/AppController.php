@@ -7,7 +7,6 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
-use Mail;
 
 class AppController extends Controller
 {

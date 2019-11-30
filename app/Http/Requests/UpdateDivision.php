@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Tag;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateDivision extends FormRequest

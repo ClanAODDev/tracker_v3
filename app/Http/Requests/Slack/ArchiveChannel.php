@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests\Slack;
 
-use CL\Slack\Payload\ChannelsArchivePayload;
-use CL\Slack\Transport\ApiClient;
 use Illuminate\Foundation\Http\FormRequest;
 use wrapi\slack\slack;
 

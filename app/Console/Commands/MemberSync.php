@@ -8,7 +8,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 
 class MemberSync extends Command
 {
-
     use DispatchesJobs;
 
     /**

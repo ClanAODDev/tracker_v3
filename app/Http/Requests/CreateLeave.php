@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Leave;
 use App\Note;
-use App\Tag;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
