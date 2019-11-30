@@ -40,7 +40,7 @@
 
         <div class="panel panel-filled panel-c-warning">
             <div class="panel-heading">
-                <i class="fa fa-trash-o text-warning"></i> Unassign from {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}
+                <i class="fas fa-trash text-warning"></i> Unassign from {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}
             </div>
             <div class="panel-body">
                 <div class="mod-plt sortable-squad">
