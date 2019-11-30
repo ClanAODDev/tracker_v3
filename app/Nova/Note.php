@@ -16,7 +16,7 @@ class Note extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Note';
+    public static $model = \App\Note::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -47,7 +47,7 @@ class Note extends Resource
 
             BelongsTo::make('Member', 'member'),
 
-            BelongsTo::make('Author', 'author', 'App\Nova\User'),
+            BelongsTo::make('Author', 'author', \App\Nova\User::class),
 
             Select::make('type')->options([
                 'misc' => 'Misc',
