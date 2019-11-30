@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Division;
 
-use Illuminate\Support\Str;
 use App\Activity;
 use App\Division;
 use App\Http\Controllers\Controller;
@@ -11,6 +10,7 @@ use App\Repositories\MemberRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ReportController extends Controller

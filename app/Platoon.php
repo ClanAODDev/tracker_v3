@@ -10,8 +10,6 @@ use Illuminate\Support\Collection;
 
 class Platoon extends Model
 {
-    
-
     protected $fillable = [
         'name',
         'leader_id',
