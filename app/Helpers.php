@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Arr;
 use App\MemberRequest;
 use App\Settings\UserSettings;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Arr;
 
 function bytesToHuman($bytes)
 {
