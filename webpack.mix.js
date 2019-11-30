@@ -12,7 +12,7 @@ const {mix} = require('laravel-mix');
  */
 
 mix.scripts([
-    'resources/assets/js/app.js'
+    'resources/js/app.js'
 ], 'public/js');
 
 
