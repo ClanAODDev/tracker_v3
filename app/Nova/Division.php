@@ -18,7 +18,7 @@ class Division extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Division';
+    public static $model = \App\Division::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

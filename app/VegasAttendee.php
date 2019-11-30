@@ -37,6 +37,6 @@ class VegasAttendee extends Model
      */
     public function member()
     {
-        return $this->belongsTo('App\Member', 'member_id', 'clan_id');
+        return $this->belongsTo(\App\Member::class, 'member_id', 'clan_id');
     }
 }

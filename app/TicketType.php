@@ -8,6 +8,6 @@ class TicketType extends Model
 {
     public function ticket()
     {
-        return $this->hasMany('App\Ticket');
+        return $this->hasMany(\App\Ticket::class);
     }
 }
