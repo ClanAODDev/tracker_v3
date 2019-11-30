@@ -31,8 +31,8 @@
 --}}
 
 {{--
-{!! "<" . str_slug($division->name) . ">" !!}
+{!! "<" . Str::slug($division->name) . ">" !!}
 <h4>Loading report...</h4>
 If you are seeing this message, the division report either does not exist, or did not loaded properly.
-{!! "</" . str_slug($division->name) . ">" !!}
+{!! "</" . Str::slug($division->name) . ">" !!}
 --}}

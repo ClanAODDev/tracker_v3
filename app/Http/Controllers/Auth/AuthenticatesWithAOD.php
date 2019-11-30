@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Arr;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -32,7 +33,7 @@ trait AuthenticatesWithAOD
         }
 
         if (!empty($results)) {
-            $member = array_first($results);
+            $member = Arr::first($results);
 
             $this->setMemberAttributes($member);
 
