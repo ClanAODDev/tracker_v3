@@ -1,4 +1,4 @@
-<?php $file = camel_case($division->name); ?>
+<?php $file = Str::camel($division->name); ?>
 @if ($data && file_exists(resource_path("views/division/reports/ingame-reports/{$file}.blade.php")))
     @include("division.reports.ingame-reports.{$file}")
 @else

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Arr;
 use App\MemberRequest;
 use App\Settings\UserSettings;
 use Illuminate\Foundation\Application;
@@ -63,26 +64,26 @@ function doForumFunction(array $ids, $action)
     switch ($action) {
         case "email":
             $path = "https://www.clanaod.net/forums/sendmessage.php?";
-            $params = ['do' => 'mailmember', 'u' => array_first($ids)];
+            $params = ['do' => 'mailmember', 'u' => Arr::first($ids)];
             break;
         case "showThread":
             $path = "https://www.clanaod.net/forums/showthread.php?";
-            $params = ['t' => array_first($ids)];
+            $params = ['t' => Arr::first($ids)];
             break;
         case "forumProfile":
             $path = "https://www.clanaod.net/forums/member.php?";
-            $params = ['u' => array_first($ids)];
+            $params = ['u' => Arr::first($ids)];
             break;
         case "pm":
             $params = ['do' => 'newpm', 'u' => $ids];
             $path = "https://www.clanaod.net/forums/private.php?";
             break;
         case "createThread":
-            $params = ['do' => 'newthread', 'f' => array_first($ids)];
+            $params = ['do' => 'newthread', 'f' => Arr::first($ids)];
             $path = "https://www.clanaod.net/forums/newthread.php?";
             break;
         case "replyToThread":
-            $params = ['do' => 'postreply', 't' => array_first($ids)];
+            $params = ['do' => 'postreply', 't' => Arr::first($ids)];
             $path = "https://www.clanaod.net/forums/newreply.php?";
             break;
         default:
