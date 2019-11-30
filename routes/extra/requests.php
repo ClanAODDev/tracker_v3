@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Mail;
 
 Route::get('requests-count.png', function () {
     header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
