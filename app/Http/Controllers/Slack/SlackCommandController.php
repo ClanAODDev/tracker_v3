@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Slack;
 
-use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 use App\SlackSlashCommand;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SlackCommandController extends Controller
 {
