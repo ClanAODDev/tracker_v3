@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'member_id' => function () {
             return factory(\App\Member::class)->create()->clan_id;
         },
-        'remember_token' => str_random(10),
+        'remember_token' => Str::random(10),
     ];
 });
 

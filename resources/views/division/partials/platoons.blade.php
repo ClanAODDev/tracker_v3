@@ -1,5 +1,5 @@
 <h3 class="m-b-xs text-uppercase m-t-xxxl" id="platoons">
-    {{ str_plural($division->locality('platoon')) }}
+    {{ Str::plural($division->locality('platoon')) }}
 
     @can('create', [App\Platoon::class, $division])
         <a href="{{ route('createPlatoon', $division->abbreviation) }}"
@@ -49,7 +49,7 @@
             <div class="panel panel-filled panel-c-danger text-muted">
                 <div class="panel-body">
                     <h4 class="m-b-none text-uppercase">
-                        No {{ str_plural($division->locality('platoon')) }} Found
+                        No {{ Str::plural($division->locality('platoon')) }} Found
                     </h4>
                 </div>
             </div>

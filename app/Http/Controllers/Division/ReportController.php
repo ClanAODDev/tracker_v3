@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Division;
 
+use Illuminate\Support\Str;
 use App\Activity;
 use App\Division;
 use App\Http\Controllers\Controller;
@@ -86,7 +87,7 @@ class ReportController extends Controller
      */
     public function ingameReport(Division $division, $customAttr = null)
     {
-        $method = camel_case($division->name);
+        $method = Str::camel($division->name);
 
         if (method_exists($this, $method)) {
             $data = $this->$method($customAttr);
