@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class AddSlugToTagsTable extends Migration
 {
@@ -19,7 +20,7 @@ class AddSlugToTagsTable extends Migration
 
         // populate our tags with slugs
         foreach (App\Tag::all() as $tag) {
-            $tag->slug = str_slug($tag->name);
+            $tag->slug = Str::slug($tag->name);
             $tag->save();
         }
     }

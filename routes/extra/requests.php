@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Mail;
 
 Route::get('requests-count.png', function () {
     header('Content-Type: image/png');
@@ -81,4 +80,3 @@ Route::get('tickets-count.png', function () {
     imagepng($im);
     imagedestroy($im);
 });
-

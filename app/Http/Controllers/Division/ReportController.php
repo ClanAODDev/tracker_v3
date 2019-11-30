@@ -10,6 +10,7 @@ use App\Repositories\MemberRepository;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ReportController extends Controller
@@ -86,7 +87,7 @@ class ReportController extends Controller
      */
     public function ingameReport(Division $division, $customAttr = null)
     {
-        $method = camel_case($division->name);
+        $method = Str::camel($division->name);
 
         if (method_exists($this, $method)) {
             $data = $this->$method($customAttr);

@@ -34,7 +34,7 @@
                     <div class="panel-body">
                         <h4 class="m-b-none">
                             <span class="slight">{{ $loop->iteration }}. </span>
-                            {!! str_limit($member->present()->rankName, 15) !!}
+                            {!! Str::limit($member->present()->rankName, 15) !!}
                             <small class="slight text-muted">[{{ $member->clan_id }}]</small>
                             <small class="pull-right">{{ $member->division->name ?? "Ex-AOD" }}</small>
                         </h4>
