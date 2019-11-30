@@ -17,7 +17,6 @@ use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-
     use ThrottlesLogins, AuthenticatesWithAOD;
     /**
      * Where to redirect users after login / registration.

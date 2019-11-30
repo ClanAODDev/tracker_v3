@@ -22,7 +22,7 @@
                 </td>
                 <td>{{ $recruit->join_date }}</td>
                 <td>
-                    {{ $recruit->division->name or "Ex-AOD" }}
+                    {{ $recruit->division->name ?? "Ex-AOD" }}
                 </td>
             </tr>
         @endforeach

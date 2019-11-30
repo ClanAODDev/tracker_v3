@@ -13,7 +13,6 @@ use App\Slack\Command;
  */
 class Search extends Base implements Command
 {
-
     private $members;
 
     private $content = [];

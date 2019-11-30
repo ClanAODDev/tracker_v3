@@ -8,7 +8,6 @@ use App\Member;
 use App\Platoon;
 use App\Squad;
 use App\User;
-use Auth;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;

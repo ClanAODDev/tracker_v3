@@ -10,7 +10,6 @@ use Illuminate\Support\Collection;
 
 class Platoon extends Model
 {
-
     protected $dates = [
         'deleted_at'
     ];

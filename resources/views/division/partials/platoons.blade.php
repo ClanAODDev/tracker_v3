@@ -37,7 +37,7 @@
                     <div class="m-t-lg">
                         @foreach ($platoon->squads as $squad)
                             <div class="badge squad" data-squad-id="{{ $squad->id }}">
-                                {{ $squad->leader->name or "TBA" }}
+                                {{ $squad->leader->name ?? "TBA" }}
                             </div>
                         @endforeach
                     </div>

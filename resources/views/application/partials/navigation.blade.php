@@ -119,11 +119,12 @@
         Application
     </li>
 
-    @can('manage-issues', auth()->user())
-        <li class="{{ set_active('issues') }}">
-            <a href="{{ route('github.issues') }}">Issue Reports</a>
-        </li>
-    @endcan
+    {{-- disable for now --}}
+    {{--  @can('manage-issues', auth()->user())
+          <li class="{{ set_active('issues') }}">
+              <a href="{{ route('github.issues') }}">Issue Reports</a>
+          </li>
+      @endcan--}}
 
     <li class="{{ set_active('help') }}">
         <a href="{{ route('help') }}">Documentation</a>

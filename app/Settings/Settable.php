@@ -6,7 +6,6 @@ use Exception;
 
 trait Settable
 {
-
     protected $settings = [];
 
     /**

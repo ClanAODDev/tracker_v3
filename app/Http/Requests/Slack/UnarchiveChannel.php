@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Slack;
 
-use CL\Slack\Payload\ChannelsUnarchivePayload;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UnarchiveChannel extends FormRequest
