@@ -18,14 +18,6 @@ trait HasCustomAttributes
     }
 
     /**
-     * Accessor for name - enforce proper casing
-     */
-    public function getNameAttribute($value)
-    {
-        return ucfirst($value);
-    }
-
-    /**
      * @param $value
      * @return string
      */

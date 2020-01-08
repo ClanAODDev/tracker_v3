@@ -38,7 +38,7 @@ Route::get('requests-count.png', function () {
     imagettftext($im, 20, 0, $xRequests - 10, 25, $orange, $bigfont, $requestsCount);
 
     if ($errors > 0) {
-        imagettftext($im, 6, 0, $x - 50, 20, $red, $tinyfont, "({$errors} ERR)");
+        imagettftext($im, 6, 0, $xRequests - 50, 20, $red, $tinyfont, "({$errors} ERR)");
     }
 
     imagepng($im);
