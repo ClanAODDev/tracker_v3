@@ -25,6 +25,29 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>9 Feb 2019 - 3.9.0</h4>
+                <hr />
+                <ul>
+                    <li>Header display bug fixed (where certain items were uppercase)</li>
+                    <li>Added ability to filter by toggle-able columns, like member handle. Affects division members, platoon, squad views</li>
+                    <li>Starting work on ticketing system</li>
+                    <li>Discord notification updates for continuity</li>
+                    <li>Misc bug fixes, fatal error issues, visual weirdness</li>
+                    <li>Admin reports for account access</li>
+                    <li>Leave of absence information added to member profile</li>
+                    <li>Consolidate policies governing division structure management</li>
+                    <li>Dropped recruitment task validation (encoding errors prevented users from proceeding)</li>
+                    <li>Support squad logos</li>
+                    <li>Provision docker environment for application, dev</li>
+                    <li>Ensure only senior leaders can view notes marked Sr Ldr, ensure members cannot view their own notes</li>
+                    <li>Support discord tag in member sync</li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>6 Jan 2019 - 3.8.0</h4>
                 <hr />
                 <ul>
