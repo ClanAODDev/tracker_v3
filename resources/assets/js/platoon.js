@@ -169,7 +169,7 @@ let Platoon = Platoon || {};
           columnDefs: [{
             targets: 'no-search', searchable: false
           }, {
-            targets: 'col-hidden', visible: false, searchable: false
+            targets: 'col-hidden', visible: false
           }, {
             // sort rank by rank id
             'iDataSort': 0, 'aTargets': [3]
