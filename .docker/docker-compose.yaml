@@ -2,8 +2,8 @@ networks:
   backend:
     driver: bridge
 services:
-  core_services:
-    container_name: core
+  core_services_tracker:
+    container_name: core_tracker
     image: creativitykills/nginx-php-server
     networks:
       backend: null
@@ -11,8 +11,8 @@ services:
     - 44678:80/tcp
     volumes:
     - /Users/dcdeaton/projects/tracker_v3:/var/www:rw
-  mysql:
-    container_name: db_mysql
+  mysql_tracker:
+    container_name: db_mysql_tracker
     environment:
       MYSQL_ROOT_PASSWORD: secret
     image: mysql:5.7
