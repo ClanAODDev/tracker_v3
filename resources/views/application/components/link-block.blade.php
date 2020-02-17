@@ -1,4 +1,4 @@
-<div class="col-md-4 col-xs-12">
+<div class="col-md-3 col-xs-12">
     <a href="{{ $link }}" class="panel panel-filled {{ $color or null }} panel-c-success">
         <div class="panel-body">
             <span class="pull-right"><i class="fa fa-link"></i></span>
