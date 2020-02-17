@@ -1,4 +1,4 @@
-<div class="col-md-3 col-xs-12">
+<div class="col-lg-3 col-md-4 col-xs-12">
     <div class="panel panel-filled {{ $color or null }}">
         <div class="panel-body">
             <h4 class="m-b-sm text-uppercase">
