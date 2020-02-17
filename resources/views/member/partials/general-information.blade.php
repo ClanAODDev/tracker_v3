@@ -1,5 +1,5 @@
 <h4>General Info</h4>
-<hr />
+<hr/>
 
 <div class="row">
 
@@ -41,9 +41,17 @@
         @slot('title') Last <span class="c-white">promotion date</span> @endslot
     @endcomponent
 
+    @if ($member->discord)
+        @component('application.components.data-block')
+            @slot('data') {{ $member->discord }} @endslot
+            @slot('title') Discord <span class="c-white">Tag</span> @endslot
+        @endcomponent
+    @endif
+
     @component('application.components.link-block')
         @slot('link')
-            https://www.clanaod.net/forums/search.php?do=finduser&amp;userid={{ $member->clan_id }}&amp;contenttype=vBForum_Post&amp;showposts=1
+            https://www.clanaod.net/forums/search.php?do=finduser&amp;userid={{ $member->clan_id }}&amp;
+            contenttype=vBForum_Post&amp;showposts=1
         @endslot
         @slot('data') {{ $member->posts }} @endslot
         @slot('title') forum <span class="c-white">post count</span> @endslot
@@ -60,7 +68,7 @@
 
 @if ($member->rank_id >= 9)
     <h4>Leadership Info</h4>
-    <hr />
+    <hr/>
 
     <div class="row">
         @component('application.components.data-block')
