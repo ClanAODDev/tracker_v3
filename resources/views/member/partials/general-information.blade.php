@@ -42,7 +42,7 @@
     @endcomponent
 
     @if ($member->discord)
-        @component('application.components.data-block')
+        @component('application.components.data-block', ['isUppercase' => false])
             @slot('data'){!! $member->discord !!}@endslot
             @slot('title') Discord <span class="c-white">Tag</span> @endslot
         @endcomponent
