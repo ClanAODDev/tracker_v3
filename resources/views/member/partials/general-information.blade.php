@@ -43,7 +43,7 @@
 
     @if ($member->discord)
         @component('application.components.data-block')
-            @slot('data') <span class="copy-to-clipboard">{{ $member->discord }}</span> @endslot
+            @slot('data'){!! $member->discord !!}@endslot
             @slot('title') Discord <span class="c-white">Tag</span> @endslot
         @endcomponent
     @endif
