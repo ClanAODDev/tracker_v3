@@ -31,15 +31,16 @@
                     @else
                         <td>
                             <a class="btn btn-info btn-block" target="_blank"
-                               href="{{ $request->approvePath . $request->name }}"><i class="fa fa-user-plus"></i>
-                                REPROCESS</a>
+                               href="{{ $request->approvePath . $request->name }}">
+                                <small><i class="fa fa-user-plus"></i> REPROCESS</small>
+                            </a>
                         </td>
                         <td>
                             <form action="{{ route('admin.member-request.requeue', $request) }}"
                                   method="post">
                                 {{ csrf_field() }}
                                 <button class="btn btn-warning btn-block" type="submit">
-                                    <i class="fa fa-refresh"></i> REQUEUE
+                                    <small><i class="fa fa-refresh"></i> REQUEUE</small>
                                 </button>
                             </form>
                         </td>
