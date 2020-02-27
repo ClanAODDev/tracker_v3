@@ -109,7 +109,9 @@ class MemberRequest extends Model
      */
     public function scopeErrors($query)
     {
-        return $query->where('approved_at', '<=', now()->subHour(4));
+        return $query
+            ->where('approved_at', '<=', now()->subHour(4))
+            ->where('processed_at', null);
     }
 
     /**
@@ -155,5 +157,13 @@ class MemberRequest extends Model
     public function canceller()
     {
         return $this->belongsTo(Member::class, 'canceller_id', 'clan_id');
+    }
+
+    /**
+     * mark a request processed
+     */
+    public function process()
+    {
+        $this->update(['processed_at', now()]);
     }
 }
