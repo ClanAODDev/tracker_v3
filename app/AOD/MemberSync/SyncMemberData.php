@@ -32,7 +32,7 @@ class SyncMemberData
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
 
-        self::cleanUpMemberRequests();
+        self::processMemberRequests();
 
         if (!count($syncData)) {
             Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
@@ -178,12 +178,12 @@ class SyncMemberData
     /**
      * Purge pending requests for active members
      */
-    private static function cleanUpMemberRequests()
+    private static function processMemberRequests()
     {
-        $requestsToPrune = MemberRequest::approved()
+        $requestsToProcess = MemberRequest::approved()
             ->whereIn('member_id', self::$activeClanMembers)
             ->get();
 
-        $requestsToPrune->each->delete();
+        $requestsToPrune->each->process();
     }
 }
