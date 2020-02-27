@@ -38,7 +38,7 @@ class MemberRequestController extends Controller
 
         $approved = MemberRequest::approved()
             ->with('member', 'member.rank', 'approver', 'division')
-            ->orderByDe('approved_at', 'desc')
+            ->orderBy('approved_at', 'desc')
             ->get();
 
         return view('admin.member-requests', compact('pending', 'approved'));
