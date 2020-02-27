@@ -58,6 +58,22 @@ class DivisionStructureController extends Controller
                 return ordSuffix($value);
             }));
 
+
+            $env->addFunction(new Twig_SimpleFunction('replaceRegex', function ($str, $search, $replace = null) {
+                // Are they using the standard Twig syntax?
+                if (is_array($search) && $replace === null) {
+                    return strtr($str, $search);
+                } else {
+                    // Is this a regular expression?
+                    if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
+                        return preg_replace($search, $replace, $str);
+                    } else {
+                        // Otherwise use str_replace
+                        return str_replace($search, $replace, $str);
+                    }
+                }
+            }));
+
             $data = $env->render('structure', ['division' => $compiledData]);
         } catch (Twig_Error $error) {
             $data = $this->handleTwigError($error);
