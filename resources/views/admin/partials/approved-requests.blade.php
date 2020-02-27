@@ -1,7 +1,5 @@
 @if ($approved->count())
     <h4 class="m-t-xl">APPROVED REQUESTS</h4>
-    <p>Approved requests will remain here until the forum member sync occurs. Requests for members with active AOD
-        Member status will automatically be pruned.</p>
     <hr/>
     <div class="panel panel-filled">
         <table class="table">
@@ -28,7 +26,9 @@
                     </td>
 
                     @if ($request->processed_at)
-                        <td colspan="2" class="text-success">PROCESSED</td>
+                        <td colspan="2" class="text-center">
+                            <small class="text-success ">PROCESSED INTO AOD</small>
+                        </td>
                     @else
                         <td>
                             <a class="btn btn-info btn-block" target="_blank"
