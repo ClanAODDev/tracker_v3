@@ -61,6 +61,11 @@ class MemberPolicy
         return false;
     }
 
+    public function reset(User $user)
+    {
+        return false;
+    }
+
     public function view()
     {
         return true;
