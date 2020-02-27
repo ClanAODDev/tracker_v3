@@ -12,7 +12,7 @@ class MemberRequest extends Model
 
     protected $guarded = [];
 
-    protected $dates = ['approved_at', 'denied_at', 'cancelled_at', 'processed_at'];
+    protected $dates = ['approved_at', 'cancelled_at', 'processed_at'];
 
     /**
      * @return BelongsTo
@@ -164,6 +164,6 @@ class MemberRequest extends Model
      */
     public function process()
     {
-        $this->update(['processed_at', now()]);
+        $this->update(['processed_at' => now()]);
     }
 }
