@@ -314,7 +314,7 @@ class MemberController extends Controller
 
     public function confirmUnassign($member)
     {
-        $this->authorize('update', $member);
+        $this->authorize('reset', $member);
 
         $division = $member->division;
 
