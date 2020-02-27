@@ -184,6 +184,6 @@ class SyncMemberData
             ->whereIn('member_id', self::$activeClanMembers)
             ->get();
 
-        $requestsToPrune->each->process();
+        $requestsToProcess->each->process();
     }
 }
