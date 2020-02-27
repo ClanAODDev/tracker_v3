@@ -1,7 +1,8 @@
 @if ($approved->count())
     <h4 class="m-t-xl">APPROVED REQUESTS</h4>
-    <p>Approved requests will remain here until the forum member sync occurs. Requests for members with active AOD Member status will automatically be pruned.</p>
-    <hr />
+    <p>Approved requests will remain here until the forum member sync occurs. Requests for members with active AOD
+        Member status will automatically be pruned.</p>
+    <hr/>
     <div class="panel panel-filled">
         <table class="table">
             <thead>
@@ -25,19 +26,24 @@
                     <td class="text-center {{ $request->approved_at <= now()->subHour(3) ? 'text-danger' : 'null' }}">
                         {{ $request->approved_at }}
                     </td>
-                    <td>
-                        <a class="btn btn-info btn-block" target="_blank"
-                           href="{{ $request->approvePath . $request->name }}"><i class="fa fa-user-plus"></i></a>
-                    </td>
-                    <td>
-                        <form action="{{ route('admin.member-request.requeue', $request) }}"
-                              method="post">
-                            {{ csrf_field() }}
-                            <button class="btn btn-warning btn-block" type="submit">
-                                <i class="fa fa-refresh"></i>
-                            </button>
-                        </form>
-                    </td>
+
+                    @if ($request->processed_at)
+                        <td colspan="2" class="text-success">PROCESSED</td>
+                    @else
+                        <td>
+                            <a class="btn btn-info btn-block" target="_blank"
+                               href="{{ $request->approvePath . $request->name }}"><i class="fa fa-user-plus"></i></a>
+                        </td>
+                        <td>
+                            <form action="{{ route('admin.member-request.requeue', $request) }}"
+                                  method="post">
+                                {{ csrf_field() }}
+                                <button class="btn btn-warning btn-block" type="submit">
+                                    <i class="fa fa-refresh"></i>
+                                </button>
+                            </form>
+                        </td>
+                    @endif
                 </tr>
             @endforeach
             </tbody>
