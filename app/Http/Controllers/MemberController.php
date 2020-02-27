@@ -314,6 +314,8 @@ class MemberController extends Controller
 
     public function confirmUnassign($member)
     {
+        $this->authorize('update', $member);
+        
         $division = $member->division;
 
         return view('member.confirm-unassign', compact('member', 'division'));
