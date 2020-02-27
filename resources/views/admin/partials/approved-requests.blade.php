@@ -1,7 +1,7 @@
 @if ($approved->count())
     <h4 class="m-t-xl">APPROVED REQUESTS</h4>
     <hr/>
-    <div class="panel panel-filled">
+    <div class="panel panel-filled basic-datatable">
         <table class="table">
             <thead>
             <tr>
@@ -27,7 +27,7 @@
 
                     @if ($request->processed_at)
                         <td colspan="2" class="text-center">
-                            <small class="text-success ">PROCESSED INTO AOD</small>
+                            <small class="text-success ">-- PROCESSED INTO AOD --</small>
                         </td>
                     @else
                         <td>
