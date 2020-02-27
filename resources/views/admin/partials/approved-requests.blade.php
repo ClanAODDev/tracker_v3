@@ -21,7 +21,7 @@
                     </td>
                     <td>{{ $request->approver->name }}</td>
                     <td>{{ $request->division->name }}</td>
-                    <td class="text-center {{ $request->approved_at <= now()->subHour(3) ? 'text-danger' : 'null' }}">
+                    <td class="text-center {{ $request->approved_at <= now()->subHour(3) && !$request->processed_at ? 'text-danger' : 'null' }}">
                         {{ $request->approved_at }}
                     </td>
 
