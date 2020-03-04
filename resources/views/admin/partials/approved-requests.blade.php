@@ -1,5 +1,5 @@
 @if ($approved->count())
-    <h4 class="m-t-xl">APPROVED REQUESTS</h4>
+    <h4 class="m-t-xl">RECENTLY APPROVED</h4>
     <hr/>
     <div class="panel panel-filled basic-datatable">
         <table class="table">

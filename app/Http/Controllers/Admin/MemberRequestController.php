@@ -39,6 +39,7 @@ class MemberRequestController extends Controller
         $approved = MemberRequest::approved()
             ->with('member', 'member.rank', 'approver', 'division')
             ->orderBy('approved_at', 'desc')
+            ->where('approved_at', '>=', now()->subHours(24))
             ->get();
 
         return view('admin.member-requests', compact('pending', 'approved'));
