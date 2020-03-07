@@ -24,16 +24,14 @@
                         {{ $request->approved_at }}
                     </td>
 
-                    @if ($request->processed_at)
-                        <td class="text-center"><small>--</small></td>
-                    @else
+                    @unless($request->processed_at)
                         <td>
                             <a class="btn btn-info btn-block"
                                href="{{ route('admin.member-requests.reprocess', $request->id) }}">
                                 <small>REPROCESS <i class="fa fa-arrow-right"></i></small>
                             </a>
                         </td>
-                    @endif
+                    @endunless
                 </tr>
             @endforeach
             </tbody>
