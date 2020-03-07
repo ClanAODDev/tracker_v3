@@ -80,13 +80,19 @@ class MemberRequestPolicy
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     public function update()
     {
-        return true;
+        return auth()->user()->isDeveloper();
     }
 
+    /**
+     * @return mixed
+     */
     public function delete()
     {
-        return true;
+        return auth()->user()->isDeveloper();
     }
 }
