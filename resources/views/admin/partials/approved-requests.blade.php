@@ -10,7 +10,6 @@
                 <th>Division</th>
                 <th class="text-center">Approved at</th>
                 <th class="text-center col-xs-2"></th>
-                <th class="text-center col-xs-2"></th>
             </tr>
             </thead>
             <tbody>
@@ -27,22 +26,12 @@
 
                     @if ($request->processed_at)
                         <td class="text-center"><small>--</small></td>
-                        <td class="text-center"><small>--</small></td>
                     @else
                         <td>
-                            <a class="btn btn-info btn-block" target="_blank"
-                               href="{{ $request->approvePath . $request->name }}">
-                                <small><i class="fa fa-user-plus"></i> REPROCESS</small>
+                            <a class="btn btn-info btn-block"
+                               href="{{ route('admin.member-requests.reprocess', $request->id) }}">
+                                <small>REPROCESS <i class="fa fa-arrow-right"></i></small>
                             </a>
-                        </td>
-                        <td>
-                            <form action="{{ route('admin.member-request.requeue', $request) }}"
-                                  method="post">
-                                {{ csrf_field() }}
-                                <button class="btn btn-warning btn-block" type="submit">
-                                    <small><i class="fa fa-refresh"></i> REQUEUE</small>
-                                </button>
-                            </form>
                         </td>
                     @endif
                 </tr>
