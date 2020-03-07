@@ -275,6 +275,10 @@ Route::group(['prefix' => 'help', 'middleware' => ['auth']], function () {
  */
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
+    Route::get('/member-requests/{requestId}/reprocess', 'Admin\MemberRequestController@reprocess')
+        ->name('admin.member-requests.reprocess');
+    Route::post('/member-requests/{requestId}/reprocess', 'Admin\MemberRequestController@reprocess')
+        ->name('admin.member-requests.reprocess-confirm');
     Route::post(
         'member-requests/{requestId}/approve',
         'Admin\MemberRequestController@approve'

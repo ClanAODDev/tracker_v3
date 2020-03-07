@@ -45,6 +45,34 @@ class MemberRequestController extends Controller
         return view('admin.member-requests', compact('pending', 'approved'));
     }
 
+    /**
+     * @param $requestId
+     * @return Factory|RedirectResponse|Redirector|View
+     */
+    public function reprocess($requestId)
+    {
+        $request = MemberRequest::find($requestId)
+            ->with('member', 'member.rank', 'approver', 'division')
+            ->first();
+
+        if (request()->isMethod('post')) {
+            $request->update([
+                'approved_at' => now(),
+                'approver_id' => auth()->user()->member->clan_id
+            ]);
+
+            $this->showToast('Request updated!');
+
+            return redirect(route('admin.member-request.index'));
+        }
+
+        return view('admin.reprocess-request', compact(
+            'pending',
+            'approved',
+            'request'
+        ));
+    }
+
     public function approve($requestId)
     {
         $this->authorize('manage', MemberRequest::class);
@@ -79,22 +107,6 @@ class MemberRequestController extends Controller
         }
 
         return $request;
-    }
-
-    /**
-     * @param MemberRequest $memberRequest
-     * @return RedirectResponse|Redirector
-     */
-    public function requeue(MemberRequest $memberRequest)
-    {
-        $memberRequest->update([
-            'approved_at' => null,
-            'approver_id' => null,
-        ]);
-
-        $this->showToast('Request returned to pending. Cancel as appropriate.');
-
-        return redirect(route('admin.member-request.index'));
     }
 
     /**
