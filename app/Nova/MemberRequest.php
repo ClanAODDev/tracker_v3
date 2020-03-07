@@ -2,14 +2,11 @@
 
 namespace App\Nova;
 
-use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class MemberRequest extends Resource
 {
