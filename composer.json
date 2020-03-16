@@ -35,7 +35,8 @@
         "appstract/laravel-blade-directives": "^0.4.5",
         "sentry/sentry-laravel": "^0.9.1",
         "fideloper/proxy": "~4.0",
-        "laravel/nova": "~1.0"
+        "laravel/nova": "~1.0",
+        "google/apiclient": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
