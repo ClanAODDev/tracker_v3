@@ -35,4 +35,13 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'twitch' => [
+        'client_id' => env('TWITCH_CLIENT_ID'),
+        'secret' => env('TWITCH_SECRET'),
+    ],
+
+    'google' => [
+        'apiKey' => env('GOOGLE_API_KEY')
+    ],
+
 ];
