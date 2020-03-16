@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\v1;
 use App\Services\AOD;
 use DateTimeInterface;
 use Google_Client;
+use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Illuminate\Http\JsonResponse;
 
@@ -43,7 +44,10 @@ class ClanController extends ApiController
         ]);
     }
 
-    public function eventStream()
+    /**
+     * @return JsonResponse
+     */
+    public function streamEvents()
     {
         $client = new Google_Client();
         $client->setApplicationName("AOD Stream Calendar");
