@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Services\AOD;
-use DateTimeInterface;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
@@ -11,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 
 class ClanController extends ApiController
 {
+
+    const RFC3339 = "Y-m-d\TH:i:sP";
 
     /**
      * ClanController constructor.
@@ -57,8 +58,8 @@ class ClanController extends ApiController
 
         $eventStream = $service->events
             ->listEvents(config('app.aod.stream_calendar'), [
-                'timeMin' => now()->format(DateTimeInterface::RFC3339),
-                'timeMax' => now()->addDays(7)->format(DateTimeInterface::RFC3339),
+                'timeMin' => now()->format(self::RFC3339),
+                'timeMax' => now()->addDays(7)->format(self::RFC3339),
                 'singleEvents' => true,
                 'orderBy' => 'startTime'
             ]);
@@ -68,8 +69,8 @@ class ClanController extends ApiController
             /** @var Google_Service_Calendar_Event $event */
             foreach ($eventStream->getItems() as $event) {
                 if ($event->summary || $event->description) {
-                    $start = Carbon::parse($event->start->dateTime ?? $event->start->date);
-                    $end = Carbon::parse($event->end->dateTime ?? $event->end->date);
+                    $start = \Carbon::parse($event->start->dateTime ?? $event->start->date);
+                    $end = \Carbon::parse($event->end->dateTime ?? $event->end->date);
                     $events[] = [
                         "event" => $event->summary ?? $event->description,
                         "time" => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
