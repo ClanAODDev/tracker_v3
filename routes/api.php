@@ -12,13 +12,10 @@ Route::group(
 
     ],
     function () {
-        // Basic information on divisions
         Route::get('divisions', 'API\v1\DivisionController@index');
-
-        // Basic information about a specific division
         Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show');
-
         Route::get('ts-count', 'API\v1\ClanController@teamspeakPopulationCount');
         Route::get('discord-count', 'API\v1\ClanController@discordPopulationCount');
+        Route::get('stream-events', 'API\v1\ClanController@streamEvents');
     }
 );
