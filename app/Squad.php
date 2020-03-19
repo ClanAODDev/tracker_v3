@@ -12,7 +12,6 @@ class Squad extends Model
 {
 
     use RecordsActivity;
-    use SoftDeletes;
 
     protected static $recordEvents = [
         'created',
