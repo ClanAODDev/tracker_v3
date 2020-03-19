@@ -27,7 +27,6 @@ class Platoon extends Model
     ];
 
     use RecordsActivity;
-    use SoftDeletes;
 
     /**
      * relationship - platoon belongs to a division
