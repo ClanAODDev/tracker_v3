@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Panel;
 
@@ -57,7 +58,11 @@ class Division extends Resource
             Text::make('Abbreviation')
                 ->help('Should match Clan AOD abbreviation'),
 
-            BelongsTo::make('Handle'),
+            Number::make('officer_role_id')
+                ->help('Id assigned by the AOD Forums for the division officers group'),
+
+            BelongsTo::make('Handle')
+                ->help("If a handle doesn't exist, create it first"),
 
             Date::make('Created At')->sortable(),
 
