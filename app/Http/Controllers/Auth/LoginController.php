@@ -225,6 +225,12 @@ class LoginController extends Controller
             die('Not authorized. Error 49');
         }
 
+        // are they a regular member?
+        if (array_intersect($roles, ['AOD Member', 50]) && 2 == count($roles)) {
+            auth()->user()->assignRole('member');
+            return;
+        }
+
         // are they an admin?
         if (array_intersect($roles, ['Administrators', 6])) {
             auth()->user()->assignRole('admin');
