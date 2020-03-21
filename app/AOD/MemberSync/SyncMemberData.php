@@ -22,7 +22,7 @@ class SyncMemberData
      * Performs update operation on divisions and members and also
      * syncs division membership (adds, removes)
      */
-    public static function execute()
+    public static function execute($verbose = false)
     {
         $divisionInfo = new GetDivisionInfo();
 
@@ -35,14 +35,16 @@ class SyncMemberData
         self::processMemberRequests();
 
         if (!count($syncData)) {
-            Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
+            \Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
             exit;
         }
 
         foreach (Division::active()->get() as $division) {
             if ($syncData->keys()->contains(strtolower($division->name))) {
                 // log activity
-                Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - syncing {$division->name}");
+                if ($verbose) {
+                    \Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - syncing {$division->name}");
+                }
 
                 // reset array
                 self::$activeDivisionMembers = [];
@@ -55,7 +57,9 @@ class SyncMemberData
                     self::doMemberUpdate($member, $division);
                 }
 
-                echo "{$division->name} members synced" . PHP_EOL;
+                if ($verbose) {
+                    echo "{$division->name} members synced" . PHP_EOL;
+                }
 
                 // trash removed members
                 self::doRemovalCleanup();
@@ -144,6 +148,7 @@ class SyncMemberData
 
             // did they transfer to another division?
             if (self::$activeClanMembers->contains($member->clan_id)) {
+                \Log::info("Member transfer: {$member->name}");
                 self::hardResetMember($member);
             } else {
                 if ($member instanceof Member && !$member->memberRequest) {
