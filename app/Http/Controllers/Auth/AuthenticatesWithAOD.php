@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\UserGroup;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -52,9 +53,9 @@ trait AuthenticatesWithAOD
 
         $this->email = $member->email;
 
-        $this->roles = array_merge(
+        $this->roles = UserGroup::whereIn('id', array_merge(
             array_map('intval', explode(',', $member->membergroupids)),
             [$member->usergroupid]
-        );
+        ))->get();
     }
 }
