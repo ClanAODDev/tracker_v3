@@ -136,6 +136,12 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
+        if ($this->roles && auth()->user()->isRole(['admin'])) {
+            dd($this->roles);
+        }
+
+        $this->handleAccountRoles();
+
         return $this->authenticated($request, $this->guard()->user())
             ?: redirect()->intended($this->redirectPath());
     }
@@ -208,5 +214,10 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         return redirect('/');
+    }
+
+    private function handleAccountRoles()
+    {
+
     }
 }
