@@ -5,7 +5,7 @@
             <h5 class="m-b-none">
                 {!! $member->present()->rankName !!}
             </h5>
-            <small class="slight">{{ $member->division->name or "Ex-AOD" }} [{{ $member->clan_id }}]</small>
+            <small class="slight">{{ $member->division->name ?? "Ex-AOD" }} [{{ $member->clan_id }}]</small>
         </div>
     </a>
 @empty

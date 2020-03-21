@@ -15,7 +15,7 @@
             {!! $member->present()->rankName !!}
         @endslot
         @slot ('subheading')
-            {{ $member->position->name or "No Position" }}
+            {{ $member->position->name ?? "No Position" }}
         @endslot
     @endcomponent
 

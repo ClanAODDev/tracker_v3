@@ -2,11 +2,10 @@
 
 namespace App\Nova;
 
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Ticket extends Resource
 {
@@ -15,7 +14,7 @@ class Ticket extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Ticket';
+    public static $model = \App\Ticket::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

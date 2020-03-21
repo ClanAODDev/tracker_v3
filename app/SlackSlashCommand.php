@@ -2,6 +2,10 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
+
+use Illuminate\Support\Str;
+
 class SlackSlashCommand
 {
     /**
@@ -14,7 +18,7 @@ class SlackSlashCommand
      */
     public static function handle($command, array $data)
     {
-        $command = sprintf('App\Slack\Commands\%s', studly_case($command));
+        $command = sprintf('App\Slack\Commands\%s', Str::studly($command));
 
         if (class_exists($command)) {
             $command = new $command($data);

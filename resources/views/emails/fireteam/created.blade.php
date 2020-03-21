@@ -1,6 +1,6 @@
 @component('mail::message')
 
-You recently created a **{{ ucwords($fireteam->type) }}** Fireteam with {{ $fireteam->players_needed }} {{ str_plural('spot', $fireteam->players_needed) }}! You, as well as all of your fireteam members, will be notified once all available slots are filled. To return to the Fireteam page, or to manage your fireteam, use the button below.
+You recently created a **{{ ucwords($fireteam->type) }}** Fireteam with {{ $fireteam->players_needed }} {{ Str::plural('spot', $fireteam->players_needed) }}! You, as well as all of your fireteam members, will be notified once all available slots are filled. To return to the Fireteam page, or to manage your fireteam, use the button below.
 
 Here are a few tips for ensuring your fireteam goes off without a hitch!
 

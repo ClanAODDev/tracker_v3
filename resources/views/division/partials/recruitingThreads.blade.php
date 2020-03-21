@@ -15,7 +15,7 @@
 
             <td class="col-xs-2">
                 <button type="button" data-repeater-delete class="btn btn-danger">
-                    <i class="fa fa-trash-o fa-lg"></i></button>
+                    <i class="fas fa-trash fa-lg"></i></button>
             </td>
         </tr>
 

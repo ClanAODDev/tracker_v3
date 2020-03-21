@@ -39,7 +39,7 @@
                             <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
                         @endif
                     </td>
-                    <td>{{ $member->squad->name or "Untitled" }}</td>
+                    <td>{{ $member->squad->name ?? "Untitled" }}</td>
                     <td>
                         <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank"
                            class="btn btn-default btn-sm">Forum PM</a>

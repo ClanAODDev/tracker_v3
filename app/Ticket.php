@@ -18,7 +18,7 @@ class Ticket extends Model
      */
     public function type()
     {
-        return $this->belongsTo('App\TicketType');
+        return $this->belongsTo(\App\TicketType::class);
     }
 
     /**
@@ -26,7 +26,7 @@ class Ticket extends Model
      */
     public function caller()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(\App\User::class);
     }
 
     /**
@@ -34,7 +34,7 @@ class Ticket extends Model
      */
     public function owner()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(\App\User::class);
     }
 
     /**

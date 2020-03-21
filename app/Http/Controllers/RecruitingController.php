@@ -24,7 +24,6 @@ use Illuminate\View\View;
  */
 class RecruitingController extends Controller
 {
-
     use AuthorizesRequests;
 
     /**

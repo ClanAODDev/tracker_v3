@@ -20,7 +20,7 @@
         {!! Breadcrumbs::render('platoon', $division, $platoon) !!}
 
         <h4>Manage {{ $division->locality('Squad') }} Assignments</h4>
-        <p>Drag members between {{ str_plural($division->locality('squad')) }} to assign them. Only {{ $division->locality('Squad') }} members will be shown; squad leaders cannot be reassigned from this view.</p>
+        <p>Drag members between {{ Str::plural($division->locality('squad')) }} to assign them. Only {{ $division->locality('Squad') }} members will be shown; squad leaders cannot be reassigned from this view.</p>
         {{-- <p>If you wish to reassign an entire {{ $division->locality('Squad') }} to a new platoon, you can perform that function from the
              <code>Edit {{ $division->locality('Squad') }}</code> view. </p>
  --}}
@@ -35,12 +35,12 @@
         <hr />
 
         <p class="alert alert-warning"><i
-                    class="fa fa-exclamation-circle"></i> You can rearrange {{ str_plural($division->locality('squad')) }} to more easily move members between them. To do so, click and drag the {{ $division->locality('squad') }} name.
+                    class="fa fa-exclamation-circle"></i> You can rearrange {{ Str::plural($division->locality('squad')) }} to more easily move members between them. To do so, click and drag the {{ $division->locality('squad') }} name.
         </p>
 
         <div class="panel panel-filled panel-c-warning">
             <div class="panel-heading">
-                <i class="fa fa-trash-o text-warning"></i> Unassign from {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}
+                <i class="fas fa-trash text-warning"></i> Unassign from {{ $division->locality('platoon') }} and {{ $division->locality('squad') }}
             </div>
             <div class="panel-body">
                 <div class="mod-plt sortable-squad">

@@ -11,7 +11,6 @@ class DivisionSeeder extends Seeder
      */
     public function run()
     {
-        
         $defaultSettings = [
             'slack_alert_created_member' => false,
             'slack_alert_removed_member' => false,

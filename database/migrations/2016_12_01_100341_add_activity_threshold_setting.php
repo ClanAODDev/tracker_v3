@@ -1,8 +1,6 @@
 <?php
 
 use App\Division;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class AddActivityThresholdSetting extends Migration

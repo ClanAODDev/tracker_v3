@@ -21,7 +21,7 @@ class Member extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Member';
+    public static $model = \App\Member::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
