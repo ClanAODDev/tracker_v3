@@ -4,9 +4,9 @@ use Faker\Generator as Faker;
 
 $factory->define(\App\Member::class, function (Faker $faker) {
     $memberId = $faker->numberBetween(10000, 99999);
-    $division = create('App\Division');
-    $platoon = create('App\Platoon', ['division_id' => $division->id]);
-    $squad = create('App\Squad', ['platoon_id' => $platoon->id]);
+    $division = create(\App\Division::class);
+    $platoon = create(\App\Platoon::class, ['division_id' => $division->id]);
+    $squad = create(\App\Squad::class, ['platoon_id' => $platoon->id]);
 
     return [
         'name' => $faker->userName,

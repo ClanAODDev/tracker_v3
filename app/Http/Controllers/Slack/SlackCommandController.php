@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\SlackSlashCommand;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class SlackCommandController extends Controller
 {
@@ -21,7 +22,7 @@ class SlackCommandController extends Controller
             ]);
         }
 
-        $command = array_first(
+        $command = Arr::first(
             explode(':', $request->text)
         );
 
@@ -36,7 +37,7 @@ class SlackCommandController extends Controller
      */
     protected function isValid(Request $request)
     {
-        if (array_has($request->all(), 'text')) {
+        if (Arr::has($request->all(), 'text')) {
             return true;
         }
     }

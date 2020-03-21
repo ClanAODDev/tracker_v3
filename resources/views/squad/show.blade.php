@@ -8,7 +8,7 @@
             </a>
         @endslot
         @slot ('heading')
-            {{ $squad->name or "Untitled " . $division->locality('squad') }}
+            {{ $squad->name ?? "Untitled " . $division->locality('squad') }}
             @include('squad.partials.edit-squad-button', ['division' => $division])
         @endslot
         @slot ('subheading')

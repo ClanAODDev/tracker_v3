@@ -10,11 +10,6 @@ use Illuminate\Support\Collection;
 
 class Platoon extends Model
 {
-
-    protected $dates = [
-        'deleted_at'
-    ];
-
     protected $fillable = [
         'name',
         'leader_id',

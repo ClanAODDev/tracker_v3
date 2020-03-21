@@ -6,7 +6,7 @@ $factory->define(\App\Division::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'handle_id' => function () {
-            return create('App\Handle')->id;
+            return create(\App\Handle::class)->id;
         },
         'abbreviation' => $faker->word,
         'description' => $faker->sentence,

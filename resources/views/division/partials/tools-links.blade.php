@@ -67,7 +67,7 @@
             <a href="{{ route('division.retention-report', $division) }}">Member Retention</a>
         </li>
 
-        <?php $file = camel_case($division->name); ?>
+        <?php $file = Str::camel($division->name); ?>
         @if (file_exists(resource_path("views/division/reports/ingame-reports/{$file}.blade.php")))
             <li>
                 <a href="{{ route('division.ingame-reports', $division) }}">Ingame Report</a>

@@ -17,4 +17,3 @@ $factory->define(\App\Ticket::class, function (Faker $faker) {
             : null,
     ];
 });
-

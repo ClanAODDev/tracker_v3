@@ -3,10 +3,10 @@
 namespace App\Settings;
 
 use Exception;
+use Illuminate\Support\Arr;
 
 trait Settable
 {
-
     protected $settings = [];
 
     /**
@@ -58,7 +58,7 @@ trait Settable
     public function get($key)
     {
         if ($this->has($key)) {
-            return array_get($this->settings, $key);
+            return Arr::get($this->settings, $key);
         }
 
         throw new Exception("The {$key} setting does not exist");
@@ -74,7 +74,7 @@ trait Settable
     {
         $this->settings = array_merge(
             $this->settings,
-            array_only($attributes, array_keys($this->settings))
+            Arr::only($attributes, array_keys($this->settings))
         );
 
         return $this->persist();

@@ -22,7 +22,6 @@ class RebuildStaffSergeantTable extends Migration
             $table->timestamps();
             $table->unique(['division_id', 'member_id']);
         });
-
     }
 
     /**

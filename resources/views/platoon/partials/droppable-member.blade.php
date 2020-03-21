@@ -6,7 +6,7 @@
             <small>TBA</small>
         @endif
         <br />
-        <div class="m-t-sm">{{ $squad->name or "Untitled" }}
+        <div class="m-t-sm">{{ $squad->name ?? "Untitled" }}
             <span class="pull-right badge badge-default count">{{ count($squad->members) }}</span>
         </div>
     </h5>
