@@ -31,14 +31,14 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-md-4 text-center">
-                        <i class="fa fa-dot-circle-o text-success"></i> - Members Recruited
+                        <i class="fas fa-dot-circle text-success"></i> - Members Recruited
                     </div>
                     <div class="col-md-4 text-center">
-                        <i class="fa fa-dot-circle-o text-warning"></i> - Members Removed
+                        <i class="fas fa-dot-circle text-warning"></i> - Members Removed
                     </div>
 
                     <div class="col-md-4 text-center">
-                        <i class="fa fa-dot-circle-o text-info"></i> - Population
+                        <i class="fas fa-dot-circle text-info"></i> - Population
                     </div>
                 </div>
             </div>
