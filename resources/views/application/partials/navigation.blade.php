@@ -124,7 +124,7 @@
     </li>
 
     <li class="{{ set_active('changelog') }}">
-        <a href="{{ route('changelog') }}">Changelog <span class="label label-success">NEW</span></a>
+        <a href="{{ route('changelog') }}">Changelog</a>
     </li>
 </ul>
 

@@ -27,6 +27,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>20 March 2020 - 3.10.0</h4>
+                <hr/>
+                <ul>
+                    <li>Framework updated from 5.6 to 5.8 with the eventual plan to move to 6.x</li>
+                    <li>Other updates coming very soon...</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>17 Feb 2019 - 3.9.1</h4>
                 <hr/>
                 <ul>
