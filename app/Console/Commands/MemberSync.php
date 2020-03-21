@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use App\AOD\MemberSync\SyncMemberData;
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class MemberSync extends Command
 {
@@ -41,7 +43,7 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        SyncMemberData::execute();
+        SyncMemberData::execute($this->output->isVerbose());
 
         $this->comment('Member sync successful');
     }
