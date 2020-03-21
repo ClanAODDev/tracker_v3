@@ -106,10 +106,6 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
-        if (!$this->role instanceof Role) {
-            return false;
-        }
-
         if ($this->isDeveloper()) {
             return true;
         }
@@ -136,8 +132,16 @@ class User extends Authenticatable
      *
      * @param $role
      */
-    public function assignRole(Role $role)
+    public function assignRole($role)
     {
+        if (is_string($role)) {
+            $role = Role::whereName(strtolower($role))->firstOrFail();
+        }
+
+        if (is_int($role)) {
+            $role = Role::find($role);
+        }
+
         $this->role()->associate($role)->save();
     }
 

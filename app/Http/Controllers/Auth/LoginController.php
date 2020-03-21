@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Member;
 use App\User;
 use Auth;
+
+use Illuminate\Support\Arr;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -136,11 +138,9 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        if ($this->roles && auth()->user()->isRole(['admin'])) {
-            dd($this->roles);
+        if (auth()->user()->name == 'Guybrush') {
+            $this->handleAccountRoles();
         }
-
-        $this->handleAccountRoles();
 
         return $this->authenticated($request, $this->guard()->user())
             ?: redirect()->intended($this->redirectPath());
@@ -218,6 +218,33 @@ class LoginController extends Controller
 
     private function handleAccountRoles()
     {
+        $roles = \Illuminate\Support\Arr::flatten($this->roles->toArray());
 
+        // are they banned?
+        if (array_intersect($roles, ['Banned Users', 49])) {
+            die('Not authorized. Error 49');
+        }
+
+        // are they an admin?
+        if (array_intersect($roles, ['Administrators', 6])) {
+            auth()->user()->assignRole('admin');
+            return;
+        }
+
+        // are they a sergeant?
+        if (array_intersect($roles, ['AOD Sergeants', 52, 'AOD Staff Sergeants', 66])) {
+            auth()->user()->assignRole('sr_ldr');
+            return;
+        }
+
+        // are they an officer?
+        $officerRoleIds = \DB::table('divisions')->select('officer_role_id')
+            ->where('active', true)
+            ->where('officer_key', '!=', null)
+            ->get()->toArray();
+
+        if (array_intersect($roles, $officerRoleIds)) {
+            auth()->user()->assignRole('officer');
+        }
     }
 }
