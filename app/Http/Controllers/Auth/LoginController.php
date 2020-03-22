@@ -244,10 +244,10 @@ class LoginController extends Controller
         }
 
         // are they an officer?
-        $officerRoleIds = \DB::table('divisions')->select('officer_role_id')
+        $officerRoleIds = Arr::flatten(\DB::table('divisions')->select('officer_role_id')
             ->where('active', true)
-            ->where('officer_role_Id', '!=', null)
-            ->get()->toArray();
+            ->where('officer_role_id', '!=', null)
+            ->get()->toArray());
 
         if (array_intersect($roles, $officerRoleIds)) {
             auth()->user()->assignRole('officer');
