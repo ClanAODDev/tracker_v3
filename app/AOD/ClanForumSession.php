@@ -27,6 +27,7 @@ class ClanForumSession
     {
         if (app()->environment() === 'local') {
             Auth::login(User::whereName('Guybrush')->first());
+            return true;
         }
 
         if (Auth::guest()) {
