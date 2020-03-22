@@ -17,6 +17,10 @@ class HasPrimaryDivision
      */
     public function handle($request, Closure $next)
     {
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
+
         if (!request()->user()->member->division) {
             return redirect(null, 408);
         }
