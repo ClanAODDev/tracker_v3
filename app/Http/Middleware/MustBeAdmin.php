@@ -16,12 +16,10 @@ class MustBeAdmin
      */
     public function handle($request, Closure $next)
     {
-        if ($request->user()->isRole('admin') ||
-            $request->user()->isDeveloper()
-        ) {
-            return $next($request);
+        if (!request()->user()->isRole('admin')) {
+            return redirect(null, 403);
         }
 
-        abort(403);
+        return $next($request);
     }
 }
