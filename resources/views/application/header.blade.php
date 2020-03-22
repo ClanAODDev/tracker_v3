@@ -1,7 +1,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 
-@if(App::environment('develop'))
+@if(App::environment('develop', 'local'))
     <link href="{{ asset('favicon_dev.ico?v=3.3') }}" type="image/x-icon" rel="Shortcut Icon"/>
 @else
     <link href="{{ asset('favicon.ico?v=3.3') }}" type="image/x-icon" rel="Shortcut Icon" />
