@@ -7,7 +7,6 @@ use App\Member;
 use App\User;
 use Auth;
 
-use Illuminate\Support\Arr;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -222,7 +221,8 @@ class LoginController extends Controller
 
         // are they banned?
         if (array_intersect($roles, ['Banned Users', 49])) {
-            die('Not authorized. Error 49');
+            auth()->user()->assignRole('member');
+            return;
         }
 
         // are they a regular member?
