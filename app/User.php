@@ -106,6 +106,10 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
+        if (!$this->role instanceof Role) {
+            return false;
+        }
+
         if ($this->isDeveloper()) {
             return true;
         }
