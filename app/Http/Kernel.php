@@ -7,6 +7,7 @@ use App\Http\Middleware\ClanForumAuthentication;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\HasPrimaryDivision;
+use App\Http\Middleware\IsBanned;
 use App\Http\Middleware\MustBeAdmin;
 use App\Http\Middleware\MustBeDeveloper;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -61,6 +62,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             SubstituteBindings::class,
             VerifyCsrfToken::class,
+            IsBanned::class,
         ],
 
         'api' => [
@@ -89,6 +91,7 @@ class Kernel extends HttpKernel
         'developer' => MustBeDeveloper::class,
         'admin' => MustBeAdmin::class,
         'activeDivision' => DivisionMustBeActive::class,
+        'banned' => IsBanned::class,
         'slack' => VerifySlackToken::class,
         'scopes' => CheckScopes::class,
         'scope' => CheckForAnyScope::class,
