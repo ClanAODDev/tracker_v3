@@ -7,7 +7,6 @@ use App\Member;
 use App\User;
 use Auth;
 
-use Illuminate\Support\Arr;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -130,7 +129,7 @@ class LoginController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -213,7 +212,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect('/');
+        return response()->redirectTo('/');
     }
 
     private function handleAccountRoles()
@@ -222,7 +221,8 @@ class LoginController extends Controller
 
         // are they banned?
         if (array_intersect($roles, ['Banned Users', 49])) {
-            die('Not authorized. Error 49');
+            auth()->user()->assignRole('member');
+            return;
         }
 
         // are they a regular member?
@@ -246,8 +246,8 @@ class LoginController extends Controller
         // are they an officer?
         $officerRoleIds = \DB::table('divisions')->select('officer_role_id')
             ->where('active', true)
-            ->where('officer_key', '!=', null)
-            ->get()->toArray();
+            ->where('officer_role_id', '!=', null)
+            ->pluck('officer_role_id')->toArray();
 
         if (array_intersect($roles, $officerRoleIds)) {
             auth()->user()->assignRole('officer');
