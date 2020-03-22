@@ -246,7 +246,7 @@ class LoginController extends Controller
         // are they an officer?
         $officerRoleIds = \DB::table('divisions')->select('officer_role_id')
             ->where('active', true)
-            ->where('officer_key', '!=', null)
+            ->where('officer_role_Id', '!=', null)
             ->get()->toArray();
 
         if (array_intersect($roles, $officerRoleIds)) {
