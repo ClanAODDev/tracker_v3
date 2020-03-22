@@ -16,7 +16,7 @@ class MustBeAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (!request()->user()->isRole('admin')) {
+        if (!auth()->user()->isRole('admin') && !auth()->user()->isDeveloper()) {
             return redirect(null, 403);
         }
 
