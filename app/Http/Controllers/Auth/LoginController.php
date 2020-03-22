@@ -129,7 +129,7 @@ class LoginController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param Request $request
-     * @return Response
+     * @return RedirectResponse
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -212,7 +212,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return redirect('/');
+        return response()->redirectTo('/');
     }
 
     private function handleAccountRoles()
