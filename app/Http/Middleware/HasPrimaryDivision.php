@@ -22,7 +22,7 @@ class HasPrimaryDivision
 
             if (!$user->member->division) {
                 //Auth::logout();
-                return redirect(null, 408);
+                abort(408, "You do not have a primary division.");
             }
         }
 
