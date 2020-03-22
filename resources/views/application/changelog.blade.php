@@ -27,11 +27,22 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
-                <h4>20 March 2020 - 3.10.0</h4>
+                <h4>28 March 2020 - 3.10.0</h4>
                 <hr/>
                 <ul>
                     <li>Framework updated from 5.6 to 5.8 with the eventual plan to move to 6.x</li>
-                    <li>Other updates coming very soon...</li>
+                    <li>Account access is now automated, making the AOD forums the source of truth. Access is determined by a member's user groups. <strong>Note:</strong> this change brings account access more in line with forum privileges. As such, the <code>jr_ldr</code> role will be removed, and some privileges will either be elevated to <code>Sr Ldr</code> roles, or downgraded to allow <code>Officer</code> role.
+                        <ul>
+                            <li>Only SGTS can update members (position, rank), currently done via forum modcp</li>
+                            <li>Only SGTs can update platoons, squads</li>
+                            <li>Only SGTs can create platoons, squads</li>
+                            <li>Only SGTs can modify the division structure</li>
+                            <li>Only SGTs can manage unassigned members</li>
+                            <li>Officers can now view the division structure</li>
+                            <li>Officers can now manage part time</li>
+                            <li>Officers can now manage ingame handles</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
