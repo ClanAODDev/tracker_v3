@@ -221,24 +221,28 @@ class LoginController extends Controller
 
         // are they banned?
         if (array_intersect($roles, ['Banned Users', 49])) {
-            auth()->user()->assignRole('member');
+            \Log::info("Account access 'banned' assigned to user " . auth()->id());
+            auth()->user()->assignRole('banned');
             return;
         }
 
         // are they a regular member?
         if (array_intersect($roles, ['AOD Member', 50]) && 2 == count($roles)) {
+            \Log::info("Account access 'member' assigned to user " . auth()->id());
             auth()->user()->assignRole('member');
             return;
         }
 
         // are they an admin?
         if (array_intersect($roles, ['Administrators', 6])) {
+            \Log::info("Account access 'admin' assigned to user " . auth()->id());
             auth()->user()->assignRole('admin');
             return;
         }
 
         // are they a sergeant?
         if (array_intersect($roles, ['AOD Sergeants', 52, 'AOD Staff Sergeants', 66])) {
+            \Log::info("Account access 'sr_ldr' assigned to user " . auth()->id());
             auth()->user()->assignRole('sr_ldr');
             return;
         }
@@ -250,6 +254,7 @@ class LoginController extends Controller
             ->pluck('officer_role_id')->toArray();
 
         if (array_intersect($roles, $officerRoleIds)) {
+            \Log::info("Account access 'officer' assigned to user " . auth()->id());
             auth()->user()->assignRole('officer');
             return;
         }
