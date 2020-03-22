@@ -52,8 +52,7 @@ class MemberRequestController extends Controller
     public function reprocess($requestId)
     {
         $request = MemberRequest::find($requestId)
-            ->with('member', 'member.rank', 'approver', 'division')
-            ->first();
+            ->load('member', 'member.rank', 'approver', 'division');
 
         if (request()->isMethod('post')) {
             $request->update([
