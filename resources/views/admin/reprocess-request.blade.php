@@ -25,7 +25,7 @@
 
         <div class="row">
 
-            <div class="col-md-6">
+            <div class="col-md-12">
 
                 <div class="panel panel-filled">
                     <div class="panel-heading c-white"><strong>Step 1:</strong> Add to AOD</div>
@@ -43,7 +43,7 @@
 
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-12">
 
                 <div class="panel panel-filled">
                     <div class="panel-heading c-white"><strong>Step 2:</strong> Confirm added</div>
