@@ -36,14 +36,6 @@ class SquadPolicy
      */
     public function update(User $user, Squad $squad)
     {
-
-        // CPLs can affect squads within their division
-        if ($user->isRole('jr_ldr')
-            && $user->member->division->id == $squad->platoon->division->id
-        ) {
-            return true;
-        }
-
         return false;
     }
 
@@ -66,11 +58,6 @@ class SquadPolicy
      */
     public function create(User $user, Division $division)
     {
-        // CPLs can create squads within their division
-        if ($user->isRole('jr_ldr') && $user->member->division->id == $division->id) {
-            return true;
-        }
-
         return false;
     }
 }

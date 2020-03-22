@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\UserGroup;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,9 @@ trait AuthenticatesWithAOD
 
     public $clanId;
 
+    /**
+     * @var Collection
+     */
     public $roles = [];
 
     /**
