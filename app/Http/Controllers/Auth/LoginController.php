@@ -251,6 +251,7 @@ class LoginController extends Controller
 
         if (array_intersect($roles, $officerRoleIds)) {
             auth()->user()->assignRole('officer');
+            return;
         }
     }
 }

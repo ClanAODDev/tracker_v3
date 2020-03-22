@@ -248,7 +248,7 @@ class DivisionStructureController extends Controller
      */
     public function modify(Division $division)
     {
-        $this->authorize('viewDivisionStructure', auth()->user());
+        $this->authorize('editDivisionStructure', auth()->user());
 
         return view('division.structure-editor', compact('division'));
     }

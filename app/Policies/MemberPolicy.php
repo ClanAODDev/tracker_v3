@@ -51,9 +51,9 @@ class MemberPolicy
         $userDivision = $user->member->division;
         $memberDivision = $member->division;
 
-        // Jr leaders (CPl), and officers can update anyone within division
+        // officers can update anyone within division
         if ($memberDivision instanceof Division) {
-            if ($user->isRole(['jr_ldr', 'officer']) && $userDivision->id == $memberDivision->id) {
+            if ($user->isRole('officer') && $userDivision->id == $memberDivision->id) {
                 return true;
             }
         }
@@ -110,14 +110,8 @@ class MemberPolicy
             return true;
         }
 
-        if ($user->isRole('jr_ldr')) {
-            return true;
-        }
-
         if ($user->isRole('officer')) {
-            if ($member->platoon && $user->member->platoon) {
-                return $member->platoon_id == $user->member->platoon_id;
-            }
+            return true;
         }
 
         return false;
@@ -130,14 +124,8 @@ class MemberPolicy
             return true;
         }
 
-        if ($user->isRole('jr_ldr')) {
-            return true;
-        }
-
         if ($user->isRole('officer')) {
-            if ($member->platoon && $user->member->platoon) {
-                return $member->platoon_id == $user->member->platoon_id;
-            }
+            return true;
         }
 
         return false;

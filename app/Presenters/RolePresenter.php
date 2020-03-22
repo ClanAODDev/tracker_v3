@@ -20,8 +20,6 @@ class RolePresenter extends Presenter
                 return "<span class=\"text-danger\">{$this->role->label}</span>";
             case 'sr_ldr':
                 return "<span class=\"text-warning\">{$this->role->label}</span>";
-            case 'jr_ldr':
-                return "<span class=\"text-info\">{$this->role->label}</span>";
         }
 
         return ucwords($this->role->name);

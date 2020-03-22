@@ -27,32 +27,11 @@ class UserPolicy
 
     /**
      * @param User $user
-     * @param User $userOfMember
      * @return bool
      */
-    public function update(User $user, User $userOfMember)
+    public function update(User $user)
     {
-        // can't update yourself
-        if ($user->id === $userOfMember->id) {
-            return false;
-        }
-
         if ($user->isRole(['admin'])) {
-            return true;
-        }
-
-        // cannot update a user of the same or higher role
-        if ($user->role->id <= $userOfMember->role->id) {
-            return false;
-        }
-
-        // senior leaders who are sgts and ssgts can update user accounts
-        if ($user->isRole('sr_ldr') && $user->member->isRank(['sgt', 'ssgt'])) {
-            return true;
-        }
-
-        // jr leaders can create officers
-        if ($user->isRole('jr_ldr') && ($userOfMember->role_id < $user->role_id)) {
             return true;
         }
 
@@ -120,17 +99,17 @@ class UserPolicy
 
     public function viewDivisionStructure(User $user)
     {
-        return $user->isRole(['jr_ldr', 'sr_ldr', 'admin']);
+        return $user->isRole('officer');
+    }
+
+    public function editDivisionStructure(User $user)
+    {
+        return $user->isRole(['sr_ldr', 'admin']);
     }
 
     public function manageUnassigned(User $user)
     {
-        return $user->isRole(['jr_ldr', 'sr_ldr', 'admin']);
-    }
-
-    public function manageIssues(User $user)
-    {
-        return $user->isRole(['jr_ldr', 'sr_ldr']);
+        return $user->isRole(['sr_ldr', 'admin']);
     }
 
     public function manageSlack(User $user)

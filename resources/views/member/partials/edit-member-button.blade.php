@@ -40,6 +40,22 @@
             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}" target="_blank">View forum profile</a>
         </li>
 
+        @can ('manageIngameHandles', $member)
+            <li>
+                <a href="{{ route('member.edit-handles', $member->clan_id) }}">
+                    Manage Ingame Handles
+                </a>
+            </li>
+        @endcan
+
+        @can ('managePartTime', $member)
+            <li>
+                <a href="{{ route('member.edit-part-time', $member->clan_id) }}">
+                    Manage Part-Time
+                </a>
+            </li>
+        @endcan
+
         @can('update', $member)
             <li class="divider"></li>
             <li>
