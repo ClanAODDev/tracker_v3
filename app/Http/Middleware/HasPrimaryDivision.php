@@ -17,12 +17,13 @@ class HasPrimaryDivision
      */
     public function handle($request, Closure $next)
     {
-        if (!auth()->check()) {
-            return redirect('/login');
-        }
+        if (Auth::check()) {
+            $user = Auth::user();
 
-        if (!request()->user()->member->division) {
-            return redirect(null, 408);
+            if (!$user->member->division) {
+                //Auth::logout();
+                return redirect(null, 408);
+            }
         }
 
         return $next($request);
