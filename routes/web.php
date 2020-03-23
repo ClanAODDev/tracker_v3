@@ -2,11 +2,13 @@
 
 include_once('extra/requests.php');
 
+Route::view('unauthorized', 'errors.403')->name('errors.unauthorized');
+
 Auth::routes();
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::post('/members/assign-squad', 'SquadController@assignMember');
+
 
 /**
  * Application endpoints
@@ -47,7 +49,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('{member}/confirm-reset', 'MemberController@confirmUnassign')->name('member.confirm-reset');
     Route::post('{member}/unassign', 'MemberController@unassignMember')->name('member.unassign');
     Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
-
+    Route::post('/members/assign-squad', 'SquadController@assignMember');
 
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
     Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
@@ -85,9 +87,9 @@ Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
 Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recruiting.addMember');
 
 /** Disable for now
-Route::get('issues', 'IssuesController@index')->name('github.issues');
-Route::post('issues', 'IssuesController@create')->name('github.create-issue');
-**/
+ * Route::get('issues', 'IssuesController@index')->name('github.issues');
+ * Route::post('issues', 'IssuesController@create')->name('github.create-issue');
+ **/
 Route::get('changelog', 'AppController@changelog')->name('changelog');
 
 /**
