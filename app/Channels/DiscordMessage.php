@@ -113,7 +113,7 @@ class DiscordMessage
                     'author' => [
                         'name' => 'AOD Tracker'
                     ],
-                    'fields' => addslashes($this->fields)
+                    'fields' => $this->fields
                 ]
             ]) . "'";
 

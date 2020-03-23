@@ -54,7 +54,7 @@ class MemberRequestDenied extends Notification
             ->fields([
                 [
                     'name' => "**MEMBER STATUS REQUEST**",
-                    'value' => ":skull_crossbones: A member status request for `{$this->request->member->name}` was denied."
+                    'value' => addslashes(":skull_crossbones: A member status request for `{$this->request->member->name}` was denied.")
                 ],
                 [
                     'name' => 'The reason for the denial was:',
