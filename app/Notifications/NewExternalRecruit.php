@@ -60,7 +60,7 @@ class NewExternalRecruit extends Notification
             ->fields([
                 [
                     'name' => '**EXTERNAL RECRUIT**',
-                    'value' => "{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!"
+                    'value' => addslashes("{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!")
                 ],
                 [
                     'name' => 'View member profile',
