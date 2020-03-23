@@ -138,6 +138,11 @@ class User extends Authenticatable
      */
     public function assignRole($role)
     {
+        if ($role instanceof Role) {
+            $this->role()->associate($role)->save();
+            return;
+        }
+
         if (is_string($role)) {
             $role = Role::whereName(strtolower($role))->firstOrFail();
         }

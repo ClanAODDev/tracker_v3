@@ -137,9 +137,7 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        if (auth()->user()->name == 'Guybrush') {
-            $this->handleAccountRoles();
-        }
+        $this->handleAccountRoles();
 
         return $this->authenticated($request, $this->guard()->user())
             ?: redirect()->intended($this->redirectPath());
@@ -215,48 +213,42 @@ class LoginController extends Controller
         return response()->redirectTo('/');
     }
 
+    /**
+     * Provision account role based on forum groups
+     */
     private function handleAccountRoles()
     {
         $roles = \Illuminate\Support\Arr::flatten($this->roles->toArray());
 
-        // are they banned?
-        if (array_intersect($roles, ['Banned Users', 49])) {
-            \Log::info("Account access 'banned' assigned to user " . auth()->id());
-            auth()->user()->assignRole('banned');
-            return;
-        }
-
-        // are they a regular member?
-        if (array_intersect($roles, ['AOD Member', 50]) && 2 == count($roles)) {
-            \Log::info("Account access 'member' assigned to user " . auth()->id());
-            auth()->user()->assignRole('member');
-            return;
-        }
-
-        // are they an admin?
-        if (array_intersect($roles, ['Administrators', 6])) {
-            \Log::info("Account access 'admin' assigned to user " . auth()->id());
-            auth()->user()->assignRole('admin');
-            return;
-        }
-
-        // are they a sergeant?
-        if (array_intersect($roles, ['AOD Sergeants', 52, 'AOD Staff Sergeants', 66])) {
-            \Log::info("Account access 'sr_ldr' assigned to user " . auth()->id());
-            auth()->user()->assignRole('sr_ldr');
-            return;
-        }
-
-        // are they an officer?
         $officerRoleIds = \DB::table('divisions')->select('officer_role_id')
             ->where('active', true)
             ->where('officer_role_id', '!=', null)
             ->pluck('officer_role_id')->toArray();
 
-        if (array_intersect($roles, $officerRoleIds)) {
-            \Log::info("Account access 'officer' assigned to user " . auth()->id());
-            auth()->user()->assignRole('officer');
-            return;
+        switch (true) {
+            case array_intersect($roles, ['Banned Users', 49]):
+                $this->assignRole('banned');
+                break;
+            case array_intersect($roles, ['Administrators', 6]):
+                $this->assignRole('admin');
+                break;
+            case array_intersect($roles, ['AOD Sergeants', 52, 'AOD Staff Sergeants', 66]):
+                $this->assignRole('sr_ldr');
+                break;
+            case array_intersect($roles, $officerRoleIds):
+                $this->assignRole('officer');
+                break;
+            default:
+                $this->assignRole('member');
         }
+    }
+
+    /**
+     * @param string $role
+     */
+    private function assignRole(string $role)
+    {
+        \Log::info("Account access {$role} assigned to user " . auth()->id());
+        auth()->user()->assignRole($role);
     }
 }
