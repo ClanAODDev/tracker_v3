@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function before(User $user)
     {
-        if ($user->isDeveloper()) {
+        if ($user->isDeveloper() || $user->isRole('admin')) {
             return true;
         }
     }
@@ -29,87 +29,59 @@ class UserPolicy
      * @param User $user
      * @return bool
      */
-    public function update(User $user)
+    public function update()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function viewAny(User $user)
+    public function viewAny()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function view(User $user)
+    public function view()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function create(User $user)
+    public function create()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function delete(User $user)
+    public function delete()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function restore(User $user)
+    public function restore()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function forceDelete(User $user)
+    public function forceDelete()
     {
-        if ($user->isRole(['admin'])) {
-            return true;
-        }
-
         return false;
     }
 
-    public function canImpersonate($userBeingImpersonated)
+    public function canImpersonate()
     {
         return false;
     }
 
     public function viewDivisionStructure(User $user)
     {
-        return $user->isRole('officer');
+        return $user->isRole(['officer', 'sr_ldr']);
     }
 
     public function editDivisionStructure(User $user)
     {
-        return $user->isRole(['sr_ldr', 'admin']);
+        return $user->isRole('sr_ldr');
     }
 
     public function manageUnassigned(User $user)
     {
-        return $user->isRole(['sr_ldr', 'admin']);
+        return $user->isRole('sr_ldr');
     }
 
     public function manageSlack(User $user)
