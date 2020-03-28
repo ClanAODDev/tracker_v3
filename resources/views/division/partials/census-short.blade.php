@@ -3,8 +3,6 @@
 
     {{ number_format($division->members->count()) }}
 
-
-
     @if($previousCensus)
         <div class="slight" style="display: inline-block">
             @if ($previousCensus && $division->members->count())
