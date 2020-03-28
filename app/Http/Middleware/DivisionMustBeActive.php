@@ -16,7 +16,7 @@ class DivisionMustBeActive
      */
     public function handle($request, Closure $next)
     {
-        if ($request->division->active && $request->division) {
+        if (\Auth::check() && $request->division->active && $request->division) {
             return $next($request);
         }
 
