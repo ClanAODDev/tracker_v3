@@ -96,4 +96,30 @@ class Kernel extends HttpKernel
         'scopes' => CheckScopes::class,
         'scope' => CheckForAnyScope::class,
     ];
+
+    /**
+     * The priority-sorted list of middleware.
+     *
+     * This forces non-global middleware to always be in the given order.
+     *
+     * @var array
+     */
+    protected $middlewarePriority = [
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\ClanForumAuthentication::class,
+        \App\Http\Middleware\Authenticate::class,
+        \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
+
+
+        \App\Http\Middleware\MustBeDeveloper::class,
+        \App\Http\Middleware\MustBeAdmin::class,
+        \App\Http\Middleware\DivisionMustBeActive::class,
+        \App\Http\Middleware\IsBanned::class,
+        \App\Http\Middleware\VerifySlackToken::class,
+        CheckScopes::class,
+        CheckForAnyScope::class,
+    ];
 }
