@@ -23,16 +23,9 @@
         <td class="c-accent">Officer (new NCO)</td>
         <td>
             <ul>
-                <li>Can manage members within own platoon</li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td class="c-accent">Jr Leader (CPL)</td>
-        <td>
-            <ul>
-                <li>Can manage own division platoons, squads, members</li>
-                <li>Can render division structure template</li>
+                <li>Can view the division structure</li>
+                <li>Can manage part-time members of a division</li>
+                <li>Can manage member in-game handles</li>
             </ul>
         </td>
     </tr>
@@ -40,7 +33,7 @@
         <td class="c-accent">Sr Leader (SGT+)</td>
         <td>
             <ul>
-                <li>Can manage (and create, delete) any division platoons, squads, members</li>
+                <li>Can manage (create, delete, update) any division platoons, squads, members</li>
                 <li>Can remove any member (requires SGT+ forum permissions)</li>
                 <li>Can change own division settings (must be CO/XO)</li>
                 <li>Can give user account access (up to one below current role)</li>
