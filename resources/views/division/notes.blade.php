@@ -55,7 +55,7 @@
                             {{ $note->member->name }} - {{ $note->updated_at->format('M d, Y')}}
                         </div>
                         <div class="panel-body">
-                            {{ $note->body }} <span class="text-muted">- {{ $note->author->name }}</span>
+                            {{ $note->body }} <span class="text-muted">- {{ ($note->author) ? $note->author->name : 'Unk' }}</span>
                         </div>
                     </a>
                 @empty
