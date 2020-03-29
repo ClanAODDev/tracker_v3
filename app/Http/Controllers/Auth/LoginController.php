@@ -225,21 +225,20 @@ class LoginController extends Controller
             ->where('officer_role_id', '!=', null)
             ->pluck('officer_role_id')->toArray();
 
+        /**
+         * Update role unless current role matches new role
+         */
         switch (true) {
             case array_intersect($roles, ['Banned Users', 49]):
-                $this->assignRole('banned');
-                break;
+                return (auth()->user()->role_id != 6) ? $this->assignRole('banned') : null;
             case array_intersect($roles, ['Administrators', 6]):
-                $this->assignRole('admin');
-                break;
+                return (auth()->user()->role_id != 5) ? $this->assignRole('admin') : null;
             case array_intersect($roles, ['AOD Sergeants', 52, 'AOD Staff Sergeants', 66]):
-                $this->assignRole('sr_ldr');
-                break;
+                return (auth()->user()->role_id != 4) ? $this->assignRole('sr_ldr') : null;
             case array_intersect($roles, $officerRoleIds):
-                $this->assignRole('officer');
-                break;
+                return (auth()->user()->role_id != 2) ? $this->assignRole('officer') : null;
             default:
-                $this->assignRole('member');
+                return (auth()->user()->role_id != 1) ? $this->assignRole('member') : null;
         }
     }
 
