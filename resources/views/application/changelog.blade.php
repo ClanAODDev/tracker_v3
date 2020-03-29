@@ -31,7 +31,16 @@
                 <hr/>
                 <ul>
                     <li>Framework updated from 5.6 to 5.8 with the eventual plan to move to 6.x</li>
-                    <li>Account access is now automated, making the AOD forums the source of truth. Access is determined by a member's user groups. <strong>Note:</strong> this change brings account access more in line with forum privileges. As such, the <code>jr_ldr</code> role will be removed, and some privileges will either be elevated to <code>Sr Ldr</code> roles, or downgraded to allow <code>Officer</code> role.
+                    <li>Notification, logging for division transfers
+                        <ul>
+                            <li>Only transfers INTO a division can be tracked</li>
+                        </ul>
+                    </li>
+                    <li>Account access is now automated, making the AOD forums the source of truth. Access is determined
+                        by a member's user groups. <strong>Note:</strong> this change brings account access more in line
+                        with forum privileges. As such, the <code>jr_ldr</code> role will be removed, and some
+                        privileges will either be elevated to <code>Sr Ldr</code> roles, or downgraded to allow <code>Officer</code>
+                        role.
                         <ul>
                             <li>Only SGTS can update members (position, rank), currently done via forum modcp</li>
                             <li>Only SGTs can update platoons, squads</li>
@@ -52,7 +61,9 @@
                 <h4>17 Feb 2019 - 3.9.1</h4>
                 <hr/>
                 <ul>
-                    <li><strong>Discord tags</strong> are now provided on user profile pages. Non-UTF-8 characters <em>should</em> display correctly. Long names will break and wrap to the next line.</li>
+                    <li><strong>Discord tags</strong> are now provided on user profile pages. Non-UTF-8 characters <em>should</em>
+                        display correctly. Long names will break and wrap to the next line.
+                    </li>
                 </ul>
             </div>
         </div>
