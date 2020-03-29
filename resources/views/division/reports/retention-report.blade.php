@@ -85,7 +85,7 @@
 
                         <li class="list-group-item">
                             @unless (is_object($item['member']))
-                                Member id {{ $item['member']->id }}
+                                Member id {{ $item['member'] }}
                             @else
                                 <a href="{{ route('member', $item['member']->getUrlParams()) }}">
                                     {{ $item['member']->present()->rankName }}
