@@ -247,7 +247,7 @@ class LoginController extends Controller
      */
     private function assignRole(string $role)
     {
-        \Log::info("Account access {$role} assigned to user " . auth()->id());
+        \Log::info("Role {$role} granted to user " . auth()->id());
         auth()->user()->assignRole($role);
     }
 }
