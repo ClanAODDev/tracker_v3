@@ -64,7 +64,7 @@ class LoginController extends Controller
      */
     private function isCurrentAODMember($name)
     {
-        return Member::whereForumName($name)->first() ?? false;
+        return Member::whereName($name)->first() ?? false;
     }
 
     /**
