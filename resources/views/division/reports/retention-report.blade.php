@@ -83,14 +83,14 @@
                     </div>
                     @foreach ($members as $item)
 
-                        <li class="list-group-item">
-                            @if (is_object($item['member']))
+                        @if (is_object($item['member']))
+                            <li class="list-group-item">
                                 <a href="{{ route('member', $item['member']->getUrlParams()) }}">
                                     {{ $item['member']->present()->rankName }}
                                 </a>
-                            @endif
-                            <span class="pull-right badge">{{ $item['recruits'] }}</span>
-                        </li>
+                                <span class="pull-right badge">{{ $item['recruits'] }}</span>
+                            </li>
+                        @endif
                     @endforeach
                 </div>
             </div>
