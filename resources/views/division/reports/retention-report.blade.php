@@ -84,9 +84,7 @@
                     @foreach ($members as $item)
 
                         <li class="list-group-item">
-                            @unless (is_object($item['member']))
-                                {{ dump($item) }}
-                            @else
+                            @if (is_object($item['member']))
                                 <a href="{{ route('member', $item['member']->getUrlParams()) }}">
                                     {{ $item['member']->present()->rankName }}
                                 </a>
