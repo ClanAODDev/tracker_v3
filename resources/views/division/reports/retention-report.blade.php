@@ -84,12 +84,12 @@
                     @foreach ($members as $item)
 
                         <li class="list-group-item">
-                            @if ($item['member'] instanceof \App\Member)
+                            @unless (is_object($item['member']))
+                                Member id {{ $item['member']->id }}
+                            @else
                                 <a href="{{ route('member', $item['member']->getUrlParams()) }}">
                                     {{ $item['member']->present()->rankName }}
                                 </a>
-                            @else
-                                Member id {{ $item['member']->id }}
                             @endif
                             <span class="pull-right badge">{{ $item['recruits'] }}</span>
                         </li>
