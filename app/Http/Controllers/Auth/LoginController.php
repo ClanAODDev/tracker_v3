@@ -42,12 +42,13 @@ class LoginController extends Controller
      */
     private function registerNewUser($username)
     {
-        if ($member = $this->isCurrentAODMember()) {
-            $user = new User;
-            $user->name = $username;
-            $user->email = $this->email;
-            $user->member_id = $member->id;
-            $user->save();
+        if ($member = $this->isCurrentAODMember($username)) {
+
+            $user = \App\User::updateOrCreate([
+                'email' => $this->email,
+                'name' => $username,
+                'member_id' => $member->id
+            ]);
 
             Auth::login($user);
 
@@ -58,12 +59,12 @@ class LoginController extends Controller
     }
 
     /**
-     * @param $username
+     * @param $name
      * @return bool
      */
-    private function isCurrentAODMember()
+    private function isCurrentAODMember($name)
     {
-        return Member::whereClanId($this->clanId)->first() ?? false;
+        return Member::whereForumName($name)->first() ?? false;
     }
 
     /**

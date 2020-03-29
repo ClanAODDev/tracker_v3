@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Member
  *
  * @package App
+ * @method static whereForumName($name)
  */
 class Member extends Model
 {
