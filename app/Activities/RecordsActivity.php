@@ -43,7 +43,7 @@ trait RecordsActivity
     /**
      * @param $event
      */
-    public function recordActivity($event) //$post->recordActivity('favorited')
+    public function recordActivity($event)
     {
         if (auth()->check()) {
             $actor = auth()->user();
@@ -53,7 +53,7 @@ trait RecordsActivity
                 'user_id' => $actor->id,
                 'subject_id' => $this->id,
                 'subject_type' => get_class($this),
-                'division_id' => $actor->member->division->id
+                'division_id' => $actor->member->division_id
             ]);
         }
     }

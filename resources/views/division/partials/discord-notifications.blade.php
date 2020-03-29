@@ -66,4 +66,15 @@
         </td>
     </tr>
 
+    <tr>
+        <td>
+            <label for="slack_alert_member_transferred">When a member transfers into {{ $division->name }}</label>
+        </td>
+        <td>
+            <input type='hidden' value='0' name="slack_alert_member_transferred">
+            <input id="slack_alert_member_transferred" name="slack_alert_member_transferred"
+                   type="checkbox" {{ checked($division->settings()->slack_alert_member_transferred) }} />
+        </td>
+    </tr>
+
 </table>

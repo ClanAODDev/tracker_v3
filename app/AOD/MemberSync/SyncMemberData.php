@@ -5,6 +5,7 @@ namespace App\AOD\MemberSync;
 use App\Division;
 use App\Member;
 use App\MemberRequest;
+use App\Notifications\MemberTransferred;
 use App\Platoon;
 use App\Squad;
 use Carbon;
@@ -147,8 +148,10 @@ class SyncMemberData
             $member = Member::find($id);
 
             // did they transfer to another division?
+            /** @var $member \App\Member */
             if (self::$activeClanMembers->contains($member->clan_id)) {
-                \Log::info("Member transfer: {$member->name}");
+                self::registerTransfer($member);
+
                 self::hardResetMember($member);
             } else {
                 if ($member instanceof Member && !$member->memberRequest) {
@@ -190,5 +193,15 @@ class SyncMemberData
             ->get();
 
         $requestsToProcess->each->process();
+    }
+
+    private static function registerTransfer(Member $member)
+    {
+        \Log::info("{$member->name} transferred to {$member->division->name}");
+        $member->recordActivity("transferred");
+
+        if ($member->division->settings()->get('slack_alert_member_transferred')) {
+            $member->division->notify(new MemberTransferred($member));
+        }
     }
 }
