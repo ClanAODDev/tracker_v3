@@ -35,6 +35,7 @@ class DeleteMember extends FormRequest
      */
     public function persist()
     {
+        /** @var \App\Member $member */
         $member = $this->route('member');
 
         if ($member->division()->exists()) {
