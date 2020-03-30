@@ -26,7 +26,7 @@ class ClanForumSession
     public function exists()
     {
         if (app()->environment() === 'local') {
-            Auth::login(User::whereName('Guybrush')->first());
+            Auth::login(User::whereMemberId(273)->first());
             return true;
         }
 
