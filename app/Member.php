@@ -181,13 +181,13 @@ class Member extends Model
      */
     public function resetPositionAndAssignments()
     {
-        $this->division_id = 0;
-        $this->platoon_id = 0;
-        $this->squad_id = 0;
-        $this->position_id = 1;
-        $this->flagged_for_inactivity = false;
-
-        $this->save();
+        $this->update([
+            'division_id' => 0,
+            'platoon_id' => 0,
+            'squad_id' => 0,
+            'position_id' => 1,
+            'flagged_for_inactivity' => false,
+        ]);
     }
 
     /**
