@@ -86,7 +86,7 @@
       },
 
       notifyOfNameChange (event) {
-        axios.post(window.Laravel.appPath + '/admin/member-requests/' + event.id + '/name-change', {
+        axios.post(window.Laravel.appPath + '/clan/member-requests/' + event.id + '/name-change', {
           oldName: event.oldName,
           newName: event.newName,
         });
@@ -97,7 +97,7 @@
         /**
          * Check if member was already approved
          */
-        axios.get(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/validate').then((response) => {
+        axios.get(window.Laravel.appPath + '/clan/member-requests/' + request.id + '/validate').then((response) => {
 
           if (!response.data.isMember) {
 
@@ -110,7 +110,7 @@
               return false;
             }
 
-            axios.post(window.Laravel.appPath + '/admin/member-requests/' + request.id + '/approve')
+            axios.post(window.Laravel.appPath + '/clan/member-requests/' + request.id + '/approve')
               .then((response) => {
                 this.dataPending.splice(index, 1);
                 toastr.success('Approved!');
