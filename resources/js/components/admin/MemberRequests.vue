@@ -131,7 +131,7 @@
       },
 
       cancelConfirm () {
-        axios.post(window.Laravel.appPath + '/admin/member-requests/' + this.request.id + '/cancel', {
+        axios.post(window.Laravel.appPath + '/clan/member-requests/' + this.request.id + '/cancel', {
           'notes': this.notes
         })
           .then(response => {
