@@ -3,7 +3,7 @@
 /**
  * Admin / Member Request routes
  */
-Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
+Route::group(['prefix' => 'clan'], function () {
     Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
     Route::get('/member-requests/{requestId}/reprocess', 'Admin\MemberRequestController@reprocess')
         ->name('admin.member-requests.reprocess');
