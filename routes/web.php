@@ -13,4 +13,4 @@ include_once('partials/members.php');
 include_once('partials/divisions.php');
 include_once('partials/slack.php');
 include_once('partials/reports.php');
-include_once('partials/admin.php');
+include_once('partials/clan.php');
