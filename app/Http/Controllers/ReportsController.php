@@ -172,4 +172,30 @@ class ReportsController extends Controller
 
         return view('reports.division-turnover', compact('divisions'));
     }
+
+    /**
+     * @return Factory|View
+     */
+    public function sergeants()
+    {
+        $divisions = Division::active()
+            ->with([
+                'sergeants' => function ($query) {
+                    $query->orderByDesc('rank_id');
+                },
+                'sergeants.rank',
+                'sergeants.position',
+            ])
+            ->with('staffSergeants', 'staffSergeants.rank')
+            ->withCount('sgtAndSsgt')
+            ->get()->sortBy('name');
+
+        $leadership = \App\Member::where('rank_id', '>', 10)
+            ->where('division_id', '!=', 0)
+            ->with('rank')
+            ->orderByDesc('rank_id')->orderBy('name')
+            ->get();
+
+        return view('member.sergeants', compact('divisions', 'leadership'));
+    }
 }

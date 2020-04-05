@@ -71,7 +71,7 @@
     </li>
 
     <li class="{{ set_active('sergeants') }}">
-        <a href="{{ route('sergeants') }}">Sergeants</a>
+        <a href="{{ route('sergeants') }}">Sergeants Structure</a>
     </li>
 
     <li class="{{ set_active('reports/*') }}">
