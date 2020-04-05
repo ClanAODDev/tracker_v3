@@ -23,6 +23,7 @@
                 <h4>
                     Clan Leadership
                 </h4>
+                <hr>
                 <div class="panel">
                     <table class="table table-hover basic-datatable">
                         <thead>
