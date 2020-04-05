@@ -102,6 +102,7 @@ class DivisionStructureController extends Controller
         ])->get();
 
         $data->staffSergeants = $division->staffSergeants()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank'
         ])->get();
 
