@@ -62,16 +62,8 @@
         </li>
     @endcan
 
-    <li class="nav-category">
-        Members
-    </li>
-
     <li class="{{ set_active('search/members') }} visible-xs">
         <a href="{{ route('memberSearch') }}">Search</a>
-    </li>
-
-    <li class="{{ set_active('sergeants') }}">
-        <a href="{{ route('sergeants') }}">Sergeants Structure</a>
     </li>
 
     <li class="{{ set_active('reports/*') }}">
@@ -81,6 +73,10 @@
         </a>
 
         <ul id="reports" class="nav nav-second {{ request()->is('reports/*') ? 'expanded' : 'collapse' }}">
+
+            <li class="{{ set_active('reports/sergeants') }}">
+                <a href="{{ route('sergeants') }}">Sergeants Structure</a>
+            </li>
 
             <li class="{{ set_active('reports/clan-census') }}">
                 <a href="{{ route('reports.clan-census') }}">Clan Census Data</a>

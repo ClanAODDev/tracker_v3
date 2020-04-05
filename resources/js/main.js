@@ -150,6 +150,7 @@ let Tracker = Tracker || {};
         var targetId = $(this).attr('href');
         var top = $(targetId).offset().top - 90;
         $('html, body').stop().animate({scrollTop: top}, 750);
+        window.location.hash = $.attr(this, 'href').substr(1);
       });
 
     },
