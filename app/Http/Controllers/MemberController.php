@@ -69,26 +69,6 @@ class MemberController extends Controller
     }
 
     /**
-     * @return Factory|View
-     */
-    public function sergeants()
-    {
-        $divisions = Division::active()
-            ->with([
-                'sergeants' => function ($query) {
-                    $query->orderByDesc('rank_id');
-                },
-                'sergeants.rank',
-                'sergeants.position',
-            ])
-            ->with('staffSergeants', 'staffSergeants.rank')
-            ->withCount('sgtAndSsgt')
-            ->get()->sortBy('name');
-
-        return view('member.sergeants', compact('divisions'));
-    }
-
-    /**
      * Endpoint for Bootcomplete
      *
      * @param Request $request

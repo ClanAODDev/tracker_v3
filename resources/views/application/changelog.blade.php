@@ -27,6 +27,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>5 April 2020 - 3.10.1</h4>
+                <hr/>
+                <ul>
+                    <li>Added clan leadership to Sergeants structure report</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>28 March 2020 - 3.10.0</h4>
                 <hr/>
                 <ul>

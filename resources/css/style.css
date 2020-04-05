@@ -3410,6 +3410,11 @@ fieldset[disabled] .form-control {
     padding: 6px 12px !important;
 }
 
+a.rank-hover:hover {
+    color: #fff !important;
+    text-decoration: none;
+}
+
 /**
  * tracker stuff
  */
