@@ -19,13 +19,12 @@
     <div class="container-fluid">
 
         <div class="row m-b-xl">
-            <div class="col-md-12">
-                <h4>
-                    Clan Leadership
-                </h4>
-                <hr>
+
+            <div class="col-md-9">
+
+                <h4 id="leadership"><img src="{{ asset('images/aod-logo.png') }}" class="division-icon-medium"/> Clan Leadership </h4>
                 <div class="panel">
-                    <table class="table table-hover basic-datatable">
+                    <table class="table table-hover table-striped basic-datatable">
                         <thead>
                         <tr>
                             <th>Member</th>
@@ -37,7 +36,8 @@
                         @foreach ($leadership as $member)
                             <tr>
                                 <td>
-                                    <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover" style="color: {{ $member->rank->color }};">
+                                    <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
+                                       style="color: {{ $member->rank->color }};">
                                         {!! $member->present()->rankName !!}
                                     </a>
                                 </td>
@@ -48,26 +48,19 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
 
-        @foreach ($divisions as $division)
 
-            <div class="row m-b-xl">
-                <div class="col-md-12">
-                    <h4>
+                @foreach ($divisions as $division)
+                    <h4 id="{{ $division->abbreviation }}">
                         <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium"/>
                         {{ $division->name }}
                         <span class="badge" title="Sgts and SSgts">{{ $division->sgt_and_ssgt_count }} Sgts*</span>
                         <span class="badge">{{ $division->members_count }} Members</span>
                         <span class="badge">{{ ratio($division->sgt_and_ssgt_count, $division->members_count) }}*</span>
-
                     </h4>
 
-                    <hr>
-
                     <div class="panel pt-0">
-                        <table class="table table-hover basic-datatable">
+                        <table class="table table-striped table-hover basic-datatable">
                             <thead>
                             <tr>
                                 <th>Member</th>
@@ -82,7 +75,8 @@
                             @foreach ( $division->sergeants as $member)
                                 <tr>
                                     <td>
-                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover" style="color: {{ $member->rank->color }};">
+                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
+                                           style="color: {{ $member->rank->color }};">
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
@@ -98,7 +92,8 @@
 
                                 <tr>
                                     <td>
-                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover" style="color: {{ $member->rank->color }};">
+                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
+                                           style="color: {{ $member->rank->color }};">
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
@@ -118,10 +113,26 @@
                                 not included</small>
                         </div>
                     </div>
+                @endforeach
+            </div>
+
+
+            <div class="col-md-3" style="position: sticky; top: 75px">
+                <div class="panel panel-filled">
+                    <div class="panel-heading">Navigation</div>
+                    <ul>
+                        <li><a href="#leadership" class="smooth-scroll">Clan Leadership</a></li>
+                        @foreach($divisions as $division)
+                            <li><a href="#{{ $division->abbreviation }}" class="smooth-scroll">{{ $division->name }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
-        @endforeach
+
+        </div>
 
     </div>
 @stop
+
 
