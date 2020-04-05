@@ -10,12 +10,6 @@
             </li>
 
             @if ($member->user)
-                @can('update', $member->user)
-                    <li>
-                        <a href="{{ route('editUser', $member->clan_id) }}"> Edit account</a>
-                    </li>
-                @endcan
-
                 @if (auth()->user()->isRole('admin') && !(session('impersonating')))
                     @unless($member->user->id === auth()->user()->id)
                         <li>
