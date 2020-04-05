@@ -7,9 +7,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
     Route::post('assign-squad', 'SquadController@assignMember');
 
-
     Route::get('{member}/edit-member', 'MemberController@edit')->name('editMember');
-    Route::get('{member}/edit-user', 'UserController@edit')->name('editUser');
     Route::get('{member}/edit-part-time', 'MemberController@editPartTime')->name('member.edit-part-time');
     Route::get('{member}/edit-handles', 'MemberController@editHandles')->name('member.edit-handles');
     Route::post('search/{name}', 'MemberController@search');

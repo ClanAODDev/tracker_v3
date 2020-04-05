@@ -6,11 +6,6 @@ Vue.component(
 );
 
 Vue.component(
-  'manage-user-account',
-  require('./components/member-edit/ManageUser.vue')
-);
-
-Vue.component(
   'manage-handles',
   require('./components/member-edit/ManageHandles.vue')
 );
