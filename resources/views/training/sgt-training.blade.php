@@ -146,16 +146,12 @@
                         <div class="tab-pane fade p-md" id="ts-mod" role="tabpanel">
                             <h4>TS Moderation</h4>
 
-                            <p>
-                                Moving members - Ask permission first - Do not abuse
-                                Kicking/Banning - Remind them that they cannot reverse a permanent ban
-                                Adding Channels - As needed, make sure that they are temporary, and clean up after they
-                                are
-                                done with the
-                                channel. CO/XO should be consulted before changing any permanent channel in the
-                                Division's
-                                area
-                            </p>
+                            <ul>
+                                <li>Moving members - Ask permission first - Do not abuse</li>
+                                <li>Kicking/Banning - Remind them that they cannot reverse a permanent ban</li>
+                                <li>Adding Channels - As needed, make sure that they are temporary, and clean up after they are done with the channel.</li>
+                                <li>CO/XO should be consulted before changing any permanent channel in the Division's area</li>
+                            </ul>
                         </div>
                         <div class="tab-pane fade p-md" id="misc" role="tabpanel">
                             <h4>Misc Information</h4>
