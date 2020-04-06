@@ -194,8 +194,7 @@
                         <div class="panel panel-filled {{ $errors->has('clan_id') ? 'panel-c-danger' : null }}">
                             <div class="panel-heading">Confirm Training</div>
                             <div class="panel-body">
-                                <p>By submitting this form, you confirm that training has been completed for this
-                                    SGT</p>
+                                <p>Enter the clan id for the SGT you are training.</p>
                             </div>
                             <div class="panel-footer">
 
