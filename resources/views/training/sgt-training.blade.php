@@ -190,7 +190,8 @@
                         <div class="panel panel-filled {{ $errors->has('clan_id') ? 'panel-c-danger' : null }}">
                             <div class="panel-heading">Confirm Training</div>
                             <div class="panel-body">
-                                <p>Enter the clan id for the SGT you are training.</p>
+                                <p>Once you are finished with the training session, enter the clan id for the SGT you are training and submit.</p>
+                                <p>This will update the member's last training date, and set you as the trainer.</p>
                             </div>
                             <div class="panel-footer">
 
