@@ -10,6 +10,10 @@ Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('
 
 Route::group(['prefix' => 'training'], function () {
     Route::get('', 'TrainingController@index')->name('training.index');
+    Route::get('sgt', 'TrainingController@sgtTraining')->name('training.sgt');
+    Route::get('ssgt', 'TrainingController@index')->name('training.ssgt');
+    Route::get('msgt', 'TrainingController@index')->name('training.msgt');
+    Route::post('', 'TrainingController@update')->name('training.update');
 });
 
 Route::group(['prefix' => 'help', 'middleware' => ['auth']], function () {
