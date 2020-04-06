@@ -91,6 +91,6 @@ class UserPolicy
 
     public function train(User $user)
     {
-        return $user->canTrainMembers();
+        return $user->member->rank_id > 9 && in_array($user->role_id, [4, 5]);
     }
 }
