@@ -9,6 +9,12 @@
                 <a href="{{ route('editMember', $member->clan_id) }}"> Edit member</a>
             </li>
 
+            @can('train', auth()->user())
+                <li>
+                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}">Sgt Training</a>
+                </li>
+            @endcan
+
             @if ($member->user)
                 @if (auth()->user()->isRole('admin') && !(session('impersonating')))
                     @unless($member->user->id === auth()->user()->id)

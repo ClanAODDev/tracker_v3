@@ -9,7 +9,6 @@ Route::get('/impersonate-end/', 'ImpersonationController@endImpersonation')->nam
 Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('impersonate');
 
 Route::group(['prefix' => 'training'], function () {
-    Route::get('', 'TrainingController@index')->name('training.index');
     Route::get('sgt', 'TrainingController@sgtTraining')->name('training.sgt');
     Route::get('ssgt', 'TrainingController@index')->name('training.ssgt');
     Route::get('msgt', 'TrainingController@index')->name('training.msgt');
