@@ -24,7 +24,7 @@ class Ticket extends Model
     /**
      * @return BelongsTo
      */
-    public function caller()
+    public function user()
     {
         return $this->belongsTo(\App\User::class);
     }
