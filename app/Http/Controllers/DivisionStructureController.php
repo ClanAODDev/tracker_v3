@@ -139,7 +139,7 @@ class DivisionStructureController extends Controller
         $data->leaders = $data->leaders->each($this->getMemberHandle());
         $data->partTimeMembers = $data->partTimeMembers->each($this->getMemberHandle());
         $data->generalSergeants = $data->generalSergeants->each($this->getMemberHandle());
-//        $data->staffSergeants = $data->staffSergeants->each($this->getMemberHandle());
+        $data->staffSergeants = $data->staffSergeants->each($this->getMemberHandle());
 
         // platoon->leader->handle
         $data->platoons = $data->platoons->each(function ($platoon) {
