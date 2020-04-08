@@ -4,8 +4,10 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Text;
 
 class Ticket extends Resource
 {
@@ -29,28 +31,33 @@ class Ticket extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'description'
+        'id',
+        'description'
     ];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Ticket Type', 'type_id'),
-            HasOne::make('Caller'),
+            BelongsTo::make('Type', null, \App\Nova\TicketType::class),
+            BelongsTo::make('User', 'user', \App\Nova\User::class)->searchable(),
+            BelongsTo::make('Owner', 'owner', \App\Nova\User::class)->searchable(),
+            Text::make('Description'),
+            Date::make('Created At'),
+            Date::make('Updated At'),
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -61,7 +68,7 @@ class Ticket extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -72,7 +79,7 @@ class Ticket extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -83,7 +90,7 @@ class Ticket extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)
