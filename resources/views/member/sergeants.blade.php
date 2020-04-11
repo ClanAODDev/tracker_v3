@@ -22,7 +22,8 @@
 
             <div class="col-md-9">
 
-                <h4 id="leadership"><img src="{{ asset('images/aod-logo.png') }}" class="division-icon-medium"/> Clan Leadership </h4>
+                <h4 id="leadership"><img src="{{ asset('images/aod-logo.png') }}" class="division-icon-medium"/> Clan
+                    Leadership </h4>
                 <div class="panel">
                     <table class="table table-hover table-striped basic-datatable">
                         <thead>
@@ -42,7 +43,7 @@
                                     </a>
                                 </td>
                                 <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
-                                <td class="hidden-xs hidden-sm">{{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}</td>
+                                <td>{{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}</td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -116,15 +117,14 @@
                 @endforeach
             </div>
 
-
-            <div class="col-md-3" style="position: sticky; top: 75px">
+            <div class="col-md-3 hidden-xs hidden-sm pull-right" style="position: sticky; top: 75px">
                 <div class="panel panel-filled">
-                    <div class="panel-heading">Navigation</div>
-                    <ul>
-                        <li><a href="#leadership" class="smooth-scroll">Clan Leadership</a></li>
+                    <div class="panel-heading"><strong class="text-accent">Navigation</strong></div>
+                    <ul class="page-nav list-group">
+                        <a href="#leadership" class="smooth-scroll list-group-item"><small>Clan Leadership</small></a>
                         @foreach($divisions as $division)
-                            <li><a href="#{{ $division->abbreviation }}" class="smooth-scroll">{{ $division->name }}</a>
-                            </li>
+                            <a href="#{{ $division->abbreviation }}"
+                               class="smooth-scroll list-group-item"><small>{{ $division->name }}</small></a>
                         @endforeach
                     </ul>
                 </div>
@@ -133,6 +133,18 @@
         </div>
 
     </div>
+
+
+    <script>
+        $('body').scrollspy({target: ".page-nav", offset: 50});
+
+        $(document).ready(function () {
+            $(".page-nav").on("activate.bs.scrollspy", function () {
+                var currentItem = $(".page-nav a.active").text();
+                console.log("Currently you are viewing - " + currentItem);
+            })
+        });
+    </script>
 @stop
 
 
