@@ -22,6 +22,20 @@
 
             <div class="col-md-9">
 
+                <div class="panel panel-c-accent panel-filled collapsed">
+                    <div class="panel-heading">
+                        <span class="text-muted">Filter View</span>
+                        <div class="panel-tools">
+                            <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <input id="showSsgts" name="showSsgts" type="checkbox">
+                        <label for="showSsgts">Show Staff Sergeants</label>
+                    </div>
+                </div>
+
+
                 <h4 id="leadership"><img src="{{ asset('images/aod-logo.png') }}" class="division-icon-medium"/> Clan
                     Leadership </h4>
                 <div class="panel">
@@ -91,7 +105,7 @@
 
                             @foreach($division->staffSergeants as $member)
 
-                                <tr>
+                                <tr data-ssgt="1">
                                     <td>
                                         <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
                                            style="color: {{ $member->rank->color }};">
@@ -136,14 +150,16 @@
 
 
     <script>
-        $('body').scrollspy({target: ".page-nav", offset: 50});
-
         $(document).ready(function () {
-            $(".page-nav").on("activate.bs.scrollspy", function () {
-                var currentItem = $(".page-nav a.active").text();
-                console.log("Currently you are viewing - " + currentItem);
-            })
+            $('#showSsgts').click(function () {
+                if ($(this).prop("checked") == true) {
+                    $('tr').not('[data-ssgt]').hide();
+                } else if ($(this).prop("checked") == false) {
+                    $('tr').not('[data-ssgt]').show();
+                }
+            });
         });
+
     </script>
 @stop
 
