@@ -196,6 +196,6 @@ class ReportsController extends Controller
             ->orderByDesc('rank_id')->orderBy('name')
             ->get();
 
-        return view('member.sergeants', compact('divisions', 'leadership'));
+        return view('reports.sergeants', compact('divisions', 'leadership'));
     }
 }
