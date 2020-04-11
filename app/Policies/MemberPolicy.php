@@ -90,11 +90,6 @@ class MemberPolicy
             return false;
         }
 
-        // prevent exploiting ability to change rank to SGT
-        if (!$user->isRole(['admin', 'sr_ldr'])) {
-            return false;
-        }
-
         // use the abbreviation in case id changes for some reason
         if ($user->member->rank_id < Rank::whereAbbreviation('sgt')->first()->id) {
             return false;
@@ -115,6 +110,27 @@ class MemberPolicy
         }
 
         return false;
+    }
+
+    public function promote(User $userPromoting, Member $memberBeingPromoted)
+    {
+        // only admin, sr_ldr, officer can promote
+        if (!$userPromoting->isRole('officer')) {
+            return false;
+        }
+
+        // can only promote up to one below your rank
+        $rankAllowed = $userPromoting->member->rank_id - 1;
+        if ($rankAllowed < $memberBeingPromoted->rank_id) {
+            return false;
+        }
+
+        // can only promote within division
+        if ($userPromoting->member->division_id != $memberBeingPromoted->division_id) {
+            return false;
+        }
+
+        return true;
     }
 
     public function manageIngameHandles(User $user, Member $member)
