@@ -23,10 +23,10 @@
             <div class="col-md-9">
 
                 <div class="panel panel-c-accent panel-filled collapsed">
-                    <div class="panel-heading">
+                    <div class="panel-heading panel-toggle">
                         <span class="text-muted">Filter View</span>
                         <div class="panel-tools">
-                            <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
+                            <i class="fa fa-chevron-up"></i>
                         </div>
                     </div>
                     <div class="panel-body">
