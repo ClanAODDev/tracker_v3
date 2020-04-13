@@ -51,8 +51,7 @@
                         @foreach ($leadership as $member)
                             <tr>
                                 <td>
-                                    <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                       style="color: {{ $member->rank->color }};">
+                                    <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover">
                                         {!! $member->present()->rankName !!}
                                     </a>
                                 </td>
@@ -90,8 +89,7 @@
                             @foreach ( $division->sergeants as $member)
                                 <tr>
                                     <td>
-                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                           style="color: {{ $member->rank->color }};">
+                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover">
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
@@ -108,11 +106,11 @@
                                 <tr data-ssgt="1">
                                     <td>
                                         <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                           style="color: {{ $member->rank->color }};">
+                                        >
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
-                                    <td class="slight text-uppercase" style="color: cyan">
+                                    <td class="slight text-uppercase" style="color: cyan;">
                                         Assigned Staff Sergeant
                                     </td>
                                     <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
@@ -132,13 +130,14 @@
             </div>
 
             <div class="col-md-3 hidden-xs hidden-sm pull-right" style="position: sticky; top: 75px">
-                <div class="panel panel-filled">
-                    <div class="panel-heading"><strong class="text-accent">Navigation</strong></div>
-                    <ul class="page-nav list-group">
-                        <a href="#leadership" class="smooth-scroll list-group-item"><small>Clan Leadership</small></a>
+                <div class="panel panel-filled panel-c-accent">
+                    <div class="panel-heading"><strong>Navigation</strong></div>
+                    <ul class="page-nav">
+                        <li><a href="#leadership" class="smooth-scroll">Clan Leadership</a></li>
                         @foreach($divisions as $division)
-                            <a href="#{{ $division->abbreviation }}"
-                               class="smooth-scroll list-group-item"><small>{{ $division->name }}</small></a>
+                            <li>
+                                <a href="#{{ $division->abbreviation }}" class="smooth-scroll">{{ $division->name }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
