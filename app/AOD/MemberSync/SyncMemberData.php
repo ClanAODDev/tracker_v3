@@ -150,7 +150,7 @@ class SyncMemberData
             // did they transfer to another division?
             /** @var $member \App\Member */
             if (self::$activeClanMembers->contains($member->clan_id)) {
-                self::registerTransfer($member);
+//                self::registerTransfer($member);
 
                 self::hardResetMember($member);
             } else {
