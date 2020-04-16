@@ -22,6 +22,20 @@
 
             <div class="col-md-9">
 
+                <div class="panel panel-c-accent panel-filled collapsed">
+                    <div class="panel-heading panel-toggle">
+                        <span class="text-muted">Filter View</span>
+                        <div class="panel-tools">
+                            <i class="fa fa-chevron-up"></i>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <input id="showSsgts" name="showSsgts" type="checkbox">
+                        <label for="showSsgts">Show Staff Sergeants</label>
+                    </div>
+                </div>
+
+
                 <h4 id="leadership"><img src="{{ asset('images/aod-logo.png') }}" class="division-icon-medium"/> Clan
                     Leadership </h4>
                 <div class="panel">
@@ -37,8 +51,7 @@
                         @foreach ($leadership as $member)
                             <tr>
                                 <td>
-                                    <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                       style="color: {{ $member->rank->color }};">
+                                    <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover">
                                         {!! $member->present()->rankName !!}
                                     </a>
                                 </td>
@@ -76,8 +89,7 @@
                             @foreach ( $division->sergeants as $member)
                                 <tr>
                                     <td>
-                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                           style="color: {{ $member->rank->color }};">
+                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover">
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
@@ -91,14 +103,14 @@
 
                             @foreach($division->staffSergeants as $member)
 
-                                <tr>
+                                <tr data-ssgt="1">
                                     <td>
                                         <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                           style="color: {{ $member->rank->color }};">
+                                        >
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
-                                    <td class="slight text-uppercase" style="color: cyan">
+                                    <td class="slight text-uppercase" style="color: cyan;">
                                         Assigned Staff Sergeant
                                     </td>
                                     <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
@@ -118,13 +130,14 @@
             </div>
 
             <div class="col-md-3 hidden-xs hidden-sm pull-right" style="position: sticky; top: 75px">
-                <div class="panel panel-filled">
-                    <div class="panel-heading"><strong class="text-accent">Navigation</strong></div>
-                    <ul class="page-nav list-group">
-                        <a href="#leadership" class="smooth-scroll list-group-item"><small>Clan Leadership</small></a>
+                <div class="panel panel-filled panel-c-accent">
+                    <div class="panel-heading"><strong>Navigation</strong></div>
+                    <ul class="page-nav">
+                        <li><a href="#leadership" class="smooth-scroll">Clan Leadership</a></li>
                         @foreach($divisions as $division)
-                            <a href="#{{ $division->abbreviation }}"
-                               class="smooth-scroll list-group-item"><small>{{ $division->name }}</small></a>
+                            <li>
+                                <a href="#{{ $division->abbreviation }}" class="smooth-scroll">{{ $division->name }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
@@ -136,14 +149,16 @@
 
 
     <script>
-        $('body').scrollspy({target: ".page-nav", offset: 50});
-
         $(document).ready(function () {
-            $(".page-nav").on("activate.bs.scrollspy", function () {
-                var currentItem = $(".page-nav a.active").text();
-                console.log("Currently you are viewing - " + currentItem);
-            })
+            $('#showSsgts').click(function () {
+                if ($(this).prop("checked") == true) {
+                    $('tr').not('[data-ssgt]').hide();
+                } else if ($(this).prop("checked") == false) {
+                    $('tr').not('[data-ssgt]').show();
+                }
+            });
         });
+
     </script>
 @stop
 
