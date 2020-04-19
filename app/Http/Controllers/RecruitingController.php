@@ -234,6 +234,13 @@ class RecruitingController extends Controller
 
         foreach ($threads as $key => $thread) {
             $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
+            $threads[$key]['status'] = ($request->isTesting)
+                ? true
+                : $division->threadCheckForString(
+                    $request['string'],
+                    $threads[$key]['url']
+                );
+            sleep(1);
         }
 
         return $threads;
@@ -266,14 +273,12 @@ class RecruitingController extends Controller
      */
     public function validateMemberName()
     {
-
-        return response()->json(['memberExists' => false]);
         $name = request('name');
         $memberId = request('member_id');
         
         $result = DB::connection('aod_forums')
             ->select("CALL user_exists('{$name}', {$memberId})");
 
-        return response()->json(['memberExists' => !empty($result)]);
+        return ['memberExists' => !empty($result)];
     }
 }

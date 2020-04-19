@@ -17,6 +17,9 @@
         <hr />
         <division-threads v-if=" ! store.loadingThreads"></division-threads>
         <div v-else><p>Searching threads for posts by member <code>#{{ store.member_id }}</code></p></div>
+        <div class="text-muted" v-if="! store.division.threads.length && ! store.loadingThreads">
+            <p>Run the thread check to poll the AOD forums.</p>
+        </div>
 
         <hr />
 
@@ -48,6 +51,11 @@
 
     methods: {
       validateStep: function () {
+        if (store.threadsIncomplete) {
+          toastr.error('Recruit has not completed all threads!', 'Uh oh...');
+          return;
+        }
+
         store.currentStep = 'step-three';
         store.progress = 75;
       },
