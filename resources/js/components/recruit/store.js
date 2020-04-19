@@ -20,7 +20,6 @@ store.base_url = window.Laravel.appPath;
 // are we in test mode?
 store.inDemoMode = false;
 store.loadingThreads = false;
-store.threadsIncomplete = true;
 
 // application states
 store.currentStep = 'step-one';
@@ -72,21 +71,6 @@ store.getPlatoons = (division) => {
 };
 
 /**
- * has the recruit responded to all threads?
- *
- * @param threads
- */
-store.checkIfIncomplete = function (threads) {
-    threads.forEach(function (thread) {
-        if (!thread.status) {
-            store.threadsIncomplete = true;
-            return;
-        }
-        store.threadsIncomplete = false;
-    });
-};
-
-/**
  * fetches a division's required agreement threads
  *
  * @param division
@@ -100,7 +84,6 @@ store.getDivisionThreads = (division) => {
     }).then(function (response) {
         store.loadingThreads = false;
         store.division.threads = response.data;
-        store.checkIfIncomplete(store.division.threads);
     }).catch(function (error) {
         toastr.error(error, 'Something went wrong while fetching division threads');
     });
