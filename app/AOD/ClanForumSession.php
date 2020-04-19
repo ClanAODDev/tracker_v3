@@ -2,6 +2,7 @@
 
 namespace App\AOD;
 
+use App\AOD\Traits\Procedureable;
 use App\Member;
 use App\User;
 use Auth;
@@ -10,12 +11,8 @@ use Exception;
 
 class ClanForumSession
 {
-    /**
-     * Stored procedure that validates forum session
-     *
-     * @var string
-     */
-    public $storedProcedure = 'check_session';
+
+    use Procedureable;
 
     /**
      * Key containing AOD forum session data
@@ -55,6 +52,11 @@ class ClanForumSession
                 $member->id
             );
 
+            (new ClanForumPermissions())->handleAccountRoles($member->clan_id, array_merge(
+                array_map('intval', explode(',', $sessionData->membergroupids)),
+                [$sessionData->usergroupid]
+            ));
+
             Auth::login($user);
 
             return true;
@@ -70,28 +72,16 @@ class ClanForumSession
             return false;
         }
 
-        $data = $this->callStoredProcedure($_COOKIE[$this->sessionKey]);
-
-        return $data ?? false;
-    }
-
-    /**
-     * @param $aod_session
-     * @return bool|null
-     */
-    private function callStoredProcedure($aod_session)
-    {
         try {
-            $results = DB::connection('aod_forums')
-                ->select("CALL {$this->storedProcedure}('{$aod_session}')");
-
-            return array_key_exists(0, $results)
-                ? $results[0]
-                : null;
+            return $this->callProcedure('check_session', [
+                'session' => $_COOKIE[$this->sessionKey]
+            ]);
         } catch (Exception $exception) {
             return false;
         }
     }
+
+
 
     /**
      * @param $username
