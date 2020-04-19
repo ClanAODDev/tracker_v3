@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\User;
@@ -43,7 +44,6 @@ class LoginController extends Controller
     private function registerNewUser($username)
     {
         if ($member = $this->isCurrentAODMember($username)) {
-
             $user = \App\User::updateOrCreate([
                 'email' => $this->email,
                 'name' => $username,
@@ -124,6 +124,11 @@ class LoginController extends Controller
         if ($user->email !== $this->email) {
             $user->update(['email' => $this->email]);
         }
+
+        (new ClanForumPermissions())->handleAccountRoles(
+            auth()->user()->member->clan_id,
+            $this->roles
+        );
     }
 
     /**
@@ -137,8 +142,6 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         $this->clearLoginAttempts($request);
-
-        $this->handleAccountRoles();
 
         return $this->authenticated($request, $this->guard()->user())
             ?: redirect()->intended($this->redirectPath());

@@ -269,7 +269,7 @@ class RecruitingController extends Controller
     /**
      * @param string $name
      * @param int $memberId
-     * @return array
+     * @return \Illuminate\Http\JsonResponse
      */
     public function validateMemberName()
     {
