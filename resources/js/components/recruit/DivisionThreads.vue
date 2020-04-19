@@ -1,19 +1,20 @@
 <template>
     <div class="thread-list">
 
-        <div class="panel panel-filled thread" :class="(thread.status) ? 'panel-c-success' : 'panel-c-danger'"
+        <div class="panel panel-filled panel-c-info thread" style="cursor: pointer;"
              v-for="thread in store.division.threads">
-            <div class="panel-heading text-uppercase">
+            <div class="panel-heading text-uppercase" @click="toggleItem(thread.thread_id)">
                 {{ thread.thread_name }}
-
                 <button class="btn btn-xs btn-default copy-to-clipboard" type="button"
                         :data-clipboard-text="thread.url">
                     <i class="fa fa-clone"></i>
                 </button>
 
                 <span class="pull-right">
-                        <i class="fa text-success fa-2x fa-check-circle" v-if="thread.status"></i>
-                        <i class="fa text-danger fa-2x fa-times-circle" v-else></i>
+                        <i :class="toggle.indexOf(thread.thread_id) >= 0
+                           ? 'fa text-success fa-2x fa-check-circle'
+                           : 'fa text-danger fa-2x fa-times-circle'"
+                        />
                 </span>
             </div>
 
@@ -25,11 +26,23 @@
 </template>
 
 <script>
-  import store from './store';
+    import store from './store';
 
-  export default {
-    data: () => ({
-      store
-    })
-  };
+    export default {
+        data: () => ({
+            toggle: [],
+            store
+        }),
+
+        methods: {
+            toggleItem: function (key) {
+                var i = this.toggle.indexOf(key)
+                if (i < 0) {
+                    this.toggle.push(key)
+                } else {
+                    this.toggle.splice(i, 1)
+                }
+            }
+        }
+    };
 </script>

@@ -157,39 +157,6 @@ class Division extends Model
     }
 
     /**
-     * @param $string
-     * @param $thread
-     * @return bool
-     */
-    public static function threadCheckForString($string, $thread)
-    {
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $thread . "&goto=newpost");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-        $getPosts = curl_exec($ch);
-        $countPosts = stripos($getPosts, $string);
-
-        if (!$countPosts) {
-            $url = parse_url(curl_last_url($ch));
-            $query = $url['query'];
-            parse_str($query, $url_array);
-            $page = @$url_array['page'] - 1;
-            curl_setopt($ch, CURLOPT_URL, $thread . "&page={$page}");
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-            $getPosts = curl_exec($ch);
-            $countPosts = stripos($getPosts, $string);
-        }
-
-        return ($countPosts) ? true : false;
-    }
-
-    /**
      * @return string
      */
     public function getRouteKeyName()
