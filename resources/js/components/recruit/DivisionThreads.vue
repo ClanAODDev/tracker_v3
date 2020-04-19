@@ -1,8 +1,11 @@
 <template>
     <div class="thread-list">
 
-        <div class="panel panel-filled panel-c-info thread" style="cursor: pointer;"
+        <div :class="toggle.indexOf(thread.thread_id) >= 0
+                ? 'panel panel-filled panel-c-success thread'
+                : 'panel panel-filled panel-c-danger thread'" style="cursor: pointer;"
              v-for="thread in store.division.threads">
+            
             <div class="panel-heading text-uppercase" @click="toggleItem(thread.thread_id)">
                 {{ thread.thread_name }}
 
