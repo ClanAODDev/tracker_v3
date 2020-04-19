@@ -5,7 +5,8 @@
 
         <div class="panel">
             <h3><i class="fa fa-check-circle-o text-accent"></i> Step 3: In-processing</h3>
-            <p>You are almost finished with your recruit. Below are tasks required by your division in order to in-process your new member.</p>
+            <p>You are almost finished with your recruit. Below are tasks required by your division in order to
+                in-process your new member.</p>
         </div>
 
         <div class="row">
@@ -33,63 +34,50 @@
 
         <ts-info></ts-info>
 
-        <hr />
+        <hr/>
 
         <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
-            <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure all of your information is correct before continuing further in the process.
+            <strong>Heads up!</strong> Continuing past this step will add your recruit to the Tracker. Please ensure all
+            of your information is correct before continuing further in the process.
         </p>
-        <hr />
+        <hr/>
 
         <button type="submit" class="btn btn-success pull-right">Continue</button>
-        <button class="pull-left btn btn-default" type="button">Back</button>
+        <button class="pull-left btn btn-default" type="button" @click="backToStepTwo">Back</button>
     </form>
 </template>
 <script>
-  import store from './store.js';
+    import store from './store.js';
 
-  import TSInfo from './TsInfo.vue';
-  import RecapInfo from './RecapInfo.vue';
-  import DemoModeNotice from './DemoModeNotice.vue';
-  import ProgressBar from './ProgressBar.vue';
+    import TSInfo from './TsInfo.vue';
+    import RecapInfo from './RecapInfo.vue';
+    import DemoModeNotice from './DemoModeNotice.vue';
+    import ProgressBar from './ProgressBar.vue';
 
-  export default {
-    data: function () {
-      return {
-        store
-      };
-    },
+    export default {
+        data: function () {
+            return {
+                store
+            };
+        },
 
-    components: {
-      'demo-mode-notice': DemoModeNotice,
-      'ts-info': TSInfo,
-      'recap-info': RecapInfo,
-      'progress-bar': ProgressBar
-    },
+        components: {
+            'demo-mode-notice': DemoModeNotice,
+            'ts-info': TSInfo,
+            'recap-info': RecapInfo,
+            'progress-bar': ProgressBar
+        },
 
-    methods: {
-      validateStep: function () {
-        /*let complete = true;
-        store.division.tasks.forEach(function (task) {
-          if (!task.complete) {
-            complete = false;
-          }
-        });
-
-        if (store.inDemoMode) {
-          store.currentStep = 'step-four';
-          store.progress = 100;
-          return;
+        methods: {
+            validateStep: function () {
+                store.currentStep = 'step-four';
+                store.createMember();
+                store.progress = 100;
+            },
+            backToStepTwo: () => {
+                store.progress = 50;
+                store.currentStep = 'step-two';
+            }
         }
-
-        if (!complete) {
-          toastr.error('Mark all tasks complete as you do them');
-          return;
-        }*/
-
-        store.currentStep = 'step-four';
-        store.createMember();
-        store.progress = 100;
-      },
-    }
-  };
+    };
 </script>
