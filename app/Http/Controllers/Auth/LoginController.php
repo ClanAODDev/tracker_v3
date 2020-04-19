@@ -213,4 +213,42 @@ class LoginController extends Controller
 
         return response()->redirectTo('/');
     }
+
+    /**
+     * Provision account role based on forum groups
+     */
+    private function handleAccountRoles()
+    {
+        $roles = \Illuminate\Support\Arr::flatten($this->roles->toArray());
+
+        $officerRoleIds = \DB::table('divisions')->select('officer_role_id')
+            ->where('active', true)
+            ->where('officer_role_id', '!=', null)
+            ->pluck('officer_role_id')->toArray();
+
+        /**
+         * Update role unless current role matches new role
+         */
+        switch (true) {
+            case array_intersect($roles, ['Banned Users', 49]):
+                return (auth()->user()->role_id != 6) ? $this->assignRole('banned') : null;
+            case array_intersect($roles, ['Administrators', 6]):
+                return (auth()->user()->role_id != 5) ? $this->assignRole('admin') : null;
+            case array_intersect($roles, ['AOD Sergeants', 52, 'AOD Staff Sergeants', 66]):
+                return (auth()->user()->role_id != 4) ? $this->assignRole('sr_ldr') : null;
+            case array_intersect($roles, $officerRoleIds):
+                return (auth()->user()->role_id != 2) ? $this->assignRole('officer') : null;
+            default:
+                return (auth()->user()->role_id != 1) ? $this->assignRole('member') : null;
+        }
+    }
+
+    /**
+     * @param string $role
+     */
+    private function assignRole(string $role)
+    {
+        \Log::info("Role {$role} granted to user " . auth()->id());
+        auth()->user()->assignRole($role);
+    }
 }
