@@ -124,11 +124,6 @@ class LoginController extends Controller
         if ($user->email !== $this->email) {
             $user->update(['email' => $this->email]);
         }
-
-        (new ClanForumPermissions())->handleAccountRoles(
-            $user->member->clan_id,
-            $this->roles
-        );
     }
 
     /**
@@ -142,6 +137,11 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         $this->clearLoginAttempts($request);
+
+        (new ClanForumPermissions())->handleAccountRoles(
+            auth()->user()->member->clan_id,
+            $this->roles
+        );
 
         return $this->authenticated($request, $this->guard()->user())
             ?: redirect()->intended($this->redirectPath());
