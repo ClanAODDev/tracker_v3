@@ -57,9 +57,9 @@ trait AuthenticatesWithAOD
 
         $this->email = $member->email;
 
-        $this->roles = UserGroup::whereIn('usergroupid', array_merge(
+        $this->roles =  array_merge(
             array_map('intval', explode(',', $member->membergroupids)),
             [$member->usergroupid]
-        ))->get();
+        );
     }
 }
