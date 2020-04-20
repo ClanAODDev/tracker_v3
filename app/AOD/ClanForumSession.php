@@ -53,8 +53,7 @@ class ClanForumSession
             );
 
             Auth::login($user);
-
-            \Log::info("Attempted to sync forum permissions via clan forum session. {$member->clan_id}");
+            
             (new ClanForumPermissions())->handleAccountRoles($member->clan_id, array_merge(
                 array_map('intval', explode(',', $sessionData->membergroupids)),
                 [$sessionData->usergroupid]
