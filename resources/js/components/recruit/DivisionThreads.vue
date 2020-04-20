@@ -5,7 +5,7 @@
                 ? 'panel panel-filled panel-c-success thread'
                 : 'panel panel-filled panel-c-danger thread'" style="cursor: pointer;"
              v-for="thread in store.division.threads">
-            
+
             <div class="panel-heading text-uppercase" @click="toggleItem(thread.thread_id)">
                 {{ thread.thread_name }}
 

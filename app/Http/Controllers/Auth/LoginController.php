@@ -103,7 +103,6 @@ class LoginController extends Controller
                 $this->checkForUpdates($user);
                 Auth::login($user);
 
-                \Log::info("Attempted to sync forum permissions via login controller. {$user->member->clan_id}");
                 (new ClanForumPermissions())->handleAccountRoles(
                     $user->member->clan_id,
                     $this->roles
