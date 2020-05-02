@@ -58,9 +58,7 @@ class StaffSergeant extends Resource
 
             BelongsTo::make('member')
                 ->rules('required')
-                ->searchable(),
-
-            Date::make('Created At')
+                ->searchable(),ß
         ];
     }
 
