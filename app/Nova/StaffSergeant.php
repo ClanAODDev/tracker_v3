@@ -58,7 +58,7 @@ class StaffSergeant extends Resource
 
             BelongsTo::make('member')
                 ->rules('required')
-                ->searchable(),ß
+                ->searchable(),
         ];
     }
 
