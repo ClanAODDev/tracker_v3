@@ -53,16 +53,17 @@
                 <div class="row">
 
                     <div class="col-md-4 form-group"
-                         :class="{'input': true, 'has-warning': !store.validMemberId }">
+                         :class="{'input': true, 'has-warning': !store.validMemberId || !store.verifiedEmail }">
                         <label for="member_id">Forum Member Id</label>
                         <input type="number" class="form-control" name="member_id"
                                v-model="store.member_id"
                                id="member_id" v-validate="'required|max:5'"
-                               @change="this.resetThreadsOnIdChange"
                                :disabled="store.inDemoMode"
                                @blur="validateMemberId"/>
                         <span v-show="!store.validMemberId"
                               class="help-block">Enter a valid member id</span>
+                        <span v-show="!store.verifiedEmail"
+                              class="help-block">User has not verified email</span>
                     </div>
 
                     <div class="col-md-4 form-group"
@@ -188,6 +189,11 @@
                             return false;
                         }
 
+                        if (!store.verifiedEmail) {
+                            toastr.error('Member has not yet verified their email and cannot be processed.', true);
+                            return false;
+                        }
+
                         if (!store.validMemberName) {
                             toastr.error('That forum name appears to already be taken.');
                             return false;
@@ -224,13 +230,10 @@
                 if (store.member_id) {
                     axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
                         .then((response) => {
-                            store.validMemberId = response.data.isMember == true;
+                            store.validMemberId = response.data.is_member == true;
+                            store.verifiedEmail = response.data.verified_email == true;
                         });
                 }
-            },
-
-            resetThreadsOnIdChange: () => {
-                store.division.threads = [];
             },
 
             forumNameToIngameName: () => {

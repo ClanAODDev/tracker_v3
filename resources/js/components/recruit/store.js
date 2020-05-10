@@ -33,6 +33,7 @@ store.forum_name = '';
 store.platoon = '';
 store.squad = '';
 store.validMemberId = false;
+store.verifiedEmail = false;
 store.validMemberName = false;
 
 // division data
