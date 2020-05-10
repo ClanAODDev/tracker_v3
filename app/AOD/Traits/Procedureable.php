@@ -7,7 +7,7 @@ trait Procedureable
     /**
      * @param $procedure
      * @param $data
-     * @return bool|null
+     * @return \Illuminate\Support\Collection
      */
     private function callProcedure($procedure, $data)
     {
@@ -24,7 +24,7 @@ trait Procedureable
             }
 
             if (!isset($results) || !property_exists($results, 'userid')) {
-                return;
+                return collect([]);
             }
 
             return $results;

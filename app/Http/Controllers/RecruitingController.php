@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AOD\Traits\Procedureable;
 use App\Division;
 use App\Handle;
 use App\Member;
@@ -24,7 +25,7 @@ use Illuminate\View\View;
  */
 class RecruitingController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, Procedureable;
 
     /**
      * RecruitingController constructor.
@@ -240,23 +241,31 @@ class RecruitingController extends Controller
     }
 
     /**
-     * @param $memberId
+     * @param $member_id
      * @return array
      */
-    public function validateMemberId($memberId)
+    public function validateMemberId($member_id)
     {
         if (app()->environment() === 'local') {
-            if ($memberId == 31832) {
-                return ['isMember' => true];
+            if ($member_id == 31832) {
+                return [
+                    'is_member' => true,
+                    'verified_email' => true
+                ];
             }
 
-            return ['isMember' => false];
+            return [
+                'is_member' => false,
+                'verified_email' => false
+            ];
         }
 
-        $result = DB::connection('aod_forums')
-            ->select("CALL get_user({$memberId})");
+        $result = $this->callProcedure('check_user', $member_id);
 
-        return ['isMember' => !empty($result)];
+        return [
+            'is_member' => !empty($result),
+            'verified_email' => \App\Member::UNVERIFIED_EMAIL_GROUP_ID != $result->usergroupid
+        ];
     }
 
     /**
@@ -266,9 +275,13 @@ class RecruitingController extends Controller
      */
     public function validateMemberName()
     {
+        if (app()->environment() === 'local') {
+            return response()->json(['memberExists' => false]);
+        }
+
         $name = request('name');
         $memberId = request('member_id');
-        
+
         $result = DB::connection('aod_forums')
             ->select("CALL user_exists('{$name}', {$memberId})");
 

@@ -24,6 +24,8 @@ class Member extends Model
         RecordsActivity,
         SoftDeletes;
 
+    public const UNVERIFIED_EMAIL_GROUP_ID = 3;
+
     /**
      * @var array
      */
