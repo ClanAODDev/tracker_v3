@@ -260,7 +260,7 @@ class RecruitingController extends Controller
             ];
         }
 
-        $result = $this->callProcedure('check_user', $member_id);
+        $result = $this->callProcedure('get_user', $member_id);
 
         return [
             'is_member' => !empty($result),
