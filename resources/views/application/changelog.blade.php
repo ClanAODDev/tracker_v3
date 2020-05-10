@@ -27,6 +27,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>10 May 2020 - 3.10.2</h4>
+                <hr/>
+                <ul>
+                    <li>CPLs now appear in the SGT structure, and the SGT structure has been renamed the "Leadership Structure"</li>
+                    <li>Recruiting process now checks that the new member has completed email verification. Recruiters will see an error and cannot continue until this is fixed.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>5 April 2020 - 3.10.1</h4>
                 <hr/>
                 <ul>
