@@ -122,8 +122,7 @@
                 <hr/>
                 <ul>
                     <li>Training information for SGT+ is now maintained by the tracker. This information can be viewed
-                        either clan-wide via the
-                        <a href="{{ route('sergeants') }}">Sergeants</a> index, or by visiting a member's profile.
+                        either clan-wide via the Leadership Structure, or by visiting a member's profile.
                         Leadership information will only display for current Sergeants+
                     </li>
                     <ul>
