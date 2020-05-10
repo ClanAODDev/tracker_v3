@@ -22,12 +22,9 @@
 
             <div class="col-md-9">
 
-                <div class="panel panel-c-accent panel-filled collapsed">
-                    <div class="panel-heading panel-toggle">
+                <div class="panel panel-c-accent panel-filled">
+                    <div class="panel-heading">
                         <span class="text-muted">Filter View</span>
-                        <div class="panel-tools">
-                            <i class="fa fa-chevron-up"></i>
-                        </div>
                     </div>
                     <div class="panel-body">
                         <input id="showSsgts" name="showSsgts" type="checkbox">

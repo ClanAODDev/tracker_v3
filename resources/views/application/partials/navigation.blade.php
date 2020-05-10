@@ -74,8 +74,8 @@
 
         <ul id="reports" class="nav nav-second {{ request()->is('reports/*') ? 'expanded' : 'collapse' }}">
 
-            <li class="{{ set_active('reports/sergeants') }}">
-                <a href="{{ route('sergeants') }}">Sergeants Structure</a>
+            <li class="{{ set_active('reports/leadership') }}">
+                <a href="{{ route('leadership') }}">Leadership Structure</a>
             </li>
 
             <li class="{{ set_active('reports/clan-census') }}">

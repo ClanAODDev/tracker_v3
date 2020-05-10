@@ -176,12 +176,13 @@ class ReportsController extends Controller
     /**
      * @return Factory|View
      */
-    public function sergeants()
+    public function leadership()
     {
         $divisions = Division::active()
             ->with([
                 'sergeants' => function ($query) {
-                    $query->orderByDesc('rank_id');
+                    $query->orderByDesc('rank_id')
+                    ->orWhereIn('position_id', [5,6]);
                 },
                 'sergeants.rank',
                 'sergeants.position',
@@ -196,6 +197,6 @@ class ReportsController extends Controller
             ->orderByDesc('rank_id')->orderBy('name')
             ->get();
 
-        return view('reports.sergeants', compact('divisions', 'leadership'));
+        return view('reports.leadership', compact('divisions', 'leadership'));
     }
 }
