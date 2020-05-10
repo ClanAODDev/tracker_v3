@@ -30,11 +30,11 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
-            if (!is_object($sessionData)) {
+            if (!is_object($sessionData) || !property_exists($sessionData, 'loggedin')) {
                 return false;
             }
 
-            if (property_exists($sessionData, 'loggedin') && !in_array($sessionData->loggedin, [1, 2])) {
+            if (!in_array($sessionData->loggedin, [1, 2])) {
                 return false;
             }
 
