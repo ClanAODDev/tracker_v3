@@ -34,7 +34,7 @@ class ClanForumSession
                 return false;
             }
 
-            if (!in_array($sessionData->loggedin, [1, 2])) {
+            if (property_exists($sessionData, 'loggedin') && !in_array($sessionData->loggedin, [1, 2])) {
                 return false;
             }
 
