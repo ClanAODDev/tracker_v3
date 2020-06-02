@@ -58,7 +58,7 @@ class MemberRequestDenied extends Notification
                 ],
                 [
                     'name' => 'The reason for the denial was:',
-                    'value' => "{$notes}"
+                    'value' => "`{$notes}`"
                 ],
                 [
                     'name' => 'Manage member requests',
