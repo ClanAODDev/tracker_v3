@@ -41,6 +41,7 @@ class Division extends Model
         'slack_alert_division_edited' => false,
         'slack_alert_member_denied' => false,
         'slack_alert_member_approved' => false,
+        'slack_alert_member_transferred' => false,
         'slack_channel' => '',
         'use_welcome_thread' => false,
         'division_structure' => '',
