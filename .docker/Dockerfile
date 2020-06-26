@@ -1,0 +1,59 @@
+# NGINX x ALPINE.
+FROM nginx:1.17.5-alpine
+
+# INSTALL SOME SYSTEM PACKAGES.
+RUN apk --update --no-cache add ca-certificates \
+    bash
+
+# trust this project public key to trust the packages.
+ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
+
+# CONFIGURE ALPINE REPOSITORIES AND PHP BUILD DIR.
+ARG PHP_VERSION=7.4
+ARG ALPINE_VERSION=3.11
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories && \
+    echo "https://dl.bintray.com/php-alpine/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
+
+# INSTALL PHP AND SOME EXTENSIONS. SEE: https://github.com/codecasts/php-alpine
+RUN apk add --no-cache --update php-fpm \
+    php \
+    php-openssl \
+    php-pdo \
+    php-pdo_mysql \
+    php-mbstring \
+    php-phar \
+    php-session \
+    php-dom \
+    php-ctype \
+    php-zlib \
+    php-json \
+    php-xml && \
+    ln -s /usr/bin/php7 /usr/bin/php
+
+# CONFIGURE WEB SERVER.
+RUN mkdir -p /var/www && \
+    mkdir -p /run/php && \
+    mkdir -p /run/nginx && \
+    mkdir -p /etc/nginx/sites-enabled && \
+    mkdir -p /etc/nginx/sites-available && \
+    rm /etc/nginx/nginx.conf && \
+    rm /etc/php7/php-fpm.d/www.conf && \
+    rm /etc/php7/php.ini
+
+# INSTALL COMPOSER.
+COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
+
+# ADD START SCRIPT, NGINX CONFIG AND RUN SCRIPTS.
+ADD config/nginx/nginx.conf /etc/nginx/nginx.conf
+ADD config/nginx/site.conf /etc/nginx/sites-available/default.conf
+ADD config/php/php.ini /etc/php7/php.ini
+ADD config/php-fpm/www.conf /etc/php7/php-fpm.d/www.conf
+
+# EXPOSE PORTS!
+ARG NGINX_HTTP_PORT=80
+ARG NGINX_HTTPS_PORT=443
+EXPOSE ${NGINX_HTTPS_PORT} ${NGINX_HTTP_PORT}
+
+# SET THE WORK DIRECTORY.
+WORKDIR /var/www
