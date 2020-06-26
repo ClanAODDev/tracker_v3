@@ -143,7 +143,7 @@ class DivisionController extends Controller
                 })->first();
             });
 
-        return view('division.part-time', compact('division', 'members', 'removedPartTimers'));
+        return view('division.part-time', compact('division', 'members'));
     }
 
     /**
