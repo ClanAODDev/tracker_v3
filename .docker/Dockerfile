@@ -1,9 +1,13 @@
 # NGINX x ALPINE.
 FROM nginx:1.17.5-alpine
 
+# MAINTAINER OF THE PACKAGE.
+LABEL maintainer="Neo Ighodaro <neo@creativitykills.co>"
+
 # INSTALL SOME SYSTEM PACKAGES.
 RUN apk --update --no-cache add ca-certificates \
-    bash
+    bash \
+    supervisor
 
 # trust this project public key to trust the packages.
 ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
@@ -35,6 +39,7 @@ RUN apk add --no-cache --update php-fpm \
 RUN mkdir -p /var/www && \
     mkdir -p /run/php && \
     mkdir -p /run/nginx && \
+    mkdir -p /var/log/supervisor && \
     mkdir -p /etc/nginx/sites-enabled && \
     mkdir -p /etc/nginx/sites-available && \
     rm /etc/nginx/nginx.conf && \
@@ -45,6 +50,8 @@ RUN mkdir -p /var/www && \
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
 
 # ADD START SCRIPT, NGINX CONFIG AND RUN SCRIPTS.
+ADD start.sh /start.sh
+ADD config/supervisor/supervisord.conf /etc/supervisord.conf
 ADD config/nginx/nginx.conf /etc/nginx/nginx.conf
 ADD config/nginx/site.conf /etc/nginx/sites-available/default.conf
 ADD config/php/php.ini /etc/php7/php.ini
@@ -57,3 +64,6 @@ EXPOSE ${NGINX_HTTPS_PORT} ${NGINX_HTTP_PORT}
 
 # SET THE WORK DIRECTORY.
 WORKDIR /var/www
+
+# KICKSTART!
+CMD ["/start.sh"]

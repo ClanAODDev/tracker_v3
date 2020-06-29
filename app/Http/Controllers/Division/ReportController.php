@@ -95,7 +95,7 @@ class ReportController extends Controller
             $data = [];
         }
 
-        return view('division.reports.ingame-report', compact('division', 'data', 'range'));
+        return view('division.reports.ingame-report', compact('division', 'data'));
     }
 
     /**
