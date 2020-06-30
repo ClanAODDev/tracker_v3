@@ -189,12 +189,6 @@ return [
         App\Providers\NovaServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        /**
-         * Custom Providers
-         * Check for auto-discovery
-         */
-        Whossun\Toastr\ToastrServiceProvider::class,
-
     ],
 
     /*
