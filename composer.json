@@ -31,6 +31,7 @@
         "appstract/laravel-blade-directives": "^0.4.5",
         "sentry/sentry-laravel": "^1.5",
         "fideloper/proxy": "^4.0",
+        "facade/ignition": "^1.0",
         "google/apiclient": "^2.0",
         "laravel/nova": "^2.0",
         "laravel/passport": "^9.2",
