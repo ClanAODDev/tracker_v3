@@ -43,7 +43,7 @@
                             {{ handle.label }}
                         </td>
                         <td class="col-md-8">
-                            <input type="text" class="form-control" :value="handle.value"
+                            <input type="text" class="form-control"
                                    :disabled="!handle.enabled" v-model="handle.value"
                                    :placeholder="handle.enabled ? 'Enter handle value' : 'Activate to enter a value'"
                                    :required="handle.enabled" @keydown="changesMade = true"
