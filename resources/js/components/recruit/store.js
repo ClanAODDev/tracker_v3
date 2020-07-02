@@ -20,6 +20,7 @@ store.base_url = window.Laravel.appPath;
 // are we in test mode?
 store.inDemoMode = false;
 store.loadingThreads = false;
+store.validating = null;
 
 // application states
 store.currentStep = 'step-one';
@@ -35,7 +36,6 @@ store.squad = '';
 store.validMemberId = false;
 store.verifiedEmail = false;
 store.nameDoesNotExist = false;
-store.validating = false;
 
 // division data
 store.handleName = '';

@@ -18,10 +18,10 @@ require('bootstrap-sass');
 
 window.Vue = require('vue');
 
-window.Vue.config.devtools = false;
-window.Vue.config.debug = false;
-window.Vue.config.silent = true;
-window.Vue.config.productionTip = false;
+// window.Vue.config.devtools = false;
+// window.Vue.config.debug = false;
+// window.Vue.config.silent = true;
+// window.Vue.config.productionTip = false;
 
 
 window.VueResource = require('vue-resource');

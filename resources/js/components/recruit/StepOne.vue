@@ -42,8 +42,6 @@
 
         <div class="panel panel-filled">
             <div class="panel-heading">
-                <span class="pull-right" v-if="store.validating"><span class="small">VALIDATING</span> <i
-                        class="fa fa-cog fa-spin fa-fw"></i> </span>
                 <strong class="text-uppercase">Information</strong>
             </div>
             <div class="panel-body">
@@ -66,7 +64,7 @@
 
                     <div class="col-md-4 form-group"
                          :class="{'input': true, 'has-warning': !store.nameDoesNotExist || errors.has('forum_name') }">
-                        <label for="forum_name">Desired Forum Name <span class="text-info">*</span></label>
+                        <label for="forum_name">Desired Forum Name</label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
                                id="forum_name" v-validate="{ required: true, regex: /^[\w\s.-]+$/}"
                                @blur="validateMemberDoesNotExist"
@@ -78,14 +76,6 @@
                         <label for="ingame_name">{{ store.handleName }}</label>
                         <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
                                id="ingame_name" :disabled="store.inDemoMode"/>
-                    </div>
-
-                    <div>
-                        <ul>
-                            <li v-for="error in errors">
-                                {{ error.msg }}
-                            </li>
-                        </ul>
                     </div>
 
                 </div>
@@ -109,10 +99,19 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <p class="text-info">* Provide the forum name the member wishes to use. If it is different than the
-                    member's current name, it will be updated to match.</p>
+                   <span v-show="store.validating">
+                       <span class="small">VALIDATING</span> <i class="fa fa-cog fa-spin fa-fw"></i>
+                   </span>
+                <div class="alert alert-danger" v-if="errors.any()">
+                    <ul>
+                        <li v-for="error in errors">
+                            {{ error.msg }}
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+
 
         <div class="m-t-xl">
             <div class="panel panel-filled" v-if="store.division.platoons">
@@ -177,9 +176,6 @@
     import toastr from 'toastr';
     import ProgressBar from './ProgressBar.vue';
     import {focus} from 'vue-focus';
-    import {ErrorBag} from 'vee-validate';
-
-    const bag = new ErrorBag();
 
     export default {
         directives: {focus: focus},
@@ -224,46 +220,43 @@
 
             validateMemberDoesNotExist: function () {
 
-                console.log(this.errors.items.length);
-
                 if (store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) {
-                    this.$validator.errors.add({
+                    this.errors.add({
                         field: 'forum_name_aod',
                         msg: 'Do not include "AOD_" in the desired forum name'
                     });
                 } else {
-                    this.$validator.errors.remove('forum_name_aod');
+                    this.errors.remove('forum_name_aod');
                 }
-
-                store.validating = true;
 
                 // don't attempt to query a badly formatted name
                 if (store.forum_name && store.member_id && !this.errors.has('forum_name')) {
+                    store.validating = true;
                     axios.post(window.Laravel.appPath + '/validate-name/', {
                         name: store.forum_name.toLowerCase(),
                         member_id: store.member_id
                     }).then((response) => {
                         if (response.data.memberExists) {
-                            if (!this.$validator.errors.has('forum_name_exists')) {
-                                this.$validator.errors.add({
+                            if (!this.errors.has('forum_name_exists')) {
+                                this.errors.add({
                                     field: 'forum_name_exists',
                                     msg: 'The desired forum name is already taken'
                                 });
                             }
                             store.nameDoesNotExist = false;
                         } else {
-                            this.$validator.errors.remove('forum_name_exists');
+                            this.errors.remove('forum_name_exists');
                             store.nameDoesNotExist = true;
                         }
-
+                        store.validating = false;
                     });
-
-                    store.validating = false;
                 }
+
             },
 
             validateMemberId: function () {
                 if (store.member_id) {
+                    store.validating = true;
                     axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
                         .then((response) => {
                             if (!response.data.is_member) {
@@ -291,6 +284,7 @@
                                 this.$validator.errors.remove('member_id_email')
                                 store.verifiedEmail = true;
                             }
+                            store.validating = false;
                         });
                 }
             },
