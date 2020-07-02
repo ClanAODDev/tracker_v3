@@ -186,7 +186,9 @@
 
                 this.$validator.validateAll().then((result) => {
 
-                    if (!result) {
+                    console.log(result);
+
+                    if (!result || this.errors.fields().length) {
                         toastr.error('Something is wrong with your member information', 'Error');
                         return false;
                     }
@@ -203,7 +205,7 @@
 
             validateMemberDoesNotExist: function () {
 
-                if (store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) {
+                if ((store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) && !this.errors.has('forum_name_aod')) {
                     this.errors.add({
                         field: 'forum_name_aod',
                         msg: 'Do not include "AOD_" in the desired forum name'
