@@ -65,7 +65,7 @@ class MemberRequestController extends Controller
             return redirect(route('admin.member-request.index'));
         }
 
-        return view('admin.reprocess-request', compact('approved', 'request'));
+        return view('admin.reprocess-request', compact('request'));
     }
 
     public function approve($requestId)
