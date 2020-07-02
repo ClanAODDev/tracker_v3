@@ -27,6 +27,22 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>1 July 2020 - 3.10.3</h4>
+                <hr/>
+                <ul>
+                    <li>The underlying framework was upgraded to 6.x. An additional upgrade to 7.x is forthcoming.</li>
+                    <li>The recruiting process has received some updates, specifically: <ul>
+                            <li>Forum names and member ids are much more stringently validated. Only letters, numbers, dashes, spaces, and periods are acceptable</li>
+                            <li>Error messages now appear in a group at the bottom of the form</li>
+                            <li>The validation process is announced rather than running silently</li>
+                            <li>Prevented a race condition that would allow users to proceed while validation was ongoing</li>
+                        </ul></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>10 May 2020 - 3.10.2</h4>
                 <hr/>
                 <ul>
