@@ -34,7 +34,8 @@ store.platoon = '';
 store.squad = '';
 store.validMemberId = false;
 store.verifiedEmail = false;
-store.validMemberName = false;
+store.nameDoesNotExist = false;
+store.validating = false;
 
 // division data
 store.handleName = '';
