@@ -263,7 +263,7 @@ class RecruitingController extends Controller
         $result = $this->callProcedure('get_user', $member_id);
 
 
-        if (!property_exists('usergroupid', $result)) {
+        if (!property_exists($result, 'usergroupid')) {
             return [
                 'is_member' => false,
                 'verified_email' => false
