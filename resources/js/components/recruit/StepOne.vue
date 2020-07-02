@@ -217,6 +217,7 @@
 
             validateMemberDoesNotExist: function () {
                 if (store.forum_name && store.member_id) {
+                console.log(this.errors.items.length);
                     axios.post(window.Laravel.appPath + '/validate-name/', {
                         name: store.forum_name.toLowerCase(),
                         member_id: store.member_id
