@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-center md animated fadeInDown">
+    <div class="container-center md">
         @component('application.components.view-heading')
             @slot('heading')
                 He's dead, Jim!
@@ -23,6 +23,10 @@
                 An application error occurred. Please contact your division leadership or a clan administrator to report the problem.
             </div>
         </div>
+
+
+
+
         <div>
             <a href="{{ route('home') }}" class="btn btn-accent">Back to app</a>
         </div>

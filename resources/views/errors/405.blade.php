@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-center md animated fadeInDown">
+    <div class="container-center md">
         @component('application.components.view-heading')
             @slot('heading')
                 Unauthorized
