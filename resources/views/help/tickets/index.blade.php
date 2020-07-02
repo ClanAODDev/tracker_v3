@@ -38,7 +38,7 @@
                             <tr>
                                 <td>{{ $ticket->id }}</td>
                                 <td class="text-info">{{ $ticket->type->name }}</td>
-                                <td>{{ $ticket->caller->name }}</td>
+                                <td>{{ $ticket->user->name }}</td>
                                 @if($ticket->owner)
                                     <td class="text-accent">{{ $ticket->owner->name }}</td>
                                 @else
@@ -74,7 +74,7 @@
                             <tr>
                                 <td>{{ $ticket->id }}</td>
                                 <td>{{ $ticket->type->name }}</td>
-                                <td>{{ $ticket->caller->name }}</td>
+                                <td>{{ $ticket->user->name }}</td>
                                 <td>{{ $ticket->owner->name ?? "Unassigned" }}</td>
                                 <td>{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
                             </tr>

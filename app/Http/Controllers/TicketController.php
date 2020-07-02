@@ -14,9 +14,9 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $openTickets = Ticket::open()->with('type', 'caller', 'owner')->latest()->get();
+        $openTickets = Ticket::open()->with('type', 'user', 'owner')->latest()->get();
 
-        $closedTickets = Ticket::closed()->with('type', 'caller', 'owner')->latest()->get();
+        $closedTickets = Ticket::closed()->with('type', 'user', 'owner')->latest()->get();
 
         return view('help.tickets.index', compact('openTickets', 'closedTickets'));
     }
