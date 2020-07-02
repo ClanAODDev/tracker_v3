@@ -103,6 +103,7 @@
                        <span class="small">VALIDATING</span> <i class="fa fa-cog fa-spin fa-fw"></i>
                    </span>
                 <div class="alert alert-danger" v-if="errors.any()">
+                    <strong>Some errors were found:</strong>
                     <ul>
                         <li v-for="error in errors">
                             {{ error.msg }}
@@ -188,6 +189,12 @@
 
                     if (!result || this.errors.any()) {
                         toastr.error('Something is wrong with your member information', 'Error');
+                        return false;
+                    }
+
+                    if (store.validating) {
+                        // don't allow progress if validating
+                        toastr.error('Not ready yet...', 'Error');
                         return false;
                     }
 
