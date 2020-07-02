@@ -33,6 +33,7 @@
                     <li>The underlying framework was upgraded to 6.x. An additional upgrade to 7.x is forthcoming.</li>
                     <li>The recruiting process has received some updates, specifically: <ul>
                             <li>Forum names and member ids are much more stringently validated. Only letters, numbers, dashes, spaces, and periods are acceptable</li>
+                            <li>Fixed a bug where users could enter thread ids instead of member ids, which was not correctly validated</li>
                             <li>Error messages now appear in a group at the bottom of the form</li>
                             <li>The validation process is announced rather than running silently</li>
                             <li>Prevented a race condition that would allow users to proceed while validation was ongoing</li>
