@@ -186,25 +186,8 @@
 
                 this.$validator.validateAll().then((result) => {
 
-                    if (!store.inDemoMode) {
-                        if (!store.validMemberId) {
-                            toastr.error('Oops, your member id appears to be invalid!');
-                            return false;
-                        }
-
-                        if (!store.verifiedEmail) {
-                            toastr.error('Member has not yet verified their email and cannot be processed.', true);
-                            return false;
-                        }
-
-                        if (!store.nameDoesNotExist) {
-                            toastr.error('That forum name appears to already be taken.');
-                            return false;
-                        }
-                    }
-
                     if (!result) {
-                        toastr.error('Something is wrong with your member information', 'Uh oh...');
+                        toastr.error('Something is wrong with your member information', 'Error');
                         return false;
                     }
 
