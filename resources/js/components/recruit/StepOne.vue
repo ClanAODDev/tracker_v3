@@ -42,6 +42,8 @@
 
         <div class="panel panel-filled">
             <div class="panel-heading">
+                <span class="pull-right" v-if="store.validating"><span class="small">VALIDATING</span> <i
+                        class="fa fa-cog fa-spin fa-fw"></i> </span>
                 <strong class="text-uppercase">Information</strong>
             </div>
             <div class="panel-body">
@@ -60,21 +62,15 @@
                                id="member_id" v-validate="'required|max:5'"
                                :disabled="store.inDemoMode"
                                @blur="validateMemberId"/>
-                        <span v-show="!store.validMemberId"
-                              class="help-block">Enter a valid member id</span>
-                        <span v-show="!store.verifiedEmail"
-                              class="help-block">User has not verified email</span>
                     </div>
 
                     <div class="col-md-4 form-group"
-                         :class="{'input': true, 'has-warning': !store.validMemberName }">
+                         :class="{'input': true, 'has-warning': !store.nameDoesNotExist || errors.has('forum_name') }">
                         <label for="forum_name">Desired Forum Name <span class="text-info">*</span></label>
                         <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
-                               id="forum_name" v-validate="{ required: true, regex: /^((?!AOD_|aod_).)*$/}"
+                               id="forum_name" v-validate="{ required: true, regex: /^[\w\s.-]+$/}"
                                @blur="validateMemberDoesNotExist"
                                :disabled="store.inDemoMode"/>
-                        <span v-show="!store.validMemberName"
-                              class="help-block">Enter a valid member name</span>
                     </div>
 
                     <div class="col-md-4 form-group"
@@ -82,6 +78,14 @@
                         <label for="ingame_name">{{ store.handleName }}</label>
                         <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
                                id="ingame_name" :disabled="store.inDemoMode"/>
+                    </div>
+
+                    <div>
+                        <ul>
+                            <li v-for="error in errors">
+                                {{ error.msg }}
+                            </li>
+                        </ul>
                     </div>
 
                 </div>
@@ -173,6 +177,9 @@
     import toastr from 'toastr';
     import ProgressBar from './ProgressBar.vue';
     import {focus} from 'vue-focus';
+    import {ErrorBag} from 'vee-validate';
+
+    const bag = new ErrorBag();
 
     export default {
         directives: {focus: focus},
@@ -194,7 +201,7 @@
                             return false;
                         }
 
-                        if (!store.validMemberName) {
+                        if (!store.nameDoesNotExist) {
                             toastr.error('That forum name appears to already be taken.');
                             return false;
                         }
@@ -209,21 +216,49 @@
                     store.currentStep = 'step-two';
                     store.progress = 50;
                 }).catch(() => {
-                    toastr.error('Something is wrong with your member information', 'Uh oh...');
+                    toastr.error('Something is wrong with your member information', 'Error');
                     return false;
                 });
 
             },
 
             validateMemberDoesNotExist: function () {
-                if (store.forum_name && store.member_id) {
+
                 console.log(this.errors.items.length);
+
+                if (store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) {
+                    this.$validator.errors.add({
+                        field: 'forum_name_aod',
+                        msg: 'Do not include "AOD_" in the desired forum name'
+                    });
+                } else {
+                    this.$validator.errors.remove('forum_name_aod');
+                }
+
+                store.validating = true;
+
+                // don't attempt to query a badly formatted name
+                if (store.forum_name && store.member_id && !this.errors.has('forum_name')) {
                     axios.post(window.Laravel.appPath + '/validate-name/', {
                         name: store.forum_name.toLowerCase(),
                         member_id: store.member_id
                     }).then((response) => {
-                        store.validMemberName = response.data.memberExists == false;
+                        if (response.data.memberExists) {
+                            if (!this.$validator.errors.has('forum_name_exists')) {
+                                this.$validator.errors.add({
+                                    field: 'forum_name_exists',
+                                    msg: 'The desired forum name is already taken'
+                                });
+                            }
+                            store.nameDoesNotExist = false;
+                        } else {
+                            this.$validator.errors.remove('forum_name_exists');
+                            store.nameDoesNotExist = true;
+                        }
+
                     });
+
+                    store.validating = false;
                 }
             },
 
@@ -231,8 +266,31 @@
                 if (store.member_id) {
                     axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
                         .then((response) => {
-                            store.validMemberId = response.data.is_member == true;
-                            store.verifiedEmail = response.data.verified_email == true;
+                            if (!response.data.is_member) {
+                                store.validMemberId = false;
+                                if (!this.$validator.errors.has('member_id')) {
+                                    this.$validator.errors.add({
+                                        field: 'member_id',
+                                        msg: 'The provided member id is invalid'
+                                    });
+                                }
+                            } else {
+                                this.$validator.errors.remove('member_id');
+                                store.validMemberId = true;
+                            }
+
+                            if (!response.data.verified_email) {
+                                if (!this.$validator.errors.has('member_id_email')) {
+                                    this.$validator.errors.add({
+                                        field: 'member_id_email',
+                                        msg: 'The provided member has not completed email verification'
+                                    });
+                                }
+                                store.verifiedEmail = false;
+                            } else {
+                                this.$validator.errors.remove('member_id_email')
+                                store.verifiedEmail = true;
+                            }
                         });
                 }
             },
