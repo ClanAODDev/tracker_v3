@@ -186,9 +186,7 @@
 
                 this.$validator.validateAll().then((result) => {
 
-                    console.log(result);
-
-                    if (!result || this.errors.fields().length) {
+                    if (!result || this.errors.any()) {
                         toastr.error('Something is wrong with your member information', 'Error');
                         return false;
                     }
