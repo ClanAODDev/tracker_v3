@@ -31,6 +31,7 @@
                 <hr/>
                 <ul>
                     <li>The underlying framework was upgraded to 7.19.1 - additional changes coming soon</li>
+                    <li>Member requests can now be placed on hold by admins. Divisions will receive a discord notice when this occurs.</li>
                 </ul>
             </div>
         </div>
