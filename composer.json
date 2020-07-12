@@ -36,8 +36,7 @@
         "laravel/nova": "^3.0",
         "laravel/passport": "^9.2",
         "brian2694/laravel-toastr": "^5.53",
-        "rcrowe/twigbridge": "^0.12.0",
-        "laravel/ui": "^2.1"
+        "rcrowe/twigbridge": "^0.12.0"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
@@ -48,7 +47,8 @@
         "beyondcode/laravel-er-diagram-generator": "^0.2.2",
         "filp/whoops": "^2.0",
         "nunomaduro/collision": "^4.1",
-        "beyondcode/laravel-dump-server": "^1.0"
+        "beyondcode/laravel-dump-server": "^1.0",
+        "laravel/ui": "^2.1"
     },
     "autoload": {
         "classmap": [
