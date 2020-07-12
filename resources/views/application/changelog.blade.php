@@ -32,6 +32,7 @@
                 <ul>
                     <li>The underlying framework was upgraded to 7.19.1 - additional changes coming soon</li>
                     <li>Member requests can now be placed on hold by admins. Divisions will receive a discord notice when this occurs.</li>
+                    <li>Admins can now see all member requests, even those in the 2 hour grace period.</li>
                 </ul>
             </div>
         </div>
