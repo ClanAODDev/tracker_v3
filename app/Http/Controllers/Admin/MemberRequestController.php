@@ -8,6 +8,8 @@ use App\MemberRequest;
 use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
 use App\Notifications\MemberRequestDenied;
+use App\Notifications\MemberRequestPutOnHold;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +34,6 @@ class MemberRequestController extends Controller
         $this->authorize('manage', MemberRequest::class);
 
         $pending = MemberRequest::pending()
-            ->pastGracePeriod()
             ->with('member', 'member.rank', 'requester', 'division')
             ->get();
 
@@ -42,7 +43,11 @@ class MemberRequestController extends Controller
             ->where('processed_at', null)
             ->get();
 
-        return view('admin.member-requests', compact('pending', 'approved'));
+        $onHold = MemberRequest::onHold()
+            ->with('member', 'member.rank', 'approver', 'division')
+            ->get();
+
+        return view('admin.member-requests', compact('pending', 'approved', 'onHold'));
     }
 
     /**
@@ -83,11 +88,11 @@ class MemberRequestController extends Controller
         return $request;
     }
 
-    public function cancel($requestId)
+    public function cancel(Request $request, $requestId)
     {
         $this->authorize('manage', MemberRequest::class);
 
-        $this->validate(request(), [
+        $request->validate([
             'notes' => 'required|max:1000'
         ], [
             'notes.required' => 'You must provide a justification!'
@@ -95,7 +100,7 @@ class MemberRequestController extends Controller
 
         $request = MemberRequest::find($requestId);
 
-        $request->cancel();
+        $request->cancel($request->notes);
 
         if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
             $request->division->notify(new MemberRequestDenied($request));
@@ -105,8 +110,8 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param MemberRequest $memberRequest
+     * @param  Request  $request
+     * @param  MemberRequest  $memberRequest
      */
     public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
@@ -124,12 +129,35 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param MemberRequest $memberRequest
+     * @param  Request  $request
+     * @param  MemberRequest  $memberRequest
      * @return array
      */
     public function isAlreadyMember(Request $request, MemberRequest $memberRequest)
     {
         return ['isMember' => $memberRequest->approved_at !== null];
+    }
+
+    /**
+     * @param  Request  $request
+     * @param  MemberRequest  $memberRequest
+     * @return MemberRequest
+     * @throws AuthorizationException
+     */
+    public function placeOnHold(Request $request, $requestId)
+    {
+        $this->authorize('manage', MemberRequest::class);
+
+        $request->validate([
+            'notes' => 'required'
+        ]);
+
+        $memberRequest = MemberRequest::find($requestId);
+
+        $memberRequest->placeOnHold($request->notes);
+
+        $memberRequest->division->notify(new MemberRequestPutOnHold($memberRequest));
+
+        return $memberRequest;
     }
 }

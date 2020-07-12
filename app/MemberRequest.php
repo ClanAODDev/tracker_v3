@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MemberRequest extends Model
 {
-    protected $appends = ['approvePath', 'timeWaiting', 'name'];
+    protected $appends = ['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'];
 
     protected $guarded = [];
 
-    protected $dates = ['approved_at', 'cancelled_at', 'processed_at'];
+    protected $dates = ['approved_at', 'cancelled_at', 'processed_at', 'hold_placed_at'];
 
     /**
      * @return BelongsTo
@@ -46,6 +46,11 @@ class MemberRequest extends Model
         return $this->belongsTo(Division::class);
     }
 
+    public function scopeOnHold($query)
+    {
+        return $query->where('hold_placed_at', '!=', null);
+    }
+
     /**
      * @param $query
      * @return mixed
@@ -53,12 +58,18 @@ class MemberRequest extends Model
     public function scopePending($query)
     {
         return $query->where('approved_at', null)
-            ->where('cancelled_at', null);
+            ->where('cancelled_at', null)
+            ->where('hold_placed_at', null);
+    }
+
+    public function getIsPastGracePeriodAttribute()
+    {
+        return ($this->created_at <= now()->subHours(2));
     }
 
     public function scopePastGracePeriod($query)
     {
-        return $query->where('created_at', '<=', Carbon::now()->subHour(2));
+        return $query->where('created_at', '<=', now()->subHours(2));
     }
 
     /**
@@ -128,13 +139,14 @@ class MemberRequest extends Model
 
     /**
      * Cancel a member request
+     * @param $notes
      */
-    public function cancel()
+    public function cancel($notes)
     {
         $this->update([
             'cancelled_at' => now(),
             'canceller_id' => auth()->user()->member->clan_id,
-            'notes' => request('notes'),
+            'notes' => $notes,
         ]);
     }
 
@@ -165,5 +177,14 @@ class MemberRequest extends Model
     public function process()
     {
         $this->update(['processed_at' => now()]);
+    }
+
+    public function placeOnHold($notes)
+    {
+        $this->update([
+            'hold_placed_at' => now(),
+            'approver_id' => auth()->user()->member->clan_id,
+            'notes' => $notes,
+        ]);
     }
 }
