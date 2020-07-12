@@ -17,6 +17,9 @@ Route::group(['prefix' => 'clan'], function () {
     Route::post('member-requests/{requestId}/cancel', 'Admin\MemberRequestController@cancel')
         ->name('admin.member-request.cancel');
 
+    Route::post('member-requests/{requestId}/hold', 'Admin\MemberRequestController@placeOnHold')
+        ->name('admin.member-request.place-on-hold');
+
     Route::post('member-requests/{memberRequest}/requeue', 'Admin\MemberRequestController@requeue')
         ->name('admin.member-request.requeue');
 

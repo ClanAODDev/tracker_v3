@@ -29,6 +29,8 @@
             </member-requests>
 
             @include('admin.partials.approved-requests')
+            @include('admin.partials.requests-on-hold')
+
         </div>
     </div>
 

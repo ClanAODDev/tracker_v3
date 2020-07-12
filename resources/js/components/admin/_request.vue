@@ -1,6 +1,7 @@
 <template>
-    <tr>
+    <tr :class="{'grace-period': !isPastGracePeriod}">
         <td>
+            <i class="fa fa-hourglass-half" v-show="!isPastGracePeriod" title="Grace period"></i>
             <div class="input-group" v-if="editing">
                 <input type="text" class="form-control" v-model="name"
                        @input="buildPath">
@@ -17,50 +18,74 @@
         <td>{{ division }}</td>
         <td class="text-center">{{ this.data.timeWaiting }}</td>
         <td>
-            <button @click="approve()"
-                    class="btn btn-success btn-block">
-                <i class="fa fa-user-plus"></i>
-            </button>
-        </td>
-        <td>
-            <button @click="cancel()"
-                    class="btn btn-warning btn-block">
-                <i class="fa fa-times"></i>
-            </button>
+
+            <div class="btn-group">
+                <button @click="approve()"
+                        class="btn btn-success mr-2">
+                    <small class="text-uppercase"><i class="fa fa-user-plus"></i> Approve</small>
+                </button>
+
+                <button @click="placeOnHold()"
+                        class="btn btn-warning mr-2">
+                    <small class="text-uppercase"><i class="fa fa-hourglass-half"></i> Hold</small>
+                </button>
+
+                <button @click="cancel()"
+                        class="btn btn-danger">
+                    <small class="text-uppercase"><i class="fa fa-times"></i> Cancel</small>
+                </button>
+            </div>
         </td>
     </tr>
 </template>
 
 <script>
-  export default {
-    props: ['data'],
-    created () {
-      this.buildPath();
-    },
-    methods: {
-      approve () {
-        this.$emit('approved', {id: this.id, path: this.path});
+    export default {
+        props: ['data'],
+        created() {
+            this.buildPath();
+        },
 
-        if (this.name !== this.data.name) {
-          this.$emit('name-changed', {oldName: this.data.name, newName: this.name, id: this.id});
-        }
-      },
-      cancel () {
-        this.$emit('cancelled', this.id);
-      },
-      buildPath () {
-        this.path = this.data.approvePath + this.name;
-      }
-    },
-    data: function () {
-      return {
-        editing: false,
-        id: this.data.id,
-        name: this.data.name,
-        division: this.data.division.name,
-        path: '',
-        notes: '',
-      };
-    },
-  };
+        computed: {
+            isPastGracePeriod() {
+                console.log(this.data.isPastGracePeriod);
+                return (this.data.isPastGracePeriod);
+            },
+        },
+        methods: {
+
+            approve() {
+                this.$emit('approved', {id: this.id, path: this.path});
+
+                if (this.name !== this.data.name) {
+                    this.$emit('name-changed', {oldName: this.data.name, newName: this.name, id: this.id});
+                }
+            },
+            cancel() {
+                this.$emit('cancelled', this.id);
+            },
+            placeOnHold() {
+                this.$emit('placedOnHold', this.id);
+            },
+            buildPath() {
+                this.path = this.data.approvePath + this.name;
+            }
+        },
+        data: function () {
+            return {
+                editing: false,
+                id: this.data.id,
+                name: this.data.name,
+                division: this.data.division.name,
+                path: '',
+                notes: '',
+            };
+        },
+    };
 </script>
+
+<style>
+    .grace-period {
+        opacity: .35;
+    }
+</style>
