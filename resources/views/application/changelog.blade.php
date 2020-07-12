@@ -27,6 +27,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>12 July 2020 - 3.11</h4>
+                <hr/>
+                <ul>
+                    <li>The underlying framework was upgraded to 7.19.1 - additional changes coming soon</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>1 July 2020 - 3.10.3</h4>
                 <hr/>
                 <ul>
