@@ -46,16 +46,6 @@ class Member extends Resource
     ];
 
     /**
-     * @param NovaRequest $request
-     * @param Builder $query
-     * @return Builder
-     */
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        return $query->where('division_id', '!=', 0);
-    }
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param Request $request
