@@ -25,7 +25,7 @@
         <p class="text-accent">Ensure popups are not blocked for this domain. An additional screen will appear during approval that takes you to Clan AOD forum MODCP.</p>
         <div id="admin-container" class="m-t-lg">
             <member-requests :pending="{{ $pending }}">
-                <i class="fas fa-redo-alt"></i> Loading...
+                <i class="fas fa-redo-alt fa-spin"></i> Loading...
             </member-requests>
 
             @include('admin.partials.approved-requests')
