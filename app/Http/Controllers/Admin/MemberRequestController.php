@@ -78,9 +78,11 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
-        $memberRequest = MemberRequest::find($requestId)->removeHold();
+        $memberRequest = MemberRequest::find($requestId);
 
         $this->showToast('Hold removed');
+
+        $memberRequest->removeHold();
 
         $memberRequest->division->notify(new MemberRequestHoldLifted($memberRequest));
 
