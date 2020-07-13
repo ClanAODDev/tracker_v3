@@ -30,10 +30,12 @@
                     </td>
 
                     <td>
-                        <a class="btn btn-success pull-right"
-                           href="{{ route('admin.member-requests.reprocess', $request->id) }}">
-                            <small><i class="fa fa-user-plus"></i> APPROVE</small>
-                        </a>
+                        <form action="{{ route('admin.member-request.remove-hold', $request->id) }}" method="post">
+                            {{ csrf_field() }}
+                            <button class="btn btn-success pull-right text-uppercase" type="submit">
+                                <small>Remove Hold</small>
+                            </button>
+                        </form>
                     </td>
 
                 </tr>
