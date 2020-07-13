@@ -100,7 +100,7 @@ class MemberRequestController extends Controller
 
         $request = MemberRequest::find($requestId);
 
-        $request->cancel($request->notes);
+        $request->cancel();
 
         if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
             $request->division->notify(new MemberRequestDenied($request));

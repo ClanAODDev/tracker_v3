@@ -25,9 +25,7 @@
                         {{ $request->hold_placed_at->format('Y-m-d H:i:s') }}
                     </td>
                     <td>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias architecto aut corporis delectus
-                        earum ex, in ipsam iure, laudantium mollitia natus nobis officiis possimus, ratione recusandae
-                        rem sed suscipit tempora.
+                        {{ $request->notes ?? '-' }}
                     </td>
 
                     <td>

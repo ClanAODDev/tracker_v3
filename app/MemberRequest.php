@@ -141,12 +141,12 @@ class MemberRequest extends Model
      * Cancel a member request
      * @param $notes
      */
-    public function cancel($notes)
+    public function cancel()
     {
         $this->update([
             'cancelled_at' => now(),
             'canceller_id' => auth()->user()->member->clan_id,
-            'notes' => $notes,
+            'notes' => request('notes'),
         ]);
     }
 
