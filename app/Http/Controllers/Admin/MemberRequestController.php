@@ -73,6 +73,17 @@ class MemberRequestController extends Controller
         return view('admin.reprocess-request', compact('request'));
     }
 
+    public function removeHold($requestId)
+    {
+        $this->authorize('manage', MemberRequest::class);
+
+        MemberRequest::find($requestId)->removeHold();
+
+        $this->showToast('Hold removed');
+
+        return redirect(route('admin.member-request.index'));
+    }
+
     public function approve($requestId)
     {
         $this->authorize('manage', MemberRequest::class);

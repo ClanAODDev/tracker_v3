@@ -20,6 +20,9 @@ Route::group(['prefix' => 'clan'], function () {
     Route::post('member-requests/{requestId}/hold', 'Admin\MemberRequestController@placeOnHold')
         ->name('admin.member-request.place-on-hold');
 
+    Route::post('member-requests/{requestId}/remove-hold', 'Admin\MemberRequestController@removeHold')
+        ->name('admin.member-request.remove-hold');
+
     Route::post('member-requests/{memberRequest}/requeue', 'Admin\MemberRequestController@requeue')
         ->name('admin.member-request.requeue');
 

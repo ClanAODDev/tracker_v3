@@ -188,4 +188,12 @@ class MemberRequest extends Model
             'notes' => $notes,
         ]);
     }
+
+    public function removeHold()
+    {
+        $this->update([
+            'hold_placed_at' => null,
+            'approver_id' => null,
+        ]);
+    }
 }
