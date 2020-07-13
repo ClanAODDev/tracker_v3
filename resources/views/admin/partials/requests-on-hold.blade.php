@@ -20,6 +20,7 @@
                         <code>{{ $request->member->name }}</code>
                     </td>
                     <td>{{ $request->approver->name }}</td>
+
                     <td>{{ $request->division->name }}</td>
                     <td class="text-center">
                         {{ $request->hold_placed_at->format('Y-m-d H:i:s') }}

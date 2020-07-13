@@ -48,7 +48,8 @@ class MemberRequest extends Model
 
     public function scopeOnHold($query)
     {
-        return $query->where('hold_placed_at', '!=', null);
+        return $query->where('hold_placed_at', '!=', null)
+            ->where('approved_at', null);
     }
 
     /**
