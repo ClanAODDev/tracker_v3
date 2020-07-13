@@ -46,8 +46,8 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param Division $division
-     * @param MemberRequest $memberRequest
+     * @param  Division  $division
+     * @param  MemberRequest  $memberRequest
      * @return MemberRequest
      * @throws AuthorizationException
      */
