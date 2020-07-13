@@ -188,7 +188,7 @@
                 }).then(response => {
                     this.dataPending.splice(this.requestIndex, 1);
                     toastr.warning('Request put on hold!');
-                    this.closeModal();
+                    this.closeHoldModal();
                     this.notes = '';
                 }).catch(error => {
                     if (error.response.data.errors.notes) {
