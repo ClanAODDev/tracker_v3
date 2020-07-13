@@ -8,6 +8,7 @@ use App\MemberRequest;
 use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
 use App\Notifications\MemberRequestDenied;
+use App\Notifications\MemberRequestHoldLifted;
 use App\Notifications\MemberRequestPutOnHold;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -77,9 +78,11 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
-        MemberRequest::find($requestId)->removeHold();
+        $memberRequest = MemberRequest::find($requestId)->removeHold();
 
         $this->showToast('Hold removed');
+
+        $memberRequest->division->notify(new MemberRequestHoldLifted($memberRequest));
 
         return redirect(route('admin.member-request.index'));
     }
