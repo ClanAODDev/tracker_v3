@@ -25,13 +25,13 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Division $division
+     * @param  Division  $division
      * @return Factory|View
      */
     public function retentionReport(Division $division)
     {
         $range = [
-            'start' => request('start') ?? (new Carbon('first day of this month'))
+            'start' => request('start') ?? (new Carbon('first day of three months ago'))
                     ->format('Y-m-d'),
             'end' => request('end') ?? (new Carbon('last day of this month'))
                     ->format('Y-m-d')
@@ -55,18 +55,20 @@ class ReportController extends Controller
         })->sortByDesc('recruits');
 
         $totalRecruitCount = $members->map(function ($item) {
-            return $item['recruits'];
+            if (!is_null($item)) {
+                return $item['recruits'];
+            }
         })->sum();
 
-        $recruits = $this->division->recruitsLast6Months($division->id)->map(function ($record) {
+        $recruits = $this->division->recruitsLast6Months($division->id, $range['start'])->map(function ($record) {
             return [$record->date, $record->recruits];
         });
 
-        $removals = $this->division->removalsLast6Months($division->id)->map(function ($record) {
+        $removals = $this->division->removalsLast6Months($division->id, $range['start'])->map(function ($record) {
             return [$record->date, $record->removals];
         });
 
-        $population = $this->division->populationLast6Months($division->id)->map(function ($record) {
+        $population = $this->division->populationLast6Months($division->id, $range['start'])->map(function ($record) {
             return [$record->date, $record->count];
         });
 
@@ -82,7 +84,7 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Division $division
+     * @param  Division  $division
      * @return Factory|View
      */
     public function ingameReport(Division $division, $customAttr = null)
@@ -99,10 +101,10 @@ class ReportController extends Controller
     }
 
     /**
-     * @param MemberRepository $repository
+     * @param  MemberRepository  $repository
      * @param $division
-     * @param null $month
-     * @param null $year
+     * @param  null  $month
+     * @param  null  $year
      * @return Factory|View
      */
     public function promotionsReport(MemberRepository $repository, $division, $month = null, $year = null)
@@ -156,7 +158,7 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Division $division
+     * @param  Division  $division
      * @return Factory|View
      */
     public function tsReport(Division $division)
@@ -167,7 +169,7 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Division $division
+     * @param  Division  $division
      * @return Factory|View
      */
     public function censusReport(Division $division)

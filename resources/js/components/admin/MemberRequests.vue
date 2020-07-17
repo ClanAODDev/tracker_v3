@@ -10,7 +10,7 @@
                     <th>Recruiter</th>
                     <th>Division</th>
                     <th class="text-center">Waiting for</th>
-                    <th class="text-center col-xs-2">Actions</th>
+                    <th class="text-center col-xs-3">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
