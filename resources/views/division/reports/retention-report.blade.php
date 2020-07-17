@@ -83,7 +83,7 @@
                     </div>
                     @foreach ($members as $item)
 
-                        @if (is_object($item['member']))
+                        @if (isset($item['member']) && is_object($item['member']))
                             <li class="list-group-item">
                                 <a href="{{ route('member', $item['member']->getUrlParams()) }}">
                                     {{ $item['member']->present()->rankName }}

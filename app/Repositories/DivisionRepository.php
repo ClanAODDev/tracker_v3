@@ -136,9 +136,10 @@ class DivisionRepository
 
     /**
      * @param $divisionId
+     * @param  null  $startDate
      * @return mixed
      */
-    public function recruitsLast6Months($divisionId)
+    public function recruitsLast6Months($divisionId, $startDate)
     {
         return DB::table('activities')
             ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
@@ -146,7 +147,7 @@ class DivisionRepository
             ->from('activities')
             ->where('activities.name', '=', 'recruited_member')
             ->where('division_id', '=', $divisionId)
-            ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->where('created_at', '>=', $startDate)
             ->orderBy('activities.created_at')
             ->groupby('date')
             ->get();
@@ -154,16 +155,17 @@ class DivisionRepository
 
     /**
      * @param $divisionId
+     * @param  null  $startDate
      * @return mixed
      */
-    public function removalsLast6Months($divisionId)
+    public function removalsLast6Months($divisionId, $startDate)
     {
         return DB::table('activities')
             ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
             ->selectRaw('count(*) as removals')
             ->from('activities')
             ->where('activities.name', '=', 'removed_member')
-            ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->where('created_at', '>=', $startDate)
             ->where('division_id', '=', $divisionId)
             ->groupby('date')
             ->orderBy('activities.created_at', 'ASC')
@@ -172,16 +174,17 @@ class DivisionRepository
 
     /**
      * @param $divisionId
+     * @param  null  $startDate
      * @return mixed
      */
-    public function populationLast6Months($divisionId)
+    public function populationLast6Months($divisionId, $startDate)
     {
         return DB::table('censuses')
             ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
             ->selectRaw('count')
             ->from('censuses')
             ->where('division_id', '=', $divisionId)
-            ->where('created_at', '>=', Carbon::now()->subDays(180))
+            ->where('created_at', '>=', $startDate)
             ->groupby('date')
             ->orderBy('created_at', 'ASC')
             ->get();
