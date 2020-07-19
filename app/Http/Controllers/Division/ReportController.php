@@ -31,9 +31,9 @@ class ReportController extends Controller
     public function retentionReport(Division $division)
     {
         $range = [
-            'start' => request('start') ?? (new Carbon('first day of last month'))
+            'start' => request('start') ?? now()->subMonths(6)->startOfMonth()
                     ->format('Y-m-d'),
-            'end' => request('end') ?? (new Carbon('last day of this month'))
+            'end' => request('end') ?? now()->endOfMonth()
                     ->format('Y-m-d')
         ];
 
