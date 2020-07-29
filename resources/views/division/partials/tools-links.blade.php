@@ -7,10 +7,12 @@
     <ul class="dropdown-menu" aria-labelledby="tools">
 
         @can ('create', App\Member::class)
-            <li>
-                <a href="{{ route('recruiting.form', $division) }}">Add Recruit</a>
-            </li>
-            <li role="separator" class="divider"></li>
+            @if (!$division->isShutdown())
+                <li>
+                    <a href="{{ route('recruiting.form', $division) }}">Add Recruit</a>
+                </li>
+                <li role="separator" class="divider"></li>
+            @endif
         @endcan
 
         <li>

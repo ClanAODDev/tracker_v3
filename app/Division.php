@@ -113,6 +113,10 @@ class Division extends Model
     use SoftDeletes;
     use Notifiable;
 
+    protected $dates = [
+        'shutdown_at'
+    ];
+
     /**
      * @var array
      */
@@ -142,7 +146,8 @@ class Division extends Model
         'handle_id',
         'description',
         'active',
-        'abbreviation'
+        'abbreviation',
+        'shutdown_at'
     ];
 
     public static function boot()
@@ -436,6 +441,11 @@ class Division extends Model
     public function isActive()
     {
         return $this->active;
+    }
+
+    public function isShutdown()
+    {
+        return ($this->shutdown_at);
     }
 
     /**

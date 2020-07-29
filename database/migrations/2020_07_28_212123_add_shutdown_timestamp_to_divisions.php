@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropVegasOptinTable extends Migration
+class AddShutdownTimestampToDivisions extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +13,9 @@ class DropVegasOptinTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql')->drop('opt_in');
+        Schema::table('divisions', function (Blueprint $table) {
+            $table->timestamp('shutdown_at')->after('updated_at')->nullable();
+        });
     }
 
     /**
@@ -22,6 +25,6 @@ class DropVegasOptinTable extends Migration
      */
     public function down()
     {
-        //
+       //
     }
 }
