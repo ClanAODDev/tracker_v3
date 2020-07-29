@@ -43,22 +43,12 @@ class RecruitingController extends Controller
         $this->authorize('create', Member::class);
 
         $divisions = Division::active()
+            ->where('shutdown_at', null)
             ->get()
             ->sortBy('name')
             ->pluck('name', 'abbreviation');
 
         return view('recruit.index', compact('divisions'));
-    }
-
-    /**
-     * @param Division $division
-     * @return Factory|View
-     */
-    public function form(Division $division)
-    {
-        $this->authorize('create', Member::class);
-
-        return view('recruit.form', compact('division'));
     }
 
     /**
@@ -83,6 +73,21 @@ class RecruitingController extends Controller
         }
 
         $this->showToast('Your recruitment has successfully been completed!');
+    }
+
+    /**
+     * @param Division $division
+     */
+    public function form(Division $division)
+    {
+        $this->authorize('create', Member::class);
+
+        if ($division->isShutdown()) {
+            $this->showErrorToast('This division has been shutdown and cannot receive new members');
+            return redirect()->back();
+        }
+
+        return view('recruit.form', compact('division'));
     }
 
     /**
