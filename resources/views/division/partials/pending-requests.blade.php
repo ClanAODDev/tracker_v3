@@ -17,7 +17,7 @@
                     <tr>
                         <td>{{ $request->name }}</td>
                         <td>{{ $request->requester->name }}</td>
-                        <td>{{ $request->hold_placed_at ? 'ON HOLD - ' . $request->hold_placed_at->format('Y-m-d H:i:s') : $request->created_at ? $request->created_at->diffForHumans(null, true) : 'N/A' }}</td>
+                        <td>{{ ($request->hold_placed_at ? 'ON HOLD - ' . $request->hold_placed_at->format('Y-m-d H:i:s') : $request->created_at) ? $request->created_at->diffForHumans(null, true) : 'N/A' }}</td>
                         <td>
                             <form action="{{ route('division.member-requests.cancel', [$division, $request->id]) }}"
                                   method="post">
