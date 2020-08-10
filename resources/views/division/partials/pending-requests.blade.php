@@ -19,7 +19,10 @@
                         <td>{{ $request->requester->name }}</td>
                         <td>
                             @if ($request->hold_placed_at)
-                                ON HOLD - {{ $request->hold_placed_at->format('Y-m-d H:i:s') }}
+                                <div class="text-danger" title="{{ $request->hold_placed_at->diffForHumans() }}">
+                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> ON HOLD
+                                    - {{ $request->hold_placed_at->format('Y-m-d') }}
+                                </div>
                             @elseif ($request->created_at)
                                 {{ $request->created_at->diffForHumans(null, true) }}
                             @else
