@@ -1,6 +1,14 @@
 @if ($division->isShutdown())
     <div class="alert alert-danger">
-        <i class="fa fa-exclamation-circle"></i> This division was shut down on <strong>{{ $division->shutdown_at->format('Y-m-d') }}</strong>. Assigned members should find new divisions or be removed immediately.
+        @if ($division->shut_down_at < now())
+            <i class="fa fa-exclamation-circle"></i> This division was shut down on
+            <strong>{{ $division->shutdown_at->format('Y-m-d') }}</strong>. Assigned members should find new divisions
+            or be removed immediately.
+        @else
+            <i class="fa fa-exclamation-circle"></i> This division will be shut down on
+            <strong>{{ $division->shutdown_at->format('Y-m-d') }}</strong>. Assigned members should begin looking for
+            new divisions and begin transferring.
+        @endif
     </div>
 @endif
 
