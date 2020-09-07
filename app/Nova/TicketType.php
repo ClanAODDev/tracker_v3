@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -48,7 +49,7 @@ class TicketType extends Resource
         return [
             ID::make()->sortable(),
             Text::make('Name'),
-            Text::make('Slug'),
+            Text::make('Slug')->readonly()->onlyOnDetail(),
             HasMany::make('Ticket'),
         ];
     }
