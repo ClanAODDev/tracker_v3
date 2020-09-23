@@ -4,7 +4,7 @@
 
     @component ('application.components.division-heading', [$division])
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
         @endslot
         @slot ('heading')
             <span class="hidden-xs">{{ $division->name }}</span>
@@ -21,16 +21,20 @@
 
         @if ($leave->expired)
             <div class="alert alert-warning">
-                This leave of absence has expired! Please reach out to the member to determine if an extension is warranted, or revoke the LOA.
+                This leave of absence has expired! Please reach out to the member to determine if an extension is
+                warranted, or revoke the LOA.
             </div>
         @endif
 
         <h4 class="m-t-xl">Edit Leave Details
             <small class="text-muted text-uppercase">{{ $member->name }}</small>
         </h4>
-        <p>Leaves of absence are reserved for members who need to take extended leave for extenuating circumstances. It should not be something that is used on the whim. Division leadership should ensure that members are not abusing LOAs.</p>
+        <p>Leaves of absence are reserved for members who need to take extended leave for extenuating circumstances. It
+            should not be something that is used on the whim. Division leadership should ensure that members are not
+            abusing LOAs.</p>
 
-        <p>If an LOA is extended, be sure to update the associated note with the appropriate details if anything has changed.</p>
+        <p>If an LOA is extended, be sure to update the associated note with the appropriate details if anything has
+            changed.</p>
 
         <div class="panel panel-filled panel-c-info m-t-xl">
 
@@ -57,12 +61,14 @@
 
         <div class="m-t-xl">
             {!! Form::model($leave, ['method' => 'patch', 'route' => ['leave.update', $member->clan_id]]) !!}
-            <input type="hidden" value="{{ $leave->id }}" name="leave_id" />
-            <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}" />
+            <input type="hidden" value="{{ $leave->id }}" name="leave_id"/>
+            <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}"/>
             @include('leave.forms.edit-leave')
             {!! Form::close() !!}
-            <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
-               class="btn btn-default">View Forum Thread</a>
+            @if($leave->note)
+                <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
+                   class="btn btn-default">View Forum Thread</a>
+            @endif
         </div>
 
         <div class="m-t-xl">
@@ -72,7 +78,8 @@
                     {{ $leave->note->body }}
                 </div>
             </div>
-            <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to the note associated with this leave request, you can access that below.</p>
+            <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to the
+                note associated with this leave request, you can access that below.</p>
             <a href="{{ route('editNote', [$member->clan_id, $leave->note->id]) }}"
                class="btn btn-accent">Edit Note</a>
         </div>
