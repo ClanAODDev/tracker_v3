@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Leave;
+use App\Member;
 use App\Note;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
@@ -29,7 +30,7 @@ class CreateLeave extends FormRequest
         return [
             'end_date' => 'date|after:today',
             'member_id' => [
-                'exists:members,clan_id',
+                'exists:members,id',
                 'unique:leaves,member_id'
             ]
         ];
@@ -48,12 +49,14 @@ class CreateLeave extends FormRequest
      */
     public function persist()
     {
+        $memberRequestingLeave = Member::whereClanId($this->member_id)->firstOrFail();
+
         $note = Note::create([
             'body' => $this->note_body,
             'forum_thread_id' => $this->note_thread_id,
             'type' => 'misc',
             'author_id' => auth()->user(),
-            'member_id' => $this->member_id
+            'member_id' => $memberRequestingLeave->id
         ]);
 
         $leave = Leave::create([
