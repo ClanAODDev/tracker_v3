@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class Ticket extends Resource
 {
@@ -48,7 +49,7 @@ class Ticket extends Resource
             BelongsTo::make('Type', null, \App\Nova\TicketType::class),
             BelongsTo::make('User', 'user', \App\Nova\User::class)->searchable(),
             BelongsTo::make('Owner', 'owner', \App\Nova\User::class)->searchable(),
-            Text::make('Description'),
+            Textarea::make('Description'),
             Date::make('Created At'),
             Date::make('Updated At'),
         ];
