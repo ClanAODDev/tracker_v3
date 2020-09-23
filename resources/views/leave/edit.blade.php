@@ -65,7 +65,7 @@
             <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}"/>
             @include('leave.forms.edit-leave')
             {!! Form::close() !!}
-            @if($leave->note)
+            @if($leave->note && $leave->note->forum_thread_id)
                 <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
                    class="btn btn-default">View Forum Thread</a>
             @endif
@@ -78,10 +78,13 @@
                     {{ $leave->note->body ?? "N/A" }}
                 </div>
             </div>
-            <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to the
-                note associated with this leave request, you can access that below.</p>
-            <a href="{{ route('editNote', [$member->clan_id, $leave->note->id]) }}"
-               class="btn btn-accent">Edit Note</a>
+
+            @if($leave->note)
+                <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to
+                    the note associated with this leave request, you can access that below.</p>
+                <a href="{{ route('editNote', [$member->clan_id, $leave->note->id]) }}"
+                   class="btn btn-accent">Edit Note</a>
+            @endif
         </div>
 
         <div class="m-t-xl">
