@@ -75,7 +75,7 @@
             <label for="note-body">Leave Justification</label>
             <div class="panel panel-filled">
                 <div class="panel-body">
-                    {{ $leave->note->body }}
+                    {{ $leave->note->body ?? "N/A" }}
                 </div>
             </div>
             <p class="m-t-md">Notes are generated separately from leave requests. If you need to make a change to the
