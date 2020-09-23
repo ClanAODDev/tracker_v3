@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Nova\Metrics\MembersByMonth;
 use App\Nova\Metrics\UsersByRole;
+use App\Observers\TicketTypeObserver;
+use App\TicketType;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
@@ -19,6 +21,10 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
+
+        Nova::serving(function () {
+            TicketType::observe(TicketTypeObserver::class);
+        });
     }
 
     /**
