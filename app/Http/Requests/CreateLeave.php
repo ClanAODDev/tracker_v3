@@ -30,7 +30,7 @@ class CreateLeave extends FormRequest
         return [
             'end_date' => 'date|after:today',
             'member_id' => [
-                'exists:members,id',
+                'exists:members,clan_id',
                 'unique:leaves,member_id'
             ]
         ];
@@ -49,6 +49,7 @@ class CreateLeave extends FormRequest
      */
     public function persist()
     {
+        // search is by clan id, but we want member id (tracker id)
         $memberRequestingLeave = Member::whereClanId($this->member_id)->firstOrFail();
 
         $note = Note::create([
