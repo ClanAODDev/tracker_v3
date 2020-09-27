@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 class MemberRemoved extends Notification
 {
     use Queueable;
+
     /**
      * @var
      */
@@ -33,7 +34,7 @@ class MemberRemoved extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -59,10 +60,10 @@ class MemberRemoved extends Notification
                     'name' => "**MEMBER REMOVED**",
                     'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name)
                 ],
-                /*[
-                    'name' => 'Reason:',
-                    'value' => "{$notes}"
-                ],*/
+                [
+                    'name' => 'View Member Profile',
+                    'value' => route('member', $this->member->getUrlParams())
+                ]
             ])->send();
     }
 }
