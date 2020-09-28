@@ -32,7 +32,8 @@ RUN apk add --no-cache --update php-fpm \
     php-ctype \
     php-zlib \
     php-json \
-    php-xml && \
+    php-xml \
+    php7-xmlwriter && \
     ln -s /usr/bin/php7 /usr/bin/php
 
 # CONFIGURE WEB SERVER.

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Settings\UserSettings;
 use Auth;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Schema;
 use wrapi\slack\slack;
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        Paginator::useBootstrap();
     }
 
     /**
