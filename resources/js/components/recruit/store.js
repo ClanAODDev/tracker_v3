@@ -22,6 +22,9 @@ store.inDemoMode = false;
 store.loadingThreads = false;
 store.validating = null;
 
+// so recruiters don't try to recruit themselves...
+store.recruiter_id = null;
+
 // application states
 store.currentStep = 'step-one';
 store.progress = 25;

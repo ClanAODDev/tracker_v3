@@ -13,8 +13,10 @@
             {{ $division->name }}
         @endslot
     @endcomponent
+
     <div class="container-fluid" id="recruiting-container">
         <recruiting-process division="{{ $division->abbreviation }}"
+                            recruiter_id="{{ auth()->user()->member->clan_id }}"
                             :ranks="{{ \App\Rank::all()->pluck('abbreviation', 'id') }}"
                             handle-name="{{ $division->handle->label ?? 'Ingame Name' }}"></recruiting-process>
     </div>
