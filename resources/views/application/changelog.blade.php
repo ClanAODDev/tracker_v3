@@ -27,6 +27,18 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>28 September 2020 - 3.2</h4>
+                <hr/>
+                <ul>
+                    <li>The underlying framework was upgraded to 8.6</li>
+                    <li>Recruiters can no longer recruit themselves</li>
+                    <li>Discord notifications for members removed now includes a profile link</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>12 July 2020 - 3.11</h4>
                 <hr/>
                 <ul>
