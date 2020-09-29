@@ -180,7 +180,7 @@
 
     export default {
         directives: {focus: focus},
-        props: ['ranks'],
+        props: ['ranks', 'recruiter-id'],
 
         methods: {
             validateStep: function () {
@@ -246,6 +246,16 @@
 
             validateMemberId: function () {
                 if (store.member_id) {
+
+                  if (store.member_id === store.recruiter_id) {
+                    this.errors.add({
+                      field: 'member_id',
+                      msg: "You can't recruit yourself, dummy!"
+                    });
+                    return false;
+                  }
+
+
                     store.validating = true;
                     axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
                         .then((response) => {
