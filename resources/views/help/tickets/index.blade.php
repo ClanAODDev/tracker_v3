@@ -52,37 +52,5 @@
                 </div>
             </div>
         </div>
-
-        <hr/>
-
-        <h4 class="m-t-lg">RESOLVED TICKETS <span class="badge">{{ $closedTickets->count() }}</span></h4>
-        <div class="row">
-            <div class="panel panel-filled m-b-xl">
-                <div class="table-responsive">
-                    <table class="table table-hover basic-datatable">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Type</th>
-                            <th>Caller</th>
-                            <th>Owned By</th>
-                            <th>Updated At</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($closedTickets as $ticket)
-                            <tr>
-                                <td>{{ $ticket->id }}</td>
-                                <td>{{ $ticket->type->name }}</td>
-                                <td>{{ $ticket->user->name }}</td>
-                                <td>{{ $ticket->owner->name ?? "Unassigned" }}</td>
-                                <td>{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </div>
 @stop
