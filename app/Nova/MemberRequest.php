@@ -15,7 +15,7 @@ class MemberRequest extends Resource
      *
      * @var string
      */
-    public static $model = 'App\MemberRequest';
+    public static $model = \App\MemberRequest::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -41,8 +41,8 @@ class MemberRequest extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Member', 'member', 'App\Nova\Member')->onlyOnIndex(),
-            BelongsTo::make('Approver', 'approver', 'App\Nova\Member')->onlyOnIndex(),
+            BelongsTo::make('Member', 'member', \App\Nova\Member::class)->onlyOnIndex(),
+            BelongsTo::make('Approver', 'approver', \App\Nova\Member::class)->onlyOnIndex(),
             Textarea::make('Notes'),
             DateTime::make('Created At'),
             DateTime::make('Approved At'),
