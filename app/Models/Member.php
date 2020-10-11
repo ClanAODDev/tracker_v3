@@ -173,7 +173,7 @@ class Member extends Model
      */
     public function ssgtAssignment()
     {
-        return $this->belongsToMany(Division::class, 'division_staffSergeants')
+        return $this->belongsToMany(Division::class, 'staff_sergeants')
             ->withTimestamps();
     }
 
