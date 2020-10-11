@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Handle\HasCustomAttributes;
+use App\Models\Handle\HasCustomAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 class Handle extends Model

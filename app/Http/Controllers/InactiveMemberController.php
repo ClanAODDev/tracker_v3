@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Activity;
+use App\Models\Activity;
 use App\Http\Requests\DeleteMember;
-use App\Member;
+use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;

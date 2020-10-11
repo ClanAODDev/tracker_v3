@@ -25,6 +25,6 @@ class AddShutdownTimestampToDivisions extends Migration
      */
     public function down()
     {
-       //
+        //
     }
 }

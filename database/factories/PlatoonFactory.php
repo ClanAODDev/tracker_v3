@@ -2,14 +2,14 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Platoon::class, function (Faker $faker) {
+$factory->define(\App\Models\Platoon::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'leader_id' => function () {
-            return create(\App\Member::class)->id;
+            return create(\App\Models\Member::class)->id;
         },
         'division_id' => function () {
-            return create(\App\Division::class)->id;
+            return create(\App\Models\Division::class)->id;
         }
     ];
 });

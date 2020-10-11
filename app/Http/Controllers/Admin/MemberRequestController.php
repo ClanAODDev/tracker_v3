@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Member;
-use App\MemberRequest;
+use App\Models\Member;
+use App\Models\MemberRequest;
 use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
 use App\Notifications\MemberRequestDenied;

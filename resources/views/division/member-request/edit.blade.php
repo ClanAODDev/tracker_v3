@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label for="division">Division</label>
                                 <select name="division" id="division" class="form-control">
-                                    @foreach (\App\Division::active()->get() as $d)
+                                    @foreach (\App\Models\Division::active()->get() as $d)
                                         <option value="{{ $d->id }}"
                                                 {{ $memberRequest->division_id === $d->id ? 'selected' : null }}>{{ $d->name }}</option>
                                     @endforeach

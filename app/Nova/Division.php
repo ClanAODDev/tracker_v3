@@ -19,7 +19,7 @@ class Division extends Resource
      *
      * @var string
      */
-    public static $model = \App\Division::class;
+    public static $model = \App\Models\Division::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -73,12 +73,14 @@ class Division extends Resource
             new Panel('Extra stuff', function () {
                 return [
                     Text::make('description')->rules(['required'])->hideFromIndex(),
-                    Boolean::make('active')->sortable()->rules('required',
+                    Boolean::make('active')->sortable()->rules(
+                        'required',
                         function ($attribute, $value, $fail) {
                             if ($value == false && $this->members->count()) {
                                 return $fail('Division still has members assigned and cannot be disabled.');
                             }
-                        }),
+                        }
+                    ),
                 ];
             }),
 

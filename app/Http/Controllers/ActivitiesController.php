@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\User;
+use App\Models\Division;
+use App\Models\User;
 
 class ActivitiesController extends Controller
 {

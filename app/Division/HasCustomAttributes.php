@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Division;
-
-use App;
+namespace App\Models\Division;
 
 trait HasCustomAttributes
 {

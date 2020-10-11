@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Handle;
+namespace App\Models\Handle;
 
 trait HasCustomAttributes
 {

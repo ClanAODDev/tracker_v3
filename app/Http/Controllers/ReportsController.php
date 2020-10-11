@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\Member;
+use App\Models\Division;
+use App\Models\Member;
 use App\Repositories\ClanRepository;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
@@ -191,7 +191,7 @@ class ReportsController extends Controller
             ->withCount('sgtAndSsgt')
             ->get()->sortBy('name');
 
-        $leadership = \App\Member::where('rank_id', '>', 10)
+        $leadership = \App\Models\Member::where('rank_id', '>', 10)
             ->where('division_id', '!=', 0)
             ->with('rank')
             ->orderByDesc('rank_id')->orderBy('name')

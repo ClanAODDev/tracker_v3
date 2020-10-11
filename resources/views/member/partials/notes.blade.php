@@ -1,7 +1,7 @@
 <h4>
     Member Notes
 
-    @can('create', App\Note::class)
+    @can('create', App\Models\Note::class)
         <span class="pull-right">
             <a href="#" class="btn-add-note btn btn-default btn-sm" data-toggle="modal"
                data-target="#create-member-note"><i class="fa fa-comment text-accent"></i> Add note</a>
@@ -25,10 +25,10 @@
 @endif
 
 
-@can ('create', App\Note::class)
+@can ('create', App\Models\Note::class)
     <div class="modal fade" id="create-member-note">
         <div class="modal-dialog" role="document" style="background-color: #000;">
-            {!! Form::model(App\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
+            {!! Form::model(App\Models\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
             @include('member.forms.note-form', ['action' => 'Add Member Note', 'create' => true])
             {!! Form::close() !!}
         </div>

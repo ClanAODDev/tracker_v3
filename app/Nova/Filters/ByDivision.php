@@ -2,7 +2,7 @@
 
 namespace App\Nova\Filters;
 
-use App\Division;
+use App\Models\Division;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;

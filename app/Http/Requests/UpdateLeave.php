@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Leave;
+use App\Models\Leave;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateLeave extends FormRequest

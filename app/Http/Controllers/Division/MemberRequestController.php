@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Division;
 
-use App\Division;
+use App\Models\Division;
 use App\Http\Controllers\Controller;
-use App\MemberRequest;
+use App\Models\MemberRequest;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;

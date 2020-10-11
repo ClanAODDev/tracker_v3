@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -22,12 +22,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'settings' => [],
         'developer' => false,
         'member_id' => function () {
-            return factory(\App\Member::class)->create()->clan_id;
+            return factory(\App\Models\Member::class)->create()->clan_id;
         },
         'remember_token' => Str::random(10),
     ];
 });
 
-$factory->state(App\User::class, 'admin', function ($faker) {
+$factory->state(App\Models\User::class, 'admin', function ($faker) {
     return ['developer' => true];
 });

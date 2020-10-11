@@ -6,7 +6,7 @@
     </button>
     <ul class="dropdown-menu" aria-labelledby="tools">
 
-        @can ('create', App\Member::class)
+        @can ('create', App\Models\Member::class)
             @if (!$division->isShutdown())
                 <li>
                     <a href="{{ route('recruiting.form', $division) }}">Add Recruit</a>
@@ -39,7 +39,7 @@
             </a>
         </li>
 
-        @can ('show', App\Note::class)
+        @can ('show', App\Models\Note::class)
             <li>
                 <a href="{{ route('division.notes', $division) }}">View Notes</a>
             </li>

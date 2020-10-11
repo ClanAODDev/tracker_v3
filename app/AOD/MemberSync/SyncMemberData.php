@@ -2,12 +2,12 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Division;
-use App\Member;
-use App\MemberRequest;
+use App\Models\Division;
+use App\Models\Member;
+use App\Models\MemberRequest;
 use App\Notifications\MemberTransferred;
-use App\Platoon;
-use App\Squad;
+use App\Models\Platoon;
+use App\Models\Squad;
 use Carbon;
 use Illuminate\Support\Facades\Log;
 
@@ -148,7 +148,7 @@ class SyncMemberData
             $member = Member::find($id);
 
             // did they transfer to another division?
-            /** @var $member \App\Member */
+            /** @var $member \App\Models\Member */
             if (self::$activeClanMembers->contains($member->clan_id)) {
 //                self::registerTransfer($member);
 

@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Division;
-use App\Squad;
-use App\User;
+use App\Models\Division;
+use App\Models\Squad;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**

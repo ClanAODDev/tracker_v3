@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\Note;
+use App\Models\Division;
+use App\Models\Note;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 

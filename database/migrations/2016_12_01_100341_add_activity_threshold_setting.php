@@ -1,6 +1,6 @@
 <?php
 
-use App\Division;
+use App\Models\Division;
 use Illuminate\Database\Migrations\Migration;
 
 class AddActivityThresholdSetting extends Migration
