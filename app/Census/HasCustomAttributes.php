@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Census;
+namespace App\Models\Census;
 
 trait HasCustomAttributes
 {

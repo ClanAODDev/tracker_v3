@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
+use App\Models\Division;
 use App\Http\Requests\CreateLeave;
 use App\Http\Requests\UpdateLeave;
-use App\Leave;
-use App\Member;
+use App\Models\Leave;
+use App\Models\Member;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;

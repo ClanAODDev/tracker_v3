@@ -1,6 +1,6 @@
 <?php
 
-use App\MemberRequest;
+use App\Models\MemberRequest;
 use App\Settings\UserSettings;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;

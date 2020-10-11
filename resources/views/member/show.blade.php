@@ -44,7 +44,7 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
-                @can('create', \App\Note::class)
+                @can('create', \App\Models\Note::class)
                     @include ('member.partials.notes')
                 @endcan
             </div>

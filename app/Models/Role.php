@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Presenters\RolePresenter;
 use Illuminate\Database\Eloquent\Model;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +21,7 @@ class Ticket extends Model
      */
     public function type()
     {
-        return $this->belongsTo(\App\TicketType::class);
+        return $this->belongsTo(\App\Models\TicketType::class);
     }
 
     /**
@@ -29,7 +29,7 @@ class Ticket extends Model
      */
     public function caller()
     {
-        return $this->belongsTo(\App\User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     /**
@@ -37,7 +37,7 @@ class Ticket extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(\App\User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
+use App\Models\Division;
 use App\Http\Requests\UpdateDivision;
-use App\Member;
+use App\Models\Member;
 use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
 use Carbon\Carbon;

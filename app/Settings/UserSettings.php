@@ -2,7 +2,7 @@
 
 namespace App\Settings;
 
-use App\User;
+use App\Models\User;
 
 class UserSettings
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Activities\RecordsActivity;
 use App\Presenters\MemberPresenter;

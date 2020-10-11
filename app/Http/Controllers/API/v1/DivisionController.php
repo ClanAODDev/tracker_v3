@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API\v1;
 
-use App\Division;
+use App\Models\Division;
 use App\Transformers\DivisionTransformer;
 use Illuminate\Http\JsonResponse;
 

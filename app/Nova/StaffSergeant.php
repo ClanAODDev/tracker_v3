@@ -14,7 +14,7 @@ class StaffSergeant extends Resource
      *
      * @var string
      */
-    public static $model = \App\StaffSergeant::class;
+    public static $model = \App\Models\StaffSergeant::class;
 
     public static $with = [
         'division', 'member'

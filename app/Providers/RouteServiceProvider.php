@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Division;
-use App\Handle;
-use App\Member;
-use App\Platoon;
-use App\Squad;
-use App\User;
+use App\Models\Division;
+use App\Models\Handle;
+use App\Models\Member;
+use App\Models\Platoon;
+use App\Models\Squad;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;

@@ -56,7 +56,7 @@
         </ul>
     </li>
 
-    @can('create', App\Member::class)
+    @can('create', App\Models\Member::class)
         <li class="{{ set_active('recruit') }}">
             <a href="{{ route('recruiting.initial') }}">Add New Recruit</a>
         </li>
@@ -105,7 +105,7 @@
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
                 Member Requests <span
-                        class="badge text-info">{{ \App\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
+                        class="badge text-info">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
             </a>
         </li>
 
