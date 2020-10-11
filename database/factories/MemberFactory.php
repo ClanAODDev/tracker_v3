@@ -2,11 +2,11 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(\App\Member::class, function (Faker $faker) {
+$factory->define(\App\Models\Member::class, function (Faker $faker) {
     $memberId = $faker->numberBetween(10000, 99999);
-    $division = create(\App\Division::class);
-    $platoon = create(\App\Platoon::class, ['division_id' => $division->id]);
-    $squad = create(\App\Squad::class, ['platoon_id' => $platoon->id]);
+    $division = create(\App\Models\Division::class);
+    $platoon = create(\App\Models\Platoon::class, ['division_id' => $division->id]);
+    $squad = create(\App\Models\Squad::class, ['platoon_id' => $platoon->id]);
 
     return [
         'name' => $faker->userName,
