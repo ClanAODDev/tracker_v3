@@ -9,14 +9,12 @@ class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $openTickets = Ticket::open()->with('type', 'caller', 'owner')->latest()->get();
 
-        return view('help.tickets.index', compact('openTickets', 'closedTickets'));
+        return view('help.tickets.index', compact('openTickets'));
     }
 
     /**
