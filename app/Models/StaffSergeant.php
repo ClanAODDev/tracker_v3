@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class StaffSergeant extends Model
 {
-    protected $table = 'division_staffSergeants';
+    protected $table = 'staff_sergeants';
 
     public function division()
     {
