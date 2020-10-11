@@ -38,7 +38,7 @@
                             <tr>
                                 <td>{{ $ticket->id }}</td>
                                 <td class="text-info">{{ $ticket->type->name }}</td>
-                                <td>{{ $ticket->user->name }}</td>
+                                <td>{{ $ticket->caller->name }}</td>
                                 @if($ticket->owner)
                                     <td class="text-accent">{{ $ticket->owner->name }}</td>
                                 @else
