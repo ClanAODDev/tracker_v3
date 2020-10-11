@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Log;
  */
 class Division extends Model
 {
-    use RecordsActivity, Notifiable;
+    use RecordsActivity, Notifiable, SoftDeletes;
 
     /**
      * @var array
@@ -107,11 +107,6 @@ class Division extends Model
             ],
         ]
     ];
-
-    use Division\HasCustomAttributes;
-    use RecordsActivity;
-    use SoftDeletes;
-    use Notifiable;
 
     protected $dates = [
         'shutdown_at'
