@@ -33,7 +33,7 @@ class TrainingController extends Controller
             'clan_id.exists' => 'That member id appears to be invalid'
         ]);
 
-        \App\Member::whereClanId($request->clan_id)->update([
+        \App\Models\Member::whereClanId($request->clan_id)->update([
             'last_trained_at' => now(),
             'last_trained_by' => auth()->user()->member->clan_id,
         ]);

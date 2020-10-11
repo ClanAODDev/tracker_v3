@@ -2,7 +2,7 @@
 
 namespace App\Slack\Commands;
 
-use App\Division;
+use App\Models\Division;
 use App\Slack\Base;
 use App\Slack\Command;
 

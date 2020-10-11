@@ -14,7 +14,7 @@ class Handle extends Resource
      *
      * @var string
      */
-    public static $model = \App\Handle::class;
+    public static $model = \App\Models\Handle::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

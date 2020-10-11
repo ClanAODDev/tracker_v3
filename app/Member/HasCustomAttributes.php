@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Member;
+namespace App\Models\Member;
 
 use Carbon\Carbon;
 

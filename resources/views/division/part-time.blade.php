@@ -9,7 +9,7 @@
         @slot ('heading')
             Part-Timers
 
-            @can ('create', App\Member::class)
+            @can ('create', App\Models\Member::class)
                 <button type="button" class="btn btn-default pull-right" data-toggle="modal"
                         data-target="#mass-pm-modal">
                     <i class="fa fa-bullhorn text-accent"></i> <span
@@ -68,7 +68,7 @@
                             </small>
                         </td>
                         <td class="text-center">
-                            @can ('create', App\Member::class)
+                            @can ('create', App\Models\Member::class)
                                 <a class="btn btn-danger"
                                    href="{{ route('removePartTimer', [$division->abbreviation, $member->clan_id]) }}">
                                     <i class="fa fa-trash text-danger"></i>

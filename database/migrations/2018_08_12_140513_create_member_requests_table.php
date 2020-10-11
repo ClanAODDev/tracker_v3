@@ -32,7 +32,7 @@ class CreateMemberRequestsTable extends Migration
             });
         }
 
-        foreach (\App\Division::active()->get() as $division) {
+        foreach (\App\Models\Division::active()->get() as $division) {
             $division->settings()->set('slack_alert_member_denied', false);
             $division->settings()->set('slack_alert_member_approved', false);
         }

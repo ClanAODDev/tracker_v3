@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +15,6 @@ class TicketType extends Model
 
     public function ticket()
     {
-        return $this->hasMany(\App\Ticket::class);
+        return $this->hasMany(\App\Models\Ticket::class);
     }
 }

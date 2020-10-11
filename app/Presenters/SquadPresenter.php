@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Squad;
+use App\Models\Squad;
 
 class SquadPresenter extends Presenter
 {

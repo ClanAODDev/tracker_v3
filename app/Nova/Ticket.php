@@ -15,7 +15,7 @@ class Ticket extends Resource
      *
      * @var string
      */
-    public static $model = \App\Ticket::class;
+    public static $model = \App\Models\Ticket::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

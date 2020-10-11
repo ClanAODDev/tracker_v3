@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Division;
-use App\User;
+use App\Models\Division;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class DivisionPolicy

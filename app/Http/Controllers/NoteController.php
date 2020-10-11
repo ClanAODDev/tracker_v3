@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateNote;
-use App\Leave;
-use App\Member;
-use App\Note;
+use App\Models\Leave;
+use App\Models\Member;
+use App\Models\Note;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;

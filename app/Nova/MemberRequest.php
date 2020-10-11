@@ -15,7 +15,7 @@ class MemberRequest extends Resource
      *
      * @var string
      */
-    public static $model = \App\MemberRequest::class;
+    public static $model = \App\Models\MemberRequest::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

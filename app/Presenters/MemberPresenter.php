@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Member;
+use App\Models\Member;
 use Carbon\Carbon;
 
 class MemberPresenter extends Presenter

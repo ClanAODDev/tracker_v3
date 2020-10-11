@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\AOD\Traits\Procedureable;
-use App\Division;
-use App\Handle;
-use App\Member;
-use App\MemberRequest;
+use App\Models\Division;
+use App\Models\Handle;
+use App\Models\Member;
+use App\Models\MemberRequest;
 use App\Notifications\NewExternalRecruit;
 use App\Notifications\NewMemberRecruited;
-use App\Platoon;
+use App\Models\Platoon;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -277,7 +277,7 @@ class RecruitingController extends Controller
 
         return [
             'is_member' => true,
-            'verified_email' => \App\Member::UNVERIFIED_EMAIL_GROUP_ID != $result->usergroupid
+            'verified_email' => \App\Models\Member::UNVERIFIED_EMAIL_GROUP_ID != $result->usergroupid
         ];
     }
 

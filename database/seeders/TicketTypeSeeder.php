@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\TicketType;
+use App\Models\TicketType;
 use Illuminate\Database\Seeder;
 
 class TicketTypeSeeder extends Seeder
