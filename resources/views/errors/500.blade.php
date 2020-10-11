@@ -25,8 +25,6 @@
         </div>
 
 
-
-
         <div>
             <a href="{{ route('home') }}" class="btn btn-accent">Back to app</a>
         </div>
