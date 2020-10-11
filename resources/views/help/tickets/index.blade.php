@@ -22,8 +22,8 @@
         <h4>OPEN TICKETS <span class="badge">{{ $openTickets->count() }}</span></h4>
         <div class="row">
             <div class="panel panel-filled">
-                <div class="table-responsive">
-                    <table class="table table-hover basic-datatable">
+                <div class="table-responsive p-3">
+                    <table class="table table-hover adv-datatable p-3">
                         <thead>
                         <tr>
                             <th>ID</th>
