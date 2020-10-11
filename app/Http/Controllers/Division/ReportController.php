@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Division;
 
-use App\Activity;
-use App\Division;
+use App\Models\Activity;
+use App\Models\Division;
 use App\Http\Controllers\Controller;
 use App\Repositories\DivisionRepository;
 use App\Repositories\MemberRepository;

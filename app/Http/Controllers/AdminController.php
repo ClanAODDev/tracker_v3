@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\Handle;
+use App\Models\Division;
+use App\Models\Handle;
 use App\Repositories\ClanRepository;
-use App\User;
+use App\Models\User;
 
 class AdminController extends Controller
 {

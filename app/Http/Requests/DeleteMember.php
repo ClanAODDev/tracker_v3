@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Note;
+use App\Models\Note;
 use App\Notifications\MemberRemoved;
 use Illuminate\Foundation\Http\FormRequest;
 

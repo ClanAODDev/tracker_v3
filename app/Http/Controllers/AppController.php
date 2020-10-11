@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
+use App\Models\Division;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;

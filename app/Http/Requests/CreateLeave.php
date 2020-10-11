@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Leave;
-use App\Member;
-use App\Note;
+use App\Models\Leave;
+use App\Models\Member;
+use App\Models\Note;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 

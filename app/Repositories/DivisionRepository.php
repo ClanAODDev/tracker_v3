@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Division;
+use App\Models\Division;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Collection;

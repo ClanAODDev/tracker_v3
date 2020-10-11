@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Division;
-use App\Platoon;
-use App\User;
+use App\Models\Division;
+use App\Models\Platoon;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -58,6 +58,5 @@ class PlatoonPolicy
     public function create(User $user, Division $division)
     {
         return false;
-
     }
 }

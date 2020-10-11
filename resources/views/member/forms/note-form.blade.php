@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-sm-4 form-group">
                 {!! Form::label('type', 'Note Type', ['class' => 'slight text-muted']) !!}
-                {!! Form::select('type', App\Note::allNoteTypes(), null, ['class' => 'form-control']) !!}
+                {!! Form::select('type', App\Models\Note::allNoteTypes(), null, ['class' => 'form-control']) !!}
             </div>
 
             <div class="col-sm-4 form-group">

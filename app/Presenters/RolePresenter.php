@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Role;
+use App\Models\Role;
 
 class RolePresenter extends Presenter
 {

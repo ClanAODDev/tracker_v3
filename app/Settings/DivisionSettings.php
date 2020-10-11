@@ -2,7 +2,7 @@
 
 namespace App\Settings;
 
-use App\Division;
+use App\Models\Division;
 
 class DivisionSettings
 {

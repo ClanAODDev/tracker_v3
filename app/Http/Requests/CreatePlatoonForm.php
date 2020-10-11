@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Member;
-use App\Platoon;
+use App\Models\Member;
+use App\Models\Platoon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreatePlatoonForm extends FormRequest

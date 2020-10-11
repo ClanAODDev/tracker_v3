@@ -49,7 +49,7 @@
 
 @if (count($division->unassigned) > 0)
     {{-- only show notice if user is capable of taking action --}}
-    @can('create', [App\Platoon::class, $division])
+    @can('create', [App\Models\Platoon::class, $division])
         <div class="alert alert-default">
             <i class="fa fa-users text-info"></i>
             You have

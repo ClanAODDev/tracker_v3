@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Census;
-use App\Division;
+use App\Models\Census;
+use App\Models\Division;
 use Illuminate\Console\Command;
 
 class DivisionCensus extends Command

@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -28,6 +28,6 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->state(App\User::class, 'admin', function ($faker) {
+$factory->state(App\Models\User::class, 'admin', function ($faker) {
     return ['developer' => true];
 });

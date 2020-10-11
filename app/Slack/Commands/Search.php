@@ -2,7 +2,7 @@
 
 namespace App\Slack\Commands;
 
-use App\Member;
+use App\Models\Member;
 use App\Slack\Base;
 use App\Slack\Command;
 
