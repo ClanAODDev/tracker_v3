@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Member;
-use Composer\DependencyResolver\Request;
-
 class TrainingController extends Controller
 {
     public function __construct()

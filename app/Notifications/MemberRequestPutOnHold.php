@@ -6,8 +6,6 @@ use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
 use App\MemberRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class MemberRequestPutOnHold extends Notification
