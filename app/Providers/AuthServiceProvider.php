@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Division;
-use App\Member;
-use App\MemberRequest;
-use App\Note;
-use App\Platoon;
+use App\Models\Division;
+use App\Models\Member;
+use App\Models\MemberRequest;
+use App\Models\Note;
+use App\Models\Platoon;
 use App\Policies\DivisionPolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MemberRequestPolicy;
@@ -14,8 +14,8 @@ use App\Policies\NotePolicy;
 use App\Policies\PlatoonPolicy;
 use App\Policies\SquadPolicy;
 use App\Policies\UserPolicy;
-use App\Squad;
-use App\User;
+use App\Models\Squad;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 

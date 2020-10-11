@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\TicketType;
+use App\Models\TicketType;
 use Illuminate\Support\Str;
 
 class TicketTypeObserver
@@ -10,7 +10,7 @@ class TicketTypeObserver
     /**
      * Handle the ticket type "created" event.
      *
-     * @param  \App\TicketType  $ticketType
+     * @param  \App\Models\TicketType  $ticketType
      * @return void
      */
     public function created(TicketType $ticketType)

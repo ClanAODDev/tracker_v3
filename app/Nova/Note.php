@@ -16,7 +16,7 @@ class Note extends Resource
      *
      * @var string
      */
-    public static $model = \App\Note::class;
+    public static $model = \App\Models\Note::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

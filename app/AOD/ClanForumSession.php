@@ -3,15 +3,13 @@
 namespace App\AOD;
 
 use App\AOD\Traits\Procedureable;
-use App\Member;
-use App\User;
+use App\Models\Member;
+use App\Models\User;
 use Auth;
-use DB;
 use Exception;
 
 class ClanForumSession
 {
-
     use Procedureable;
 
     /**

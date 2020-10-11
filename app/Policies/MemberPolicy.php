@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Division;
-use App\Member;
-use App\Rank;
-use App\User;
+use App\Models\Division;
+use App\Models\Member;
+use App\Models\Rank;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberPolicy

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
+use App\Models\Division;
 use App\Http\Requests\CreateSquadForm;
 use App\Http\Requests\DeleteSquadForm;
 use App\Http\Requests\UpdateSquadForm;
-use App\Member;
-use App\Platoon;
-use App\Squad;
+use App\Models\Member;
+use App\Models\Platoon;
+use App\Models\Squad;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\JsonResponse;

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Member;
+use App\Models\Member;
 use Illuminate\Support\Facades\DB;
 
 class MemberRepository

@@ -29,8 +29,8 @@ Route::get('requests-count.png', function () {
     $orange = imagecolorallocate($im, 255, 108, 0);
     $red = imagecolorallocate($im, 153, 26, 34);
 
-    $requestsCount = \App\MemberRequest::pending()->pastGracePeriod()->count();
-    $errors = \App\MemberRequest::errors()->count();
+    $requestsCount = \App\Models\MemberRequest::pending()->pastGracePeriod()->count();
+    $errors = \App\Models\MemberRequest::errors()->count();
 
     // calculate X for number of requests
     $dimensionsRequests = imagettfbbox(20, 0, $bigfont, $requestsCount);
@@ -71,7 +71,7 @@ Route::get('tickets-count.png', function () {
     $im = imagecreatefromstring($response);
     $orange = imagecolorallocate($im, 255, 108, 0);
 
-    $ticketsCount = \App\Ticket::open()->count();
+    $ticketsCount = \App\Models\Ticket::open()->count();
 
     // calculate X for number of tickets
     $dimensionsTickets = imagettfbbox(20, 0, $bigfont, $ticketsCount);

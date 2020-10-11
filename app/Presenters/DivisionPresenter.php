@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Division;
+use App\Models\Division;
 
 class DivisionPresenter extends Presenter
 {
