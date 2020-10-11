@@ -3,7 +3,6 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
@@ -15,7 +14,7 @@ class TicketType extends Resource
      *
      * @var string
      */
-    public static $model = \App\TicketType::class;
+    public static $model = \App\Models\TicketType::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.

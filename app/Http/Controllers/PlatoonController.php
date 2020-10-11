@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
+use App\Models\Division;
 use App\Http\Requests\CreatePlatoonForm;
 use App\Http\Requests\DeletePlatoonForm;
 use App\Http\Requests\UpdatePlatoonForm;
-use App\Member;
-use App\Platoon;
+use App\Models\Member;
+use App\Models\Platoon;
 use App\Repositories\PlatoonRepository;
 use Closure;
 use Illuminate\Auth\Access\AuthorizationException;

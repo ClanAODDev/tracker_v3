@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Member;
-use App\Squad;
+use App\Models\Member;
+use App\Models\Squad;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateSquadForm extends FormRequest

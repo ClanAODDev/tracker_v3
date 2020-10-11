@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\MemberRequest;
-use App\User;
+use App\Models\MemberRequest;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MemberRequestPolicy

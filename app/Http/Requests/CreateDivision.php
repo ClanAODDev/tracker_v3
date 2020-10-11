@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Division;
-use App\Member;
+use App\Models\Division;
+use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateDivision extends FormRequest

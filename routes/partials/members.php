@@ -39,4 +39,3 @@ Route::group(['prefix' => 'inactive-members'], function () {
 });
 
 // initial recruiting screen
-

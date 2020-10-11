@@ -1,7 +1,7 @@
 <h3 class="m-b-xs text-uppercase m-t-xxxl" id="platoons">
     {{ Str::plural($division->locality('platoon')) }}
 
-    @can('create', [App\Platoon::class, $division])
+    @can('create', [App\Models\Platoon::class, $division])
         <a href="{{ route('createPlatoon', $division->abbreviation) }}"
            class="btn btn-default pull-right"><i class="fa fa-plus text-success"></i> NEW
         </a>
@@ -10,7 +10,7 @@
 
 <hr/>
 
-@can('manageUnassigned', App\User::class)
+@can('manageUnassigned', App\Models\User::class)
     @include('division.partials.unassigned-members')
 @endcan
 

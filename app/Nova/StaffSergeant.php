@@ -5,7 +5,6 @@ namespace App\Nova;
 use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
 
 class StaffSergeant extends Resource
@@ -15,7 +14,7 @@ class StaffSergeant extends Resource
      *
      * @var string
      */
-    public static $model = \App\StaffSergeant::class;
+    public static $model = \App\Models\StaffSergeant::class;
 
     public static $with = [
         'division', 'member'

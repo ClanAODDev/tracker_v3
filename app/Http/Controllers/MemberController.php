@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Division;
-use App\Handle;
+use App\Models\Division;
+use App\Models\Handle;
 use App\Http\Requests\DeleteMember;
-use App\Member;
-use App\Platoon;
-use App\Position;
+use App\Models\Member;
+use App\Models\Platoon;
+use App\Models\Position;
 use App\Repositories\MemberRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;

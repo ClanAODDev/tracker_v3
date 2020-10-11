@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
-use App\Member;
-use App\User;
+use App\Models\Member;
+use App\Models\User;
 use Auth;
 
 use Illuminate\Contracts\Auth\StatefulGuard;
@@ -44,7 +44,7 @@ class LoginController extends Controller
     private function registerNewUser($username)
     {
         if ($member = $this->isCurrentAODMember($username)) {
-            $user = \App\User::updateOrCreate([
+            $user = \App\Models\User::updateOrCreate([
                 'email' => $this->email,
                 'name' => $username,
                 'member_id' => $member->id

@@ -2,7 +2,7 @@
 
 namespace App\Activities;
 
-use App\Activity;
+use App\Models\Activity;
 use ReflectionClass;
 
 /**

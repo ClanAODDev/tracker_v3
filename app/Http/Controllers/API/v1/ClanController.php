@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 
 class ClanController extends ApiController
 {
-
     const RFC3339 = "Y-m-d\TH:i:sP";
 
     /**
