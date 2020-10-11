@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\UserGroup;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;

@@ -58,6 +58,5 @@ class PlatoonPolicy
     public function create(User $user, Division $division)
     {
         return false;
-
     }
 }
