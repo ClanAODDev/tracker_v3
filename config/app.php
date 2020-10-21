@@ -45,6 +45,8 @@ return [
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
     ],
 
+    'ticketing_enabled' => env('TICKETING', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

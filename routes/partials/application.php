@@ -15,13 +15,16 @@ Route::group(['prefix' => 'training'], function () {
     Route::post('', 'TrainingController@update')->name('training.update');
 });
 
-Route::name('help.tickets.')->prefix('help/tickets')->group(function () {
-    Route::get('', 'TicketController@index')->name('index');
-    Route::get('create', 'TicketController@create')->name('create');
-    Route::post('', 'TicketController@store')->name('store');
-    Route::delete('', 'TicketController@store')->name('store');
-    Route::get('{ticket}', 'TicketController@show')->name('show');
-});
+if (config('app.ticketing_enabled')) {
+    Route::name('help.tickets.')->prefix('help/tickets')->group(function () {
+        Route::get('', 'TicketController@index')->name('index');
+        Route::get('create', 'TicketController@create')->name('create');
+        Route::post('', 'TicketController@store')->name('store');
+        Route::delete('', 'TicketController@store')->name('store');
+        Route::get('{ticket}', 'TicketController@show')->name('show');
+    });
+}
+
 
 Route::group(['prefix' => 'help'], function () {
     Route::get('/', 'HelpController@index')->name('help');
