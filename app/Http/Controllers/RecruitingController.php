@@ -109,6 +109,7 @@ class RecruitingController extends Controller
         $member->rank_id = $request->rank;
         $member->position_id = 1;
         $member->division_id = $division->id;
+        $member->flagged_for_inactivity = false;
         $member->save();
 
         // handle ingame name assignment
