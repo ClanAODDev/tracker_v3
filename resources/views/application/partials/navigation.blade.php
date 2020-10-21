@@ -95,6 +95,25 @@
         </ul>
     </li>
 
+    <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
+        <a href="#tickets" data-toggle="collapse" aria-expanded="false">
+            Help Tickets
+            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+        </a>
+
+        <ul id="tickets"
+            class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
+            <li class="{{ set_active('help/tickets/create') }}">
+                <a href="{{ route('help.tickets.create') }}">Create New Ticket</a>
+            </li>
+
+            <li class="{{ set_active('help/tickets') }}">
+                <a href="{{ route('help.tickets.index') }}">All Tickets</a>
+            </li>
+
+        </ul>
+    </li>
+
     @if(Auth::user()->isRole('admin'))
         <li class="nav-category">
             Admin
@@ -105,7 +124,7 @@
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
                 Member Requests <span
-                        class="badge text-info">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
+                    class="badge text-info">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
             </a>
         </li>
 

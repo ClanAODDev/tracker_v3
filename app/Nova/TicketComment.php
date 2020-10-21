@@ -3,26 +3,24 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Ticket extends Resource
+class TicketComment extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Ticket::class;
+    public static $model = \App\Models\TicketComment::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'description';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -31,7 +29,6 @@ class Ticket extends Resource
      */
     public static $search = [
         'id',
-        'description'
     ];
 
     /**
@@ -43,13 +40,7 @@ class Ticket extends Resource
     public function fields(Request $request)
     {
         return [
-            ID::make()->sortable(),
-            BelongsTo::make('Ticket Type'),
-            BelongsTo::make('Caller', 'caller', '\App\Nova\User')->searchable(),
-            BelongsTo::make('Owner', 'owner', '\App\Nova\User')->searchable()->nullable(),
-            Textarea::make('Description'),
-            Date::make('Created At'),
-            Date::make('Updated At'),
+            ID::make(__('ID'), 'id')->sortable(),
         ];
     }
 

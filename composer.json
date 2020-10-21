@@ -35,7 +35,8 @@
         "laravel/nova": "^3.0",
         "laravel/passport": "^10.0",
         "brian2694/laravel-toastr": "^5.53",
-        "rcrowe/twigbridge": "^0.12.0"
+        "rcrowe/twigbridge": "^0.12.0",
+        "spatie/laravel-query-builder": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",

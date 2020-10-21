@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Nova\Metrics\MembersByMonth;
-use App\Nova\Metrics\UsersByRole;
-use App\Observers\TicketTypeObserver;
+use App\Models\Observers\TicketTypeObserver;
 use App\Models\TicketType;
 use App\Models\User;
+use App\Nova\Metrics\MembersByMonth;
+use App\Nova\Metrics\UsersByRole;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;

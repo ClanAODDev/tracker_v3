@@ -4,17 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TicketController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth']);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $openTickets = Ticket::open()->with('type', 'caller', 'owner')->latest()->get();
+        $tickets = QueryBuilder::for(Ticket::class)
+            ->allowedFilters(
+                [
+                    'caller.name',
+                    'caller.member.clan_id',
+                    'owner.name',
+                    'owner.member.clan_id',
+                    'state',
+                    'type.slug',
+                ]
+            );
 
-        return view('help.tickets.index', compact('openTickets'));
+        $newCount = Ticket::new()->count();
+        $assignedCount = Ticket::assigned()->count();
+        $resolvedCount = Ticket::resolved()->count();
+
+        return view('help.tickets.index', compact('tickets', 'newCount', 'assignedCount', 'resolvedCount'));
     }
 
     /**
@@ -30,7 +54,7 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -41,7 +65,7 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Ticket $ticket
+     * @param  Ticket  $ticket
      * @return Ticket
      */
     public function show(Ticket $ticket)
@@ -52,7 +76,7 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -63,8 +87,8 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -75,7 +99,7 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

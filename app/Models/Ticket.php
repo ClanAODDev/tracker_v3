@@ -12,6 +12,12 @@ class Ticket extends Model
 
     protected $guarded = [];
 
+    protected $with = [
+        'ticket_type',
+        'caller',
+        'owner',
+    ];
+
     protected $dates = [
         'resolved_at'
     ];
@@ -19,9 +25,9 @@ class Ticket extends Model
     /**
      * @return BelongsTo
      */
-    public function type()
+    public function ticket_type()
     {
-        return $this->belongsTo(\App\Models\TicketType::class);
+        return $this->belongsTo(TicketType::class, 'ticket_type_id');
     }
 
     /**
@@ -29,7 +35,12 @@ class Ticket extends Model
      */
     public function caller()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(TicketComment::class);
     }
 
     /**
@@ -37,20 +48,32 @@ class Ticket extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
      * @param $query
      * @return mixed
      */
-    public function scopeOpen($query)
+    public function scopeNew($query)
     {
-        return $query->where('state', '!=', 'resolved');
+        return $query->where('state', 'new')
+            ->whereNotIn('state', ['assigned', 'resolved']);
     }
 
-    public function scopeClosed($query)
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeAssigned($query)
     {
-        return $query->where('state', '=', 'resolved');
+        return $query->where('state', 'assigned')
+            ->whereNotIn('state', ['new', 'resolved']);
+    }
+
+    public function scopeResolved($query)
+    {
+        return $query->where('state', 'resolved')
+            ->whereNotIn('state', ['new', 'assigned']);
     }
 }

@@ -26,7 +26,7 @@ class TicketFactory extends Factory
 
         return [
             'state' => $states[$randomState],
-            'type_id' => \App\Models\TicketType::inRandomOrder()->first()->id,
+            'ticket_type_id' => \App\Models\TicketType::inRandomOrder()->first()->id,
             'caller_id' => \App\Models\User::inRandomOrder()->first()->id,
             'division_id' => \App\Models\Division::inRandomOrder()->active()->get()->first()->id,
             'description' => $this->faker->paragraph,
