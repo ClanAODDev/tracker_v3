@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\TicketType;
+use App\Models\Observers\TicketTypeObserver;
 use App\Settings\UserSettings;
 use Auth;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
@@ -20,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        TicketType::observe(TicketTypeObserver::class);
 
         Paginator::useBootstrap();
     }

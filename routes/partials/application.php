@@ -15,9 +15,12 @@ Route::group(['prefix' => 'training'], function () {
     Route::post('', 'TrainingController@update')->name('training.update');
 });
 
-Route::group(['prefix' => 'help', 'middleware' => ['auth']], function () {
-    Route::get('tickets', 'TicketController@index')->name('tickets.index');
-    Route::get('tickets/{ticket}', 'TicketController@show')->name('tickets.show');
+Route::name('help.tickets.')->prefix('help/tickets')->group(function () {
+    Route::get('', 'TicketController@index')->name('index');
+    Route::get('create', 'TicketController@create')->name('create');
+    Route::post('', 'TicketController@store')->name('store');
+    Route::delete('', 'TicketController@store')->name('store');
+    Route::get('{ticket}', 'TicketController@show')->name('show');
 });
 
 Route::group(['prefix' => 'help'], function () {

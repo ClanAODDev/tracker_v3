@@ -19,31 +19,108 @@
 
     <div class="container-fluid">
 
-        <h4>OPEN TICKETS <span class="badge">{{ $openTickets->count() }}</span></h4>
-        <div class="row">
+        <a href="?filter[state]=new" class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'new' ? 'active' : '' }}">New ({{ $newCount }})</a>
+        <a href="?filter[state]=resolved" class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'resolved' ? 'active' : '' }}">Resolved ({{ $resolvedCount }})</a>
+        <a href="?filter[state]=assigned" class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'assigned' ? 'active' : '' }}">Assigned ({{ $assignedCount }})</a>
+
+        <form action="">
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="panel panel-filled">
+                        <div class="panel-heading">
+                            <div class="panel-tools">
+                                <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
+                            </div>
+                            Filter tickets
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+
+                            </div>
+                            <div class="text-right">
+                                <a href="{{ route('help.tickets.index') }}" class="btn btn-default">Reset</a>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        @if(request('filter') && is_array(request('filter')))
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-c-accent panel-filled">
+                        <div class="panel-body">
+                            <h5>Active filters</h5>
+
+                            @foreach (request('filter') as $attribute => $filter)
+                                <span class="badge">{{ ucwords($attribute) . " = " . ucwords($filter) }}</span>
+                            @endforeacH
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        <h4>TICKETS <span class="badge">{{ $tickets->count() }}</span></h4>
+        <hr>
+
+        @unless($tickets->count())
+            <p class="text-muted">No tickets match the provided criteria.</p>
+        @else
+
             <div class="panel panel-filled">
-                <div class="table-responsive p-3">
-                    <table class="table table-hover adv-datatable p-3">
+                <div class="table-responsive">
+                    <table class="table table-hover basic-datatable">
                         <thead>
                         <tr>
                             <th>ID</th>
                             <th>Type</th>
                             <th>Caller</th>
+                            <th>State</th>
                             <th>Owned By</th>
                             <th>Updated At</th>
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($openTickets as $ticket)
+                        @foreach ($tickets->get() as $ticket)
                             <tr>
                                 <td>{{ $ticket->id }}</td>
-                                <td class="text-info">{{ $ticket->type->name }}</td>
+                                <td class="text-info">{{ $ticket->ticket_type->name }}</td>
                                 <td>{{ $ticket->caller->name }}</td>
-                                @if($ticket->owner)
-                                    <td class="text-accent">{{ $ticket->owner->name }}</td>
-                                @else
-                                    <td class="text-muted">--</td>
-                                @endif
+                                <td>
+                                    @if ($ticket->state == 'new')
+
+                                        <a title="Show only {{ $ticket->state }} tickets"
+                                           href="{{ route('help.tickets.index') . "?filter[state]={$ticket->state}" }}"
+                                           class="label label-info text-uppercase">{{ $ticket->state }}</a>
+
+                                    @elseif ($ticket->state == 'assigned')
+
+                                        <a title="Show only {{ $ticket->state }} tickets"
+                                           href="{{ route('help.tickets.index')  . "?filter[state]={$ticket->state}"}}"
+                                           class="label label-warning text-uppercase">{{ $ticket->state }}</a>
+
+                                    @else ($ticket->state == 'resolved')
+
+                                        <a title="Show only {{ $ticket->state }} tickets"
+                                           href="{{ route('help.tickets.index') . "?filter[state]={$ticket->state}"}}"
+                                           class="label label-success text-uppercase">{{ $ticket->state }}</a>
+
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($ticket->owner)
+                                        {{ $ticket->owner->name }}
+                                    @else
+                                        <span class="text-muted">--</span>
+                                    @endif
+                                </td>
                                 <td>{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
                             </tr>
                         @endforeach
@@ -51,6 +128,8 @@
                     </table>
                 </div>
             </div>
-        </div>
+
+
+        @endunless
     </div>
 @stop

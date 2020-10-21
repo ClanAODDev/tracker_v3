@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Observers;
+namespace App\Models\Observers;
 
 use App\Models\TicketType;
 use Illuminate\Support\Str;
@@ -13,9 +13,8 @@ class TicketTypeObserver
      * @param  \App\Models\TicketType  $ticketType
      * @return void
      */
-    public function created(TicketType $ticketType)
+    public function saving(TicketType $ticketType)
     {
         $ticketType->slug = Str::slug($ticketType->name);
-        $ticketType->save();
     }
 }
