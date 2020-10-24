@@ -209,9 +209,7 @@ class PlatoonController extends Controller
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
-            $squad->members = $squad->members->filter(function ($member) {
-                return $member->position_id === 1;
-            });
+            $squad->members = $squad->members->filter(fn($member) => $member->position_id === 1);
         });
 
         return view('platoon.manage-members', compact('division', 'platoon'));

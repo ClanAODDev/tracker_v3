@@ -32,12 +32,8 @@ class MemberRequestController extends Controller
         }
 
         $requests = collect([
-            'pending' => $requests->filter(function ($request) {
-                return $request->approved_at === null && $request->cancelled_at === null;
-            }),
-            'cancelled' => $requests->filter(function ($request) {
-                return $request->cancelled_at != null;
-            }),
+            'pending' => $requests->filter(fn($request) => $request->approved_at === null && $request->cancelled_at === null),
+            'cancelled' => $requests->filter(fn($request) => $request->cancelled_at != null),
         ]);
 
 

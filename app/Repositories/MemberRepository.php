@@ -28,9 +28,7 @@ class MemberRepository
                       ORDER BY year DESC
             ")
         ))
-            ->filter(function ($values) {
-                return $values->month !== null;
-            });
+            ->filter(fn($values) => $values->month !== null);
     }
 
     public function staffSergeants()

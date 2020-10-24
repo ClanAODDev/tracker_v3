@@ -13,9 +13,7 @@ trait Procedureable
     {
         try {
             if (is_array($data)) {
-                $stringKeys = implode(',', array_map(function ($key) {
-                    return ':' . $key;
-                }, array_keys($data)));
+                $stringKeys = implode(',', array_map(fn($key) => ':' . $key, array_keys($data)));
                 $results = collect(\DB::connection('aod_forums')
                     ->select("CALL {$procedure}({$stringKeys})", $data))->first();
             } elseif (is_string($data) || is_int($data)) {

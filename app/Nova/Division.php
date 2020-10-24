@@ -70,19 +70,17 @@ class Division extends Resource
 
             Date::make('Shutdown At'),
 
-            new Panel('Extra stuff', function () {
-                return [
-                    Text::make('description')->rules(['required'])->hideFromIndex(),
-                    Boolean::make('active')->sortable()->rules(
-                        'required',
-                        function ($attribute, $value, $fail) {
-                            if ($value == false && $this->members->count()) {
-                                return $fail('Division still has members assigned and cannot be disabled.');
-                            }
+            new Panel('Extra stuff', fn() => [
+                Text::make('description')->rules(['required'])->hideFromIndex(),
+                Boolean::make('active')->sortable()->rules(
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        if ($value == false && $this->members->count()) {
+                            return $fail('Division still has members assigned and cannot be disabled.');
                         }
-                    ),
-                ];
-            }),
+                    }
+                ),
+            ]),
 
         ];
     }
