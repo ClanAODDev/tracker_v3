@@ -7,11 +7,9 @@ use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Illuminate\Http\JsonResponse;
-
-class ClanController extends ApiController
+class ClanController extends \App\Http\Controllers\API\v1\ApiController
 {
-    const RFC3339 = "Y-m-d\TH:i:sP";
-
+    const RFC3339 = "Y-m-d\\TH:i:sP";
     /**
      * ClanController constructor.
      */
@@ -19,50 +17,32 @@ class ClanController extends ApiController
     {
         $this->middleware('auth');
     }
-
     /**
      * @return JsonResponse
      */
     public function teamspeakPopulationCount()
     {
-        $data = AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population_json&');
-
-        return $this->respond([
-            'data' => $data
-        ]);
+        $data = \App\Services\AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population_json&');
+        return $this->respond(['data' => $data]);
     }
-
     /**
      * @return JsonResponse
      */
     public function discordPopulationCount()
     {
-        $data = AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
-
-        return $this->respond([
-            'data' => $data
-        ]);
+        $data = \App\Services\AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
+        return $this->respond(['data' => $data]);
     }
-
     /**
      * @return JsonResponse
      */
     public function streamEvents()
     {
-        $client = new Google_Client();
+        $client = new \Google_Client();
         $client->setApplicationName("AOD Stream Calendar");
         $client->setDeveloperKey(config('services.google.apiKey'));
-
-        $service = new Google_Service_Calendar($client);
-
-        $eventStream = $service->events
-            ->listEvents(config('app.aod.stream_calendar'), [
-                'timeMin' => now()->format(self::RFC3339),
-                'timeMax' => now()->addDays(7)->format(self::RFC3339),
-                'singleEvents' => true,
-                'orderBy' => 'startTime'
-            ]);
-
+        $service = new \Google_Service_Calendar($client);
+        $eventStream = $service->events->listEvents(config('app.aod.stream_calendar'), ['timeMin' => now()->format(self::RFC3339), 'timeMax' => now()->addDays(7)->format(self::RFC3339), 'singleEvents' => true, 'orderBy' => 'startTime']);
         $events = [];
         while (true) {
             /** @var Google_Service_Calendar_Event $event */
@@ -70,12 +50,7 @@ class ClanController extends ApiController
                 if ($event->summary || $event->description) {
                     $start = \Carbon::parse($event->start->dateTime ?? $event->start->date);
                     $end = \Carbon::parse($event->end->dateTime ?? $event->end->date);
-                    $events[] = [
-                        "event" => $event->summary ?? $event->description,
-                        "time" => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
-                        "timestamp-start" => $start->timestamp,
-                        "timestamp-end" => $end->timestamp,
-                    ];
+                    $events[] = ["event" => $event->summary ?? $event->description, "time" => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}", "timestamp-start" => $start->timestamp, "timestamp-end" => $end->timestamp];
                 }
             }
             $pageToken = $eventStream->getNextPageToken();
@@ -86,7 +61,6 @@ class ClanController extends ApiController
                 break;
             }
         }
-
         return response()->json($events);
     }
 }

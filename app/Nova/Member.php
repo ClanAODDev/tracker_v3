@@ -68,14 +68,12 @@ class Member extends Resource
 
             Date::make('Last Promoted', 'last_promoted_at'),
 
-            new Panel('SGT Info', function () {
-                return [
-                    Date::make('Last Trained', 'last_trained_at')->hideFromIndex(),
-                    Number::make('Trained By', 'last_trained_by')->hideFromIndex(),
-                    Date::make('XO Since', 'xo_at')->hideFromIndex(),
-                    Date::make('CO Since', 'co_at')->hideFromIndex(),
-                ];
-            }),
+            new Panel('SGT Info', fn() => [
+                Date::make('Last Trained', 'last_trained_at')->hideFromIndex(),
+                Number::make('Trained By', 'last_trained_by')->hideFromIndex(),
+                Date::make('XO Since', 'xo_at')->hideFromIndex(),
+                Date::make('CO Since', 'co_at')->hideFromIndex(),
+            ]),
 
             HasMany::make('Notes'),
 

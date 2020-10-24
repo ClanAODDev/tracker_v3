@@ -40,13 +40,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // register user settings
-        $this->app->singleton(UserSettings::class, function () {
-            return Auth::user()->settings();
-        });
+        $this->app->singleton(UserSettings::class, fn() => Auth::user()->settings());
 
         // register slack api client
-        $this->app->singleton(slack::class, function () {
-            return new slack(config('core.slack.token'));
-        });
+        $this->app->singleton(slack::class, fn() => new slack(config('core.slack.token')));
     }
 }

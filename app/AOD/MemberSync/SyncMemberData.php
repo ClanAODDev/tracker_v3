@@ -27,9 +27,7 @@ class SyncMemberData
     {
         $divisionInfo = new GetDivisionInfo();
 
-        $syncData = collect($divisionInfo->data)->groupBy(function ($item, $key) {
-            return strtolower($item['aoddivision']);
-        });
+        $syncData = collect($divisionInfo->data)->groupBy(fn($item, $key) => strtolower($item['aoddivision']));
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
 

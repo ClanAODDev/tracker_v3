@@ -12,9 +12,6 @@ use ReflectionClass;
  */
 trait RecordsActivity
 {
-    /**
-     *
-     */
     protected static function bootRecordsActivity()
     {
         foreach (static::getModelEvents() as $event) {
@@ -78,9 +75,6 @@ trait RecordsActivity
         return "{$action}_{$name}";
     }
 
-    /**
-     *
-     */
     public static function feed()
     {
     }

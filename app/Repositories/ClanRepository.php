@@ -16,9 +16,7 @@ class ClanRepository
     public function teamspeakReport()
     {
         return Member::whereHas('division')->get()
-            ->filter(function ($member) {
-                return !carbon_date_or_null_if_zero($member->last_ts_activity);
-            });
+            ->filter(fn($member) => !carbon_date_or_null_if_zero($member->last_ts_activity));
     }
 
     /**

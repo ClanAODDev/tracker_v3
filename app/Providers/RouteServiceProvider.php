@@ -42,15 +42,11 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        \Route::bind('username', function ($username) {
-            return User::whereName($username)->firstOrFail();
-        });
+        \Route::bind('username', fn($username) => User::whereName($username)->firstOrFail());
 
-        \Route::bind('handle', function ($handle) {
-            return Handle::whereId($handle)
-                ->with('divisions')
-                ->first();
-        });
+        \Route::bind('handle', fn($handle) => Handle::whereId($handle)
+            ->with('divisions')
+            ->first());
 
         /**
          * Show platoon by division abbrev, platoon number (1st, 2nd, etc)

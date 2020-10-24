@@ -54,9 +54,7 @@ class DivisionStructureController extends Controller
                 'autoescape' => false
             ]);
 
-            $env->addFunction(new Twig_SimpleFunction('ordSuffix', function ($value) {
-                return ordSuffix($value);
-            }));
+            $env->addFunction(new Twig_SimpleFunction('ordSuffix', fn($value) => ordSuffix($value)));
 
 
             $env->addFunction(new Twig_SimpleFunction('replaceRegex', function ($str, $search, $replace = null) {
@@ -173,9 +171,7 @@ class DivisionStructureController extends Controller
         $leave = $division->members()->whereHas('leave')
             ->with('leave', 'rank')->get();
 
-        return $leave->filter(function ($member) {
-            return $member->leave->approver;
-        });
+        return $leave->filter(fn($member) => $member->leave->approver);
     }
 
     private function getLocality(Division $division)
@@ -209,9 +205,7 @@ class DivisionStructureController extends Controller
     {
         return $data->platoons->each(function ($platoon) {
             $platoon->squads = $platoon->squads->each(function ($squad) {
-                $squad->members = $squad->members->filter(function ($member) use ($squad) {
-                    return $member->clan_id !== $squad->leader_id;
-                });
+                $squad->members = $squad->members->filter(fn($member) => $member->clan_id !== $squad->leader_id);
             });
         });
     }

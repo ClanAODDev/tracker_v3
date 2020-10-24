@@ -25,7 +25,7 @@
         "league/csv": "^8.1",
         "laravelcollective/html": "^6.0",
         "laravel/tinker": "^2.0",
-        "doctrine/annotations": "1.4",
+        "doctrine/annotations": "^1.10.4",
         "wrapi/slack": "^0.1.5",
         "appstract/laravel-blade-directives": "^0.4.5",
         "sentry/sentry-laravel": "^1.5",
@@ -48,7 +48,8 @@
         "filp/whoops": "^2.0",
         "nunomaduro/collision": "^5.0",
         "beyondcode/laravel-dump-server": "^1.0",
-        "laravel/ui": "^3.0"
+        "laravel/ui": "^3.0",
+        "rector/rector": "^0.8.41"
     },
     "autoload": {
         "classmap": [

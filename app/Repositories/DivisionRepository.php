@@ -6,7 +6,6 @@ use App\Models\Division;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
-
 /**
  * Class DivisionRepository
  *
@@ -14,126 +13,71 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class DivisionRepository
 {
-
     /**
      * @param Division $division
      * @param int $limit
      * @return \Illuminate\Support\Collection
      */
-    public function censusCounts(Division $division, $limit = 52)
+    public function censusCounts(\App\Models\Division $division, $limit = 52)
     {
-        $censuses = collect(DB::select(
-            DB::raw("
-                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date 
-                FROM censuses WHERE division_id = {$division->id} 
-                GROUP BY date(created_at) 
-                ORDER BY date DESC LIMIT {$limit};
-            ")
-        ));
-
+        $censuses = collect(\DB::select(\DB::raw("\n                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date \n                FROM censuses WHERE division_id = {$division->id} \n                GROUP BY date(created_at) \n                ORDER BY date DESC LIMIT {$limit};\n            ")));
         return $censuses;
     }
-
     /**
      * @param Division $division
      * @return array
      */
-    public function getPromotionsData(Division $division)
+    public function getPromotionsData(\App\Models\Division $division)
     {
-        $members = $division->members()
-            ->whereBetween('last_promoted', [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfMonth()
-            ])->get();
-
-        return [
-            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
-            'values' => [$members->groupBy('rank.name')],
-            'colors' => ['#28b62c', '#ff851b', '#ff4136']
-        ];
+        $members = $division->members()->whereBetween('last_promoted', [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()])->get();
+        return ['labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'], 'values' => [$members->groupBy('rank.name')], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
     }
-
     /**
      * @param Division $division
      * @return array
      */
-    public function getDivisionActivity(Division $division)
+    public function getDivisionActivity(\App\Models\Division $division)
     {
-        $twoWeeksAgo = Carbon::now()->subDays(14);
-        $oneMonthAgo = Carbon::now()->subDays(30);
-
+        $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
+        $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
         $twoWeeks = $division->members()->where('last_activity', '>=', $twoWeeksAgo);
-
-        $oneMonth = $division->members()->where('last_activity', '<=', $twoWeeksAgo)
-            ->where('last_activity', '>=', $oneMonthAgo);
-
+        $oneMonth = $division->members()->where('last_activity', '<=', $twoWeeksAgo)->where('last_activity', '>=', $oneMonthAgo);
         $moreThanOneMonth = $division->members()->where('last_activity', '<=', $oneMonthAgo);
-
-        return [
-            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
-            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
-            'colors' => ['#28b62c', '#ff851b', '#ff4136']
-        ];
+        return ['labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'], 'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
     }
-
     /**
      * @param Division $division
      * @return array
      */
-    public function getDivisionTSActivity(Division $division)
+    public function getDivisionTSActivity(\App\Models\Division $division)
     {
-        $twoWeeksAgo = Carbon::now()->subDays(14);
-        $oneMonthAgo = Carbon::now()->subDays(30);
-
+        $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
+        $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
         $twoWeeks = $division->members()->where('last_ts_activity', '>=', $twoWeeksAgo);
-
-        $oneMonth = $division->members()->where('last_ts_activity', '<=', $twoWeeksAgo)
-            ->where('last_ts_activity', '>=', $oneMonthAgo);
-
+        $oneMonth = $division->members()->where('last_ts_activity', '<=', $twoWeeksAgo)->where('last_ts_activity', '>=', $oneMonthAgo);
         $moreThanOneMonth = $division->members()->where('last_ts_activity', '<=', $oneMonthAgo);
-
-        return [
-            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
-            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
-            'colors' => ['#28b62c', '#ff851b', '#ff4136']
-        ];
+        return ['labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'], 'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
     }
-
     /**
      * @param Division $division
      * @return array
      */
-    public function getRankDemographic(Division $division)
+    public function getRankDemographic(\App\Models\Division $division)
     {
-        $ranks = DB::select('ranks.abbreviation')
-            ->addSelect(DB::raw('count(*) as count'))
-            ->from('members')
-            ->join('ranks', function ($join) {
-                $join->on('ranks.id', '=', 'members.rank_id');
-            })
-            ->join('division_member', function ($join) {
-                $join->on('member_id', '=', 'members.id');
-            })
-            ->where('division_id', '=', $division->id)
-            ->groupBy('rank_id')
-            ->get();
-
+        $ranks = \DB::select('ranks.abbreviation')->addSelect(\DB::raw('count(*) as count'))->from('members')->join('ranks', function ($join) {
+            $join->on('ranks.id', '=', 'members.rank_id');
+        })->join('division_member', function ($join) {
+            $join->on('member_id', '=', 'members.id');
+        })->where('division_id', '=', $division->id)->groupBy('rank_id')->get();
         $labels = [];
         $values = [];
-
         foreach ($ranks as $rank) {
             $labels[] = $rank->abbreviation;
             $values[] = $rank->count;
         }
-
-        $data = [
-            'labels' => $labels,
-            'values' => $values
-        ];
-
+        $data = ['labels' => $labels, 'values' => $values];
         return $data;
     }
-
     /**
      * @param $divisionId
      * @param  null  $startDate
@@ -141,18 +85,8 @@ class DivisionRepository
      */
     public function recruitsLast6Months($divisionId, $startDate)
     {
-        return DB::table('activities')
-            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
-            ->selectRaw('count(*) as recruits')
-            ->from('activities')
-            ->where('activities.name', '=', 'recruited_member')
-            ->where('division_id', '=', $divisionId)
-            ->where('created_at', '>=', $startDate)
-            ->orderBy('activities.created_at')
-            ->groupby('date')
-            ->get();
+        return \DB::table('activities')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count(*) as recruits')->from('activities')->where('activities.name', '=', 'recruited_member')->where('division_id', '=', $divisionId)->where('created_at', '>=', $startDate)->orderBy('activities.created_at')->groupby('date')->get();
     }
-
     /**
      * @param $divisionId
      * @param  null  $startDate
@@ -160,18 +94,8 @@ class DivisionRepository
      */
     public function removalsLast6Months($divisionId, $startDate)
     {
-        return DB::table('activities')
-            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
-            ->selectRaw('count(*) as removals')
-            ->from('activities')
-            ->where('activities.name', '=', 'removed_member')
-            ->where('created_at', '>=', $startDate)
-            ->where('division_id', '=', $divisionId)
-            ->groupby('date')
-            ->orderBy('activities.created_at', 'ASC')
-            ->get();
+        return \DB::table('activities')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count(*) as removals')->from('activities')->where('activities.name', '=', 'removed_member')->where('created_at', '>=', $startDate)->where('division_id', '=', $divisionId)->groupby('date')->orderBy('activities.created_at', 'ASC')->get();
     }
-
     /**
      * @param $divisionId
      * @param  null  $startDate
@@ -179,22 +103,13 @@ class DivisionRepository
      */
     public function populationLast6Months($divisionId, $startDate)
     {
-        return DB::table('censuses')
-            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
-            ->selectRaw('count')
-            ->from('censuses')
-            ->where('division_id', '=', $divisionId)
-            ->where('created_at', '>=', $startDate)
-            ->groupby('date')
-            ->orderBy('created_at', 'ASC')
-            ->get();
+        return \DB::table('censuses')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count')->from('censuses')->where('division_id', '=', $divisionId)->where('created_at', '>=', $startDate)->groupby('date')->orderBy('created_at', 'ASC')->get();
     }
-
     /**
      * @return Collection|static[]
      */
     public function withoutSsgts()
     {
-        return Division::doesntHave('staffSergeants')->get();
+        return \App\Models\Division::doesntHave('staffSergeants')->get();
     }
 }
