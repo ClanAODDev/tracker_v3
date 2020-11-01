@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string state
+ */
 class Ticket extends Model
 {
     use HasFactory;
@@ -13,9 +16,15 @@ class Ticket extends Model
     protected $guarded = [];
 
     protected $with = [
-        'ticket_type',
+        'type',
         'caller',
         'owner',
+    ];
+
+    public $stateColors = [
+        'new' => 'info',
+        'assigned' => 'accent',
+        'resolved' => 'success',
     ];
 
     protected $dates = [
@@ -25,7 +34,7 @@ class Ticket extends Model
     /**
      * @return BelongsTo
      */
-    public function ticket_type()
+    public function type()
     {
         return $this->belongsTo(TicketType::class, 'ticket_type_id');
     }
@@ -75,5 +84,10 @@ class Ticket extends Model
     {
         return $query->where('state', 'resolved')
             ->whereNotIn('state', ['new', 'assigned']);
+    }
+
+    public function getStateColorAttribute()
+    {
+        return $this->stateColors[$this->state];
     }
 }

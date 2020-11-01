@@ -23,16 +23,22 @@ class TicketController extends Controller
     public function index()
     {
         $tickets = QueryBuilder::for(Ticket::class)
-            ->allowedFilters(
-                [
-                    'caller.name',
-                    'caller.member.clan_id',
-                    'owner.name',
-                    'owner.member.clan_id',
-                    'state',
-                    'type.slug',
-                ]
+            ->allowedFilters([
+                'type.slug',
+                'caller.name',
+                'caller.member.clan_id',
+                'owner.name',
+                'owner.member.clan_id',
+                'state',
+            ]);
+
+        if (request('search-filter') && request('search-criteria') && request()->isMethod('get')) {
+            return redirect(
+                route('help.tickets.index')
+                . '?' . request('search-query')
+                . '&filter[' . request('search-filter') . ']=' . request('search-criteria')
             );
+        }
 
         $newCount = Ticket::new()->count();
         $assignedCount = Ticket::assigned()->count();

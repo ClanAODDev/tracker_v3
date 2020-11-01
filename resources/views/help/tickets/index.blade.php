@@ -19,55 +19,64 @@
 
     <div class="container-fluid">
 
-        <a href="?filter[state]=new" class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'new' ? 'active' : '' }}">New ({{ $newCount }})</a>
-        <a href="?filter[state]=resolved" class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'resolved' ? 'active' : '' }}">Resolved ({{ $resolvedCount }})</a>
-        <a href="?filter[state]=assigned" class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'assigned' ? 'active' : '' }}">Assigned ({{ $assignedCount }})</a>
-
-        <form action="">
-
-            <div class="row">
-
-                <div class="col-md-12">
-                    <div class="panel panel-filled">
-                        <div class="panel-heading">
-                            <div class="panel-tools">
-                                <a class="panel-toggle"><i class="fa fa-chevron-up"></i></a>
-                            </div>
-                            Filter tickets
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-
-                            </div>
-                            <div class="text-right">
-                                <a href="{{ route('help.tickets.index') }}" class="btn btn-default">Reset</a>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
+        <div style="display: flex; justify-content: space-between">
+            @if(request('filter') && is_array(request('filter')))
+                <div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a href="{{ route('help.tickets.index') }}" class="btn btn-danger btn-rounded"><i class="fa fa-times"></i> Reset</a>
+                            @foreach (request('filter') as $attribute => $filter)
+                                @if ($attribute && $filter)
+                                    <a class="btn btn-default btn-rounded hover-strikethrough" title="Click to remove"
+                                       href="{{ urldecode(remove_query_params(["filter[{$attribute}]"])) }}">
+                                        {{ ucwords(str_replace('.', ' ', $attribute)) }} = <code>{{ $filter }}</code>
+                                    </a>
+                                @endif
+                            @endforeacH
                         </div>
                     </div>
                 </div>
+            @endif
+            <div>
+                <small class="text-uppercase">
+                    <a href="?filter[state]=new"
+                       class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'new' ? 'active' : '' }}">
+                        <i class="fa fa-asterisk text-info"></i> New ({{ $newCount }})</a>
+                    <a href="?filter[state]=assigned"
+                    class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'assigned' ? 'active' : '' }}">
+                        <i class="fa fa-hourglass-half text-accent"></i> Assigned ({{ $assignedCount }})</a>
+                    <a href="?filter[state]=resolved"
+                       class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'resolved' ? 'active' : '' }}">
+                        <i class="fa fa-check-circle text-success"></i> Resolved ({{ $resolvedCount }})</a>
 
+                </small>
+            </div>
+        </div>
+        <hr>
+        <form>
+            <div class="row">
+                <form action="">
+                    <input type="hidden" name="search-query"
+                           value="{{ urldecode(http_build_query(request()->query())) }}">
+                    <div class="col-md-3">
+                        <select name="search-filter" id="" class="form-control">
+                            <option value="">Select a filter</option>
+                            <option value="type.slug" required>Type</option>
+                            <option value="caller.name">Caller Name</option>
+                            <option value="caller.member.clan_id">Caller Clan ID</option>
+                            <option value="owner.name">Owner Name</option>
+                            <option value="owner.member.clan_id">Owner Clan ID</option>
+                            <option value="state">State (new, assigned, resolved)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" placeholder="Search criteria" name="search-criteria"
+                               required>
+                    </div>
+                </form>
             </div>
         </form>
 
-        @if(request('filter') && is_array(request('filter')))
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-c-accent panel-filled">
-                        <div class="panel-body">
-                            <h5>Active filters</h5>
-
-                            @foreach (request('filter') as $attribute => $filter)
-                                <span class="badge">{{ ucwords($attribute) . " = " . ucwords($filter) }}</span>
-                            @endforeacH
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <h4>TICKETS <span class="badge">{{ $tickets->count() }}</span></h4>
         <hr>
 
         @unless($tickets->count())
@@ -91,32 +100,18 @@
                         @foreach ($tickets->get() as $ticket)
                             <tr>
                                 <td>{{ $ticket->id }}</td>
-                                <td class="text-info">{{ $ticket->ticket_type->name }}</td>
-                                <td>{{ $ticket->caller->name }}</td>
+                                <td class="text-info">{{ $ticket->type->name }}</td>
                                 <td>
-                                    @if ($ticket->state == 'new')
-
-                                        <a title="Show only {{ $ticket->state }} tickets"
-                                           href="{{ route('help.tickets.index') . "?filter[state]={$ticket->state}" }}"
-                                           class="label label-info text-uppercase">{{ $ticket->state }}</a>
-
-                                    @elseif ($ticket->state == 'assigned')
-
-                                        <a title="Show only {{ $ticket->state }} tickets"
-                                           href="{{ route('help.tickets.index')  . "?filter[state]={$ticket->state}"}}"
-                                           class="label label-warning text-uppercase">{{ $ticket->state }}</a>
-
-                                    @else ($ticket->state == 'resolved')
-
-                                        <a title="Show only {{ $ticket->state }} tickets"
-                                           href="{{ route('help.tickets.index') . "?filter[state]={$ticket->state}"}}"
-                                           class="label label-success text-uppercase">{{ $ticket->state }}</a>
-
-                                    @endif
+                                    <a href="?filter[caller.name]={{ $ticket->caller->name }}">{{ $ticket->caller->name }}</a>
+                                </td>
+                                <td>
+                                    <a title="Show only {{ $ticket->state }} tickets"
+                                       href="{{ "?filter[state]={$ticket->state}" }}"
+                                       class="text-{{ $ticket->stateColor }} text-uppercase">{{ $ticket->state }}</a>
                                 </td>
                                 <td>
                                     @if($ticket->owner)
-                                        {{ $ticket->owner->name }}
+                                        <a href="?filter[owner.name]={{ $ticket->owner->name }}">{{ $ticket->owner->name }}</a>
                                     @else
                                         <span class="text-muted">--</span>
                                     @endif
