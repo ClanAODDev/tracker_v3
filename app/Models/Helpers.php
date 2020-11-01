@@ -55,8 +55,8 @@ function ordSuffix($n)
 /**
  * Perform an AOD forum function (pm or email)
  *
- * @param array $ids
- * @param $action (email, showThread, forumProfile, pm, createThread, replyToThread)
+ * @param  array  $ids
+ * @param $action  (email, showThread, forumProfile, pm, createThread, replyToThread)
  * @return mixed
  */
 function doForumFunction(array $ids, $action)
@@ -96,7 +96,7 @@ function doForumFunction(array $ids, $action)
 /**
  * Get user settings
  *
- * @param null $key
+ * @param  null  $key
  * @return Application|mixed
  */
 function UserSettings($key = null)
@@ -127,8 +127,8 @@ function getDivisionIconPath($abbreviation)
  *
  * @param $myArray
  * @param $MAXDEPTH
- * @param int $depth
- * @param array $arrayKeys
+ * @param  int  $depth
+ * @param  array  $arrayKeys
  * @return array
  */
 function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = [])
@@ -199,8 +199,8 @@ function getActivityClass($date, $division)
 /**
  * Helper for assigning leadership of platoons, squads
  *
- * @param Member $member
- * @param Eloquent|Model $model
+ * @param  Member  $member
+ * @param  Eloquent|Model  $model
  */
 function setLeaderOf(Model $model, Member $member)
 {
@@ -225,12 +225,12 @@ function getNameOfClass($class)
  * Navigation helper for active classs
  *
  * @param $path
- * @param string $active
+ * @param  string  $active
  * @return string
  */
 function set_active($path, $active = 'active')
 {
-    return call_user_func_array('Request::is', (array)$path) ? $active : '';
+    return call_user_func_array('Request::is', (array) $path) ? $active : '';
 }
 
 function percent($old_member_count, $new_member_count)
@@ -243,7 +243,7 @@ function percent($old_member_count, $new_member_count)
 }
 
 /**
- * @param MemberRequest $memberRequest
+ * @param  MemberRequest  $memberRequest
  * @return string
  */
 function approveMemberPath(MemberRequest $memberRequest)
@@ -296,4 +296,54 @@ function ratio()
     }
 
     return $var;
+}
+
+/**
+ * URL before:
+ * https://example.com/orders/123?order=ABC009&status=shipped
+ *
+ * 1. remove_query_params(['status'])
+ * 2. remove_query_params(['status', 'order'])
+ *
+ * URL after:
+ * 1. https://example.com/orders/123?order=ABC009
+ * 2. https://example.com/orders/123
+ */
+function remove_query_params(array $params = [])
+{
+
+    $url = url()->current();
+    $query = request()->query();
+
+    foreach ($params as $param) {
+        if (str_contains($param, 'filter')) {
+            preg_match('/filter\[(.*)\]/', $param, $matches);
+            unset($query['filter'][$matches[1]]);
+        } else {
+            unset($query[$param]);
+        }
+    }
+
+    return $query ? $url . '?' . http_build_query($query) : $url;
+}
+
+/**
+ * URL before:
+ * https://example.com/orders/123?order=ABC009
+ *
+ * 1. add_query_params(['status' => 'shipped'])
+ * 2. add_query_params(['status' => 'shipped', 'coupon' => 'CCC2019'])
+ *
+ * URL after:
+ * 1. https://example.com/orders/123?order=ABC009&status=shipped
+ * 2. https://example.com/orders/123?order=ABC009&status=shipped&coupon=CCC2019
+ */
+function add_query_params(array $params = [])
+{
+    $query = array_merge(
+        request()->query(),
+        $params
+    );
+
+    return url()->current() . '?' . urldecode(http_build_query($query));
 }
