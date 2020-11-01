@@ -11,6 +11,10 @@
     user-select: none;
 }
 
+.hover-strikethrough:hover {
+    text-decoration: line-through !important;
+}
+
 .spotsLeft.spotsGray {
     background: #37414E;
 }
