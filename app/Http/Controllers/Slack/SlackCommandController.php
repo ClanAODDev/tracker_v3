@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Slack;
 
 use App\Http\Controllers\Controller;
-use App\SlackSlashCommand;
+use App\Models\SlackSlashCommand;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
