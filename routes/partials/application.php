@@ -22,6 +22,7 @@ if (config('app.ticketing_enabled')) {
         Route::post('', 'TicketController@store')->name('store');
         Route::delete('', 'TicketController@store')->name('store');
         Route::get('{ticket}', 'TicketController@show')->name('show');
+        Route::patch('{ticket}/self-assign', 'TicketController@selfAssign')->name('self-assign');
     });
 }
 
