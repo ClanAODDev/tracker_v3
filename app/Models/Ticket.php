@@ -90,4 +90,11 @@ class Ticket extends Model
     {
         return $this->stateColors[$this->state];
     }
+
+    public function ownTo(?\Illuminate\Contracts\Auth\Authenticatable $user)
+    {
+        $this->owner()->associate($user);
+        $this->state = 'assigned';
+        $this->save();
+    }
 }
