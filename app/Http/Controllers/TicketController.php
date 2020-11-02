@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -32,6 +33,11 @@ class TicketController extends Controller
                 'state',
             ]);
 
+        // filter tickets unless you're an admin
+        if (!auth()->user()->can('manage', Ticket::class)) {
+            $tickets = $tickets->whereCallerId(auth()->id());
+        }
+
         if (request('search-filter') && request('search-criteria') && request()->isMethod('get')) {
             return redirect(
                 route('help.tickets.index')
@@ -40,11 +46,7 @@ class TicketController extends Controller
             );
         }
 
-        $newCount = Ticket::new()->count();
-        $assignedCount = Ticket::assigned()->count();
-        $resolvedCount = Ticket::resolved()->count();
-
-        return view('help.tickets.index', compact('tickets', 'newCount', 'assignedCount', 'resolvedCount'));
+        return view('help.tickets.index', compact('tickets'));
     }
 
     /**
