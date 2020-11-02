@@ -24,7 +24,8 @@
                 <div>
                     <div class="row">
                         <div class="col-md-12">
-                            <a href="{{ route('help.tickets.index') }}" class="btn btn-danger btn-rounded"><i class="fa fa-times"></i> Reset</a>
+                            <a href="{{ route('help.tickets.index') }}" class="btn btn-danger btn-rounded"><i
+                                    class="fa fa-times"></i> Reset</a>
                             @foreach (request('filter') as $attribute => $filter)
                                 @if ($attribute && $filter)
                                     <a class="btn btn-default btn-rounded hover-strikethrough" title="Click to remove"
@@ -41,13 +42,13 @@
                 <small class="text-uppercase">
                     <a href="?filter[state]=new"
                        class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'new' ? 'active' : '' }}">
-                        <i class="fa fa-asterisk text-info"></i> New ({{ $newCount }})</a>
+                        <i class="fa fa-asterisk text-info"></i> New</a>
                     <a href="?filter[state]=assigned"
-                    class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'assigned' ? 'active' : '' }}">
-                        <i class="fa fa-hourglass-half text-accent"></i> Assigned ({{ $assignedCount }})</a>
+                       class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'assigned' ? 'active' : '' }}">
+                        <i class="fa fa-hourglass-half text-accent"></i> Assigned</a>
                     <a href="?filter[state]=resolved"
                        class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'resolved' ? 'active' : '' }}">
-                        <i class="fa fa-check-circle text-success"></i> Resolved ({{ $resolvedCount }})</a>
+                        <i class="fa fa-check-circle text-success"></i> Resolved</a>
 
                 </small>
             </div>
@@ -88,35 +89,36 @@
                     <table class="table table-hover basic-datatable">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Type</th>
+                            <th class="no-sort"></th>
+                            <th class="hidden-sm hidden-xs">Type</th>
                             <th>Caller</th>
                             <th>State</th>
-                            <th>Owned By</th>
-                            <th>Updated At</th>
+                            <th class="hidden-sm hidden-xs">Owned By</th>
+                            <th class="hidden-sm hidden-xs">Updated At</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($tickets->get() as $ticket)
                             <tr>
-                                <td>{{ $ticket->id }}</td>
-                                <td class="text-info">{{ $ticket->type->name }}</td>
+                                <td><a href="{{ route('help.tickets.show', $ticket) }}"
+                                       class="btn btn-squared btn-block btn-primary">#{{ $ticket->id }}</a></td>
+                                <td class="hidden-sm hidden-xs">{{ $ticket->type->name }}</td>
                                 <td>
                                     <a href="?filter[caller.name]={{ $ticket->caller->name }}">{{ $ticket->caller->name }}</a>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a title="Show only {{ $ticket->state }} tickets"
                                        href="{{ "?filter[state]={$ticket->state}" }}"
-                                       class="text-{{ $ticket->stateColor }} text-uppercase">{{ $ticket->state }}</a>
+                                       class="text-{{ $ticket->stateColor }} text-uppercase btn btn-rounded btn-{{ $ticket->stateColor }}">{{ $ticket->state }}</a>
                                 </td>
-                                <td>
+                                <td class="hidden-sm hidden-xs">
                                     @if($ticket->owner)
                                         <a href="?filter[owner.name]={{ $ticket->owner->name }}">{{ $ticket->owner->name }}</a>
                                     @else
-                                        <span class="text-muted">--</span>
+                                        <span class="text-muted">UNASSIGNED</span>
                                     @endif
                                 </td>
-                                <td>{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
+                                <td class="hidden-sm hidden-xs">{{ $ticket->updated_at->format('Y-m-d H:i:s') }}</td>
                             </tr>
                         @endforeach
                         </tbody>
