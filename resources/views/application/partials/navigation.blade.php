@@ -109,7 +109,7 @@
                 </li>
 
                 <li class="{{ set_active('help/tickets') }}">
-                    <a href="{{ route('help.tickets.index') }}">All Tickets</a>
+                    <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">All Tickets</a>
                 </li>
 
             </ul>
