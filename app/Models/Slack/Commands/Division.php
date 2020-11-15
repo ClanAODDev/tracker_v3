@@ -43,8 +43,8 @@ class Division extends Base implements Command
                         'name' => "{$division->name}",
                         'value' => function () use ($division) {
                             $data = "";
-                            foreach ($division->leaders() as $leader) {
-                                $data .= $leader->present()->rankName() . PHP_EOL;
+                            foreach ($division->leaders()->get() as $leader) {
+                                $data .= $leader->present()->rankName() . ' - ' . $leader->position->name . PHP_EOL;
                             }
 
                             return $data;
