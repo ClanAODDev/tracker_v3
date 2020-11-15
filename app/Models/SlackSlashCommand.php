@@ -14,7 +14,7 @@ class SlackSlashCommand
      */
     public static function handle($command, array $data)
     {
-        $command = sprintf('App\Slack\Commands\%s', \Illuminate\Support\Str::studly($command));
+        $command = sprintf('App\Models\Slack\Commands\%s', \Illuminate\Support\Str::studly($command));
 
         if (class_exists($command)) {
             $command = new $command($data);
