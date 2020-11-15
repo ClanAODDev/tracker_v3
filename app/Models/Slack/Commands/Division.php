@@ -25,25 +25,25 @@ class Division extends Base implements Command
      */
     public function handle()
     {
-        if (strlen($this->params) < 3) {
+        if (strlen($this->params) >= 5) {
             return [
-                'text' => "Provide 3 characters or more of the division name",
+                'text' => "Please provide the division abbreviation - not the name!",
             ];
         }
 
-        $division = \App\Models\Division::where('name', 'LIKE', "%{$this->params}%")->get();
+        $division = \App\Models\Division::where('abbreviation', $this->params)->get();
 
         if ($division) {
             return [
                 "embed" => [
                     'color' => 10181046,
                     'title' => "Search results",
-                    'fields' =>  [
+                    'fields' => [
                         'name' => "{$division->name}",
                         'value' => function () use ($division) {
                             $data = "";
                             foreach ($division->leaders()->get() as $leader) {
-                                $data .= $leader->present()->rankName() . ' - ' . $leader->position->name . PHP_EOL;
+                                $data .= $leader->present()->rankName() . ' - ' . $leader->position()->name . PHP_EOL;
                             }
 
                             return $data;
