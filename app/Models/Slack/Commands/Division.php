@@ -33,21 +33,20 @@ class Division extends Base implements Command
 
         $division = \App\Models\Division::where('abbreviation', $this->params)->first();
 
+        $leaderData = "";
+
         if ($division) {
+            foreach ($division->leaders()->get() as $leader) {
+                $leaderData .= $leader->present()->rankName() . ' - ' . $leader->position()->name . PHP_EOL;
+            }
+
             return [
                 "embed" => [
                     'color' => 10181046,
                     'title' => "Search results",
                     'fields' => [
                         'name' => "{$division->name}",
-                        'value' => function () use ($division) {
-                            $data = "";
-                            foreach ($division->leaders()->get() as $leader) {
-                                $data .= $leader->present()->rankName() . ' - ' . $leader->position()->name . PHP_EOL;
-                            }
-
-                            return $data;
-                        }
+                        'value' => $leaderData
                     ]
                 ]
             ];
