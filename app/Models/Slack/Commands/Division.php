@@ -41,7 +41,14 @@ class Division extends Base implements Command
                     'title' => "Search results",
                     'fields' =>  [
                         'name' => "{$division->name}",
-                        'value' => $division->leaders->each()
+                        'value' => function () use ($division) {
+                            $data = "";
+                            foreach ($division->leaders() as $leader) {
+                                $data .= $leader->present()->rankName() . PHP_EOL;
+                            }
+
+                            return $data;
+                        }
                     ]
                 ]
             ];
