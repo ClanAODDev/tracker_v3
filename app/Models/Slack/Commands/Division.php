@@ -34,7 +34,6 @@ class Division extends Base implements Command
         $division = \App\Models\Division::where('name', 'LIKE', "%{$this->params}%")->get();
 
         if ($division) {
-            $leaders = $division->leaders->toArray();
             return [
                 "embed" => [
                     'color' => 10181046,
