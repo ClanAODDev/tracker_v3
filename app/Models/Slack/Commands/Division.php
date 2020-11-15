@@ -45,7 +45,7 @@ class Division extends Base implements Command
                     'color' => 10181046,
                     'title' => "Search results",
                     'fields' => [
-                        'name' => "{$division->name}",
+                        'name' => "https://tracker.clanaod.net/images/game_icons/48x48/al.png {$division->name}",
                         'value' => $leaderData
                     ]
                 ]
