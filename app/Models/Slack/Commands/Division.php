@@ -2,8 +2,8 @@
 
 namespace App\Models\Slack\Commands;
 
-use App\Slack\Base;
-use App\Slack\Command;
+use App\Models\Slack\Base;
+use App\Models\Slack\Command;
 
 /**
  * Class Search
