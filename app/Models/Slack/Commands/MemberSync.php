@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Slack\Commands;
+namespace App\Models\Slack\Commands;
 
 use App\Jobs\SyncMemberData;
 use App\Slack\Base;
