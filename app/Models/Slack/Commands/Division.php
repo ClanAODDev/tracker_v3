@@ -43,15 +43,20 @@ class Division extends Base implements Command
             return [
                 "embed" => [
                     'color' => 10181046,
-                    'title' => "Search results",
                     'author' => [
                         'name' => $division->name,
-                        'icon_url' => 'https://tracker.clanaod.net/images/game_icons/48x48/al.png',
-                        'url' => "https://clanaod.net/divisions/{$division->abbreviation}",
+                        'icon_url' => getDivisionIconPath($division->abbreviation),
+                        'url' => "https://clanaod.net/divisions/" . \Str::slug($division->name),
                     ],
                     'fields' => [
-                        'name' => '\u200b',
-                        'value' => $leaderData
+                        [
+                            'name' => 'Leadership',
+                            'value' => $leaderData
+                        ],
+                        [
+                            'name' => 'Member count',
+                            'value' => $division->members()->count()
+                        ]
                     ]
                 ]
             ];
