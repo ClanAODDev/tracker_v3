@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Chris
- * Date: 5/17/16
- * Time: 9:46 AM
- */
 
-namespace App\Slack\Response;
+namespace App\Models\Slack\Response;
 
 use GuzzleHttp\Client;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Slack;
+namespace App\Models\Slack;
 
 /**
  * Base class for Slack commands
