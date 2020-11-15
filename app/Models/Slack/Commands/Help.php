@@ -30,6 +30,11 @@ class Help extends Base implements Command
             'name' => 'Search members by TS Unique ID',
             'description' => 'Search for members in AOD via TS unique ID. Cannot return more than 10 results at a time.',
             'usage' => '!tracker search-teamspeak:unique-id-string-here'
+        ],
+        [
+            'name' => 'Query basic division information',
+            'description' => 'Search divisions and get leadership, member count information by division abbreviation',
+            'usage' => '!tracker division:bf'
         ]
     ];
 
