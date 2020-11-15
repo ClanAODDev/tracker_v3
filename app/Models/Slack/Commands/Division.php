@@ -31,7 +31,7 @@ class Division extends Base implements Command
             ];
         }
 
-        $division = \App\Models\Division::where('abbreviation', $this->params)->get();
+        $division = \App\Models\Division::where('abbreviation', $this->params)->first();
 
         if ($division) {
             return [
