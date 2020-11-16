@@ -3,8 +3,8 @@
 namespace App\Models\Slack\Commands;
 
 use App\Models\Division;
-use App\Slack\Base;
-use App\Slack\Command;
+use App\Models\Slack\Base;
+use App\Models\Slack\Command;
 
 class OutstandingMemberReport extends Base implements Command
 {

@@ -13,6 +13,13 @@ use App\Models\Slack\Command;
  */
 class Delete extends Base implements Command
 {
+    public function __construct($data)
+    {
+        parent::__construct($data);
+
+        $this->request = $data;
+    }
+
     /**
      * @return array
      */
