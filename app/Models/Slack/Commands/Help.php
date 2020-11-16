@@ -35,7 +35,7 @@ class Help extends Base implements Command
             'name' => 'Query basic division information',
             'description' => 'Search divisions and get leadership, member count information by division abbreviation',
             'usage' => '!tracker division:bf'
-        ]
+        ],
     ];
 
     /**

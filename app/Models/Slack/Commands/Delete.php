@@ -35,7 +35,7 @@ class Delete extends Base implements Command
 
         if (!$member) {
             return [
-                'text' => "I can't delete a member that doesn't exist."
+                'text' => "I can't delete a member that doesn't exist. Please provide AOD Clan ID."
             ];
         }
 
