@@ -50,7 +50,7 @@ class Help extends Base implements Command
                     'name' => 'AOD Tracker'
                 ],
                 'color' => 10181046,
-                'fields' => collect($this->commands)->map(fn($command) => [
+                'fields' => collect($this->commands)->map(fn ($command) => [
                     'name' => "{$command['name']}: {$command['description']}",
                     'value' => "Ex. {$command['usage']}\r\n\r\n"
                 ]),
