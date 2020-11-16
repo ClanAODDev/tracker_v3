@@ -14,7 +14,7 @@ class AddTicketBoilerplateColumnToTicketTypesTable extends Migration
     public function up()
     {
         Schema::table('ticket_types', function (Blueprint $table) {
-            $table->multiLineString('boilerplate')->nullable()->after('description');
+            $table->text('boilerplate')->nullable()->after('description');
 
         });
     }
