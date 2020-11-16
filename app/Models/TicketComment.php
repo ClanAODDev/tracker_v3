@@ -9,13 +9,22 @@ class TicketComment extends Model
 {
     use HasFactory;
 
+    protected $with = [
+        'user',
+        'user.role'
+    ];
+
+    protected $touches = ['ticket'];
+
+    protected $guarded = [];
+
     public function ticket()
     {
         return $this->belongsTo('App\Models\Ticket');
     }
 
-    public function member()
+    public function user()
     {
-        return $this->belongsTo('App\Member', 'clan_id');
+        return $this->belongsTo('App\Models\User');
     }
 }

@@ -95,27 +95,29 @@
         </ul>
     </li>
 
-    @if(config('app.ticketing_enabled'))
-        <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
-            <a href="#tickets" data-toggle="collapse" aria-expanded="false">
-                Help Tickets
-                <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-            </a>
+    @can('manage', \App\Models\Ticket::class)
+        @if(config('app.ticketing_enabled'))
+            <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
+                <a href="#tickets" data-toggle="collapse" aria-expanded="false">
+                    Help Tickets
+                    <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+                </a>
 
-            <ul id="tickets"
-                class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
-                <li class="{{ set_active('help/tickets/create') }}">
-                    <a href="{{ route('help.tickets.create') }}">Create New Ticket</a>
-                </li>
+                <ul id="tickets"
+                    class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
+                    <li class="{{ set_active('help/tickets/create') }}">
+                        <a href="{{ route('help.tickets.create') }}">Create New Ticket</a>
+                    </li>
 
-                <li class="{{ set_active('help/tickets') }}">
-                    <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">All Tickets</a>
-                </li>
+                    <li class="{{ set_active('help/tickets') }}">
+                        <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">All Tickets</a>
+                    </li>
 
-            </ul>
-        </li>
+                </ul>
+            </li>
 
-    @endif
+        @endif
+    @endcan
 
     @if(Auth::user()->isRole('admin'))
         <li class="nav-category">

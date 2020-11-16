@@ -7,12 +7,16 @@ use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Note;
 use App\Models\Platoon;
+use App\Models\Ticket;
+use App\Models\TicketComment;
 use App\Policies\DivisionPolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MemberRequestPolicy;
 use App\Policies\NotePolicy;
 use App\Policies\PlatoonPolicy;
 use App\Policies\SquadPolicy;
+use App\Policies\TicketCommentPolicy;
+use App\Policies\TicketPolicy;
 use App\Policies\UserPolicy;
 use App\Models\Squad;
 use App\Models\User;
@@ -34,6 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         Note::class => NotePolicy::class,
         User::class => UserPolicy::class,
         MemberRequest::class => MemberRequestPolicy::class,
+        Ticket::class => TicketPolicy::class,
     ];
 
     /**

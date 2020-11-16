@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -9,9 +10,16 @@ class TicketPolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user)
+    {
+        if ($user->isRole('admin')) {
+            return true;
+        }
+    }
+
     public function manage(User $user)
     {
-        return $user->isRole('admin');
+        return false;
     }
 
     public function viewAny()
@@ -19,9 +27,9 @@ class TicketPolicy
         return true;
     }
 
-    public function view()
+    public function view(User $user, Ticket $ticket)
     {
-        return true;
+        return $user->id == $ticket->caller_id;
     }
 
     public function create()
@@ -45,6 +53,16 @@ class TicketPolicy
     }
 
     public function forceDelete()
+    {
+        return true;
+    }
+
+    public function createComment()
+    {
+        return true;
+    }
+
+    public function deleteComment()
     {
         return true;
     }

@@ -27,6 +27,21 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>16 November 2020 - 3.3</h4>
+                <hr/>
+                <ul>
+                    <li>The underlying framework was upgraded to 8.14</li>
+                    <li>Admin ticketing system has been implemented
+                        <ul>
+                            <li>Users can create and view their own tickets</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>28 September 2020 - 3.2</h4>
                 <hr/>
                 <ul>
@@ -43,7 +58,9 @@
                 <hr/>
                 <ul>
                     <li>The underlying framework was upgraded to 7.19.1 - additional changes coming soon</li>
-                    <li>Member requests can now be placed on hold by admins. Divisions will receive a discord notice when this occurs.</li>
+                    <li>Member requests can now be placed on hold by admins. Divisions will receive a discord notice
+                        when this occurs.
+                    </li>
                     <li>Admins can now see all member requests, even those in the 2 hour grace period.</li>
                 </ul>
             </div>
@@ -55,13 +72,21 @@
                 <hr/>
                 <ul>
                     <li>The underlying framework was upgraded to 6.x. An additional upgrade to 7.x is forthcoming.</li>
-                    <li>The recruiting process has received some updates, specifically: <ul>
-                            <li>Forum names and member ids are much more stringently validated. Only letters, numbers, dashes, spaces, and periods are acceptable</li>
-                            <li>Fixed a bug where users could enter thread ids instead of member ids, which was not correctly validated</li>
+                    <li>The recruiting process has received some updates, specifically:
+                        <ul>
+                            <li>Forum names and member ids are much more stringently validated. Only letters, numbers,
+                                dashes, spaces, and periods are acceptable
+                            </li>
+                            <li>Fixed a bug where users could enter thread ids instead of member ids, which was not
+                                correctly validated
+                            </li>
                             <li>Error messages now appear in a group at the bottom of the form</li>
                             <li>The validation process is announced rather than running silently</li>
-                            <li>Prevented a race condition that would allow users to proceed while validation was ongoing</li>
-                        </ul></li>
+                            <li>Prevented a race condition that would allow users to proceed while validation was
+                                ongoing
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -71,8 +96,12 @@
                 <h4>10 May 2020 - 3.10.2</h4>
                 <hr/>
                 <ul>
-                    <li>CPLs now appear in the SGT structure, and the SGT structure has been renamed the "Leadership Structure"</li>
-                    <li>Recruiting process now checks that the new member has completed email verification. Recruiters will see an error and cannot continue until this is fixed.</li>
+                    <li>CPLs now appear in the SGT structure, and the SGT structure has been renamed the "Leadership
+                        Structure"
+                    </li>
+                    <li>Recruiting process now checks that the new member has completed email verification. Recruiters
+                        will see an error and cannot continue until this is fixed.
+                    </li>
                 </ul>
             </div>
         </div>

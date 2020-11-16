@@ -80,6 +80,8 @@ class TicketController extends Controller
         $ticket->division_id = auth()->user()->member->division_id;
         $ticket->save();
 
+        $ticket->notify(new \App\Notifications\AdminTicketCreated());
+
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
 
         return redirect(route('help.tickets.show', $ticket));
@@ -93,6 +95,8 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+        $this->authorize('view', $ticket);
+
         return view('help.tickets.show', compact('ticket'));
     }
 
@@ -128,5 +132,38 @@ class TicketController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function resolve(Ticket $ticket)
+    {
+        $this->authorize('manage', $ticket);
+
+        $ticket->resolve();
+
+        $this->showToast("Ticket has been resolved!");
+
+        return redirect(route('help.tickets.show', $ticket));
+    }
+
+    public function reopen(Ticket $ticket)
+    {
+        $this->authorize('manage', $ticket);
+
+        $ticket->reopen();
+
+        $this->showToast("Ticket has been reopened!");
+
+        return redirect(route('help.tickets.show', $ticket));
+    }
+
+    public function selfAssign(Ticket $ticket)
+    {
+        $this->authorize('manage', $ticket);
+
+        $ticket->ownTo(auth()->user());
+
+        $this->showToast("Ticket has been assigned to " . auth()->user()->name);
+
+        return redirect(route('help.tickets.show', $ticket));
     }
 }

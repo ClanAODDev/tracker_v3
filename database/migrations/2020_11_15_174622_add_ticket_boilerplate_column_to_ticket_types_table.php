@@ -19,13 +19,4 @@ class AddTicketBoilerplateColumnToTicketTypesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        // silence is golden
-    }
 }

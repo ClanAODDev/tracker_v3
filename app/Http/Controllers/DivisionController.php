@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Division;
 use App\Http\Requests\UpdateDivision;
+use App\Models\Division;
 use App\Models\Member;
-use App\Notifications\DivisionEdited;
 use App\Repositories\DivisionRepository;
-use Carbon\Carbon;
 use Closure;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -16,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+
 /**
  * Class DivisionController
  *
@@ -26,17 +25,18 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Create a new controller instance.
      *
-     * @param DivisionRepository $division
+     * @param  DivisionRepository  $division
      */
     public function __construct(\App\Repositories\DivisionRepository $division)
     {
         $this->division = $division;
         $this->middleware(['auth', 'activeDivision']);
     }
+
     /**
      * Display the specified resource.
      *
-     * @param Division $division
+     * @param  Division  $division
      * @return Response
      * @internal param int $id
      */
@@ -47,17 +47,22 @@ class DivisionController extends \App\Http\Controllers\Controller
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
         $maxDays = config('app.aod.maximum_days_inactive');
-        $division->outstandingInactives = $division->members()->whereDoesntHave('leave')->where('last_activity', '<', \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d'))->count();
+        $division->outstandingInactives = $division->members()->whereDoesntHave('leave')->where('last_activity', '<',
+            \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d'))->count();
         $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
-        $platoons = $division->platoons()->with('leader.rank')->with('squads.leader', 'squads.leader.rank')->withCount('members')->orderBy('order')->get();
+        $platoons = $division->platoons()->with('leader.rank')->with('squads.leader',
+            'squads.leader.rank')->withCount('members')->orderBy('order')->get();
         $generalSergeants = $division->generalSergeants()->with('rank')->get();
         $staffSergeants = $division->staffSergeants()->with('rank')->get();
-        return view('division.show', compact('division', 'previousCensus', 'platoons', 'lastYearCensus', 'divisionLeaders', 'generalSergeants', 'staffSergeants'));
+        return view('division.show',
+            compact('division', 'previousCensus', 'platoons', 'lastYearCensus', 'divisionLeaders', 'generalSergeants',
+                'staffSergeants'));
     }
+
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Division $division
+     * @param  Division  $division
      * @return Response
      * @throws AuthorizationException
      */
@@ -69,11 +74,12 @@ class DivisionController extends \App\Http\Controllers\Controller
         $weeklyActive = $censuses->values()->map(fn($census, $key) => [$key, $census->weekly_active_count]);
         return view('division.modify', compact('division', 'censuses', 'weeklyActive', 'populations'));
     }
+
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateDivision $form
-     * @param Division $division
+     * @param  UpdateDivision  $form
+     * @param  Division  $division
      * @return Response
      * @throws Exception
      * @internal param Request $request
@@ -88,23 +94,26 @@ class DivisionController extends \App\Http\Controllers\Controller
         }
         return back();
     }
+
     /**
-     * @param Division $division
+     * @param  Division  $division
      * @return Factory|View
      */
     public function partTime(\App\Models\Division $division)
     {
-        $members = $division->partTimeMembers()->with('rank', 'handles')->get()->each(function ($member) use ($division) {
+        $members = $division->partTimeMembers()->with('rank', 'handles')->get()->each(function ($member) use ($division
+        ) {
             // filter out handles that don't match current division primary handle
             $member->handle = $member->handles->filter(fn($handle) => $handle->id === $division->handle_id)->first();
         });
         return view('division.part-time', compact('division', 'members'));
     }
+
     /**
      * Assign a member as part-time to a division
      *
-     * @param Division $division
-     * @param Member $member
+     * @param  Division  $division
+     * @param  Member  $member
      * @return RedirectResponse|Redirector|string
      * @throws AuthorizationException
      */
@@ -116,9 +125,10 @@ class DivisionController extends \App\Http\Controllers\Controller
         $member->recordActivity('add_part_time');
         return redirect()->back();
     }
+
     /**
-     * @param Division $division
-     * @param Member $member
+     * @param  Division  $division
+     * @param  Member  $member
      * @return RedirectResponse|string
      * @throws AuthorizationException
      */
@@ -130,18 +140,22 @@ class DivisionController extends \App\Http\Controllers\Controller
         $member->recordActivity('remove_part_time');
         return redirect()->back();
     }
+
     /**
-     * @param Division $division
+     * @param  Division  $division
      * @return Factory|View
      */
     public function members(\App\Models\Division $division)
     {
-        $members = $division->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'])->get()->sortByDesc('rank_id');
+        $members = $division->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'
+        ])->get()->sortByDesc('rank_id');
         $members = $members->each($this->getMemberHandle());
         $forumActivityGraph = $this->division->getDivisionActivity($division);
         $tsActivityGraph = $this->division->getDivisionTSActivity($division);
         return view('division.members', compact('division', 'members', 'forumActivityGraph', 'tsActivityGraph'));
     }
+
     /**
      * @param $division
      * @return Closure
@@ -152,6 +166,7 @@ class DivisionController extends \App\Http\Controllers\Controller
             $query->where('id', $division->handle_id);
         };
     }
+
     /**
      * @return Closure
      */
