@@ -52,11 +52,17 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function create()
     {
-        return view('help.tickets.create');
+        if (!request()->get('type')) {
+            return redirect(route('help.tickets.setup'));
+        }
+
+        $type = \App\Models\TicketType::whereSlug(request('type'))->first();
+
+        return view('help.tickets.create', compact('type'));
     }
 
     /**

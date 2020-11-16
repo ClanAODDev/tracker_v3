@@ -25,27 +25,13 @@
                 <div class="col-md-12">
 
                     @include('application.partials.errors')
-
-                    <h4>Create an Admin Ticket</h4>
-                    <p>Submit a ticket only if you require assistance from the <strong>MSGT+</strong> team. If you have
-                        questions regarding the use of this form, please use the Admin discord channel. </p>
+                    @include('help.tickets.partials.header')
                     <hr>
                     <div class="form-group">
-                        <label for="ticket_type">Reason for ticket</label>
-                        <select name="ticket_type" id="ticket_type" class="form-control" required>
-                            <option hidden disabled selected value> -- Select a type --</option>
-                            @foreach (\App\Models\TicketType::all() as $ticketType)
-                                <option value="{{ $ticketType->id }}">{{ $ticketType->name }}
-                                    - {{ $ticketType->description }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="description">Issue description:</label>
-                        <textarea name="description" id="description" cols="30" rows="10" class="form-control"
-                                  style="resize: vertical" required></textarea>
-                        <small class="help-text">Please provide as much detail as possible</small>
+                        <textarea name="description" id="description" rows="4" class="form-control"
+                                  style="resize: vertical; min-height: 92px;" minlength="25" required>{{ $type->boilerplate }}</textarea>
+                        <small class="help-text">Please provide as much detail as possible. Min 25 characters.</small>
                     </div>
                 </div>
             </div>

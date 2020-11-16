@@ -106,7 +106,7 @@
                 <ul id="tickets"
                     class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
                     <li class="{{ set_active('help/tickets/create') }}">
-                        <a href="{{ route('help.tickets.create') }}">Create New Ticket</a>
+                        <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
                     </li>
 
                     <li class="{{ set_active('help/tickets') }}">
