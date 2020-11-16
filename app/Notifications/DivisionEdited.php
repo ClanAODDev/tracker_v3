@@ -6,12 +6,12 @@ use App\Channels\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 
 class DivisionEdited extends Notification
 {
     use Queueable;
+
     /**
      * @var
      */
@@ -34,7 +34,7 @@ class DivisionEdited extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -58,18 +58,5 @@ class DivisionEdited extends Notification
             ->message(":tools: **{$authoringUser}** updated division settings for **{$this->division->name}**")
             ->success()
             ->send();
-    }
-
-    public function toSlack()
-    {
-        $to = $this->division->settings()->get('slack_channel');
-        if ($to) {
-            $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
-
-            return (new SlackMessage())
-                ->success()
-                ->to($to)
-                ->content("{$authoringUser} updated division settings for {$this->division->name}");
-        }
     }
 }
