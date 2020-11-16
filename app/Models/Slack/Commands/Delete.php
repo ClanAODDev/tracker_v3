@@ -47,7 +47,7 @@ class Delete extends Base implements Command
         ];
 
         return [
-            'text' => array_rand($responses)
+            'text' => $responses[array_rand($responses)]
         ];
     }
 }
