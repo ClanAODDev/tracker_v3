@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTicketCommentsTable extends Migration
+class AddTicketBoilerplateColumnToTicketTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateTicketCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ticket_comments', function (Blueprint $table) {
-            $table->id();
-            $table->text('body');
-            $table->integer('member_id');
-            $table->timestamps();
+        Schema::table('ticket_types', function (Blueprint $table) {
+            $table->multiLineString('boilerplate')->nullable()->after('description');
+
         });
     }
 
@@ -28,6 +26,6 @@ class CreateTicketCommentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ticket_comments');
+        // silence is golden
     }
 }

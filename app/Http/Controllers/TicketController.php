@@ -56,18 +56,33 @@ class TicketController extends Controller
      */
     public function create()
     {
-        //
+        return view('help.tickets.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'ticket_type' => 'required',
+            'description' => 'string|min:25|required'
+        ]);
+
+        $ticket = new Ticket();
+        $ticket->state = 'new';
+        $ticket->ticket_type_id = $validated['ticket_type'];
+        $ticket->description = $validated['description'];
+        $ticket->caller_id = auth()->id();
+        $ticket->division_id = auth()->user()->member->division_id;
+        $ticket->save();
+
+        flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
+
+        return redirect(route('help.tickets.show', $ticket));
     }
 
     /**
@@ -78,7 +93,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        return $ticket;
+        return view('help.tickets.show', compact('ticket'));
     }
 
     /**

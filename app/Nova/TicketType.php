@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
 
 class TicketType extends Resource
 {
@@ -49,6 +50,7 @@ class TicketType extends Resource
             ID::make()->sortable(),
             Text::make('Name'),
             Text::make('Slug')->readonly()->onlyOnDetail(),
+            Textarea::make('boilerplate'),
             HasMany::make('Ticket'),
         ];
     }

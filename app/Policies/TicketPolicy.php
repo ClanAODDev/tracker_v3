@@ -13,4 +13,39 @@ class TicketPolicy
     {
         return $user->isRole('admin');
     }
+
+    public function viewAny()
+    {
+        return true;
+    }
+
+    public function view()
+    {
+        return true;
+    }
+
+    public function create()
+    {
+        return true;
+    }
+
+    public function update()
+    {
+        return true;
+    }
+
+    public function delete()
+    {
+        return true;
+    }
+
+    public function restore()
+    {
+        return true;
+    }
+
+    public function forceDelete()
+    {
+        return true;
+    }
 }

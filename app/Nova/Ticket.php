@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Textarea;
 
 class Ticket extends Resource
@@ -44,10 +45,11 @@ class Ticket extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Ticket Type'),
+            BelongsTo::make('Ticket Type', 'type'),
             BelongsTo::make('Caller', 'caller', '\App\Nova\User')->searchable(),
             BelongsTo::make('Owner', 'owner', '\App\Nova\User')->searchable()->nullable(),
             Textarea::make('Description'),
+            Select::make('State')->options(['new' => 'New', 'assigned' => 'Assigned to admin', 'resolved' => 'Resolved']),
             Date::make('Created At'),
             Date::make('Updated At'),
         ];

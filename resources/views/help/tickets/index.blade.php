@@ -13,7 +13,7 @@
             AOD Tracker
         @endslot
         @slot ('subheading')
-            Ticket Index
+            All Tickets
         @endslot
     @endcomponent
 
