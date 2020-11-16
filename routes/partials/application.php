@@ -18,6 +18,7 @@ Route::group(['prefix' => 'training'], function () {
 if (config('app.ticketing_enabled')) {
     Route::name('help.tickets.')->prefix('help/tickets')->group(function () {
         Route::get('', 'TicketController@index')->name('index');
+        Route::view('setup', 'help.tickets.setup')->name('setup');
         Route::get('create', 'TicketController@create')->name('create');
         Route::post('', 'TicketController@store')->name('store');
         Route::delete('', 'TicketController@store')->name('delete');

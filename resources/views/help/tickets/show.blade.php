@@ -24,33 +24,32 @@
                     <div class="label label-{{ $ticket->stateColor }}">{{ strtoupper($ticket->state) }}</div>
                 </h4>
 
-                <div style="display: inline-flex;">
-                    @if (!$ticket->owner)
-                        <form action="{{ route('help.tickets.self-assign', $ticket) }}" method="POST"
-                              class="inline m-2">
-                            <button class="btn btn-info" type="submit">Assign to me</button>
-                            {{ method_field('PATCH') }}
-                            {{ csrf_field() }}
-                        </form>
-                    @endif
-                    @unless ($ticket->isResolved())
-                        <form action="{{ route('help.tickets.resolve', $ticket) }}" method="POST" class="inline m-2">
-                            <button class="btn btn-success" type="submit">Resolve Ticket</button>
-                            {{ method_field('PATCH') }}
-                            {{ csrf_field() }}
-                        </form>
-                    @else
-                        <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline m-2">
-                            <button class="btn btn-accent" type="submit">Reopen Ticket</button>
-                            {{ method_field('PATCH') }}
-                            {{ csrf_field() }}
-                        </form>
-                    @endif
-                </div>
-
-                {{--                @if (!$ticket->owner_id)--}}
-                {{--                    <em class="text-muted">Awaiting assignment</em>--}}
-                {{--                @endif--}}
+                @can('manage', $ticket)
+                    <div style="display: inline-flex;">
+                        @if (!$ticket->owner)
+                            <form action="{{ route('help.tickets.self-assign', $ticket) }}" method="POST"
+                                  class="inline m-2">
+                                <button class="btn btn-info" type="submit">Assign to me</button>
+                                {{ method_field('PATCH') }}
+                                {{ csrf_field() }}
+                            </form>
+                        @endif
+                        @unless ($ticket->isResolved())
+                            <form action="{{ route('help.tickets.resolve', $ticket) }}" method="POST"
+                                  class="inline m-2">
+                                <button class="btn btn-success" type="submit">Resolve Ticket</button>
+                                {{ method_field('PATCH') }}
+                                {{ csrf_field() }}
+                            </form>
+                        @else
+                            <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline m-2">
+                                <button class="btn btn-accent" type="submit">Reopen Ticket</button>
+                                {{ method_field('PATCH') }}
+                                {{ csrf_field() }}
+                            </form>
+                        @endif
+                    </div>
+                @endcan
 
             </div>
             <div class="panel-body">
