@@ -42,7 +42,7 @@ class Delete extends Base implements Command
         $responses = [
             ":skull_crossbones: I will delete {$member->name} in 5 seconds unless you cancel the command...",
             ":skull_crossbones: {$member->name} has been permanently deleted! Recovery is not possible.",
-            ":skull_crossbones: Permission denied! Your attempt to delete has been reported to the clan admins.",
+            ":skull_crossbones: Permission denied! Your attempt to delete {$member->name} has been reported to the clan admins.",
             ":skull_crossbones: Do you really think {$member->name} wants you to delete them? That's not nice.",
         ];
 
