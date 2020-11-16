@@ -29,7 +29,7 @@
                     <hr>
                     <div class="form-group">
                         <label for="description">Issue description:</label>
-                        <textarea name="description" id="description" rows="4" class="form-control"
+                        <textarea name="description" id="description" class="form-control"
                                   style="resize: vertical; min-height: 92px;" minlength="25" required>{{ $type->boilerplate }}</textarea>
                         <small class="help-text">Please provide as much detail as possible. Min 25 characters.</small>
                     </div>
