@@ -28,6 +28,7 @@ class Ticket extends Model
         'new' => 'info',
         'assigned' => 'accent',
         'resolved' => 'success',
+        'rejected' => 'danger',
     ];
 
     protected $dates = [
@@ -136,6 +137,15 @@ class Ticket extends Model
         $this->resolved_at = null;
         $this->save();
         $this->say('reopened the ticket');
+    }
+
+    public function reject()
+    {
+        $this->state = 'rejected';
+        $this->resolved_at = now();
+        $this->owner_id = auth()->id();
+        $this->save();
+        $this->say('rejected the ticket');
     }
 
     public function say(string $comment)
