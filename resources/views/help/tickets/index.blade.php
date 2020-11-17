@@ -30,7 +30,7 @@
                                 @if ($attribute && $filter)
                                     <a class="btn btn-default btn-rounded hover-strikethrough" title="Click to remove"
                                        href="{{ urldecode(remove_query_params(["filter[{$attribute}]"])) }}">
-                                        {{ ucwords(str_replace('.', ' ', $attribute)) }} = <code>{{ $filter }}</code>
+                                        {{ sanitize_filter_attribute($attribute) }} = <code>{{ $filter }}</code>
                                     </a>
                                 @endif
                             @endforeacH
@@ -61,8 +61,9 @@
                            value="{{ urldecode(http_build_query(request()->query())) }}">
                     <div class="col-md-3">
                         <select name="search-filter" id="" class="form-control">
-                            <option value="">Select a filter</option>
-                            <option value="type.slug" required>Type</option>
+                            <option value="" hidden disabled selected required>Select a filter</option>
+                            <option value="description">Ticket Description</option>
+                            <option value="type.slug">Type</option>
                             <option value="caller.name">Caller Name</option>
                             <option value="caller.member.clan_id">Caller Clan ID</option>
                             <option value="owner.name">Owner Name</option>
