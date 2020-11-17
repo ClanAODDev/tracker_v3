@@ -20,25 +20,25 @@
     <div class="container-fluid">
 
         <div style="display: flex; justify-content: space-between">
-            @if(request('filter') && is_array(request('filter')))
-                <div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <a href="{{ route('help.tickets.index') }}" class="btn btn-danger btn-rounded"><i
-                                    class="fa fa-times"></i> Reset</a>
-                            @foreach (request('filter') as $attribute => $filter)
-                                @if ($attribute && $filter)
-                                    <a class="btn btn-default btn-rounded hover-strikethrough" title="Click to remove"
-                                       href="{{ urldecode(remove_query_params(["filter[{$attribute}]"])) }}">
-                                        {{ sanitize_filter_attribute($attribute) }} = <code>{{ $filter }}</code>
-                                    </a>
-                                @endif
-                            @endforeacH
-                        </div>
+            @can('manage', \App\Models\Ticket::class)
+                @if(request('filter') && is_array(request('filter')))
+                    <div>
+                        <h4 class="text-uppercase"><i class="fas fa-filter text-accent"></i> Active Filters</h4>
+                        <a href="{{ route('help.tickets.index') }}" class="btn btn-danger btn-rounded"><i
+                                class="fa fa-times"></i> Reset</a>
+                        @foreach (request('filter') as $attribute => $filter)
+                            @if ($attribute && $filter)
+                                <a class="btn btn-default btn-rounded hover-strikethrough" title="Click to remove"
+                                   href="{{ urldecode(remove_query_params(["filter[{$attribute}]"])) }}">
+                                    {{ sanitize_filter_attribute($attribute) }} = <code>{{ $filter }}</code>
+                                </a>
+                            @endif
+                        @endforeacH
                     </div>
-                </div>
-            @endif
+                @endif
+            @endcan
             <div>
+                <h4 class="text-uppercase"><i class="fas fa-search text-accent"></i> Show only</h4>
                 <small class="text-uppercase">
                     <a href="?filter[state]=new"
                        class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'new' ? 'active' : '' }}">
@@ -53,36 +53,46 @@
                 </small>
             </div>
         </div>
-        <hr>
-        <form>
-            <div class="row">
-                <form action="">
-                    <input type="hidden" name="search-query"
-                           value="{{ urldecode(http_build_query(request()->query())) }}">
-                    <div class="col-md-3">
-                        <select name="search-filter" id="" class="form-control">
-                            <option value="" hidden disabled selected required>Select a filter</option>
-                            <option value="description">Ticket Description</option>
-                            <option value="type.slug">Type</option>
-                            <option value="caller.name">Caller Name</option>
-                            <option value="caller.member.clan_id">Caller Clan ID</option>
-                            <option value="owner.name">Owner Name</option>
-                            <option value="owner.member.clan_id">Owner Clan ID</option>
-                            <option value="state">State (new, assigned, resolved)</option>
-                        </select>
-                    </div>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" placeholder="Search criteria" name="search-criteria"
-                               required>
-                    </div>
-                </form>
-            </div>
-        </form>
+
+        @can('manage', \App\Models\Ticket::class)
+            <hr>
+            <form>
+                <div class="row">
+                    <form action="">
+                        <input type="hidden" name="search-query"
+                               value="{{ urldecode(http_build_query(request()->query())) }}">
+                        <div class="col-md-3">
+                            <select name="search-filter" id="" class="form-control">
+                                <option value="" hidden disabled selected required>Select a filter</option>
+                                <option value="description">Ticket Description</option>
+                                <option value="type.slug">Type</option>
+                                <option value="caller.name">Caller Name</option>
+                                <option value="caller.member.clan_id">Caller Clan ID</option>
+                                <option value="owner.name">Owner Name</option>
+                                <option value="owner.member.clan_id">Owner Clan ID</option>
+                                <option value="state">State (new, assigned, resolved)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" placeholder="Search criteria" name="search-criteria"
+                                   required>
+                        </div>
+                    </form>
+                </div>
+            </form>
+        @endcan
 
         <hr>
 
         @unless($tickets->count())
-            <p class="text-muted">No tickets match the provided criteria.</p>
+            <p>
+                <i class="fas fa-exclamation-circle"></i>
+                @can('manage', \App\Models\Ticket::class)
+                    No tickets match the provided criteria. Please check your active filters.
+                @else
+                    You don't currently have any tickets. <a href="{{ route('help.tickets.setup') }}">Create one</a>?
+                @endcan
+            </p>
         @else
 
             <div class="panel panel-filled">

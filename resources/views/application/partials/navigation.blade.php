@@ -95,29 +95,36 @@
         </ul>
     </li>
 
-    @can('manage', \App\Models\Ticket::class)
-        @if(config('app.ticketing_enabled'))
-            <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
-                <a href="#tickets" data-toggle="collapse" aria-expanded="false">
-                    Help Tickets
-                    <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-                </a>
+    @if(config('app.ticketing_enabled'))
+        <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
+            <a href="#tickets" data-toggle="collapse" aria-expanded="false">
+                Help Tickets
+                <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+            </a>
 
-                <ul id="tickets"
-                    class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
-                    <li class="{{ set_active('help/tickets/create') }}">
-                        <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
+            <ul id="tickets"
+                class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
+                <li class="{{ set_active(['help/tickets/create', 'help/tickets/setup']) }}">
+                    <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
+                </li>
+
+                <li class="{{ set_active('help/tickets') }}">
+                    <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
+                        @can('manage', \App\Models\Ticket::class) All Tickets @else My Tickets @endcan
+                    </a>
+                </li>
+
+                @can('manage', \App\Models\Ticket::class)
+                    <li>
+                        <a href="{{ route('help.tickets.index') . '?filter[owner.name]=' . auth()->user()->name }}">
+                            Assigned To Me
+                        </a>
                     </li>
+                @endcan
+            </ul>
+        </li>
+    @endif
 
-                    <li class="{{ set_active('help/tickets') }}">
-                        <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">All Tickets</a>
-                    </li>
-
-                </ul>
-            </li>
-
-        @endif
-    @endcan
 
     @if(Auth::user()->isRole('admin'))
         <li class="nav-category">
