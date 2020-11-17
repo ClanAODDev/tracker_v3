@@ -16,6 +16,20 @@ function bytesToHuman($bytes)
     return round($bytes, 2) . ' ' . $units[$i];
 }
 
+function sanitize_filter_attribute($attribute)
+{
+    // replace dots
+    $attribute = str_replace('.', ' ', $attribute);
+
+    // remove pivot references
+    $attribute = str_replace('member', '', $attribute);
+
+    // capitalize
+    $attribute = ucwords($attribute);
+
+    return $attribute;
+}
+
 function bungieMemberType($type)
 {
     switch ($type) {
@@ -311,7 +325,6 @@ function ratio()
  */
 function remove_query_params(array $params = [])
 {
-
     $url = url()->current();
     $query = request()->query();
 
