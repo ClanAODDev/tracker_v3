@@ -26,7 +26,7 @@
 
                 @can('manage', $ticket)
                     <div style="display: inline-flex;">
-                        @if (!$ticket->owner)
+                        @if (!$ticket->owner || $ticket->owner_id != auth()->id())
                             <form action="{{ route('help.tickets.self-assign', $ticket) }}" method="POST"
                                   class="inline m-2">
                                 <button class="btn btn-info" type="submit">Assign to me</button>
@@ -38,6 +38,16 @@
                             <form action="{{ route('help.tickets.resolve', $ticket) }}" method="POST"
                                   class="inline m-2">
                                 <button class="btn btn-success" type="submit">Resolve Ticket</button>
+                                {{ method_field('PATCH') }}
+                                {{ csrf_field() }}
+                            </form>
+
+                            <form action="{{ route('help.tickets.reject', $ticket) }}" method="POST"
+                                  class="inline m-2">
+                                <button type="submit"
+                                        onclick="return confirm('Are you sure you wish to reject this message? Please be sure you include comments in the discussion explaining the reason for the rejection.')"
+                                        class="btn btn-danger"><i class="fas fa-times"></i> Reject
+                                </button>
                                 {{ method_field('PATCH') }}
                                 {{ csrf_field() }}
                             </form>
@@ -58,21 +68,24 @@
                     <div class="col-md-9">
                         <div class="form-group">
                             <label for="caller">Caller:</label>
-                            <input type="text" id="caller" name="caller" class="form-control" style="color: rgba(255,255,255,.6)" disabled
+                            <input type="text" id="caller" name="caller" class="form-control"
+                                   style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->caller->name }}">
                         </div>
 
                         @if ($ticket->owner)
                             <div class="form-group">
                                 <label for="caller">Assigned to:</label>
-                                <input type="text" id="caller" name="caller" class="form-control" style="color: rgba(255,255,255,.6)" disabled
+                                <input type="text" id="caller" name="caller" class="form-control"
+                                       style="color: rgba(255,255,255,.6)" disabled
                                        value="{{ $ticket->owner->name }}">
                             </div>
                         @endif
 
                         <div class="form-group">
                             <label for="ticket_type">Ticket Type</label>
-                            <input type="text" class="form-control" id="ticket_type" name="ticket_type" style="color: rgba(255,255,255,.6)" disabled
+                            <input type="text" class="form-control" id="ticket_type" name="ticket_type"
+                                   style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->type->name }}">
                         </div>
                     </div>
@@ -80,18 +93,21 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="created">Created At:</label>
-                            <input type="text" id="created" name="created" class="form-control" style="color: rgba(255,255,255,.6)" disabled
+                            <input type="text" id="created" name="created" class="form-control"
+                                   style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->created_at }}">
                         </div>
                         <div class="form-group">
                             <label for="created">Updated At:</label>
-                            <input type="text" id="updated" name="updated" class="form-control" style="color: rgba(255,255,255,.6)" disabled
+                            <input type="text" id="updated" name="updated" class="form-control"
+                                   style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->updated_at }}">
                         </div>
                         @if ($ticket->isResolved())
                             <div class="form-group">
                                 <label for="created">Resolved At:</label>
-                                <input type="text" id="updated" name="updated" class="form-control" style="color: rgba(255,255,255,.6)" disabled
+                                <input type="text" id="updated" name="updated" class="form-control"
+                                       style="color: rgba(255,255,255,.6)" disabled
                                        value="{{ $ticket->updated_at }}">
                             </div>
                         @endif
@@ -138,4 +154,5 @@
         @endforeach
 
     </div>
+
 @stop

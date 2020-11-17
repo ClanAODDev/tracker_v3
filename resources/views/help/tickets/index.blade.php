@@ -25,7 +25,7 @@
                     <div>
                         <h4 class="text-uppercase"><i class="fas fa-filter text-accent"></i> Active Filters</h4>
                         <a href="{{ route('help.tickets.index') }}" class="btn btn-danger btn-rounded"><i
-                                class="fa fa-times"></i> Reset</a>
+                                class="fa fa-trash"></i> Reset</a>
                         @foreach (request('filter') as $attribute => $filter)
                             @if ($attribute && $filter)
                                 <a class="btn btn-default btn-rounded hover-strikethrough" title="Click to remove"
@@ -49,6 +49,9 @@
                     <a href="?filter[state]=resolved"
                        class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'resolved' ? 'active' : '' }}">
                         <i class="fa fa-check-circle text-success"></i> Resolved</a>
+                    <a href="?filter[state]=resolved"
+                       class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'rejected' ? 'active' : '' }}">
+                        <i class="fa fa-times text-danger"></i> Rejected</a>
 
                 </small>
             </div>

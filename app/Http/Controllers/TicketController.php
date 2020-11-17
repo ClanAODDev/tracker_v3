@@ -163,6 +163,17 @@ class TicketController extends Controller
         return redirect(route('help.tickets.show', $ticket));
     }
 
+    public function reject(Ticket $ticket)
+    {
+        $this->authorize('manage', $ticket);
+
+        $ticket->reject();
+
+        $this->showToast("Ticket has been rejected!");
+
+        return redirect(route('help.tickets.show', $ticket));
+    }
+
     public function selfAssign(Ticket $ticket)
     {
         $this->authorize('manage', $ticket);
