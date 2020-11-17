@@ -58,21 +58,21 @@
                     <div class="col-md-9">
                         <div class="form-group">
                             <label for="caller">Caller:</label>
-                            <input type="text" id="caller" name="caller" class="form-control"
+                            <input type="text" id="caller" name="caller" class="form-control" style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->caller->name }}">
                         </div>
 
                         @if ($ticket->owner)
                             <div class="form-group">
                                 <label for="caller">Assigned to:</label>
-                                <input type="text" id="caller" name="caller" class="form-control"
+                                <input type="text" id="caller" name="caller" class="form-control" style="color: rgba(255,255,255,.6)" disabled
                                        value="{{ $ticket->owner->name }}">
                             </div>
                         @endif
 
                         <div class="form-group">
                             <label for="ticket_type">Ticket Type</label>
-                            <input type="text" class="form-control" id="ticket_type" name="ticket_type"
+                            <input type="text" class="form-control" id="ticket_type" name="ticket_type" style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->type->name }}">
                         </div>
                     </div>
@@ -80,18 +80,18 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="created">Created At:</label>
-                            <input type="text" id="created" name="created" class="form-control"
+                            <input type="text" id="created" name="created" class="form-control" style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->created_at }}">
                         </div>
                         <div class="form-group">
                             <label for="created">Updated At:</label>
-                            <input type="text" id="updated" name="updated" class="form-control"
+                            <input type="text" id="updated" name="updated" class="form-control" style="color: rgba(255,255,255,.6)" disabled
                                    value="{{ $ticket->updated_at }}">
                         </div>
                         @if ($ticket->isResolved())
                             <div class="form-group">
                                 <label for="created">Resolved At:</label>
-                                <input type="text" id="updated" name="updated" class="form-control"
+                                <input type="text" id="updated" name="updated" class="form-control" style="color: rgba(255,255,255,.6)" disabled
                                        value="{{ $ticket->updated_at }}">
                             </div>
                         @endif
@@ -102,7 +102,7 @@
                 <div class="form-group">
                     <label for="description">Ticket Description</label>
                     <textarea name="description" id="description" rows="4"
-                              style="resize: vertical; min-height: 92px;"
+                              style="resize: vertical; min-height: 92px; color: rgba(255,255,255,.6)" disabled
                               class="form-control">{{ $ticket->description }}</textarea>
                 </div>
             </div>
