@@ -96,7 +96,7 @@
     </li>
 
     @if(config('app.ticketing_enabled'))
-        @can('manage', \App\Models\Ticket::class)
+{{--        @can('manage', \App\Models\Ticket::class)--}}
             <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
                 <a href="#tickets" data-toggle="collapse" aria-expanded="false">
                     Help Tickets
@@ -109,9 +109,11 @@
                         <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
                     </li>
 
-                    <li class="{{ set_active('help/tickets') }}">
-                        <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
-                            @can('manage', \App\Models\Ticket::class) All Tickets @else My Tickets @endcan
+                    <li class="nav-divider"></li>
+
+                    <li>
+                        <a href="{{ route('help.tickets.index') . '?filter[caller.name]=' . auth()->user()->name }}">
+                            My Tickets
                         </a>
                     </li>
 
@@ -121,10 +123,16 @@
                                 Assigned To Me
                             </a>
                         </li>
+                        <li class="{{ set_active('help/tickets') }}">
+                            <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
+                                All Tickets
+                            </a>
+                        </li>
+
                     @endcan
                 </ul>
             </li>
-        @endcan
+{{--        @endcan--}}
     @endif
 
 
