@@ -96,7 +96,7 @@
     </li>
 
     @if(config('app.ticketing_enabled'))
-{{--        @can('manage', \App\Models\Ticket::class)--}}
+        @can('manage', \App\Models\Ticket::class)
             <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
                 <a href="#tickets" data-toggle="collapse" aria-expanded="false">
                     Help Tickets
@@ -130,7 +130,7 @@
                     @endcan
                 </ul>
             </li>
-{{--        @endcan--}}
+        @endcan
     @endif
 
 
