@@ -50,7 +50,8 @@ class TicketType extends Resource
             ID::make()->sortable(),
             Text::make('Name'),
             Text::make('Slug')->readonly()->onlyOnDetail(),
-            Textarea::make('boilerplate'),
+            Text::make('Description')->help('Provide a general description for the type'),
+            Textarea::make('Boilerplate')->help('Pre-populates ticket with basic information, if applicable'),
             HasMany::make('Ticket'),
         ];
     }
