@@ -7,6 +7,34 @@ use Illuminate\Database\Seeder;
 
 class TicketTypeSeeder extends Seeder
 {
+    private $types = [
+        [
+            'name' => 'Misc',
+            'description' => "Miscellaneous admin help request",
+            'display_order' => 900
+        ],
+        [
+            'name' => 'Forum Change',
+            'description' => "Change to your forums",
+            'display_order' => 100
+        ],
+        [
+            'name' => 'Awards & Medals',
+            'description' => "Add or update a division award",
+            'display_order' => 100
+        ],
+        [
+            'name' => 'Member Rename',
+            'description' => "Request a member rename",
+            'display_order' => 100
+        ],
+        [
+            'name' => 'Teamspeak Change',
+            'description' => "Change to Teamspeak",
+            'display_order' => 100
+        ]
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -14,10 +42,8 @@ class TicketTypeSeeder extends Seeder
      */
     public function run()
     {
-        TicketType::create(['name' => 'Misc', 'description' => "Miscellaneous admin help request"]);
-        TicketType::create(['name' => 'Forum Change', 'description' => "Change to your forums"]);
-        TicketType::create(['name' => 'Awards & Medals', 'description' => "Add or update a division award"]);
-        TicketType::create(['name' => 'Member Rename', 'description' => "Request a member rename"]);
-        TicketType::create(['name' => 'Teamspeak Change', 'description' => "Change to Teamspeak"]);
+        foreach ($this->types as $ticketType) {
+            TicketType::create($ticketType);
+        }
     }
 }
