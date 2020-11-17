@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 
@@ -52,6 +53,7 @@ class TicketType extends Resource
             Text::make('Slug')->readonly()->onlyOnDetail(),
             Text::make('Description')->help('Provide a general description for the type'),
             Textarea::make('Boilerplate')->help('Pre-populates ticket with basic information, if applicable'),
+            Number::make('Display Order')->help('Change the order in which the type is displayed. (Ascending order)'),
             HasMany::make('Ticket'),
         ];
     }
