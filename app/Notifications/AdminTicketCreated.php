@@ -39,12 +39,8 @@ class AdminTicketCreated extends Notification
             ->info()
             ->fields([
                 [
-                    'name' => ":tickets: Admin Help",
-                    'value' => "Submitted by {$authoringUser}"
-                ],
-                [
                     'name' => "Type: {$ticket->type->name}",
-                    'value' => $ticket->description
+                    'value' => "Submitted by {$authoringUser}"
                 ], [
                     'name' => 'Link to ticket',
                     'value' => route('help.tickets.show', $ticket)
