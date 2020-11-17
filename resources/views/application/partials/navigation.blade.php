@@ -121,7 +121,7 @@
                                 Assigned To Me
                             </a>
                         </li>
-                        <li class="{{ set_active('help/tickets') }}">
+                        <li >
                             <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
                                 All Tickets
                             </a>
