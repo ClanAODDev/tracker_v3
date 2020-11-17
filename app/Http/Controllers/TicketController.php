@@ -31,6 +31,7 @@ class TicketController extends Controller
                 'owner.name',
                 'owner.member.clan_id',
                 'state',
+                'description',
             ]);
 
         // filter tickets unless you're an admin
