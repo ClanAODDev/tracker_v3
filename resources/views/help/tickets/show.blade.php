@@ -28,7 +28,7 @@
                     <div style="display: inline-flex;">
                         @if (!$ticket->owner || $ticket->owner_id != auth()->id())
                             <form action="{{ route('help.tickets.self-assign', $ticket) }}" method="POST"
-                                  class="inline m-2">
+                                  class="inline" style="margin-left: 10px;">
                                 <button class="btn btn-info" type="submit">Assign to me</button>
                                 {{ method_field('PATCH') }}
                                 {{ csrf_field() }}
@@ -36,14 +36,14 @@
                         @endif
                         @unless ($ticket->isResolved())
                             <form action="{{ route('help.tickets.resolve', $ticket) }}" method="POST"
-                                  class="inline m-2">
+                                  class="inline" style="margin-left: 10px;">
                                 <button class="btn btn-success" type="submit">Resolve Ticket</button>
                                 {{ method_field('PATCH') }}
                                 {{ csrf_field() }}
                             </form>
 
                             <form action="{{ route('help.tickets.reject', $ticket) }}" method="POST"
-                                  class="inline m-2">
+                                  class="inline" style="margin-left: 10px;">
                                 <button type="submit"
                                         onclick="return confirm('Are you sure you wish to reject this message? Please be sure you include comments in the discussion explaining the reason for the rejection.')"
                                         class="btn btn-danger"><i class="fas fa-times"></i> Reject
@@ -52,7 +52,7 @@
                                 {{ csrf_field() }}
                             </form>
                         @else
-                            <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline m-2">
+                            <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline" style="margin-left: 10px;">
                                 <button class="btn btn-accent" type="submit">Reopen Ticket</button>
                                 {{ method_field('PATCH') }}
                                 {{ csrf_field() }}
