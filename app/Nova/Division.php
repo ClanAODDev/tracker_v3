@@ -70,7 +70,7 @@ class Division extends Resource
 
             Date::make('Shutdown At'),
 
-            new Panel('Extra stuff', fn() => [
+            new Panel('Extra stuff', fn () => [
                 Text::make('description')->rules(['required'])->hideFromIndex(),
                 Boolean::make('active')->sortable()->rules(
                     'required',
