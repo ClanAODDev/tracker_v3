@@ -49,7 +49,7 @@
                     <a href="?filter[state]=resolved"
                        class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'resolved' ? 'active' : '' }}">
                         <i class="fa fa-check-circle text-success"></i> Resolved</a>
-                    <a href="?filter[state]=resolved"
+                    <a href="?filter[state]=rejected"
                        class="btn btn-rounded btn-default {{ request()->input('filter.state') == 'rejected' ? 'active' : '' }}">
                         <i class="fa fa-times text-danger"></i> Rejected</a>
 
