@@ -73,7 +73,7 @@
                                 <option value="caller.member.clan_id">Caller Clan ID</option>
                                 <option value="owner.name">Owner Name</option>
                                 <option value="owner.member.clan_id">Owner Clan ID</option>
-                                <option value="state">State (new, assigned, resolved)</option>
+                                <option value="state">State (new, assigned, resolved, rejected)</option>
                             </select>
                         </div>
                         <div class="col-md-9">
