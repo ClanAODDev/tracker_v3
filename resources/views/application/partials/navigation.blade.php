@@ -109,8 +109,6 @@
                         <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
                     </li>
 
-                    <li class="nav-divider"></li>
-
                     <li>
                         <a href="{{ route('help.tickets.index') . '?filter[caller.name]=' . auth()->user()->name }}">
                             My Tickets
