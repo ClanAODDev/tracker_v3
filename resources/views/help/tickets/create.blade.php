@@ -30,7 +30,7 @@
                     <div class="form-group">
                         <label for="description">Issue description:</label>
                         <textarea name="description" id="description" class="form-control"
-                                  style="resize: vertical; min-height: 92px;" minlength="25"
+                                  style="resize: vertical; min-height: 140px;" rows="10"
                                   required>{{ $type->boilerplate }}</textarea>
                         <input type="hidden" value="{{ $type->id }}" name="ticket_type" id="ticket_type">
                         <small class="help-text">Please provide as much detail as possible. Min 25 characters.</small>
