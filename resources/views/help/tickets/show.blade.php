@@ -101,8 +101,8 @@
 
                 <div class="form-group">
                     <label for="description">Ticket Description</label>
-                    <textarea name="description" id="description" rows="4"
-                              style="resize: vertical; min-height: 92px; color: rgba(255,255,255,.6)" disabled
+                    <textarea name="description" id="description"
+                              style="resize: vertical; min-height: 140px; color: rgba(255,255,255,.6)" disabled
                               class="form-control">{{ $ticket->description }}</textarea>
                 </div>
             </div>
