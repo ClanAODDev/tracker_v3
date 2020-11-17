@@ -44,7 +44,7 @@ class AdminTicketCreated extends Notification
                 ],
                 [
                     'name' => "Type: {$ticket->type->name}",
-                    'value' => $ticket->description
+                    'value' => html_entity_decode($ticket->description)
                 ], [
                     'name' => 'Link to ticket',
                     'value' => route('help.tickets.show', $ticket)
