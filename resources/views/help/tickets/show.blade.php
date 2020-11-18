@@ -20,7 +20,7 @@
     <div class="container-fluid">
         <div class="panel panel-filled panel-c-{{ $ticket->stateColor }}">
             <div class="panel-heading" style="display: flex; justify-content: space-between">
-                <h4> Ticket <code>#{{ $ticket->id }}</code>
+                <h4><code>#{{ $ticket->id }}</code>
                     <div class="label label-{{ $ticket->stateColor }}">{{ strtoupper($ticket->state) }}</div>
                 </h4>
 
@@ -52,7 +52,8 @@
                                 {{ csrf_field() }}
                             </form>
                         @else
-                            <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline" style="margin-left: 10px;">
+                            <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline"
+                                  style="margin-left: 10px;">
                                 <button class="btn btn-accent" type="submit">Reopen Ticket</button>
                                 {{ method_field('PATCH') }}
                                 {{ csrf_field() }}
@@ -63,14 +64,13 @@
 
             </div>
             <div class="panel-body">
-
                 <div class="row">
                     <div class="col-md-9">
                         <div class="form-group">
                             <label for="caller">Caller:</label>
                             <input type="text" id="caller" name="caller" class="form-control"
                                    style="color: rgba(255,255,255,.6)" disabled
-                                   value="{{ $ticket->caller->name }}">
+                                   value="{{ $ticket->caller->name }} ({{ $ticket->caller->member->position->name }} of {{ $ticket->division->name }})">
                         </div>
 
                         @if ($ticket->owner)
