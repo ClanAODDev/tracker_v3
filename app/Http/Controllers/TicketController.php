@@ -132,7 +132,11 @@ class TicketController extends Controller
 
         $ticket->reopen();
 
-        $this->showToast("Ticket has been reopened!");
+        $message = "Ticket has been reopened!";
+
+        $this->showToast($message);
+
+        $ticket->notify(new AdminTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
