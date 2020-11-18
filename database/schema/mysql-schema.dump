@@ -112,17 +112,6 @@ CREATE TABLE `divisions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `failed_jobs` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `connection` text COLLATE utf8_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8_unicode_ci NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `handle_member` (
   `handle_id` int(10) unsigned NOT NULL,
   `member_id` int(10) unsigned NOT NULL,
@@ -479,7 +468,6 @@ INSERT INTO `migrations` VALUES (10,'2016_03_16_160439_create_division_populatio
 INSERT INTO `migrations` VALUES (11,'2016_05_17_150808_create_jobs_table',1);
 INSERT INTO `migrations` VALUES (12,'2016_05_22_024309_create_staff_sergeants_table',1);
 INSERT INTO `migrations` VALUES (13,'2016_05_23_142407_create_activities_table',1);
-INSERT INTO `migrations` VALUES (14,'2016_05_30_120447_create_failed_jobs_table',1);
 INSERT INTO `migrations` VALUES (15,'2016_09_17_054913_ChangeEnabledDivisionToActiveDivision',1);
 INSERT INTO `migrations` VALUES (16,'2016_09_17_060442_create_handles_table',1);
 INSERT INTO `migrations` VALUES (17,'2016_11_22_050303_create_roles_table',1);
