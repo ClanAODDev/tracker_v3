@@ -42,11 +42,11 @@ class AdminTicketUpdated extends Notification
      */
     public function toWebhook($ticket)
     {
-        if (!auth()->user()->member->discord) {
+        if (!$ticket->caller->member->discord) {
             throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
         }
 
-        $target = auth()->user()->member->discord;
+        $target = $ticket->caller->member->discord;
 
         return (new DiscordDMMessage())
             ->to($target)
