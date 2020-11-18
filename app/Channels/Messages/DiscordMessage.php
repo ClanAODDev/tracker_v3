@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Channels;
+namespace App\Channels\Messages;
 
 use Exception;
 

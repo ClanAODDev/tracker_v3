@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Notifications\AdminTicketUpdated;
+use App\Notifications\NotifyAdminTicketCreated;
+use App\Notifications\NotifyUserTicketCreated;
 use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -87,7 +89,9 @@ class TicketController extends Controller
         $ticket->division_id = auth()->user()->member->division_id;
         $ticket->save();
 
-        $ticket->notify(new \App\Notifications\AdminTicketCreated());
+        // send a message to admin channel as well as to the caller
+        $ticket->notify(new NotifyUserTicketCreated());
+        $ticket->notify(new NotifyAdminTicketCreated());
 
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
 
@@ -107,47 +111,17 @@ class TicketController extends Controller
         return view('help.tickets.show', compact('ticket'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function resolve(Ticket $ticket)
     {
         $this->authorize('manage', $ticket);
 
         $ticket->resolve();
 
-        $this->showToast("Ticket has been resolved!");
+        $message = ":white_check_mark: Ticket `{$ticket->type->name}` has been resolved";
+
+        $this->showToast($message);
+
+        $ticket->notify(new AdminTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
