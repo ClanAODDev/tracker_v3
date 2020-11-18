@@ -32,7 +32,7 @@ class DiscordDMMessage
      */
     public function message($message)
     {
-        $this->message = $message;
+        $this->message = addslashes($message);
 
         return $this;
     }
