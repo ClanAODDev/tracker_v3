@@ -43,6 +43,7 @@ return [
         // in hours
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
+        'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
     ],
 
     'ticketing_enabled' => env('TICKETING', false),

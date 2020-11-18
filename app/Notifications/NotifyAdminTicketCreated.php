@@ -2,14 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Channels\DiscordMessage;
+use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
-class AdminTicketCreated extends Notification
+class NotifyAdminTicketCreated extends Notification
 {
-
     use Queueable;
 
     /**
@@ -26,11 +25,11 @@ class AdminTicketCreated extends Notification
     /**
      * @param $ticket
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public function toWebhook($ticket)
     {
-        $channel = 'aod-msgt-up';
+        $channel = config('app.aod.admin-ticketing-channel');
 
         $authoringUser = auth()->check() ? auth()->user()->name : 'UNK';
 
