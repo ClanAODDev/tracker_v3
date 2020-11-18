@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class NotifyAdminTicketCreated extends Notification
@@ -31,7 +32,7 @@ class NotifyAdminTicketCreated extends Notification
     {
         $channel = config('app.aod.admin-ticketing-channel');
 
-        $authoringUser = auth()->check() ? auth()->user()->name : 'UNK';
+        $authoringUser = $ticket->caller ? $ticket->caller->name : 'UNK';
 
         return (new DiscordMessage())
             ->to($channel)

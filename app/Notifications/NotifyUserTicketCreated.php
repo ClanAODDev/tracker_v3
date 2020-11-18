@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordDMMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class NotifyUserTicketCreated extends Notification
@@ -32,7 +33,7 @@ class NotifyUserTicketCreated extends Notification
         $ticketUrl = route('help.tickets.show', $ticket);
 
         return (new DiscordDMMessage())
-            ->to(auth()->user()->member->discord)
+            ->to($ticket->caller->member->discord)
             ->message("Your ticket ({$ticketUrl}) has been created. Any future updates to your ticket will be sent here.")
             ->send();
     }
