@@ -43,6 +43,11 @@ class Ticket extends Model
         return $this->belongsTo(TicketType::class, 'ticket_type_id');
     }
 
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    }
+
     /**
      * @return BelongsTo
      */
