@@ -117,11 +117,11 @@ class TicketController extends Controller
 
         $ticket->resolve();
 
-        $message = ":white_check_mark: Ticket `{$ticket->type->name}` has been resolved";
+        $message = "Ticket `{$ticket->type->name}` has been resolved";
 
         $this->showToast($message);
 
-        $ticket->notify(new AdminTicketUpdated($message));
+        $ticket->notify(new AdminTicketUpdated(':white_check_mark: ' . $message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -143,7 +143,11 @@ class TicketController extends Controller
 
         $ticket->reject();
 
-        $this->showToast("Ticket has been rejected!");
+        $message = "Ticket has been rejected";
+
+        $this->showToast($message);
+
+        $ticket->notify(new AdminTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -154,7 +158,11 @@ class TicketController extends Controller
 
         $ticket->ownTo(auth()->user());
 
-        $this->showToast("Ticket has been assigned to " . auth()->user()->name);
+        $message = "Ticket has been assigned to " . auth()->user()->name;
+
+        $this->showToast($message);
+
+        $ticket->notify(new AdminTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
