@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Channels\DiscordMessage;
+use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
