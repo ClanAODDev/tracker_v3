@@ -22,9 +22,11 @@ class TicketCommentController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        $author = $comment->user->name;
-        $disclaimer = "*Note: Use the ticket link to respond to this comment. You cannot reply directly via discord.*";
-        $ticket->notify(new AdminTicketUpdated("```{$comment->body} -{$author}```{$disclaimer}"));
+        if ($comment->user_id != $ticket->caller_id) {
+            $author = $comment->user->name;
+            $disclaimer = "*Note: Use the ticket link to respond to this comment. You cannot reply directly via discord.*";
+            $ticket->notify(new AdminTicketUpdated("```{$comment->body} -{$author}```{$disclaimer}"));
+        }
 
         return redirect(route('help.tickets.show', $ticket));
     }
