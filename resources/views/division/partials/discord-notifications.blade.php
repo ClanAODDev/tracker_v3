@@ -68,6 +68,20 @@
 
     <tr>
         <td>
+            <label for="slack_alert_member_denied">
+                When a part-time member gets removed by their primary division
+            </label>
+        </td>
+        <td>
+            <input type='hidden' value='0' name="slack_alert_pt_member_removed">
+            <input id="slack_alert_pt_member_removed"
+                   name="slack_alert_pt_member_removed"
+                   type="checkbox" {{ checked($division->settings()->slack_alert_pt_member_removed) }} />
+        </td>
+    </tr>
+
+    <tr>
+        <td>
             <label for="slack_alert_member_transferred">When a member transfers into {{ $division->name }}</label>
         </td>
         <td>

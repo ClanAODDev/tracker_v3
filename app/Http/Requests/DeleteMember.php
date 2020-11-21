@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\MemberRemoved;
+use App\Notifications\PartTimeMemberRemoved;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
@@ -35,7 +37,7 @@ class DeleteMember extends FormRequest
      */
     public function persist()
     {
-        /** @var \App\Models\Member $member */
+        /** @var Member $member */
         $member = $this->route('member');
 
         if ($member->division()->exists()) {
@@ -44,6 +46,7 @@ class DeleteMember extends FormRequest
             }
         }
 
+        $this->notifyPartTimeDivisions($member);
         $this->createRemovalNote($member);
         $member->resetPositionAndAssignments();
     }
@@ -59,5 +62,19 @@ class DeleteMember extends FormRequest
             'author_id' => auth()->id(),
             'member_id' => $member->id
         ]);
+    }
+
+    /**
+     * @param  Member  $member
+     */
+    private function notifyPartTimeDivisions(Member $member)
+    {
+        $divisions = $member->partTimeDivisions()->active()->get();
+
+        foreach ($divisions as $division) {
+            if ($member->division->settings()->get('slack_alert_pt_member_removed')) {
+                $division->notify(new \App\Notifications\PartTimeMemberRemoved($member));
+            }
+        }
     }
 }
