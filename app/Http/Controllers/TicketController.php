@@ -156,6 +156,23 @@ class TicketController extends Controller
         return redirect(route('help.tickets.show', $ticket));
     }
 
+    public function assignTo(Ticket $ticket)
+    {
+        $this->authorize('manage', $ticket);
+
+        $ticket->ownTo(auth()->user());
+
+        // check if auth user is not the assigned user, in which case alert the newly assigned user
+
+        $message = "Ticket has been assigned to " . auth()->user()->name;
+
+        $this->showToast($message);
+
+        $ticket->notify(new AdminTicketUpdated($message));
+
+        return redirect(route('help.tickets.show', $ticket));
+    }
+
     public function selfAssign(Ticket $ticket)
     {
         $this->authorize('manage', $ticket);
