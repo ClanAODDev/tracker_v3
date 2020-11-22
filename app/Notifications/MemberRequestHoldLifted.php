@@ -13,16 +13,6 @@ class MemberRequestHoldLifted extends Notification
     use Queueable;
 
     /**
-     * Create a new notification instance.
-     *
-     * @param  MemberRequest  $memberRequest
-     */
-    public function __construct(MemberRequest $memberRequest)
-    {
-        $this->request = $memberRequest;
-    }
-
-    /**
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
@@ -34,16 +24,17 @@ class MemberRequestHoldLifted extends Notification
     }
 
     /**
+     * @param $notifiable
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $division = $this->request->division;
+        $division = $notifiable->division;
 
         $channel = $division->settings()->get('slack_channel');
 
-        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->request->member->name}` has been lifted. Your request will be processed soon.");
+        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$notifiable->member->name}` has been lifted. Your request will be processed soon.");
 
         return (new DiscordMessage())
             ->to($channel)
