@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
@@ -14,7 +15,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 
 class MemberRequestController extends Controller
@@ -29,7 +29,6 @@ class MemberRequestController extends Controller
 
     /**
      * @return Factory|View
-     * @throws AuthorizationException
      */
     public function index()
     {
@@ -75,72 +74,72 @@ class MemberRequestController extends Controller
         return view('admin.reprocess-request', compact('request'));
     }
 
-    public function removeHold(MemberRequest $memberRequest)
+    public function removeHold($requestId)
     {
         $this->authorize('manage', MemberRequest::class);
+
+        $memberRequest = MemberRequest::find($requestId);
 
         $this->showToast('Hold removed');
 
         $memberRequest->removeHold();
 
-        $memberRequest->division->notify(new MemberRequestHoldLifted());
+        $memberRequest->division->notify(new MemberRequestHoldLifted($memberRequest));
 
         return redirect(route('admin.member-request.index'));
     }
 
-    public function approve(MemberRequest $memberRequest)
+    public function approve($requestId)
     {
         $this->authorize('manage', MemberRequest::class);
 
-        /*        try {
-                    $this->approveOnAOD($memberRequest);
-                } catch (\Exception $exception) {
-                    return response("An error occurred and the request could not be processed", 400);
-                };
-        */
+        $request = MemberRequest::find($requestId);
 
-        if ($memberRequest->division->settings()->get('slack_alert_member_approved') == "on") {
-            $memberRequest->division->notify(new MemberRequestApproved());
+        if ($request->division->settings()->get('slack_alert_member_approved') == "on") {
+            $request->division->notify(new MemberRequestApproved($request));
         }
 
-        $memberRequest->approve();
+        $request->approve();
 
-        return $memberRequest;
+        return $request;
     }
 
-    public function cancel(MemberRequest $memberRequest)
+    public function cancel(Request $request, $requestId)
     {
         $this->authorize('manage', MemberRequest::class);
 
-        request()->validate([
+        $request->validate([
             'notes' => 'required|max:1000'
         ], [
             'notes.required' => 'You must provide a justification!'
         ]);
 
-        $memberRequest->cancel();
+        $request = MemberRequest::find($requestId);
 
-        if ($memberRequest->division->settings()->get('slack_alert_member_denied') == "on") {
-            $memberRequest->division->notify(new MemberRequestDenied());
+        $request->cancel();
+
+        if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
+            $request->division->notify(new MemberRequestDenied($request));
         }
 
-        return $memberRequest;
+        return $request;
     }
 
     /**
      * @param  Request  $request
      * @param  MemberRequest  $memberRequest
      */
-    public function handleNameChange(MemberRequest $memberRequest)
+    public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
-        $memberRequest->member()->update([
-            'name' => request()->newName
-        ]);
+        $member = Member::whereClanId($memberRequest->member_id)
+            ->first()->update([
+                'name' => $request->newName
+            ]);
 
         $memberRequest->division->notify(
             new MemberNameChanged([
-                'oldName' => $memberRequest->oldName,
-                'newName' => $memberRequest->newName,
+                'oldName' => $request->oldName,
+                'newName' => $request->newName,
             ], $memberRequest->division)
         );
     }
@@ -150,7 +149,7 @@ class MemberRequestController extends Controller
      * @param  MemberRequest  $memberRequest
      * @return array
      */
-    public function isAlreadyMember(MemberRequest $memberRequest)
+    public function isAlreadyMember(Request $request, MemberRequest $memberRequest)
     {
         return ['isMember' => $memberRequest->approved_at !== null];
     }
@@ -161,28 +160,20 @@ class MemberRequestController extends Controller
      * @return MemberRequest
      * @throws AuthorizationException
      */
-    public function placeOnHold(MemberRequest $memberRequest)
+    public function placeOnHold(Request $request, $requestId)
     {
         $this->authorize('manage', MemberRequest::class);
 
-        request()->validate([
+        $request->validate([
             'notes' => 'required'
         ]);
 
-        $memberRequest->placeOnHold(request()->get('notes'));
+        $memberRequest = MemberRequest::find($requestId);
+
+        $memberRequest->placeOnHold($request->notes);
 
         $memberRequest->division->notify(new MemberRequestPutOnHold($memberRequest));
 
         return $memberRequest;
-    }
-
-    /**
-     * WIP
-     * @param $requestId
-     */
-    private function approveOnAOD($requestId)
-    {
-        dd($requestId);
-        Http::post("https://www.clanaod.net/forums/modcp/aodmember.php?do=clickaddaod&u=50283");
     }
 }
