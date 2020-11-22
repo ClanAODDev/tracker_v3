@@ -23,3 +23,5 @@ composer.phar
 yarn.lock
 .php_cs.cache
 /data
+/public/css/site.css
+/public/css/style.css

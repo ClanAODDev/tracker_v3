@@ -7,7 +7,8 @@ require('laravel-elixir-webpack-official');
 
 elixir(function (mix) {
 
-  mix.styles('style.css');
+  mix.styles("style.css");
+  mix.styles("site.css");
 
   mix.scripts(
     [

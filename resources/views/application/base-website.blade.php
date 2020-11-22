@@ -1,46 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    @yield('metadata')
-    <title>AOD | Tracker v3</title>
-    @include('application.header')
+    <title>ClanAOD.net </title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('site.css') }}"/>
+
+    <script src="<?= get_template_directory_uri() . '/assets/js/modernizr.js' ?>"></script>
+
+    <?php include(get_template_directory() . '/assets/partials/favicons.php'); ?>
+    <?php include(get_template_directory() . '/assets/partials/site-meta.php'); ?>
+
 </head>
 
-@if (Auth::check() && Auth::user()->member->division)
-    <body class="{{ session('primary_nav_collapsed') === true ? 'nav-toggle' : null }}">
-    {!! Toastr::message() !!}
+<body>
 
-    <div class="wrapper">
+<?php do_shortcode('[commo]'); ?>
 
-        <nav class="navbar navbar-default navbar-fixed-top">
-            @include('application.partials.primaryHeader')
-        </nav>
-        <aside class="navigation">
-            @include('application.partials.navigation')
-        </aside>
-
-        <section class="search-results closed text-center"></section>
-
-        <section class="content">
-            @yield('content')
-        </section>
-    </div>
-    </body>
-
-@else
-
-    <body class="blank">
-    <div class="wrapper">
-        <section class="content">
-            @yield('content')
-        </section>
-    </div>
-    </body>
-
-@endif
-
-@include('application.footer')
-
-@yield('footer_scripts')
-
-</html>
+@include('website.partials.apply-form')
