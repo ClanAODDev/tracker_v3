@@ -2,7 +2,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/codemirror.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.26.0/theme/dracula.min.css">
 
-@extends('application.base')
+@extends('application.base-tracker')
 
 @section('content')
 
