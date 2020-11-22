@@ -34,6 +34,8 @@
                     <li>Admin ticketing system has been implemented
                         <ul>
                             <li>Users can create and view their own tickets</li>
+                            <li>Users will receive discord notifications when their ticket is updated, resolved, or rejected</li>
+                            <li>Links included in the comments portion will be appropriately converted</li>
                         </ul>
                     </li>
                 </ul>
