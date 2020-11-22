@@ -1,4 +1,4 @@
-@extends('application.base')
+@extends('application.base-tracker')
 
 @section('content')
 
@@ -16,11 +16,6 @@
             Ticket Index
         @endslot
     @endcomponent
-
-    <meta property="og:url" content="{{ route('help.tickets.show', $ticket) }}"/>
-    <meta property="og:title" content="Admin Ticket {{ $ticket->id }} - {{ strtoupper($ticket->state) }}"/>
-    <meta property="og:description" content="{{ $ticket->description }}"/>
-    <meta property="og:site_name" content="Clan AOD Tracker"/>
 
     <div class="container-fluid">
         <div class="panel panel-filled panel-c-{{ $ticket->stateColor }}">

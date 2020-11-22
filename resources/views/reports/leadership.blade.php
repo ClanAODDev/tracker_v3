@@ -1,4 +1,4 @@
-@extends('application.base')
+@extends('application.base-tracker')
 
 @section('content')
     @component ('application.components.view-heading')
