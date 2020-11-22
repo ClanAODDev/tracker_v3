@@ -93,15 +93,15 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
-        $request = MemberRequest::find($requestId);
+        $memberRequest = MemberRequest::find($requestId);
 
-        if ($request->division->settings()->get('slack_alert_member_approved') == "on") {
-            $request->division->notify(new MemberRequestApproved($request));
+        if ($memberRequest->division->settings()->get('slack_alert_member_approved') == "on") {
+            $memberRequest->division->notify(new MemberRequestApproved($memberRequest));
         }
 
-        $request->approve();
+        $memberRequest->approve();
 
-        return $request;
+        return $memberRequest;
     }
 
     public function cancel(Request $request, $requestId)
@@ -156,7 +156,7 @@ class MemberRequestController extends Controller
 
     /**
      * @param  Request  $request
-     * @param  MemberRequest  $memberRequest
+     * @param $requestId
      * @return MemberRequest
      * @throws AuthorizationException
      */
