@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * @property mixed division
+ */
 class MemberRequest extends \Illuminate\Database\Eloquent\Model
 {
     protected $appends = ['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'];
@@ -109,9 +113,9 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     {
         $this->update(['approver_id' => auth()->user()->member->clan_id, 'approved_at' => now(), 'cancelled_at' => null]);
     }
+
     /**
      * Cancel a member request
-     * @param $notes
      */
     public function cancel()
     {
