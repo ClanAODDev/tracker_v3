@@ -145,7 +145,8 @@
                 <div class="panel-body">
                     <div class="d-flex justify-content-between">
                         <div>
-                            <strong {{ $comment->user->isRole('admin') ? "class=text-danger" : null }}>{{ $comment->user->name }}</strong> {{ $comment->body }}
+                            <strong {{ $comment->user->isRole('admin') ? "class=text-danger" : null }}>{{ $comment->user->name }}</strong>
+                            {{ \OsiemSiedem\Autolink\Facades\Autolink::convert($comment->body) }}
                         </div>
                         <div class="text-muted">{{ $comment->created_at->diffForHumans() }}</div>
                     </div>
