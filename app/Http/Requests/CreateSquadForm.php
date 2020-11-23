@@ -53,6 +53,7 @@ class CreateSquadForm extends FormRequest
 
         $squad->name = $this->name;
         $squad->platoon()->associate($this->route('platoon'));
+        $squad->logo = $this->logo;
         $squad->save();
 
         if ($this->member_ids) {
