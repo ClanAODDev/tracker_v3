@@ -3,7 +3,7 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-logo-large" />
         @endslot
         @slot ('heading')
             {{ $division->name }} Division
