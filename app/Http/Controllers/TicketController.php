@@ -7,6 +7,7 @@ use App\Models\TicketType;
 use App\Models\User;
 use App\Notifications\AdminTicketUpdated;
 use App\Notifications\NotifyAdminTicketCreated;
+use App\Notifications\NotifyNewTicketOwner;
 use App\Notifications\NotifyUserTicketCreated;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
@@ -177,6 +178,7 @@ class TicketController extends Controller
         $this->showToast($message);
 
         $ticket->notify(new AdminTicketUpdated($message));
+        $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
 
         return redirect(route('help.tickets.show', $ticket));
     }
