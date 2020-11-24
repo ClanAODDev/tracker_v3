@@ -24,6 +24,7 @@ if (config('app.ticketing_enabled')) {
         Route::delete('', 'TicketController@store')->name('delete');
         Route::get('{ticket}', 'TicketController@show')->name('show');
         Route::patch('{ticket}/self-assign', 'TicketController@selfAssign')->name('self-assign');
+        Route::patch('{ticket}/assign-to', 'TicketController@assignTo')->name('assign-to');
         Route::patch('{ticket}/resolve', 'TicketController@resolve')->name('resolve');
         Route::patch('{ticket}/reopen', 'TicketController@reopen')->name('reopen');
         Route::patch('{ticket}/reject', 'TicketController@reject')->name('reject');

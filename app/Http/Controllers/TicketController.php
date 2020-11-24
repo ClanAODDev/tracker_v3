@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\TicketType;
+use App\Models\User;
 use App\Notifications\AdminTicketUpdated;
 use App\Notifications\NotifyAdminTicketCreated;
 use App\Notifications\NotifyUserTicketCreated;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class TicketController extends Controller
@@ -55,7 +61,7 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function create()
     {
@@ -63,7 +69,7 @@ class TicketController extends Controller
             return redirect(route('help.tickets.setup'));
         }
 
-        $type = \App\Models\TicketType::whereSlug(request('type'))->first();
+        $type = TicketType::whereSlug(request('type'))->first();
 
         return view('help.tickets.create', compact('type'));
     }
@@ -71,8 +77,8 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Routing\Redirector
+     * @param  Request  $request
+     * @return Application|RedirectResponse|Response|Redirector
      */
     public function store(Request $request)
     {
@@ -160,11 +166,13 @@ class TicketController extends Controller
     {
         $this->authorize('manage', $ticket);
 
-        $ticket->ownTo(auth()->user());
+        $validated = request()->validate(['owner_id' => 'required|exists:users,id']);
 
-        // check if auth user is not the assigned user, in which case alert the newly assigned user
+        $assignedUser = User::find($validated['owner_id']);
 
-        $message = "Ticket has been assigned to " . auth()->user()->name;
+        $ticket->ownTo($assignedUser);
+
+        $message = "Ticket has been assigned to " . $assignedUser->name;
 
         $this->showToast($message);
 

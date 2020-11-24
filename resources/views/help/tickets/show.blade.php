@@ -18,6 +18,9 @@
     @endcomponent
 
     <div class="container-fluid">
+
+        @include('application.partials.errors')
+        
         <div class="panel panel-filled panel-c-{{ $ticket->stateColor }}">
             <div class="panel-heading" style="display: flex; justify-content: space-between">
                 <h4><code>#{{ $ticket->id }}</code>
@@ -26,6 +29,17 @@
 
                 @can('manage', $ticket)
                     <div style="display: inline-flex;">
+                        <form action="{{ route('help.tickets.assign-to', $ticket) }}" method="post" id="assignTicketTo">
+                            {{ method_field('PATCH') }}
+                            {{ csrf_field() }}
+                            <select class="form-control" name="owner_id" id="owner_id">
+                                <option hidden disabled selected>Assign to...</option>
+                                @foreach (\App\Models\User::admins()->get() as $admin)
+                                    <option value="{{ $admin->id }}">{{ $admin->name }}</option>
+                                @endforeach
+                            </select>
+                        </form>
+
                         @if (!$ticket->owner || $ticket->owner_id != auth()->id())
                             <form action="{{ route('help.tickets.self-assign', $ticket) }}" method="POST"
                                   class="inline" style="margin-left: 10px;">
@@ -142,6 +156,7 @@
 
         @foreach ($ticket->comments as $comment)
             <div class="panel panel-filled {{ $comment->user->isRole('admin') ? 'panel-c-danger' : null }}">
+            <div class="panel panel-filled {{ $comment->user->isRole('admin') ? 'panel-c-danger' : null }}">
                 <div class="panel-body">
                     <div class="d-flex justify-content-between">
                         <div>
@@ -155,5 +170,14 @@
         @endforeach
 
     </div>
+
+    <script>
+        $("#owner_id").change(function (){
+            let selected = $(this).children("option:selected").text();
+            if (confirm("Are you sure you want to assign " + selected + "?")) {
+                $("#assignTicketTo").submit();
+            }
+        });
+    </script>
 
 @stop
