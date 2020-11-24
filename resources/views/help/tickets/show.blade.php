@@ -20,7 +20,7 @@
     <div class="container-fluid">
 
         @include('application.partials.errors')
-        
+
         <div class="panel panel-filled panel-c-{{ $ticket->stateColor }}">
             <div class="panel-heading" style="display: flex; justify-content: space-between">
                 <h4><code>#{{ $ticket->id }}</code>
@@ -34,7 +34,7 @@
                             {{ csrf_field() }}
                             <select class="form-control" name="owner_id" id="owner_id">
                                 <option hidden disabled selected>Assign to...</option>
-                                @foreach (\App\Models\User::admins()->get() as $admin)
+                                @foreach (\App\Models\User::admins()->get()->except(auth()->id()) as $admin)
                                     <option value="{{ $admin->id }}">{{ $admin->name }}</option>
                                 @endforeach
                             </select>
@@ -155,7 +155,6 @@
         </form>
 
         @foreach ($ticket->comments as $comment)
-            <div class="panel panel-filled {{ $comment->user->isRole('admin') ? 'panel-c-danger' : null }}">
             <div class="panel panel-filled {{ $comment->user->isRole('admin') ? 'panel-c-danger' : null }}">
                 <div class="panel-body">
                     <div class="d-flex justify-content-between">
