@@ -67,6 +67,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return mixed
+     */
+    public function scopeAdmins()
+    {
+        return $this->whereRoleId(5)->orderBy('name', 'ASC');
+    }
+
+    /**
      * Record new activity for the user.
      *
      * @param string $name
