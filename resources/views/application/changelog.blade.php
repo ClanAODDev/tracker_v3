@@ -149,11 +149,13 @@
                 <hr/>
                 <ul>
                     <li>Framework updated from 5.6 to 5.8 with the eventual plan to move to 6.x</li>
-                    <li>Notification, logging for division transfers
-                        <ul>
-                            <li>Only transfers INTO a division can be tracked</li>
-                        </ul>
-                    </li>
+                    <del>
+                        <li>Notification, logging for division transfers
+                            <ul>
+                                <li>Only transfers INTO a division can be tracked</li>
+                            </ul>
+                        </li>
+                    </del>
                     <li>Account access is now automated, making the AOD forums the source of truth. Access is determined
                         by a member's user groups. <strong>Note:</strong> this change brings account access more in line
                         with forum privileges. As such, the <code>jr_ldr</code> role will be removed, and some
