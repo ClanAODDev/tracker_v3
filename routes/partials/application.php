@@ -8,6 +8,9 @@ Route::get('/', 'AppController@index')->name('index');
 Route::get('/impersonate-end/', 'ImpersonationController@endImpersonation')->name('end-impersonation');
 Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('impersonate');
 
+Route::get('/settings', 'UserSettingsController@show')->name('user.settings.show');
+Route::patch('/settings', 'UserSettingsController@update')->name('user.settings.update');
+
 Route::group(['prefix' => 'training'], function () {
     Route::get('sgt', 'TrainingController@sgtTraining')->name('training.sgt');
     Route::get('ssgt', 'TrainingController@index')->name('training.ssgt');

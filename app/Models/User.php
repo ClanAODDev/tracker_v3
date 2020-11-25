@@ -77,8 +77,8 @@ class User extends Authenticatable
     /**
      * Record new activity for the user.
      *
-     * @param string $name
-     * @param mixed $related
+     * @param  string  $name
+     * @param  mixed  $related
      * @return mixed
      * @throws Exception
      */
@@ -195,10 +195,5 @@ class User extends Authenticatable
     public function getNameAttribute($value)
     {
         return ucfirst($value);
-    }
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new ResetPasswordNotification($token));
     }
 }

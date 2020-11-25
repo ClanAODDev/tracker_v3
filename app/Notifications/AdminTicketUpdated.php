@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordDMMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class AdminTicketUpdated extends Notification
@@ -44,6 +45,10 @@ class AdminTicketUpdated extends Notification
     {
         if (!$ticket->caller->member->discord) {
             throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
+        }
+
+        if (!$ticket->caller->settings()->get('ticket_notifications')) {
+            return [];
         }
 
         $target = $ticket->caller->member->discord;
