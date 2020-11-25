@@ -7,4 +7,4 @@
 
 @if(auth()->user()->settings()->get('snow'))
     <script src="{{ asset('/js/snowstorm.js') }}"></script>
-@endunless
+@endif
