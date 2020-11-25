@@ -30,7 +30,17 @@
                 <h4>24 November 2020 - 3.31</h4>
                 <hr/>
                 <ul>
-                    <li>Happy Holidays, AOD.</li>
+                    <li>Happy Holidays, AOD!</li>
+                    <li>A bug was fixed pertaining to notes created from leaves of absence request. This bug caused the
+                        requester not to be properly recorded in the note. Notes for existing leave requests have been
+                        fixed, but there are likely old notes out there that do not have authors.
+                    </li>
+                    <li>User settings page added, allowing users to
+                        <ul>
+                            <li>Disable notifications from created tickets</li>
+                            <li>Turn off the snow (but who would do that?)</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -44,9 +54,13 @@
                     <li>Admin ticketing system has been implemented
                         <ul>
                             <li>Users can create and view their own tickets</li>
-                            <li>Users will receive discord notifications when their ticket is updated, resolved, or rejected</li>
+                            <li>Users will receive discord notifications when their ticket is updated, resolved, or
+                                rejected
+                            </li>
                             <li>Links included in the comments portion will be appropriately converted</li>
-                            <li>Admins can now assign other admins to tickets, which will generate appropriate notifications</li>
+                            <li>Admins can now assign other admins to tickets, which will generate appropriate
+                                notifications
+                            </li>
                         </ul>
                     </li>
                 </ul>
