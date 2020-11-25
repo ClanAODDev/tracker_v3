@@ -11,7 +11,7 @@ class UserSettingsController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function show()
     {
         $settings = auth()->user()->settings();
