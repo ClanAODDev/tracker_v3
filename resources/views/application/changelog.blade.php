@@ -27,6 +27,16 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>24 November 2020 - 3.31</h4>
+                <hr/>
+                <ul>
+                    <li>Happy Holidays, AOD.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>16 November 2020 - 3.3</h4>
                 <hr/>
                 <ul>
@@ -36,6 +46,7 @@
                             <li>Users can create and view their own tickets</li>
                             <li>Users will receive discord notifications when their ticket is updated, resolved, or rejected</li>
                             <li>Links included in the comments portion will be appropriately converted</li>
+                            <li>Admins can now assign other admins to tickets, which will generate appropriate notifications</li>
                         </ul>
                     </li>
                 </ul>
