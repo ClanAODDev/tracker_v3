@@ -5,6 +5,6 @@
 <script src="{{ asset('/js/main.js?v=3.2') }}"></script>
 <script src="https://cdn.ravenjs.com/3.26.2/raven.min.js" crossorigin="anonymous"></script>
 
-@if(auth()->user()->settings()->get('snow'))
+@if(auth()->check() && auth()->user()->settings()->get('snow'))
     <script src="{{ asset('/js/snowstorm.js') }}"></script>
 @endif
