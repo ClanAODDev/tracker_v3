@@ -106,4 +106,4 @@
         <h4 class="m-t-xl">Member</h4>
         @include('help.partials.member-properties')
     </div>
-@stop
+@endsection

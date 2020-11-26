@@ -30,6 +30,6 @@
             <button type="submit" class="btn btn-success">Reset Assignments</button>
             {{ csrf_field() }}
         </form>
-@stop
+@endsection
 
 

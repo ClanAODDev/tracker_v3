@@ -157,6 +157,6 @@
         });
 
     </script>
-@stop
+@endsection
 
 

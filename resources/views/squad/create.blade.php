@@ -20,6 +20,6 @@
         </form>
     </div>
 
-@stop
+@endsection
 
 

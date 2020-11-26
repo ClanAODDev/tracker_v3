@@ -68,4 +68,4 @@
 
 @section('footer_scripts')
     <script src="{!! asset('/js/platoon.js?v=2') !!}"></script>
-@stop
+@endsection

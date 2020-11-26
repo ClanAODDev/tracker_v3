@@ -55,8 +55,8 @@
             </p>
         @endslot
     @endcomponent
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/platoon.js?v=2.2') !!}"></script>
-@stop
+@endsection

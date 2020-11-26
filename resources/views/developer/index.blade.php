@@ -22,8 +22,8 @@
         <passport-personal-access-tokens></passport-personal-access-tokens>
     </div>
 
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/passport.js?v=2.1') !!}"></script>
-@stop
+@endsection

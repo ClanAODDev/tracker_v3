@@ -79,8 +79,8 @@
             </div>
         </div>
     </div>
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/platoon.js?v=2.1') !!}"></script>
-@stop
+@endsection

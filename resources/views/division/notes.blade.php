@@ -68,8 +68,8 @@
 
     </div>
 
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/division.js?v=1.3') !!}"></script>
-@stop
+@endsection

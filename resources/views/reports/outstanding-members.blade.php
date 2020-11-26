@@ -61,4 +61,4 @@
 
     </div>
 
-@stop
+@endsection
