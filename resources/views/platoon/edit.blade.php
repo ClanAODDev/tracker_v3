@@ -48,6 +48,6 @@
       });
     </script>
 
-@stop
+@endsection
 
 

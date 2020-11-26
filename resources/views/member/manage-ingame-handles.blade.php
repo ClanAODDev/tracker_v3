@@ -37,8 +37,8 @@
             </div>
         </div>
     </div>
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/manage-member.js?v=4.5') !!}"></script>
-@stop
+@endsection

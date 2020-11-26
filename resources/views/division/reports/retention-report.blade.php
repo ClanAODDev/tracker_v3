@@ -228,4 +228,4 @@
         });
     </script>
 
-@stop
+@endsection

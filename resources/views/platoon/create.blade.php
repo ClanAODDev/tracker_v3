@@ -24,6 +24,6 @@
 
     </form>
 
-@stop
+@endsection
 
 

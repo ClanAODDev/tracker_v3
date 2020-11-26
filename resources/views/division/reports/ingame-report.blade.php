@@ -22,12 +22,12 @@
             @include('division.partials.ingame-report-partial')
         </div>
     </div>
-@stop
+@endsection
 
 {{--
 @section('footer_scripts')
     <script src="{!! asset('/js/division-reports.js') !!}"></script>
-@stop
+@endsection
 --}}
 
 {{--

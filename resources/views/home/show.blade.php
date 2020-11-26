@@ -38,4 +38,4 @@
             @include('home.partials.divisions')
         </div>
     </div>
-@stop
+@endsection

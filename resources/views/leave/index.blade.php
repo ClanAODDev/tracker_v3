@@ -53,4 +53,4 @@
             <div class="panel-footer"><span class="text-accent">*</span> - required</div>
         </div>
     </div>
-@stop
+@endsection

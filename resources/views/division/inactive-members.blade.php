@@ -99,4 +99,4 @@
             </p>
         @endslot
     @endcomponent
-@stop
+@endsection

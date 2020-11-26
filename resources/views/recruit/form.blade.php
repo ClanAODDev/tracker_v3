@@ -20,8 +20,8 @@
                             :ranks="{{ \App\Models\Rank::all()->pluck('abbreviation', 'id') }}"
                             handle-name="{{ $division->handle->label ?? 'Ingame Name' }}"></recruiting-process>
     </div>
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/recruiting.js?v=6') !!}"></script>
-@stop
+@endsection

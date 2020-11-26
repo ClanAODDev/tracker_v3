@@ -20,4 +20,4 @@
         @include ('activity.list')
     </div>
 
-@stop
+@endsection

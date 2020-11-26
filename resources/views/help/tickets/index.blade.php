@@ -143,4 +143,4 @@
 
         @endunless
     </div>
-@stop
+@endsection

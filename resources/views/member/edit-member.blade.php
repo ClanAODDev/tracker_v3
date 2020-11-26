@@ -77,8 +77,8 @@
         @endcan
     </div>
 
-@stop
+@endsection
 
 @section('footer_scripts')
     <script src="{!! asset('/js/manage-member.js?v=4.4') !!}"></script>
-@stop
+@endsection

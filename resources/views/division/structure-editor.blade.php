@@ -65,4 +65,4 @@
       });
     </script>
 
-@stop
+@endsection

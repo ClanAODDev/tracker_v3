@@ -120,7 +120,7 @@
 
 
     </div>
-@stop
+@endsection
 
 @section('footer_scripts')
     <script>
@@ -128,4 +128,4 @@
             $(this).find('.fa-check-circle').removeClass('text-muted').addClass('text-success');
         })
     </script>
-@stop
+@endsection
