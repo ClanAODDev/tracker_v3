@@ -5,5 +5,5 @@
  */
 
 Route::prefix('website')->group(function () {
-//    Route::view('', )
+    Route::get('', 'WebsiteController@index')->name('site.home');
 });
