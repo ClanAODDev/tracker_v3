@@ -22,6 +22,8 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/a
 # INSTALL PHP AND SOME EXTENSIONS. SEE: https://github.com/codecasts/php-alpine
 RUN apk add --no-cache --update php-fpm \
     php \
+    curl \
+    unzip \
     php-openssl \
     php-pdo \
     php-pdo_mysql \
@@ -33,6 +35,7 @@ RUN apk add --no-cache --update php-fpm \
     php-zlib \
     php-json \
     php-xml \
+    php-curl \
     php7-xmlwriter && \
     ln -s /usr/bin/php7 /usr/bin/php
 
@@ -46,6 +49,10 @@ RUN mkdir -p /var/www && \
     rm /etc/nginx/nginx.conf && \
     rm /etc/php7/php-fpm.d/www.conf && \
     rm /etc/php7/php.ini
+
+RUN curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip \
+&& unzip ngrok.zip -d /opt/ngrok \
+&& rm ngrok.zip
 
 # INSTALL COMPOSER.
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
