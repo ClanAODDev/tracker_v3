@@ -17,22 +17,7 @@ class ClanController extends \App\Http\Controllers\API\v1\ApiController
     {
         $this->middleware('auth');
     }
-    /**
-     * @return JsonResponse
-     */
-    public function teamspeakPopulationCount()
-    {
-        $data = \App\Services\AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population_json&');
-        return $this->respond(['data' => $data]);
-    }
-    /**
-     * @return JsonResponse
-     */
-    public function discordPopulationCount()
-    {
-        $data = \App\Services\AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
-        return $this->respond(['data' => $data]);
-    }
+
     /**
      * @return JsonResponse
      */
