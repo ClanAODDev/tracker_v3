@@ -28,4 +28,10 @@
 
 <body>
 
+@include('website.partials.commo-bar')
+
 @include('website.partials.apply-form')
+
+
+</body>
+</html>
