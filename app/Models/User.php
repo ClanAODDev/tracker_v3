@@ -69,7 +69,7 @@ class User extends Authenticatable
         /**
          * Handle default settings population
          */
-        static::creating(function (Division $user) {
+        static::creating(function (User $user) {
             $user->settings = $user->defaultSettings;
         });
     }
