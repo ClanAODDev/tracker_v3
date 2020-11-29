@@ -50,7 +50,7 @@ class PartTimeMemberRemoved extends Notification
     public function toWebhook($notifiable)
     {
         $channel = $notifiable->settings()->get('slack_channel');
-        $primaryDivision = $notifiable;
+        $primaryDivision = $this->member->division;
 
         return (new DiscordMessage())
             ->info()
