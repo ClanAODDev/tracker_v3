@@ -57,7 +57,7 @@ class PartTimeMemberRemoved extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name' => "**PART TIME MEMBER REMOVED** [TESTING - PLEASE IGNORE]",
+                    'name' => "**PART TIME MEMBER REMOVED**",
                     'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$primaryDivision->name}, and they were a part-time member in your division")
                 ],
                 [
