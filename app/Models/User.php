@@ -19,6 +19,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+    public array $defaultSettings = [
+        'snow' => true,
+        'ticket_notifications' => true,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -57,6 +62,17 @@ class User extends Authenticatable
     protected $dates = [
         'last_login_at'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        /**
+         * Handle default settings population
+         */
+        static::creating(function (Division $user) {
+            $user->settings = $user->defaultSettings;
+        });
+    }
 
     /**
      * relationship - user belongs to a member
