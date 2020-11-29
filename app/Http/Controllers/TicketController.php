@@ -27,6 +27,18 @@ class TicketController extends Controller
         $this->middleware(['auth']);
     }
 
+    public function setup()
+    {
+        $ticketTypes = TicketType::orderBy('display_order', 'ASC')
+            ->get();
+
+        $ticketTypes = $ticketTypes->filter(function ($type) {
+            return collect(json_decode($type->role_access))->contains(auth()->user()->role_id);
+        });
+
+        return view('help.tickets.setup', compact('ticketTypes'));
+    }
+
     /**
      * Display a listing of the resource.
      */

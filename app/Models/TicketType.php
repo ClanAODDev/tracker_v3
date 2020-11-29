@@ -15,6 +15,6 @@ class TicketType extends Model
 
     public function ticket()
     {
-        return $this->hasMany(\App\Models\Ticket::class);
+        return $this->hasMany(Ticket::class);
     }
 }
