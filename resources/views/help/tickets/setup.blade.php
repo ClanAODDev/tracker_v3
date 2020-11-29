@@ -25,7 +25,7 @@
 
                 <hr>
                 <div class="row">
-                    @foreach (\App\Models\TicketType::orderBy('display_order', 'ASC')->get() as $ticketType)
+                    @foreach ($ticketTypes as $ticketType)
                         <div class="col-md-3">
                             <a href="{{ route('help.tickets.create') . '?type=' . $ticketType->slug }}"
                                class="panel panel-filled">
