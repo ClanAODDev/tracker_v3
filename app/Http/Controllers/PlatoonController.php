@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Division;
 use App\Http\Requests\CreatePlatoonForm;
 use App\Http\Requests\DeletePlatoonForm;
 use App\Http\Requests\UpdatePlatoonForm;
+use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\PlatoonRepository;
@@ -20,7 +20,7 @@ class PlatoonController extends Controller
     /**
      * PlatoonController constructor.
      *
-     * @param PlatoonRepository $platoon
+     * @param  PlatoonRepository  $platoon
      */
     public function __construct(PlatoonRepository $platoon)
     {
@@ -32,7 +32,7 @@ class PlatoonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param Division $division
+     * @param  Division  $division
      * @return Response
      * @throws AuthorizationException
      */
@@ -54,8 +54,8 @@ class PlatoonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param CreatePlatoonForm $form
-     * @param Division $division
+     * @param  CreatePlatoonForm  $form
+     * @param  Division  $division
      * @return RedirectResponse
      */
     public function store(CreatePlatoonForm $form, Division $division)
@@ -74,8 +74,8 @@ class PlatoonController extends Controller
     }
 
     /**
-     * @param CreatePlatoonForm $request
-     * @param Division $division
+     * @param  CreatePlatoonForm  $request
+     * @param  Division  $division
      * @return bool
      */
     public function isMemberOfDivision(Division $division, $request)
@@ -89,8 +89,8 @@ class PlatoonController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Division $division
-     * @param Platoon $platoon
+     * @param  Division  $division
+     * @param  Platoon  $platoon
      * @return Response|StreamedResponse
      */
     public function show(Division $division, Platoon $platoon)
@@ -138,8 +138,8 @@ class PlatoonController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Division $division
-     * @param Platoon $platoon
+     * @param  Division  $division
+     * @param  Platoon  $platoon
      * @return Response
      */
     public function edit(Division $division, Platoon $platoon)
@@ -154,9 +154,9 @@ class PlatoonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdatePlatoonForm $form
-     * @param Division $division
-     * @param Platoon $platoon
+     * @param  UpdatePlatoonForm  $form
+     * @param  Division  $division
+     * @param  Platoon  $platoon
      * @return RedirectResponse|Response
      */
     public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
@@ -184,8 +184,8 @@ class PlatoonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param DeletePlatoonForm $form
-     * @param Division $division
+     * @param  DeletePlatoonForm  $form
+     * @param  Division  $division
      * @return RedirectResponse
      */
     public function destroy(DeletePlatoonForm $form, Division $division)
@@ -209,7 +209,11 @@ class PlatoonController extends Controller
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
-            $squad->members = $squad->members->filter(fn($member) => $member->position_id === 1);
+            $squad->members = $squad->members->filter(fn($member) => $member->position_id === 1)->sortbyDesc(function (
+                $member
+            ) use ($squad) {
+                return $squad->leader && $squad->leader->clan_id == $member->recruiter_id;
+            });
         });
 
         return view('platoon.manage-members', compact('division', 'platoon'));
@@ -218,8 +222,8 @@ class PlatoonController extends Controller
     /**
      * Export platoon members as CSV
      *
-     * @param Division $division
-     * @param Platoon $platoon
+     * @param  Division  $division
+     * @param  Platoon  $platoon
      * @return StreamedResponse
      */
     public function exportAsCSV(Division $division, Platoon $platoon)

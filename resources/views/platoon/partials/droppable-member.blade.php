@@ -15,7 +15,12 @@
         @foreach ($squad->members as $member)
             <li class="list-group-item grabbable" data-member-id="{{ $member->id }}"><i
                         class="fa fa-drag-handle text-muted pull-right"></i><span
-                        class="no-select">{{ $member->present()->rankName }}</span></li>
+                        class="no-select">{{ $member->present()->rankName }}</span>
+                @if ($squad->leader && $squad->leader->clan_id == $member->recruiter_id)
+                    <strong style="color: magenta;" title="Direct Recruit"><i
+                            class="fa fa-asterisk"></i></strong>
+                @endif
+            </li>
         @endforeach
     </ul>
 </div>
