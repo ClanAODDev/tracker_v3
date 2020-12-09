@@ -24,18 +24,19 @@ store.validating = null;
 
 // so recruiters don't try to recruit themselves...
 store.recruiter_id = null;
+store.currentName = "";
 
 // application states
-store.currentStep = 'step-one';
+store.currentStep = "step-one";
 store.progress = 25;
 
 // member data
-store.member_id = '';
-store.ingame_name = '';
-store.rank = '';
-store.forum_name = '';
-store.platoon = '';
-store.squad = '';
+store.member_id = "";
+store.ingame_name = "";
+store.rank = "";
+store.forum_name = store.currentName ? store.currentName : "";
+store.platoon = "";
+store.squad = "";
 store.validMemberId = false;
 store.verifiedEmail = false;
 store.nameDoesNotExist = false;
