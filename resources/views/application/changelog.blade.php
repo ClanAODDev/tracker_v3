@@ -27,6 +27,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>9 December 2020 - 3.32</h4>
+                <hr/>
+                <ul>
+                    <li>Recruiting process now auto-populates with the forum name of the member id being validated. This will help ensure the recruiter is targeting the correct member id</li>
+                    <li>Platoon "manage member" control now includes direct recruit information in squads</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>24 November 2020 - 3.31</h4>
                 <hr/>
                 <ul>
