@@ -54,7 +54,7 @@ elixir(function (mix) {
   mix.webpack('division.js');
   mix.webpack('census-graph.js');
   mix.webpack('passport.js');
-  mix.webpack('recruiting.js');
+  mix.webpack("recruiting.js");
   mix.webpack('training.js');
   mix.webpack('admin.js');
   mix.webpack('manage-member.js');
