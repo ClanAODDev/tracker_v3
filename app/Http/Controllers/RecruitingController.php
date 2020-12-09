@@ -2,21 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\AOD\Traits\Procedureable;
 use App\Models\Division;
-use App\Models\Handle;
-use App\Models\Member;
-use App\Models\MemberRequest;
-use App\Notifications\NewExternalRecruit;
-use App\Notifications\NewMemberRecruited;
 use App\Models\Platoon;
-use Carbon\Carbon;
-use DB;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+
 /**
  * Class RecruitingController
  *
@@ -25,6 +17,7 @@ use Illuminate\View\View;
 class RecruitingController extends \App\Http\Controllers\Controller
 {
     use \Illuminate\Foundation\Auth\Access\AuthorizesRequests, \App\AOD\Traits\Procedureable;
+
     /**
      * RecruitingController constructor.
      */
@@ -32,17 +25,20 @@ class RecruitingController extends \App\Http\Controllers\Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * @return mixed
      */
     public function index()
     {
         $this->authorize('create', \App\Models\Member::class);
-        $divisions = \App\Models\Division::active()->where('shutdown_at', null)->get()->sortBy('name')->pluck('name', 'abbreviation');
+        $divisions = \App\Models\Division::active()->where('shutdown_at', null)->get()->sortBy('name')->pluck('name',
+            'abbreviation');
         return view('recruit.index', compact('divisions'));
     }
+
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @throws AuthorizationException
      */
     public function submitRecruitment(\Illuminate\Http\Request $request)
@@ -59,8 +55,9 @@ class RecruitingController extends \App\Http\Controllers\Controller
         }
         $this->showToast('Your recruitment has successfully been completed!');
     }
+
     /**
-     * @param Division $division
+     * @param  Division  $division
      */
     public function form(\App\Models\Division $division)
     {
@@ -71,6 +68,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
         }
         return view('recruit.form', compact('division'));
     }
+
     /**
      * Handle member creation on recruitment
      *
@@ -102,6 +100,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
         $member->recordActivity('recruited');
         return $member;
     }
+
     /**
      * Create a member status request
      *
@@ -114,10 +113,14 @@ class RecruitingController extends \App\Http\Controllers\Controller
         if (\App\Models\MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
             return;
         }
-        \App\Models\MemberRequest::create(['requester_id' => auth()->user()->member->clan_id, 'member_id' => $member->clan_id, 'division_id' => $division->id]);
+        \App\Models\MemberRequest::create([
+            'requester_id' => auth()->user()->member->clan_id, 'member_id' => $member->clan_id,
+            'division_id' => $division->id
+        ]);
     }
+
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @param $member
      * @param $division
      */
@@ -128,6 +131,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
         }
         return $division->notify(new \App\Notifications\NewMemberRecruited($member, $division));
     }
+
     /**
      * @param $abbreviation
      * @return array
@@ -137,6 +141,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
         $division = \App\Models\Division::whereAbbreviation($abbreviation)->first();
         return $this->getPlatoons($division);
     }
+
     /**
      * @param $division
      * @return array
@@ -145,10 +150,11 @@ class RecruitingController extends \App\Http\Controllers\Controller
     {
         return ['data' => ['platoons' => $division->platoons->pluck('name', 'id'), 'settings' => $division->settings]];
     }
+
     /**
      * Fetch a division's recruitment tasks
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return mixed
      */
     public function getTasks(\Illuminate\Http\Request $request)
@@ -157,26 +163,29 @@ class RecruitingController extends \App\Http\Controllers\Controller
         $tasks = $division->settings()->get('recruiting_tasks');
         return collect($tasks)->map(fn($task) => ['complete' => false, 'description' => $task['task_description']]);
     }
+
     /**
      * ajax method
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return object
      */
     public function searchPlatoonForSquads(\Illuminate\Http\Request $request)
     {
         return $this->getSquadsFor(\App\Models\Platoon::find($request->platoon));
     }
+
     /**
-     * @param Platoon $platoon
+     * @param  Platoon  $platoon
      * @return object
      */
     public function getSquadsFor(\App\Models\Platoon $platoon)
     {
         return $platoon->squads->load('leader', 'members');
     }
+
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return Factory|View
      */
     public function doThreadCheck(\Illuminate\Http\Request $request)
@@ -188,6 +197,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
         }
         return $threads;
     }
+
     /**
      * @param $member_id
      * @return array
@@ -204,11 +214,16 @@ class RecruitingController extends \App\Http\Controllers\Controller
         if (!property_exists($result, 'usergroupid')) {
             return ['is_member' => false, 'verified_email' => false];
         }
-        return ['is_member' => true, 'verified_email' => \App\Models\Member::UNVERIFIED_EMAIL_GROUP_ID != $result->usergroupid];
+        return [
+            'is_member' => true,
+            'username' => $result->username,
+            'verified_email' => \App\Models\Member::UNVERIFIED_EMAIL_GROUP_ID != $result->usergroupid
+        ];
     }
+
     /**
-     * @param string $name
-     * @param int $memberId
+     * @param  string  $name
+     * @param  int  $memberId
      * @return \Illuminate\Http\JsonResponse
      */
     public function validateMemberName()

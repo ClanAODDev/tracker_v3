@@ -234,6 +234,7 @@
                                 });
                             }
                             store.nameDoesNotExist = false;
+                            store.currentName = response.data.username;
                         } else {
                             this.errors.remove('forum_name_exists');
                             store.nameDoesNotExist = true;
