@@ -274,7 +274,7 @@ export default {
                 this.$validator.errors.remove('member_id');
                 store.validMemberId = true;
                 // force update to form field
-                store.currentName = response.data.username;
+                store.forum_name = response.data.username;
               }
 
               if (!response.data.verified_email) {
