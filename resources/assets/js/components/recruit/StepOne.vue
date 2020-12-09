@@ -191,7 +191,7 @@ export default {
 
       this.$validator.validateAll().then((result) => {
 
-        if (!result || this.errors.any()) {
+        if (!result || this.$validator.errors.any()) {
           toastr.error('Something is wrong with your member information', 'Error');
           return false;
         }
@@ -214,32 +214,32 @@ export default {
 
     validateMemberDoesNotExist: function () {
 
-      if ((store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) && !this.errors.has('forum_name_aod')) {
-        this.errors.add({
+      if ((store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) && !this.$validator.errors.has('forum_name_aod')) {
+        this.$validator.errors.add({
           field: 'forum_name_aod',
           msg: 'Do not include "AOD_" in the desired forum name'
         });
       } else {
-        this.errors.remove('forum_name_aod');
+        this.$validator.errors.remove('forum_name_aod');
       }
 
       // don't attempt to query a badly formatted name
-      if (store.forum_name && store.member_id && !this.errors.has('forum_name')) {
+      if (store.forum_name && store.member_id && !this.$validator.errors.has('forum_name')) {
         store.validating = true;
         axios.post(window.Laravel.appPath + '/validate-name/', {
           name: store.forum_name.toLowerCase(),
           member_id: store.member_id
         }).then((response) => {
           if (response.data.memberExists) {
-            if (!this.errors.has('forum_name_exists')) {
-              this.errors.add({
+            if (!this.$validator.errors.has('forum_name_exists')) {
+              this.$validator.errors.add({
                 field: 'forum_name_exists',
                 msg: 'The desired forum name is already taken'
               });
             }
             store.nameDoesNotExist = false;
           } else {
-            this.errors.remove('forum_name_exists');
+            this.$validator.errors.remove('forum_name_exists');
             store.nameDoesNotExist = true;
           }
           store.validating = false;
@@ -252,7 +252,7 @@ export default {
       if (store.member_id) {
 
         if (store.member_id === store.recruiter_id) {
-          this.errors.add({
+          this.$validator.errors.add({
             field: 'member_id',
             msg: "You can't recruit yourself, dummy!"
           });
