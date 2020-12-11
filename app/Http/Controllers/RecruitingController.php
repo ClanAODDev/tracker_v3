@@ -32,8 +32,8 @@ class RecruitingController extends \App\Http\Controllers\Controller
     public function index()
     {
         $this->authorize('create', \App\Models\Member::class);
-        $divisions = \App\Models\Division::active()->where('shutdown_at', null)->get()->sortBy('name')->pluck('name',
-            'abbreviation');
+
+        $divisions = \App\Models\Division::active()->where('shutdown_at', null)->get()->pluck('name', 'abbreviation');
         return view('recruit.index', compact('divisions'));
     }
 

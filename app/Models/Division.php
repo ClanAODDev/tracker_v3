@@ -204,7 +204,7 @@ class Division extends Model
      */
     public function scopeActive($query)
     {
-        return $query->whereActive(true);
+        return $query->whereActive(true)->orderBy('name', 'ASC');
     }
 
     /**
