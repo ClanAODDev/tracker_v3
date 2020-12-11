@@ -32,6 +32,7 @@
                 <ul>
                     <li>Recruiting process now auto-populates with the forum name of the member id being validated. This will help ensure the recruiter is targeting the correct member id</li>
                     <li>Platoon "manage member" control now includes direct recruit information in squads</li>
+                    <li>Division listings now properly sort alphabetically by name (sorry iRacing)</li>
                 </ul>
             </div>
         </div>
