@@ -6,9 +6,9 @@
 <p>Be sure to plan time in the coming days and weeks to check on their progress.</p>
 
 <p class="m-t-lg">
-    <a href="https://tracker.clanaod.net/reports/sergeants"
+    <a href="https://tracker.clanaod.net/reports/leadership"
        class="btn btn-primary"
-       target="_blank"> Open Sgt Structure <i
+       target="_blank"> Open Leadership Structure <i
                 class="fas fa-external-link-alt text-primary"></i>
     </a>
     <a href="https://www.clanaod.net/forums/showthread.php?t=56367"
