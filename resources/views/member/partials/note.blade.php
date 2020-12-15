@@ -22,7 +22,7 @@
                         <span>Unk Author</span>
                         @endif
                         &mdash;
-                        {{ $note->created_at->diffForHumans() }}
+                        {{ $note->created_at->diffForHumans() }} <span class="text-muted">{{ $note->created_at->format('Y-m-d H:i:s') }}</span>
 
                         @if ($note->forum_thread_id)
                             <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}"
