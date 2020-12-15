@@ -162,7 +162,7 @@
                             <strong {{ $comment->user->isRole('admin') ? "class=text-danger" : null }}>{{ $comment->user->name }}</strong>
                             {{ \OsiemSiedem\Autolink\Facades\Autolink::convert($comment->body) }}
                         </div>
-                        <div class="text-muted">{{ $comment->created_at->diffForHumans() }}</div>
+                        <div class="text-muted">{{ $comment->created_at->diffForHumans() }} | {{ $comment->created_at->format('Y-m-d H:i:s') }}</div>
                     </div>
                 </div>
             </div>
