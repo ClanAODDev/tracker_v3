@@ -53,12 +53,10 @@ class StaffSergeant extends Resource
             ID::make('ID'),
 
             BelongsTo::make('division')
-                ->rules('required')
-                ->sortable(),
+                ->rules('required'),
 
             BelongsTo::make('member')
                 ->rules('required')
-                ->sortable()
                 ->searchable(),
         ];
     }
