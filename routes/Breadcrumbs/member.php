@@ -70,3 +70,25 @@ Breadcrumbs::register('member-leave', function ($breadcrumbs, $member, $division
 
     $breadcrumbs->push('Edit Leave');
 });
+
+Breadcrumbs::register('member-recruits', function ($breadcrumbs, $member, $division) {
+    $breadcrumbs->parent('home');
+
+    if ($division) {
+        $breadcrumbs->push($division->name, route('division', $division->abbreviation));
+    }
+
+    if ($member->platoon_id !== 0) {
+        $breadcrumbs->push(
+            ucwords($member->platoon->name),
+            route('platoon', [$division->abbreviation, $member->platoon->id])
+        );
+    }
+
+    $breadcrumbs->push(
+        $member->name,
+        route('member', $member->getUrlParams())
+    );
+
+    $breadcrumbs->push('Recruiting History');
+});
