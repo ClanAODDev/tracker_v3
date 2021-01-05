@@ -20,6 +20,6 @@
 <div class="panel-footer">
     <small class="slight badge"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave</small>
     <small class="slight badge"><span style="color: magenta"><i class="fa fa-asterisk"></i></span> - Direct Recruit</small>
-    <a href="{{ route('squad.export-csv', [$squad->division, $platoon, $squad]) }}"
+    <a href="{{ route('squad.export-csv', [$division, $platoon, $squad]) }}"
        class="btn btn-sm btn-accent pull-right">Export to CSV</a>
 </div>
