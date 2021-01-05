@@ -186,10 +186,11 @@ class SquadController extends \App\Http\Controllers\Controller
      * Export platoon members as CSV
      *
      * @param  Division  $division
+     * @param  Platoon  $platoon
      * @param  Squad  $squad
      * @return StreamedResponse
      */
-    public function exportAsCSV(Division $division, Squad $squad)
+    public function exportAsCSV(Division $division, Platoon $platoon, Squad $squad)
     {
         $members = $squad->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
