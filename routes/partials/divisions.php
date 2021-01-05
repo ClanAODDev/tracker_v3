@@ -109,6 +109,7 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
             Route::put('{squad}', 'SquadController@update')->name('updateSquad');
             Route::patch('{squad}', 'SquadController@update');
             Route::delete('{squad}', 'SquadController@destroy')->name('deleteSquad');
+            Route::get('{squad}/csv', 'SquadController@exportAsCsv')->name('squad.export-csv');
         });
     });
 });
