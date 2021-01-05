@@ -15,6 +15,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
 class SquadController extends \App\Http\Controllers\Controller
 {
     public function __construct()
@@ -178,5 +180,61 @@ class SquadController extends \App\Http\Controllers\Controller
         }
         $member->save();
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Export platoon members as CSV
+     *
+     * @param  Division  $division
+     * @param  Squad  $squad
+     * @return StreamedResponse
+     */
+    public function exportAsCSV(Division $division, Squad $squad)
+    {
+        $members = $squad->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division),
+            'rank',
+            'position',
+            'leave'
+        ])->get()->sortByDesc('rank_id');
+
+        $members = $members->each($this->getMemberHandle());
+
+        $csv_data = $members->reduce(function ($data, $member) {
+            $data[] = [
+                $member->name,
+                $member->rank->abbreviation,
+                $member->join_date,
+                $member->last_activity,
+                $member->last_ts_activity,
+                $member->last_promoted_at,
+                $member->handle->pivot->value ?? 'N/A',
+                $member->posts,
+            ];
+
+            return $data;
+        }, [
+            [
+                'Name',
+                'Rank',
+                'Join Date',
+                'Last Forum Activity',
+                'Last TS Activity',
+                'Last Promoted',
+                'Member Handle',
+                'Member Forum Posts'
+            ],
+        ]);
+
+        return new StreamedResponse(function () use ($csv_data) {
+            $handle = fopen('php://output', 'w');
+            foreach ($csv_data as $row) {
+                fputcsv($handle, $row);
+            }
+            fclose($handle);
+        }, 200, [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=members.csv',
+        ]);
     }
 }
