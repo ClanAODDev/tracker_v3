@@ -27,6 +27,17 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>4 January 2021 - 3.33</h4>
+                <hr/>
+                <ul>
+                    <li>Squads can now be exported to CSV</li>
+                    <li>Fixed last promoted date on squad and platoon views. They now show "never" if a date is not available.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>9 December 2020 - 3.32</h4>
                 <hr/>
                 <ul>
