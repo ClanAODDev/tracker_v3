@@ -30,7 +30,9 @@ class DivisionController extends ApiController
      */
     public function index()
     {
-        $divisions = Division::whereActive(true)->with('members')->get();
+        $divisions = Division::active()
+            ->shuttingDown(false)
+            ->with('members')->get();
 
         return $this->respond([
             'data' => $this->divisionTransformer->transformCollection($divisions->all())

@@ -208,6 +208,20 @@ class Division extends Model
     }
 
     /**
+     * @param $query
+     * @param  bool  $status
+     * @return mixed
+     */
+    public function scopeShuttingDown($query, bool $status)
+    {
+        if ($status) {
+            return $query->whereNotNull('shutdown_at');
+        }
+
+        return $query->whereNull('shutdown_at');
+    }
+
+    /**
      * @return mixed
      */
     public function sergeants()
