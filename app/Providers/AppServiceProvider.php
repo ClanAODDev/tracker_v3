@@ -35,10 +35,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if ($this->app->environment() !== 'production') {
-            $this->app->register(IdeHelperServiceProvider::class);
-        }
-
         // register user settings
         $this->app->singleton(UserSettings::class, fn() => Auth::user()->settings());
 
