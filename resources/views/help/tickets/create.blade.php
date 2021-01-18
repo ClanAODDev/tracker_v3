@@ -13,7 +13,7 @@
             AOD Tracker
         @endslot
         @slot ('subheading')
-            Create a Help Ticket
+            Create a Admin Ticket
         @endslot
     @endcomponent
 
