@@ -95,6 +95,10 @@ class MemberRequestController extends Controller
             'name' => $request->name,
         ]);
 
+        if ($memberRequest->isOnHold()) {
+            $memberRequest->removeHold();
+        }
+
         $this->showToast('Member request resubmitted!');
 
         return redirect(route('division.member-requests.index', $division));
