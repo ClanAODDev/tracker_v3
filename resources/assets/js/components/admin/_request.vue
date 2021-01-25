@@ -21,13 +21,13 @@
 
       <div class="col-md-6 col-sm-12">
         <button @click="approve()"
-                class="btn btn-success mr-2">
+                class="btn btn-success btn-block">
           <small class="text-uppercase"><i class="fa fa-user-plus"></i> Approve</small>
         </button>
       </div>
       <div class="col-md-6 col-sm-12">
         <button @click="placeOnHold()"
-                class="btn btn-warning mr-2">
+                class="btn btn-warning btn-block">
           <small class="text-uppercase"><i class="fa fa-hourglass-half"></i> Hold</small>
         </button>
       </div>
