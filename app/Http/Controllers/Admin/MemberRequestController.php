@@ -104,27 +104,6 @@ class MemberRequestController extends Controller
         return $memberRequest;
     }
 
-    public function cancel(Request $request, $requestId)
-    {
-        $this->authorize('manage', MemberRequest::class);
-
-        $request->validate([
-            'notes' => 'required|max:1000'
-        ], [
-            'notes.required' => 'You must provide a justification!'
-        ]);
-
-        $request = MemberRequest::find($requestId);
-
-        $request->cancel();
-
-        if ($request->division->settings()->get('slack_alert_member_denied') == "on") {
-            $request->division->notify(new MemberRequestDenied($request));
-        }
-
-        return $request;
-    }
-
     /**
      * @param  Request  $request
      * @param  MemberRequest  $memberRequest

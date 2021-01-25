@@ -96,15 +96,6 @@
         },
         methods: {
 
-            showCancelModal() {
-                this.isCancelModalVisible = true;
-            },
-
-            closeCancelModal() {
-                this.isCancelModalVisible = false;
-                this.notes = null;
-            },
-
             showHoldModal() {
                 this.isHoldModalVisible = true;
             },
@@ -152,13 +143,7 @@
                     }
                 });
             },
-
-            cancel(request, index) {
-                this.showCancelModal();
-                this.requestIndex = index;
-                this.request = request;
-            },
-
+          
             placeOnHold(request, index) {
                 this.showHoldModal();
                 this.requestIndex = index;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Division;
 
-use App\Models\Division;
 use App\Http\Controllers\Controller;
+use App\Models\Division;
 use App\Models\MemberRequest;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -32,8 +32,8 @@ class MemberRequestController extends Controller
         }
 
         $requests = collect([
-            'pending' => $requests->filter(fn($request) => $request->approved_at === null && $request->cancelled_at === null),
-            'cancelled' => $requests->filter(fn($request) => $request->cancelled_at != null),
+            'pending' => $requests->filter(fn ($request) => $request->approved_at === null && $request->cancelled_at === null),
+            'cancelled' => $requests->filter(fn ($request) => $request->cancelled_at != null),
         ]);
 
 

@@ -24,15 +24,9 @@
                         class="btn btn-success mr-2">
                     <small class="text-uppercase"><i class="fa fa-user-plus"></i> Approve</small>
                 </button>
-
                 <button @click="placeOnHold()"
                         class="btn btn-warning mr-2">
                     <small class="text-uppercase"><i class="fa fa-hourglass-half"></i> Hold</small>
-                </button>
-
-                <button @click="cancel()"
-                        class="btn btn-danger">
-                    <small class="text-uppercase"><i class="fa fa-times"></i> Cancel</small>
                 </button>
             </div>
         </td>
@@ -60,9 +54,6 @@
                 if (this.name !== this.data.name) {
                     this.$emit('name-changed', {oldName: this.data.name, newName: this.name, id: this.id});
                 }
-            },
-            cancel() {
-                this.$emit('cancelled', this.id);
             },
             placeOnHold() {
                 this.$emit('placedOnHold', this.id);
