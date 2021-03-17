@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\MemberRemoved;
-use App\Notifications\PartTimeMemberRemoved;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
@@ -72,7 +71,7 @@ class DeleteMember extends FormRequest
         $divisions = $member->partTimeDivisions()->active()->get();
 
         foreach ($divisions as $division) {
-            if ($member->division->settings()->get('slack_alert_pt_member_removed')) {
+            if ($division->settings()->get('slack_alert_pt_member_removed')) {
                 $division->notify(new \App\Notifications\PartTimeMemberRemoved($member));
             }
         }
