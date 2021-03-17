@@ -68,7 +68,7 @@
 
     <tr>
         <td>
-            <label for="slack_alert_member_denied">
+            <label for="slack_alert_pt_member_removed">
                 When a part-time member gets removed by their primary division
             </label>
         </td>
