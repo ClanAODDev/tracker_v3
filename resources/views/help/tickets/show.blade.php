@@ -147,7 +147,8 @@
         <form action="{{ route('help.tickets.comments.store', $ticket) }}" method="POST">
             {{ csrf_field() }}
             <div class="form-group">
-                <input type="text" class="form-control" name="comment" minlength="5" id="comment" required>
+                <textarea type="text" class="form-control" name="comment" minlength="5" id="comment"
+                          required></textarea>
             </div>
             <div class="text-right form-group">
                 <button type="submit" class="btn btn-primary">Post message</button>
@@ -162,7 +163,8 @@
                             <strong {{ $comment->user->isRole('admin') ? "class=text-danger" : null }}>{{ $comment->user->name }}</strong>
                             {{ \OsiemSiedem\Autolink\Facades\Autolink::convert($comment->body) }}
                         </div>
-                        <div class="text-muted">{{ $comment->created_at->diffForHumans() }} | {{ $comment->created_at->format('Y-m-d H:i:s') }}</div>
+                        <div class="text-muted">{{ $comment->created_at->diffForHumans() }}
+                            | {{ $comment->created_at->format('Y-m-d H:i:s') }}</div>
                     </div>
                 </div>
             </div>
@@ -171,7 +173,7 @@
     </div>
 
     <script>
-        $("#owner_id").change(function (){
+        $("#owner_id").change(function () {
             let selected = $(this).children("option:selected").text();
             if (confirm("Are you sure you want to assign " + selected + "?")) {
                 $("#assignTicketTo").submit();
