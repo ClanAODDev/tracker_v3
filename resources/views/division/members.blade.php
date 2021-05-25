@@ -4,7 +4,7 @@
 
     @component ('application.components.division-heading', [$division])
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
         @endslot
         @slot ('heading')
             <span class="hidden-xs">Division Members</span>
@@ -43,6 +43,8 @@
                     <div class="panel-footer">
                         <small class="slight"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave
                         </small>
+{{--                        <a href="{{ route('division.export-csv', [$division]) }}"--}}
+{{--                           class="btn btn-sm btn-accent pull-right">Export to CSV</a>--}}
                     </div>
                 </div>
             </div>
