@@ -154,7 +154,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             'sergeants' => function ($query) {
                 $query->orderByDesc('rank_id')->orWhereIn('position_id', [5, 6]);
             }, 'sergeants.rank', 'sergeants.position'
-        ])->get();
+        ])->withCount('sgtAndSsgt')->get();
 
         $leadership = \App\Models\Member::where('rank_id', '>', 10)
             ->where('division_id', '!=', 0)
