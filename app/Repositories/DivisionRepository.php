@@ -3,9 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Division;
-use Carbon\Carbon;
-use DB;
-use Illuminate\Database\Eloquent\Collection;
+
 /**
  * Class DivisionRepository
  *
@@ -104,12 +102,5 @@ class DivisionRepository
     public function populationLast6Months($divisionId, $startDate)
     {
         return \DB::table('censuses')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count')->from('censuses')->where('division_id', '=', $divisionId)->where('created_at', '>=', $startDate)->groupby('date')->orderBy('created_at', 'ASC')->get();
-    }
-    /**
-     * @return Collection|static[]
-     */
-    public function withoutSsgts()
-    {
-        return \App\Models\Division::doesntHave('staffSergeants')->get();
     }
 }

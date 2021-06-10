@@ -27,11 +27,23 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>10 June 2021 - 3.4</h4>
+                <hr/>
+                <ul>
+                    <li>Dropping support for staff sergeant assignments within divisions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>4 January 2021 - 3.33</h4>
                 <hr/>
                 <ul>
                     <li>Squads can now be exported to CSV</li>
-                    <li>Fixed last promoted date on squad and platoon views. They now show "never" if a date is not available.</li>
+                    <li>Fixed last promoted date on squad and platoon views. They now show "never" if a date is not
+                        available.
+                    </li>
                 </ul>
             </div>
         </div>
@@ -41,7 +53,9 @@
                 <h4>9 December 2020 - 3.32</h4>
                 <hr/>
                 <ul>
-                    <li>Recruiting process now auto-populates with the forum name of the member id being validated. This will help ensure the recruiter is targeting the correct member id</li>
+                    <li>Recruiting process now auto-populates with the forum name of the member id being validated.
+                        This will help ensure the recruiter is targeting the correct member id
+                    </li>
                     <li>Platoon "manage member" control now includes direct recruit information in squads</li>
                     <li>Division listings now properly sort alphabetically by name (sorry iRacing)</li>
                 </ul>
@@ -54,8 +68,10 @@
                 <hr/>
                 <ul>
                     <li>Happy Holidays, AOD!</li>
-                    <li>A bug was fixed pertaining to notes created from leaves of absence request. This bug caused the
-                        requester not to be properly recorded in the note. Notes for existing leave requests have been
+                    <li>A bug was fixed pertaining to notes created from leaves of absence request. This bug caused
+                        the
+                        requester not to be properly recorded in the note. Notes for existing leave requests have
+                        been
                         fixed, but there are likely old notes out there that do not have authors.
                     </li>
                     <li>User settings page added, allowing users to
@@ -121,10 +137,12 @@
                 <h4>1 July 2020 - 3.10.3</h4>
                 <hr/>
                 <ul>
-                    <li>The underlying framework was upgraded to 6.x. An additional upgrade to 7.x is forthcoming.</li>
+                    <li>The underlying framework was upgraded to 6.x. An additional upgrade to 7.x is forthcoming.
+                    </li>
                     <li>The recruiting process has received some updates, specifically:
                         <ul>
-                            <li>Forum names and member ids are much more stringently validated. Only letters, numbers,
+                            <li>Forum names and member ids are much more stringently validated. Only letters,
+                                numbers,
                                 dashes, spaces, and periods are acceptable
                             </li>
                             <li>Fixed a bug where users could enter thread ids instead of member ids, which was not
@@ -149,7 +167,8 @@
                     <li>CPLs now appear in the SGT structure, and the SGT structure has been renamed the "Leadership
                         Structure"
                     </li>
-                    <li>Recruiting process now checks that the new member has completed email verification. Recruiters
+                    <li>Recruiting process now checks that the new member has completed email verification.
+                        Recruiters
                         will see an error and cannot continue until this is fixed.
                     </li>
                 </ul>
@@ -179,10 +198,13 @@
                             </ul>
                         </li>
                     </del>
-                    <li>Account access is now automated, making the AOD forums the source of truth. Access is determined
-                        by a member's user groups. <strong>Note:</strong> this change brings account access more in line
+                    <li>Account access is now automated, making the AOD forums the source of truth. Access is
+                        determined
+                        by a member's user groups. <strong>Note:</strong> this change brings account access more in
+                        line
                         with forum privileges. As such, the <code>jr_ldr</code> role will be removed, and some
-                        privileges will either be elevated to <code>Sr Ldr</code> roles, or downgraded to allow <code>Officer</code>
+                        privileges will either be elevated to <code>Sr Ldr</code> roles, or downgraded to allow
+                        <code>Officer</code>
                         role.
                         <ul>
                             <li>Only SGTS can update members (position, rank), currently done via forum modcp</li>
@@ -204,7 +226,8 @@
                 <h4>17 Feb 2019 - 3.9.1</h4>
                 <hr/>
                 <ul>
-                    <li><strong>Discord tags</strong> are now provided on user profile pages. Non-UTF-8 characters <em>should</em>
+                    <li><strong>Discord tags</strong> are now provided on user profile pages. Non-UTF-8 characters
+                        <em>should</em>
                         display correctly. Long names will break and wrap to the next line.
                     </li>
                 </ul>
@@ -217,7 +240,8 @@
                 <hr/>
                 <ul>
                     <li>Header display bug fixed (where certain items were uppercase)</li>
-                    <li>Added ability to filter by toggle-able columns, like member handle. Affects division members,
+                    <li>Added ability to filter by toggle-able columns, like member handle. Affects division
+                        members,
                         platoon, squad views
                     </li>
                     <li>Starting work on ticketing system</li>
@@ -229,7 +253,8 @@
                     <li>Dropped recruitment task validation (encoding errors prevented users from proceeding)</li>
                     <li>Support squad logos</li>
                     <li>Provision docker environment for application, dev</li>
-                    <li>Ensure only senior leaders can view notes marked Sr Ldr, ensure members cannot view their own
+                    <li>Ensure only senior leaders can view notes marked Sr Ldr, ensure members cannot view their
+                        own
                         notes
                     </li>
                     <li>Support discord tag in member sync</li>
@@ -243,24 +268,28 @@
                 <h4>6 Jan 2019 - 3.8.0</h4>
                 <hr/>
                 <ul>
-                    <li>Training information for SGT+ is now maintained by the tracker. This information can be viewed
+                    <li>Training information for SGT+ is now maintained by the tracker. This information can be
+                        viewed
                         either clan-wide via the Leadership Structure, or by visiting a member's profile.
                         Leadership information will only display for current Sergeants+
                     </li>
                     <ul>
                         <li>Speak to a MSGT+ for updates to a member's `last trained` date.</li>
-                        <li>CO and XO appointment dates are updated whenever a member is assigned to that position via
+                        <li>CO and XO appointment dates are updated whenever a member is assigned to that position
+                            via
                             the tracker.
                         </li>
                     </ul>
                     <li>Member status requests will now have a <code>2 hour</code> window before being approved by
-                        leadership. This window will allow divisions to make changes to requests (specifically member
+                        leadership. This window will allow divisions to make changes to requests (specifically
+                        member
                         names) before being processed.
                     </li>
                     <li>Hotfix addressing leaves of absence whose associated notes were not being assigned to the
                         correct member id.
                     </li>
-                    <li>Allow divisions to change their discord channel name in the event it does not match the typical
+                    <li>Allow divisions to change their discord channel name in the event it does not match the
+                        typical
                         convention.
                     </li>
                     <li>Fixed bug preventing notes from being deleted by authorized users.</li>
@@ -307,10 +336,12 @@
                     <li>Implement member status requests</li>
                     <ul>
                         <li>Administrators will now process member status requests through the tracker. A member's
-                            status will reflect whether or not status has been approved by an administrator. Status can
+                            status will reflect whether or not status has been approved by an administrator. Status
+                            can
                             be viewed or managed via Division tools > Member Requests.
                         </li>
-                        <li>Bugfix: addressed issue with member sync that could reset a member's assignment information
+                        <li>Bugfix: addressed issue with member sync that could reset a member's assignment
+                            information
                             while waiting to be approved.
                         </li>
                     </ul>
@@ -369,21 +400,27 @@
                 <h4>16 Feb 2018 - 3.3.0</h4>
                 <hr/>
                 <ul>
-                    <li>Login mechanism now leverages AOD Forum authentication system. Users will login to the tracker
+                    <li>Login mechanism now leverages AOD Forum authentication system. Users will login to the
+                        tracker
                         using their forum username and password.
                     </li>
                     <ul>
                         <li>
-                            Tracker and forum accounts will continue to be separate. However, when authenticating as a
-                            new user to the Tracker, an account will automatically be generated. Management of account
+                            Tracker and forum accounts will continue to be separate. However, when authenticating as
+                            a
+                            new user to the Tracker, an account will automatically be generated. Management of
+                            account
                             access will continue to be managed through the tracker.
                         </li>
                         <li>
-                            <em>In a later update</em>, account access will be granted based on the forum member groups
+                            <em>In a later update</em>, account access will be granted based on the forum member
+                            groups
                             a user belongs to.
                         </li>
-                        <li>Password resets and account registration will be handled directly through the AOD forums.
-                            Just as before, users that do not already have a forum account will not be able to log into
+                        <li>Password resets and account registration will be handled directly through the AOD
+                            forums.
+                            Just as before, users that do not already have a forum account will not be able to log
+                            into
                             the tracker.
                         </li>
                         <li>Users exceeding 5 failed login attempts will be locked out for 60 seconds.</li>
@@ -420,7 +457,8 @@
                     </li>
                     <ul>
                         <li>
-                            <strong>Note:</strong> In order to ensure divisions have the chance to clean up part-timers
+                            <strong>Note:</strong> In order to ensure divisions have the chance to clean up
+                            part-timers
                             from internal systems (ingame organizations), part-time membership will no longer be
                             automatically reset when a member is removed from AOD.
                         </li>
@@ -434,10 +472,12 @@
                 <h4>30 Oct 2017 - 3.2.6</h4>
                 <hr/>
                 <ul>
-                    <li>Added division ingame report functionality (boilerplate, not all divisions will have supported
+                    <li>Added division ingame report functionality (boilerplate, not all divisions will have
+                        supported
                         ingame report functionality)
                     </li>
-                    <li>Added division retention information. Initially, only the current month's recruitment data will
+                    <li>Added division retention information. Initially, only the current month's recruitment data
+                        will
                         be available. Soon, by-month query and removals will be available.
                     </li>
                 </ul>
@@ -473,8 +513,10 @@
                 <h4>12 Sept 2017 - 3.2.3</h4>
                 <hr/>
                 <ul>
-                    <li>Ingame handle and part-time management has been moved out of the "Edit Member" area, and into
-                        their own areas. You can still navigate to these areas via the respective "Manage" buttons on a
+                    <li>Ingame handle and part-time management has been moved out of the "Edit Member" area, and
+                        into
+                        their own areas. You can still navigate to these areas via the respective "Manage" buttons
+                        on a
                         member profile. Additionally, junior leaders can now access these areas.
                     </li>
                     <li>Corrected bug where assigning a platoon leader who was previously a squad leader would not
@@ -503,14 +545,18 @@
                 <hr/>
                 <ul>
                     <li>Minor logic issues fixed with assigning platoon leaders, squad leaders</li>
-                    <li>Removed deprecated member assignment functionality in Manage Platoon, Manage Squad views</li>
+                    <li>Removed deprecated member assignment functionality in Manage Platoon, Manage Squad views
+                    </li>
                     <li>Members on leave now appear "dimmed" in member lists. Leave icon is now a grey color.</li>
                     <li>Added a mass-pm button on part-timers management view</li>
                     <li>Member profile page routes now include a slug that displays rank and name to make linking to
                         member profiles more accessible.
                     </li>
-                    <li>Users can now edit their own member profile, to manage position, handles, part-time status.</li>
-                    <li>Squad information now listed on the inactive members section. TS activity has been added to the
+                    <li>Users can now edit their own member profile, to manage position, handles, part-time
+                        status.
+                    </li>
+                    <li>Squad information now listed on the inactive members section. TS activity has been added to
+                        the
                         flagged view.
                     </li>
                     <li>List division inactive by percentage instead of raw number. Number can still be viewed by
@@ -544,7 +590,8 @@
                 <h4>23 August 2017 - 3.1.1</h4>
                 <hr/>
                 <ul>
-                    <li>Division census report updated to show a range of dates. Hover tooltip shows the exact day and
+                    <li>Division census report updated to show a range of dates. Hover tooltip shows the exact day
+                        and
                         member count. Notes have been omitted until a more viable solution is implemented. Graph
                         ordering was also modified to appear left to right.
                     </li>
@@ -561,28 +608,35 @@
                 <ul>
                     <li>Added application changelog</li>
                     <li>Implemented
-                        <code>Reset member assignments</code> function on the member profile page to resolve erroneous
-                        platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as well
+                        <code>Reset member assignments</code> function on the member profile page to resolve
+                        erroneous
+                        platoon, squad assignments. This is for quickly resolving "disappearing" member issues, as
+                        well
                         as convenience for members transferring out of a division.
                     </li>
-                    <li>Added unassigned members area to division view, deprecating the unassigned member area in the
+                    <li>Added unassigned members area to division view, deprecating the unassigned member area in
+                        the
                         platoon edit view. This will be removed in a later update.
                         <ul>
-                            <li>Note: the manage members area deprecates the unassigned member in the squad edit view.
+                            <li>Note: the manage members area deprecates the unassigned member in the squad edit
+                                view.
                                 This will also be removed at the same time.
                             </li>
                         </ul>
                     </li>
                     <li>
-                        Fix issue where leave type isn't properly selected, or updated when editing an existing leave of
+                        Fix issue where leave type isn't properly selected, or updated when editing an existing
+                        leave of
                         absence.
                     </li>
-                    <li>Add notice to member note when that note is associated with an existing leave of absence.</li>
+                    <li>Add notice to member note when that note is associated with an existing leave of absence.
+                    </li>
                     <li>
                         Add pending member status attribute
                         <ul>
                             <li>New recruits will be flagged as pending to prevent the forum sync from erroneously
-                                resetting assignment information (because they are not listed as active). Pending member
+                                resetting assignment information (because they are not listed as active). Pending
+                                member
                                 (and Ex-AOD) statuses will now reflect on the member profile page.
                             </li>
                         </ul>

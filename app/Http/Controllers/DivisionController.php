@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateDivision;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
 use App\Repositories\DivisionRepository;
 use Closure;
 use Exception;
@@ -39,28 +38,34 @@ class DivisionController extends \App\Http\Controllers\Controller
      * Display the specified resource.
      *
      * @param  Division  $division
-     * @return Response
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Response
      * @internal param int $id
      */
     public function show(\App\Models\Division $division)
     {
         $division->load('unassigned.rank');
+
         $censusCounts = $this->division->censusCounts($division);
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
+
         $maxDays = config('app.aod.maximum_days_inactive');
+
         $division->outstandingInactives = $division->members()->whereDoesntHave('leave')->where(
             'last_activity',
             '<',
             \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
         )->count();
+
         $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
+
         $platoons = $division->platoons()->with('leader.rank')->with(
             'squads.leader',
             'squads.leader.rank'
         )->withCount('members')->orderBy('order')->get();
+
         $generalSergeants = $division->generalSergeants()->with('rank')->get();
-        $staffSergeants = $division->staffSergeants()->with('rank')->get();
+
         return view(
             'division.show',
             compact(
@@ -70,7 +75,6 @@ class DivisionController extends \App\Http\Controllers\Controller
                 'lastYearCensus',
                 'divisionLeaders',
                 'generalSergeants',
-                'staffSergeants'
             )
         );
     }
