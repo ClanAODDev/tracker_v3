@@ -9,7 +9,6 @@ use Carbon\Carbon;
 use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -267,14 +266,6 @@ class Division extends Model
     }
 
     /**
-     * @return BelongsToMany
-     */
-    public function staffSergeants()
-    {
-        return $this->belongsToMany(Member::class, 'staff_sergeants')->withTimestamps();
-    }
-
-    /**
      * @return BelongsTo
      */
     public function handle()
@@ -288,8 +279,10 @@ class Division extends Model
      */
     public function unassigned()
     {
-        return $this->members()->where('platoon_id', 0)->whereIn('position_id', [1])->orderBy('rank_id',
-            'asc')->orderBy('name', 'asc');
+        return $this->members()->where('platoon_id', 0)->whereIn('position_id', [1])->orderBy(
+            'rank_id',
+            'asc'
+        )->orderBy('name', 'asc');
     }
 
     /**
@@ -338,8 +331,10 @@ class Division extends Model
      */
     public function partTimeMembers()
     {
-        return $this->belongsToMany(Member::class,
-            'division_parttimer')->orderByDesc('rank_id')->orderBy('name')->withTimestamps();
+        return $this->belongsToMany(
+            Member::class,
+            'division_parttimer'
+        )->orderByDesc('rank_id')->orderBy('name')->withTimestamps();
     }
 
     /**

@@ -28,11 +28,6 @@ class MemberRepository
                       ORDER BY year DESC
             ")
         ))
-            ->filter(fn($values) => $values->month !== null);
-    }
-
-    public function staffSergeants()
-    {
-        return Member::where('rank_id', 10)->get();
+            ->filter(fn ($values) => $values->month !== null);
     }
 }
