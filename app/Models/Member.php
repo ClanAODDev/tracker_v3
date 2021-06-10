@@ -77,8 +77,10 @@ class Member extends \Illuminate\Database\Eloquent\Model
     {
         $newPosition = $position instanceof \App\Models\Position ? $position : \App\Models\Position::whereName(strtolower($position))->firstOrFail();
         // reset assignments for specific positions
-        if (in_array($newPosition->name,
-            ["Commanding Officer", "Executive Officer", "General Sergeant", "Clan Admin"])) {
+        if (in_array(
+            $newPosition->name,
+            ["Commanding Officer", "Executive Officer", "General Sergeant", "Clan Admin"]
+        )) {
             $this->platoon_id = 0;
             $this->squad_id = 0;
         }
@@ -128,17 +130,6 @@ class Member extends \Illuminate\Database\Eloquent\Model
     public function squadLeaderOf()
     {
         return $this->hasOne(\App\Models\Squad::class, 'leader_id');
-    }
-
-    /**
-     * Handle Staff Sergeant assignments
-     * division/
-     *
-     * @return BelongsToMany
-     */
-    public function ssgtAssignment()
-    {
-        return $this->belongsToMany(\App\Models\Division::class, 'staff_sergeants')->withTimestamps();
     }
 
     /**

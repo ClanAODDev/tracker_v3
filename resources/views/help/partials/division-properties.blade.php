@@ -23,11 +23,6 @@
         <td><code>array</code></td>
     </tr>
     <tr>
-        <td><code>division.staffSergeants</code></td>
-        <td>A collection of all assigned staff sergeants</td>
-        <td><code>array</code></td>
-    </tr>
-    <tr>
         <td><code>division.partTimeMembers</code></td>
         <td>A collection of all part-time members</td>
         <td><code>array</code></td>

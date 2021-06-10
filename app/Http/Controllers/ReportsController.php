@@ -26,7 +26,7 @@ class ReportsController extends \App\Http\Controllers\Controller
         $lastYearCensus = $censusCounts->reverse();
 
         // fetch all divisions and eager load census data
-        $censuses = \App\Models\Division::active()->orderBy('name')->with('census')->get()->filter(fn(
+        $censuses = \App\Models\Division::active()->orderBy('name')->with('census')->get()->filter(fn (
             $division
         ) => count($division->census))->each(function ($division) {
             $division->total = $division->census->last()->count;
@@ -59,8 +59,8 @@ class ReportsController extends \App\Http\Controllers\Controller
      */
     public function clanTsReport()
     {
-        $invalidDates = fn($member) => !carbon_date_or_null_if_zero($member->last_ts_activity);
-        $newMembers = fn($member) => $member->created_at < \Carbon\Carbon::now()->subDays(2);
+        $invalidDates = fn ($member) => !carbon_date_or_null_if_zero($member->last_ts_activity);
+        $newMembers = fn ($member) => $member->created_at < \Carbon\Carbon::now()->subDays(2);
 
         $issues = \App\Models\Member::whereHas('division')->with(
             'rank',
@@ -123,7 +123,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             $members = $division->members()->whereHas('user', function ($query) {
                 $query->where('role_id', '>', 2);
             })->get();
-            $sortedMembers = collect(\Illuminate\Support\Arr::sort($members, fn($member) => $member->rank_id));
+            $sortedMembers = collect(\Illuminate\Support\Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
                 echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
             });
@@ -154,7 +154,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             'sergeants' => function ($query) {
                 $query->orderByDesc('rank_id')->orWhereIn('position_id', [5, 6]);
             }, 'sergeants.rank', 'sergeants.position'
-        ])->with('staffSergeants', 'staffSergeants.rank')->withCount('sgtAndSsgt')->get();
+        ])->get();
 
         $leadership = \App\Models\Member::where('rank_id', '>', 10)
             ->where('division_id', '!=', 0)
