@@ -22,17 +22,6 @@
 
             <div class="col-md-9">
 
-                <div class="panel panel-c-accent panel-filled">
-                    <div class="panel-heading">
-                        <span class="text-muted">Filter View</span>
-                    </div>
-                    <div class="panel-body">
-                        <input id="showSsgts" name="showSsgts" type="checkbox">
-                        <label for="showSsgts">Show Staff Sergeants</label>
-                    </div>
-                </div>
-
-
                 <h4 id="leadership"><img src="{{ asset('images/aod-logo.png') }}" class="division-icon-medium"/> Clan
                     Leadership </h4>
                 <div class="panel">
@@ -97,30 +86,10 @@
                                     <td class="hidden-xs hidden-sm">{{ $member->co_at ? $member->co_at->format('Y-m-d') : '--' }}</td>
                                 </tr>
                             @endforeach
-
-                            @foreach($division->staffSergeants as $member)
-
-                                <tr data-ssgt="1">
-                                    <td>
-                                        <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover"
-                                        >
-                                            {!! $member->present()->rankName !!}
-                                        </a>
-                                    </td>
-                                    <td class="slight text-uppercase" style="color: cyan;">
-                                        Assigned Staff Sergeant
-                                    </td>
-                                    <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
-                                    <td class="hidden-xs hidden-sm">{{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}</td>
-                                    <td class="hidden-xs hidden-sm">{{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }}</td>
-                                    <td class="hidden-xs hidden-sm">{{ $member->co_at ? $member->co_at->format('Y-m-d') : '--' }}</td>
-                                </tr>
-                            @endforeach
                             </tbody>
                         </table>
                         <div class="panel-footer text-right">
-                            <small class="slight text-muted">*Count, ratio consists of SGT and SSGT only. Assigned SSGT
-                                not included</small>
+                            <small class="slight text-muted">*Count, ratio consists of SGT and SSGT only.</small>
                         </div>
                     </div>
                 @endforeach
