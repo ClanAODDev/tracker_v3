@@ -30,7 +30,7 @@
                 <h4>10 June 2021 - 3.4</h4>
                 <hr/>
                 <ul>
-                    <li>Dropping support for staf sergeant assignments within divisions</li>
+                    <li>Dropping support for staff sergeant assignments within divisions</li>
                 </ul>
             </div>
         </div>
