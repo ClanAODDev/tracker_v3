@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
-use App\Notifications\AdminTicketUpdated;
+use App\Notifications\NotifyCallerTicketUpdated;
 use App\Notifications\NotifyAdminTicketCreated;
 use App\Notifications\NotifyNewTicketOwner;
 use App\Notifications\NotifyUserTicketCreated;
@@ -140,7 +140,7 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new AdminTicketUpdated(':white_check_mark: ' . $message));
+        $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -155,7 +155,7 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new AdminTicketUpdated($message));
+        $ticket->notify(new NotifyCallerTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -170,7 +170,7 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new AdminTicketUpdated($message));
+        $ticket->notify(new NotifyCallerTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -189,7 +189,7 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new AdminTicketUpdated($message));
+        $ticket->notify(new NotifyCallerTicketUpdated($message));
         $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
 
         return redirect(route('help.tickets.show', $ticket));
@@ -205,7 +205,7 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new AdminTicketUpdated($message));
+        $ticket->notify(new NotifyCallerTicketUpdated($message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
