@@ -5,12 +5,10 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordDMMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class AdminTicketUpdated extends Notification
+class NotifyCallerTicketUpdated extends Notification
 {
-
     use Queueable;
 
     private string $update;
