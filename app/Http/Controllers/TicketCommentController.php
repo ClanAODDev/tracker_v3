@@ -30,9 +30,10 @@ class TicketCommentController extends Controller
         $ticket->notify(
             ($comment->user_id != $ticket->caller_id)
                 // caller responded
-                ? new NotifyAdminTicketUpdated($message)
+                ? new NotifyCallerTicketUpdated($message)
+
                 // admin responded
-                : new NotifyCallerTicketUpdated($message)
+                : new NotifyAdminTicketUpdated($message)
         );
 
         return redirect(route('help.tickets.show', $ticket));
