@@ -21,6 +21,6 @@ composer.phar
 /config/mail.mailtrap.php
 *.map
 yarn.lock
-.php_cs.cache
+*.cache
 /data
-
+auth.json
