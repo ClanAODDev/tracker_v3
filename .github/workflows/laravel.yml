@@ -17,13 +17,13 @@ jobs:
       - name: Copy .env
         run: php7.4 -r "file_exists('.env') || copy('.env.example', '.env');"
 
+      - name: Setup CI Authentication
+        run: |
+          php7.4 /usr/bin/composer config http-basic.nova.laravel.com ${{ secrets.NOVA_API_USER }} ${{ secrets.NOVA_API_KEY }}
+
       - name: Install dependencies
         run: |
-          php7.4 /usr/bin/composer config http-basic.nova.laravel.com ${NOVA_API_USER} ${NOVA_API_KEY}
-          php7.4 /usr/bin/composer install --ignore-platform-reqs --no-scripts --no-progress --prefer-dist --no-interaction
-        env:
-          NOVA_API_USER: ${{ secrets.NOVA_API_USER }}
-          NOVA_API_KEY: ${{ secrets.NOVA_API_KEY }}
+          php7.4 /usr/bin/composer install --ignore-platform-reqs --no-scripts --no-progress --prefer-dist --no-cache
 
       - name: Generate key
         run: php7.4 artisan key:generate
