@@ -23,4 +23,4 @@ composer.phar
 yarn.lock
 .php_cs.cache
 /data
-
+auth.json
