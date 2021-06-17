@@ -19,7 +19,7 @@ jobs:
 
       - name: Setup CI Authentication
         run: |
-          composer config http-basic.nova.laravel.com ${{ secrets.NOVA_API_USER }} ${{ secrets.NOVA_API_KEY }}
+          php7.4 /usr/bin/composer config http-basic.nova.laravel.com ${{ secrets.NOVA_API_USER }} ${{ secrets.NOVA_API_KEY }}
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v1"
