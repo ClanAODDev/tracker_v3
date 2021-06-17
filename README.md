@@ -1,3 +1,5 @@
+[![Tracker v3 CI](https://github.com/ClanAODDev/tracker_v3/actions/workflows/laravel.yml/badge.svg?branch=main)](https://github.com/ClanAODDev/tracker_v3/actions/workflows/laravel.yml)
+
 # ![logo](https://clanaod.net/tracker/images/logo_v2.png) AOD Tracker v3
 
 The AOD Tracker is a member and organizational unit management system. It is specifically built to support AOD processes, and as such makes some assumptions about the characteristics of an organization:
