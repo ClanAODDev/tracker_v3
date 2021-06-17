@@ -19,8 +19,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          php7.4 composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_API_USER }}" "${{ secrets.NOVA_API_KEY }}"
-          php7.4 composer install -n --prefer-dist
+          php7.4 /usr/local/bin/composer config "http-basic.nova.laravel.com" "${{ secrets.NOVA_API_USER }}" "${{ secrets.NOVA_API_KEY }}"
+          php7.4 /usr/local/bin/composer install -n --prefer-dist
 
       - name: Generate key
         run: php7.4 artisan key:generate
