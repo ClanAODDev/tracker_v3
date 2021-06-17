@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          php7.4 /usr/bin/composer install --ignore-platform-reqs --no-scripts --no-progress --prefer-dist --no-cache
+          php7.4 /usr/bin/composer install --ignore-platform-reqs --no-scripts --no-progress --prefer-dist
 
       - name: Generate key
         run: php7.4 artisan key:generate
