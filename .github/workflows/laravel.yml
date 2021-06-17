@@ -1,13 +1,10 @@
-name: Tracker test suite
+name: Tracker v3 CI
 
 on:
   push:
     branches: [ main, test ]
   pull_request:
     branches: [ main, test ]
-
-
-
 
 jobs:
   laravel-tests:
