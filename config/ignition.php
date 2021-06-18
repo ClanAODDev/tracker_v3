@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'theme' => env('IGNITION_THEME', 'light'),
+    'theme' => env('IGNITION_THEME', 'dark'),
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +109,7 @@ return [
     |
     */
 
-    'remote_sites_path' => env('IGNITION_REMOTE_SITES_PATH', ''),
+    'remote_sites_path' => env('IGNITION_REMOTE_SITES_PATH', base_path()),
     'local_sites_path' => env('IGNITION_LOCAL_SITES_PATH', ''),
 
     /*
