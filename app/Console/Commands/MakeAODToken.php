@@ -18,7 +18,7 @@ class MakeAODToken extends Command
      *
      * @var string
      */
-    protected $description = 'Generates a token for interfacing with AOD API. Valid for one minute.';
+    protected $description = 'Create a new token for interfacing with AOD API. Valid for one minute.';
 
     /**
      * Create a new command instance.
