@@ -10,14 +10,13 @@ RUN apk --update --no-cache add ca-certificates \
     supervisor
 
 # trust this project public key to trust the packages.
-ADD https://dl.bintray.com/php-alpine/key/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
+ADD https://packages.whatwedo.ch/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 
 # CONFIGURE ALPINE REPOSITORIES AND PHP BUILD DIR.
 ARG PHP_VERSION=7.4
 ARG ALPINE_VERSION=3.11
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories && \
-    echo "https://dl.bintray.com/php-alpine/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
+
+RUN echo "https://packages.whatwedo.ch/php-alpine/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
 
 # INSTALL PHP AND SOME EXTENSIONS. SEE: https://github.com/codecasts/php-alpine
 RUN apk add --no-cache --update php-fpm \
@@ -54,7 +53,7 @@ RUN curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ng
 && rm ngrok.zip
 
 # INSTALL COMPOSER.
-COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # ADD START SCRIPT, NGINX CONFIG AND RUN SCRIPTS.
 ADD start.sh /start.sh
