@@ -34,12 +34,9 @@ return [
         'discord_webhook' => env('DISCORD_WEBHOOK'),
         'token' => env('AOD_TOKEN'),
         'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
-        'ingame-reports' => [
-            'destiny-2-clans' => env('DESTINY_CLANS')
-        ],
-        'api-keys' => [
-            'bungie' => env('BUNGIE_API_KEY')
-        ],
+        'ingame-reports' => [],
+        'api-keys' => [],
+        
         // in hours
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
@@ -47,6 +44,8 @@ return [
     ],
 
     'ticketing_enabled' => env('TICKETING', false),
+
+    'dev_default_user' => env('DEV_DEFAULT_USER', 1),
 
     /*
     |--------------------------------------------------------------------------
