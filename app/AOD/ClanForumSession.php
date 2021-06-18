@@ -20,8 +20,12 @@ class ClanForumSession
 
     public function exists()
     {
+        if (!\App\Models\User::exists()) {
+            throw new \Exception("No users exist. Have you run seeders?");
+        }
+
         if (app()->environment() === 'local') {
-            Auth::login(User::whereMemberId(273)->first());
+            Auth::login(User::whereMemberId(config('dev_default_user'))->first());
             return true;
         }
 
