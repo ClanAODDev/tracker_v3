@@ -20,12 +20,18 @@ class ClanForumSession
 
     public function exists()
     {
-        if (!\App\Models\User::exists()) {
-            throw new \Exception("No users exist. Have you run seeders?");
+        if (!User::exists()) {
+            throw new \Exception("No users exist. Have you created an account?");
         }
 
         if (app()->environment() === 'local') {
-            Auth::login(User::whereMemberId(config('dev_default_user'))->first());
+            $user_id = config('dev_default_user') ?? 1;
+            Auth::login(
+                config('dev_default_user')
+                ? User::find($user_id)
+                : User::first()
+            );
+
             return true;
         }
 
@@ -55,7 +61,7 @@ class ClanForumSession
             );
 
             Auth::login($user);
-            
+
             (new ClanForumPermissions())->handleAccountRoles($member->clan_id, array_merge(
                 array_map('intval', explode(',', $sessionData->membergroupids)),
                 [$sessionData->usergroupid]
@@ -82,8 +88,6 @@ class ClanForumSession
             return false;
         }
     }
-
-
 
     /**
      * @param $username
