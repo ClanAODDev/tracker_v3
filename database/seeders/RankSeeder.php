@@ -13,7 +13,7 @@ class RankSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('ranks')->insert(
+        \DB::table('ranks')->insert(
             [
                 ['name' => 'Recruit', 'abbreviation' => 'Rct'],
                 ['name' => 'Cadet', 'abbreviation' => 'Cdt'],

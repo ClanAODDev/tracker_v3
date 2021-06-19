@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
 
         $date = \Carbon\Carbon::now()->toDateTimeString();
 
-        DB::table('roles')->insert(
+        \DB::table('roles')->insert(
             [
                 [
                     'name' => 'member',
