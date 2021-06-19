@@ -52,6 +52,10 @@ RUN curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ng
 # INSTALL COMPOSER.
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+# BRING A COPY OF MYSQL-CLIENT (WE HAVE A CONTAINER, BUT WE NEED THE CLIENT FOR TESTING)
+RUN apk update && \
+    apk add mysql-client
+
 # ADD START SCRIPT, NGINX CONFIG AND RUN SCRIPTS.
 ADD start.sh /start.sh
 ADD config/supervisor/supervisord.conf /etc/supervisord.conf
