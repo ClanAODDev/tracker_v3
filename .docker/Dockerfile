@@ -1,9 +1,6 @@
 # NGINX x ALPINE.
 FROM nginx:1.17.5-alpine
 
-# MAINTAINER OF THE PACKAGE.
-LABEL maintainer="Neo Ighodaro <neo@creativitykills.co>"
-
 # INSTALL SOME SYSTEM PACKAGES.
 RUN apk --update --no-cache add ca-certificates \
     bash \
