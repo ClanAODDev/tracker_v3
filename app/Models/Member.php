@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Activities\RecordsActivity;
+use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Member
@@ -17,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Member extends \Illuminate\Database\Eloquent\Model
 {
-    use \App\Models\Member\HasCustomAttributes, \App\Activities\RecordsActivity, \Illuminate\Database\Eloquent\SoftDeletes;
+    use HasCustomAttributes, RecordsActivity, SoftDeletes, HasFactory;
 
     public const UNVERIFIED_EMAIL_GROUP_ID = 3;
     /**

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Notifications\ResetPasswordNotification;
 use App\Settings\UserSettings;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,10 +17,10 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, HasFactory;
 
     public array $defaultSettings = [
-        'snow' => true,
+        'snow' => false,
         'ticket_notifications' => true,
     ];
 

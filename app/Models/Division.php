@@ -7,6 +7,7 @@ use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Carbon\Carbon;
 use Illuminate\Config\Repository;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -22,16 +23,17 @@ use Illuminate\Support\Facades\Log;
  */
 class Division extends Model
 {
-    use RecordsActivity, Notifiable, SoftDeletes;
+    use RecordsActivity, Notifiable, SoftDeletes, HasFactory;
 
     /**
      * @var array
      */
-    protected static $recordEvents = ['created', 'deleted'];
+    protected static array $recordEvents = ['created', 'deleted'];
+
     /**
      * @var array
      */
-    public $defaultSettings = [
+    public array $defaultSettings = [
         'slack_alert_created_member' => false, 'slack_alert_removed_member' => false,
         'slack_alert_updated_member' => false, 'slack_alert_created_request' => false,
         'slack_alert_division_edited' => false, 'slack_alert_member_denied' => false,

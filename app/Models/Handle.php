@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Handle\HasCustomAttributes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Handle extends Model
 {
-    use HasCustomAttributes;
+    use HasCustomAttributes, HasFactory;
 
     protected $casts = [
         'visible' => 'boolean',
