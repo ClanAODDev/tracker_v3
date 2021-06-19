@@ -27,7 +27,7 @@ class DivisionFactory extends Factory
         return [
             'name' => $name,
             'handle_id' => Handle::factory(),
-            'abbreviation' => substr($name, 0, 4),
+            'abbreviation' => strtolower(substr($name, 0, 4)),
             'description' => $this->faker->sentence,
             'active' => true,
             'settings' => '[]',
