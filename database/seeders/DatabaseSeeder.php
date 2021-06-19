@@ -16,10 +16,13 @@ class DatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call('DivisionSeeder');
-        $this->call('PositionSeeder');
-        $this->call('RankSeeder');
-        $this->call('RoleSeeder');
+        $this->call([
+            PositionSeeder::class,
+            RankSeeder::class,
+            RoleSeeder::class,
+            TicketTypeSeeder::class,
+        ]);
+
         $this->command->info('Tables seeded!');
     }
 }

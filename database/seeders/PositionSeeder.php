@@ -13,7 +13,7 @@ class PositionSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('positions')->insert(
+        \DB::table('positions')->insert(
             [
                 ['name' => 'Member', 'icon' => '', 'class' => 'text-default', 'order' => 0],
                 ['name' => 'Squad Leader', 'icon' => 'fas fa-shield-alt', 'class' => 'text-info', 'order' => 0],
