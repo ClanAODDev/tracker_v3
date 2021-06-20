@@ -22,7 +22,7 @@ class MemberFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array:
     {
         return [
             'name' => $this->faker->userName,
@@ -30,6 +30,8 @@ class MemberFactory extends Factory
             'rank_id' => Rank::find(rand(1, 10)),
             'position_id' => Position::find(rand(1, 7)),
             'division_id' => Division::factory(),
+            'last_activity' => now(),
+            'last_promoted_at' => now()->subYear(),
         ];
     }
 }
