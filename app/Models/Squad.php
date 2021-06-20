@@ -4,12 +4,13 @@ namespace App\Models;
 
 use App\Activities\RecordsActivity;
 use App\Presenters\SquadPresenter;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Squad extends Model
 {
-    use RecordsActivity;
+    use RecordsActivity, HasFactory;
 
     protected static $recordEvents = [
         'created',
