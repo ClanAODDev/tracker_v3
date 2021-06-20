@@ -22,7 +22,7 @@ class DivisionFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->company;
+        $name = $this->faker->game;
 
         return [
             'name' => $name,
