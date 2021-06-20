@@ -22,12 +22,12 @@ class DivisionFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->game;
+        $game = $this->faker->game;
 
         return [
-            'name' => $name,
+            'name' => $game['name'],
             'handle_id' => Handle::factory(),
-            'abbreviation' => strtolower(substr($name, 0, 4)),
+            'abbreviation' => strtolower($game['abbreviation']),
             'description' => $this->faker->sentence,
             'active' => true,
             'settings' => '[]',

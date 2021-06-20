@@ -61,23 +61,12 @@ First we will need to run our migrations, of which many have accumulated over th
 # drop all existing tables, run migrations
 php artisan migrate:fresh
 
-# run our seeders (app-specific data - roles, ranks, positions, etc)
-php artisan db:seed
-```
+# run our database seeder as well as clan seeder (generates 3 random divisions)
+php artisan migrate:fresh \
+  && php artisan db:seed \
+  && php artisan db:seed --class=ClanSeeder
 
-Next, we need to create a user to login to the application. You can access the database and create an entry manually, but it is recommended that you use the factory, as it generates the additional related models needed.
-
-```bash
-# while on the web container
-# run the artisan tinker CLI
-php artisan tinker
-```
-
-```php
-# in tinker
-# run the user factory to generate a dummy user
-\App\Models\User::factory()->create();
-
+# this will also create a default user picking a generated member at random
 ```
 
 The tracker automatically authenticates to the first user when using the `local` app environment, regardless of the password provided. Alternatively, you may provide a specific user id in your `.env` using the `dev_default_user` setting. Review `\App\AOD\ClanForumSession` for more details.
