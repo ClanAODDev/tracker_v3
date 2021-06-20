@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Position;
 use App\Models\Rank;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -28,10 +27,62 @@ class MemberFactory extends Factory
             'name' => $this->faker->userName,
             'clan_id' => $this->faker->numberBetween(10000, 99999),
             'rank_id' => Rank::find(rand(1, 10)),
-            'position_id' => Position::find(rand(1, 7)),
+            'position_id' => 1,
             'division_id' => Division::factory(),
-            'last_activity' => now(),
-            'last_promoted_at' => now()->subYear(),
+            'join_date' => $this->faker->dateTimeThisDecade,
+            'last_activity' => $this->faker->dateTimeThisMonth,
+            'last_ts_activity' => $this->faker->dateTimeThisMonth,
+            'last_promoted_at' => $this->faker->dateTimeThisYear,
         ];
+    }
+
+    public function member(): MemberFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'position_id' => 1,
+                'rank_id' => rand(1, 5)
+            ];
+        });
+    }
+
+    public function squadLeader(): MemberFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'position_id' => 2,
+                'rank_id' => rand(6, 8)
+            ];
+        });
+    }
+
+    public function platoonLeader(): MemberFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'position_id' => 3,
+                'rank_id' => rand(7, 9)
+            ];
+        });
+    }
+
+    public function commander(): MemberFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'position_id' => 6,
+                'rank_id' => 9
+            ];
+        });
+    }
+
+    public function executiveOfficer(): MemberFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'position_id' => 5,
+                'rank_id' => 9
+            ];
+        });
     }
 }

@@ -30,9 +30,9 @@ class UserFactory extends Factory
             'email' => $this->faker->email,
             // role seeder must be run first
             'role_id' => Role::find(rand(1, 5)),
-            'member_id' => Member::factory()->create([
-                'name' => $name
-            ]),
+//            'member_id' => Member::factory()->create([
+//                'name' => $name
+//            ]),
         ];
     }
 
