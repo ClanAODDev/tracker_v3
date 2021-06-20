@@ -22,7 +22,5 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             TicketTypeSeeder::class,
         ]);
-
-        $this->command->info('Tables seeded!');
     }
 }
