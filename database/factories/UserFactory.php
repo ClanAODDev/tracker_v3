@@ -23,12 +23,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->userName;
+
         return [
-            'name' => $this->faker->name,
+            'name' => $name,
             'email' => $this->faker->email,
             // role seeder must be run first
             'role_id' => Role::find(rand(1, 5)),
-            'member_id' => Member::factory(),
+            'member_id' => Member::factory()->create([
+                'name' => $name
+            ]),
         ];
     }
 
