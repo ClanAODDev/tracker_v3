@@ -19,7 +19,7 @@ class TicketFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         $states = ['new', 'assigned', 'resolved'];
         $randomState = array_rand($states);
