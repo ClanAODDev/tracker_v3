@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Census\HasCustomAttributes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Census extends Model
 {
-    use HasCustomAttributes;
+    use HasCustomAttributes, HasFactory;
 
     public function division()
     {
