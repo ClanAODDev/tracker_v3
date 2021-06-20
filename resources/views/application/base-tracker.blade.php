@@ -6,7 +6,7 @@
     @include('application.header')
 </head>
 
-@if (Auth::check() && Auth::user()->member->division)
+@if (Auth::check() && Auth::user()->member && Auth::user()->member->division)
     <body class="{{ session('primary_nav_collapsed') === true ? 'nav-toggle' : null }}">
     {!! Toastr::message() !!}
 
