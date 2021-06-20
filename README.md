@@ -71,11 +71,21 @@ Next, we need to create a user to login to the application. You can access the d
 # while on the web container
 # run the artisan tinker CLI
 php artisan tinker
+```
 
+```php
 # in tinker
 # run the user factory to generate a dummy user
->>> \App\Models\User::factory()->create()
+\App\Models\User::factory()->create();
 
 ```
 
-The tracker automatically authenticates to the first user when using the `local` app environment, regardless of the password provided. Alternatively, you may provide a specific user id in your `.env` using the `dev_default_user` setting. Review `\App\AOD\ClanForumSession` for more details. 
+The tracker automatically authenticates to the first user when using the `local` app environment, regardless of the password provided. Alternatively, you may provide a specific user id in your `.env` using the `dev_default_user` setting. Review `\App\AOD\ClanForumSession` for more details.
+
+You will want to enable the `developer` boolean flag on your account in order to supersede access controls.
+```php
+// assuming your user id is 1
+\App\Models\User::find(1)->update([
+    'developer' => true
+]);
+```
