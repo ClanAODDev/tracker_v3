@@ -36,7 +36,7 @@ return [
         'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
         'ingame-reports' => [],
         'api-keys' => [],
-        
+
         // in hours
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
