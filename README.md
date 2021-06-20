@@ -33,40 +33,33 @@ There is a docker configuration provided to create a basic ngnix, mysql stack. Y
 ~ $ php artisan key:generate
 
 # the example should contain enough to do local development
-~ $ cp .env.example .env
+cp .env.example .env
 ```
 
 #### Building the docker images
 
-```shell script
-~ $ cd .docker
-~ $ docker-compose up -d
+```bash
+cd .docker && docker-compose up -d
 ```
-
 
 #### Configuring application for local dev
 Interacting with the application depends on Docker and the `web` and `db_mysql_tracker` containers running. Your environment configuration should reference the container names (ex. db_host should be `db_mysql_tracker`).
 
 ```bash
 # see what containers are running
-~ $ docker container ls
+docker container ls
 
 # exec into the web container
-~ $ docker exec -it web bash
+docker exec -it web bash
 ```
-
-First we will need to run our migrations, of which many have accumulated over the years. Fortunately, Laravel allows us to condense these down into a schema file, so we are left only with recent migrations.
-
 ```bash
-# drop all existing tables, run migrations
-php artisan migrate:fresh
-
 # run our database seeder as well as clan seeder (generates 3 random divisions)
+# this will also create a default user picking a generated member at random
+
 php artisan migrate:fresh \
   && php artisan db:seed \
   && php artisan db:seed --class=ClanSeeder
 
-# this will also create a default user picking a generated member at random
 ```
 
 The tracker automatically authenticates to the first user when using the `local` app environment, regardless of the password provided. Alternatively, you may provide a specific user id in your `.env` using the `dev_default_user` setting. Review `\App\AOD\ClanForumSession` for more details.
