@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
@@ -20,7 +21,7 @@ class Platoon extends Model
         'leader'
     ];
 
-    use RecordsActivity;
+    use RecordsActivity, HasFactory;
 
     /**
      * relationship - platoon belongs to a division
