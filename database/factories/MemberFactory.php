@@ -22,7 +22,7 @@ class MemberFactory extends Factory
      *
      * @return array
      */
-    public function definition(): array:
+    public function definition(): array
     {
         return [
             'name' => $this->faker->userName,
