@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\FactoryMissingException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
@@ -19,6 +20,10 @@ class ReportsController extends \App\Http\Controllers\Controller
     public function clanCensusReport()
     {
         $memberCount = $this->clan->totalActiveMembers();
+
+        if (!$this->clan->censusCounts()->count()) {
+            throw new FactoryMissingException("You might need to run the `census` factory");
+        }
 
         // get our census information, and organize it
         $censusCounts = $this->clan->censusCounts();
