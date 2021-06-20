@@ -3,15 +3,17 @@
 
 <div class="row">
 
-    @component('application.components.data-block')
-        @slot('data') {{ $member->last_activity->diffInDays() }} days @endslot
-        @slot('title')since last <span class="c-white">forum activity </span>@endslot
-        @slot('color')
-            @if($division)
-                {{ $member->last_activity->diffInDays() > $division->settings()->inactivity_days ? "panel-c-danger" : null }}
-            @endif
-        @endslot
-    @endcomponent
+    @if ($member->last_activity)
+        @component('application.components.data-block')
+            @slot('data') {{ $member->last_activity->diffInDays() . ' days' }} @endslot
+            @slot('title')since last <span class="c-white">forum activity </span>@endslot
+            @slot('color')
+                @if($division)
+                    {{ $member->last_activity->diffInDays() > $division->settings()->inactivity_days ? "panel-c-danger" : null }}
+                @endif
+            @endslot
+        @endcomponent
+    @endif
 
     @component('application.components.data-block')
         @slot('data')
@@ -86,14 +88,14 @@
 
         @if($member->xo_at)
             @component('application.components.data-block')
-                @slot('data') {{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }} @endslot
+                @slot('data') {{ $member->xo_at->format('Y-m-d') }} @endslot
                 @slot('title') <span class="c-white">XO Since</span> @endslot
             @endcomponent
         @endif
 
         @if ($member->co_at)
             @component('application.components.data-block')
-                @slot('data') {{ $member->co_at ? $member->co_at->format('Y-m-d') : '--' }} @endslot
+                @slot('data') {{ $member->co_at->format('Y-m-d') }} @endslot
                 @slot('title') <span class="c-white">CO Since</span> @endslot
             @endcomponent
         @endif
