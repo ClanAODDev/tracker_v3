@@ -70,17 +70,17 @@ class ClanSeeder extends Seeder
 
     private function generateDivisionMembers($division)
     {
-        $platoons = Platoon::factory()->count(4)->create([
+        $platoons = Platoon::factory()->count(rand(2, 5))->create([
             'division_id' => $division,
         ]);
 
         foreach ($platoons as $platoon) {
-            $squads = Squad::factory()->count(3)->create([
+            $squads = Squad::factory()->count(rand(1, 3))->create([
                 'platoon_id' => $platoon,
             ]);
 
             foreach ($squads as $squad) {
-                Member::factory()->member()->count(rand(10, 30))->create([
+                Member::factory()->member()->count(rand(5, 20))->create([
                     'division_id' => $division,
                     'platoon_id' => $platoon,
                     'squad_id' => $squad,
