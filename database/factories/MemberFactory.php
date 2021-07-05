@@ -36,7 +36,7 @@ class MemberFactory extends Factory
         ];
     }
 
-    public function member(): MemberFactory
+    public function ofTypeMember(): MemberFactory
     {
         return $this->state(function (array $attributes) {
             return [
@@ -66,7 +66,7 @@ class MemberFactory extends Factory
         });
     }
 
-    public function commander(): MemberFactory
+    public function ofTypeCommander(): MemberFactory
     {
         return $this->state(function (array $attributes) {
             return [
@@ -76,7 +76,7 @@ class MemberFactory extends Factory
         });
     }
 
-    public function executiveOfficer(): MemberFactory
+    public function ofTypeExecutiveOfficer(): MemberFactory
     {
         return $this->state(function (array $attributes) {
             return [
