@@ -31,7 +31,7 @@ RUN apk add --no-cache --update php-fpm \
     php-zlib \
     php-json \
     php-xml \
-    php-curl  && \
+    php-curl && \
     ln -s /usr/bin/php7 /usr/bin/php
 
 # CONFIGURE WEB SERVER.
