@@ -39,7 +39,6 @@ if (config('app.ticketing_enabled')) {
     });
 }
 
-
 Route::group(['prefix' => 'help'], function () {
     Route::get('/', 'HelpController@index')->name('help');
     Route::get('/division-structures', 'HelpController@divisionStructures')->name('divisionStructures');
@@ -48,6 +47,8 @@ Route::group(['prefix' => 'help'], function () {
 Route::get('changelog', 'AppController@changelog')->name('changelog');
 Route::get('developers', 'DeveloperController@index')->name('developer');
 
+Route::post('developers/tokens', 'DeveloperController@generateToken')->name('developer.token.store');
+Route::delete('developers/tokens', 'DeveloperController@destroyToken')->name('developer.token.delete');
 
 /**
  * Application UI
