@@ -12,7 +12,6 @@ Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTa
 Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
 Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
 Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
-Route::post('update-role', 'UserController@updateRole');
 Route::post('update-position', 'MemberController@updatePosition')->name('member.position.update');
 Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
 Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
