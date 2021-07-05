@@ -22,7 +22,6 @@ jobs:
           MYSQL_ROOT_PASSWORD: test
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
-
     strategy:
       matrix:
         php:
