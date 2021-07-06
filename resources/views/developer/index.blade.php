@@ -18,7 +18,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12 ">
+            <div class="col-md-12">
 
                 <p>AOD provides several consumable APIs which are intended solely for internal community use. AOD data,
                     tokens, and other resources including source code are not to be shared outside the AOD community,
@@ -41,10 +41,10 @@
 
                     <ul class="list-group">
                         @foreach ($tokens as $token)
-                            <li class="list-group-item row">
+                            <li class="list-group-item clearfix">
                                 <form action="{{ route('developer.token.delete') }}" method="POST">
                                     <div class="col-md-6">
-                                        <p><strong>{{ $token->name }}</strong></p>
+                                        <h5><strong>{{ $token->name }}</strong></h5>
                                         <p class="text-muted">Last
                                             used: {{ $token->last_used_at ? $token->last_used_at->diffForHumans() : 'Never' }}</p>
                                     </div>
