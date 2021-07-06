@@ -3,10 +3,10 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Jeffbeltran\SanctumTokens\SanctumTokens;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 
@@ -67,12 +67,14 @@ class User extends Resource
 
             BelongsTo::make('Role'),
 
+            BelongsTo::make('Member', 'member'),
+
             DateTime::make('Last Logged In', 'last_login_at')
                 ->hideWhenUpdating()
                 ->hideFromIndex()
                 ->sortable(),
 
-            HasOne::make('Member'),
+            SanctumTokens::make(),
         ];
     }
 
