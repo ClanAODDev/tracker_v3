@@ -70,7 +70,7 @@ class Division extends Model
     /**
      * @var array
      */
-    protected $fillable = ['settings', 'name', 'handle_id', 'description', 'active', 'abbreviation', 'shutdown_at'];
+    protected $fillable = ['settings', 'name', 'handle_id', 'forum_app_id', 'description', 'active', 'abbreviation', 'shutdown_at'];
 
     public static function boot()
     {
