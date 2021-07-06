@@ -38,7 +38,7 @@ class Division extends Resource
     ];
 
     public static $with = [
-        'handle'
+        'handle',
     ];
 
     /**
@@ -64,13 +64,16 @@ class Division extends Resource
             BelongsTo::make('Handle')
                 ->help("If a handle doesn't exist, create it first"),
 
+            Number::make('forum_app_id')
+                ->help('Numerical id of division application form id'),
+
             Date::make('Created At')->sortable(),
 
             Date::make('Updated At')->sortable(),
 
             Date::make('Shutdown At'),
 
-            new Panel('Extra stuff', fn () => [
+            new Panel('Extra stuff', fn() => [
                 Text::make('description')->rules(['required'])->hideFromIndex(),
                 Boolean::make('active')->sortable()->rules(
                     'required',
