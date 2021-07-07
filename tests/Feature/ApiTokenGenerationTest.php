@@ -82,20 +82,17 @@ class ApiTokenGenerationTest extends TestCase
     public function an_officer_can_revoke_their_own_token()
     {
         $this->markTestSkipped();
-        
+
         $user = User::factory()->officer()->create();
 
         $this->signIn($user);
 
         $token = $user->createToken('test');
 
-        $this->withoutExceptionHandling()->delete(
-            route(
+        $this->delete(route(
             'developer.token.delete',
             ['token_id' => $token->accessToken->id]
-        )
-        );
-
+        ));
 
         $this->assertCount(0, $user->refresh()->tokens);
     }
