@@ -34,4 +34,13 @@ class DivisionFactory extends Factory
             'settings' => '[]',
         ];
     }
+
+    public function inactive(): DivisionFactory
+    {
+        return $this->state(function () {
+            return [
+                'active' => false,
+            ];
+        });
+    }
 }
