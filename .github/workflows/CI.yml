@@ -43,7 +43,7 @@ jobs:
           php-version: "${{ matrix.php }}"
 
       - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+        run: php -r "file_exists('.env') || copy('.env.github', '.env');"
 
       - name: Setup CI Authentication
         run: |
@@ -65,6 +65,8 @@ jobs:
         uses: mheap/phpunit-matcher-action@v1
 
       - name: Run Tests
+        env:
+          DB_PORT: ${{ job.services.mariadb.ports['3306'] }}
         run: ./vendor/bin/phpunit --colors=always
 
       - uses: sarisia/actions-status-discord@v1
