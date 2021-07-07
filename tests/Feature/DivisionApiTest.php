@@ -29,12 +29,12 @@ class DivisionApiTest extends TestCase
     /** @test */
     public function an_inactive_division_should_return_404_not_found()
     {
-        $activeDivision = Division::factory()->create();
+        $activeDivision = Division::factory(['abbreviation' => 'unique'])->create();
 
         $this->json('get', route('v1.divisions.show', $activeDivision))
             ->assertOk();
 
-        $inactiveDivision = Division::factory()->inactive()->create();
+        $inactiveDivision = Division::factory(['abbreviation' => 'alsounique'])->inactive()->create();
 
         $this->json('get', route('v1.divisions.show', $inactiveDivision))
             ->assertNotFound();
