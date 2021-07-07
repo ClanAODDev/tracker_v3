@@ -40,7 +40,8 @@
     "ext-curl": "*",
     "optimistdigital/nova-multiselect-field": "^1.11",
     "ext-json": "*",
-    "laravel/sanctum": "^2.11"
+    "laravel/sanctum": "^2.11",
+    "jeffbeltran/sanctum-tokens": "^1.5"
   },
   "require-dev": {
     "fzaninotto/faker": "^1.4",
