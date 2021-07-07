@@ -3,52 +3,63 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Models\Division;
-use App\Transformers\DivisionTransformer;
+use App\Transformers\DivisionBasicTransformer;
+use App\Transformers\MemberBasicTransformer;
 use Illuminate\Http\JsonResponse;
 
 class DivisionController extends ApiController
 {
-    /**
-     * @var DivisionTransformer
-     */
-    protected $divisionTransformer;
+    private $divisionTransformer;
+    private $memberTransformer;
 
-    /**
-     * DivisionController constructor.
-     *
-     * @param DivisionTransformer $divisionTransformer
-     */
-    public function __construct(DivisionTransformer $divisionTransformer)
-    {
+    public function __construct(
+        DivisionBasicTransformer $divisionTransformer,
+        MemberBasicTransformer $memberTransformer
+    ) {
         $this->divisionTransformer = $divisionTransformer;
-
-        $this->middleware('auth');
+        $this->memberTransformer = $memberTransformer;
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function index()
+
+    public function index(): JsonResponse
     {
-        $divisions = Division::active()
-            ->shuttingDown(false)
-            ->with('members')->get();
+        if ($this->tokenCan('basic:read')) {
+            $divisions = Division::get();
 
-        return $this->respond([
-            'data' => $this->divisionTransformer->transformCollection($divisions->all())
-        ]);
+            return $this->respond([
+                'data' => $this->divisionTransformer->transformCollection($divisions->all()),
+            ]);
+        }
+
+        return $this->setStatusCode(403)
+            ->respondWithError("Not authorized to access this endpoint");
     }
 
-    public function show($abbreviation)
+    public function show($abbreviation): JsonResponse
     {
         $division = Division::whereAbbreviation($abbreviation)->first();
 
         if (!$division) {
-            return $this->respondNotFound('Division could not be found');
+            return $this->respondNotFound();
         }
 
-        return $this->respond([
-            'data' => $this->divisionTransformer->transform($division)
-        ]);
+        if ($division != auth()->user()->member->division && !$this->tokenCan('clan:read')) {
+            return $this->setStatusCode(403)
+                ->respondWithError("Not authorized to access this endpoint");
+        }
+
+        $members = $division->members()->paginate(25);
+
+        return $this->respond(array_merge(
+            $this->paginatorDetails($members),
+            [
+                'data' => [
+                    'division' => $this->divisionTransformer->transform($division),
+                    'members' => $this->memberTransformer->transformCollection(
+                        $members->all()
+                    ),
+                ],
+            ]
+        ));
     }
 }
