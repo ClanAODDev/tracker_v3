@@ -24,7 +24,7 @@ class DivisionController extends ApiController
     public function index(): JsonResponse
     {
         if ($this->tokenCan('basic:read')) {
-            $divisions = Division::get();
+            $divisions = Division::active()->get();
 
             return $this->respond([
                 'data' => $this->divisionTransformer->transformCollection($divisions->all()),
@@ -37,7 +37,8 @@ class DivisionController extends ApiController
 
     public function show($abbreviation): JsonResponse
     {
-        $division = Division::whereAbbreviation($abbreviation)->first();
+        $division = Division::whereAbbreviation($abbreviation)
+            ->active()->first();
 
         if (!$division) {
             return $this->respondNotFound();
