@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\MemberHandle;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Models\User;
@@ -20,7 +21,7 @@ class ClanSeeder extends Seeder
     public function run()
     {
         // generate divisions
-        Division::factory()->count(3)->create();
+        Division::factory()->count(2)->create();
 
         foreach (Division::all() as $division) {
             $this->command->info("Adding and populating a division - {$division->name}");
@@ -58,12 +59,12 @@ class ClanSeeder extends Seeder
     protected function generateDivisionLeadership($division): void
     {
         // a commander
-        Member::factory()->commander()->create([
+        Member::factory()->ofTypeCommander()->create([
             'division_id' => $division,
         ]);
 
         // some XOs
-        Member::factory()->count(2)->executiveOfficer()->create([
+        Member::factory()->count(2)->ofTypeExecutiveOfficer()->create([
             'division_id' => $division,
         ]);
     }
@@ -80,12 +81,18 @@ class ClanSeeder extends Seeder
             ]);
 
             foreach ($squads as $squad) {
-                Member::factory()->member()->count(rand(5, 20))->create([
+                Member::factory()->ofTypeMember()->count(rand(5, 20))->create([
                     'division_id' => $division,
                     'platoon_id' => $platoon,
                     'squad_id' => $squad,
                 ]);
             }
+        }
+
+        foreach (Member::all() as $member) {
+            MemberHandle::factory()->count(1)->create([
+                'member_id' => $member
+            ]);
         }
     }
 }

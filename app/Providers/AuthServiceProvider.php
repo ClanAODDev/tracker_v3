@@ -7,21 +7,20 @@ use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Note;
 use App\Models\Platoon;
+use App\Models\Squad;
 use App\Models\Ticket;
-use App\Models\TicketComment;
+use App\Models\User;
+use App\Policies\ApiTokenPolicy;
 use App\Policies\DivisionPolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MemberRequestPolicy;
 use App\Policies\NotePolicy;
 use App\Policies\PlatoonPolicy;
 use App\Policies\SquadPolicy;
-use App\Policies\TicketCommentPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\UserPolicy;
-use App\Models\Squad;
-use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Laravel\Passport\Passport;
+use Laravel\Sanctum\NewAccessToken;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -39,6 +38,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         MemberRequest::class => MemberRequestPolicy::class,
         Ticket::class => TicketPolicy::class,
+        NewAccessToken::class => ApiTokenPolicy::class,
     ];
 
     /**
@@ -49,13 +49,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        Passport::routes();
-
-        Passport::tokensCan([
-            'query-division-info-basic' => 'Query basic information about divisions',
-            'query-division-info-full' => 'Query full information about divisions',
-            'query-member-data' => 'Query member data',
-        ]);
     }
 }

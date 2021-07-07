@@ -12,13 +12,14 @@ use Illuminate\Http\JsonResponse;
  */
 class ApiController extends Controller
 {
+
     /**
      * @var int
      */
     protected $statusCode = 200;
 
     /**
-     * @param string $message
+     * @param  string  $message
      * @return JsonResponse
      */
     public function respondNotFound($message = 'Not found.')
@@ -35,14 +36,14 @@ class ApiController extends Controller
         return $this->respond([
             'error' => [
                 'message' => $message,
-                'status_code' => $this->getStatusCode()
-            ]
+                'status_code' => $this->getStatusCode(),
+            ],
         ]);
     }
 
     /**
      * @param $data
-     * @param array $headers
+     * @param  array  $headers
      * @return JsonResponse
      */
     public function respond($data, $headers = [])
@@ -70,11 +71,30 @@ class ApiController extends Controller
     }
 
     /**
-     * @param string $message
+     * @param  string  $message
      * @return JsonResponse
      */
     public function respondInternalError($message = 'Internal Error')
     {
         return $this->setStatusCode(500)->respondWithError($message);
+    }
+
+    /**
+     * @param $ability
+     * @return mixed
+     */
+    protected function tokenCan($ability)
+    {
+        return auth()->user()->tokenCan($ability);
+    }
+
+    protected function paginatorDetails($paginator)
+    {
+        return [
+            'total' => $paginator->total(),
+            'per_page' => $paginator->perPage(),
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+        ];
     }
 }

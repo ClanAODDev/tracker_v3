@@ -2,10 +2,10 @@
 
 function create($class, $attributes = [])
 {
-    return factory($class)->create($attributes);
+    return $class::factory()->create($attributes);
 }
 
 function make($class, $attributes = [])
 {
-    return factory($class)->make($attributes);
+    return $class::factory()->make($attributes);
 }

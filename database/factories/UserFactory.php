@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Member;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -28,26 +27,44 @@ class UserFactory extends Factory
         return [
             'name' => $name,
             'email' => $this->faker->email,
-            // role seeder must be run first
-            'role_id' => Role::find(rand(1, 5)),
-//            'member_id' => Member::factory()->create([
-//                'name' => $name
-//            ]),
+            'role_id' => 1,
+            'member_id' => Member::factory([
+                'name' => $name
+            ])
         ];
     }
 
     /**
      * Indicate that the user is an admin.
      *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     * @return Factory
      */
-    public function admin()
+    public function admin(): Factory
     {
         return $this->state(function (array $attributes) {
             return [
                 'role_id' => 5,
                 'developer' => true,
-                'member_id' => Member::factory(),
+                'member_id' => Member::factory([
+                    'rank_id' => 11
+                ]),
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the user is an officer.
+     *
+     * @return Factory
+     */
+    public function officer(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role_id' => 2,
+                'member_id' => Member::factory([
+                    'rank_id' => 7
+                ]),
             ];
         });
     }
