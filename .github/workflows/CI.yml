@@ -16,7 +16,6 @@ jobs:
         ports:
           - 3306
         env:
-          MYSQL_HOST: 127.0.0.1
           MYSQL_USER: sail
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: tracker
@@ -66,6 +65,8 @@ jobs:
         uses: mheap/phpunit-matcher-action@v1
 
       - name: Run Tests
+        env:
+          DB_PORT: ${{ job.services.mariadb.ports['3306'] }}
         run: ./vendor/bin/phpunit --colors=always
 
       - uses: sarisia/actions-status-discord@v1
