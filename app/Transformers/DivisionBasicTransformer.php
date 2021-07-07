@@ -4,7 +4,7 @@ namespace App\Transformers;
 
 class DivisionBasicTransformer extends Transformer
 {
-    public function transform($item, $withMemberData = false): array
+    public function transform($item): array
     {
         return [
             'name' => $item->name,

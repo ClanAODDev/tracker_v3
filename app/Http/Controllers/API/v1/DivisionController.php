@@ -4,20 +4,20 @@ namespace App\Http\Controllers\API\v1;
 
 use App\Models\Division;
 use App\Transformers\DivisionBasicTransformer;
-use App\Transformers\DivisionFullTransformer;
+use App\Transformers\MemberBasicTransformer;
 use Illuminate\Http\JsonResponse;
 
 class DivisionController extends ApiController
 {
-    protected $basicTransformer;
-    protected $fullTransformer;
+    private $divisionTransformer;
+    private $memberTransformer;
 
     public function __construct(
-        DivisionBasicTransformer $basicTransformer,
-        DivisionFullTransformer $fullTransformer
+        DivisionBasicTransformer $divisionTransformer,
+        MemberBasicTransformer $memberTransformer
     ) {
-        $this->basicTransformer = $basicTransformer;
-        $this->fullTransformer = $fullTransformer;
+        $this->divisionTransformer = $divisionTransformer;
+        $this->memberTransformer = $memberTransformer;
     }
 
 
@@ -27,7 +27,7 @@ class DivisionController extends ApiController
             $divisions = Division::get();
 
             return $this->respond([
-                'data' => $this->basicTransformer->transformCollection($divisions->all()),
+                'data' => $this->divisionTransformer->transformCollection($divisions->all()),
             ]);
         }
 
@@ -48,8 +48,18 @@ class DivisionController extends ApiController
                 ->respondWithError("Not authorized to access this endpoint");
         }
 
-        return $this->respond([
-            'data' => $this->fullTransformer->transform($division, true),
-        ]);
+        $members = $division->members()->paginate(25);
+
+        return $this->respond(array_merge(
+            $this->paginatorDetails($members),
+            [
+                'data' => [
+                    'division' => $this->divisionTransformer->transform($division),
+                    'members' => $this->memberTransformer->transformCollection(
+                        $members->all()
+                    ),
+                ],
+            ]
+        ));
     }
 }
