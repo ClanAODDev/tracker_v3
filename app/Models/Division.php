@@ -205,7 +205,10 @@ class Division extends Model
      */
     public function scopeActive($query)
     {
-        return $query->whereActive(true)->orderBy('name', 'ASC');
+        return $query->whereActive(true)
+            // never return floater
+            ->whereNotIn('name', ['Floater'])
+            ->orderBy('name', 'ASC');
     }
 
     /**
