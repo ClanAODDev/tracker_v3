@@ -66,11 +66,6 @@ jobs:
         uses: mheap/phpunit-matcher-action@v1
 
       - name: Run Tests
-        env:
-          MYSQL_DATABASE: tracker
-          DB_USERNAME: sail
-          DB_PASSWORD: password
-          DB_PORT: ${{ job.services.mariadb.ports[3306] }}
         run: ./vendor/bin/phpunit --colors=always
 
       - uses: sarisia/actions-status-discord@v1
