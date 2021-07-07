@@ -13,11 +13,6 @@ Route::prefix('v1')->group(
         )->name('v1.divisions.show');
 
         Route::get(
-            'divisions/{abbreviation}/members',
-            'API\v1\DivisionMembersController@show'
-        )->name('v1.divisionMembers.show');
-
-        Route::get(
             'ts-count',
             'API\v1\ClanController@teamspeakPopulationCount'
         )->name('v1.ts_population');
