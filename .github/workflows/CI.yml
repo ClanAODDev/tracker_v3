@@ -2,7 +2,7 @@ name: Tracker v3 CI
 
 on:
   push:
-    branches: [ main, test ]
+    branches: [ main ]
   pull_request:
     branches: [ test ]
 
