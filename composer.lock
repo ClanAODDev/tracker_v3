@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d1fa238612202191568273ac20a3802",
+    "content-hash": "47db05ad4f959423c3791b8b9a6b60f7",
     "packages": [
         {
             "name": "appstract/laravel-blade-directives",
@@ -2321,6 +2321,51 @@
                 "source": "https://github.com/Jean85/pretty-package-versions/tree/1.6.0"
             },
             "time": "2021-02-04T16:20:16+00:00"
+        },
+        {
+            "name": "jeffbeltran/sanctum-tokens",
+            "version": "v1.5.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JeffBeltran/sanctum-tokens.git",
+                "reference": "8ef921dbc09d9ab12303dc889502796bccf66256"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JeffBeltran/sanctum-tokens/zipball/8ef921dbc09d9ab12303dc889502796bccf66256",
+                "reference": "8ef921dbc09d9ab12303dc889502796bccf66256",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jeffbeltran\\SanctumTokens\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jeffbeltran\\SanctumTokens\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova resource tool for sanctum tokens.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/JeffBeltran/sanctum-tokens/issues",
+                "source": "https://github.com/JeffBeltran/sanctum-tokens/tree/v1.5.4"
+            },
+            "time": "2021-05-11T17:07:48+00:00"
         },
         {
             "name": "laracasts/flash",
