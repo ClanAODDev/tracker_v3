@@ -16,6 +16,7 @@ jobs:
         ports:
           - 3306
         env:
+          MYSQL_HOST: 127.0.0.1
           MYSQL_USER: sail
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: tracker
