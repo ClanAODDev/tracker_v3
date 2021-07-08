@@ -15,7 +15,8 @@ class DivisionController extends ApiController
     public function __construct(
         DivisionBasicTransformer $divisionTransformer,
         MemberBasicTransformer $memberTransformer
-    ) {
+    )
+    {
         $this->divisionTransformer = $divisionTransformer;
         $this->memberTransformer = $memberTransformer;
     }
@@ -35,10 +36,9 @@ class DivisionController extends ApiController
             ->respondWithError("Not authorized to access this endpoint");
     }
 
-    public function show($abbreviation): JsonResponse
+    public function show($slug): JsonResponse
     {
-        $division = Division::whereAbbreviation($abbreviation)
-            ->active()->first();
+        $division = Division::whereSlug($slug)->active()->first();
 
         if (!$division) {
             return $this->respondNotFound();
