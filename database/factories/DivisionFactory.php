@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Division;
 use App\Models\Handle;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class DivisionFactory extends Factory
 {
@@ -26,6 +27,7 @@ class DivisionFactory extends Factory
 
         return [
             'name' => $game['name'],
+            'slug' => Str::slug($game['name']),
             'handle_id' => Handle::factory(),
             'abbreviation' => strtolower($game['abbreviation']),
             'description' => $this->faker->sentence,
