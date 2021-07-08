@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Class Division
@@ -80,6 +81,10 @@ class Division extends Model
          */
         static::creating(function (Division $division) {
             $division->settings = $division->defaultSettings;
+        });
+
+        static::creating(function (Division $division) {
+            $division->slug = Str::slug($division->name);
         });
     }
 
