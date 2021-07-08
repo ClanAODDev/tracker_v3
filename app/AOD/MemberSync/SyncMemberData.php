@@ -27,7 +27,7 @@ class SyncMemberData
     {
         $divisionInfo = new GetDivisionInfo();
 
-        $syncData = collect($divisionInfo->data)->groupBy(fn($item, $key) => strtolower($item['aoddivision']));
+        $syncData = collect($divisionInfo->data)->groupBy(fn ($item, $key) => strtolower($item['aoddivision']));
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
 
@@ -108,6 +108,7 @@ class SyncMemberData
         $member->posts = $record['postcount'];
         $member->ts_unique_id = $record['tsid'];
         $member->discord = $record['discordtag'];
+        $member->privacy_flag = $record['allow_export'] === "yes" ? 1 : 0;
 
         // persist
         $member->save();
