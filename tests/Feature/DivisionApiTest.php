@@ -31,12 +31,12 @@ class DivisionApiTest extends TestCase
     {
         $activeDivision = Division::factory(['abbreviation' => 'unique'])->create();
 
-        $this->json('get', route('v1.divisions.show', $activeDivision))
+        $this->json('get', route('v1.divisions.show', $activeDivision->slug))
             ->assertOk();
 
         $inactiveDivision = Division::factory(['abbreviation' => 'alsounique'])->inactive()->create();
 
-        $this->json('get', route('v1.divisions.show', $inactiveDivision))
+        $this->json('get', route('v1.divisions.show', $inactiveDivision->slug))
             ->assertNotFound();
     }
 }
