@@ -61,3 +61,11 @@ Route::group(['prefix' => 'primary-nav'], function () {
         session(['primary_nav_collapsed' => false]);
     });
 });
+
+/**
+ * Slack handler
+ */
+Route::post('slack', [
+    'as' => 'slack.commands',
+    'uses' => 'Slack\SlackCommandController@index',
+])->middleware('slack');
