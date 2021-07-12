@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class DiscordCommandTest extends TestCase
@@ -20,7 +19,11 @@ class DiscordCommandTest extends TestCase
             'text' => 'help'
         ]);
 
-        $response->assertSeeText('The following commands are currently available.');
+        $response->assertJson(
+            fn(AssertableJson $json) => $json->where(
+                'embed.title', 'The following commands are currently available.'
+            )->etc()
+        );
     }
 
     /** @test */
@@ -34,8 +37,12 @@ class DiscordCommandTest extends TestCase
             'token' => $token,
             'text' => 'foo'
         ]);
-        
-        $response->assertSeeText('Unrecognized command');
+
+        $response->assertJson(
+            fn(AssertableJson $json) => $json->where(
+                'text', 'Unrecognized command. Sorry!'
+            )
+        );
     }
 
     /** @test */
