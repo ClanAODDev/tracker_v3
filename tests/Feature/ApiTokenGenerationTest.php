@@ -39,7 +39,7 @@ class ApiTokenGenerationTest extends TestCase
     /** @test */
     public function an_officer_can_create_api_tokens()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Temporary ACL change');
 
         $user = User::factory()->officer()->create();
 
@@ -57,18 +57,21 @@ class ApiTokenGenerationTest extends TestCase
     /** @test */
     public function a_non_officer_cannot_create_api_tokens()
     {
+        $this->markTestSkipped('Temporary ACL change');
+
         $user = User::factory()->create();
 
         $this->signIn($user);
 
-        $this->get(route('developer'))
+        $this->withoutExceptionHandling()
+            ->get(route('developer'))
             ->assertForbidden();
     }
 
     /** @test */
     public function a_token_name_is_required_when_generating_an_api_token()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Temporary ACL change');
 
         $user = User::factory()->officer()->create();
 
@@ -81,7 +84,7 @@ class ApiTokenGenerationTest extends TestCase
     /** @test */
     public function an_officer_can_revoke_their_own_token()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Temporary ACL change');
 
         $user = User::factory()->officer()->create();
 
