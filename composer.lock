@@ -1825,16 +1825,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.202.0",
+            "version": "v0.203.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "c72cb04fde47a2cc3336c1f513f9ff5db27ccc35"
+                "reference": "e397f35251a49e0f4284d5f7d934164ca1274066"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/c72cb04fde47a2cc3336c1f513f9ff5db27ccc35",
-                "reference": "c72cb04fde47a2cc3336c1f513f9ff5db27ccc35",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/e397f35251a49e0f4284d5f7d934164ca1274066",
+                "reference": "e397f35251a49e0f4284d5f7d934164ca1274066",
                 "shasum": ""
             },
             "require": {
@@ -1863,9 +1863,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.202.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.203.0"
             },
-            "time": "2021-07-03T11:20:23+00:00"
+            "time": "2021-07-10T11:20:23+00:00"
         },
         {
             "name": "google/auth",
@@ -2437,16 +2437,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v8.49.1",
+            "version": "v8.49.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "62aee1bfeefd82f160c7aa3b4c63cb2f053215c0"
+                "reference": "d9b43ee080b4d51344b2e578aa667f85040471a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/62aee1bfeefd82f160c7aa3b4c63cb2f053215c0",
-                "reference": "62aee1bfeefd82f160c7aa3b4c63cb2f053215c0",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/d9b43ee080b4d51344b2e578aa667f85040471a2",
+                "reference": "d9b43ee080b4d51344b2e578aa667f85040471a2",
                 "shasum": ""
             },
             "require": {
@@ -2601,7 +2601,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2021-07-02T16:50:12+00:00"
+            "time": "2021-07-06T14:06:38+00:00"
         },
         {
             "name": "laravel/nova",
@@ -5761,16 +5761,16 @@
         },
         {
             "name": "spatie/laravel-html",
-            "version": "2.29.0",
+            "version": "2.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "0c278efcb1a95b6476f9894e76cbb7f7a83709da"
+                "reference": "e7a9caa9b7d9f8a0bdf514a424034f74101de926"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/0c278efcb1a95b6476f9894e76cbb7f7a83709da",
-                "reference": "0c278efcb1a95b6476f9894e76cbb7f7a83709da",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/e7a9caa9b7d9f8a0bdf514a424034f74101de926",
+                "reference": "e7a9caa9b7d9f8a0bdf514a424034f74101de926",
                 "shasum": ""
             },
             "require": {
@@ -5828,7 +5828,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-html/issues",
-                "source": "https://github.com/spatie/laravel-html/tree/2.29.0"
+                "source": "https://github.com/spatie/laravel-html/tree/2.30.0"
             },
             "funding": [
                 {
@@ -5836,7 +5836,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-02-09T08:46:34+00:00"
+            "time": "2021-07-09T07:26:20+00:00"
         },
         {
             "name": "spatie/laravel-query-builder",
@@ -9992,16 +9992,16 @@
         },
         {
             "name": "laravel/sail",
-            "version": "v1.8.3",
+            "version": "v1.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sail.git",
-                "reference": "dc7a9ca301fc89e9eaa164d58eac39a39c2e93b0"
+                "reference": "164ab771c8ccef341a07a21fae2ee3b770ec2e9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sail/zipball/dc7a9ca301fc89e9eaa164d58eac39a39c2e93b0",
-                "reference": "dc7a9ca301fc89e9eaa164d58eac39a39c2e93b0",
+                "url": "https://api.github.com/repos/laravel/sail/zipball/164ab771c8ccef341a07a21fae2ee3b770ec2e9a",
+                "reference": "164ab771c8ccef341a07a21fae2ee3b770ec2e9a",
                 "shasum": ""
             },
             "require": {
@@ -10048,7 +10048,7 @@
                 "issues": "https://github.com/laravel/sail/issues",
                 "source": "https://github.com/laravel/sail"
             },
-            "time": "2021-06-29T21:27:36+00:00"
+            "time": "2021-07-06T16:57:00+00:00"
         },
         {
             "name": "migrify/migrify-kernel",
@@ -11079,16 +11079,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.91",
+            "version": "0.12.92",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "8226701cd228a0d63c2df995de7ab6070c69ac6a"
+                "reference": "64d4c5dc8ea96972bc18432d137a330239a5d2b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8226701cd228a0d63c2df995de7ab6070c69ac6a",
-                "reference": "8226701cd228a0d63c2df995de7ab6070c69ac6a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/64d4c5dc8ea96972bc18432d137a330239a5d2b2",
+                "reference": "64d4c5dc8ea96972bc18432d137a330239a5d2b2",
                 "shasum": ""
             },
             "require": {
@@ -11119,7 +11119,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.91"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.92"
             },
             "funding": [
                 {
@@ -11139,7 +11139,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-04T15:31:48+00:00"
+            "time": "2021-07-10T13:53:49+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -14173,5 +14173,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
