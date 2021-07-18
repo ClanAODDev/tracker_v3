@@ -49,7 +49,8 @@ function registerDivisionSubPages()
         'ingame-report',
         'promotions',
         'members',
-        'member-requests'
+        'member-requests',
+        'send-private-message',
     ];
 
     foreach ($divisionStaticSubPages as $page) {

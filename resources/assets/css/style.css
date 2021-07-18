@@ -667,6 +667,13 @@ fieldset[disabled] .btn-danger.focus {
     text-decoration: none;
 }
 
+.pm-link.visited {
+    text-decoration: line-through;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: .5;
+}
+
 /* PACE handler */
 /*.content > div {*/
 /*opacity: 0;*/
@@ -1290,6 +1297,14 @@ sup {
 .row {
     margin-left: -10px;
     margin-right: -10px;
+}
+
+.row .selected {
+    background-color: rgba(255,255,255,.2);
+}
+
+.row .selected:hover {
+    background-color: rgba(255,255,255,.25);
 }
 
 .col-xs-1,
@@ -2454,7 +2469,11 @@ input::placeholder {
 }
 
 .table-hover > tbody > tr:hover {
-    background-color: #494b54;
+    background-color: rgba(255,255,255,.15);
+}
+
+.table-hover > tbody > tr:active {
+    background-color: rgba(255,255,255,.40);
 }
 
 .table-bordered,

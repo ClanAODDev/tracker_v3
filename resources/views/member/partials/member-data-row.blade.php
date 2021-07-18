@@ -51,4 +51,7 @@
     <td class="col-hidden">
         {{ $member->posts }}
     </td>
+    <td class="col-hidden">
+        {{ $member->clan_id }}
+    </td>
 </tr>

@@ -7,16 +7,18 @@
             <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
         @endslot
         @slot ('heading')
-            <span class="hidden-xs">Division Members</span>
+            <span class="hidden-xs">{{ $division->name }}</span>
         @endslot
         @slot ('subheading')
-            {{ $division->name }}
+            Division Members
         @endslot
     @endcomponent
 
     <div class="container-fluid">
 
         {!! Breadcrumbs::render('members', $division) !!}
+
+        @include('division.partials.select-panel')
 
         <div class="row">
             <div class="col-md-9">

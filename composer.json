@@ -41,7 +41,8 @@
     "ext-json": "*",
     "laravel/sanctum": "^2.11",
     "jeffbeltran/sanctum-tokens": "^1.5",
-    "fakerphp/faker": "^1.15"
+    "fakerphp/faker": "^1.15",
+    "spatie/laravel-validation-rules": "^3.0"
   },
   "require-dev": {
     "mockery/mockery": "^1.0",

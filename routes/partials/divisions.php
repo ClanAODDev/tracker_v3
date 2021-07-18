@@ -113,4 +113,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
             Route::get('{squad}/csv', 'SquadController@exportAsCsv')->name('squad.export-csv');
         });
     });
+
+    Route::post('private-message', 'PmController@create')->name('private-message.create');
 });

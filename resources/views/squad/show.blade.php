@@ -20,8 +20,7 @@
 
         {!! Breadcrumbs::render('squad', $division, $platoon, $squad) !!}
 
-        {{--@include('platoon.partials.alerts')--}}
-
+        @include('division.partials.select-panel')
 
         <div class="row">
             <div class="col-md-9">

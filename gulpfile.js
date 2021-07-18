@@ -43,7 +43,8 @@ elixir(function (mix) {
 
       "libs/dataTables/jquery.dataTables.min.js",
       "libs/dataTables/dataTables.bootstrap.js",
-      "libs/dataTables/dataTables.tableTools.min.js"
+      "libs/dataTables/dataTables.tableTools.min.js",
+      "libs/dataTables/dataTables.select.min.js"
     ],
 
     "public/js/libs.js", "resources/js");

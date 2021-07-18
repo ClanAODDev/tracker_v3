@@ -23,4 +23,6 @@
     <th class="col-hidden">Handle</th>
     {{--10--}}
     <th class="col-hidden">Posts</th>
+    {{--11--}}
+    <th class="col-hidden">Member Id</th>
 </tr>

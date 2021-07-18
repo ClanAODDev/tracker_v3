@@ -21,5 +21,5 @@
                     class="fa fa-asterisk"></i></span> - On Leave
     </small>
     <a href="{{ route('platoon.export-csv', [$platoon->division, $platoon]) }}"
-              class="btn btn-sm btn-accent pull-right">Export to CSV</a>
+       class="btn btn-sm btn-accent pull-right">Export to CSV</a>
 </div>

@@ -4,14 +4,14 @@
 
     @component ('application.components.division-heading', [$division])
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
+            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
         @endslot
         @slot ('heading')
-            <span class="hidden-xs">Inactive Members</span>
-            <span class="visible-xs">Inactive</span>
+            {{ $division->name }}
         @endslot
         @slot ('subheading')
-            {{ $division->name }}
+            <span class="hidden-xs">Inactive Members</span>
+            <span class="visible-xs">Inactive</span>
         @endslot
     @endcomponent
 
@@ -19,7 +19,9 @@
 
         {!! Breadcrumbs::render('inactive-members', $division) !!}
 
-        <p>Members listed here have activity that has reached or exceeded the number of days defined by the division leadership. Use this page to attempt to communicate with inactive members, and also to process their removal from the clan. Members who have an active leave of absence are omitted.</p>
+        <p>Members listed here have activity that has reached or exceeded the number of days defined by the division
+            leadership. Use this page to attempt to communicate with inactive members, and also to process their removal
+            from the clan. Members who have an active leave of absence are omitted.</p>
 
         <p class="text-info">Members should be PMed before they are flagged for removal</p>
 
@@ -27,7 +29,7 @@
             <code>{{ $division->settings()->inactivity_days }} days</code>
         </p>
 
-        <hr />
+        <hr/>
 
         <div class="tabs-container">
             <ul class="nav nav-tabs">
@@ -72,7 +74,9 @@
                 <div class="panel-heading">Share Flagged Members ({{ count($flaggedMembers) }})</div>
                 <div class="panel-body">
                     <pre name="bb-code-flagged" id="bb-code-flagged"
-                         style="max-height: 100px; overflow-y: scroll">[list]@foreach ($flaggedMembers as $member)[*][profile={{ $member->clan_id }}]{{ $member->present()->rankName }}[/profile] - Seen {{ $member->last_activity->diffInDays() }} days ago @endforeach[/list]</pre>
+                         style="max-height: 100px; overflow-y: scroll">[list]@foreach ($flaggedMembers as $member)
+                            [*][profile={{ $member->clan_id }}]{{ $member->present()->rankName }}[/profile] -
+                            Seen {{ $member->last_activity->diffInDays() }} days ago @endforeach[/list]</pre>
                     <button data-clipboard-target="#bb-code-flagged" class="copy-to-clipboard btn-success btn"><i
                                 class="fa fa-clone"></i> Copy BB-Code
                     </button>
@@ -88,7 +92,8 @@
             Mass Forum PM ({{ count($inactiveMembers) }})
         @endslot
         @slot('body')
-            <p>The Clan AOD forums has a maximum number of 20 recipients per PM. To assist with this limitation, members have been chunked into groups for your convenience.</p>
+            <p>The Clan AOD forums has a maximum number of 20 recipients per PM. To assist with this limitation, members
+                have been chunked into groups for your convenience.</p>
             <p class="m-t-md">
                 @foreach ($inactiveMembers->chunk(20) as $chunk)
                     <a href="{{ doForumFunction($chunk->pluck('clan_id')->toArray(), 'pm') }}"
