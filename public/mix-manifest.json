@@ -1,0 +1,14 @@
+{
+    "/js/main.js": "/js/main.js",
+    "/js/platoon.js": "/js/platoon.js",
+    "/js/members.js": "/js/members.js",
+    "/js/division.js": "/js/division.js",
+    "/js/census-graph.js": "/js/census-graph.js",
+    "/js/recruiting.js": "/js/recruiting.js",
+    "/js/training.js": "/js/training.js",
+    "/js/admin.js": "/js/admin.js",
+    "/js/manage-member.js": "/js/manage-member.js",
+    "/js/libs.js": "/js/libs.js",
+    "/css/style.css": "/css/style.css",
+    "/css/site.css": "/css/site.css"
+}
