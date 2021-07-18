@@ -25,7 +25,7 @@
 <link rel="stylesheet" href="{{ asset('css/pe-icons/helper.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/stroke-icons/style.css') }}"/>
 <link rel="stylesheet" href="{{ asset('vendor/datatables/datatables.min.css') }}"/>
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style.css') }}?v3.5">
 
 <script src="{{ asset('js/libs.js?v=2.0') }}"></script>
 

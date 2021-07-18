@@ -27,6 +27,21 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>18 July 2021 - 3.5</h4>
+                <hr/>
+                <ul>
+                    <li>Mass PM functionality for division members, platoon, and squad views is now replaced with a more
+                        functional PM process allowing explicit rows to be selected. To use it: <ul>
+                            <li>Select a row and hold either <code>CTRL</code> or <code>SHIFT</code></li>
+                            <li>Select additional rows depending on the desired range</li>
+                            <li>Note: at least 2 members must be selected before sending a PM</li>
+                        </ul></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>10 June 2021 - 3.4</h4>
                 <hr/>
                 <ul>
