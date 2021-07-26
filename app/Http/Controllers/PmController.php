@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SendBulkPm;
-use Spatie\ValidationRules\Rules\Delimited;
-
-use Illuminate\Http\Request;
 
 class PmController extends Controller
 {

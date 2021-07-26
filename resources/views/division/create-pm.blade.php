@@ -18,12 +18,14 @@
 
         {!! Breadcrumbs::render('send-private-message', $division) !!}
 
-        <p>The AOD Forums has a maximum number of <code>20 recipients</code> per PM. To assist with this limitation,
+        <p>The AOD Forums has a maximum number of <code>20</code> recipients per PM. To assist with this limitation,
             members
             have been chunked into groups for your convenience.</p>
 
         <p>Some members may opt out of receiving private messages. This will generate a warning when sending a
             private message. You will need to manually omit them from your mass PM.</p>
+
+        <p>You are sending to <code>{{ $members->count() }}</code> recipients.</p>
 
         <div class="panel panel-c-accent panel-filled m-t-md">
             <div class="panel-heading">
