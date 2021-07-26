@@ -96,6 +96,11 @@ class Division extends Model
         return 'abbreviation';
     }
 
+    public function setAbbreviationAttribute($value)
+    {
+        return $this->attributes['abbreviation'] = strtolower($value);
+    }
+
     public function mismatchedTSMembers()
     {
         return $this->members()->where('join_date', '<', Carbon::today()->subDays(5))->where(function ($query) {
