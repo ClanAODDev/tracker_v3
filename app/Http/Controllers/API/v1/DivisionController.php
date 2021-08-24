@@ -25,7 +25,9 @@ class DivisionController extends ApiController
     public function index(): JsonResponse
     {
         if ($this->tokenCan('basic:read')) {
-            $divisions = Division::active()->get();
+            $divisions = Division::active()
+                ->shuttingDown(false)
+                ->get();
 
             return $this->respond([
                 'data' => $this->divisionTransformer->transformCollection($divisions->all()),

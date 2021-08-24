@@ -202,7 +202,6 @@ class Division extends Model
         return $query->whereActive(true)
             // never return floater
             ->whereNotIn('name', ['Floater'])
-            ->whereNull('shutdown_at')
             ->orderBy('name', 'ASC');
     }
 
