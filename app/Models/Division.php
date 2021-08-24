@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use phpDocumentor\Reflection\Types\Collection;
 
 /**
  * Class Division
@@ -88,20 +89,17 @@ class Division extends Model
         });
     }
 
-    /**
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'abbreviation';
     }
 
-    public function setAbbreviationAttribute($value)
+    public function setAbbreviationAttribute($value): string
     {
         return $this->attributes['abbreviation'] = strtolower($value);
     }
 
-    public function mismatchedTSMembers()
+    public function mismatchedTSMembers(): HasMany
     {
         return $this->members()->where('join_date', '<', Carbon::today()->subDays(5))->where(function ($query) {
             $query->where('last_ts_activity', null)->orWhere('last_ts_activity', '0000-00-00 00:00:00');
@@ -111,7 +109,7 @@ class Division extends Model
     /**
      * relationship - division has many members
      */
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(Member::class);
     }
@@ -119,7 +117,7 @@ class Division extends Model
     /**
      * @return HasMany
      */
-    public function newMembersLast30()
+    public function newMembersLast30(): HasMany
     {
         return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(30));
     }
@@ -127,7 +125,7 @@ class Division extends Model
     /**
      * @return HasMany
      */
-    public function newMembersLast60()
+    public function newMembersLast60(): HasMany
     {
         return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(60));
     }
@@ -135,45 +133,31 @@ class Division extends Model
     /**
      * @return HasMany
      */
-    public function newMembersLast90()
+    public function newMembersLast90(): HasMany
     {
         return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(90));
     }
 
-    public function notes()
+    public function notes(): HasManyThrough
     {
         return $this->hasManyThrough(Note::class, Member::class)->with('member', 'author');
     }
 
-    /**
-     * @return DivisionPresenter
-     */
-    public function present()
+    public function present(): DivisionPresenter
     {
         return new DivisionPresenter($this);
     }
 
-    /**
-     * @return HasMany
-     */
-    public function census()
+    public function census(): HasMany
     {
         return $this->hasMany(Census::class);
     }
 
-    /**
-     * Get division's squads
-     *
-     * @return HasManyThrough
-     */
-    public function squads()
+    public function squads(): HasManyThrough
     {
         return $this->hasManyThrough(Squad::class, Platoon::class);
     }
 
-    /**
-     * @return mixed
-     */
     public function routeNotificationForSlack()
     {
         return config('app.aod.slack_webhook');
@@ -218,6 +202,7 @@ class Division extends Model
         return $query->whereActive(true)
             // never return floater
             ->whereNotIn('name', ['Floater'])
+            ->whereNull('shutdown_at')
             ->orderBy('name', 'ASC');
     }
 
