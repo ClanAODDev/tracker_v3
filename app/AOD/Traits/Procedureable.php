@@ -7,9 +7,8 @@ trait Procedureable
     /**
      * @param $procedure
      * @param $data
-     * @return \Illuminate\Support\Collection
      */
-    private function callProcedure($procedure, $data)
+    private function callProcedure($procedure, $data): \Illuminate\Support\Collection
     {
         try {
             if (is_array($data)) {
@@ -22,7 +21,7 @@ trait Procedureable
             }
 
             if (!isset($results) || !property_exists($results, 'userid')) {
-                return collect([]);
+                return collect();
             }
 
             return $results;
@@ -30,6 +29,8 @@ trait Procedureable
             \Log::error("Could not call procedure: {$procedure}", [
                 'exception' => $exception->getMessage()
             ]);
+
+            return collect();
         }
     }
 }
