@@ -47,9 +47,8 @@ class SyncMemberData
                 // reset array
                 self::$activeDivisionMembers = [];
 
-                self::$currentDivisionMembers = Member::whereDivisionId($division->id)
-                    ->select('id')
-                    ->get()
+                self::$currentDivisionMembers = Member::whereDivisionId($division->id)->select('id')->get()
+                    ->pluck('id')
                     ->toArray();
 
                 foreach ($syncData[strtolower($division->name)] as $member) {
