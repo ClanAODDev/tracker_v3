@@ -40,11 +40,9 @@ class DivisionController extends ApiController
 
     public function show($slug): JsonResponse
     {
-        $division = Division::whereSlug($slug)->active()->first();
-
-        if (!$division) {
-            return $this->respondNotFound();
-        }
+        $division = Division::whereSlug($slug)
+            ->active()
+            ->firstOrFail();
 
         if ($division != auth()->user()->member->division && !$this->tokenCan('clan:read')) {
             return $this->setStatusCode(403)
