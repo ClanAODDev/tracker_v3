@@ -9,7 +9,6 @@ use App\Notifications\MemberTransferred;
 use App\Models\Platoon;
 use App\Models\Squad;
 use Carbon;
-use Illuminate\Support\Facades\Log;
 
 class SyncMemberData
 {
@@ -27,7 +26,7 @@ class SyncMemberData
     {
         $divisionInfo = new GetDivisionInfo();
 
-        $syncData = collect($divisionInfo->data)->groupBy(fn ($item, $key) => strtolower($item['aoddivision']));
+        $syncData = collect($divisionInfo->data)->groupBy(fn($item, $key) => strtolower($item['aoddivision']));
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
 
@@ -48,8 +47,9 @@ class SyncMemberData
                 // reset array
                 self::$activeDivisionMembers = [];
 
-                self::$currentDivisionMembers = Member::whereDivisionId($division->id)->get()
-                    ->pluck('id')
+                self::$currentDivisionMembers = Member::whereDivisionId($division->id)
+                    ->select('id')
+                    ->get()
                     ->toArray();
 
                 foreach ($syncData[strtolower($division->name)] as $member) {
@@ -146,18 +146,10 @@ class SyncMemberData
         foreach ($removed as $index => $id) {
             $member = Member::find($id);
 
-            // did they transfer to another division?
-            /** @var $member \App\Models\Member */
-            if (self::$activeClanMembers->contains($member->clan_id)) {
-//                self::registerTransfer($member);
-
+            if ($member instanceof Member && !$member->memberRequest) {
                 self::hardResetMember($member);
-            } else {
-                if ($member instanceof Member && !$member->memberRequest) {
-                    $member->partTimeDivisions()->sync([]);
-                    self::hardResetMember($member);
-                }
             }
+
         }
     }
 
@@ -192,15 +184,5 @@ class SyncMemberData
             ->get();
 
         $requestsToProcess->each->process();
-    }
-
-    private static function registerTransfer(Member $member)
-    {
-        \Log::info("{$member->name} transferred to {$member->division->name}");
-        $member->recordActivity("transferred");
-
-        if ($member->division->settings()->get('slack_alert_member_transferred')) {
-            $member->division->notify(new MemberTransferred($member));
-        }
     }
 }
