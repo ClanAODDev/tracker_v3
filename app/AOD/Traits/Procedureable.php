@@ -8,7 +8,7 @@ trait Procedureable
      * @param $procedure
      * @param $data
      */
-    private function callProcedure($procedure, $data): \Illuminate\Support\Collection
+    private function callProcedure($procedure, $data)
     {
         try {
             if (is_array($data)) {
