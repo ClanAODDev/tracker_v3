@@ -21,7 +21,7 @@ trait Procedureable
             }
 
             if (!isset($results) || !property_exists($results, 'userid')) {
-                return collect();
+                return collect([]);
             }
 
             return $results;
@@ -30,7 +30,7 @@ trait Procedureable
                 'exception' => $exception->getMessage()
             ]);
 
-            return collect();
+            return collect([]);
         }
     }
 }
