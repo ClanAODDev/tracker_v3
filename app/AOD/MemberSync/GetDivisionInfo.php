@@ -5,11 +5,6 @@ namespace App\AOD\MemberSync;
 use App\Services\AOD;
 use Log;
 
-/**
- * Handles member data sync from AOD forums
- *
- * @package App\AOD
- */
 class GetDivisionInfo
 {
     public $data;
@@ -48,7 +43,7 @@ class GetDivisionInfo
         ]);
 
         if (!is_object($data)) {
-            Log::critical("ERROR: Member sync returning invalid: {$this->jsonUrl()}");
+            Log::critical("ERROR: Member sync returning invalid.");
             exit;
         }
 
