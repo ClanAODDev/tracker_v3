@@ -20,6 +20,7 @@ use Illuminate\View\View;
 class LoginController extends Controller
 {
     use ThrottlesLogins, AuthenticatesWithAOD;
+
     /**
      * Where to redirect users after login / registration.
      *
@@ -35,36 +36,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);
-    }
-
-    /**
-     * @param $username
-     * @return bool
-     */
-    private function registerNewUser($username)
-    {
-        if ($member = $this->isCurrentAODMember($username)) {
-            $user = \App\Models\User::updateOrCreate([
-                'email' => $this->email,
-                'name' => $username,
-                'member_id' => $member->id
-            ]);
-
-            Auth::login($user);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param $name
-     * @return bool
-     */
-    private function isCurrentAODMember($name)
-    {
-        return Member::whereName($name)->first() ?? false;
     }
 
     /**
@@ -100,20 +71,35 @@ class LoginController extends Controller
             $username = str_replace('aod_', '', strtolower($request->username));
 
             if ($user = User::whereName($username)->first()) {
+
+                // login existing account, look for superficial changes
                 $this->checkForUpdates($user);
                 Auth::login($user);
 
-                (new ClanForumPermissions())->handleAccountRoles(
-                    $user->member->clan_id,
-                    $this->roles
-                );
+            } else {
 
-                return true;
+                // ensure this is an active member
+                $member = Member::where('name', $username)->first();
+                if (!$member->exists()) {
+                    return false;
+                }
+
+                $user = User::create([
+                    'email' => $this->email,
+                    'name' => $username,
+                    'member_id' => $member->id
+                ]);
+
+                Auth::login($user);
             }
 
-            if ($this->registerNewUser($username)) {
-                return true;
-            }
+            // sync roles
+            (new ClanForumPermissions())->handleAccountRoles(
+                $user->member->clan_id,
+                $this->roles
+            );
+            
+            return true;
         }
 
         return false;
