@@ -17,6 +17,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * @param $division
      * @return Factory|View
@@ -24,6 +25,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     public function index($division)
     {
         $queryingTsInactives = strpos(request()->path(), 'inactive-members-ts');
+
         $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)->where(function ($query) use ($division, $queryingTsInactives) {
             if ($queryingTsInactives) {
                 $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
@@ -31,13 +33,17 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
                 $query->where('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
             }
         })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy('last_activity')->get();
+
         if (request()->platoon) {
             $inactiveMembers = $inactiveMembers->where('platoon_id', request()->platoon->id);
         }
+
         $flagActivity = \App\Models\Activity::whereDivisionId($division->id)->where(function ($query) {
             $query->where('name', 'flagged_member')->orWhere('name', 'unflagged_member')->orWhere('name', 'removed_member');
         })->orderByDesc('created_at')->with('subject', 'subject.rank')->get();
+
         $flaggedMembers = $division->members()->with('rank')->whereFlaggedForInactivity(true)->get();
+
         /**
          * Using this to determine the active route, whether filtering
          * by teamspeak or forum. Used in platoon filter options, reset
@@ -46,6 +52,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $requestPath = $queryingTsInactives ? 'division.inactive-members-ts' : 'division.inactive-members';
         return view('division.inactive-members', compact('queryingTsInactives', 'division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath'));
     }
+
     /**
      * Flags a member for inactivity
      *
@@ -62,6 +69,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $this->showToast($member->name . " successfully flagged for removal");
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
+
     /**
      * Remove a flag from an inactive member
      *
@@ -78,6 +86,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $this->showToast($member->name . " successfully unflagged");
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
+
     public function removeMember(\App\Models\Member $member, \App\Http\Requests\DeleteMember $form)
     {
         $this->authorize('delete', $member);

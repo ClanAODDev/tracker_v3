@@ -14,7 +14,8 @@
         <canvas class="forum-activity-chart"
                 data-labels="{{ json_encode($forumActivityGraph['labels']) }}"
                 data-values="{{ json_encode($forumActivityGraph['values']) }}"
-                data-colors="{{ json_encode($forumActivityGraph['colors']) }}"></canvas>
+                data-colors="{{ json_encode($forumActivityGraph['colors']) }}"
+        ></canvas>
     </div>
 </div>
 <div class="panel panel-filled hidden-xs hidden-sm">
@@ -24,6 +25,7 @@
     <div class="panel-body">
         <canvas class="ts-activity-chart" data-labels="{{ json_encode($tsActivityGraph['labels']) }}"
                 data-values="{{ json_encode($tsActivityGraph['values']) }}"
-                data-colors="{{ json_encode($tsActivityGraph['colors']) }}"></canvas>
+                data-colors="{{ json_encode($tsActivityGraph['colors']) }}"
+        ></canvas>
     </div>
 </div>
