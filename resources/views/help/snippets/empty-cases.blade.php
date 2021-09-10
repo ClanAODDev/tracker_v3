@@ -9,3 +9,11 @@
 {% else %}
 	[color=red]No part-time members assigned[/color]
 {% endfor %}
+
+{# Check for an empty object (like squad.leader or platoon.leader)
+{% if squad.leader.exists() %}
+	{# present() is a presenter class, not an attribute #}
+	@{{ squad.leader.present().rankName }}
+{% else %}
+	TBA
+{% endif %}
