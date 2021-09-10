@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Models\Platoon;
+use App\Models\Squad;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 
-class PlatoonRepository
+class SquadRepository
 {
     private array $labels = [
         'Current', '14 days', '30-60 days', 'More than 60 days'
@@ -14,6 +17,12 @@ class PlatoonRepository
         '#28b62c', '#ff851b', '#ff4136', '#000'
     ];
 
+    private CarbonImmutable $twoWeeksAgo;
+
+    private CarbonImmutable $oneMonthAgo;
+
+    private CarbonImmutable $twoMonthsAgo;
+
     public function __construct()
     {
         $this->twoWeeksAgo = CarbonImmutable::now()->subDays(14);
@@ -21,30 +30,30 @@ class PlatoonRepository
         $this->twoMonthsAgo = CarbonImmutable::now()->subDays(60);
     }
 
-    public function getPlatoonForumActivity(\App\Models\Platoon $platoon): array
+    public function getSquadForumActivity(Squad $squad): array
     {
-        return $this->getActivityFor('last_activity', $platoon);
+        return $this->getActivityFor('last_activity', $squad);
     }
 
-    public function getPlatoonTSActivity(\App\Models\Platoon $platoon): array
+    public function getSquadTSActivity(Squad $squad): array
     {
-        return $this->getActivityFor('last_ts_activity', $platoon);
+        return $this->getActivityFor('last_ts_activity', $squad);
     }
 
-    private function getActivityFor(string $string, $platoon): array
+    private function getActivityFor(string $string, $squad): array
     {
-        $twoWeeks = $platoon->members()
+        $twoWeeks = $squad->members()
             ->where($string, '>=', $this->twoWeeksAgo)->count();
 
-        $oneMonth = $platoon->members()->where($string, '<=', $this->twoWeeksAgo)
+        $oneMonth = $squad->members()->where($string, '<=', $this->twoWeeksAgo)
             ->where($string, '>=', $this->oneMonthAgo)->count();
 
-        $moreThanOneMonth = $platoon->members()
+        $moreThanOneMonth = $squad->members()
             ->whereBetween($string, [
                 $this->oneMonthAgo->subDays(60), $this->oneMonthAgo
             ])->count();
 
-        $moreThan60Days = $platoon->members()
+        $moreThan60Days = $squad->members()
             ->where($string, '<=', $this->twoMonthsAgo)
             ->count();
 

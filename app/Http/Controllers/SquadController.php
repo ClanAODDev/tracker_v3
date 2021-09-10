@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateSquadForm;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Repositories\SquadRepository;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -19,10 +20,15 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SquadController extends \App\Http\Controllers\Controller
 {
-    public function __construct()
+    private SquadRepository $squadRepository;
+
+    public function __construct(SquadRepository $squad)
     {
+        $this->squadRepository = $squad;
+
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,90 +36,85 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param Platoon $platoon
      * @return Response
      */
-    public function show(\App\Models\Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
+    public function show(Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
     {
         $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'])->get()->sortByDesc('rank_id');
+
         $members = $members->each($this->getMemberHandle());
-        $forumActivityGraph = $this->getSquadForumActivity($squad);
-        $tsActivityGraph = $this->getSquadTSActivity($squad);
+
+        $forumActivityGraph = $this->squadRepository->getSquadForumActivity($squad);
+
+        $tsActivityGraph = $this->squadRepository->getSquadTSActivity($squad);
+
         return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph'));
     }
+
     /**
      * @param $division
      * @return Closure
      */
-    private function filterHandlesToPrimaryHandle($division)
+    private function filterHandlesToPrimaryHandle($division): Closure
     {
         return function ($query) use ($division) {
             $query->where('id', $division->handle_id);
         };
     }
+
     /**
      * @return Closure
      */
-    private function getMemberHandle()
+    private function getMemberHandle(): Closure
     {
         return function ($member) {
             $member->handle = $member->handles->first();
         };
     }
-    public function getSquadForumActivity(\App\Models\Squad $squad)
-    {
-        $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
-        $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
-        $twoWeeks = $squad->members()->where('last_activity', '>=', $twoWeeksAgo)->count();
-        $oneMonth = $squad->members()->where('last_activity', '<=', $twoWeeksAgo)->where('last_activity', '>=', $oneMonthAgo)->count();
-        $moreThanOneMonth = $squad->members()->where('last_activity', '<=', $oneMonthAgo)->count();
-        return ['labels' => ['Current', '14 days', '30 days'], 'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
-    }
-    public function getSquadTSActivity(\App\Models\Squad $squad)
-    {
-        $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
-        $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
-        $twoWeeks = $squad->members()->where('last_ts_activity', '>=', $twoWeeksAgo)->count();
-        $oneMonth = $squad->members()->where('last_ts_activity', '<=', $twoWeeksAgo)->where('last_ts_activity', '>=', $oneMonthAgo)->count();
-        $moreThanOneMonth = $squad->members()->where('last_ts_activity', '<=', $oneMonthAgo)->count();
-        return ['labels' => ['Current', '14 days', '30 days'], 'values' => [$twoWeeks, $oneMonth, $moreThanOneMonth], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
-    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return Response
      */
-    public function create(\App\Models\Division $division, \App\Models\Platoon $platoon)
+    public function create(Division $division, \App\Models\Platoon $platoon)
     {
         $this->authorize('create', [\App\Models\Squad::class, $division]);
+
         return view('squad.create', compact('division', 'platoon'));
     }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param CreateSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return RedirectResponse
      */
-    public function store(\App\Http\Requests\CreateSquadForm $form, \App\Models\Division $division, \App\Models\Platoon $platoon)
+    public function store(\App\Http\Requests\CreateSquadForm $form, Division $division, \App\Models\Platoon $platoon)
     {
         if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
         }
+
         $form->persist();
+
         $this->showToast(ucwords($division->locality('squad')) . " has been created!");
+
         return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
+
     /**
      * @param $request
      * @param Division $division
      * @return bool
      */
-    public function isMemberOfDivision(\App\Models\Division $division, $request)
+    public function isMemberOfDivision(Division $division, $request): bool
     {
         $member = \App\Models\Member::whereClanId($request->leader_id)->first();
-        return $member->division instanceof \App\Models\Division && $member->division->id === $division->id;
+
+        return $member->division instanceof Division && $member->division->id === $division->id;
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -122,11 +123,13 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param Squad $squad
      * @return Response
      */
-    public function edit(\App\Models\Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
+    public function edit(Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
     {
         $this->authorize('update', $squad);
+
         return view('squad.edit', compact('squad', 'platoon', 'division'));
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -134,38 +137,43 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param Division $division
      * @param Platoon $platoon
      * @param Squad $squad
-     * @return RedirectResponse
      */
-    public function update(\App\Http\Requests\UpdateSquadForm $form, \App\Models\Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
+    public function update(UpdateSquadForm $form, Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
     {
         if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
         }
+
         $form->persist();
+
         $this->showToast('Squad has been updated');
+
         return redirect()->route('squad.show', [$division->abbreviation, $platoon, $squad]);
     }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param DeleteSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return Response
      */
-    public function destroy(\App\Http\Requests\DeleteSquadForm $form, \App\Models\Division $division, \App\Models\Platoon $platoon)
+    public function destroy(DeleteSquadForm $form, Division $division, \App\Models\Platoon $platoon)
     {
         $form->persist();
+
         $this->showToast('Squad has been deleted');
+
         return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
+
     /**
      * Assign a member to a squad
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function assignMember(\Illuminate\Http\Request $request)
+    public function assignMember(Request $request): JsonResponse
     {
         $member = \App\Models\Member::find($request->member_id);
         // if squad id is zero, user wants to unassign member
@@ -190,7 +198,7 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param  Squad  $squad
      * @return StreamedResponse
      */
-    public function exportAsCSV(Division $division, Platoon $platoon, Squad $squad)
+    public function exportAsCSV(Division $division, Platoon $platoon, Squad $squad): StreamedResponse
     {
         $members = $squad->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),

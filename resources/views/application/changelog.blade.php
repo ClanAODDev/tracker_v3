@@ -25,6 +25,20 @@
             </div>
         </div>
 
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
+                <h4>5 September 2021 - 3.51</h4>
+                <hr/>
+                <ul>
+                    <li>Additional information added to member listing pages (platoon, squad, all members)</li>
+                    <li>Bug fixed causing user roles to not properly sync when new members first log into the
+                        tracker</li>
+                    <li>Bug fixed affecting creating of new squads</li>
+                </ul>
+            </div>
+        </div>
+
         <div class="row m-t-xl">
             <div class="col-md-12">
                 <h4>18 July 2021 - 3.5</h4>
