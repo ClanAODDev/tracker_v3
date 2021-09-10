@@ -75,9 +75,8 @@ class SquadController extends \App\Http\Controllers\Controller
      *
      * @param Division $division
      * @param Platoon $platoon
-     * @return Response
      */
-    public function create(Division $division, \App\Models\Platoon $platoon): Response
+    public function create(Division $division, \App\Models\Platoon $platoon)
     {
         $this->authorize('create', [\App\Models\Squad::class, $division]);
 
@@ -90,9 +89,8 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param CreateSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return RedirectResponse
      */
-    public function store(\App\Http\Requests\CreateSquadForm $form, Division $division, \App\Models\Platoon $platoon): RedirectResponse
+    public function store(\App\Http\Requests\CreateSquadForm $form, Division $division, \App\Models\Platoon $platoon)
     {
         if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
@@ -139,9 +137,8 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param Division $division
      * @param Platoon $platoon
      * @param Squad $squad
-     * @return RedirectResponse
      */
-    public function update(UpdateSquadForm $form, Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad): RedirectResponse
+    public function update(UpdateSquadForm $form, Division $division, \App\Models\Platoon $platoon, \App\Models\Squad $squad)
     {
         if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
@@ -160,9 +157,8 @@ class SquadController extends \App\Http\Controllers\Controller
      * @param DeleteSquadForm $form
      * @param Division $division
      * @param Platoon $platoon
-     * @return Response
      */
-    public function destroy(DeleteSquadForm $form, Division $division, \App\Models\Platoon $platoon): Response
+    public function destroy(DeleteSquadForm $form, Division $division, \App\Models\Platoon $platoon)
     {
         $form->persist();
 
