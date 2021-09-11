@@ -34,7 +34,6 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
-
         $pending = MemberRequest::pending()
             ->with('member', 'member.rank', 'requester', 'division')
             ->get();
@@ -48,7 +47,6 @@ class MemberRequestController extends Controller
         $onHold = MemberRequest::onHold()
             ->with('member', 'member.rank', 'approver', 'division')
             ->get();
-
 
         if (auth()->user()->isRole('sr_ldr') && in_array(auth()->user()->member->position_id, [5, 6])) {
             $pending = $this->filterByDivision($pending);
@@ -164,10 +162,14 @@ class MemberRequestController extends Controller
         return $memberRequest;
     }
 
+    /**
+     * @param $requests
+     * @return mixed
+     */
     private function filterByDivision($requests)
     {
-        return $requests->filter(function ($request) {
-            return $request->division_id == auth()->user()->member->division_id;
-        });
+        return $requests->reject(function ($request) {
+            return $request->division_id !== auth()->user()->member->division_id;
+        })->values();
     }
 }
