@@ -151,7 +151,6 @@
                     class="badge text-info">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
             </a>
         </li>
-
     @endif
 
     <li class="nav-category">

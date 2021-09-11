@@ -34,6 +34,7 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
+
         $pending = MemberRequest::pending()
             ->with('member', 'member.rank', 'requester', 'division')
             ->get();
@@ -47,6 +48,13 @@ class MemberRequestController extends Controller
         $onHold = MemberRequest::onHold()
             ->with('member', 'member.rank', 'approver', 'division')
             ->get();
+
+
+        if (auth()->user()->isRole('sr_ldr') && in_array(auth()->user()->member->position_id, [5, 6])) {
+            $pending = $this->filterByDivision($pending);
+            $approved = $this->filterByDivision($approved);
+            $onHold = $this->filterByDivision($onHold);
+        }
 
         return view('admin.member-requests', compact('pending', 'approved', 'onHold'));
     }
@@ -105,8 +113,8 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  MemberRequest  $memberRequest
+     * @param Request $request
+     * @param MemberRequest $memberRequest
      */
     public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
@@ -124,8 +132,8 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param  Request  $request
-     * @param  MemberRequest  $memberRequest
+     * @param Request $request
+     * @param MemberRequest $memberRequest
      * @return array
      */
     public function isAlreadyMember(Request $request, MemberRequest $memberRequest)
@@ -134,7 +142,7 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param  Request  $request
+     * @param Request $request
      * @param $requestId
      * @return MemberRequest
      * @throws AuthorizationException
@@ -154,5 +162,12 @@ class MemberRequestController extends Controller
         $memberRequest->division->notify(new MemberRequestPutOnHold($memberRequest));
 
         return $memberRequest;
+    }
+
+    private function filterByDivision($requests)
+    {
+        return $requests->filter(function ($request) {
+            return $request->division_id == auth()->user()->member->division_id;
+        });
     }
 }

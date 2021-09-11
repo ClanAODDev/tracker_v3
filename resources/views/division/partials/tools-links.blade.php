@@ -81,3 +81,9 @@
 <a href="{{ route('division.members', $division) }}" class="btn btn-default">
     <i class="fa fa-users text-accent"></i> Members
 </a>
+
+@can('manage', \App\Models\MemberRequest::class)
+    <a href="{{ route('admin.member-request.index') }}" class="btn btn-default">
+        <i class="fa fa-users text-accent"></i> Member Requests
+    </a>
+@endcan

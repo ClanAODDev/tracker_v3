@@ -12,7 +12,7 @@ class MemberRequestPolicy
 
     public function before()
     {
-        if (auth()->user()->isDeveloper()) {
+        if (auth()->user()->isDeveloper() || auth()->user()->isRole('admin')) {
             return true;
         }
     }
@@ -23,7 +23,8 @@ class MemberRequestPolicy
      */
     public function manage(User $user)
     {
-        if ($user->isRole('admin')) {
+        // are they a SGT and a division XO/CO?
+        if ($user->isRole('sr_ldr') && in_array($user->member->position_id, [5, 6])) {
             return true;
         }
 
