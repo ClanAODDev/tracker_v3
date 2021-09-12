@@ -34,9 +34,9 @@ class MemberNameChanged extends Notification
     }
 
     /**
+     * @return array
      * @throws Exception
      *
-     * @return array
      */
     public function toWebhook()
     {
@@ -44,7 +44,7 @@ class MemberNameChanged extends Notification
 
         return (new DiscordMessage())
             ->to($channel)
-            ->message(addslashes(":tools: \"**MEMBER STATUS - NAME CHANGE**\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}`. Please inform the member of this change."))
+            ->message(addslashes(":tools: **MEMBER STATUS - NAME CHANGE**\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}`. Please inform the member of this change."))
             ->success()
             ->send();
     }
