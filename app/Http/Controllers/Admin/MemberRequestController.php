@@ -57,7 +57,7 @@ class MemberRequestController extends Controller
     {
         $this->authorize('manage', MemberRequest::class);
 
-        $requests = MemberRequest::processed()
+        $requests = MemberRequest::where('approved_at', '>=', now()->subDays(3))
             ->with('member', 'member.rank', 'approver', 'division')
             ->get();
 
