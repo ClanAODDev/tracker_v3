@@ -40,7 +40,7 @@
                             <tr>
                                 <td><code>{{ $request->member->name }}</code></td>
                                 <td>{{ $request->approver->name }}</td>
-                                <td class="text-center">{{ $request->approved_at->diffForHumans() }}</td>
+                                <td class="text-center">{{ $request->approved_at }}</td>
                                 <td class="text-center">
                                     <a href="{{ doForumFunction([$request->member->clan_id], 'forumProfile') }}"
                                        target="_blank"
