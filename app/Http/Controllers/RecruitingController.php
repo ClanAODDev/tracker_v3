@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use App\Models\Member;
+use App\Models\MemberRequest;
 use App\Models\Platoon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -30,9 +32,9 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     public function index()
     {
-        $this->authorize('create', \App\Models\Member::class);
+        $this->authorize('create', Member::class);
 
-        $divisions = \App\Models\Division::active()->where('shutdown_at', null)->get()->pluck('name', 'abbreviation');
+        $divisions = Division::active()->where('shutdown_at', null)->get()->pluck('name', 'abbreviation');
 
         return view('recruit.index', compact('divisions'));
     }
@@ -42,22 +44,27 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     public function submitRecruitment(Request $request)
     {
-        $this->authorize('create', \App\Models\Member::class);
-        $division = \App\Models\Division::whereAbbreviation($request->division)->first();
+        $this->authorize('create', Member::class);
+
+        $division = Division::whereAbbreviation($request->division)->first();
+
         // create or update member record
         $member = $this->createMember($request);
+
         // request member status
         $this->createRequest($member, $division);
+
         // notify slack of recruitment
         if ('on' === $division->settings()->get('slack_alert_created_member')) {
             $this->handleNotification($request, $member, $division);
         }
+
         $this->showToast('Your recruitment has successfully been completed!');
     }
 
     public function form(Division $division)
     {
-        $this->authorize('create', \App\Models\Member::class);
+        $this->authorize('create', Member::class);
         if ($division->isShutdown()) {
             $this->showErrorToast('This division has been shutdown and cannot receive new members');
 
@@ -74,7 +81,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     public function searchPlatoons($abbreviation)
     {
-        $division = \App\Models\Division::whereAbbreviation($abbreviation)->first();
+        $division = Division::whereAbbreviation($abbreviation)->first();
 
         return $this->getPlatoons($division);
     }
@@ -86,10 +93,10 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     public function getTasks(Request $request)
     {
-        $division = \App\Models\Division::whereAbbreviation($request->division)->first();
+        $division = Division::whereAbbreviation($request->division)->first();
         $tasks = $division->settings()->get('recruiting_tasks');
 
-        return collect($tasks)->map(fn ($task) => ['complete' => false, 'description' => $task['task_description']]);
+        return collect($tasks)->map(fn($task) => ['complete' => false, 'description' => $task['task_description']]);
     }
 
     /**
@@ -115,8 +122,10 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     public function doThreadCheck(Request $request)
     {
-        $division = \App\Models\Division::whereAbbreviation($request->division)->first();
+        $division = Division::whereAbbreviation($request->division)->first();
+
         $threads = $division->settings()->get('recruiting_threads');
+
         foreach ($threads as $key => $thread) {
             $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
         }
@@ -138,21 +147,23 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
             return ['is_member' => false, 'verified_email' => false];
         }
+
         $result = $this->callProcedure('get_user', $member_id);
+
         if (!property_exists($result, 'usergroupid')) {
             return ['is_member' => false, 'verified_email' => false];
         }
 
         return [
-            'is_member'      => true,
-            'username'       => $result->username,
-            'verified_email' => \App\Models\Member::UNVERIFIED_EMAIL_GROUP_ID !== $result->usergroupid,
+            'is_member' => true,
+            'username' => $result->username,
+            'verified_email' => Member::UNVERIFIED_EMAIL_GROUP_ID !== $result->usergroupid,
         ];
     }
 
     /**
      * @param string $name
-     * @param int    $memberId
+     * @param int $memberId
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -161,8 +172,11 @@ class RecruitingController extends \App\Http\Controllers\Controller
         if ('local' === app()->environment()) {
             return response()->json(['memberExists' => false]);
         }
+
         $name = request('name');
+
         $memberId = request('member_id');
+
         $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
         return response()->json(['memberExists' => !empty($result)]);
@@ -177,8 +191,9 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     private function createMember($request)
     {
-        $division = \App\Models\Division::whereAbbreviation($request->division)->first();
-        $member = \App\Models\Member::firstOrNew(['clan_id' => $request->member_id]);
+        $division = Division::whereAbbreviation($request->division)->first();
+        $member = Member::firstOrNew(['clan_id' => $request->member_id]);
+
         // update member properties
         $member->name = $request->forum_name;
         $member->join_date = \Carbon\Carbon::today();
@@ -189,10 +204,12 @@ class RecruitingController extends \App\Http\Controllers\Controller
         $member->division_id = $division->id;
         $member->flagged_for_inactivity = false;
         $member->save();
+
         // handle ingame name assignment
         if ($request->ingame_name) {
             $member->handles()->syncWithoutDetaching([\App\Models\Handle::find($division->handle_id)->id => ['value' => $request->ingame_name]]);
         }
+
         // handle assignments
         $member->platoon_id = $request->platoon;
         $member->squad_id = $request->squad;
@@ -211,12 +228,13 @@ class RecruitingController extends \App\Http\Controllers\Controller
     private function createRequest($member, $division)
     {
         // don't allow duplicate pending requests
-        if (\App\Models\MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
+        if (MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
             return;
         }
-        \App\Models\MemberRequest::create([
+
+        MemberRequest::create([
             'requester_id' => auth()->user()->member->clan_id, 'member_id' => $member->clan_id,
-            'division_id'  => $division->id,
+            'division_id' => $division->id,
         ]);
     }
 
@@ -226,7 +244,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     private function handleNotification(Request $request, $member, $division)
     {
-        if ($division !== auth()->user()->member->division) {
+        if ($division->id !== auth()->user()->member->division_id) {
             return $division->notify(new \App\Notifications\NewExternalRecruit($member, $division));
         }
 
