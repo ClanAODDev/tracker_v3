@@ -26,9 +26,6 @@ class MemberRequestController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * @return Factory|View
-     */
     public function index()
     {
         $this->authorize('manage', MemberRequest::class);
@@ -47,13 +44,28 @@ class MemberRequestController extends Controller
             ->with('member', 'member.rank', 'approver', 'division')
             ->get();
 
-        if (auth()->user()->isRole('sr_ldr') && \in_array(auth()->user()->member->position_id, [5, 6], true)) {
+        if ($this->isDivisionLeadership()) {
             $pending = $this->filterByDivision($pending);
             $approved = $this->filterByDivision($approved);
             $onHold = $this->filterByDivision($onHold);
         }
 
         return view('admin.member-requests', compact('pending', 'approved', 'onHold'));
+    }
+
+    public function history()
+    {
+        $this->authorize('manage', MemberRequest::class);
+
+        $requests = MemberRequest::processed()
+            ->with('member', 'member.rank', 'approver', 'division')
+            ->get();
+
+        if ($this->isDivisionLeadership()) {
+            $requests = $this->filterByDivision($requests);
+        }
+
+        return view('admin.requests-history', compact('requests'));
     }
 
     /**
@@ -136,9 +148,9 @@ class MemberRequestController extends Controller
     /**
      * @param $requestId
      *
+     * @return MemberRequest
      * @throws AuthorizationException
      *
-     * @return MemberRequest
      */
     public function placeOnHold(Request $request, $requestId)
     {
@@ -167,5 +179,14 @@ class MemberRequestController extends Controller
         return $requests->reject(function ($request) {
             return $request->division_id !== auth()->user()->member->division_id;
         })->values();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDivisionLeadership(): bool
+    {
+        return auth()->user()->isRole('sr_ldr')
+            && \in_array(auth()->user()->member->position_id, [5, 6], true);
     }
 }

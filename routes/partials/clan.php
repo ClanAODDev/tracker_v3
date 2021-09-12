@@ -4,15 +4,20 @@
  * Admin / Member Request routes
  */
 Route::group(['prefix' => 'clan'], function () {
-    Route::get('member-requests', 'Admin\MemberRequestController@index')->name('admin.member-request.index');
+    Route::get('member-requests', 'Admin\MemberRequestController@index')
+        ->name('admin.member-request.index');
+
     Route::get('/member-requests/{requestId}/reprocess', 'Admin\MemberRequestController@reprocess')
         ->name('admin.member-requests.reprocess');
+
+    Route::get('member-requests/history', 'Admin\MemberRequestController@history')
+        ->name('admin.member-request.history');
+
     Route::post('/member-requests/{requestId}/reprocess', 'Admin\MemberRequestController@reprocess')
         ->name('admin.member-requests.reprocess-confirm');
-    Route::post(
-        'member-requests/{requestId}/approve',
-        'Admin\MemberRequestController@approve'
-    )->name('admin.member-request.approve');
+
+    Route::post('member-requests/{requestId}/approve', 'Admin\MemberRequestController@approve')
+        ->name('admin.member-request.approve');
 
     Route::post('member-requests/{requestId}/cancel', 'Admin\MemberRequestController@cancel')
         ->name('admin.member-request.cancel');

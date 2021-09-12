@@ -10,6 +10,16 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     protected $guarded = [];
     protected $dates = ['approved_at', 'cancelled_at', 'processed_at', 'hold_placed_at'];
 
+    public function scopeProcessed($query)
+    {
+        return $query
+            ->whereNotNull('approved_at')
+            ->whereNotNull('processed_at')
+            ->whereNull('cancelled_at')
+            ->whereNull('hold_placed_at')
+            ->where('processed_at', '>=', now()->subDays(3));
+    }
+
     /**
      * @return BelongsTo
      */
