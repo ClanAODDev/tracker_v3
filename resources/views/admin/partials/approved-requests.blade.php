@@ -20,8 +20,13 @@
                     </td>
                     <td>{{ $request->approver->name }}</td>
                     <td>{{ $request->division->name }}</td>
-                    <td class="text-center {{ $request->approved_at <= now()->subHour(3) && !$request->processed_at ? 'text-danger' : 'null' }}">
-                        {{ $request->approved_at }}
+                    <td class="text-center">
+                        {{ $request->approved_at->diffForHumans() }}
+                        @if($request->approved_at <= now()->subHour(3) && !$request->processed_at)
+                            <strong class="text-danger"
+                                  title="Member forum status not yet approved."
+                            > OVERDUE</strong>
+                        @endif
                     </td>
 
                     @unless($request->processed_at)
