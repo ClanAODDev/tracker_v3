@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Models\Division;
 use App\Models\MemberRequest;
 
 Route::get('requests-count.png', function () {
@@ -34,7 +35,8 @@ Route::get('requests-count.png', function () {
     $requestsCount = MemberRequest::pending()->pastGracePeriod();
 
     if (request()->has('division')) {
-        $requestsCount = $requestsCount->where('division_id', request('division_id'));
+        $division = Division::whereAbbreviation(request('division'))->firstOrFail();
+        $requestsCount = $requestsCount->where('division_id', $division->id);
     }
 
     $errors = MemberRequest::errors()->count();
