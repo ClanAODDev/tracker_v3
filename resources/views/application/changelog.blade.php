@@ -30,8 +30,10 @@
                 <h4>5 September 2021 - 3.6</h4>
                 <hr/>
                 <ul>
-                    <li>Division leaders now have the <a href="https://www.clanaod.net/forums/showthread
-                    .php?t=251106&goto=newpost">ability to manage AOD member status</a>.</li>
+                    <li>Division leaders now have the <a
+                                href="https://www.clanaod.net/forums/showthread.php?t=251106&goto=newpost">ability to
+                            manage AOD member status</a>.
+                    </li>
                     <li>Slightly improved appearance of overdue requests</li>
                 </ul>
             </div>
@@ -45,7 +47,8 @@
                 <ul>
                     <li>Additional information added to member listing pages (platoon, squad, all members)</li>
                     <li>Bug fixed causing user roles to not properly sync when new members first log into the
-                        tracker</li>
+                        tracker
+                    </li>
                     <li>Bug fixed affecting creating of new squads</li>
                     <li>Notes added to division structure twig templates for handling empty objects</li>
                 </ul>
@@ -58,11 +61,13 @@
                 <hr/>
                 <ul>
                     <li>Mass PM functionality for division members, platoon, and squad views is now replaced with a more
-                        functional PM process allowing explicit rows to be selected. To use it: <ul>
+                        functional PM process allowing explicit rows to be selected. To use it:
+                        <ul>
                             <li>Select a row and hold either <code>CTRL</code> or <code>SHIFT</code></li>
                             <li>Select additional rows depending on the desired range</li>
                             <li>Note: at least 2 members must be selected before sending a PM</li>
-                        </ul></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
