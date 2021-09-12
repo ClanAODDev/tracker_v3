@@ -25,8 +25,8 @@
             @if ($requests->count())
                 <h4 class="m-t-xl">Approval History <small>Last 3 days</small></h4>
                 <hr/>
-                <div class="panel panel-filled basic-datatable">
-                    <table class="table">
+                <div class="panel panel-filled">
+                    <table class="table table-hover basic-datatable">
                         <thead>
                         <tr>
                             <th>Member Name</th>
