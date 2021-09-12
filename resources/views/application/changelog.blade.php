@@ -25,6 +25,18 @@
             </div>
         </div>
 
+        <div class="row m-t-xl">
+            <div class="col-md-12">
+                <h4>5 September 2021 - 3.6</h4>
+                <hr/>
+                <ul>
+                    <li>Division leaders now have the <a href="https://www.clanaod.net/forums/showthread
+                    .php?t=251106&goto=newpost">ability to manage AOD member status</a>.</li>
+                    <li>Slightly improved appearance of overdue requests</li>
+                </ul>
+            </div>
+        </div>
+
 
         <div class="row m-t-xl">
             <div class="col-md-12">
@@ -35,6 +47,7 @@
                     <li>Bug fixed causing user roles to not properly sync when new members first log into the
                         tracker</li>
                     <li>Bug fixed affecting creating of new squads</li>
+                    <li>Notes added to division structure twig templates for handling empty objects</li>
                 </ul>
             </div>
         </div>
