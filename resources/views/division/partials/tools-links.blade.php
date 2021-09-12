@@ -31,9 +31,6 @@
             <a href="{{ route('division.inactive-members', $division) }}">Manage Inactives</a>
         </li>
         <li>
-            <a href="{{ route('division.member-requests.index', $division) }}">Member Requests</a>
-        </li>
-        <li>
             <a href="{{ route('leave.index', $division) }}">
                 Manage Leaves of Absence
             </a>
@@ -81,3 +78,9 @@
 <a href="{{ route('division.members', $division) }}" class="btn btn-default">
     <i class="fa fa-users text-accent"></i> Members
 </a>
+
+@can('manage', \App\Models\MemberRequest::class)
+    <a href="{{ route('admin.member-request.index') }}" class="btn btn-default">
+        <i class="fa fa-users text-accent"></i> Member Requests
+    </a>
+@endcan

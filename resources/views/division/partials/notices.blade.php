@@ -12,13 +12,23 @@
     </div>
 @endif
 
-@if ($count = $division->memberRequests()->cancelled()->count())
-    <div class="alert alert-warning">
-        You have <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} in need of attention. <a
-            class="alert-link pull-right"
-            href="{{ route('division.member-requests.index', $division) }}">Manage Member Requests</a>
-    </div>
-@endif
+@can('manage', \App\Models\MemberRequest::class)
+    @if ($count = $division->memberRequests()->cancelled()->count())
+        <div class="alert alert-warning">
+            You have <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} in need of attention. <a
+                    class="alert-link pull-right"
+                    href="{{ route('admin.member-request.index') }}"
+            >Manage Member Requests</a>
+        </div>
+    @elseif($count = $division->memberRequests()->pending()->count())
+        <div class="alert alert-warning">
+            You have <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} pending.
+            <a class="alert-link pull-right"
+               href="{{ route('admin.member-request.index') }}"
+            >Manage Member Requests</a>
+        </div>
+    @endif
+@endcan
 
 @if($division->outstandingInactives)
     <div class="alert alert-default">

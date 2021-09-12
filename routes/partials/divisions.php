@@ -36,21 +36,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
 
     Route::get('/notes', 'DivisionNoteController@index')->name('division.notes');
 
-
-    /**
-     * Member requests
-     */
-    Route::get('/member-requests', 'Division\MemberRequestController@index')
-        ->name('division.member-requests.index');
-    Route::get('/member-requests/{memberRequest}/edit', 'Division\MemberRequestController@edit')
-        ->name('division.member-requests.edit');
-    Route::post('/member-requests/{memberRequest}/cancel', 'Division\MemberRequestController@cancel')
-        ->name('division.member-requests.cancel');
-    Route::patch('/member-requests/{memberRequest}', 'Division\MemberRequestController@update')
-        ->name('division.member-requests.update');
-    Route::delete('/member-requests/{memberRequest}/delete', 'Division\MemberRequestController@destroy')
-        ->name('division.member-requests.delete');
-
     /**
      * Recruiting Process
      */
