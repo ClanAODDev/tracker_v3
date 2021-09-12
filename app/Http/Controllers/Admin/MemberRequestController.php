@@ -59,6 +59,7 @@ class MemberRequestController extends Controller
 
         $requests = MemberRequest::where('approved_at', '>=', now()->subDays(3))
             ->with('member', 'member.rank', 'approver', 'division')
+            ->orderByDesc('approved_at')
             ->get();
 
         if ($this->isDivisionLeadership()) {
