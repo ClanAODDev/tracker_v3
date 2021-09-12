@@ -1,6 +1,8 @@
 <?php
 
 
+use App\Models\MemberRequest;
+
 Route::get('requests-count.png', function () {
     header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
     header("Cache-Control: post-check=0, pre-check=0", false);
@@ -29,15 +31,20 @@ Route::get('requests-count.png', function () {
     $orange = imagecolorallocate($im, 255, 108, 0);
     $red = imagecolorallocate($im, 153, 26, 34);
 
-    $requestsCount = \App\Models\MemberRequest::pending()->pastGracePeriod()->count();
-    $errors = \App\Models\MemberRequest::errors()->count();
+    $requestsCount = MemberRequest::pending()->pastGracePeriod();
+
+    if (request()->has('division')) {
+        $requestsCount = $requestsCount->where('division_id', request('division_id'));
+    }
+
+    $errors = MemberRequest::errors()->count();
 
     // calculate X for number of requests
-    $dimensionsRequests = imagettfbbox(20, 0, $bigfont, $requestsCount);
+    $dimensionsRequests = imagettfbbox(20, 0, $bigfont, $requestsCount->count());
     $textWidthRequests = abs($dimensionsRequests[4] - $dimensionsRequests[0]);
     $xRequests = imagesx($im) - $textWidthRequests;
 
-    imagettftext($im, 20, 0, $xRequests - 10, 25, $orange, $bigfont, $requestsCount);
+    imagettftext($im, 20, 0, $xRequests - 10, 25, $orange, $bigfont, $requestsCount->count());
 
     if ($errors > 0) {
         imagettftext($im, 6, 0, $xRequests - 50, 20, $red, $tinyfont, "({$errors} ERR)");
@@ -77,7 +84,7 @@ Route::get('tickets-count.png', function () {
     $dimensionsTickets = imagettfbbox(20, 0, $bigfont, $ticketsCount);
     $textWidthTickets = abs($dimensionsTickets[4] - $dimensionsTickets[0]);
     $xTickets = imagesx($im) - $textWidthTickets;
-    
+
     imagettftext($im, 20, 0, $xTickets - 10, 25, $orange, $bigfont, $ticketsCount);
 
     imagepng($im);
