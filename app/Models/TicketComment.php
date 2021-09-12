@@ -11,7 +11,7 @@ class TicketComment extends Model
 
     protected $with = [
         'user',
-        'user.role'
+        'user.role',
     ];
 
     protected $touches = ['ticket'];

@@ -10,18 +10,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Squad extends Model
 {
-    use RecordsActivity, HasFactory;
+    use HasFactory;
+    use RecordsActivity;
 
     protected static $recordEvents = [
         'created',
         'updated',
-        'deleted'
+        'deleted',
     ];
 
     protected $fillable = [
         'leader_id',
         'name',
-        'logo'
+        'logo',
     ];
 
     /**
@@ -33,7 +34,7 @@ class Squad extends Model
     }
 
     /**
-     * relationship - squad belongs to a platoon
+     * relationship - squad belongs to a platoon.
      */
     public function platoon()
     {
@@ -41,7 +42,7 @@ class Squad extends Model
     }
 
     /**
-     * relationship - squad has many members
+     * relationship - squad has many members.
      */
     public function members()
     {
@@ -51,9 +52,10 @@ class Squad extends Model
     }
 
     /**
-     * Assign the leader of a squad
+     * Assign the leader of a squad.
      *
      * @param $member
+     *
      * @return Model
      */
     public function assignLeaderTo($member)
@@ -62,7 +64,7 @@ class Squad extends Model
     }
 
     /**
-     * Leader of a squad
+     * Leader of a squad.
      *
      * @return BelongsTo
      */

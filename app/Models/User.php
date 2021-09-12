@@ -11,16 +11,16 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Class User
- *
- * @package App
+ * Class User.
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable, HasFactory;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     public array $defaultSettings = [
-        'snow' => false,
+        'snow'                 => false,
         'ticket_notifications' => true,
     ];
 
@@ -53,29 +53,29 @@ class User extends Authenticatable
      */
     protected $casts = [
         'developer' => 'boolean',
-        'settings' => 'json',
+        'settings'  => 'json',
     ];
 
     /**
      * @var array
      */
     protected $dates = [
-        'last_login_at'
+        'last_login_at',
     ];
 
     public static function boot()
     {
         parent::boot();
         /**
-         * Handle default settings population
+         * Handle default settings population.
          */
-        static::creating(function (User $user) {
+        static::creating(function (self $user) {
             $user->settings = $user->defaultSettings;
         });
     }
 
     /**
-     * relationship - user belongs to a member
+     * relationship - user belongs to a member.
      */
     public function member()
     {
@@ -93,16 +93,19 @@ class User extends Authenticatable
     /**
      * Record new activity for the user.
      *
-     * @param  string  $name
-     * @param  mixed  $related
-     * @return mixed
+     * @param string $name
+     * @param mixed  $related
+     *
      * @throws Exception
+     *
+     * @return mixed
      */
     public function recordActivity($name, $related)
     {
         if (!method_exists($related, 'recordActivity')) {
             throw new Exception('..');
         }
+
         return $related->recordActivity($name);
     }
 
@@ -123,9 +126,10 @@ class User extends Authenticatable
     }
 
     /**
-     * Check to see if user is a certain role
+     * Check to see if user is a certain role.
      *
      * @param $role
+     *
      * @return bool
      */
     public function isRole($role)
@@ -138,25 +142,25 @@ class User extends Authenticatable
             return true;
         }
 
-        if (is_array($role)) {
-            return in_array($this->role->name, $role);
+        if (\is_array($role)) {
+            return \in_array($this->role->name, $role, true);
         }
 
         return $this->role->name === $role;
     }
 
     /**
-     * Checks to see if user is a developer
+     * Checks to see if user is a developer.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDeveloper()
     {
-        return ($this->developer);
+        return $this->developer;
     }
 
     /**
-     * Assign a role to a user
+     * Assign a role to a user.
      *
      * @param $role
      */
@@ -164,14 +168,15 @@ class User extends Authenticatable
     {
         if ($role instanceof Role) {
             $this->role()->associate($role)->save();
+
             return;
         }
 
-        if (is_string($role)) {
+        if (\is_string($role)) {
             $role = Role::whereName(strtolower($role))->firstOrFail();
         }
 
-        if (is_int($role)) {
+        if (\is_int($role)) {
             $role = Role::find($role);
         }
 
@@ -179,7 +184,7 @@ class User extends Authenticatable
     }
 
     /**
-     * relationship - user belongs to a role
+     * relationship - user belongs to a role.
      */
     public function role()
     {
@@ -187,7 +192,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Is member allowed to remove members from AOD
+     * Is member allowed to remove members from AOD.
      *
      * @return bool
      */
@@ -206,7 +211,9 @@ class User extends Authenticatable
 
     /**
      * Accessor for name
-     * enforce proper casing
+     * enforce proper casing.
+     *
+     * @param mixed $value
      */
     public function getNameAttribute($value)
     {

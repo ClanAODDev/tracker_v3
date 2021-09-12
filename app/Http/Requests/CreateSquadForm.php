@@ -26,16 +26,16 @@ class CreateSquadForm extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'max:40',
+            'name'      => 'max:40',
             'leader_id' => [
                 'exists:members,clan_id',
-                'unique:squads,leader_id'
-            ]
+                'unique:squads,leader_id',
+            ],
         ];
     }
 
     /**
-     * Custom error messages
+     * Custom error messages.
      *
      * @return array
      */
@@ -49,7 +49,7 @@ class CreateSquadForm extends FormRequest
 
     public function persist()
     {
-        $squad = new Squad;
+        $squad = new Squad();
 
         $squad->name = $this->name;
         $squad->platoon()->associate($this->route('platoon'));
@@ -88,7 +88,7 @@ class CreateSquadForm extends FormRequest
 
         $leader->squad()->associate($squad)
             ->platoon()->associate($this->route('platoon'))
-            ->assignPosition("squad leader")
+            ->assignPosition('squad leader')
             ->save();
     }
 }

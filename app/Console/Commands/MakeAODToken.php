@@ -22,8 +22,6 @@ class MakeAODToken extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -37,7 +35,7 @@ class MakeAODToken extends Command
      */
     public function handle()
     {
-        $this->comment("curl http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode=" . $this->generateToken());
+        $this->comment('curl http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode=' . $this->generateToken());
     }
 
     protected function generateToken()

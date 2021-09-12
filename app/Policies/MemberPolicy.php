@@ -21,7 +21,6 @@ class MemberPolicy
     }
 
     /**
-     * @param User $user
      * @return bool
      */
     public function create(User $user)
@@ -37,8 +36,6 @@ class MemberPolicy
     /**
      * Can the user update the given member?
      *
-     * @param User $user
-     * @param Member $member
      * @return bool
      */
     public function update(User $user, Member $member)
@@ -53,7 +50,7 @@ class MemberPolicy
 
         // officers can update anyone within division
         if ($memberDivision instanceof Division) {
-            if ($user->isRole('officer') && $userDivision->id == $memberDivision->id) {
+            if ($user->isRole('officer') && $userDivision->id === $memberDivision->id) {
                 return true;
             }
         }
@@ -77,16 +74,14 @@ class MemberPolicy
     }
 
     /**
-     * Determines policy for removing members
+     * Determines policy for removing members.
      *
-     * @param User $user
-     * @param Member $member
      * @return bool
      */
     public function delete(User $user, Member $member)
     {
         // can't delete yourself
-        if ($member->id == $user->member->id) {
+        if ($member->id === $user->member->id) {
             return false;
         }
 
@@ -126,7 +121,7 @@ class MemberPolicy
         }
 
         // can only promote within division
-        if ($userPromoting->member->division_id != $memberBeingPromoted->division_id) {
+        if ($userPromoting->member->division_id !== $memberBeingPromoted->division_id) {
             return false;
         }
 

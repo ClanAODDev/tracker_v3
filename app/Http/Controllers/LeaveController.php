@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Division;
 use App\Http\Requests\CreateLeave;
 use App\Http\Requests\UpdateLeave;
+use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;
 use Exception;
@@ -15,9 +15,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
- * Class LeaveController
- *
- * @package App\Http\Controllers
+ * Class LeaveController.
  */
 class LeaveController extends Controller
 {
@@ -30,7 +28,6 @@ class LeaveController extends Controller
     }
 
     /**
-     * @param Division $division
      * @return Factory|View
      */
     public function index(Division $division)
@@ -38,7 +35,7 @@ class LeaveController extends Controller
         $membersWithLeave = $division->members()->whereHas('leave')
             ->with('leave', 'rank')->get();
 
-        $expiredLeave = (bool)count($membersWithLeave->filter(fn($member) => $member->leave->expired));
+        $expiredLeave = (bool) \count($membersWithLeave->filter(fn ($member) => $member->leave->expired));
 
         return view('leave.index', compact(
             'division',
@@ -48,11 +45,10 @@ class LeaveController extends Controller
     }
 
     /**
-     * @param Member $member
-     * @param Leave $leave
-     * @return RedirectResponse|Redirector
      * @throws Exception
      * @throws AuthorizationException
+     *
+     * @return Redirector|RedirectResponse
      */
     public function delete(Member $member, Leave $leave)
     {
@@ -66,15 +62,13 @@ class LeaveController extends Controller
     }
 
     /**
-     * @param UpdateLeave $form
-     * @param Member $member
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function update(UpdateLeave $form, Member $member)
     {
-        if ($form->approve_leave && ($form->requester_id == auth()->user()->id)) {
+        if ($form->approve_leave && ($form->requester_id === auth()->user()->id)) {
             return redirect()->back()
-                ->withErrors(['member_id' => "You cannot approve an LOA that you requested"])
+                ->withErrors(['member_id' => 'You cannot approve an LOA that you requested'])
                 ->withInput();
         }
 
@@ -86,8 +80,6 @@ class LeaveController extends Controller
     }
 
     /**
-     * @param Member $member
-     * @param Leave $leave
      * @return Factory|View
      */
     public function edit(Member $member, Leave $leave)
@@ -101,8 +93,6 @@ class LeaveController extends Controller
     }
 
     /**
-     * @param CreateLeave $form
-     * @param Division $division
      * @return LeaveController|RedirectResponse
      */
     public function store(CreateLeave $form, Division $division)
@@ -121,15 +111,15 @@ class LeaveController extends Controller
     }
 
     /**
-     * @param Division $division
      * @param $request
+     *
      * @return bool
      */
     public function isMemberOfDivision(Division $division, $request)
     {
         $member = Member::whereClanId($request->member_id)->first();
 
-        return $member->division instanceof Division &&
-            $member->division->id === $division->id;
+        return $member->division instanceof Division
+            && $member->division->id === $division->id;
     }
 }

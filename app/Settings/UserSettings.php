@@ -12,9 +12,6 @@ class UserSettings
 
     /**
      * Settings constructor.
-     *
-     * @param array $settings
-     * @param User $user
      */
     public function __construct(array $settings, User $user)
     {

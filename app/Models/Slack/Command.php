@@ -3,9 +3,7 @@
 namespace App\Models\Slack;
 
 /**
- * Interface Command
- *
- * @package App\Slack\Commands
+ * Interface Command.
  */
 interface Command
 {
@@ -17,7 +15,7 @@ interface Command
     public function __construct($data);
 
     /**
-     * Handle execution of command and return response method
+     * Handle execution of command and return response method.
      *
      * @return mixed
      */

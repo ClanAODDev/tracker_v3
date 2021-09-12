@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
 use Auth;
-
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -19,7 +18,8 @@ use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-    use ThrottlesLogins, AuthenticatesWithAOD;
+    use AuthenticatesWithAOD;
+    use ThrottlesLogins;
 
     /**
      * Where to redirect users after login / registration.
@@ -39,9 +39,9 @@ class LoginController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return Factory|RedirectResponse|Response|View
      * @throws ValidationException
+     *
+     * @return Factory|RedirectResponse|Response|View
      */
     public function login(Request $request)
     {
@@ -65,62 +65,39 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse();
     }
 
-    private function attemptLogin($request)
+    /**
+     * @return array|Request|string
+     */
+    public function username()
     {
-        if ($this->validatesCredentials($request)) {
-            $username = str_replace('aod_', '', strtolower($request->username));
-
-            if ($user = User::whereName($username)->first()) {
-
-                // login existing account, look for superficial changes
-                $this->checkForUpdates($user);
-                Auth::login($user);
-
-            } else {
-
-                // ensure this is an active member
-                $member = Member::where('name', $username)->first();
-                if (!$member->exists()) {
-                    return false;
-                }
-
-                $user = User::create([
-                    'email' => $this->email,
-                    'name' => $username,
-                    'member_id' => $member->id
-                ]);
-
-                Auth::login($user);
-            }
-
-            // sync roles
-            (new ClanForumPermissions())->handleAccountRoles(
-                $user->member->clan_id,
-                $this->roles
-            );
-            
-            return true;
-        }
-
-        return false;
+        return request('username');
     }
 
     /**
-     * Update user's email if updated
-     *
-     * @param $user
+     * @return Factory|View
      */
-    private function checkForUpdates($user)
+    public function showLoginForm()
     {
-        if ($user->email !== $this->email) {
-            $user->update(['email' => $this->email]);
-        }
+        return view('auth.login');
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return Response
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        return response()->redirectTo('/');
     }
 
     /**
      * Send the response after the user was authenticated.
      *
-     * @param Request $request
      * @return RedirectResponse
      */
     protected function sendLoginResponse(Request $request)
@@ -136,13 +113,12 @@ class LoginController extends Controller
     /**
      * The user has been authenticated.
      *
-     * @param Request $request
      * @param mixed $user
+     *
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
     {
-        //
     }
 
     /**
@@ -168,38 +144,56 @@ class LoginController extends Controller
     protected function sendFailedLoginResponse()
     {
         return view('auth.login')->withErrors([
-            'login' => 'Invalid login credentials'
+            'login' => 'Invalid login credentials',
         ]);
     }
 
-    /**
-     * @return array|Request|string
-     */
-    public function username()
+    private function attemptLogin($request)
     {
-        return request('username');
+        if ($this->validatesCredentials($request)) {
+            $username = str_replace('aod_', '', strtolower($request->username));
+
+            if ($user = User::whereName($username)->first()) {
+                // login existing account, look for superficial changes
+                $this->checkForUpdates($user);
+                Auth::login($user);
+            } else {
+                // ensure this is an active member
+                $member = Member::where('name', $username)->first();
+                if (!$member->exists()) {
+                    return false;
+                }
+
+                $user = User::create([
+                    'email'     => $this->email,
+                    'name'      => $username,
+                    'member_id' => $member->id,
+                ]);
+
+                Auth::login($user);
+            }
+
+            // sync roles
+            (new ClanForumPermissions())->handleAccountRoles(
+                $user->member->clan_id,
+                $this->roles
+            );
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * @return Factory|View
-     */
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
-
-    /**
-     * Log the user out of the application.
+     * Update user's email if updated.
      *
-     * @param Request $request
-     * @return Response
+     * @param $user
      */
-    public function logout(Request $request)
+    private function checkForUpdates($user)
     {
-        $this->guard()->logout();
-
-        $request->session()->invalidate();
-
-        return response()->redirectTo('/');
+        if ($user->email !== $this->email) {
+            $user->update(['email' => $this->email]);
+        }
     }
 }

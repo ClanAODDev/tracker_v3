@@ -24,6 +24,7 @@ class WelcomeUser extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -35,11 +36,12 @@ class WelcomeUser extends Notification
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return MailMessage
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->view(
+        return (new MailMessage())->view(
             'emails.welcome',
             ['user' => $this->user]
         );
@@ -49,12 +51,12 @@ class WelcomeUser extends Notification
      * Get the array representation of the notification.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 }

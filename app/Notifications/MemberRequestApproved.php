@@ -29,6 +29,7 @@ class MemberRequestApproved extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -37,8 +38,9 @@ class MemberRequestApproved extends Notification
     }
 
     /**
-     * @return mixed
      * @throws Exception
+     *
+     * @return mixed
      */
     public function toWebhook()
     {

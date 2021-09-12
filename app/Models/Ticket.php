@@ -14,7 +14,15 @@ use Illuminate\Notifications\Notifiable;
  */
 class Ticket extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
+
+    public $stateColors = [
+        'new'      => 'info',
+        'assigned' => 'accent',
+        'resolved' => 'success',
+        'rejected' => 'danger',
+    ];
 
     protected $guarded = [];
 
@@ -24,15 +32,8 @@ class Ticket extends Model
         'owner',
     ];
 
-    public $stateColors = [
-        'new' => 'info',
-        'assigned' => 'accent',
-        'resolved' => 'success',
-        'rejected' => 'danger',
-    ];
-
     protected $dates = [
-        'resolved_at'
+        'resolved_at',
     ];
 
     /**
@@ -71,7 +72,7 @@ class Ticket extends Model
     }
 
     /**
-     * @return Repository|mixed
+     * @return mixed|Repository
      */
     public function routeNotificationForWebhook()
     {
@@ -80,6 +81,7 @@ class Ticket extends Model
 
     /**
      * @param $query
+     *
      * @return mixed
      */
     public function scopeNew($query)
@@ -90,6 +92,7 @@ class Ticket extends Model
 
     /**
      * @param $query
+     *
      * @return mixed
      */
     public function scopeAssigned($query)
@@ -115,7 +118,7 @@ class Ticket extends Model
         $this->state = 'assigned';
         $this->save();
 
-        if ($user == auth()->user()) {
+        if ($user === auth()->user()) {
             $this->say('owned the ticket');
         } else {
             $this->say(auth()->user()->name . ' assigned the ticket to ' . $user->name);
@@ -124,7 +127,7 @@ class Ticket extends Model
 
     public function isResolved()
     {
-        return ($this->resolved_at);
+        return $this->resolved_at;
     }
 
     public function resolve()
@@ -157,7 +160,7 @@ class Ticket extends Model
     {
         $this->comments()->create([
             'user_id' => auth()->id(),
-            'body' => $comment
+            'body'    => $comment,
         ]);
     }
 }

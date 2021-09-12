@@ -3,14 +3,12 @@
 namespace App\Models\Slack;
 
 /**
- * Base class for Slack commands
- *
- * @package App\Slack\Commands
+ * Base class for Slack commands.
  */
 class Base
 {
     /**
-     * All commands have parameters
+     * All commands have parameters.
      *
      * @var array
      */

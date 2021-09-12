@@ -6,13 +6,10 @@ use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class UpdatePlatoonForm
- *
- * @package App\Http\Requests
+ * Class UpdatePlatoonForm.
  */
 class UpdatePlatoonForm extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -36,12 +33,12 @@ class UpdatePlatoonForm extends FormRequest
                 'exists:members,clan_id',
             ],
             'name' => 'max:40',
-            'logo' => 'nullable|url'
+            'logo' => 'nullable|url',
         ];
     }
 
     /**
-     * Custom error messages
+     * Custom error messages.
      *
      * @return array
      */
@@ -54,14 +51,13 @@ class UpdatePlatoonForm extends FormRequest
     }
 
     /**
-     * Save the platoon
+     * Save the platoon.
      */
     public function persist()
     {
         if ($this->member_ids) {
             $this->assignMembersTo($this->platoon);
         }
-
 
         // setting platoon to TBA
         if (!$this->leader && !$this->leader_id) {
@@ -89,7 +85,7 @@ class UpdatePlatoonForm extends FormRequest
     }
 
     /**
-     * Assign members to a platoon
+     * Assign members to a platoon.
      *
      * @param $platoon
      */
@@ -104,7 +100,7 @@ class UpdatePlatoonForm extends FormRequest
     }
 
     /**
-     * Reset the leader for a platoon
+     * Reset the leader for a platoon.
      *
      * @param $platoon
      */
@@ -116,7 +112,7 @@ class UpdatePlatoonForm extends FormRequest
     }
 
     /**
-     * Assign a member as platoon leader
+     * Assign a member as platoon leader.
      *
      * @param $platoon
      */

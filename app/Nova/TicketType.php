@@ -12,7 +12,6 @@ use OptimistDigital\MultiselectField\Multiselect;
 
 class TicketType extends Resource
 {
-
     /**
      * The model the resource corresponds to.
      *
@@ -38,13 +37,12 @@ class TicketType extends Resource
 
     public static function label()
     {
-        return "Ticket Types";
+        return 'Ticket Types';
     }
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function fields(Request $request)
@@ -63,7 +61,7 @@ class TicketType extends Resource
                     '5' => 'Administrator',
                 ])
                 ->placeholder('Specify roles') // Placeholder text
-                    ->help('Provide roles this ticket type should be available to. Leave blank if type should be available to all roles.'),
+                ->help('Provide roles this ticket type should be available to. Leave blank if type should be available to all roles.'),
             Textarea::make('Boilerplate')->help('Pre-populates ticket with basic information, if applicable'),
             Number::make('Display Order')->help('Change the order in which the type is displayed. (Ascending order)'),
             HasMany::make('Ticket'),
@@ -73,7 +71,6 @@ class TicketType extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -84,7 +81,6 @@ class TicketType extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -95,7 +91,6 @@ class TicketType extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function lenses(Request $request)
@@ -106,7 +101,6 @@ class TicketType extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)

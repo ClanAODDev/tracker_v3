@@ -17,18 +17,14 @@ use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * Class DivisionController
- *
- * @package App\Http\Controllers
+ * Class DivisionController.
  */
 class DivisionController extends \App\Http\Controllers\Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @param  DivisionRepository  $division
      */
-    public function __construct(\App\Repositories\DivisionRepository $division)
+    public function __construct(DivisionRepository $division)
     {
         $this->division = $division;
         $this->middleware(['auth', 'activeDivision']);
@@ -37,11 +33,11 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Display the specified resource.
      *
-     * @param  Division  $division
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Response
+     * @return Factory|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\View|Response
+     *
      * @internal param int $id
      */
-    public function show(\App\Models\Division $division)
+    public function show(Division $division)
     {
         $division->load('unassigned.rank');
 
@@ -82,29 +78,30 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Division  $division
-     * @return Response
      * @throws AuthorizationException
+     *
+     * @return Response
      */
-    public function edit(\App\Models\Division $division)
+    public function edit(Division $division)
     {
         $this->authorize('update', $division);
         $censuses = $division->census->sortByDesc('created_at')->take(52);
         $populations = $censuses->values()->map(fn ($census, $key) => [$key, $census->count]);
         $weeklyActive = $censuses->values()->map(fn ($census, $key) => [$key, $census->weekly_active_count]);
+
         return view('division.modify', compact('division', 'censuses', 'weeklyActive', 'populations'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateDivision  $form
-     * @param  Division  $division
-     * @return Response
      * @throws Exception
+     *
+     * @return Response
+     *
      * @internal param Request $request
      */
-    public function update(\App\Http\Requests\UpdateDivision $form, \App\Models\Division $division)
+    public function update(UpdateDivision $form, Division $division)
     {
         $form->persist();
         $this->showToast('Changes saved successfully');
@@ -112,14 +109,14 @@ class DivisionController extends \App\Http\Controllers\Controller
         if ($division->settings()->get('slack_alert_division_edited')) {
             $division->notify(new \App\Notifications\DivisionEdited($division));
         }
+
         return back();
     }
 
     /**
-     * @param  Division  $division
      * @return Factory|View
      */
-    public function partTime(\App\Models\Division $division)
+    public function partTime(Division $division)
     {
         $members = $division->partTimeMembers()->with('rank', 'handles')->get()->each(function ($member) use (
             $division
@@ -127,49 +124,49 @@ class DivisionController extends \App\Http\Controllers\Controller
             // filter out handles that don't match current division primary handle
             $member->handle = $member->handles->filter(fn ($handle) => $handle->id === $division->handle_id)->first();
         });
+
         return view('division.part-time', compact('division', 'members'));
     }
 
     /**
-     * Assign a member as part-time to a division
+     * Assign a member as part-time to a division.
      *
-     * @param  Division  $division
-     * @param  Member  $member
-     * @return RedirectResponse|Redirector|string
      * @throws AuthorizationException
+     *
+     * @return Redirector|RedirectResponse|string
      */
-    public function assignPartTime(\App\Models\Division $division, \App\Models\Member $member)
+    public function assignPartTime(Division $division, Member $member)
     {
         $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->attach($member->id);
         $this->showToast("{$member->name} added as part-time member to {$division->name}!");
         $member->recordActivity('add_part_time');
+
         return redirect()->back();
     }
 
     /**
-     * @param  Division  $division
-     * @param  Member  $member
-     * @return RedirectResponse|string
      * @throws AuthorizationException
+     *
+     * @return RedirectResponse|string
      */
-    public function removePartTime(\App\Models\Division $division, \App\Models\Member $member)
+    public function removePartTime(Division $division, Member $member)
     {
         $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->detach($member);
         $this->showToast("{$member->name} removed from {$division->name} part-timers!");
         $member->recordActivity('remove_part_time');
+
         return redirect()->back();
     }
 
     /**
-     * @param  Division  $division
      * @return Factory|View
      */
-    public function members(\App\Models\Division $division)
+    public function members(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
@@ -180,15 +177,14 @@ class DivisionController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * Export platoon members as CSV
+     * Export platoon members as CSV.
      *
-     * @param  Division  $division
      * @return StreamedResponse
      */
     public function exportAsCSV(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
@@ -215,7 +211,7 @@ class DivisionController extends \App\Http\Controllers\Controller
                 'Last TS Activity',
                 'Last Promoted',
                 'Member Handle',
-                'Member Forum Posts'
+                'Member Forum Posts',
             ],
         ]);
 
@@ -226,13 +222,14 @@ class DivisionController extends \App\Http\Controllers\Controller
             }
             fclose($handle);
         }, 200, [
-            'Content-type' => 'text/csv',
+            'Content-type'        => 'text/csv',
             'Content-Disposition' => 'attachment; filename=members.csv',
         ]);
     }
 
     /**
      * @param $division
+     *
      * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)

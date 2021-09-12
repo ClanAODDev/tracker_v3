@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models\Slack\Commands;
 
 use App\Models\Member;
@@ -8,9 +7,7 @@ use App\Models\Slack\Base;
 use App\Models\Slack\Command;
 
 /**
- * Class SearchDiscord
- *
- * @package App\Slack\Commands
+ * Class SearchDiscord.
  */
 class SearchDiscord extends Base implements Command
 {
@@ -18,7 +15,7 @@ class SearchDiscord extends Base implements Command
 
     private $content = [];
 
-    private $forumProfile = "https://www.clanaod.net/forums/member.php?u=";
+    private $forumProfile = 'https://www.clanaod.net/forums/member.php?u=';
 
     public function __construct($data)
     {
@@ -32,9 +29,9 @@ class SearchDiscord extends Base implements Command
      */
     public function handle()
     {
-        if (strlen($this->params) < 3) {
+        if (\strlen($this->params) < 3) {
             return [
-                'text' => "Your search criteria must be 3 characters or more",
+                'text' => 'Your search criteria must be 3 characters or more',
             ];
         }
 
@@ -49,42 +46,43 @@ class SearchDiscord extends Base implements Command
             foreach ($this->members as $member) {
                 $division = ($member->division)
                     ? "{$member->division->name} Division"
-                    : "Ex-AOD";
+                    : 'Ex-AOD';
 
                 $memberLink = route('member', $member->getUrlParams());
 
                 $links = [
                     "[Forum]({$this->forumProfile}{$member->clan_id})",
-                    "[Tracker]({$memberLink})"
+                    "[Tracker]({$memberLink})",
                 ];
 
                 $this->content[] = [
-                    'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
-                    'value' => "Profiles: "
+                    'name'  => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
+                    'value' => 'Profiles: '
                         . implode(', ', $links)
-                        . $this->buildActivityAndDiscordBlock($member)
+                        . $this->buildActivityAndDiscordBlock($member),
                 ];
             }
         }
 
         if ($this->members->count() >= 1) {
             return [
-                "embed" => [
-                    'color' => 10181046,
-                    'title' => 'The following members were found:',
-                    'fields' => $this->content
-                ]
+                'embed' => [
+                    'color'  => 10181046,
+                    'title'  => 'The following members were found:',
+                    'fields' => $this->content,
+                ],
             ];
         }
 
         return [
-            'text' => "No results were found",
+            'text' => 'No results were found',
         ];
     }
 
     /**
      * @param $member
-     * @return string|null
+     *
+     * @return null|string
      */
     private function buildActivityAndDiscordBlock($member)
     {

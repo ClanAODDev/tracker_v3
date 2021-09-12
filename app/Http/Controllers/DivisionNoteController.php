@@ -9,7 +9,6 @@ use Illuminate\View\View;
 
 class DivisionNoteController extends Controller
 {
-
     /**
      * DivisionNoteController constructor.
      */
@@ -21,7 +20,6 @@ class DivisionNoteController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param Division $division
      * @return Factory|View
      */
     public function index(Division $division)
@@ -38,7 +36,7 @@ class DivisionNoteController extends Controller
             ->with('member.rank')->orderByDesc('created_at')
             ->get()
             ->filter(function ($note) {
-                if ($note->type == 'sr_ldr') {
+                if ('sr_ldr' === $note->type) {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
                 }
 

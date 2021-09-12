@@ -2,19 +2,17 @@
 
 namespace App\Repositories;
 
-use App\Models\Platoon;
 use App\Models\Squad;
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 
 class SquadRepository
 {
     private array $labels = [
-        'Current', '14 days', '30-60 days', 'More than 60 days'
+        'Current', '14 days', '30-60 days', 'More than 60 days',
     ];
 
     private array $colors = [
-        '#28b62c', '#ff851b', '#ff4136', '#000'
+        '#28b62c', '#ff851b', '#ff4136', '#000',
     ];
 
     private CarbonImmutable $twoWeeksAgo;
@@ -50,7 +48,7 @@ class SquadRepository
 
         $moreThanOneMonth = $squad->members()
             ->whereBetween($string, [
-                $this->oneMonthAgo->subDays(60), $this->oneMonthAgo
+                $this->oneMonthAgo->subDays(60), $this->oneMonthAgo,
             ])->count();
 
         $moreThan60Days = $squad->members()
@@ -63,7 +61,7 @@ class SquadRepository
                 $twoWeeks,
                 $oneMonth,
                 $moreThanOneMonth,
-                $moreThan60Days
+                $moreThan60Days,
             ],
             'colors' => $this->colors,
         ];

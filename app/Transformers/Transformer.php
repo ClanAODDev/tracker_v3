@@ -3,9 +3,7 @@
 namespace App\Transformers;
 
 /**
- * Class Transformer
- *
- * @package App\Transformers
+ * Class Transformer.
  */
 abstract class Transformer
 {

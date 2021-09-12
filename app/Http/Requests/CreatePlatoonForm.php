@@ -26,18 +26,18 @@ class CreatePlatoonForm extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'max:40',
-            'logo' => 'nullable|url',
-            'order' => 'required|integer',
+            'name'      => 'max:40',
+            'logo'      => 'nullable|url',
+            'order'     => 'required|integer',
             'leader_id' => [
                 'exists:members,clan_id',
-                'unique:platoons,leader_id'
-            ]
+                'unique:platoons,leader_id',
+            ],
         ];
     }
 
     /**
-     * Custom error messages
+     * Custom error messages.
      *
      * @return array
      */
@@ -51,11 +51,11 @@ class CreatePlatoonForm extends FormRequest
 
     /**
      * Persist the platoon, and handle member assignment update
-     * if a leader was provided
+     * if a leader was provided.
      */
     public function persist()
     {
-        $platoon = new Platoon;
+        $platoon = new Platoon();
 
         $platoon->name = $this->name;
         $platoon->order = $this->order;
@@ -92,7 +92,7 @@ class CreatePlatoonForm extends FormRequest
 
         $leader->platoon()
             ->associate($platoon)
-            ->assignPosition("platoon leader")
+            ->assignPosition('platoon leader')
             ->save();
 
         $platoon->leader()->associate($leader)->save();

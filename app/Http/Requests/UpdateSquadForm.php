@@ -6,9 +6,7 @@ use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class UpdateSquadForm
- *
- * @package App\Http\Requests
+ * Class UpdateSquadForm.
  */
 class UpdateSquadForm extends FormRequest
 {
@@ -40,7 +38,7 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
-     * Custom error messages
+     * Custom error messages.
      *
      * @return array
      */
@@ -53,7 +51,7 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
-     * Save the squad
+     * Save the squad.
      */
     public function persist()
     {
@@ -86,7 +84,7 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
-     * Assign members to a squad
+     * Assign members to a squad.
      *
      * @param $squad
      */
@@ -100,7 +98,7 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
-     * Reset the leader
+     * Reset the leader.
      *
      * @param $squad
      */
@@ -114,7 +112,7 @@ class UpdateSquadForm extends FormRequest
     }
 
     /**
-     * Assign a leader
+     * Assign a leader.
      *
      * @param $squad
      */
@@ -126,7 +124,7 @@ class UpdateSquadForm extends FormRequest
 
         $leader->squad()->associate($squad)
             ->platoon()->associate($this->route('platoon'))
-            ->assignPosition("squad leader")
+            ->assignPosition('squad leader')
             ->save();
     }
 }

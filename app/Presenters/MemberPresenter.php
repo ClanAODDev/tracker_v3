@@ -3,26 +3,27 @@
 namespace App\Presenters;
 
 use App\Models\Member;
-use Carbon\Carbon;
+
 class MemberPresenter extends \App\Presenters\Presenter
 {
     /**
      * @var Member
      */
     public $member;
+
     /**
      * MemberPresenter constructor.
-     *
-     * @param Member $member
      */
-    public function __construct(\App\Models\Member $member)
+    public function __construct(Member $member)
     {
         $this->member = $member;
     }
+
     public function lastPromoted($emptyVal = 'Never')
     {
         return !$this->member->last_promoted_at ? $emptyVal ?? 'Never' : $this->member->last_promoted_at->format('Y-m-d');
     }
+
     public function lastActive($value)
     {
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
@@ -33,10 +34,12 @@ class MemberPresenter extends \App\Presenters\Presenter
         //        }
         return $value->diffForHumans();
     }
+
     /**
-     * Returns member's name with position icon
+     * Returns member's name with position icon.
      *
      * @param bool $showRank
+     *
      * @return string
      */
     public function nameWithIcon($showRank = false)
@@ -45,20 +48,24 @@ class MemberPresenter extends \App\Presenters\Presenter
             $title = $this->member->position->name ?: null;
             $icon = $this->member->position->icon ? "<i class=\"{$this->member->position->icon}\"></i>" : null;
             $name = $showRank ? $this->rankName() : $this->member->name;
+
             return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$name}</span>";
         }
+
         return $this->member->name;
     }
+
     /**
-     * Gets member's rank and name
+     * Gets member's rank and name.
      *
      * @return string
      */
     public function rankName()
     {
-        if ($this->member->rank_id === 14) {
+        if (14 === $this->member->rank_id) {
             return $this->member->name;
         }
-        return $this->member->rank->abbreviation . " " . $this->member->name;
+
+        return $this->member->rank->abbreviation . ' ' . $this->member->name;
     }
 }

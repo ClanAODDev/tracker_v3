@@ -34,7 +34,8 @@ class DivisionEdited extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -44,8 +45,10 @@ class DivisionEdited extends Notification
 
     /**
      * @param $notifiable
-     * @return array
+     *
      * @throws Exception
+     *
+     * @return array
      */
     public function toWebhook($notifiable)
     {

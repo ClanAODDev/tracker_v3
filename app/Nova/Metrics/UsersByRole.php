@@ -13,7 +13,6 @@ class UsersByRole extends Partition
     /**
      * Calculate the value of the metric.
      *
-     * @param Request $request
      * @return mixed
      */
     public function calculate(Request $request)
@@ -24,7 +23,7 @@ class UsersByRole extends Partition
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  DateTimeInterface|DateInterval|float|int
+     * @return DateInterval|DateTimeInterface|float|int
      */
     public function cacheFor()
     {

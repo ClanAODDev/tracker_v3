@@ -15,11 +15,11 @@ class Note extends Model
     protected static $recordEvents = [
         'created',
         'updated',
-        'deleted'
+        'deleted',
     ];
 
     protected static $noteTypes = [
-        'misc' => 'Misc',
+        'misc'     => 'Misc',
         'negative' => 'Negative',
         'positive' => 'Positive',
     ];
@@ -29,9 +29,8 @@ class Note extends Model
         'body',
         'forum_thread_id',
         'author_id',
-        'member_id'
+        'member_id',
     ];
-
 
     /**
      * @return array
@@ -67,12 +66,12 @@ class Note extends Model
     }
 
     /**
-     * Check to see if note has been changed
+     * Check to see if note has been changed.
      *
      * @return bool
      */
     public function changed()
     {
-        return $this->updated_at != $this->created_at;
+        return $this->updated_at !== $this->created_at;
     }
 }

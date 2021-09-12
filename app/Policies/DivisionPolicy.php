@@ -13,7 +13,6 @@ class DivisionPolicy
     /**
      * Create a new policy instance.
      *
-     * @param User $user
      * @return bool
      */
     public function before(User $user)
@@ -24,8 +23,6 @@ class DivisionPolicy
     }
 
     /**
-     * @param User $user
-     * @param Division $division
      * @return bool
      */
     public function update(User $user, Division $division)
@@ -35,18 +32,17 @@ class DivisionPolicy
          * is the user a senior leader?
          * is the user a SGT in the division?
          */
-
         if ($user->isRole('admin')) {
             return true;
         }
 
-        if ($user->member->isDivisionLeader($division) &&
-            $user->isRole('sr_ldr')
+        if ($user->member->isDivisionLeader($division)
+            && $user->isRole('sr_ldr')
         ) {
             return true;
         }
 
-        if ($user->member->division->id == $division->id
+        if ($user->member->division->id === $division->id
             && $user->isRole('sr_ldr')
             && $user->member->isRank(['Sgt', 'SSgt'])
         ) {
@@ -58,8 +54,8 @@ class DivisionPolicy
 
     public function delete(User $user, Division $division)
     {
-        if ($user->member->isDivisionLeader($division) &&
-            $user->isRole('sr_ldr')
+        if ($user->member->isDivisionLeader($division)
+            && $user->isRole('sr_ldr')
         ) {
             return true;
         }

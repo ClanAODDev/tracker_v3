@@ -15,12 +15,10 @@ class DivisionController extends ApiController
     public function __construct(
         DivisionBasicTransformer $divisionTransformer,
         MemberBasicTransformer $memberTransformer
-    )
-    {
+    ) {
         $this->divisionTransformer = $divisionTransformer;
         $this->memberTransformer = $memberTransformer;
     }
-
 
     public function index(): JsonResponse
     {
@@ -35,7 +33,7 @@ class DivisionController extends ApiController
         }
 
         return $this->setStatusCode(403)
-            ->respondWithError("Not authorized to access this endpoint");
+            ->respondWithError('Not authorized to access this endpoint');
     }
 
     public function show($slug): JsonResponse
@@ -44,9 +42,9 @@ class DivisionController extends ApiController
             ->active()
             ->firstOrFail();
 
-        if ($division != auth()->user()->member->division && !$this->tokenCan('clan:read')) {
+        if ($division !== auth()->user()->member->division && !$this->tokenCan('clan:read')) {
             return $this->setStatusCode(403)
-                ->respondWithError("Not authorized to access this endpoint");
+                ->respondWithError('Not authorized to access this endpoint');
         }
 
         $members = $division->members()->paginate(25);
@@ -56,7 +54,7 @@ class DivisionController extends ApiController
             [
                 'data' => [
                     'division' => $this->divisionTransformer->transform($division),
-                    'members' => $this->memberTransformer->transformCollection(
+                    'members'  => $this->memberTransformer->transformCollection(
                         $members->all()
                     ),
                 ],

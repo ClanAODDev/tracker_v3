@@ -22,7 +22,7 @@ class SendBulkPm extends FormRequest
     public function messages(): array
     {
         return [
-            'pm-member-data.min' => 'You must select at least :min members'
+            'pm-member-data.min' => 'You must select at least :min members',
         ];
     }
 }

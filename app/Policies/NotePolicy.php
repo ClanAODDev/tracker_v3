@@ -11,12 +11,9 @@ class NotePolicy
 
     /**
      * Create a new policy instance.
-     *
-     * @return void
      */
     public function __construct()
     {
-        //
     }
 
     public function before(User $user)
@@ -28,7 +25,7 @@ class NotePolicy
     }
 
     /**
-     * Officers and above can see notes
+     * Officers and above can see notes.
      *
      * @return bool
      */
@@ -39,11 +36,10 @@ class NotePolicy
 
     public function edit()
     {
-        //
     }
 
     /**
-     * Only officers and above can create notes
+     * Only officers and above can create notes.
      *
      * @return bool
      */

@@ -29,7 +29,7 @@ class WebhookChannel
 
     /**
      * @param Notifiable $notifiable
-     * @param Notification $notification
+     *
      * @throws WebHookFailedException
      * @throws GuzzleException
      */
@@ -40,7 +40,7 @@ class WebhookChannel
         }
 
         if (method_exists($notification, 'toWebhook')) {
-            $body = (array)$notification->toWebhook($notifiable);
+            $body = (array) $notification->toWebhook($notifiable);
         } else {
             $body = $notification->toArray($notifiable);
         }
@@ -52,7 +52,7 @@ class WebhookChannel
         $request = new Request('POST', $url, $headers, json_encode(array_merge(
             $body,
             [
-                'username' => 'AOD Tracker',
+                'username'   => 'AOD Tracker',
                 'avatar_url' => 'https://tracker.clanaod.net/images/logo_v2.png',
             ]
         )));

@@ -24,13 +24,12 @@ class TrainingController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function update(\Illuminate\Http\Request $request)
     {
         $request->validate(['clan_id' => 'exists:members,clan_id'], [
-            'clan_id.exists' => 'That member id appears to be invalid'
+            'clan_id.exists' => 'That member id appears to be invalid',
         ]);
 
         \App\Models\Member::whereClanId($request->clan_id)->update([

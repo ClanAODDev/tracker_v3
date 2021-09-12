@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 /**
- * Class Leave
- *
- * @package App
+ * Class Leave.
  */
 class Leave extends \Illuminate\Database\Eloquent\Model
 {
@@ -24,6 +21,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
     protected $fillable = ['reason', 'end_date', 'extended'];
+
     /**
      * @return BelongsTo
      */
@@ -31,6 +29,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     {
         return $this->belongsTo(\App\Models\Member::class, 'member_id', 'clan_id');
     }
+
     /**
      * @return BelongsTo
      */
@@ -38,6 +37,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     {
         return $this->belongsTo(\App\Models\Note::class);
     }
+
     /**
      * @return BelongsTo
      */
@@ -45,6 +45,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
     /**
      * @return BelongsTo
      */
@@ -52,6 +53,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
     /**
      * @return bool
      */
@@ -59,8 +61,9 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     {
         return \Carbon\Carbon::today() > $this->end_date->format('Y-m-d');
     }
+
     /**
-     * Returns end date in a short format
+     * Returns end date in a short format.
      *
      * @return mixed
      */

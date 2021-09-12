@@ -9,12 +9,11 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncMemberData extends Job implements ShouldQueue
 {
-    use InteractsWithQueue, SerializesModels;
+    use InteractsWithQueue;
+    use SerializesModels;
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {

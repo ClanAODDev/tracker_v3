@@ -9,7 +9,6 @@ use App\Models\Slack\Command;
  * This doesn't actually do anything. Just a gag.
  *
  * Class Division
- * @package App\Models\Slack\Commands
  */
 class Delete extends Base implements Command
 {
@@ -25,9 +24,9 @@ class Delete extends Base implements Command
      */
     public function handle()
     {
-        if (strlen($this->params) <= 3) {
+        if (\strlen($this->params) <= 3) {
             return [
-                'text' => "Please provide the member ID you wish to delete",
+                'text' => 'Please provide the member ID you wish to delete',
             ];
         }
 
@@ -35,7 +34,7 @@ class Delete extends Base implements Command
 
         if (!$member) {
             return [
-                'text' => "I can't delete a member that doesn't exist. Please provide AOD Clan ID."
+                'text' => "I can't delete a member that doesn't exist. Please provide AOD Clan ID.",
             ];
         }
 
@@ -47,7 +46,7 @@ class Delete extends Base implements Command
         ];
 
         return [
-            'text' => $responses[array_rand($responses)]
+            'text' => $responses[array_rand($responses)],
         ];
     }
 }

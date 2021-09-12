@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordDMMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class NotifyUserTicketCreated extends Notification
@@ -15,7 +14,8 @@ class NotifyUserTicketCreated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -25,8 +25,10 @@ class NotifyUserTicketCreated extends Notification
 
     /**
      * @param $ticket
-     * @return array
+     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function toWebhook($ticket)
     {

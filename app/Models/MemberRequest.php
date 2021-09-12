@@ -49,11 +49,12 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     public function isOnHold()
     {
-        return ($this->hold_placed_at);
+        return $this->hold_placed_at;
     }
 
     /**
      * @param $query
+     *
      * @return mixed
      */
     public function scopePending($query)
@@ -73,6 +74,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $query
+     *
      * @return mixed
      */
     public function scopeApproved($query)
@@ -85,7 +87,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function isApproved()
     {
-        return $this->approved_at != null;
+        return null !== $this->approved_at;
     }
 
     /**
@@ -93,11 +95,12 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function isCancelled()
     {
-        return $this->cancelled_at != null;
+        return null !== $this->cancelled_at;
     }
 
     /**
      * @param $query
+     *
      * @return mixed
      */
     public function scopeCancelled($query)
@@ -115,6 +118,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $query
+     *
      * @return mixed
      */
     public function scopeErrors($query)
@@ -123,23 +127,24 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * Approve a member request
+     * Approve a member request.
      */
     public function approve()
     {
         $this->update([
-            'approver_id' => auth()->user()->member->clan_id, 'approved_at' => now(), 'cancelled_at' => null
+            'approver_id' => auth()->user()->member->clan_id, 'approved_at' => now(), 'cancelled_at' => null,
         ]);
     }
 
     /**
-     * Cancel a member request
+     * Cancel a member request.
+     *
      * @param $notes
      */
     public function cancel()
     {
         $this->update([
-            'cancelled_at' => now(), 'canceller_id' => auth()->user()->member->clan_id, 'notes' => request('notes')
+            'cancelled_at' => now(), 'canceller_id' => auth()->user()->member->clan_id, 'notes' => request('notes'),
         ]);
     }
 
@@ -153,7 +158,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function getNameAttribute()
     {
-        return "AOD_" . $this->member->name;
+        return 'AOD_' . $this->member->name;
     }
 
     /**
@@ -165,7 +170,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * mark a request processed
+     * mark a request processed.
      */
     public function process()
     {

@@ -11,8 +11,8 @@ class HasPrimaryDivision
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
+     * @param Request $request
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
@@ -21,14 +21,15 @@ class HasPrimaryDivision
             $user = Auth::user();
 
             if (!$user->member) {
-                abort(408, "No associated member record");
+                abort(408, 'No associated member record');
+
                 return false;
             }
 
-
             if (!$user->member->division) {
                 //Auth::logout();
-                abort(408, "You do not have a primary division.");
+                abort(408, 'You do not have a primary division.');
+
                 return false;
             }
         }

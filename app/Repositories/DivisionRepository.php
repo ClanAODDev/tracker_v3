@@ -5,28 +5,24 @@ namespace App\Repositories;
 use App\Models\Division;
 
 /**
- * Class DivisionRepository
- *
- * @package App\Repositories
+ * Class DivisionRepository.
  */
 class DivisionRepository
 {
     /**
-     * @param Division $division
      * @param int $limit
+     *
      * @return \Illuminate\Support\Collection
      */
-    public function censusCounts(\App\Models\Division $division, $limit = 52)
+    public function censusCounts(Division $division, $limit = 52)
     {
-        $censuses = collect(\DB::select(\DB::raw("\n                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date \n                FROM censuses WHERE division_id = {$division->id} \n                GROUP BY date(created_at) \n                ORDER BY date DESC LIMIT {$limit};\n            ")));
-        return $censuses;
+        return collect(\DB::select(\DB::raw("\n                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date \n                FROM censuses WHERE division_id = {$division->id} \n                GROUP BY date(created_at) \n                ORDER BY date DESC LIMIT {$limit};\n            ")));
     }
 
     /**
-     * @param Division $division
      * @return array
      */
-    public function getPromotionsData(\App\Models\Division $division)
+    public function getPromotionsData(Division $division)
     {
         $members = $division->members()->whereBetween('last_promoted', [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()])->get();
 
@@ -34,38 +30,37 @@ class DivisionRepository
     }
 
     /**
-     * @param Division $division
      * @return array
      */
-    public function getDivisionActivity(\App\Models\Division $division)
+    public function getDivisionActivity(Division $division)
     {
         $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
         $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
         $twoWeeks = $division->members()->where('last_activity', '>=', $twoWeeksAgo);
         $oneMonth = $division->members()->where('last_activity', '<=', $twoWeeksAgo)->where('last_activity', '>=', $oneMonthAgo);
         $moreThanOneMonth = $division->members()->where('last_activity', '<=', $oneMonthAgo);
+
         return ['labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'], 'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
     }
 
     /**
-     * @param Division $division
      * @return array
      */
-    public function getDivisionTSActivity(\App\Models\Division $division)
+    public function getDivisionTSActivity(Division $division)
     {
         $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
         $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
         $twoWeeks = $division->members()->where('last_ts_activity', '>=', $twoWeeksAgo);
         $oneMonth = $division->members()->where('last_ts_activity', '<=', $twoWeeksAgo)->where('last_ts_activity', '>=', $oneMonthAgo);
         $moreThanOneMonth = $division->members()->where('last_ts_activity', '<=', $oneMonthAgo);
+
         return ['labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'], 'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()], 'colors' => ['#28b62c', '#ff851b', '#ff4136']];
     }
 
     /**
-     * @param Division $division
      * @return array
      */
-    public function getRankDemographic(\App\Models\Division $division)
+    public function getRankDemographic(Division $division)
     {
         $ranks = \DB::select('ranks.abbreviation')->addSelect(\DB::raw('count(*) as count'))->from('members')->join('ranks', function ($join) {
             $join->on('ranks.id', '=', 'members.rank_id');
@@ -78,13 +73,14 @@ class DivisionRepository
             $labels[] = $rank->abbreviation;
             $values[] = $rank->count;
         }
-        $data = ['labels' => $labels, 'values' => $values];
-        return $data;
+
+        return ['labels' => $labels, 'values' => $values];
     }
 
     /**
      * @param $divisionId
      * @param null $startDate
+     *
      * @return mixed
      */
     public function recruitsLast6Months($divisionId, $startDate)
@@ -95,6 +91,7 @@ class DivisionRepository
     /**
      * @param $divisionId
      * @param null $startDate
+     *
      * @return mixed
      */
     public function removalsLast6Months($divisionId, $startDate)
@@ -105,6 +102,7 @@ class DivisionRepository
     /**
      * @param $divisionId
      * @param null $startDate
+     *
      * @return mixed
      */
     public function populationLast6Months($divisionId, $startDate)

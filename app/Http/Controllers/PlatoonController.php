@@ -19,8 +19,6 @@ class PlatoonController extends Controller
 {
     /**
      * PlatoonController constructor.
-     *
-     * @param  PlatoonRepository  $platoon
      */
     public function __construct(PlatoonRepository $platoon)
     {
@@ -32,9 +30,9 @@ class PlatoonController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param  Division  $division
-     * @return Response
      * @throws AuthorizationException
+     *
+     * @return Response
      */
     public function create(Division $division)
     {
@@ -54,8 +52,6 @@ class PlatoonController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreatePlatoonForm  $form
-     * @param  Division  $division
      * @return RedirectResponse
      */
     public function store(CreatePlatoonForm $form, Division $division)
@@ -74,23 +70,21 @@ class PlatoonController extends Controller
     }
 
     /**
-     * @param  CreatePlatoonForm  $request
-     * @param  Division  $division
+     * @param CreatePlatoonForm $request
+     *
      * @return bool
      */
     public function isMemberOfDivision(Division $division, $request)
     {
         $member = Member::whereClanId($request->leader_id)->first();
 
-        return $member->division instanceof Division &&
-            $member->division->id === $division->id;
+        return $member->division instanceof Division
+            && $member->division->id === $division->id;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Division  $division
-     * @param  Platoon  $platoon
      * @return Response|StreamedResponse
      */
     public function show(Division $division, Platoon $platoon)
@@ -99,7 +93,7 @@ class PlatoonController extends Controller
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
             'position',
-            'leave'
+            'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
@@ -113,33 +107,9 @@ class PlatoonController extends Controller
         );
     }
 
-
-    /**
-     * @param $division
-     * @return Closure
-     */
-    private function filterHandlesToPrimaryHandle($division)
-    {
-        return function ($query) use ($division) {
-            $query->where('id', $division->handle_id);
-        };
-    }
-
-    /**
-     * @return Closure
-     */
-    private function getMemberHandle()
-    {
-        return function ($member) {
-            $member->handle = $member->handles->first();
-        };
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Division  $division
-     * @param  Platoon  $platoon
      * @return Response
      */
     public function edit(Division $division, Platoon $platoon)
@@ -154,9 +124,6 @@ class PlatoonController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdatePlatoonForm  $form
-     * @param  Division  $division
-     * @param  Platoon  $platoon
      * @return RedirectResponse|Response
      */
     public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
@@ -167,10 +134,10 @@ class PlatoonController extends Controller
                 ->withInput();
         }
 
-        $toastMessage = "Your changes were saved";
+        $toastMessage = 'Your changes were saved';
 
         if ($form->member_ids) {
-            $assignedCount = count(json_decode($form->member_ids));
+            $assignedCount = \count(json_decode($form->member_ids));
             $toastMessage .= " and {$assignedCount} members were assigned!";
         }
 
@@ -184,8 +151,6 @@ class PlatoonController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  DeletePlatoonForm  $form
-     * @param  Division  $division
      * @return RedirectResponse
      */
     public function destroy(DeletePlatoonForm $form, Division $division)
@@ -209,10 +174,10 @@ class PlatoonController extends Controller
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
-            $squad->members = $squad->members->filter(fn($member) => $member->position_id === 1)->sortbyDesc(function (
+            $squad->members = $squad->members->filter(fn ($member) => 1 === $member->position_id)->sortbyDesc(function (
                 $member
             ) use ($squad) {
-                return $squad->leader && $squad->leader->clan_id == $member->recruiter_id;
+                return $squad->leader && $squad->leader->clan_id === $member->recruiter_id;
             });
         });
 
@@ -220,10 +185,8 @@ class PlatoonController extends Controller
     }
 
     /**
-     * Export platoon members as CSV
+     * Export platoon members as CSV.
      *
-     * @param  Division  $division
-     * @param  Platoon  $platoon
      * @return StreamedResponse
      */
     public function exportAsCSV(Division $division, Platoon $platoon)
@@ -232,7 +195,7 @@ class PlatoonController extends Controller
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
             'position',
-            'leave'
+            'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
@@ -259,7 +222,7 @@ class PlatoonController extends Controller
                 'Last TS Activity',
                 'Last Promoted',
                 'Member Handle',
-                'Member Forum Posts'
+                'Member Forum Posts',
             ],
         ]);
 
@@ -270,8 +233,30 @@ class PlatoonController extends Controller
             }
             fclose($handle);
         }, 200, [
-            'Content-type' => 'text/csv',
+            'Content-type'        => 'text/csv',
             'Content-Disposition' => 'attachment; filename=members.csv',
         ]);
+    }
+
+    /**
+     * @param $division
+     *
+     * @return Closure
+     */
+    private function filterHandlesToPrimaryHandle($division)
+    {
+        return function ($query) use ($division) {
+            $query->where('id', $division->handle_id);
+        };
+    }
+
+    /**
+     * @return Closure
+     */
+    private function getMemberHandle()
+    {
+        return function ($member) {
+            $member->handle = $member->handles->first();
+        };
     }
 }

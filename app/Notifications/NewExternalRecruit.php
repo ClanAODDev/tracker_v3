@@ -37,6 +37,7 @@ class NewExternalRecruit extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -45,8 +46,9 @@ class NewExternalRecruit extends Notification
     }
 
     /**
-     * @return array
      * @throws Exception
+     *
+     * @return array
      */
     public function toWebhook()
     {
@@ -59,13 +61,13 @@ class NewExternalRecruit extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name' => '**EXTERNAL RECRUIT**',
-                    'value' => addslashes("{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!")
+                    'name'  => '**EXTERNAL RECRUIT**',
+                    'value' => addslashes("{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$this->division->name} Division!"),
                 ],
                 [
-                    'name' => 'View member profile',
-                    'value' => route('member', $this->member->getUrlParams())
-                ]
+                    'name'  => 'View member profile',
+                    'value' => route('member', $this->member->getUrlParams()),
+                ],
             ])
             ->send();
     }

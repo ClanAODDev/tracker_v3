@@ -25,7 +25,7 @@ class UpdateLeave extends FormRequest
     public function rules()
     {
         return [
-            'end_date' => 'date|after:today'
+            'end_date' => 'date|after:today',
         ];
     }
 

@@ -13,7 +13,7 @@ class Role extends Model
     }
 
     /**
-     * relationship - role belongs to many users
+     * relationship - role belongs to many users.
      */
     public function users()
     {

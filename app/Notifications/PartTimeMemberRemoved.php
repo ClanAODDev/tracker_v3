@@ -34,7 +34,8 @@ class PartTimeMemberRemoved extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -44,8 +45,10 @@ class PartTimeMemberRemoved extends Notification
 
     /**
      * @param $notifiable
-     * @return array
+     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function toWebhook($notifiable)
     {
@@ -57,13 +60,13 @@ class PartTimeMemberRemoved extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name' => "**PART TIME MEMBER REMOVED**",
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$primaryDivision->name}, and they were a part-time member in your division")
+                    'name'  => '**PART TIME MEMBER REMOVED**',
+                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$primaryDivision->name}, and they were a part-time member in your division"),
                 ],
                 [
-                    'name' => 'View Member Profile',
-                    'value' => route('member', $this->member->getUrlParams())
-                ]
+                    'name'  => 'View Member Profile',
+                    'value' => route('member', $this->member->getUrlParams()),
+                ],
             ])->send();
     }
 }

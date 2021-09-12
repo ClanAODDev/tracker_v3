@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteMember;
 use App\Models\Division;
 use App\Models\Handle;
-use App\Http\Requests\DeleteMember;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Position;
@@ -18,9 +18,7 @@ use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 /**
- * Class MemberController
- *
- * @package App\Http\Controllers
+ * Class MemberController.
  */
 class MemberController extends Controller
 {
@@ -31,8 +29,6 @@ class MemberController extends Controller
 
     /**
      * MemberController constructor.
-     *
-     * @param MemberRepository $member
      */
     public function __construct(MemberRepository $member)
     {
@@ -42,10 +38,12 @@ class MemberController extends Controller
     }
 
     /**
-     * Search for a member
+     * Search for a member.
      *
      * @param $name
+     *
      * @return Factory|View
+     *
      * @internal param $name
      */
     public function search($name = null)
@@ -69,9 +67,8 @@ class MemberController extends Controller
     }
 
     /**
-     * Endpoint for Bootcomplete
+     * Endpoint for Bootcomplete.
      *
-     * @param Request $request
      * @return mixed
      */
     public function searchAutoComplete(Request $request)
@@ -80,9 +77,9 @@ class MemberController extends Controller
 
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 
-        return $members->map(fn($member) => [
-            'id' => $member->clan_id,
-            'label' => $member->name
+        return $members->map(fn ($member) => [
+            'id'    => $member->clan_id,
+            'label' => $member->name,
         ]);
     }
 
@@ -97,32 +94,6 @@ class MemberController extends Controller
         return view('member.manage-ingame-handles', compact('handles', 'member', 'division'));
     }
 
-    /**
-     * @param Member $member
-     * @return Collection
-     */
-    private function getHandles(Member $member)
-    {
-        $handles = Handle::all()->map(function ($handle) use ($member) {
-            $newHandle = [
-                'id' => $handle->id,
-                'label' => $handle->label,
-                'type' => $handle->type,
-                'comments' => $handle->comments,
-                'enabled' => false,
-            ];
-
-            if ($member->handles->contains($handle->id)) {
-                $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(fn($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
-            }
-
-            return $newHandle;
-        });
-
-        return $handles->sortBy('type')->values();
-    }
-
     public function editPartTime(Member $member)
     {
         $this->authorize('managePartTime', $member);
@@ -131,8 +102,8 @@ class MemberController extends Controller
 
         /**
          * omit divisions the member is already part-time in
-         * omit member's primary division from list of available divisions
-         **/
+         * omit member's primary division from list of available divisions.
+         */
         $divisions = Division::active()->get()->except(
             $member->partTimeDivisions->pluck('id')->toArray()
         )->filter(function ($division) use ($member) {
@@ -149,8 +120,8 @@ class MemberController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Member $member
      * @return Response
+     *
      * @internal param int $id
      */
     public function show(Member $member)
@@ -160,7 +131,7 @@ class MemberController extends Controller
         // hide admin notes from non-admin users
         $notes = $member->notes()->with('author')->get()
             ->filter(function ($note) {
-                if ($note->type == 'sr_ldr') {
+                if ('sr_ldr' === $note->type) {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
                 }
 
@@ -182,9 +153,8 @@ class MemberController extends Controller
     }
 
     /**
-     * Assigns a position to the given member
+     * Assigns a position to the given member.
      *
-     * @param Request $request
      * @throws AuthorizationException
      */
     public function updatePosition(Request $request)
@@ -198,9 +168,9 @@ class MemberController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Member $member
-     * @return Response
      * @throws AuthorizationException
+     *
+     * @return Response
      */
     public function edit(Member $member)
     {
@@ -218,9 +188,7 @@ class MemberController extends Controller
     }
 
     /**
-     * Sync player handles
-     *
-     * @param Request $request
+     * Sync player handles.
      */
     public function updateHandles(Request $request)
     {
@@ -229,7 +197,7 @@ class MemberController extends Controller
 
         foreach ($request->handles as $handle) {
             $handles[$handle['id']] = [
-                'value' => $handle['value']
+                'value' => $handle['value'],
             ];
         }
 
@@ -238,10 +206,8 @@ class MemberController extends Controller
     }
 
     /**
-     * Remove member from AOD
+     * Remove member from AOD.
      *
-     * @param Member $member
-     * @param DeleteMember $form
      * @return Response
      */
     public function destroy(Member $member, DeleteMember $form)
@@ -251,11 +217,11 @@ class MemberController extends Controller
         $form->persist();
 
         $this->showToast(
-            ucwords($member->name ?? 'Member') . " has been removed."
+            ucwords($member->name ?? 'Member') . ' has been removed.'
         );
 
         return redirect()->route('division', [
-            $division->abbreviation
+            $division->abbreviation,
         ]);
     }
 
@@ -277,6 +243,7 @@ class MemberController extends Controller
 
     /**
      * @param $member
+     *
      * @return RedirectResponse
      */
     public function unassignMember($member)
@@ -288,5 +255,30 @@ class MemberController extends Controller
         $this->showToast('Member assignments reset successfully');
 
         return redirect()->route('member', $member->getUrlParams());
+    }
+
+    /**
+     * @return Collection
+     */
+    private function getHandles(Member $member)
+    {
+        $handles = Handle::all()->map(function ($handle) use ($member) {
+            $newHandle = [
+                'id'       => $handle->id,
+                'label'    => $handle->label,
+                'type'     => $handle->type,
+                'comments' => $handle->comments,
+                'enabled'  => false,
+            ];
+
+            if ($member->handles->contains($handle->id)) {
+                $newHandle['enabled'] = true;
+                $newHandle['value'] = $member->handles->filter(fn ($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
+            }
+
+            return $newHandle;
+        });
+
+        return $handles->sortBy('type')->values();
     }
 }

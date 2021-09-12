@@ -15,7 +15,6 @@ use Illuminate\View\View;
 class NoteController extends Controller
 {
     /**
-     * @param CreateNote $form
      * @return RedirectResponse
      */
     public function store(CreateNote $form)
@@ -28,10 +27,9 @@ class NoteController extends Controller
     }
 
     /**
-     * @param Member $member
-     * @param Note $note
-     * @return Factory|View
      * @throws AuthorizationException
+     *
+     * @return Factory|View
      */
     public function edit(Member $member, Note $note)
     {
@@ -51,19 +49,17 @@ class NoteController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Member $member
-     * @param Note $note
-     * @return RedirectResponse
      * @throws AuthorizationException
+     *
+     * @return RedirectResponse
      */
     public function update(Request $request, Member $member, Note $note)
     {
         $this->authorize('delete', $member);
 
         $this->validate(request(), [
-            'body.required' => 'You must provide content for your note',
-            'forum_thread_id.numeric' => 'Forum thread ID must be a number'
+            'body.required'           => 'You must provide content for your note',
+            'forum_thread_id.numeric' => 'Forum thread ID must be a number',
         ]);
 
         $note->update(request()->all());

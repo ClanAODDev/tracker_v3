@@ -26,16 +26,16 @@ class CreateChannel extends FormRequest
     public function rules()
     {
         return [
-            'channel-name' => 'required|max:21'
+            'channel-name' => 'required|max:21',
         ];
     }
 
     public function persist(slack $client)
     {
-        $channelName = Str::slug(request()->get('division') . "-" . request()->get('channel-name'));
+        $channelName = Str::slug(request()->get('division') . '-' . request()->get('channel-name'));
 
         return $client->channels->create([
-            'name' => $channelName
+            'name' => $channelName,
         ]);
     }
 }

@@ -6,16 +6,13 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
- * Class UserPolicy
- *
- * @package App\Policies
+ * Class UserPolicy.
  */
 class UserPolicy
 {
     use AuthorizesRequests;
 
     /**
-     * @param User $user
      * @return bool
      */
     public function before(User $user)
@@ -27,6 +24,7 @@ class UserPolicy
 
     /**
      * @param User $user
+     *
      * @return bool
      */
     public function update()
@@ -86,11 +84,11 @@ class UserPolicy
 
     public function manageSlack(User $user)
     {
-        return $user->isRole('sr_ldr') && $user->member->position_id == 6;
+        return $user->isRole('sr_ldr') && 6 === $user->member->position_id;
     }
 
     public function train(User $user)
     {
-        return $user->member->rank_id > 9 && in_array($user->role_id, [4, 5]);
+        return $user->member->rank_id > 9 && \in_array($user->role_id, [4, 5], true);
     }
 }

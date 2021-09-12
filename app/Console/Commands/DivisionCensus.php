@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Census;
 use App\Models\Division;
 use Illuminate\Console\Command;
+
 class DivisionCensus extends \Illuminate\Console\Command
 {
     /**
@@ -19,15 +19,15 @@ class DivisionCensus extends \Illuminate\Console\Command
      * @var string
      */
     protected $description = 'Collect division census data across all active divisions';
+
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
         parent::__construct();
     }
+
     /**
      * Execute the console command.
      *
@@ -37,6 +37,7 @@ class DivisionCensus extends \Illuminate\Console\Command
     {
         if ($this->censusAlreadyPerformed()) {
             $this->alert('Census already performed. No action taken.');
+
             exit;
         }
         $divisions = \App\Models\Division::active()->get();
@@ -47,10 +48,11 @@ class DivisionCensus extends \Illuminate\Console\Command
         }
         $this->comment('Census complete.');
     }
+
     /**
      * @param $division
      */
-    protected function recordEntry(\App\Models\Division $division)
+    protected function recordEntry(Division $division)
     {
         $census = new \App\Models\Census();
         $census->division()->associate($division);
@@ -59,12 +61,14 @@ class DivisionCensus extends \Illuminate\Console\Command
         $census->weekly_ts_count = $division->membersActiveOnTsSinceDaysAgo(8)->count();
         $census->save();
     }
+
     /**
      * @return bool
      */
     private function censusAlreadyPerformed()
     {
         $census = \App\Models\Census::latest()->first();
-        return $census->created_at->format('Y-m-d') == now()->format('Y-m-d');
+
+        return $census->created_at->format('Y-m-d') === now()->format('Y-m-d');
     }
 }

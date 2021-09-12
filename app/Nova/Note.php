@@ -37,7 +37,6 @@ class Note extends Resource
     /**
      * Get the fields displayed by the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -50,23 +49,21 @@ class Note extends Resource
             BelongsTo::make('Author', 'author', \App\Nova\User::class),
 
             Select::make('type')->options([
-                'misc' => 'Misc',
+                'misc'     => 'Misc',
                 'negative' => 'Negative',
                 'positive' => 'Positive',
-                'sr_ldr' => 'SGT+'
+                'sr_ldr'   => 'SGT+',
             ])->displayUsingLabels()->sortable(),
 
             Date::make('Created At'),
 
             Text::make('body'),
-
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -77,7 +74,6 @@ class Note extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -88,7 +84,6 @@ class Note extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -99,7 +94,6 @@ class Note extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function actions(Request $request)

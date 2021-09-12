@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
-use App\Notifications\NotifyCallerTicketUpdated;
 use App\Notifications\NotifyAdminTicketCreated;
+use App\Notifications\NotifyCallerTicketUpdated;
 use App\Notifications\NotifyNewTicketOwner;
 use App\Notifications\NotifyUserTicketCreated;
 use Illuminate\Contracts\Foundation\Application;
@@ -18,7 +18,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class TicketController extends Controller
 {
-
     /**
      * Create a new controller instance.
      */
@@ -74,7 +73,7 @@ class TicketController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Application|RedirectResponse|Response|Redirector
+     * @return Application|Redirector|RedirectResponse|Response
      */
     public function create()
     {
@@ -90,14 +89,13 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
-     * @return Application|RedirectResponse|Response|Redirector
+     * @return Application|Redirector|RedirectResponse|Response
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'ticket_type' => 'required',
-            'description' => 'string|min:25|required'
+            'description' => 'string|min:25|required',
         ]);
 
         $ticket = new Ticket();
@@ -120,7 +118,6 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Ticket  $ticket
      * @return Ticket
      */
     public function show(Ticket $ticket)
@@ -151,7 +148,7 @@ class TicketController extends Controller
 
         $ticket->reopen();
 
-        $message = "Ticket has been reopened!";
+        $message = 'Ticket has been reopened!';
 
         $this->showToast($message);
 
@@ -166,7 +163,7 @@ class TicketController extends Controller
 
         $ticket->reject();
 
-        $message = "Ticket has been rejected";
+        $message = 'Ticket has been rejected';
 
         $this->showToast($message);
 
@@ -185,7 +182,7 @@ class TicketController extends Controller
 
         $ticket->ownTo($assignedUser);
 
-        $message = "Ticket has been assigned to " . $assignedUser->name;
+        $message = 'Ticket has been assigned to ' . $assignedUser->name;
 
         $this->showToast($message);
 
@@ -201,7 +198,7 @@ class TicketController extends Controller
 
         $ticket->ownTo(auth()->user());
 
-        $message = "Ticket has been assigned to " . auth()->user()->name;
+        $message = 'Ticket has been assigned to ' . auth()->user()->name;
 
         $this->showToast($message);
 

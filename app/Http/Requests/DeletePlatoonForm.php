@@ -24,7 +24,6 @@ class DeletePlatoonForm extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 
@@ -46,7 +45,7 @@ class DeletePlatoonForm extends FormRequest
     }
 
     /**
-     * Dissociate squad members from any squads
+     * Dissociate squad members from any squads.
      */
     private function cleanUpSquads()
     {
@@ -64,7 +63,7 @@ class DeletePlatoonForm extends FormRequest
     }
 
     /**
-     * Dissociate platoon members
+     * Dissociate platoon members.
      */
     private function cleanUpMembers()
     {

@@ -40,13 +40,12 @@ class Member extends Resource
 
     public static $with = [
         'rank',
-        'division'
+        'division',
     ];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -68,7 +67,7 @@ class Member extends Resource
 
             Date::make('Last Promoted', 'last_promoted_at'),
 
-            new Panel('SGT Info', fn() => [
+            new Panel('SGT Info', fn () => [
                 Date::make('Last Trained', 'last_trained_at')->hideFromIndex(),
                 Number::make('Trained By', 'last_trained_by')->hideFromIndex(),
                 Date::make('XO Since', 'xo_at')->hideFromIndex(),
@@ -76,27 +75,24 @@ class Member extends Resource
             ]),
 
             HasMany::make('Notes'),
-
         ];
     }
 
     /**
      * Get the cards available for the request.
      *
-     * @param Request $request
      * @return array
      */
     public function cards(Request $request)
     {
         return [
-            (new Metrics\MembersByMonth())->width('full')
+            (new Metrics\MembersByMonth())->width('full'),
         ];
     }
 
     /**
      * Get the filters available for the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -109,7 +105,6 @@ class Member extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -120,7 +115,6 @@ class Member extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param Request $request
      * @return array
      */
     public function actions(Request $request)

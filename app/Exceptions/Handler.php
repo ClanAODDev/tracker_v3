@@ -17,7 +17,6 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
     ];
 
     /**
@@ -36,14 +35,14 @@ class Handler extends ExceptionHandler
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
      *
      * @param Exception $exception
-     * @return void
+     *
      * @throws Exception
      */
     public function report(Throwable $exception)
     {
         if (app()->bound('sentry')
             && $this->shouldReport($exception)
-            && app()->environment() == 'production'
+            && 'production' === app()->environment()
         ) {
             app('sentry')->captureException($exception);
         }
@@ -54,8 +53,9 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param Request $request
+     * @param Request   $request
      * @param Exception $exception
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Throwable $exception)
@@ -63,20 +63,19 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
-
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
      * @param Request $request
-     * @param AuthenticationException $e
+     *
      * @return Response
      */
     protected function unauthenticated($request, AuthenticationException $e)
     {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
-        } else {
-            return redirect()->guest('login');
         }
+
+        return redirect()->guest('login');
     }
 }

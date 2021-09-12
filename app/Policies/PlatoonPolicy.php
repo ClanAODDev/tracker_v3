@@ -8,9 +8,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
- * Class PlatoonPolicy
- *
- * @package App\Policies
+ * Class PlatoonPolicy.
  */
 class PlatoonPolicy
 {
@@ -19,7 +17,6 @@ class PlatoonPolicy
     /**
      * Create a new policy instance.
      *
-     * @param User $user
      * @return bool
      */
     public function before(User $user)
@@ -30,8 +27,9 @@ class PlatoonPolicy
     }
 
     /**
-     * @param User $user
+     * @param User    $user
      * @param Platoon $platoon
+     *
      * @return bool
      */
     public function update()
@@ -40,8 +38,6 @@ class PlatoonPolicy
     }
 
     /**
-     * @param User $user
-     * @param Platoon $platoon
      * @return bool
      */
     public function delete(User $user, Platoon $platoon)
@@ -51,8 +47,6 @@ class PlatoonPolicy
     }
 
     /**
-     * @param User $user
-     * @param Division $division
      * @return bool
      */
     public function create(User $user, Division $division)

@@ -24,7 +24,6 @@ class DeleteSquadForm extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 

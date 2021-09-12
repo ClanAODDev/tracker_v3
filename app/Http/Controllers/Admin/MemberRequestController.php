@@ -7,7 +7,6 @@ use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Notifications\MemberNameChanged;
 use App\Notifications\MemberRequestApproved;
-use App\Notifications\MemberRequestDenied;
 use App\Notifications\MemberRequestHoldLifted;
 use App\Notifications\MemberRequestPutOnHold;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -48,7 +47,7 @@ class MemberRequestController extends Controller
             ->with('member', 'member.rank', 'approver', 'division')
             ->get();
 
-        if (auth()->user()->isRole('sr_ldr') && in_array(auth()->user()->member->position_id, [5, 6])) {
+        if (auth()->user()->isRole('sr_ldr') && \in_array(auth()->user()->member->position_id, [5, 6], true)) {
             $pending = $this->filterByDivision($pending);
             $approved = $this->filterByDivision($approved);
             $onHold = $this->filterByDivision($onHold);
@@ -59,7 +58,8 @@ class MemberRequestController extends Controller
 
     /**
      * @param $requestId
-     * @return Factory|RedirectResponse|Redirector|View
+     *
+     * @return Factory|Redirector|RedirectResponse|View
      */
     public function reprocess($requestId)
     {
@@ -69,7 +69,7 @@ class MemberRequestController extends Controller
         if (request()->isMethod('post')) {
             $request->update([
                 'approved_at' => now(),
-                'approver_id' => auth()->user()->member->clan_id
+                'approver_id' => auth()->user()->member->clan_id,
             ]);
 
             $this->showToast('Request updated!');
@@ -101,7 +101,7 @@ class MemberRequestController extends Controller
 
         $memberRequest = MemberRequest::find($requestId);
 
-        if ($memberRequest->division->settings()->get('slack_alert_member_approved') == "on") {
+        if ('on' === $memberRequest->division->settings()->get('slack_alert_member_approved')) {
             $memberRequest->division->notify(new MemberRequestApproved($memberRequest));
         }
 
@@ -110,15 +110,11 @@ class MemberRequestController extends Controller
         return $memberRequest;
     }
 
-    /**
-     * @param Request $request
-     * @param MemberRequest $memberRequest
-     */
     public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
         $member = Member::whereClanId($memberRequest->member_id)
             ->first()->update([
-                'name' => $request->newName
+                'name' => $request->newName,
             ]);
 
         $memberRequest->division->notify(
@@ -130,27 +126,26 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param MemberRequest $memberRequest
      * @return array
      */
     public function isAlreadyMember(Request $request, MemberRequest $memberRequest)
     {
-        return ['isMember' => $memberRequest->approved_at !== null];
+        return ['isMember' => null !== $memberRequest->approved_at];
     }
 
     /**
-     * @param Request $request
      * @param $requestId
-     * @return MemberRequest
+     *
      * @throws AuthorizationException
+     *
+     * @return MemberRequest
      */
     public function placeOnHold(Request $request, $requestId)
     {
         $this->authorize('manage', MemberRequest::class);
 
         $request->validate([
-            'notes' => 'required'
+            'notes' => 'required',
         ]);
 
         $memberRequest = MemberRequest::find($requestId);
@@ -164,6 +159,7 @@ class MemberRequestController extends Controller
 
     /**
      * @param $requests
+     *
      * @return mixed
      */
     private function filterByDivision($requests)

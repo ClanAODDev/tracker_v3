@@ -28,12 +28,12 @@ class CreateLeave extends \Illuminate\Foundation\Http\FormRequest
     {
         return [
             'member_id.exists' => 'Not a valid AOD member',
-            'member_id.unique' => 'Member already has a leave of absence'
+            'member_id.unique' => 'Member already has a leave of absence',
         ];
     }
 
     /**
-     * store leave and note
+     * store leave and note.
      */
     public function persist()
     {
@@ -41,13 +41,13 @@ class CreateLeave extends \Illuminate\Foundation\Http\FormRequest
         $memberRequestingLeave = \App\Models\Member::whereClanId($this->member_id)->firstOrFail();
 
         $note = \App\Models\Note::create([
-            'body' => "Leave of absence requested. Reason: {$this->note_body}",
+            'body'            => "Leave of absence requested. Reason: {$this->note_body}",
             'forum_thread_id' => $this->note_thread_id, 'type' => 'misc',
-            'author_id' => auth()->id(), 'member_id' => $memberRequestingLeave->id
+            'author_id'       => auth()->id(), 'member_id' => $memberRequestingLeave->id,
         ]);
 
         $leave = \App\Models\Leave::create([
-            'reason' => $this->leave_type, 'end_date' => \Carbon\Carbon::parse($this->end_date), 'extended' => false
+            'reason' => $this->leave_type, 'end_date' => \Carbon\Carbon::parse($this->end_date), 'extended' => false,
         ]);
 
         $leave->member()->associate($this->member_id);

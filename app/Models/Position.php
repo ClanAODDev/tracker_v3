@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Position extends Model
 {
-
     /**
-     * relationship - position has one member
+     * relationship - position has one member.
      */
     public function member()
     {

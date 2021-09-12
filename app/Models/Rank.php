@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
- * Class Rank
- *
- * @package App
+ * Class Rank.
  */
 class Rank extends Model
 {

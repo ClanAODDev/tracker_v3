@@ -11,9 +11,9 @@ class DivisionPresenter extends Presenter
      */
     protected $division;
 
-    private $threadLink = "http://www.clanaod.net/forums/showthread.php?t=";
+    private $threadLink = 'http://www.clanaod.net/forums/showthread.php?t=';
 
-    private $forumLink = "http://www.clanaod.net/forums/forumdisplay.php?f=";
+    private $forumLink = 'http://www.clanaod.net/forums/forumdisplay.php?f=';
 
     public function __construct(Division $division)
     {
@@ -21,7 +21,7 @@ class DivisionPresenter extends Presenter
     }
 
     /**
-     * Get Division Structure
+     * Get Division Structure.
      *
      * @return string
      */
@@ -31,9 +31,10 @@ class DivisionPresenter extends Presenter
     }
 
     /**
-     * Get welcome forum / thread attribute as a proper URL
+     * Get welcome forum / thread attribute as a proper URL.
      *
      * @param $value
+     *
      * @return string
      */
     public function welcomeAreaLink()

@@ -14,14 +14,13 @@ class UnarchiveChannel extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 
     public function persist($client, $channel)
     {
         return $client->channels->unarchive([
-            'channel' => $channel
+            'channel' => $channel,
         ]);
     }
 

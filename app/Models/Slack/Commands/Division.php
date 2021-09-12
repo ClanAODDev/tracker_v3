@@ -6,13 +6,10 @@ use App\Models\Slack\Base;
 use App\Models\Slack\Command;
 
 /**
- * Class Search
- *
- * @package App\Slack\Commands
+ * Class Search.
  */
 class Division extends Base implements Command
 {
-
     public function __construct($data)
     {
         parent::__construct($data);
@@ -25,15 +22,15 @@ class Division extends Base implements Command
      */
     public function handle()
     {
-        if (strlen($this->params) >= 5) {
+        if (\strlen($this->params) >= 5) {
             return [
-                'text' => "Please provide the division abbreviation - not the name!",
+                'text' => 'Please provide the division abbreviation - not the name!',
             ];
         }
 
         $division = \App\Models\Division::where('abbreviation', $this->params)->first();
 
-        $leaderData = "";
+        $leaderData = '';
 
         if ($division) {
             foreach ($division->leaders()->get() as $leader) {
@@ -41,35 +38,36 @@ class Division extends Base implements Command
             }
 
             return [
-                "embed" => [
-                    'color' => 10181046,
+                'embed' => [
+                    'color'  => 10181046,
                     'author' => [
-                        'name' => $division->name,
+                        'name'     => $division->name,
                         'icon_url' => getDivisionIconPath($division->abbreviation),
-                        'url' => "https://clanaod.net/divisions/" . \Str::slug($division->name),
+                        'url'      => 'https://clanaod.net/divisions/' . \Str::slug($division->name),
                     ],
                     'fields' => [
                         [
-                            'name' => 'Leadership',
-                            'value' => $leaderData
+                            'name'  => 'Leadership',
+                            'value' => $leaderData,
                         ],
                         [
-                            'name' => 'Member count',
-                            'value' => $division->members()->count()
-                        ]
-                    ]
-                ]
+                            'name'  => 'Member count',
+                            'value' => $division->members()->count(),
+                        ],
+                    ],
+                ],
             ];
         }
 
         return [
-            'text' => "No results were found",
+            'text' => 'No results were found',
         ];
     }
 
     /**
      * @param $member
-     * @return string|null
+     *
+     * @return null|string
      */
     private function buildActivityBlock($member)
     {

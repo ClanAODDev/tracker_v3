@@ -13,7 +13,8 @@ class ClanForumSession
     use Procedureable;
 
     /**
-     * Key containing AOD forum session data
+     * Key containing AOD forum session data.
+     *
      * @var string
      */
     public $sessionKey = 'aod_sessionhash';
@@ -21,10 +22,10 @@ class ClanForumSession
     public function exists()
     {
         if (!User::exists()) {
-            throw new \Exception("No users exist. Have you created an account?");
+            throw new \Exception('No users exist. Have you created an account?');
         }
 
-        if (app()->environment() === 'local') {
+        if ('local' === app()->environment()) {
             $user_id = config('dev_default_user') ?? 1;
             Auth::login(
                 config('dev_default_user')
@@ -38,11 +39,11 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
-            if (!is_object($sessionData) || !property_exists($sessionData, 'loggedin')) {
+            if (!\is_object($sessionData) || !property_exists($sessionData, 'loggedin')) {
                 return false;
             }
 
-            if (!in_array($sessionData->loggedin, [1, 2])) {
+            if (!\in_array($sessionData->loggedin, [1, 2], true)) {
                 return false;
             }
 
@@ -72,6 +73,28 @@ class ClanForumSession
     }
 
     /**
+     * @param $username
+     * @param $email
+     * @param $clanId
+     *
+     * @return User||void
+     */
+    public function registerNewUser($username, $email, $clanId)
+    {
+        if ($authUser = User::whereName($username)->first()) {
+            return $authUser;
+        }
+
+        $user = new User();
+        $user->name = $username;
+        $user->email = $email;
+        $user->member_id = $clanId;
+        $user->save();
+
+        return $user;
+    }
+
+    /**
      * @return bool
      */
     private function getAODSession()
@@ -82,31 +105,10 @@ class ClanForumSession
 
         try {
             return $this->callProcedure('check_session', [
-                'session' => $_COOKIE[$this->sessionKey]
+                'session' => $_COOKIE[$this->sessionKey],
             ]);
         } catch (Exception $exception) {
             return false;
         }
-    }
-
-    /**
-     * @param $username
-     * @param $email
-     * @param $clanId
-     * @return User||void
-     */
-    public function registerNewUser($username, $email, $clanId)
-    {
-        if ($authUser = User::whereName($username)->first()) {
-            return $authUser;
-        }
-
-        $user = new User;
-        $user->name = $username;
-        $user->email = $email;
-        $user->member_id = $clanId;
-        $user->save();
-
-        return $user;
     }
 }

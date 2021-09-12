@@ -14,8 +14,6 @@ class MemberRequestHoldLifted extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @param  MemberRequest  $memberRequest
      */
     public function __construct(MemberRequest $memberRequest)
     {
@@ -26,6 +24,7 @@ class MemberRequestHoldLifted extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -34,8 +33,9 @@ class MemberRequestHoldLifted extends Notification
     }
 
     /**
-     * @return mixed
      * @throws Exception
+     *
+     * @return mixed
      */
     public function toWebhook()
     {

@@ -11,7 +11,7 @@ class Activity extends Model
 
     protected $with = [
         'user',
-        'division'
+        'division',
     ];
 
     public function user()

@@ -10,21 +10,21 @@ use Illuminate\Support\Collection;
 
 class Platoon extends Model
 {
+    use HasFactory;
+    use RecordsActivity;
     protected $fillable = [
         'name',
         'leader_id',
         'logo',
-        'order'
+        'order',
     ];
 
     protected $with = [
-        'leader'
+        'leader',
     ];
 
-    use RecordsActivity, HasFactory;
-
     /**
-     * relationship - platoon belongs to a division
+     * relationship - platoon belongs to a division.
      */
     public function division()
     {
@@ -32,7 +32,7 @@ class Platoon extends Model
     }
 
     /**
-     * relationship - platoon has many squads
+     * relationship - platoon has many squads.
      */
     public function squads()
     {
@@ -40,7 +40,7 @@ class Platoon extends Model
     }
 
     /**
-     * Leader of a platoon
+     * Leader of a platoon.
      *
      * @return BelongsTo
      */
@@ -50,7 +50,7 @@ class Platoon extends Model
     }
 
     /**
-     * Only return members who are squad members
+     * Only return members who are squad members.
      *
      * @return Collection
      */
@@ -62,7 +62,7 @@ class Platoon extends Model
     }
 
     /**
-     * relationship - platoon has many members
+     * relationship - platoon has many members.
      */
     public function members()
     {

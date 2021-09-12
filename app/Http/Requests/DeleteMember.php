@@ -27,12 +27,12 @@ class DeleteMember extends FormRequest
     public function rules()
     {
         return [
-            'removal_reason' => 'required'
+            'removal_reason' => 'required',
         ];
     }
 
     /**
-     * Persist the form
+     * Persist the form.
      */
     public function persist()
     {
@@ -56,16 +56,13 @@ class DeleteMember extends FormRequest
     private function createRemovalNote($member)
     {
         Note::create([
-            'type' => 'negative',
-            'body' => $this->removal_reason,
+            'type'      => 'negative',
+            'body'      => $this->removal_reason,
             'author_id' => auth()->id(),
-            'member_id' => $member->id
+            'member_id' => $member->id,
         ]);
     }
 
-    /**
-     * @param  Member  $member
-     */
     private function notifyPartTimeDivisions(Member $member)
     {
         $divisions = $member->partTimeDivisions()->active()->get();

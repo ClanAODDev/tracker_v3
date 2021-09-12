@@ -16,7 +16,7 @@ class MemberRepository
 
     /**
      * Returns promotion periods for members in the
-     * form of year and month
+     * form of year and month.
      *
      * @return static
      */
@@ -28,6 +28,6 @@ class MemberRepository
                       ORDER BY year DESC
             ")
         ))
-            ->filter(fn ($values) => $values->month !== null);
+            ->filter(fn ($values) => null !== $values->month);
     }
 }

@@ -8,29 +8,31 @@ trait HasCustomAttributes
 {
     public function getAODProfileLinkAttribute()
     {
-        return "http://www.clanaod.net/forums/member.php?u=" . $this->clan_id;
+        return 'http://www.clanaod.net/forums/member.php?u=' . $this->clan_id;
     }
 
     public function getTsInvalidAttribute()
     {
-        return (carbon_date_or_null_if_zero($this->last_ts_activity) == null);
+        return null === carbon_date_or_null_if_zero($this->last_ts_activity);
     }
 
     /**
      * @param $value
+     *
      * @return string
      */
     public function getLastPromotedAttribute($value)
     {
-        if (strlen($value)) {
+        if (\strlen($value)) {
             return Carbon::parse($value)->format('Y-m-d');
         }
 
-        return "Never";
+        return 'Never';
     }
 
     /**
      * Is a pending member?
+     *
      * @return mixed
      */
     public function getIsPendingAttribute()
@@ -40,6 +42,7 @@ trait HasCustomAttributes
 
     /**
      * @param $value
+     *
      * @return string
      */
     public function getJoinDateAttribute($value)

@@ -9,7 +9,7 @@ class SlackSlashCommand
      * and executes the command if it does.
      *
      * @param $command
-     * @param array $data
+     *
      * @return array
      */
     public static function handle($command, array $data)
@@ -23,7 +23,7 @@ class SlackSlashCommand
         }
 
         return [
-            "text" => 'Unrecognized command. Sorry!',
+            'text' => 'Unrecognized command. Sorry!',
         ];
     }
 }

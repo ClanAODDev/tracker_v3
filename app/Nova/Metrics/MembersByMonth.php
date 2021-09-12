@@ -13,7 +13,6 @@ class MembersByMonth extends Trend
     /**
      * Calculate the value of the metric.
      *
-     * @param Request $request
      * @return mixed
      */
     public function calculate(Request $request)
@@ -29,7 +28,7 @@ class MembersByMonth extends Trend
     public function ranges()
     {
         return [
-            6 => '6 Months',
+            6  => '6 Months',
             12 => '1 Year',
             24 => '2 Years',
         ];
@@ -38,7 +37,7 @@ class MembersByMonth extends Trend
     /**
      * Determine for how many minutes the metric should be cached.
      *
-     * @return  DateTimeInterface|DateInterval|float|int
+     * @return DateInterval|DateTimeInterface|float|int
      */
     public function cacheFor()
     {

@@ -12,7 +12,6 @@ class MemberRequestPutOnHold extends Notification
 {
     use Queueable;
 
-
     private $request;
 
     /**
@@ -29,6 +28,7 @@ class MemberRequestPutOnHold extends Notification
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -37,8 +37,9 @@ class MemberRequestPutOnHold extends Notification
     }
 
     /**
-     * @return mixed
      * @throws Exception
+     *
+     * @return mixed
      */
     public function toWebhook()
     {

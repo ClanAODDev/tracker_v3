@@ -9,9 +9,6 @@ class TicketTypeObserver
 {
     /**
      * Handle the ticket type "created" event.
-     *
-     * @param  \App\Models\TicketType  $ticketType
-     * @return void
      */
     public function saving(TicketType $ticketType)
     {

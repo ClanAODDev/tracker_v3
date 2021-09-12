@@ -10,7 +10,9 @@ use Toastr;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     /**
      * @param $toastMessage
@@ -19,7 +21,7 @@ class Controller extends BaseController
     {
         Toastr::success(
             $toastMessage,
-            "Success"
+            'Success'
         );
     }
 
@@ -27,9 +29,9 @@ class Controller extends BaseController
     {
         Toastr::error(
             $toastMessage,
-            "Uh oh...",
+            'Uh oh...',
             [
-                'timeOut' => 10000
+                'timeOut' => 10000,
             ]
         );
     }

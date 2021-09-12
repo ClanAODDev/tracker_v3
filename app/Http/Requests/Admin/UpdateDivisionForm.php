@@ -29,7 +29,7 @@ class UpdateDivisionForm extends FormRequest
     }
 
     /**
-     * Persist changes to the model
+     * Persist changes to the model.
      */
     public function persist()
     {

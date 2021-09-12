@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
 use App\Http\Requests\DeleteMember;
 use App\Models\Member;
-use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+
 class InactiveMemberController extends \App\Http\Controllers\Controller
 {
     public function __construct()
@@ -20,6 +19,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
 
     /**
      * @param $division
+     *
      * @return Factory|View
      */
     public function index($division)
@@ -47,53 +47,57 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         /**
          * Using this to determine the active route, whether filtering
          * by teamspeak or forum. Used in platoon filter options, reset
-         * filter button
+         * filter button.
          */
         $requestPath = $queryingTsInactives ? 'division.inactive-members-ts' : 'division.inactive-members';
+
         return view('division.inactive-members', compact('queryingTsInactives', 'division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath'));
     }
 
     /**
-     * Flags a member for inactivity
+     * Flags a member for inactivity.
      *
-     * @param Member $member
-     * @return RedirectResponse|Redirector
      * @throws AuthorizationException
+     *
+     * @return Redirector|RedirectResponse
      */
-    public function create(\App\Models\Member $member)
+    public function create(Member $member)
     {
         $this->authorize('update', $member);
         $member->flagged_for_inactivity = true;
         $member->save();
         $member->recordActivity('flagged');
-        $this->showToast($member->name . " successfully flagged for removal");
+        $this->showToast($member->name . ' successfully flagged for removal');
+
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
 
     /**
-     * Remove a flag from an inactive member
+     * Remove a flag from an inactive member.
      *
-     * @param Member $member
-     * @return RedirectResponse|Redirector
      * @throws AuthorizationException
+     *
+     * @return Redirector|RedirectResponse
      */
-    public function destroy(\App\Models\Member $member)
+    public function destroy(Member $member)
     {
         $this->authorize('update', $member);
         $member->flagged_for_inactivity = false;
         $member->save();
         $member->recordActivity('unflagged');
-        $this->showToast($member->name . " successfully unflagged");
+        $this->showToast($member->name . ' successfully unflagged');
+
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
 
-    public function removeMember(\App\Models\Member $member, \App\Http\Requests\DeleteMember $form)
+    public function removeMember(Member $member, DeleteMember $form)
     {
         $this->authorize('delete', $member);
         $division = $member->division;
         $form->persist();
         $this->showToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
         $member->recordActivity('removed');
+
         return redirect(route('division.inactive-members', [$division->abbreviation]) . '#flagged');
     }
 }

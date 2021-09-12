@@ -7,11 +7,11 @@ use Carbon\CarbonImmutable;
 class PlatoonRepository
 {
     private array $labels = [
-        'Current', '14 days', '30-60 days', 'More than 60 days'
+        'Current', '14 days', '30-60 days', 'More than 60 days',
     ];
 
     private array $colors = [
-        '#28b62c', '#ff851b', '#ff4136', '#000'
+        '#28b62c', '#ff851b', '#ff4136', '#000',
     ];
 
     public function __construct()
@@ -41,7 +41,7 @@ class PlatoonRepository
 
         $moreThanOneMonth = $platoon->members()
             ->whereBetween($string, [
-                $this->oneMonthAgo->subDays(60), $this->oneMonthAgo
+                $this->oneMonthAgo->subDays(60), $this->oneMonthAgo,
             ])->count();
 
         $moreThan60Days = $platoon->members()
@@ -54,7 +54,7 @@ class PlatoonRepository
                 $twoWeeks,
                 $oneMonth,
                 $moreThanOneMonth,
-                $moreThan60Days
+                $moreThan60Days,
             ],
             'colors' => $this->colors,
         ];

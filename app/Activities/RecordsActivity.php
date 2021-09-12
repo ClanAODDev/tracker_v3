@@ -6,12 +6,41 @@ use App\Models\Activity;
 use ReflectionClass;
 
 /**
- * Trait RecordsActivity
- *
- * @package App\Activities
+ * Trait RecordsActivity.
  */
 trait RecordsActivity
 {
+    /**
+     * @param $event
+     */
+    public function recordActivity($event)
+    {
+        if (auth()->check()) {
+            $actor = auth()->user();
+
+            $this->activity()->create([
+                'name'         => $this->getActivityName($event),
+                'user_id'      => $actor->id,
+                'subject_id'   => $this->id,
+                'subject_type' => static::class,
+                'division_id'  => $actor->member->division_id,
+            ]);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function activity()
+    {
+        return $this->morphMany(Activity::class, 'subject')
+            ->orderBy('created_at', 'desc');
+    }
+
+    public static function feed()
+    {
+    }
+
     protected static function bootRecordsActivity()
     {
         foreach (static::getModelEvents() as $event) {
@@ -33,39 +62,13 @@ trait RecordsActivity
         return [
             'created',
             'deleted',
-            'updated'
+            'updated',
         ];
     }
 
     /**
-     * @param $event
-     */
-    public function recordActivity($event)
-    {
-        if (auth()->check()) {
-            $actor = auth()->user();
-
-            $this->activity()->create([
-                'name' => $this->getActivityName($event),
-                'user_id' => $actor->id,
-                'subject_id' => $this->id,
-                'subject_type' => get_class($this),
-                'division_id' => $actor->member->division_id
-            ]);
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function activity()
-    {
-        return $this->morphMany(Activity::class, 'subject')
-            ->orderBy('created_at', 'desc');
-    }
-
-    /**
      * @param $action
+     *
      * @return string
      */
     protected function getActivityName($action)
@@ -73,9 +76,5 @@ trait RecordsActivity
         $name = strtolower((new ReflectionClass($this))->getShortName());
 
         return "{$action}_{$name}";
-    }
-
-    public static function feed()
-    {
     }
 }

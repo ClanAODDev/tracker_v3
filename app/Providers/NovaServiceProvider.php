@@ -15,8 +15,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -25,44 +23,6 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
         Nova::serving(function () {
             TicketType::observe(TicketTypeObserver::class);
         });
-    }
-
-    /**
-     * Register the Nova routes.
-     *
-     * @return void
-     */
-    protected function routes()
-    {
-        Nova::routes()
-            ->withAuthenticationRoutes(['web', \App\Http\Middleware\MustBeAdmin::class])
-            ->withPasswordResetRoutes()
-            ->register();
-    }
-
-    /**
-     * Register the Nova gate.
-     *
-     * This gate determines who can access Nova in non-local environments.
-     *
-     * @return void
-     */
-    protected function gate()
-    {
-        Gate::define('viewNova', fn(User $user) => $user->isRole('admin'));
-    }
-
-    /**
-     * Get the cards that should be displayed on the Nova dashboard.
-     *
-     * @return array
-     */
-    protected function cards()
-    {
-        return [
-            new MembersByMonth(),
-            new UsersByRole()
-        ];
     }
 
     /**
@@ -77,11 +37,42 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
 
     /**
      * Register any application services.
-     *
-     * @return void
      */
     public function register()
     {
-        //
+    }
+
+    /**
+     * Register the Nova routes.
+     */
+    protected function routes()
+    {
+        Nova::routes()
+            ->withAuthenticationRoutes(['web', \App\Http\Middleware\MustBeAdmin::class])
+            ->withPasswordResetRoutes()
+            ->register();
+    }
+
+    /**
+     * Register the Nova gate.
+     *
+     * This gate determines who can access Nova in non-local environments.
+     */
+    protected function gate()
+    {
+        Gate::define('viewNova', fn (User $user) => $user->isRole('admin'));
+    }
+
+    /**
+     * Get the cards that should be displayed on the Nova dashboard.
+     *
+     * @return array
+     */
+    protected function cards()
+    {
+        return [
+            new MembersByMonth(),
+            new UsersByRole(),
+        ];
     }
 }

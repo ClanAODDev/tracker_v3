@@ -68,7 +68,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
-            'auth:sanctum'
+            'auth:sanctum',
         ],
     ];
 
@@ -80,21 +80,21 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'forumAuth' => ClanForumAuthentication::class,
-        'auth' => Authenticate::class,
-        'bindings' => SubstituteBindings::class,
+        'forumAuth'     => ClanForumAuthentication::class,
+        'auth'          => Authenticate::class,
+        'bindings'      => SubstituteBindings::class,
         'cache.headers' => SetCacheHeaders::class,
-        'can' => Authorize::class,
-        'guest' => RedirectIfAuthenticated::class,
-        'throttle' => ThrottleRequests::class,
+        'can'           => Authorize::class,
+        'guest'         => RedirectIfAuthenticated::class,
+        'throttle'      => ThrottleRequests::class,
 
-        'developer' => MustBeDeveloper::class,
-        'admin' => MustBeAdmin::class,
+        'developer'      => MustBeDeveloper::class,
+        'admin'          => MustBeAdmin::class,
         'activeDivision' => DivisionMustBeActive::class,
-        'banned' => IsBanned::class,
-        'slack' => VerifySlackToken::class,
-        'scopes' => CheckScopes::class,
-        'scope' => CheckForAnyScope::class,
+        'banned'         => IsBanned::class,
+        'slack'          => VerifySlackToken::class,
+        'scopes'         => CheckScopes::class,
+        'scope'          => CheckForAnyScope::class,
     ];
 
     /**
@@ -112,7 +112,6 @@ class Kernel extends HttpKernel
         \Illuminate\Session\Middleware\AuthenticateSession::class,
         \Illuminate\Routing\Middleware\SubstituteBindings::class,
         \Illuminate\Auth\Middleware\Authorize::class,
-
 
         \App\Http\Middleware\MustBeDeveloper::class,
         \App\Http\Middleware\MustBeAdmin::class,

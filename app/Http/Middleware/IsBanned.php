@@ -9,14 +9,14 @@ class IsBanned
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
-        if (\Auth::check() && $request->user()->role_id == 6) {
-            abort(403, "You are banned.");
+        if (\Auth::check() && 6 === $request->user()->role_id) {
+            abort(403, 'You are banned.');
         }
 
         return $next($request);

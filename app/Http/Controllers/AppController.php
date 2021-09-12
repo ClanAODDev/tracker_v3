@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Division;
-use Auth;
-use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
+
 class AppController extends \App\Http\Controllers\Controller
 {
     /**
@@ -16,10 +14,12 @@ class AppController extends \App\Http\Controllers\Controller
     {
         $this->middleware('auth');
     }
+
     public function changeLog()
     {
         return view('application.changelog');
     }
+
     /**
      * Show the application dashboard.
      *
@@ -32,6 +32,7 @@ class AppController extends \App\Http\Controllers\Controller
         $myDivision->outstandingInactives = $myDivision->members()->whereDoesntHave('leave')->where('last_activity', '<', \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d'))->count();
         $activeDivisions = \App\Models\Division::active()->withCount('members')->orderBy('name')->get();
         $divisions = $activeDivisions->except($myDivision->id);
+
         return view('home.show', compact('divisions', 'myDivision'));
     }
 }

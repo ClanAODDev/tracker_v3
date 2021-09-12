@@ -6,9 +6,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
 /**
- * Class HelpController
- *
- * @package App\Http\Controllers
+ * Class HelpController.
  */
 class HelpController extends Controller
 {

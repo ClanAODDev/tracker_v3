@@ -16,14 +16,11 @@ class Kernel extends ConsoleKernel
         Commands\MemberSync::class,
         Commands\DivisionCensus::class,
         Commands\MakeAODToken::class,
-        Commands\SgtActivity::class
+        Commands\SgtActivity::class,
     ];
 
     /**
      * Define the application's command schedule.
-     *
-     * @param Schedule $schedule
-     * @return void
      */
     protected function schedule(Schedule $schedule)
     {
@@ -33,12 +30,11 @@ class Kernel extends ConsoleKernel
 
     /**
      * Register the Closure based commands for the application.
-     *
-     * @return void
      */
     protected function commands()
     {
         $this->load(__DIR__ . '/Commands');
+
         require base_path('routes/console.php');
     }
 }

@@ -5,14 +5,12 @@ namespace App\Channels\Messages;
 use Exception;
 
 /**
- * Class DiscordMessage
- *
- * @package App\Channels
+ * Class DiscordMessage.
  */
 class DiscordMessage
 {
     /**
-     * Color codes
+     * Color codes.
      */
     const SUCCESS = 3066993;
     const ERROR = 15158332;
@@ -21,7 +19,7 @@ class DiscordMessage
     private $fields = [];
 
     /**
-     * Use info-coded color
+     * Use info-coded color.
      *
      * @return $this
      */
@@ -33,7 +31,7 @@ class DiscordMessage
     }
 
     /**
-     * Use success-code color
+     * Use success-code color.
      */
     public function success()
     {
@@ -43,7 +41,7 @@ class DiscordMessage
     }
 
     /**
-     * Use danger-code color
+     * Use danger-code color.
      */
     public function error()
     {
@@ -54,6 +52,7 @@ class DiscordMessage
 
     /**
      * @param $channel
+     *
      * @return DiscordMessage
      */
     public function to($channel)
@@ -65,6 +64,7 @@ class DiscordMessage
 
     /**
      * @param $fields
+     *
      * @return $this
      */
     public function fields($fields)
@@ -76,6 +76,7 @@ class DiscordMessage
 
     /**
      * @param $message
+     *
      * @return $this
      */
     public function message($message)
@@ -86,8 +87,9 @@ class DiscordMessage
     }
 
     /**
-     * @return array
      * @throws Exception
+     *
+     * @return array
      */
     public function send()
     {
@@ -101,7 +103,7 @@ class DiscordMessage
 
         if (empty($this->fields)) {
             return [
-                'content' => "!relay {$this->channel} {$this->message}"
+                'content' => "!relay {$this->channel} {$this->message}",
             ];
         }
 
@@ -109,16 +111,16 @@ class DiscordMessage
             ? $this->message
             : "'" . json_encode([
                 'embed' => [
-                    'color' => $this->color ?? 0,
+                    'color'  => $this->color ?? 0,
                     'author' => [
-                        'name' => 'AOD Tracker'
+                        'name' => 'AOD Tracker',
                     ],
-                    'fields' => $this->fields
-                ]
+                    'fields' => $this->fields,
+                ],
             ]) . "'";
 
         return [
-            'content' => "!relay {$this->channel}" . $body
+            'content' => "!relay {$this->channel}" . $body,
         ];
     }
 }

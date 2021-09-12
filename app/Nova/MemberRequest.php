@@ -24,17 +24,16 @@ class MemberRequest extends Resource
      */
     public static $title = 'member';
 
+    public static $with = ['member', 'approver'];
+
     public static function label()
     {
-        return "Member Requests";
+        return 'Member Requests';
     }
-
-    public static $with = ['member', 'approver'];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function fields(Request $request)
@@ -52,7 +51,6 @@ class MemberRequest extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -63,7 +61,6 @@ class MemberRequest extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -74,7 +71,6 @@ class MemberRequest extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -85,7 +81,6 @@ class MemberRequest extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

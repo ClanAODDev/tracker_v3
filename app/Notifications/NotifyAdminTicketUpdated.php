@@ -26,7 +26,8 @@ class NotifyAdminTicketUpdated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -36,8 +37,10 @@ class NotifyAdminTicketUpdated extends Notification
 
     /**
      * @param $ticket
-     * @return array
+     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function toWebhook($ticket)
     {
@@ -57,7 +60,7 @@ class NotifyAdminTicketUpdated extends Notification
 
         return (new DiscordDMMessage())
             ->to($target)
-            ->message("Your ticket (" . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
+            ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();
     }
 }

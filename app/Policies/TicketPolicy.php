@@ -29,7 +29,7 @@ class TicketPolicy
 
     public function view(User $user, Ticket $ticket)
     {
-        return $user->id == $ticket->caller_id;
+        return $user->id === $ticket->caller_id;
     }
 
     public function create()

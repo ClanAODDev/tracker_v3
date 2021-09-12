@@ -8,16 +8,13 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
- * Class SquadPolicy
- *
- * @package App\Policies
+ * Class SquadPolicy.
  */
 class SquadPolicy
 {
     use HandlesAuthorization;
 
     /**
-     * @param User $user
      * @return bool
      */
     public function before(User $user)
@@ -30,8 +27,6 @@ class SquadPolicy
     }
 
     /**
-     * @param User $user
-     * @param Squad $squad
      * @return bool
      */
     public function update(User $user, Squad $squad)
@@ -40,8 +35,6 @@ class SquadPolicy
     }
 
     /**
-     * @param User $user
-     * @param Squad $squad
      * @return bool
      */
     public function delete(User $user, Squad $squad)
@@ -52,8 +45,6 @@ class SquadPolicy
     }
 
     /**
-     * @param User $user
-     * @param Division $division
      * @return bool
      */
     public function create(User $user, Division $division)

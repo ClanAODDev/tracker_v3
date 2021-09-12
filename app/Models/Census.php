@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Census extends Model
 {
-    use HasCustomAttributes, HasFactory;
+    use HasCustomAttributes;
+    use HasFactory;
 
     public function division()
     {

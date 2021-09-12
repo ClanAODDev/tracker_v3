@@ -9,7 +9,7 @@ use App\Models\Slack\Command;
 class OutstandingMemberReport extends Base implements Command
 {
     /**
-     * Handle performing our member sync
+     * Handle performing our member sync.
      */
     public function handle()
     {
@@ -37,12 +37,12 @@ class OutstandingMemberReport extends Base implements Command
                 $division->name,
                 $outstandingCount,
                 $inactiveCount - $outstandingCount,
-                $inactiveCount
+                $inactiveCount,
             ];
         }
 
         return [
-            'text' => print_r($data, true)
+            'text' => print_r($data, true),
         ];
     }
 }

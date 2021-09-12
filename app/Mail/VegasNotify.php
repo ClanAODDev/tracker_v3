@@ -8,7 +8,8 @@ use Illuminate\Queue\SerializesModels;
 
 class VegasNotify extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Build the message.

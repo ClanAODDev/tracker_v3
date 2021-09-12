@@ -22,7 +22,7 @@ class ReportsController extends \App\Http\Controllers\Controller
         $memberCount = $this->clan->totalActiveMembers();
 
         if (!$this->clan->censusCounts()->count()) {
-            throw new FactoryMissingException("You might need to run the `census` factory");
+            throw new FactoryMissingException('You might need to run the `census` factory');
         }
 
         // get our census information, and organize it
@@ -33,7 +33,7 @@ class ReportsController extends \App\Http\Controllers\Controller
         // fetch all divisions and eager load census data
         $censuses = \App\Models\Division::active()->orderBy('name')->with('census')->get()->filter(fn (
             $division
-        ) => count($division->census))->each(function ($division) {
+        ) => \count($division->census))->each(function ($division) {
             $division->total = $division->census->last()->count;
             $division->popMinusActive = $division->census->last()->count - $division->census->last()->weekly_active_count;
             $division->weeklyActive = $division->census->last()->weekly_active_count;
@@ -98,13 +98,15 @@ class ReportsController extends \App\Http\Controllers\Controller
             $division->outstanding_members = $outstandingCount;
             $division->inactive_members = $inactiveCount;
             $division->percent_inactive = number_format($inactiveCount / max($division->members_count, 1) * 100, 1);
+
             return $division;
         });
+
         return view('reports.outstanding-members', compact('divisions'));
     }
 
     /**
-     * Users with empty discord tag
+     * Users with empty discord tag.
      */
     public function usersWithoutDiscordReport()
     {
@@ -115,12 +117,10 @@ class ReportsController extends \App\Http\Controllers\Controller
                 $data[$division->name][] = [$member->clan_id => "{$member->name}"];
             }
         }
+
         return $data;
     }
 
-    /**
-     * @return void
-     */
     public function divisionUsersWithAccess()
     {
         foreach (\App\Models\Division::active()->get() as $division) {
@@ -132,7 +132,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             $sortedMembers->each(function ($member) {
                 echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
             });
-            echo "---------- END OF DIVISION ----------" . PHP_EOL . PHP_EOL . PHP_EOL;
+            echo '---------- END OF DIVISION ----------' . PHP_EOL . PHP_EOL . PHP_EOL;
         }
     }
 
@@ -147,6 +147,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             'newMembersLast60',
             'newMembersLast90'
         )->get();
+
         return view('reports.division-turnover', compact('divisions'));
     }
 
@@ -158,7 +159,7 @@ class ReportsController extends \App\Http\Controllers\Controller
         $divisions = \App\Models\Division::active()->with([
             'sergeants' => function ($query) {
                 $query->orderByDesc('rank_id')->orWhereIn('position_id', [5, 6]);
-            }, 'sergeants.rank', 'sergeants.position'
+            }, 'sergeants.rank', 'sergeants.position',
         ])->withCount('sgtAndSsgt')->get();
 
         $leadership = \App\Models\Member::where('rank_id', '>', 10)
@@ -166,6 +167,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             ->with('rank')
             ->orderByDesc('rank_id')
             ->orderBy('name')->get();
+
         return view('reports.leadership', compact('divisions', 'leadership'));
     }
 }

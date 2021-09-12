@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Faker;
 
 class GameProvider extends \Faker\Provider\Base

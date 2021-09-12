@@ -10,7 +10,25 @@ trait Settable
     protected $settings = [];
 
     /**
-     * Persist a setting
+     * Magic getter for settings.
+     *
+     * @param $key
+     *
+     * @throws Exception
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        if ($this->has($key)) {
+            return $this->get($key);
+        }
+
+        throw new Exception("The {$key} setting does not exist");
+    }
+
+    /**
+     * Persist a setting.
      *
      * @param $key
      * @param $value
@@ -23,36 +41,10 @@ trait Settable
     }
 
     /**
-     * Magic getter for settings
+     * Get a setting.
      *
      * @param $key
-     * @return mixed
-     * @throws Exception
-     */
-    public function __get($key)
-    {
-        if ($this->has($key)) {
-            return $this->get($key);
-        }
-
-        throw new Exception("The {$key} setting does not exist");
-    }
-
-    /**
-     * Checks to see if a key exists
      *
-     * @param $key
-     * @return bool
-     */
-    private function has($key)
-    {
-        return array_key_exists($key, $this->settings);
-    }
-
-    /**
-     * Get a setting
-     *
-     * @param $key
      * @return mixed
      */
     public function get($key)
@@ -65,9 +57,8 @@ trait Settable
     }
 
     /**
-     * Update settings
+     * Update settings.
      *
-     * @param array $attributes
      * @return mixed
      */
     public function merge(array $attributes)
@@ -81,12 +72,24 @@ trait Settable
     }
 
     /**
-     * Returns all settings
+     * Returns all settings.
      *
      * @return mixed
      */
     public function all()
     {
         return $this->settings;
+    }
+
+    /**
+     * Checks to see if a key exists.
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    private function has($key)
+    {
+        return \array_key_exists($key, $this->settings);
     }
 }

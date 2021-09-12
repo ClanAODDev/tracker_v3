@@ -18,6 +18,7 @@ class RolePresenter extends Presenter
         switch ($this->role->name) {
             case 'admin':
                 return "<span class=\"text-danger\">{$this->role->label}</span>";
+
             case 'sr_ldr':
                 return "<span class=\"text-warning\">{$this->role->label}</span>";
         }

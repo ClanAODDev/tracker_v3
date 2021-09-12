@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Division;
 use App\Models\Handle;
-use App\Repositories\ClanRepository;
 use App\Models\User;
+use App\Repositories\ClanRepository;
 
 class AdminController extends Controller
 {

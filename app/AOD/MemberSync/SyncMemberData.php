@@ -5,7 +5,6 @@ namespace App\AOD\MemberSync;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
-use App\Notifications\MemberTransferred;
 use App\Models\Platoon;
 use App\Models\Squad;
 use Carbon;
@@ -20,20 +19,23 @@ class SyncMemberData
 
     /**
      * Performs update operation on divisions and members and also
-     * syncs division membership (adds, removes)
+     * syncs division membership (adds, removes).
+     *
+     * @param mixed $verbose
      */
     public static function execute($verbose = false)
     {
         $divisionInfo = new GetDivisionInfo();
 
-        $syncData = collect($divisionInfo->data)->groupBy(fn($item, $key) => strtolower($item['aoddivision']));
+        $syncData = collect($divisionInfo->data)->groupBy(fn ($item, $key) => strtolower($item['aoddivision']));
 
         self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
 
         self::processMemberRequests();
 
-        if (!count($syncData)) {
-            \Log::critical(date('Y-m-d H:i:s') . " - MEMBER SYNC - No data available");
+        if (!\count($syncData)) {
+            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
+
             exit;
         }
 
@@ -66,7 +68,7 @@ class SyncMemberData
     }
 
     /**
-     * Updates an individual member and queues as an active primary member
+     * Updates an individual member and queues as an active primary member.
      *
      * @param $record
      * @param $division
@@ -107,7 +109,7 @@ class SyncMemberData
         $member->posts = $record['postcount'];
         $member->ts_unique_id = $record['tsid'];
         $member->discord = $record['discordtag'];
-        $member->privacy_flag = $record['allow_export'] === "yes" ? 1 : 0;
+        $member->privacy_flag = 'yes' === $record['allow_export'] ? 1 : 0;
 
         // persist
         $member->save();
@@ -133,7 +135,7 @@ class SyncMemberData
     }
 
     /**
-     * Handles cleanup of members removed from a division (platoon, squad info wiped)
+     * Handles cleanup of members removed from a division (platoon, squad info wiped).
      */
     private static function doRemovalCleanup()
     {
@@ -148,20 +150,18 @@ class SyncMemberData
             if ($member instanceof Member && !$member->memberRequest) {
                 self::hardResetMember($member);
             }
-
         }
     }
 
     private static function hardResetMember(Member $member)
     {
-
         // reset member data
         $member->resetPositionAndAssignments();
 
         // reset any leadership assignments
         $assignments = collect([
             Squad::whereLeaderId($member->clan_id)->first(),
-            Platoon::whereLeaderId($member->clan_id)->first()
+            Platoon::whereLeaderId($member->clan_id)->first(),
         ]);
 
         if ($assignments->count()) {
@@ -174,7 +174,7 @@ class SyncMemberData
     }
 
     /**
-     * Purge pending requests for active members
+     * Purge pending requests for active members.
      */
     private static function processMemberRequests()
     {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Solutions;
 
 use Facade\IgnitionContracts\RunnableSolution;

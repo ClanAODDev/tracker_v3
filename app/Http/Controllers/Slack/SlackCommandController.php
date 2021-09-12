@@ -11,7 +11,6 @@ use Illuminate\Support\Arr;
 class SlackCommandController extends Controller
 {
     /**
-     * @param Request $request
      * @return JsonResponse
      */
     public function index(Request $request)
@@ -32,7 +31,6 @@ class SlackCommandController extends Controller
     }
 
     /**
-     * @param Request $request
      * @return bool
      */
     protected function isValid(Request $request)

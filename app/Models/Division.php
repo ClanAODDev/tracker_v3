@@ -16,49 +16,43 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use phpDocumentor\Reflection\Types\Collection;
 
 /**
- * Class Division
- *
- * @package App
+ * Class Division.
  */
 class Division extends Model
 {
-    use RecordsActivity, Notifiable, SoftDeletes, HasFactory;
+    use HasFactory;
+    use Notifiable;
+    use RecordsActivity;
+    use SoftDeletes;
 
-    /**
-     * @var array
-     */
-    protected static array $recordEvents = ['created', 'deleted'];
-
-    /**
-     * @var array
-     */
     public array $defaultSettings = [
-        'slack_alert_created_member' => false, 'slack_alert_removed_member' => false,
-        'slack_alert_updated_member' => false, 'slack_alert_created_request' => false,
-        'slack_alert_division_edited' => false, 'slack_alert_member_denied' => false,
-        'slack_alert_member_approved' => false, 'slack_alert_member_transferred' => false, 'slack_channel' => '',
+        'slack_alert_created_member'    => false, 'slack_alert_removed_member' => false,
+        'slack_alert_updated_member'    => false, 'slack_alert_created_request' => false,
+        'slack_alert_division_edited'   => false, 'slack_alert_member_denied' => false,
+        'slack_alert_member_approved'   => false, 'slack_alert_member_transferred' => false, 'slack_channel' => '',
         'slack_alert_pt_member_removed' => false,
-        'use_welcome_thread' => false, 'division_structure' => '', 'welcome_area' => '', 'welcome_pm' => '',
-        'inactivity_days' => 30,
-        'activity_threshold' => [['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning']],
-        'recruiting_threads' => [
+        'use_welcome_thread'            => false, 'division_structure' => '', 'welcome_area' => '', 'welcome_pm' => '',
+        'inactivity_days'               => 30,
+        'activity_threshold'            => [['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning']],
+        'recruiting_threads'            => [
             ['thread_name' => 'AOD Code of Conduct', 'thread_id' => 3327, 'comments' => ''],
-            ['thread_name' => 'AOD Ranking Structure', 'thread_id' => 3326, 'comments' => '']
+            ['thread_name' => 'AOD Ranking Structure', 'thread_id' => 3326, 'comments' => ''],
         ], 'recruiting_tasks' => [
             ['task_description' => 'Adjust forum profile settings'],
             ['task_description' => 'Copy TS identity unique id to forum profile'],
             ['task_description' => 'Change name on Teamspeak (add AOD_ and rank)'],
             ['task_description' => 'Reminder that forum login name will change in 24/48 hours'],
-            ['task_description' => 'Introduce new member to the other members of the division']
+            ['task_description' => 'Introduce new member to the other members of the division'],
         ], 'locality' => [
             ['old-string' => 'squad', 'new-string' => 'squad'], ['old-string' => 'platoon', 'new-string' => 'platoon'],
             ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
-            ['old-string' => 'platoon leader', 'new-string' => 'platoon leader']
-        ]
+            ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
+        ],
     ];
+
+    protected static array $recordEvents = ['created', 'deleted'];
     protected $dates = ['shutdown_at'];
     /**
      * @var array
@@ -78,13 +72,13 @@ class Division extends Model
     {
         parent::boot();
         /**
-         * Handle default settings population
+         * Handle default settings population.
          */
-        static::creating(function (Division $division) {
+        static::creating(function (self $division) {
             $division->settings = $division->defaultSettings;
         });
 
-        static::creating(function (Division $division) {
+        static::creating(function (self $division) {
             $division->slug = Str::slug($division->name);
         });
     }
@@ -107,32 +101,23 @@ class Division extends Model
     }
 
     /**
-     * relationship - division has many members
+     * relationship - division has many members.
      */
     public function members(): HasMany
     {
         return $this->hasMany(Member::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function newMembersLast30(): HasMany
     {
         return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(30));
     }
 
-    /**
-     * @return HasMany
-     */
     public function newMembersLast60(): HasMany
     {
         return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(60));
     }
 
-    /**
-     * @return HasMany
-     */
     public function newMembersLast90(): HasMany
     {
         return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(90));
@@ -164,7 +149,7 @@ class Division extends Model
     }
 
     /**
-     * @return Repository|mixed
+     * @return mixed|Repository
      */
     public function routeNotificationForWebhook()
     {
@@ -172,7 +157,7 @@ class Division extends Model
     }
 
     /**
-     * Division has many platoons
+     * Division has many platoons.
      *
      * @return HasMany
      */
@@ -182,7 +167,7 @@ class Division extends Model
     }
 
     /**
-     * Division has many activity entries
+     * Division has many activity entries.
      *
      * @return HasMany
      */
@@ -192,9 +177,10 @@ class Division extends Model
     }
 
     /**
-     * Enabled division scope
+     * Enabled division scope.
      *
      * @param $query
+     *
      * @return mixed
      */
     public function scopeActive($query)
@@ -207,7 +193,7 @@ class Division extends Model
 
     /**
      * @param $query
-     * @param  bool  $status
+     *
      * @return mixed
      */
     public function scopeShuttingDown($query, bool $status)
@@ -228,7 +214,7 @@ class Division extends Model
     }
 
     /**
-     * Count of Sgts and SSGs
+     * Count of Sgts and SSGs.
      */
     public function sgtAndSsgt()
     {
@@ -237,26 +223,31 @@ class Division extends Model
 
     /**
      * @param $days
+     *
      * @return mixed
      */
     public function membersActiveSinceDaysAgo($days)
     {
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
+
         return $this->members()->where('last_activity', '>=', $date);
     }
 
     /**
      * @param $days
+     *
      * @return $this
      */
     public function membersActiveOnTsSinceDaysAgo($days)
     {
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
+
         return $this->members()->where('last_ts_activity', '>=', $date);
     }
 
     /**
-     * Includes general sgt (4) and admin (7)
+     * Includes general sgt (4) and admin (7).
+     *
      * @return mixed
      */
     public function generalSergeants()
@@ -274,7 +265,7 @@ class Division extends Model
 
     /**
      * Gets unassigned members of a division (no platoon assignment)
-     * NOTE: Only members (position 1)
+     * NOTE: Only members (position 1).
      */
     public function unassigned()
     {
@@ -286,6 +277,7 @@ class Division extends Model
 
     /**
      * @param $string
+     *
      * @return string
      */
     public function locality($string)
@@ -293,17 +285,20 @@ class Division extends Model
         $locality = collect($this->settings()->locality);
         if (!$locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
+
             return ucwords($string);
         }
         $results = $locality->first(function ($translation) use ($string) {
-            if (array_key_exists('old-string', $translation)) {
-                return $translation['old-string'] == strtolower($string);
+            if (\array_key_exists('old-string', $translation)) {
+                return $translation['old-string'] === strtolower($string);
             }
         });
         if (!$results) {
             Log::error("The {$string} locality does not exist");
+
             return ucwords($string);
         }
+
         return ucwords($results['new-string']);
     }
 
@@ -316,7 +311,7 @@ class Division extends Model
     }
 
     /**
-     * Gets CO and XOs of a division
+     * Gets CO and XOs of a division.
      *
      * @return mixed
      */
@@ -326,7 +321,7 @@ class Division extends Model
     }
 
     /**
-     * Gets part time members of a division
+     * Gets part time members of a division.
      */
     public function partTimeMembers()
     {

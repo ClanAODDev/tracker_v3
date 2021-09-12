@@ -13,10 +13,9 @@ class ImpersonationController extends Controller
     use AuthorizesRequests;
 
     /**
-     * Impersonate a given user
+     * Impersonate a given user.
      *
-     * @param User $user
-     * @return RedirectResponse|Redirector
+     * @return Redirector|RedirectResponse
      */
     public function impersonate(User $user)
     {
@@ -37,7 +36,26 @@ class ImpersonationController extends Controller
     }
 
     /**
+     * End an impersonation.
+     *
+     * @return Redirector|RedirectResponse
+     */
+    public function endImpersonation()
+    {
+        if (session('impersonating') && session('impersonatingUser')) {
+            $user = User::find(session('impersonatingUser'));
+            // need to log end of impersonation
+            Auth::login($user);
+            session()->forget(['impersonating', 'impersonatingUser']);
+            $this->showToast('Impersonation ended');
+        }
+
+        return redirect()->back();
+    }
+
+    /**
      * @param $user
+     *
      * @return bool
      */
     private function canImpersonate($user)
@@ -53,23 +71,5 @@ class ImpersonationController extends Controller
         }
 
         return true;
-    }
-
-    /**
-     * End an impersonation
-     *
-     * @return RedirectResponse|Redirector
-     */
-    public function endImpersonation()
-    {
-        if (session('impersonating') && session('impersonatingUser')) {
-            $user = User::find(session('impersonatingUser'));
-            // need to log end of impersonation
-            Auth::login($user);
-            session()->forget(['impersonating', 'impersonatingUser']);
-            $this->showToast('Impersonation ended');
-        }
-
-        return redirect()->back();
     }
 }

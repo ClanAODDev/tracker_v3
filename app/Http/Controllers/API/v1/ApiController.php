@@ -6,20 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class ApiController
- *
- * @package App\Http\Controllers\API\v1
+ * Class ApiController.
  */
 class ApiController extends Controller
 {
-
     /**
      * @var int
      */
     protected $statusCode = 200;
 
     /**
-     * @param  string  $message
+     * @param string $message
+     *
      * @return JsonResponse
      */
     public function respondNotFound($message = 'Not found.')
@@ -29,13 +27,14 @@ class ApiController extends Controller
 
     /**
      * @param $message
+     *
      * @return JsonResponse
      */
     public function respondWithError($message)
     {
         return $this->respond([
             'error' => [
-                'message' => $message,
+                'message'     => $message,
                 'status_code' => $this->getStatusCode(),
             ],
         ]);
@@ -43,7 +42,8 @@ class ApiController extends Controller
 
     /**
      * @param $data
-     * @param  array  $headers
+     * @param array $headers
+     *
      * @return JsonResponse
      */
     public function respond($data, $headers = [])
@@ -61,6 +61,7 @@ class ApiController extends Controller
 
     /**
      * @param $statusCode
+     *
      * @return $this
      */
     public function setStatusCode($statusCode)
@@ -71,7 +72,8 @@ class ApiController extends Controller
     }
 
     /**
-     * @param  string  $message
+     * @param string $message
+     *
      * @return JsonResponse
      */
     public function respondInternalError($message = 'Internal Error')
@@ -81,6 +83,7 @@ class ApiController extends Controller
 
     /**
      * @param $ability
+     *
      * @return mixed
      */
     protected function tokenCan($ability)
@@ -91,10 +94,10 @@ class ApiController extends Controller
     protected function paginatorDetails($paginator)
     {
         return [
-            'total' => $paginator->total(),
-            'per_page' => $paginator->perPage(),
+            'total'        => $paginator->total(),
+            'per_page'     => $paginator->perPage(),
             'current_page' => $paginator->currentPage(),
-            'last_page' => $paginator->lastPage(),
+            'last_page'    => $paginator->lastPage(),
         ];
     }
 }

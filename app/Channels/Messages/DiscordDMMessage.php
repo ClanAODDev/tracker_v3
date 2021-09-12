@@ -5,18 +5,16 @@ namespace App\Channels\Messages;
 use Exception;
 
 /**
- * Class DiscordMessage
- *
- * @package App\Channels
+ * Class DiscordMessage.
  */
 class DiscordDMMessage
 {
-
     private $target;
     private $message;
 
     /**
      * @param $target
+     *
      * @return DiscordDMMessage
      */
     public function to($target)
@@ -28,6 +26,7 @@ class DiscordDMMessage
 
     /**
      * @param $message
+     *
      * @return $this
      */
     public function message($message)
@@ -38,8 +37,9 @@ class DiscordDMMessage
     }
 
     /**
-     * @return array
      * @throws Exception
+     *
+     * @return array
      */
     public function send()
     {
@@ -52,7 +52,7 @@ class DiscordDMMessage
         }
 
         return [
-            'content' => "!relaydm {$this->target} {$this->message}"
+            'content' => "!relaydm {$this->target} {$this->message}",
         ];
     }
 }

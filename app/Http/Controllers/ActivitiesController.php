@@ -20,7 +20,7 @@ class ActivitiesController extends Controller
             'subject' => function ($query) {
                 // provide context even if a subject is "trashed"
                 $query->withTrashed();
-            }
+            },
         ])->get()->reverse();
 
         return view('activity.show', compact('activity', 'division', 'user'));
@@ -32,7 +32,7 @@ class ActivitiesController extends Controller
             'subject' => function ($query) {
                 // provide context even if a subject is "trashed"
                 $query->withTrashed();
-            }
+            },
         ])->orderByDesc('created_at')->get();
 
         return view('activity.show', compact('activity', 'division'));

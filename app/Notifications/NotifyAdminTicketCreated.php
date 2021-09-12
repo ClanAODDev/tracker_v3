@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class NotifyAdminTicketCreated extends Notification
@@ -15,7 +14,8 @@ class NotifyAdminTicketCreated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -25,8 +25,10 @@ class NotifyAdminTicketCreated extends Notification
 
     /**
      * @param $ticket
-     * @return array
+     *
      * @throws \Exception
+     *
+     * @return array
      */
     public function toWebhook($ticket)
     {
@@ -39,12 +41,12 @@ class NotifyAdminTicketCreated extends Notification
             ->info()
             ->fields([
                 [
-                    'name' => "Type: {$ticket->type->name}",
-                    'value' => "Submitted by {$authoringUser}"
+                    'name'  => "Type: {$ticket->type->name}",
+                    'value' => "Submitted by {$authoringUser}",
                 ], [
-                    'name' => 'Link to ticket',
-                    'value' => route('help.tickets.show', $ticket)
-                ]
+                    'name'  => 'Link to ticket',
+                    'value' => route('help.tickets.show', $ticket),
+                ],
             ])->send();
     }
 }

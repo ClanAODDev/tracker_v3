@@ -11,11 +11,12 @@ class AOD extends Model
     /**
      * @param $url
      * @param array $options
+     *
      * @return bool|string
      */
     public static function request($url, $options = [])
     {
-        $endpoint = (new AOD)->prepareRequestUrl($url, $options);
+        $endpoint = (new self())->prepareRequestUrl($url, $options);
 
         $ch = curl_init();
 
@@ -33,10 +34,10 @@ class AOD extends Model
     }
 
     /**
-     * Builds a proper request URL
+     * Builds a proper request URL.
      *
      * @param $url
-     * @param array $options
+     *
      * @return string
      */
     private function prepareRequestUrl($url, array $options)
@@ -49,7 +50,7 @@ class AOD extends Model
     }
 
     /**
-     * Generates authentication token for AOD API
+     * Generates authentication token for AOD API.
      *
      * @return string
      */

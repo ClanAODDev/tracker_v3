@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Division;
 use GuzzleHttp\Client;
 
 /**
- * Trait IngameReports
- *
- * @package App\Http\Controllers\Division
+ * Trait IngameReports.
  */
 trait IngameReports
 {
     /**
-     * Destiny 2 Ingame clan information
+     * Destiny 2 Ingame clan information.
+     *
+     * @param null|mixed $clanId
      *
      * @return array
      */
@@ -23,7 +23,7 @@ trait IngameReports
         $requestedClan = $clanId ?: $clans[0];
 
         // invalid clan id
-        if (!in_array($requestedClan, $clans)) {
+        if (!\in_array($requestedClan, $clans, true)) {
             return [];
         }
 
@@ -37,7 +37,7 @@ trait IngameReports
 
     /**
      * @param $clan
-     * @param Client $client
+     *
      * @return array
      */
     protected function fetchDestiny2ClanData($clan, Client $client)
@@ -49,20 +49,20 @@ trait IngameReports
         $memberData = $this->getBungieInfo($memberUrl, $client);
 
         return [
-            'clan-info' => $clanInformation,
-            'clan-members' => collect($memberData->results)->sortBy('destinyUserInfo.displayName')
+            'clan-info'    => $clanInformation,
+            'clan-members' => collect($memberData->results)->sortBy('destinyUserInfo.displayName'),
         ];
     }
 
     /**
      * @param $url
-     * @param Client $client
+     *
      * @return mixed
      */
     protected function getBungieInfo($url, Client $client)
     {
         return json_decode($client->request('GET', $url, [
-            'headers' => ['X-API-Key' => config('core.bungie.api_key')]
+            'headers' => ['X-API-Key' => config('core.bungie.api_key')],
         ])->getBody()->getContents())->Response;
     }
 }

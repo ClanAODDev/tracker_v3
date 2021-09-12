@@ -25,14 +25,13 @@ class ArchiveChannel extends FormRequest
     public function rules()
     {
         return [
-            //
         ];
     }
 
     public function persist(slack $client)
     {
         return $client->channels->archive([
-            'channel' => $this->channel_id
+            'channel' => $this->channel_id,
         ]);
     }
 }

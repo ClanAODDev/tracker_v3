@@ -25,15 +25,13 @@ class RouteServiceProvider extends ServiceProvider
 
     /**
      * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
      */
     public function boot()
     {
         parent::boot();
 
         /**
-         * Show division by abbreviation
+         * Show division by abbreviation.
          */
         \Route::bind('division', function ($division) {
             $model = Division::whereAbbreviation(strtolower($division))->first();
@@ -42,14 +40,14 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        \Route::bind('username', fn($username) => User::whereName($username)->firstOrFail());
+        \Route::bind('username', fn ($username) => User::whereName($username)->firstOrFail());
 
-        \Route::bind('handle', fn($handle) => Handle::whereId($handle)
+        \Route::bind('handle', fn ($handle) => Handle::whereId($handle)
             ->with('divisions')
             ->first());
 
         /**
-         * Show platoon by division abbrev, platoon number (1st, 2nd, etc)
+         * Show platoon by division abbrev, platoon number (1st, 2nd, etc).
          */
         \Route::bind('platoon', function ($platoon) {
             $model = Platoon::whereId($platoon)
@@ -61,7 +59,6 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-
         \Route::bind('squad', function ($squad) {
             $model = Squad::whereId($squad)->first();
             if ($model instanceof Squad) {
@@ -70,7 +67,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         /**
-         * Show member by clan member id (forum id)
+         * Show member by clan member id (forum id).
          */
         \Route::bind('member', function ($member) {
             $model = Member::whereClanId($member)
@@ -87,7 +84,6 @@ class RouteServiceProvider extends ServiceProvider
      * Define the routes for the application.
      *
      * @param Router $router
-     * @return void
      */
     public function map()
     {
@@ -100,8 +96,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'api',
-            'namespace' => $this->namespace,
-            'prefix' => 'api',
+            'namespace'  => $this->namespace,
+            'prefix'     => 'api',
         ], function ($router) {
             require base_path('routes/api.php');
         });
@@ -111,7 +107,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'web',
-            'namespace' => $this->namespace,
+            'namespace'  => $this->namespace,
         ], function ($router) {
             require base_path('routes/web.php');
         });
