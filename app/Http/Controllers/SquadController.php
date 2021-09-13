@@ -128,7 +128,7 @@ class SquadController extends \App\Http\Controllers\Controller
     {
         $member = \App\Models\Member::find($request->member_id);
         // if squad id is zero, user wants to unassign member
-        if (0 === $request->squad_id) {
+        if (0 === (int) $request->squad_id) {
             $member->platoon()->dissociate();
             $member->squad()->dissociate();
         } else {
@@ -137,6 +137,7 @@ class SquadController extends \App\Http\Controllers\Controller
             $member->platoon()->associate($squad->platoon);
             $member->squad()->associate($squad);
         }
+
         $member->save();
 
         return response()->json(['success' => true]);
