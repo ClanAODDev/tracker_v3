@@ -21,7 +21,7 @@ class PmController extends Controller
 
         return view('division.create-pm')->with([
             'members' => $availableForPm,
-            'selected' => $membersSelected,
+            'omitted' => $membersSelected->diffAssoc($availableForPm),
             'division' => $request->division,
         ]);
     }

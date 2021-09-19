@@ -27,7 +27,7 @@
             </div>
             <div class="panel-body">
                 @foreach ($members->chunk(20) as $chunk)
-                    <a href="{{ doForumFunction($chunk->values()->toArray(), 'pm') }}"
+                    <a href="{{ doForumFunction($chunk->pluck('clan_id')->toArray(), 'pm') }}"
                        target="_blank" class="btn btn-default pm-link" onclick="$(this).addClass('visited')">
                         <i class="fa fa-link text-accent"></i> Group {{ $loop->iteration }}
                     </a>
@@ -35,10 +35,10 @@
             </div>
 
             <div class="panel-footer">
-                @if ($selected->count())
-                    <p><strong>Note:</strong> Some members ({{ $selected->count() }}) were filtered out because they do
+                @if ($omitted->count())
+                    <p><strong>Note:</strong> Some members ({{ $omitted->count() }}) were filtered out because they do
                         not accept PMs from forum administrators:</p>
-                    <p class="text-muted">{{ $selected->pluck('name')->implode(', ') }}</p>
+                    <p class="text-muted">{{ $omitted->pluck('name')->implode(', ') }}</p>
                 @endif
             </div>
         </div>
