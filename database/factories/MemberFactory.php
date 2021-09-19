@@ -33,6 +33,8 @@ class MemberFactory extends Factory
             'last_activity' => $this->faker->dateTimeThisMonth,
             'last_ts_activity' => $this->faker->dateTimeThisMonth,
             'last_promoted_at' => $this->faker->dateTimeThisYear,
+            'allow_pm' => array_rand([0, 1], 1),
+            'privacy_flag' => array_rand([0, 1], 1),
         ];
     }
 

@@ -109,7 +109,8 @@ class SyncMemberData
         $member->posts = $record['postcount'];
         $member->ts_unique_id = $record['tsid'];
         $member->discord = $record['discordtag'];
-        $member->privacy_flag = 'yes' === $record['allow_export'] ? 1 : 0;
+        $member->allow_pm = $record['allow_pm'];
+        $member->privacy_flag = 'yes' !== $record['allow_export'] ? 0 : 1;
 
         // persist
         $member->save();

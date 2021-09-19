@@ -78,16 +78,16 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @return Response
      * @throws AuthorizationException
      *
-     * @return Response
      */
     public function edit(Division $division)
     {
         $this->authorize('update', $division);
         $censuses = $division->census->sortByDesc('created_at')->take(52);
-        $populations = $censuses->values()->map(fn ($census, $key) => [$key, $census->count]);
-        $weeklyActive = $censuses->values()->map(fn ($census, $key) => [$key, $census->weekly_active_count]);
+        $populations = $censuses->values()->map(fn($census, $key) => [$key, $census->count]);
+        $weeklyActive = $censuses->values()->map(fn($census, $key) => [$key, $census->weekly_active_count]);
 
         return view('division.modify', compact('division', 'censuses', 'weeklyActive', 'populations'));
     }
@@ -95,9 +95,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Update the specified resource in storage.
      *
-     * @throws Exception
-     *
      * @return Response
+     *
+     * @throws Exception
      *
      * @internal param Request $request
      */
@@ -122,7 +122,7 @@ class DivisionController extends \App\Http\Controllers\Controller
             $division
         ) {
             // filter out handles that don't match current division primary handle
-            $member->handle = $member->handles->filter(fn ($handle) => $handle->id === $division->handle_id)->first();
+            $member->handle = $member->handles->filter(fn($handle) => $handle->id === $division->handle_id)->first();
         });
 
         return view('division.part-time', compact('division', 'members'));
@@ -131,9 +131,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Assign a member as part-time to a division.
      *
+     * @return Redirector|RedirectResponse|string
      * @throws AuthorizationException
      *
-     * @return Redirector|RedirectResponse|string
      */
     public function assignPartTime(Division $division, Member $member)
     {
@@ -146,9 +146,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     }
 
     /**
+     * @return RedirectResponse|string
      * @throws AuthorizationException
      *
-     * @return RedirectResponse|string
      */
     public function removePartTime(Division $division, Member $member)
     {
@@ -222,7 +222,7 @@ class DivisionController extends \App\Http\Controllers\Controller
             }
             fclose($handle);
         }, 200, [
-            'Content-type'        => 'text/csv',
+            'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=members.csv',
         ]);
     }
