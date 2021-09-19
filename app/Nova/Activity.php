@@ -2,8 +2,10 @@
 
 namespace App\Nova;
 
+use App\Nova\Filters\ByDivision;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphOne;
 use Laravel\Nova\Fields\MorphTo;
@@ -32,7 +34,7 @@ class Activity extends Resource
      * @var array
      */
     public static $search = [
-        'name',
+        'name', 'division_id'
     ];
 
     /**
@@ -45,10 +47,12 @@ class Activity extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            MorphTo::make('subject')->withoutTrashed(),
-            Text::make('name'),
-            BelongsTo::make('division'),
-            BelongsTo::make('user'),
+            MorphTo::make('Subject')->withoutTrashed(),
+            Text::make('Action', 'name')
+                ->sortable(),
+            BelongsTo::make('Division'),
+            BelongsTo::make('User'),
+            DateTime::make('Created At')
         ];
     }
 
@@ -71,7 +75,9 @@ class Activity extends Resource
      */
     public function filters(Request $request)
     {
-        return [];
+        return [
+            new ByDivision(),
+        ];
     }
 
     /**
