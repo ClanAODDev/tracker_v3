@@ -35,6 +35,9 @@
                             manage AOD member status</a>.
                     </li>
                     <li>Slightly improved appearance of overdue requests</li>
+                    <li>Members who opt-out of receiving forum PMs are now filtered out of mass PMs created through
+                        the tracker
+                    </li>
                 </ul>
             </div>
         </div>
