@@ -19,17 +19,11 @@
         {!! Breadcrumbs::render('send-private-message', $division) !!}
 
         <p>The AOD Forums has a maximum number of <code>20</code> recipients per PM. To assist with this limitation,
-            members
-            have been chunked into groups for your convenience.</p>
-
-        <p>Some members may opt out of receiving private messages. This will generate a warning when sending a
-            private message. You will need to manually omit them from your mass PM.</p>
-
-        <p>You are sending to <code>{{ $members->count() }}</code> recipients.</p>
+            members have been chunked into groups for your convenience.</p>
 
         <div class="panel panel-c-accent panel-filled m-t-md">
             <div class="panel-heading">
-                Message Groups
+                Message Groups <small class="text-muted">{{ $members->count() }} recipients</small>
             </div>
             <div class="panel-body">
                 @foreach ($members->chunk(20) as $chunk)
@@ -40,7 +34,13 @@
                 @endforeach
             </div>
 
-            <div class="panel-footer"><p class="text-muted">Groups will be disabled as they are clicked.</p></div>
+            <div class="panel-footer">
+                @if ($selected->count())
+                    <p><strong>Note:</strong> Some members ({{ $selected->count() }}) were filtered out because they do
+                        not accept PMs from forum administrators:</p>
+                    <p class="text-muted">{{ $selected->pluck('name')->implode(', ') }}</p>
+                @endif
+            </div>
         </div>
 
         <a href="{{ url()->previous() }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> Go back</a>

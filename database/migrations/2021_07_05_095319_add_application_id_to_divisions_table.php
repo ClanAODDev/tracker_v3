@@ -14,7 +14,9 @@ class AddApplicationIdToDivisionsTable extends Migration
     public function up()
     {
         Schema::table('divisions', function (Blueprint $table) {
-            $table->integer('forum_app_id')->after('officer_role_id');
+            $table
+                ->integer('forum_app_id')
+                ->after('officer_role_id');
         });
     }
 }
