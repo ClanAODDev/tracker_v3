@@ -24,14 +24,21 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
      */
     public function index($division)
     {
-        $queryingTsInactives = strpos(request()->path(), 'inactive-members-ts');
+        $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)->where(function ($query) use ($division) {
 
-        $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)->where(function ($query) use ($division, $queryingTsInactives) {
-            if ($queryingTsInactives) {
-                $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
-            } else {
-                $query->where('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
+            switch(true) {
+                case request()->is('*/inactive-members-ts'):
+                    $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
+                    break;
+                case request()->is('*/inactive-ts-forums'):
+                    $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days))
+                        ->where('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
+                    break;
+                default:
+                    $query->where('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
+                    break;
             }
+
         })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy('last_activity')->get();
 
         if (request()->platoon) {
@@ -49,9 +56,9 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
          * by teamspeak or forum. Used in platoon filter options, reset
          * filter button.
          */
-        $requestPath = $queryingTsInactives ? 'division.inactive-members-ts' : 'division.inactive-members';
+        $requestPath = 'division.' . explode('/', request()->path())[2];
 
-        return view('division.inactive-members', compact('queryingTsInactives', 'division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath'));
+        return view('division.inactive-members', compact('division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath'));
     }
 
     /**

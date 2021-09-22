@@ -30,6 +30,8 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
         ->name('division.inactive-members');
     Route::get('/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members-ts');
+    Route::get('/inactive-ts-forums/{platoon?}', 'InactiveMemberController@index')
+        ->name('division.inactive-ts-forums');
 
     Route::get('/members', 'DivisionController@members')->name('division.members');
     Route::get('/members/csv', 'DivisionController@exportAsCSV')->name('division.export-csv');

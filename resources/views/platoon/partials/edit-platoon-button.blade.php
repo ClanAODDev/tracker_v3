@@ -11,10 +11,6 @@
             <span class="hidden-xs hidden-sm">Manage {{ $division->locality('platoon') }}</span>
         </a>
     @endcan
-
-{{--    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mass-pm-modal">
-        <i class="fa fa-bullhorn text-accent"></i> <span class="hidden-xs hidden-sm">Mass PM</span>
-    </button>--}}
 </div>
 
 

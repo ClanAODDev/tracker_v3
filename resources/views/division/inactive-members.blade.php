@@ -44,14 +44,13 @@
                 <li class="pull-right">
                     <span class="btn-group-sm btn-group">
                     <a href="{{ route('division.inactive-members', $division->abbreviation) }}"
-                       class="btn btn-default {{ set_active(['divisions/*/inactive-members/*', 'divisions/*/inactive-members']) }}">Filter By Forum Activity</a>
+                       class="btn btn-default {{ set_active(['divisions/*/inactive-members/*', 'divisions/*/inactive-members']) }}">Forum Activity</a>
                     <a href="{{ route('division.inactive-members-ts', $division->abbreviation) }}"
-                       class="btn btn-default {{ set_active(['divisions/*/inactive-members-ts/*', 'divisions/*/inactive-members-ts']) }}">Filter By TS Activity</a>
-                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#mass-pm-modal">
-                        <i class="fa fa-bullhorn text-accent"></i> <span
-                                class="hidden-xs hidden-sm">Mass PM Inactives</span>
-                    </button>
-                        </span>
+                       class="btn btn-default {{ set_active(['divisions/*/inactive-members-ts/*', 'divisions/*/inactive-members-ts']) }}">TS Activity</a>
+                    <a href="{{ route('division.inactive-ts-forums', $division->abbreviation) }}"
+                       class="btn btn-default {{ set_active(['divisions/*/inactive-ts-forums/*',
+                       'divisions/*/inactive-ts-forums']) }}">Both (TS / Forums)</a>
+                    </span>
                 </li>
             </ul>
             <div class="tab-content">
@@ -87,21 +86,4 @@
         @include('division.partials.inactivity-log')
     </div>
 
-    @component('application.components.modal', ['showSaveButton' => false])
-        @slot('title')
-            Mass Forum PM ({{ count($inactiveMembers) }})
-        @endslot
-        @slot('body')
-            <p>The Clan AOD forums has a maximum number of 20 recipients per PM. To assist with this limitation, members
-                have been chunked into groups for your convenience.</p>
-            <p class="m-t-md">
-                @foreach ($inactiveMembers->chunk(20) as $chunk)
-                    <a href="{{ doForumFunction($chunk->pluck('clan_id')->toArray(), 'pm') }}"
-                       target="_blank" class="btn btn-default">
-                        <i class="fa fa-link text-accent"></i> Group {{ $loop->iteration }}
-                    </a>
-                @endforeach
-            </p>
-        @endslot
-    @endcomponent
 @endsection
