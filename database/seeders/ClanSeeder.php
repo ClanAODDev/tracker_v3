@@ -29,6 +29,8 @@ class ClanSeeder extends Seeder
             $this->generateDivisionLeadership($division);
             $this->generateDivisionMembers($division);
             $this->generateCensusData($division);
+
+            $division->partTimeMembers()->attach(Member::factory()->count(2)->create());
         }
 
         // generate user

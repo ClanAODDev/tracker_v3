@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\PrunePartTimers;
 use App\Nova\Actions\SetDefaultSettings;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -125,6 +126,7 @@ class Division extends Resource
     {
         return [
             new SetDefaultSettings(),
+            new PrunePartTimers(),
         ];
     }
 }
