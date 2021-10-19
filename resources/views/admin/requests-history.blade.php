@@ -39,7 +39,7 @@
                         @foreach ($requests as $request)
                             <tr>
                                 <td><code>{{ $request->member->name }}</code></td>
-                                <td>{{ $request->approver->name ?? 'UNKNOWN' }}</td>
+                                <td>{{ $request->approver ? $request->approver->name : 'UNKNOWN' }}</td>
                                 <td class="text-center">{{ $request->approved_at }}</td>
                                 <td class="text-center">
                                     <a href="{{ doForumFunction([$request->member->clan_id], 'forumProfile') }}"
