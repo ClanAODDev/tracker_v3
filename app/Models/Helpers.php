@@ -16,6 +16,15 @@ function bytesToHuman($bytes)
     return round($bytes, 2) . ' ' . $units[$i];
 }
 
+function getSnowSetting()
+{
+    if (auth()->check()) {
+        return auth()->user()->settings()->get('snow');
+    }
+
+    return false;
+}
+
 function sanitize_filter_attribute($attribute)
 {
     // replace dots

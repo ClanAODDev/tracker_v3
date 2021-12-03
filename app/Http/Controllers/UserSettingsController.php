@@ -22,7 +22,10 @@ class UserSettingsController extends Controller
     {
         $user = auth()->user();
 
-        $user->settings()->merge($request->all());
+        $user->settings()->merge($request->only([
+            'ticket_notifications',
+            'snow'
+        ]));
 
         $this->showToast('Your settings have been updated successfully');
 
