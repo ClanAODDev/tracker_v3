@@ -214,11 +214,12 @@ let Platoon = Platoon || {};
 
                 $('.no-sort').removeClass('sorting');
 
+                // handle PM selection
                 dataTable.on("select", function (e, t, a, d) {
                     let l = dataTable.rows($(".selected")).data().toArray().map(function (e) {
                         return e[11]
                     });
-                    if (l.length >=2) {
+                    if (l.length >= 2) {
                         $("#selected-data").show(),
                             $("#selected-data .status-text").text("With selected (" + l.length + ")"),
                             $("#pm-member-data").val(l);

@@ -1299,11 +1299,11 @@ sup {
     margin-right: -10px;
 }
 
-.row .selected {
+tr.selected {
     background-color: rgba(255,255,255,.2);
 }
 
-.row .selected:hover {
+tr.selected:hover {
     background-color: rgba(255,255,255,.25);
 }
 

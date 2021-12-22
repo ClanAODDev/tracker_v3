@@ -45,8 +45,8 @@
                     <div class="panel-footer">
                         <small class="slight"><span class="text-accent"><i class="fa fa-asterisk"></i></span> - On Leave
                         </small>
-{{--                        <a href="{{ route('division.export-csv', [$division]) }}"--}}
-{{--                           class="btn btn-sm btn-accent pull-right">Export to CSV</a>--}}
+                        {{--                        <a href="{{ route('division.export-csv', [$division]) }}"--}}
+                        {{--                           class="btn btn-sm btn-accent pull-right">Export to CSV</a>--}}
                     </div>
                 </div>
             </div>

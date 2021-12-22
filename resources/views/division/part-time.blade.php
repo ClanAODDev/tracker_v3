@@ -18,21 +18,29 @@
 
         {!! Breadcrumbs::render('part-timers', $division) !!}
 
+        @include('division.partials.select-panel')
+
         @if (count($members))
-            <table class="table adv-datatable table-hover">
+            <div class='panel-body border-bottom'>
+                <div id='playerFilter'></div>
+            </div>
+            <table class="table table-hover basic-datatable for-pm-selection">
                 <thead>
                 <tr>
                     <th>Member Name</th>
                     <th>Ingame Name</th>
                     <th>Status</th>
                     <th class="no-sort col-xs-1"></th>
+                    <th class="col-hidden">Clan Id</th>
+
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($members as $member)
                     <tr>
                         <td>
-                            <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
+                            <a href="{{ route('member', $member->getUrlParams()) }}"><i
+                                    class="fa fa-search"></i></a>
                             {{ $member->name }}
                             <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                         </td>
@@ -66,14 +74,19 @@
                                 </a>
                             @endcan
                         </td>
+                        <td class="col-hidden">{{ $member->clan_id }}</td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
         @else
             <h4><i class="fa fa-times-circle-o text-danger"></i> No Part-Time Members</h4>
-            <p>This division currently has no part-time members assigned. To assign a member, use the search bar at the
-                top of the page to find their profile, edit their member information, and select your division in the
-                part-time tab.</p>
+            <p>This division currently has no part-time members assigned. To assign a member, use the search bar
+                at the top of the page to find their profile, edit their member information, and select your division
+                in the part-time tab.</p>
+
     @endif
+
 @endsection
+
+
