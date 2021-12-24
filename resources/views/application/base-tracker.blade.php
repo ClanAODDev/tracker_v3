@@ -8,6 +8,7 @@
 
 @if (Auth::check() && Auth::user()->member && Auth::user()->member->division)
     <body class="{{ session('primary_nav_collapsed') === true ? 'nav-toggle' : null }}">
+
     {!! Toastr::message() !!}
 
     <div class="wrapper">
@@ -21,7 +22,10 @@
 
         <section class="search-results closed text-center"></section>
 
+
+
         <section class="content">
+            @include('application.partials.alert')
             @yield('content')
         </section>
     </div>
@@ -30,6 +34,7 @@
 @else
 
     <body class="blank">
+
     <div class="wrapper">
         <section class="content">
             @yield('content')

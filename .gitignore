@@ -24,3 +24,4 @@ yarn.lock
 *.cache
 /data
 auth.json
+maintenance.alert
