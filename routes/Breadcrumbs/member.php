@@ -1,6 +1,6 @@
 <?php
 
-Breadcrumbs::register('member', function ($breadcrumbs, $member, $division) {
+Breadcrumbs::for('member', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {
@@ -26,7 +26,7 @@ Breadcrumbs::register('member', function ($breadcrumbs, $member, $division) {
 });
 
 
-Breadcrumbs::register('member-note', function ($breadcrumbs, $member, $division) {
+Breadcrumbs::for('member-note', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {
@@ -49,7 +49,7 @@ Breadcrumbs::register('member-note', function ($breadcrumbs, $member, $division)
 });
 
 
-Breadcrumbs::register('member-leave', function ($breadcrumbs, $member, $division) {
+Breadcrumbs::for('member-leave', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {
@@ -71,7 +71,7 @@ Breadcrumbs::register('member-leave', function ($breadcrumbs, $member, $division
     $breadcrumbs->push('Edit Leave');
 });
 
-Breadcrumbs::register('member-recruits', function ($breadcrumbs, $member, $division) {
+Breadcrumbs::for('member-recruits', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {

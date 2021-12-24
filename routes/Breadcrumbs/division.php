@@ -2,27 +2,27 @@
 
 registerDivisionSubPages();
 
-Breadcrumbs::register('home', function ($breadcrumbs) {
+Breadcrumbs::for('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', route('index'));
 });
 
 
 
 // Home > Division
-Breadcrumbs::register('division', function ($breadcrumbs, $division) {
+Breadcrumbs::for('division', function ($breadcrumbs, $division) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->abbreviation));
 });
 
 // Home > Division > Platoon
-Breadcrumbs::register('platoon', function ($breadcrumbs, $division, $platoon) {
+Breadcrumbs::for('platoon', function ($breadcrumbs, $division, $platoon) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     $breadcrumbs->push($platoon->name);
 });
 
 // Home > Division > Platoon > Squad
-Breadcrumbs::register('squad', function ($breadcrumbs, $division, $platoon, $squad) {
+Breadcrumbs::for('squad', function ($breadcrumbs, $division, $platoon, $squad) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     $breadcrumbs->push($platoon->name, route('platoon', [$division->abbreviation, $platoon->id]));
@@ -54,7 +54,7 @@ function registerDivisionSubPages()
     ];
 
     foreach ($divisionStaticSubPages as $page) {
-        Breadcrumbs::register($page, function ($breadcrumbs, $division) use ($page) {
+        Breadcrumbs::for($page, function ($breadcrumbs, $division) use ($page) {
             $breadcrumbs->parent('home');
             $breadcrumbs->push($division->name, route('division', $division->abbreviation));
             $breadcrumbs->push(ucwords(
