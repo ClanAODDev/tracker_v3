@@ -20,7 +20,7 @@
     "vue-template-compiler": "^2.6.14"
   },
   "devDependencies": {
-    "axios": ">=0.21.1",
+    "axios": ">=0.21.2",
     "bootstrap": "^4.6.0",
     "bootstrap-sass": "^3.3.7",
     "buble-loader": "^0.5.1",
