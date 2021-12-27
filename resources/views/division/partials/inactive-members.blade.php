@@ -1,6 +1,6 @@
 @if (count($inactiveMembers))
     <div class="table-responsive">
-        <table class="table adv-datatable table-hover">
+        <table class="table basic-datatable table-hover">
             <thead>
             <tr>
                 <th>Member Name</th>
