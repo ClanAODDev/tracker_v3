@@ -25,20 +25,8 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     public function index($division)
     {
         $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)->where(function ($query) use ($division) {
-
-            switch(true) {
-                case request()->is('*/inactive-members-ts'):
-                    $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
-                    break;
-                case request()->is('*/inactive-ts-forums'):
-                    $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days))
-                        ->where('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
-                    break;
-                default:
-                    $query->where('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
-                    break;
-            }
-
+            $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days))
+                ->Orwhere('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
         })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy('last_activity')->get();
 
         if (request()->platoon) {
@@ -64,9 +52,9 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     /**
      * Flags a member for inactivity.
      *
+     * @return Redirector|RedirectResponse
      * @throws AuthorizationException
      *
-     * @return Redirector|RedirectResponse
      */
     public function create(Member $member)
     {
@@ -76,15 +64,15 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $member->recordActivity('flagged');
         $this->showToast($member->name . ' successfully flagged for removal');
 
-        return redirect(route('division.inactive-members', $member->division->abbreviation));
+        return redirect()->back();
     }
 
     /**
      * Remove a flag from an inactive member.
      *
+     * @return Redirector|RedirectResponse
      * @throws AuthorizationException
      *
-     * @return Redirector|RedirectResponse
      */
     public function destroy(Member $member)
     {

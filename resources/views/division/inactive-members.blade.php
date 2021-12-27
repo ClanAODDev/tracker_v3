@@ -35,22 +35,11 @@
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a data-toggle="tab" href="#inactive"
-                       aria-expanded="true"> Inactive <span class="badge">{{ count($inactiveMembers) }}</span></a></li>
+                       aria-expanded="true">Inactive <span class="badge">{{ count($inactiveMembers) }}</span></a></li>
                 <li>
                     <a data-toggle="tab" href="#flagged"
                        aria-expanded="false">Flagged <span class="badge">{{ count($flaggedMembers) }}</span>
                     </a>
-                </li>
-                <li class="pull-right">
-                    <span class="btn-group-sm btn-group">
-                    <a href="{{ route('division.inactive-members', $division->abbreviation) }}"
-                       class="btn btn-default {{ set_active(['divisions/*/inactive-members/*', 'divisions/*/inactive-members']) }}">Forum Activity</a>
-                    <a href="{{ route('division.inactive-members-ts', $division->abbreviation) }}"
-                       class="btn btn-default {{ set_active(['divisions/*/inactive-members-ts/*', 'divisions/*/inactive-members-ts']) }}">TS Activity</a>
-                    <a href="{{ route('division.inactive-ts-forums', $division->abbreviation) }}"
-                       class="btn btn-default {{ set_active(['divisions/*/inactive-ts-forums/*',
-                       'divisions/*/inactive-ts-forums']) }}">Both (TS / Forums)</a>
-                    </span>
                 </li>
             </ul>
             <div class="tab-content">
