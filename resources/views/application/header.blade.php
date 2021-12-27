@@ -27,8 +27,8 @@
 <link rel="stylesheet" href="{{ asset('vendor/datatables/datatables.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/style.css') }}?v3.5">
 
-<script src="{{ asset('js/libs.js?v=2.0') }}"></script>
-
+<script src="{{ asset('js/libs.js?v=2.1') }}"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/sl-1.3.4/datatables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 

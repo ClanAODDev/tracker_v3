@@ -39,12 +39,7 @@ elixir(function (mix) {
       "libs/CopyClipboard.js",
       "libs/prism.js",
       "libs/codemirror.js",
-      "libs/twig.js",
-
-      "libs/dataTables/jquery.dataTables.min.js",
-      "libs/dataTables/dataTables.bootstrap.js",
-      "libs/dataTables/dataTables.tableTools.min.js",
-      "libs/dataTables/dataTables.select.min.js"
+      "libs/twig.js"
     ],
 
     "public/js/libs.js", "resources/js");
