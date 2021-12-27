@@ -53,6 +53,7 @@ class Division extends Model
     ];
 
     protected static array $recordEvents = ['created', 'deleted'];
+
     protected $dates = ['shutdown_at'];
     /**
      * @var array
@@ -71,16 +72,27 @@ class Division extends Model
     public static function boot()
     {
         parent::boot();
-        /**
-         * Handle default settings population.
-         */
-        static::creating(function (self $division) {
-            $division->settings = $division->defaultSettings;
-        });
 
         static::creating(function (self $division) {
+            $division->settings = $division->defaultSettings;
             $division->slug = Str::slug($division->name);
         });
+
+        static::retrieved(function (self $division) {
+            self::setMissingSettings($division);
+        });
+    }
+
+    /**
+     * @param Division $division
+     */
+    private static function setMissingSettings(Division $division): void
+    {
+        if ($diff = array_diff(array_keys($division->defaultSettings), array_keys($division->settings))) {
+            foreach ($diff as $key) {
+                $division->settings()->set($key, $division->defaultSettings[$key]);
+            }
+        }
     }
 
     public function getRouteKeyName(): string
@@ -307,6 +319,8 @@ class Division extends Model
      */
     public function settings()
     {
+        $this->fireCustomModelEvent('settingsRead', true);
+
         return new DivisionSettings($this->settings, $this);
     }
 
