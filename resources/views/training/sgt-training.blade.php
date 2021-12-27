@@ -72,17 +72,9 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <h4>SGT Handbook</h4>
-                        <p>Do not do this ahead of time, or they will be distracted throughout the whole
-                            process. Take some time to answer any questions that they may have. Set up a few times in a
-                            week or two to revisit and chat about their first few weeks as a Sgt. You will probably get
-                            some great stories.</p>
-                        <p><a href="http://clanaod.net/files/AOD-SGT-HANDBOOK.pdf"
-                              target="_blank"
-                              class="btn btn-primary">AOD Sgt Handbook (PDF) <i
-                                        class="fas fa-external-link-alt text-primary"></i>
-                            </a>
-                        </p>
+                        <h4>SGT Handbook (in revision)</h4>
+                        <p>The current SGT handbook has been deemed deprecated, and a new forum based version is
+                            being prepared. This resource will be updated once the newer version is available</p>
                     </div>
                     <div class="col-md-6">
                         <div class="panel panel-filled {{ $errors->has('clan_id') ? 'panel-c-danger' : null }}">
