@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        @if ($flaggedMembers)
+        @if ($flaggedMembers->count() > 0)
             <div class="panel panel-filled">
                 <div class="panel-heading">Share Flagged Members ({{ count($flaggedMembers) }})</div>
                 <div class="panel-body">
