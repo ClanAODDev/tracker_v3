@@ -69,13 +69,7 @@
                     </div>
                 </div>
 
-
                 <div class="row">
-                    <div class="col-md-6">
-                        <h4>SGT Handbook (in revision)</h4>
-                        <p>The current SGT handbook has been deemed deprecated, and a new forum based version is
-                            being prepared. This resource will be updated once the newer version is available</p>
-                    </div>
                     <div class="col-md-6">
                         <div class="panel panel-filled {{ $errors->has('clan_id') ? 'panel-c-danger' : null }}">
                             <div class="panel-heading">Confirm Training</div>
@@ -106,6 +100,11 @@
                             </div>
                         </div>
                     </div>
+                    {{--<div class="col-md-6">
+                        <h4>SGT Handbook (in revision)</h4>
+                        <p>The current SGT handbook has been deemed deprecated, and a new forum based version is
+                            being prepared. This resource will be updated once the newer version is available</p>
+                    </div>--}}
                 </div>
             </div>
         </div>
