@@ -26,21 +26,13 @@ class Member extends \Illuminate\Database\Eloquent\Model
     use SoftDeletes;
 
     public const UNVERIFIED_EMAIL_GROUP_ID = 3;
-    /**
-     * @var array
-     */
-    protected static $recordEvents = [];
+
+    protected static array $recordEvents = [];
+
     protected $casts = ['pending_member' => 'boolean', 'flagged_for_inactivity' => 'boolean'];
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'clan_id', 'platoon_id', 'squad_id', 'position_id', 'division_id', 'posts', 'join_date',
-        'last_activity', 'last_ts_activity', 'last_promoted_at', 'recruiter_id',
-    ];
-    /**
-     * @var array
-     */
+
+    protected $guarded = [];
+
     protected $dates = [
         'join_date',
         'last_activity',
@@ -51,36 +43,22 @@ class Member extends \Illuminate\Database\Eloquent\Model
         'co_at',
     ];
 
-    /**
-     * @return MemberPresenter
-     */
-    public function present()
+    public function present(): MemberPresenter
     {
         return new \App\Presenters\MemberPresenter($this);
     }
 
-    /**
-     * relationship - user has one member.
-     */
     public function user()
     {
         return $this->hasOne(\App\Models\User::class);
     }
 
-    /**
-     * @return HasMany
-     */
     public function notes()
     {
         return $this->hasMany(\App\Models\Note::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
-    /**
-     * @param $position
-     *
-     * @return Model
-     */
-    public function assignPosition($position)
+    public function assignPosition($position): Model
     {
         $newPosition = $position instanceof \App\Models\Position ? $position : \App\Models\Position::whereName(strtolower($position))->firstOrFail();
         // reset assignments for specific positions
@@ -91,6 +69,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
             $this->platoon_id = 0;
             $this->squad_id = 0;
         }
+
         if ('Executive Officer' === $newPosition->name) {
             $this->xo_at = now();
             $this->co_at = null;
@@ -220,18 +199,6 @@ class Member extends \Illuminate\Database\Eloquent\Model
     public function expiredLeave()
     {
         return $this->hasOne(\App\Models\Leave::class)->where('end_date', '<', \Carbon\Carbon::today());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isPending()
-    {
-        if ($this->memberRequest) {
-            return $this->memberRequest()->pending()->exists();
-        }
-
-        return false;
     }
 
     /**

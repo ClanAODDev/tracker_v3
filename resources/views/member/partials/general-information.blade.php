@@ -34,12 +34,12 @@
     @endcomponent
 
     @component('application.components.data-block')
-        @slot('data') {{ $member->join_date }} @endslot
+        @slot('data') {{ $member->join_date->format('Y-m-d') }} @endslot
         @slot('title') Member <span class="c-white">join date</span> @endslot
     @endcomponent
 
     @component('application.components.data-block')
-        @slot('data') {{ $member->present()->lastPromoted() }} @endslot
+        @slot('data') {{ $member->lastPromoted }} @endslot
         @slot('title') Last <span class="c-white">promotion date</span> @endslot
     @endcomponent
 

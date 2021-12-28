@@ -50,7 +50,7 @@
             </li>
 
             <li>
-                <a href="{{ doForumFunction([auth()->user()->member->clan_id], 'forumProfile') }}">Forum Profile</a>
+                <a href="{{ auth()->user()->member->AODProfileLink }}">Forum Profile</a>
             </li>
 
             <li>

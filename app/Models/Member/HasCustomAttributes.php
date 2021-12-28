@@ -3,50 +3,37 @@
 namespace App\Models\Member;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait HasCustomAttributes
 {
-    public function getAODProfileLinkAttribute()
+    public function AODProfileLink(): Attribute
     {
-        return 'http://www.clanaod.net/forums/member.php?u=' . $this->clan_id;
+        return new Attribute(
+            fn($value, $attributes) => 'http://www.clanaod.net/forums/member.php?u=' . $attributes['clan_id']
+        );
     }
 
-    public function getTsInvalidAttribute()
+    public function tsInvalid(): Attribute
     {
-        return null === carbon_date_or_null_if_zero($this->last_ts_activity);
+        return new Attribute(
+            fn($value, $attributes) => null === carbon_date_or_null_if_zero($attributes['last_ts_activity'])
+        );
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getLastPromotedAttribute($value)
+    public function lastPromoted(): Attribute
     {
-        if (\strlen($value)) {
-            return Carbon::parse($value)->format('Y-m-d');
-        }
-
-        return 'Never';
+        return new Attribute(
+            fn($value, $attributes) => (strlen($attributes['last_promoted_at']))
+                ? Carbon::parse($attributes['last_promoted_at'])->format('Y-m-d')
+                : 'Never'
+        );
     }
 
-    /**
-     * Is a pending member?
-     *
-     * @return mixed
-     */
-    public function getIsPendingAttribute()
+    public function isPending(): Attribute
     {
-        return $this->pending_member;
-    }
-
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getJoinDateAttribute($value)
-    {
-        return Carbon::parse($value)->format('Y-m-d');
+        return new Attribute(
+            fn($value, $attributes) => $this->memberRequest()->pending()->exists()
+        );
     }
 }

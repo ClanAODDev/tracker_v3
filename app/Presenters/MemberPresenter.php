@@ -19,11 +19,9 @@ class MemberPresenter extends \App\Presenters\Presenter
         $this->member = $member;
     }
 
-    public function lastPromoted($emptyVal = 'Never')
-    {
-        return !$this->member->last_promoted_at ? $emptyVal ?? 'Never' : $this->member->last_promoted_at->format('Y-m-d');
-    }
-
+    /**
+     * TODO - Figure out what the hell this is
+     */
     public function lastActive($value)
     {
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
