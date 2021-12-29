@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AOD extends Model
 {
-    const AGENT = 'AOD Division Tracker';
+    public const AGENT = 'AOD Division Tracker';
 
     /**
      * @param $url

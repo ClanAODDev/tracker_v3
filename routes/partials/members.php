@@ -31,7 +31,6 @@ Route::group(['prefix' => 'members'], function () {
     Route::get('{member}-{slug?}', 'MemberController@show')->name('member');
 });
 
-
 Route::group(['prefix' => 'inactive-members'], function () {
     Route::get('{member}/flag-inactive', 'InactiveMemberController@create')->name('member.flag-inactive');
     Route::get('{member}/unflag-inactive', 'InactiveMemberController@destroy')->name('member.unflag-inactive');

@@ -33,6 +33,7 @@ class MakeMaintenanceAlert extends Command
         if ($this->option('clear')) {
             if (!file_exists(base_path(self::MAINTENANCE_ALERT))) {
                 $this->info('No alert to clear!');
+
                 return $this::SUCCESS;
             }
 
@@ -42,24 +43,24 @@ class MakeMaintenanceAlert extends Command
 
         if ($this->option('set')) {
             if (file_exists(base_path(self::MAINTENANCE_ALERT))) {
-                if (!$this->confirm("Alert already exists! Replace it?")) {
+                if (!$this->confirm('Alert already exists! Replace it?')) {
                     return $this::SUCCESS;
                 }
 
                 unlink(base_path(self::MAINTENANCE_ALERT));
             }
 
-            $message = $this->ask("What would you like the alert set to? (basic HTML allowed)");
+            $message = $this->ask('What would you like the alert set to? (basic HTML allowed)');
 
             try {
                 $alert = fopen(base_path(self::MAINTENANCE_ALERT), 'w');
                 fwrite($alert, $message);
                 fclose($alert);
             } catch (\Exception $exception) {
-                $this->error("Could not set alert file! - " . $exception->getMessage());
+                $this->error('Could not set alert file! - ' . $exception->getMessage());
             }
 
-            $this->info(sprintf("Alert file set to: %s", $message));
+            $this->info(sprintf('Alert file set to: %s', $message));
         }
 
         return $this::SUCCESS;

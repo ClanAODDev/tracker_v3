@@ -96,7 +96,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
         $division = Division::whereAbbreviation($request->division)->first();
         $tasks = $division->settings()->get('recruiting_tasks');
 
-        return collect($tasks)->map(fn($task) => ['complete' => false, 'description' => $task['task_description']]);
+        return collect($tasks)->map(fn ($task) => ['complete' => false, 'description' => $task['task_description']]);
     }
 
     /**
@@ -155,15 +155,15 @@ class RecruitingController extends \App\Http\Controllers\Controller
         }
 
         return [
-            'is_member' => true,
-            'username' => $result->username,
+            'is_member'      => true,
+            'username'       => $result->username,
             'verified_email' => Member::UNVERIFIED_EMAIL_GROUP_ID !== $result->usergroupid,
         ];
     }
 
     /**
      * @param string $name
-     * @param int $memberId
+     * @param int    $memberId
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -235,7 +235,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
         MemberRequest::create([
             'requester_id' => auth()->user()->member->clan_id, 'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'division_id'  => $division->id,
         ]);
     }
 

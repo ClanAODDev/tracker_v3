@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Application endpoints
+ * Application endpoints.
  */
 Route::get('/home', 'AppController@index')->name('home');
 Route::get('/', 'AppController@index')->name('index');
@@ -51,7 +51,7 @@ Route::post('developers/tokens', 'DeveloperController@generateToken')->name('dev
 Route::delete('developers/tokens', 'DeveloperController@destroyToken')->name('developer.token.delete');
 
 /**
- * Application UI
+ * Application UI.
  */
 Route::group(['prefix' => 'primary-nav'], function () {
     Route::get('collapse', function () {
@@ -63,9 +63,9 @@ Route::group(['prefix' => 'primary-nav'], function () {
 });
 
 /**
- * Slack handler
+ * Slack handler.
  */
 Route::post('slack', [
-    'as' => 'slack.commands',
+    'as'   => 'slack.commands',
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');

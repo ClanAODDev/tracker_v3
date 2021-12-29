@@ -16,12 +16,12 @@ class PmController extends Controller
             ->get();
 
         $availableForPm = $membersSelected->filter(function ($member) {
-            return ($member->allow_pm);
+            return $member->allow_pm;
         });
 
         return view('division.create-pm')->with([
-            'members' => $availableForPm,
-            'omitted' => $membersSelected->diffAssoc($availableForPm),
+            'members'  => $availableForPm,
+            'omitted'  => $membersSelected->diffAssoc($availableForPm),
             'division' => $request->division,
         ]);
     }

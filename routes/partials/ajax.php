@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ajax endpoints
+ * ajax endpoints.
  */
 Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
 Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');

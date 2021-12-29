@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |-------------------------------------------------------------
     | Incoming webhook endpoint
@@ -52,7 +51,7 @@ return [
     */
 
     // Tracker logo for messages
-    'icon' => "http://159.203.134.98/images/logo.png",
+    'icon' => 'http://159.203.134.98/images/logo.png',
 
     /*
     |-------------------------------------------------------------
@@ -120,11 +119,8 @@ return [
     // Allow Markdown in all fields
     // 'markdown_in_attachments' => ['pretext', 'text', 'title', 'fields', 'fallback']
 
-
     /**
-     * AOD Slack Tokens
+     * AOD Slack Tokens.
      */
-
     'tokens' => env('SLACK_TOKENS'),
-
 ];

@@ -20,7 +20,9 @@ class MemberPresenter extends \App\Presenters\Presenter
     }
 
     /**
-     * TODO - Figure out what the hell this is
+     * TODO - Figure out what the hell this is.
+     *
+     * @param mixed $value
      */
     public function lastActive($value)
     {

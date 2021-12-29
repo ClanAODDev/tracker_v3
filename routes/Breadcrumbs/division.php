@@ -6,8 +6,6 @@ Breadcrumbs::for('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', route('index'));
 });
 
-
-
 // Home > Division
 Breadcrumbs::for('division', function ($breadcrumbs, $division) {
     $breadcrumbs->parent('home');
@@ -26,11 +24,11 @@ Breadcrumbs::for('squad', function ($breadcrumbs, $division, $platoon, $squad) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     $breadcrumbs->push($platoon->name, route('platoon', [$division->abbreviation, $platoon->id]));
-    $breadcrumbs->push($squad->name ?: "Untitled");
+    $breadcrumbs->push($squad->name ?: 'Untitled');
 });
 
 /**
- * Handle static division sub pages
+ * Handle static division sub pages.
  */
 function registerDivisionSubPages()
 {

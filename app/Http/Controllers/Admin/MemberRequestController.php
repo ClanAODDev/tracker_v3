@@ -149,9 +149,9 @@ class MemberRequestController extends Controller
     /**
      * @param $requestId
      *
-     * @return MemberRequest
      * @throws AuthorizationException
      *
+     * @return MemberRequest
      */
     public function placeOnHold(Request $request, $requestId)
     {
@@ -182,9 +182,6 @@ class MemberRequestController extends Controller
         })->values();
     }
 
-    /**
-     * @return bool
-     */
     private function isDivisionLeadership(): bool
     {
         return auth()->user()->isRole('sr_ldr')

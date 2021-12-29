@@ -7,11 +7,11 @@ return [
     |--------------------------------------------------------------------------
     */
     'default' => [
-        'type' => 'line',
-        'library' => 'google',
+        'type'          => 'line',
+        'library'       => 'google',
         'element_label' => 'Element',
-        'height' => 400,
-        'width' => 500,
-        'responsive' => true,
+        'height'        => 400,
+        'width'         => 500,
+        'responsive'    => true,
     ],
 ];

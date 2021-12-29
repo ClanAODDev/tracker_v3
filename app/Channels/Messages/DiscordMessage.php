@@ -12,9 +12,9 @@ class DiscordMessage
     /**
      * Color codes.
      */
-    const SUCCESS = 3066993;
-    const ERROR = 15158332;
-    const INFO = 10181046;
+    public const SUCCESS = 3066993;
+    public const ERROR = 15158332;
+    public const INFO = 10181046;
 
     private $fields = [];
 

@@ -17,20 +17,18 @@ class HandleFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         $handles = [
-            'origin', 'ea', 'blizzard', 'steam', 'activision', 'riot', 'battle tag', 'wows', 'xbox-live'
+            'origin', 'ea', 'blizzard', 'steam', 'activision', 'riot', 'battle tag', 'wows', 'xbox-live',
         ];
 
         $label = $handles[array_rand($handles)];
 
         return [
             'label' => $label,
-            'type' => Str::slug($label),
+            'type'  => Str::slug($label),
         ];
     }
 }

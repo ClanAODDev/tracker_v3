@@ -1,13 +1,12 @@
 <?php
 
-
 use App\Models\Division;
 use App\Models\MemberRequest;
 
 Route::get('requests-count.png', function () {
-    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-    header("Cache-Control: post-check=0, pre-check=0", false);
-    header("Pragma: no-cache");
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
     header('Content-Type: image/png');
     date_default_timezone_set('America/New_York');
 
@@ -17,7 +16,7 @@ Route::get('requests-count.png', function () {
 
     $context = [
         'ssl' => [
-            'verify_peer' => false,
+            'verify_peer'      => false,
             'verify_peer_name' => false,
         ],
     ];
@@ -66,7 +65,7 @@ Route::get('tickets-count.png', function () {
 
     $context = [
         'ssl' => [
-            'verify_peer' => false,
+            'verify_peer'      => false,
             'verify_peer_name' => false,
         ],
     ];

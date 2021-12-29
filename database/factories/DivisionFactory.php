@@ -18,26 +18,24 @@ class DivisionFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         $game = $this->faker->game;
 
         return [
-            'name' => $game['name'],
-            'slug' => Str::slug($game['name']),
-            'handle_id' => Handle::factory(),
+            'name'         => $game['name'],
+            'slug'         => Str::slug($game['name']),
+            'handle_id'    => Handle::factory(),
             'abbreviation' => strtolower($game['abbreviation']),
-            'description' => $this->faker->sentence,
+            'description'  => $this->faker->sentence,
             'forum_app_id' => rand(100, 999),
-            'active' => true,
-            'settings' => '[]',
+            'active'       => true,
+            'settings'     => '[]',
         ];
     }
 
-    public function inactive(): DivisionFactory
+    public function inactive(): self
     {
         return $this->state(function () {
             return [

@@ -16,16 +16,14 @@ class CensusFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         return [
-            'division_id' => \App\Models\Division::factory(),
-            'count' => rand(100, 500),
+            'division_id'         => \App\Models\Division::factory(),
+            'count'               => rand(100, 500),
             'weekly_active_count' => rand(50, 100),
-            'weekly_ts_count' => rand(50, 100),
+            'weekly_ts_count'     => rand(50, 100),
         ];
     }
 }

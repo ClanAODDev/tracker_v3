@@ -34,9 +34,9 @@ class MemberNameChanged extends Notification
     }
 
     /**
-     * @return array
      * @throws Exception
      *
+     * @return array
      */
     public function toWebhook()
     {

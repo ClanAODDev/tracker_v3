@@ -83,18 +83,6 @@ class Division extends Model
         });
     }
 
-    /**
-     * @param Division $division
-     */
-    private static function setMissingSettings(Division $division): void
-    {
-        if ($diff = array_diff(array_keys($division->defaultSettings), array_keys($division->settings))) {
-            foreach ($diff as $key) {
-                $division->settings()->set($key, $division->defaultSettings[$key]);
-            }
-        }
-    }
-
     public function getRouteKeyName(): string
     {
         return 'abbreviation';
@@ -364,5 +352,14 @@ class Division extends Model
     public function memberRequests()
     {
         return $this->hasMany(MemberRequest::class);
+    }
+
+    private static function setMissingSettings(self $division): void
+    {
+        if ($diff = array_diff(array_keys($division->defaultSettings), array_keys($division->settings))) {
+            foreach ($diff as $key) {
+                $division->settings()->set($key, $division->defaultSettings[$key]);
+            }
+        }
     }
 }

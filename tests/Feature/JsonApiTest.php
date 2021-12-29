@@ -7,7 +7,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
-class JsonApiTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class JsonApiTest extends TestCase
 {
     use RefreshDatabase;
 

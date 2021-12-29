@@ -29,7 +29,6 @@ Route::prefix('v1')->group(
     }
 );
 
-
 // basic
 // squads
 // platoons

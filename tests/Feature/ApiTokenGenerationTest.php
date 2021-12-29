@@ -6,7 +6,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ApiTokenGenerationTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class ApiTokenGenerationTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Admin / Member Request routes
+ * Admin / Member Request routes.
  */
 Route::group(['prefix' => 'clan'], function () {
     Route::get('member-requests', 'Admin\MemberRequestController@index')

@@ -52,9 +52,9 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     /**
      * Flags a member for inactivity.
      *
-     * @return Redirector|RedirectResponse
      * @throws AuthorizationException
      *
+     * @return Redirector|RedirectResponse
      */
     public function create(Member $member)
     {
@@ -70,9 +70,9 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     /**
      * Remove a flag from an inactive member.
      *
-     * @return Redirector|RedirectResponse
      * @throws AuthorizationException
      *
+     * @return Redirector|RedirectResponse
      */
     public function destroy(Member $member)
     {

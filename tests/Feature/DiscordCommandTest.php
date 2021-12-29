@@ -5,7 +5,11 @@ namespace Tests\Feature;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-class DiscordCommandTest extends TestCase
+/**
+ * @internal
+ * @coversNothing
+ */
+final class DiscordCommandTest extends TestCase
 {
     /** @test */
     public function a_slack_command_with_a_valid_token_returns_successful()
@@ -16,12 +20,13 @@ class DiscordCommandTest extends TestCase
 
         $response = $this->json('POST', '/slack', [
             'token' => $token,
-            'text' => 'help'
+            'text'  => 'help',
         ]);
 
         $response->assertJson(
-            fn(AssertableJson $json) => $json->where(
-                'embed.title', 'The following commands are currently available.'
+            fn (AssertableJson $json) => $json->where(
+                'embed.title',
+                'The following commands are currently available.'
             )->etc()
         );
     }
@@ -35,12 +40,13 @@ class DiscordCommandTest extends TestCase
 
         $response = $this->json('POST', '/slack', [
             'token' => $token,
-            'text' => 'foo'
+            'text'  => 'foo',
         ]);
 
         $response->assertJson(
-            fn(AssertableJson $json) => $json->where(
-                'text', 'Unrecognized command. Sorry!'
+            fn (AssertableJson $json) => $json->where(
+                'text',
+                'Unrecognized command. Sorry!'
             )
         );
     }

@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 
 class ClanController extends \App\Http\Controllers\API\v1\ApiController
 {
-    const RFC3339 = 'Y-m-d\\TH:i:sP';
+    public const RFC3339 = 'Y-m-d\\TH:i:sP';
 
     /**
      * ClanController constructor.

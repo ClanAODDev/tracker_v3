@@ -64,7 +64,8 @@ class Member extends \Illuminate\Database\Eloquent\Model
         // reset assignments for specific positions
         if (\in_array(
             $newPosition->name,
-            ['Commanding Officer', 'Executive Officer', 'General Sergeant', 'Clan Admin'], true
+            ['Commanding Officer', 'Executive Officer', 'General Sergeant', 'Clan Admin'],
+            true
         )) {
             $this->platoon_id = 0;
             $this->squad_id = 0;

@@ -17,36 +17,32 @@ class UserFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
     public function definition(): array
     {
         $name = $this->faker->userName;
 
         return [
-            'name' => $name,
-            'email' => $this->faker->email,
-            'role_id' => 1,
+            'name'      => $name,
+            'email'     => $this->faker->email,
+            'role_id'   => 1,
             'member_id' => Member::factory([
-                'name' => $name
-            ])
+                'name' => $name,
+            ]),
         ];
     }
 
     /**
      * Indicate that the user is an admin.
-     *
-     * @return Factory
      */
     public function admin(): Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id' => 5,
+                'role_id'   => 5,
                 'developer' => true,
                 'member_id' => Member::factory([
-                    'rank_id' => 11
+                    'rank_id' => 11,
                 ]),
             ];
         });
@@ -54,16 +50,14 @@ class UserFactory extends Factory
 
     /**
      * Indicate that the user is an officer.
-     *
-     * @return Factory
      */
     public function officer(): Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id' => 2,
+                'role_id'   => 2,
                 'member_id' => Member::factory([
-                    'rank_id' => 7
+                    'rank_id' => 7,
                 ]),
             ];
         });
