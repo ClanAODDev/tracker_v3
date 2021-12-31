@@ -3,45 +3,60 @@
 
 <div class="row">
 
-    @if ($member->last_activity)
-        @component('application.components.data-block')
-            @slot('data') {{ $member->last_activity->diffInDays() . ' days' }} @endslot
-            @slot('title')since last <span class="c-white">forum activity </span>@endslot
-            @slot('color')
-                @if($division)
-                    {{ $member->last_activity->diffInDays() > $division->settings()->inactivity_days ? "panel-c-danger" : null }}
-                @endif
-            @endslot
-        @endcomponent
-    @endif
+    <div class="col-md-12">
+        <div class="panel panel-filled">
 
-    @component('application.components.data-block')
-        @slot('data')
-            @if ($member->isPending)
-                <span class="text-muted">UNAVAILABLE</span>
-            @elseif ($member->tsInvalid)
-                TS MISCONFIGURATION
-            @else
-                {{ Carbon::parse($member->last_ts_activity)->diffInDays() }} DAYS
-            @endif
-        @endslot
-        @slot('color')
-            {{ $member->tsInvalid ? "panel-c-danger" : null }}
-        @endslot
-        @slot('title')
-            since last <span class="c-white">TS activity </span>
-        @endslot
-    @endcomponent
+            <div class="panel-body">
 
-    @component('application.components.data-block')
-        @slot('data') {{ $member->join_date->format('Y-m-d') }} @endslot
-        @slot('title') Member <span class="c-white">join date</span> @endslot
-    @endcomponent
+                <div class="row">
+                    <div class="col-md-3 col-xs-6 text-center">
+                        <h2 class="no-margins">
+                            @if ($member->last_activity)
+                                {{ $member->last_activity->diffInDays()}}
+                                {{ \Illuminate\Support\Str::plural('day', $member->last_activity->diffInDays()) }}
+                            @else
+                                N/A
+                            @endif
+                        </h2>
+                        Since last <span class="c-white">forum activity</span>
+                    </div>
 
-    @component('application.components.data-block')
-        @slot('data') {{ $member->lastPromoted }} @endslot
-        @slot('title') Last <span class="c-white">promotion date</span> @endslot
-    @endcomponent
+                    <div class="col-md-3 col-xs-6 text-center">
+                        <h2 class="no-margins">
+                            @if ($member->isPending)
+                                <span class="text-muted">UNAVAILABLE</span>
+                            @elseif ($member->tsInvalid)
+                                TS MISCONFIGURATION
+                            @else
+                                {{ Carbon::parse($member->last_ts_activity)->diffInDays() }}
+                                {{ \Illuminate\Support\Str::plural('day',
+                            $member->last_ts_activity->diffInDays()) }}
+                            @endif
+                        </h2>
+                        Since last <span class="c-white">TS activity</span>
+                    </div>
+                    <div class="col-md-3 col-xs-6 text-center">
+                        <h2 class="no-margins">
+                            {{ $member->join_date->format('Y-m-d') }}
+                        </h2>
+                        Member <span class="c-white">Join Date</span>
+                    </div>
+                    <div class="col-md-3 col-xs-6 text-center">
+                        <h2 class="no-margins">
+                            {{ $member->lastPromoted }}
+                        </h2>
+                        Last <span class="c-white">Promotion Date</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+
 
     @if ($member->discord)
         @component('application.components.data-block', ['isUppercase' => false])
