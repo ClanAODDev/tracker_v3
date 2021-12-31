@@ -35,7 +35,7 @@ class Ticket extends Resource
         'description',
     ];
 
-    public static $group = "Member";
+    public static $group = 'Member';
 
     /**
      * Get the fields displayed by the resource.

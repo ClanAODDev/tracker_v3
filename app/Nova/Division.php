@@ -42,7 +42,7 @@ class Division extends Resource
         'handle',
     ];
 
-    public static $group = "Admin";
+    public static $group = 'Admin';
 
     /**
      * Get the fields displayed by the resource.
