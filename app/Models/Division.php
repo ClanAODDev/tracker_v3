@@ -346,6 +346,12 @@ class Division extends Model
         return $this->shutdown_at;
     }
 
+    public function transfers()
+    {
+        return $this->hasMany(\App\Models\Transfer::class, 'division_id')
+            ->orderBy('created_at', 'desc');
+    }
+
     /**
      * @return HasMany
      */

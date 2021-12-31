@@ -172,7 +172,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     /**
      * mark a request processed.
      */
-    public function process()
+    public function complete()
     {
         $this->update(['processed_at' => now()]);
     }
