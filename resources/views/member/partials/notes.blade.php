@@ -3,7 +3,7 @@
 
     @can('create', App\Models\Note::class)
         <span class="pull-right">
-            <a href="#" class="btn-add-note btn btn-default btn-sm" data-toggle="modal"
+            <a href="#" class="btn-add-note btn btn-default" data-toggle="modal"
                data-target="#create-member-note"><i class="fa fa-comment text-accent"></i> Add note</a>
         </span>
     @endcan

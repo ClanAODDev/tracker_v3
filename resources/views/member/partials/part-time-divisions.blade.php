@@ -2,7 +2,7 @@
     Part-Time Divisions
     @can ('managePartTime', $member)
         <a href="{{ route('member.edit-part-time', $member->clan_id) }}"
-           class="btn btn-default btn-sm pull-right">
+           class="btn btn-default pull-right">
             <i class="fa fa-cog text-accent"></i> Manage
         </a>
     @endcan

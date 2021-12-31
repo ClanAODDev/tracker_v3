@@ -2,7 +2,7 @@
     Ingame Handles
 
     @can ('manageIngameHandles', $member)
-        <a href="{{ route('member.edit-handles', $member->clan_id) }}" class="btn btn-default pull-right btn-sm">
+        <a href="{{ route('member.edit-handles', $member->clan_id) }}" class="btn btn-default pull-right">
             <i class="fa fa-cog text-accent"></i> Manage
         </a>
     @endcan
