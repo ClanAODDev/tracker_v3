@@ -11,7 +11,7 @@
                 props: [
                     'square', 'triangle', 'line',
                     {
-                        "type": "svg", "src": "images/aod-logo-modern.svg", "weight": ".3"
+                        "type": "svg", "src": "{{ asset("images/aod-logo-modern.svg") }}", "weight": ".3"
                     }
                 ],
 
