@@ -13,7 +13,7 @@
         {!! Toastr::message() !!}
 
         <div class="wrapper">
-            <canvas id="canvas" style="position: fixed;"></canvas>
+            <canvas id="canvas" style="position: fixed; z-index:-1"></canvas>
             <nav class="navbar navbar-default navbar-fixed-top">
                 @include('application.partials.primaryHeader')
             </nav>
