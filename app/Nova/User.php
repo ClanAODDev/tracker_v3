@@ -42,6 +42,8 @@ class User extends Resource
         'role',
     ];
 
+    public static $group = "Admin";
+
     /**
      * Get the fields displayed by the resource.
      *

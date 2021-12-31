@@ -43,6 +43,8 @@ class Member extends Resource
         'division',
     ];
 
+    public static $group = "Division";
+
     /**
      * Get the fields displayed by the resource.
      *

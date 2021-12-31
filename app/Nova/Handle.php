@@ -32,6 +32,8 @@ class Handle extends Resource
         'label',
     ];
 
+    public static $group = "Division";
+
     /**
      * Get the fields displayed by the resource.
      *

@@ -32,6 +32,8 @@ class Role extends Resource
         'label',
     ];
 
+    public static $displayInNavigation = false;
+
     /**
      * Get the fields displayed by the resource.
      *

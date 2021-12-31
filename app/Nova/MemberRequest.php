@@ -26,6 +26,8 @@ class MemberRequest extends Resource
 
     public static $with = ['member', 'approver'];
 
+    public static $group = "Member";
+
     public static function label()
     {
         return 'Member Requests';
