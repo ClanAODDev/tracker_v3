@@ -35,7 +35,7 @@ class TicketType extends Resource
         'name',
     ];
 
-    public static $group = "Admin";
+    public static $group = 'Admin';
 
     public static function label()
     {

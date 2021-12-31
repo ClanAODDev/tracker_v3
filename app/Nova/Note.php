@@ -18,7 +18,7 @@ class Note extends Resource
      */
     public static $model = \App\Models\Note::class;
 
-    public static $group = "Member";
+    public static $group = 'Member';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
