@@ -26,10 +26,11 @@
 
             <section class="content">
                 @include('application.partials.alert')
+
                 @yield('content')
             </section>
         </div>
-{{--    </canvas>--}}
+
     </body>
 
 @else
