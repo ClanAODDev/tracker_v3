@@ -20,14 +20,15 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-                You are no longer associated with a primary division, and cannot access the tracker. Please speak with
-                your intended division leadership to resolve this issue.
+                <p>You are no longer associated with a primary division, and cannot access the tracker. Please speak
+                    with
+                    your intended division leadership to resolve this issue.</p>
 
                 @if (session('impersonating'))
-                    <a href="{{ route('end-impersonation') }}">
-                        <strong class="text-danger">End Impersonation</strong>
-                        <i class="fa fa-user-secret "></i>
-                    </a>
+                    <p><a href="{{ route('end-impersonation') }}">
+                            <strong class="text-danger">End Impersonation</strong>
+                            <i class="fa fa-user-secret "></i>
+                        </a></p>
                 @endif
             </div>
 
