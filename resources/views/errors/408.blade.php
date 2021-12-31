@@ -21,14 +21,10 @@
         <div class="panel panel-filled">
             <div class="panel-body">
                 <p>You are no longer associated with a primary division, and cannot access the tracker. Please speak
-                    with
-                    your intended division leadership to resolve this issue.</p>
+                    with your intended division leadership to resolve this issue.</p>
 
-                @if (session('impersonating'))
-                    <p><a href="{{ route('end-impersonation') }}">
-                            <strong class="text-danger">End Impersonation</strong>
-                            <i class="fa fa-user-secret "></i>
-                        </a></p>
+                @if(session('impersonating'))
+                    <p class="text-muted">You appear to be impersonating. Try refreshing the page.</p>
                 @endif
             </div>
 

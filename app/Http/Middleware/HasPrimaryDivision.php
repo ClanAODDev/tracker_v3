@@ -17,16 +17,17 @@ class HasPrimaryDivision
      */
     public function handle($request, Closure $next)
     {
+
+
         if (Auth::check()) {
             $user = Auth::user();
 
-            if (!$user->member) {
-                abort(408, 'No associated member record');
+            if (!$user->member->division || !$user->member) {
+                if (session('impersonating')) {
+                    auth()->logout();
+                    redirect()->to(route('end-impersonation'));
+                }
 
-                return false;
-            }
-
-            if (!$user->member->division) {
                 //Auth::logout();
                 abort(408, 'You do not have a primary division.');
 
