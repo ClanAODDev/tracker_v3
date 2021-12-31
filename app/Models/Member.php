@@ -36,6 +36,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
     protected $dates = [
         'join_date',
         'last_activity',
+        'last_ts_activity',
         'last_promoted_at',
         // sgt info
         'last_trained_at',
@@ -51,6 +52,11 @@ class Member extends \Illuminate\Database\Eloquent\Model
     public function user()
     {
         return $this->hasOne(\App\Models\User::class);
+    }
+
+    public function transfers()
+    {
+        return $this->hasMany(\App\Models\Transfer::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
     public function notes()
