@@ -4,4 +4,4 @@
 
 <script src="{{ asset('/js/main.js?v=3.3') }}"></script>
 
-@include('application.partials.snow')
+@include('application.partials.confetti')
