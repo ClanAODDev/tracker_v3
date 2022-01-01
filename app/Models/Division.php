@@ -77,10 +77,6 @@ class Division extends Model
             $division->settings = $division->defaultSettings;
             $division->slug = Str::slug($division->name);
         });
-
-        static::retrieved(function (self $division) {
-            self::setMissingSettings($division);
-        });
     }
 
     public function getRouteKeyName(): string
