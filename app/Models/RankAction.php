@@ -10,6 +10,8 @@ class RankAction extends Model
 {
     use HasFactory;
 
+    public $guarded = [];
+
     /**
      * @return BelongsTo
      */

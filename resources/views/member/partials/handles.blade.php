@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     @forelse ($member->handles as $handle)
-        <div class="col-md-4">
+        <div class="col-md-3"  style="overflow: hidden;">
 
             @if($handle->url)
                 @include('member.partials.handle-link')

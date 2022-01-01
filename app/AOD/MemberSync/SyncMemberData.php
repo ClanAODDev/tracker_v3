@@ -6,152 +6,169 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
+use App\Models\RankAction;
 use App\Models\Squad;
+use App\Models\Transfer;
 use Carbon;
+use Doctrine\DBAL\Schema\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class SyncMemberData
 {
-    protected static $activeClanMembers = [];
-
-    protected static $activeDivisionMembers = [];
-
-    protected static $currentDivisionMembers = [];
-
-    /**
-     * Performs update operation on divisions and members and also
-     * syncs division membership (adds, removes).
-     *
-     * @param mixed $verbose
-     */
     public static function execute($verbose = false)
     {
         $divisionInfo = new GetDivisionInfo();
 
-        $syncData = collect($divisionInfo->data)->groupBy(fn ($item, $key) => strtolower($item['aoddivision']));
-
-        self::$activeClanMembers = collect($divisionInfo->data)->pluck('userid');
-
-        self::processMemberRequests();
-
-        if (!\count($syncData)) {
+        if (!$syncData = collect($divisionInfo->data)) {
             \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
         }
 
-        foreach (Division::active()->get() as $division) {
-            if ($syncData->keys()->contains(strtolower($division->name))) {
-                // log activity
-                if ($verbose) {
-                    \Log::info(date('Y-m-d h:i:s') . " - MEMBER SYNC - syncing {$division->name}");
-                }
+        $divisionIds = \App\Models\Division::active()->pluck('name', 'id')->flip();
 
-                // reset array
-                self::$activeDivisionMembers = [];
+        $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
-                self::$currentDivisionMembers = Member::whereDivisionId($division->id)->select('id')->get()
-                    ->pluck('id')
-                    ->toArray();
+        $syncTable->truncate();
 
-                foreach ($syncData[strtolower($division->name)] as $member) {
-                    self::doMemberUpdate($member, $division);
-                }
-
-                if ($verbose) {
-                    echo "{$division->name} members synced" . PHP_EOL;
-                }
-
-                // trash removed members
-                self::doRemovalCleanup();
-            }
-        }
-    }
-
-    /**
-     * Updates an individual member and queues as an active primary member.
-     *
-     * @param $record
-     * @param $division
-     */
-    private static function doMemberUpdate($record, $division)
-    {
-        // are we updating or creating?
-        $member = Member::firstOrCreate([
-            'clan_id' => $record['userid'],
-        ]);
-
-        // are we dealing with a transfer?
-        // if so, clean up position, assignments, but retain
-        // part-time divisions
-        if ($member->division_id !== $division->id) {
-            self::wipePositionAndAssignment($member);
+        foreach ($syncData->chunk(50) as $chunk) {
+            $syncTable->insert($chunk->toArray());
         }
 
-        // begin the assignment process
-        $member->division_id = $division->id;
+        // complete any outstanding member requests
+        self::processMemberRequests($syncTable->pluck('userid'));
 
-        // have they been recently promoted?
-        if ($member->rank_id < ($record['aodrankval'] - 2) && $member->rank_id > 0) {
-            $member->last_promoted_at = Carbon::now();
-        }
+        // iterating over members we know exist in the tracker
+        $members = Member::whereNotIn('division_id', [0, 7])->get();
 
-        // drop aod prefix
-        $member->name = str_replace('AOD_', '', $record['username']);
+        foreach ($members as $member) {
 
-        // handle timestamps
-        $member->join_date = $record['joindate'];
-        $member->last_activity = "{$record['lastactivity']} {$record['lastactivity_time']}";
-        $member->last_ts_activity = "{$record['lastts_connect']} {$record['lastts_connect_time']}";
+            $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
-        // accounts for forum member, prospective member ranks which we don't use
-        $member->rank_id = ($record['aodrankval'] - 2 <= 0) ? 1 : $record['aodrankval'] - 2;
+            $newData = $syncTable->where('userid', $member->clan_id)->first();
 
-        $member->posts = $record['postcount'];
-        $member->ts_unique_id = $record['tsid'];
-        $member->discord = $record['discordtag'];
-        $member->allow_pm = $record['allow_pm'];
-        $member->privacy_flag = 'yes' !== $record['allow_export'] ? 0 : 1;
-
-        // persist
-        $member->save();
-
-        if ($member->user) {
-            $user = $member->user;
-            $user->name = $member->name;
-            $user->save();
-        }
-
-        // populate our active members
-        self::$activeDivisionMembers[] = $member->id;
-    }
-
-    /**
-     * @param $member
-     */
-    private static function wipePositionAndAssignment($member)
-    {
-        $member->squad_id = 0;
-        $member->platoon_id = 0;
-        $member->position_id = 1;
-    }
-
-    /**
-     * Handles cleanup of members removed from a division (platoon, squad info wiped).
-     */
-    private static function doRemovalCleanup()
-    {
-        $removed = array_diff(
-            self::$currentDivisionMembers,
-            self::$activeDivisionMembers
-        );
-
-        foreach ($removed as $index => $id) {
-            $member = Member::find($id);
-
-            if ($member instanceof Member && !$member->memberRequest) {
+            if (!$newData) {
+                // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
+
+                continue;
+            }
+
+            $oldData = $member->toArray();
+
+            $oldData = collect([
+                'allow_pm' => $oldData['allow_pm'],
+                'discord' => $oldData['discord'],
+                'division_id' => $oldData['division_id'],
+                'name' => $oldData['name'],
+                'posts' => $oldData['posts'],
+                'privacy_flag' => $oldData['privacy_flag'],
+                'rank_id' => $oldData['rank_id'],
+                'ts_unique_id' => $oldData['ts_unique_id'],
+
+                // these can be null, and they piss me off
+                'last_activity' => $oldData['last_activity'] != ""
+                    ? \Carbon::createFromTimeString($oldData['last_activity'])->format('Y-m-d')
+                    : "",
+                'last_ts_activity' => $oldData['last_ts_activity'] != ""
+                    ? \Carbon::createFromTimeString($oldData['last_ts_activity'])->format('Y-m-d')
+                    : "",
+            ]);
+
+            try {
+                $newData = collect([
+                    'allow_pm' => $newData->allow_pm,
+                    'discord' => $newData->discordtag,
+                    'division_id' => $divisionIds[$newData->aoddivision],
+                    'name' => str_replace('AOD_', '', $newData->username),
+                    'posts' => $newData->postcount,
+                    'privacy_flag' => 'yes' !== $newData->allow_export ? 0 : 1,
+                    'rank_id' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
+                    'ts_unique_id' => $newData->tsid,
+
+                    // these can be null, and they piss me off
+                    'last_activity' => $newData->lastactivity != ""
+                        ? \Carbon::createFromTimeString("{$newData->lastactivity} {$newData->lastactivity_time}")
+                            ->format('Y-m-d')
+                        : "",
+                    'last_ts_activity' => $newData->lastts_connect != ""
+                        ? \Carbon::createFromTimeString("{$newData->lastts_connect} {$newData->lastts_connect_time}")
+                            ->format('Y-m-d')
+                        : "",
+                ]);
+            } catch (\Exception $exception) {
+                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
+            }
+
+            $differences = $newData->diff($oldData)->filter()->all();
+
+            if (count($differences) > 0) {
+                \Log::debug("Found updates for {$oldData['name']}");
+
+                $updates = [];
+
+                // only update things that have changed
+                foreach ($differences as $key => $value) {
+                    $updates[$key] = $newData[$key];
+
+                    if ('rank_id' === $key) {
+                        \Log::debug("Saw a rank change!");
+                        $member->last_promoted_at = now();
+                        RankAction::create([
+                            'member_id' => $member->id,
+                            'rank_id' => $newData[$key],
+                        ]);
+                    }
+
+                    if ('division_id' === $key) {
+                        \Log::debug("Saw a division change!");
+                        Transfer::create([
+                            'member_id' => $member->id,
+                            'division_id' => $newData[$key],
+                        ]);
+                    }
+
+                    if ('name' === $key && $user = $member->user) {
+                        \Log::debug("Saw a name change!");
+                        $user->name = $newData[$key];
+                        $user->save();
+                    }
+                }
+
+                $member->update($updates);
             }
         }
+
+        // handle new members not in the tracker
+        $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
+        $activeIds = \App\Models\Member::where('division_id', '!=', 0)->pluck('clan_id');
+        $membersToAdd = $syncTable->where('aoddivision', '!=', 'None')
+            ->whereNotIn('userid', $activeIds)->get();
+
+        foreach ($membersToAdd as $member) {
+            \App\Models\Member::create([
+                'allow_pm' => $member->allow_pm,
+                'clan_id' => $member->userid,
+                'discord' => $member->discordtag,
+                'division_id' => $divisionIds[$member->aoddivision],
+                'name' => str_replace('AOD_', '', $member->username),
+                'posts' => $member->postcount,
+                'privacy_flag' => 'yes' !== $member->allow_export ? 0 : 1,
+                'rank_id' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
+                'ts_unique_id' => $member->tsid,
+
+                // these can be null, and they piss me off
+                'last_activity' => $member->lastactivity != ""
+                    ? \Carbon::createFromTimeString("{$member->lastactivity} {$member->lastactivity_time}")
+                        ->format('Y-m-d')
+                    : "",
+                'last_ts_activity' => $member->lastts_connect != ""
+                    ? \Carbon::createFromTimeString("{$member->lastts_connect} {$member->lastts_connect_time}")
+                        ->format('Y-m-d')
+                    : "",
+            ]);
+        }
+
     }
 
     private static function hardResetMember(Member $member)
@@ -172,15 +189,21 @@ class SyncMemberData
                 }
             });
         }
+
+        if ($user = $member->user) {
+            $user->role_id = 1;
+            $user->save();
+
+        }
     }
 
     /**
      * Purge pending requests for active members.
      */
-    private static function processMemberRequests()
+    private static function processMemberRequests($user_ids)
     {
         $requestsToProcess = MemberRequest::approved()
-            ->whereIn('member_id', self::$activeClanMembers)
+            ->whereIn('member_id', $user_ids)
             ->get();
 
         $requestsToProcess->each->process();

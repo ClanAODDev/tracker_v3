@@ -81,13 +81,10 @@
             @slot('title') clan <span class="c-white">recruiter</span> @endslot
         @endcomponent
     @endif
-</div>
 
-@if ($member->rank_id >= 9)
-    <h4>Leadership Info</h4>
-    <hr/>
 
-    <div class="row">
+    @if ($member->rank_id >= 9)
+
         @component('application.components.data-block')
             @slot('data') {{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }} @endslot
             @slot('title') Last <span class="c-white">Rank Training</span> @endslot
@@ -114,6 +111,7 @@
                 @slot('title') <span class="c-white">CO Since</span> @endslot
             @endcomponent
         @endif
-    </div>
-@endif
 
+    @endif
+
+</div>

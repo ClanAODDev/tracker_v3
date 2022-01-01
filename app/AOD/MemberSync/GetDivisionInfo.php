@@ -23,10 +23,11 @@ class GetDivisionInfo
     public function __construct()
     {
         if (!config('app.aod.token')) {
-            Log::critical('ERROR: AOD Token not defined in configuration.');
+            throw new \Exception('ERROR: AOD Token not defined in configuration.');
 
             exit;
         }
+
         $this->data = $this->fetchData();
     }
 

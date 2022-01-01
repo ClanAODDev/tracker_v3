@@ -56,7 +56,14 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function transfers()
     {
-        return $this->hasMany(\App\Models\Transfer::class, 'member_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(\App\Models\Transfer::class, 'member_id')
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function rankActions()
+    {
+        return $this->hasMany(\App\Models\RankAction::class, 'member_id')
+            ->orderBy('created_at', 'desc');
     }
 
     public function notes()
@@ -136,6 +143,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
         $this->update([
             'division_id'            => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position_id' => 1,
             'flagged_for_inactivity' => false,
+            'groups'                 => null,
         ]);
     }
 

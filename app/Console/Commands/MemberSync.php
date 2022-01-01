@@ -40,7 +40,5 @@ class MemberSync extends Command
     public function handle()
     {
         SyncMemberData::execute($this->output->isVerbose());
-
-        $this->comment('Member sync successful');
     }
 }

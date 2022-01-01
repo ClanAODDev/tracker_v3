@@ -144,11 +144,16 @@ class MemberController extends Controller
             ->whereActive(true)
             ->get();
 
+        $rankHistory = $member->rankActions()->with('rank')->get();
+        $transfers = $member->transfers()->with('division')->get();
+
         return view('member.show', compact(
             'member',
             'division',
             'notes',
-            'partTimeDivisions'
+            'partTimeDivisions',
+            'rankHistory',
+            'transfers',
         ));
     }
 

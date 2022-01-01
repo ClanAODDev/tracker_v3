@@ -1,4 +1,4 @@
-<div class="col-md-4 col-xs-12">
+<div class="col-md-3 col-xs-12"  style="overflow: hidden;">
     <div class="panel panel-filled {{ $color ?? null }}">
         <div class="panel-body">
             <h4 class="m-b-sm {{ (!isset($isUppercase) || $isUppercase) ? "text-uppercase" : null }}">

@@ -6,9 +6,9 @@
         @slot ('icon')
             @if ($division)
                 <img src="{{ getDivisionIconPath($division->abbreviation) }}"
-                     class="division-icon-large" />
+                     class="division-icon-large"/>
             @else
-                <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;" />
+                <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;"/>
             @endif
         @endslot
         @slot ('heading')
@@ -40,14 +40,12 @@
 
         @include ('member.partials.handles')
         @include ('member.partials.part-time-divisions')
-        @include ('member.partials.recruits')
+        @include ('member.partials.member-history')
 
-        <div class="row m-t-xl">
-            <div class="col-md-12">
-                @can('create', \App\Models\Note::class)
-                    @include ('member.partials.notes')
-                @endcan
-            </div>
-        </div>
+        @can('create', \App\Models\Note::class)
+            @include ('member.partials.notes')
+        @endcan
+
+    </div>
 
 @endsection

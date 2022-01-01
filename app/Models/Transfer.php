@@ -10,6 +10,8 @@ class Transfer extends Model
 {
     use HasFactory;
 
+    public $guarded = [];
+
     /**
      * @return BelongsTo
      */

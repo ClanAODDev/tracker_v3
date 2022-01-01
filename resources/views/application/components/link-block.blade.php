@@ -1,4 +1,4 @@
-<div class="col-md-4 col-xs-12">
+<div class="col-md-3 col-xs-12" style="overflow: hidden;">
     <a href="{{ $link }}" class="panel panel-filled {{ $color ?? null }} panel-c-success">
         <div class="panel-body">
             <span class="pull-right"><i class="fa fa-link"></i></span>

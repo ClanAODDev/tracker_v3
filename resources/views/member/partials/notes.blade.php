@@ -1,4 +1,4 @@
-<h4>
+<h4 class="m-t-xl">
     Member Notes
 
     @can('create', App\Models\Note::class)
@@ -18,8 +18,8 @@
     </div>
 @else
     <div class="panel panel-filled">
-        <div class="panel-body text-muted">
-            Member has no notes recorded.
+        <div class="panel-body">
+            <p class="text-muted m-t-sm">Member currently has no notes recorded.</p>
         </div>
     </div>
 @endif
