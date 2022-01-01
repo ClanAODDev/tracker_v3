@@ -2,16 +2,12 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
-use Carbon;
-use Doctrine\DBAL\Schema\Schema;
-use Illuminate\Database\Schema\Blueprint;
 
 class SyncMemberData
 {
@@ -42,7 +38,6 @@ class SyncMemberData
         $members = Member::whereNotIn('division_id', [0, 7])->get();
 
         foreach ($members as $member) {
-
             $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
             $newData = $syncTable->where('userid', $member->clan_id)->first();
@@ -57,44 +52,44 @@ class SyncMemberData
             $oldData = $member->toArray();
 
             $oldData = collect([
-                'allow_pm' => $oldData['allow_pm'],
-                'discord' => $oldData['discord'],
-                'division_id' => $oldData['division_id'],
-                'name' => $oldData['name'],
-                'posts' => $oldData['posts'],
+                'allow_pm'     => $oldData['allow_pm'],
+                'discord'      => $oldData['discord'],
+                'division_id'  => $oldData['division_id'],
+                'name'         => $oldData['name'],
+                'posts'        => $oldData['posts'],
                 'privacy_flag' => $oldData['privacy_flag'],
-                'rank_id' => $oldData['rank_id'],
+                'rank_id'      => $oldData['rank_id'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
 
                 // these can be null, and they piss me off
-                'last_activity' => $oldData['last_activity'] != ""
+                'last_activity' => '' !== $oldData['last_activity']
                     ? \Carbon::createFromTimeString($oldData['last_activity'])->format('Y-m-d')
-                    : "",
-                'last_ts_activity' => $oldData['last_ts_activity'] != ""
+                    : '',
+                'last_ts_activity' => '' !== $oldData['last_ts_activity']
                     ? \Carbon::createFromTimeString($oldData['last_ts_activity'])->format('Y-m-d')
-                    : "",
+                    : '',
             ]);
 
             try {
                 $newData = collect([
-                    'allow_pm' => $newData->allow_pm,
-                    'discord' => $newData->discordtag,
-                    'division_id' => $divisionIds[$newData->aoddivision],
-                    'name' => str_replace('AOD_', '', $newData->username),
-                    'posts' => $newData->postcount,
+                    'allow_pm'     => $newData->allow_pm,
+                    'discord'      => $newData->discordtag,
+                    'division_id'  => $divisionIds[$newData->aoddivision],
+                    'name'         => str_replace('AOD_', '', $newData->username),
+                    'posts'        => $newData->postcount,
                     'privacy_flag' => 'yes' !== $newData->allow_export ? 0 : 1,
-                    'rank_id' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
+                    'rank_id'      => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
 
                     // these can be null, and they piss me off
-                    'last_activity' => $newData->lastactivity != ""
+                    'last_activity' => '' !== $newData->lastactivity
                         ? \Carbon::createFromTimeString("{$newData->lastactivity} {$newData->lastactivity_time}")
                             ->format('Y-m-d')
-                        : "",
-                    'last_ts_activity' => $newData->lastts_connect != ""
+                        : '',
+                    'last_ts_activity' => '' !== $newData->lastts_connect
                         ? \Carbon::createFromTimeString("{$newData->lastts_connect} {$newData->lastts_connect_time}")
                             ->format('Y-m-d')
-                        : "",
+                        : '',
                 ]);
             } catch (\Exception $exception) {
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
@@ -102,7 +97,7 @@ class SyncMemberData
 
             $differences = $newData->diff($oldData)->filter()->all();
 
-            if (count($differences) > 0) {
+            if (\count($differences) > 0) {
                 \Log::debug("Found updates for {$oldData['name']}");
 
                 $updates = [];
@@ -112,24 +107,24 @@ class SyncMemberData
                     $updates[$key] = $newData[$key];
 
                     if ('rank_id' === $key) {
-                        \Log::debug("Saw a rank change!");
+                        \Log::debug('Saw a rank change!');
                         $member->last_promoted_at = now();
                         RankAction::create([
                             'member_id' => $member->id,
-                            'rank_id' => $newData[$key],
+                            'rank_id'   => $newData[$key],
                         ]);
                     }
 
                     if ('division_id' === $key) {
-                        \Log::debug("Saw a division change!");
+                        \Log::debug('Saw a division change!');
                         Transfer::create([
-                            'member_id' => $member->id,
+                            'member_id'   => $member->id,
                             'division_id' => $newData[$key],
                         ]);
                     }
 
                     if ('name' === $key && $user = $member->user) {
-                        \Log::debug("Saw a name change!");
+                        \Log::debug('Saw a name change!');
                         $user->name = $newData[$key];
                         $user->save();
                     }
@@ -147,28 +142,27 @@ class SyncMemberData
 
         foreach ($membersToAdd as $member) {
             \App\Models\Member::create([
-                'allow_pm' => $member->allow_pm,
-                'clan_id' => $member->userid,
-                'discord' => $member->discordtag,
-                'division_id' => $divisionIds[$member->aoddivision],
-                'name' => str_replace('AOD_', '', $member->username),
-                'posts' => $member->postcount,
+                'allow_pm'     => $member->allow_pm,
+                'clan_id'      => $member->userid,
+                'discord'      => $member->discordtag,
+                'division_id'  => $divisionIds[$member->aoddivision],
+                'name'         => str_replace('AOD_', '', $member->username),
+                'posts'        => $member->postcount,
                 'privacy_flag' => 'yes' !== $member->allow_export ? 0 : 1,
-                'rank_id' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
+                'rank_id'      => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
                 'ts_unique_id' => $member->tsid,
 
                 // these can be null, and they piss me off
-                'last_activity' => $member->lastactivity != ""
+                'last_activity' => '' !== $member->lastactivity
                     ? \Carbon::createFromTimeString("{$member->lastactivity} {$member->lastactivity_time}")
                         ->format('Y-m-d')
-                    : "",
-                'last_ts_activity' => $member->lastts_connect != ""
+                    : '',
+                'last_ts_activity' => '' !== $member->lastts_connect
                     ? \Carbon::createFromTimeString("{$member->lastts_connect} {$member->lastts_connect_time}")
                         ->format('Y-m-d')
-                    : "",
+                    : '',
             ]);
         }
-
     }
 
     private static function hardResetMember(Member $member)
@@ -193,12 +187,13 @@ class SyncMemberData
         if ($user = $member->user) {
             $user->role_id = 1;
             $user->save();
-
         }
     }
 
     /**
      * Purge pending requests for active members.
+     *
+     * @param mixed $user_ids
      */
     private static function processMemberRequests($user_ids)
     {
