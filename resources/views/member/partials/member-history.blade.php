@@ -33,7 +33,7 @@
                             @foreach ($rankHistory as $entry)
                                 <tr>
                                     <td>{{ $entry->rank->name }}</td>
-                                    <td>{{ $entry->created_at }}</td>
+                                    <td>{{ $entry->created_at->format('Y-m-d') }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -61,7 +61,7 @@
                             @foreach ($transfers as $transfer)
                                 <tr>
                                     <td>{{ $transfer->division->name }}</td>
-                                    <td>{{ $transfer->created_at }}</td>
+                                    <td>{{ $transfer->created_at->format('Y-m-d') }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
