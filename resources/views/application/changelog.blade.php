@@ -27,6 +27,29 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>31 December - 1 January 2022 - 3.7</h4>
+                <hr/>
+                <ul>
+                    <li>Rank changes and division transfers/assignments are now recorded for posterity. Historical
+                        changes will be listed on member profiles. NCOs will soon have the ability to retroactively
+                        create both. MSGT+ have the ability to create records administratively.
+                        <ul>
+                            <li>
+                                The recruiting history section has been consolidated into a tabbed pane, along with
+                                rank and division history.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Significant improvements made to the forum sync process, enabling more accurate change
+                        detection.
+                    </li>
+                    <li>Confetti - added in lieu of snow for a short time</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>5 September 2021 - 3.6</h4>
                 <hr/>
                 <ul>
