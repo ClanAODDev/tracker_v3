@@ -11,8 +11,10 @@
             <li><a class="nav-link" data-toggle="tab" href="#division-tab" aria-expanded="false"><i class="fa
             fa-gamepad text-accent"></i>
                     Division</a></li>
-            <li><a class="nav-link" data-toggle="tab" href="#recruiting-tab" aria-expanded="false"><i class="fa
+            @if (count($member->recruits))
+                <li><a class="nav-link" data-toggle="tab" href="#recruiting-tab" aria-expanded="false"><i class="fa
             fa-user-plus text-accent"></i> Recruiting</a></li>
+            @endif
         </ul>
         <div class="tab-content">
             <div id="rank-tab" class="tab-pane active">
