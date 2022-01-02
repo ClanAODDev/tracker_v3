@@ -4,6 +4,5 @@
 
 <script src="{{ asset('/js/main.js?v=3.3') }}"></script>
 
-{{-- New Years --}}
-{{--@include('application.partials.snow')--}}
-@include('application.partials.confetti')
+@include('application.partials.snow')
+{{--@include('application.partials.confetti')--}}

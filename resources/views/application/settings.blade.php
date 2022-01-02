@@ -36,20 +36,15 @@
                         </label>
                     </div>
 
-
-                    {{-- New Years --}}
                     <div class="form-group" style="margin-top:50px;">
-                        <h4>
-{{--                            <i class="fas fa-snowflake text-info"></i> Snow--}}
-                            <img src="{{ asset('images/aod-logo-modern.svg') }}" width="15px" alt=""> Confetti
-                        </h4>
+                        <h4><i class="fas fa-snowflake text-info"></i> Snow</h4>
                         <hr>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="snow" id="no_snow" value="no_snow"
                                     {{ checked(getSnowSetting() === 'no_snow') }}
                             >
                             <label class="form-check-label" for="no_snow">
-                                No AOD-fetti for me, please <span class="text-muted">(There's no mess, really!)</span>
+                                Disable snow <span class="text-muted">(do you hate Christmas?)</span>
                             </label>
                         </div>
 
@@ -58,19 +53,19 @@
                                     {{ checked(getSnowSetting() === 'some_snow') }}
                             >
                             <label class="form-check-label" for="some_snow">
-                                Yes, all the AOD-fetti <span class="text-muted"></span>
+                                Some snow <span class="text-muted">(kinda festive)</span>
                             </label>
                         </div>
 
-{{--                        <div class="form-check">--}}
-{{--                            <input class="form-check-input" type="radio" name="snow" id="all_the_snow"--}}
-{{--                                   value="all_the_snow"--}}
-{{--                                    {{ checked(getSnowSetting() === 'all_the_snow') }}--}}
-{{--                            >--}}
-{{--                            <label class="form-check-label" for="all_the_snow">--}}
-{{--                                All the snow <span class="text-muted">(really festive - CPU intensive)</span>--}}
-{{--                            </label>--}}
-{{--                        </div>--}}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="snow" id="all_the_snow"
+                                   value="all_the_snow"
+                                    {{ checked(getSnowSetting() === 'all_the_snow') }}
+                            >
+                            <label class="form-check-label" for="all_the_snow">
+                                All the snow <span class="text-muted">(really festive - CPU intensive)</span>
+                            </label>
+                        </div>
                     </div>
 
                     <hr>
