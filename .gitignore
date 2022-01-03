@@ -25,3 +25,4 @@ yarn.lock
 /data
 auth.json
 maintenance.alert
+database.sqlite
