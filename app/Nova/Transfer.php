@@ -44,9 +44,9 @@ class Transfer extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
             BelongsTo::make('Member')->searchable(),
-            BelongsTo::make('Division'),
-            Date::make('Created At'),
-            Date::make('Updated At'),
+            BelongsTo::make('Division')->sortable(),
+            Date::make('Created At')->sortable(),
+            Date::make('Updated At')->sortable(),
         ];
     }
 

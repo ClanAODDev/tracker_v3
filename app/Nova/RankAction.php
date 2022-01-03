@@ -43,10 +43,10 @@ class RankAction extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-            BelongsTo::make('Member')->searchable(),
-            BelongsTo::make('Rank'),
-            Date::make('Created At'),
-            Date::make('Updated At'),
+            BelongsTo::make('Member')->searchable()->sortable(),
+            BelongsTo::make('Rank')->sortable(),
+            Date::make('Created At')->sortable(),
+            Date::make('Updated At')->sortable(),
         ];
     }
 
