@@ -7,6 +7,7 @@ use App\Nova\Actions\SetDefaultSettings;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\Date;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -68,6 +69,9 @@ class Division extends Resource
 
             Number::make('forum_app_id')
                 ->help('Numerical id of division application form id'),
+
+            Code::make('Settings')
+                ->json(),
 
             Date::make('Created At')->sortable(),
 

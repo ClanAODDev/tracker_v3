@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Jeffbeltran\SanctumTokens\SanctumTokens;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
@@ -59,6 +60,9 @@ class User extends Resource
             Text::make('Name')
                 ->sortable()
                 ->rules('required', 'max:255'),
+
+            Code::make('Settings')
+                ->json(),
 
             Text::make('Email')
                 ->sortable()
