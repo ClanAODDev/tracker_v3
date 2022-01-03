@@ -146,7 +146,7 @@ class SyncMemberData
         $activeIds = \App\Models\Member::where('division_id', '!=', 0)->pluck('clan_id');
 
         $membersToAdd = $syncTable->where('aoddivision', '!=', 'None')
-            ->whereNotIn('userid')->get();
+            ->whereNotIn('userid', $activeIds)->get();
 
         foreach ($membersToAdd as $member) {
             \App\Models\Member::create([
