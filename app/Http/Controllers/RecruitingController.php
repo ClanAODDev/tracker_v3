@@ -220,11 +220,11 @@ class RecruitingController extends \App\Http\Controllers\Controller
         // track division assignment, rank change
         \App\Models\RankAction::create([
             'member_id' => $member->id,
-            'rank_id' => $request->rank,
+            'rank_id'   => $request->rank,
         ]);
 
         \App\Models\Transfer::create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $division->id,
         ]);
 
