@@ -8,6 +8,7 @@ use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
+use Carbon\Carbon;
 
 class SyncMemberData
 {
@@ -26,6 +27,8 @@ class SyncMemberData
         $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
         $syncTable->truncate();
+
+        date_default_timezone_set('UTC');
 
         foreach ($syncData->chunk(50) as $chunk) {
             $syncTable->insert($chunk->toArray());
@@ -62,12 +65,12 @@ class SyncMemberData
                 'ts_unique_id' => $oldData['ts_unique_id'],
 
                 // these can be null, and they piss me off
-                'last_activity' => '' !== $oldData['last_activity']
-                    ? \Carbon::createFromTimeString($oldData['last_activity'])->format('Y-m-d')
-                    : '',
-                'last_ts_activity' => '' !== $oldData['last_ts_activity']
-                    ? \Carbon::createFromTimeString($oldData['last_ts_activity'])->format('Y-m-d')
-                    : '',
+                'last_activity' => $oldData['last_activity'] != null
+                    ? Carbon::createFromTimeString($oldData['last_activity'])->format('Y-m-d H:i:s')
+                    : null,
+                'last_ts_activity' => $oldData['last_ts_activity'] != null
+                    ? Carbon::createFromTimeString($oldData['last_ts_activity'])->format('Y-m-d H:i:s')
+                    : null,
             ]);
 
             try {
@@ -82,13 +85,11 @@ class SyncMemberData
                     'ts_unique_id' => $newData->tsid,
 
                     // these can be null, and they piss me off
-                    'last_activity' => '' !== $newData->lastactivity
-                        ? \Carbon::createFromTimeString("{$newData->lastactivity} {$newData->lastactivity_time}")
-                            ->format('Y-m-d')
+                    'last_activity' => '' != $newData->lastactivity
+                        ? "{$newData->lastactivity} {$newData->lastactivity_time}"
                         : '',
-                    'last_ts_activity' => '' !== $newData->lastts_connect
-                        ? \Carbon::createFromTimeString("{$newData->lastts_connect} {$newData->lastts_connect_time}")
-                            ->format('Y-m-d')
+                    'last_ts_activity' => '' != $newData->lastts_connect
+                        ? "{$newData->lastts_connect} {$newData->lastts_connect_time}"
                         : '',
                 ]);
             } catch (\Exception $exception) {
@@ -97,16 +98,18 @@ class SyncMemberData
 
             $differences = $newData->diff($oldData)->filter()->all();
 
+
             if (\count($differences) > 0) {
-                \Log::debug("Found updates for {$oldData['name']}");
+                echo ("Found updates for {$oldData['name']}") . PHP_EOL;
 
                 $updates = [];
 
                 // only update things that have changed
                 foreach ($differences as $key => $value) {
+
                     $updates[$key] = $newData[$key];
 
-                    if ('rank_id' === $key) {
+                    if ('rank_id' == $key) {
                         \Log::debug('Saw a rank change!');
                         $member->last_promoted_at = now();
                         RankAction::create([
@@ -115,7 +118,7 @@ class SyncMemberData
                         ]);
                     }
 
-                    if ('division_id' === $key) {
+                    if ('division_id' == $key) {
                         \Log::debug('Saw a division change!');
                         Transfer::create([
                             'member_id'   => $member->id,
@@ -123,7 +126,7 @@ class SyncMemberData
                         ]);
                     }
 
-                    if ('name' === $key && $user = $member->user) {
+                    if ('name' == $key && $user = $member->user) {
                         \Log::debug('Saw a name change!');
                         $user->name = $newData[$key];
                         $user->save();
@@ -163,6 +166,8 @@ class SyncMemberData
                     : '',
             ]);
         }
+
+        $syncTable->truncate();
     }
 
     private static function hardResetMember(Member $member)
