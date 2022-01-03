@@ -2,6 +2,7 @@
 
 namespace App\AOD\MemberSync;
 
+use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
@@ -22,7 +23,8 @@ class SyncMemberData
             exit;
         }
 
-        $divisionIds = \App\Models\Division::active()->pluck('name', 'id')->flip();
+        $divisionIds = Division::active()->pluck('name', 'id')->flip();
+        $requestIds = MemberRequest::pending()->pluck('member_id');
 
         $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
@@ -38,12 +40,16 @@ class SyncMemberData
         self::processMemberRequests($syncTable->pluck('userid'));
 
         // iterating over members we know exist in the tracker
-        $members = Member::whereNotIn('division_id', [0, 7])->get();
+        $members = Member::whereNotIn('division_id', [0, 7])
+            // skip pending member requests
+            ->whereNotIn('clan_id', $requestIds)
+            ->get();
 
         foreach ($members as $member) {
             $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
-            $newData = $syncTable->where('userid', $member->clan_id)->first();
+            $newData = $syncTable->where('userid', $member->clan_id)
+                ->first();
 
             if (!$newData) {
                 // member does not exist in sync data, so must be removed
@@ -55,13 +61,13 @@ class SyncMemberData
             $oldData = $member->toArray();
 
             $oldData = collect([
-                'allow_pm'     => $oldData['allow_pm'],
-                'discord'      => $oldData['discord'],
-                'division_id'  => $oldData['division_id'],
-                'name'         => $oldData['name'],
-                'posts'        => $oldData['posts'],
+                'allow_pm' => $oldData['allow_pm'],
+                'discord' => $oldData['discord'],
+                'division_id' => $oldData['division_id'],
+                'name' => $oldData['name'],
+                'posts' => $oldData['posts'],
                 'privacy_flag' => $oldData['privacy_flag'],
-                'rank_id'      => $oldData['rank_id'],
+                'rank_id' => $oldData['rank_id'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
 
                 // these can be null, and they piss me off
@@ -75,13 +81,13 @@ class SyncMemberData
 
             try {
                 $newData = collect([
-                    'allow_pm'     => $newData->allow_pm,
-                    'discord'      => $newData->discordtag,
-                    'division_id'  => $divisionIds[$newData->aoddivision],
-                    'name'         => str_replace('AOD_', '', $newData->username),
-                    'posts'        => $newData->postcount,
+                    'allow_pm' => $newData->allow_pm,
+                    'discord' => $newData->discordtag,
+                    'division_id' => $divisionIds[$newData->aoddivision],
+                    'name' => str_replace('AOD_', '', $newData->username),
+                    'posts' => $newData->postcount,
                     'privacy_flag' => 'yes' !== $newData->allow_export ? 0 : 1,
-                    'rank_id'      => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
+                    'rank_id' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
 
                     // these can be null, and they piss me off
@@ -99,7 +105,7 @@ class SyncMemberData
             $differences = $newData->diff($oldData)->filter()->all();
 
             if (\count($differences) > 0) {
-                echo("Found updates for {$oldData['name']}") . PHP_EOL;
+                echo ("Found updates for {$oldData['name']}") . PHP_EOL;
 
                 $updates = [];
 
@@ -112,14 +118,14 @@ class SyncMemberData
                         $member->last_promoted_at = now();
                         RankAction::create([
                             'member_id' => $member->id,
-                            'rank_id'   => $newData[$key],
+                            'rank_id' => $newData[$key],
                         ]);
                     }
 
                     if ('division_id' === $key) {
                         \Log::debug('Saw a division change!');
                         Transfer::create([
-                            'member_id'   => $member->id,
+                            'member_id' => $member->id,
                             'division_id' => $newData[$key],
                         ]);
                     }
@@ -138,19 +144,20 @@ class SyncMemberData
         // handle new members not in the tracker
         $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
         $activeIds = \App\Models\Member::where('division_id', '!=', 0)->pluck('clan_id');
+
         $membersToAdd = $syncTable->where('aoddivision', '!=', 'None')
-            ->whereNotIn('userid', $activeIds)->get();
+            ->whereNotIn('userid')->get();
 
         foreach ($membersToAdd as $member) {
             \App\Models\Member::create([
-                'allow_pm'     => $member->allow_pm,
-                'clan_id'      => $member->userid,
-                'discord'      => $member->discordtag,
-                'division_id'  => $divisionIds[$member->aoddivision],
-                'name'         => str_replace('AOD_', '', $member->username),
-                'posts'        => $member->postcount,
+                'allow_pm' => $member->allow_pm,
+                'clan_id' => $member->userid,
+                'discord' => $member->discordtag,
+                'division_id' => $divisionIds[$member->aoddivision],
+                'name' => str_replace('AOD_', '', $member->username),
+                'posts' => $member->postcount,
                 'privacy_flag' => 'yes' !== $member->allow_export ? 0 : 1,
-                'rank_id'      => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
+                'rank_id' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
                 'ts_unique_id' => $member->tsid,
 
                 // these can be null, and they piss me off
