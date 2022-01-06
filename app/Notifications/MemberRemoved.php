@@ -32,7 +32,7 @@ class MemberRemoved extends Notification
 
     /**
      * Get the notification's delivery channels.
-
+     *
      * @return array
      */
     public function via()
@@ -41,6 +41,8 @@ class MemberRemoved extends Notification
     }
 
     /**
+     * @param mixed $notifiable
+     *
      * @throws \Exception
      *
      * @return array

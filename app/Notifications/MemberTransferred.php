@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
-use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
@@ -33,9 +32,11 @@ class MemberTransferred extends Notification
     }
 
     /**
-     * @return array
+     * @param mixed $notifiable
+     *
      * @throws \Exception
      *
+     * @return array
      */
     public function toWebhook($notifiable)
     {
@@ -46,7 +47,7 @@ class MemberTransferred extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name' => '**MEMBER TRANSFER**',
+                    'name'  => '**MEMBER TRANSFER**',
                     'value' => addslashes(":recycle: {$this->member->name} [{$this->member->clan_id}] transferred to {$notifiable->name}"),
                 ],
             ])->send();

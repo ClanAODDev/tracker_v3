@@ -38,6 +38,8 @@ class MemberRequestApproved extends Notification
     }
 
     /**
+     * @param mixed $notifiable
+     *
      * @throws Exception
      *
      * @return mixed

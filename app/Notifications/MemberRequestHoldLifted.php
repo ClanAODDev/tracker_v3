@@ -33,6 +33,8 @@ class MemberRequestHoldLifted extends Notification
     }
 
     /**
+     * @param mixed $notifiable
+     *
      * @throws Exception
      *
      * @return mixed
