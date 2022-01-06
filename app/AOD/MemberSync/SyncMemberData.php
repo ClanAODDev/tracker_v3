@@ -149,9 +149,8 @@ class SyncMemberData
             ->whereNotIn('userid', $activeIds)->get();
 
         foreach ($membersToAdd as $member) {
-            \App\Models\Member::create([
+            \App\Models\Member::updateOrCreate([
                 'allow_pm'     => $member->allow_pm,
-                'clan_id'      => $member->userid,
                 'discord'      => $member->discordtag,
                 'division_id'  => $divisionIds[$member->aoddivision],
                 'name'         => str_replace('AOD_', '', $member->username),
@@ -169,6 +168,8 @@ class SyncMemberData
                     ? \Carbon::createFromTimeString("{$member->lastts_connect} {$member->lastts_connect_time}")
                         ->format('Y-m-d')
                     : '',
+            ], [
+                'clan_id'      => $member->userid,
             ]);
         }
 
