@@ -128,6 +128,11 @@ class SyncMemberData
                             'member_id'   => $member->id,
                             'division_id' => $newData[$key],
                         ]);
+
+                        // wipe old division assignments
+                        $member->position_id = 0;
+                        $member->squad_id = 0;
+                        $member->platoon_id = 0;
                     }
 
                     if ('name' === $key && $user = $member->user) {
