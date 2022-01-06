@@ -160,7 +160,7 @@ class LoginController extends Controller
             } else {
                 // ensure this is an active member
                 $member = Member::where('name', $username)->first();
-                if (!$member->exists()) {
+                if (!$member) {
                     return false;
                 }
 
