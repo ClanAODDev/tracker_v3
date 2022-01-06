@@ -130,9 +130,9 @@ class SyncMemberData
                         ]);
 
                         // wipe old division assignments
-                        $member->position_id = 0;
-                        $member->squad_id = 0;
-                        $member->platoon_id = 0;
+                        $member->position_id = 1;
+                        $member->squad_id    = 0;
+                        $member->platoon_id  = 0;
 
                         // notify division of transfer
                         $division = Division::find($newData[$key]);
