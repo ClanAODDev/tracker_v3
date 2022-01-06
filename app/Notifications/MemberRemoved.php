@@ -24,7 +24,6 @@ class MemberRemoved extends Notification
      * Create a new notification instance.
      *
      * @param $member
-     * @param $reason
      */
     public function __construct($member)
     {
@@ -33,12 +32,10 @@ class MemberRemoved extends Notification
 
     /**
      * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
+
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }
@@ -48,11 +45,9 @@ class MemberRemoved extends Notification
      *
      * @return array
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $division = $this->member->division;
-
-        $channel = $division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         return (new DiscordMessage())
             ->info()
@@ -60,7 +55,7 @@ class MemberRemoved extends Notification
             ->fields([
                 [
                     'name'  => '**MEMBER REMOVED**',
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$division->name} by " . auth()->user()->name),
+                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$notifiable->name} by " . auth()->user()->name),
                 ],
                 [
                     'name'  => 'View Member Profile',

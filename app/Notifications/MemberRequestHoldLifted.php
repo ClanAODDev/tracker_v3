@@ -27,7 +27,7 @@ class MemberRequestHoldLifted extends Notification
      *
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }
@@ -37,11 +37,9 @@ class MemberRequestHoldLifted extends Notification
      *
      * @return mixed
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $division = $this->request->division;
-
-        $channel = $division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->request->member->name}` has been lifted. Your request will be processed soon.");
 

@@ -13,25 +13,6 @@ class DivisionEdited extends Notification
     use Queueable;
 
     /**
-     * @var
-     */
-    private $division;
-    /**
-     * @var
-     */
-    private $request;
-
-    /**
-     * Create a new notification instance.
-     *
-     * @param $division
-     */
-    public function __construct($division)
-    {
-        $this->division = $division;
-    }
-
-    /**
      * Get the notification's delivery channels.
      *
      * @param mixed $notifiable
@@ -52,13 +33,13 @@ class DivisionEdited extends Notification
      */
     public function toWebhook($notifiable)
     {
-        $channel = $this->division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
 
         return (new DiscordMessage())
             ->to($channel)
-            ->message(":tools: **{$authoringUser}** updated division settings for **{$this->division->name}**")
+            ->message(":tools: **{$authoringUser}** updated division settings for **{$notifiable->name}**")
             ->success()
             ->send();
     }

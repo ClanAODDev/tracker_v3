@@ -13,25 +13,13 @@ class NewMemberRecruited extends Notification
     use Queueable;
 
     /**
-     * @var
-     */
-    private $user;
-
-    /**
-     * @var
-     */
-    private $member;
-
-    /**
      * Create a new notification instance.
      *
      * @param $member
      * @param $division
      */
-    public function __construct($member, $division)
+    public function __construct(private $member)
     {
-        $this->division = $division;
-        $this->member = $member;
     }
 
     /**
@@ -41,7 +29,7 @@ class NewMemberRecruited extends Notification
      *
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }
@@ -51,9 +39,9 @@ class NewMemberRecruited extends Notification
      *
      * @return array
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $channel = $this->division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         return (new DiscordMessage())
             ->success()
@@ -61,7 +49,7 @@ class NewMemberRecruited extends Notification
             ->fields([
                 [
                     'name'  => '**NEW MEMBER RECRUITED**',
-                    'value' => addslashes(':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$this->division->name} Division!"),
+                    'value' => addslashes(':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
                 ],
                 [
                     'name'  => 'View Member Profile',

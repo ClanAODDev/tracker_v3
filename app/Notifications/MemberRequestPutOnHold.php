@@ -26,12 +26,9 @@ class MemberRequestPutOnHold extends Notification
 
     /**
      * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }
@@ -41,11 +38,9 @@ class MemberRequestPutOnHold extends Notification
      *
      * @return mixed
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $division = $this->request->division;
-
-        $channel = $division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         $approver = auth()->user()->member;
 

@@ -18,7 +18,7 @@ class NotifyAdminTicketCreated extends Notification
      *
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }

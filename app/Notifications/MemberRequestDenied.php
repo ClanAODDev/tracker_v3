@@ -28,12 +28,9 @@ class MemberRequestDenied extends Notification
 
     /**
      * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     *
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }
@@ -41,11 +38,9 @@ class MemberRequestDenied extends Notification
     /**
      * @return mixed
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $division = $this->request->division;
-
-        $channel = $division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         $notes = addslashes($this->request->notes);
 
@@ -54,16 +49,16 @@ class MemberRequestDenied extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name'  => '**MEMBER STATUS REQUEST**',
+                    'name' => '**MEMBER STATUS REQUEST**',
                     'value' => addslashes(":skull_crossbones: A member status request for `{$this->request->member->name}` was denied."),
                 ],
                 [
-                    'name'  => 'The reason for the denial was:',
+                    'name' => 'The reason for the denial was:',
                     'value' => "`{$notes}`",
                 ],
                 [
-                    'name'  => 'Manage member requests',
-                    'value' => route('division.member-requests.index', $this->request->division),
+                    'name' => 'Manage member requests',
+                    'value' => route('division.member-requests.index', $notifiable),
                 ],
             ])->send();
     }

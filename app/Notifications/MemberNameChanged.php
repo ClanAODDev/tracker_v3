@@ -12,20 +12,8 @@ class MemberNameChanged extends Notification
 {
     use Queueable;
 
-    private $names;
-
-    private $division;
-
-    /**
-     * Create a new notification instance.
-     *
-     * @param $names
-     * @param $division
-     */
-    public function __construct($names, $division)
+    public function __construct(private $names)
     {
-        $this->names = $names;
-        $this->division = $division;
     }
 
     public function via($notifiable)
@@ -38,9 +26,9 @@ class MemberNameChanged extends Notification
      *
      * @return array
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $channel = $this->division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         return (new DiscordMessage())
             ->to($channel)

@@ -32,7 +32,7 @@ class MemberRequestApproved extends Notification
      *
      * @return array
      */
-    public function via($notifiable)
+    public function via()
     {
         return [WebhookChannel::class];
     }
@@ -42,11 +42,9 @@ class MemberRequestApproved extends Notification
      *
      * @return mixed
      */
-    public function toWebhook()
+    public function toWebhook($notifiable)
     {
-        $division = $this->request->division;
-
-        $channel = $division->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('slack_channel');
 
         $approver = auth()->user()->member;
 

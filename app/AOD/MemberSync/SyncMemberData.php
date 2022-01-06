@@ -137,7 +137,7 @@ class SyncMemberData
                         // notify division of transfer
                         $division = Division::find($newData[$key]);
                         if ('on' === $division->settings()->get('slack_alert_member_transferred')) {
-                            $division->notify(new \App\Notifications\MemberTransferred($member));
+                            $division->notify(new \App\Notifications\MemberTransferred($member, $division));
                         }
                     }
 

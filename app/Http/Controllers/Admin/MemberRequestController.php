@@ -134,7 +134,7 @@ class MemberRequestController extends Controller
             new MemberNameChanged([
                 'oldName' => $request->oldName,
                 'newName' => $request->newName,
-            ], $memberRequest->division)
+            ])
         );
     }
 
