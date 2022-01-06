@@ -169,7 +169,7 @@ class SyncMemberData
                         ->format('Y-m-d')
                     : '',
             ], [
-                'clan_id'      => $member->userid,
+                'clan_id' => $member->userid,
             ]);
         }
 
