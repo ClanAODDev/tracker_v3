@@ -12,13 +12,16 @@ class NewExternalRecruit extends Notification
 {
     use Queueable;
 
+    private $member;
+
     /**
      * Create a new notification instance.
      *
      * @param $member
      */
-    public function __construct(private $member)
+    public function __construct($member)
     {
+        $this->member = $member;
     }
 
     /**

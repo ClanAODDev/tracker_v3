@@ -12,8 +12,11 @@ class MemberNameChanged extends Notification
 {
     use Queueable;
 
-    public function __construct(private $names)
+    private $names;
+
+    public function __construct($names)
     {
+        $this->names = $names;
     }
 
     public function via($notifiable)

@@ -12,14 +12,17 @@ class NewMemberRecruited extends Notification
 {
     use Queueable;
 
+    private $member;
+
     /**
      * Create a new notification instance.
      *
      * @param $member
      * @param $division
      */
-    public function __construct(private $member)
+    public function __construct($member)
     {
+        $this->member = $member;
     }
 
     /**

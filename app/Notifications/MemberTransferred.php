@@ -12,11 +12,14 @@ class MemberTransferred extends Notification
 {
     use Queueable;
 
+    private Member $member;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(private Member $member)
+    public function __construct(Member $member)
     {
+        $this->member = $member;
     }
 
     /**
