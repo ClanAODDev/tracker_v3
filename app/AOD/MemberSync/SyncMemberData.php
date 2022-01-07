@@ -115,7 +115,7 @@ class SyncMemberData
 
                     if ('rank_id' === $key) {
                         \Log::debug('Saw a rank change!');
-                        $member->last_promoted_at = now();
+                        $updates['last_promoted_at'] = now();
                         RankAction::create([
                             'member_id' => $member->id,
                             'rank_id'   => $newData[$key],
@@ -130,9 +130,9 @@ class SyncMemberData
                         ]);
 
                         // wipe old division assignments
-                        $member->position_id = 1;
-                        $member->squad_id    = 0;
-                        $member->platoon_id  = 0;
+                        $updates['position_id'] = 1;
+                        $updates['squad_id']    = 0;
+                        $updates['platoon_id']  = 0;
 
                         // notify division of transfer
                         $division = Division::find($newData[$key]);
