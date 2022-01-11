@@ -40,7 +40,7 @@ class SyncMemberData
         self::processMemberRequests($syncTable->pluck('userid'));
 
         // iterating over members we know exist in the tracker
-        $members = Member::whereNotIn('division_id', [0, 7])
+        $members = Member::whereNotIn('division_id', [0])
             // skip pending member requests
             ->whereNotIn('clan_id', $requestIds)
             ->get();
