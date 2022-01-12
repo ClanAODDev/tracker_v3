@@ -104,7 +104,6 @@ class SyncMemberData
 
             if (!$newData) {
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
-
                 continue;
             }
 
