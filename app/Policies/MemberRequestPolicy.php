@@ -23,7 +23,7 @@ class MemberRequestPolicy
     public function manage(User $user)
     {
         // are they a SGT and a division XO/CO?
-        if ($user->isRole('jr_ldr') && \in_array($user->member->position_id, [5, 6], true)) {
+        if ($user->isRole(['jr_ldr', 'sr_ldr']) && \in_array($user->member->position_id, [5, 6], true)) {
             return true;
         }
 
