@@ -102,6 +102,11 @@ class SyncMemberData
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
             }
 
+            if (!$newData) {
+                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
+                continue;
+            }
+
             $differences = $newData->diff($oldData)->filter()->all();
 
             if (\count($differences) > 0) {
