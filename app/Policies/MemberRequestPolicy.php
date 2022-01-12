@@ -81,7 +81,6 @@ class MemberRequestPolicy
      */
     public function update()
     {
-        return;
     }
 
     /**
@@ -89,6 +88,5 @@ class MemberRequestPolicy
      */
     public function delete()
     {
-        return;
     }
 }
