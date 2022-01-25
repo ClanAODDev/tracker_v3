@@ -99,7 +99,7 @@ class SyncMemberData
                         : '',
                 ]);
             } catch (\Exception $exception) {
-                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
+                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id} - {$exception->getMessage()}");
 
                 continue;
             }
