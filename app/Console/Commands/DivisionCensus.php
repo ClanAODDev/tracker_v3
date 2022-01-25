@@ -13,6 +13,7 @@ class DivisionCensus extends \Illuminate\Console\Command
      * @var string
      */
     protected $signature = 'do:divisioncensus';
+
     /**
      * The console command description.
      *

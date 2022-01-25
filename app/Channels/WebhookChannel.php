@@ -16,6 +16,7 @@ class WebhookChannel
      * @var Client
      */
     private $client;
+
     /**
      * @var Logger
      */

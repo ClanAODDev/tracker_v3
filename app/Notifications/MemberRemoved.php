@@ -15,6 +15,7 @@ class MemberRemoved extends Notification
      * @var
      */
     private $user;
+
     /**
      * @var
      */
