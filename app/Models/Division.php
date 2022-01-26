@@ -35,17 +35,19 @@ class Division extends Model
         'slack_alert_pt_member_removed' => false,
         'use_welcome_thread'            => false, 'division_structure' => '', 'welcome_area' => '', 'welcome_pm' => '',
         'inactivity_days'               => 30,
-        'activity_threshold'            => [['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning']],
+        'activity_threshold'            => [
+            ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
+        ],
         'recruiting_threads'            => [
             ['thread_name' => 'AOD Code of Conduct', 'thread_id' => 3327, 'comments' => ''],
             ['thread_name' => 'AOD Ranking Structure', 'thread_id' => 3326, 'comments' => ''],
-        ], 'recruiting_tasks' => [
+        ], 'recruiting_tasks'           => [
             ['task_description' => 'Adjust forum profile settings'],
             ['task_description' => 'Copy TS identity unique id to forum profile'],
             ['task_description' => 'Change name on Teamspeak (add AOD_ and rank)'],
             ['task_description' => 'Reminder that forum login name will change in 24/48 hours'],
             ['task_description' => 'Introduce new member to the other members of the division'],
-        ], 'locality' => [
+        ], 'locality'                   => [
             ['old-string' => 'squad', 'new-string' => 'squad'], ['old-string' => 'platoon', 'new-string' => 'platoon'],
             ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
             ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
@@ -67,7 +69,9 @@ class Division extends Model
     /**
      * @var array
      */
-    protected $fillable = ['settings', 'name', 'handle_id', 'forum_app_id', 'description', 'active', 'abbreviation', 'shutdown_at'];
+    protected $fillable = [
+        'settings', 'name', 'handle_id', 'forum_app_id', 'description', 'active', 'abbreviation', 'shutdown_at',
+    ];
 
     public static function boot()
     {
@@ -75,7 +79,7 @@ class Division extends Model
 
         static::creating(function (self $division) {
             $division->settings = $division->defaultSettings;
-            $division->slug = Str::slug($division->name);
+            $division->slug     = Str::slug($division->name);
         });
     }
 
@@ -181,10 +185,7 @@ class Division extends Model
      */
     public function scopeActive($query)
     {
-        return $query->whereActive(true)
-            // never return floater
-            ->whereNotIn('name', ['Floater'])
-            ->orderBy('name', 'ASC');
+        return $query->whereActive(true)->orderBy('name', 'ASC');
     }
 
     /**
@@ -345,7 +346,7 @@ class Division extends Model
     public function transfers()
     {
         return $this->hasMany(\App\Models\Transfer::class, 'division_id')
-            ->orderBy('created_at', 'desc');
+                    ->orderBy('created_at', 'desc');
     }
 
     /**
