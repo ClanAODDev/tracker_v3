@@ -38,16 +38,16 @@ class Division extends Model
         'activity_threshold'            => [
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
         ],
-        'recruiting_threads'            => [
+        'recruiting_threads' => [
             ['thread_name' => 'AOD Code of Conduct', 'thread_id' => 3327, 'comments' => ''],
             ['thread_name' => 'AOD Ranking Structure', 'thread_id' => 3326, 'comments' => ''],
-        ], 'recruiting_tasks'           => [
+        ], 'recruiting_tasks' => [
             ['task_description' => 'Adjust forum profile settings'],
             ['task_description' => 'Copy TS identity unique id to forum profile'],
             ['task_description' => 'Change name on Teamspeak (add AOD_ and rank)'],
             ['task_description' => 'Reminder that forum login name will change in 24/48 hours'],
             ['task_description' => 'Introduce new member to the other members of the division'],
-        ], 'locality'                   => [
+        ], 'locality' => [
             ['old-string' => 'squad', 'new-string' => 'squad'], ['old-string' => 'platoon', 'new-string' => 'platoon'],
             ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
             ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
@@ -349,7 +349,7 @@ class Division extends Model
     public function transfers()
     {
         return $this->hasMany(\App\Models\Transfer::class, 'division_id')
-                    ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc');
     }
 
     /**
