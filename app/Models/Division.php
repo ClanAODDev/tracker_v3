@@ -57,15 +57,18 @@ class Division extends Model
     protected static array $recordEvents = ['created', 'deleted'];
 
     protected $dates = ['shutdown_at'];
+
     /**
      * @var array
      */
     protected $casts = ['active' => 'boolean', 'settings' => 'json'];
+
     /**
      * @var array
      */
     protected $hidden = ['structure'];
     protected $withCount = ['sergeants', 'members'];
+
     /**
      * @var array
      */

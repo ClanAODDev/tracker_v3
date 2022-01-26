@@ -38,6 +38,7 @@ class User extends Authenticatable
         'developer',
         'member_id',
     ];
+
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -66,6 +67,7 @@ class User extends Authenticatable
     public static function boot()
     {
         parent::boot();
+
         /**
          * Handle default settings population.
          */

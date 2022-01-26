@@ -13,10 +13,12 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
     protected $casts = ['extended'];
+
     /**
      * @var array
      */
     protected $dates = ['end_date'];
+
     /**
      * @var array
      */

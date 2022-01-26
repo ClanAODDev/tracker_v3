@@ -15,6 +15,7 @@ class PartTimeMemberRemoved extends Notification
      * @var
      */
     private $user;
+
     /**
      * @var
      */
