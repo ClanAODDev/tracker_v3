@@ -163,6 +163,8 @@ class SyncMemberData
 
         foreach ($membersToAdd as $member) {
             \App\Models\Member::updateOrCreate([
+                'clan_id' => $member->userid,
+            ], [
                 'allow_pm'     => $member->allow_pm,
                 'discord'      => $member->discordtag,
                 'division_id'  => $divisionIds[$member->aoddivision],
@@ -181,8 +183,6 @@ class SyncMemberData
                     ? \Carbon::createFromTimeString("{$member->lastts_connect} {$member->lastts_connect_time}")
                         ->format('Y-m-d')
                     : '',
-            ], [
-                'clan_id' => $member->userid,
             ]);
         }
 
