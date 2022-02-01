@@ -26,7 +26,7 @@
                             @if ($member->isPending)
                                 <span class="text-muted">UNAVAILABLE</span>
                             @elseif ($member->tsInvalid)
-                                TS MISCONFIGURATION
+                                --
                             @else
                                 {{ Carbon::parse($member->last_ts_activity)->diffInDays() }}
                                 {{ \Illuminate\Support\Str::plural('day',
