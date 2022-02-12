@@ -24,6 +24,7 @@ class DivisionController extends ApiController
     {
         if ($this->tokenCan('basic:read')) {
             $divisions = Division::active()
+                ->withoutFloaters()
                 ->shuttingDown(false)
                 ->get();
 

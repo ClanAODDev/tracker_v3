@@ -191,6 +191,11 @@ class Division extends Model
         return $query->whereActive(true)->orderBy('name', 'ASC');
     }
 
+    public function scopeWithoutFloaters($query)
+    {
+        return $query->where('slug', '!=', 'floater');
+    }
+
     /**
      * @param $query
      *
