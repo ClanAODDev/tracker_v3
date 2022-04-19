@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-/**
+/*
  * Configuration options for Twig.
  */
 return [

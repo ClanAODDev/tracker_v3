@@ -165,12 +165,12 @@ class DivisionStructureController extends Controller
             'leader.rank',
         ])->get();
 
-        /**
+        /*
          * ensure squad leaders don't appear in squads.
          */
         $data->platoons = $this->filterSquadLeads($data);
 
-        /**
+        /*
          * have to do some funky things to get handles organized:
          * divisions only need the primary handle for a member.
          */

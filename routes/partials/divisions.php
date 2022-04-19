@@ -1,7 +1,7 @@
 <?php
 
 Route::group(['prefix' => 'divisions/{division}'], function () {
-    /**
+    /*
      * division.
      */
     Route::get('/', 'DivisionController@show')->name('division');
@@ -37,14 +37,14 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
 
     Route::get('/notes', 'DivisionNoteController@index')->name('division.notes');
 
-    /**
+    /*
      * Recruiting Process.
      */
     Route::group(['prefix' => '/recruit'], function () {
         Route::get('form', 'RecruitingController@form')->name('recruiting.form');
     });
 
-    /**
+    /*
      * Division Reports.
      */
     Route::get('/ts-report', 'Division\ReportController@tsReport')
@@ -64,12 +64,12 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     )->middleware(['auth'])
         ->name('division.ingame-reports');
 
-    /**
+    /*
      * member requests.
      */
 //    Route::
 
-    /**
+    /*
      * platoons.
      */
     Route::group(['prefix' => '/platoons/'], function () {
@@ -84,7 +84,7 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
         Route::patch('{platoon}', 'PlatoonController@update');
         Route::delete('{platoon}', 'PlatoonController@destroy')->name('deletePlatoon');
 
-        /**
+        /*
          * squads.
          */
         Route::group(['prefix' => '{platoon}/squads/'], function () {

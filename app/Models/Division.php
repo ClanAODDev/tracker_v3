@@ -82,7 +82,7 @@ class Division extends Model
 
         static::creating(function (self $division) {
             $division->settings = $division->defaultSettings;
-            $division->slug     = Str::slug($division->name);
+            $division->slug = Str::slug($division->name);
         });
     }
 

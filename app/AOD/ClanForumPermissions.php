@@ -32,21 +32,21 @@ class ClanForumPermissions
             ->where('officer_role_id', '!=', null)
             ->pluck('officer_role_id')->toArray();
 
-        /**
+        /*
          * Update role unless current role matches new role.
          */
         switch (true) {
-            /**
+            /*
              * Banned Users.
              */
             case array_intersect($groupIds, [49]):
                 return (6 !== $user->role_id) ? $this->assignRole('banned') : null;
-            /**
+            /*
              * 6 - Administrators.
              */
             case array_intersect($groupIds, [6]):
                 return (5 !== $user->role_id) ? $this->assignRole('admin') : null;
-            /**
+            /*
              * 52 - AOD Sergeants
              * 66 - AOD Staff Sergeants
              * 80 - Division CO
@@ -54,7 +54,7 @@ class ClanForumPermissions
              */
             case array_intersect($groupIds, [52, 66, 80, 79]):
                 return (4 !== $user->role_id) ? $this->assignRole('sr_ldr') : null;
-            /**
+            /*
              * Division officer usergroup.
              */
             case array_intersect($groupIds, $officerRoleIds):

@@ -30,7 +30,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        /**
+        /*
          * Show division by abbreviation.
          */
         \Route::bind('division', function ($division) {
@@ -46,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
             ->with('divisions')
             ->first());
 
-        /**
+        /*
          * Show platoon by division abbrev, platoon number (1st, 2nd, etc).
          */
         \Route::bind('platoon', function ($platoon) {
@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        /**
+        /*
          * Show member by clan member id (forum id).
          */
         \Route::bind('member', function ($member) {

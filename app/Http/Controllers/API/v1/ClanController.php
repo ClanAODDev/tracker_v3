@@ -60,7 +60,7 @@ class ClanController extends \App\Http\Controllers\API\v1\ApiController
             foreach ($eventStream->getItems() as $event) {
                 if ($event->summary || $event->description) {
                     $start = \Carbon::parse($event->start->dateTime ?? $event->start->date);
-                    $end = \Carbon::parse($event->end->dateTime     ?? $event->end->date);
+                    $end = \Carbon::parse($event->end->dateTime ?? $event->end->date);
                     $events[] = [
                         'event'           => $event->summary ?? $event->description,
                         'time'            => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
