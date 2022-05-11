@@ -221,9 +221,13 @@ class SyncMemberData
      */
     private static function processMemberRequests($user_ids)
     {
-        $requestsToProcess = MemberRequest::approved()
-            ->whereIn('member_id', $user_ids)
-            ->get();
+        $requestsToProcess = MemberRequest::approved()->get();
+
+        $requestsToProcess->each(function ($request) use ($user_ids) {
+           if ($user_ids->contains($request->member_id)) {
+               $request->process();
+           }
+        });
 
         $requestsToProcess->each->process();
     }

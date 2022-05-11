@@ -79,7 +79,8 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopeApproved($query)
     {
-        return $query->where('approved_at', '!=', null);
+        return $query->where('approved_at', '!=', null)
+            ->where('processed_at', null);
     }
 
     /**
