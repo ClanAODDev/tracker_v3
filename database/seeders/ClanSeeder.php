@@ -45,7 +45,7 @@ class ClanSeeder extends Seeder
      */
     protected function generateCensusData($division): void
     {
-        for ($i = 1; $i < 7; ++$i) {
+        for ($i = 1; $i < 7; $i++) {
             Census::factory()->create([
                 'division_id' => $division,
                 'created_at'  => now()->subWeeks($i),

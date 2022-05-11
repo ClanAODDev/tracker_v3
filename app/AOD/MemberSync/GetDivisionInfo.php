@@ -24,7 +24,6 @@ class GetDivisionInfo
     {
         if (!config('app.aod.token')) {
             throw new \Exception('ERROR: AOD Token not defined in configuration.');
-
             exit;
         }
 
@@ -77,10 +76,10 @@ class GetDivisionInfo
 
             foreach ($json->column_order as $column) {
                 $prepared[$memberCount][$column] = $member[$columnCount];
-                ++$columnCount;
+                $columnCount++;
             }
 
-            ++$memberCount;
+            $memberCount++;
         }
 
         return $prepared;

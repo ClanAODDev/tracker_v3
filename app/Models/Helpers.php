@@ -9,7 +9,7 @@ function bytesToHuman($bytes)
 {
     $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 
-    for ($i = 0; $bytes > 1024; ++$i) {
+    for ($i = 0; $bytes > 1024; $i++) {
         $bytes /= 1024;
     }
 
@@ -174,7 +174,7 @@ function getDivisionIconPath($abbreviation)
 function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = [])
 {
     if ($depth < $MAXDEPTH) {
-        ++$depth;
+        $depth++;
         $keys = array_keys($myArray);
         foreach ($keys as $key) {
             if (is_array($myArray[$key])) {
@@ -327,12 +327,12 @@ function ratio()
         return $inputs[0];
     }
     $gcd = gcd($inputs[0], $inputs[1]);
-    for ($i = 2; $i < $c; ++$i) {
+    for ($i = 2; $i < $c; $i++) {
         $gcd = gcd($gcd, $inputs[$i]);
     }
 
     $var = max($inputs[0], 1) / max($gcd, 1);
-    for ($i = 1; $i < $c; ++$i) {
+    for ($i = 1; $i < $c; $i++) {
         $var .= ':' . round(($inputs[$i] / max($gcd, 1)));
     }
 

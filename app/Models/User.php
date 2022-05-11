@@ -68,7 +68,7 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        /**
+        /*
          * Handle default settings population.
          */
         static::creating(function (self $user) {
