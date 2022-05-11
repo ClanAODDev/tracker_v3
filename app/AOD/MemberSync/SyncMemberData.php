@@ -224,9 +224,9 @@ class SyncMemberData
         $requestsToProcess = MemberRequest::approved()->get();
 
         $requestsToProcess->each(function ($request) use ($user_ids) {
-           if ($user_ids->contains($request->member_id)) {
-               $request->process();
-           }
+            if ($user_ids->contains($request->member_id)) {
+                $request->process();
+            }
         });
 
         $requestsToProcess->each->process();
