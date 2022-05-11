@@ -228,7 +228,5 @@ class SyncMemberData
                 $request->process();
             }
         });
-
-        $requestsToProcess->each->process();
     }
 }
