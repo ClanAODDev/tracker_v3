@@ -64,18 +64,18 @@ function ordSuffix($n)
     }
 
     switch ($u) {
-            case 1:
-                return $str . 'st';
+        case 1:
+            return $str . 'st';
 
-            case 2:
-                return $str . 'nd';
+        case 2:
+            return $str . 'nd';
 
-            case 3:
-                return $str . 'rd';
+        case 3:
+            return $str . 'rd';
 
-            default:
-                return $str . 'th';
-        }
+        default:
+            return $str . 'th';
+    }
 }
 
 /**

@@ -41,22 +41,22 @@ class ClanForumPermissions
              */
             case array_intersect($groupIds, [49]):
                 return (6 !== $user->role_id) ? $this->assignRole('banned') : null;
-            /*
-             * 6 - Administrators.
-             */
+                /*
+                 * 6 - Administrators.
+                 */
             case array_intersect($groupIds, [6]):
                 return (5 !== $user->role_id) ? $this->assignRole('admin') : null;
-            /*
-             * 52 - AOD Sergeants
-             * 66 - AOD Staff Sergeants
-             * 80 - Division CO
-             * 79 - Division XO.
-             */
+                /*
+                 * 52 - AOD Sergeants
+                 * 66 - AOD Staff Sergeants
+                 * 80 - Division CO
+                 * 79 - Division XO.
+                 */
             case array_intersect($groupIds, [52, 66, 80, 79]):
                 return (4 !== $user->role_id) ? $this->assignRole('sr_ldr') : null;
-            /*
-             * Division officer usergroup.
-             */
+                /*
+                 * Division officer usergroup.
+                 */
             case array_intersect($groupIds, $officerRoleIds):
                 return (2 !== $user->role_id) ? $this->assignRole('officer') : null;
 
