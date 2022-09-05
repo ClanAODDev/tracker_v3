@@ -18,7 +18,7 @@
 
     <div class="container-fluid">
 
-        <p>Outstanding inactive members are those whose last forum activity exceeds the clan maximum, currently
+        <p>Outstanding inactive members are those whose last TeamSpeak activity exceeds the clan maximum, currently
             <code>{{ config('app.aod.maximum_days_inactive') }} days</code>. Additionally, divisions can define a specific number of days before a member is listed as inactive, typically between 30-45 days.
         </p>
 

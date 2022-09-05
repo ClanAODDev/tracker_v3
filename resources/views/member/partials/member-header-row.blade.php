@@ -10,9 +10,9 @@
     {{--4--}}
     <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
     {{--5--}}
-    <th class='text-center'><strong>Forum Activity</strong></th>
+    <th class='col-hidden'><strong>Forum Activity</strong></th>
     {{--6--}}
-    <th class='text-center'><strong>TS Activity</strong></th>
+    <th class='text-center'><strong>Comms Activity</strong></th>
     {{--7--}}
     <th class="col-hidden">Ts activity Dates</th>
     {{--8--}}

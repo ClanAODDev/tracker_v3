@@ -19,7 +19,7 @@
     </td>
     <td class="text-center">{{ $member->rank->abbreviation }}</td>
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
-    <td class="text-center">
+    <td class="col-hidden">
                     <span class="{{ getActivityClass($member->last_activity, $division) }}">
                         {{ $member->present()->lastActive($member->last_activity) }}
                     </span>

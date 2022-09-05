@@ -9,19 +9,7 @@
             <div class="panel-body">
 
                 <div class="row">
-                    <div class="col-md-3 col-xs-6 text-center">
-                        <h2 class="no-margins">
-                            @if ($member->last_activity)
-                                {{ $member->last_activity->diffInDays()}}
-                                {{ \Illuminate\Support\Str::plural('day', $member->last_activity->diffInDays()) }}
-                            @else
-                                N/A
-                            @endif
-                        </h2>
-                        Since last <span class="c-white">forum activity</span>
-                    </div>
-
-                    <div class="col-md-3 col-xs-6 text-center">
+                    <div class="col-md-4 col-xs-12 text-center">
                         <h2 class="no-margins">
                             @if ($member->isPending)
                                 <span class="text-muted">UNAVAILABLE</span>
@@ -35,13 +23,15 @@
                         </h2>
                         Since last <span class="c-white">TS activity</span>
                     </div>
-                    <div class="col-md-3 col-xs-6 text-center">
+
+                    <div class="col-md-4 col-xs-12 text-center">
                         <h2 class="no-margins">
                             {{ $member->join_date->format('Y-m-d') }}
                         </h2>
                         Member <span class="c-white">Join Date</span>
                     </div>
-                    <div class="col-md-3 col-xs-6 text-center">
+
+                    <div class="col-md-4 col-xs-12 text-center">
                         <h2 class="no-margins">
                             {{ $member->lastPromoted }}
                         </h2>
