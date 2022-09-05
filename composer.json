@@ -42,7 +42,8 @@
     "jeffbeltran/sanctum-tokens": "^1.5",
     "fakerphp/faker": "^1.15",
     "spatie/laravel-validation-rules": "^3.0",
-    "diglactic/laravel-breadcrumbs": "^7.2"
+    "diglactic/laravel-breadcrumbs": "^7.2",
+    "opcodesio/log-viewer": "^1.2"
   },
   "require-dev": {
     "mockery/mockery": "^1.0",
