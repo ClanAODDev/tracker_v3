@@ -116,7 +116,7 @@ class SyncMemberData
                     $updates[$key] = $newData[$key];
 
                     if ('rank_id' === $key) {
-                        \Log::debug('Saw a rank change!');
+                        \Log::debug("Saw a rank change for {$oldData['name']} to {$newData[$key]}");
                         $updates['last_promoted_at'] = now();
                         RankAction::create([
                             'member_id' => $member->id,
@@ -125,7 +125,7 @@ class SyncMemberData
                     }
 
                     if ('division_id' === $key) {
-                        \Log::debug('Saw a division change!');
+                        \Log::debug("Saw a division change for {$oldData['name']} to {$newData[$key]}");
                         Transfer::create([
                             'member_id'   => $member->id,
                             'division_id' => $newData[$key],
@@ -144,7 +144,7 @@ class SyncMemberData
                     }
 
                     if ('name' === $key && $user = $member->user) {
-                        \Log::debug('Saw a name change!');
+                        \Log::debug("Saw a username change for {$oldData['name']} to {$newData[$key]}");
                         $user->name = $newData[$key];
                         $user->save();
                     }
