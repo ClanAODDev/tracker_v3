@@ -48,13 +48,13 @@ class DivisionStructureController extends Controller
 
             $templates = ['structure' => $division->structure];
 
-            $env = new Twig_Environment(new Twig_Loader_Array($templates), [
+            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader($templates), [
                 'autoescape' => false,
             ]);
 
-            $env->addFunction(new Twig_SimpleFunction('ordSuffix', fn ($value) => ordSuffix($value)));
+            $env->addFunction(new \Twig\TwigFunction('ordSuffix', fn ($value) => ordSuffix($value)));
 
-            $env->addFunction(new Twig_SimpleFunction('replaceRegex', function ($str, $search, $replace = null) {
+            $env->addFunction(new \Twig\TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
                 // Are they using the standard Twig syntax?
                 if (\is_array($search) && null === $replace) {
                     return strtr($str, $search);
