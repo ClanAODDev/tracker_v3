@@ -61,17 +61,6 @@
                 </div>
                 <div class="panel panel-filled hidden-xs hidden-sm">
                     <div class="panel-heading">
-                        Forum Activity
-                    </div>
-                    <div class="panel-body">
-                        <canvas class="forum-activity-chart"
-                                data-labels="{{ json_encode($forumActivityGraph['labels']) }}"
-                                data-values="{{ json_encode($forumActivityGraph['values']) }}"
-                                data-colors="{{ json_encode($forumActivityGraph['colors']) }}"></canvas>
-                    </div>
-                </div>
-                <div class="panel panel-filled hidden-xs hidden-sm">
-                    <div class="panel-heading">
                         TS Activity
                     </div>
                     <div class="panel-body">
