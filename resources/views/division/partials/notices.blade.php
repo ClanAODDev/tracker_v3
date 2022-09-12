@@ -35,7 +35,7 @@
         You have
         <code>{{ $division->outstandingInactives }}</code> outstanding
         inactive {{ Str::plural('member', $division->outstandingInactives) }}. AOD does not allow divisions to maintain
-        members whose last forum activity exceeds
+        members whose last activity exceeds
         <code>{{ config('app.aod.maximum_days_inactive') }}</code> days except where a leave of absence exists. Please
         <a href="{{ route('division.inactive-members', $division) }}">process these members</a> out of AOD.
     </div>

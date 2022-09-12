@@ -48,7 +48,7 @@ class DivisionController extends \App\Http\Controllers\Controller
         $maxDays = config('app.aod.maximum_days_inactive');
 
         $division->outstandingInactives = $division->members()->whereDoesntHave('leave')->where(
-            'last_activity',
+            'last_ts_activity',
             '<',
             \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
         )->count();
