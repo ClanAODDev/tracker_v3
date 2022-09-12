@@ -6,7 +6,7 @@
             <th>Last Forum Activity
                 <small class="slight">Days</small>
             </th>
-            <th>Last TS Activity
+            <th>Last Comms Activity
                 <small class="slight">Days</small>
             </th>
             <th class="no-sort"></th>

@@ -176,7 +176,7 @@ class SquadController extends \App\Http\Controllers\Controller
                 'Rank',
                 'Join Date',
                 'Last Forum Activity',
-                'Last TS Activity',
+                'Last Comms Activity',
                 'Last Promoted',
                 'Member Handle',
                 'Member Forum Posts',
