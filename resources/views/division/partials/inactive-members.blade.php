@@ -4,9 +4,6 @@
             <thead>
             <tr>
                 <th>Member Name</th>
-                <th>Last Forum Activity
-                    <small class="slight">Days</small>
-                </th>
                 <th>Last TS Activity
                     <small class="slight">Days</small>
                 </th>
@@ -22,15 +19,6 @@
                         <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
                         {{ $member->name }}
                         <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
-                    </td>
-                    <td>
-                        @if ($member->last_activity->diffInDays() > config('app.aod.maximum_days_inactive'))
-                            <code title="Exceeds clan maximum">
-                                <span class="text-danger">{{ $member->last_activity->diffInDays() }}</span>
-                            </code>
-                        @else
-                            <code>{{ $member->last_activity->diffInDays() }}</code>
-                        @endif
                     </td>
                     <td>
                         @if ($member->tsInvalid)

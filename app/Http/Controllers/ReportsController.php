@@ -35,8 +35,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             $division
         ) => \count($division->census))->each(function ($division) {
             $division->total = $division->census->last()->count;
-            $division->popMinusActive = $division->census->last()->count - $division->census->last()->weekly_active_count;
-            $division->weeklyActive = $division->census->last()->weekly_active_count;
+            $division->popMinusActive = $division->census->last()->count - $division->census->last()->weekly_ts_count;
             $division->weeklyTsActive = $division->census->last()->weekly_ts_count;
         });
 
@@ -86,12 +85,12 @@ class ReportsController extends \App\Http\Controllers\Controller
             $divisionMax = $division->settings()->get('inactivity_days');
             $members = $division->members()->whereDoesntHave('leave')->get();
             $outstandingCount = $members->where(
-                'last_activity',
+                'last_ts_activity',
                 '<',
                 \Carbon\Carbon::now()->subDays($clanMax)->format('Y-m-d')
             )->count();
             $inactiveCount = $members->where(
-                'last_activity',
+                'last_ts_activity',
                 '<',
                 \Carbon\Carbon::now()->subDays($divisionMax)->format('Y-m-d')
             )->count();

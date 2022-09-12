@@ -6,7 +6,7 @@
         <div class="flot-chart">
             <div class="flot-chart-content" id="flot-line-chart"
                  data-populations="{{ $populations }}"
-                 data-weekly-active="{{ $weeklyActive }}"
+{{--                 data-weekly-active="{{ $weeklyActive }}"--}}
                  data-weekly-ts="{{ $weeklyTsActive }}"
             ></div>
         </div>
@@ -16,11 +16,11 @@
             <div class="col-md-4 text-center">
                 <i class="fas fa-dot-circle text-info"></i> - Division Population
             </div>
+{{--            <div class="col-md-4 text-center">--}}
+{{--                <i class="fas fa-dot-circle text-success"></i> - Weekly Active--}}
+{{--            </div>--}}
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-success"></i> - Weekly Active
-            </div>
-            <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-warning"></i> - Weekly TS Active
+                <i class="fas fa-dot-circle text-warning"></i> - Weekly Comms Active
             </div>
         </div>
     </div>

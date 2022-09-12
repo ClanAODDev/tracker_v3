@@ -25,9 +25,8 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
     public function index($division)
     {
         $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)->where(function ($query) use ($division) {
-            $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days))
-                ->Orwhere('last_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
-        })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy('last_activity')->get();
+            $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
+        })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy('last_ts_activity')->get();
 
         if (request()->platoon) {
             $inactiveMembers = $inactiveMembers->where('platoon_id', request()->platoon->id);
