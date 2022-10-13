@@ -104,7 +104,7 @@ class SyncMemberData
                 continue;
             }
 
-            $differences = $newData->diff($oldData)->filter()->all();
+            $differences = $newData->diffAssoc($oldData)->filter()->all();
 
             if (\count($differences) > 0) {
                 echo("Found updates for {$oldData['name']}") . PHP_EOL;
