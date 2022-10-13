@@ -5,7 +5,7 @@
 
     @if($previousCensus)
         <div class="slight" style="display: inline-block">
-            @if ($previousCensus && $division->members->count())
+            @if (is_int($previousCensus) && $division->members->count())
                 @if($division->members->count() < $previousCensus->count)
                     <i class="fa fa-play fa-rotate-90 c-white"></i>
                 @else
