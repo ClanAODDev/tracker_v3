@@ -14,7 +14,7 @@
             <div class="panel-footer">
                 <div class="slight">
 
-                    @if ($note->author)
+                    @if ($note->author && $note->author->member)
                         <a href="{{ route('member', $note->author->member->getUrlParams()) }}">
                             {{ $note->author->name }}
                         </a>
