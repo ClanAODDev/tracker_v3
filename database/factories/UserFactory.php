@@ -23,9 +23,9 @@ class UserFactory extends Factory
         $name = $this->faker->userName;
 
         return [
-            'name'      => $name,
-            'email'     => $this->faker->email,
-            'role_id'   => 1,
+            'name' => $name,
+            'email' => $this->faker->email,
+            'role_id' => 1,
             'member_id' => Member::factory([
                 'name' => $name,
             ]),
@@ -39,7 +39,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id'   => 5,
+                'role_id' => 5,
                 'developer' => true,
                 'member_id' => Member::factory([
                     'rank_id' => 11,
@@ -55,7 +55,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id'   => 2,
+                'role_id' => 2,
                 'member_id' => Member::factory([
                     'rank_id' => 7,
                 ]),

@@ -13,10 +13,9 @@ trait Settable
      * Magic getter for settings.
      *
      * @param $key
+     * @return mixed
      *
      * @throws Exception
-     *
-     * @return mixed
      */
     public function __get($key)
     {
@@ -44,7 +43,6 @@ trait Settable
      * Get a setting.
      *
      * @param $key
-     *
      * @return mixed
      */
     public function get($key)
@@ -85,7 +83,6 @@ trait Settable
      * Checks to see if a key exists.
      *
      * @param $key
-     *
      * @return bool
      */
     private function has($key)

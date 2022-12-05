@@ -42,11 +42,10 @@ class MemberRemoved extends Notification
     }
 
     /**
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
+     * @return array
      *
      * @throws \Exception
-     *
-     * @return array
      */
     public function toWebhook($notifiable)
     {
@@ -57,11 +56,11 @@ class MemberRemoved extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name'  => '**MEMBER REMOVED**',
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$notifiable->name} by " . auth()->user()->name),
+                    'name' => '**MEMBER REMOVED**',
+                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$notifiable->name} by ".auth()->user()->name),
                 ],
                 [
-                    'name'  => 'View Member Profile',
+                    'name' => 'View Member Profile',
                     'value' => route('member', $this->member->getUrlParams()),
                 ],
             ])->send();

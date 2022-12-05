@@ -16,7 +16,7 @@ Route::get('requests-count.png', function () {
 
     $context = [
         'ssl' => [
-            'verify_peer'      => false,
+            'verify_peer' => false,
             'verify_peer_name' => false,
         ],
     ];
@@ -65,7 +65,7 @@ Route::get('tickets-count.png', function () {
 
     $context = [
         'ssl' => [
-            'verify_peer'      => false,
+            'verify_peer' => false,
             'verify_peer_name' => false,
         ],
     ];

@@ -32,7 +32,7 @@ class CreateChannel extends FormRequest
 
     public function persist(slack $client)
     {
-        $channelName = Str::slug(request()->get('division') . '-' . request()->get('channel-name'));
+        $channelName = Str::slug(request()->get('division').'-'.request()->get('channel-name'));
 
         return $client->channels->create([
             'name' => $channelName,

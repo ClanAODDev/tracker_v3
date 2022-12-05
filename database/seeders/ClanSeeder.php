@@ -34,9 +34,9 @@ class ClanSeeder extends Seeder
         // generate user
         $member = Member::inRandomOrder()->first();
         User::factory()->create([
-            'name'      => $member->name,
+            'name' => $member->name,
             'member_id' => $member,
-            'role_id'   => 5,
+            'role_id' => 5,
         ]);
     }
 
@@ -48,7 +48,7 @@ class ClanSeeder extends Seeder
         for ($i = 1; $i < 7; $i++) {
             Census::factory()->create([
                 'division_id' => $division,
-                'created_at'  => now()->subWeeks($i),
+                'created_at' => now()->subWeeks($i),
             ]);
         }
     }
@@ -83,8 +83,8 @@ class ClanSeeder extends Seeder
             foreach ($squads as $squad) {
                 Member::factory()->ofTypeMember()->count(rand(5, 20))->create([
                     'division_id' => $division,
-                    'platoon_id'  => $platoon,
-                    'squad_id'    => $squad,
+                    'platoon_id' => $platoon,
+                    'squad_id' => $squad,
                 ]);
             }
         }

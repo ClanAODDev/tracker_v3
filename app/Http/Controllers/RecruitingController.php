@@ -76,7 +76,6 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
     /**
      * @param $abbreviation
-     *
      * @return array
      */
     public function searchPlatoons($abbreviation)
@@ -135,7 +134,6 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
     /**
      * @param $member_id
-     *
      * @return array
      */
     public function validateMemberId($member_id)
@@ -150,21 +148,20 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
         $result = $this->callProcedure('get_user', $member_id);
 
-        if (!property_exists($result, 'usergroupid')) {
+        if (! property_exists($result, 'usergroupid')) {
             return ['is_member' => false, 'verified_email' => false];
         }
 
         return [
-            'is_member'      => true,
-            'username'       => $result->username,
+            'is_member' => true,
+            'username' => $result->username,
             'verified_email' => Member::UNVERIFIED_EMAIL_GROUP_ID !== $result->usergroupid,
         ];
     }
 
     /**
-     * @param string $name
-     * @param int    $memberId
-     *
+     * @param  string  $name
+     * @param  int  $memberId
      * @return \Illuminate\Http\JsonResponse
      */
     public function validateMemberName()
@@ -179,14 +176,13 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
         $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
-        return response()->json(['memberExists' => !empty($result)]);
+        return response()->json(['memberExists' => ! empty($result)]);
     }
 
     /**
      * Handle member creation on recruitment.
      *
      * @param $request
-     *
      * @return
      */
     private function createMember($request)
@@ -220,11 +216,11 @@ class RecruitingController extends \App\Http\Controllers\Controller
         // track division assignment, rank change
         \App\Models\RankAction::create([
             'member_id' => $member->id,
-            'rank_id'   => $request->rank,
+            'rank_id' => $request->rank,
         ]);
 
         \App\Models\Transfer::create([
-            'member_id'   => $member->id,
+            'member_id' => $member->id,
             'division_id' => $division->id,
         ]);
 
@@ -246,7 +242,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
         MemberRequest::create([
             'requester_id' => auth()->user()->member->clan_id, 'member_id' => $member->clan_id,
-            'division_id'  => $division->id,
+            'division_id' => $division->id,
         ]);
     }
 
@@ -265,7 +261,6 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
     /**
      * @param $division
-     *
      * @return array
      */
     private function getPlatoons($division)

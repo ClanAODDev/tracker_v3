@@ -19,11 +19,11 @@ trait RecordsActivity
             $actor = auth()->user();
 
             $this->activity()->create([
-                'name'         => $this->getActivityName($event),
-                'user_id'      => $actor->id,
-                'subject_id'   => $this->id,
+                'name' => $this->getActivityName($event),
+                'user_id' => $actor->id,
+                'subject_id' => $this->id,
                 'subject_type' => static::class,
-                'division_id'  => $actor->member->division_id,
+                'division_id' => $actor->member->division_id,
             ]);
         }
     }
@@ -68,7 +68,6 @@ trait RecordsActivity
 
     /**
      * @param $action
-     *
      * @return string
      */
     protected function getActivityName($action)

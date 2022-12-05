@@ -26,10 +26,10 @@ class CreateDivision extends FormRequest
     public function rules()
     {
         return [
-            'name'         => 'required|unique:divisions',
+            'name' => 'required|unique:divisions',
             'abbreviation' => 'required|unique:divisions',
-            'leader_id'    => 'required|exists:members,clan_id',
-            'description'  => 'required',
+            'leader_id' => 'required|exists:members,clan_id',
+            'description' => 'required',
         ];
     }
 

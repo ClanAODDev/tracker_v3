@@ -32,9 +32,9 @@ class DivisionStructureController extends Controller
     }
 
     /**
-     * @throws AuthorizationException
-     *
      * @return string
+     *
+     * @throws AuthorizationException
      */
     public function show(Division $division)
     {
@@ -105,10 +105,10 @@ class DivisionStructureController extends Controller
     {
         return json_encode([
             'division' => [
-                'name'             => $division->name,
-                'leaders'          => $division->leaders,
+                'name' => $division->name,
+                'leaders' => $division->leaders,
                 'generalSergeants' => $division->generalSergeants,
-                'platoons'         => $division->platoons()->with(
+                'platoons' => $division->platoons()->with(
                     [
                         'squads.members.handles' => function ($query) use ($division) {
                             // filtering handles for just the relevant one
@@ -155,7 +155,7 @@ class DivisionStructureController extends Controller
 
         $data->platoons = $division->platoons()->with([
             'squads.members.handles' => $this->filterHandlesToPrimaryHandle($division),
-            'leader.handles'         => $this->filterHandlesToPrimaryHandle($division),
+            'leader.handles' => $this->filterHandlesToPrimaryHandle($division),
             'squads.members.rank',
             'squads.leader.rank',
             'squads.leader.handles' => $this->filterHandlesToPrimaryHandle($division),
@@ -200,7 +200,6 @@ class DivisionStructureController extends Controller
      * Filters leave, omitting unapproved leave.
      *
      * @param $division
-     *
      * @return mixed
      */
     private function getLeave($division)
@@ -214,9 +213,9 @@ class DivisionStructureController extends Controller
     private function getLocality(Division $division)
     {
         return [
-            'squad'          => $division->locality('squad'),
-            'platoon'        => $division->locality('platoon'),
-            'squad_leader'   => $division->locality('squad leader'),
+            'squad' => $division->locality('squad'),
+            'platoon' => $division->locality('platoon'),
+            'squad_leader' => $division->locality('squad leader'),
             'platoon_leader' => $division->locality('platoon leader'),
         ];
     }
@@ -225,7 +224,6 @@ class DivisionStructureController extends Controller
      * Eager loading filter.
      *
      * @param $division
-     *
      * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
@@ -237,7 +235,6 @@ class DivisionStructureController extends Controller
 
     /**
      * @param $data
-     *
      * @return mixed
      */
     private function filterSquadLeads($data)
@@ -261,7 +258,6 @@ class DivisionStructureController extends Controller
 
     /**
      * @param $error
-     *
      * @return string
      */
     private function handleTwigError($error)

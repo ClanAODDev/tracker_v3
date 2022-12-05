@@ -12,9 +12,8 @@ class ByDivision extends Filter
     /**
      * Apply the filter to the given query.
      *
-     * @param Builder $query
-     * @param mixed   $value
-     *
+     * @param  Builder  $query
+     * @param  mixed  $value
      * @return Builder
      */
     public function apply(Request $request, $query, $value)

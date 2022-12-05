@@ -106,7 +106,6 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $rank
-     *
      * @return Model
      */
     public function assignRank($rank)
@@ -141,9 +140,9 @@ class Member extends \Illuminate\Database\Eloquent\Model
     public function resetPositionAndAssignments()
     {
         $this->update([
-            'division_id'            => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position_id' => 1,
+            'division_id' => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position_id' => 1,
             'flagged_for_inactivity' => false,
-            'groups'                 => null,
+            'groups' => null,
         ]);
     }
 
@@ -279,12 +278,11 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $rank
-     *
      * @return bool
      */
     public function isRank($rank)
     {
-        if (!$this->rank instanceof \App\Models\Rank) {
+        if (! $this->rank instanceof \App\Models\Rank) {
             return false;
         }
         if (\is_array($rank)) {
@@ -296,7 +294,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function getUrlParams()
     {
-        return [$this->clan_id, $this->rank->abbreviation . '-' . $this->name];
+        return [$this->clan_id, $this->rank->abbreviation.'-'.$this->name];
     }
 
     /**

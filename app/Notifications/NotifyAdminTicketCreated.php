@@ -14,8 +14,7 @@ class NotifyAdminTicketCreated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via()
@@ -25,10 +24,9 @@ class NotifyAdminTicketCreated extends Notification
 
     /**
      * @param $ticket
+     * @return array
      *
      * @throws \Exception
-     *
-     * @return array
      */
     public function toWebhook($ticket)
     {
@@ -41,10 +39,10 @@ class NotifyAdminTicketCreated extends Notification
             ->info()
             ->fields([
                 [
-                    'name'  => "Type: {$ticket->type->name}",
+                    'name' => "Type: {$ticket->type->name}",
                     'value' => "Submitted by {$authoringUser}",
                 ], [
-                    'name'  => 'Link to ticket',
+                    'name' => 'Link to ticket',
                     'value' => route('help.tickets.show', $ticket),
                 ],
             ])->send();

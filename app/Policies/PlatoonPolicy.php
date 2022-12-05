@@ -27,9 +27,8 @@ class PlatoonPolicy
     }
 
     /**
-     * @param User    $user
-     * @param Platoon $platoon
-     *
+     * @param  User  $user
+     * @param  Platoon  $platoon
      * @return bool
      */
     public function update()

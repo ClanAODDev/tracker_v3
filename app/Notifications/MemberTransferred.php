@@ -25,8 +25,7 @@ class MemberTransferred extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via()
@@ -35,11 +34,10 @@ class MemberTransferred extends Notification
     }
 
     /**
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
+     * @return array
      *
      * @throws \Exception
-     *
-     * @return array
      */
     public function toWebhook($notifiable)
     {
@@ -50,7 +48,7 @@ class MemberTransferred extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name'  => '**MEMBER TRANSFER**',
+                    'name' => '**MEMBER TRANSFER**',
                     'value' => addslashes(":recycle: {$this->member->name} [{$this->member->clan_id}] transferred to {$notifiable->name}"),
                 ],
             ])->send();

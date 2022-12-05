@@ -17,10 +17,10 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
-        'name'      => $faker->name,
-        'email'     => $faker->unique()->safeEmail,
-        'role_id'   => 1,
-        'settings'  => [],
+        'name' => $faker->name,
+        'email' => $faker->unique()->safeEmail,
+        'role_id' => 1,
+        'settings' => [],
         'developer' => false,
         'member_id' => function () {
             return factory(\App\Models\Member::class)->create()->clan_id;

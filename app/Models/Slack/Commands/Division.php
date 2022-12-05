@@ -34,24 +34,24 @@ class Division extends Base implements Command
 
         if ($division) {
             foreach ($division->leaders()->get() as $leader) {
-                $leaderData .= $leader->present()->rankName() . ' - ' . $leader->position->name . PHP_EOL;
+                $leaderData .= $leader->present()->rankName().' - '.$leader->position->name.PHP_EOL;
             }
 
             return [
                 'embed' => [
-                    'color'  => 10181046,
+                    'color' => 10181046,
                     'author' => [
-                        'name'     => $division->name,
+                        'name' => $division->name,
                         'icon_url' => getDivisionIconPath($division->abbreviation),
-                        'url'      => 'https://clanaod.net/divisions/' . \Str::slug($division->name),
+                        'url' => 'https://clanaod.net/divisions/'.\Str::slug($division->name),
                     ],
                     'fields' => [
                         [
-                            'name'  => 'Leadership',
+                            'name' => 'Leadership',
                             'value' => $leaderData,
                         ],
                         [
-                            'name'  => 'Member count',
+                            'name' => 'Member count',
                             'value' => $division->members()->count(),
                         ],
                     ],
@@ -66,13 +66,12 @@ class Division extends Base implements Command
 
     /**
      * @param $member
-     *
      * @return null|string
      */
     private function buildActivityBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
 
-        return PHP_EOL . "Forum activity: {$forumActivity}";
+        return PHP_EOL."Forum activity: {$forumActivity}";
     }
 }

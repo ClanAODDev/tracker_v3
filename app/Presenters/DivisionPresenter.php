@@ -27,23 +27,22 @@ class DivisionPresenter extends Presenter
      */
     public function divisionStructureLink()
     {
-        return $this->threadLink . $this->division->division_structure;
+        return $this->threadLink.$this->division->division_structure;
     }
 
     /**
      * Get welcome forum / thread attribute as a proper URL.
      *
      * @param $value
-     *
      * @return string
      */
     public function welcomeAreaLink()
     {
         if ($this->division->settings['useWelcomeThread']) {
-            return $this->threadLink . $this->division->settings()->welcome_area;
+            return $this->threadLink.$this->division->settings()->welcome_area;
         }
 
         // defaults to forum area
-        return $this->forumLink . $this->division->settings()->welcome_area;
+        return $this->forumLink.$this->division->settings()->welcome_area;
     }
 }

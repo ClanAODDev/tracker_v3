@@ -55,15 +55,15 @@ class TicketController extends Controller
             ]);
 
         // filter tickets unless you're an admin
-        if (!auth()->user()->can('manage', Ticket::class)) {
+        if (! auth()->user()->can('manage', Ticket::class)) {
             $tickets = $tickets->whereCallerId(auth()->id());
         }
 
         if (request('search-filter') && request('search-criteria') && request()->isMethod('get')) {
             return redirect(
                 route('help.tickets.index')
-                . '?' . request('search-query')
-                . '&filter[' . request('search-filter') . ']=' . request('search-criteria')
+                .'?'.request('search-query')
+                .'&filter['.request('search-filter').']='.request('search-criteria')
             );
         }
 
@@ -77,7 +77,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        if (!request()->get('type')) {
+        if (! request()->get('type')) {
             return redirect(route('help.tickets.setup'));
         }
 
@@ -137,7 +137,7 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
+        $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: '.$message));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -182,7 +182,7 @@ class TicketController extends Controller
 
         $ticket->ownTo($assignedUser);
 
-        $message = 'Ticket has been assigned to ' . $assignedUser->name;
+        $message = 'Ticket has been assigned to '.$assignedUser->name;
 
         $this->showToast($message);
 
@@ -198,7 +198,7 @@ class TicketController extends Controller
 
         $ticket->ownTo(auth()->user());
 
-        $message = 'Ticket has been assigned to ' . auth()->user()->name;
+        $message = 'Ticket has been assigned to '.auth()->user()->name;
 
         $this->showToast($message);
 

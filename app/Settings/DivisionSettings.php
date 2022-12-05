@@ -13,7 +13,7 @@ class DivisionSettings
     /**
      * Settings constructor.
      *
-     * @param Division|DivisionSettings $division
+     * @param  Division|DivisionSettings  $division
      */
     public function __construct(array $settings, Division $division)
     {

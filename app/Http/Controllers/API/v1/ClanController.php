@@ -51,7 +51,7 @@ class ClanController extends \App\Http\Controllers\API\v1\ApiController
         $client->setDeveloperKey(config('services.google.apiKey'));
         $service = new \Google_Service_Calendar($client);
         $eventStream = $service->events->listEvents(config('app.aod.stream_calendar'), [
-            'timeMin'      => now()->format(self::RFC3339), 'timeMax' => now()->addDays(7)->format(self::RFC3339),
+            'timeMin' => now()->format(self::RFC3339), 'timeMax' => now()->addDays(7)->format(self::RFC3339),
             'singleEvents' => true, 'orderBy' => 'startTime',
         ]);
         $events = [];
@@ -62,8 +62,8 @@ class ClanController extends \App\Http\Controllers\API\v1\ApiController
                     $start = \Carbon::parse($event->start->dateTime ?? $event->start->date);
                     $end = \Carbon::parse($event->end->dateTime ?? $event->end->date);
                     $events[] = [
-                        'event'           => $event->summary ?? $event->description,
-                        'time'            => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
+                        'event' => $event->summary ?? $event->description,
+                        'time' => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
                         'timestamp-start' => $start->timestamp, 'timestamp-end' => $end->timestamp,
                     ];
                 }

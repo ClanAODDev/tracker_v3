@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 class DivisionController extends ApiController
 {
     private $divisionTransformer;
+
     private $memberTransformer;
 
     public function __construct(
@@ -43,7 +44,7 @@ class DivisionController extends ApiController
             ->active()
             ->firstOrFail();
 
-        if ($division !== auth()->user()->member->division && !$this->tokenCan('clan:read')) {
+        if ($division !== auth()->user()->member->division && ! $this->tokenCan('clan:read')) {
             return $this->setStatusCode(403)
                 ->respondWithError('Not authorized to access this endpoint');
         }
@@ -55,7 +56,7 @@ class DivisionController extends ApiController
             [
                 'data' => [
                     'division' => $this->divisionTransformer->transform($division),
-                    'members'  => $this->memberTransformer->transformCollection(
+                    'members' => $this->memberTransformer->transformCollection(
                         $members->all()
                     ),
                 ],

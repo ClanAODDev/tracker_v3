@@ -20,7 +20,7 @@ class User extends Authenticatable
     use Notifiable;
 
     public array $defaultSettings = [
-        'snow'                 => false,
+        'snow' => false,
         'ticket_notifications' => true,
     ];
 
@@ -54,7 +54,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'developer' => 'boolean',
-        'settings'  => 'json',
+        'settings' => 'json',
     ];
 
     /**
@@ -95,16 +95,15 @@ class User extends Authenticatable
     /**
      * Record new activity for the user.
      *
-     * @param string $name
-     * @param mixed  $related
+     * @param  string  $name
+     * @param  mixed  $related
+     * @return mixed
      *
      * @throws Exception
-     *
-     * @return mixed
      */
     public function recordActivity($name, $related)
     {
-        if (!method_exists($related, 'recordActivity')) {
+        if (! method_exists($related, 'recordActivity')) {
             throw new Exception('..');
         }
 
@@ -131,12 +130,11 @@ class User extends Authenticatable
      * Check to see if user is a certain role.
      *
      * @param $role
-     *
      * @return bool
      */
     public function isRole($role)
     {
-        if (!$this->role instanceof Role) {
+        if (! $this->role instanceof Role) {
             return false;
         }
 
@@ -215,7 +213,7 @@ class User extends Authenticatable
      * Accessor for name
      * enforce proper casing.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function getNameAttribute($value)
     {

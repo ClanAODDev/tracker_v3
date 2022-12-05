@@ -25,11 +25,10 @@ class MemberNameChanged extends Notification
     }
 
     /**
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
+     * @return array
      *
      * @throws Exception
-     *
-     * @return array
      */
     public function toWebhook($notifiable)
     {

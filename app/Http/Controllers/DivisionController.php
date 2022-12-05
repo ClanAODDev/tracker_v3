@@ -78,9 +78,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @throws AuthorizationException
-     *
      * @return Response
+     *
+     * @throws AuthorizationException
      */
     public function edit(Division $division)
     {
@@ -95,9 +95,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Update the specified resource in storage.
      *
-     * @throws Exception
-     *
      * @return Response
+     *
+     * @throws Exception
      *
      * @internal param Request $request
      */
@@ -131,9 +131,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     /**
      * Assign a member as part-time to a division.
      *
-     * @throws AuthorizationException
-     *
      * @return Redirector|RedirectResponse|string
+     *
+     * @throws AuthorizationException
      */
     public function assignPartTime(Division $division, Member $member)
     {
@@ -146,9 +146,9 @@ class DivisionController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * @throws AuthorizationException
-     *
      * @return RedirectResponse|string
+     *
+     * @throws AuthorizationException
      */
     public function removePartTime(Division $division, Member $member)
     {
@@ -222,14 +222,13 @@ class DivisionController extends \App\Http\Controllers\Controller
             }
             fclose($handle);
         }, 200, [
-            'Content-type'        => 'text/csv',
+            'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=members.csv',
         ]);
     }
 
     /**
      * @param $division
-     *
      * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)

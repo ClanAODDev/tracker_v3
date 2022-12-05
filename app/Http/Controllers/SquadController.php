@@ -60,13 +60,13 @@ class SquadController extends \App\Http\Controllers\Controller
      */
     public function store(CreateSquadForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
         }
 
         $form->persist();
 
-        $this->showToast(ucwords($division->locality('squad')) . ' has been created!');
+        $this->showToast(ucwords($division->locality('squad')).' has been created!');
 
         return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
@@ -98,7 +98,7 @@ class SquadController extends \App\Http\Controllers\Controller
      */
     public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
         }
 
@@ -190,7 +190,7 @@ class SquadController extends \App\Http\Controllers\Controller
             }
             fclose($handle);
         }, 200, [
-            'Content-type'        => 'text/csv',
+            'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename=members.csv',
         ]);
     }

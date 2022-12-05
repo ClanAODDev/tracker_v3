@@ -8,6 +8,7 @@ use Log;
 class GetDivisionInfo
 {
     public $data;
+
     public $division;
 
     /**
@@ -22,7 +23,7 @@ class GetDivisionInfo
      */
     public function __construct()
     {
-        if (!config('app.aod.token')) {
+        if (! config('app.aod.token')) {
             throw new \Exception('ERROR: AOD Token not defined in configuration.');
             exit;
         }
@@ -39,10 +40,10 @@ class GetDivisionInfo
     {
         $data = AOD::request($this->source, [
             'extra' => 1,
-            'type'  => 'json',
+            'type' => 'json',
         ]);
 
-        if (!\is_object($data)) {
+        if (! \is_object($data)) {
             Log::critical('ERROR: Member sync returning invalid.');
 
             exit;
@@ -63,7 +64,6 @@ class GetDivisionInfo
      * array from the column sort data.
      *
      * @param $json
-     *
      * @return array
      */
     protected function prepareData($json)

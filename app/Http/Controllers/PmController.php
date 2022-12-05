@@ -20,8 +20,8 @@ class PmController extends Controller
         });
 
         return view('division.create-pm')->with([
-            'members'  => $availableForPm,
-            'omitted'  => $membersSelected->diffAssoc($availableForPm),
+            'members' => $availableForPm,
+            'omitted' => $membersSelected->diffAssoc($availableForPm),
             'division' => $request->division,
         ]);
     }

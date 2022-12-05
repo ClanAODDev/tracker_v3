@@ -41,14 +41,13 @@ class MemberController extends Controller
      * Search for a member.
      *
      * @param $name
-     *
      * @return Factory|View
      *
      * @internal param $name
      */
     public function search($name = null)
     {
-        if (!$name) {
+        if (! $name) {
             $name = request()->name;
         }
 
@@ -78,7 +77,7 @@ class MemberController extends Controller
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 
         return $members->map(fn ($member) => [
-            'id'    => $member->clan_id,
+            'id' => $member->clan_id,
             'label' => $member->name,
         ]);
     }
@@ -173,9 +172,9 @@ class MemberController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @throws AuthorizationException
-     *
      * @return Response
+     *
+     * @throws AuthorizationException
      */
     public function edit(Member $member)
     {
@@ -222,7 +221,7 @@ class MemberController extends Controller
         $form->persist();
 
         $this->showToast(
-            ucwords($member->name ?? 'Member') . ' has been removed.'
+            ucwords($member->name ?? 'Member').' has been removed.'
         );
 
         return redirect()->route('division', [
@@ -248,7 +247,6 @@ class MemberController extends Controller
 
     /**
      * @param $member
-     *
      * @return RedirectResponse
      */
     public function unassignMember($member)
@@ -269,11 +267,11 @@ class MemberController extends Controller
     {
         $handles = Handle::all()->map(function ($handle) use ($member) {
             $newHandle = [
-                'id'       => $handle->id,
-                'label'    => $handle->label,
-                'type'     => $handle->type,
+                'id' => $handle->id,
+                'label' => $handle->label,
+                'type' => $handle->type,
                 'comments' => $handle->comments,
-                'enabled'  => false,
+                'enabled' => false,
             ];
 
             if ($member->handles->contains($handle->id)) {

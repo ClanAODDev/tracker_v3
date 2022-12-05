@@ -39,9 +39,9 @@ class LoginController extends Controller
     }
 
     /**
-     * @throws ValidationException
-     *
      * @return Factory|RedirectResponse|Response|View
+     *
+     * @throws ValidationException
      */
     public function login(Request $request)
     {
@@ -113,8 +113,7 @@ class LoginController extends Controller
     /**
      * The user has been authenticated.
      *
-     * @param mixed $user
-     *
+     * @param  mixed  $user
      * @return mixed
      */
     protected function authenticated(Request $request, $user)
@@ -160,13 +159,13 @@ class LoginController extends Controller
             } else {
                 // ensure this is an active member
                 $member = Member::where('name', $username)->first();
-                if (!$member) {
+                if (! $member) {
                     return false;
                 }
 
                 $user = User::create([
-                    'email'     => $this->email,
-                    'name'      => $username,
+                    'email' => $this->email,
+                    'name' => $username,
                     'member_id' => $member->id,
                 ]);
 

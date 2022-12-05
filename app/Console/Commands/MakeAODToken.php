@@ -35,13 +35,13 @@ class MakeAODToken extends Command
      */
     public function handle()
     {
-        $this->comment('curl http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode=' . $this->generateToken());
+        $this->comment('curl http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode='.$this->generateToken());
     }
 
     protected function generateToken()
     {
         $currentMinute = floor(time() / 60) * 60;
 
-        return md5($currentMinute . config('app.aod.token'));
+        return md5($currentMinute.config('app.aod.token'));
     }
 }

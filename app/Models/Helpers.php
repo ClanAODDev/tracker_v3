@@ -13,7 +13,7 @@ function bytesToHuman($bytes)
         $bytes /= 1024;
     }
 
-    return round($bytes, 2) . ' ' . $units[$i];
+    return round($bytes, 2).' '.$units[$i];
 }
 
 function getSnowSetting()
@@ -60,21 +60,21 @@ function ordSuffix($n)
     $t = $n > 9 ? substr($str, -2, 1) : 0;
     $u = substr($str, -1);
     if (1 === $t) {
-        return $str . 'th';
+        return $str.'th';
     }
 
     switch ($u) {
         case 1:
-            return $str . 'st';
+            return $str.'st';
 
         case 2:
-            return $str . 'nd';
+            return $str.'nd';
 
         case 3:
-            return $str . 'rd';
+            return $str.'rd';
 
         default:
-            return $str . 'th';
+            return $str.'th';
     }
 }
 
@@ -82,7 +82,6 @@ function ordSuffix($n)
  * Perform an AOD forum function (pm or email).
  *
  * @param $action  (email, showThread, forumProfile, pm, createThread, replyToThread)
- *
  * @return mixed
  */
 function doForumFunction(array $ids, $action)
@@ -125,17 +124,16 @@ function doForumFunction(array $ids, $action)
             break;
 
         default:
-            throw new InvalidArgumentException('Improper forum function used: ' . $action);
+            throw new InvalidArgumentException('Improper forum function used: '.$action);
     }
 
-    return urldecode($path . http_build_query($params));
+    return urldecode($path.http_build_query($params));
 }
 
 /**
  * Get user settings.
  *
- * @param null $key
- *
+ * @param  null  $key
  * @return Application|mixed
  */
 function UserSettings($key = null)
@@ -147,7 +145,7 @@ function UserSettings($key = null)
 
 function hasDivisionIcon($abbreviation)
 {
-    $image = public_path() . "/images/game_icons/48x48/{$abbreviation}.png";
+    $image = public_path()."/images/game_icons/48x48/{$abbreviation}.png";
 
     return File::exists($image);
 }
@@ -166,9 +164,8 @@ function getDivisionIconPath($abbreviation)
  *
  * @param $myArray
  * @param $MAXDEPTH
- * @param int   $depth
- * @param array $arrayKeys
- *
+ * @param  int  $depth
+ * @param  array  $arrayKeys
  * @return array
  */
 function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys = [])
@@ -191,7 +188,6 @@ function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys 
  *
  * @param $arg1
  * @param $arg2
- *
  * @return string
  */
 function selected($arg1, $arg2)
@@ -219,7 +215,6 @@ function carbon_date_or_null_if_zero($value)
  *
  * @param $date
  * @param $division
- *
  * @return string
  */
 function getActivityClass($date, $division)
@@ -241,7 +236,7 @@ function getActivityClass($date, $division)
 /**
  * Helper for assigning leadership of platoons, squads.
  *
- * @param Eloquent|Model $model
+ * @param  Eloquent|Model  $model
  */
 function setLeaderOf(Model $model, Member $member)
 {
@@ -266,8 +261,7 @@ function getNameOfClass($class)
  * Navigation helper for active classs.
  *
  * @param $path
- * @param string $active
- *
+ * @param  string  $active
  * @return string
  */
 function set_active($path, $active = 'active')
@@ -292,14 +286,14 @@ function approveMemberPath(MemberRequest $memberRequest)
     $base = 'http://www.clanaod.net/forums/modcp/aodmember.php?do=addaod&';
 
     $args = [
-        'userid'   => $memberRequest->member->clan_id,
+        'userid' => $memberRequest->member->clan_id,
         'division' => $memberRequest->division->name,
-        'rank'     => $memberRequest->member->rank->name,
+        'rank' => $memberRequest->member->rank->name,
         // left empty and at the end so it can be adjusted
         'aodname' => '',
     ];
 
-    return $base . http_build_query($args);
+    return $base.http_build_query($args);
 }
 
 function gcd($a, $b)
@@ -333,7 +327,7 @@ function ratio()
 
     $var = max($inputs[0], 1) / max($gcd, 1);
     for ($i = 1; $i < $c; $i++) {
-        $var .= ':' . round(($inputs[$i] / max($gcd, 1)));
+        $var .= ':'.round(($inputs[$i] / max($gcd, 1)));
     }
 
     return $var;
@@ -364,7 +358,7 @@ function remove_query_params(array $params = [])
         }
     }
 
-    return $query ? $url . '?' . http_build_query($query) : $url;
+    return $query ? $url.'?'.http_build_query($query) : $url;
 }
 
 /**
@@ -385,5 +379,5 @@ function add_query_params(array $params = [])
         $params
     );
 
-    return url()->current() . '?' . urldecode(http_build_query($query));
+    return url()->current().'?'.urldecode(http_build_query($query));
 }

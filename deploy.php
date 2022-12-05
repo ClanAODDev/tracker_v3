@@ -42,7 +42,8 @@ host('162.248.89.152')
     ->set('deploy_path', '/home/guybrush/tracker/v3_prod');
 
 // Tasks
-task('artisan:optimize', function () {});
+task('artisan:optimize', function () {
+});
 
 task('build', function () {
     run('cd {{release_path}} && build');
@@ -61,4 +62,3 @@ before('deploy:symlink', 'deploy:public_disk');
 // Migrate database before symlink new release.
 
 before('deploy:symlink', 'artisan:migrate');
-

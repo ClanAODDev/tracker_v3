@@ -21,7 +21,7 @@ class ClanForumSession
 
     public function exists()
     {
-        if (!User::exists()) {
+        if (! User::exists()) {
             throw new \Exception('No users exist. Have you created an account?');
         }
 
@@ -39,11 +39,11 @@ class ClanForumSession
         if (Auth::guest()) {
             $sessionData = $this->getAODSession();
 
-            if (!\is_object($sessionData) || !property_exists($sessionData, 'loggedin')) {
+            if (! \is_object($sessionData) || ! property_exists($sessionData, 'loggedin')) {
                 return false;
             }
 
-            if (!\in_array($sessionData->loggedin, [1, 2], true)) {
+            if (! \in_array($sessionData->loggedin, [1, 2], true)) {
                 return false;
             }
 
@@ -51,7 +51,7 @@ class ClanForumSession
 
             $member = Member::whereClanId($sessionData->userid)->first();
 
-            if (!$member) {
+            if (! $member) {
                 abort(403, 'Not authorized');
             }
 
@@ -76,7 +76,6 @@ class ClanForumSession
      * @param $username
      * @param $email
      * @param $clanId
-     *
      * @return User||void
      */
     public function registerNewUser($username, $email, $clanId)
@@ -99,7 +98,7 @@ class ClanForumSession
      */
     private function getAODSession()
     {
-        if (!isset($_COOKIE[$this->sessionKey])) {
+        if (! isset($_COOKIE[$this->sessionKey])) {
             return false;
         }
 

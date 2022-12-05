@@ -21,10 +21,10 @@ class PlatoonFactory extends Factory
     public function definition(): array
     {
         return [
-            'order'       => 100,
-            'name'        => $this->faker->colorName,
+            'order' => 100,
+            'name' => $this->faker->colorName,
             'division_id' => Division::factory(),
-//            'leader_id' => Member::factory(),
+            //            'leader_id' => Member::factory(),
         ];
     }
 }

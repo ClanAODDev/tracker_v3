@@ -28,7 +28,7 @@ class HandleFactory extends Factory
 
         return [
             'label' => $label,
-            'type'  => Str::slug($label),
+            'type' => Str::slug($label),
         ];
     }
 }

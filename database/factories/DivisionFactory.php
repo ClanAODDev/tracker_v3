@@ -24,14 +24,14 @@ class DivisionFactory extends Factory
         $game = $this->faker->game;
 
         return [
-            'name'         => $game['name'],
-            'slug'         => Str::slug($game['name']),
-            'handle_id'    => Handle::factory(),
+            'name' => $game['name'],
+            'slug' => Str::slug($game['name']),
+            'handle_id' => Handle::factory(),
             'abbreviation' => strtolower($game['abbreviation']),
-            'description'  => $this->faker->sentence,
+            'description' => $this->faker->sentence,
             'forum_app_id' => rand(100, 999),
-            'active'       => true,
-            'settings'     => '[]',
+            'active' => true,
+            'settings' => '[]',
         ];
     }
 

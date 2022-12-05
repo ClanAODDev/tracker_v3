@@ -74,10 +74,10 @@ class Search extends Base implements Command
                 ];
 
                 $this->content[] = [
-                    'name'  => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
+                    'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => 'Profiles: '
-                        . implode(', ', $links)
-                        . $this->buildActivityBlock($member),
+                        .implode(', ', $links)
+                        .$this->buildActivityBlock($member),
                 ];
             }
         }
@@ -85,8 +85,8 @@ class Search extends Base implements Command
         if ($this->members->count() >= 1) {
             return [
                 'embed' => [
-                    'color'  => 10181046,
-                    'title'  => 'The following members were found:',
+                    'color' => 10181046,
+                    'title' => 'The following members were found:',
                     'fields' => $this->content,
                 ],
             ];
@@ -99,13 +99,12 @@ class Search extends Base implements Command
 
     /**
      * @param $member
-     *
      * @return null|string
      */
     private function buildActivityBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
 
-        return PHP_EOL . "Forum activity: {$forumActivity}";
+        return PHP_EOL."Forum activity: {$forumActivity}";
     }
 }

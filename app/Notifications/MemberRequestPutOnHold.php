@@ -35,11 +35,10 @@ class MemberRequestPutOnHold extends Notification
     }
 
     /**
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
+     * @return mixed
      *
      * @throws Exception
-     *
-     * @return mixed
      */
     public function toWebhook($notifiable)
     {

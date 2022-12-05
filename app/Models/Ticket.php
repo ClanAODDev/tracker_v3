@@ -18,7 +18,7 @@ class Ticket extends Model
     use Notifiable;
 
     public $stateColors = [
-        'new'      => 'info',
+        'new' => 'info',
         'assigned' => 'accent',
         'resolved' => 'success',
         'rejected' => 'danger',
@@ -81,7 +81,6 @@ class Ticket extends Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopeNew($query)
@@ -92,7 +91,6 @@ class Ticket extends Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopeAssigned($query)
@@ -121,7 +119,7 @@ class Ticket extends Model
         if ($user === auth()->user()) {
             $this->say('owned the ticket');
         } else {
-            $this->say(auth()->user()->name . ' assigned the ticket to ' . $user->name);
+            $this->say(auth()->user()->name.' assigned the ticket to '.$user->name);
         }
     }
 
@@ -160,7 +158,7 @@ class Ticket extends Model
     {
         $this->comments()->create([
             'user_id' => auth()->id(),
-            'body'    => $comment,
+            'body' => $comment,
         ]);
     }
 }

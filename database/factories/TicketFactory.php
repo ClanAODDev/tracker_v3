@@ -23,12 +23,12 @@ class TicketFactory extends Factory
         $randomState = array_rand($states);
 
         return [
-            'state'          => $states[$randomState],
+            'state' => $states[$randomState],
             'ticket_type_id' => \App\Models\TicketType::inRandomOrder()->first()->id,
-            'caller_id'      => \App\Models\User::inRandomOrder()->first()->id,
-            'division_id'    => \App\Models\Division::inRandomOrder()->active()->get()->first()->id,
-            'description'    => $this->faker->paragraph,
-            'owner_id'       => 'assigned' === $states[$randomState]
+            'caller_id' => \App\Models\User::inRandomOrder()->first()->id,
+            'division_id' => \App\Models\Division::inRandomOrder()->active()->get()->first()->id,
+            'description' => $this->faker->paragraph,
+            'owner_id' => 'assigned' === $states[$randomState]
                 ? \App\Models\User::whereRoleId(5)->inRandomOrder()->first()->id
                 : null,
         ];

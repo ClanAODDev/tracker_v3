@@ -10,15 +10,14 @@ class VerifySlackToken
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
-     *
+     * @param  Request  $request
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         $app_tokens = explode(',', config('slack.tokens'));
 
-        if (\in_array($request->token, $app_tokens, true) && !empty($request->token)) {
+        if (\in_array($request->token, $app_tokens, true) && ! empty($request->token)) {
             return $next($request);
         }
 

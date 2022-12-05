@@ -27,9 +27,9 @@ class NoteController extends Controller
     }
 
     /**
-     * @throws AuthorizationException
-     *
      * @return Factory|View
+     *
+     * @throws AuthorizationException
      */
     public function edit(Member $member, Note $note)
     {
@@ -37,7 +37,7 @@ class NoteController extends Controller
 
         $division = $member->division;
 
-        if (!$division) {
+        if (! $division) {
             return redirect(404);
         }
 
@@ -49,16 +49,16 @@ class NoteController extends Controller
     }
 
     /**
-     * @throws AuthorizationException
-     *
      * @return RedirectResponse
+     *
+     * @throws AuthorizationException
      */
     public function update(Request $request, Member $member, Note $note)
     {
         $this->authorize('delete', $member);
 
         $this->validate(request(), [
-            'body.required'           => 'You must provide content for your note',
+            'body.required' => 'You must provide content for your note',
             'forum_thread_id.numeric' => 'Forum thread ID must be a number',
         ]);
 

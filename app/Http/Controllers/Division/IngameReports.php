@@ -12,8 +12,7 @@ trait IngameReports
     /**
      * Destiny 2 Ingame clan information.
      *
-     * @param null|mixed $clanId
-     *
+     * @param  null|mixed  $clanId
      * @return array
      */
     public function destiny2($clanId = null)
@@ -23,7 +22,7 @@ trait IngameReports
         $requestedClan = $clanId ?: $clans[0];
 
         // invalid clan id
-        if (!\in_array($requestedClan, $clans, true)) {
+        if (! \in_array($requestedClan, $clans, true)) {
             return [];
         }
 
@@ -37,7 +36,6 @@ trait IngameReports
 
     /**
      * @param $clan
-     *
      * @return array
      */
     protected function fetchDestiny2ClanData($clan, Client $client)
@@ -49,14 +47,13 @@ trait IngameReports
         $memberData = $this->getBungieInfo($memberUrl, $client);
 
         return [
-            'clan-info'    => $clanInformation,
+            'clan-info' => $clanInformation,
             'clan-members' => collect($memberData->results)->sortBy('destinyUserInfo.displayName'),
         ];
     }
 
     /**
      * @param $url
-     *
      * @return mixed
      */
     protected function getBungieInfo($url, Client $client)

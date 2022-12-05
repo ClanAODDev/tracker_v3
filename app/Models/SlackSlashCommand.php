@@ -9,7 +9,6 @@ class SlackSlashCommand
      * and executes the command if it does.
      *
      * @param $command
-     *
      * @return array
      */
     public static function handle($command, array $data)

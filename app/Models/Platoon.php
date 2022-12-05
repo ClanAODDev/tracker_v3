@@ -12,6 +12,7 @@ class Platoon extends Model
 {
     use HasFactory;
     use RecordsActivity;
+
     protected $fillable = [
         'name',
         'leader_id',

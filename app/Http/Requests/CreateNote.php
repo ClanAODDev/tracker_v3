@@ -26,7 +26,7 @@ class CreateNote extends FormRequest
     public function rules()
     {
         return [
-            'body'            => 'required',
+            'body' => 'required',
             'forum_thread_id' => 'nullable|numeric',
         ];
     }
@@ -34,7 +34,7 @@ class CreateNote extends FormRequest
     public function messages()
     {
         return [
-            'body.required'           => 'You must provide content for your note',
+            'body.required' => 'You must provide content for your note',
             'forum_thread_id.numeric' => 'Forum thread ID must be a number',
         ];
     }

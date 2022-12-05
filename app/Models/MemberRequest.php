@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class MemberRequest extends \Illuminate\Database\Eloquent\Model
 {
     protected $appends = ['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'];
+
     protected $guarded = [];
+
     protected $dates = ['approved_at', 'cancelled_at', 'processed_at', 'hold_placed_at'];
 
     /**
@@ -54,7 +56,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopePending($query)
@@ -74,7 +75,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopeApproved($query)
@@ -101,7 +101,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopeCancelled($query)
@@ -119,7 +118,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopeErrors($query)
@@ -159,7 +157,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function getNameAttribute()
     {
-        return 'AOD_' . $this->member->name;
+        return 'AOD_'.$this->member->name;
     }
 
     /**

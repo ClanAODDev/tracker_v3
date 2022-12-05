@@ -29,14 +29,14 @@ class WebhookChannel
     }
 
     /**
-     * @param Notifiable $notifiable
+     * @param  Notifiable  $notifiable
      *
      * @throws WebHookFailedException
      * @throws GuzzleException
      */
     public function send($notifiable, Notification $notification)
     {
-        if (!$url = $notifiable->routeNotificationFor('webhook', $notification)) {
+        if (! $url = $notifiable->routeNotificationFor('webhook', $notification)) {
             return;
         }
 
@@ -53,7 +53,7 @@ class WebhookChannel
         $request = new Request('POST', $url, $headers, json_encode(array_merge(
             $body,
             [
-                'username'   => 'AOD Tracker',
+                'username' => 'AOD Tracker',
                 'avatar_url' => 'https://tracker.clanaod.net/images/logo_v2.png',
             ]
         )));

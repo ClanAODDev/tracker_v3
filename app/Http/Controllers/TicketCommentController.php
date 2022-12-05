@@ -19,7 +19,7 @@ class TicketCommentController extends Controller
         ]);
 
         $comment = $ticket->comments()->create([
-            'body'    => $validated['comment'],
+            'body' => $validated['comment'],
             'user_id' => auth()->id(),
         ]);
 

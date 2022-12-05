@@ -28,7 +28,7 @@ class MembersByMonth extends Trend
     public function ranges()
     {
         return [
-            6  => '6 Months',
+            6 => '6 Months',
             12 => '1 Year',
             24 => '2 Years',
         ];

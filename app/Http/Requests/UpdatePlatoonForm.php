@@ -60,7 +60,7 @@ class UpdatePlatoonForm extends FormRequest
         }
 
         // setting platoon to TBA
-        if (!$this->leader && !$this->leader_id) {
+        if (! $this->leader && ! $this->leader_id) {
             // reset existing leader if there is one
             if ($this->platoon->leader) {
                 $this->resetLeaderOf($this->platoon);

@@ -14,8 +14,7 @@ class NotifyUserTicketCreated extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -25,10 +24,9 @@ class NotifyUserTicketCreated extends Notification
 
     /**
      * @param $ticket
+     * @return array
      *
      * @throws \Exception
-     *
-     * @return array
      */
     public function toWebhook($ticket)
     {

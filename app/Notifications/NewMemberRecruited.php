@@ -28,8 +28,7 @@ class NewMemberRecruited extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via()
@@ -38,11 +37,10 @@ class NewMemberRecruited extends Notification
     }
 
     /**
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
+     * @return array
      *
      * @throws Exception
-     *
-     * @return array
      */
     public function toWebhook($notifiable)
     {
@@ -53,11 +51,11 @@ class NewMemberRecruited extends Notification
             ->to($channel)
             ->fields([
                 [
-                    'name'  => '**NEW MEMBER RECRUITED**',
-                    'value' => addslashes(':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
+                    'name' => '**NEW MEMBER RECRUITED**',
+                    'value' => addslashes(':crossed_swords: '.auth()->user()->name." just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
                 ],
                 [
-                    'name'  => 'View Member Profile',
+                    'name' => 'View Member Profile',
                     'value' => route('member', $this->member->getUrlParams()),
                 ],
             ])->send();

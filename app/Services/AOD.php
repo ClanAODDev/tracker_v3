@@ -10,8 +10,7 @@ class AOD extends Model
 
     /**
      * @param $url
-     * @param array $options
-     *
+     * @param  array  $options
      * @return bool|string
      */
     public static function request($url, $options = [])
@@ -37,7 +36,6 @@ class AOD extends Model
      * Builds a proper request URL.
      *
      * @param $url
-     *
      * @return string
      */
     private function prepareRequestUrl($url, array $options)
@@ -46,7 +44,7 @@ class AOD extends Model
             'authcode2' => $this->generateToken(),
         ]);
 
-        return $url . http_build_query($arguments);
+        return $url.http_build_query($arguments);
     }
 
     /**
@@ -58,6 +56,6 @@ class AOD extends Model
     {
         $currentMinute = floor(time() / 60) * 60;
 
-        return md5($currentMinute . config('app.aod.token'));
+        return md5($currentMinute.config('app.aod.token'));
     }
 }

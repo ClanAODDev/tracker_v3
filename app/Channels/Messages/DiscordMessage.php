@@ -13,7 +13,9 @@ class DiscordMessage
      * Color codes.
      */
     public const SUCCESS = 3066993;
+
     public const ERROR = 15158332;
+
     public const INFO = 10181046;
 
     private $fields = [];
@@ -52,7 +54,6 @@ class DiscordMessage
 
     /**
      * @param $channel
-     *
      * @return DiscordMessage
      */
     public function to($channel)
@@ -64,7 +65,6 @@ class DiscordMessage
 
     /**
      * @param $fields
-     *
      * @return $this
      */
     public function fields($fields)
@@ -76,7 +76,6 @@ class DiscordMessage
 
     /**
      * @param $message
-     *
      * @return $this
      */
     public function message($message)
@@ -87,17 +86,17 @@ class DiscordMessage
     }
 
     /**
-     * @throws Exception
-     *
      * @return array
+     *
+     * @throws Exception
      */
     public function send()
     {
-        if (!$this->channel) {
+        if (! $this->channel) {
             throw new Exception('A channel must be defined');
         }
 
-        if (!isset($this->message) && empty($this->fields)) {
+        if (! isset($this->message) && empty($this->fields)) {
             throw new Exception('A message must be defined');
         }
 
@@ -109,18 +108,18 @@ class DiscordMessage
 
         $body = empty($this->fields)
             ? $this->message
-            : "'" . json_encode([
+            : "'".json_encode([
                 'embed' => [
-                    'color'  => $this->color ?? 0,
+                    'color' => $this->color ?? 0,
                     'author' => [
                         'name' => 'AOD Tracker',
                     ],
                     'fields' => $this->fields,
                 ],
-            ]) . "'";
+            ])."'";
 
         return [
-            'content' => "!relay {$this->channel}" . $body,
+            'content' => "!relay {$this->channel}".$body,
         ];
     }
 }

@@ -51,10 +51,10 @@ class Note extends Resource
             BelongsTo::make('Author', 'author', \App\Nova\User::class),
 
             Select::make('type')->options([
-                'misc'     => 'Misc',
+                'misc' => 'Misc',
                 'negative' => 'Negative',
                 'positive' => 'Positive',
-                'sr_ldr'   => 'SGT+',
+                'sr_ldr' => 'SGT+',
             ])->displayUsingLabels()->sortable(),
 
             Date::make('Created At'),

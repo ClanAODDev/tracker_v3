@@ -37,7 +37,6 @@ trait AuthenticatesWithAOD
      * Authenticates with AOD Community Service.
      *
      * @param $request
-     *
      * @return bool
      */
     private function validatesCredentials($request)
@@ -52,7 +51,7 @@ trait AuthenticatesWithAOD
             return false;
         }
 
-        if (!empty($results)) {
+        if (! empty($results)) {
             $member = Arr::first($results);
 
             $this->setMemberAttributes($member);

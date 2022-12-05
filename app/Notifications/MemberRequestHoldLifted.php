@@ -23,8 +23,7 @@ class MemberRequestHoldLifted extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via()
@@ -33,11 +32,10 @@ class MemberRequestHoldLifted extends Notification
     }
 
     /**
-     * @param mixed $notifiable
+     * @param  mixed  $notifiable
+     * @return mixed
      *
      * @throws Exception
-     *
-     * @return mixed
      */
     public function toWebhook($notifiable)
     {

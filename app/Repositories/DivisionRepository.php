@@ -10,8 +10,7 @@ use App\Models\Division;
 class DivisionRepository
 {
     /**
-     * @param int $limit
-     *
+     * @param  int  $limit
      * @return \Illuminate\Support\Collection
      */
     public function censusCounts(Division $division, $limit = 52)
@@ -79,8 +78,7 @@ class DivisionRepository
 
     /**
      * @param $divisionId
-     * @param null $startDate
-     *
+     * @param  null  $startDate
      * @return mixed
      */
     public function recruitsLast6Months($divisionId, $startDate)
@@ -90,8 +88,7 @@ class DivisionRepository
 
     /**
      * @param $divisionId
-     * @param null $startDate
-     *
+     * @param  null  $startDate
      * @return mixed
      */
     public function removalsLast6Months($divisionId, $startDate)
@@ -101,8 +98,7 @@ class DivisionRepository
 
     /**
      * @param $divisionId
-     * @param null $startDate
-     *
+     * @param  null  $startDate
      * @return mixed
      */
     public function populationLast6Months($divisionId, $startDate)

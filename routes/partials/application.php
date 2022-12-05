@@ -66,6 +66,6 @@ Route::group(['prefix' => 'primary-nav'], function () {
  * Slack handler.
  */
 Route::post('slack', [
-    'as'   => 'slack.commands',
+    'as' => 'slack.commands',
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');

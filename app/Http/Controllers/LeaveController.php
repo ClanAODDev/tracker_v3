@@ -45,10 +45,10 @@ class LeaveController extends Controller
     }
 
     /**
+     * @return Redirector|RedirectResponse
+     *
      * @throws Exception
      * @throws AuthorizationException
-     *
-     * @return Redirector|RedirectResponse
      */
     public function delete(Member $member, Leave $leave)
     {
@@ -97,7 +97,7 @@ class LeaveController extends Controller
      */
     public function store(CreateLeave $form, Division $division)
     {
-        if ($form->member_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->member_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['member_id' => "Member {$form->member_id} not assigned to this division!"])
                 ->withInput();
@@ -112,7 +112,6 @@ class LeaveController extends Controller
 
     /**
      * @param $request
-     *
      * @return bool
      */
     public function isMemberOfDivision(Division $division, $request)

@@ -23,8 +23,7 @@ class UserPolicy
     }
 
     /**
-     * @param User $user
-     *
+     * @param  User  $user
      * @return bool
      */
     public function update()

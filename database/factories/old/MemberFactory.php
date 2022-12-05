@@ -9,11 +9,11 @@ $factory->define(\App\Models\Member::class, function (Faker $faker) {
     $squad = create(\App\Models\Squad::class, ['platoon_id' => $platoon->id]);
 
     return [
-        'name'        => $faker->userName,
-        'clan_id'     => $memberId,
-        'rank_id'     => 3,
-        'platoon_id'  => $platoon->id,
-        'squad_id'    => $squad->id,
+        'name' => $faker->userName,
+        'clan_id' => $memberId,
+        'rank_id' => 3,
+        'platoon_id' => $platoon->id,
+        'squad_id' => $squad->id,
         'position_id' => $faker->numberBetween(1, 7),
         'division_id' => $division->id,
     ];

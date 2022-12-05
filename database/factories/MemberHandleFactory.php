@@ -26,7 +26,7 @@ class MemberHandleFactory extends Factory
         return [
             'handle_id' => Handle::factory(),
             'member_id' => Member::factory(),
-            'value'     => $this->faker->userName,
+            'value' => $this->faker->userName,
         ];
     }
 }

@@ -56,8 +56,8 @@ class DeleteMember extends FormRequest
     private function createRemovalNote($member)
     {
         Note::create([
-            'type'      => 'negative',
-            'body'      => $this->removal_reason,
+            'type' => 'negative',
+            'body' => $this->removal_reason,
             'author_id' => auth()->id(),
             'member_id' => $member->id,
         ]);

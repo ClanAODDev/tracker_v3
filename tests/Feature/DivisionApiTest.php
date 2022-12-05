@@ -42,8 +42,8 @@ final class DivisionApiTest extends TestCase
 
         $inactiveDivision = Division::factory([
             'abbreviation' => 'foobar',
-            'name'         => 'Baz Buzz',
-            'active'       => false,
+            'name' => 'Baz Buzz',
+            'active' => false,
         ])->create();
 
         $this->json('get', route('v1.divisions.show', $inactiveDivision->slug))->assertNotFound();

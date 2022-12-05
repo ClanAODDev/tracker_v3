@@ -50,7 +50,7 @@
     "fakerphp/faker": "^1.9.1",
     "phpunit/phpunit": "^9.5.10",
     "laravel/browser-kit-testing": "^2.0",
-    "laravel/pint": "^1.0",
+    "laravel/pint": "^1.2",
     "barryvdh/laravel-ide-helper": "^2.3",
     "nunomaduro/collision": "^6.1",
     "beyondcode/laravel-dump-server": "^1.0",

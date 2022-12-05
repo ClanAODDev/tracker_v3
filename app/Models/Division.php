@@ -28,14 +28,14 @@ class Division extends Model
     use SoftDeletes;
 
     public array $defaultSettings = [
-        'slack_alert_created_member'    => false, 'slack_alert_removed_member' => false,
-        'slack_alert_updated_member'    => false, 'slack_alert_created_request' => false,
-        'slack_alert_division_edited'   => false, 'slack_alert_member_denied' => false,
-        'slack_alert_member_approved'   => false, 'slack_alert_member_transferred' => false, 'slack_channel' => '',
+        'slack_alert_created_member' => false, 'slack_alert_removed_member' => false,
+        'slack_alert_updated_member' => false, 'slack_alert_created_request' => false,
+        'slack_alert_division_edited' => false, 'slack_alert_member_denied' => false,
+        'slack_alert_member_approved' => false, 'slack_alert_member_transferred' => false, 'slack_channel' => '',
         'slack_alert_pt_member_removed' => false,
-        'use_welcome_thread'            => false, 'division_structure' => '', 'welcome_area' => '', 'welcome_pm' => '',
-        'inactivity_days'               => 30,
-        'activity_threshold'            => [
+        'use_welcome_thread' => false, 'division_structure' => '', 'welcome_area' => '', 'welcome_pm' => '',
+        'inactivity_days' => 30,
+        'activity_threshold' => [
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
         ],
         'recruiting_threads' => [
@@ -67,6 +67,7 @@ class Division extends Model
      * @var array
      */
     protected $hidden = ['structure'];
+
     protected $withCount = ['sergeants', 'members'];
 
     /**
@@ -183,7 +184,6 @@ class Division extends Model
      * Enabled division scope.
      *
      * @param $query
-     *
      * @return mixed
      */
     public function scopeActive($query)
@@ -198,7 +198,6 @@ class Division extends Model
 
     /**
      * @param $query
-     *
      * @return mixed
      */
     public function scopeShuttingDown($query, bool $status)
@@ -228,7 +227,6 @@ class Division extends Model
 
     /**
      * @param $days
-     *
      * @return mixed
      */
     public function membersActiveSinceDaysAgo($days)
@@ -240,7 +238,6 @@ class Division extends Model
 
     /**
      * @param $days
-     *
      * @return $this
      */
     public function membersActiveOnTsSinceDaysAgo($days)
@@ -282,13 +279,12 @@ class Division extends Model
 
     /**
      * @param $string
-     *
      * @return string
      */
     public function locality($string)
     {
         $locality = collect($this->settings()->locality);
-        if (!$locality->count()) {
+        if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -298,7 +294,7 @@ class Division extends Model
                 return $translation['old-string'] === strtolower($string);
             }
         });
-        if (!$results) {
+        if (! $results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);

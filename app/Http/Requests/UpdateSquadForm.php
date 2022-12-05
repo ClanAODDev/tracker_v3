@@ -30,7 +30,7 @@ class UpdateSquadForm extends FormRequest
         return [
             'leader_id' => [
                 // ignore current record
-                'unique:squads,leader_id,' . $this->squad->id,
+                'unique:squads,leader_id,'.$this->squad->id,
                 'exists:members,clan_id',
             ],
             'name' => 'max:40',
@@ -60,7 +60,7 @@ class UpdateSquadForm extends FormRequest
         }
 
         // setting squad to TBA
-        if (!$this->leader && !$this->leader_id) {
+        if (! $this->leader && ! $this->leader_id) {
             // reset existing leader if there is one
             if ($this->squad->leader) {
                 $this->resetLeaderOf($this->squad);

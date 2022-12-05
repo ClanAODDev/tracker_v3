@@ -22,12 +22,12 @@ class MemberPresenter extends \App\Presenters\Presenter
     /**
      * TODO - Figure out what the hell this is.
      *
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function lastActive($value)
     {
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
-        if (!$value) {
+        if (! $value) {
         }
         //        if ($value->diffInDays() < 1) {
         //            return "Today";
@@ -38,8 +38,7 @@ class MemberPresenter extends \App\Presenters\Presenter
     /**
      * Returns member's name with position icon.
      *
-     * @param bool $showRank
-     *
+     * @param  bool  $showRank
      * @return string
      */
     public function nameWithIcon($showRank = false)
@@ -66,6 +65,6 @@ class MemberPresenter extends \App\Presenters\Presenter
             return $this->member->name;
         }
 
-        return $this->member->rank->abbreviation . ' ' . $this->member->name;
+        return $this->member->rank->abbreviation.' '.$this->member->name;
     }
 }

@@ -20,7 +20,7 @@ final class DiscordCommandTest extends TestCase
 
         $response = $this->json('POST', '/slack', [
             'token' => $token,
-            'text'  => 'help',
+            'text' => 'help',
         ]);
 
         $response->assertJson(
@@ -40,7 +40,7 @@ final class DiscordCommandTest extends TestCase
 
         $response = $this->json('POST', '/slack', [
             'token' => $token,
-            'text'  => 'foo',
+            'text' => 'foo',
         ]);
 
         $response->assertJson(

@@ -13,6 +13,7 @@ class NotifyNewTicketOwner extends Notification
     use Queueable;
 
     private User $assignedOwner;
+
     private User $oldUser;
 
     public function __construct(User $assignedOwner, User $oldUser)
@@ -24,8 +25,7 @@ class NotifyNewTicketOwner extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -35,10 +35,9 @@ class NotifyNewTicketOwner extends Notification
 
     /**
      * @param $ticket
+     * @return array
      *
      * @throws \Exception
-     *
-     * @return array
      */
     public function toWebhook($ticket)
     {
@@ -46,7 +45,7 @@ class NotifyNewTicketOwner extends Notification
 
         return (new DiscordDMMessage())
             ->to($target)
-            ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
+            ->message('You were assigned to a ticket ('.route('help.tickets.show', $ticket).") by {$this->oldUser->name}")
             ->send();
     }
 }

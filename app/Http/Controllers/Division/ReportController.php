@@ -43,8 +43,7 @@ class ReportController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * @param null|mixed $customAttr
-     *
+     * @param  null|mixed  $customAttr
      * @return Factory|View
      */
     public function ingameReport(Division $division, $customAttr = null)
@@ -61,9 +60,8 @@ class ReportController extends \App\Http\Controllers\Controller
 
     /**
      * @param $division
-     * @param null $month
-     * @param null $year
-     *
+     * @param  null  $month
+     * @param  null  $year
      * @return Factory|View
      */
     public function promotionsReport(MemberRepository $repository, $division, $month = null, $year = null)
@@ -110,12 +108,11 @@ class ReportController extends \App\Http\Controllers\Controller
      * @param $division
      * @param $month
      * @param $year
-     *
      * @return mixed
      */
     private function getMemberPromotions($division, $month, $year)
     {
-        $dates = $month && $year ? [\Carbon\Carbon::parse($month . " {$year}")->startOfMonth(), \Carbon\Carbon::parse($month . " {$year}")->endOfMonth()] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
+        $dates = $month && $year ? [\Carbon\Carbon::parse($month." {$year}")->startOfMonth(), \Carbon\Carbon::parse($month." {$year}")->endOfMonth()] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
 
         return $division->members()->with('rank')->whereBetween('last_promoted_at', $dates)->orderByDesc('rank_id')->get();
     }
