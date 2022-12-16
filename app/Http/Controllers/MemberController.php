@@ -220,6 +220,8 @@ class MemberController extends Controller
 
         $form->persist();
 
+        $member->recordActivity('removed');
+
         $this->showToast(
             ucwords($member->name ?? 'Member').' has been removed.'
         );
