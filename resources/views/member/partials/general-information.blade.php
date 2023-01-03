@@ -72,6 +72,20 @@
         @endcomponent
     @endif
 
+        @if($discordUrl = $member->discord)
+            @component('application.components.link-block')
+                @slot('link')
+                    {{ $discordUrl }}
+                @endslot
+                @slot('data')
+                    {{$member->discord }}
+                @endslot
+                @slot('title')
+                    Discord <span class="c-white">Profile</span>
+                @endslot
+            @endcomponent
+        @endif
+
 
     @if ($member->rank_id >= 9)
 

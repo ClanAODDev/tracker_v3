@@ -29,7 +29,10 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     protected static array $recordEvents = [];
 
-    protected $casts = ['pending_member' => 'boolean', 'flagged_for_inactivity' => 'boolean'];
+    protected $casts = [
+        'pending_member' => 'boolean',
+        'flagged_for_inactivity' => 'boolean'
+    ];
 
     protected $guarded = [];
 
@@ -276,13 +279,21 @@ class Member extends \Illuminate\Database\Eloquent\Model
         return false;
     }
 
+    public function getDiscordUrl()
+    {
+        if (!$this->discord)
+            return false;
+
+        return sprintf("https://discordapp.com/users/%d", $this->discord);
+    }
+
     /**
      * @param $rank
      * @return bool
      */
     public function isRank($rank)
     {
-        if (! $this->rank instanceof \App\Models\Rank) {
+        if (!$this->rank instanceof \App\Models\Rank) {
             return false;
         }
         if (\is_array($rank)) {
@@ -294,7 +305,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function getUrlParams()
     {
-        return [$this->clan_id, $this->rank->abbreviation.'-'.$this->name];
+        return [$this->clan_id, $this->rank->abbreviation . '-' . $this->name];
     }
 
     /**
