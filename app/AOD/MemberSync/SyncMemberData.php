@@ -63,6 +63,7 @@ class SyncMemberData
             $oldData = collect([
                 'allow_pm' => $oldData['allow_pm'],
                 'discord' => $oldData['discord'],
+                'discord_id' => $oldData['discord_id'],
                 'division_id' => $oldData['division_id'],
                 'name' => $oldData['name'],
                 'posts' => $oldData['posts'],
@@ -83,6 +84,7 @@ class SyncMemberData
                 $newData = collect([
                     'allow_pm' => $newData->allow_pm,
                     'discord' => $newData->discordtag,
+                    'discord_id' => $newData->discordid,
                     'division_id' => $divisionIds[$newData->aoddivision],
                     'name' => str_replace('AOD_', '', $newData->username),
                     'posts' => $newData->postcount,
@@ -167,6 +169,7 @@ class SyncMemberData
             ], [
                 'allow_pm' => $member->allow_pm,
                 'discord' => $member->discordtag,
+                'discord_id' => $member->discordid,
                 'division_id' => $divisionIds[$member->aoddivision],
                 'name' => str_replace('AOD_', '', $member->username),
                 'posts' => $member->postcount,

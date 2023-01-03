@@ -281,11 +281,11 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function getDiscordUrl()
     {
-        if (!$this->discord) {
+        if (!$this->discord_id) {
             return false;
         }
 
-        return sprintf('https://discordapp.com/users/%d', $this->discord);
+        return sprintf('https://discordapp.com/users/%d', $this->discord_id);
     }
 
     /**
