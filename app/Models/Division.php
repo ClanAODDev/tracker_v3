@@ -284,7 +284,7 @@ class Division extends Model
     public function locality($string)
     {
         $locality = collect($this->settings()->locality);
-        if (! $locality->count()) {
+        if (!$locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -294,7 +294,7 @@ class Division extends Model
                 return $translation['old-string'] === strtolower($string);
             }
         });
-        if (! $results) {
+        if (!$results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);

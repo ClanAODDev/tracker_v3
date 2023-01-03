@@ -52,7 +52,7 @@ class NewMemberRecruited extends Notification
             ->fields([
                 [
                     'name' => '**NEW MEMBER RECRUITED**',
-                    'value' => addslashes(':crossed_swords: '.auth()->user()->name." just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
+                    'value' => addslashes(':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
                 ],
                 [
                     'name' => 'View Member Profile',

@@ -42,11 +42,11 @@ class DiscordDMMessage
      */
     public function send()
     {
-        if (! $this->target) {
+        if (!$this->target) {
             throw new Exception('A target user (snowflake, tag) must be defined');
         }
 
-        if (! isset($this->message) && empty($this->fields)) {
+        if (!isset($this->message) && empty($this->fields)) {
             throw new Exception('A message must be defined');
         }
 

@@ -36,7 +36,7 @@ class WebhookChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (! $url = $notifiable->routeNotificationFor('webhook', $notification)) {
+        if (!$url = $notifiable->routeNotificationFor('webhook', $notification)) {
             return;
         }
 

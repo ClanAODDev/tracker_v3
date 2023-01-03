@@ -51,7 +51,7 @@ trait AuthenticatesWithAOD
             return false;
         }
 
-        if (! empty($results)) {
+        if (!empty($results)) {
             $member = Arr::first($results);
 
             $this->setMemberAttributes($member);

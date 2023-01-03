@@ -44,7 +44,7 @@ class DivisionController extends ApiController
             ->active()
             ->firstOrFail();
 
-        if ($division !== auth()->user()->member->division && ! $this->tokenCan('clan:read')) {
+        if ($division !== auth()->user()->member->division && !$this->tokenCan('clan:read')) {
             return $this->setStatusCode(403)
                 ->respondWithError('Not authorized to access this endpoint');
         }

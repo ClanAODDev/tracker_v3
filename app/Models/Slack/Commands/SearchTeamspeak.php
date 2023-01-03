@@ -58,8 +58,8 @@ class SearchTeamspeak extends Base implements Command
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => 'Profiles: '
-                        .implode(', ', $links)
-                        .$this->buildActivityAndTSBlock($member),
+                        . implode(', ', $links)
+                        . $this->buildActivityAndTSBlock($member),
                 ];
             }
         }
@@ -86,8 +86,8 @@ class SearchTeamspeak extends Base implements Command
     private function buildActivityAndTSBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
-        $string = PHP_EOL."Forum activity: {$forumActivity}";
-        $string .= PHP_EOL."TS Unique ID: `{$member->ts_unique_id}`";
+        $string = PHP_EOL . "Forum activity: {$forumActivity}";
+        $string .= PHP_EOL . "TS Unique ID: `{$member->ts_unique_id}`";
 
         return $string;
     }

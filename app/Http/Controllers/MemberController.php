@@ -47,7 +47,7 @@ class MemberController extends Controller
      */
     public function search($name = null)
     {
-        if (! $name) {
+        if (!$name) {
             $name = request()->name;
         }
 
@@ -223,7 +223,7 @@ class MemberController extends Controller
         $member->recordActivity('removed');
 
         $this->showToast(
-            ucwords($member->name ?? 'Member').' has been removed.'
+            ucwords($member->name ?? 'Member') . ' has been removed.'
         );
 
         return redirect()->route('division', [

@@ -17,8 +17,8 @@ class SyncMemberData
     {
         $divisionInfo = new GetDivisionInfo();
 
-        if (! $syncData = collect($divisionInfo->data)) {
-            \Log::critical(date('Y-m-d H:i:s').' - MEMBER SYNC - No data available');
+        if (!$syncData = collect($divisionInfo->data)) {
+            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
         }
@@ -51,7 +51,7 @@ class SyncMemberData
             $newData = $syncTable->where('userid', $member->clan_id)
                 ->first();
 
-            if (! $newData) {
+            if (!$newData) {
                 // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
 
@@ -99,7 +99,7 @@ class SyncMemberData
                         : '',
                 ]);
             } catch (\Exception $exception) {
-                \Log::error($exception->getMessage()." - Error syncing {$member->name} - {$member->clan_id} - {$exception->getMessage()}");
+                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id} - {$exception->getMessage()}");
 
                 continue;
             }
@@ -107,7 +107,7 @@ class SyncMemberData
             $differences = $newData->diffAssoc($oldData)->filter()->all();
 
             if (\count($differences) > 0) {
-                echo("Found updates for {$oldData['name']}").PHP_EOL;
+                echo("Found updates for {$oldData['name']}") . PHP_EOL;
 
                 $updates = [];
 

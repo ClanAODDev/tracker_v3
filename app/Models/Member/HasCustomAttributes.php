@@ -10,7 +10,7 @@ trait HasCustomAttributes
     public function AODProfileLink(): Attribute
     {
         return new Attribute(
-            fn ($value, $attributes) => 'http://www.clanaod.net/forums/member.php?u='.$attributes['clan_id']
+            fn ($value, $attributes) => 'http://www.clanaod.net/forums/member.php?u=' . $attributes['clan_id']
         );
     }
 

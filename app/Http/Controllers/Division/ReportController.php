@@ -112,7 +112,7 @@ class ReportController extends \App\Http\Controllers\Controller
      */
     private function getMemberPromotions($division, $month, $year)
     {
-        $dates = $month && $year ? [\Carbon\Carbon::parse($month." {$year}")->startOfMonth(), \Carbon\Carbon::parse($month." {$year}")->endOfMonth()] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
+        $dates = $month && $year ? [\Carbon\Carbon::parse($month . " {$year}")->startOfMonth(), \Carbon\Carbon::parse($month . " {$year}")->endOfMonth()] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
 
         return $division->members()->with('rank')->whereBetween('last_promoted_at', $dates)->orderByDesc('rank_id')->get();
     }

@@ -45,7 +45,7 @@ class NotifyNewTicketOwner extends Notification
 
         return (new DiscordDMMessage())
             ->to($target)
-            ->message('You were assigned to a ticket ('.route('help.tickets.show', $ticket).") by {$this->oldUser->name}")
+            ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
             ->send();
     }
 }

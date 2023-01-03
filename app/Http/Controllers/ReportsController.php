@@ -21,7 +21,7 @@ class ReportsController extends \App\Http\Controllers\Controller
     {
         $memberCount = $this->clan->totalActiveMembers();
 
-        if (! $this->clan->censusCounts()->count()) {
+        if (!$this->clan->censusCounts()->count()) {
             throw new FactoryMissingException('You might need to run the `census` factory');
         }
 
@@ -63,7 +63,7 @@ class ReportsController extends \App\Http\Controllers\Controller
      */
     public function clanTsReport()
     {
-        $invalidDates = fn ($member) => ! carbon_date_or_null_if_zero($member->last_ts_activity);
+        $invalidDates = fn ($member) => !carbon_date_or_null_if_zero($member->last_ts_activity);
         $newMembers = fn ($member) => $member->created_at < \Carbon\Carbon::now()->subDays(2);
 
         $issues = \App\Models\Member::whereHas('division')->with(
@@ -123,15 +123,15 @@ class ReportsController extends \App\Http\Controllers\Controller
     public function divisionUsersWithAccess()
     {
         foreach (\App\Models\Division::active()->get() as $division) {
-            echo '---------- '.$division->name.' ---------- '.PHP_EOL;
+            echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
                 $query->where('role_id', '>', 2);
             })->get();
             $sortedMembers = collect(\Illuminate\Support\Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
-                echo $member->present()->rankName().", {$member->user->role_id}".PHP_EOL;
+                echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
             });
-            echo '---------- END OF DIVISION ----------'.PHP_EOL.PHP_EOL.PHP_EOL;
+            echo '---------- END OF DIVISION ----------' . PHP_EOL . PHP_EOL . PHP_EOL;
         }
     }
 

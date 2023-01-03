@@ -119,7 +119,7 @@ class Ticket extends Model
         if ($user === auth()->user()) {
             $this->say('owned the ticket');
         } else {
-            $this->say(auth()->user()->name.' assigned the ticket to '.$user->name);
+            $this->say(auth()->user()->name . ' assigned the ticket to ' . $user->name);
         }
     }
 

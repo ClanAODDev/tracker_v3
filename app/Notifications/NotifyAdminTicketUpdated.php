@@ -42,15 +42,15 @@ class NotifyAdminTicketUpdated extends Notification
      */
     public function toWebhook($ticket)
     {
-        if (! $ticket->owner) {
+        if (!$ticket->owner) {
             // ticket hasn't been assigned, so we have no one to notify
             return [];
         }
-        if (! $ticket->owner->member->discord) {
-            throw new \Exception(auth()->user()->name.' could not be notified because they do not have a valid discord.');
+        if (!$ticket->owner->member->discord) {
+            throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
         }
 
-        if (! $ticket->owner->settings()->get('ticket_notifications')) {
+        if (!$ticket->owner->settings()->get('ticket_notifications')) {
             return [];
         }
 
@@ -58,7 +58,7 @@ class NotifyAdminTicketUpdated extends Notification
 
         return (new DiscordDMMessage())
             ->to($target)
-            ->message('Your ticket ('.route('help.tickets.show', $ticket).") has been updated: {$this->update}")
+            ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();
     }
 }

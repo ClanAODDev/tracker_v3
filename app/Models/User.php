@@ -103,7 +103,7 @@ class User extends Authenticatable
      */
     public function recordActivity($name, $related)
     {
-        if (! method_exists($related, 'recordActivity')) {
+        if (!method_exists($related, 'recordActivity')) {
             throw new Exception('..');
         }
 
@@ -134,7 +134,7 @@ class User extends Authenticatable
      */
     public function isRole($role)
     {
-        if (! $this->role instanceof Role) {
+        if (!$this->role instanceof Role) {
             return false;
         }
 

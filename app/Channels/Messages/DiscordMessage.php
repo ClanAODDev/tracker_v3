@@ -92,11 +92,11 @@ class DiscordMessage
      */
     public function send()
     {
-        if (! $this->channel) {
+        if (!$this->channel) {
             throw new Exception('A channel must be defined');
         }
 
-        if (! isset($this->message) && empty($this->fields)) {
+        if (!isset($this->message) && empty($this->fields)) {
             throw new Exception('A message must be defined');
         }
 
@@ -108,7 +108,7 @@ class DiscordMessage
 
         $body = empty($this->fields)
             ? $this->message
-            : "'".json_encode([
+            : "'" . json_encode([
                 'embed' => [
                     'color' => $this->color ?? 0,
                     'author' => [
@@ -116,10 +116,10 @@ class DiscordMessage
                     ],
                     'fields' => $this->fields,
                 ],
-            ])."'";
+            ]) . "'";
 
         return [
-            'content' => "!relay {$this->channel}".$body,
+            'content' => "!relay {$this->channel}" . $body,
         ];
     }
 }

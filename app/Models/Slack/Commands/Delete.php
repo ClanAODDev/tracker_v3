@@ -32,7 +32,7 @@ class Delete extends Base implements Command
 
         $member = \App\Models\Member::where('clan_id', 'LIKE', "%{$this->params}%")->first();
 
-        if (! $member) {
+        if (!$member) {
             return [
                 'text' => "I can't delete a member that doesn't exist. Please provide AOD Clan ID.",
             ];

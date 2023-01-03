@@ -13,7 +13,7 @@ function bytesToHuman($bytes)
         $bytes /= 1024;
     }
 
-    return round($bytes, 2).' '.$units[$i];
+    return round($bytes, 2) . ' ' . $units[$i];
 }
 
 function getSnowSetting()
@@ -60,21 +60,21 @@ function ordSuffix($n)
     $t = $n > 9 ? substr($str, -2, 1) : 0;
     $u = substr($str, -1);
     if (1 === $t) {
-        return $str.'th';
+        return $str . 'th';
     }
 
     switch ($u) {
         case 1:
-            return $str.'st';
+            return $str . 'st';
 
         case 2:
-            return $str.'nd';
+            return $str . 'nd';
 
         case 3:
-            return $str.'rd';
+            return $str . 'rd';
 
         default:
-            return $str.'th';
+            return $str . 'th';
     }
 }
 
@@ -124,10 +124,10 @@ function doForumFunction(array $ids, $action)
             break;
 
         default:
-            throw new InvalidArgumentException('Improper forum function used: '.$action);
+            throw new InvalidArgumentException('Improper forum function used: ' . $action);
     }
 
-    return urldecode($path.http_build_query($params));
+    return urldecode($path . http_build_query($params));
 }
 
 /**
@@ -145,7 +145,7 @@ function UserSettings($key = null)
 
 function hasDivisionIcon($abbreviation)
 {
-    $image = public_path()."/images/game_icons/48x48/{$abbreviation}.png";
+    $image = public_path() . "/images/game_icons/48x48/{$abbreviation}.png";
 
     return File::exists($image);
 }
@@ -293,7 +293,7 @@ function approveMemberPath(MemberRequest $memberRequest)
         'aodname' => '',
     ];
 
-    return $base.http_build_query($args);
+    return $base . http_build_query($args);
 }
 
 function gcd($a, $b)
@@ -327,7 +327,7 @@ function ratio()
 
     $var = max($inputs[0], 1) / max($gcd, 1);
     for ($i = 1; $i < $c; $i++) {
-        $var .= ':'.round(($inputs[$i] / max($gcd, 1)));
+        $var .= ':' . round(($inputs[$i] / max($gcd, 1)));
     }
 
     return $var;
@@ -358,7 +358,7 @@ function remove_query_params(array $params = [])
         }
     }
 
-    return $query ? $url.'?'.http_build_query($query) : $url;
+    return $query ? $url . '?' . http_build_query($query) : $url;
 }
 
 /**
@@ -379,5 +379,5 @@ function add_query_params(array $params = [])
         $params
     );
 
-    return url()->current().'?'.urldecode(http_build_query($query));
+    return url()->current() . '?' . urldecode(http_build_query($query));
 }

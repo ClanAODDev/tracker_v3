@@ -6,6 +6,6 @@ trait HasCustomAttributes
 {
     public function getFullUrlAttribute()
     {
-        return $this->url.$this->pivot->value;
+        return $this->url . $this->pivot->value;
     }
 }

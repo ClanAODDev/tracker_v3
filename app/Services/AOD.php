@@ -44,7 +44,7 @@ class AOD extends Model
             'authcode2' => $this->generateToken(),
         ]);
 
-        return $url.http_build_query($arguments);
+        return $url . http_build_query($arguments);
     }
 
     /**
@@ -56,6 +56,6 @@ class AOD extends Model
     {
         $currentMinute = floor(time() / 60) * 60;
 
-        return md5($currentMinute.config('app.aod.token'));
+        return md5($currentMinute . config('app.aod.token'));
     }
 }

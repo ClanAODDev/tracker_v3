@@ -27,7 +27,7 @@ class MemberPresenter extends \App\Presenters\Presenter
     public function lastActive($value)
     {
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
-        if (! $value) {
+        if (!$value) {
         }
         //        if ($value->diffInDays() < 1) {
         //            return "Today";
@@ -65,6 +65,6 @@ class MemberPresenter extends \App\Presenters\Presenter
             return $this->member->name;
         }
 
-        return $this->member->rank->abbreviation.' '.$this->member->name;
+        return $this->member->rank->abbreviation . ' ' . $this->member->name;
     }
 }

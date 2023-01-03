@@ -157,7 +157,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function getNameAttribute()
     {
-        return 'AOD_'.$this->member->name;
+        return 'AOD_' . $this->member->name;
     }
 
     /**

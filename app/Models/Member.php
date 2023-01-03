@@ -31,7 +31,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     protected $casts = [
         'pending_member' => 'boolean',
-        'flagged_for_inactivity' => 'boolean'
+        'flagged_for_inactivity' => 'boolean',
     ];
 
     protected $guarded = [];
@@ -281,10 +281,11 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function getDiscordUrl()
     {
-        if (!$this->discord)
+        if (!$this->discord) {
             return false;
+        }
 
-        return sprintf("https://discordapp.com/users/%d", $this->discord);
+        return sprintf('https://discordapp.com/users/%d', $this->discord);
     }
 
     /**

@@ -34,7 +34,7 @@ class Division extends Base implements Command
 
         if ($division) {
             foreach ($division->leaders()->get() as $leader) {
-                $leaderData .= $leader->present()->rankName().' - '.$leader->position->name.PHP_EOL;
+                $leaderData .= $leader->present()->rankName() . ' - ' . $leader->position->name . PHP_EOL;
             }
 
             return [
@@ -43,7 +43,7 @@ class Division extends Base implements Command
                     'author' => [
                         'name' => $division->name,
                         'icon_url' => getDivisionIconPath($division->abbreviation),
-                        'url' => 'https://clanaod.net/divisions/'.\Str::slug($division->name),
+                        'url' => 'https://clanaod.net/divisions/' . \Str::slug($division->name),
                     ],
                     'fields' => [
                         [
@@ -72,6 +72,6 @@ class Division extends Base implements Command
     {
         $forumActivity = $member->last_activity->diffForHumans();
 
-        return PHP_EOL."Forum activity: {$forumActivity}";
+        return PHP_EOL . "Forum activity: {$forumActivity}";
     }
 }

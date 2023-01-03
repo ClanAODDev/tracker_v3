@@ -42,7 +42,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
          * by teamspeak or forum. Used in platoon filter options, reset
          * filter button.
          */
-        $requestPath = 'division.'.explode('/', request()->path())[2];
+        $requestPath = 'division.' . explode('/', request()->path())[2];
 
         return view('division.inactive-members', compact('division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath'));
     }
@@ -60,7 +60,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $member->flagged_for_inactivity = true;
         $member->save();
         $member->recordActivity('flagged');
-        $this->showToast($member->name.' successfully flagged for removal');
+        $this->showToast($member->name . ' successfully flagged for removal');
 
         return redirect()->back();
     }
@@ -78,7 +78,7 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $member->flagged_for_inactivity = false;
         $member->save();
         $member->recordActivity('unflagged');
-        $this->showToast($member->name.' successfully unflagged');
+        $this->showToast($member->name . ' successfully unflagged');
 
         return redirect(route('division.inactive-members', $member->division->abbreviation));
     }
@@ -88,9 +88,9 @@ class InactiveMemberController extends \App\Http\Controllers\Controller
         $this->authorize('delete', $member);
         $division = $member->division;
         $form->persist();
-        $this->showToast(ucwords($member->name)." has been removed from the {$division->name} Division!");
+        $this->showToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
         $member->recordActivity('removed');
 
-        return redirect(route('division.inactive-members', [$division->abbreviation]).'#flagged');
+        return redirect(route('division.inactive-members', [$division->abbreviation]) . '#flagged');
     }
 }

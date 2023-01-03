@@ -58,8 +58,8 @@ class SearchDiscord extends Base implements Command
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => 'Profiles: '
-                        .implode(', ', $links)
-                        .$this->buildActivityAndDiscordBlock($member),
+                        . implode(', ', $links)
+                        . $this->buildActivityAndDiscordBlock($member),
                 ];
             }
         }
@@ -86,8 +86,8 @@ class SearchDiscord extends Base implements Command
     private function buildActivityAndDiscordBlock($member)
     {
         $forumActivity = $member->last_activity->diffForHumans();
-        $string = PHP_EOL."Forum activity: {$forumActivity}";
-        $string .= PHP_EOL."Discord: `{$member->discord}`";
+        $string = PHP_EOL . "Forum activity: {$forumActivity}";
+        $string .= PHP_EOL . "Discord: `{$member->discord}`";
 
         return $string;
     }

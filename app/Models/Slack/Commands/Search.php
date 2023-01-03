@@ -76,8 +76,8 @@ class Search extends Base implements Command
                 $this->content[] = [
                     'name' => "{$member->present()->rankName} ({$member->clan_id}) - {$division}",
                     'value' => 'Profiles: '
-                        .implode(', ', $links)
-                        .$this->buildActivityBlock($member),
+                        . implode(', ', $links)
+                        . $this->buildActivityBlock($member),
                 ];
             }
         }
@@ -105,6 +105,6 @@ class Search extends Base implements Command
     {
         $forumActivity = $member->last_activity->diffForHumans();
 
-        return PHP_EOL."Forum activity: {$forumActivity}";
+        return PHP_EOL . "Forum activity: {$forumActivity}";
     }
 }

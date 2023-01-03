@@ -148,7 +148,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
         $result = $this->callProcedure('get_user', $member_id);
 
-        if (! property_exists($result, 'usergroupid')) {
+        if (!property_exists($result, 'usergroupid')) {
             return ['is_member' => false, 'verified_email' => false];
         }
 
@@ -176,7 +176,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
 
         $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
-        return response()->json(['memberExists' => ! empty($result)]);
+        return response()->json(['memberExists' => !empty($result)]);
     }
 
     /**

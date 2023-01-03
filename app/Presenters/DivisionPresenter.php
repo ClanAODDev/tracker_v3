@@ -27,7 +27,7 @@ class DivisionPresenter extends Presenter
      */
     public function divisionStructureLink()
     {
-        return $this->threadLink.$this->division->division_structure;
+        return $this->threadLink . $this->division->division_structure;
     }
 
     /**
@@ -39,10 +39,10 @@ class DivisionPresenter extends Presenter
     public function welcomeAreaLink()
     {
         if ($this->division->settings['useWelcomeThread']) {
-            return $this->threadLink.$this->division->settings()->welcome_area;
+            return $this->threadLink . $this->division->settings()->welcome_area;
         }
 
         // defaults to forum area
-        return $this->forumLink.$this->division->settings()->welcome_area;
+        return $this->forumLink . $this->division->settings()->welcome_area;
     }
 }
