@@ -47,11 +47,17 @@
 
 <div class="row">
 
-
-    @if ($member->discord)
-        @component('application.components.data-block', ['isUppercase' => false])
-            @slot('data'){!! $member->discord !!}@endslot
-            @slot('title') Discord <span class="c-white">Tag</span> @endslot
+    @if($discordUrl = $member->getDiscordUrl())
+        @component('application.components.link-block')
+            @slot('link')
+                {{ $discordUrl }}
+            @endslot
+            @slot('data')
+                {{$member->discord }}
+            @endslot
+            @slot('title')
+                Discord <span class="c-white">Profile</span>
+            @endslot
         @endcomponent
     @endif
 
@@ -71,20 +77,6 @@
             @slot('title') clan <span class="c-white">recruiter</span> @endslot
         @endcomponent
     @endif
-
-        @if($discordUrl = $member->discord)
-            @component('application.components.link-block')
-                @slot('link')
-                    {{ $discordUrl }}
-                @endslot
-                @slot('data')
-                    {{$member->discord }}
-                @endslot
-                @slot('title')
-                    Discord <span class="c-white">Profile</span>
-                @endslot
-            @endcomponent
-        @endif
 
 
     @if ($member->rank_id >= 9)
