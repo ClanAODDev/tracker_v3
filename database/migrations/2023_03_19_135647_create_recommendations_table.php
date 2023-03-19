@@ -20,7 +20,8 @@ return new class extends Migration
             $table->dateTime('decided_at')->nullable();
             $table->dateTime('effective_at')->nullable();
             $table->enum('decision', ['approved', 'denied']);
-            $table->enum('type', ['promotion', 'demotion']);
+            $table->text('recommendable_type');
+            $table->integer('recommendable_id');
             $table->timestamps();
         });
     }

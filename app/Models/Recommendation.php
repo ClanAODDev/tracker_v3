@@ -6,6 +6,8 @@ use App\Enums\RecommendationDecision;
 use App\Enums\RecommendationType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Recommendation extends Model
 {
@@ -18,18 +20,31 @@ class Recommendation extends Model
         'type' => RecommendationDecision::class,
     ];
 
-    public static function scopePromotions($query)
+    public function recommendable(): MorphTo
     {
-        return $query->whereType(RecommendationType::PROMOTION)->orderBy('created_at');
-    }
-
-    public static function scopeDemotions($query)
-    {
-        return $query->whereType(RecommendationType::DEMOTION)->orderBy('created_at');
+        return $this->morphTo();
     }
 
     public static function scopeForCurrentMonth($query)
     {
         return $query->whereMonth('effective_at', date('m'));
+    }
+
+    public function member():HasOne
+    {
+        return $this->hasOne(Member::class);
+    }
+
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Member::class);
+    }
+
+    public function isPromotion(): bool
+    {
+        if ($this->recommendable_type === 'App\Models\Rank' && $this->member) {
+            return $this->member->rank_id < $this->recommendable_id;
+
+        }
     }
 }
