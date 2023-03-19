@@ -25,12 +25,15 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     Route::get('/structure', 'DivisionStructureController@show')->name('division.structure');
     Route::post('/structure', 'DivisionStructureController@update')->name('division.update-structure');
 
+
     Route::get('/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
     Route::get('/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members-ts');
     Route::get('/inactive-ts-forums/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-ts-forums');
+
+    Route::get('recommendations', 'RecommendationController@index')->name('recommendations.index');
 
     Route::get('/members', 'DivisionController@members')->name('division.members');
     Route::get('/members/csv', 'DivisionController@exportAsCSV')->name('division.export-csv');
@@ -63,11 +66,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
         'Division\ReportController@ingameReport'
     )->middleware(['auth'])
         ->name('division.ingame-reports');
-
-    /*
-     * member requests.
-     */
-//    Route::
 
     /*
      * platoons.
