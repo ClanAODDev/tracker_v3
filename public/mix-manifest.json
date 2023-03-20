@@ -8,7 +8,7 @@
     "/js/training.js": "/js/training.js",
     "/js/admin.js": "/js/admin.js",
     "/js/manage-member.js": "/js/manage-member.js",
-    "/js/libs.js": "/js/libs.js",
     "/css/style.css": "/css/style.css",
-    "/css/site.css": "/css/site.css"
+    "/css/site.css": "/css/site.css",
+    "/js/libs.js": "/js/libs.js"
 }

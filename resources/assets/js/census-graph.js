@@ -45,7 +45,7 @@ var chartUsersOptions = {
         timeformat: '%m/%d/%y',
     },
 
-    colors: ['#1bbf89', '#0F83C9', '#f7af3e']
+    colors: ['#5fbb60', '#0F83C9', '#6da21f']
 };
 
 $.plot($('#flot-line-chart'), [data2, data3], chartUsersOptions);
