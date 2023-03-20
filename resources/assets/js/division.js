@@ -66,7 +66,7 @@ var Division = Division || {};
                 data: ctx.data('values'),
                 borderWidth: 0,
                 backgroundColor: [
-                  '#949ba2', '#0f83c9', '#1bbf89', '#f7af3e', '#56c0e0', '#db524b'
+                  '#949ba2', '#0f83c9', '#5fbb60', '#6da21f', '#56c0e0', '#db524b'
                 ]
               }],
             labels: ctx.data('labels'),

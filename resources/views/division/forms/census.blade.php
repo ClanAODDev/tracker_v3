@@ -28,7 +28,7 @@
 {{--                <td class="text-center slight">--}}
 {{--                    {{ $census->count > 0 ? number_format($census->weekly_active_count / $census->count * 100, 1) : 0 }}%--}}
 {{--                    <span class="census-pie"--}}
-{{--                          data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"--}}
+{{--                          data-colors="{{ json_encode(['#404652', '#5fbb60']) }}"--}}
 {{--                          data-counts="{{ json_encode([$popMinus, $census->weekly_active_count]) }}">--}}
 {{--                    </span>--}}
 {{--                </td>--}}

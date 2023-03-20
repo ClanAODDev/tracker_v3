@@ -1,3 +1,5 @@
+import Vue from 'vue/dist/vue';
+
 window._ = require('lodash');
 
 /**
@@ -16,7 +18,7 @@ require('bootstrap-sass');
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = require('vue');
+window.Vue = Vue;
 
 // window.Vue.config.devtools = false;
 // window.Vue.config.debug = false;

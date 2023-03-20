@@ -218,7 +218,7 @@
                     tickLength: 0,
                 },
 
-                colors: ['#1bbf89', '#f7af3e', '#0F83C9']
+                colors: ['#5fbb60', '#6da21f', '#0F83C9']
             };
 
         $.plot($('#flot-line-chart'), [data1, data2, data3], chartUsersOptions);

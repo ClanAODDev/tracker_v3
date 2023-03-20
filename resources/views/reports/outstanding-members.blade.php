@@ -47,7 +47,7 @@
                     <td>
                         {{ $division->percent_inactive }}%
                         <span class="census-pie"
-                              data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
+                              data-colors="{{ json_encode(['#404652', '#5fbb60']) }}"
                               data-counts="{{ json_encode([$division->members_count-$division->inactive_members, $division->inactive_members]) }}">
                     </span>
                         <a href="{{ route('division.inactive-members', $division) }}" class="btn btn-default pull-right btn-xs">

@@ -8,7 +8,7 @@
             }
 
             .my-division h2 a:hover {
-                color: #f6a821;
+                color: #629418;
                 text-decoration: none;
             }
         </style>
