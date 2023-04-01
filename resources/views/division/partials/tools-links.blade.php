@@ -17,30 +17,36 @@
 
         <li>
             <a href="{{ route('partTimers', $division) }}">
-                Manage Part Timers
+                Part Timers
             </a>
         </li>
         <li>
             @can ('viewDivisionStructure', auth()->user())
                 <a href="{{ route('division.structure', $division) }}">
-                    Generate Structure
+                    Division Structure
                 </a>
             @endcan
         </li>
         <li>
-            <a href="{{ route('division.inactive-members', $division) }}">Manage Inactives</a>
+            <a href="{{ route('division.inactive-members', $division) }}">Inactives</a>
         </li>
         <li>
             <a href="{{ route('leave.index', $division) }}">
-                Manage Leaves of Absence
+                Leaves of Absence
             </a>
         </li>
 
         @can ('show', App\Models\Note::class)
             <li>
-                <a href="{{ route('division.notes', $division) }}">View Notes</a>
+                <a href="{{ route('division.notes', $division) }}">Member Notes</a>
             </li>
         @endcan
+
+            @can ('makeRecommendations', App\Models\Member::class)
+                <li>
+                    <a href="{{ route('division.recommendations', $division) }}">Recommendations</a>
+                </li>
+            @endcan
 
     </ul>
 </div>
