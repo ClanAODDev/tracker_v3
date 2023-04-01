@@ -46,6 +46,7 @@ function registerDivisionSubPages()
         'retention-report',
         'ingame-report',
         'promotions',
+        'recommendations',
         'members',
         'member-requests',
         'send-private-message',
