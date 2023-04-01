@@ -19,6 +19,10 @@ Route::group(['prefix' => 'members'], function () {
     Route::patch('{member}/leave', 'LeaveController@update');
     Route::delete('{member}/leave/{leave}', 'LeaveController@delete')->name('leave.delete');
 
+    // member recommendations
+    Route::get('recommendations', 'RecommendationController@create')->name('division.recommendations.store');
+    Route::put('recommendations', 'RecommendationController@store')->name('division.recommendations.store');
+
     // member notes
     Route::group(['prefix' => '{member}/notes'], function () {
         Route::post('', 'NoteController@store')->name('storeNote');
