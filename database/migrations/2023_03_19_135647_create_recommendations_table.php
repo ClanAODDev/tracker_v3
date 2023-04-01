@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('decision', ['approved', 'denied']);
             $table->text('recommendable_type');
             $table->integer('recommendable_id');
+            $table->text('justification');
             $table->timestamps();
         });
     }
