@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\RecommendationDecision;
-use App\Enums\RecommendationType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -44,7 +43,6 @@ class Recommendation extends Model
     {
         if ($this->recommendable_type === 'App\Models\Rank' && $this->member) {
             return $this->member->rank_id < $this->recommendable_id;
-
         }
     }
 }

@@ -23,7 +23,7 @@ class MemberPolicy
     /**
      * @return bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         // member role cannot recruit members
         if ($user->role_id > 1) {
@@ -38,7 +38,7 @@ class MemberPolicy
      *
      * @return bool
      */
-    public function update(User $user, Member $member)
+    public function update(User $user, Member $member): bool
     {
         // can edit yourself
         if ($member->id === auth()->user()->member_id) {
@@ -58,17 +58,17 @@ class MemberPolicy
         return false;
     }
 
-    public function reset(User $user)
+    public function reset(User $user): bool
     {
         return false;
     }
 
-    public function view()
+    public function view(): bool
     {
         return true;
     }
 
-    public function viewAny()
+    public function viewAny(): bool
     {
         return true;
     }
@@ -78,7 +78,7 @@ class MemberPolicy
      *
      * @return bool
      */
-    public function delete(User $user, Member $member)
+    public function delete(User $user, Member $member): bool
     {
         // can't delete yourself
         if ($member->id === $user->member->id) {
@@ -93,7 +93,7 @@ class MemberPolicy
         return true;
     }
 
-    public function managePartTime(User $user, Member $member)
+    public function managePartTime(User $user, Member $member): bool
     {
         // can edit yourself
         if ($member->id === auth()->user()->member_id) {
@@ -107,7 +107,7 @@ class MemberPolicy
         return false;
     }
 
-    public function promote(User $userPromoting, Member $memberBeingPromoted)
+    public function promote(User $userPromoting, Member $memberBeingPromoted): bool
     {
         // only admin, sr_ldr, officer can promote
         if (!$userPromoting->isRole('officer')) {
@@ -128,7 +128,7 @@ class MemberPolicy
         return true;
     }
 
-    public function manageIngameHandles(User $user, Member $member)
+    public function manageIngameHandles(User $user, Member $member): bool
     {
         // can edit yourself
         if ($member->id === auth()->user()->member_id) {
@@ -140,5 +140,13 @@ class MemberPolicy
         }
 
         return false;
+    }
+
+    public function makeRecommendations(): bool
+    {
+        // only admin, sr_ldr, officer can promote
+        if (!auth()->user()->isRole('officer')) {
+            return false;
+        }
     }
 }

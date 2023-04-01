@@ -11,14 +11,14 @@ class RecommendationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function index($division)
     {
-        $promotions = Recommendation::promotions()->forCurrentMonth()->get();
-        $demotions = Recommendation::demotions()->forCurrentMonth()->get();
+        $recommendations = Recommendation::forCurrentMonth()->get();
 
-        return view('division.recommendations', compact('division', 'promotions', 'demotions'));
+        return view('division.recommendations', compact(
+            'division', 'recommendations'
+        ));
     }
 
     /**
