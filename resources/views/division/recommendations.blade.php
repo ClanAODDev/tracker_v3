@@ -16,10 +16,9 @@
 
     <div class="container-fluid">
 
-        {!! Breadcrumbs::render('promotions', $division) !!}
+        {!! Breadcrumbs::render('recommendations', $division) !!}
 
         <hr/>
-
 
         {{-- @include('division.partials.recommendations-log')--}}
     </div>
