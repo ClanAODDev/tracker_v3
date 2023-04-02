@@ -76,7 +76,7 @@ class MemberController extends Controller
 
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 
-        return $members->map(fn ($member) => [
+        return $members->map(fn($member) => [
             'id' => $member->clan_id,
             'label' => $member->name,
         ]);
@@ -165,7 +165,8 @@ class MemberController extends Controller
     {
         $member = Member::find($request->member);
         $this->authorize('update', $member);
-        $member->assignPosition(Position::find($request->position));
+        /** @var \App\Models\Member $member */
+        $member->assignPosition(\App\Enums\Position::from($request->position));
         $member->save();
     }
 
@@ -182,7 +183,10 @@ class MemberController extends Controller
 
         $division = $member->division;
 
-        $positions = \App\Enums\Position::cases();
+        $positions = collect(\App\Enums\Position::cases())->pluck('value', 'name')
+            ->flip()->map(function ($name, $value) {
+                return \App\Enums\Position::from($value)->name();
+            })->flip();
 
         return view('member.edit-member', compact(
             'member',
@@ -278,7 +282,7 @@ class MemberController extends Controller
 
             if ($member->handles->contains($handle->id)) {
                 $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(fn ($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
+                $newHandle['value'] = $member->handles->filter(fn($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
             }
 
             return $newHandle;

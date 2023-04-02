@@ -34,9 +34,10 @@
                         <div class="tab-content" id="profile-container">
                             <div id="member" class="tab-pane active">
                                 <div class="panel-body">
+
                                     <manage-member :member-id="{{ $member->id }}"
-                                                   :positions="{{ $positions->values() }}"
-                                                   :position="{{ $member->position_id }}"
+                                                   :positions="{{ $positions }}"
+                                                   :position="{{ $member->position }}"
                                     ></manage-member>
                                     <hr />
                                     <table class="table table-bordered table-condensed">

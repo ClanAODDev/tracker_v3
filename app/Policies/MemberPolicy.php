@@ -93,11 +93,15 @@ class MemberPolicy
         return true;
     }
 
-    public function recommend(User $user, Member $member): bool
+    public function recommend(User $actingUser, Member $memberBeingActedUpon): bool
     {
-        // squad leaders can only recommend members of their own squad
-        // platoon leaders only members of their platoon / squads
         // CO/XO/Admin recommend anyone
+        if ($actingUser->member->position)
+
+        // platoon leaders only members of their platoon / squads
+        // squad leaders can only recommend members of their own squad\
+
+        return false;
     }
 
     public function managePartTime(User $user, Member $member): bool
