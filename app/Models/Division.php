@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\Position;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Carbon\Carbon;
@@ -254,7 +255,11 @@ class Division extends Model
      */
     public function generalSergeants()
     {
-        return $this->members()->whereIn('position_id', [4, 7]);
+        return $this->members()
+            ->whereIn('position', [
+                Position::GENERAL_SERGEANT,
+                Position::CLAN_ADMIN,
+            ]);
     }
 
     /**
@@ -271,7 +276,7 @@ class Division extends Model
      */
     public function unassigned()
     {
-        return $this->members()->where('platoon_id', 0)->whereIn('position_id', [1])->orderBy(
+        return $this->members()->where('platoon_id', 0)->wherePosition(Position::MEMBER)->orderBy(
             'rank_id',
             'asc'
         )->orderBy('name', 'asc');
@@ -320,7 +325,12 @@ class Division extends Model
      */
     public function leaders()
     {
-        return $this->members()->orderBy('position_id', 'desc')->whereIn('position_id', [5, 6]);
+        return $this->members()
+            ->orderBy('position', 'desc')
+            ->whereIn('position', [
+                Position::EXECUTIVE_OFFICER,
+                Position::COMMANDING_OFFICER
+            ]);
     }
 
     /**

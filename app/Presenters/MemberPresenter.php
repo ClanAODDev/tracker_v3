@@ -45,10 +45,10 @@ class MemberPresenter extends \App\Presenters\Presenter
     {
         if ($this->member->position) {
             $title = $this->member->position->name ?: null;
-            $icon = $this->member->position->icon ? "<i class=\"{$this->member->position->icon}\"></i>" : null;
+            $icon = $this->member->position->icon() ? "<i class=\"{$this->member->position->icon()}\"></i>" : null;
             $name = $showRank ? $this->rankName() : $this->member->name;
 
-            return "<span title=\"{$title}\" class=\"{$this->member->position->class}\">{$icon} {$name}</span>";
+            return "<span title=\"{$title}\" class=\"{$this->member->position->class()}\">{$icon} {$name}</span>";
         }
 
         return $this->member->name;

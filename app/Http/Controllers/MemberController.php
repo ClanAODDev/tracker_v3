@@ -182,7 +182,7 @@ class MemberController extends Controller
 
         $division = $member->division;
 
-        $positions = Position::all()->pluck('id', 'name');
+        $positions = \App\Enums\Position::cases();
 
         return view('member.edit-member', compact(
             'member',

@@ -134,7 +134,7 @@ class SyncMemberData
                         ]);
 
                         // wipe old division assignments
-                        $updates['position_id'] = 1;
+                        $updates['position'] = 1;
                         $updates['squad_id'] = 0;
                         $updates['platoon_id'] = 0;
 

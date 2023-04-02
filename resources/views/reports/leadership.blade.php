@@ -79,7 +79,7 @@
                                             {!! $member->present()->rankName !!}
                                         </a>
                                     </td>
-                                    <td class="slight text-uppercase">{{ $member->position->name }}</td>
+                                    <td class="slight text-uppercase">{{ $member->position->name() }}</td>
                                     <td>{{ $member->last_promoted_at ? $member->last_promoted_at->format('Y-m-d') : '--' }}</td>
                                     <td class="hidden-xs hidden-sm">{{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}</td>
                                     <td class="hidden-xs hidden-sm">{{ $member->xo_at ? $member->xo_at->format('Y-m-d') : '--' }}</td>

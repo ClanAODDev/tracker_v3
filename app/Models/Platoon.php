@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\Position;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,7 +60,9 @@ class Platoon extends Model
     {
         return $this->members()
             ->whereSquadId(0)
-            ->whereNotIn('position_id', [3]);
+            ->whereNotIn('position', [
+                Position::PLATOON_LEADER
+            ]);
     }
 
     /**

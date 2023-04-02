@@ -84,7 +84,7 @@
                             <label for="caller">Caller:</label>
                             <input type="text" id="caller" name="caller" class="form-control"
                                    style="color: rgba(255,255,255,.6)" disabled
-                                   value="{{ $ticket->caller->name }} ({{ $ticket->caller->member->position->name }} of {{ $ticket->division->name }})">
+                                   value="{{ $ticket->caller->name }} ({{ $ticket->caller->member->position->name() }} of {{ $ticket->division->name }})">
                         </div>
 
                         @if ($ticket->owner)
