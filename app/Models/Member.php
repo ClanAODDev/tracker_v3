@@ -76,7 +76,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
         return $this->hasMany(\App\Models\Note::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
-    public function assignPosition($position): Model
+    public function assignPosition($position)
     {
         // reset assignments for specific positions
         if (\in_array($position, [
@@ -98,7 +98,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
             $this->xo_at = null;
         }
 
-        return $this->position()->associate($position);
+        return $this->position = $position;
     }
 
     /**
