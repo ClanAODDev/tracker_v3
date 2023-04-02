@@ -110,7 +110,6 @@ class MemberPolicy
             return true;
         }
 
-        // squad leaders can only recommend members of their own squad
         if ($actor->position === Position::SQUAD_LEADER
             // squad leader of same squad?
             && $actor->member->squad_id === $target->squad_id
