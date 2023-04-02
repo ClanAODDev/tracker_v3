@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Position;
 use App\Http\Requests\DeleteMember;
 use App\Models\Division;
 use App\Models\Handle;
 use App\Models\Member;
 use App\Models\Platoon;
-use App\Models\Position;
 use App\Repositories\MemberRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -165,8 +165,7 @@ class MemberController extends Controller
     {
         $member = Member::find($request->member);
         $this->authorize('update', $member);
-        /** @var \App\Models\Member $member */
-        $member->assignPosition(\App\Enums\Position::from($request->position));
+        $member->assignPosition(Position::from($request->position));
         $member->save();
     }
 
@@ -183,9 +182,9 @@ class MemberController extends Controller
 
         $division = $member->division;
 
-        $positions = collect(\App\Enums\Position::cases())->pluck('value', 'name')
+        $positions = collect(Position::cases())->pluck('value', 'name')
             ->flip()->map(function ($name, $value) {
-                return \App\Enums\Position::from($value)->name();
+                return Position::from($value)->name();
             })->flip();
 
         return view('member.edit-member', compact(
