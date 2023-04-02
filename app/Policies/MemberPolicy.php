@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Rank;
@@ -93,15 +94,31 @@ class MemberPolicy
         return true;
     }
 
-    public function recommend(User $actingUser, Member $memberBeingActedUpon): bool
+    public function recommend(User $actor, Member $target): bool
     {
-        // CO/XO/Admin recommend anyone
-        if ($actingUser->member->position) {
-            // platoon leaders only members of their platoon / squads
-            // squad leaders can only recommend members of their own squad\
-
-            return false;
+        if (in_array($actor->position, [
+            Position::COMMANDING_OFFICER,
+            Position::EXECUTIVE_OFFICER
+        ])) {
+            return true;
         }
+
+        if ($actor->position === Position::PLATOON_LEADER
+            // platoon leader of same platoon?
+            && $actor->member->platoon_id === $target->platoon_id
+        ) {
+            return true;
+        }
+
+        // squad leaders can only recommend members of their own squad
+        if ($actor->position === Position::SQUAD_LEADER
+            // squad leader of same squad?
+            && $actor->member->squad_id === $target->squad_id
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     public function managePartTime(User $user, Member $member): bool
@@ -151,13 +168,5 @@ class MemberPolicy
         }
 
         return false;
-    }
-
-    public function makeRecommendations(): bool
-    {
-        // only admin, sr_ldr, officer can promote
-        if (!auth()->user()->isRole('officer')) {
-            return false;
-        }
     }
 }
