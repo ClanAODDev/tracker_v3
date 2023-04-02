@@ -27,6 +27,22 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
+                <h4>2 April - 3.8</h4>
+                <hr/>
+                <ul>
+                    <li>Backend improvements to member position
+                    <ul>
+                        <li>Division structures referencing <code>position.name</code> will need to move to using
+                            <code>position.name()</code> to get the proper format for position name</li>
+                    </ul>
+                    </li>
+                    <li>Division structure template generated code field converted to read-only</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
                 <h4>31 December - 1 January 2022 - 3.7</h4>
                 <hr/>
                 <ul>
