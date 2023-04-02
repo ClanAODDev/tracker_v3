@@ -1,3 +1,5 @@
+@php use App\Enums\Position; @endphp
+
 @extends('application.base-tracker')
 
 @section('content')
@@ -21,7 +23,7 @@
             @elseif ($member->division_id == 0)
                 <span class="text-muted"><i class="fa fa-user-times"></i> Ex-AOD</span>
             @else
-                {{ $member->position->name ?? "No Position" }}
+                {{ $member->position->name() ?? "No Position" }}
             @endif
         @endslot
     @endcomponent

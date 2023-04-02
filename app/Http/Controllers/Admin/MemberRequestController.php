@@ -182,6 +182,6 @@ class MemberRequestController extends Controller
     private function isDivisionLeadership(): bool
     {
         return auth()->user()->isRole('sr_ldr')
-            && \in_array(auth()->user()->member->position_id, [5, 6], true);
+            && \in_array(auth()->user()->member->position, [5, 6], true);
     }
 }

@@ -53,7 +53,7 @@ class DivisionController extends \App\Http\Controllers\Controller
             \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
         )->count();
 
-        $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
+        $divisionLeaders = $division->leaders()->with('rank')->get();
 
         $platoons = $division->platoons()->with('leader.rank')->with(
             'squads.leader',

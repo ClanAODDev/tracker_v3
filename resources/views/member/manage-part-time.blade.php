@@ -13,7 +13,7 @@
             {!! $member->present()->rankName !!}
         @endslot
         @slot ('subheading')
-            {{ $member->position->name ?? "No Position" }}
+            {{ $member->position->name() ?? "No Position" }}
         @endslot
     @endcomponent
 

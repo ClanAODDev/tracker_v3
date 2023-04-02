@@ -71,7 +71,7 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('member', function ($member) {
             $model = Member::whereClanId($member)
-                ->with('rank', 'position')
+                ->with('rank')
                 ->first();
 
             if ($model instanceof Member) {

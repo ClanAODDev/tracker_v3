@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\Position;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
     protected $casts = [
         'pending_member' => 'boolean',
         'flagged_for_inactivity' => 'boolean',
+        'position' => \App\Enums\Position::class,
     ];
 
     protected $guarded = [];
@@ -76,35 +78,27 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function assignPosition($position): Model
     {
-        $newPosition = $position instanceof \App\Models\Position ? $position : \App\Models\Position::whereName(strtolower($position))->firstOrFail();
         // reset assignments for specific positions
-        if (\in_array(
-            $newPosition->name,
-            ['Commanding Officer', 'Executive Officer', 'General Sergeant', 'Clan Admin'],
-            true
-        )) {
+        if (\in_array($position, [
+            Position::COMMANDING_OFFICER,
+            Position::EXECUTIVE_OFFICER,
+            Position::GENERAL_SERGEANT,
+            Position::CLAN_ADMIN,
+        ])) {
             $this->platoon_id = 0;
             $this->squad_id = 0;
         }
 
-        if ('Executive Officer' === $newPosition->name) {
+        if (Position::EXECUTIVE_OFFICER === $position) {
             $this->xo_at = now();
             $this->co_at = null;
         }
-        if ('Commanding Officer' === $newPosition->name) {
+        if (Position::COMMANDING_OFFICER === $position) {
             $this->co_at = now();
             $this->xo_at = null;
         }
 
-        return $this->position()->associate($newPosition);
-    }
-
-    /**
-     * relationship - member belongs to a position.
-     */
-    public function position()
-    {
-        return $this->belongsTo(\App\Models\Position::class);
+        return $this->position()->associate($position);
     }
 
     /**
@@ -143,7 +137,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
     public function resetPositionAndAssignments()
     {
         $this->update([
-            'division_id' => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position_id' => 1,
+            'division_id' => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position' => 1,
             'flagged_for_inactivity' => false,
             'groups' => null,
         ]);
@@ -272,7 +266,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function isDivisionLeader(Division $division)
     {
-        if ($this->division->id === $division->id && \in_array($this->position_id, [5, 6], true)) {
+        if ($this->division->id === $division->id && \in_array($this->position, [5, 6], true)) {
             return true;
         }
 

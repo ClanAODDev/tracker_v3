@@ -16,7 +16,7 @@
             @include('member.partials.member-actions-button', ['member' => $member])
         @endslot
         @slot ('subheading')
-            {{ $member->position->name  }}
+            {{ $member->position->name()  }}
         @endslot
     @endcomponent
 

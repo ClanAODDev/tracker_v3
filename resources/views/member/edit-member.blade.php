@@ -13,7 +13,7 @@
             {!! $member->present()->rankName !!}
         @endslot
         @slot ('subheading')
-            {{ $member->position->name ?? "No Position" }}
+            {{ $member->position->name() ?? "No Position" }}
         @endslot
     @endcomponent
 
@@ -35,8 +35,8 @@
                             <div id="member" class="tab-pane active">
                                 <div class="panel-body">
                                     <manage-member :member-id="{{ $member->id }}"
-                                                   :positions="{{ $positions }}"
-                                                   :position="{{ $member->position->id }}"
+                                                   :positions="{{ $positions->values() }}"
+                                                   :position="{{ $member->position_id }}"
                                     ></manage-member>
                                     <hr />
                                     <table class="table table-bordered table-condensed">
