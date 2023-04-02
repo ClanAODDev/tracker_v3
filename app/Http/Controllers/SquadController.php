@@ -34,7 +34,9 @@ class SquadController extends \App\Http\Controllers\Controller
      */
     public function show(Division $division, Platoon $platoon, Squad $squad)
     {
-        $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'])->get()->sortByDesc('rank_id');
+        $members = $squad->members()->with([
+                'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave']
+        )->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
 
@@ -128,7 +130,7 @@ class SquadController extends \App\Http\Controllers\Controller
     {
         $member = \App\Models\Member::find($request->member_id);
         // if squad id is zero, user wants to unassign member
-        if (0 === (int) $request->squad_id) {
+        if (0 === (int)$request->squad_id) {
             $member->platoon()->dissociate();
             $member->squad()->dissociate();
         } else {
