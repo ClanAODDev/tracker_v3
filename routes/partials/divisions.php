@@ -25,7 +25,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     Route::get('/structure', 'DivisionStructureController@show')->name('division.structure');
     Route::post('/structure', 'DivisionStructureController@update')->name('division.update-structure');
 
-
     Route::get('/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
     Route::get('/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')

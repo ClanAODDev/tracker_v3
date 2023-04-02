@@ -329,7 +329,7 @@ class Division extends Model
             ->orderBy('position', 'desc')
             ->whereIn('position', [
                 Position::EXECUTIVE_OFFICER,
-                Position::COMMANDING_OFFICER
+                Position::COMMANDING_OFFICER,
             ]);
     }
 

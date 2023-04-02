@@ -162,7 +162,7 @@ class ReportsController extends \App\Http\Controllers\Controller
             'sergeants' => function ($query) {
                 $query->orderByDesc('rank_id')->orWhereIn('position', [
                     Position::EXECUTIVE_OFFICER,
-                    Position::COMMANDING_OFFICER
+                    Position::COMMANDING_OFFICER,
                 ]);
             }, 'sergeants.rank',
         ])->withCount('sgtAndSsgt')->get();

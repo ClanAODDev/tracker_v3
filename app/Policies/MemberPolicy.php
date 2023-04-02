@@ -96,12 +96,12 @@ class MemberPolicy
     public function recommend(User $actingUser, Member $memberBeingActedUpon): bool
     {
         // CO/XO/Admin recommend anyone
-        if ($actingUser->member->position)
+        if ($actingUser->member->position) {
+            // platoon leaders only members of their platoon / squads
+            // squad leaders can only recommend members of their own squad\
 
-        // platoon leaders only members of their platoon / squads
-        // squad leaders can only recommend members of their own squad\
-
-        return false;
+            return false;
+        }
     }
 
     public function managePartTime(User $user, Member $member): bool
