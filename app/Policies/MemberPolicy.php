@@ -98,7 +98,7 @@ class MemberPolicy
     {
         if (in_array($actor->position, [
             Position::COMMANDING_OFFICER,
-            Position::EXECUTIVE_OFFICER
+            Position::EXECUTIVE_OFFICER,
         ])) {
             return true;
         }
