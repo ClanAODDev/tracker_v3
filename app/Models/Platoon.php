@@ -61,7 +61,7 @@ class Platoon extends Model
         return $this->members()
             ->whereSquadId(0)
             ->whereNotIn('position', [
-                Position::PLATOON_LEADER
+                Position::PLATOON_LEADER,
             ]);
     }
 

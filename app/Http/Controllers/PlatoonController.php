@@ -174,7 +174,7 @@ class PlatoonController extends Controller
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
             $squad->members = $squad->members->filter(
-                fn($member) => Position::MEMBER === $member->position
+                fn ($member) => Position::MEMBER === $member->position
             )->sortbyDesc(function ($member) use ($squad) {
                 return $squad->leader && $squad->leader->clan_id === $member->recruiter_id;
             });

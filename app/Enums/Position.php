@@ -21,7 +21,7 @@ enum Position:int
 
     public function icon(): string
     {
-        return match($this) {
+        return match ($this) {
             self::MEMBER,
             self::GENERAL_SERGEANT => '',
 
@@ -35,7 +35,7 @@ enum Position:int
 
     public function class(): string
     {
-        return match($this) {
+        return match ($this) {
             self::MEMBER,
             self::GENERAL_SERGEANT => 'text-default',
 
@@ -47,5 +47,4 @@ enum Position:int
             self::CLAN_ADMIN => 'text-danger',
         };
     }
-
 }

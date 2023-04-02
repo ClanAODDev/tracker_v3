@@ -76,7 +76,7 @@ class MemberController extends Controller
 
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 
-        return $members->map(fn($member) => [
+        return $members->map(fn ($member) => [
             'id' => $member->clan_id,
             'label' => $member->name,
         ]);
@@ -281,7 +281,7 @@ class MemberController extends Controller
 
             if ($member->handles->contains($handle->id)) {
                 $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(fn($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
+                $newHandle['value'] = $member->handles->filter(fn ($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
             }
 
             return $newHandle;
