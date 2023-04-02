@@ -98,7 +98,11 @@ class Member extends \Illuminate\Database\Eloquent\Model
             $this->xo_at = null;
         }
 
-        return $this->position = $position;
+        $this->position = null == $position
+            ? Position::MEMBER
+            : $position;
+
+        return $this;
     }
 
     /**

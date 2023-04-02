@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
@@ -52,7 +53,8 @@ class CreateDivision extends FormRequest
     private function reassignLeaderTo($division)
     {
         $member = Member::whereClanId($this->leader_id)->first();
-        $member->assignPosition('Commanding Officer')->save();
+        $member->assignPosition(Position::COMMANDING_OFFICER);
         $member->division_id = $division->id;
+        $member->save();
     }
 }

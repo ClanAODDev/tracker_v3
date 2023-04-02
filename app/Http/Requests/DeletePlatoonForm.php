@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Position;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeletePlatoonForm extends FormRequest
@@ -53,7 +54,7 @@ class DeletePlatoonForm extends FormRequest
             $squad->members->each(function ($member) use ($squad) {
                 $member->squad()->dissociate()->save();
                 $squad->leader()->dissociate()->save();
-                $member->assignPosition('member');
+                $member->assignPosition(Position::MEMBER);
             });
 
             $squad->platoon()->dissociate();

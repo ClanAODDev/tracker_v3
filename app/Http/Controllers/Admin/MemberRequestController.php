@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Position;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -182,6 +183,9 @@ class MemberRequestController extends Controller
     private function isDivisionLeadership(): bool
     {
         return auth()->user()->isRole('sr_ldr')
-            && \in_array(auth()->user()->member->position, [5, 6], true);
+            && \in_array(auth()->user()->member->position, [
+                Position::EXECUTIVE_OFFICER,
+                Position::COMMANDING_OFFICER,
+            ]);
     }
 }

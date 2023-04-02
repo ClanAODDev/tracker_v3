@@ -2,6 +2,7 @@
 
 namespace App\AOD\MemberSync;
 
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -134,7 +135,7 @@ class SyncMemberData
                         ]);
 
                         // wipe old division assignments
-                        $updates['position'] = 1;
+                        $updates['position'] = Position::MEMBER;
                         $updates['squad_id'] = 0;
                         $updates['platoon_id'] = 0;
 
