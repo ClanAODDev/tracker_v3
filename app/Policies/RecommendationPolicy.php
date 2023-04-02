@@ -19,7 +19,7 @@ class RecommendationPolicy
      */
     public function viewAny(User $actor)
     {
-        return !$actor->position === Position::MEMBER;
+        return $actor->position != Position::MEMBER;
     }
 
     /**
