@@ -27,7 +27,7 @@
 
         <div class="row m-t-xl">
             <div class="col-md-12">
-                <h4>2 April - 3.8</h4>
+                <h4>2 April 2023 - 3.8</h4>
                 <hr/>
                 <ul>
                     <li>Backend improvements to member position
