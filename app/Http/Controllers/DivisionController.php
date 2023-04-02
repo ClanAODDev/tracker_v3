@@ -184,7 +184,7 @@ class DivisionController extends \App\Http\Controllers\Controller
     public function exportAsCSV(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave',
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
