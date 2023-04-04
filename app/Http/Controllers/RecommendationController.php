@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRecommendationRequest;
 use App\Http\Requests\UpdateRecommendationRequest;
+use App\Models\Member;
+use App\Models\Rank;
 use App\Models\Recommendation;
 
 class RecommendationController extends Controller
@@ -26,26 +28,34 @@ class RecommendationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Member $member)
     {
-        //
+        $recommendableRanks = Rank::where('id', '>=', auth()->user()->member->rank_id)->get();
+
+        return view('division.recommendations', compact(
+            'member', 'recommendableRanks'
+        ));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreRecommendationRequest  $request
+     * @param \App\Http\Requests\StoreRecommendationRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreRecommendationRequest $request)
     {
-        //
+        $request->persist();
+
+        $this->showToast('Recommendation submitted successfully');
+
+        return redirect()->back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Recommendation  $promotion
+     * @param \App\Models\Recommendation $promotion
      * @return \Illuminate\Http\Response
      */
     public function show(Recommendation $promotion)
@@ -56,7 +66,7 @@ class RecommendationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Recommendation  $promotion
+     * @param \App\Models\Recommendation $promotion
      * @return \Illuminate\Http\Response
      */
     public function edit(Recommendation $promotion)
@@ -67,8 +77,8 @@ class RecommendationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateRecommendationRequest  $request
-     * @param  \App\Models\Recommendation  $promotion
+     * @param \App\Http\Requests\UpdateRecommendationRequest $request
+     * @param \App\Models\Recommendation $promotion
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateRecommendationRequest $request, Recommendation $promotion)
@@ -79,7 +89,7 @@ class RecommendationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Recommendation  $promotion
+     * @param \App\Models\Recommendation $promotion
      * @return \Illuminate\Http\Response
      */
     public function destroy(Recommendation $promotion)
