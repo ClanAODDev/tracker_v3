@@ -13,7 +13,7 @@ class StoreRecommendationRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return auth()->user()->can('recommend', request()->member);
     }
 
     /**
