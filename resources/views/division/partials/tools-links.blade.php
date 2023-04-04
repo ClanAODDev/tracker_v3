@@ -42,7 +42,7 @@
             </li>
         @endcan
 
-            @can ('makeRecommendations', App\Models\Member::class)
+            @can ('viewAny', App\Models\Recommendation::class)
                 <li>
                     <a href="{{ route('division.recommendations', $division) }}">Recommendations</a>
                 </li>
