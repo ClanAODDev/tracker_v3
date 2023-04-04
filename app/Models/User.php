@@ -219,4 +219,9 @@ class User extends Authenticatable
     {
         return ucfirst($value);
     }
+
+    public function getPositionAttribute()
+    {
+        return $this->member->position;
+    }
 }
