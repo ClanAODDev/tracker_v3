@@ -16,9 +16,10 @@ return new class extends Migration {
             $table->id();
             $table->integer('member_id')->unsigned();
             $table->integer('admin_id')->unsigned();
+            $table->integer('division_id')->unsigned();
             $table->dateTime('decided_at')->nullable();
             $table->dateTime('effective_at')->nullable();
-            $table->enum('decision', ['approved', 'denied']);
+            $table->enum('decision', ['approved', 'denied', 'pending'])->default('pending');
             $table->text('recommendable_type');
             $table->integer('recommendable_id');
             $table->text('justification');
