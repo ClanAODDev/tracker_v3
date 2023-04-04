@@ -20,8 +20,7 @@ Route::group(['prefix' => 'members'], function () {
     Route::delete('{member}/leave/{leave}', 'LeaveController@delete')->name('leave.delete');
 
     // member recommendations
-    Route::get('recommendations', 'RecommendationController@create')->name('division.recommendations.store');
-    Route::put('recommendations', 'RecommendationController@store')->name('division.recommendations.store');
+    Route::put('{member}/recommend', 'RecommendationController@store')->name('member.recommendations.store');
 
     // member notes
     Route::group(['prefix' => '{member}/notes'], function () {
