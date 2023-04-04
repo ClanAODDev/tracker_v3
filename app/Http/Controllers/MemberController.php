@@ -8,6 +8,7 @@ use App\Models\Division;
 use App\Models\Handle;
 use App\Models\Member;
 use App\Models\Platoon;
+use App\Models\Rank;
 use App\Repositories\MemberRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -146,6 +147,9 @@ class MemberController extends Controller
         $rankHistory = $member->rankActions()->with('rank')->get();
         $transfers = $member->transfers()->with('division')->get();
 
+        $recommendableRanks = Rank::where('id', '<=', auth()->user()->member->rank_id)
+            ->get()->pluck('name', 'id');
+
         return view('member.show', compact(
             'member',
             'division',
@@ -153,6 +157,7 @@ class MemberController extends Controller
             'partTimeDivisions',
             'rankHistory',
             'transfers',
+            'recommendableRanks'
         ));
     }
 

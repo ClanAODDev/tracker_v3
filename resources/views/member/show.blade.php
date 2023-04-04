@@ -48,6 +48,10 @@
             @include ('member.partials.notes')
         @endcan
 
+        @can('recommend', $member)
+            @include('member.partials.recommend')
+        @endcan
+
     </div>
 
 @endsection
