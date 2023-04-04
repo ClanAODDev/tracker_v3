@@ -33,7 +33,8 @@ class RecommendationController extends Controller
         $recommendableRanks = Rank::where('id', '>=', auth()->user()->member->rank_id)->get();
 
         return view('division.recommendations', compact(
-            'member', 'recommendableRanks'
+            'member',
+            'recommendableRanks'
         ));
     }
 

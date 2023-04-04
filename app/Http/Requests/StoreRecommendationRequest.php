@@ -34,7 +34,7 @@ class StoreRecommendationRequest extends FormRequest
     public function messages()
     {
         return [
-          'justification.required' => 'Please provide a justification for your recommendation'
+          'justification.required' => 'Please provide a justification for your recommendation',
         ];
     }
 
@@ -44,7 +44,7 @@ class StoreRecommendationRequest extends FormRequest
 
         $rank->recommendation()->create(array_merge(request([
             'justification',
-            'effective_at'
+            'effective_at',
         ]), [
             'member_id' => request('member')->id,
             'admin_id' => auth()->user()->member_id,
