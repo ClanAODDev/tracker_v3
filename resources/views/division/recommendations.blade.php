@@ -20,6 +20,10 @@
 
         <hr/>
 
+        @foreach ($recommendations as $recommendation)
+            @dump($recommendation->toArray()) <br />
+        @endforeach
+
         {{-- @include('division.partials.recommendations-log')--}}
     </div>
 
