@@ -27,7 +27,6 @@ enum Role:int
             self::JUNIOR_LEADER  => 'text-default',
             self::SENIOR_LEADER => 'text-warning',
             self::ADMINISTRATOR => 'text-danger',
-
         };
     }
 }
