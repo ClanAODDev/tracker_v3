@@ -3,6 +3,7 @@
 namespace App\AOD;
 
 use App\AOD\Traits\Procedureable;
+use App\Enums\Role;
 
 class ClanForumPermissions
 {
@@ -39,12 +40,12 @@ class ClanForumPermissions
              * Banned Users.
              */
             case array_intersect($groupIds, [49]):
-                return (6 !== $user->role_id) ? $this->assignRole('banned') : null;
+                return (Role::BANNED !== $user->role) ? $this->assignRole(Role::BANNED) : null;
                 /*
                  * 6 - Administrators.
                  */
             case array_intersect($groupIds, [6]):
-                return (5 !== $user->role_id) ? $this->assignRole('admin') : null;
+                return (Role::ADMINISTRATOR !== $user->role) ? $this->assignRole(Role::ADMINISTRATOR) : null;
                 /*
                  * 52 - AOD Sergeants
                  * 66 - AOD Staff Sergeants
@@ -52,22 +53,22 @@ class ClanForumPermissions
                  * 79 - Division XO.
                  */
             case array_intersect($groupIds, [52, 66, 80, 79]):
-                return (4 !== $user->role_id) ? $this->assignRole('sr_ldr') : null;
+                return (Role::SENIOR_LEADER !== $user->role) ? $this->assignRole(Role::SENIOR_LEADER) : null;
                 /*
                  * Division officer usergroup.
                  */
             case array_intersect($groupIds, $officerRoleIds):
-                return (2 !== $user->role_id) ? $this->assignRole('officer') : null;
+                return (Role::OFFICER !== $user->role) ? $this->assignRole(Role::OFFICER) : null;
 
             default:
-                return (1 !== $user->role_id) ? $this->assignRole('member') : null;
+                return (Role::MEMBER !== $user->role) ? $this->assignRole(Role::MEMBER) : null;
         }
     }
 
     /**
      * @return
      */
-    private function assignRole(string $role)
+    private function assignRole(Role $role)
     {
         \Log::info("Role {$role} granted to user " . auth()->id());
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Role;
 use Illuminate\Support\Str;
 
 /*
@@ -19,7 +20,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
-        'role_id' => 1,
+        'role' => Role::MEMBER,
         'settings' => [],
         'developer' => false,
         'member_id' => function () {

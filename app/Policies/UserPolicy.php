@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -23,7 +24,7 @@ class UserPolicy
     }
 
     /**
-     * @param  User  $user
+     * @param User $user
      * @return bool
      */
     public function update()
@@ -88,6 +89,9 @@ class UserPolicy
 
     public function train(User $user)
     {
-        return $user->member->rank_id > 9 && \in_array($user->role_id, [4, 5], true);
+        return $user->member->rank_id > 9
+            && \in_array($user->role, [
+                Role::SENIOR_LEADER, Role::ADMINISTRATOR
+            ], true);
     }
 }

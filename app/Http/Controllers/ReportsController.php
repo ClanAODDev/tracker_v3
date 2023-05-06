@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Position;
+use App\Enums\Role;
 use App\Exceptions\FactoryMissingException;
 use App\Models\Division;
 use App\Models\Member;
@@ -128,11 +129,11 @@ class ReportsController extends \App\Http\Controllers\Controller
         foreach (Division::active()->get() as $division) {
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
-                $query->where('role_id', '>', 2);
+                $query->where('role', '>', Role::OFFICER);
             })->get();
             $sortedMembers = collect(\Illuminate\Support\Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
-                echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
+                echo $member->present()->rankName() . ", {$member->user->role->name()}" . PHP_EOL;
             });
             echo '---------- END OF DIVISION ----------' . PHP_EOL . PHP_EOL . PHP_EOL;
         }

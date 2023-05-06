@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Position;
+use App\Enums\Role;
 use App\Models\Recommendation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -19,7 +19,10 @@ class RecommendationPolicy
      */
     public function viewAny(User $actor)
     {
-        return $actor->position != Position::MEMBER;
+        return !in_array($actor->role, [
+            Role::MEMBER,
+            Role::BANNED,
+        ]);
     }
 
     /**

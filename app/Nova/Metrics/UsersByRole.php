@@ -17,7 +17,7 @@ class UsersByRole extends Partition
      */
     public function calculate(Request $request)
     {
-        return $this->count($request, User::class, 'role_id');
+        return $this->count($request, User::class, 'role');
     }
 
     /**

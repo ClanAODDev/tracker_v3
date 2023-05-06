@@ -36,7 +36,7 @@ class ClanSeeder extends Seeder
         User::factory()->create([
             'name' => $member->name,
             'member_id' => $member,
-            'role_id' => 5,
+            'role' => 5,
         ]);
     }
 
