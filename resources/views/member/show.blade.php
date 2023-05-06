@@ -1,5 +1,3 @@
-@php use App\Enums\Position; @endphp
-
 @extends('application.base-tracker')
 
 @section('content')
