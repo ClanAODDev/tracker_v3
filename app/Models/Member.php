@@ -33,7 +33,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
     protected $casts = [
         'pending_member' => 'boolean',
         'flagged_for_inactivity' => 'boolean',
-        'position' => \App\Enums\Position::class,
+        'position' => Position::class,
     ];
 
     protected $guarded = [];

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Settings\UserSettings;
 use Exception;
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,6 +56,7 @@ class User extends Authenticatable
     protected $casts = [
         'developer' => 'boolean',
         'settings' => 'json',
+        'role' => Role::class,
     ];
 
     /**
@@ -181,14 +183,6 @@ class User extends Authenticatable
         }
 
         $this->role()->associate($role)->save();
-    }
-
-    /**
-     * relationship - user belongs to a role.
-     */
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     /**
