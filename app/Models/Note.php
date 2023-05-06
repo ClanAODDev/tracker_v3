@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,7 +38,9 @@ class Note extends Model
      */
     public static function allNoteTypes()
     {
-        if (auth()->user()->role(['admin', 'sr_ldr'])) {
+        if (auth()->user()->role([
+            Role::ADMINISTRATOR, Role::SENIOR_LEADER
+        ])) {
             static::$noteTypes['sr_ldr'] = 'Sr Leaders Only';
         }
 

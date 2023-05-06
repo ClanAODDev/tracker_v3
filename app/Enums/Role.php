@@ -20,8 +20,7 @@ enum Role:int
         );
     }
 
-    // replace roleLabelColored with this
-    // role presenter can go away, as can role table
+    // might not need this
     public function label(): string
     {
         return match ($this) {

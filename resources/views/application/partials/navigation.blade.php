@@ -23,7 +23,7 @@
             <li class="no-select">
                 <a href="#">
                     <small class="text-muted text-uppercase slight">
-                        Role: <strong>{{ auth()->user()->role->name }}</strong>
+                        Role: <strong>{{ auth()->user()->role->name() }}</strong>
                     </small>
                 </a>
             </li>
