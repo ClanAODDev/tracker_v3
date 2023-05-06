@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum Role:int
 {
+    // @TODO: convert ids to abbreviations
+    // and get rid of the abbreviation helper
     case MEMBER = 1;
     case OFFICER = 2;
     case JUNIOR_LEADER = 3;

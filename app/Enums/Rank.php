@@ -4,6 +4,8 @@ namespace App\Enums;
 
 enum Rank: int
 {
+    // @TODO: convert ids to abbreviations
+    // and get rid of the abbreviation helper
     case RECRUIT = 1;
     case CADET = 2;
     case PRIVATE = 3;
