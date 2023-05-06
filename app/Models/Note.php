@@ -39,7 +39,7 @@ class Note extends Model
     public static function allNoteTypes()
     {
         if (auth()->user()->role([
-            Role::ADMINISTRATOR, Role::SENIOR_LEADER
+            Role::ADMINISTRATOR, Role::SENIOR_LEADER,
         ])) {
             static::$noteTypes['sr_ldr'] = 'Sr Leaders Only';
         }
