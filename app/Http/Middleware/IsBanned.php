@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Role;
 use Closure;
 
 class IsBanned
@@ -14,7 +15,7 @@ class IsBanned
      */
     public function handle($request, Closure $next)
     {
-        if (\Auth::check() && 6 === $request->user()->role_id) {
+        if (\Auth::check() && Role::BANNED === $request->user()->role) {
             abort(403, 'You are banned.');
         }
 

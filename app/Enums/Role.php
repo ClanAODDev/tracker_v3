@@ -11,6 +11,7 @@ enum Role:int
     case JUNIOR_LEADER = 3;
     case SENIOR_LEADER = 4;
     case ADMINISTRATOR = 5;
+    case BANNED = 6;
 
     public function name(): string
     {
