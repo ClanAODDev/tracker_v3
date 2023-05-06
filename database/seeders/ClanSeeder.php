@@ -19,7 +19,7 @@ class ClanSeeder extends Seeder
     public function run()
     {
         // generate divisions
-        Division::factory()->count(2)->create();
+        Division::factory()->create();
 
         foreach (Division::all() as $division) {
             $this->command->info("Adding and populating a division - {$division->name}");
