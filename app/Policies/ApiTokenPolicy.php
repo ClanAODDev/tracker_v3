@@ -24,7 +24,7 @@ class ApiTokenPolicy
                 Role::OFFICER,
                 Role::JUNIOR_LEADER,
                 Role::SENIOR_LEADER,
-                Role::ADMINISTRATOR
+                Role::ADMINISTRATOR,
             ], true);
     }
 

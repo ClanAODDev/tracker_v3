@@ -91,7 +91,7 @@ class UserPolicy
     {
         return $user->member->rank_id > 9
             && \in_array($user->role, [
-                Role::SENIOR_LEADER, Role::ADMINISTRATOR
+                Role::SENIOR_LEADER, Role::ADMINISTRATOR,
             ], true);
     }
 }

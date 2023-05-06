@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use App\Settings\UserSettings;
 use Exception;
-use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
