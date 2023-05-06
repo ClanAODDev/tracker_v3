@@ -7,6 +7,6 @@
     </div>
 </div>
 
-{{--@if ($errors->count() &&  && request('recommend-form'))--}}
+@if ($errors->count() && request('recommend-form'))
     <script>$('#create-recommendation').modal();</script>
-{{--@endif--}}
+@endif

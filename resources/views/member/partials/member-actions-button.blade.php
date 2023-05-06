@@ -11,7 +11,15 @@
 
             @can('train', auth()->user())
                 <li>
-                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}#sgt-duties">Perform Sgt Training</a>
+                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}#sgt-duties">Perform Sgt
+                        Training</a>
+                </li>
+            @endcan
+
+            @can('recommend', $member)
+                <li>
+                    <a href="#" data-toggle="modal"
+                       data-target="#create-recommendation"> Recommend</a>
                 </li>
             @endcan
 
@@ -26,7 +34,7 @@
 
             @else
                 <li class="disabled">
-                    <a href="#" class="text-muted" disabled> No account</a>
+                    <a href="#" class="text-muted" disabled> No tracker account</a>
                 </li>
             @endif
             <li class="divider"></li>
