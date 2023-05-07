@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Enums\Role;
 use Illuminate\Http\Request;
 use Jeffbeltran\SanctumTokens\SanctumTokens;
 use Laravel\Nova\Fields\BelongsTo;
@@ -9,6 +10,7 @@ use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 
 class User extends Resource
@@ -40,7 +42,6 @@ class User extends Resource
 
     public static $with = [
         'member',
-        'role',
     ];
 
     public static $group = 'Admin';
@@ -70,7 +71,10 @@ class User extends Resource
                 ->creationRules('unique:users,email')
                 ->updateRules('unique:users,email,{{resourceId}}'),
 
-            BelongsTo::make('Role'),
+            Select::make('Role')->options(collect(Role::cases())
+                ->mapWithKeys(function ($role) {
+                    return [$role->value => $role->name()];
+                })->all()),
 
             BelongsTo::make('Member', 'member'),
 
