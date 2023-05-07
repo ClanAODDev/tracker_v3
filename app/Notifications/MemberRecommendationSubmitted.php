@@ -41,7 +41,7 @@ class MemberRecommendationSubmitted extends Notification
         // @TODO: Rename to discord channel
         $channel = $notifiable->settings()->get('slack_channel');
 
-        $string = "A member recommendation was submitted for";
+        $string = 'A member recommendation was submitted for';
 
         return (new DiscordMessage())
             ->to($channel)

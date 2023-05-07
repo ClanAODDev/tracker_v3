@@ -51,7 +51,7 @@ return [
             'slack_alert_pt_member_removed',
             'slack_alert_member_transferred',
             'slack_alert_member_recommendation_created',
-        ]
+        ],
     ],
 
     'ticketing_enabled' => env('TICKETING', false),
