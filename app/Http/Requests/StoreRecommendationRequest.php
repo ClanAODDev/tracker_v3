@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Rank;
+use App\Notifications\MemberRecommendationSubmitted;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRecommendationRequest extends FormRequest
@@ -34,7 +35,7 @@ class StoreRecommendationRequest extends FormRequest
     public function messages()
     {
         return [
-          'justification.required' => 'Please provide a justification for your recommendation',
+            'justification.required' => 'Please provide a justification for your recommendation',
         ];
     }
 
@@ -42,7 +43,7 @@ class StoreRecommendationRequest extends FormRequest
     {
         $rank = Rank::find($this->rank_id);
 
-        $rank->recommendation()->create(array_merge(request([
+        $recommendation = $rank->recommendation()->create(array_merge(request([
             'justification',
             'effective_at',
         ]), [
@@ -50,5 +51,11 @@ class StoreRecommendationRequest extends FormRequest
             'admin_id' => auth()->user()->member_id,
             'division_id' => request()->member->division_id,
         ]));
+
+        if ('on' === request()->member->division->settings()->get('slack_member_notification_created')) {
+            request()->member->division->notify(
+                new MemberRecommendationSubmitted($recommendation)
+            );
+        }
     }
 }

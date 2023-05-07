@@ -40,6 +40,18 @@ return [
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
         'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
+
+        // @TODO: refactor view and settings to use config values
+        'division_discord_notifications' => [
+            'slack_alert_created_member',
+            'slack_alert_removed_member',
+            'slack_alert_division_edited',
+            'slack_alert_member_approved',
+            'slack_alert_member_denied',
+            'slack_alert_pt_member_removed',
+            'slack_alert_member_transferred',
+            'slack_alert_member_recommendation_created',
+        ]
     ],
 
     'ticketing_enabled' => env('TICKETING', false),
