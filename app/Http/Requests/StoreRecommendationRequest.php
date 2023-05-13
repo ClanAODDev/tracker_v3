@@ -5,9 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Rank;
 use App\Models\Recommendation as Form;
 use App\Notifications\MemberRecommendationSubmitted;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreRecommendationRequest extends FormRequest
 {
@@ -34,8 +32,8 @@ class StoreRecommendationRequest extends FormRequest
             'effective_at' => 'required|date',
             'member_id' => [
                 'required',
-                $this->hasRecommendationForCurrentOrFutureMonth()
-            ]
+                $this->hasRecommendationForCurrentOrFutureMonth(),
+            ],
         ];
     }
 
@@ -83,7 +81,7 @@ class StoreRecommendationRequest extends FormRequest
                 })->count();
 
             if ($futureRecommendations) {
-                $fail("That member already has a recommendation for the current or a future month");
+                $fail('That member already has a recommendation for the current or a future month');
             }
         };
     }

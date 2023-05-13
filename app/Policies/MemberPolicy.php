@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Enums\Position;
 use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
