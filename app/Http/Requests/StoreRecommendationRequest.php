@@ -4,7 +4,9 @@ namespace App\Http\Requests;
 
 use App\Models\Rank;
 use App\Notifications\MemberRecommendationSubmitted;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRecommendationRequest extends FormRequest
 {
@@ -29,6 +31,10 @@ class StoreRecommendationRequest extends FormRequest
             'rank_id' => 'required|integer',
             'justification' => 'required',
             'effective_at' => 'required|date',
+            'member_id' => [
+                'required',
+                Rule::exists('recommendations')->where($this->noFutureRecommendationsExist())
+            ]
         ];
     }
 
@@ -36,6 +42,7 @@ class StoreRecommendationRequest extends FormRequest
     {
         return [
             'justification.required' => 'Please provide a justification for your recommendation',
+            'member_id.exists' => 'That member already has a recommendation for the current or a future month'
         ];
     }
 
@@ -57,5 +64,26 @@ class StoreRecommendationRequest extends FormRequest
                 new MemberRecommendationSubmitted($recommendation)
             );
         }
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function noFutureRecommendationsExist(): \Closure
+    {
+
+        return function (Builder $query) {
+
+            return (
+                // is there a future recommendation
+                $query->where('effective_at', '>', now())->exists()
+
+                OR
+
+                // is there a recommendation for the current month and year
+                $query->whereMonth('effective_at', now()->format('m'))
+                    ->whereYear('effective_at', now()->format('Y'))->exists()
+            );
+        };
     }
 }
