@@ -17,6 +17,11 @@ class Recommendation extends Model
 
     protected $guarded = [];
 
+    protected $with = [
+        'member',
+        'admin'
+    ];
+
     protected $casts = [
         'decision' => RecommendationDecision::class,
         'type' => RecommendationDecision::class,
@@ -69,23 +74,23 @@ class Recommendation extends Model
     {
         // officer -> where user squad = recommendation squad
         if (auth()->user()->role === Role::OFFICER && auth()->user()->squad) {
-            $query->whereHas('member.squad', function ($query) {
-                $query->whereId(auth()->user()->squad->id);
+            $query = $query->whereHas('member.squad', function ($query) {
+                $query->whereSquadId(auth()->user()->squad->id);
             });
         }
 
         // jr_leader -> where user platoon = recommendation platoon
         if (auth()->user()->role === Role::JUNIOR_LEADER && auth()->user()->platoon) {
-            $query->whereHas('member.platoon', function ($query) {
-                $query->whereId(auth()->user()->platoon->id);
+            $query = $query->whereHas('member.platoon', function ($query) {
+                $query->wherePlatoonId(auth()->user()->platoon->id);
             });
         }
 
         // sr_leader -> where user division = recommendation division
         if (auth()->user()->role === Role::SENIOR_LEADER && auth()->user()->division) {
-            $query->whereHas('member.division', function ($query) {
+            $query = $query->whereHas('member.division', function ($query) {
                 // division id
-                $query->whereId(auth()->user()->division_id);
+                $query->whereDivisionId(auth()->user()->division_id);
             });
         }
 
