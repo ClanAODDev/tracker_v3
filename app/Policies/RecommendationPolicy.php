@@ -3,7 +3,6 @@
 namespace App\Policies;
 
 use App\Enums\Role;
-use App\Models\Division;
 use App\Models\Recommendation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
