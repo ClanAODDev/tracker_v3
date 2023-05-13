@@ -15,6 +15,8 @@ class RecommendationController extends Controller
      */
     public function index($division)
     {
+        $this->authorize('viewForDivision', [Recommendation::class, $division->id]);
+
         $recommendations = Recommendation::forDivision($division->id)
             ->forRank()
             ->pending()

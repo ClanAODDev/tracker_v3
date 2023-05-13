@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\Role;
+use App\Models\Division;
 use App\Models\Recommendation;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,12 +18,19 @@ class RecommendationPolicy
      * @param \App\Models\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $actor)
+    public function viewForDivision(User $actor, $divisionId): bool
     {
-        return !in_array($actor->role, [
-            Role::MEMBER,
-            Role::BANNED,
-        ]);
+        if ($actor->role == Role::MEMBER) {
+            return false;
+        }
+
+        if (in_array($actor->role, [Role::OFFICER, Role::JUNIOR_LEADER])) {
+            if ($actor->division->id != $divisionId) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
