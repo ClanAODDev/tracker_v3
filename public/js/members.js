@@ -1,1 +1,96 @@
-(()=>{var a;a=jQuery,{setup:function(){this.handleMemberList(),this.handleForumActivityChart()},handleForumActivityChart:function(){var e=a(".forum-activity-chart");new Chart(e,{type:"doughnut",data:{datasets:[{data:e.data("values"),backgroundColor:e.data("colors"),borderWidth:0}],labels:e.data("labels")},options:{rotation:1*Math.PI,circumference:1*Math.PI,legend:{position:"bottom",labels:{boxWidth:5,fontColor:"#949ba2"},label:{fullWidth:!1}}}})},handleMemberList:function(){parseInt(a(".platoon-number").text());var e=new Date;e.getDate(),e.getMonth();function t(){a("#is_tba").is(":checked")?a("#leader_id, #leader").prop("disabled",!0).val(""):a("#leader_id, #leader").prop("disabled",!1)}e.getFullYear(),new Array,a("table.members").DataTable({bInfo:!1,autoWidth:!0,columnDefs:[{targets:"no-search",searchable:!1},{targets:"col-hidden",visible:!1,searchable:!1},{iDataSort:2,aTargets:[1]}],stateSave:!1,paging:!1}),a(".dataTables_filter input").appendTo("#playerFilter").removeClass("input-sm"),a("#playerFilter input").attr({placeholder:"Search Players",class:"form-control"}),a(".dataTables_filter label").remove(),a(".no-sort").removeClass("sorting"),a("#is_tba").click((function(){t()})),t()}}.setup()})();
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!****************************************!*\
+  !*** ./resources/assets/js/members.js ***!
+  \****************************************/
+var Platoon = Platoon || {};
+(function ($) {
+  Platoon = {
+    setup: function setup() {
+      this.handleMemberList();
+      this.handleForumActivityChart();
+    },
+    handleForumActivityChart: function handleForumActivityChart() {
+      var ctx = $('.forum-activity-chart');
+      var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: ctx.data('values'),
+            backgroundColor: ctx.data('colors'),
+            borderWidth: 0
+          }],
+          labels: ctx.data('labels')
+        },
+        options: {
+          rotation: 1 * Math.PI,
+          circumference: 1 * Math.PI,
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 5,
+              fontColor: '#949ba2'
+            },
+            label: {
+              fullWidth: false
+            }
+          }
+        }
+      });
+    },
+    handleMemberList: function handleMemberList() {
+      var platoonNum = parseInt($('.platoon-number').text()),
+        formattedDate = new Date(),
+        d = formattedDate.getDate(),
+        m = formattedDate.getMonth() + 1,
+        y = formattedDate.getFullYear(),
+        nowDate = y + '-' + m + '-' + d,
+        selected = new Array();
+
+      /**
+       * Handle platoons, squads
+       */
+      $('table.members').DataTable({
+        bInfo: false,
+        autoWidth: true,
+        columnDefs: [{
+          targets: 'no-search',
+          searchable: false
+        }, {
+          targets: 'col-hidden',
+          visible: false,
+          searchable: false
+        }, {
+          // sort rank by rank id
+          'iDataSort': 2,
+          'aTargets': [1]
+        }],
+        stateSave: false,
+        paging: false
+      });
+      $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');
+      $('#playerFilter input').attr({
+        'placeholder': 'Search Players',
+        'class': 'form-control'
+      });
+      $('.dataTables_filter label').remove();
+      $('.no-sort').removeClass('sorting');
+
+      // omit leader field if using TBA
+      $('#is_tba').click(function () {
+        toggleTBA();
+      });
+      toggleTBA();
+      function toggleTBA() {
+        if ($('#is_tba').is(':checked')) {
+          $('#leader_id, #leader').prop('disabled', true).val('');
+        } else {
+          $('#leader_id, #leader').prop('disabled', false);
+        }
+      }
+    }
+  };
+})(jQuery);
+Platoon.setup();
+/******/ })()
+;

@@ -1,1 +1,239 @@
-(()=>{var t;t=jQuery,{setup:function(){this.handleMembers(),this.handleSquadMembers(),this.handleForumActivityChart(),this.handleTSActivityChart(),this.initAutocomplete()},handleForumActivityChart:function(){var e=t(".forum-activity-chart");e.length&&new Chart(e,{type:"doughnut",data:{datasets:[{data:e.data("values"),backgroundColor:e.data("colors"),borderWidth:0}],labels:e.data("labels")},options:{rotation:1*Math.PI,circumference:1*Math.PI,legend:{position:"bottom",labels:{boxWidth:5,fontColor:"#949ba2"},label:{fullWidth:!1}}}})},handleTSActivityChart:function(){var e=t(".ts-activity-chart");e.length&&new Chart(e,{type:"doughnut",data:{datasets:[{data:e.data("values"),backgroundColor:e.data("colors"),borderWidth:0}],labels:e.data("labels")},options:{rotation:1*Math.PI,circumference:1*Math.PI,legend:{position:"bottom",labels:{boxWidth:5,fontColor:"#949ba2"},label:{fullWidth:!1}}}})},handleSquadMembers:function(){var e,a,r,o;t(".sortable-squad").sortable({revert:"invalid"}),t(".draggable").draggable({connectToSortable:"ul",revert:"invalid",scroll:!0,scrollSensitivity:100}),t(".mod-plt .sortable").sortable({connectWith:"ul",placeholder:"ui-state-highlight",forcePlaceholderSize:!0,revert:"invalid",receive:function(l,n){e=t(n.item).attr("data-member-id"),a=t(this).attr("data-squad-id"),r=t(n.sender).find("li").length,o=t(this).find("li").length,void 0===a?(toastr.error("You cannot move members to the unassigned list"),t(".mod-plt .sortable").sortable("cancel")):(t(".genpop").find("li").length<1&&t(".genpop").fadeOut(),t(n.sender).parent().find(".count").text(r),t(this).parent().find(".count").text(o).effect("highlight"),t.ajax({type:"POST",url:window.Laravel.appPath+"/members/assign-squad",data:{member_id:e,squad_id:a,_token:t("meta[name=csrf-token]").attr("content")},dataType:"json",success:function(){toastr.success("Member reassigned!")},error:function(){toastr.error("Something bad happened...")}}))}})},initAutocomplete:function(){t("#leader").bootcomplete({url:window.Laravel.appPath+"/search-member/",minLength:3,idField:!0,method:"POST",dataParams:{_token:t("meta[name=csrf-token]").attr("content")}})},handleMembers:function(){parseInt(t(".platoon-number").text());var e=new Date;e.getDate(),e.getMonth();if(e.getFullYear(),new Array,t(".members-table").length){var a=t("table.members-table").DataTable({initComplete:function(e,a){setTimeout((function(){t(".ld-loading").removeClass("ld-loading")}),2e3)},autoWidth:!0,bInfo:!1,oLanguage:{sLengthMenu:""},columnDefs:[{orderable:!1,className:"select-checkbox",targets:0},{targets:"no-search",searchable:!1},{targets:"col-hidden",visible:!1},{iDataSort:0,aTargets:[3]},{iDataSort:1,aTargets:[5]},{iDataSort:7,aTargets:[6]}],select:{style:"os",selector:"td:first-child"},stateSave:!0,paging:!1});t("a.toggle-vis").on("click",(function(e){e.preventDefault();var r=a.column(t(this).attr("data-column"));r.visible(!r.visible())})),t(".dataTables_filter input").appendTo("#playerFilter").removeClass("input-sm"),t("#playerFilter input").attr({placeholder:"Search Players",class:"form-control"}),t(".dataTables_filter label").remove(),t(".no-sort").removeClass("sorting"),a.on("select",(function(e,r,o,l){var n=a.rows(t(".selected")).data().toArray().map((function(t){return t[11]}));n.length>=2&&(t("#selected-data").show(),t("#selected-data .status-text").text("With selected ("+n.length+")"),t("#pm-member-data").val(n))}))}function r(){t("#is_tba").is(":checked")?t("#leader_id, #leader").prop("disabled",!0).val(""):t("#leader_id, #leader").prop("disabled",!1)}t("#is_tba").click((function(){r()})),r()}}.setup()})();
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!****************************************!*\
+  !*** ./resources/assets/js/platoon.js ***!
+  \****************************************/
+var Platoon = Platoon || {};
+(function ($) {
+  Platoon = {
+    setup: function setup() {
+      this.handleMembers();
+      this.handleSquadMembers();
+      this.handleForumActivityChart();
+      this.handleTSActivityChart();
+      this.initAutocomplete();
+    },
+    handleForumActivityChart: function handleForumActivityChart() {
+      var ctx = $('.forum-activity-chart');
+      if (ctx.length) {
+        var myDoughnutChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [{
+              data: ctx.data('values'),
+              backgroundColor: ctx.data('colors'),
+              borderWidth: 0
+            }],
+            labels: ctx.data('labels')
+          },
+          options: {
+            rotation: 1 * Math.PI,
+            circumference: 1 * Math.PI,
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 5,
+                fontColor: '#949ba2'
+              },
+              label: {
+                fullWidth: false
+              }
+            }
+          }
+        });
+      }
+    },
+    handleTSActivityChart: function handleTSActivityChart() {
+      var ctx = $('.ts-activity-chart');
+      if (ctx.length) {
+        var myDoughnutChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            datasets: [{
+              data: ctx.data('values'),
+              backgroundColor: ctx.data('colors'),
+              borderWidth: 0
+            }],
+            labels: ctx.data('labels')
+          },
+          options: {
+            rotation: 1 * Math.PI,
+            circumference: 1 * Math.PI,
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 5,
+                fontColor: '#949ba2'
+              },
+              label: {
+                fullWidth: false
+              }
+            }
+          }
+        });
+      }
+    },
+    handleSquadMembers: function handleSquadMembers() {
+      $('.sortable-squad').sortable({
+        revert: 'invalid'
+      });
+      $('.draggable').draggable({
+        connectToSortable: 'ul',
+        revert: 'invalid',
+        scroll: true,
+        scrollSensitivity: 100
+      });
+      var itemMoved, targetSquad, senderLength, receiverLength;
+      $('.mod-plt .sortable').sortable({
+        connectWith: 'ul',
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true,
+        revert: 'invalid',
+        receive: function receive(event, ui) {
+          itemMoved = $(ui.item).attr('data-member-id');
+          targetSquad = $(this).attr('data-squad-id');
+          senderLength = $(ui.sender).find('li').length;
+          receiverLength = $(this).find('li').length;
+          if (undefined === targetSquad) {
+            toastr.error('You cannot move members to the unassigned list');
+            $('.mod-plt .sortable').sortable('cancel');
+          } else {
+            // is genpop empty?
+            if ($('.genpop').find('li').length < 1) {
+              $('.genpop').fadeOut();
+            }
+            // update squad counts
+            $(ui.sender).parent().find('.count').text(senderLength);
+            $(this).parent().find('.count').text(receiverLength).effect('highlight');
+            $.ajax({
+              type: 'POST',
+              url: window.Laravel.appPath + '/members/assign-squad',
+              data: {
+                member_id: itemMoved,
+                squad_id: targetSquad,
+                _token: $('meta[name=csrf-token]').attr('content')
+              },
+              dataType: 'json',
+              success: function success() {
+                toastr.success('Member reassigned!');
+              },
+              error: function error() {
+                toastr.error('Something bad happened...');
+              }
+            });
+          }
+        }
+      });
+    },
+    initAutocomplete: function initAutocomplete() {
+      $('#leader').bootcomplete({
+        url: window.Laravel.appPath + '/search-member/',
+        minLength: 3,
+        idField: true,
+        method: 'POST',
+        dataParams: {
+          _token: $('meta[name=csrf-token]').attr('content')
+        }
+      });
+    },
+    handleMembers: function handleMembers() {
+      var platoonNum = parseInt($('.platoon-number').text()),
+        formattedDate = new Date(),
+        d = formattedDate.getDate(),
+        m = formattedDate.getMonth() + 1,
+        y = formattedDate.getFullYear(),
+        nowDate = y + '-' + m + '-' + d,
+        selected = new Array();
+
+      /**
+       * Handle platoons, squads, members tables
+       */
+      if ($('.members-table').length) {
+        var dataTable = $('table.members-table').DataTable({
+          'initComplete': function initComplete(settings, json) {
+            setTimeout(function () {
+              $('.ld-loading').removeClass('ld-loading');
+            }, 2000);
+          },
+          autoWidth: true,
+          bInfo: false,
+          oLanguage: {
+            sLengthMenu: '' // _MENU_
+          },
+
+          columnDefs: [{
+            orderable: false,
+            className: 'select-checkbox',
+            targets: 0
+          }, {
+            targets: 'no-search',
+            searchable: false
+          }, {
+            targets: 'col-hidden',
+            visible: false
+          }, {
+            // sort rank by rank id
+            'iDataSort': 0,
+            'aTargets': [3]
+          }, {
+            // sort activity by last login date
+            'iDataSort': 1,
+            'aTargets': [5]
+          }, {
+            // sort ts activity by date
+            'iDataSort': 7,
+            'aTargets': [6]
+          }],
+          select: {
+            style: 'os',
+            selector: 'td:first-child'
+          },
+          stateSave: true,
+          paging: false
+        });
+        $('a.toggle-vis').on('click', function (e) {
+          e.preventDefault();
+
+          // Get the column API object
+          var column = dataTable.column($(this).attr('data-column'));
+
+          // Toggle the visibility
+          column.visible(!column.visible());
+        });
+        $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');
+        $('#playerFilter input').attr({
+          'placeholder': 'Search Players',
+          'class': 'form-control'
+        });
+        $('.dataTables_filter label').remove();
+        $('.no-sort').removeClass('sorting');
+
+        // handle PM selection
+        dataTable.on("select", function (e, t, a, d) {
+          var l = dataTable.rows($(".selected")).data().toArray().map(function (e) {
+            return e[11];
+          });
+          if (l.length >= 2) {
+            $("#selected-data").show(), $("#selected-data .status-text").text("With selected (" + l.length + ")"), $("#pm-member-data").val(l);
+          }
+        });
+      }
+
+      // omit leader field if using TBA
+      $('#is_tba').click(function () {
+        toggleTBA();
+      });
+      toggleTBA();
+      function toggleTBA() {
+        if ($('#is_tba').is(':checked')) {
+          $('#leader_id, #leader').prop('disabled', true).val('');
+        } else {
+          $('#leader_id, #leader').prop('disabled', false);
+        }
+      }
+    }
+  };
+})(jQuery);
+Platoon.setup();
+/******/ })()
+;
