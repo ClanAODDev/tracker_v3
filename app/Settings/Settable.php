@@ -94,10 +94,3 @@ trait Settable
         return \array_key_exists($key, $this->settings);
     }
 }
-
-
-
-
-
-
-
