@@ -228,4 +228,11 @@ class User extends Authenticatable
     {
         return $this->hasOneThrough(Platoon::class, Member::class, 'id', 'id', 'member_id', 'platoon_id');
     }
+
+    public function division()
+    {
+        return $this->hasOneThrough(Division::class, Member::class, 'id', 'id', 'member_id', 'division_id');
+    }
+
+
 }
