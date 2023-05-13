@@ -233,6 +233,4 @@ class User extends Authenticatable
     {
         return $this->hasOneThrough(Division::class, Member::class, 'id', 'id', 'member_id', 'division_id');
     }
-
-
 }
