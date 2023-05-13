@@ -218,4 +218,14 @@ class User extends Authenticatable
     {
         return $this->member->position;
     }
+
+    public function squad()
+    {
+        return $this->hasOneThrough(Squad::class, Member::class, 'id', 'id', 'member_id', 'squad_id');
+    }
+
+    public function platoon()
+    {
+        return $this->hasOneThrough(Platoon::class, Member::class, 'id', 'id', 'member_id', 'platoon_id');
+    }
 }
