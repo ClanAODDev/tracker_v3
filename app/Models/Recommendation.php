@@ -19,7 +19,7 @@ class Recommendation extends Model
 
     protected $with = [
         'member',
-        'admin'
+        'admin',
     ];
 
     protected $casts = [
