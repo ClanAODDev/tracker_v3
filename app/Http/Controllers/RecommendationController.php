@@ -15,11 +15,15 @@ class RecommendationController extends Controller
      */
     public function index($division)
     {
-        $recommendations = Recommendation::forCurrentMonth()->get();
+        $recommendations = Recommendation::forDivision($division->id)
+            ->forRank()
+            ->pending()
+            ->forCurrentUser()
+            ->get();
 
         return view('division.recommendations', compact(
             'division',
-            'recommendations'
+            'recommendations',
         ));
     }
 
