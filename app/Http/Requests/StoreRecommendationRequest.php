@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Rank;
+use App\Models\Recommendation as Form;
 use App\Notifications\MemberRecommendationSubmitted;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
@@ -33,8 +34,8 @@ class StoreRecommendationRequest extends FormRequest
             'effective_at' => 'required|date',
             'member_id' => [
                 'required',
-                Rule::exists('recommendations')->where($this->noFutureRecommendationsExist()),
-            ],
+                $this->hasRecommendationForCurrentOrFutureMonth()
+            ]
         ];
     }
 
@@ -42,7 +43,6 @@ class StoreRecommendationRequest extends FormRequest
     {
         return [
             'justification.required' => 'Please provide a justification for your recommendation',
-            'member_id.exists' => 'That member already has a recommendation for the current or a future month',
         ];
     }
 
@@ -54,7 +54,7 @@ class StoreRecommendationRequest extends FormRequest
             'justification',
             'effective_at',
         ]), [
-            'member_id' => request('member')->id,
+            'member_id' => request('member_id'),
             'admin_id' => auth()->user()->member_id,
             'division_id' => request()->member->division_id,
         ]));
@@ -69,18 +69,22 @@ class StoreRecommendationRequest extends FormRequest
     /**
      * @return \Closure
      */
-    private function noFutureRecommendationsExist(): \Closure
+    private function hasRecommendationForCurrentOrFutureMonth(): \Closure
     {
-        return function (Builder $query) {
-            return
-                // is there a future recommendation
-                $query->where('effective_at', '>', now())->exists()
+        return function ($attribute, $value, $fail) {
+            $futureRecommendations = Form::whereMemberId($value)
+                ->where(function ($query) {
+                    $query
+                        ->where('effective_at', '>', now())
+                        ->orWhere(function ($query) {
+                            $query->whereMonth('effective_at', now()->format('m'))
+                                ->whereYear('effective_at', now()->format('Y'))->exists();
+                        });
+                })->count();
 
-                or
-
-                // is there a recommendation for the current month and year
-                $query->whereMonth('effective_at', now()->format('m'))
-                    ->whereYear('effective_at', now()->format('Y'))->exists();
+            if ($futureRecommendations) {
+                $fail("That member already has a recommendation for the current or a future month");
+            }
         };
     }
 }
