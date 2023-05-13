@@ -96,14 +96,19 @@ class MemberPolicy
 
     public function recommend(User $actor, Member $target): bool
     {
-        if ($actor->role === Role::JUNIOR_LEADER
+        // can't recommend yourself
+        if ($actor->member_id === $target->id) {
+            return false;
+        }
+
+        if ($actor->role === Role::JUNIOR_LEADER && $target->platoon
             // platoon leader of same platoon?
             && $actor->platoon->id === $target->platoon_id
         ) {
             return true;
         }
 
-        if ($actor->role === Role::OFFICER
+        if ($actor->role === Role::OFFICER && $target->squad
             // squad leader of same squad?
             && $actor->squad->id === $target->squad_id
         ) {
