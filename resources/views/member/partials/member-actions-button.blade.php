@@ -4,6 +4,7 @@
                 class="caret"></span></button>
     <ul class="dropdown-menu">
 
+
         @can('update', $member)
             <li>
                 <a href="{{ route('editMember', $member->clan_id) }}"> Edit member</a>
@@ -13,13 +14,6 @@
                 <li>
                     <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}#sgt-duties">Perform Sgt
                         Training</a>
-                </li>
-            @endcan
-
-            @can('recommend', $member)
-                <li>
-                    <a href="#" data-toggle="modal"
-                       data-target="#create-recommendation"> Recommend</a>
                 </li>
             @endcan
 
@@ -47,6 +41,13 @@
         <li>
             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}" target="_blank">View forum profile</a>
         </li>
+
+        @can('recommend', $member)
+            <li>
+                <a href="#" data-toggle="modal"
+                   data-target="#create-recommendation"> Recommend</a>
+            </li>
+        @endcan
 
         @can ('manageIngameHandles', $member)
             <li>
