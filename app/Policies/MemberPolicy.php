@@ -106,14 +106,14 @@ class MemberPolicy
 
         if ($actor->position === Position::PLATOON_LEADER
             // platoon leader of same platoon?
-            && $actor->member->platoon_id === $target->platoon_id
+            && $actor->platoon->id === $target->platoon_id
         ) {
             return true;
         }
 
         if ($actor->position === Position::SQUAD_LEADER
             // squad leader of same squad?
-            && $actor->member->squad_id === $target->squad_id
+            && $actor->squad->id === $target->squad_id
         ) {
             return true;
         }
