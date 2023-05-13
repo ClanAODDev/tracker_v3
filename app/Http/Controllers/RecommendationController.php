@@ -21,6 +21,7 @@ class RecommendationController extends Controller
             ->forRank()
             ->pending()
             ->forCurrentUser()
+            ->orderBy('effective_at')
             ->get();
 
         return view('division.recommendations', compact(
