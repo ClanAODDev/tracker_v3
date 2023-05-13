@@ -91,4 +91,18 @@
         </td>
     </tr>
 
+    {{--
+    <tr>
+        <td>
+            <label for="slack_alert_member_recommendation_created">When a division recommendation is created</label>
+        </td>
+        <td>
+            <input type='hidden' value='0' name="slack_alert_member_recommendation_created">
+            <input id="slack_alert_member_recommendation_created" name="slack_alert_member_recommendation_created"
+                   type="checkbox" {{ checked($division->settings()->slack_alert_member_recommendation_created) }} />
+        </td>
+    </tr>
+
+    --}}
+
 </table>
