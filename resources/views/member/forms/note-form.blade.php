@@ -1,7 +1,11 @@
-@include('application.partials.errors')
+@if (old('note-form'))
+    @include('application.partials.errors')
+@endif
+
 @if (isset($note) && $note->leave && !isset($create))
     <div class="alert alert-warning">
-        <strong>Note:</strong> This note is associated with a leave request and cannot be deleted until the LOA is revoked.
+        <strong>Note:</strong> This note is associated with a leave request and cannot be deleted until the LOA is
+        revoked.
         <a class="alert-link"
            href="{{ route('leave.edit', [$member->clan_id, $note->leave->id]) }}">View LOA</a></div>
 @endif

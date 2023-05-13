@@ -30,13 +30,13 @@
         <div class="modal-dialog" role="document" style="background-color: #000;">
             {!! Form::model(App\Models\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
             @include('member.forms.note-form', ['action' => 'Add Member Note', 'create' => true])
-            <input type="hidden" name="note-form">
+            <input type="hidden" name="note-form" value="true">
             {!! Form::close() !!}
         </div>
     </div>
 @endcan
 
-@if ($errors->count() && request('note-form'))
+@if ($errors->count() && old('note-form'))
     <script>$('#create-member-note').modal();</script>
 @endif
 

@@ -1,4 +1,6 @@
-@include('application.partials.errors')
+@if (old('recommend-form'))
+    @include('application.partials.errors')
+@endif
 
 <div class="panel panel-filled">
 
@@ -27,6 +29,8 @@
             {!! Form::date('effective_at', now(), ['class' => 'form-control', 'required']) !!}
             <p class="help-block slight">Select a future month to hold the recommendation until that month arrives.</p>
         </div>
+
+        <input type="hidden" name="member_id" value="{{ $member->id }}">
 
         <div class="form-group">
             <button type="submit" class="btn btn-default btn-block" style="margin-top:23px">Submit for review</button>
