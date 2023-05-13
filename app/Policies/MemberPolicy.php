@@ -97,21 +97,14 @@ class MemberPolicy
 
     public function recommend(User $actor, Member $target): bool
     {
-        if (in_array($actor->position, [
-            Position::COMMANDING_OFFICER,
-            Position::EXECUTIVE_OFFICER,
-        ])) {
-            return true;
-        }
-
-        if ($actor->position === Position::PLATOON_LEADER
+        if ($actor->role === Role::JUNIOR_LEADER
             // platoon leader of same platoon?
             && $actor->platoon->id === $target->platoon_id
         ) {
             return true;
         }
 
-        if ($actor->position === Position::SQUAD_LEADER
+        if ($actor->role === Role::OFFICER
             // squad leader of same squad?
             && $actor->squad->id === $target->squad_id
         ) {
