@@ -34,7 +34,7 @@ class DiscordMessageReact
         ];
 
         if (!isset($statuses[$status])) {
-            throw new \Exception("Invalid status provided to DiscordMessageReact");
+            throw new \Exception('Invalid status provided to DiscordMessageReact');
         }
 
         $this->emote = $statuses[$status];
@@ -66,6 +66,3 @@ class DiscordMessageReact
         ];
     }
 }
-
-
-

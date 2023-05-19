@@ -124,7 +124,7 @@ class DiscordMessage
                     ],
                     'fields' => $this->fields,
                 ],
-                'id' => $this->messageId
+                'id' => $this->messageId,
             ]) . "'";
 
         return [
