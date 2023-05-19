@@ -19,6 +19,7 @@ class DiscordMessage
     public const INFO = 10181046;
 
     private $fields = [];
+    private $messageId;
 
     /**
      * Use info-coded color.
@@ -59,6 +60,13 @@ class DiscordMessage
     public function to($channel)
     {
         $this->channel = $channel;
+
+        return $this;
+    }
+
+    public function messageId($messageId)
+    {
+        $this->messageId = $messageId;
 
         return $this;
     }
@@ -116,6 +124,7 @@ class DiscordMessage
                     ],
                     'fields' => $this->fields,
                 ],
+                'id' => $this->messageId
             ]) . "'";
 
         return [
