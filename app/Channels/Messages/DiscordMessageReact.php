@@ -57,7 +57,7 @@ class DiscordMessageReact
             throw new Exception('A status {assigned, resolved, rejected} must be defined');
         }
 
-        if (!isset($this->messageId)) {
+        if (!$this->messageId) {
             throw new Exception('A message id must be defined');
         }
 
