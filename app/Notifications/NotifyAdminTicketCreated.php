@@ -36,6 +36,7 @@ class NotifyAdminTicketCreated extends Notification
 
         return (new DiscordMessage())
             ->to($channel)
+            ->messageId($ticket->message_id)
             ->info()
             ->fields([
                 [
