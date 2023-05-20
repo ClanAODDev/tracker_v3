@@ -217,8 +217,10 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
+        $ticket->notify(new NotifyCallerTicketUpdated($message));
+
         if ($ticket->message_id) {
-            $ticket->notify(new NotifyCallerTicketUpdated($message));
+            $ticket->notify(new TicketReaction('assigned'));
         }
 
         return redirect(route('help.tickets.show', $ticket));
