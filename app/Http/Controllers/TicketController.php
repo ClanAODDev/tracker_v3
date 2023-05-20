@@ -30,7 +30,7 @@ class TicketController extends Controller
     public function setup()
     {
         $ticketTypes = TicketType::orderBy('display_order', 'ASC')
-            ->get();
+                                 ->get();
 
         $ticketTypes = $ticketTypes->filter(function ($type) {
             return collect(json_decode($type->role_access))->contains(auth()->user()->role_id);
@@ -45,15 +45,15 @@ class TicketController extends Controller
     public function index()
     {
         $tickets = QueryBuilder::for(Ticket::class)
-            ->allowedFilters([
-                'type.slug',
-                'caller.name',
-                'caller.member.clan_id',
-                'owner.name',
-                'owner.member.clan_id',
-                'state',
-                'description',
-            ]);
+                               ->allowedFilters([
+                                   'type.slug',
+                                   'caller.name',
+                                   'caller.member.clan_id',
+                                   'owner.name',
+                                   'owner.member.clan_id',
+                                   'state',
+                                   'description',
+                               ]);
 
         // filter tickets unless you're an admin
         if (!auth()->user()->can('manage', Ticket::class)) {
@@ -63,8 +63,8 @@ class TicketController extends Controller
         if (request('search-filter') && request('search-criteria') && request()->isMethod('get')) {
             return redirect(
                 route('help.tickets.index')
-                . '?' . request('search-query')
-                . '&filter[' . request('search-filter') . ']=' . request('search-criteria')
+                .'?'.request('search-query')
+                .'&filter['.request('search-filter').']='.request('search-criteria')
             );
         }
 
@@ -99,13 +99,13 @@ class TicketController extends Controller
             'description' => 'string|min:25|required',
         ]);
 
-        $ticket = new Ticket();
-        $ticket->state = 'new';
+        $ticket                 = new Ticket();
+        $ticket->state          = 'new';
         $ticket->ticket_type_id = $validated['ticket_type'];
-        $ticket->description = $validated['description'];
-        $ticket->message_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $ticket->caller_id = auth()->id();
-        $ticket->division_id = auth()->user()->member->division_id;
+        $ticket->description    = $validated['description'];
+        $ticket->message_id     = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        $ticket->caller_id      = auth()->id();
+        $ticket->division_id    = auth()->user()->member->division_id;
         $ticket->save();
 
         // send a message to admin channel as well as to the caller
@@ -139,8 +139,11 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
-        $ticket->notify(new TicketReaction('resolved'));
+        $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: '.$message));
+
+        if ($ticket->message_id) {
+            $ticket->notify(new TicketReaction('resolved'));
+        }
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -170,7 +173,11 @@ class TicketController extends Controller
 
         $this->showToast($message);
 
-        $ticket->notify(new NotifyCallerTicketUpdated($message));
+        if ($ticket->message_id) {
+            $ticket->notify(new NotifyCallerTicketUpdated($message));
+        }
+
+
         $ticket->notify(new TicketReaction('rejected'));
 
         return redirect(route('help.tickets.show', $ticket));
@@ -186,13 +193,16 @@ class TicketController extends Controller
 
         $ticket->ownTo($assignedUser);
 
-        $message = 'Ticket has been assigned to ' . $assignedUser->name;
+        $message = 'Ticket has been assigned to '.$assignedUser->name;
 
         $this->showToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
         $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
-        $ticket->notify(new TicketReaction('assigned'));
+
+        if ($ticket->message_id) {
+            $ticket->notify(new TicketReaction('assigned'));
+        }
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -203,11 +213,13 @@ class TicketController extends Controller
 
         $ticket->ownTo(auth()->user());
 
-        $message = 'Ticket has been assigned to ' . auth()->user()->name;
+        $message = 'Ticket has been assigned to '.auth()->user()->name;
 
         $this->showToast($message);
 
-        $ticket->notify(new NotifyCallerTicketUpdated($message));
+        if ($ticket->message_id) {
+            $ticket->notify(new NotifyCallerTicketUpdated($message));
+        }
 
         return redirect(route('help.tickets.show', $ticket));
     }
