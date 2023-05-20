@@ -9,6 +9,7 @@ use App\Notifications\NotifyAdminTicketCreated;
 use App\Notifications\NotifyCallerTicketUpdated;
 use App\Notifications\NotifyNewTicketOwner;
 use App\Notifications\NotifyUserTicketCreated;
+use App\Notifications\TicketReaction;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -102,6 +103,7 @@ class TicketController extends Controller
         $ticket->state = 'new';
         $ticket->ticket_type_id = $validated['ticket_type'];
         $ticket->description = $validated['description'];
+        $ticket->message_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
         $ticket->caller_id = auth()->id();
         $ticket->division_id = auth()->user()->member->division_id;
         $ticket->save();
@@ -138,6 +140,7 @@ class TicketController extends Controller
         $this->showToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
+        $ticket->notify(new TicketReaction('resolved'));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -168,6 +171,7 @@ class TicketController extends Controller
         $this->showToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
+        $ticket->notify(new TicketReaction('rejected'));
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -188,6 +192,7 @@ class TicketController extends Controller
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
         $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
+        $ticket->notify(new TicketReaction('assigned'));
 
         return redirect(route('help.tickets.show', $ticket));
     }
