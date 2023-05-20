@@ -4,9 +4,12 @@ namespace App\Channels\Messages;
 
 class DiscordMessageReact
 {
-    public const RESOLVED = '✅';
-    public const REJECTED = '❌';
-    public const ASSIGNED = '⏳';
+    public $states = [
+        'resolved' => '✅',
+        'rejected' => '❌',
+        'assigned' => '⏳',
+    ];
+
     private string $emote;
     private string $messageId;
     private string $channel;
@@ -27,17 +30,11 @@ class DiscordMessageReact
 
     public function status(string $status)
     {
-        $statuses = [
-            'assigned' => self::ASSIGNED,
-            'rejected' => self::REJECTED,
-            'resolved' => self::RESOLVED,
-        ];
-
-        if (!isset($statuses[$status])) {
+        if (!isset($this->states[$status])) {
             throw new \Exception('Invalid status provided to DiscordMessageReact');
         }
 
-        $this->emote = $statuses[$status];
+        $this->emote = $this->states[$status];
 
         return $this;
     }
