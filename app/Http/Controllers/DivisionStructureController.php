@@ -107,7 +107,7 @@ class DivisionStructureController extends Controller
             'division' => [
                 'name' => $division->name,
                 'leaders' => $division->leaders,
-                'generalSergeants' => $division->generalSergeants->sortBy('rank_id', 'DESC'),
+                'generalSergeants' => $division->generalSergeants,
                 'platoons' => $division->platoons()->with(
                     [
                         'squads.members.handles' => function ($query) use ($division) {
@@ -140,7 +140,7 @@ class DivisionStructureController extends Controller
         $data->generalSergeants = $division->generalSergeants()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
-        ])->get();
+        ])->orderBy('rank_id', 'DESC')->get();
 
         $data->leaders = $division->leaders()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
