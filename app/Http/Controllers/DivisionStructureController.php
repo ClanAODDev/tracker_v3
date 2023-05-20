@@ -140,7 +140,7 @@ class DivisionStructureController extends Controller
         $data->generalSergeants = $division->generalSergeants()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
-        ])->orderBy('rank_id', 'DESC')->get();
+        ])->orderBy('rank_id', 'DESC')->orderBy('name', 'ASC')->get();
 
         $data->leaders = $division->leaders()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
