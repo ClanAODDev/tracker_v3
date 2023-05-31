@@ -33,7 +33,8 @@ class TicketController extends Controller
                                  ->get();
 
         $ticketTypes = $ticketTypes->filter(function ($type) {
-            return collect(json_decode($type->role_access))->contains(auth()->user()->role_id);
+            return collect(json_decode($type->role_access))->contains(auth()->user()->role_id)
+                || empty(json_decode($type->role_access));
         });
 
         return view('help.tickets.setup', compact('ticketTypes'));
@@ -113,6 +114,13 @@ class TicketController extends Controller
         $ticket->notify(new NotifyAdminTicketCreated());
 
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
+
+        /** @TODO: refactor later */
+        if ($ticket->type->auto_assign_to) {
+            $ticket->ownTo($ticket->type->auto_assign_to);
+            $ticket->notify(new NotifyCallerTicketUpdated('Ticket has been assigned to ' . $ticket->type->auto_assign_to->name));
+            $ticket->notify(new NotifyNewTicketOwner($ticket->type->auto_assign_to, auth()->user()));
+        }
 
         return redirect(route('help.tickets.show', $ticket));
     }

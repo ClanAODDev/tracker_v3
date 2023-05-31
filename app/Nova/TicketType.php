@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
@@ -65,6 +66,9 @@ class TicketType extends Resource
                 ->placeholder('Specify roles') // Placeholder text
                 ->help('Provide roles this ticket type should be available to. Leave blank if type should be available to all roles.'),
             Textarea::make('Boilerplate')->help('Pre-populates ticket with basic information, if applicable'),
+            BelongsTo::make('Auto-assign to', 'auto_assign_to', \App\Nova\User::class)
+                ->searchable()
+                ->help('If set, assigns the ticket to the user indicated'),
             Number::make('Display Order')->help('Change the order in which the type is displayed. (Ascending order)'),
             HasMany::make('Ticket'),
         ];

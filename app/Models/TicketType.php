@@ -17,4 +17,9 @@ class TicketType extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function auto_assign_to()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
