@@ -115,7 +115,7 @@ class TicketController extends Controller
 
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
 
-        /** @TODO: refactor later */
+        /* @TODO: refactor later */
         if ($ticket->type->auto_assign_to) {
             $ticket->ownTo($ticket->type->auto_assign_to);
             $ticket->notify(new NotifyCallerTicketUpdated('Ticket has been assigned to ' . $ticket->type->auto_assign_to->name));
