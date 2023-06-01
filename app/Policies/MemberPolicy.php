@@ -16,7 +16,7 @@ class MemberPolicy
     public function before(User $user)
     {
         // MSgts, SGTs, developers have access to all members
-        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
+        if ($user->isRole(['administrator', 'senior leader']) || $user->isDeveloper()) {
             return true;
         }
     }
