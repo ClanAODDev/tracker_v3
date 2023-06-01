@@ -40,7 +40,7 @@ class DivisionController extends ApiController
 
     public function show($slug): JsonResponse
     {
-        $division = Division::whereSlug($slug)
+        $division = Division::whereSlug(strtolower($slug))
             ->active()
             ->firstOrFail();
 
