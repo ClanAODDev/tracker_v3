@@ -27,7 +27,7 @@ class MemberPolicy
     public function create(User $user): bool
     {
         // member role cannot recruit members
-        if ($user->role > Role::MEMBER) {
+        if ($user->role->value > Role::MEMBER->value) {
             return true;
         }
 
