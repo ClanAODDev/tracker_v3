@@ -26,3 +26,4 @@ yarn.lock
 auth.json
 maintenance.alert
 database.sqlite
+*Zone.Identifier
