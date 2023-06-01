@@ -13,7 +13,7 @@ class UpdateDivisionForm extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->isRole('admin');
+        return $this->user()->isRole('administrator');
     }
 
     /**

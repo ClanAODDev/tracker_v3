@@ -132,7 +132,7 @@ class MemberController extends Controller
         $notes = $member->notes()->with('author')->get()
             ->filter(function ($note) {
                 if ('sr_ldr' === $note->type) {
-                    return auth()->user()->isRole(['sr_ldr', 'admin']);
+                    return auth()->user()->isRole(['senior leader', 'administrator']);
                 }
 
                 return true;

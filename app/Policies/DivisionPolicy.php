@@ -32,18 +32,18 @@ class DivisionPolicy
          * is the user a senior leader?
          * is the user a SGT in the division?
          */
-        if ($user->isRole('admin')) {
+        if ($user->isRole('administrator')) {
             return true;
         }
 
         if ($user->member->isDivisionLeader($division)
-            && $user->isRole('sr_ldr')
+            && $user->isRole('senior leader')
         ) {
             return true;
         }
 
         if ($user->member->division->id === $division->id
-            && $user->isRole('sr_ldr')
+            && $user->isRole('senior leader')
             && $user->member->isRank(['Sgt', 'SSgt'])
         ) {
             return true;
@@ -55,7 +55,7 @@ class DivisionPolicy
     public function delete(User $user, Division $division)
     {
         if ($user->member->isDivisionLeader($division)
-            && $user->isRole('sr_ldr')
+            && $user->isRole('senior leader')
         ) {
             return true;
         }
@@ -65,7 +65,7 @@ class DivisionPolicy
 
     public function show(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->isRole('administrator')) {
             return true;
         }
 
@@ -74,7 +74,7 @@ class DivisionPolicy
 
     public function viewAny(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->isRole('administrator')) {
             return true;
         }
 
@@ -83,7 +83,7 @@ class DivisionPolicy
 
     public function view(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->isRole('administrator')) {
             return true;
         }
 
@@ -92,7 +92,7 @@ class DivisionPolicy
 
     public function create(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->isRole('administrator')) {
             return true;
         }
 

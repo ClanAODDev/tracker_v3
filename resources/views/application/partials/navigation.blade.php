@@ -93,7 +93,7 @@
             <li class="{{ set_active('reports/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>
-            @if (auth()->user()->isRole('admin'))
+            @if (auth()->user()->isRole('administrator'))
                 <li class="{{ set_active('reports/division-turnover') }}">
                     <a href="{{ route('reports.division-turnover') }}">Division Turnover</a>
                 </li>
@@ -138,7 +138,7 @@
     @endif
 
 
-    @if(Auth::user()->isRole('admin'))
+    @if(auth()->user()->isRole(\App\Enums\Role::ADMINISTRATOR))
         <li class="nav-category">
             Admin
         </li>

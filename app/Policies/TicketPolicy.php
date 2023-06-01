@@ -12,7 +12,7 @@ class TicketPolicy
 
     public function before(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->isRole('administrator')) {
             return true;
         }
     }

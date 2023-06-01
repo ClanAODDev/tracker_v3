@@ -19,7 +19,7 @@ class SquadPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole(['admin', 'sr_ldr'])
+        if ($user->isRole(['administrator', 'senior leader'])
             || $user->isDeveloper()
         ) {
             return true;

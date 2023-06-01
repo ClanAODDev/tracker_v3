@@ -12,7 +12,7 @@ class MemberRequestPolicy
 
     public function before()
     {
-        if (auth()->user()->isDeveloper() || auth()->user()->isRole('admin')) {
+        if (auth()->user()->isDeveloper() || auth()->user()->isRole('administrator')) {
             return true;
         }
     }
@@ -23,7 +23,7 @@ class MemberRequestPolicy
     public function manage(User $user)
     {
         // are they a SGT and a division XO/CO?
-        if ($user->isRole('sr_ldr') && \in_array($user->member->position, [5, 6], true)) {
+        if ($user->isRole('senior leader') && \in_array($user->member->position, [5, 6], true)) {
             return true;
         }
 
@@ -39,7 +39,7 @@ class MemberRequestPolicy
             return false;
         }
 
-        if ($user->isRole(['sr_ldr', 'admin'])) {
+        if ($user->isRole(['senior leader', 'administrator'])) {
             return true;
         }
 
@@ -55,7 +55,7 @@ class MemberRequestPolicy
      */
     public function cancel(User $user, MemberRequest $request)
     {
-        if ($user->isRole(['sr_ldr', 'admin'])) {
+        if ($user->isRole(['senior leader', 'administrator'])) {
             return true;
         }
 

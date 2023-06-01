@@ -21,7 +21,7 @@ class PlatoonPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
+        if ($user->isRole(['administrator', 'senior leader']) || $user->isDeveloper()) {
             return true;
         }
     }

@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function before(User $user)
     {
-        if ($user->isDeveloper() || $user->isRole('admin')) {
+        if ($user->isDeveloper() || $user->isRole('administrator')) {
             return true;
         }
     }
@@ -69,22 +69,22 @@ class UserPolicy
 
     public function viewDivisionStructure(User $user)
     {
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->isRole(['officer', 'senior leader']);
     }
 
     public function editDivisionStructure(User $user)
     {
-        return $user->isRole('sr_ldr');
+        return $user->isRole('senior leader');
     }
 
     public function manageUnassigned(User $user)
     {
-        return $user->isRole('sr_ldr');
+        return $user->isRole('senior leader');
     }
 
     public function manageSlack(User $user)
     {
-        return $user->isRole('sr_ldr') && 6 === $user->member->position;
+        return $user->isRole('senior leader') && 6 === $user->member->position;
     }
 
     public function train(User $user)

@@ -49,7 +49,7 @@
                     <th>Member</th>
                     <th>Last Forum Activity</th>
                     <th>Forum Profile</th>
-                    @if (auth()->user()->isRole(['sr_ldr', 'admin']))
+                    @if (auth()->user()->isRole(['senior_leader', 'administrator']))
                         <th>TS ID (forums)</th>
                     @endif
                 </tr>
@@ -69,7 +69,7 @@
                                 <i class="fa fa-link"></i> {{ $member->clan_id }}
                             </a>
                         </td>
-                        @if (auth()->user()->isRole(['sr_ldr', 'admin']))
+                        @if (auth()->user()->isRole([\App\Enums\Role::SENIOR_LEADER, \App\Enums\Role::ADMINISTRATOR]))
                             <td><code>{{ $member->ts_unique_id ?: "None set" }}</code></td>
                         @endif
                     </tr>

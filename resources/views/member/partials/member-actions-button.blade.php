@@ -18,7 +18,7 @@
             @endcan
 
             @if ($member->user)
-                @if (auth()->user()->isRole('admin') && !(session('impersonating')))
+                @if (auth()->user()->isRole(\App\Enums\Role::ADMINISTRATOR) && !(session('impersonating')))
                     @unless($member->user->id === auth()->user()->id)
                         <li>
                             <a href="{{ route('impersonate', $member->user) }}"> Impersonate User</a>

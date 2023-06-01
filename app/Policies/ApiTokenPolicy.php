@@ -12,7 +12,7 @@ class ApiTokenPolicy
 
     public function before(User $user)
     {
-        if ($user->isDeveloper() || $user->isRole('admin')) {
+        if ($user->isDeveloper() || $user->isRole('administrator')) {
             return true;
         }
     }

@@ -19,7 +19,7 @@ class NotePolicy
     public function before(User $user)
     {
         // MSgts, SGTs, developers have access to all members
-        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
+        if ($user->isRole(['administratosr', 'senior leader']) || $user->isDeveloper()) {
             return true;
         }
     }

@@ -130,25 +130,28 @@ class User extends Authenticatable
 
     /**
      * Check to see if user is a certain role.
-     *
-     * @param $role
-     * @return bool
      */
-    public function isRole($role)
+    public function isRole(mixed $role): bool
     {
-        if (!$this->role instanceof Role) {
-            return false;
+        if ($role instanceof \BackedEnum) {
+            return $this->role === $role;
         }
 
         if ($this->isDeveloper()) {
             return true;
         }
 
+        $lowercase_user_role = strtolower($this->role->name);
+
         if (\is_array($role)) {
-            return \in_array($this->role->name, $role, true);
+            return \in_array($lowercase_user_role, $role);
         }
 
-        return $this->role->name === $role;
+        if (is_string($role)) {
+            return $lowercase_user_role === $role;
+        }
+
+        return false;
     }
 
     /**
