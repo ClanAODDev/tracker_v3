@@ -56,7 +56,10 @@ class Division extends Resource
             ID::make()->sortable(),
 
             Text::make('Name')->sortable()
-                ->help('Should match Clan AOD division name'),
+                ->help("Should match Clan AOD division name. Do not change unless you know what you're doing!!"),
+
+            Text::make('Slug')->sortable()
+                ->help("Slug version of name [used for website]. Do not change unless you know what you're doing!!"),
 
             Text::make('Abbreviation')
                 ->help('Should match Clan AOD abbreviation. LOWER-CASE'),
