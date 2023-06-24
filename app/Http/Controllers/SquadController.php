@@ -6,7 +6,6 @@ use App\Http\Requests\CreateSquadForm;
 use App\Http\Requests\DeleteSquadForm;
 use App\Http\Requests\UpdateSquadForm;
 use App\Models\Division;
-use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Repositories\SquadRepository;

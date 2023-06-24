@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Division;
-use Illuminate\Console\Command;
 
 class DivisionCensus extends \Illuminate\Console\Command
 {
