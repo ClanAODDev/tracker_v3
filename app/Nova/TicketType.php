@@ -70,7 +70,9 @@ class TicketType extends Resource
                 ->searchable()
                 ->nullable()
                 ->help('If set, assigns the ticket to the user indicated'),
-            Number::make('Display Order')->help('Change the order in which the type is displayed. (Ascending order)'),
+            Number::make('Display Order')
+                ->required()
+                ->help('Change the order in which the type is displayed. (Ascending order)'),
             HasMany::make('Ticket'),
         ];
     }
