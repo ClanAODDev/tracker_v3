@@ -28,7 +28,7 @@
                     @foreach ($ticketTypes as $ticketType)
                         <div class="col-md-3">
                             <a href="{{ route('help.tickets.create') . '?type=' . $ticketType->slug }}"
-                               class="panel panel-filled" style="height: 125px; ">
+                               class="panel panel-filled" style="height: 140px; padding:5px; ">
                                 <div class="panel-heading"><strong>{{ $ticketType->name }}</strong></div>
                                 <div class="panel-body">{{ $ticketType->description }}</div>
                             </a>
