@@ -68,6 +68,7 @@ class TicketType extends Resource
             Textarea::make('Boilerplate')->help('Pre-populates ticket with basic information, if applicable'),
             BelongsTo::make('Auto-assign to', 'auto_assign_to', \App\Nova\User::class)
                 ->searchable()
+                ->nullable()
                 ->help('If set, assigns the ticket to the user indicated'),
             Number::make('Display Order')->help('Change the order in which the type is displayed. (Ascending order)'),
             HasMany::make('Ticket'),
