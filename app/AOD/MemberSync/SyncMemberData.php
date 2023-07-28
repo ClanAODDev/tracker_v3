@@ -106,7 +106,7 @@ class SyncMemberData
 
                 (new DiscordMessage())
                     ->to('#admin')
-                    ->message("Tracker sync error: " . $exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}")
+                    ->message('Tracker sync error: ' . $exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}")
                     ->error()
                     ->send();
 
