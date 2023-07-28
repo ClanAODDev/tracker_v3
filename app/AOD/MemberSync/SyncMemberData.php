@@ -2,6 +2,7 @@
 
 namespace App\AOD\MemberSync;
 
+use App\Channels\Messages\DiscordMessage;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -101,7 +102,13 @@ class SyncMemberData
                         : '',
                 ]);
             } catch (\Exception $exception) {
-                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id} - {$exception->getMessage()}");
+                \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
+
+                (new DiscordMessage())
+                    ->to('#admin')
+                    ->message("Tracker sync error: " . $exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}")
+                    ->error()
+                    ->send();
 
                 continue;
             }
