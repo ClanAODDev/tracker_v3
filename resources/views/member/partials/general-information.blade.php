@@ -51,9 +51,8 @@
         @component('application.components.data-block')
             @slot('data')
                 {{$member->discord }}
-                <button data-clipboard-target="{{ $member->discord }}"
-                        class="copy-to-clipboard btn-outline-warning
-                btn">
+                <button data-clipboard-text="{{ $member->discord }}"
+                        class="copy-to-clipboard btn-outline-warning btm-xs btn">
                     <i class="fa fa-clone"></i>
                 </button>
             @endslot
