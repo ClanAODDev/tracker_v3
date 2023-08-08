@@ -15,14 +15,14 @@
                 <div class="panel-body">
                     <small class="c-white slight text-uppercase">
                         Discord Tag
+                        <button data-clipboard-text="{{ $member->discord }}"
+                                class="copy-to-clipboard btn-outline-warning btm-xs btn"
+                                style="float: right;display: inline;">
+                            <i class="fa fa-clone"></i>
+                        </button>
                     </small>
                     <br/>
                     {{$member->discord }}
-                    <button data-clipboard-text="{{ $member->discord }}"
-                            class="copy-to-clipboard btn-outline-warning btm-xs btn"
-                            style="float: right;display: inline;">
-                        <i class="fa fa-clone"></i>
-                    </button>
                 </div>
             </div>
         </div>
