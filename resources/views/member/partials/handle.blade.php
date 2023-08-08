@@ -9,6 +9,5 @@
         </small>
         <br />
         <span class="text-uppercase">{{ $handle->pivot->value }}</span>
-
     </div>
 </div>
