@@ -7,25 +7,28 @@
         </a>
     @endcan
 </h4>
-<hr />
+<hr/>
 <div class="row">
     @if($discordUrl = $member->getDiscordUrl())
-        <div class="panel panel-filled">
-            <div class="panel-body">
-                <small class="c-white slight text-uppercase">
-                    Discord Tag
-                </small>
-                <br/>
-                {{$member->discord }}
-                <button data-clipboard-text="{{ $member->discord }}"
-                        class="copy-to-clipboard btn-outline-warning btm-xs btn" style="float: right;display: inline;">
-                    <i class="fa fa-clone"></i>
-                </button>
+        <div class="col-md-3" style="overflow: hidden;">
+            <div class="panel panel-filled">
+                <div class="panel-body">
+                    <small class="c-white slight text-uppercase">
+                        Discord Tag
+                    </small>
+                    <br/>
+                    {{$member->discord }}
+                    <button data-clipboard-text="{{ $member->discord }}"
+                            class="copy-to-clipboard btn-outline-warning btm-xs btn"
+                            style="float: right;display: inline;">
+                        <i class="fa fa-clone"></i>
+                    </button>
+                </div>
             </div>
         </div>
     @endif
     @forelse ($member->handles as $handle)
-        <div class="col-md-3"  style="overflow: hidden;">
+        <div class="col-md-3" style="overflow: hidden;">
 
             @if($handle->url)
                 @include('member.partials.handle-link')
