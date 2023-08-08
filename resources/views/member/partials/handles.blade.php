@@ -1,5 +1,5 @@
 <h4 class="m-t-xl">
-    Ingame Handles
+    Handles
 
     @can ('manageIngameHandles', $member)
         <a href="{{ route('member.edit-handles', $member->clan_id) }}" class="btn btn-default pull-right">
@@ -31,4 +31,18 @@
             </div>
         </div>
     @endforelse
+        @if($discordUrl = $member->getDiscordUrl())
+            @component('application.components.data-block')
+                @slot('data')
+                    {{$member->discord }}
+                    <button data-clipboard-text="{{ $member->discord }}"
+                            class="copy-to-clipboard btn-outline-warning btm-xs btn" style="float: right;display: inline;">
+                        <i class="fa fa-clone"></i>
+                    </button>
+                @endslot
+                @slot('title')
+                    Discord <span class="c-white">Profile</span>
+                @endslot
+            @endcomponent
+        @endif
 </div>

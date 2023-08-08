@@ -46,22 +46,6 @@
 
 
 <div class="row">
-
-    @if($discordUrl = $member->getDiscordUrl())
-        @component('application.components.data-block')
-            @slot('data')
-                {{$member->discord }}
-                <button data-clipboard-text="{{ $member->discord }}"
-                        class="copy-to-clipboard btn-outline-warning btm-xs btn">
-                    <i class="fa fa-clone"></i>
-                </button>
-            @endslot
-            @slot('title')
-                Discord <span class="c-white">Profile</span>
-            @endslot
-        @endcomponent
-    @endif
-
     @component('application.components.link-block')
         @slot('link')
             https://www.clanaod.net/forums/search.php?do=finduser&amp;userid={{ $member->clan_id }}&amp;
