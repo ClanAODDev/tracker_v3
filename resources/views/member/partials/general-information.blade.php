@@ -54,6 +54,9 @@
             @endslot
             @slot('data')
                 {{$member->discord }}
+                <button data-clipboard-target="{{$member->discord }}" class="copy-to-clipboard btn-outline-warning btn">
+                    <i class="fa fa-clone"></i>
+                </button>
             @endslot
             @slot('title')
                 Discord <span class="c-white">Profile</span>
@@ -66,15 +69,25 @@
             https://www.clanaod.net/forums/search.php?do=finduser&amp;userid={{ $member->clan_id }}&amp;
             contenttype=vBForum_Post&amp;showposts=1
         @endslot
-        @slot('data') {{ $member->posts }} @endslot
-        @slot('title') forum <span class="c-white">post count</span> @endslot
+        @slot('data')
+            {{ $member->posts }}
+        @endslot
+        @slot('title')
+            forum <span class="c-white">post count</span>
+        @endslot
     @endcomponent
 
     @if ($member->recruiter && $member->recruiter_id !== 0)
         @component('application.components.link-block')
-            @slot('link'){{ route('member', $member->recruiter->getUrlParams()) }}@endslot
-            @slot('data'){{ $member->recruiter->present()->rankName }}@endslot
-            @slot('title') clan <span class="c-white">recruiter</span> @endslot
+            @slot('link')
+                {{ route('member', $member->recruiter->getUrlParams()) }}
+            @endslot
+            @slot('data')
+                {{ $member->recruiter->present()->rankName }}
+            @endslot
+            @slot('title')
+                clan <span class="c-white">recruiter</span>
+            @endslot
         @endcomponent
     @endif
 
@@ -82,29 +95,47 @@
     @if ($member->rank_id >= 9)
 
         @component('application.components.data-block')
-            @slot('data') {{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }} @endslot
-            @slot('title') Last <span class="c-white">Rank Training</span> @endslot
+            @slot('data')
+                {{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}
+            @endslot
+            @slot('title')
+                Last <span class="c-white">Rank Training</span>
+            @endslot
         @endcomponent
 
         @if( $member->trainer)
             @component('application.components.link-block')
-                @slot('link'){{ route('member', $member->trainer->getUrlParams()) }}@endslot
-                @slot('data') {{$member->trainer->name }} @endslot
-                @slot('title') Last <span class="c-white">Trained By</span> @endslot
+                @slot('link')
+                    {{ route('member', $member->trainer->getUrlParams()) }}
+                @endslot
+                @slot('data')
+                    {{$member->trainer->name }}
+                @endslot
+                @slot('title')
+                    Last <span class="c-white">Trained By</span>
+                @endslot
             @endcomponent
         @endif
 
         @if($member->xo_at)
             @component('application.components.data-block')
-                @slot('data') {{ $member->xo_at->format('Y-m-d') }} @endslot
-                @slot('title') <span class="c-white">XO Since</span> @endslot
+                @slot('data')
+                    {{ $member->xo_at->format('Y-m-d') }}
+                @endslot
+                @slot('title')
+                    <span class="c-white">XO Since</span>
+                @endslot
             @endcomponent
         @endif
 
         @if ($member->co_at)
             @component('application.components.data-block')
-                @slot('data') {{ $member->co_at->format('Y-m-d') }} @endslot
-                @slot('title') <span class="c-white">CO Since</span> @endslot
+                @slot('data')
+                    {{ $member->co_at->format('Y-m-d') }}
+                @endslot
+                @slot('title')
+                    <span class="c-white">CO Since</span>
+                @endslot
             @endcomponent
         @endif
 
