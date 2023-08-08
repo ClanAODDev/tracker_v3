@@ -22,7 +22,7 @@
                         </button>
                     </small>
                     <br/>
-                    {{$member->discord }}
+                    <span class="text-uppercase">{{$member->discord }}</span>
                 </div>
             </div>
         </div>
