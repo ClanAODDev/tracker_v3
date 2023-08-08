@@ -48,13 +48,12 @@
 <div class="row">
 
     @if($discordUrl = $member->getDiscordUrl())
-        @component('application.components.link-block')
-            @slot('link')
-                {{ $discordUrl }}
-            @endslot
+        @component('application.components.data-block')
             @slot('data')
                 {{$member->discord }}
-                <button data-clipboard-target="{{$member->discord }}" class="copy-to-clipboard btn-outline-warning btn">
+                <button data-clipboard-target="{{ $member->discord }}"
+                        class="copy-to-clipboard btn-outline-warning
+                btn">
                     <i class="fa fa-clone"></i>
                 </button>
             @endslot
