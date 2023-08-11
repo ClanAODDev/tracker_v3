@@ -102,10 +102,15 @@ class SyncMemberData
                         : '',
                 ]);
             } catch (\Exception $exception) {
+                if ($newData->aoddivision === 'None') {
+                    // ignore these because they're dumb
+                    continue;
+                }
+
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
 
                 (new DiscordMessage())
-                    ->to('#admin')
+                    ->to('admin')
                     ->message('Tracker sync error: ' . $exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}")
                     ->error()
                     ->send();
