@@ -2,16 +2,27 @@
 
 @section('content')
 
-    @component ('application.components.division-heading', [$division])
+    @component ('application.components.division-heading')
         @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
+            @if ($division)
+                <img src="{{ getDivisionIconPath($division->abbreviation) }}"
+                     class="division-icon-large"/>
+            @else
+                <img src="{{ asset('images/logo_v2.svg') }}" width="50px" style="opacity: .2;"/>
+            @endif
         @endslot
         @slot ('heading')
-            <span class="hidden-xs">{{ $division->name }}</span>
-            <span class="visible-xs">{{ $division->abbreviation }}</span>
+            {!! $member->present()->rankName !!}
+            @include('member.partials.member-actions-button', ['member' => $member])
         @endslot
         @slot ('subheading')
-            {{ $division->description }}
+            @if ($member->isPending)
+                <span class="text-accent"><i class="fa fa-hourglass"></i> Pending member</span>
+            @elseif ($member->division_id == 0)
+                <span class="text-muted"><i class="fa fa-user-times"></i> Ex-AOD</span>
+            @else
+                {{ $member->position->name ?? "No Position" }}
+            @endif
         @endslot
     @endcomponent
 
