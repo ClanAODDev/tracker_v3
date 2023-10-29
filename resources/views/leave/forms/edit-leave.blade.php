@@ -26,7 +26,7 @@
         @endif
     </div>
     <div class="col-md-6 text-right">
-        <a href="{{ route('leave.index', $division->abbreviation) }}" class="btn btn-default">Cancel</a>
+        <a href="{{ route('home') }}" class="btn btn-default">Cancel</a>
         <button class="btn btn-success" type="submit">Submit Changes</button>
     </div>
 </div>
