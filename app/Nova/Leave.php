@@ -20,6 +20,11 @@ class Leave extends Resource
 
     public static $group = 'Member';
 
+    public static function label()
+    {
+        return 'Leaves of Absence';
+    }
+
     /**
      * The columns that should be searched.
      *
@@ -41,7 +46,7 @@ class Leave extends Resource
 
             BelongsTo::make('Member', 'member'),
 
-            BelongsTo::make('Approver', 'member', 'approver_id'),
+            BelongsTo::make('Approver', 'approver', '\App\Nova\Member'),
 
             Text::make('Reason'),
 
