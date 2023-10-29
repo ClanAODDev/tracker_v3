@@ -60,6 +60,7 @@ class DivisionStructureController extends Controller
                 if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
                     return preg_replace($search, $replace, $str);
                 }
+
                 // Otherwise use str_replace
                 return str_replace($search, $replace, $str);
             }));

@@ -29,6 +29,7 @@ class MemberPresenter extends \App\Presenters\Presenter
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
         if (!$value) {
         }
+
         //        if ($value->diffInDays() < 1) {
         //            return "Today";
         //        }
