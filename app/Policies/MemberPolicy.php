@@ -45,7 +45,7 @@ class MemberPolicy
             return false;
         }
 
-        $userDivision   = $user->member->division;
+        $userDivision = $user->member->division;
         $memberDivision = $member->division;
 
         // officers can update anyone within division
