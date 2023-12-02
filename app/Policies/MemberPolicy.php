@@ -58,8 +58,21 @@ class MemberPolicy
         return false;
     }
 
-    public function updateLeave()
+    public function updateLeave(User $user, Member $member)
     {
+        // can't edit yourself
+        if ($member->id === auth()->user()->member_id) {
+            return false;
+        }
+
+        $userDivision   = $user->member->division;
+        $memberDivision = $member->division;
+
+        // allow CPLs
+        if ($user->isRole(['jr_ldr']) && $userDivision->id === $memberDivision->id) {
+            return true;
+        }
+
         return false;
     }
 
