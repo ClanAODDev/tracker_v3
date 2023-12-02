@@ -65,7 +65,7 @@ class MemberPolicy
             return false;
         }
 
-        $userDivision   = $user->member->division;
+        $userDivision = $user->member->division;
         $memberDivision = $member->division;
 
         // allow CPLs
