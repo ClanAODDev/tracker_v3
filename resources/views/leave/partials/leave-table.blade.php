@@ -14,10 +14,12 @@
     @foreach ($membersWithLeave as $member)
         <tr class="{{ $member->leave->expired ? 'text-danger' : null }}">
             <td>
-                <a href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}"
-                   class="btn btn-default">
-                    <i class="fa fa-search"></i>
-                </a>
+                @can('updateLeave', $member)
+                    <a href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}"
+                       class="btn btn-default">
+                        <i class="fa fa-search"></i>
+                    </a>
+                @endcan
             </td>
             <td>
                 {{ $member->name }}

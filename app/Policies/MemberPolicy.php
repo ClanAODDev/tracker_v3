@@ -40,7 +40,7 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        // can edit yourself
+        // can't edit yourself
         if ($member->id === auth()->user()->member_id) {
             return false;
         }
@@ -50,9 +50,27 @@ class MemberPolicy
 
         // officers can update anyone within division
         if ($memberDivision instanceof Division) {
-            if ($user->isRole('officer') && $userDivision->id === $memberDivision->id) {
+            if (in_array($user->role_id, [3, 4]) && $userDivision->id === $memberDivision->id) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public function updateLeave(User $user, Member $member)
+    {
+        // can't edit yourself
+        if ($member->id === auth()->user()->member_id) {
+            return false;
+        }
+
+        $userDivision = $user->member->division;
+        $memberDivision = $member->division;
+
+        // allow CPLs
+        if ($user->isRole(['jr_ldr']) && $userDivision->id === $memberDivision->id) {
+            return true;
         }
 
         return false;

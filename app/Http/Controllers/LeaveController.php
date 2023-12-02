@@ -84,7 +84,7 @@ class LeaveController extends Controller
      */
     public function edit(Member $member, Leave $leave)
     {
-        $this->authorize('update', $member);
+        $this->authorize('updateLeave', $member);
 
         $leave->load('note', 'approver', 'requester');
         $division = $member->division;
