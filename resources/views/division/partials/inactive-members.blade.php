@@ -33,6 +33,7 @@
                            class="btn btn-default btn-sm">Forum PM</a>
                     </td>
                     <td class="text-center">
+                        {{-- @TODO: create separate permission for inactive flagging --}}
                         @can ('update', $member)
                             <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
                                class="btn btn-warning btn-sm">

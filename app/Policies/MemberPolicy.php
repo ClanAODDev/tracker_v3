@@ -50,7 +50,7 @@ class MemberPolicy
 
         // officers can update anyone within division
         if ($memberDivision instanceof Division) {
-            if (in_array($user->role_id, [3, 4]) && $userDivision->id === $memberDivision->id) {
+            if ($user->isRole(['jr_ldr', 'officer']) && $userDivision->id === $memberDivision->id) {
                 return true;
             }
         }
