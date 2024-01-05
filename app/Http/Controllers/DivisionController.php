@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 /**
  * Class DivisionController.
  */
-class DivisionController extends \App\Http\Controllers\Controller
+class DivisionController extends Controller
 {
     /**
      * Create a new controller instance.

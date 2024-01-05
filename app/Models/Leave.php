@@ -29,7 +29,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      */
     public function member()
     {
-        return $this->belongsTo(\App\Models\Member::class, 'member_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -37,7 +37,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      */
     public function note()
     {
-        return $this->belongsTo(\App\Models\Note::class);
+        return $this->belongsTo(Note::class);
     }
 
     /**
@@ -45,7 +45,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      */
     public function requester()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -53,7 +53,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      */
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**

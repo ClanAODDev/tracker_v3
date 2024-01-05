@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @method static whereName($name)
  */
-class Member extends \Illuminate\Database\Eloquent\Model
+class Member extends Model
 {
     use HasCustomAttributes;
     use HasFactory;
@@ -54,29 +54,29 @@ class Member extends \Illuminate\Database\Eloquent\Model
 
     public function user()
     {
-        return $this->hasOne(\App\Models\User::class);
+        return $this->hasOne(User::class);
     }
 
     public function transfers()
     {
-        return $this->hasMany(\App\Models\Transfer::class, 'member_id')
+        return $this->hasMany(Transfer::class, 'member_id')
             ->orderBy('created_at', 'desc');
     }
 
     public function rankActions()
     {
-        return $this->hasMany(\App\Models\RankAction::class, 'member_id')
+        return $this->hasMany(RankAction::class, 'member_id')
             ->orderBy('created_at', 'desc');
     }
 
     public function notes()
     {
-        return $this->hasMany(\App\Models\Note::class, 'member_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Note::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
     public function assignPosition($position): Model
     {
-        $newPosition = $position instanceof \App\Models\Position ? $position : \App\Models\Position::whereName(strtolower($position))->firstOrFail();
+        $newPosition = $position instanceof \App\Models\Position ? $position : Position::whereName(strtolower($position))->firstOrFail();
         // reset assignments for specific positions
         if (\in_array(
             $newPosition->name,
@@ -104,7 +104,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function position()
     {
-        return $this->belongsTo(\App\Models\Position::class);
+        return $this->belongsTo(Position::class);
     }
 
     /**
@@ -113,7 +113,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function assignRank($rank)
     {
-        return $this->rank()->associate(\App\Models\Rank::whereName(strtolower($rank))->firstOrFail());
+        return $this->rank()->associate(Rank::whereName(strtolower($rank))->firstOrFail());
     }
 
     /**
@@ -121,7 +121,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function rank()
     {
-        return $this->belongsTo(\App\Models\Rank::class);
+        return $this->belongsTo(Rank::class);
     }
 
     /**
@@ -133,7 +133,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function squadLeaderOf()
     {
-        return $this->hasOne(\App\Models\Squad::class, 'leader_id');
+        return $this->hasOne(Squad::class, 'leader_id');
     }
 
     /**
@@ -157,7 +157,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function partTimeDivisions()
     {
-        return $this->belongsToMany(\App\Models\Division::class, 'division_parttimer')->withTimestamps();
+        return $this->belongsToMany(Division::class, 'division_parttimer')->withTimestamps();
     }
 
     /**
@@ -165,7 +165,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function platoon()
     {
-        return $this->belongsTo(\App\Models\Platoon::class);
+        return $this->belongsTo(Platoon::class);
     }
 
     /**
@@ -173,7 +173,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function squad()
     {
-        return $this->belongsTo(\App\Models\Squad::class);
+        return $this->belongsTo(Squad::class);
     }
 
     /**
@@ -181,7 +181,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function division()
     {
-        return $this->belongsTo(\App\Models\Division::class);
+        return $this->belongsTo(Division::class);
     }
 
     /**
@@ -207,7 +207,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function leave()
     {
-        return $this->hasOne(\App\Models\Leave::class, 'member_id', 'clan_id');
+        return $this->hasOne(Leave::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -215,7 +215,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function expiredLeave()
     {
-        return $this->hasOne(\App\Models\Leave::class)->where('end_date', '<', \Carbon\Carbon::today());
+        return $this->hasOne(Leave::class)->where('end_date', '<', \Carbon\Carbon::today());
     }
 
     /**
@@ -223,7 +223,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function memberRequest()
     {
-        return $this->hasOne(\App\Models\MemberRequest::class, 'member_id', 'clan_id');
+        return $this->hasOne(MemberRequest::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -231,7 +231,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function activeLeave()
     {
-        return $this->hasOne(\App\Models\Leave::class)->where('end_date', '>', \Carbon\Carbon::today());
+        return $this->hasOne(Leave::class)->where('end_date', '>', \Carbon\Carbon::today());
     }
 
     /**
@@ -245,7 +245,7 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function handles()
     {
-        return $this->belongsToMany(\App\Models\Handle::class)->withPivot('value');
+        return $this->belongsToMany(Handle::class)->withPivot('value');
     }
 
     /**
@@ -314,6 +314,6 @@ class Member extends \Illuminate\Database\Eloquent\Model
      */
     public function memberRequests()
     {
-        return $this->hasMany(\App\Models\MemberRequest::class, 'requester_id', 'clan_id');
+        return $this->hasMany(MemberRequest::class, 'requester_id', 'clan_id');
     }
 }

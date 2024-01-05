@@ -349,7 +349,7 @@ class Division extends Model
 
     public function transfers()
     {
-        return $this->hasMany(\App\Models\Transfer::class, 'division_id')
+        return $this->hasMany(Transfer::class, 'division_id')
             ->orderBy('created_at', 'desc');
     }
 

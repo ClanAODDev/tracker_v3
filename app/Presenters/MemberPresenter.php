@@ -4,7 +4,7 @@ namespace App\Presenters;
 
 use App\Models\Member;
 
-class MemberPresenter extends \App\Presenters\Presenter
+class MemberPresenter extends Presenter
 {
     /**
      * @var Member

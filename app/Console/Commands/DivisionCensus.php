@@ -40,7 +40,7 @@ class DivisionCensus extends \Illuminate\Console\Command
 
             exit;
         }
-        $divisions = \App\Models\Division::active()->get();
+        $divisions = Division::active()->get();
         $this->comment('Beginning division census...');
         foreach ($divisions as $division) {
             $this->comment("Recording data for {$division->name}...");

@@ -42,8 +42,8 @@ class MemberRequest extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('Member', 'member', \App\Nova\Member::class)->onlyOnIndex(),
-            BelongsTo::make('Approver', 'approver', \App\Nova\Member::class)->onlyOnIndex(),
+            BelongsTo::make('Member', 'member', Member::class)->onlyOnIndex(),
+            BelongsTo::make('Approver', 'approver', Member::class)->onlyOnIndex(),
             Textarea::make('Notes'),
             DateTime::make('Created At'),
             DateTime::make('Approved At'),

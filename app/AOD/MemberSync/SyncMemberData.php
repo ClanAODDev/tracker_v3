@@ -170,13 +170,13 @@ class SyncMemberData
 
         // handle new members not in the tracker
         $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
-        $activeIds = \App\Models\Member::where('division_id', '!=', 0)->pluck('clan_id');
+        $activeIds = Member::where('division_id', '!=', 0)->pluck('clan_id');
 
         $membersToAdd = $syncTable->where('aoddivision', '!=', 'None')
             ->whereNotIn('userid', $activeIds)->get();
 
         foreach ($membersToAdd as $member) {
-            \App\Models\Member::updateOrCreate([
+            Member::updateOrCreate([
                 'clan_id' => $member->userid,
             ], [
                 'allow_pm' => $member->allow_pm,

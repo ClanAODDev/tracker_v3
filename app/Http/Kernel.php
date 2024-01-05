@@ -105,19 +105,19 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewarePriority = [
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \App\Http\Middleware\ClanForumAuthentication::class,
-        \App\Http\Middleware\Authenticate::class,
-        \Illuminate\Session\Middleware\AuthenticateSession::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        \Illuminate\Auth\Middleware\Authorize::class,
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        ClanForumAuthentication::class,
+        Middleware\Authenticate::class,
+        AuthenticateSession::class,
+        SubstituteBindings::class,
+        Authorize::class,
 
-        \App\Http\Middleware\MustBeDeveloper::class,
-        \App\Http\Middleware\MustBeAdmin::class,
-        \App\Http\Middleware\DivisionMustBeActive::class,
-        \App\Http\Middleware\IsBanned::class,
-        \App\Http\Middleware\VerifySlackToken::class,
+        MustBeDeveloper::class,
+        MustBeAdmin::class,
+        DivisionMustBeActive::class,
+        IsBanned::class,
+        VerifySlackToken::class,
         CheckScopes::class,
         CheckForAnyScope::class,
     ];

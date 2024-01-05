@@ -6,7 +6,7 @@ use App\Exceptions\FactoryMissingException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
-class ReportsController extends \App\Http\Controllers\Controller
+class ReportsController extends Controller
 {
     public function __construct(\App\Repositories\ClanRepository $clanRepository)
     {

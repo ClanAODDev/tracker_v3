@@ -17,7 +17,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function member()
     {
-        return $this->belongsTo(\App\Models\Member::class, 'member_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
     }
 
     /**
@@ -25,7 +25,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function requester()
     {
-        return $this->belongsTo(\App\Models\Member::class, 'requester_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'requester_id', 'clan_id');
     }
 
     /**
@@ -33,7 +33,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function approver()
     {
-        return $this->belongsTo(\App\Models\Member::class, 'approver_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'approver_id', 'clan_id');
     }
 
     /**
@@ -41,7 +41,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function division()
     {
-        return $this->belongsTo(\App\Models\Division::class);
+        return $this->belongsTo(Division::class);
     }
 
     public function scopeOnHold($query)
@@ -165,7 +165,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function canceller()
     {
-        return $this->belongsTo(\App\Models\Member::class, 'canceller_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'canceller_id', 'clan_id');
     }
 
     /**

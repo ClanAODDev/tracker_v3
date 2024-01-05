@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
-class InactiveMemberController extends \App\Http\Controllers\Controller
+class InactiveMemberController extends Controller
 {
     public function __construct()
     {

@@ -14,7 +14,7 @@ use Illuminate\View\View;
 /**
  * Class RecruitingController.
  */
-class RecruitingController extends \App\Http\Controllers\Controller
+class RecruitingController extends Controller
 {
     use \App\AOD\Traits\Procedureable;
     use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -105,7 +105,7 @@ class RecruitingController extends \App\Http\Controllers\Controller
      */
     public function searchPlatoonForSquads(Request $request)
     {
-        return $this->getSquadsFor(\App\Models\Platoon::find($request->platoon));
+        return $this->getSquadsFor(Platoon::find($request->platoon));
     }
 
     /**

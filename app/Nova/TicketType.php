@@ -66,7 +66,7 @@ class TicketType extends Resource
                 ->placeholder('Specify roles') // Placeholder text
                 ->help('Provide roles this ticket type should be available to. Leave blank if type should be available to all roles.'),
             Textarea::make('Boilerplate')->help('Pre-populates ticket with basic information, if applicable'),
-            BelongsTo::make('Auto-assign to', 'auto_assign_to', \App\Nova\User::class)
+            BelongsTo::make('Auto-assign to', 'auto_assign_to', User::class)
                 ->searchable()
                 ->nullable()
                 ->help('If set, assigns the ticket to the user indicated'),

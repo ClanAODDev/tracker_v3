@@ -48,7 +48,7 @@ class Note extends Resource
 
             BelongsTo::make('Member', 'member'),
 
-            BelongsTo::make('Author', 'author', \App\Nova\User::class),
+            BelongsTo::make('Author', 'author', User::class),
 
             Select::make('type')->options([
                 'misc' => 'Misc',

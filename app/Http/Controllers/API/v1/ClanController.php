@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\v1;
 use Google_Service_Calendar_Event;
 use Illuminate\Http\JsonResponse;
 
-class ClanController extends \App\Http\Controllers\API\v1\ApiController
+class ClanController extends ApiController
 {
     public const RFC3339 = 'Y-m-d\\TH:i:sP';
 

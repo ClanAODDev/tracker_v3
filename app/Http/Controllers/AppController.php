@@ -6,7 +6,7 @@ use App\Models\Division;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
-class AppController extends \App\Http\Controllers\Controller
+class AppController extends Controller
 {
     /**
      * Create a new controller instance.

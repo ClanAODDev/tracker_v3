@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class SquadController extends \App\Http\Controllers\Controller
+class SquadController extends Controller
 {
     private SquadRepository $squadRepository;
 
@@ -49,7 +49,7 @@ class SquadController extends \App\Http\Controllers\Controller
      */
     public function create(Division $division, Platoon $platoon)
     {
-        $this->authorize('create', [\App\Models\Squad::class, $division]);
+        $this->authorize('create', [Squad::class, $division]);
 
         return view('squad.create', compact('division', 'platoon'));
     }
@@ -132,7 +132,7 @@ class SquadController extends \App\Http\Controllers\Controller
             $member->squad()->dissociate();
         } else {
             // ensure they are assigned to current platoon
-            $squad = \App\Models\Squad::find($request->squad_id);
+            $squad = Squad::find($request->squad_id);
             $member->platoon()->associate($squad->platoon);
             $member->squad()->associate($squad);
         }
