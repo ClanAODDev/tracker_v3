@@ -22,7 +22,7 @@ class ClanForumSession
     public function exists()
     {
         if (!User::exists()) {
-            throw new \Exception('No users exist. Have you created an account?');
+            throw new Exception('No users exist. Have you created an account?');
         }
 
         if ('local' === app()->environment()) {

@@ -10,7 +10,7 @@ use Illuminate\View\View;
 
 class ReportController extends \App\Http\Controllers\Controller
 {
-    use \App\Http\Controllers\Division\IngameReports;
+    use IngameReports;
 
     public function __construct(DivisionRepository $division)
     {

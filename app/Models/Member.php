@@ -49,7 +49,7 @@ class Member extends Model
 
     public function present(): MemberPresenter
     {
-        return new \App\Presenters\MemberPresenter($this);
+        return new MemberPresenter($this);
     }
 
     public function user()
@@ -76,7 +76,7 @@ class Member extends Model
 
     public function assignPosition($position): Model
     {
-        $newPosition = $position instanceof \App\Models\Position ? $position : Position::whereName(strtolower($position))->firstOrFail();
+        $newPosition = $position instanceof Position ? $position : Position::whereName(strtolower($position))->firstOrFail();
         // reset assignments for specific positions
         if (\in_array(
             $newPosition->name,
@@ -294,7 +294,7 @@ class Member extends Model
      */
     public function isRank($rank)
     {
-        if (!$this->rank instanceof \App\Models\Rank) {
+        if (!$this->rank instanceof Rank) {
             return false;
         }
         if (\is_array($rank)) {

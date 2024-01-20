@@ -23,7 +23,7 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'settings' => [],
         'developer' => false,
         'member_id' => function () {
-            return factory(\App\Models\Member::class)->create()->clan_id;
+            return factory(App\Models\Member::class)->create()->clan_id;
         },
         'remember_token' => Str::random(10),
     ];
