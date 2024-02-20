@@ -78,6 +78,8 @@ class Member extends Resource
                 Date::make('CO Since', 'co_at')->hideFromIndex(),
             ]),
 
+            HasMany::make('RankActions'),
+
             HasMany::make('Notes'),
         ];
     }
