@@ -9,7 +9,6 @@ class AOD extends Model
     public const AGENT = 'AOD Division Tracker';
 
     /**
-     * @param $url
      * @param  array  $options
      * @return bool|string
      */
@@ -35,7 +34,6 @@ class AOD extends Model
     /**
      * Builds a proper request URL.
      *
-     * @param $url
      * @return string
      */
     private function prepareRequestUrl($url, array $options)

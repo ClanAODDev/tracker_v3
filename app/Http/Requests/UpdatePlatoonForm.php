@@ -60,7 +60,7 @@ class UpdatePlatoonForm extends FormRequest
         }
 
         // setting platoon to TBA
-        if (!$this->leader && !$this->leader_id) {
+        if (! $this->leader && ! $this->leader_id) {
             // reset existing leader if there is one
             if ($this->platoon->leader) {
                 $this->resetLeaderOf($this->platoon);
@@ -86,8 +86,6 @@ class UpdatePlatoonForm extends FormRequest
 
     /**
      * Assign members to a platoon.
-     *
-     * @param $platoon
      */
     private function assignMembersTo($platoon)
     {
@@ -101,8 +99,6 @@ class UpdatePlatoonForm extends FormRequest
 
     /**
      * Reset the leader for a platoon.
-     *
-     * @param $platoon
      */
     private function resetLeaderOf($platoon)
     {
@@ -113,8 +109,6 @@ class UpdatePlatoonForm extends FormRequest
 
     /**
      * Assign a member as platoon leader.
-     *
-     * @param $platoon
      */
     private function assignLeaderTo($platoon)
     {

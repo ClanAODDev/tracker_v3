@@ -59,7 +59,7 @@ class SquadController extends Controller
      */
     public function store(CreateSquadForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
         }
 
@@ -70,9 +70,6 @@ class SquadController extends Controller
         return redirect()->route('platoon', [$division->abbreviation, $platoon]);
     }
 
-    /**
-     * @param $request
-     */
     public function isMemberOfDivision(Division $division, $request): bool
     {
         $member = \App\Models\Member::whereClanId($request->leader_id)->first();
@@ -97,7 +94,7 @@ class SquadController extends Controller
      */
     public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
         }
 
@@ -194,9 +191,6 @@ class SquadController extends Controller
         ]);
     }
 
-    /**
-     * @param $division
-     */
     private function filterHandlesToPrimaryHandle($division): Closure
     {
         return function ($query) use ($division) {

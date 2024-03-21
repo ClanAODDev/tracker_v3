@@ -11,6 +11,7 @@ use Tests\TestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class DivisionApiTest extends TestCase

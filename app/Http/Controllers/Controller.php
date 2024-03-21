@@ -14,9 +14,6 @@ class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
 
-    /**
-     * @param $toastMessage
-     */
     protected function showToast($toastMessage)
     {
         Toastr::success(

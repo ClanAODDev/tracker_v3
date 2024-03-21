@@ -11,20 +11,13 @@ class PartTimeMemberRemoved extends Notification
 {
     use Queueable;
 
-    /**
-     * @var
-     */
     private $user;
 
-    /**
-     * @var
-     */
     private $member;
 
     /**
      * Create a new notification instance.
      *
-     * @param $member
      * @param $partTimeDivision
      */
     public function __construct($member)
@@ -44,7 +37,6 @@ class PartTimeMemberRemoved extends Notification
     }
 
     /**
-     * @param $notifiable
      * @return array
      *
      * @throws \Exception

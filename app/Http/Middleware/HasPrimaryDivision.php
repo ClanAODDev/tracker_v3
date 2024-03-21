@@ -19,7 +19,7 @@ class HasPrimaryDivision
         if (Auth::check()) {
             $user = Auth::user();
 
-            if (!$user->member->division || !$user->member) {
+            if (! $user->member->division || ! $user->member) {
                 if (session('impersonating')) {
                     auth()->logout();
                     redirect()->to(route('end-impersonation'));

@@ -34,7 +34,6 @@ class NotifyNewTicketOwner extends Notification
     }
 
     /**
-     * @param $ticket
      * @return array
      *
      * @throws \Exception

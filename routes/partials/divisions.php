@@ -67,7 +67,7 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     /*
      * member requests.
      */
-//    Route::
+    //    Route::
 
     /*
      * platoons.

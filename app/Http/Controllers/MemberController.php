@@ -40,14 +40,13 @@ class MemberController extends Controller
     /**
      * Search for a member.
      *
-     * @param $name
      * @return Factory|View
      *
      * @internal param $name
      */
     public function search($name = null)
     {
-        if (!$name) {
+        if (! $name) {
             $name = request()->name;
         }
 
@@ -248,7 +247,6 @@ class MemberController extends Controller
     }
 
     /**
-     * @param $member
      * @return RedirectResponse
      */
     public function unassignMember($member)

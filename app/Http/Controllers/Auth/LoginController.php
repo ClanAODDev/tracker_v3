@@ -159,7 +159,7 @@ class LoginController extends Controller
             } else {
                 // ensure this is an active member
                 $member = Member::where('name', $username)->first();
-                if (!$member) {
+                if (! $member) {
                     return false;
                 }
 
@@ -186,8 +186,6 @@ class LoginController extends Controller
 
     /**
      * Update user's email if updated.
-     *
-     * @param $user
      */
     private function checkForUpdates($user)
     {

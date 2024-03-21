@@ -24,7 +24,6 @@ class DivisionEdited extends Notification
     }
 
     /**
-     * @param $notifiable
      * @return array
      *
      * @throws Exception

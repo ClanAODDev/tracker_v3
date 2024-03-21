@@ -25,7 +25,6 @@ class ApiController extends Controller
     }
 
     /**
-     * @param $message
      * @return JsonResponse
      */
     public function respondWithError($message)
@@ -39,7 +38,6 @@ class ApiController extends Controller
     }
 
     /**
-     * @param $data
      * @param  array  $headers
      * @return JsonResponse
      */
@@ -57,7 +55,6 @@ class ApiController extends Controller
     }
 
     /**
-     * @param $statusCode
      * @return $this
      */
     public function setStatusCode($statusCode)
@@ -77,7 +74,6 @@ class ApiController extends Controller
     }
 
     /**
-     * @param $ability
      * @return mixed
      */
     protected function tokenCan($ability)

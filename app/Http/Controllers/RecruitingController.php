@@ -75,7 +75,6 @@ class RecruitingController extends Controller
     }
 
     /**
-     * @param $abbreviation
      * @return array
      */
     public function searchPlatoons($abbreviation)
@@ -133,7 +132,6 @@ class RecruitingController extends Controller
     }
 
     /**
-     * @param $member_id
      * @return array
      */
     public function validateMemberId($member_id)
@@ -148,7 +146,7 @@ class RecruitingController extends Controller
 
         $result = $this->callProcedure('get_user', $member_id);
 
-        if (!property_exists($result, 'usergroupid')) {
+        if (! property_exists($result, 'usergroupid')) {
             return ['is_member' => false, 'verified_email' => false];
         }
 
@@ -176,14 +174,11 @@ class RecruitingController extends Controller
 
         $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
-        return response()->json(['memberExists' => !empty($result)]);
+        return response()->json(['memberExists' => ! empty($result)]);
     }
 
     /**
      * Handle member creation on recruitment.
-     *
-     * @param $request
-     * @return
      */
     private function createMember($request)
     {
@@ -229,9 +224,6 @@ class RecruitingController extends Controller
 
     /**
      * Create a member status request.
-     *
-     * @param $member
-     * @param $division
      */
     private function createRequest($member, $division)
     {
@@ -246,10 +238,6 @@ class RecruitingController extends Controller
         ]);
     }
 
-    /**
-     * @param $member
-     * @param $division
-     */
     private function handleNotification(Request $request, $member, $division)
     {
         if ($division->id !== auth()->user()->member->division_id) {
@@ -260,7 +248,6 @@ class RecruitingController extends Controller
     }
 
     /**
-     * @param $division
      * @return array
      */
     private function getPlatoons($division)

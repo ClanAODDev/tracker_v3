@@ -18,7 +18,6 @@ class InactiveMemberController extends Controller
     }
 
     /**
-     * @param $division
      * @return Factory|View
      */
     public function index($division)

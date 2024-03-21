@@ -56,7 +56,7 @@ class PlatoonController extends Controller
      */
     public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader' => "Member {$form->leader_id} not to this division!"])
                 ->withInput();
@@ -127,7 +127,7 @@ class PlatoonController extends Controller
      */
     public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
@@ -238,7 +238,6 @@ class PlatoonController extends Controller
     }
 
     /**
-     * @param $division
      * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)

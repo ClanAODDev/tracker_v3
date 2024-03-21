@@ -49,9 +49,6 @@ class DivisionCensus extends \Illuminate\Console\Command
         $this->comment('Census complete.');
     }
 
-    /**
-     * @param $division
-     */
     protected function recordEntry(Division $division)
     {
         $census = new \App\Models\Census();

@@ -23,7 +23,7 @@ class GetDivisionInfo
      */
     public function __construct()
     {
-        if (!config('app.aod.token')) {
+        if (! config('app.aod.token')) {
             throw new \Exception('ERROR: AOD Token not defined in configuration.');
             exit;
         }
@@ -43,7 +43,7 @@ class GetDivisionInfo
             'type' => 'json',
         ]);
 
-        if (!\is_object($data)) {
+        if (! \is_object($data)) {
             Log::critical('ERROR: Member sync returning invalid.');
 
             exit;
@@ -63,7 +63,6 @@ class GetDivisionInfo
      * so we need to build an associative
      * array from the column sort data.
      *
-     * @param $json
      * @return array
      */
     protected function prepareData($json)

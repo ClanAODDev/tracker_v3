@@ -21,7 +21,7 @@ class ReportsController extends Controller
     {
         $memberCount = $this->clan->totalActiveMembers();
 
-        if (!$this->clan->censusCounts()->count()) {
+        if (! $this->clan->censusCounts()->count()) {
             throw new FactoryMissingException('You might need to run the `census` factory');
         }
 
@@ -63,7 +63,7 @@ class ReportsController extends Controller
      */
     public function clanTsReport()
     {
-        $invalidDates = fn ($member) => !carbon_date_or_null_if_zero($member->last_ts_activity);
+        $invalidDates = fn ($member) => ! carbon_date_or_null_if_zero($member->last_ts_activity);
         $newMembers = fn ($member) => $member->created_at < \Carbon\Carbon::now()->subDays(2);
 
         $issues = \App\Models\Member::whereHas('division')->with(

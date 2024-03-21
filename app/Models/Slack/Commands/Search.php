@@ -98,7 +98,6 @@ class Search extends Base implements Command
     }
 
     /**
-     * @param $member
      * @return null|string
      */
     private function buildActivityBlock($member)

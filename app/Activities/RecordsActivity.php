@@ -10,9 +10,6 @@ use ReflectionClass;
  */
 trait RecordsActivity
 {
-    /**
-     * @param $event
-     */
     public function recordActivity($event)
     {
         if (auth()->check()) {
@@ -67,7 +64,6 @@ trait RecordsActivity
     }
 
     /**
-     * @param $action
      * @return string
      */
     protected function getActivityName($action)

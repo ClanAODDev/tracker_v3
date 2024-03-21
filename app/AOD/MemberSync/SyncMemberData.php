@@ -18,7 +18,7 @@ class SyncMemberData
     {
         $divisionInfo = new GetDivisionInfo();
 
-        if (!$syncData = collect($divisionInfo->data)) {
+        if (! $syncData = collect($divisionInfo->data)) {
             \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
@@ -52,7 +52,7 @@ class SyncMemberData
             $newData = $syncTable->where('userid', $member->clan_id)
                 ->first();
 
-            if (!$newData) {
+            if (! $newData) {
                 // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
 

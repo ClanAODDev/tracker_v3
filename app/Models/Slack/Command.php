@@ -9,8 +9,6 @@ interface Command
 {
     /**
      * Command constructor.
-     *
-     * @param $data
      */
     public function __construct($data);
 

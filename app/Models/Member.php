@@ -108,7 +108,6 @@ class Member extends Model
     }
 
     /**
-     * @param $rank
      * @return Model
      */
     public function assignRank($rank)
@@ -281,7 +280,7 @@ class Member extends Model
 
     public function getDiscordUrl()
     {
-        if (!$this->discord_id) {
+        if (! $this->discord_id) {
             return false;
         }
 
@@ -289,12 +288,11 @@ class Member extends Model
     }
 
     /**
-     * @param $rank
      * @return bool
      */
     public function isRank($rank)
     {
-        if (!$this->rank instanceof Rank) {
+        if (! $this->rank instanceof Rank) {
             return false;
         }
         if (\is_array($rank)) {

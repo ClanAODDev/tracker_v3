@@ -18,7 +18,7 @@ class MemberController extends ApiController
     {
         $member = Member::whereClanId($clan_id)->first();
 
-        if (!$member) {
+        if (! $member) {
             return $this->respondNotFound();
         }
 

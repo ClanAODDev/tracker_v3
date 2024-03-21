@@ -71,9 +71,6 @@ class CreatePlatoonForm extends FormRequest
         }
     }
 
-    /**
-     * @param $platoon
-     */
     private function assignMembersTo($platoon)
     {
         collect(json_decode($this->member_ids))->each(function ($memberId) use ($platoon) {
@@ -83,9 +80,6 @@ class CreatePlatoonForm extends FormRequest
         });
     }
 
-    /**
-     * @param $platoon
-     */
     private function assignLeaderTo($platoon)
     {
         $leader = Member::whereClanId($this->leader_id)->firstOrFail();

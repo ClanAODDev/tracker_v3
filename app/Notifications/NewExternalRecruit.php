@@ -16,8 +16,6 @@ class NewExternalRecruit extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @param $member
      */
     public function __construct($member)
     {

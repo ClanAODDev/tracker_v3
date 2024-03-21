@@ -15,8 +15,6 @@ class NotifyCallerTicketUpdated extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @param $update
      */
     public function __construct($update)
     {
@@ -35,18 +33,17 @@ class NotifyCallerTicketUpdated extends Notification
     }
 
     /**
-     * @param $ticket
      * @return array
      *
      * @throws \Exception
      */
     public function toWebhook($ticket)
     {
-        if (!$ticket->caller->member->discord) {
+        if (! $ticket->caller->member->discord) {
             throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
         }
 
-        if (!$ticket->caller->settings()->get('ticket_notifications')) {
+        if (! $ticket->caller->settings()->get('ticket_notifications')) {
             return [];
         }
 

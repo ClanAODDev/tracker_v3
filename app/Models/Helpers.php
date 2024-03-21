@@ -162,8 +162,6 @@ function getDivisionIconPath($abbreviation)
 /**
  * array_keys with recursive implementation.
  *
- * @param $myArray
- * @param $MAXDEPTH
  * @param  int  $depth
  * @param  array  $arrayKeys
  * @return array
@@ -186,8 +184,6 @@ function array_keys_recursive($myArray, $MAXDEPTH = INF, $depth = 0, $arrayKeys 
 /**
  * Provides a 'selected' property for dropdown forms.
  *
- * @param $arg1
- * @param $arg2
  * @return string
  */
 function selected($arg1, $arg2)
@@ -213,8 +209,6 @@ function carbon_date_or_null_if_zero($value)
  * Provides visual feedback for a member's last activity
  * based on division activity threshold.
  *
- * @param $date
- * @param $division
  * @return string
  */
 function getActivityClass($date, $division)
@@ -260,7 +254,6 @@ function getNameOfClass($class)
 /**
  * Navigation helper for active classs.
  *
- * @param $path
  * @param  string  $active
  * @return string
  */

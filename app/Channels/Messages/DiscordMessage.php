@@ -19,6 +19,7 @@ class DiscordMessage
     public const INFO = 10181046;
 
     private $fields = [];
+
     private $messageId;
 
     /**
@@ -54,7 +55,6 @@ class DiscordMessage
     }
 
     /**
-     * @param $channel
      * @return DiscordMessage
      */
     public function to($channel)
@@ -72,7 +72,6 @@ class DiscordMessage
     }
 
     /**
-     * @param $fields
      * @return $this
      */
     public function fields($fields)
@@ -83,7 +82,6 @@ class DiscordMessage
     }
 
     /**
-     * @param $message
      * @return $this
      */
     public function message($message)
@@ -100,11 +98,11 @@ class DiscordMessage
      */
     public function send()
     {
-        if (!$this->channel) {
+        if (! $this->channel) {
             throw new Exception('A channel must be defined');
         }
 
-        if (!isset($this->message) && empty($this->fields)) {
+        if (! isset($this->message) && empty($this->fields)) {
             throw new Exception('A message must be defined');
         }
 

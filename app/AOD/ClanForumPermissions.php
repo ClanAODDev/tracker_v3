@@ -11,7 +11,6 @@ class ClanForumPermissions
     /**
      * Provision account role based on forum groups.
      *
-     * @param $clanForumId
      * @param  null  $groupIds
      * @return null|void
      */
@@ -64,9 +63,6 @@ class ClanForumPermissions
         }
     }
 
-    /**
-     * @return
-     */
     private function assignRole(string $role)
     {
         \Log::info("Role {$role} granted to user " . auth()->id());

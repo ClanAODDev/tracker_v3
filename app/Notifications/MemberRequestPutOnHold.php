@@ -16,8 +16,6 @@ class MemberRequestPutOnHold extends Notification
 
     /**
      * Create a new notification instance.
-     *
-     * @param $memberRequest
      */
     public function __construct(MemberRequest $memberRequest)
     {

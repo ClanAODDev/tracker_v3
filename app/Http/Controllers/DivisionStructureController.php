@@ -200,7 +200,6 @@ class DivisionStructureController extends Controller
     /**
      * Filters leave, omitting unapproved leave.
      *
-     * @param $division
      * @return mixed
      */
     private function getLeave($division)
@@ -224,7 +223,6 @@ class DivisionStructureController extends Controller
     /**
      * Eager loading filter.
      *
-     * @param $division
      * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
@@ -235,7 +233,6 @@ class DivisionStructureController extends Controller
     }
 
     /**
-     * @param $data
      * @return mixed
      */
     private function filterSquadLeads($data)
@@ -258,7 +255,6 @@ class DivisionStructureController extends Controller
     }
 
     /**
-     * @param $error
      * @return string
      */
     private function handleTwigError($error)

@@ -65,9 +65,6 @@ class CreateSquadForm extends FormRequest
         }
     }
 
-    /**
-     * @param $squad
-     */
     private function assignMembersTo($squad)
     {
         collect(json_decode($this->member_ids))->each(function ($memberId) use ($squad) {
@@ -77,9 +74,6 @@ class CreateSquadForm extends FormRequest
         });
     }
 
-    /**
-     * @param $squad
-     */
     private function assignLeaderTo($squad)
     {
         $leader = Member::whereClanId($this->leader_id)->firstOrFail();

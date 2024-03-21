@@ -77,7 +77,6 @@ class DivisionRepository
     }
 
     /**
-     * @param $divisionId
      * @param  null  $startDate
      * @return mixed
      */
@@ -87,7 +86,6 @@ class DivisionRepository
     }
 
     /**
-     * @param $divisionId
      * @param  null  $startDate
      * @return mixed
      */
@@ -97,7 +95,6 @@ class DivisionRepository
     }
 
     /**
-     * @param $divisionId
      * @param  null  $startDate
      * @return mixed
      */

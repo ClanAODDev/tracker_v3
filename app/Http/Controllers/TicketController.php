@@ -30,7 +30,7 @@ class TicketController extends Controller
     public function setup()
     {
         $ticketTypes = TicketType::orderBy('display_order', 'ASC')
-                                 ->get();
+            ->get();
 
         $ticketTypes = $ticketTypes->filter(function ($type) {
             return collect(json_decode($type->role_access))->contains(auth()->user()->role_id)
@@ -46,18 +46,18 @@ class TicketController extends Controller
     public function index()
     {
         $tickets = QueryBuilder::for(Ticket::class)
-                               ->allowedFilters([
-                                   'type.slug',
-                                   'caller.name',
-                                   'caller.member.clan_id',
-                                   'owner.name',
-                                   'owner.member.clan_id',
-                                   'state',
-                                   'description',
-                               ]);
+            ->allowedFilters([
+                'type.slug',
+                'caller.name',
+                'caller.member.clan_id',
+                'owner.name',
+                'owner.member.clan_id',
+                'state',
+                'description',
+            ]);
 
         // filter tickets unless you're an admin
-        if (!auth()->user()->can('manage', Ticket::class)) {
+        if (! auth()->user()->can('manage', Ticket::class)) {
             $tickets = $tickets->whereCallerId(auth()->id());
         }
 
@@ -79,7 +79,7 @@ class TicketController extends Controller
      */
     public function create()
     {
-        if (!request()->get('type')) {
+        if (! request()->get('type')) {
             return redirect(route('help.tickets.setup'));
         }
 

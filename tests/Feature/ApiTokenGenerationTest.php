@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class ApiTokenGenerationTest extends TestCase

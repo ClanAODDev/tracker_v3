@@ -80,7 +80,6 @@ class Ticket extends Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopeNew($query)
@@ -90,7 +89,6 @@ class Ticket extends Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopeAssigned($query)

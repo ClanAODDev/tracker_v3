@@ -60,7 +60,7 @@ class UpdateSquadForm extends FormRequest
         }
 
         // setting squad to TBA
-        if (!$this->leader && !$this->leader_id) {
+        if (! $this->leader && ! $this->leader_id) {
             // reset existing leader if there is one
             if ($this->squad->leader) {
                 $this->resetLeaderOf($this->squad);
@@ -85,8 +85,6 @@ class UpdateSquadForm extends FormRequest
 
     /**
      * Assign members to a squad.
-     *
-     * @param $squad
      */
     private function assignMembersTo($squad)
     {
@@ -99,8 +97,6 @@ class UpdateSquadForm extends FormRequest
 
     /**
      * Reset the leader.
-     *
-     * @param $squad
      */
     private function resetLeaderOf($squad)
     {
@@ -113,8 +109,6 @@ class UpdateSquadForm extends FormRequest
 
     /**
      * Assign a leader.
-     *
-     * @param $squad
      */
     private function assignLeaderTo($squad)
     {

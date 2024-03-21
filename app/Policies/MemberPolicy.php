@@ -128,7 +128,7 @@ class MemberPolicy
     public function promote(User $userPromoting, Member $memberBeingPromoted)
     {
         // only admin, sr_ldr, officer can promote
-        if (!$userPromoting->isRole('officer')) {
+        if (! $userPromoting->isRole('officer')) {
             return false;
         }
 

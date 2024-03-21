@@ -46,8 +46,6 @@ class CreateDivision extends FormRequest
 
     /**
      * Reassigns the division leader to the new division.
-     *
-     * @param $division
      */
     private function reassignLeaderTo($division)
     {

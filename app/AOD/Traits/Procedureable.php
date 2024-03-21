@@ -4,10 +4,6 @@ namespace App\AOD\Traits;
 
 trait Procedureable
 {
-    /**
-     * @param $procedure
-     * @param $data
-     */
     private function callProcedure($procedure, $data)
     {
         try {
@@ -20,7 +16,7 @@ trait Procedureable
                     ->select("CALL {$procedure}('{$data}')"))->first();
             }
 
-            if (!isset($results) || !property_exists($results, 'userid')) {
+            if (! isset($results) || ! property_exists($results, 'userid')) {
                 return collect([]);
             }
 

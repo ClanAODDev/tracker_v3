@@ -11,7 +11,9 @@ class DiscordMessageReact
     ];
 
     private string $emote;
+
     private string $messageId;
+
     private string $channel;
 
     public function to(string $channel)
@@ -30,7 +32,7 @@ class DiscordMessageReact
 
     public function status(string $status)
     {
-        if (!isset($this->states[$status])) {
+        if (! isset($this->states[$status])) {
             throw new \Exception('Invalid status provided to DiscordMessageReact');
         }
 
@@ -46,15 +48,15 @@ class DiscordMessageReact
      */
     public function send()
     {
-        if (!$this->channel) {
+        if (! $this->channel) {
             throw new Exception('A channel must be defined');
         }
 
-        if (!$this->emote) {
+        if (! $this->emote) {
             throw new Exception('A status {assigned, resolved, rejected} must be defined');
         }
 
-        if (!$this->messageId) {
+        if (! $this->messageId) {
             throw new Exception('A message id must be defined');
         }
 

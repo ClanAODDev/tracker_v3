@@ -55,7 +55,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopePending($query)
@@ -74,7 +73,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopeApproved($query)
@@ -100,7 +98,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopeCancelled($query)
@@ -117,7 +114,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopeErrors($query)

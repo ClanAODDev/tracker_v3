@@ -80,7 +80,6 @@ class SearchDiscord extends Base implements Command
     }
 
     /**
-     * @param $member
      * @return null|string
      */
     private function buildActivityAndDiscordBlock($member)

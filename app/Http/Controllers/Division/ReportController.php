@@ -59,7 +59,6 @@ class ReportController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * @param $division
      * @param  null  $month
      * @param  null  $year
      * @return Factory|View
@@ -105,9 +104,6 @@ class ReportController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * @param $division
-     * @param $month
-     * @param $year
      * @return mixed
      */
     private function getMemberPromotions($division, $month, $year)

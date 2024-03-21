@@ -27,7 +27,7 @@ class MemberPresenter extends Presenter
     public function lastActive($value)
     {
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
-        if (!$value) {
+        if (! $value) {
         }
 
         //        if ($value->diffInDays() < 1) {

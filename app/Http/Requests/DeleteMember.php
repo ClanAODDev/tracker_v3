@@ -50,9 +50,6 @@ class DeleteMember extends FormRequest
         $member->resetPositionAndAssignments();
     }
 
-    /**
-     * @param $member
-     */
     private function createRemovalNote($member)
     {
         Note::create([

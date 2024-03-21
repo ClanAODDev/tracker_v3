@@ -40,9 +40,6 @@ class ClanSeeder extends Seeder
         ]);
     }
 
-    /**
-     * @param $division
-     */
     protected function generateCensusData($division): void
     {
         for ($i = 1; $i < 7; $i++) {
@@ -53,9 +50,6 @@ class ClanSeeder extends Seeder
         }
     }
 
-    /**
-     * @param $division
-     */
     protected function generateDivisionLeadership($division): void
     {
         // a commander

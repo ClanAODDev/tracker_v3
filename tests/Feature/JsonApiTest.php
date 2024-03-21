@@ -9,6 +9,7 @@ use Tests\TestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class JsonApiTest extends TestCase

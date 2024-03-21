@@ -80,7 +80,6 @@ class SearchTeamspeak extends Base implements Command
     }
 
     /**
-     * @param $member
      * @return null|string
      */
     private function buildActivityAndTSBlock($member)

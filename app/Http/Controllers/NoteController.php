@@ -37,7 +37,7 @@ class NoteController extends Controller
 
         $division = $member->division;
 
-        if (!$division) {
+        if (! $division) {
             return redirect(404);
         }
 

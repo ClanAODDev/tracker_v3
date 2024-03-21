@@ -183,7 +183,6 @@ class Division extends Model
     /**
      * Enabled division scope.
      *
-     * @param $query
      * @return mixed
      */
     public function scopeActive($query)
@@ -197,7 +196,6 @@ class Division extends Model
     }
 
     /**
-     * @param $query
      * @return mixed
      */
     public function scopeShuttingDown($query, bool $status)
@@ -226,7 +224,6 @@ class Division extends Model
     }
 
     /**
-     * @param $days
      * @return mixed
      */
     public function membersActiveSinceDaysAgo($days)
@@ -237,7 +234,6 @@ class Division extends Model
     }
 
     /**
-     * @param $days
      * @return $this
      */
     public function membersActiveOnTsSinceDaysAgo($days)
@@ -278,13 +274,12 @@ class Division extends Model
     }
 
     /**
-     * @param $string
      * @return string
      */
     public function locality($string)
     {
         $locality = collect($this->settings()->locality);
-        if (!$locality->count()) {
+        if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -294,7 +289,7 @@ class Division extends Model
                 return $translation['old-string'] === strtolower($string);
             }
         });
-        if (!$results) {
+        if (! $results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);

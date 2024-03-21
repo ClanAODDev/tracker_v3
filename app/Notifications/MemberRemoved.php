@@ -11,20 +11,12 @@ class MemberRemoved extends Notification
 {
     use Queueable;
 
-    /**
-     * @var
-     */
     private $user;
 
-    /**
-     * @var
-     */
     private $member;
 
     /**
      * Create a new notification instance.
-     *
-     * @param $member
      */
     public function __construct($member)
     {

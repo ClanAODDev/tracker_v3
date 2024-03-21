@@ -70,7 +70,6 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param $requestId
      * @return Factory|Redirector|RedirectResponse|View
      */
     public function reprocess($requestId)
@@ -146,7 +145,6 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param $requestId
      * @return MemberRequest
      *
      * @throws AuthorizationException
@@ -169,7 +167,6 @@ class MemberRequestController extends Controller
     }
 
     /**
-     * @param $requests
      * @return mixed
      */
     private function filterByDivision($requests)

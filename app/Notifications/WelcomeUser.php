@@ -10,9 +10,6 @@ class WelcomeUser extends Notification
 {
     use Queueable;
 
-    /**
-     * @var
-     */
     private $user;
 
     public function __construct($user)

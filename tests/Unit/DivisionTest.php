@@ -7,6 +7,7 @@ use Tests\TestCase;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 final class DivisionTest extends TestCase

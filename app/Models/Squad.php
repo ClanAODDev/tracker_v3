@@ -54,7 +54,6 @@ class Squad extends Model
     /**
      * Assign the leader of a squad.
      *
-     * @param $member
      * @return Model
      */
     public function assignLeaderTo($member)

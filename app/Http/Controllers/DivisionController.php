@@ -228,7 +228,6 @@ class DivisionController extends Controller
     }
 
     /**
-     * @param $division
      * @return Closure
      */
     private function filterHandlesToPrimaryHandle($division)
