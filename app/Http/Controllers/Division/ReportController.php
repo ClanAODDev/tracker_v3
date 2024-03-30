@@ -90,6 +90,21 @@ class ReportController extends \App\Http\Controllers\Controller
     }
 
     /**
+     * @param  Division  $division
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View
+     */
+    public function voiceReport(Division $division)
+    {
+        $issues = $division->membersOfDiscordState([
+            'never_connected',
+            'never_configured',
+            'disconnected',
+        ])->get();
+
+        return view('division.reports.voice-report', compact('division', 'issues'));
+    }
+
+    /**
      * @return Factory|View
      */
     public function censusReport(Division $division)

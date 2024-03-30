@@ -9,7 +9,7 @@
             <div class="panel-body">
 
                 <div class="row">
-                    <div class="col-md-4 col-xs-12 text-center">
+                    <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
                             @if ($member->isPending)
                                 <span class="text-muted">UNAVAILABLE</span>
@@ -24,18 +24,27 @@
                         Since last <span class="c-white">TS activity</span>
                     </div>
 
-                    <div class="col-md-4 col-xs-12 text-center">
+                    <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
                             {{ $member->join_date->format('Y-m-d') }}
                         </h2>
                         Member <span class="c-white">Join Date</span>
                     </div>
 
-                    <div class="col-md-4 col-xs-12 text-center">
+                    <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
                             {{ $member->lastPromoted }}
                         </h2>
                         Last <span class="c-white">Promotion Date</span>
+                    </div>
+
+                    <div class="col-md-3 col-xs-12 text-center">
+                        <h2 class="no-margins" title="{{ $member->voiceStatus . ' - '
+                        . $member->last_voice_activity ??
+                        'N/A' }}">
+                            @include('member.partials.voice-status', ['status' => $member->last_voice_status])
+                        </h2>
+                        Voice <span class="c-white">Status</span>
                     </div>
                 </div>
 
