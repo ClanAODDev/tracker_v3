@@ -19,9 +19,39 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                To assist with helping clan leaders keep up with changes, a historical record of interface and process
-                changes will be provided here. Minor refactoring, optimization, and other similar changes will not be
-                recorded.
+                <p>To assist with helping clan leaders keep up with changes, a historical record of interface and
+                    process changes will be provided here. Minor refactoring, optimization, and other similar changes
+                    will not be recorded. Refer to the <a href="https://github.com/ClanAODDev/tracker_v3/commits/main/">commit
+                        history on GitHub</a> for a full changelog.</p>
+            </div>
+        </div>
+
+        <div class="row m-t-xl">
+            <div class="col-md-12">
+                <h4>30 March 2024 - 3.7.1</h4>
+                <hr/>
+                <ul>
+                    <li>Discord activity now being tracked
+                        <ul>
+                            <li>Forum data sync will include discord status and last activity</li>
+                            <li>Possible states include:
+                                <ul>
+                                    <li><strong>Connected</strong> - member is here right now</li>
+                                    <li><strong>Disconnected</strong> - member was here but isn't anymore</li>
+                                    <li><strong>Never connected</strong> - member never connected to our discord</li>
+                                    <li><strong>Never configured</strong> - no discord account information was shared with AOD (via
+                                        member
+                                        profile)
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>A status icon can be found on member profiles</li>
+                            <li>Divisions have access to a "voice comms" report identifying members with issues
+                                requiring attention
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
 

@@ -4,7 +4,7 @@
             {{ $handle->label }}
             <button data-clipboard-text="{{ $handle->pivot->value }}"
                     class="copy-to-clipboard btn-outline-warning btm-xs btn" style="float: right;display: inline;">
-                <i class="fa fa-clone"></i>
+                <i class="far fa-copy" title="Copy to clipboard"></i>
             </button>
         </small>
         <br />
