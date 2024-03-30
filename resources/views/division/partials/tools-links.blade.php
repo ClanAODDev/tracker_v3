@@ -58,16 +58,18 @@
                 Census
             </a>
         </li>
-        <li>
-            <a href="{{ route('division.promotions', $division) }}">Promotions</a>
-        </li>
 
         <li>
             <a href="{{ route('division.retention-report', $division) }}">Member Retention</a>
         </li>
 
+
         <li>
-            <a href="{{ route('division.voice-report', $division) }}">Voice Issues</a>
+            <a href="{{ route('division.promotions', $division) }}">Promotions</a>
+        </li>
+
+        <li>
+            <a href="{{ route('division.voice-report', $division) }}">Voice Comms Issues</a>
         </li>
 
         <?php $file = Str::camel($division->name); ?>

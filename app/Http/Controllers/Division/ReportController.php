@@ -80,28 +80,24 @@ class ReportController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * @return Factory|View
-     */
-    public function tsReport(Division $division)
-    {
-        $issues = $division->mismatchedTSMembers;
-
-        return view('division.reports.ts-report', compact('division', 'issues'));
-    }
-
-    /**
      * @param  Division  $division
      * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View
      */
     public function voiceReport(Division $division)
     {
-        $issues = $division->membersOfDiscordState([
+        $tsIssues = $division->mismatchedTSMembers;
+
+        $discordIssues = $division->membersOfDiscordState([
             'never_connected',
             'never_configured',
             'disconnected',
         ])->get();
 
-        return view('division.reports.voice-report', compact('division', 'issues'));
+        return view('division.reports.voice-report', compact(
+            'division',
+            'discordIssues',
+            'tsIssues',
+        ));
     }
 
     /**

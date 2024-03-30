@@ -47,7 +47,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     /*
      * Division Reports.
      */
-    Route::get('/ts-report', 'Division\ReportController@tsReport')->name('division.ts-report');
     Route::get('/voice-report', 'Division\ReportController@voiceReport')->name('division.voice-report');
     Route::get('/retention', 'Division\ReportController@retentionReport')
         ->name('division.retention-report');
