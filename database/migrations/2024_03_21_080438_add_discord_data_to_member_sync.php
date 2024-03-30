@@ -29,9 +29,9 @@ return new class() extends Migration
             $table->string('tsid');
             $table->string('lastts_connect');
             $table->string('lastts_connect_time');
-            $table->string('lastdiscord_connect');
-            $table->string('lastdiscord_connect_time');
-            $table->string('lastdiscord_status');
+            $table->string('lastdiscord_connect'); // last day in a voice channel
+            $table->string('lastdiscord_connect_time'); // last time in a voice channel
+            $table->string('lastdiscord_status'); // discord connection
             $table->string('aodrank');
             $table->integer('aodrankval');
             $table->string('aoddivision');

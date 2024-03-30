@@ -99,9 +99,27 @@ class Division extends Model
 
     public function mismatchedTSMembers(): HasMany
     {
-        return $this->members()->where('join_date', '<', Carbon::today()->subDays(5))->where(function ($query) {
-            $query->where('last_ts_activity', null)->orWhere('last_ts_activity', '0000-00-00 00:00:00');
-        });
+        return $this->members()
+            ->where('join_date', '<', Carbon::today()->subDays(5))
+            ->where(function ($query) {
+                $query->where('last_ts_activity', null)
+                    ->orWhere('last_ts_activity', '0000-00-00 00:00:00');
+            });
+    }
+
+    public function membersOfDiscordState(array $state)
+    {
+        if (!array_intersect($state, [
+            'connected',
+            'never_connected',
+            'disconnected'
+        ])) {
+            throw new \InvalidArgumentException('Invalid discord state');
+        }
+
+        return $this->members()
+            ->whereIn('last_voice_status', $state)
+            ->with(['rank', 'platoon']);
     }
 
     /**
@@ -279,7 +297,7 @@ class Division extends Model
     public function locality($string)
     {
         $locality = collect($this->settings()->locality);
-        if (! $locality->count()) {
+        if (!$locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -289,7 +307,7 @@ class Division extends Model
                 return $translation['old-string'] === strtolower($string);
             }
         });
-        if (! $results) {
+        if (!$results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);
