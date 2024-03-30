@@ -39,12 +39,10 @@
                     </div>
 
                     <div class="col-md-3 col-xs-12 text-center">
-                        <h2 class="no-margins" title="{{ $member->voiceStatus . ' - '
-                        . $member->last_voice_activity ??
-                        'N/A' }}">
+                        <h2 class="no-margins" title="{!! $discordStatusLastSeen !!}">
                             @include('member.partials.voice-status', ['status' => $member->last_voice_status])
                         </h2>
-                        Voice <span class="c-white">Status</span>
+                        Discord <span class="c-white">Status</span>
                     </div>
                 </div>
 
