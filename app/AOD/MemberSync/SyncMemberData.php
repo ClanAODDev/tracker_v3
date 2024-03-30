@@ -71,6 +71,7 @@ class SyncMemberData
                 'privacy_flag' => $oldData['privacy_flag'],
                 'rank_id' => $oldData['rank_id'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
+                'last_voice_status' => $oldData['last_voice_status'],
 
                 // these can be null, and they piss me off
                 'last_activity' => null !== $oldData['last_activity']
@@ -79,7 +80,18 @@ class SyncMemberData
                 'last_ts_activity' => null !== $oldData['last_ts_activity']
                     ? Carbon::createFromTimeString($oldData['last_ts_activity'])->format('Y-m-d H:i:s')
                     : null,
+                'last_voice_activity' => null !== $oldData['last_voice_activity']
+                    ? Carbon::createFromTimeString($oldData['last_voice_activity'])->format('Y-m-d H:i:s')
+                    : null,
             ]);
+
+            /**
+             * Discord states
+             *  - connected
+             *  - disconnected
+             *  - never_connected | null
+             */
+
 
             try {
                 $newData = collect([
@@ -92,15 +104,24 @@ class SyncMemberData
                     'privacy_flag' => 'yes' !== $newData->allow_export ? 0 : 1,
                     'rank_id' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
+                    'last_voice_status' => $newData->lastdiscord_status,
+
 
                     // these can be null, and they piss me off
                     'last_activity' => '' !== $newData->lastactivity
                         ? "{$newData->lastactivity} {$newData->lastactivity_time}"
                         : '',
+
                     'last_ts_activity' => '' !== $newData->lastts_connect
                         ? "{$newData->lastts_connect} {$newData->lastts_connect_time}"
                         : '',
+
+                    'last_voice_activity' => (self::isBadDate($newData))
+                        ? "{$newData->lastdiscord_connect} {$newData->lastdiscord_connect_time}"
+                        : 'never_configured',
                 ]);
+
+
             } catch (\Exception $exception) {
                 if ($newData->aoddivision === 'None') {
                     // ignore these because they're dumb
@@ -109,6 +130,7 @@ class SyncMemberData
 
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
 
+                // @TODO: figure out why this isn't working
                 (new DiscordMessage())
                     ->to('admin')
                     ->message('Tracker sync error: ' . $exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}")
@@ -243,5 +265,14 @@ class SyncMemberData
                 $request->process();
             }
         });
+    }
+
+    /**
+     * @param $newData
+     * @return bool
+     */
+    private static function isBadDate($newData): bool
+    {
+        return !empty($newData->lastdiscord_connect) && $newData->lastdiscord_connect !== '1970';
     }
 }
