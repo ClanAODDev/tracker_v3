@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Position;
 use App\Repositories\MemberRepository;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -129,7 +130,7 @@ class MemberController extends Controller
         // hide admin notes from non-admin users
         $notes = $member->notes()->with('author')->get()
             ->filter(function ($note) {
-                if ('sr_ldr' === $note->type) {
+                if ($note->type === 'sr_ldr') {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
                 }
 
@@ -145,6 +146,14 @@ class MemberController extends Controller
         $rankHistory = $member->rankActions()->with('rank')->get();
         $transfers = $member->transfers()->with('division')->get();
 
+        $discordStatusLastSeen = sprintf(
+            '%s &mdash; Last seen: %s',
+            $member->voiceStatus,
+            ! str_contains($member->last_voice_activity, 1970)
+                ? Carbon::createFromTimeString($member->last_voice_activity)->format('Y-m-d g:i A')
+                : 'Never'
+        );
+
         return view('member.show', compact(
             'member',
             'division',
@@ -152,6 +161,7 @@ class MemberController extends Controller
             'partTimeDivisions',
             'rankHistory',
             'transfers',
+            'discordStatusLastSeen',
         ));
     }
 
@@ -276,7 +286,8 @@ class MemberController extends Controller
 
             if ($member->handles->contains($handle->id)) {
                 $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(fn ($myHandle) => $handle->type === $myHandle->type)->first()->pivot->value;
+                $newHandle['value'] = $member->handles->filter(fn ($myHandle
+                ) => $handle->type === $myHandle->type)->first()->pivot->value;
             }
 
             return $newHandle;
