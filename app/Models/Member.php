@@ -36,10 +36,12 @@ class Member extends Model
 
     protected $guarded = [];
 
+    // @TODO: replace with casts
     protected $dates = [
         'join_date',
         'last_activity',
         'last_ts_activity',
+        'last_voice_activity',
         'last_promoted_at',
         // sgt info
         'last_trained_at',
@@ -314,4 +316,5 @@ class Member extends Model
     {
         return $this->hasMany(MemberRequest::class, 'requester_id', 'clan_id');
     }
+
 }
