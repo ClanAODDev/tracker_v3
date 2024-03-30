@@ -66,3 +66,10 @@ Then we need to provision an admin user for ourselves. The Tracker will automati
     'name' => 'Your name'
 ])->admin()->create();
 ```
+
+
+### Enforcing code style
+Everyone has their own preferences for how code should look. For cases where there are wild differences, we use `.
+./vendor/bin/pint` to make things consistent throughout the repo. Feel free to run this before committing!
+
+Eventually we'll add this to a GitHub Action so it happens automatically....
