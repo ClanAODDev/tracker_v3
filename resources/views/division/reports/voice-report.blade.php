@@ -30,7 +30,7 @@
                 <tr>
                     <th>Member</th>
                     <th>State</th>
-                    <th>{{ $division->locality('platoon')}}</th>
+                    <th>{{ $division->locality('platoon') }}</th>
                     <th>Last Activity</th>
                 </tr>
                 </thead>
