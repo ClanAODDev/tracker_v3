@@ -71,8 +71,7 @@
         <div class="panel-body">
                <p><strong class="text-danger">Disconnected</strong>: User was connected but not anymore.</p>
                <p> <strong class="text-muted">Never Connected</strong>: User has never connected to the AOD Discord.</p>
-               <p> <strong class="text-warning">Never Configured</strong>: User has not provided Discord information to AOD
-                   .</p>
+               <p> <strong class="text-warning">Never Configured</strong>: User has not provided Discord information to AOD.</p>
         </div>
     </div>
 
