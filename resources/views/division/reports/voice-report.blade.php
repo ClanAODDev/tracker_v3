@@ -18,6 +18,10 @@
 
         {!! Breadcrumbs::render('voice-report', $division) !!}
 
+        @if(!count($discordIssues) && !count($tsIssues))
+            <p>There no voice comms issues to resolve for the {{ $division->name }} division.</p>
+        @endif
+
         @if (count($discordIssues))
             <h4 class="m-t-xl">
                 <i class="fa fa-exclamation-triangle text-danger"></i> Discord Issues
