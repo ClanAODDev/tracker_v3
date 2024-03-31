@@ -30,7 +30,7 @@ class TicketFactory extends Factory
             'division_id' => \App\Models\Division::inRandomOrder()->active()->get()->first()->id,
             'description' => $this->faker->paragraph,
             'message_id' => Uuid::uuid4()->toString(),
-            'owner_id' => 'assigned' === $states[$randomState]
+            'owner_id' => $states[$randomState] === 'assigned'
                 ? \App\Models\User::whereRoleId(5)->inRandomOrder()->first()->id
                 : null,
         ];

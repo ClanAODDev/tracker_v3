@@ -28,6 +28,6 @@ class MemberRepository
                       ORDER BY year DESC
             ")
         ))
-            ->filter(fn ($values) => null !== $values->month);
+            ->filter(fn ($values) => $values->month !== null);
     }
 }

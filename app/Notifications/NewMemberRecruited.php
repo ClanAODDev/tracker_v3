@@ -17,7 +17,7 @@ class NewMemberRecruited extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param $division
+     * @param  $division
      */
     public function __construct($member)
     {

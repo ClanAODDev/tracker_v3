@@ -89,11 +89,11 @@ class Member extends Model
             $this->squad_id = 0;
         }
 
-        if ('Executive Officer' === $newPosition->name) {
+        if ($newPosition->name === 'Executive Officer') {
             $this->xo_at = now();
             $this->co_at = null;
         }
-        if ('Commanding Officer' === $newPosition->name) {
+        if ($newPosition->name === 'Commanding Officer') {
             $this->co_at = now();
             $this->xo_at = null;
         }
@@ -316,5 +316,4 @@ class Member extends Model
     {
         return $this->hasMany(MemberRequest::class, 'requester_id', 'clan_id');
     }
-
 }

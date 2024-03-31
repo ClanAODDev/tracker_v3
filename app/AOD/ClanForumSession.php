@@ -25,7 +25,7 @@ class ClanForumSession
             throw new Exception('No users exist. Have you created an account?');
         }
 
-        if ('local' === app()->environment()) {
+        if (app()->environment() === 'local') {
             $user_id = config('dev_default_user') ?? 1;
             Auth::login(
                 config('dev_default_user')

@@ -87,7 +87,7 @@ class Division extends Resource
                 Boolean::make('active')->sortable()->rules(
                     'required',
                     function ($attribute, $value, $fail) {
-                        if (false === $value && $this->members->count()) {
+                        if ($value === false && $this->members->count()) {
                             return $fail('Division still has members assigned and cannot be disabled.');
                         }
                     }

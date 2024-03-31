@@ -53,7 +53,7 @@ class DivisionStructureController extends Controller
 
             $env->addFunction(new \Twig\TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
                 // Are they using the standard Twig syntax?
-                if (\is_array($search) && null === $replace) {
+                if (\is_array($search) && $replace === null) {
                     return strtr($str, $search);
                 }
                 // Is this a regular expression?

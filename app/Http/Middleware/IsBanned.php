@@ -14,7 +14,7 @@ class IsBanned
      */
     public function handle($request, Closure $next)
     {
-        if (\Auth::check() && 6 === $request->user()->role_id) {
+        if (\Auth::check() && $request->user()->role_id === 6) {
             abort(403, 'You are banned.');
         }
 

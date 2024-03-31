@@ -62,7 +62,7 @@ class MemberPresenter extends Presenter
      */
     public function rankName()
     {
-        if (14 === $this->member->rank_id) {
+        if ($this->member->rank_id === 14) {
             return $this->member->name;
         }
 

@@ -6,14 +6,14 @@ Breadcrumbs::for('member', function ($breadcrumbs, $member, $division) {
     if ($division) {
         $breadcrumbs->push($division->name, route('division', $division->abbreviation));
 
-        if (0 !== $member->platoon_id && $member->platoon) {
+        if ($member->platoon_id !== 0 && $member->platoon) {
             $breadcrumbs->push(
                 $member->platoon->name,
                 route('platoon', [$division->abbreviation, $member->platoon->id])
             );
         }
 
-        if (0 !== $member->squad_id && $member->squad) {
+        if ($member->squad_id !== 0 && $member->squad) {
             $breadcrumbs->push(
                 $member->squad->name ?: 'Untitled',
                 route('squad.show', [$division->abbreviation, $member->platoon->id, $member->squad])
@@ -31,7 +31,7 @@ Breadcrumbs::for('member-note', function ($breadcrumbs, $member, $division) {
         $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     }
 
-    if (0 !== $member->platoon_id) {
+    if ($member->platoon_id !== 0) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
             route('platoon', [$division->abbreviation, $member->platoon->id])
@@ -53,7 +53,7 @@ Breadcrumbs::for('member-leave', function ($breadcrumbs, $member, $division) {
         $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     }
 
-    if (0 !== $member->platoon_id) {
+    if ($member->platoon_id !== 0) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
             route('platoon', [$division->abbreviation, $member->platoon->id])
@@ -75,7 +75,7 @@ Breadcrumbs::for('member-recruits', function ($breadcrumbs, $member, $division) 
         $breadcrumbs->push($division->name, route('division', $division->abbreviation));
     }
 
-    if (0 !== $member->platoon_id) {
+    if ($member->platoon_id !== 0) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
             route('platoon', [$division->abbreviation, $member->platoon->id])

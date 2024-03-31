@@ -59,7 +59,7 @@ function ordSuffix($n)
     $str = "{$n}";
     $t = $n > 9 ? substr($str, -2, 1) : 0;
     $u = substr($str, -1);
-    if (1 === $t) {
+    if ($t === 1) {
         return $str . 'th';
     }
 
@@ -81,7 +81,7 @@ function ordSuffix($n)
 /**
  * Perform an AOD forum function (pm or email).
  *
- * @param $action  (email, showThread, forumProfile, pm, createThread, replyToThread)
+ * @param  $action  (email, showThread, forumProfile, pm, createThread, replyToThread)
  * @return mixed
  */
 function doForumFunction(array $ids, $action)
@@ -202,7 +202,7 @@ function checked($arg)
 
 function carbon_date_or_null_if_zero($value)
 {
-    return (null === $value || Carbon::parse($value)->timestamp <= 0) ? null : $value;
+    return ($value === null || Carbon::parse($value)->timestamp <= 0) ? null : $value;
 }
 
 /**
@@ -264,7 +264,7 @@ function set_active($path, $active = 'active')
 
 function percent($old_member_count, $new_member_count)
 {
-    if (0 === $old_member_count || 0 === $new_member_count) {
+    if ($old_member_count === 0 || $new_member_count === 0) {
         return 0;
     }
 
@@ -294,7 +294,7 @@ function gcd($a, $b)
     $_a = abs($a);
     $_b = abs($b);
 
-    while (0 !== $_b) {
+    while ($_b !== 0) {
         $remainder = $_a % $_b;
         $_a = $_b;
         $_b = $remainder;
@@ -310,7 +310,7 @@ function ratio()
     if ($c < 1) {
         return '';
     }
-    if (1 === $c) {
+    if ($c === 1) {
         return $inputs[0];
     }
     $gcd = gcd($inputs[0], $inputs[1]);

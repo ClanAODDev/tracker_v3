@@ -36,7 +36,7 @@ class DivisionNoteController extends Controller
             ->with('member.rank')->orderByDesc('created_at')
             ->get()
             ->filter(function ($note) {
-                if ('sr_ldr' === $note->type) {
+                if ($note->type === 'sr_ldr') {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
                 }
 

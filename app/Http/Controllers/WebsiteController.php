@@ -9,7 +9,7 @@ class WebsiteController extends Controller
     public function index()
     {
         $channel = (new ClanAOD\Twitch('clanaodstream'))->getChannel();
-        $status = null === $channel->stream ? 'offline' : 'online';
+        $status = $channel->stream === null ? 'offline' : 'online';
 
         ddd($channel);
 

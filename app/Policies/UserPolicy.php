@@ -83,7 +83,7 @@ class UserPolicy
 
     public function manageSlack(User $user)
     {
-        return $user->isRole('sr_ldr') && 6 === $user->member->position_id;
+        return $user->isRole('sr_ldr') && $user->member->position_id === 6;
     }
 
     public function train(User $user)

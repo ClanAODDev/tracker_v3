@@ -31,7 +31,7 @@ class ReportController extends \App\Http\Controllers\Controller
             }
         })->sortByDesc('recruits');
         $totalRecruitCount = $members->map(function ($item) {
-            if (null !== $item) {
+            if ($item !== null) {
                 return $item['recruits'];
             }
         })->sum();
@@ -80,7 +80,6 @@ class ReportController extends \App\Http\Controllers\Controller
     }
 
     /**
-     * @param  Division  $division
      * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View
      */
     public function voiceReport(Division $division)

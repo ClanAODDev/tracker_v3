@@ -86,7 +86,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function isApproved()
     {
-        return null !== $this->approved_at;
+        return $this->approved_at !== null;
     }
 
     /**
@@ -94,7 +94,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function isCancelled()
     {
-        return null !== $this->cancelled_at;
+        return $this->cancelled_at !== null;
     }
 
     /**
@@ -134,7 +134,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     /**
      * Cancel a member request.
      *
-     * @param $notes
+     * @param  $notes
      */
     public function cancel()
     {

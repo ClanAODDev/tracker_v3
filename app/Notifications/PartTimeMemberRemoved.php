@@ -18,7 +18,7 @@ class PartTimeMemberRemoved extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param $partTimeDivision
+     * @param  $partTimeDivision
      */
     public function __construct($member)
     {

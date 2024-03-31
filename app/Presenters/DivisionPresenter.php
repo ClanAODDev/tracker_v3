@@ -33,7 +33,7 @@ class DivisionPresenter extends Presenter
     /**
      * Get welcome forum / thread attribute as a proper URL.
      *
-     * @param $value
+     * @param  $value
      * @return string
      */
     public function welcomeAreaLink()

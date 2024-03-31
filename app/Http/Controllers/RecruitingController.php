@@ -55,7 +55,7 @@ class RecruitingController extends Controller
         $this->createRequest($member, $division);
 
         // notify slack of recruitment
-        if ('on' === $division->settings()->get('slack_alert_created_member')) {
+        if ($division->settings()->get('slack_alert_created_member') === 'on') {
             $this->handleNotification($request, $member, $division);
         }
 
@@ -136,8 +136,8 @@ class RecruitingController extends Controller
      */
     public function validateMemberId($member_id)
     {
-        if ('local' === app()->environment()) {
-            if (31832 === $member_id) {
+        if (app()->environment() === 'local') {
+            if ($member_id === 31832) {
                 return ['is_member' => true, 'verified_email' => true];
             }
 
@@ -153,7 +153,7 @@ class RecruitingController extends Controller
         return [
             'is_member' => true,
             'username' => $result->username,
-            'verified_email' => Member::UNVERIFIED_EMAIL_GROUP_ID !== $result->usergroupid,
+            'verified_email' => $result->usergroupid !== Member::UNVERIFIED_EMAIL_GROUP_ID,
         ];
     }
 
@@ -164,7 +164,7 @@ class RecruitingController extends Controller
      */
     public function validateMemberName()
     {
-        if ('local' === app()->environment()) {
+        if (app()->environment() === 'local') {
             return response()->json(['memberExists' => false]);
         }
 
