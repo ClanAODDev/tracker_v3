@@ -47,7 +47,7 @@ class MemberController extends Controller
      */
     public function search($name = null)
     {
-        if (! $name) {
+        if (!$name) {
             $name = request()->name;
         }
 
@@ -76,7 +76,7 @@ class MemberController extends Controller
 
         $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
 
-        return $members->map(fn ($member) => [
+        return $members->map(fn($member) => [
             'id' => $member->clan_id,
             'label' => $member->name,
         ]);
@@ -149,10 +149,11 @@ class MemberController extends Controller
         $discordStatusLastSeen = sprintf(
             '%s &mdash; Last seen: %s',
             $member->voiceStatus,
-            ! str_contains($member->last_voice_activity, 1970)
+            ($member->last_voice_activity && !str_contains($member->last_voice_activity, '1970'))
                 ? Carbon::createFromTimeString($member->last_voice_activity)->format('Y-m-d g:i A')
                 : 'Never'
         );
+
 
         return view('member.show', compact(
             'member',
@@ -232,7 +233,7 @@ class MemberController extends Controller
         $member->recordActivity('removed');
 
         $this->showToast(
-            ucwords($member->name ?? 'Member') . ' has been removed.'
+            ucwords($member->name ?? 'Member').' has been removed.'
         );
 
         return redirect()->route('division', [
@@ -286,7 +287,7 @@ class MemberController extends Controller
 
             if ($member->handles->contains($handle->id)) {
                 $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(fn ($myHandle
+                $newHandle['value'] = $member->handles->filter(fn($myHandle
                 ) => $handle->type === $myHandle->type)->first()->pivot->value;
             }
 
