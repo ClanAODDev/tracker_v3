@@ -107,6 +107,15 @@ class Division extends Model
             });
     }
 
+    public function misconfiguredDiscordMembers(): HasMany
+    {
+        return $this->membersOfDiscordState([
+            'never_connected',
+            'never_configured',
+            'disconnected',
+        ]);
+    }
+
     public function membersOfDiscordState(array $state)
     {
         if (!array_intersect($state, [
