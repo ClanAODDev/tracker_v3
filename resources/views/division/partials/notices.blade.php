@@ -15,14 +15,14 @@
 @can('manage', \App\Models\MemberRequest::class)
     @if ($count = $division->memberRequests()->cancelled()->count())
         <div class="alert alert-warning">
-            You have <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} in need of attention. <a
+            There are <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} in need of attention. <a
                     class="alert-link pull-right"
                     href="{{ route('admin.member-request.index') }}"
             >Manage Member Requests</a>
         </div>
     @elseif($count = $division->memberRequests()->pending()->count())
         <div class="alert alert-warning">
-            You have <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} pending.
+            There are <code>{{ $count }}</code> {{ Str::plural('member request', $count) }} pending.
             <a class="alert-link pull-right"
                href="{{ route('admin.member-request.index') }}"
             >Manage Member Requests</a>
@@ -32,7 +32,7 @@
 
 @if($division->outstandingInactives)
     <div class="alert alert-default">
-        You have
+        There are
         <code>{{ $division->outstandingInactives }}</code> outstanding
         inactive {{ Str::plural('member', $division->outstandingInactives) }}. AOD does not allow divisions to maintain
         members whose last activity exceeds
@@ -41,13 +41,10 @@
     </div>
 @endif
 
-@if (count($division->mismatchedTSMembers))
+@if (count($division->mismatchedTSMembers) || count($division->misconfiguredDiscordMembers))
     <div class="alert alert-default">
-        You have
-        <code>{{ count($division->mismatchedTSMembers) }}</code> {{ Str::plural('member', count($division->mismatchedTSMembers)) }}
-        improperly configured for Teamspeak. Please review the
-        <a href="{{ route('division.ts-report', $division->abbreviation) }}">Teamspeak Report</a> to resolve these
-        issues.
+        There are assigned members with voice comms issues. Please review the
+        <a href="{{ route('division.voice-report', $division->abbreviation) }}">Voice Comms Report</a>.
     </div>
 @endif
 
@@ -62,7 +59,7 @@
     @can('create', [App\Models\Platoon::class, $division])
         <div class="alert alert-default">
             <i class="fa fa-users text-info"></i>
-            You have
+            There are
             <code>{{ count($division->unassigned) }}</code>
             unassigned {{ Str::plural('member', count($division->unassigned)) }} in
             <strong>{{ $division->name }}</strong>. Drag members into a
