@@ -21,7 +21,7 @@
       recruitment:</p>
 
     <ul class="c-white">
-      <li>Maintain comms activity. Inactivity can result in removal from AOD</li>
+      <li>Maintain TS Activity. Inactivity can result in removal from AOD</li>
       <li>Engage on TeamSpeak when playing a game AOD supports</li>
       <li>Strive to be a contributing member of your division</li>
       <li>Always be respectful of other clan members and leadership</li>

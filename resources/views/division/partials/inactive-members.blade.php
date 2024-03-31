@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th>Member Name</th>
-                <th>Last Comms Activity
+                <th>Last TS Activity
                     <small class="slight">Days</small>
                 </th>
                 <th>Squad</th>

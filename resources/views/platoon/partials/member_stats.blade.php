@@ -20,7 +20,7 @@
 {{--</div>--}}
 <div class="panel panel-filled hidden-xs hidden-sm">
     <div class="panel-heading">
-        Comms Activity
+        TS Activity
     </div>
     <div class="panel-body">
         <canvas class="ts-activity-chart" data-labels="{{ json_encode($tsActivityGraph['labels']) }}"
