@@ -179,7 +179,7 @@ class SyncMemberData
                     }
 
                     if ($key === 'name' && $user = $member->user) {
-                        \Log::debug(sprintf("Saw a username change for %s to %s", $oldData['name'], $newData[$key]));
+                        \Log::debug(sprintf('Saw a username change for %s to %s', $oldData['name'], $newData[$key]));
                         $user->name = $newData[$key];
                         $user->save();
                     }
