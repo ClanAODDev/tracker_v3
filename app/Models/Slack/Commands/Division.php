@@ -63,14 +63,4 @@ class Division extends Base implements Command
             'text' => 'No results were found',
         ];
     }
-
-    /**
-     * @return null|string
-     */
-    private function buildActivityBlock($member)
-    {
-        $forumActivity = $member->last_activity->diffForHumans();
-
-        return PHP_EOL . "Forum activity: {$forumActivity}";
-    }
 }
