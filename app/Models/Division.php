@@ -28,12 +28,28 @@ class Division extends Model
     use SoftDeletes;
 
     public array $defaultSettings = [
-        'slack_alert_created_member' => false, 'slack_alert_removed_member' => false,
-        'slack_alert_updated_member' => false, 'slack_alert_created_request' => false,
-        'slack_alert_division_edited' => false, 'slack_alert_member_denied' => false,
-        'slack_alert_member_approved' => false, 'slack_alert_member_transferred' => false, 'slack_channel' => '',
+
+        /**
+         * Discord specific settings
+         */
+        'slack_alert_created_member' => false, 
+        'slack_alert_removed_member' => false,
+        'slack_alert_updated_member' => false,
+        'slack_alert_created_request' => false,
+        'slack_alert_division_edited' => false, 
+        'slack_alert_member_denied' => false,
+        'slack_alert_member_approved' => false,
+        'slack_alert_member_transferred' => false, 
+        'slack_channel' => '',
         'slack_alert_pt_member_removed' => false,
-        'use_welcome_thread' => false, 'division_structure' => '', 'welcome_area' => '', 'welcome_pm' => '',
+
+        /**
+         * Recruiting and basic settings
+         */
+        'use_welcome_thread' => false, 
+        'division_structure' => '', 
+        'welcome_area' => '', 
+        'welcome_pm' => '',
         'inactivity_days' => 30,
         'activity_threshold' => [
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
