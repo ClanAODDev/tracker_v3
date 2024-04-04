@@ -24,7 +24,7 @@
 
         @if (count($discordIssues))
             <h4 class="m-t-xl">
-                <i class="fa fa-exclamation-triangle text-danger"></i> Discord Issues
+                <i class="fab fa-discord fa-lg text-danger"></i> Discord Issues
                 <span class="pull-right text-muted">{{ count($discordIssues) }} Issue(s)</span>
             </h4>
             <hr/>
@@ -75,7 +75,7 @@
 
         @if (count($tsIssues))
             <h4 class="m-t-xl">
-                <i class="fa fa-exclamation-triangle text-danger"></i> Teamspeak Issues
+                <i class="fab fa-teamspeak fa-lg text-danger"></i> Teamspeak Issues
                 <span class="pull-right text-muted">{{ count($tsIssues) }} Issue(s)</span>
             </h4>
             <hr/>
