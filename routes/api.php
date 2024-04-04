@@ -2,6 +2,7 @@
 
 Route::prefix('v1')->group(
     function () {
+
         Route::get('divisions', 'API\v1\DivisionController@index')->name('v1.divisions.index');
         Route::get('divisions/{division-slug}', 'API\v1\DivisionController@show')->name('v1.divisions.show');
         Route::get('ts-count', 'API\v1\ClanController@teamspeakPopulationCount')->name('v1.ts_population');
