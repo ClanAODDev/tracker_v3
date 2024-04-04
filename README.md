@@ -20,15 +20,17 @@ historical purposes.
 
 #### Building the laravel environment
 
+You will need to ensure, at a minimum, that you have [Docker](https://www.docker.com/) 
+installed. 
+
 ```shell script
-# install php depdencies
-~ $ composer install
-
-# install front-end dependencies
-~ $ npm install
-
-# compile front-end assets
-~ $ gulp
+# installs application dependencies to allow you to run Sail
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
+    composer install --ignore-platform-reqs
 
 # generate framework key
 ~ $ php artisan key:generate
