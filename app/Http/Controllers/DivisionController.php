@@ -27,7 +27,7 @@ class DivisionController extends Controller
     public function __construct(DivisionRepository $division)
     {
         $this->division = $division;
-        $this->middleware(['auth', 'activeDivision']);
+        $this->middleware('auth');
     }
 
     /**

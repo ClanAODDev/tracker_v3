@@ -28,7 +28,7 @@ class DivisionStructureController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'activeDivision']);
+        $this->middleware('auth');
     }
 
     /**

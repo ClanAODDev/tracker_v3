@@ -15,7 +15,7 @@ class ReportController extends \App\Http\Controllers\Controller
     public function __construct(DivisionRepository $division)
     {
         $this->division = $division;
-        $this->middleware(['auth', 'activeDivision']);
+        $this->middleware('auth');
     }
 
     /**
