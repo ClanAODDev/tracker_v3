@@ -134,12 +134,20 @@ class Division extends Model
 
     public function membersOfDiscordState(array $state)
     {
-        if (! array_intersect($state, [
+        $validStates = [
             'connected',
             'never_connected',
             'disconnected',
-        ])) {
-            throw new \InvalidArgumentException('Invalid discord state');
+            'never_configured',
+        ];
+
+        $invalidStates = array_diff($state, $validStates);
+
+        if (! empty($invalidStates)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid Discord state: %s',
+                implode(', ', $invalidStates)
+            ));
         }
 
         return $this->members()
