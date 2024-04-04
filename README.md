@@ -21,7 +21,8 @@ historical purposes.
 #### Building the laravel environment
 
 You will need to ensure, at a minimum, that you have [Docker](https://www.docker.com/) 
-installed. 
+installed. If you don't have PHP installed (or don't want to), you can use the following `docker run` command to get 
+things built.
 
 ```shell script
 # installs application dependencies to allow you to run Sail
@@ -31,9 +32,14 @@ docker run --rm \
     -w /var/www/html \
     laravelsail/php82-composer:latest \
     composer install --ignore-platform-reqs
+```
 
+If you have the correct version of PHP installed, and you have composer, you can skip the `docker run` command, and
+simply build it with Composer using `composer install`
+
+```
 # generate framework key
-~ $ php artisan key:generate
+php artisan key:generate
 
 # the example should contain enough to do local development
 cp .env.example .env
