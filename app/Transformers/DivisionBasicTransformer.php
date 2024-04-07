@@ -14,6 +14,7 @@ class DivisionBasicTransformer extends Transformer
             'forum_app_id' => $item->forum_app_id,
             'members_count' => $item->members_count,
             'officer_channel' => $item->settings()->get('officer_channel'),
+            'icon' => getDivisionIconPath($item->abbreviation),
         ];
     }
 }
