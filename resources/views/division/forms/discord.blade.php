@@ -5,19 +5,20 @@
 
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-                <label for="officer_channel" class="control-label">Channel</label>
-                <input type="text" id="officer_channel" name="officer_channel"
-                       placeholder="division-name-officers"
-                       value="{{ $division->settings()->officer_channel }}" class="form-control" />
-                <span class="help-block"><small>Enter the channel you wish to post updates to. Notifications should be sent to your officer channel.</small></span>
-            </div>
-        </div>
-
-        <div class="col-md-6">
             <label for="discord-notifications-table">Officer Notifications</label>
             <div class="table-responsive" id="discord-notifications-table">
                 @include ('division.partials.discord-notifications')
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="officer_channel" class="control-label">Channel</label>
+                <input type="text"
+                       readonly disabled
+                       placeholder="discord-id-should-be-here"
+                       value="{{ $division->settings()->officer_channel }}" class="form-control disabled" />
+                <span class="help-block"><small>Discord channel id where officer notifications will be
+                        sent. Value set by AOD Discord Bot.</small></span>
             </div>
         </div>
 
