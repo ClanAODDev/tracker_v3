@@ -211,6 +211,15 @@ class Division extends Model
         return config('app.aod.discord_webhook');
     }
 
+    public function routeNotificationForBot()
+    {
+        return sprintf(
+            "%s/channel/%s",
+            config('app.aod.bot_api_base_url'),
+            $this->settings()->get('slack_channel')
+        );
+    }
+
     /**
      * Division has many platoons.
      *
