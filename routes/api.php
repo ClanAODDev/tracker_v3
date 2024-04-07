@@ -13,7 +13,7 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware(['abilities:division:write'])->group(function () {
-        Route::post('divisions/{abbreviation}', 'API\v1\DivisionController@update')->name('v1.divisions.update');
+        Route::post('divisions/{slug}', 'API\v1\DivisionController@update')->name('v1.divisions.update');
     });
 });
 
