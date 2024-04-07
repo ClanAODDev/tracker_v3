@@ -52,7 +52,11 @@ class DivisionController extends ApiController
     {
         $division = Division::where('slug', strtolower($slug))
             ->active()
-            ->firstOrFail();
+            ->first();
+
+        if (!$division) {
+            return $this->setStatusCode(404)->respondWithError('Invalid division provided');
+        }
 
         $members = $division->members()->paginate(25);
 
