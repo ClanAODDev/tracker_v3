@@ -9,7 +9,7 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware(['abilities:division:read'])->group(function () {
         Route::get('divisions', 'API\v1\DivisionController@index')->name('v1.divisions.index');
-        Route::get('divisions/{abbreviation}', 'API\v1\DivisionController@show')->name('v1.divisions.show');
+        Route::get('divisions/{slug}', 'API\v1\DivisionController@show')->name('v1.divisions.show');
     });
 
     Route::middleware(['abilities:division:write'])->group(function () {
