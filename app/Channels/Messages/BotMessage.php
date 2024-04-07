@@ -63,8 +63,8 @@ class BotMessage
     public function fields($fields)
     {
         foreach ($fields as $field) {
-            if (!array_key_exists('key', $field) || (!array_key_exists('value', $field))) {
-                throw new \Exception('Fields must include a key and value pair');
+            if (!array_key_exists('name', $field) || (!array_key_exists('value', $field))) {
+                throw new \Exception('Fields must include a name and value pair');
             }
         }
 
