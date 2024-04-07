@@ -40,7 +40,7 @@ class Division extends Model
         'slack_alert_member_denied' => false,
         'slack_alert_member_approved' => false,
         'slack_alert_member_transferred' => false, 
-        'slack_channel' => '',
+        'officer_channel' => '',
         'slack_alert_pt_member_removed' => false,
 
         /**
@@ -216,7 +216,7 @@ class Division extends Model
         return sprintf(
             "%s/channel/%s",
             config('app.aod.bot_api_base_url'),
-            $this->settings()->get('slack_channel')
+            $this->settings()->get('officer_channel')
         );
     }
 

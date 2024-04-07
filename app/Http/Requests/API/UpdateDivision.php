@@ -10,7 +10,7 @@ class UpdateDivision extends FormRequest
     {
         $division->settings()->merge(
             $this->only([
-                'slack_channel'
+                'officer_channel'
             ])
         );
     }
@@ -23,7 +23,7 @@ class UpdateDivision extends FormRequest
     public function rules()
     {
         return [
-            'slack_channel' => 'nullable|alpha_dash'
+            'officer_channel' => 'nullable|alpha_dash'
         ];
     }
 }

@@ -39,7 +39,7 @@ class MemberRequestHoldLifted extends Notification
      */
     public function toWebhook($notifiable)
     {
-        $channel = $notifiable->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('officer_channel');
 
         $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->request->member->name}` has been lifted. Your request will be processed soon.");
 

@@ -40,7 +40,7 @@ class MemberRequestPutOnHold extends Notification
      */
     public function toWebhook($notifiable)
     {
-        $channel = $notifiable->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('officer_channel');
 
         $approver = auth()->user()->member;
 

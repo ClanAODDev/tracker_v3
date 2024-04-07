@@ -41,7 +41,7 @@ class NewExternalRecruit extends Notification
      */
     public function toWebhook($notifiable)
     {
-        $channel = $notifiable->settings()->get('slack_channel');
+        $channel = $notifiable->settings()->get('officer_channel');
 
         $user = auth()->user();
 
