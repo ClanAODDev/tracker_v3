@@ -40,7 +40,7 @@ class DivisionController extends ApiController
 
     public function show($slug): JsonResponse
     {
-        $division = Division::whereSlug(strtolower($slug))
+        $division = Division::where('abbreviation', strtolower($slug))
             ->active()
             ->firstOrFail();
 
