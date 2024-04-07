@@ -13,7 +13,7 @@ class DivisionBasicTransformer extends Transformer
             'description' => $item->description,
             'forum_app_id' => $item->forum_app_id,
             'members_count' => $item->members_count,
-            'officers_channel' => $item->settings()->get('slack_channel')
+            'officers_channel' => $item->settings()->get('slack_channel'),
         ];
     }
 }

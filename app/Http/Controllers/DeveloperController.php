@@ -29,7 +29,7 @@ class DeveloperController extends Controller
             'token_name' => 'required',
         ]);
 
-        $token = $request->user()->createToken($request->token_name);
+        $token = $request->user()->createToken($request->token_name, ['division:read']);
 
         $this->showToast('API token generated successfully!');
 
