@@ -34,15 +34,18 @@ class RouteServiceProvider extends ServiceProvider
          * Show division by abbreviation.
          */
         \Route::bind('division', function ($division) {
-            $model = Division::where('slug', strtolower($division))->first();
+            $division = strtolower($division);
+            $model = Division::where('slug', $division)
+                ->orWhere('abbreviation', $division)
+                ->first();
             if ($model instanceof Division) {
                 return $model;
             }
         });
 
-        \Route::bind('username', fn ($username) => User::whereName($username)->firstOrFail());
+        \Route::bind('username', fn($username) => User::whereName($username)->firstOrFail());
 
-        \Route::bind('handle', fn ($handle) => Handle::whereId($handle)
+        \Route::bind('handle', fn($handle) => Handle::whereId($handle)
             ->with('divisions')
             ->first());
 
