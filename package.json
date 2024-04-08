@@ -22,8 +22,6 @@
   "devDependencies": {
     "axios": ">=1.6.0",
     "bootstrap": "^4.6.0",
-    "bootstrap-sass": "^3.3.7",
-    "buble-loader": "^0.5.1",
     "jquery": "^3.6.0",
     "laravel-elixir": "^6.0.0-15",
     "laravel-elixir-browserify-official": "^0.1.3",

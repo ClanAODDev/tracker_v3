@@ -5,6 +5,7 @@
             <th>Date</th>
             <th class="text-center">Population</th>
             <th class="text-center">Weekly Comms Active</th>
+            <th class="text-center">Weekly Discord Active</th>
 {{--            <th class="text-center">Weekly Forum Active</th>--}}
             {{--<th>Notes</th>--}}
         </tr>
@@ -23,6 +24,14 @@
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
                           data-counts="{{ json_encode([$popMinus, $census->weekly_ts_count]) }}">
+                    </span>
+                </td>
+                <td class="text-center slight">
+                    {{ $census->count > 0 ? number_format($census->weekly_discord_count / $census->count * 100, 1) : 0
+                     }}%
+                    <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
+                          data-counts="{{ json_encode([$popMinus, $census->weekly_discord_count]) }}">
                     </span>
                 </td>
 {{--                <td class="text-center slight">--}}

@@ -23,8 +23,14 @@ class ReportController extends \App\Http\Controllers\Controller
      */
     public function retentionReport(Division $division)
     {
-        $range = ['start' => request('start') ?? now()->subMonths(6)->startOfMonth()->format('Y-m-d'), 'end' => request('end') ?? now()->endOfMonth()->format('Y-m-d')];
-        $activity = collect(\App\Models\Activity::whereName('recruited_member')->whereDivisionId($division->id)->whereBetween('created_at', [$range['start'], $range['end']])->with('user.member')->with('user.member.rank')->get())->groupBy('user_id');
+        $range = [
+            'start' => request('start') ?? now()->subMonths(6)->startOfMonth()->format('Y-m-d'),
+            'end' => request('end') ?? now()->endOfMonth()->format('Y-m-d')
+        ];
+        $activity = collect(\App\Models\Activity::whereName('recruited_member')->whereDivisionId($division->id)->whereBetween('created_at',
+            [
+                $range['start'], $range['end']
+            ])->with('user.member')->with('user.member.rank')->get())->groupBy('user_id');
         $members = $activity->map(function ($item) {
             if ($item->first()->user) {
                 return ['recruits' => \count($item), 'member' => $item->first()->user->member];
@@ -35,11 +41,15 @@ class ReportController extends \App\Http\Controllers\Controller
                 return $item['recruits'];
             }
         })->sum();
-        $recruits = $this->division->recruitsLast6Months($division->id, $range['start'])->map(fn ($record) => [$record->date, $record->recruits]);
-        $removals = $this->division->removalsLast6Months($division->id, $range['start'])->map(fn ($record) => [$record->date, $record->removals]);
-        $population = $this->division->populationLast6Months($division->id, $range['start'])->map(fn ($record) => [$record->date, $record->count]);
+        $recruits = $this->division->recruitsLast6Months($division->id, $range['start'])->map(fn($record
+        ) => [$record->date, $record->recruits]);
+        $removals = $this->division->removalsLast6Months($division->id, $range['start'])->map(fn($record
+        ) => [$record->date, $record->removals]);
+        $population = $this->division->populationLast6Months($division->id, $range['start'])->map(fn($record
+        ) => [$record->date, $record->count]);
 
-        return view('division.reports.retention-report', compact('division', 'members', 'totalRecruitCount', 'population', 'range', 'recruits', 'removals'));
+        return view('division.reports.retention-report',
+            compact('division', 'members', 'totalRecruitCount', 'population', 'range', 'recruits', 'removals'));
     }
 
     /**
@@ -76,7 +86,8 @@ class ReportController extends \App\Http\Controllers\Controller
         })->pluck('count');
         $promotionPeriods = $repository->promotionPeriods();
 
-        return view('division.reports.promotions', compact('members', 'division', 'promotionPeriods', 'year', 'month', 'ranks', 'counts'));
+        return view('division.reports.promotions',
+            compact('members', 'division', 'promotionPeriods', 'year', 'month', 'ranks', 'counts'));
     }
 
     /**
@@ -105,12 +116,36 @@ class ReportController extends \App\Http\Controllers\Controller
     public function censusReport(Division $division)
     {
         $censuses = $division->census->sortByDesc('created_at')->take(52);
-        $populations = $censuses->values()->map(fn ($census, $key) => [$census->javascriptTimestamp, $census->count]);
-        $weeklyActive = $censuses->values()->map(fn ($census, $key) => [$census->javascriptTimestamp, $census->weekly_active_count]);
-        $weeklyTsActive = $censuses->values()->map(fn ($census, $key) => [$census->javascriptTimestamp, $census->weekly_ts_count]);
-        $comments = $censuses->values()->filter(fn ($census) => $census->notes)->map(fn ($census, $key) => ['x' => $key, 'y' => $censuses->values()->pluck('count'), 'contents' => $census->notes])->values();
 
-        return view('division.reports.census', compact('division', 'populations', 'weeklyActive', 'comments', 'censuses', 'weeklyTsActive'));
+        $populations = $censuses->values()->map(fn($census, $key) => [
+            $census->javascriptTimestamp, $census->count
+        ]);
+
+        $weeklyActive = $censuses->values()->map(fn($census, $key) => [
+            $census->javascriptTimestamp, $census->weekly_active_count
+        ]);
+
+        $weeklyTsActive = $censuses->values()->map(fn($census, $key) => [
+            $census->javascriptTimestamp, $census->weekly_ts_count
+        ]);
+
+        $weeklyDiscordActive = $censuses->values()->map(fn($census, $key) => [
+            $census->javascriptTimestamp, $census->weekly_voice_count
+        ]);
+
+        $comments = $censuses->values()->filter(fn($census) => $census->notes)->map(fn($census, $key) => [
+            'x' => $key, 'y' => $censuses->values()->pluck('count'), 'contents' => $census->notes
+        ])->values();
+
+        return view('division.reports.census', compact(
+            'division',
+            'populations',
+            'weeklyActive',
+            'comments',
+            'censuses',
+            'weeklyTsActive',
+            'weeklyDiscordActive',
+        ));
     }
 
     /**
@@ -118,8 +153,12 @@ class ReportController extends \App\Http\Controllers\Controller
      */
     private function getMemberPromotions($division, $month, $year)
     {
-        $dates = $month && $year ? [\Carbon\Carbon::parse($month . " {$year}")->startOfMonth(), \Carbon\Carbon::parse($month . " {$year}")->endOfMonth()] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
+        $dates = $month && $year ? [
+            \Carbon\Carbon::parse($month." {$year}")->startOfMonth(),
+            \Carbon\Carbon::parse($month." {$year}")->endOfMonth()
+        ] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
 
-        return $division->members()->with('rank')->whereBetween('last_promoted_at', $dates)->orderByDesc('rank_id')->get();
+        return $division->members()->with('rank')->whereBetween('last_promoted_at',
+            $dates)->orderByDesc('rank_id')->get();
     }
 }

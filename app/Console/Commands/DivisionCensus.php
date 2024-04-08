@@ -56,6 +56,7 @@ class DivisionCensus extends \Illuminate\Console\Command
         $census->count = $division->members->count();
         $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();
         $census->weekly_ts_count = $division->membersActiveOnTsSinceDaysAgo(8)->count();
+        $census->weekly_voice_count = $division->membersActiveOnDiscordSinceDaysAgo(8)->count();
         $census->save();
     }
 
