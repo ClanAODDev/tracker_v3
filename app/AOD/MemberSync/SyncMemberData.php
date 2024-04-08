@@ -11,6 +11,8 @@ use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
 use Carbon\Carbon;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class SyncMemberData
 {
@@ -26,6 +28,8 @@ class SyncMemberData
 
         $divisionIds = Division::active()->pluck('name', 'id')->flip();
         $requestIds = MemberRequest::pending()->pluck('member_id');
+
+        self::buildSyncTable();
 
         $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
@@ -269,5 +273,37 @@ class SyncMemberData
     private static function isBadDate($newData): bool
     {
         return ! empty($newData->lastdiscord_connect) && $newData->lastdiscord_connect !== '1970';
+    }
+
+    private static function buildSyncTable()
+    {
+        Schema::connection('sqlite')->dropIfExists('aod_member_sync');
+        Schema::connection('sqlite')->create('aod_member_sync', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('userid');
+            $table->string('username');
+            $table->date('joindate');
+            $table->string('lastvisit');
+            $table->string('lastvisit_time');
+            $table->string('lastactivity');
+            $table->string('lastactivity_time');
+            $table->string('lastpost');
+            $table->string('lastpost_time');
+            $table->integer('postcount');
+            $table->string('tsid');
+            $table->string('lastts_connect');
+            $table->string('lastts_connect_time');
+            $table->string('lastdiscord_connect'); // last day in a voice channel
+            $table->string('lastdiscord_connect_time'); // last time in a voice channel
+            $table->string('lastdiscord_status'); // discord connection
+            $table->string('aodrank');
+            $table->integer('aodrankval');
+            $table->string('aoddivision');
+            $table->string('aodstatus');
+            $table->string('discordtag');
+            $table->string('discordid');
+            $table->boolean('allow_export');
+            $table->boolean('allow_pm');
+        });
     }
 }
