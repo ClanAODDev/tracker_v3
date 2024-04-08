@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('division', $division->abbreviation) }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('division', $division->slug) }}" class="btn btn-default">Cancel</a>
                 <button type="submit" class="btn btn-success pull-right">Save</button>
             </div>
         </div>

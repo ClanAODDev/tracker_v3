@@ -34,7 +34,7 @@ class RouteServiceProvider extends ServiceProvider
          * Show division by abbreviation.
          */
         \Route::bind('division', function ($division) {
-            $model = Division::whereAbbreviation(strtolower($division))->first();
+            $model = Division::where('slug', strtolower($division))->first();
             if ($model instanceof Division) {
                 return $model;
             }

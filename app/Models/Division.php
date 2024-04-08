@@ -105,7 +105,7 @@ class Division extends Model
 
     public function getRouteKeyName(): string
     {
-        return 'abbreviation';
+        return 'slug';
     }
 
     public function setAbbreviationAttribute($value): string
@@ -301,6 +301,16 @@ class Division extends Model
         $date = Carbon::now()->subDays($days)->format('Y-m-d');
 
         return $this->members()->where('last_ts_activity', '>=', $date);
+    }
+
+    /**
+     * @return $this
+     */
+    public function membersActiveOnDiscordSinceDaysAgo($days)
+    {
+        $date = Carbon::now()->subDays($days)->format('Y-m-d');
+
+        return $this->members()->where('last_voice_activity', '>=', $date);
     }
 
     /**

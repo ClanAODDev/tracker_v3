@@ -63,7 +63,7 @@
             <code>{{ count($division->unassigned) }}</code>
             unassigned {{ Str::plural('member', count($division->unassigned)) }} in
             <strong>{{ $division->name }}</strong>. Drag members into a
-            <a href="{{ route('division', $division->abbreviation) }}/#platoons"
+            <a href="{{ route('division', $division->slug) }}/#platoons"
                class="alert-link">{{ $division->locality('platoon') }}</a> to assign them
         </div>
     @endcan

@@ -14,7 +14,7 @@
         </style>
 
         <h2 class="m-b-none text-uppercase my-division">
-            <a href="{{ route('division', $myDivision->abbreviation) }}">{{ $myDivision->name }}</a>
+            <a href="{{ route('division', $myDivision->slug) }}">{{ $myDivision->name }}</a>
             @include('division.partials.edit-division-button', ['division' => $myDivision])
         </h2>
 

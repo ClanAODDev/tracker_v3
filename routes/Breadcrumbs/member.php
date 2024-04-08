@@ -4,7 +4,7 @@ Breadcrumbs::for('member', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {
-        $breadcrumbs->push($division->name, route('division', $division->abbreviation));
+        $breadcrumbs->push($division->name, route('division', $division->slug));
 
         if ($member->platoon_id !== 0 && $member->platoon) {
             $breadcrumbs->push(
@@ -28,7 +28,7 @@ Breadcrumbs::for('member-note', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {
-        $breadcrumbs->push($division->name, route('division', $division->abbreviation));
+        $breadcrumbs->push($division->name, route('division', $division->slug));
     }
 
     if ($member->platoon_id !== 0) {
@@ -50,7 +50,7 @@ Breadcrumbs::for('member-leave', function ($breadcrumbs, $member, $division) {
     $breadcrumbs->parent('home');
 
     if ($division) {
-        $breadcrumbs->push($division->name, route('division', $division->abbreviation));
+        $breadcrumbs->push($division->name, route('division', $division->slug));
     }
 
     if ($member->platoon_id !== 0) {
@@ -72,7 +72,7 @@ Breadcrumbs::for('member-recruits', function ($breadcrumbs, $member, $division) 
     $breadcrumbs->parent('home');
 
     if ($division) {
-        $breadcrumbs->push($division->name, route('division', $division->abbreviation));
+        $breadcrumbs->push($division->name, route('division', $division->slug));
     }
 
     if ($member->platoon_id !== 0) {

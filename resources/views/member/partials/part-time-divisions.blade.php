@@ -11,7 +11,7 @@
 <div class="row">
     @forelse ($partTimeDivisions as $division)
         <div class="col-md-4">
-            <a href="{{ route('division', $division->abbreviation) }}" class="panel panel-filled">
+            <a href="{{ route('division', $division->slug) }}" class="panel panel-filled">
                 <div class="panel-body">
                     <h4 class="text-uppercase">
                         {{ $division->name }}

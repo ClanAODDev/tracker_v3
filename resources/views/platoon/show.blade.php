@@ -3,7 +3,7 @@
 
     @component ('application.components.division-heading')
         @slot ('icon')
-            <a href="{{ route('division', $division->abbreviation) }}">
+            <a href="{{ route('division', $division->slug) }}">
                 <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
             </a>
         @endslot
