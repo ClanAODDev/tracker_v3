@@ -3321,8 +3321,8 @@ div.dt-button-info h2 {
 .alert-danger {
     color: #ffffff;
     border-color: #DB524B;
-    background-image: linear-gradient(45deg, #db524b 38.79%, #db3939 38.79%, #db3939 50%, #db524b 50%, #db524b 88.79%, #db3939 88.79%, #db3939 100%);
-    background-size: 82.02px 82.02px;
+    background-image: linear-gradient(45deg, #db524b 12.82%, #d14a43 12.82%, #d14a43 50%, #db524b 50%, #db524b 62.82%, #d14a43 62.82%, #d14a43 100%);
+    background-size: 110.31px 110.31px;
     opacity: 50%;
     transition: opacity 0.2s ease-in-out;
 }
