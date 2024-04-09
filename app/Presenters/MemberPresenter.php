@@ -26,15 +26,14 @@ class MemberPresenter extends Presenter
      */
     public function lastActive($value)
     {
-        $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
-
         if (str_contains($value, '1970')) {
             return '--';
         }
 
-        //        if ($value->diffInDays() < 1) {
-        //            return "Today";
-        //        }
+        $value = $value instanceof \Carbon\Carbon
+            ? $value
+            : \Carbon\Carbon::parse($value);
+
         return $value->diffForHumans();
     }
 
