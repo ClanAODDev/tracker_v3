@@ -13,7 +13,8 @@
         @foreach ($censuses as $census)
 
             @php
-                $popMinus = $census->count - $census->weekly_ts_count;
+                $popMinusTs = $census->count - $census->weekly_ts_count;
+                $popMinusDiscord = $census->count - $census->weekly_ts_count;
             @endphp
 
             <tr>
@@ -23,7 +24,7 @@
                     {{ $census->count > 0 ? number_format($census->weekly_ts_count / $census->count * 100, 1) : 0 }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
-                          data-counts="{{ json_encode([$popMinus, $census->weekly_ts_count]) }}">
+                          data-counts="{{ json_encode([$popMinusTs, $census->weekly_ts_count]) }}">
                     </span>
                 </td>
                 <td class="text-center slight">
@@ -31,7 +32,7 @@
                      }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
-                          data-counts="{{ json_encode([$popMinus, $census->weekly_voice_count]) }}">
+                          data-counts="{{ json_encode([$popMinusDiscord, $census->weekly_voice_count]) }}">
                     </span>
                 </td>
 {{--                <td class="text-center slight">--}}
