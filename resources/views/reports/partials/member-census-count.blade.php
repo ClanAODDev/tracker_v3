@@ -23,9 +23,11 @@
         </div>
     </div>
 
-    <div class="sparkline" data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
+    <div class="sparkline"
+         data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}"
          data-weekly-active="{{ json_encode($lastYearCensus->pluck('weekly_active')) }}"
-         census-data>
+         census-data
+    >
     </div>
 
 </div>

@@ -10,7 +10,8 @@
         <tr>
             <th class="col-xs-4">Division</th>
             <th class="text-center col-xs-2">Population</th>
-            <th class="text-center col-xs-2">Weekly Comms Active</th>
+            <th class="text-center col-xs-2">Weekly TS Active</th>
+            <th class="text-center col-xs-2">Weekly Discord Active</th>
         </tr>
         </thead>
 
@@ -29,6 +30,14 @@
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
                           data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyTsActive]) }}">
+                    </span>
+                </td>
+                <td class="text-center slight">
+                    {{ number_format($division->weeklyVoiceActive / $division->total * 100, 1) }}%
+                    <span class="census-pie"
+                          data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
+                          data-counts="{{ json_encode([$division->popMinusVoiceActive, $division->weeklyVoiceActive])
+                          }}">
                     </span>
                 </td>
             </tr>

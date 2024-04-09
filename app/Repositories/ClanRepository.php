@@ -28,7 +28,7 @@ class ClanRepository
     {
         return collect(DB::select(
             DB::raw("
-                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, date_format(created_at,'%y-%m-%d') as date
+                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, sum(weekly_voice_count) as weekly_voice_active, date_format(created_at,'%y-%m-%d') as date
                 FROM censuses GROUP BY date(created_at)
                 ORDER BY date DESC LIMIT {$limit};
             ")
