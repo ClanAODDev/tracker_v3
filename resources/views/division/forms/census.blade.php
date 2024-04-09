@@ -14,7 +14,7 @@
 
             @php
                 $popMinusTs = $census->count - $census->weekly_ts_count;
-                $popMinusDiscord = $census->count - $census->weekly_ts_count;
+                $popMinusDiscord = $census->count - $census->weekly_voice_count;
             @endphp
 
             <tr>
