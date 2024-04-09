@@ -151,6 +151,9 @@
                     class="badge text-info">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
             </a>
         </li>
+        <li>
+            <a href="{{ url('/log-viewer') }}">Log Viewer</a>
+        </li>
     @endif
 
     <li class="nav-category">
