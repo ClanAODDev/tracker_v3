@@ -3323,6 +3323,13 @@ div.dt-button-info h2 {
     border-color: #DB524B;
     background-image: linear-gradient(45deg, #db524b 38.79%, #db3939 38.79%, #db3939 50%, #db524b 50%, #db524b 88.79%, #db3939 88.79%, #db3939 100%);
     background-size: 82.02px 82.02px;
+    opacity: 50%;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.alert-danger:hover {
+    opacity: 100%;
+    transition: opacity 0.2s ease-in-out;
 }
 
 .alert-danger .alert-link {
