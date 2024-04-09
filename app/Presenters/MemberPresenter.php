@@ -28,7 +28,7 @@ class MemberPresenter extends Presenter
     {
         $value = $value instanceof \Carbon\Carbon ? $value : \Carbon\Carbon::parse($value);
 
-        if (str_contains($value, 1970)) {
+        if (str_contains($value, '1970')) {
             return '--';
         }
 
