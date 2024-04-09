@@ -5,7 +5,7 @@
             <th>Date</th>
             <th class="text-center">Population</th>
             <th class="text-center">Weekly Comms Active</th>
-            <th class="text-center">Weekly Discord Active</th>
+            <th class="text-center" title="Data began collection 4/7/2024">Weekly Discord Active*</th>
 {{--            <th class="text-center">Weekly Forum Active</th>--}}
             {{--<th>Notes</th>--}}
         </tr>
