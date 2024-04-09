@@ -21,7 +21,7 @@
             {{--                <i class="fas fa-dot-circle text-success"></i> - Weekly Discord Active--}}
             {{--            </div>--}}
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-info"></i> - Weekly Comms Active
+                <i class="fas fa-dot-circle text-info"></i> - Weekly TS Active
             </div>
             <div class="col-md-4 text-center">
                 <i class="fas fa-dot-circle text-warning"></i> - Weekly Discord Active
