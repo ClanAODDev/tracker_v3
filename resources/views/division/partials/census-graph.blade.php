@@ -15,16 +15,18 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-success"></i> - Division Population
+                <i class="fas fa-dot-circle text-success"></i> Division Population
             </div>
             {{--            <div class="col-md-4 text-center">--}}
             {{--                <i class="fas fa-dot-circle text-success"></i> - Weekly Discord Active--}}
             {{--            </div>--}}
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-info"></i> - Weekly TS Active
+                <i class="fas fa-dot-circle text-info"></i> TeamSpeak
+                <p><small class="text-muted"># active VoiP past week</small></p>
             </div>
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-warning"></i> - Weekly Discord Active
+                <i class="fas fa-dot-circle text-warning"></i> Discord
+                <p><small class="text-muted"># active VoiP past week</small></p>
             </div>
         </div>
     </div>
