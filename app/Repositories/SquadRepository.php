@@ -38,6 +38,11 @@ class SquadRepository
         return $this->getActivityFor('last_ts_activity', $squad);
     }
 
+    public function getSquadVoiceActivity(Squad $squad): array
+    {
+        return $this->getActivityFor('last_voice_activity', $squad);
+    }
+
     private function getActivityFor(string $string, $squad): array
     {
         $twoWeeks = $squad->members()

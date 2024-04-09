@@ -9,6 +9,7 @@ let Platoon = Platoon || {};
             this.handleSquadMembers();
             this.handleForumActivityChart();
             this.handleTSActivityChart();
+            this.handleVoiceActivityChart();
             this.initAutocomplete();
         },
 
@@ -48,6 +49,39 @@ let Platoon = Platoon || {};
         handleTSActivityChart: function () {
 
             var ctx = $('.ts-activity-chart');
+
+            if (ctx.length) {
+                var myDoughnutChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [
+                            {
+                                data: ctx.data('values'),
+                                backgroundColor: ctx.data('colors'),
+                                borderWidth: 0,
+                            }],
+                        labels: ctx.data('labels'),
+                    },
+                    options: {
+                        rotation: 1 * Math.PI,
+                        circumference: 1 * Math.PI,
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 5,
+                                fontColor: '#949ba2'
+                            },
+                            label: {
+                                fullWidth: false
+                            }
+                        }
+                    }
+                });
+            }
+        },
+        handleVoiceActivityChart: function () {
+
+            var ctx = $('.voice-activity-chart');
 
             if (ctx.length) {
                 var myDoughnutChart = new Chart(ctx, {
@@ -177,13 +211,14 @@ let Platoon = Platoon || {};
                     }, {
                         // sort rank by rank id
                         'iDataSort': 0, 'aTargets': [3]
-                    }, {
-                        // sort activity by last login date
-                        'iDataSort': 1, 'aTargets': [5]
                     },
                         {
                             // sort ts activity by date
                             'iDataSort': 7, 'aTargets': [6]
+                        },
+                        {
+                            // sort discord activity by date
+                            'iDataSort': 12, 'aTargets': [5]
                         }
                     ],
                     select: {

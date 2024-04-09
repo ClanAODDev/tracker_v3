@@ -36,12 +36,11 @@ class SquadController extends Controller
         $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
-
         $forumActivityGraph = $this->squadRepository->getSquadForumActivity($squad);
-
         $tsActivityGraph = $this->squadRepository->getSquadTSActivity($squad);
+        $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
 
-        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph'));
+        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph', 'voiceActivityGraph'));
     }
 
     /**

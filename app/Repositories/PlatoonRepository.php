@@ -31,6 +31,11 @@ class PlatoonRepository
         return $this->getActivityFor('last_ts_activity', $platoon);
     }
 
+    public function getPlatoonVoiceActivity(\App\Models\Platoon $platoon): array
+    {
+        return $this->getActivityFor('last_voice_activity', $platoon);
+    }
+
     private function getActivityFor(string $string, $platoon): array
     {
         $twoWeeks = $platoon->members()

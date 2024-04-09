@@ -19,9 +19,9 @@
     </td>
     <td class="text-center">{{ $member->rank->abbreviation }}</td>
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
-    <td class="col-hidden">
-                    <span class="{{ getActivityClass($member->last_activity, $division) }}">
-                        {{ $member->present()->lastActive($member->last_activity) }}
+    <td class="text-center">
+                    <span class="{{ getActivityClass($member->last_voice_activity, $division) }}">
+                        {{ $member->present()->lastActive($member->last_voice_activity) }}
                     </span>
     </td>
     <td class="text-center">
@@ -54,4 +54,5 @@
     <td class="col-hidden">
         {{ $member->clan_id }}
     </td>
+    <td class="col-hidden">{{ $member->last_voice_activity }}</td>
 </tr>

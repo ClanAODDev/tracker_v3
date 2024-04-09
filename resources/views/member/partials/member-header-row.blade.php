@@ -10,7 +10,7 @@
     {{--4--}}
     <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
     {{--5--}}
-    <th class='col-hidden'><strong>Forum Activity</strong></th>
+    <th class='text-center'><strong>Discord Activity</strong></th>
     {{--6--}}
     <th class='text-center'><strong>TS Activity</strong></th>
     {{--7--}}
@@ -25,4 +25,6 @@
     <th class="col-hidden">Posts</th>
     {{--11--}}
     <th class="col-hidden">Member Id</th>
+    {{--12--}}
+    <th class='col-hidden'><strong>Discord Activity Dates</strong></th>
 </tr>

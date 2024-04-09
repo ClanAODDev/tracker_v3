@@ -173,8 +173,9 @@ class DivisionController extends Controller
         $members = $members->each($this->getMemberHandle());
         $forumActivityGraph = $this->division->getDivisionActivity($division);
         $tsActivityGraph = $this->division->getDivisionTSActivity($division);
+        $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
 
-        return view('division.members', compact('division', 'members', 'forumActivityGraph', 'tsActivityGraph'));
+        return view('division.members', compact('division', 'members', 'forumActivityGraph', 'tsActivityGraph', 'voiceActivityGraph'));
     }
 
     /**
