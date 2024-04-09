@@ -38,11 +38,11 @@ If you have the correct version of PHP installed, and you have composer, you can
 simply build it with Composer using `composer install`
 
 ```
-# generate framework key
-php artisan key:generate
-
 # the example should contain enough to do local development
 cp .env.example .env
+
+# generate framework key
+php artisan key:generate
 ```
 
 #### Building the docker images
