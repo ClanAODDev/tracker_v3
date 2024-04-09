@@ -4,20 +4,11 @@
     @yield('metadata')
     <title>AOD | Tracker v3</title>
     @include('application.header')
+    @include('application.partials.console')
 </head>
 
 @if (Auth::check() && Auth::user()->member && Auth::user()->member->division)
     <body class="{{ session('primary_nav_collapsed') === true ? 'nav-toggle' : null }}">
-    <span style="display:none;" class="a-little-fancy">
-
- ██████ ██       █████  ███    ██  █████   ██████  ██████      ████████ ██████   █████   ██████ ██   ██ ███████ ██████
-██      ██      ██   ██ ████   ██ ██   ██ ██    ██ ██   ██        ██    ██   ██ ██   ██ ██      ██  ██  ██      ██   ██
-██      ██      ███████ ██ ██  ██ ███████ ██    ██ ██   ██        ██    ██████  ███████ ██      █████   █████   ██████
-██      ██      ██   ██ ██  ██ ██ ██   ██ ██    ██ ██   ██        ██    ██   ██ ██   ██ ██      ██  ██  ██      ██   ██
- ██████ ███████ ██   ██ ██   ████ ██   ██  ██████  ██████         ██    ██   ██ ██   ██  ██████ ██   ██ ███████ ██   ██
-
-    </span>
-
     {!! Toastr::message() !!}
 
     <div class="wrapper">
