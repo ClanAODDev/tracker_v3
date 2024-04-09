@@ -27,11 +27,11 @@
                     </span>
                 </td>
                 <td class="text-center slight">
-                    {{ $census->count > 0 ? number_format($census->weekly_discord_count / $census->count * 100, 1) : 0
+                    {{ $census->count > 0 ? number_format($census->weekly_voice_count / $census->count * 100, 1) : 0
                      }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
-                          data-counts="{{ json_encode([$popMinus, $census->weekly_discord_count]) }}">
+                          data-counts="{{ json_encode([$popMinus, $census->weekly_voice_count]) }}">
                     </span>
                 </td>
 {{--                <td class="text-center slight">--}}
