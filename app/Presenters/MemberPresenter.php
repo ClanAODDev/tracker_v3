@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Models\Member;
+use Carbon\Carbon;
 
 class MemberPresenter extends Presenter
 {
@@ -26,13 +27,15 @@ class MemberPresenter extends Presenter
      */
     public function lastActive($value)
     {
-        if (str_contains($value, '1970')) {
-            return '--';
-        }
-
         $value = $value instanceof \Carbon\Carbon
             ? $value
             : \Carbon\Carbon::parse($value);
+
+        $epochStart = Carbon::createFromTimestampUTC(0);
+
+        if ($epochStart->equalTo($value)) {
+            return  'Never';
+        }
 
         return $value->diffForHumans();
     }
