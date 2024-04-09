@@ -15,13 +15,13 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-info"></i> - Division Population
+                <i class="fas fa-dot-circle text-success"></i> - Division Population
             </div>
             {{--            <div class="col-md-4 text-center">--}}
             {{--                <i class="fas fa-dot-circle text-success"></i> - Weekly Discord Active--}}
             {{--            </div>--}}
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-success"></i> - Weekly Comms Active
+                <i class="fas fa-dot-circle text-info"></i> - Weekly Comms Active
             </div>
             <div class="col-md-4 text-center">
                 <i class="fas fa-dot-circle text-warning"></i> - Weekly Discord Active
@@ -31,5 +31,5 @@
 </div>
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/census-graph.js?v=3') !!}"></script>
+    <script src="{!! asset('/js/census-graph.js?v=3.2') !!}"></script>
 @endsection
