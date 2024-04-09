@@ -10,8 +10,8 @@
         <tr>
             <th class="col-xs-4">Division</th>
             <th class="text-center col-xs-2">Population</th>
-            <th class="text-center col-xs-2">Weekly TS Active</th>
-            <th class="text-center col-xs-2">Weekly Discord Active</th>
+            <th class="text-center col-xs-2">TeamSpeak</th>
+            <th class="text-center col-xs-2">Discord</th>
         </tr>
         </thead>
 
