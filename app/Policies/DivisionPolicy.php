@@ -54,12 +54,6 @@ class DivisionPolicy
 
     public function delete(User $user, Division $division)
     {
-        if ($user->member->isDivisionLeader($division)
-            && $user->isRole('sr_ldr')
-        ) {
-            return true;
-        }
-
         return false;
     }
 
