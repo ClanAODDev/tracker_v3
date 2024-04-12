@@ -27,6 +27,10 @@ class MemberPresenter extends Presenter
      */
     public function lastActive($value)
     {
+        if (is_null($value)) {
+            return 'Never';
+        }
+
         $value = $value instanceof \Carbon\Carbon
             ? $value
             : \Carbon\Carbon::parse($value);

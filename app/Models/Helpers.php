@@ -216,6 +216,10 @@ function getActivityClass($date, $division)
     $limits = $division->settings()
         ->get('activity_threshold');
 
+    if (!$date instanceof \Carbon\Carbon) {
+        return 'text-danger';
+    }
+
     $days = $date->diffInDays();
 
     foreach ($limits as $limit) {
