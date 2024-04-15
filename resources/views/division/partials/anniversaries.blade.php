@@ -9,11 +9,9 @@
            class="btn btn-default" style="margin-bottom:15px;" target="_blank"
         >
             {{ $anniversary->name }}
-            <span class="label label-success text-uppercase" style="color:#000;">{{ $anniversary->years_since_joined
-            }} {{
-            Str::plural
-            ('yr',
-            $anniversary->years_since_joined) }}</span>
+            <span class="label label-success text-uppercase" style="color:#000;">
+                {{ $anniversary->years_since_joined }} {{ Str::plural('yr', $anniversary->years_since_joined) }}
+            </span>
         </a>
     @endforeach
 @endif

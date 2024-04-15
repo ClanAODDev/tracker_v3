@@ -95,6 +95,7 @@ class DivisionRepository
             ->whereMonth('join_date', now()->month)
             ->where('division_id', $division->id)
             ->orderByDesc('years_since_joined')
+            ->orderBy('name')
             ->get();
 
     }
