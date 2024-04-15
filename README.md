@@ -16,6 +16,12 @@ and activity that derive from outside data.
 The Tracker is considered a consumer of member data. The only concrete data it generates on its own are member notes for
 historical purposes.
 
+## Contributing
+
+The Tracker is a large project that has been in development since 2015, and is the result of quite a few contributors over the years. If you have an interest in helping develop a feature, fix bugs, or even just provide general feedback, we welcomee you! 
+
+The best way to contribute code changes is by way of a PR. First, make a fork of this repo, clone the fork to your local development environment, and follow the steps for local installation. Then when you are ready, submit a pull request of the changes from your fork. Please ensure you pay attention to the code style section, and explain any signiicant alterations your PR may make.
+
 ## Local Installation
 
 #### Building the laravel environment
