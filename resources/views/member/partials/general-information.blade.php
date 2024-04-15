@@ -25,10 +25,10 @@
                     </div>
 
                     <div class="col-md-3 col-xs-12 text-center">
-                        <h2 class="no-margins">
-                            {{ $member->join_date->format('Y-m-d') }}
+                        <h2 class="no-margins" title="{{ $member->join_date->format('Y-m-d') }}">
+                            {{ $member->join_date->diffInYears() }}
                         </h2>
-                        Member <span class="c-white">Join Date</span>
+                        {{ str()->plural('Year') }} <span class="c-white">In AOD</span>
                     </div>
 
                     <div class="col-md-3 col-xs-12 text-center">

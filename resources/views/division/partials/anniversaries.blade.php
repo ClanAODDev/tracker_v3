@@ -20,7 +20,7 @@
 
             {{ $anniversary->name }}
             <span class="label label-success text-uppercase" style="color:#000;">
-                {{ $anniversary->years_since_joined }} {{ Str::plural('yr', $anniversary->years_since_joined) }}
+                {{ $anniversary->years_since_joined }} {{ str()->plural('yr', $anniversary->years_since_joined) }}
             </span>
         </a>
     @endforeach

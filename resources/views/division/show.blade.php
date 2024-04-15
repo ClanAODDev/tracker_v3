@@ -1,4 +1,3 @@
-@php use Illuminate\Support\Str; @endphp
 @extends('application.base-tracker')
 
 @section('content')
