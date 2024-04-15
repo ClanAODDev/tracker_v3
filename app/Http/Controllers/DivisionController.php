@@ -39,6 +39,8 @@ class DivisionController extends Controller
      */
     public function show(Division $division)
     {
+        $divisionAnniversaries = $this->division->getDivisionAnniversaries($division);
+
         $division->load('unassigned.rank');
 
         $censusCounts = $this->division->censusCounts($division);
@@ -71,6 +73,7 @@ class DivisionController extends Controller
                 'lastYearCensus',
                 'divisionLeaders',
                 'generalSergeants',
+                'divisionAnniversaries',
             )
         );
     }

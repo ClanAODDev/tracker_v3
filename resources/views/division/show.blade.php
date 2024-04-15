@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Str; @endphp
 @extends('application.base-tracker')
 
 @section('content')
@@ -24,6 +25,8 @@
         @include ('division.partials.census-short')
         @include('division.partials.leadership')
         @include('division.partials.platoons')
+        @include('division.partials.anniversaries')
+
     </div>
 
 @endsection
