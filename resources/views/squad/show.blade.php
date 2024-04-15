@@ -23,7 +23,7 @@
         @include('division.partials.select-panel')
 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="panel panel-filled ld-loading">
                     <div class="loader">
                         <div class="loader-bar"></div>
@@ -31,7 +31,7 @@
                     @include('squad.partials.squad-members')
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 @include('platoon.partials.squads')
                 @include('squad.partials.member-stats')
             </div>

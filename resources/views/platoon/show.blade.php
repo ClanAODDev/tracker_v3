@@ -25,7 +25,7 @@
         @include('platoon.partials.notices')
 
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="panel panel-filled ld-loading">
                     <div class="loader">
                         <div class="loader-bar"></div>
@@ -33,7 +33,7 @@
                     @include('platoon.partials.platoon-members')
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 @include('platoon.partials.squads')
                 @include('platoon.partials.member_stats')
             </div>
