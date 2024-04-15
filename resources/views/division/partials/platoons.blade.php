@@ -36,8 +36,11 @@
 
                     <div class="m-t-lg">
                         @foreach ($platoon->squads as $squad)
-                            <div class="badge squad" data-squad-id="{{ $squad->id }}">
-                                {{ $squad->leader->name ?? "TBA" }}
+                            <div class="squad label label-default m-2"
+                                 style="margin-right:15px;"
+                                 data-squad-id="{{ $squad->id }}"
+                            >
+                                {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
                             </div>
                         @endforeach
                     </div>
