@@ -5,7 +5,7 @@
     </h3>
 
     @foreach($divisionAnniversaries as $anniversary)
-        <a href="{{ doForumFunction([$anniversary->clan_id], 'forumProfile') }}"
+        <a href="{{ doForumFunction([$anniversary->clan_id], 'forumProfile') }}&tab=myawards#myawards"
            class="btn btn-default" style="margin-bottom:15px;" target="_blank"
         >
             {{ $anniversary->name }}
