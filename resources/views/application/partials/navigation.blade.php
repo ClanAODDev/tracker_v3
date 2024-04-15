@@ -148,7 +148,8 @@
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
                 Member Requests <span
-                    class="badge text-info">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()->count() }}</span>
+                    class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
+                    ->count() }}</span>
             </a>
         </li>
         <li>
@@ -167,6 +168,10 @@
     <li class="{{ set_active('changelog') }}">
         <a href="{{ route('changelog') }}">Changelog</a>
     </li>
+
+    <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i class="fab
+    fa-lg
+    fa-github"></i></span></a></li>
 </ul>
 
 {{--back to top--}}
