@@ -6,10 +6,14 @@
 
     @foreach($divisionAnniversaries as $anniversary)
         <a href="{{ doForumFunction([$anniversary->clan_id], 'forumProfile') }}"
-           class="btn btn-success" style="margin-bottom:15px;" target="_blank"
+           class="btn btn-default" style="margin-bottom:15px;" target="_blank"
         >
-            <strong>{{ $anniversary->name }}</strong>
-            - {{ $anniversary->years_since_joined }} {{ Str::plural('year', $anniversary->years_since_joined) }}
+            {{ $anniversary->name }}
+            <span class="label label-success text-uppercase" style="color:#000;">{{ $anniversary->years_since_joined
+            }} {{
+            Str::plural
+            ('yr',
+            $anniversary->years_since_joined) }}</span>
         </a>
     @endforeach
 @endif

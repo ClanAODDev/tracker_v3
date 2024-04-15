@@ -24,8 +24,8 @@
 
         @include ('division.partials.census-short')
         @include('division.partials.leadership')
-        @include('division.partials.platoons')
         @include('division.partials.anniversaries')
+        @include('division.partials.platoons')
 
     </div>
 
