@@ -2368,7 +2368,6 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 
 .view-header,
 .division-header {
-    margin: 20px 0;
     min-height: 50px;
     padding: 0 15px;
 }
