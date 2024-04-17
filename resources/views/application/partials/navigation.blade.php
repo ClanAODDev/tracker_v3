@@ -148,7 +148,7 @@
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
                 Member Requests <span
-                    class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
+                        class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
                     ->count() }}</span>
             </a>
         </li>
@@ -161,15 +161,53 @@
         Application
     </li>
 
-    <li class="{{ set_active('help') }}">
-        <a href="{{ route('help') }}">Documentation</a>
+    <li class="{{ set_active(['help/docs/*', 'help/docs']) }}">
+        <a href="#docs" data-toggle="collapse" aria-expanded="false">
+            Documentation
+            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+        </a>
+
+        <ul id="docs"
+            class="nav nav-second {{ request()->is(['help/docs/*', 'help/docs']) ? 'expanded' : 'collapse' }}">
+            <li class="{{ set_active(['help/docs']) }}">
+                <a href="{{ route('help') }}">General</a>
+            </li>
+
+            @if(Auth::user()->isRole('admin'))
+
+                {{--
+                    -- Admin documentation routes go here
+                --}}
+
+                <li class="{{ set_active(['help/docs/admin']) }}">
+                    <a href="{{ route('help.admin.home') }}">
+                        Admin docs
+                    </a>
+                </li>
+
+                <li class="{{ set_active(['help/docs/admin/sink']) }}">
+                    <a href="{{ route('help.admin.sink') }}">
+                        Kitchen Sink
+                    </a>
+                </li>
+
+                {{--
+                    -- End Admin documentation routes
+                --}}
+
+            @endif
+
+
+        </ul>
     </li>
+
 
     <li class="{{ set_active('changelog') }}">
         <a href="{{ route('changelog') }}">Changelog</a>
     </li>
 
-    <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i class="fab
+    <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
+                        class="fab
     fa-lg
     fa-github"></i></span></a></li>
 </ul>

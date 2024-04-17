@@ -3,7 +3,7 @@
 registerDivisionSubPages();
 
 Breadcrumbs::for('home', function ($breadcrumbs) {
-    $breadcrumbs->push('Home', route('index'));
+    $breadcrumbs->push('Home', route('home'));
 });
 
 // Home > Division

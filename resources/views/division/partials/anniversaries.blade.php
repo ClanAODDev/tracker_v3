@@ -1,6 +1,6 @@
 @if($divisionAnniversaries->count())
     <h3 class="m-b-xs text-uppercase m-t-xxxl" id="platoons">
-        {{ now()->monthName }} Anniversaries
+        {{ now()->monthName }} <span class="text-muted">Anniversaries</span>
         <hr/>
     </h3>
 

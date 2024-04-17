@@ -2416,6 +2416,28 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
     background: none !important;
 }
 
+.heading-permalink {
+    font-size: .8em;
+    vertical-align: super;
+    text-decoration: none;
+    color: transparent;
+}
+
+h1:hover .heading-permalink,
+h2:hover .heading-permalink,
+h3:hover .heading-permalink,
+h4:hover .heading-permalink,
+h5:hover .heading-permalink,
+h6:hover .heading-permalink,
+.heading-permalink:hover {
+    text-decoration: none;
+    color: #777;
+}
+
+p {
+    margin: 0 0 20px;
+}
+
 .pagination > li > a,
 .pagination > li > span {
     color: #949ba2;
@@ -2556,6 +2578,7 @@ h3,
 h4,
 h5,
 h6 {
+    margin-top: 0;
     color: #FFFFFF;
 }
 
@@ -2565,7 +2588,7 @@ h2,
 .h2,
 h3,
 .h3 {
-    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 .c-accent {
