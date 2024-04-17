@@ -27,7 +27,12 @@ http.createServer(function (req, res) {
 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda facilis nulla quidem. Nemo odit
 officiis quibusdam. Amet, architecto consequatur corporis eligendi error iusto omnis porro provident quos
 similique soluta tempore. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa doloremque
-fugit illum laborum minima mollitia __ratione repellendus repudiandae__? Animi atque dignissimos exercitationem
+fugit illum laborum minima mollitia __ratione repellendus repudiandae__? 
+
+![A caption for a picture because accessibility](https://picsum.photos/400/300)
+
+
+Animi atque dignissimos exercitationem
 modi nam quae repudiandae sunt suscipit tenetur totam? Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 Asperiores consectetur cupiditate debitis doloribus enim est eum ex exercitationem illum incidunt, laborum
 mollitia obcaecati placeat possimus sunt, tempora vel, voluptatem voluptates?
