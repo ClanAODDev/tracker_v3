@@ -19,7 +19,7 @@ Route::view('sink', 'help.admin.sink')->name('help.admin.sink');
 ```  
   
 #### Navigation link
-Next, add an entry in the navigation blade partial at `/routes/views/application/partials/navigation.blade.php`. 
+Next, add an entry in the navigation blade partial at `/resources/views/application/partials/navigation.blade.php`. 
   Find the section marked as admin documentation. An example is provided below:
 
 ```html
