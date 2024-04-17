@@ -180,6 +180,12 @@
                 --}}
 
                 <li class="{{ set_active(['help/docs/admin']) }}">
+                    <a href="{{ route('help.admin.division-checklist') }}">
+                        Division Checklist
+                    </a>
+                </li>
+
+                <li class="{{ set_active(['help/docs/admin']) }}">
                     <a href="{{ route('help.admin.home') }}">
                         Admin docs
                     </a>
