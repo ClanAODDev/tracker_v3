@@ -18,6 +18,7 @@ Route::group(['prefix' => 'help/docs'], function () {
         /**
          * New admin documentation routes should go here
          */
+        Route::view('division-checklist', 'help.admin.division-checklist')->name('help.admin.division-checklist');
         Route::view('sink', 'help.admin.sink')->name('help.admin.sink');
         Route::view('', 'help.admin.index')->name('help.admin.home');
 
