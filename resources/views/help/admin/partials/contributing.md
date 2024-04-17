@@ -31,9 +31,7 @@ Next, add an entry in the navigation blade partial at `/resources/views/applicat
 ### For existing pages
 If you just want to create a new section for an existing page, consider building a partial so the content can be 
 organized according to topic. As an example, this page is included in the `resources/views/help/admin/index.blade.php` 
-view 
-using the 
-`@include` blade directive. This way, we can write strictly as a `.md` file so IDEs can color-code, format, etc.
+view using the `@include` blade directive. This way, we can write strictly as a `.md` file so IDEs can color-code, format, etc.
 
 Just include the path to the partial wherever you want the content to be inserted.
 
