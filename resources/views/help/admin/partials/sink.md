@@ -57,17 +57,17 @@ voluptas!
 
 ### A list
 
-and more
-and more **because this is important**
-this has stuff
-that goes on
-forever!
-and actually more!
-okay we're done
+- and more
+  - and more **because this is important**
+  - this has stuff
+  - that goes on
+    - forever!
+- and actually more!
+- okay we're done
 
 **And now a table**
 
-| Item              | In Stock | Price |
+| **Item**          | In Stock | Price |
 |:------------------|:--------:|------:|
 | Python Hat        |   True   | 23.99 |
 | SQL Hat           |   True   | 23.99 |
