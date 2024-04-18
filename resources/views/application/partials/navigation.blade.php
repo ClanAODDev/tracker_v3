@@ -187,7 +187,7 @@
 
                 <li class="{{ set_active(['help/docs/admin']) }}">
                     <a href="{{ route('help.admin.home') }}">
-                        Admin docs
+                        Contributing
                     </a>
                 </li>
 
