@@ -17,7 +17,7 @@ Documentation of the various objects needed for Divisions. This page will genera
   - [Flair Server Group](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-flair-server-groups)
 
 ## Tracker
-Don't we already have a doc for this?
+[Creeating divisions on the Tracker](https://www.clanaod.net/forums/showthread.php?t=261830) - Soon to be converted to Markdown
 
 ## DNS Entry
 DNS Entries are managed through CloudFlare by Archangel, Guybrush, Kestah, and LiquidSmoke. Please contact one of these members to add or remove domains using LiquidSmoke as a last resort.
