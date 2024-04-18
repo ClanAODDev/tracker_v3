@@ -227,7 +227,7 @@ To create a new group:
 6. Enable the `Show Granted Only` option in Permission view
 7. Set `i_icon_id` to the appropriate icon for the division (or clear it until the icon is uploaded)
 
-TODO: Document the permissions required to create a group from scratch.
+![TeamSpeak Officer Server Group permissions](/images/docs/officer-server-group.png)
 
 #### Forum Sync Map
 The forum sync process maps TeamSpeak server groups to forum groups. Presently this processes is managed directly from AOD's server. Please contact Archangel to add or remove group maps.
@@ -246,4 +246,4 @@ To create a new group:
 6. Enable the `Show Granted Only` option in Permission view
 7. Set `i_icon_id` to the appropriate icon for the flair group (or clear it until the icon is uploaded)
 
-TODO: Document the permissions required to create a group from scratch.
+![TeamSpeak Flair Server Group permissions](/images/docs/flair-server-group.png)
