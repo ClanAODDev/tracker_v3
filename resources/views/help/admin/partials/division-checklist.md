@@ -101,6 +101,23 @@ To apply permissions to a forum:
 8. Set `Overwrite Inherited Entries` to `Yes`
 9. Click `Go`
 
+#### Officer Forum Permissions
+
+Officer and other specialized forums do not have simple templates to copy from. To apply permissions, start with the next higher permissions template and adjust.
+
+Officer Forums must start with `Permission Setup (AOD Sgts+)`.
+
+To add officer group permissions after duplicating Sgt+ permissions:
+1. Open the [AdminCP](https://www.clanaod.net/forums/admincp/index.php)
+2. Open the `Forums & Moderators` section in the left menu
+3. Click `Forum Permissions`
+4. Search for the officer forum by name
+5. Underneath the forum name, find the `{Division Name} Officers` group and click `[Edit]`
+6. Set permissions according to the forum moderator template.
+7. Click `Save`
+
+![Forum Moderator Permissions Template](/images/docs/forum-moderator-permissions.png)
+
 ### vbCerberus
 vbCerberus allows us to create custom forums views for each division using subdomains.
 
