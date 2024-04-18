@@ -63,11 +63,7 @@
                         </td>
                         <td>
                             {{-- temporary handling of null dates --}}
-                            @if(str_contains($member->last_voice_activity, '1970'))
-                                Never
-                            @else
-                                {{ $member->last_voice_activity }}
-                            @endif
+                            {{ $member->present()->lastActive($member->last_voice_activity) }}
                         </td>
                     </tr>
                 @endforeach
