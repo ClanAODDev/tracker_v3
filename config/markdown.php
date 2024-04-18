@@ -109,7 +109,6 @@ return [
 
         Link::class => [
             'class' => '',
-            'target' => '_blank',
         ],
 
         Code::class => [
