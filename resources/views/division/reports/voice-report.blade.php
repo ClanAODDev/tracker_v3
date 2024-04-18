@@ -36,6 +36,7 @@
                     <th>State</th>
                     <th>Forum Profile</th>
                     <th>{{ $division->locality('platoon') }}</th>
+                    <th>Discord</th>
                     <th>Last Activity</th>
                 </tr>
                 </thead>
@@ -56,6 +57,9 @@
                         </td>
                         <td>
                             {{ $member->platoon->name }}
+                        </td>
+                        <td>
+                            {{ $member->discord }}
                         </td>
                         <td>
                             {{-- temporary handling of null dates --}}
