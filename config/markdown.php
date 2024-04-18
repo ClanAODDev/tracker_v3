@@ -108,7 +108,7 @@ return [
         ],
 
         Link::class => [
-            'class' => '',
+            'class' => 'smooth-scroll',
         ],
 
         Code::class => [
