@@ -1,20 +1,20 @@
 # Division Checklist
 Documentation of the various objects needed for Divisions. This page will generally document the steps and order for adding a new division. Deviations for deleting a Division will also be noted.
 
-- [Tracker](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-tracker)
-- [DNS Entry](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-dns-entry)
-- [Forums](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-forums-vbulletin)
-  - [Forum Officers Group](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-forum-officers-group)
-  - [Forum Category](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-forum-category-parent-forum)
-  - [Forum Permissions](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-forum-permission-duplication)
-  - [vbCerberus](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-vbcerberus)
-  - [Application Form](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-application-form)
-  - [Navigation](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-navigation-options)
-  - [User Profile Fields](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-user-profile-fields)
-- [Discord](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-discord)
-- [TeamSpeak](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-teamspeak)
-  - [Officer Server Group](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-officer-server-group)
-  - [Flair Server Group](https://tracker-dev.clanaod.net/help/docs/admin/division_checklist#content-flair-server-groups)
+- [Tracker](#content-tracker)
+- [DNS Entry](#content-dns-entry)
+- [Forums](#content-forums-vbulletin)
+  - [Forum Officers Group](#content-forum-officers-group)
+  - [Forum Category](#content-forum-category-parent-forum)
+  - [Forum Permissions](#content-forum-permission-duplication)
+  - [vbCerberus](#content-vbcerberus)
+  - [Application Form](#content-application-form)
+  - [Navigation](#content-navigation-options)
+  - [User Profile Fields](#content-user-profile-fields)
+- [Discord](#content-discord)
+- [TeamSpeak](#content-teamspeak)
+  - [Officer Server Group](#content-officer-server-group)
+  - [Flair Server Group](#content-flair-server-groups)
 
 ## Tracker
 [Creeating divisions on the Tracker](https://www.clanaod.net/forums/showthread.php?t=261830) - Soon to be converted to Markdown
