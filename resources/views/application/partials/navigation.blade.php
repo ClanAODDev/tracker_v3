@@ -179,7 +179,7 @@
                     -- Admin documentation routes go here
                 --}}
 
-                <li class="{{ set_active(['help/docs/admin']) }}">
+                <li class="{{ set_active(['help/docs/admin/division-checklist']) }}">
                     <a href="{{ route('help.admin.division-checklist') }}">
                         Division Checklist
                     </a>
