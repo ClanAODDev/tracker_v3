@@ -1,12 +1,12 @@
-### Forum Moderation
+#### Forum Moderation
 
-#### Review Basic Forum Moderation Functions
+##### Review Basic Forum Moderation Functions
 
 * Go over Search for users: Remind them of the poor placement of the "Ban User" button and to be careful.
 * Search IP addresses: Give examples of why you would use that feature.
 * Explain why/how you would Edit AOD info (promotions, demotions).
 
-#### Review the Ban User feature, Do not gloss over this.
+##### Review the Ban User feature, Do not gloss over this.
 
 * Banning is never an emotional response. It is a tool to protect AOD from threats that could hinder the clan.
 * Make sure they understand that they need to remove AOD membership status before banning.

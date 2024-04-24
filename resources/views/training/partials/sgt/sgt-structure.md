@@ -1,12 +1,12 @@
-### SGT Structure & SSgts Duties
+#### SGT Structure & SSgts Duties
 
-#### Review both the Sgt structure and the SSgt lists below.
+##### Review both the Sgt structure and the SSgt lists below.
 
 This is a good link to reference who is a Sgt in AOD and what their role is:
 
 [Open Leadership Structure](https://tracker.clanaod.net/reports/leadership)
 
-#### Explain briefly what a SSgt's role is:
+##### Explain briefly what a SSgt's role is:
 
 * SSgts are responsible for the onbaording and training of all newly promoted Sgts.
 * SSgts also monitor, edit and guide along the Division Request Forums. A SSgt should be driving the conversations around a new AOD division request and keep the forum posts updated and orderly
