@@ -2,9 +2,7 @@
 
 ##### Review both the Sgt structure and the SSgt lists below.
 
-This is a good link to reference who is a Sgt in AOD and what their role is:
-
-[Open Leadership Structure](https://tracker.clanaod.net/reports/leadership)
+Reference the [leadership structure](https://tracker.clanaod.net/reports/leadership) for guidance on who is a Sgt in AOD and what their role is.
 
 ##### Explain briefly what a SSgt's role is:
 
