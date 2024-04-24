@@ -1,4 +1,8 @@
+#### April 2024 - 3.7.2
+* Markdown support added for most content to make contributions to content easier
+
 #### 30 March 2024 - 3.7.1
+
 * Discord activity now being tracked
     * Forum data sync will include discord status and last activity
     * Possible states include:
