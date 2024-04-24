@@ -1,8 +1,8 @@
-<h4>TS Moderation</h4>
+<h3>TS Moderation</h3>
 
 <ul>
-    <li>Moving members - Ask permission first - Do not abuse</li>
-    <li>Kicking/Banning - Remind them that they cannot reverse a permanent ban</li>
-    <li>Adding Channels - As needed, make sure that they are temporary, and clean up after they are done with the channel.</li>
+    <li>Moving members - Always ask permission first - try to have them move you to another channel - Do not abuse</li>
+    <li>Kicking/Banning - Remind them that they cannot reverse a permanent ban - Have them try and kick you, ask them if they know what they cannot.</li>
+    <li>Adding Channels - Have them create both a Temp and Semi-Perminate Channel - Explain the use cases for both.</li>
     <li>CO/XO should be consulted before changing any permanent channel in the Division's area</li>
 </ul>

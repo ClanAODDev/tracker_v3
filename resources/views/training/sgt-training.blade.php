@@ -23,7 +23,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <h4>SGT Training Process</h4>
+                <h3>SGT Training Process</h3>
                 <hr>
 
                 <nav class="tabs-container">
@@ -35,10 +35,13 @@
                                href="#sgt-structure" role="tab"><i class="fas fa-check-circle text-muted"></i> SGT
                                 Structure</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
-                               href="#forum-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Forum
-                                Mod</a></li>
+                               href="#forum-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Forum/ModCp
+                                </a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#ts-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Teamspeak
+                                Mod</a></li>
+                        <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
+                               href="#ds-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Discord
                                 Mod</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#misc" role="tab"><i class="fas fa-check-circle text-muted"></i> Misc
@@ -52,16 +55,17 @@
                         <div class="tab-pane p-md fade" id="sgt-duties" role="tabpanel">
                             @include('training.partials.sgt.sgt-duties')
                         </div>
-
                         <div class="tab-pane fade p-md" id="sgt-structure" role="tabpanel">
                             @include('training.partials.sgt.sgt-structure')
                         </div>
                         <div class="tab-pane fade p-md" id="forum-mod" role="tabpanel">
                             @include('training.partials.sgt.forum-moderation')
                         </div>
-
                         <div class="tab-pane fade p-md" id="ts-mod" role="tabpanel">
                             @include('training.partials.sgt.ts-moderation')
+                        </div>
+                        <div class="tab-pane fade p-md" id="ds-mod" role="tabpanel">
+                            @include('training.partials.sgt.ds-moderation')
                         </div>
                         <div class="tab-pane fade p-md" id="misc" role="tabpanel">
                             @include('training.partials.sgt.misc-info')
@@ -96,20 +100,12 @@
                                         </tr>
                                     </table>
                                 </form>
-
                             </div>
                         </div>
                     </div>
-                    {{--<div class="col-md-6">
-                        <h4>SGT Handbook (in revision)</h4>
-                        <p>The current SGT handbook has been deemed deprecated, and a new forum based version is
-                            being prepared. This resource will be updated once the newer version is available</p>
-                    </div>--}}
                 </div>
             </div>
         </div>
-
-
     </div>
 @endsection
 
