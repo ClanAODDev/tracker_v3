@@ -29,14 +29,15 @@
                 <nav class="tabs-container">
                     <ul class="nav nav-tabs" id="nav-tab" role="tablist">
                         <li class="active"><a class="nav-item nav-link btn-default btn" data-toggle="tab"
-                               href="#sgt-duties" role="tab"><i class="fas fa-check-circle text-success"></i> Sgt
+                                              href="#sgt-duties" role="tab"><i
+                                        class="fas fa-check-circle text-success"></i> Sgt
                                 Duties</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#sgt-structure" role="tab"><i class="fas fa-check-circle text-muted"></i> SGT
                                 Structure</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#forum-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Forum/ModCp
-                                </a></li>
+                            </a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#ts-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Teamspeak
                                 Mod</a></li>
@@ -52,7 +53,7 @@
                 <div class="panel panel-filled">
                     <div class="tab-content" id="nav-tabContent">
 
-                        <div class="tab-pane p-md fade active" id="sgt-duties" role="tabpanel">
+                        <div class="tab-pane p-md fade in active" id="sgt-duties" role="tabpanel">
                             @include('training.partials.sgt.sgt-duties')
                         </div>
                         <div class="tab-pane fade p-md" id="sgt-structure" role="tabpanel">
@@ -73,37 +74,42 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="panel panel-filled {{ $errors->has('clan_id') ? 'panel-c-danger' : null }}">
-                            <div class="panel-heading">Confirm Training</div>
-                            <div class="panel-body">
-                                <p>Once you are finished with the training session, enter the clan id for the SGT you
-                                    are training and submit.</p>
-                                <p>This will update the member's last training date, and set you as the trainer.</p>
-                            </div>
-                            <div class="panel-footer">
+                @if(request()->has('training'))
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-filled {{ $errors->has('clan_id') ? 'panel-c-danger' : null }}">
+                                <div class="panel-heading">Confirm Training</div>
+                                <div class="panel-body">
+                                    <p>Once you are finished with the training session, enter the clan id for the SGT
+                                        you
+                                        are training and submit.</p>
+                                    <p>This will update the member's last training date, and set you as the trainer.</p>
+                                </div>
+                                <div class="panel-footer">
 
-                                <form action="{{ route('training.update') }}" method="POST">
-                                    {{ csrf_field() }}
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <td>
-                                                <input type="number"
-                                                       class="form-control col-9"
-                                                       id="clan_id"
-                                                       name="clan_id"
-                                                       placeholder="Enter Clan ID..." value="{{ old('clan_id') ?? $_GET['clan_id'] }}"></td>
-                                            <td>
-                                                <button type="submit" class="btn btn-default btn-block">Submit</button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </form>
+                                    <form action="{{ route('training.update') }}" method="POST">
+                                        {{ csrf_field() }}
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td>
+                                                    <input type="number" class="form-control col-9" id="clan_id"
+                                                           name="clan_id"
+                                                           placeholder="Enter Clan ID..."
+                                                           value="{{ request()->has('clan_id') ? request()->get('clan_id') : null }}"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-default btn-block">Submit
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>

@@ -11,7 +11,8 @@
 
             @can('train', auth()->user())
                 <li>
-                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}#sgt-duties">Perform Sgt Training</a>
+                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id, 'training']) }}#sgt-duties"
+                    >SGT Training</a>
                 </li>
             @endcan
 
