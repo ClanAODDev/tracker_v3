@@ -5,18 +5,24 @@ adding a new division. Deviations for deleting a Division will also be noted.
 
 - [DNS Entry](#content-dns-entry)
 - [Forums](#content-forums-vbulletin)
-    - [Forum Officers Group](#content-forum-officers-group)
-    - [Forum Category](#content-forum-category-parent-forum)
-    - [Forum Permissions](#content-forum-permission-duplication)
-    - [vbCerberus](#content-vbcerberus)
-    - [Application Form](#content-application-form)
-    - [Navigation](#content-navigation-options)
-    - [User Profile Fields](#content-user-profile-fields)
+  - [Forum Officers Group](#content-forum-officers-group)
+  - [Forum Category](#content-forum-category-parent-forum)
+  - [Forum Permissions](#content-forum-permission-duplication)
+  - [vbCerberus](#content-vbcerberus)
+  - [Application Form](#content-application-form)
+  - [Navigation](#content-navigation-options)
+  - [User Profile Fields](#content-user-profile-fields)
 - [Discord](#content-discord)
 - [TeamSpeak](#content-teamspeak)
-    - [Officer Server Group](#content-officer-server-group)
-    - [Flair Server Group](#content-flair-server-groups)
+  - [Officer Server Group](#content-officer-server-group)
+  - [Flair Server Group](#content-flair-server-groups)
 - [Tracker](#content-tracker)
+  - [Creating divisions in Admin CP](#content-creating-divisions-in-admin-cp)
+  - [Ingame handles](#content-ingame-handles)
+  - [Additional cosmetic items](#content-additional-cosmetic-items)
+    - [Website](#content-website-pages)
+    - [Division page headers (Website)](#content-division-page-headers)
+    - [Tracker banners](#content-tracker-banner)
 
 ## DNS Entry
 
@@ -323,16 +329,16 @@ Rough notes here. Needs some cleaning up.
 
 - Forum officer role (Division Officers)
 - Agreed upon abbreviation (short-hand version of a division name. IE., Battlefield => bf, World of Warcraft => wow
-- Forum Form Application (IE., [url]https://www.clanaod.net/forums/forms.php?do=form&fid=34[/url])
+- Forum Form Application (IE., https://www.clanaod.net/forums/forms.php?do=form&fid=34)
 - Ingame handle (developer or platform specific). There's a good chance it already exists. If not, make a new one (
   tracker admin cp => Handles)
 - Division icon - this should **come from the official game binary** and can be extracted
-  using [BeCyIconGrabber]("https://jarlpenguin.github.io/BeCyIconGrabberPortable/") (48x48 PNG). If you are unsure how
+  using [BeCyIconGrabber](https://jarlpenguin.github.io/BeCyIconGrabberPortable/) (48x48 PNG). If you are unsure how
   to use this, ask around. Store the division icon
-  at [[FONT=Courier New]public/images/game_icons/48x48[/FONT]]("https://github.com/ClanAODDev/tracker_v3/tree/main/public/images/game_icons/48x48")
-  using the division abbreviation.[/INDENT]
+  at [public/images/game_icons/48x48](https://github.com/ClanAODDev/tracker_v3/tree/main/public/images/game_icons/48x48)
+  using the division abbreviation.
 
-### Admin CP > Divisions > Create Division
+### Creating divisions in Admin CP
 
 - Name: Provide the full proper name of the division
 - Slug: Sluggified version of the name. This should be lower-case and hyphenated. No other characters.
@@ -346,7 +352,7 @@ Rough notes here. Needs some cleaning up.
 - Description: Provide some appropriate sub-title for the division.
 - Active: Self-explanatory
 
-### Handles
+### Ingame Handles
 
 Handles are ingame names that a member can have across the variety of platforms of games AOD plays. Steam, Battlenet,
 and Bungie are just a few examples. Some games (like Warships) have their own specific ingame handle. Since handles are
@@ -361,7 +367,7 @@ used in a variety of ways, it's important to make sure the handle is configured 
 
 ### Additional cosmetic items
 
-#### Divisional website pages
+#### Website pages
 
 Since divisions automatically appear on the website when they are populated in the tracker, a new problem arises: the
 link to the division leads to a 404. To remedy this, a division page must be created as soon as possible to ensure that
@@ -400,7 +406,7 @@ Assuming you provided a forum_app_id on the tracker, an "apply" button will send
 application. This is automatically added to the page. **If the apply button takes you to a 404, it's because you're
 missing the forum_app_id for the division on the tracker.**
 
-#### Divisional tracker banner
+#### Tracker banner
 
 This is the image that is displayed at the top of the tracker for members of the division, if one exists. The way this
 image gets created is by taking the same image used on the website into a new photoshop canvas (must be transparent),
