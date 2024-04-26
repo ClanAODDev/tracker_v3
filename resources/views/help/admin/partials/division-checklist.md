@@ -363,7 +363,7 @@ used in a variety of ways, it's important to make sure the handle is configured 
   Bungie => bungie_id.
 - Comments: mostly guidance, not required
 - URL: This is the deeplink URL, if the platform provides it. Ensure that the URL is configured so that the unique
-  profile/member id can be appended to the end. Not all platforms offer this.[/INDENT]
+  profile/member id can be appended to the end. Not all platforms offer this.
 
 ### Additional cosmetic items
 
