@@ -29,7 +29,7 @@
                 <nav class="tabs-container">
                     <ul class="nav nav-tabs" id="nav-tab" role="tablist">
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
-                               href="#sgt-duties" role="tab"><i class="fas fa-check-circle text-muted"></i> Sgt
+                               href="#sgt-duties" role="tab"><i class="fas fa-check-circle text-success"></i> Sgt
                                 Duties</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#sgt-structure" role="tab"><i class="fas fa-check-circle text-muted"></i> SGT
