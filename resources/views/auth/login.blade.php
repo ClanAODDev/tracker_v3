@@ -4,7 +4,7 @@
 
     <div class="container-center">
 
-        <div class="view-header">
+        <div class="view-header m-b-md">
             <div class="header-icon">
                 <i class="pe page-header-icon pe-7s-unlock"></i>
             </div>
