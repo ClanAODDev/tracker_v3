@@ -28,7 +28,7 @@
 
                 <nav class="tabs-container">
                     <ul class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
+                        <li class="active"><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#sgt-duties" role="tab"><i class="fas fa-check-circle text-success"></i> Sgt
                                 Duties</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
@@ -52,7 +52,7 @@
                 <div class="panel panel-filled">
                     <div class="tab-content" id="nav-tabContent">
 
-                        <div class="tab-pane p-md fade" id="sgt-duties" role="tabpanel">
+                        <div class="tab-pane p-md fade active" id="sgt-duties" role="tabpanel">
                             @include('training.partials.sgt.sgt-duties')
                         </div>
                         <div class="tab-pane fade p-md" id="sgt-structure" role="tabpanel">
