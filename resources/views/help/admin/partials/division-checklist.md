@@ -18,11 +18,6 @@ adding a new division. Deviations for deleting a Division will also be noted.
     - [Flair Server Group](#content-flair-server-groups)
 - [Tracker](#content-tracker)
 
-## Tracker
-
-[Creeating divisions on the Tracker](https://www.clanaod.net/forums/showthread.php?t=261830) - Soon to be converted to
-Markdown
-
 ## DNS Entry
 
 DNS Entries are managed through CloudFlare by Archangel, Guybrush, Kestah, and LiquidSmoke. Please contact one of these
