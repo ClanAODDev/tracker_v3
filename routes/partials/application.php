@@ -62,8 +62,3 @@ Route::post('slack', [
     'as' => 'slack.commands',
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');
-
-Route::get('storage-test', function () {
-    $filePath = storage_path('database.sqlite');
-    dd(posix_getpwuid(fileowner($filePath)), posix_getgrgid(filegroup($filePath)));
-});

@@ -51,8 +51,11 @@ class AppController extends Controller
     {
         $filePath = storage_path('database.sqlite');
 
-        return file_exists($filePath) && app()->environment() === 'production'
-            && posix_getpwuid(fileowner($filePath)) == 'nginx'
-            && posix_getgrgid(filegroup($filePath)) == 'nginx-data';
+        if (app()->environment() === 'production') {
+            return file_exists($filePath) && posix_getpwuid(fileowner($filePath))['name'] == 'nginx'
+                && posix_getgrgid(filegroup($filePath))['name'] == 'nginx-data';
+        }
+
+        return true;
     }
 }
