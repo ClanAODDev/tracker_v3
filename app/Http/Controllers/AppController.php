@@ -28,6 +28,10 @@ class AppController extends Controller
      */
     public function index()
     {
+        if (!$this->storageOwnershipValid()) {
+            toastr()->error('Storage ownership issue. Tracker sync may not perform correctly.', 'Sync error');
+        }
+
         $myDivision = \Auth::user()->member->division;
 
         $maxDays = config('app.aod.maximum_days_inactive');
@@ -41,5 +45,14 @@ class AppController extends Controller
             ->except($myDivision->id);
 
         return view('home.show', compact('divisions', 'myDivision'));
+    }
+
+    private function storageOwnershipValid()
+    {
+        $filePath = storage_path('database.sqlite');
+
+        return file_exists($filePath) && app()->environment() === 'production'
+            && posix_getpwuid(fileowner($filePath)) == 'nginx-data'
+            && posix_getgrgid(filegroup($filePath)) == 'nginx';
     }
 }
