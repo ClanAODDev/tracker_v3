@@ -4,7 +4,7 @@
         <a href="{{ route('division', $division->slug) }}"
            class="panel panel-filled division-header {{ ($division->isShutdown()) ? 'panel-c-danger' : null }}">
             <div class="panel-body">
-                <h4 class="m-b-none text-uppercase">
+                <h4 class="m-b-none text-uppercase m-t-sm">
                     <img src="{{ getDivisionIconPath($division->abbreviation) }}"
                          class="pull-right division-icon-medium"/>
                     @if ($division->isShutDown())
