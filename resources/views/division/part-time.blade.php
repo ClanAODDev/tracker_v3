@@ -69,7 +69,7 @@
                         <td class="text-center">
                             @can ('create', App\Models\Member::class)
                                 <a class="btn btn-danger"
-                                   href="{{ route('removePartTimer', $division->slug, $member->clan_id]) }}">
+                                   href="{{ route('removePartTimer', [$division->slug, $member->clan_id]) }}">
                                     <i class="fa fa-trash text-danger"></i>
                                 </a>
                             @endcan

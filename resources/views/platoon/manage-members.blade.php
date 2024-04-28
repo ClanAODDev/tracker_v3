@@ -25,9 +25,9 @@
              <code>Edit {{ $division->locality('Squad') }}</code> view. </p>
  --}}
         <div class="m-t-xl">
-            <a href="{{ route('platoon', $division->slug, $platoon]) }}" class="btn btn-default">Cancel</a>
+            <a href="{{ route('platoon', [$division->slug, $platoon]) }}" class="btn btn-default">Cancel</a>
             <a class="btn btn-success"
-               href="{{ route('createSquad', $division->slug, $platoon]) }}">
+               href="{{ route('createSquad', [$division->slug, $platoon]) }}">
                 <i class="fa fa-plus"></i> Create {{ $division->locality('squad') }}
             </a>
         </div>
