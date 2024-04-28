@@ -35,9 +35,7 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('division', function ($division) {
             $division = strtolower($division);
-            $model = Division::where('slug', $division)
-                ->orWhere('abbreviation', $division)
-                ->first();
+            $model = Division::where('slug', $division)->first();
             if ($model instanceof Division) {
                 return $model;
             }
