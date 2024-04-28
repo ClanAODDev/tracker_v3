@@ -18,20 +18,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['abilities:division:write'])->group(function () {
         Route::post('divisions/{slug}', 'API\v1\DivisionController@update')->name('v1.divisions.update');
     });
-
-
-
-});
-
-Route::post('make-job', function () {
-    Notification::send(sprintf(
-        "%s/channel/%s",
-        config('app.aod.bot_api_base_url'),
-        861037177659064330
-    ), new ITTeamAlert(
-        'A queued job ran',
-        'It was a success!'
-    ));
 });
 
 

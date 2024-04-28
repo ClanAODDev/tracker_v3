@@ -105,7 +105,7 @@ class BotMessage
          **** ->error()
          */
         return [
-            'embeds' => [
+            'embeds' => [[
                 'color' => $this->color ?? 0,
                 'description' => $this->message,
                 'author' => [
@@ -114,7 +114,7 @@ class BotMessage
                     'url' => $this->url ?? 'https://tracker.clanaod.net',
                 ],
                 'fields' => $this->fields ?? [],
-            ],
+            ]],
         ];
     }
 }
