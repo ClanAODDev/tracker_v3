@@ -56,7 +56,7 @@
                     </div>
                 </div>
 
-                <a href="{{ route('platoon.manage-squads', $division->slug, $platoon]) }}"
+                <a href="{{ route('platoon.manage-squads', [$division->abbreviation, $platoon]) }}"
                    class="btn btn-default">Cancel</a>
                 <button type="submit" class="btn btn-success pull-right">Save</button>
             </div>

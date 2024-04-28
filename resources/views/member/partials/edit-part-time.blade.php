@@ -5,7 +5,7 @@
         <div class="row">
             @foreach ($divisions as $division)
                 <div class="col-md-6">
-                    <a href="{{ route('assignPartTimer', $division->slug, $member->clan_id]) }}"
+                    <a href="{{ route('assignPartTimer', [$division->abbreviation, $member->clan_id]) }}"
                        class="panel panel-filled panel-c-danger">
                         <div class="panel-body m-b-none">
                         <span class="text-uppercase">
@@ -23,7 +23,7 @@
         <div class="row">
             @foreach ($member->partTimeDivisions as $division)
                 <div class="col-md-6">
-                    <a href="{{ route('removePartTimer', $division->slug, $member->clan_id]) }}"
+                    <a href="{{ route('removePartTimer', [$division->abbreviation, $member->clan_id]) }}"
                        class="panel panel-filled panel-c-success">
                         <div class="panel-body m-b-none">
                         <span class="text-uppercase">

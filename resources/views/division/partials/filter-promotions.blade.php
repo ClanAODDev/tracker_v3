@@ -5,7 +5,7 @@
                 onChange="top.location.href=this.options[this.selectedIndex].value;">
             <option value="" disabled selected>Select a period</option>
             @foreach ($promotionPeriods as $period)
-                <option value="{{ route('division.promotions', $division->slug, $period->month, $period->year]) }}">
+                <option value="{{ route('division.promotions', [$division->abbreviation, $period->month, $period->year]) }}">
                     {{ $period->month }} {{ $period->year }}
                 </option>
             @endforeach
