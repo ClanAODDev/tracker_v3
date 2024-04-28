@@ -6,9 +6,10 @@ use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberRequestPutOnHold extends Notification
+class MemberRequestPutOnHold extends Notification implements ShouldQueue
 {
     use Queueable;
 

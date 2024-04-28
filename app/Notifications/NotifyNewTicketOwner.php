@@ -6,9 +6,10 @@ use App\Channels\Messages\DiscordDMMessage;
 use App\Channels\WebhookChannel;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NotifyNewTicketOwner extends Notification
+class NotifyNewTicketOwner extends Notification implements ShouldQueue
 {
     use Queueable;
 

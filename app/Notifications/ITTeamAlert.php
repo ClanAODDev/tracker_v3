@@ -9,7 +9,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class ITTeamAlert extends Notification implements ShouldQueue, ShouldBeUnique
+class ITTeamAlert extends Notification implements ShouldQueue
 {
     use Queueable;
 

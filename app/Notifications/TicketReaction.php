@@ -5,9 +5,10 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordMessageReact;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class TicketReaction extends Notification
+class TicketReaction extends Notification implements ShouldQueue
 {
     use Queueable;
 

@@ -6,9 +6,10 @@ use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberNameChanged extends Notification
+class MemberNameChanged extends Notification implements ShouldQueue
 {
     use Queueable;
 

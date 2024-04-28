@@ -7,9 +7,10 @@ use App\Channels\WebhookChannel;
 use App\Models\MemberRequest;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberRequestApproved extends Notification
+class MemberRequestApproved extends Notification implements ShouldQueue
 {
     use Queueable;
 

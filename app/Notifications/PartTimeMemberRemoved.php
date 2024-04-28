@@ -5,9 +5,10 @@ namespace App\Notifications;
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class PartTimeMemberRemoved extends Notification
+class PartTimeMemberRemoved extends Notification implements ShouldQueue
 {
     use Queueable;
 

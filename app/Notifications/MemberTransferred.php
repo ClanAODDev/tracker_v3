@@ -6,9 +6,10 @@ use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use App\Models\Member;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberTransferred extends Notification
+class MemberTransferred extends Notification implements ShouldQueue
 {
     use Queueable;
 
