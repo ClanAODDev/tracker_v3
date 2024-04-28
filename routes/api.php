@@ -20,18 +20,19 @@ Route::prefix('v1')->group(function () {
     });
 
 
-    Route::post('make-job', function () {
-        Notification::send(sprintf(
-            "%s/channel/%s",
-            config('app.aod.bot_api_base_url'),
-            861037177659064330
-        ), new ITTeamAlert(
-            'A queued job ran',
-            'It was a success!'
-        ));
-    });
+
 });
 
+Route::post('make-job', function () {
+    Notification::send(sprintf(
+        "%s/channel/%s",
+        config('app.aod.bot_api_base_url'),
+        861037177659064330
+    ), new ITTeamAlert(
+        'A queued job ran',
+        'It was a success!'
+    ));
+});
 
 
 // basic
