@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Channels\BotChannel;
 use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +21,7 @@ class DivisionEdited extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -39,6 +39,18 @@ class DivisionEdited extends Notification implements ShouldQueue
             ->to($channel)
             ->message(":tools: **{$authoringUser}** updated division settings for **{$notifiable->name}**")
             ->success()
+            ->send();
+    }
+
+    public function toBot($notifiable)
+    {
+        $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
+
+        return (new BotMessage())
+            ->title($notifiable->name.' Division')
+            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
+            ->message(sprintf('%s updated the division settings', $authoringUser))
+            ->info()
             ->send();
     }
 }
