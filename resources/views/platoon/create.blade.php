@@ -16,7 +16,7 @@
     @endcomponent
 
     <form id="create-platoon" method="post"
-          action="{{ route('savePlatoon', $division->abbreviation) }}">
+          action="{{ route('savePlatoon', $division->slug) }}">
 
         <div class="container-fluid">
             @include('platoon.forms.edit-platoon-form')

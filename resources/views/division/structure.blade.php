@@ -29,7 +29,7 @@
 
                 @can('editDivisionStructure', auth()->user())
                     <a class="btn btn-default"
-                       href="{{ route('division.edit-structure', $division->abbreviation) }}">
+                       href="{{ route('division.edit-structure', $division->slug) }}">
                         <i class="fa fa-wrench text-accent"></i> Go to editor</a>
                 @endcan
 

@@ -19,7 +19,7 @@
         @endslot
     @endcomponent
 
-    <form action="{{ route('division.update-structure', $division->abbreviation) }}" method="post">
+    <form action="{{ route('division.update-structure', $division->slug) }}" method="post">
         {{ csrf_field() }}
         <div class="container-fluid">
             <div class="row">

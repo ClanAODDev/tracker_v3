@@ -1,5 +1,5 @@
 <form id="division-tags" method="post"
-      action="{{ route('updateDivision', $division->abbreviation) }}#division-tags">
+      action="{{ route('updateDivision', $division->slug) }}#division-tags">
 
     <div class="panel repeater">
         <div class="panel-body">

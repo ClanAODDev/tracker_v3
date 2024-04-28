@@ -1,5 +1,5 @@
 <form id="division-settings" method="post"
-      action="{{ route('updateDivision', $division->abbreviation) }}#division-settings">
+      action="{{ route('updateDivision', $division->slug) }}#division-settings">
     {{ method_field('PATCH') }}
 
     <div class="col-md-6">

@@ -44,7 +44,7 @@
 @if (count($division->mismatchedTSMembers) || count($division->misconfiguredDiscordMembers))
     <div class="alert alert-default">
         There are assigned members with voice comms issues. Please review the
-        <a href="{{ route('division.voice-report', $division->abbreviation) }}">Voice Comms Report</a>.
+        <a href="{{ route('division.voice-report', $division->slug) }}">Voice Comms Report</a>.
     </div>
 @endif
 
