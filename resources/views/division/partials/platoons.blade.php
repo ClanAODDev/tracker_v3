@@ -18,7 +18,7 @@
 
     @forelse ($platoons as $platoon)
         <div class="col-md-6">
-            <a href="{{ route('platoon', [$division->abbreviation, $platoon->id]) }}"
+            <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
                class="panel panel-filled platoon" data-platoon-id="{{ $platoon->id }}">
                 <div class="panel-body">
                     <h4 class="m-b-none">
