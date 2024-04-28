@@ -40,7 +40,7 @@ class BotChannel
             // support null object notifications
             $url = $notifiable;
         } else {
-            $url = $notifiable->routeNotificationFor(BotChannel::class, $notification);
+            $url = $notifiable->routeNotificationFor('bot', $notification);
 
             if (!$url) {
                 return;
