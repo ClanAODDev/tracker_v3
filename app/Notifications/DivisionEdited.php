@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\DiscordMessage;
+use App\Channels\WebhookChannel;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +22,7 @@ class DivisionEdited extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [BotChannel::class];
+        return [WebhookChannel::class];
     }
 
     /**
