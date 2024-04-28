@@ -36,8 +36,15 @@ class BotChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (!$url = $notifiable->routeNotificationFor('bot', $notification)) {
-            return;
+        if (is_string($notifiable)) {
+            // support null object notifications
+            $url = $notifiable;
+        } else {
+            $url = $notifiable->routeNotificationFor(BotChannel::class, $notification);
+
+            if (!$url) {
+                return;
+            }
         }
 
         if (method_exists($notification, 'toBot')) {
