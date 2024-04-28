@@ -1,5 +1,5 @@
 <form id="locality-settings" method="post"
-      action="{{ route('updateDivision', $division->abbreviation) }}#locality-settings">
+      action="{{ route('updateDivision', $division->slug) }}#locality-settings">
 
     {{ method_field('PATCH') }}
     <table class="table">

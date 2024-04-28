@@ -2,7 +2,7 @@
     {{ Str::plural($division->locality('platoon')) }}
 
     @can('create', [App\Models\Platoon::class, $division])
-        <a href="{{ route('createPlatoon', $division->abbreviation) }}"
+        <a href="{{ route('.*', $division->slug) }}"
            class="btn btn-default pull-right"><i class="fa fa-plus text-success"></i> NEW
         </a>
     @endcan

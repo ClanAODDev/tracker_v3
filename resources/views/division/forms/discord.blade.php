@@ -1,5 +1,5 @@
 <form id="discord-settings" method="post"
-      action="{{ route('updateDivision', $division->abbreviation) }}#discord-settings">
+      action="{{ route('updateDivision', $division->slug) }}#discord-settings">
 
     {{ method_field('PATCH') }}
 
