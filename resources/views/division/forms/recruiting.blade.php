@@ -1,5 +1,5 @@
 <form id="recruiting-links" method="post"
-      action="{{ route('updateDivision', $division->slug) }}#recruiting-settings">
+      action="{{ route('updateDivision', $division->abbreviation) }}#recruiting-settings">
 
     {{ method_field('PATCH') }}
 

@@ -22,21 +22,21 @@
             <div class="panel">
                 <div class="panel-body">
                     <a class="btn btn-default"
-                       href="{{ route('.*', $division->slug) }}?type=misc">
+                       href="{{ route('division.notes', $division->abbreviation) }}?type=misc">
                         Misc
                     </a>
 
                     <a class="btn btn-default"
-                           href="{{ route('.*', $division->slug) }}?type=negative">
+                           href="{{ route('division.notes', $division->abbreviation) }}?type=negative">
                         Negative
                     </a>
 
                     <a class="btn btn-default"
-                       href="{{ route('.*', $division->slug) }}?type=Positive">
+                       href="{{ route('division.notes', $division->abbreviation) }}?type=Positive">
                         Positive
                     </a>
 
-                    <a href="{{ route('.*', $division->slug) }}"
+                    <a href="{{ route('division.notes', $division->abbreviation) }}"
                        class="btn btn-default text-muted">Reset Filter</a>
 
                 </div>

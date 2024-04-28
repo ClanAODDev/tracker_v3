@@ -44,7 +44,7 @@
                 Create Request
             </div>
             <div class="panel-body">
-                <form action="{{ route('.*', $division->slug) }}" method="post">
+                <form action="{{ route('leave.store', $division->abbreviation) }}" method="post">
                     {!! Form::model(App\Models\Note::class, ['method' => 'post', 'route' => ['leave.store', $division->abbreviation]]) !!}
                     @include('leave.forms.create-leave')
                     {!! Form::close() !!}

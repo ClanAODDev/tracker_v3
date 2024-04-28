@@ -19,7 +19,7 @@
         @foreach ($censuses as $division)
             <tr>
                 <td>
-                    <a href="{{ route('.*', $division->slug) }}">
+                    <a href="{{ route('division.census', $division->abbreviation) }}">
                         <i class="fa fa-search"></i>
                     </a>
                     {{ $division->name }}
