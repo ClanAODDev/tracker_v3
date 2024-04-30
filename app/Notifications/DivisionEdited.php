@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
 use Exception;
