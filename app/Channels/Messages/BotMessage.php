@@ -24,6 +24,13 @@ class BotMessage
         return $this;
     }
 
+    public function thumbnail($thumbnail): static
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
     /**
      * Use info-coded color.
      *
@@ -114,6 +121,7 @@ class BotMessage
                     'url' => $this->url ?? 'https://tracker.clanaod.net',
                 ],
                 'fields' => $this->fields ?? [],
+                'thumbnail' => $this->thumbnail ?? '',
             ]],
         ];
     }
