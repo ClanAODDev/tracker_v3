@@ -15,6 +15,10 @@ class DivisionEdited extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public function __construct(private $division, private $user)
+    {
+    }
+
     /**
      * Get the notification's delivery channels.
      *
@@ -46,12 +50,10 @@ class DivisionEdited extends Notification implements ShouldQueue
 
     public function toBot($notifiable)
     {
-        $authoringUser = auth()->check() ? auth()->user()->name : 'ClanAOD';
-
         return (new BotMessage())
             ->title($notifiable->name.' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
-            ->message(sprintf('%s updated the division settings', $authoringUser))
+            ->message(sprintf('%s updated the division settings', $this->user))
             ->info()
             ->send();
     }

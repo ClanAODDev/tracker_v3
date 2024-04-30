@@ -111,7 +111,7 @@ class DivisionController extends Controller
         $division->recordActivity('updated_settings');
 
         if ($division->settings()->get('slack_alert_division_edited')) {
-            $division->notify(new \App\Notifications\DivisionEdited($division));
+            $division->notify(new \App\Notifications\DivisionEdited($division, auth()->user()->name));
         }
 
         return back();
