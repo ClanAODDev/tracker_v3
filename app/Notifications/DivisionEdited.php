@@ -22,7 +22,7 @@ class DivisionEdited extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
