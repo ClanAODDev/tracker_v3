@@ -25,14 +25,14 @@
         <hr />
 
         <div class="row">
-            @foreach ($divisions as $abbreviation => $name)
+            @foreach ($divisions as $division)
                 <div class="col-sm-4">
-                    <a href="{{ route('recruiting.form', [$abbreviation]) }}" class="panel panel-filled">
+                    <a href="{{ route('recruiting.form', [$division->slug]) }}" class="panel panel-filled">
                         <div class="panel-body">
                             <h4>
-                                <img src="{{ getDivisionIconPath($abbreviation) }}"
+                                <img src="{{ getDivisionIconPath($division->abbreviation) }}"
                                      class="division-icon-medium" />
-                                {{ $name }}
+                                {{ $division->name }}
                             </h4>
                         </div>
                     </a>

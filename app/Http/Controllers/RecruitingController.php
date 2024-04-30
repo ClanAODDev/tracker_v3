@@ -34,7 +34,7 @@ class RecruitingController extends Controller
     {
         $this->authorize('create', Member::class);
 
-        $divisions = Division::active()->where('shutdown_at', null)->get()->pluck('name', 'abbreviation');
+        $divisions = Division::active()->where('shutdown_at', null)->get();
 
         return view('recruit.index', compact('divisions'));
     }
