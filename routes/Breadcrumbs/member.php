@@ -9,14 +9,14 @@ Breadcrumbs::for('member', function ($breadcrumbs, $member, $division) {
         if ($member->platoon_id !== 0 && $member->platoon) {
             $breadcrumbs->push(
                 $member->platoon->name,
-                route('platoon', [$division->abbreviation, $member->platoon->id])
+                route('platoon', [$division->slug, $member->platoon->id])
             );
         }
 
         if ($member->squad_id !== 0 && $member->squad) {
             $breadcrumbs->push(
                 $member->squad->name ?: 'Untitled',
-                route('squad.show', [$division->abbreviation, $member->platoon->id, $member->squad])
+                route('squad.show', [$division->slug, $member->platoon->id, $member->squad])
             );
         }
     }
@@ -34,7 +34,7 @@ Breadcrumbs::for('member-note', function ($breadcrumbs, $member, $division) {
     if ($member->platoon_id !== 0) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
-            route('platoon', [$division->abbreviation, $member->platoon->id])
+            route('platoon', [$division->slug, $member->platoon->id])
         );
     }
 
@@ -56,7 +56,7 @@ Breadcrumbs::for('member-leave', function ($breadcrumbs, $member, $division) {
     if ($member->platoon_id !== 0) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
-            route('platoon', [$division->abbreviation, $member->platoon->id])
+            route('platoon', [$division->slug, $member->platoon->id])
         );
     }
 
@@ -78,7 +78,7 @@ Breadcrumbs::for('member-recruits', function ($breadcrumbs, $member, $division) 
     if ($member->platoon_id !== 0) {
         $breadcrumbs->push(
             ucwords($member->platoon->name),
-            route('platoon', [$division->abbreviation, $member->platoon->id])
+            route('platoon', [$division->slug, $member->platoon->id])
         );
     }
 

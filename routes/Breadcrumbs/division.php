@@ -23,7 +23,7 @@ Breadcrumbs::for('platoon', function ($breadcrumbs, $division, $platoon) {
 Breadcrumbs::for('squad', function ($breadcrumbs, $division, $platoon, $squad) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->slug));
-    $breadcrumbs->push($platoon->name, route('platoon', [$division->abbreviation, $platoon->id]));
+    $breadcrumbs->push($platoon->name, route('platoon', [$division->slug, $platoon->id]));
     $breadcrumbs->push($squad->name ?: 'Untitled');
 });
 

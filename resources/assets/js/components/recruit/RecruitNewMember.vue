@@ -38,7 +38,7 @@ export default {
   methods: {
     prepareRecruitingProcess: function () {
       store.handleName = this.handleName;
-      store.division.abbreviation = this.division;
+      store.division.slug = this.division;
       store.recruiter_id = this.recruiter_id;
       store.getPlatoons(this.division);
       store.getTasks(this.division);

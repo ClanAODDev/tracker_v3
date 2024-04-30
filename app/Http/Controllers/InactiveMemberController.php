@@ -79,7 +79,7 @@ class InactiveMemberController extends Controller
         $member->recordActivity('unflagged');
         $this->showToast($member->name . ' successfully unflagged');
 
-        return redirect(route('division.inactive-members', $member->division->abbreviation));
+        return redirect(route('division.inactive-members', $member->division->slug));
     }
 
     public function removeMember(Member $member, DeleteMember $form)
@@ -90,6 +90,6 @@ class InactiveMemberController extends Controller
         $this->showToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
         $member->recordActivity('removed');
 
-        return redirect(route('division.inactive-members', [$division->abbreviation]) . '#flagged');
+        return redirect(route('division.inactive-members', [$division->slug]) . '#flagged');
     }
 }

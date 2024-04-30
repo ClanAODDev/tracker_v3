@@ -135,7 +135,7 @@ store.getTasks = (division) => {
 store.createMember = () => {
     if (!store.inDemoMode) {
         axios.post(store.base_url + '/add-member/', {
-            division: store.division.abbreviation,
+            division: store.division.slug,
             member_id: store.member_id,
             forum_name: store.forum_name,
             ingame_name: store.ingame_name,
