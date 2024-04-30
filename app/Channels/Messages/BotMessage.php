@@ -121,7 +121,7 @@ class BotMessage
                     'url' => $this->url ?? 'https://tracker.clanaod.net',
                 ],
                 'fields' => $this->fields ?? [],
-                'thumbnail' => $this->thumbnail ?? '',
+                'thumbnail' => ['url' => $this->thumbnail] ?? [],
             ]],
         ];
     }
