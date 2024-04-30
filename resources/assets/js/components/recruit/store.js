@@ -44,7 +44,7 @@ store.nameDoesNotExist = false;
 // division data
 store.handleName = '';
 store.division = {
-    abbreviation: '',
+    slug: '',
     settings: [],
     platoons: [],
     squads: [],

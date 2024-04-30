@@ -202,7 +202,7 @@ export default {
           return false;
         }
 
-        store.getDivisionThreads(store.division.abbreviation);
+        store.getDivisionThreads(store.division.slug);
         store.currentStep = 'step-two';
         store.progress = 50;
       }).catch(() => {

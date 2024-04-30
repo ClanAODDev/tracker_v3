@@ -15,7 +15,7 @@
     @endcomponent
 
     <div class="container-fluid" id="recruiting-container">
-        <recruiting-process division="{{ $division->abbreviation }}"
+        <recruiting-process division="{{ $division->slug }}"
                             recruiter_id="{{ auth()->user()->member->clan_id }}"
                             :ranks="{{ \App\Models\Rank::all()->pluck('abbreviation', 'id') }}"
                             handle-name="{{ $division->handle->label ?? 'Ingame Name' }}"></recruiting-process>
@@ -23,5 +23,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/recruiting.js?v=7.32') !!}"></script>
+    <script src="{!! asset('/js/recruiting.js?v=7.34') !!}"></script>
 @endsection

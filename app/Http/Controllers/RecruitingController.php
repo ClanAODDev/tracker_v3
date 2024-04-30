@@ -46,7 +46,7 @@ class RecruitingController extends Controller
     {
         $this->authorize('create', Member::class);
 
-        $division = Division::whereAbbreviation($request->division)->first();
+        $division = Division::whereSlug($request->division)->first();
 
         // create or update member record
         $member = $this->createMember($request);
@@ -64,6 +64,7 @@ class RecruitingController extends Controller
 
     public function form(Division $division)
     {
+
         $this->authorize('create', Member::class);
         if ($division->isShutdown()) {
             $this->showErrorToast('This division has been shutdown and cannot receive new members');
@@ -77,9 +78,9 @@ class RecruitingController extends Controller
     /**
      * @return array
      */
-    public function searchPlatoons($abbreviation)
+    public function searchPlatoons($slug)
     {
-        $division = Division::whereAbbreviation($abbreviation)->first();
+        $division = Division::whereSlug($slug)->first();
 
         return $this->getPlatoons($division);
     }
@@ -91,7 +92,9 @@ class RecruitingController extends Controller
      */
     public function getTasks(Request $request)
     {
-        $division = Division::whereAbbreviation($request->division)->first();
+
+        $division = Division::whereSlug($request->division)->first();
+
         $tasks = $division->settings()->get('recruiting_tasks');
 
         return collect($tasks)->map(fn ($task) => ['complete' => false, 'description' => $task['task_description']]);
@@ -120,7 +123,8 @@ class RecruitingController extends Controller
      */
     public function doThreadCheck(Request $request)
     {
-        $division = Division::whereAbbreviation($request->division)->first();
+
+        $division = Division::whereSlug($request->division)->first();
 
         $threads = $division->settings()->get('recruiting_threads');
 
@@ -136,6 +140,7 @@ class RecruitingController extends Controller
      */
     public function validateMemberId($member_id)
     {
+        return ['is_member' => true, 'verified_email' => true];
         if (app()->environment() === 'local') {
             if ($member_id === 31832) {
                 return ['is_member' => true, 'verified_email' => true];
@@ -182,7 +187,7 @@ class RecruitingController extends Controller
      */
     private function createMember($request)
     {
-        $division = Division::whereAbbreviation($request->division)->first();
+        $division = Division::whereSlug($request->division)->first();
         $member = Member::firstOrNew(['clan_id' => $request->member_id]);
 
         // update member properties

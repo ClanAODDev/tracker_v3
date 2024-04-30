@@ -11,8 +11,6 @@ class WebsiteController extends Controller
         $channel = (new ClanAOD\Twitch('clanaodstream'))->getChannel();
         $status = $channel->stream === null ? 'offline' : 'online';
 
-        ddd($channel);
-
         $commo = [
             'ts' => AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population_json&'),
             'discord' => AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&'),
