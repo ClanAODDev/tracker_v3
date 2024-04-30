@@ -44,8 +44,6 @@ return [
         'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
     ],
 
-    'ticketing_enabled' => env('TICKETING', false),
-
     'dev_default_user' => env('DEV_DEFAULT_USER', 1),
 
     /*

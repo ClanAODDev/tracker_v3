@@ -101,41 +101,40 @@
         </ul>
     </li>
 
-    @if(config('app.ticketing_enabled'))
-        <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
-            <a href="#tickets" data-toggle="collapse" aria-expanded="false">
-                Help Tickets
-                <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-            </a>
 
-            <ul id="tickets"
-                class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
-                <li class="{{ set_active(['help/tickets/create', 'help/tickets/setup']) }}">
-                    <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
-                </li>
+    <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
+        <a href="#tickets" data-toggle="collapse" aria-expanded="false">
+            Help Tickets
+            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+        </a>
 
+        <ul id="tickets"
+            class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
+            <li class="{{ set_active(['help/tickets/create', 'help/tickets/setup']) }}">
+                <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
+            </li>
+
+            <li>
+                <a href="{{ route('help.tickets.index') . '?filter[caller.name]=' . auth()->user()->name }}">
+                    My Tickets
+                </a>
+            </li>
+
+            @can('manage', \App\Models\Ticket::class)
                 <li>
-                    <a href="{{ route('help.tickets.index') . '?filter[caller.name]=' . auth()->user()->name }}">
-                        My Tickets
+                    <a href="{{ route('help.tickets.index') . '?filter[state]=assigned&filter[owner.name]=' . auth()->user()->name }}">
+                        Assigned To Me
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
+                        All Tickets
                     </a>
                 </li>
 
-                @can('manage', \App\Models\Ticket::class)
-                    <li>
-                        <a href="{{ route('help.tickets.index') . '?filter[state]=assigned&filter[owner.name]=' . auth()->user()->name }}">
-                            Assigned To Me
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
-                            All Tickets
-                        </a>
-                    </li>
-
-                @endcan
-            </ul>
-        </li>
-    @endif
+            @endcan
+        </ul>
+    </li>
 
 
     @if(Auth::user()->isRole('admin'))
@@ -148,7 +147,7 @@
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
                 Member Requests <span
-                        class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
+                    class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
                     ->count() }}</span>
             </a>
         </li>
@@ -213,7 +212,7 @@
     </li>
 
     <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
-                        class="fab
+                    class="fab
     fa-lg
     fa-github"></i></span></a></li>
 </ul>
