@@ -17,14 +17,14 @@
 
     <div class="container-fluid">
 
-        {!! Form::model($platoon, ['method' => 'patch', 'route' => ['updatePlatoon', $division->abbreviation, $platoon]]) !!}
+        {!! Form::model($platoon, ['method' => 'patch', 'route' => ['updatePlatoon', $division->slug, $platoon]]) !!}
         @include('platoon.forms.edit-platoon-form')
         {!! Form::close() !!}
 
         @can('delete', $platoon)
             <hr />
 
-            {!! Form::model($platoon, ['method' => 'delete', 'route' => ['updatePlatoon', $division->abbreviation, $platoon]]) !!}
+            {!! Form::model($platoon, ['method' => 'delete', 'route' => ['updatePlatoon', $division->slug, $platoon]]) !!}
             @include('platoon.forms.delete-platoon-form')
             {!! Form::close() !!}
 

@@ -5,7 +5,7 @@
             <span class="hidden-xs hidden-sm">Manage Members</span>
         </a>
 
-        <a href="{{ route('editPlatoon', [$division->abbreviation, $platoon]) }}"
+        <a href="{{ route('editPlatoon', [$division->slug, $platoon]) }}"
            title="Edit {{ $platoon->name }}" class="btn btn-default">
             <i class="fa fa-wrench text-accent"></i>
             <span class="hidden-xs hidden-sm">Manage {{ $division->locality('platoon') }}</span>
