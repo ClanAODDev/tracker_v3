@@ -20,13 +20,13 @@
 
     <div class="container-fluid">
 
-        {!! Form::model($squad, ['method' => 'patch', 'route' => ['updateSquad', $division->abbreviation, $platoon, $squad]]) !!}
+        {!! Form::model($squad, ['method' => 'patch', 'route' => ['updateSquad', $division->slug, $platoon, $squad]]) !!}
         @include('squad.forms.edit-squad-form')
         {!! Form::close() !!}
 
         @can('delete', $squad)
             <hr />
-            {!! Form::model($squad, ['method' => 'delete', 'route' => ['deleteSquad', $division->abbreviation, $platoon, $squad]]) !!}
+            {!! Form::model($squad, ['method' => 'delete', 'route' => ['deleteSquad', $division->slug, $platoon, $squad]]) !!}
             @include('squad.forms.delete-squad-form')
             {!! Form::close() !!}
         @endcan
