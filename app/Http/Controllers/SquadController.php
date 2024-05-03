@@ -66,7 +66,7 @@ class SquadController extends Controller
 
         $this->showToast(ucwords($division->locality('squad')) . ' has been created!');
 
-        return redirect()->route('platoon', [$division->abbreviation, $platoon]);
+        return redirect()->route('platoon', [$division->slug, $platoon]);
     }
 
     public function isMemberOfDivision(Division $division, $request): bool
@@ -101,7 +101,7 @@ class SquadController extends Controller
 
         $this->showToast('Squad has been updated');
 
-        return redirect()->route('squad.show', [$division->abbreviation, $platoon, $squad]);
+        return redirect()->route('squad.show', [$division->slug, $platoon, $squad]);
     }
 
     /**
@@ -113,7 +113,7 @@ class SquadController extends Controller
 
         $this->showToast('Squad has been deleted');
 
-        return redirect()->route('platoon', [$division->abbreviation, $platoon]);
+        return redirect()->route('platoon', [$division->slug, $platoon]);
     }
 
     /**

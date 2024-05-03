@@ -107,7 +107,7 @@ class LeaveController extends Controller
 
         $this->showToast('Leave of absence created!');
 
-        return redirect(route('leave.index', $division->abbreviation));
+        return redirect(route('leave.index', $division->slug));
     }
 
     /**

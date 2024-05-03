@@ -235,9 +235,7 @@ class MemberController extends Controller
             ucwords($member->name ?? 'Member') . ' has been removed.'
         );
 
-        return redirect()->route('division', [
-            $division->abbreviation,
-        ]);
+        return redirect()->route('division', [$division->slug]);
     }
 
     public function assignPlatoon($member)

@@ -66,7 +66,7 @@ class PlatoonController extends Controller
 
         $this->showToast("{$division->locality('platoon')} has been created!");
 
-        return redirect()->route('division', $division->abbreviation);
+        return redirect()->route('division', $division->slug);
     }
 
     /**
@@ -150,7 +150,7 @@ class PlatoonController extends Controller
 
         $this->showToast($toastMessage);
 
-        return redirect()->route('platoon', [$division->abbreviation, $platoon]);
+        return redirect()->route('platoon', [$division->slug, $platoon]);
     }
 
     /**
@@ -164,7 +164,7 @@ class PlatoonController extends Controller
 
         $this->showToast('Platoon has been deleted');
 
-        return redirect()->route('division', $division->abbreviation);
+        return redirect()->route('division', $division->slug);
     }
 
     public function manageSquads($division, $platoon)
