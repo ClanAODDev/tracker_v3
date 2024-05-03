@@ -36,6 +36,10 @@ class WebhookChannel
      */
     public function send($notifiable, Notification $notification)
     {
+        if (!config('app.aod.discord_webhook')) {
+            throw new \Exception('AOD Discord Webhook not defined!');
+        }
+
         if (! $url = $notifiable->routeNotificationFor('webhook', $notification)) {
             return;
         }
