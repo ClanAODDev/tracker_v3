@@ -8,7 +8,7 @@
 
             <div class="panel-body">
 
-                <div class="row">
+                <div class="row m-t-xs">
                     <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
                             @if ($member->isPending)
@@ -39,10 +39,17 @@
                     </div>
 
                     <div class="col-md-3 col-xs-12 text-center">
-                        <h2 class="no-margins" title="{!! $discordStatusLastSeen !!}">
-                            @include('member.partials.voice-status', ['status' => $member->last_voice_status])
+                        <h2 class="no-margins">
+                            @if ($member->last_voice_activity)
+                                {{ Carbon::parse($member->last_voice_activity)->diffInDays() }}
+                                {{ \Illuminate\Support\Str::plural('day',
+                            $member->last_voice_activity->diffInDays()) }}
+                            @else
+                                --
+                            @endif
+
                         </h2>
-                        Discord <span class="c-white">Status</span>
+                        Since Last <span class="c-white">Discord Voice Activity</span>
                     </div>
                 </div>
 
