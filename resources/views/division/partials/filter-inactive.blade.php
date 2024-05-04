@@ -8,12 +8,12 @@
                     onChange="top.location.href=this.options[this.selectedIndex].value;">
                 <option value="">None selected</option>
                 @foreach ($division->platoons as $platoon)
-                    <option {{ (request()->platoon && request()->platoon->id == $platoon->id ? 'selected' : null) }} value="{{ route($requestPath, [$division->abbreviation, $platoon->id]) }}">{{ $platoon->name }}</option>
+                    <option {{ (request()->platoon && request()->platoon->id == $platoon->id ? 'selected' : null) }} value="{{ route($requestPath, [$division->slug, $platoon->id]) }}">{{ $platoon->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="col-md-3 text-right">
-            <a href="{{ route($requestPath, $division->abbreviation) }}"
+            <a href="{{ route($requestPath, $division->slug) }}"
                class="btn btn-default">Reset Filter</a>
         </div>
     </form>
