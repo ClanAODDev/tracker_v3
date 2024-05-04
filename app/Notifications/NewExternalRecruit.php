@@ -15,12 +15,15 @@ class NewExternalRecruit extends Notification implements ShouldQueue
 
     private $member;
 
+    private User $recruiter;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct($member)
+    public function __construct($member, User $recruiter)
     {
         $this->member = $member;
+        $this->recruiter = $recruiter;
     }
 
     /**
@@ -44,7 +47,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
     {
         $channel = $notifiable->settings()->get('officer_channel');
 
-        $user = auth()->user();
+        $recruiter = $this->recruiter;
 
         return (new DiscordMessage())
             ->error()
@@ -52,7 +55,8 @@ class NewExternalRecruit extends Notification implements ShouldQueue
             ->fields([
                 [
                     'name' => '**EXTERNAL RECRUIT**',
-                    'value' => addslashes("{$user->name} from {$user->member->division->name} just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
+                    'value' => addslashes("{$recruiter->name} from {$recruiter->member->division->name} just recruited 
+                    `{$this->member->name}` into the {$notifiable->name} Division!"),
                 ],
                 [
                     'name' => 'View member profile',

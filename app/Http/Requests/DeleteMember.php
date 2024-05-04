@@ -41,7 +41,7 @@ class DeleteMember extends FormRequest
 
         if ($member->division()->exists()) {
             if ($member->division->settings()->get('slack_alert_removed_member')) {
-                $member->division->notify(new MemberRemoved($member));
+                $member->division->notify(new MemberRemoved($member, auth()->user()));
             }
         }
 

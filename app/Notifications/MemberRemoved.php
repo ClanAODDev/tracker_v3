@@ -16,12 +16,15 @@ class MemberRemoved extends Notification implements ShouldQueue
 
     private $member;
 
+    private $remover;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct($member)
+    public function __construct($member, User $remover)
     {
         $this->member = $member;
+        $this->remover = $remover;
     }
 
     /**
@@ -44,13 +47,15 @@ class MemberRemoved extends Notification implements ShouldQueue
     {
         $channel = $notifiable->settings()->get('officer_channel');
 
+        $remover = $this->remover;
+
         return (new DiscordMessage())
             ->info()
             ->to($channel)
             ->fields([
                 [
                     'name' => '**MEMBER REMOVED**',
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$notifiable->name} by " . auth()->user()->name),
+                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$notifiable->name} by " . $remover->name),
                 ],
                 [
                     'name' => 'View Member Profile',

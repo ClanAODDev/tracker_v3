@@ -15,14 +15,17 @@ class NewMemberRecruited extends Notification implements ShouldQueue
 
     private $member;
 
+    private User $recruiter;
+
     /**
      * Create a new notification instance.
      *
      * @param  $division
      */
-    public function __construct($member)
+    public function __construct($member, User $recruiter)
     {
         $this->member = $member;
+        $this->recruiter = $recruiter;
     }
 
     /**
@@ -46,13 +49,15 @@ class NewMemberRecruited extends Notification implements ShouldQueue
     {
         $channel = $notifiable->settings()->get('officer_channel');
 
+        $recruiter = $this->recruiter;
+
         return (new DiscordMessage())
             ->success()
             ->to($channel)
             ->fields([
                 [
                     'name' => '**NEW MEMBER RECRUITED**',
-                    'value' => addslashes(':crossed_swords: ' . auth()->user()->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
+                    'value' => addslashes(':crossed_swords: ' . $recruiter->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
                 ],
                 [
                     'name' => 'View Member Profile',
