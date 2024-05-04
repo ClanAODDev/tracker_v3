@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
+use App\Models\User;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
