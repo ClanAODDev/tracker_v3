@@ -11,8 +11,6 @@
 
             @php
                 $iconClass = 'fas fa-trophy';
-                $iconColor = '#cd7f32';
-                $iconTitle = '5+ Years';
 
                 if ($anniversary->years_since_joined >= 20) {
                     $iconClass .= ' fa-lg';
@@ -26,10 +24,16 @@
                     $iconClass .= ' fa-sm';
                     $iconColor = '#C0C0C0';
                     $iconTitle = '10+ Years';
+                } elseif ($anniversary->years_since_joined >= 5){
+                    $iconClass .= ' fa-sm';
+                    $iconColor = '#cd7f32';
+                    $iconTitle = '5+ Years';
                 }
             @endphp
 
-            <i class="{{ $iconClass }}" style="color: {{ $iconColor }};" title="{{ $iconTitle }}"></i>
+            @if ($anniversary->years_since_joined >= 5)
+                <i class="{{ $iconClass }}" style="color: {{ $iconColor }};" title="{{ $iconTitle }}"></i>
+            @endif
 
             {{ $anniversary->name }}
             <span class="label label-success text-uppercase" style="color:#000;">
