@@ -170,6 +170,7 @@ class MemberRequestController extends Controller
 
         $memberRequest->division->notify(new MemberRequestPutOnHold(
             $memberRequest,
+            auth()->user(),
             $memberRequest->member
         ));
 
