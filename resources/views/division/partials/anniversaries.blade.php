@@ -8,15 +8,31 @@
         <a href="{{ doForumFunction([$anniversary->clan_id], 'forumProfile') }}&tab=myawards#myawards"
            class="btn btn-default" style="margin-bottom:15px;" target="_blank"
         >
-            @if($anniversary->years_since_joined >= 20)
-                <i class="fas fa-trophy fa-lg" style="color: #E5E4E2;" title="20+ Years"></i>
-            @elseif($anniversary->years_since_joined >= 15)
-                <i class="fas fa-trophy fa-md" style="color: #D4AF37;" title="15+ Years"></i>
-            @elseif($anniversary->years_since_joined >= 10)
-                <i class="fas fa-trophy fa-sm" style="color: #C0C0C0;" title="10+ Years"></i>
-            @elseif($anniversary->years_since_joined >= 5)
-                <i class="fas fa-trophy fa-sm" style="color: #cd7f32;" title="5+ Years"></i>
-            @endif
+            
+        @php
+            
+            $iconClass = 'fas fa-trophy';
+            $iconColor = '#cd7f32';
+            $iconTitle = '5+ Years';
+        
+            if ($anniversary->years_since_joined >= 20) {
+                $iconClass .= ' fa-lg';
+                $iconColor = '#E5E4E2';
+                $iconTitle = '20+ Years';
+            } elseif ($anniversary->years_since_joined >= 15) {
+                $iconClass .= ' fa-md';
+                $iconColor = '#D4AF37';
+                $iconTitle = '15+ Years';
+            } elseif ($anniversary->years_since_joined >= 10) {
+                $iconClass .= ' fa-sm';
+                $iconColor = '#C0C0C0';
+                $iconTitle = '10+ Years';
+            }
+            
+        @endphp
+
+<i class="{{ $iconClass }}" style="color: {{ $iconColor }};" title="{{ $iconTitle }}"></i>
+
 
             {{ $anniversary->name }}
             <span class="label label-success text-uppercase" style="color:#000;">
