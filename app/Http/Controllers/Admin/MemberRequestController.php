@@ -31,23 +31,23 @@ class MemberRequestController extends Controller
         $this->authorize('manage', MemberRequest::class);
 
         $pending = MemberRequest::pending()
-            ->with('member', 'member.rank', 'requester', 'division')
-            ->get();
+                                ->with('member', 'member.rank', 'requester', 'division')
+                                ->get();
 
         $approved = MemberRequest::approved()
-            ->with('member', 'member.rank', 'approver', 'division')
-            ->orderBy('approved_at', 'desc')
-            ->where('processed_at', null)
-            ->get();
+                                 ->with('member', 'member.rank', 'approver', 'division')
+                                 ->orderBy('approved_at', 'desc')
+                                 ->where('processed_at', null)
+                                 ->get();
 
         $onHold = MemberRequest::onHold()
-            ->with('member', 'member.rank', 'approver', 'division')
-            ->get();
+                               ->with('member', 'member.rank', 'approver', 'division')
+                               ->get();
 
         if ($this->isDivisionLeadership()) {
-            $pending = $this->filterByDivision($pending);
+            $pending  = $this->filterByDivision($pending);
             $approved = $this->filterByDivision($approved);
-            $onHold = $this->filterByDivision($onHold);
+            $onHold   = $this->filterByDivision($onHold);
         }
 
         return view('admin.member-requests', compact('pending', 'approved', 'onHold'));
@@ -58,9 +58,9 @@ class MemberRequestController extends Controller
         $this->authorize('manage', MemberRequest::class);
 
         $requests = MemberRequest::where('approved_at', '>=', now()->subDays(3))
-            ->with('member', 'member.rank', 'approver', 'division')
-            ->orderByDesc('approved_at')
-            ->get();
+                                 ->with('member', 'member.rank', 'approver', 'division')
+                                 ->orderByDesc('approved_at')
+                                 ->get();
 
         if ($this->isDivisionLeadership()) {
             $requests = $this->filterByDivision($requests);
@@ -75,7 +75,7 @@ class MemberRequestController extends Controller
     public function reprocess($requestId)
     {
         $request = MemberRequest::find($requestId)
-            ->load('member', 'member.rank', 'approver', 'division');
+                                ->load('member', 'member.rank', 'approver', 'division');
 
         if (request()->isMethod('post')) {
             $request->update([
@@ -101,7 +101,10 @@ class MemberRequestController extends Controller
 
         $memberRequest->removeHold();
 
-        $memberRequest->division->notify(new MemberRequestHoldLifted($memberRequest));
+        $memberRequest->division->notify(new MemberRequestHoldLifted(
+            $memberRequest,
+            $memberRequest->member
+        ));
 
         return redirect(route('admin.member-request.index'));
     }
@@ -113,7 +116,11 @@ class MemberRequestController extends Controller
         $memberRequest = MemberRequest::find($requestId);
 
         if ($memberRequest->division->settings()->get('slack_alert_member_approved') === 'on') {
-            $memberRequest->division->notify(new MemberRequestApproved($memberRequest, auth()->user()));
+            $memberRequest->division->notify(new MemberRequestApproved(
+                $memberRequest,
+                auth()->user(),
+                $memberRequest
+            ));
         }
 
         $memberRequest->approve();
@@ -124,7 +131,7 @@ class MemberRequestController extends Controller
     public function handleNameChange(Request $request, MemberRequest $memberRequest)
     {
         $member = Member::whereClanId($memberRequest->member_id)
-            ->first()->update([
+                        ->first()->update([
                 'name' => $request->newName,
             ]);
 
@@ -161,7 +168,10 @@ class MemberRequestController extends Controller
 
         $memberRequest->placeOnHold($request->notes);
 
-        $memberRequest->division->notify(new MemberRequestPutOnHold($memberRequest));
+        $memberRequest->division->notify(new MemberRequestPutOnHold(
+            $memberRequest,
+            $memberRequest->member
+        ));
 
         return $memberRequest;
     }

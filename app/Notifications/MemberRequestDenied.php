@@ -6,6 +6,7 @@ namespace App\Notifications;
 
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
+use App\Models\Member;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,13 +17,15 @@ class MemberRequestDenied extends Notification implements ShouldQueue
     use Queueable;
 
     private $request;
+    private Member $member;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(MemberRequest $memberRequest)
+    public function __construct(MemberRequest $memberRequest, Member $member)
     {
         $this->request = $memberRequest->with('member');
+        $this->member = $member;
     }
 
     /**
@@ -51,7 +54,7 @@ class MemberRequestDenied extends Notification implements ShouldQueue
             ->fields([
                 [
                     'name' => '**MEMBER STATUS REQUEST**',
-                    'value' => addslashes(":skull_crossbones: A member status request for `{$this->request->member->name}` was denied."),
+                    'value' => addslashes(":skull_crossbones: A member status request for `{$this->member->name}` was denied."),
                 ],
                 [
                     'name' => 'The reason for the denial was:',

@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
+use App\Models\Member;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,13 +15,15 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
     use Queueable;
 
     private $request;
+    private Member $member;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(MemberRequest $memberRequest)
+    public function __construct(MemberRequest $memberRequest, Member $member)
     {
         $this->request = $memberRequest->with('member');
+        $this->member = $member;
     }
 
     /**
@@ -45,7 +48,7 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
 
         $approver = auth()->user()->member;
 
-        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->request->member->name}` was put on hold by {$approver->name} for the following reason: `{$this->request->notes}`");
+        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$approver->name} for the following reason: `{$this->request->notes}`");
 
         return (new DiscordMessage())
             ->to($channel)

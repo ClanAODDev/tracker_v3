@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
+use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\User;
 use Exception;
@@ -22,9 +23,10 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(MemberRequest $memberRequest, User $approver)
+    public function __construct(MemberRequest $memberRequest, User $approver, Member $member)
     {
         $this->request = $memberRequest->with('member');
+        $this->member = $member;
         $this->approver = $approver;
     }
 
@@ -49,7 +51,7 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     {
         $channel = $notifiable->settings()->get('officer_channel');
 
-        $message = addslashes("**MEMBER STATUS REQUEST** - :thumbsup: A member status request for `{$this->request->member->name}` was approved by {$this->approver->name}!");
+        $message = addslashes("**MEMBER STATUS REQUEST** - :thumbsup: A member status request for `{$this->member->name}` was approved by {$this->approver->name}!");
 
         return (new DiscordMessage())
             ->to($channel)

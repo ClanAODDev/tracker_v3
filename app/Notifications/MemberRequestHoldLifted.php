@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Channels\Messages\DiscordMessage;
 use App\Channels\WebhookChannel;
+use App\Models\Member;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,12 +14,15 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    private MemberRequest $memberRequest;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(MemberRequest $memberRequest)
+    public function __construct(MemberRequest $memberRequest, Member $member)
     {
         $this->request = $memberRequest->with('member');
+        $this->memberRequest = $memberRequest;
     }
 
     /**
@@ -42,7 +46,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
     {
         $channel = $notifiable->settings()->get('officer_channel');
 
-        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->request->member->name}` has been lifted. Your request will be processed soon.");
+        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon.");
 
         return (new DiscordMessage())
             ->to($channel)
