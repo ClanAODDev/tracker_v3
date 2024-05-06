@@ -8,14 +8,14 @@
         <a href="{{ doForumFunction([$anniversary->clan_id], 'forumProfile') }}&tab=myawards#myawards"
            class="btn btn-default" style="margin-bottom:15px;" target="_blank"
         >
-            @if($anniversary->years_since_joined >= 5)
-                <i class="fas fa-trophy fa-sm" style="color: #cd7f32;" title="5+ Years"></i>
-            @elseif($anniversary->years_since_joined >= 10)
-                <i class="fas fa-trophy fa-sm" style="color: #C0C0C0;" title="10+ Years"></i>
+            @if($anniversary->years_since_joined >= 20)
+                <i class="fas fa-trophy fa-lg" style="color: #E5E4E2;" title="20+ Years"></i>
             @elseif($anniversary->years_since_joined >= 15)
                 <i class="fas fa-trophy fa-md" style="color: #D4AF37;" title="15+ Years"></i>
-            @elseif($anniversary->years_since_joined >= 20)
-                <i class="fas fa-trophy fa-lg" title="20+ Years" style="color: #E5E4E2;"></i>
+            @elseif($anniversary->years_since_joined >= 10)
+                <i class="fas fa-trophy fa-sm" style="color: #C0C0C0;" title="10+ Years"></i>
+            @elseif($anniversary->years_since_joined >= 5)
+                <i class="fas fa-trophy fa-sm" style="color: #cd7f32;" title="5+ Years"></i>
             @endif
 
             {{ $anniversary->name }}
