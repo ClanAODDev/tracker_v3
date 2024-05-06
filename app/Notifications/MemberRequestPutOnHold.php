@@ -49,7 +49,7 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
     {
         $channel = $notifiable->settings()->get('officer_channel');
 
-        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$approver->name} for the following reason: `{$this->request->notes}`");
+        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$this->approver->name} for the following reason: `{$this->request->notes}`");
 
         return (new DiscordMessage())
             ->to($channel)
