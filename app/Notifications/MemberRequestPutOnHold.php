@@ -22,7 +22,7 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
      */
     public function __construct(MemberRequest $memberRequest, Member $member)
     {
-        $this->request = $memberRequest->with('member');
+        $this->request = $memberRequest;
         $this->member = $member;
     }
 
