@@ -95,15 +95,15 @@ class DivisionRepository
                 ->whereRaw("TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) >= 1")
                 ->whereMonth('join_date', now()->month)
                 ->where('division_id', $division->id)
+                ->orderByDesc('years_since_joined')
+                ->orderBy('name')
                 ->get()
                 ->map(function ($member) {
                     // Assuming the anniversary if the day hasn't yet occurred this month
                     $member->years_since_joined += $member->adjustment;
                     unset($member->adjustment);
                     return $member;
-                })
-                ->sortBy('name')
-                ->sortByDesc('years_since_joined');
+                });
     }
 
     /**
