@@ -18,7 +18,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
      */
     public function __construct(MemberRequest $memberRequest)
     {
-        $this->request = $memberRequest;
+        $this->request = $memberRequest->with('member');
     }
 
     /**

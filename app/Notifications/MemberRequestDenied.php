@@ -22,7 +22,7 @@ class MemberRequestDenied extends Notification implements ShouldQueue
      */
     public function __construct(MemberRequest $memberRequest)
     {
-        $this->request = $memberRequest;
+        $this->request = $memberRequest->with('member');
     }
 
     /**

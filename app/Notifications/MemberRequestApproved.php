@@ -24,7 +24,7 @@ class MemberRequestApproved extends Notification implements ShouldQueue
      */
     public function __construct(MemberRequest $memberRequest, User $approver)
     {
-        $this->request = $memberRequest;
+        $this->request = $memberRequest->with('member');
         $this->approver = $approver;
     }
 
