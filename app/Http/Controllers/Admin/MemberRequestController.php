@@ -119,7 +119,7 @@ class MemberRequestController extends Controller
             $memberRequest->division->notify(new MemberRequestApproved(
                 $memberRequest,
                 auth()->user(),
-                $memberRequest
+                $memberRequest->member
             ));
         }
 
