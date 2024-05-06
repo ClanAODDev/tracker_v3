@@ -90,14 +90,20 @@ class DivisionRepository
     public function getDivisionAnniversaries(Division $division)
     {
         return \App\Models\Member::select('name', 'join_date', 'clan_id')
-            ->selectRaw("TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) AS years_since_joined")
-            ->whereRaw("TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) >= 1")
-            ->whereMonth('join_date', now()->month)
-            ->where('division_id', $division->id)
-            ->orderByDesc('years_since_joined')
-            ->orderBy('name')
-            ->get();
-
+                ->selectRaw("TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) AS years_since_joined, 
+                     IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) AS adjustment")
+                ->whereRaw("TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) >= 1")
+                ->whereMonth('join_date', now()->month)
+                ->where('division_id', $division->id)
+                ->get()
+                ->map(function ($member) {
+                    // Assuming the anniversary if the day hasn't yet occurred this month
+                    $member->years_since_joined += $member->adjustment;
+                    unset($member->adjustment);
+                    return $member;
+                })
+                ->sortBy('name')
+                ->sortByDesc('years_since_joined');
     }
 
     /**
