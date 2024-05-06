@@ -16,7 +16,7 @@ class MemberRequestDenied extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $request;
+    private MemberRequest $request;
     private Member $member;
 
     /**

@@ -14,7 +14,8 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private MemberRequest $memberRequest;
+    private MemberRequest $request;
+    private Member $member;
 
     /**
      * Create a new notification instance.
@@ -22,7 +23,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
     public function __construct(MemberRequest $memberRequest, Member $member)
     {
         $this->request = $memberRequest;
-        $this->memberRequest = $memberRequest;
+        $this->member = $member;
     }
 
     /**

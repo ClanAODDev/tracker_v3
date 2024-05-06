@@ -17,8 +17,8 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     use Queueable;
 
     private $request;
-
     private User $approver;
+    private Member $member;
 
     /**
      * Create a new notification instance.
