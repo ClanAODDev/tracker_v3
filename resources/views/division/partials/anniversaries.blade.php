@@ -31,8 +31,7 @@
             
         @endphp
 
-<i class="{{ $iconClass }}" style="color: {{ $iconColor }};" title="{{ $iconTitle }}"></i>
-
+            <i class="{{ $iconClass }}" style="color: {{ $iconColor }};" title="{{ $iconTitle }}"></i>
 
             {{ $anniversary->name }}
             <span class="label label-success text-uppercase" style="color:#000;">
