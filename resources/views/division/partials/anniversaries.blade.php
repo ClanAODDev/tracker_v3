@@ -20,7 +20,8 @@
 
             {{ $anniversary->name }}
             <span class="label label-success text-uppercase" style="color:#000;">
-                {{ $anniversary->years_since_joined }} {{ str()->plural('yr', $anniversary->years_since_joined) }}
+                <?php $extraYear = ((Carbon::parse($anniversary->join_date)->day > Carbon::now()->day) ? 1 : 0) ?>
+                {{ $anniversary->years_since_joined + $extraYear }} {{ str()->plural('yr', $anniversary->years_since_joined + $extraYear) }}
             </span>
         </a>
     @endforeach
