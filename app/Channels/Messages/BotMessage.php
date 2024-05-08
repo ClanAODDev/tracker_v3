@@ -130,7 +130,7 @@ class BotMessage
          */
         return [
             'embeds' => [[
-                'co2lor' => $this->color ?? 0,
+                'color' => $this->color ?? 0,
                 'description' => $this->message ?? "",
                 'author' => [
                     'name' => $this->title,
