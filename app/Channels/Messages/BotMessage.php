@@ -17,7 +17,6 @@ class BotMessage
     private mixed $message;
     private int $color;
     private $thumbnail = [];
-    private $messageId;
 
     public function title($title)
     {
@@ -93,17 +92,6 @@ class BotMessage
     }
 
     /**
-     * @param $messageId
-     * @return $this
-     */
-    public function messageId($messageId)
-    {
-        $this->messageId = $messageId;
-
-        return $this;
-    }
-
-    /**
      * @return array
      *
      * @throws Exception
@@ -138,7 +126,6 @@ class BotMessage
                     'url' => $this->url ?? 'https://tracker.clanaod.net',
                 ],
                 'fields' => $this->fields ?? [],
-                'id' => $this->messageId,
                 'thumbnail' => ['url' => $this->thumbnail] ?? [],
             ]],
         ];
