@@ -33,7 +33,7 @@ return [
         'discord_webhook' => env('DISCORD_WEBHOOK'),
         'token' => env('AOD_TOKEN'),
         'discord_bot_token' => env('AOD_BOT_TOKEN'),
-        'bot_api_base_url' => 'https://127.0.0.1:4443/api',
+        'bot_api_base_url' => env('BOT_API_BASE_URL'),
         'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
         'ingame-reports' => [],
         'api-keys' => [],
