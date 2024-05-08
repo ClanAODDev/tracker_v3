@@ -2,8 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
 use App\Models\Member;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,27 +32,25 @@ class MemberTransferred extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
-     * @param  mixed  $notifiable
-     * @return array
-     *
+     * @param $notifiable
+     * @return array[]
      * @throws \Exception
      */
-    public function toWebhook($notifiable)
+    public function toBot($notifiable)
     {
-        $channel = $notifiable->settings()->get('officer_channel');
-
-        return (new DiscordMessage())
-            ->info()
-            ->to($channel)
+        return (new BotMessage())
+            ->title($notifiable->name.' Division')
+            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [
                     'name' => '**MEMBER TRANSFER**',
                     'value' => addslashes(":recycle: {$this->member->name} [{$this->member->clan_id}] transferred to {$notifiable->name}"),
                 ],
-            ])->send();
+            ])->info()
+            ->send();
     }
 }

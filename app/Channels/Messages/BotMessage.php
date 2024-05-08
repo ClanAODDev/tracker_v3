@@ -16,6 +16,8 @@ class BotMessage
     private $fields = [];
     private mixed $message;
     private int $color;
+    private $thumbnail = [];
+    private $messageId;
 
     public function title($title)
     {
@@ -24,7 +26,7 @@ class BotMessage
         return $this;
     }
 
-    public function thumbnail($thumbnail): static
+    public function thumbnail($thumbnail)
     {
         $this->thumbnail = $thumbnail;
 
@@ -91,14 +93,29 @@ class BotMessage
     }
 
     /**
+     * @param $messageId
+     * @return $this
+     */
+    public function messageId($messageId)
+    {
+        $this->messageId = $messageId;
+
+        return $this;
+    }
+
+    /**
      * @return array
      *
      * @throws Exception
      */
     public function send(): array
     {
-        if (!isset($this->message) || !isset($this->title)) {
-            throw new Exception('A title and message must be defined');
+        if (!isset($this->title)) {
+            throw new Exception('A title must be defined');
+        }
+
+        if (!isset($this->message)  && !isset($this->fields)) {
+            throw new Exception('A message or fields must be defined');
         }
 
         /**
@@ -113,14 +130,15 @@ class BotMessage
          */
         return [
             'embeds' => [[
-                'color' => $this->color ?? 0,
-                'description' => $this->message,
+                'co2lor' => $this->color ?? 0,
+                'description' => $this->message ?? "",
                 'author' => [
                     'name' => $this->title,
                     'icon_url' => 'http://tracker.clanaod.net/images/logo_v2.png',
                     'url' => $this->url ?? 'https://tracker.clanaod.net',
                 ],
                 'fields' => $this->fields ?? [],
+                'id' => $this->messageId,
                 'thumbnail' => ['url' => $this->thumbnail] ?? [],
             ]],
         ];

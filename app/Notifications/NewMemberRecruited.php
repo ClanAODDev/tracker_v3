@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use App\Models\User;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -37,7 +37,7 @@ class NewMemberRecruited extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -46,24 +46,24 @@ class NewMemberRecruited extends Notification implements ShouldQueue
      *
      * @throws Exception
      */
-    public function toWebhook($notifiable)
+    public function toBot($notifiable)
     {
-        $channel = $notifiable->settings()->get('officer_channel');
-
         $recruiter = $this->recruiter;
 
-        return (new DiscordMessage())
-            ->success()
-            ->to($channel)
+        return (new BotMessage())
+            ->title($notifiable->name.' Division')
+            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [
-                    'name' => '**NEW MEMBER RECRUITED**',
+                    'name' => 'New Member Recruited',
                     'value' => addslashes(':crossed_swords: ' . $recruiter->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
                 ],
                 [
                     'name' => 'View Member Profile',
                     'value' => route('member', $this->member->getUrlParams()),
                 ],
-            ])->send();
+            ])
+            ->success()
+            ->send();
     }
 }
