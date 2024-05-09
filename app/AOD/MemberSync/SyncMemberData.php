@@ -130,16 +130,6 @@ class SyncMemberData
 
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
 
-                // @TODO: figure out why this isn't working
-                (new DiscordMessage())
-                    ->to('admin')
-                    ->message(sprintf('Tracker sync error: %s - Error syncing %s - %d',
-                        $exception->getMessage(),
-                        $member->name,
-                        $member->clan_id,
-                    ))->error()
-                    ->send();
-
                 continue;
             }
 
