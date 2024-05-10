@@ -3624,6 +3624,18 @@ img.division-icon-small {
     background-size: cover;
 }
 
+img.platoon-icon-large {
+    width: 48px;
+}
+
+img.platoon-icon-medium {
+    width: 32px;
+}
+
+img.platoon-icon-small {
+    width: 16px;
+}
+
 .bc-wrapper {
     position: relative;
 }
