@@ -25,9 +25,10 @@
                     <h4 class="m-b-none m-t-sm">
                         @if ($platoon->logo)
                             <img src="{{ $platoon->logo }}"
-                                 class="pull-right division-icon-large"/>
+                                 class="pull-right platoon-icon-xl"/>
                         @endif
                         {{ $platoon->name }}
+                        <label class="badge">{{ $platoon->members_count }} Assigned</label>
                     </h4>
 
                     @if ($platoon->leader)
@@ -47,7 +48,6 @@
                                 {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
                             </div>
                         @endforeach
-                        <label class="badge pull-right">{{ $platoon->members_count }} Assigned</label>
                     </div>
                 </div>
             </a>
