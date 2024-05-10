@@ -21,9 +21,13 @@
             <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
                class="panel panel-filled platoon" data-platoon-id="{{ $platoon->id }}">
                 <div class="panel-body">
-                    <h4 class="m-b-none">
+
+                    <h4 class="m-b-none m-t-sm">
+                        @if ($platoon->logo)
+                            <img src="{{ $platoon->logo }}"
+                                 class="pull-right division-icon-large"/>
+                        @endif
                         {{ $platoon->name }}
-                        <label class="badge pull-right">{{ $platoon->members_count }} Assigned</label>
                     </h4>
 
                     @if ($platoon->leader)
@@ -43,6 +47,7 @@
                                 {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
                             </div>
                         @endforeach
+                        <label class="badge pull-right">{{ $platoon->members_count }} Assigned</label>
                     </div>
                 </div>
             </a>
