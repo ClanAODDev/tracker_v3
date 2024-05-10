@@ -1,8 +1,5 @@
 <?php
 
-use App\Notifications\ITTeamAlert;
-use Illuminate\Support\Facades\Notification;
-
 Route::prefix('v1')->group(function () {
     Route::middleware(['abilities:clan:read'])->group(function () {
         Route::get('ts-count', 'API\v1\ClanController@teamspeakPopulationCount')->name('v1.ts_population');
@@ -19,7 +16,6 @@ Route::prefix('v1')->group(function () {
         Route::post('divisions/{slug}', 'API\v1\DivisionController@update')->name('v1.divisions.update');
     });
 });
-
 
 // basic
 // squads

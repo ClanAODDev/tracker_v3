@@ -216,7 +216,7 @@ function getActivityClass($date, $division)
     $limits = $division->settings()
         ->get('activity_threshold');
 
-    if (!$date instanceof \Carbon\Carbon) {
+    if (! $date instanceof \Carbon\Carbon) {
         return 'text-danger';
     }
 

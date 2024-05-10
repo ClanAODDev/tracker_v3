@@ -15,6 +15,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
     use Queueable;
 
     private MemberRequest $request;
+
     private Member $member;
 
     /**
@@ -46,7 +47,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
     public function toBot($notifiable)
     {
         return (new BotMessage())
-            ->title($notifiable->name.' Division')
+            ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon."))
             ->success()

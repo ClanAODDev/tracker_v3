@@ -49,7 +49,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
         $recruiter = $this->recruiter;
 
         return (new BotMessage())
-            ->title($notifiable->name.' Division')
+            ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [

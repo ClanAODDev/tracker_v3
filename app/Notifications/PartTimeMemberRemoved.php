@@ -47,7 +47,7 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
         $primaryDivision = $this->member->division;
 
         return (new BotMessage())
-            ->title($primaryDivision->name.' Division')
+            ->title($primaryDivision->name . ' Division')
             ->thumbnail(getDivisionIconPath($primaryDivision->abbreviation))
             ->fields([
                 [

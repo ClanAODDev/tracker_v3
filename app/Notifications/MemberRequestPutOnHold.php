@@ -16,7 +16,9 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
     use Queueable;
 
     private MemberRequest $request;
+
     private Member $member;
+
     private User $approver;
 
     /**
@@ -48,7 +50,7 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
     public function toBot($notifiable)
     {
         return (new BotMessage())
-            ->title($notifiable->name.' Division')
+            ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$this->approver->name} for the following reason: `{$this->request->notes}`"))
             ->success()

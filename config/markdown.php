@@ -100,7 +100,7 @@ return [
         ],
 
         Heading::class => [
-          'style' => 'border-bottom: 1px solid #3d404c; padding-bottom:10px',
+            'style' => 'border-bottom: 1px solid #3d404c; padding-bottom:10px',
         ],
 
         BlockQuote::class => [
@@ -112,7 +112,7 @@ return [
         ],
 
         Code::class => [
-            'class' => 'line-numbers'
+            'class' => 'line-numbers',
         ],
 
         Paragraph::class => [
@@ -124,7 +124,6 @@ return [
                 return null;
             },
         ],
-
 
     ],
 

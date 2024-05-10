@@ -41,9 +41,9 @@ class RouteServiceProvider extends ServiceProvider
             }
         });
 
-        \Route::bind('username', fn($username) => User::whereName($username)->firstOrFail());
+        \Route::bind('username', fn ($username) => User::whereName($username)->firstOrFail());
 
-        \Route::bind('handle', fn($handle) => Handle::whereId($handle)
+        \Route::bind('handle', fn ($handle) => Handle::whereId($handle)
             ->with('divisions')
             ->first());
 

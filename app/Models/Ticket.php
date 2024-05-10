@@ -85,7 +85,7 @@ class Ticket extends Model
     public function routeNotificationForBot()
     {
         return sprintf(
-            "%s/channel/%s",
+            '%s/channel/%s',
             config('app.aod.bot_api_base_url'),
             config('app.aod.admin-ticketing-channel')
         );

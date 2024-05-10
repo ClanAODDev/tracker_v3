@@ -17,7 +17,9 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     use Queueable;
 
     private $request;
+
     private User $approver;
+
     private Member $member;
 
     /**
@@ -50,7 +52,7 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     public function toBot($notifiable)
     {
         return (new BotMessage())
-            ->title($notifiable->name.' Division')
+            ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(addslashes("**MEMBER STATUS REQUEST** - :thumbsup: A member status request for `{$this->member->name}` was approved by {$this->approver->name}!"))
             ->success()

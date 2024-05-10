@@ -2,7 +2,6 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Channels\Messages\DiscordMessage;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;

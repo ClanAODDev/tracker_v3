@@ -49,7 +49,7 @@ class MemberRemoved extends Notification implements ShouldQueue
         $remover = $this->remover;
 
         return (new BotMessage())
-            ->title($notifiable->name.' Division')
+            ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [

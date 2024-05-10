@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotMessage;
-use App\Channels\Messages\DiscordMessage;
 use App\Models\Member;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -36,14 +35,14 @@ class MemberTransferred extends Notification implements ShouldQueue
     }
 
     /**
-     * @param $notifiable
      * @return array[]
+     *
      * @throws \Exception
      */
     public function toBot($notifiable)
     {
         return (new BotMessage())
-            ->title($notifiable->name.' Division')
+            ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [
