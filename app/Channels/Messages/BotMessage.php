@@ -32,7 +32,7 @@ class BotMessage
 
     public function thumbnail($thumbnail)
     {
-        $this->thumbnail = $thumbnail;
+        $this->thumbnail = ['url' => $thumbnail];
 
         return $this;
     }
@@ -130,7 +130,7 @@ class BotMessage
                     'url' => $this->url ?? 'https://tracker.clanaod.net',
                 ],
                 'fields' => $this->fields ?? [],
-                'thumbnail' => ['url' => $this->thumbnail] ?? [],
+                'thumbnail' => $this->thumbnail ?? [],
             ]],
         ];
     }
