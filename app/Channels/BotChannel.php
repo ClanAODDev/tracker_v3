@@ -3,6 +3,7 @@
 namespace App\Channels;
 
 use App\Exceptions\WebHookFailedException;
+use App\Notifications\NotifyAdminTicketCreated;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
@@ -60,7 +61,15 @@ class BotChannel
         $request = new Request('POST', $url, $headers, json_encode($body));
 
         try {
-            $this->client->send($request, ['verify' => false]);
+            $response = $this->client->send($request, ['verify' => false]);
+
+            // kinda gross, let's refactor at some point
+            if ($notification instanceof NotifyAdminTicketCreated) {
+                // we need the resulting message id for additional actions
+                $response = json_decode($response->getBody());
+                $notifiable->update(['message_id' => $response->id]);
+            }
+
         } catch (ServerException $exception) {
             \Log::error($exception->getMessage());
             \Log::error("Failing payload: " . json_encode($body));
