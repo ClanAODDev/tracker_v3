@@ -110,6 +110,23 @@ class BotMessage
             throw new Exception('A message or fields must be defined');
         }
 
+        $message = [
+            'embeds' => [[
+                'color' => $this->color ?? 0,
+                'description' => $this->message ?? '',
+                'author' => [
+                    'name' => $this->title,
+                    'icon_url' => asset('images/logo_v2.png'),
+                    'url' => $this->url ?? config('app.url'),
+                ],
+                'fields' => $this->fields ?? [],
+            ]],
+        ];
+
+        if ($this->thumbnail) {
+            $message['embeds']['thumbnail'] = $this->thumbnail;
+        }
+
         /**
          * https://discordjs.guide/popular-topics/embeds.html#using-an-embed-object
          *
@@ -120,18 +137,6 @@ class BotMessage
          **** ->url('relevant/error/page/here')
          **** ->error()
          */
-        return [
-            'embeds' => [[
-                'color' => $this->color ?? 0,
-                'description' => $this->message ?? '',
-                'author' => [
-                    'name' => $this->title,
-                    'icon_url' => 'http://tracker.clanaod.net/images/logo_v2.png',
-                    'url' => $this->url ?? 'https://tracker.clanaod.net',
-                ],
-                'fields' => $this->fields ?? [],
-                'thumbnail' => $this->thumbnail ?? [],
-            ]],
-        ];
+        return $message;
     }
 }
