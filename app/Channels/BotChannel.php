@@ -5,6 +5,7 @@ namespace App\Channels;
 use App\Exceptions\WebHookFailedException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notifiable;
@@ -58,6 +59,11 @@ class BotChannel
 
         $request = new Request('POST', $url, $headers, json_encode($body));
 
-        $this->client->send($request, ['verify' => false]);
+        try {
+            $this->client->send($request, ['verify' => false]);
+        } catch (ServerException $exception) {
+            \Log::error($exception->getMessage());
+            \Log::error("Failing payload: " . json_encode($body));
+        }
     }
 }
