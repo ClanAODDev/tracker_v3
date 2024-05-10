@@ -80,6 +80,18 @@ class Ticket extends Model
     }
 
     /**
+     * @return mixed|Repository
+     */
+    public function routeNotificationForBot()
+    {
+        return sprintf(
+            '%s/channel/%s',
+            config('app.aod.bot_api_base_url'),
+            config('app.aod.admin-ticketing-channel')
+        );
+    }
+
+    /**
      * @return mixed
      */
     public function scopeNew($query)

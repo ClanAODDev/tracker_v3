@@ -56,7 +56,7 @@ class PlatoonController extends Controller
      */
     public function store(CreatePlatoonForm $form, Division $division)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader' => "Member {$form->leader_id} not to this division!"])
                 ->withInput();
@@ -102,13 +102,13 @@ class PlatoonController extends Controller
         $voiceActivityGraph = $this->platoon->getPlatoonVoiceActivity($platoon);
 
         return view('platoon.show', compact(
-                'platoon',
-                'members',
-                'division',
-                'forumActivityGraph',
-                'tsActivityGraph',
-                'voiceActivityGraph',
-            )
+            'platoon',
+            'members',
+            'division',
+            'forumActivityGraph',
+            'tsActivityGraph',
+            'voiceActivityGraph',
+        )
         );
     }
 
@@ -133,7 +133,7 @@ class PlatoonController extends Controller
      */
     public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
     {
-        if ($form->leader_id && !$this->isMemberOfDivision($division, $form)) {
+        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
             return redirect()->back()
                 ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
                 ->withInput();
@@ -179,7 +179,7 @@ class PlatoonController extends Controller
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
-            $squad->members = $squad->members->filter(fn($member) => $member->position_id === 1)->sortbyDesc(function (
+            $squad->members = $squad->members->filter(fn ($member) => $member->position_id === 1)->sortbyDesc(function (
                 $member
             ) use ($squad) {
                 return $squad->leader && $squad->leader->clan_id === $member->recruiter_id;

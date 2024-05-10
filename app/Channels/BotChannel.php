@@ -12,14 +12,8 @@ use Illuminate\Notifications\Notification;
 
 class BotChannel
 {
-    /**
-     * @var Client
-     */
     private Client $client;
 
-    /**
-     * @var Logger
-     */
     private Logger $logger;
 
     public function __construct(Client $client, Logger $logger)
@@ -42,7 +36,7 @@ class BotChannel
         } else {
             $url = $notifiable->routeNotificationFor('bot', $notification);
 
-            if (!$url) {
+            if (! $url) {
                 return;
             }
         }

@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -20,32 +20,31 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
+     * @param  mixed  $notifiable
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function toWebhook($ticket)
+    public function toBot($notifiable)
     {
-        $channel = config('app.aod.admin-ticketing-channel');
+        $authoringUser = $notifiable->caller ? $notifiable->caller->name : 'UNK';
 
-        $authoringUser = $ticket->caller ? $ticket->caller->name : 'UNK';
-
-        return (new DiscordMessage())
-            ->to($channel)
-            ->messageId($ticket->message_id)
-            ->info()
+        return (new BotMessage())
+            ->title('ClanAOD Tracker')
             ->fields([
                 [
-                    'name' => "Type: {$ticket->type->name}",
+                    'name' => "Type: {$notifiable->type->name}",
                     'value' => "Submitted by {$authoringUser}",
                 ], [
                     'name' => 'Link to ticket',
-                    'value' => route('help.tickets.show', $ticket),
+                    'value' => route('help.tickets.show', $notifiable),
                 ],
-            ])->send();
+            ])
+            ->info()
+            ->send();
     }
 }

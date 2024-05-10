@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\User;
@@ -16,7 +16,9 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
     use Queueable;
 
     private MemberRequest $request;
+
     private Member $member;
+
     private User $approver;
 
     /**
@@ -36,7 +38,7 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -45,15 +47,12 @@ class MemberRequestPutOnHold extends Notification implements ShouldQueue
      *
      * @throws Exception
      */
-    public function toWebhook($notifiable)
+    public function toBot($notifiable)
     {
-        $channel = $notifiable->settings()->get('officer_channel');
-
-        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$this->approver->name} for the following reason: `{$this->request->notes}`");
-
-        return (new DiscordMessage())
-            ->to($channel)
-            ->message($message)
+        return (new BotMessage())
+            ->title($notifiable->name . ' Division')
+            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
+            ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$this->approver->name} for the following reason: `{$this->request->notes}`"))
             ->success()
             ->send();
     }

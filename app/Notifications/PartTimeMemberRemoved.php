@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -34,7 +34,7 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -42,14 +42,13 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
      *
      * @throws \Exception
      */
-    public function toWebhook($notifiable)
+    public function toBot($notifiable)
     {
-        $channel = $notifiable->settings()->get('officer_channel');
         $primaryDivision = $this->member->division;
 
-        return (new DiscordMessage())
-            ->info()
-            ->to($channel)
+        return (new BotMessage())
+            ->title($primaryDivision->name . ' Division')
+            ->thumbnail(getDivisionIconPath($primaryDivision->abbreviation))
             ->fields([
                 [
                     'name' => '**PART TIME MEMBER REMOVED**',
@@ -59,6 +58,7 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
                     'name' => 'View Member Profile',
                     'value' => route('member', $this->member->getUrlParams()),
                 ],
-            ])->send();
+            ])->error()
+            ->send();
     }
 }

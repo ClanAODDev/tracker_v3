@@ -38,7 +38,7 @@ class MemberPresenter extends Presenter
         $epochStart = Carbon::createFromTimestampUTC(0);
 
         if ($epochStart->equalTo($value)) {
-            return  'Never';
+            return 'Never';
         }
 
         return $value->diffForHumans();

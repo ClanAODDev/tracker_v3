@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
@@ -15,6 +15,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
     use Queueable;
 
     private MemberRequest $request;
+
     private Member $member;
 
     /**
@@ -34,7 +35,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -43,15 +44,12 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
      *
      * @throws Exception
      */
-    public function toWebhook($notifiable)
+    public function toBot($notifiable)
     {
-        $channel = $notifiable->settings()->get('officer_channel');
-
-        $message = addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon.");
-
-        return (new DiscordMessage())
-            ->to($channel)
-            ->message($message)
+        return (new BotMessage())
+            ->title($notifiable->name . ' Division')
+            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
+            ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon."))
             ->success()
             ->send();
     }

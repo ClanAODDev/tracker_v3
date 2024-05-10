@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotMessage;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Broadcasting\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
@@ -14,6 +13,7 @@ class ITTeamAlert extends Notification implements ShouldQueue
     use Queueable;
 
     private mixed $title;
+
     private mixed $message;
 
     public function __construct($title, $message)
@@ -21,7 +21,6 @@ class ITTeamAlert extends Notification implements ShouldQueue
         $this->title = $title;
         $this->message = $message;
     }
-
 
     /**
      * Get the notification's delivery channels.

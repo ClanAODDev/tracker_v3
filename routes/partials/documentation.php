@@ -1,4 +1,5 @@
 <?php
+
 // @TODO: Convert to markdown
 Route::get('changelog', 'AppController@changelog')->name('changelog');
 Route::group(['prefix' => 'help/docs'], function () {

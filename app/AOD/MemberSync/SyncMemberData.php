@@ -2,7 +2,6 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Channels\Messages\DiscordMessage;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -130,16 +129,6 @@ class SyncMemberData
 
                 \Log::error($exception->getMessage() . " - Error syncing {$member->name} - {$member->clan_id}");
 
-                // @TODO: figure out why this isn't working
-                (new DiscordMessage())
-                    ->to('admin')
-                    ->message(sprintf('Tracker sync error: %s - Error syncing %s - %d',
-                        $exception->getMessage(),
-                        $member->name,
-                        $member->clan_id,
-                    ))->error()
-                    ->send();
-
                 continue;
             }
 
@@ -175,10 +164,16 @@ class SyncMemberData
                         $updates['squad_id'] = 0;
                         $updates['platoon_id'] = 0;
 
-                        // notify division of transfer
+                        // notify new division of transfer
                         $division = Division::find($newData[$key]);
                         if ($division->settings()->get('slack_alert_member_transferred') === 'on') {
-                            $division->notify(new \App\Notifications\MemberTransferred($member, $division));
+                            $division->notify(new \App\Notifications\MemberTransferred($member));
+                        }
+
+                        // notify old division of transfer
+                        $division = Division::find($oldData[$key]);
+                        if ($division->settings()->get('slack_alert_member_transferred') === 'on') {
+                            $division->notify(new \App\Notifications\MemberTransferred($member));
                         }
                     }
 

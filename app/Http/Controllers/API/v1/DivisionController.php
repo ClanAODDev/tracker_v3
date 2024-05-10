@@ -27,7 +27,7 @@ class DivisionController extends ApiController
     {
         $division = \App\Models\Division::where('slug', $division)->first();
 
-        if (!$division) {
+        if (! $division) {
             return $this->setStatusCode(404)->respondWithError('Invalid division provided');
         }
 
@@ -54,7 +54,7 @@ class DivisionController extends ApiController
             ->active()
             ->first();
 
-        if (!$division) {
+        if (! $division) {
             return $this->setStatusCode(404)->respondWithError('Invalid division provided');
         }
 
@@ -76,7 +76,7 @@ class DivisionController extends ApiController
         return $this->respond([
             'data' => [
                 'division' => $this->divisionTransformer->transform($division),
-            ]
+            ],
         ]);
     }
 }

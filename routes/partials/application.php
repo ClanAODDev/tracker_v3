@@ -37,7 +37,6 @@ Route::name('help.tickets.')->prefix('help/tickets')->group(function () {
     });
 });
 
-
 Route::get('developers', 'DeveloperController@index')->name('developer');
 Route::post('developers/tokens', 'DeveloperController@generateToken')->name('developer.token.store');
 Route::delete('developers/tokens', 'DeveloperController@destroyToken')->name('developer.token.delete');
@@ -58,6 +57,6 @@ Route::group(['prefix' => 'primary-nav'], function () {
  * Slack handler.
  */
 Route::post('slack', [
-    'as'   => 'slack.commands',
+    'as' => 'slack.commands',
     'uses' => 'Slack\SlackCommandController@index',
 ])->middleware('slack');

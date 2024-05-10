@@ -32,23 +32,23 @@ class Division extends Model
         /**
          * Discord specific settings
          */
-        'slack_alert_created_member' => false, 
+        'slack_alert_created_member' => false,
         'slack_alert_removed_member' => false,
         'slack_alert_updated_member' => false,
         'slack_alert_created_request' => false,
-        'slack_alert_division_edited' => false, 
+        'slack_alert_division_edited' => false,
         'slack_alert_member_denied' => false,
         'slack_alert_member_approved' => false,
-        'slack_alert_member_transferred' => false, 
+        'slack_alert_member_transferred' => false,
         'officer_channel' => '',
         'slack_alert_pt_member_removed' => false,
 
         /**
          * Recruiting and basic settings
          */
-        'use_welcome_thread' => false, 
-        'division_structure' => '', 
-        'welcome_area' => '', 
+        'use_welcome_thread' => false,
+        'division_structure' => '',
+        'welcome_area' => '',
         'welcome_pm' => '',
         'inactivity_days' => 30,
         'activity_threshold' => [
@@ -214,7 +214,7 @@ class Division extends Model
     public function routeNotificationForBot()
     {
         return sprintf(
-            "%s/channel/%s",
+            '%s/channel/%s',
             config('app.aod.bot_api_base_url'),
             $this->settings()->get('officer_channel')
         );

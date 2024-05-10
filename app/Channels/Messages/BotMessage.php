@@ -10,12 +10,18 @@ class BotMessage
      * Message color codes - only relevant to embeds
      */
     private const SUCCESS = 3066993;
+
     private const ERROR = 15158332;
+
     private const INFO = 10181046;
 
     private $fields = [];
+
     private mixed $message;
+
     private int $color;
+
+    private $thumbnail = [];
 
     public function title($title)
     {
@@ -24,7 +30,7 @@ class BotMessage
         return $this;
     }
 
-    public function thumbnail($thumbnail): static
+    public function thumbnail($thumbnail)
     {
         $this->thumbnail = $thumbnail;
 
@@ -65,12 +71,13 @@ class BotMessage
 
     /**
      * @return $this
+     *
      * @throws Exception
      */
     public function fields($fields)
     {
         foreach ($fields as $field) {
-            if (!array_key_exists('name', $field) || (!array_key_exists('value', $field))) {
+            if (! array_key_exists('name', $field) || (! array_key_exists('value', $field))) {
                 throw new \Exception('Fields must include a name and value pair');
             }
         }
@@ -91,14 +98,16 @@ class BotMessage
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
      */
     public function send(): array
     {
-        if (!isset($this->message) || !isset($this->title)) {
-            throw new Exception('A title and message must be defined');
+        if (! isset($this->title)) {
+            throw new Exception('A title must be defined');
+        }
+
+        if (! isset($this->message) && ! isset($this->fields)) {
+            throw new Exception('A message or fields must be defined');
         }
 
         /**
@@ -114,7 +123,7 @@ class BotMessage
         return [
             'embeds' => [[
                 'color' => $this->color ?? 0,
-                'description' => $this->message,
+                'description' => $this->message ?? '',
                 'author' => [
                     'name' => $this->title,
                     'icon_url' => 'http://tracker.clanaod.net/images/logo_v2.png',
