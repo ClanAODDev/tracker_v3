@@ -39,11 +39,12 @@ class BotChannel
         }
 
         $target = $notifiable->routeNotificationFor('bot', $notification);
-        $url = str_replace(':target', $target, $message['api']);
 
         if (! $target) {
             return;
         }
+
+        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), str_replace(':target', $target, $message['api']));
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -68,7 +69,7 @@ class BotChannel
 
         } catch (ServerException $exception) {
             \Log::error($exception->getMessage());
-            \Log::error("Failing payload: " . json_encode($body));
+            \Log::error('Failing payload: ' . json_encode($body));
         }
     }
 }

@@ -49,7 +49,7 @@ class BotDMMessage
         }
 
         return [
-            'api' => sprintf('%s/member/%s/message', config('app.aod.bot_api_base_url'), $this->target),
+            'api' => sprintf('member/%s/message', $this->target),
             'body' => [
                 'embeds' => [[
                     'description' => $this->message ,

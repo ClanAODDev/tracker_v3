@@ -55,7 +55,7 @@ class BotReactMessage
         }
 
         return [
-            'api' => sprintf('%s/channel/:target/%s/react', config('app.aod.bot_api_base_url'), $this->messageId),
+            'api' => sprintf('channel/:target/%s/react', $this->messageId),
             'body'=> [
                 'emoji' => $this->emote,
             ]
