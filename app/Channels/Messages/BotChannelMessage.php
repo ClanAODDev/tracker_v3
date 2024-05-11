@@ -111,7 +111,7 @@ class BotChannelMessage
         }
 
         $message = [
-            'api' => sprintf('%s/channel/:target', config('app.aod.bot_api_base_url')),
+            'api' => 'channel/:target',
             'body' => [
                 'embeds' => [[
                     'color' => $this->color ?? 0,
