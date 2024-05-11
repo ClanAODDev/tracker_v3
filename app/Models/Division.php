@@ -203,14 +203,6 @@ class Division extends Model
         return config('app.aod.slack_webhook');
     }
 
-    /**
-     * @return mixed|Repository
-     */
-    public function routeNotificationForWebhook()
-    {
-        return config('app.aod.discord_webhook');
-    }
-
     public function routeNotificationForBot()
     {
         return $this->settings()->get('officer_channel');
