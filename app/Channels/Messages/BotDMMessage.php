@@ -52,9 +52,9 @@ class BotDMMessage
             'api' => sprintf('member/%s/message', $this->target),
             'body' => [
                 'embeds' => [[
-                    'description' => $this->message ,
+                    'description' => $this->message,
                 ]],
-            ]
+            ],
         ];
     }
 }

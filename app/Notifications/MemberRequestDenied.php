@@ -47,7 +47,7 @@ class MemberRequestDenied extends Notification implements ShouldQueue
     {
         $notes = addslashes($this->request->notes);
 
-        return (new BotChannelMessage())
+        return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([

@@ -46,7 +46,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotChannelMessage())
+        return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon."))

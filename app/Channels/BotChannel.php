@@ -2,10 +2,8 @@
 
 namespace App\Channels;
 
-use App\Exceptions\WebHookFailedException;
 use App\Notifications\NotifyAdminTicketCreated;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
@@ -27,8 +25,7 @@ class BotChannel
     /**
      * @param  Notifiable  $notifiable
      *
-     * @throws WebHookFailedException
-     * @throws GuzzleException
+     * @throws ServerException
      */
     public function send($notifiable, Notification $notification)
     {
@@ -38,13 +35,7 @@ class BotChannel
             $message = $notification->toArray($notifiable);
         }
 
-        $target = $notifiable->routeNotificationFor('bot', $notification);
-
-        if (! $target) {
-            return;
-        }
-
-        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), str_replace(':target', $target, $message['api']));
+        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), $message['api']);
 
         $headers = [
             'Content-Type' => 'application/json',
