@@ -124,7 +124,7 @@ class BotMessage
         ];
 
         if ($this->thumbnail) {
-            $message['embeds']['thumbnail'] = $this->thumbnail;
+            $message['embeds'][0]['thumbnail'] = $this->thumbnail;
         }
 
         /**
