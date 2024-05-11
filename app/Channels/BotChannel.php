@@ -39,11 +39,7 @@ class BotChannel
         }
 
         $target = $notifiable->routeNotificationFor('bot', $notification);
-
-        $url = $message['api'];
-        $url = str_replace(':target', $target, $url);
-
-        $body = $message['body'];
+        $url = str_replace(':target', $target, $message['api']);
 
         if (! $target) {
             return;
@@ -58,7 +54,7 @@ class BotChannel
             array_merge($headers, ['X-Requested-By' => auth()->user()->member->discord_id]);
         }
 
-        $request = new Request('POST', $url, $headers, json_encode($body));
+        $request = new Request('POST', $url, $headers, json_encode($message['body']));
 
         try {
             $response = $this->client->send($request, ['verify' => false]);
