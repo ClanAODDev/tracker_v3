@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,7 +35,7 @@ class DivisionEdited extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotMessage())
+        return (new BotChannelMessage())
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(sprintf('%s updated the division settings', $this->user))

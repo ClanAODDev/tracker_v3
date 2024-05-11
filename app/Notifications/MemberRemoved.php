@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -48,7 +48,7 @@ class MemberRemoved extends Notification implements ShouldQueue
     {
         $remover = $this->remover;
 
-        return (new BotMessage())
+        return (new BotChannelMessage())
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([

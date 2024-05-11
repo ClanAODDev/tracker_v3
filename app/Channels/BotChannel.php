@@ -32,21 +32,21 @@ class BotChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        if (is_string($notifiable)) {
-            // support null object notifications
-            $url = $notifiable;
+        if (method_exists($notification, 'toBot')) {
+            $message = (array) $notification->toBot($notifiable);
         } else {
-            $url = $notifiable->routeNotificationFor('bot', $notification);
-
-            if (! $url) {
-                return;
-            }
+            $message = $notification->toArray($notifiable);
         }
 
-        if (method_exists($notification, 'toBot')) {
-            $body = (array) $notification->toBot($notifiable);
-        } else {
-            $body = $notification->toArray($notifiable);
+        $target = $notifiable->routeNotificationFor('bot', $notification);
+
+        $url = $message['api'];
+        $url = str_replace(':target', $target, $url);
+
+        $body = $message['body'];
+
+        if (! $target) {
+            return;
         }
 
         $headers = [

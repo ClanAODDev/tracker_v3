@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordDMMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotDMMessage;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,7 +31,7 @@ class NotifyNewTicketOwner extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -39,11 +39,11 @@ class NotifyNewTicketOwner extends Notification implements ShouldQueue
      *
      * @throws \Exception
      */
-    public function toWebhook($ticket)
+    public function toBot($ticket)
     {
         $target = $this->assignedOwner->member->discord;
 
-        return (new DiscordDMMessage())
+        return (new BotDMMessage())
             ->to($target)
             ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
             ->send();

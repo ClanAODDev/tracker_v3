@@ -74,21 +74,9 @@ class Ticket extends Model
     /**
      * @return mixed|Repository
      */
-    public function routeNotificationForWebhook()
-    {
-        return config('app.aod.discord_webhook');
-    }
-
-    /**
-     * @return mixed|Repository
-     */
     public function routeNotificationForBot()
     {
-        return sprintf(
-            '%s/channel/%s',
-            config('app.aod.bot_api_base_url'),
-            config('app.aod.admin-ticketing-channel')
-        );
+        return config('app.aod.admin-ticketing-channel');
     }
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use Illuminate\Bus\Queueable;
@@ -46,7 +46,7 @@ class MemberRequestHoldLifted extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotMessage())
+        return (new BotChannelMessage())
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon."))

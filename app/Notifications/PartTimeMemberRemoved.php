@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -46,7 +46,7 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
     {
         $primaryDivision = $this->member->division;
 
-        return (new BotMessage())
+        return (new BotChannelMessage())
             ->title($primaryDivision->name . ' Division')
             ->thumbnail(getDivisionIconPath($primaryDivision->abbreviation))
             ->fields([
