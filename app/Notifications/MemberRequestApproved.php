@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\User;
@@ -51,7 +51,7 @@ class MemberRequestApproved extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotMessage())
+        return (new BotChannelMessage())
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->message(addslashes("**MEMBER STATUS REQUEST** - :thumbsup: A member status request for `{$this->member->name}` was approved by {$this->approver->name}!"))

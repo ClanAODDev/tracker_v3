@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordMessageReact;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotReactMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -30,7 +30,7 @@ class TicketReaction extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -38,10 +38,9 @@ class TicketReaction extends Notification implements ShouldQueue
      *
      * @throws \Exception
      */
-    public function toWebhook($ticket)
+    public function toBot($ticket)
     {
-        return (new DiscordMessageReact())
-            ->to(channel: config('app.aod.admin-ticketing-channel'))
+        return (new BotReactMessage())
             ->messageId($ticket->message_id)
             ->status($this->status)
             ->send();

@@ -213,11 +213,7 @@ class Division extends Model
 
     public function routeNotificationForBot()
     {
-        return sprintf(
-            '%s/channel/%s',
-            config('app.aod.bot_api_base_url'),
-            $this->settings()->get('officer_channel')
-        );
+        return $this->settings()->get('officer_channel');
     }
 
     /**

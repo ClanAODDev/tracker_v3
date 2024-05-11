@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordDMMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotDMMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -30,7 +30,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -38,7 +38,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
      *
      * @throws \Exception
      */
-    public function toWebhook($ticket)
+    public function toBot($ticket)
     {
         if (! $ticket->owner) {
             // ticket hasn't been assigned, so we have no one to notify
@@ -54,7 +54,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
 
         $target = $ticket->owner->member->discord;
 
-        return (new DiscordDMMessage())
+        return (new BotDMMessage())
             ->to($target)
             ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();

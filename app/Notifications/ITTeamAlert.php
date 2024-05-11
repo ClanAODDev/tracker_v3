@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -41,7 +41,7 @@ class ITTeamAlert extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        (new BotMessage())
+        (new BotChannelMessage())
             ->title($this->title)
             ->message($this->message)
             ->info()

@@ -4,7 +4,7 @@ namespace App\Channels\Messages;
 
 use Exception;
 
-class BotMessage
+class BotChannelMessage
 {
     /**
      * Message color codes - only relevant to embeds
@@ -111,16 +111,19 @@ class BotMessage
         }
 
         $message = [
-            'embeds' => [[
-                'color' => $this->color ?? 0,
-                'description' => $this->message ?? '',
-                'author' => [
-                    'name' => $this->title,
-                    'icon_url' => asset('images/logo_v2.png'),
-                    'url' => $this->url ?? config('app.url'),
-                ],
-                'fields' => $this->fields ?? [],
-            ]],
+            'api' => sprintf('%s/channel/:target', config('app.aod.bot_api_base_url')),
+            'body' => [
+                'embeds' => [[
+                    'color' => $this->color ?? 0,
+                    'description' => $this->message ?? '',
+                    'author' => [
+                        'name' => $this->title,
+                        'icon_url' => asset('images/logo_v2.png'),
+                        'url' => $this->url ?? config('app.url'),
+                    ],
+                    'fields' => $this->fields ?? [],
+                ]],
+            ]
         ];
 
         if ($this->thumbnail) {
@@ -132,7 +135,7 @@ class BotMessage
          *
          * Example of an error discord message
          *
-         **** (new BotMessage())->title('Something bad happened')
+         **** (new BotChannelMessage())->title('Something bad happened')
          **** ->message('Your approval could not be processed')
          **** ->url('relevant/error/page/here')
          **** ->error()
