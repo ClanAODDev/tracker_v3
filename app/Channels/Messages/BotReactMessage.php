@@ -16,6 +16,12 @@ class BotReactMessage
 
     private string $messageId;
 
+    private $target;
+
+    public function __construct(private $notifiable)
+    {
+    }
+
     public function to(string $channel)
     {
         $this->channel = $channel;
@@ -26,6 +32,16 @@ class BotReactMessage
     public function messageId(string $messageId)
     {
         $this->messageId = $messageId;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function target($target)
+    {
+        $this->target = $target;
 
         return $this;
     }
@@ -54,11 +70,16 @@ class BotReactMessage
             throw new Exception('A message id must be defined');
         }
 
+        $routeTarget = $this->notifiable->routeNotificationFor('bot');
+        if (! isset($routeTarget) && ! isset($this->target)) {
+            throw new Exception('A channel target must be defined');
+        }
+
         return [
-            'api' => sprintf('channel/:target/%s/react', $this->messageId),
-            'body'=> [
+            'api' => sprintf('channel/%s/%s/react', $routeTarget ?? $this->target, $this->messageId),
+            'body' => [
                 'emoji' => $this->emote,
-            ]
+            ],
         ];
     }
 }

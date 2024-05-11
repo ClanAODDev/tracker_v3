@@ -50,7 +50,7 @@ class NewMemberRecruited extends Notification implements ShouldQueue
     {
         $recruiter = $this->recruiter;
 
-        return (new BotChannelMessage())
+        return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([

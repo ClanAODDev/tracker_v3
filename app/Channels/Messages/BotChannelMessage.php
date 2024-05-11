@@ -21,7 +21,13 @@ class BotChannelMessage
 
     private int $color;
 
+    private $target;
+
     private $thumbnail = [];
+
+    public function __construct(private $notifiable)
+    {
+    }
 
     public function title($title)
     {
@@ -98,6 +104,16 @@ class BotChannelMessage
     }
 
     /**
+     * @return $this
+     */
+    public function target($target)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
      * @throws Exception
      */
     public function send(): array
@@ -110,8 +126,13 @@ class BotChannelMessage
             throw new Exception('A message or fields must be defined');
         }
 
+        $routeTarget = $this->notifiable->routeNotificationFor('bot');
+        if (! isset($routeTarget) && ! isset($this->target)) {
+            throw new Exception('A channel target must be defined');
+        }
+
         $message = [
-            'api' => 'channel/:target',
+            'api' => sprintf('channel/%s', $routeTarget ?? $this->target),
             'body' => [
                 'embeds' => [[
                     'color' => $this->color ?? 0,
@@ -123,11 +144,11 @@ class BotChannelMessage
                     ],
                     'fields' => $this->fields ?? [],
                 ]],
-            ]
+            ],
         ];
 
         if ($this->thumbnail) {
-            $message['embeds'][0]['thumbnail'] = $this->thumbnail;
+            $message['body']['embeds'][0]['thumbnail'] = $this->thumbnail;
         }
 
         /**
@@ -135,7 +156,7 @@ class BotChannelMessage
          *
          * Example of an error discord message
          *
-         **** (new BotChannelMessage())->title('Something bad happened')
+         **** (new BotChannelMessage($notifiable))->title('Something bad happened')
          **** ->message('Your approval could not be processed')
          **** ->url('relevant/error/page/here')
          **** ->error()

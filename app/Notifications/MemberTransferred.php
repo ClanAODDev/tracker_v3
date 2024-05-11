@@ -41,7 +41,7 @@ class MemberTransferred extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotChannelMessage())
+        return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([

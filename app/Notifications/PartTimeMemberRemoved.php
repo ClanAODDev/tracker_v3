@@ -16,14 +16,20 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
 
     private $member;
 
+    private $primaryDivision;
+
+    private $removalReason;
+
     /**
      * Create a new notification instance.
      *
      * @param  $partTimeDivision
      */
-    public function __construct($member)
+    public function __construct($member, $removalReason)
     {
         $this->member = $member;
+        $this->primaryDivision = $this->member->division;
+        $this->removalReason = $removalReason;
     }
 
     /**
@@ -44,15 +50,17 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        $primaryDivision = $this->member->division;
-
-        return (new BotChannelMessage())
-            ->title($primaryDivision->name . ' Division')
-            ->thumbnail(getDivisionIconPath($primaryDivision->abbreviation))
+        return (new BotChannelMessage($notifiable))
+            ->title($this->primaryDivision->name . ' Division')
+            ->thumbnail(getDivisionIconPath($this->primaryDivision->abbreviation))
             ->fields([
                 [
                     'name' => '**PART TIME MEMBER REMOVED**',
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$primaryDivision->name}, and they were a part-time member in your division"),
+                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$this->primaryDivision->name}, and they were a part-time member in your division"),
+                ],
+                [
+                    'name' => 'Reason',
+                    'value' => addslashes($this->removalReason),
                 ],
                 [
                     'name' => 'View Member Profile',

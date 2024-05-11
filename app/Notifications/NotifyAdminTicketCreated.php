@@ -33,7 +33,7 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
     {
         $authoringUser = $notifiable->caller ? $notifiable->caller->name : 'UNK';
 
-        return (new BotChannelMessage())
+        return (new BotChannelMessage($notifiable))
             ->title('ClanAOD Tracker')
             ->fields([
                 [

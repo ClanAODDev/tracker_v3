@@ -41,7 +41,7 @@ class ITTeamAlert extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        (new BotChannelMessage())
+        (new BotChannelMessage($notifiable))
             ->title($this->title)
             ->message($this->message)
             ->info()
