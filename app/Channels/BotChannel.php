@@ -69,7 +69,7 @@ class BotChannel
 
         } catch (ServerException $exception) {
             \Log::error($exception->getMessage());
-            \Log::error('Failing payload: ' . json_encode($body));
+            \Log::error('Failing payload: ' . json_encode($message['body']));
         }
     }
 }
