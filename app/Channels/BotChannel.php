@@ -35,7 +35,7 @@ class BotChannel
             $message = $notification->toArray($notifiable);
         }
 
-        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), $message['api']);
+        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), $message['api_uri']);
 
         $headers = [
             'Content-Type' => 'application/json',
