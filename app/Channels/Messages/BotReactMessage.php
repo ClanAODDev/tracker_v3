@@ -76,9 +76,10 @@ class BotReactMessage
         }
 
         return [
-            'api' => sprintf('channel/%s/message/%s/react', $routeTarget ?? $this->target, $this->messageId),
+            'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget ?? $this->target, $this->messageId),
             'body' => [
                 'emoji' => $this->emote,
+                'exclusive' => true,
             ],
         ];
     }

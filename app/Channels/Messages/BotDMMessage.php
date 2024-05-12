@@ -49,7 +49,7 @@ class BotDMMessage
         }
 
         return [
-            'api' => sprintf('member/%s', $this->target),
+            'api_uri' => sprintf('members/%s', $this->target),
             'body' => [
                 'embeds' => [[
                     'description' => $this->message,

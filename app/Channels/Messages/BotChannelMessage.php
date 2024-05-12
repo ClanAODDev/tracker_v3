@@ -132,7 +132,7 @@ class BotChannelMessage
         }
 
         $message = [
-            'api' => sprintf('channel/%s', $routeTarget ?? $this->target),
+            'api_uri' => sprintf('channels/%s', $routeTarget ?? $this->target),
             'body' => [
                 'embeds' => [[
                     'color' => $this->color ?? 0,
