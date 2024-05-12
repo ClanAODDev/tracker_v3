@@ -4,10 +4,12 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Termwind\Components\Div;
 
 class MemberTransferred extends Notification implements ShouldQueue
 {
@@ -15,12 +17,15 @@ class MemberTransferred extends Notification implements ShouldQueue
 
     private Member $member;
 
+    private Division $destinationDivision;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(Member $member)
+    public function __construct(Member $member, Division $destinationDivision)
     {
         $this->member = $member;
+        $this->destinationDivision = $destinationDivision;
     }
 
     /**
@@ -42,12 +47,12 @@ class MemberTransferred extends Notification implements ShouldQueue
     public function toBot($notifiable)
     {
         return (new BotChannelMessage($notifiable))
-            ->title($notifiable->name . ' Division')
-            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
+            ->title($this->destinationDivision->name . ' Division')
+            ->thumbnail(getDivisionIconPath($this->destinationDivision->abbreviation))
             ->fields([
                 [
                     'name' => '**MEMBER TRANSFER**',
-                    'value' => addslashes(":recycle: {$this->member->name} [{$this->member->clan_id}] transferred to {$notifiable->name}"),
+                    'value' => addslashes(":recycle: {$this->member->name} [{$this->member->clan_id}] transferred to {$this->destinationDivision->name}"),
                 ],
             ])->info()
             ->send();
