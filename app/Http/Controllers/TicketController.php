@@ -120,6 +120,7 @@ class TicketController extends Controller
             $ticket->ownTo($ticket->type->auto_assign_to);
             $ticket->notify(new NotifyCallerTicketUpdated('Ticket has been assigned to ' . $ticket->type->auto_assign_to->name));
             $ticket->notify(new NotifyNewTicketOwner($ticket->type->auto_assign_to, auth()->user()));
+            $ticket->notify(new TicketReaction('assigned'));
         }
 
         return redirect(route('help.tickets.show', $ticket));
