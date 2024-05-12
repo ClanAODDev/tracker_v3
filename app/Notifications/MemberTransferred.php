@@ -9,7 +9,6 @@ use App\Models\Member;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Termwind\Components\Div;
 
 class MemberTransferred extends Notification implements ShouldQueue
 {
