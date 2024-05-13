@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use App\Models\User;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -50,7 +50,7 @@ class NewMemberRecruited extends Notification implements ShouldQueue
     {
         $recruiter = $this->recruiter;
 
-        return (new BotMessage())
+        return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([

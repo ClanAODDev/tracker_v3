@@ -7,14 +7,14 @@ use Exception;
 /**
  * Class DiscordMessage.
  */
-class DiscordDMMessage
+class BotDMMessage
 {
     private $target;
 
     private $message;
 
     /**
-     * @return DiscordDMMessage
+     * @return BotDMMessage
      */
     public function to($target)
     {
@@ -49,7 +49,12 @@ class DiscordDMMessage
         }
 
         return [
-            'content' => "!relaydm {$this->target} {$this->message}",
+            'api_uri' => sprintf('members/%s', $this->target),
+            'body' => [
+                'embeds' => [[
+                    'description' => $this->message,
+                ]],
+            ],
         ];
     }
 }

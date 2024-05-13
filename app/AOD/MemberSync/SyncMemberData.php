@@ -165,15 +165,15 @@ class SyncMemberData
                         $updates['platoon_id'] = 0;
 
                         // notify new division of transfer
-                        $division = Division::find($newData[$key]);
-                        if ($division->settings()->get('slack_alert_member_transferred') === 'on') {
-                            $division->notify(new \App\Notifications\MemberTransferred($member));
+                        $newDivision = Division::find($newData[$key]);
+                        if ($newDivision->settings()->get('slack_alert_member_transferred') === 'on') {
+                            $newDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
                         }
 
                         // notify old division of transfer
-                        $division = Division::find($oldData[$key]);
-                        if ($division->settings()->get('slack_alert_member_transferred') === 'on') {
-                            $division->notify(new \App\Notifications\MemberTransferred($member));
+                        $oldDivision = Division::find($oldData[$key]);
+                        if ($oldDivision->settings()->get('slack_alert_member_transferred') === 'on') {
+                            $oldDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
                         }
                     }
 

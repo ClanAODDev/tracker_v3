@@ -41,7 +41,7 @@ class DeleteMember extends FormRequest
 
         if ($member->division()->exists()) {
             if ($member->division->settings()->get('slack_alert_removed_member')) {
-                $member->division->notify(new MemberRemoved($member, auth()->user()));
+                $member->division->notify(new MemberRemoved($member, auth()->user(), $this->removal_reason));
             }
         }
 
@@ -66,7 +66,7 @@ class DeleteMember extends FormRequest
 
         foreach ($divisions as $division) {
             if ($division->settings()->get('slack_alert_pt_member_removed')) {
-                $division->notify(new \App\Notifications\PartTimeMemberRemoved($member));
+                $division->notify(new \App\Notifications\PartTimeMemberRemoved($member, $this->removal_reason));
             }
         }
     }

@@ -4,7 +4,7 @@ namespace App\Channels\Messages;
 
 use Exception;
 
-class BotMessage
+class BotChannelMessage
 {
     /**
      * Message color codes - only relevant to embeds
@@ -21,7 +21,13 @@ class BotMessage
 
     private int $color;
 
+    private $target;
+
     private $thumbnail = [];
+
+    public function __construct(private $notifiable)
+    {
+    }
 
     public function title($title)
     {
@@ -98,6 +104,16 @@ class BotMessage
     }
 
     /**
+     * @return $this
+     */
+    public function target($target)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
      * @throws Exception
      */
     public function send(): array
@@ -110,21 +126,29 @@ class BotMessage
             throw new Exception('A message or fields must be defined');
         }
 
+        $routeTarget = $this->notifiable->routeNotificationFor('bot');
+        if (! isset($routeTarget) && ! isset($this->target)) {
+            throw new Exception('A channel target must be defined');
+        }
+
         $message = [
-            'embeds' => [[
-                'color' => $this->color ?? 0,
-                'description' => $this->message ?? '',
-                'author' => [
-                    'name' => $this->title,
-                    'icon_url' => asset('images/logo_v2.png'),
-                    'url' => $this->url ?? config('app.url'),
-                ],
-                'fields' => $this->fields ?? [],
-            ]],
+            'api_uri' => sprintf('channels/%s', $routeTarget ?? $this->target),
+            'body' => [
+                'embeds' => [[
+                    'color' => $this->color ?? 0,
+                    'description' => $this->message ?? '',
+                    'author' => [
+                        'name' => $this->title,
+                        'icon_url' => asset('images/logo_v2.png'),
+                        'url' => $this->url ?? config('app.url'),
+                    ],
+                    'fields' => $this->fields ?? [],
+                ]],
+            ],
         ];
 
         if ($this->thumbnail) {
-            $message['embeds'][0]['thumbnail'] = $this->thumbnail;
+            $message['body']['embeds'][0]['thumbnail'] = $this->thumbnail;
         }
 
         /**
@@ -132,7 +156,7 @@ class BotMessage
          *
          * Example of an error discord message
          *
-         **** (new BotMessage())->title('Something bad happened')
+         **** (new BotChannelMessage($notifiable))->title('Something bad happened')
          **** ->message('Your approval could not be processed')
          **** ->url('relevant/error/page/here')
          **** ->error()

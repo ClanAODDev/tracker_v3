@@ -2,7 +2,9 @@
 
 namespace App\Channels\Messages;
 
-class DiscordMessageReact
+use Exception;
+
+class BotReactMessage
 {
     public $states = [
         'resolved' => '✅',
@@ -14,7 +16,11 @@ class DiscordMessageReact
 
     private string $messageId;
 
-    private string $channel;
+    private $target;
+
+    public function __construct(private $notifiable)
+    {
+    }
 
     public function to(string $channel)
     {
@@ -30,10 +36,20 @@ class DiscordMessageReact
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    public function target($target)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
     public function status(string $status)
     {
         if (! isset($this->states[$status])) {
-            throw new \Exception('Invalid status provided to DiscordMessageReact');
+            throw new \Exception('Invalid status provided to BotReactMessage');
         }
 
         $this->emote = $this->states[$status];
@@ -42,16 +58,10 @@ class DiscordMessageReact
     }
 
     /**
-     * @return array
-     *
      * @throws Exception
      */
-    public function send()
+    public function send(): array
     {
-        if (! $this->channel) {
-            throw new Exception('A channel must be defined');
-        }
-
         if (! $this->emote) {
             throw new Exception('A status {assigned, resolved, rejected} must be defined');
         }
@@ -60,8 +70,17 @@ class DiscordMessageReact
             throw new Exception('A message id must be defined');
         }
 
+        $routeTarget = $this->notifiable->routeNotificationFor('bot');
+        if (! isset($routeTarget) && ! isset($this->target)) {
+            throw new Exception('A channel target must be defined');
+        }
+
         return [
-            'content' => "!react {$this->channel} relayed {$this->messageId} {$this->emote}",
+            'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget ?? $this->target, $this->messageId),
+            'body' => [
+                'emoji' => $this->emote,
+                'exclusive' => true,
+            ],
         ];
     }
 }

@@ -2,10 +2,8 @@
 
 namespace App\Channels;
 
-use App\Exceptions\WebHookFailedException;
 use App\Notifications\NotifyAdminTicketCreated;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
@@ -27,27 +25,17 @@ class BotChannel
     /**
      * @param  Notifiable  $notifiable
      *
-     * @throws WebHookFailedException
-     * @throws GuzzleException
+     * @throws ServerException
      */
     public function send($notifiable, Notification $notification)
     {
-        if (is_string($notifiable)) {
-            // support null object notifications
-            $url = $notifiable;
-        } else {
-            $url = $notifiable->routeNotificationFor('bot', $notification);
-
-            if (! $url) {
-                return;
-            }
-        }
-
         if (method_exists($notification, 'toBot')) {
-            $body = (array) $notification->toBot($notifiable);
+            $message = (array) $notification->toBot($notifiable);
         } else {
-            $body = $notification->toArray($notifiable);
+            $message = $notification->toArray($notifiable);
         }
+
+        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), $message['api_uri']);
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -58,7 +46,7 @@ class BotChannel
             array_merge($headers, ['X-Requested-By' => auth()->user()->member->discord_id]);
         }
 
-        $request = new Request('POST', $url, $headers, json_encode($body));
+        $request = new Request('POST', $url, $headers, json_encode($message['body']));
 
         try {
             $response = $this->client->send($request, ['verify' => false]);
@@ -72,7 +60,7 @@ class BotChannel
 
         } catch (ServerException $exception) {
             \Log::error($exception->getMessage());
-            \Log::error("Failing payload: " . json_encode($body));
+            \Log::error('Failing payload: ' . json_encode($message['body']));
         }
     }
 }
