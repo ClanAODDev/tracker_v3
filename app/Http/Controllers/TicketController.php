@@ -96,17 +96,9 @@ class TicketController extends Controller
      */
     public function store(CreateTicket $ticketRequest)
     {
-        $ticketRequest->persist();
+        $ticket = $ticketRequest->persist();
 
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
-
-        /* @TODO: refactor later */
-        if ($ticket->type->auto_assign_to) {
-            $ticket->ownTo($ticket->type->auto_assign_to);
-            $ticket->notify(new NotifyCallerTicketUpdated('Ticket has been assigned to ' . $ticket->type->auto_assign_to->name));
-            $ticket->notify(new NotifyNewTicketOwner($ticket->type->auto_assign_to, auth()->user()));
-            $ticket->notify(new TicketReaction('assigned'));
-        }
 
         return redirect(route('help.tickets.show', $ticket));
     }
