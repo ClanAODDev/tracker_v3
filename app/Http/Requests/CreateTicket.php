@@ -34,10 +34,12 @@ class CreateTicket extends FormRequest
 
     public function persist()
     {
+        $validated = $this->safe();
+
         $ticket = Ticket::create([
             'state' => 'new',
-            'ticket_type_id' => $this->validated['ticket_type'],
-            'description' => $this->validated['description'],
+            'ticket_type_id' => $validated['ticket_type'],
+            'description' => $validated['description'],
             'caller_id' => auth()->id(),
             'division_id' => auth()->user()->member->division_id,
         ]);
