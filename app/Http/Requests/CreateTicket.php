@@ -4,7 +4,10 @@ namespace App\Http\Requests;
 
 use App\Models\Ticket;
 use App\Notifications\NotifyAdminTicketCreated;
+use App\Notifications\NotifyCallerTicketUpdated;
+use App\Notifications\NotifyNewTicketOwner;
 use App\Notifications\NotifyUserTicketCreated;
+use App\Notifications\TicketReaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTicket extends FormRequest
@@ -44,8 +47,16 @@ class CreateTicket extends FormRequest
             'division_id' => auth()->user()->member->division_id,
         ]);
 
-        // send a message to admin channel as well as to the caller
         $ticket->notify(new NotifyUserTicketCreated());
         $ticket->notify(new NotifyAdminTicketCreated());
+
+        if ($ticket->type->auto_assign_to) {
+            $ticket->ownTo($ticket->type->auto_assign_to);
+            $ticket->notify(new NotifyCallerTicketUpdated('Ticket has been assigned to ' . $ticket->type->auto_assign_to->name));
+            $ticket->notify(new NotifyNewTicketOwner($ticket->type->auto_assign_to, auth()->user()));
+            $ticket->notify(new TicketReaction('assigned'));
+        }
+
+        return $ticket;
     }
 }
