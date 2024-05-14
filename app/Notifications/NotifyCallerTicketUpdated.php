@@ -41,7 +41,10 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
     public function toBot($ticket)
     {
         if (! $ticket->caller->member->discord) {
-            throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
+            throw new \Exception(sprintf(
+                'Ticket %d caller could not be notified because they do not have a valid discord tag.',
+                $ticket->id
+            ));
         }
 
         if (! $ticket->caller->settings()->get('ticket_notifications')) {
