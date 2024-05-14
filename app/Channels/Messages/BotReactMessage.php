@@ -29,13 +29,6 @@ class BotReactMessage
         return $this;
     }
 
-    public function messageId(string $messageId)
-    {
-        $this->messageId = $messageId;
-
-        return $this;
-    }
-
     /**
      * @return $this
      */
@@ -66,17 +59,13 @@ class BotReactMessage
             throw new Exception('A status {assigned, resolved, rejected} must be defined');
         }
 
-        if (! $this->messageId) {
-            throw new Exception('A message id must be defined');
-        }
-
         $routeTarget = $this->notifiable->routeNotificationFor('bot');
-        if (! isset($routeTarget) && ! isset($this->target)) {
+        if (! isset($routeTarget)) {
             throw new Exception('A channel target must be defined');
         }
 
         return [
-            'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget ?? $this->target, $this->messageId),
+            'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget, $this->notifiable->message_id),
             'body' => [
                 'emoji' => $this->emote,
                 'exclusive' => true,
