@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTicket;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
@@ -93,25 +94,9 @@ class TicketController extends Controller
      *
      * @return Application|Redirector|RedirectResponse|Response
      */
-    public function store(Request $request)
+    public function store(CreateTicket $ticketRequest)
     {
-        $validated = $request->validate([
-            'ticket_type' => 'required',
-            'description' => 'string|min:25|required',
-        ]);
-
-        $ticket = new Ticket();
-        $ticket->state = 'new';
-        $ticket->ticket_type_id = $validated['ticket_type'];
-        $ticket->description = $validated['description'];
-        $ticket->message_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $ticket->caller_id = auth()->id();
-        $ticket->division_id = auth()->user()->member->division_id;
-        $ticket->save();
-
-        // send a message to admin channel as well as to the caller
-        $ticket->notify(new NotifyUserTicketCreated());
-        $ticket->notify(new NotifyAdminTicketCreated());
+        $ticketRequest->persist();
 
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
 
