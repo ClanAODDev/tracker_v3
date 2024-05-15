@@ -120,7 +120,7 @@ class TicketController extends Controller
 
         $message = "Ticket `{$ticket->type->name}` has been resolved";
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
 
@@ -140,7 +140,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been reopened!';
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
@@ -160,7 +160,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been rejected';
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
@@ -183,7 +183,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been assigned to ' . $assignedUser->name;
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
         $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
@@ -203,7 +203,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been assigned to ' . auth()->user()->name;
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 

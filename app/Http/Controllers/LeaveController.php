@@ -56,7 +56,7 @@ class LeaveController extends Controller
 
         $leave->delete();
 
-        $this->showToast('Leave successfully deleted!');
+        $this->showSuccessToast('Leave successfully deleted!');
 
         return redirect(route('leave.index', $member->division->slug));
     }
@@ -74,7 +74,7 @@ class LeaveController extends Controller
 
         $form->persist();
 
-        $this->showToast('Leave of absence updated!');
+        $this->showSuccessToast('Leave of absence updated!');
 
         return redirect(route('leave.index', [$member->division->slug]));
     }
@@ -105,7 +105,7 @@ class LeaveController extends Controller
 
         $form->persist();
 
-        $this->showToast('Leave of absence created!');
+        $this->showSuccessToast('Leave of absence created!');
 
         return redirect(route('leave.index', $division->slug));
     }

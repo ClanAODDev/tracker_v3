@@ -215,7 +215,7 @@ class MemberController extends Controller
         }
 
         $member->handles()->sync($handles);
-        $this->showToast('Member handles have been updated!');
+        $this->showSuccessToast('Member handles have been updated!');
     }
 
     /**
@@ -231,7 +231,7 @@ class MemberController extends Controller
 
         $member->recordActivity('removed');
 
-        $this->showToast(
+        $this->showSuccessToast(
             ucwords($member->name ?? 'Member') . ' has been removed.'
         );
 
@@ -263,7 +263,7 @@ class MemberController extends Controller
         $member->platoon_id = 0;
         $member->save();
 
-        $this->showToast('Member assignments reset successfully');
+        $this->showSuccessToast('Member assignments reset successfully');
 
         return redirect()->route('member', $member->getUrlParams());
     }

@@ -14,22 +14,23 @@ class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
 
-    protected function showToast($toastMessage)
+    protected function showSuccessToast($message, $title = 'Success')
     {
-        Toastr::success(
-            $toastMessage,
-            'Success'
-        );
+        Toastr::success($message, $title);
     }
 
-    protected function showErrorToast($toastMessage)
+    protected function showErrorToast($message, $title = 'Uh oh...')
     {
-        Toastr::error(
-            $toastMessage,
-            'Uh oh...',
-            [
-                'timeOut' => 10000,
-            ]
-        );
+        Toastr::error($message, $title, [
+            'timeOut' => 10000,
+        ]);
+    }
+
+    protected function showImportantToast($message, $title)
+    {
+        Toastr::info($message, $title, [
+            'timeOut' => 0,
+            'extendedTimeOut' => 0,
+        ]);
     }
 }

@@ -37,7 +37,7 @@ class TrainingController extends Controller
             'last_trained_by' => auth()->user()->member->clan_id,
         ]);
 
-        $this->showToast('Training information successfully submitted!');
+        $this->showSuccessToast('Training information successfully submitted!');
 
         return redirect('home');
     }
