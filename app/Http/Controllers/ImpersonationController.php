@@ -28,7 +28,7 @@ class ImpersonationController extends Controller
 
         auth()->user()->recordActivity('start_impersonation', $user->member);
 
-        $this->showToast('You are now impersonating ' . $user->name);
+        $this->showSuccessToast('You are now impersonating ' . $user->name);
 
         Auth::login($user);
 
@@ -47,7 +47,7 @@ class ImpersonationController extends Controller
             // need to log end of impersonation
             Auth::login($user);
             session()->forget(['impersonating', 'impersonatingUser']);
-            $this->showToast('Impersonation ended');
+            $this->showSuccessToast('Impersonation ended');
         }
 
         return redirect()->back();

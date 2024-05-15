@@ -27,7 +27,7 @@ class UserSettingsController extends Controller
             'snow',
         ]));
 
-        $this->showToast('Your settings have been updated successfully');
+        $this->showSuccessToast('Your settings have been updated successfully');
 
         return redirect(route('user.settings.show'));
     }

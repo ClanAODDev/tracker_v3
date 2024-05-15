@@ -83,7 +83,7 @@ class MemberRequestController extends Controller
                 'approver_id' => auth()->user()->member->clan_id,
             ]);
 
-            $this->showToast('Request updated!');
+            $this->showSuccessToast('Request updated!');
 
             return redirect(route('admin.member-request.index'));
         }
@@ -97,7 +97,7 @@ class MemberRequestController extends Controller
 
         $memberRequest = MemberRequest::find($requestId);
 
-        $this->showToast('Hold removed');
+        $this->showSuccessToast('Hold removed');
 
         $memberRequest->removeHold();
 

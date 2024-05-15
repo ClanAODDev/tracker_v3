@@ -21,7 +21,7 @@ class NoteController extends Controller
     {
         $form->persist();
 
-        $this->showToast('Note saved successfully');
+        $this->showSuccessToast('Note saved successfully');
 
         return redirect()->back();
     }
@@ -64,7 +64,7 @@ class NoteController extends Controller
 
         $note->update(request()->all());
 
-        $this->showToast('Note saved successfully');
+        $this->showSuccessToast('Note saved successfully');
 
         return redirect()->route('member', $member->getUrlParams());
     }
@@ -85,7 +85,7 @@ class NoteController extends Controller
         }
 
         $note->delete();
-        $this->showToast('Note deleted successfully');
+        $this->showSuccessToast('Note deleted successfully');
 
         return redirect()->route('member', $member->getUrlParams());
     }

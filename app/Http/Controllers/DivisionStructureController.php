@@ -94,7 +94,7 @@ class DivisionStructureController extends Controller
         $division->save();
 
         $division->recordActivity('updated_structure');
-        $this->showToast('Division structure was successfully updated!');
+        $this->showSuccessToast('Division structure was successfully updated!');
 
         return redirect(route('division.structure', $division->slug));
     }

@@ -107,7 +107,7 @@ class DivisionController extends Controller
     public function update(UpdateDivision $form, Division $division)
     {
         $form->persist();
-        $this->showToast('Changes saved successfully');
+        $this->showSuccessToast('Changes saved successfully');
         $division->recordActivity('updated_settings');
 
         if ($division->settings()->get('slack_alert_division_edited')) {
@@ -143,7 +143,7 @@ class DivisionController extends Controller
     {
         $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->attach($member->id);
-        $this->showToast("{$member->name} added as part-time member to {$division->name}!");
+        $this->showSuccessToast("{$member->name} added as part-time member to {$division->name}!");
         $member->recordActivity('add_part_time');
 
         return redirect()->back();
@@ -158,7 +158,7 @@ class DivisionController extends Controller
     {
         $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->detach($member);
-        $this->showToast("{$member->name} removed from {$division->name} part-timers!");
+        $this->showSuccessToast("{$member->name} removed from {$division->name} part-timers!");
         $member->recordActivity('remove_part_time');
 
         return redirect()->back();
