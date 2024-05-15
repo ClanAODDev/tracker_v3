@@ -55,7 +55,7 @@ class MemberRemoved extends Notification implements ShouldQueue
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))->fields([
                 [
-                    'name' => '**MEMBER REMOVED**',
+                    'name' => 'Member Removed',
                     'value' => sprintf(
                         ':door: [%s](%s) [%d] was removed from %s by %s. **Reason**: %s',
                         $this->member->name,
