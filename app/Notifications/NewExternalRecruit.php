@@ -53,13 +53,15 @@ class NewExternalRecruit extends Notification implements ShouldQueue
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [
-                    'name' => '**EXTERNAL RECRUIT**',
-                    'value' => addslashes("{$recruiter->name} from {$recruiter->member->division->name} just recruited " .
-                        "`{$this->member->name}` into the {$notifiable->name} Division!"),
-                ],
-                [
-                    'name' => 'View member profile',
-                    'value' => route('member', $this->member->getUrlParams()),
+                    'name' => ':crossed_swords: New Member Recruited (External)',
+                    'value' => sprintf(
+                        "%s from %s just recruited [%s](%s) into the %s Division!",
+                        $recruiter->name,
+                        $recruiter->member->division->name,
+                        $this->member->name,
+                        route('member', $this->member->getUrlParams()),
+                        $notifiable->name
+                    ),
                 ],
             ])
             ->info()
