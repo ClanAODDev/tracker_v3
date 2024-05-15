@@ -55,7 +55,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
                 [
                     'name' => ':crossed_swords: New Member Recruited (External)',
                     'value' => sprintf(
-                        "%s from %s just recruited [%s](%s) into the %s Division!",
+                        '%s from %s just recruited [%s](%s) into the %s Division!',
                         $recruiter->name,
                         $recruiter->member->division->name,
                         $this->member->name,
