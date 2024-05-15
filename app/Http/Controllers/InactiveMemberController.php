@@ -59,7 +59,7 @@ class InactiveMemberController extends Controller
         $member->flagged_for_inactivity = true;
         $member->save();
         $member->recordActivity('flagged');
-        $this->showToast($member->name . ' successfully flagged for removal');
+        $this->showSuccessToast($member->name . ' successfully flagged for removal');
 
         return redirect()->back();
     }
@@ -77,7 +77,7 @@ class InactiveMemberController extends Controller
         $member->flagged_for_inactivity = false;
         $member->save();
         $member->recordActivity('unflagged');
-        $this->showToast($member->name . ' successfully unflagged');
+        $this->showSuccessToast($member->name . ' successfully unflagged');
 
         return redirect(route('division.inactive-members', $member->division->slug));
     }
@@ -87,7 +87,7 @@ class InactiveMemberController extends Controller
         $this->authorize('delete', $member);
         $division = $member->division;
         $form->persist();
-        $this->showToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
+        $this->showSuccessToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
         $member->recordActivity('removed');
 
         return redirect(route('division.inactive-members', [$division->slug]) . '#flagged');

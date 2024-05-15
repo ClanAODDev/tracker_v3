@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Channels\Messages\DiscordDMMessage;
-use App\Channels\WebhookChannel;
+use App\Channels\BotChannel;
+use App\Channels\Messages\BotDMMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -30,7 +30,7 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
      */
     public function via()
     {
-        return [WebhookChannel::class];
+        return [BotChannel::class];
     }
 
     /**
@@ -38,10 +38,13 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
      *
      * @throws \Exception
      */
-    public function toWebhook($ticket)
+    public function toBot($ticket)
     {
         if (! $ticket->caller->member->discord) {
-            throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
+            throw new \Exception(sprintf(
+                'Ticket %d caller could not be notified because they do not have a valid discord tag.',
+                $ticket->id
+            ));
         }
 
         if (! $ticket->caller->settings()->get('ticket_notifications')) {
@@ -50,7 +53,7 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
 
         $target = $ticket->caller->member->discord;
 
-        return (new DiscordDMMessage())
+        return (new BotDMMessage())
             ->to($target)
             ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();

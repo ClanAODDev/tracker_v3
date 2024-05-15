@@ -45,7 +45,7 @@ class TicketCommentController extends Controller
 
         $comment->delete();
 
-        $this->showToast('Comment successfully deleted');
+        $this->showSuccessToast('Comment successfully deleted');
 
         return redirect(route('help.tickets.show', $ticket));
     }

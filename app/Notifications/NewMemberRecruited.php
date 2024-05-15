@@ -3,7 +3,7 @@
 namespace App\Notifications;
 
 use App\Channels\BotChannel;
-use App\Channels\Messages\BotMessage;
+use App\Channels\Messages\BotChannelMessage;
 use App\Models\User;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -50,17 +50,17 @@ class NewMemberRecruited extends Notification implements ShouldQueue
     {
         $recruiter = $this->recruiter;
 
-        return (new BotMessage())
+        return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
             ->fields([
                 [
-                    'name' => 'New Member Recruited',
-                    'value' => addslashes(':crossed_swords: ' . $recruiter->name . " just recruited `{$this->member->name}` into the {$notifiable->name} Division!"),
-                ],
-                [
-                    'name' => 'View Member Profile',
-                    'value' => route('member', $this->member->getUrlParams()),
+                    'name' => ':crossed_swords: New Member Recruited',
+                    'value' => sprintf(
+                        "%s just recruited [{$this->member->name}](%s) into the {$notifiable->name} Division!",
+                        $recruiter->name,
+                        route('member', $this->member->getUrlParams())
+                    ),
                 ],
             ])
             ->success()

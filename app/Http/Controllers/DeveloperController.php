@@ -31,7 +31,7 @@ class DeveloperController extends Controller
 
         $token = $request->user()->createToken($request->token_name, ['division:read']);
 
-        $this->showToast('API token generated successfully!');
+        $this->showSuccessToast('API token generated successfully!');
 
         return redirect(route('developer'))->with(['token' => $token->plainTextToken]);
     }
@@ -46,7 +46,7 @@ class DeveloperController extends Controller
 
         auth()->user()->tokens()->where('id', $request->token_id)->delete();
 
-        $this->showToast('API token deleted!');
+        $this->showSuccessToast('API token deleted!');
 
         return redirect(route('developer'));
     }

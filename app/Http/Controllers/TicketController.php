@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateTicket;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
-use App\Notifications\NotifyAdminTicketCreated;
 use App\Notifications\NotifyCallerTicketUpdated;
 use App\Notifications\NotifyNewTicketOwner;
-use App\Notifications\NotifyUserTicketCreated;
 use App\Notifications\TicketReaction;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -93,34 +91,11 @@ class TicketController extends Controller
      *
      * @return Application|Redirector|RedirectResponse|Response
      */
-    public function store(Request $request)
+    public function store(CreateTicket $ticketRequest)
     {
-        $validated = $request->validate([
-            'ticket_type' => 'required',
-            'description' => 'string|min:25|required',
-        ]);
-
-        $ticket = new Ticket();
-        $ticket->state = 'new';
-        $ticket->ticket_type_id = $validated['ticket_type'];
-        $ticket->description = $validated['description'];
-        $ticket->message_id = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $ticket->caller_id = auth()->id();
-        $ticket->division_id = auth()->user()->member->division_id;
-        $ticket->save();
-
-        // send a message to admin channel as well as to the caller
-        $ticket->notify(new NotifyUserTicketCreated());
-        $ticket->notify(new NotifyAdminTicketCreated());
+        $ticket = $ticketRequest->persist();
 
         flash('Your ticket has been created! Please allow 24/48 hours for a response from an admin.')->important();
-
-        /* @TODO: refactor later */
-        if ($ticket->type->auto_assign_to) {
-            $ticket->ownTo($ticket->type->auto_assign_to);
-            $ticket->notify(new NotifyCallerTicketUpdated('Ticket has been assigned to ' . $ticket->type->auto_assign_to->name));
-            $ticket->notify(new NotifyNewTicketOwner($ticket->type->auto_assign_to, auth()->user()));
-        }
 
         return redirect(route('help.tickets.show', $ticket));
     }
@@ -145,7 +120,7 @@ class TicketController extends Controller
 
         $message = "Ticket `{$ticket->type->name}` has been resolved";
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
 
@@ -165,7 +140,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been reopened!';
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
@@ -185,7 +160,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been rejected';
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
@@ -208,7 +183,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been assigned to ' . $assignedUser->name;
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
         $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
@@ -228,7 +203,7 @@ class TicketController extends Controller
 
         $message = 'Ticket has been assigned to ' . auth()->user()->name;
 
-        $this->showToast($message);
+        $this->showSuccessToast($message);
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 

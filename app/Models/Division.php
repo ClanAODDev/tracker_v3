@@ -6,7 +6,6 @@ use App\Activities\RecordsActivity;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Carbon\Carbon;
-use Illuminate\Config\Repository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -198,26 +197,9 @@ class Division extends Model
         return $this->hasManyThrough(Squad::class, Platoon::class);
     }
 
-    public function routeNotificationForSlack()
-    {
-        return config('app.aod.slack_webhook');
-    }
-
-    /**
-     * @return mixed|Repository
-     */
-    public function routeNotificationForWebhook()
-    {
-        return config('app.aod.discord_webhook');
-    }
-
     public function routeNotificationForBot()
     {
-        return sprintf(
-            '%s/channel/%s',
-            config('app.aod.bot_api_base_url'),
-            $this->settings()->get('officer_channel')
-        );
+        return $this->settings()->get('officer_channel');
     }
 
     /**
