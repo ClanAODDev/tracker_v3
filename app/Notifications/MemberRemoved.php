@@ -57,14 +57,16 @@ class MemberRemoved extends Notification implements ShouldQueue
                 [
                     'name' => 'Member Removed',
                     'value' => sprintf(
-                        ':door: [%s](%s) [%d] was removed from %s by %s. **Reason**: %s',
+                        ':door: [%s](%s) [%d] was removed from %s by %s.',
                         $this->member->name,
                         $this->member->getUrlParams(),
                         $this->member->clan_id,
                         $notifiable->name,
                         $remover->name,
-                        $this->removalReason
                     ),
+                ], [
+                    'name' => 'Reason for removal',
+                    'value' => $this->removalReason,
                 ],
             ])->error()
             ->send();
