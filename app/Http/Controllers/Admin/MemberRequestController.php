@@ -132,8 +132,8 @@ class MemberRequestController extends Controller
     {
         $member = Member::whereClanId($memberRequest->member_id)
             ->first()->update([
-                            'name' => $request->newName,
-                        ]);
+                'name' => $request->newName,
+            ]);
 
         $memberRequest->division->notify(
             new MemberNameChanged([
