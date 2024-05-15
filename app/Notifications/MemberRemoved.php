@@ -65,7 +65,7 @@ class MemberRemoved extends Notification implements ShouldQueue
                         $remover->name,
                     ),
                 ], [
-                    'name' => 'Reason for removal',
+                    'name' => 'Reason',
                     'value' => $this->removalReason,
                 ],
             ])->error()
