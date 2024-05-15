@@ -53,19 +53,20 @@ class MemberRemoved extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
-            ->fields([
+            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))->fields([
                 [
-                    'name' => '**MEMBER REMOVED**',
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$notifiable->name} by " . $remover->name),
-                ],
-                [
+                    'name' => 'Member Removed',
+                    'value' => sprintf(
+                        ':door: [%s](%s) [%d] was removed from %s by %s.',
+                        $this->member->name,
+                        route('member', $this->member->getUrlParams()),
+                        $this->member->clan_id,
+                        $notifiable->name,
+                        $remover->name,
+                    ),
+                ], [
                     'name' => 'Reason',
-                    'value' => addslashes($this->removalReason),
-                ],
-                [
-                    'name' => 'View Member Profile',
-                    'value' => route('member', $this->member->getUrlParams()),
+                    'value' => $this->removalReason,
                 ],
             ])->error()
             ->send();
