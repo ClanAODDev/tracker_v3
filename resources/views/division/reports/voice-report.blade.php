@@ -56,7 +56,7 @@
                             </a>
                         </td>
                         <td>
-                            {{ $member->platoon->name }}
+                            {{ $member->platoon?->name }}
                         </td>
                         <td>
                             {{ $member->discord }}
