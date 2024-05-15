@@ -64,7 +64,7 @@ class PlatoonController extends Controller
 
         $form->persist();
 
-        $this->showToast("{$division->locality('platoon')} has been created!");
+        $this->showSuccessToast("{$division->locality('platoon')} has been created!");
 
         return redirect()->route('division', $division->slug);
     }
@@ -148,7 +148,7 @@ class PlatoonController extends Controller
 
         $form->persist($platoon);
 
-        $this->showToast($toastMessage);
+        $this->showSuccessToast($toastMessage);
 
         return redirect()->route('platoon', [$division->slug, $platoon]);
     }
@@ -162,7 +162,7 @@ class PlatoonController extends Controller
     {
         $form->persist();
 
-        $this->showToast('Platoon has been deleted');
+        $this->showSuccessToast('Platoon has been deleted');
 
         return redirect()->route('division', $division->slug);
     }

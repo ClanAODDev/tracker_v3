@@ -64,7 +64,7 @@ class SquadController extends Controller
 
         $form->persist();
 
-        $this->showToast(ucwords($division->locality('squad')) . ' has been created!');
+        $this->showSuccessToast(ucwords($division->locality('squad')) . ' has been created!');
 
         return redirect()->route('platoon', [$division->slug, $platoon]);
     }
@@ -99,7 +99,7 @@ class SquadController extends Controller
 
         $form->persist();
 
-        $this->showToast('Squad has been updated');
+        $this->showSuccessToast('Squad has been updated');
 
         return redirect()->route('squad.show', [$division->slug, $platoon, $squad]);
     }
@@ -111,7 +111,7 @@ class SquadController extends Controller
     {
         $form->persist();
 
-        $this->showToast('Squad has been deleted');
+        $this->showSuccessToast('Squad has been deleted');
 
         return redirect()->route('platoon', [$division->slug, $platoon]);
     }

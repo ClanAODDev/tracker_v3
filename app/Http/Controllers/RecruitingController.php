@@ -59,7 +59,7 @@ class RecruitingController extends Controller
             $this->handleNotification($request, $member, $division);
         }
 
-        $this->showToast('Your recruitment has successfully been completed!');
+        $this->showSuccessToast('Your recruitment has successfully been completed!');
     }
 
     public function form(Division $division)
