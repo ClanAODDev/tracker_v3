@@ -4,9 +4,9 @@
             <thead>
             <tr>
                 <th>Member Name</th>
-                <th>Last TS Activity
-                    <small class="slight">Days</small>
-                </th>
+                <th>
+                    {{ $inactivityMetric === 'last_voice_activity' ? 'Last Discord Voice Activity' : 'Last TS Activity' }}
+                    <small class="text-muted">Days</small></th>
                 <th>Squad</th>
                 <th class="no-sort"></th>
                 <th class="no-sort"></th>
