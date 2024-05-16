@@ -21,10 +21,14 @@
                         <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                     </td>
                     <td>
-                        @if ($member->tsInvalid)
-                            <code title="Misconfiguration"><span class="text-danger">00000</span></code>
-                        @else
-                            <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                        @if ($inactivityMetric === 'last_ts_activity')
+                            @if ($member->tsInvalid)
+                                <code title="Misconfiguration"><span class="text-danger">00000</span></code>
+                            @else
+                                <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                            @endif
+                        @elseif($inactivityMetric === 'last_voice_activity')
+                            <code>{{ $member->last_voice_activity->diffInDays() }}</code>
                         @endif
                     </td>
                     <td>{{ $member->squad->name ?? "Untitled" }}</td>
