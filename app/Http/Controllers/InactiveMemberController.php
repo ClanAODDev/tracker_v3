@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteMember;
+use App\Models\Activity;
 use App\Models\Member;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -22,16 +23,25 @@ class InactiveMemberController extends Controller
      */
     public function index($division)
     {
-        $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)->where(function ($query) use ($division) {
-            $query->where('last_ts_activity', '<', \Carbon\Carbon::today()->subDays($division->settings()->inactivity_days));
-        })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy('last_ts_activity')->get();
+        // @TODO: Temporary stopgap while we straddle TS and Discord
+        $inactivityMetric = $division->settings()->use_discord_activity
+            ? 'last_voice_activity'
+            : 'last_ts_activity';
+
+        $inactiveMembers = $division->members()
+            ->whereFlaggedForInactivity(false)->where(function ($query) use ($division, $inactivityMetric) {
+                $query->where($inactivityMetric, '<', now()->today()
+                    ->subDays($division->settings()->inactivity_days)
+                );
+            })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy($inactivityMetric)->get();
 
         if (request()->platoon) {
             $inactiveMembers = $inactiveMembers->where('platoon_id', request()->platoon->id);
         }
 
-        $flagActivity = \App\Models\Activity::whereDivisionId($division->id)->where(function ($query) {
-            $query->where('name', 'flagged_member')->orWhere('name', 'unflagged_member')->orWhere('name', 'removed_member');
+        $flagActivity = Activity::whereDivisionId($division->id)->where(function ($query) {
+            $query->where('name', 'flagged_member')->orWhere('name', 'unflagged_member')->orWhere('name',
+                'removed_member');
         })->orderByDesc('created_at')->with('subject', 'subject.rank')->get();
 
         $flaggedMembers = $division->members()->with('rank')->whereFlaggedForInactivity(true)->get();
@@ -43,7 +53,8 @@ class InactiveMemberController extends Controller
          */
         $requestPath = 'division.' . explode('/', request()->path())[2];
 
-        return view('division.inactive-members', compact('division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath'));
+        return view('division.inactive-members',
+            compact('division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath', 'inactivityMetric'));
     }
 
     /**
