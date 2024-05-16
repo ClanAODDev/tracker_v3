@@ -28,7 +28,7 @@
                                 <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
                             @endif
                         @elseif($inactivityMetric === 'last_voice_activity')
-                            {{ $member->last_voice_activity->diffInDays() }}
+                            <code>{{ $member->last_voice_activity->diffInDays() }}</code>
                         @endif
                     </td>
                     <td>{{ $member->squad->name ?? "Untitled" }}</td>
