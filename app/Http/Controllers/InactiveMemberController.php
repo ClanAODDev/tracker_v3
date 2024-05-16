@@ -28,11 +28,11 @@ class InactiveMemberController extends Controller
             ? 'last_voice_activity'
             : 'last_ts_activity';
 
-        $inactiveMembers = $division->members()
-            ->whereFlaggedForInactivity(false)->where(function ($query) use ($division, $inactivityMetric) {
-                $query->where($inactivityMetric, '<', now()->today()
-                    ->subDays($division->settings()->inactivity_days)
-                );
+        $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)
+            ->where(function ($query) use ($division, $inactivityMetric) {
+                $query->where($inactivityMetric, '<', now()->today()->subDays($division->settings()->inactivity_days))
+                    // don't include discord misconfigurations - these get dealt with separately
+                    ->whereNotIn('last_voice_status', ['never_configured', 'never_connected']);
             })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy($inactivityMetric)->get();
 
         if (request()->platoon) {
@@ -53,8 +53,14 @@ class InactiveMemberController extends Controller
          */
         $requestPath = 'division.' . explode('/', request()->path())[2];
 
-        return view('division.inactive-members',
-            compact('division', 'inactiveMembers', 'flaggedMembers', 'flagActivity', 'requestPath', 'inactivityMetric'));
+        return view('division.inactive-members', compact(
+            'division',
+            'inactiveMembers',
+            'flaggedMembers',
+            'flagActivity',
+            'requestPath',
+            'inactivityMetric'
+        ));
     }
 
     /**

@@ -20,13 +20,17 @@ class MemberPresenter extends Presenter
         $this->member = $member;
     }
 
-    /**
-     * TODO - Figure out what the hell this is.
-     *
-     * @param  mixed  $value
-     */
-    public function lastActive($value)
+    public function lastActive($activityType)
     {
+        if (! in_array($activityType, [
+            'last_ts_activity',
+            'last_voice_activity',
+        ])) {
+            throw new \Exception('Invalid activity type provided to `lastActive()`');
+        }
+
+        $value = $this->member->$activityType;
+
         if (is_null($value)) {
             return 'Never';
         }

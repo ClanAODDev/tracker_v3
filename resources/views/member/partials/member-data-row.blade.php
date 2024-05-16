@@ -21,7 +21,7 @@
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
     <td class="text-center">
                     <span class="{{ getActivityClass($member->last_voice_activity, $division) }}" title="{{$member->last_voice_activity}}">
-                        {{ $member->present()->lastActive($member->last_voice_activity) }}
+                        {{ $member->present()->lastActive('last_voice_activity') }}
                     </span>
     </td>
     <td class="text-center">
@@ -29,7 +29,7 @@
             <span class="text-danger">MISCONFIGURATION</span>
         @else
             <span class="{{ getActivityClass(Carbon::parse($member->last_ts_activity), $division) }}">
-                        {{ $member->present()->lastActive($member->last_ts_activity) }}
+                        {{ $member->present()->lastActive('last_ts_activity') }}
                     </span>
         @endif
     </td>
