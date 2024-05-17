@@ -19,6 +19,11 @@ class Controller extends BaseController
         Toastr::success($message, $title);
     }
 
+    protected function showInfoToast($message, $title = 'Info')
+    {
+        Toastr::info($message, $title);
+    }
+
     protected function showErrorToast($message, $title = 'Uh oh...')
     {
         Toastr::error($message, $title, [
