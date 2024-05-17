@@ -63,7 +63,7 @@
                         </td>
                         <td>
                             {{-- temporary handling of null dates --}}
-                            {{ $member->present()->lastActive($member->last_voice_activity) }}
+                            {{ $member->present()->lastActive('last_voice_activity') }}
                         </td>
                     </tr>
                 @endforeach
