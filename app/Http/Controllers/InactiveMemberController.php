@@ -30,9 +30,7 @@ class InactiveMemberController extends Controller
 
         $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)
             ->where(function ($query) use ($division, $inactivityMetric) {
-                $query->where($inactivityMetric, '<', now()->today()->subDays($division->settings()->inactivity_days))
-                    // don't include discord misconfigurations - these get dealt with separately
-                    ->whereNotIn('last_voice_status', ['never_configured', 'never_connected']);
+                $query->where($inactivityMetric, '<', now()->today()->subDays($division->settings()->inactivity_days));
             })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy($inactivityMetric)->get();
 
         if (request()->platoon) {
