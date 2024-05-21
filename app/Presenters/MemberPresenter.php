@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\Models\Member;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 
 class MemberPresenter extends Presenter
 {
@@ -20,18 +21,28 @@ class MemberPresenter extends Presenter
         $this->member = $member;
     }
 
-    public function lastActive($activityType)
+    /**
+     * Returns activity date difference in human-readable form
+     *
+     * @param  array  $skipUnits  Array of difference units to skip. Ex. weeks, months, etc.
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function lastActive($activityType, array $skipUnits = [])
     {
         if (! in_array($activityType, [
             'last_ts_activity',
             'last_voice_activity',
         ])) {
-            throw new \Exception('Invalid activity type provided to `lastActive()`');
+            throw new \Exception('Invalid activity type provided to `getActivity()`');
         }
 
         $value = $this->member->$activityType;
 
-        if (is_null($value)) {
+        if ($this->member->isPending) {
+            return 'Pending';
+        } elseif (is_null($value)) {
             return 'Never';
         }
 
@@ -41,11 +52,11 @@ class MemberPresenter extends Presenter
 
         $epochStart = Carbon::createFromTimestampUTC(0);
 
-        if ($epochStart->equalTo($value)) {
+        if ($epochStart->equalTo($value->shiftTimezone('UTC'))) {
             return 'Never';
         }
 
-        return $value->diffForHumans();
+        return $value->diffForHumans(['skip' => $skipUnits], CarbonInterface::DIFF_ABSOLUTE);
     }
 
     /**
