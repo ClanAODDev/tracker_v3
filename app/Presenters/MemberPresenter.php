@@ -35,7 +35,7 @@ class MemberPresenter extends Presenter
             'last_ts_activity',
             'last_voice_activity',
         ])) {
-            throw new \Exception('Invalid activity type provided to `getActivity()`');
+            throw new \Exception('Invalid activity type provided to `lastActive()`');
         }
 
         $value = $this->member->$activityType;
