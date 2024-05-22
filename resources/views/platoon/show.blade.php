@@ -1,12 +1,7 @@
 @extends('application.base-tracker')
 @section('content')
 
-    @component ('application.components.division-heading')
-        @slot ('icon')
-            <a href="{{ route('division', $division->slug) }}">
-                <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large"/>
-            </a>
-        @endslot
+    @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
             {{ $platoon->name ?? "Untitled " . $division->locality('platoon') }}
             @include('platoon.partials.edit-platoon-button', ['division' => $division])

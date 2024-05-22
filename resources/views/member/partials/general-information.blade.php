@@ -11,15 +11,8 @@
                 <div class="row m-t-xs">
                     <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
-                            @if ($member->isPending)
-                                <span class="text-muted">UNAVAILABLE</span>
-                            @elseif ($member->tsInvalid)
-                                --
-                            @else
-                                {{ Carbon::parse($member->last_ts_activity)->diffInDays() }}
-                                {{ \Illuminate\Support\Str::plural('day',
-                            $member->last_ts_activity->diffInDays()) }}
-                            @endif
+                            <span title="{{ $member->last_ts_activity }}"
+                                  class="{{  getMemberProfileActivityClass($member->last_ts_activity) }}">{{ $member->present()->lastActive('last_ts_activity', ['weeks','months']) }}</span>
                         </h2>
                         Since last <span class="c-white">TS activity</span>
                     </div>
@@ -40,14 +33,8 @@
 
                     <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
-                            @if ($member->last_voice_activity)
-                                {{ Carbon::parse($member->last_voice_activity)->diffInDays() }}
-                                {{ \Illuminate\Support\Str::plural('day',
-                            $member->last_voice_activity->diffInDays()) }}
-                            @else
-                                --
-                            @endif
-
+                            <span title="{{ $member->last_voice_activity }}"
+                                  class="{{  getMemberProfileActivityClass($member->last_voice_activity) }}">{{ $member->present()->lastActive('last_voice_activity', ['weeks','months']) }}</span>
                         </h2>
                         Since Last <span class="c-white">Discord Voice Activity</span>
                     </div>

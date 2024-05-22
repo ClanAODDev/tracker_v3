@@ -1,14 +1,7 @@
 @extends('application.base-tracker')
 @section('content')
 
-    @component ('application.components.division-heading')
-        @slot ('icon')
-            @if ($division)
-                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
-            @else
-                <img class="division-icon-large" src="{{ asset('images/logo_v2.svg') }}" />
-            @endif
-        @endslot
+    @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
             {!! $member->present()->rankName !!}
         @endslot
