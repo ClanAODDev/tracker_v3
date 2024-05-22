@@ -203,7 +203,7 @@ function checked($arg)
 
 function carbon_date_or_null_if_zero($value)
 {
-    return ($value === null || str_contains($value, '1970-01-01') || Carbon::parse($value)->timestamp <= 0) ? null : $value;
+    return ($value === null || Carbon::parse($value)->timestamp <= 0) ? null : $value;
 }
 
 /**
