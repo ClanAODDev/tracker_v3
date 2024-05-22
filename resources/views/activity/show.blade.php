@@ -2,12 +2,7 @@
 
 @section('content')
 
-    @component ('application.components.division-heading', [$division])
-        @slot ('icon')
-            <a href="{{ route('division', $division->slug) }}">
-                <img src="{{ getDivisionIconPath($division->abbreviation) }}" />
-            </a>
-        @endslot
+    @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
             {{ $division->name }} Division
         @endslot

@@ -6,10 +6,7 @@
 
 @section('content')
 
-    @component ('application.components.division-heading', [$division])
-        @slot ('icon')
-            <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-large" />
-        @endslot
+    @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
             <span class="hidden-xs">{{ $division->name }}</span>
             <span class="visible-xs">{{ $division->abbreviation }}</span>
