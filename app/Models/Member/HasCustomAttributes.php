@@ -22,6 +22,13 @@ trait HasCustomAttributes
         );
     }
 
+    public function voiceInvalid(): Attribute
+    {
+        return new Attribute(
+            fn ($value, $attributes) => carbon_date_or_null_if_zero($attributes['last_voice_activity']) === null
+        );
+    }
+
     public function lastPromoted(): Attribute
     {
         return new Attribute(

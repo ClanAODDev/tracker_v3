@@ -2,6 +2,7 @@
 
 use App\Models\MemberRequest;
 use App\Settings\UserSettings;
+use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 
@@ -202,7 +203,7 @@ function checked($arg)
 
 function carbon_date_or_null_if_zero($value)
 {
-    return ($value === null || Carbon::parse($value)->timestamp <= 0) ? null : $value;
+    return ($value === null || str_contains($value, '1970-01-01') || Carbon::parse($value)->timestamp <= 0) ? null : $value;
 }
 
 /**
@@ -229,6 +230,21 @@ function getActivityClass($date, $division)
     }
 
     return 'text-success';
+}
+
+/**
+ * Provides visual feedback for a member's last activity
+ * for display on their member profile
+ *
+ * @return string
+ */
+function getMemberProfileActivityClass($date)
+{
+    if (! $date instanceof \Carbon\Carbon) {
+        return 'text-muted';
+    } else {
+        return '';
+    }
 }
 
 /**

@@ -26,13 +26,10 @@
                     </span>
     </td>
     <td class="text-center">
-        @if ($member->tsInvalid)
-            <span class="text-danger">MISCONFIGURATION</span>
-        @else
-            <span class="{{ getActivityClass(Carbon::parse($member->last_ts_activity), $division) }}">
-                {{ $member->present()->lastActive('last_ts_activity') }}
-            </span>
-        @endif
+                    <span class="{{ getActivityClass($member->last_ts_activity, $division) }}"
+                          title="{{$member->last_ts_activity}}">
+                        {{ $member->present()->lastActive('last_ts_activity') }}
+                    </span>
     </td>
     <td class="col-hidden">{{ $member->last_ts_activity }}</td>
     <td class="text-center">{{ $member->last_promoted_at ?? 'Never' }}</td>
