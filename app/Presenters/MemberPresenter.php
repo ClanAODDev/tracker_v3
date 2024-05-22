@@ -50,9 +50,9 @@ class MemberPresenter extends Presenter
             ? $value
             : \Carbon\Carbon::parse($value);
 
-        $epochStart = Carbon::createFromTimestampUTC(0);
+        $epochStart = Carbon::createFromTimestamp(0);
 
-        if ($epochStart->equalTo($value->shiftTimezone('UTC'))) {
+        if ($epochStart->equalTo($value)) {
             return 'Never';
         }
 
