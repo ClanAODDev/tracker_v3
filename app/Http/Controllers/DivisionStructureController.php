@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use stdClass;
-use Twig_Error;
 use Twig_Error_Syntax;
 use Twig_Sandbox_SecurityError;
 
@@ -40,6 +39,8 @@ class DivisionStructureController extends Controller
     {
         $this->authorize('viewDivisionStructure', auth()->user());
 
+        $data = null;
+
         try {
             $compiledData = $this->compileDivisionData($division);
 
@@ -66,8 +67,8 @@ class DivisionStructureController extends Controller
             }));
 
             $data = $env->render('structure', ['division' => $compiledData]);
-        } catch (Twig_Error $error) {
-            $data = $this->handleTwigError($error);
+        } catch (\Exception $error) {
+            $this->handleTwigError($error);
         }
 
         return view('division.structure', compact('data', 'division'));
@@ -260,13 +261,17 @@ class DivisionStructureController extends Controller
     private function handleTwigError($error)
     {
         if ($error instanceof Twig_Error_Syntax) {
-            return $error->getMessage();
+            $this->showErrorToast($error->getMessage());
+
+            return;
         }
 
         if ($error instanceof Twig_Sandbox_SecurityError) {
-            return 'You attempted to use an unauthorized tag, filter, or method';
+            $this->showErrorToast('You attempted to use an unauthorized tag, filter, or method');
+
+            return;
         }
 
-        return $error->getMessage();
+        $this->showErrorToast($error->getMessage());
     }
 }
