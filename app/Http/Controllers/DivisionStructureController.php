@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use stdClass;
-use Twig_Error;
 use Twig_Error_Syntax;
 use Twig_Sandbox_SecurityError;
 
@@ -66,7 +65,7 @@ class DivisionStructureController extends Controller
             }));
 
             $data = $env->render('structure', ['division' => $compiledData]);
-        } catch (Twig_Error $error) {
+        } catch (\Exception $error) {
             $data = $this->handleTwigError($error);
         }
 
