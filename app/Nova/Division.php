@@ -76,6 +76,8 @@ class Division extends Resource
             Code::make('Settings')
                 ->json(),
 
+            Code::make('Structure'),
+
             Date::make('Created At')->sortable(),
 
             Date::make('Updated At')->sortable(),
