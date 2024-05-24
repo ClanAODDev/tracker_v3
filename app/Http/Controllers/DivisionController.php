@@ -107,9 +107,15 @@ class DivisionController extends Controller
     public function update(UpdateDivision $form, Division $division)
     {
         $form->persist();
-        $this->showSuccessToast('Changes saved successfully');
+
+        if (! $division->wasChanged('settings')) {
+            $this->showInfoToast('No changes were made');
+            return back();
+        }
+
         $division->recordActivity('updated_settings');
 
+        $this->showSuccessToast('Changes saved successfully');
         if ($division->settings()->get('slack_alert_division_edited')) {
             $division->notify(new \App\Notifications\DivisionEdited($division, auth()->user()->name));
         }
