@@ -66,7 +66,7 @@ class DivisionStructureController extends Controller
 
             $data = $env->render('structure', ['division' => $compiledData]);
         } catch (\Exception $error) {
-            $data = $this->handleTwigError($error);
+            $this->handleTwigError($error);
         }
 
         return view('division.structure', compact('data', 'division'));
@@ -259,13 +259,17 @@ class DivisionStructureController extends Controller
     private function handleTwigError($error)
     {
         if ($error instanceof Twig_Error_Syntax) {
-            return $error->getMessage();
+            $this->showErrorToast($error->getMessage());
+
+            return;
         }
 
         if ($error instanceof Twig_Sandbox_SecurityError) {
-            return 'You attempted to use an unauthorized tag, filter, or method';
+            $this->showErrorToast('You attempted to use an unauthorized tag, filter, or method');
+
+            return;
         }
 
-        return $error->getMessage();
+        $this->showErrorToast($error->getMessage());
     }
 }
