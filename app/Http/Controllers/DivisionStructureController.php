@@ -39,6 +39,8 @@ class DivisionStructureController extends Controller
     {
         $this->authorize('viewDivisionStructure', auth()->user());
 
+        $data = null;
+
         try {
             $compiledData = $this->compileDivisionData($division);
 
