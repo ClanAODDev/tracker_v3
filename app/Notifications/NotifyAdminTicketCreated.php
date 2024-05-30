@@ -37,11 +37,8 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
             ->title('ClanAOD Tracker')
             ->fields([
                 [
-                    'name' => "Type: {$notifiable->type->name}",
-                    'value' => "Submitted by {$authoringUser}",
-                ], [
-                    'name' => 'Link to ticket',
-                    'value' => route('help.tickets.show', $notifiable),
+                    'name' => "Ticket: {$notifiable->type->name} - {$authoringUser}",
+                    'value' => sprintf('[Open Ticket](%s)', route('help.tickets.show', $notifiable)),
                 ],
             ])
             ->info()
