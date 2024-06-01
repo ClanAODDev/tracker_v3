@@ -31,10 +31,11 @@ class InactiveMemberController extends Controller
             $inactiveDiscordMembers = $inactiveDiscordMembers->where('platoon_id', request()->platoon->id);
         }
 
-        $flagActivity = Activity::whereDivisionId($division->id)->where(function ($query) {
-            $query->where('name', 'flagged_member')->orWhere('name', 'unflagged_member')->orWhere('name',
-                'removed_member');
-        })->orderByDesc('created_at')->with('subject', 'subject.rank')->get();
+        $flagActivity = Activity::where('division_id', $division->id)
+            ->whereIn('name', ['flagged_member', 'unflagged_member', 'removed_member'])
+            ->orderByDesc('created_at')
+            ->with(['subject', 'subject.rank'])
+            ->get();
 
         $flaggedMembers = $division->members()->with('rank')->whereFlaggedForInactivity(true)->get();
 
