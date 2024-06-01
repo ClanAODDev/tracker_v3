@@ -25,10 +25,10 @@
                             @if ($member->tsInvalid)
                                 <code title="Misconfiguration"><span class="text-danger">00000</span></code>
                             @else
-                                <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                                <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
                             @endif
                         @elseif($inactivityMetric === 'last_voice_activity')
-                            <code>{{ $member->last_voice_activity->diffInDays() }}</code>
+                            <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
                         @endif
                     </td>
                     <td>{{ $member->squad->name ?? "Untitled" }}</td>
