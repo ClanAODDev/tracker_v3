@@ -40,12 +40,6 @@ class MemberPresenter extends Presenter
 
         $value = $this->member->$activityType;
 
-        if ($this->member->isPending) {
-            return 'Pending';
-        } elseif (is_null($value)) {
-            return 'Never';
-        }
-
         $value = $value instanceof \Carbon\Carbon
             ? $value
             : \Carbon\Carbon::parse($value);
