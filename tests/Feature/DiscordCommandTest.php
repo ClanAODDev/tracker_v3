@@ -19,15 +19,16 @@ final class DiscordCommandTest extends TestCase
 
         config()->set('slack.tokens', $token);
 
-        $response = $this->json('POST', '/slack', [
+        $response = $this->json('POST', '/discord', [
             'token' => $token,
-            'text' => 'help',
+            'command' => 'division',
+            'query' => 'ps2',
         ]);
 
         $response->assertJson(
             fn (AssertableJson $json) => $json->where(
-                'embed.title',
-                'The following commands are currently available.'
+                'embed.author.name',
+                'Planetside'
             )->etc()
         );
     }
@@ -39,9 +40,9 @@ final class DiscordCommandTest extends TestCase
 
         config()->set('slack.tokens', $token);
 
-        $response = $this->json('POST', '/slack', [
+        $response = $this->json('POST', '/discord', [
             'token' => $token,
-            'text' => 'foo',
+            'command' => 'foo',
         ]);
 
         $response->assertJson(
@@ -55,7 +56,7 @@ final class DiscordCommandTest extends TestCase
     /** @test */
     public function a_slack_command_fails_if_it_has_no_known_token()
     {
-        $response = $this->json('POST', 'slack');
+        $response = $this->json('POST', 'discord');
 
         $response->assertStatus(401);
     }

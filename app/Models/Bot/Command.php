@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Slack;
+namespace App\Models\Bot;
 
 /**
  * Interface Command.
@@ -10,7 +10,7 @@ interface Command
     /**
      * Command constructor.
      */
-    public function __construct($data);
+    public function __construct($request);
 
     /**
      * Handle execution of command and return response method.

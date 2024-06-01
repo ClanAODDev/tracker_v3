@@ -54,9 +54,6 @@ Route::group(['prefix' => 'primary-nav'], function () {
 });
 
 /*
- * Slack handler.
+ * Discord command handler.
  */
-Route::post('slack', [
-    'as' => 'slack.commands',
-    'uses' => 'Slack\SlackCommandController@index',
-])->middleware('slack');
+Route::get('bot/commands/{command}', 'Bot\BotCommandController@index')->name('bot.commands')->middleware('bot');
