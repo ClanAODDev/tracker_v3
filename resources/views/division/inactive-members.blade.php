@@ -31,8 +31,15 @@
         <div class="tabs-container">
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a data-toggle="tab" href="#inactive"
-                       aria-expanded="true">Inactive <span class="badge">{{ count($inactiveMembers) }}</span></a></li>
+                    <a data-toggle="tab" href="#inactive-ts"
+                       aria-expanded="true">Inactive TS <span class="badge">{{ count($inactiveTSMembers)
+                       }}</span></a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#inactive-discord"
+                       aria-expanded="true">Inactive Discord <span class="badge">{{ count($inactiveDiscordMembers)
+                       }}</span></a>
+                </li>
                 <li>
                     <a data-toggle="tab" href="#flagged"
                        aria-expanded="false">Flagged <span class="badge">{{ count($flaggedMembers) }}</span>
@@ -40,10 +47,17 @@
                 </li>
             </ul>
             <div class="tab-content">
-                <div id="inactive" class="tab-pane active">
+                <div id="inactive-ts" class="tab-pane active">
                     <div class="panel-body">
                         @include('division.partials.filter-inactive')
-                        @include('division.partials.inactive-members')
+                        @include('division.partials.inactive-members', ['type' => 'ts'])
+                    </div>
+                </div>
+
+                <div id="inactive-discord" class="tab-pane">
+                    <div class="panel-body">
+                        @include('division.partials.filter-inactive')
+                        @include('division.partials.inactive-members', ['type' => 'discord'])
                     </div>
                 </div>
                 <div id="flagged" class="tab-pane">

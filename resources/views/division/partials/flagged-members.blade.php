@@ -3,10 +3,8 @@
         <thead>
         <tr>
             <th>Member</th>
-            <th>
-                {{ $inactivityMetric === 'last_voice_activity' ? 'Last Discord Voice Activity' : 'Last TS Activity' }}
-                <small class="text-muted">Days</small></th>
-            </th>
+            <th>Last TS Activity</th>
+            <th>Last Discord Voice Activity</th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
         </tr>
@@ -20,15 +18,15 @@
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
                 <td>
-                    @if ($inactivityMetric === 'last_ts_activity')
-                        @if ($member->tsInvalid)
-                            <code title="Misconfiguration"><span class="text-danger">00000</span></code>
-                        @else
-                            <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
-                        @endif
-                    @elseif($inactivityMetric === 'last_voice_activity')
-                        <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
+                    @if ($member->tsInvalid)
+                        <code title="Misconfiguration"><span class="text-danger">00000</span></code>
+                    @else
+                        <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
                     @endif
+                </td>
+                <td>
+                    <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
+
                 </td>
                 <td>
                     @can ('update', $member)
@@ -43,7 +41,7 @@
                     <div class="btn-group-xs">
                         @can ('delete', $member)
                             {!! Form::model($member, ['method' => 'delete', 'route' => ['member.drop-for-inactivity', $member->clan_id]]) !!}
-                            <input type="hidden" value="Member removed for inactivity" name="removal_reason" />
+                            <input type="hidden" value="Member removed for inactivity" name="removal_reason"/>
                             <button type="submit" class="btn btn-danger btn-sm remove-member"
                                     data-member-id="{{ $member->clan_id }}">
                                 <i class="fa fa-trash text-danger"></i> Remove

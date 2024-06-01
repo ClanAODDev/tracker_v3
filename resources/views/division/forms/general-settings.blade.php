@@ -32,14 +32,6 @@
                value="{{ $division->settings()->inactivity_days }}"
                class="form-control" required />
         <span class="help-block"><small>Number of days before a member is considered inactive.</small></span>
-        <div class="checkbox">
-            <label>
-                <input type='hidden' value='0' name="use_discord_activity">
-                <input type="checkbox" name="use_discord_activity"
-                       {{ checked($division->settings()->use_discord_activity) }}
-                       id="use-discord-activity"> Use Discord activity
-            </label>
-        </div>
     </div>
 
     {{ csrf_field() }}

@@ -1,19 +1,18 @@
-@if (count($inactiveMembers))
+@if (count(($type === 'discord') ? $inactiveDiscordMembers : $inactiveTSMembers))
     <div class="table-responsive">
         <table class="table adv-datatable table-hover">
             <thead>
             <tr>
                 <th>Member Name</th>
-                <th>
-                    {{ $inactivityMetric === 'last_voice_activity' ? 'Last Discord Voice Activity' : 'Last TS Activity' }}
-                    <small class="text-muted">Days</small></th>
+                <th>Last TS Activity</th>
+                <th>Last Discord Voice Activity</th>
                 <th>Squad</th>
                 <th class="no-sort"></th>
                 <th class="no-sort"></th>
             </tr>
             </thead>
             <tbody class="sortable">
-            @foreach ($inactiveMembers as $member)
+            @foreach (($type === 'discord') ? $inactiveDiscordMembers : $inactiveTSMembers as $member)
                 <tr>
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
@@ -21,15 +20,14 @@
                         <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                     </td>
                     <td>
-                        @if ($inactivityMetric === 'last_ts_activity')
-                            @if ($member->tsInvalid)
-                                <code title="Misconfiguration"><span class="text-danger">00000</span></code>
-                            @else
-                                <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
-                            @endif
-                        @elseif($inactivityMetric === 'last_voice_activity')
-                            <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
+                        @if ($member->tsInvalid)
+                            <code title="Misconfiguration"><span class="text-danger">00000</span></code>
+                        @else
+                            <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
                         @endif
+                    </td>
+                    <td>
+                        <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
                     </td>
                     <td>{{ $member->squad->name ?? "Untitled" }}</td>
                     <td>

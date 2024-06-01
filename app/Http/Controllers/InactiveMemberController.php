@@ -23,18 +23,12 @@ class InactiveMemberController extends Controller
      */
     public function index($division)
     {
-        // @TODO: Temporary stopgap while we straddle TS and Discord
-        $inactivityMetric = $division->settings()->use_discord_activity
-            ? 'last_voice_activity'
-            : 'last_ts_activity';
-
-        $inactiveMembers = $division->members()->whereFlaggedForInactivity(false)
-            ->where(function ($query) use ($division, $inactivityMetric) {
-                $query->where($inactivityMetric, '<', now()->today()->subDays($division->settings()->inactivity_days));
-            })->whereDoesntHave('leave')->with('rank', 'squad')->orderBy($inactivityMetric)->get();
+        $inactiveTSMembers = $this->getInactiveMembers($division, 'last_ts_activity');
+        $inactiveDiscordMembers = $this->getInactiveMembers($division, 'last_voice_activity');
 
         if (request()->platoon) {
-            $inactiveMembers = $inactiveMembers->where('platoon_id', request()->platoon->id);
+            $inactiveTSMembers = $inactiveTSMembers->where('platoon_id', request()->platoon->id);
+            $inactiveDiscordMembers = $inactiveDiscordMembers->where('platoon_id', request()->platoon->id);
         }
 
         $flagActivity = Activity::whereDivisionId($division->id)->where(function ($query) {
@@ -53,12 +47,22 @@ class InactiveMemberController extends Controller
 
         return view('division.inactive-members', compact(
             'division',
-            'inactiveMembers',
+            'inactiveTSMembers',
+            'inactiveDiscordMembers',
             'flaggedMembers',
             'flagActivity',
             'requestPath',
-            'inactivityMetric'
         ));
+    }
+
+    private function getInactiveMembers($division, $activityColumn)
+    {
+        return $division->members()->whereFlaggedForInactivity(false)
+            ->where($activityColumn, '<', now()->today()->subDays($division->settings()->inactivity_days))
+            ->whereDoesntHave('leave')
+            ->with('rank', 'squad')
+            ->orderBy($activityColumn)
+            ->get();
     }
 
     /**
