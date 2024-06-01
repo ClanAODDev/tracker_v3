@@ -20,7 +20,8 @@
             leadership. Use this page to attempt to communicate with inactive members, and also to process their removal
             from the clan. Members who have an active leave of absence are omitted.</p>
 
-        <p class="text-info">Members should be PMed before they are flagged for removal</p>
+        <p class="text-info">Tabs show inactivity information based exclusively on the indicated service. Both tabs
+            include activity information for TeamSpeak and Discord.</p>
 
         <p><strong>{{ $division->name }}</strong> division inactivity set to
             <code>{{ $division->settings()->inactivity_days }} days</code>
@@ -32,12 +33,17 @@
             <ul class="nav nav-tabs">
                 <li class="active">
                     <a data-toggle="tab" href="#inactive-ts"
-                       aria-expanded="true">Inactive TS <span class="badge">{{ count($inactiveTSMembers)
+                       aria-expanded="true"><i class="fab fa-lg fa-teamspeak"></i> &nbsp; TeamSpeak Inactive <span
+                                class="badge">{{
+                       count($inactiveTSMembers)
                        }}</span></a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#inactive-discord"
-                       aria-expanded="true">Inactive Discord <span class="badge">{{ count($inactiveDiscordMembers)
+                       aria-expanded="true"><i class="fab fa-lg fa-discord"></i> &nbsp; Discord Inactive  <span
+                                class="badge">{{
+                       count
+                       ($inactiveDiscordMembers)
                        }}</span></a>
                 </li>
                 <li>
