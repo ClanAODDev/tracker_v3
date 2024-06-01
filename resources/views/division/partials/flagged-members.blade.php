@@ -3,11 +3,9 @@
         <thead>
         <tr>
             <th>Member</th>
-            <th>Last Forum Activity
-                <small class="slight">Days</small>
-            </th>
-            <th>Last TS Activity
-                <small class="slight">Days</small>
+            <th>
+                {{ $inactivityMetric === 'last_voice_activity' ? 'Last Discord Voice Activity' : 'Last TS Activity' }}
+                <small class="text-muted">Days</small></th>
             </th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
@@ -22,13 +20,14 @@
                     <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                 </td>
                 <td>
-                    <code>{{ $member->last_activity->diffInDays() }}</code>
-                </td>
-                <td>
-                    @if ($member->tsInvalid)
-                        <code title="Misconfiguration"><span class="text-danger">00000</span></code>
-                    @else
-                        <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                    @if ($inactivityMetric === 'last_ts_activity')
+                        @if ($member->tsInvalid)
+                            <code title="Misconfiguration"><span class="text-danger">00000</span></code>
+                        @else
+                            <code>{!! Carbon::parse($member->last_ts_activity)->diffInDays() !!}</code>
+                        @endif
+                    @elseif($inactivityMetric === 'last_voice_activity')
+                        <code>{{ $member->last_voice_activity->diffInDays() }}</code>
                     @endif
                 </td>
                 <td>
