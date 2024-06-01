@@ -110,6 +110,7 @@ class DivisionController extends Controller
 
         if (! $division->wasChanged('settings')) {
             $this->showInfoToast('No changes were made');
+
             return back();
         }
 
