@@ -40,7 +40,7 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#inactive-discord"
-                       aria-expanded="true"><i class="fab fa-lg fa-discord"></i> &nbsp; Discord Inactive  <span
+                       aria-expanded="true"><i class="fab fa-lg fa-discord"></i> &nbsp; Discord Inactive <span
                                 class="badge">{{
                        count
                        ($inactiveDiscordMembers)
@@ -48,7 +48,8 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#flagged"
-                       aria-expanded="false">Flagged <span class="badge">{{ count($flaggedMembers) }}</span>
+                       aria-expanded="false"><i class="fa fa-flag"></i> &nbsp; Flagged <span
+                                class="badge">{{ count($flaggedMembers) }}</span>
                     </a>
                 </li>
             </ul>
