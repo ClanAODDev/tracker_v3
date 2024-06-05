@@ -30,16 +30,16 @@
     @endif
 @endcan
 
-@if($division->outstandingInactives)
+{{-- @if($division->outstandingInactives)
     <div class="alert alert-default">
         There are
         <code>{{ $division->outstandingInactives }}</code> outstanding
         inactive {{ Str::plural('member', $division->outstandingInactives) }}. AOD does not allow divisions to maintain
-        members whose last activity exceeds
-        <code>{{ config('app.aod.maximum_days_inactive') }}</code> days except where a leave of absence exists. Please
+        members whose last activity exceeds <code>{{ config('app.aod.maximum_days_inactive') }}</code> days
+        except where a leave of absence exists. Please
         <a href="{{ route('division.inactive-members', $division) }}">process these members</a> out of AOD.
     </div>
-@endif
+@endif --}}
 
 @if (count($division->mismatchedTSMembers) || count($division->misconfiguredDiscordMembers))
     <div class="alert alert-default">
