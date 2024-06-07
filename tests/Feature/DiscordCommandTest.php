@@ -19,7 +19,7 @@ final class DiscordCommandTest extends TestCase
 
         config()->set('app.aod.bot_cmd_tokens', $token);
 
-        $response = $this->json('GET', '/bot/commands/division?query=ps2', [
+        $response = $this->json('GET', '/bot/commands/division?value=ps2', [
             'token' => $token,
         ]);
 

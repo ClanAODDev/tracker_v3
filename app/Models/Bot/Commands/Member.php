@@ -15,8 +15,8 @@ class Member extends Base implements Command
         parent::__construct($request);
 
         $validated = $this->request->validate([
-            'filter' => 'required|in:name,discord,ts_unique_id',
-            'query' => 'required|min:3',
+            'field' => 'required|in:name,discord,ts_unique_id',
+            'value' => 'required|min:3',
         ]);
     }
 
@@ -25,7 +25,7 @@ class Member extends Base implements Command
      */
     public function handle()
     {
-        $members = \App\Models\Member::where($this->params['filter'], 'LIKE', "%{$this->params['query']}%")->get();
+        $members = \App\Models\Member::where($this->params['field'], 'LIKE', "%{$this->params['value']}%")->get();
 
         // count before iterating
         if ($members->count() > 10) {
