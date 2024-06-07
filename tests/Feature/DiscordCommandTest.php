@@ -17,17 +17,16 @@ final class DiscordCommandTest extends TestCase
     {
         $token = 'a-test-token';
 
-        config()->set('slack.tokens', $token);
+        config()->set('app.aod.bot_cmd_tokens', $token);
 
-        $response = $this->json('POST', '/slack', [
+        $response = $this->json('GET', '/bot/commands/division?value=ps2', [
             'token' => $token,
-            'text' => 'help',
         ]);
 
         $response->assertJson(
             fn (AssertableJson $json) => $json->where(
-                'embed.title',
-                'The following commands are currently available.'
+                'embed.author.name',
+                'Planetside'
             )->etc()
         );
     }
@@ -37,16 +36,15 @@ final class DiscordCommandTest extends TestCase
     {
         $token = 'a-test-token';
 
-        config()->set('slack.tokens', $token);
+        config()->set('app.aod.bot_cmd_tokens', $token);
 
-        $response = $this->json('POST', '/slack', [
+        $response = $this->json('GET', '/bot/commands/foo', [
             'token' => $token,
-            'text' => 'foo',
         ]);
 
         $response->assertJson(
             fn (AssertableJson $json) => $json->where(
-                'text',
+                'message',
                 'Unrecognized command. Sorry!'
             )
         );
@@ -55,7 +53,7 @@ final class DiscordCommandTest extends TestCase
     /** @test */
     public function a_slack_command_fails_if_it_has_no_known_token()
     {
-        $response = $this->json('POST', 'slack');
+        $response = $this->json('GET', '/bot/commands/member');
 
         $response->assertStatus(401);
     }

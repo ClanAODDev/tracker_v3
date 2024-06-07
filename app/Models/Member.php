@@ -316,4 +316,35 @@ class Member extends Model
     {
         return $this->hasMany(MemberRequest::class, 'requester_id', 'clan_id');
     }
+
+    /**
+     * Formats member data for a Discord command response.
+     */
+    public function botResponse(): array
+    {
+        $division = ($this->division)
+            ? "{$this->division->name} Division"
+            : 'Ex-AOD';
+
+        $memberLink = route('member', $this->getUrlParams());
+
+        $links = [
+            "[Forum]({$this->AODProfileLink})",
+            "[Tracker]({$memberLink})",
+        ];
+
+        $properties = [
+            "TeamSpeak activity: {$this->present()->lastActive('last_ts_activity', ['weeks', 'months'])}",
+            "Discord activity: {$this->present()->lastActive('last_voice_activity', ['weeks', 'months'])}",
+            'Discord Username: ' . ($this->discord ?? 'Not set'),
+        ];
+
+        return [
+            'name' => "{$this->present()->rankName} ({$this->clan_id}) - {$division}",
+            'value' => 'Profiles: '
+                . implode(', ', $links)
+                . PHP_EOL
+                . implode(PHP_EOL, $properties),
+        ];
+    }
 }

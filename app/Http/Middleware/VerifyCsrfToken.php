@@ -19,7 +19,7 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        'slack',
+        'bot/commands',
         'oauth/authorize',
         'oauth/clients',
     ];
