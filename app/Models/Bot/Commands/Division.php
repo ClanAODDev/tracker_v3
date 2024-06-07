@@ -13,10 +13,6 @@ class Division extends Base implements Command
     public function __construct($request)
     {
         parent::__construct($request);
-
-        $validated = $this->request->validate([
-            'value' => 'required|min:3',
-        ]);
     }
 
     /**
@@ -24,8 +20,12 @@ class Division extends Base implements Command
      */
     public function handle()
     {
-        $division = \App\Models\Division::where('abbreviation', $this->params['value'])
-            ->orWhere('name', $this->params['value'])->first();
+        $validated = $this->request->validate([
+            'value' => 'required|min:3',
+        ]);
+
+        $division = \App\Models\Division::where('abbreviation', $validated['value'])
+            ->orWhere('name', $validated['value'])->first();
 
         $leaderData = '';
 
