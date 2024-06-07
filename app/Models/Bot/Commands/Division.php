@@ -1,20 +1,18 @@
 <?php
 
-namespace App\Models\Slack\Commands;
+namespace App\Models\Bot\Commands;
 
-use App\Models\Slack\Base;
-use App\Models\Slack\Command;
+use App\Models\Bot\Base;
+use App\Models\Bot\Command;
 
 /**
  * Class Search.
  */
 class Division extends Base implements Command
 {
-    public function __construct($data)
+    public function __construct($request)
     {
-        parent::__construct($data);
-
-        $this->request = $data;
+        parent::__construct($request);
     }
 
     /**
@@ -22,13 +20,12 @@ class Division extends Base implements Command
      */
     public function handle()
     {
-        if (\strlen($this->params) >= 5) {
-            return [
-                'text' => 'Please provide the division abbreviation - not the name!',
-            ];
-        }
+        $validated = $this->request->validate([
+            'value' => 'required|min:3',
+        ]);
 
-        $division = \App\Models\Division::where('abbreviation', $this->params)->first();
+        $division = \App\Models\Division::where('abbreviation', $validated['value'])
+            ->orWhere('name', $validated['value'])->first();
 
         $leaderData = '';
 
@@ -60,7 +57,7 @@ class Division extends Base implements Command
         }
 
         return [
-            'text' => 'No results were found',
+            'message' => 'No results were found',
         ];
     }
 }

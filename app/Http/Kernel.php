@@ -13,8 +13,8 @@ use App\Http\Middleware\MustBeDeveloper;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\VerifyBotToken;
 use App\Http\Middleware\VerifyCsrfToken;
-use App\Http\Middleware\VerifySlackToken;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -94,7 +94,7 @@ class Kernel extends HttpKernel
         'admin' => MustBeAdmin::class,
         'activeDivision' => DivisionMustBeActive::class,
         'banned' => IsBanned::class,
-        'slack' => VerifySlackToken::class,
+        'bot' => VerifyBotToken::class,
         'scopes' => CheckScopes::class,
         'scope' => CheckForAnyScope::class,
 
@@ -122,7 +122,7 @@ class Kernel extends HttpKernel
         MustBeAdmin::class,
         DivisionMustBeActive::class,
         IsBanned::class,
-        VerifySlackToken::class,
+        VerifyBotToken::class,
         CheckScopes::class,
         CheckForAnyScope::class,
     ];
