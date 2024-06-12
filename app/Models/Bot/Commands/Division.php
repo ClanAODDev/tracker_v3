@@ -21,7 +21,7 @@ class Division extends Base implements Command
     public function handle()
     {
         $validated = $this->request->validate([
-            'value' => 'required|min:3',
+            'value' => 'required',
         ]);
 
         $division = \App\Models\Division::where('abbreviation', $validated['value'])
