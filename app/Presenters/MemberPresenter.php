@@ -40,6 +40,10 @@ class MemberPresenter extends Presenter
 
         $value = $this->member->$activityType;
 
+        if (is_null($value)) {
+            return 'Never';
+        }
+
         $value = $value instanceof \Carbon\Carbon
             ? $value
             : \Carbon\Carbon::parse($value);

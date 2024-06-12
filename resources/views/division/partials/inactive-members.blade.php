@@ -19,14 +19,14 @@
                         {{ $member->name }}
                         <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
                     </td>
-                    <td>
+                    <td data-order="{{ $member->last_ts_activity->timestamp }}">
                         @if ($member->tsInvalid)
                             <code title="Misconfiguration"><span class="text-danger">00000</span></code>
                         @else
                             <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
                         @endif
                     </td>
-                    <td>
+                    <td data-order="{{ $member->last_voice_activity->timestamp }}">
                         <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
                     </td>
                     <td>{{ $member->squad->name ?? "Untitled" }}</td>
