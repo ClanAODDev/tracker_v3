@@ -1,0 +1,41 @@
+# Team Speak 3 Configuration
+
+![TSConfig](https://i.imgur.com/48oxvBg.png)
+
+To set up push to talk in Team speak 3 go to tools, options
+
+![Push Talk](https://i.imgur.com/DRERsNv.png)
+
+select capture. Set Push to talk under activation and choose the push to talk key. Select the chosen push to talk key.
+
+## How to copy Teamspeak Identity
+
+![Identities](https://i.imgur.com/dXgHOe2.png)
+
+Under tools click identities,
+
+![Unique ID](https://i.imgur.com/Ry8IOdY.png)
+
+and copy the unique id.
+
+![forums](https://i.imgur.com/4CWQOLr.png)
+
+Go to the [forums](https://www.clanaod.net/forums/cmps_index.php) and in the upper right click settings
+
+![Member Info](https://i.imgur.com/VTRy1W0.png)
+
+In the left column choose Edit AOD Member Info
+
+![Identity](https://i.imgur.com/wjwC9z7.png)
+
+Paste the teamspeak identity verify other information is correct and click save changes.
+
+## How to Set a Bookmark
+
+![Add bookmark](https://i.imgur.com/jscPgM2.png)
+
+Click bookmarks add to bookmarks.
+
+![Set Nickname](https://i.imgur.com/p7Pl7Dl.png)
+
+Verify address is correct. Set Nickname. This is also where the default channel will be set later. Connect via the bookmark and verify the name is correct.
