@@ -4,6 +4,13 @@ Documentation of the various objects needed for Divisions. This page will genera
 adding a new division. Deviations for deleting a Division will also be noted.
 
 - [DNS Entry](#content-dns-entry)
+- [Tracker](#content-tracker)
+  - [Creating divisions in Admin CP](#content-creating-divisions-in-admin-cp)
+  - [Ingame handles](#content-ingame-handles)
+  - [Additional cosmetic items](#content-additional-cosmetic-items)
+    - [Website](#content-website-pages)
+    - [Division page headers (Website)](#content-division-page-headers)
+    - [Tracker banners](#content-tracker-banner)
 - [Forums](#content-forums-vbulletin)
   - [Forum Officers Group](#content-forum-officers-group)
   - [Forum Category](#content-forum-category-parent-forum)
@@ -16,18 +23,106 @@ adding a new division. Deviations for deleting a Division will also be noted.
 - [TeamSpeak](#content-teamspeak)
   - [Officer Server Group](#content-officer-server-group)
   - [Flair Server Group](#content-flair-server-groups)
-- [Tracker](#content-tracker)
-  - [Creating divisions in Admin CP](#content-creating-divisions-in-admin-cp)
-  - [Ingame handles](#content-ingame-handles)
-  - [Additional cosmetic items](#content-additional-cosmetic-items)
-    - [Website](#content-website-pages)
-    - [Division page headers (Website)](#content-division-page-headers)
-    - [Tracker banners](#content-tracker-banner)
+
 
 ## DNS Entry
 
 DNS Entries are managed through CloudFlare by Archangel, Guybrush, Kestah, and LiquidSmoke. Please contact one of these
 members to add or remove domains using LiquidSmoke as a last resort.
+
+## Tracker
+
+Rough notes here. Needs some cleaning up.
+
+- Forum officer role (Division Officers)
+- Agreed upon abbreviation (short-hand version of a division name. IE., Battlefield => bf, World of Warcraft => wow
+- Forum Form Application (IE., https://www.clanaod.net/forums/forms.php?do=form&fid=34)
+- Ingame handle (developer or platform specific). There's a good chance it already exists. If not, make a new one (
+  tracker admin cp => Handles)
+- Division icon - this should **come from the official game binary** and can be extracted
+  using [BeCyIconGrabber](https://jarlpenguin.github.io/BeCyIconGrabberPortable/) (48x48 PNG). If you are unsure how
+  to use this, ask around. Store the division icon
+  at [public/images/game_icons/48x48](https://github.com/ClanAODDev/tracker_v3/tree/main/public/images/game_icons/48x48)
+  using the division abbreviation.
+
+### Creating divisions in Admin CP
+
+- Name: Provide the full proper name of the division
+- Slug: Sluggified version of the name. This should be lower-case and hyphenated. No other characters.
+- Abbreviation: should match the forum. **Always lowercase. This is important.**
+- Officer role id: Id of the role/group created in the forums. You can find this under Forum Admin > Usergroups > Id
+  listed on the right-hand side in the "Edit" dropdown
+- Handle: Should already exist. Pick the most appropriate one. More information provided below regarding handles.
+- Forum app ID: The form id of the division application
+- Settings: Leave this blank. It'll be populated later.
+- Created At, Updated At: Currently defaults to blank. Set this to today's date.
+- Description: Provide some appropriate sub-title for the division.
+- Active: Self-explanatory
+
+### Ingame Handles
+
+Handles are ingame names that a member can have across the variety of platforms of games AOD plays. Steam, Battlenet,
+and Bungie are just a few examples. Some games (like Warships) have their own specific ingame handle. Since handles are
+used in a variety of ways, it's important to make sure the handle is configured correctly.
+
+- Label: Mostly cosmetic. Give it a proper name.
+- Type: This is less obvious (and probably needs some UI improvement), but it's the snake_case version of the name. IE.,
+  Bungie => bungie_id.
+- Comments: mostly guidance, not required
+- URL: This is the deeplink URL, if the platform provides it. Ensure that the URL is configured so that the unique
+  profile/member id can be appended to the end. Not all platforms offer this.
+
+### Additional cosmetic items
+
+#### Website pages
+
+Since divisions automatically appear on the website when they are populated in the tracker, a new problem arises: the
+link to the division leads to a 404. To remedy this, a division page must be created as soon as possible to ensure that
+traffic doesn't get lost, and divisions actually have a way to recruit people (or at least send them to the correct
+form).
+
+The website repository is publicly accessible and anyone can contribute changes - even directly through the UI. But
+you'll need a GitHub account to do so.
+
+- Go to the AOD Repo and look at division page
+  content: https://github.com/ClanAODDev/aod_site_v2/tree/main/resources/views/division/content
+- Copy content from an existing division and make a new file. Look at multiple divisions so you can get a sense for
+  what's possible and how to do it correctly. Stick with basic html formatting elements (`p, ul, strong, underline, em,
+  etc`)
+- Update content as necessary. Preserve the html structure (classnames, element ordering).
+- Ask Arch or myself to update the website with changes from the repo. At some point we'll automate this so that PRs
+  automatically get deployed. For now, it's manual.
+
+Templates are structured such that H2 header elements will automatically generate a button at the top of the page,
+providing a table of contents to navigate. The ID can be anything, as long as it's unique, and uses
+the-correct-character-structure.
+
+#### Division page headers
+
+Header images are based on
+a [preexisting photoshop template](https://github.com/ClanAODDev/aod_site_v2/blob/main/public/images/division-headers/division-header-template.psd).
+Notice that the actual image should be the bottom layer of the image. _It should also not include any
+logos or text, and should generally be official game art, not fan-made._ It should be exported as
+a `.jpg` and added to the [aod_site_v2/public/images/division-headers](https://github.com/ClanAODDev/aod_site_v2/tree/main/public/images/division-headers)
+folder using the **division abbreviation (LOWERCASE)**.
+
+Only add game artwork underneath the "division content" folder layer. Do not make any other changes to the template, or
+it will break other elements of the site.
+
+Assuming you provided a forum_app_id on the tracker, an "apply" button will send them directly to your division
+application. This is automatically added to the page. **If the apply button takes you to a 404, it's because you're
+missing the forum_app_id for the division on the tracker.**
+
+#### Tracker banner
+
+This is the image that is displayed at the top of the tracker for members of the division, if one exists. The way this
+image gets created is by taking the same image used on the website into a new photoshop canvas (must be transparent),
+adding the image, and reducing the opacity to 8-10%. You can take an existing tracker banner and remove the content to
+make things easier.
+
+You can see existing headers here: https://github.com/ClanAODDev/tracker_v3/tree/main/public/images/headers
+
+Note the naming convention - use the abbreviation and ensure you export as a transparent PNG.
 
 ## Forums (vBulletin)
 
@@ -323,98 +418,5 @@ To create a new group:
 
 ![TeamSpeak Flair Server Group permissions](/images/docs/flair-server-group.png)
 
-## Tracker
-
-Rough notes here. Needs some cleaning up.
-
-- Forum officer role (Division Officers)
-- Agreed upon abbreviation (short-hand version of a division name. IE., Battlefield => bf, World of Warcraft => wow
-- Forum Form Application (IE., https://www.clanaod.net/forums/forms.php?do=form&fid=34)
-- Ingame handle (developer or platform specific). There's a good chance it already exists. If not, make a new one (
-  tracker admin cp => Handles)
-- Division icon - this should **come from the official game binary** and can be extracted
-  using [BeCyIconGrabber](https://jarlpenguin.github.io/BeCyIconGrabberPortable/) (48x48 PNG). If you are unsure how
-  to use this, ask around. Store the division icon
-  at [public/images/game_icons/48x48](https://github.com/ClanAODDev/tracker_v3/tree/main/public/images/game_icons/48x48)
-  using the division abbreviation.
-
-### Creating divisions in Admin CP
-
-- Name: Provide the full proper name of the division
-- Slug: Sluggified version of the name. This should be lower-case and hyphenated. No other characters.
-- Abbreviation: should match the forum. **Always lowercase. This is important.**
-- Officer role id: Id of the role/group created in the forums. You can find this under Forum Admin > Usergroups > Id
-  listed on the right-hand side in the "Edit" dropdown
-- Handle: Should already exist. Pick the most appropriate one. More information provided below regarding handles.
-- Forum app ID: The form id of the division application
-- Settings: Leave this blank. It'll be populated later.
-- Created At, Updated At: Currently defaults to blank. Set this to today's date.
-- Description: Provide some appropriate sub-title for the division.
-- Active: Self-explanatory
-
-### Ingame Handles
-
-Handles are ingame names that a member can have across the variety of platforms of games AOD plays. Steam, Battlenet,
-and Bungie are just a few examples. Some games (like Warships) have their own specific ingame handle. Since handles are
-used in a variety of ways, it's important to make sure the handle is configured correctly.
-
-- Label: Mostly cosmetic. Give it a proper name.
-- Type: This is less obvious (and probably needs some UI improvement), but it's the snake_case version of the name. IE.,
-  Bungie => bungie_id.
-- Comments: mostly guidance, not required
-- URL: This is the deeplink URL, if the platform provides it. Ensure that the URL is configured so that the unique
-  profile/member id can be appended to the end. Not all platforms offer this.
-
-### Additional cosmetic items
-
-#### Website pages
-
-Since divisions automatically appear on the website when they are populated in the tracker, a new problem arises: the
-link to the division leads to a 404. To remedy this, a division page must be created as soon as possible to ensure that
-traffic doesn't get lost, and divisions actually have a way to recruit people (or at least send them to the correct
-form).
-
-The website repository is publicly accessible and anyone can contribute changes - even directly through the UI. But
-you'll need a GitHub account to do so.
-
-- Go to the AOD Repo and look at division page
-  content: https://github.com/ClanAODDev/aod_site_v2/tree/main/resources/views/division/content
-- Copy content from an existing division and make a new file. Look at multiple divisions so you can get a sense for
-  what's possible and how to do it correctly. Stick with basic html formatting elements (`p, ul, strong, underline, em,
-  etc`)
-- Update content as necessary. Preserve the html structure (classnames, element ordering).
-- Ask Arch or myself to update the website with changes from the repo. At some point we'll automate this so that PRs
-  automatically get deployed. For now, it's manual.
-
-Templates are structured such that H2 header elements will automatically generate a button at the top of the page,
-providing a table of contents to navigate. The ID can be anything, as long as it's unique, and uses
-the-correct-character-structure.
-
-#### Division page headers
-
-Header images are based on
-a [preexisting photoshop template](https://github.com/ClanAODDev/aod_site_v2/blob/main/public/images/division-headers/division-header-template.psd).
-Notice that the actual image should be the bottom layer of the image. _It should also not include any
-logos or text, and should generally be official game art, not fan-made._ It should be exported as
-a `.jpg` and added to the [aod_site_v2/public/images/division-headers](https://github.com/ClanAODDev/aod_site_v2/tree/main/public/images/division-headers)
-folder using the **division abbreviation (LOWERCASE)**.
-
-Only add game artwork underneath the "division content" folder layer. Do not make any other changes to the template, or
-it will break other elements of the site.
-
-Assuming you provided a forum_app_id on the tracker, an "apply" button will send them directly to your division
-application. This is automatically added to the page. **If the apply button takes you to a 404, it's because you're
-missing the forum_app_id for the division on the tracker.**
-
-#### Tracker banner
-
-This is the image that is displayed at the top of the tracker for members of the division, if one exists. The way this
-image gets created is by taking the same image used on the website into a new photoshop canvas (must be transparent),
-adding the image, and reducing the opacity to 8-10%. You can take an existing tracker banner and remove the content to
-make things easier.
-
-You can see existing headers here: https://github.com/ClanAODDev/tracker_v3/tree/main/public/images/headers
-
-Note the naming convention - use the abbreviation and ensure you export as a transparent PNG.
 
 If there any questions about this process, please don't hesitate to ask.
