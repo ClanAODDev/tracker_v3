@@ -32,8 +32,8 @@ class Ticket extends Model
         'owner',
     ];
 
-    protected $dates = [
-        'resolved_at',
+    protected $casts = [
+        'resolved_at' => 'datetime',
     ];
 
     /**

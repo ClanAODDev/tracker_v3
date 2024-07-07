@@ -10,7 +10,12 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     protected $guarded = [];
 
-    protected $dates = ['approved_at', 'cancelled_at', 'processed_at', 'hold_placed_at'];
+    protected $casts = [
+        'approved_at' => 'datetime',
+        'cancelled_at' => 'datetime',
+        'processed_at' => 'datetime',
+        'hold_placed_at' => 'datetime',
+    ];
 
     /**
      * @return BelongsTo

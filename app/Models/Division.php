@@ -71,12 +71,14 @@ class Division extends Model
 
     protected static array $recordEvents = ['created', 'deleted'];
 
-    protected $dates = ['shutdown_at'];
-
     /**
      * @var array
      */
-    protected $casts = ['active' => 'boolean', 'settings' => 'json'];
+    protected $casts = [
+        'active' => 'boolean',
+        'settings' => 'json',
+        'shutdown_at' => 'datetime',
+    ];
 
     /**
      * @var array
