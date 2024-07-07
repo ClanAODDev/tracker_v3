@@ -44,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register any application authentication / authorization services.
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
     }
