@@ -15,7 +15,18 @@ class DivisionRepository
      */
     public function censusCounts(Division $division, $limit = 52)
     {
-        return collect(\DB::select(\DB::raw("\n                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date \n                FROM censuses WHERE division_id = {$division->id} \n                GROUP BY date(created_at) \n                ORDER BY date DESC LIMIT {$limit};\n            ")));
+        return collect(\DB::select("
+            SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, DATE(created_at) as date
+            FROM censuses 
+            WHERE division_id = :division_id
+            GROUP BY DATE(created_at) 
+            ORDER BY date DESC 
+            LIMIT :limit
+        ", [
+            'division_id' => $division->id,
+            'limit' => $limit
+        ]));
+
     }
 
     /**
@@ -75,7 +86,8 @@ class DivisionRepository
         $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
         $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
         $twoWeeks = $division->members()->where('last_voice_activity', '>=', $twoWeeksAgo);
-        $oneMonth = $division->members()->where('last_voice_activity', '<=', $twoWeeksAgo)->where('last_voice_activity', '>=',
+        $oneMonth = $division->members()->where('last_voice_activity', '<=', $twoWeeksAgo)->where('last_voice_activity',
+            '>=',
             $oneMonthAgo);
         $moreThanOneMonth = $division->members()->where('last_voice_activity', '<=', $oneMonthAgo);
 
@@ -115,8 +127,8 @@ class DivisionRepository
             function ($join) {
                 $join->on('ranks.id', '=', 'members.rank_id');
             })->join('division_member', function ($join) {
-                $join->on('member_id', '=', 'members.id');
-            })->where('division_id', '=', $division->id)->groupBy('rank_id')->get();
+            $join->on('member_id', '=', 'members.id');
+        })->where('division_id', '=', $division->id)->groupBy('rank_id')->get();
         $labels = [];
         $values = [];
         foreach ($ranks as $rank) {
@@ -135,7 +147,7 @@ class DivisionRepository
     {
         return \DB::table('activities')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count(*) as recruits')->from('activities')->where('activities.name',
             '=', 'recruited_member')->where('division_id', '=', $divisionId)->where('created_at', '>=',
-                $startDate)->orderBy('activities.created_at')->groupby('date')->get();
+            $startDate)->orderBy('activities.created_at')->groupby('date')->get();
     }
 
     /**
@@ -160,6 +172,6 @@ class DivisionRepository
     {
         return \DB::table('censuses')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count')->from('censuses')->where('division_id',
             '=', $divisionId)->where('created_at', '>=', $startDate)->groupby('date')->orderBy('created_at',
-                'ASC')->get();
+            'ASC')->get();
     }
 }
