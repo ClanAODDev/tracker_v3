@@ -55,13 +55,7 @@ class User extends Authenticatable
     protected $casts = [
         'developer' => 'boolean',
         'settings' => 'json',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'last_login_at',
+        'last_login_at' => 'datetime',
     ];
 
     public static function boot()
