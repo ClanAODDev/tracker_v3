@@ -16,7 +16,7 @@
     "guzzlehttp/guzzle": "^7.2",
     "league/csv": "^8.1",
     "laravelcollective/html": "^6.0",
-    "laravel/tinker": "^2.7",
+    "laravel/tinker": "^2.8",
     "doctrine/annotations": "^1.10.4",
     "wrapi/slack": "^0.1.5",
     "appstract/laravel-blade-directives": "^0.4.5",
@@ -27,7 +27,7 @@
     "osiemsiedem/laravel-autolink": "^7.1.0",
     "ext-curl": "*",
     "ext-json": "*",
-    "laravel/sanctum": "^3.2",
+    "laravel/sanctum": "^3.3",
     "spatie/laravel-validation-rules": "^3.0",
     "diglactic/laravel-breadcrumbs": "^v8.1.0",
     "opcodesio/log-viewer": "^1.2",
@@ -43,7 +43,7 @@
     "nunomaduro/collision": "^6.1",
     "beyondcode/laravel-dump-server": "^1.0",
     "laravel/ui": "^4.0",
-    "laravel/sail": "^1.12",
+    "laravel/sail": "^1.18",
     "friendsofphp/php-cs-fixer": "^3.9",
     "spatie/laravel-ignition": "^2.0"
   },
@@ -87,6 +87,7 @@
   "config": {
     "preferred-install": "dist",
     "allow-plugins": {
+      "pestphp/pest-plugin": true,
       "php-http/discovery": true
     }
   },
