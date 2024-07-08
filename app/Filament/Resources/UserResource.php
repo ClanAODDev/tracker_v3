@@ -38,10 +38,12 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('member_id')
                     ->required()
                     ->numeric(),
-                FilamentJsonColumn::make('settings')
+                Forms\Components\KeyValue::make('settings')
                     ->required()
+                    ->addable(false)
                     ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('last_login_at'),
+                Forms\Components\DateTimePicker::make('last_login_at')
+                ->readOnly(),
             ]);
     }
 
