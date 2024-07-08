@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketTypeResource\Pages;
 use App\Filament\Resources\TicketTypeResource\RelationManagers;
+use App\Models\Role;
 use App\Models\TicketType;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -37,7 +38,10 @@ class TicketTypeResource extends Resource
                     ->default(null),
                 Forms\Components\Textarea::make('boilerplate')
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('role_access')
+                Forms\Components\Select::make('role_access')
+                    ->multiple()
+                    ->getSearchResultsUsing(fn (string $search): array => Role::all()->pluck('label', 'id')->toArray())
+                    ->pop
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('display_order')
                     ->required()
