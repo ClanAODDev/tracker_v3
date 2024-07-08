@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use Exception;
 
-class WebhookFailedException extends Exception
-{
-}
+class WebhookFailedException extends Exception {}

@@ -116,9 +116,7 @@ class LoginController extends Controller
      * @param  mixed  $user
      * @return mixed
      */
-    protected function authenticated(Request $request, $user)
-    {
-    }
+    protected function authenticated(Request $request, $user) {}
 
     /**
      * Get the guard to be used during authentication.

@@ -52,13 +52,13 @@ class ClanRepository
      */
     public function allRankDemographic()
     {
-        return DB::select("
+        return DB::select('
             SELECT ranks.abbreviation, count(*) AS count
             FROM members
             JOIN ranks ON ranks.id = members.rank_id
             WHERE members.division_id != 0
             GROUP BY rank_id
             ORDER BY ranks.id ASC
-        ");
+        ');
     }
 }

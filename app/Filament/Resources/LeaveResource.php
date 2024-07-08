@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LeaveResource\Pages;
-use App\Filament\Resources\LeaveResource\RelationManagers;
 use App\Models\Leave;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class LeaveResource extends Resource
 {
@@ -21,7 +18,7 @@ class LeaveResource extends Resource
 
     protected static ?string $label = 'Leave of Absence';
 
-     protected static ?string $pluralLabel = 'Leaves of Absence';
+    protected static ?string $pluralLabel = 'Leaves of Absence';
 
     public static function form(Form $form): Form
     {

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\TicketCommentResource\Pages;
 
 use App\Filament\Resources\TicketCommentResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateTicketComment extends CreateRecord

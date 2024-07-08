@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\CensusResource\Pages;
 
 use App\Filament\Resources\CensusResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateCensus extends CreateRecord
