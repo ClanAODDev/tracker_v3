@@ -14,7 +14,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      */
     protected $casts = [
         'extended' => 'boolean',
-        'end_date' => 'datetime'
+        'end_date' => 'datetime',
     ];
 
     /**

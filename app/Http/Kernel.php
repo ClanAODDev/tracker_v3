@@ -67,7 +67,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            ThrottleRequests::class.':api',
+            ThrottleRequests::class . ':api',
             'bindings',
             'auth:sanctum',
         ],

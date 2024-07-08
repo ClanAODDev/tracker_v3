@@ -80,26 +80,25 @@ class ConvertActivityReminders extends Command
 
         $query->select('body')->whereHas('member.division')->where(function ($query) use ($inactivity_keywords) {
             foreach ($inactivity_keywords as $keyword) {
-                $query->orWhere('body', 'LIKE', '%'.$keyword.'%');
+                $query->orWhere('body', 'LIKE', '%' . $keyword . '%');
             }
         });
 
         foreach ($blacklist_keywords as $keyword) {
-            $query->where('body', 'NOT LIKE', '%'.$keyword.'%');
+            $query->where('body', 'NOT LIKE', '%' . $keyword . '%');
         }
 
         $query->whereRaw('LENGTH(body) <= 200');
 
         $sql = $query->toSql();
 
-    // To get the bindings (parameters)
+        // To get the bindings (parameters)
         $bindings = $query->getBindings();
 
-    // Display the SQL query and its bindings
+        // Display the SQL query and its bindings
         dd(vsprintf(str_replace('?', '%s', $sql), array_map(function ($binding) {
             return is_numeric($binding) ? $binding : "'$binding'";
         }, $bindings)));
-
 
         return Command::SUCCESS;
     }

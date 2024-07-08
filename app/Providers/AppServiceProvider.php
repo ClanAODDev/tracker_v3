@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
 
         TicketType::observe(TicketTypeObserver::class);
 
-//        Paginator::useBootstrap();
+        Paginator::useBootstrap();
     }
 
     /**

@@ -12,9 +12,7 @@ class NotePolicy
     /**
      * Create a new policy instance.
      */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function before(User $user)
     {
@@ -34,9 +32,7 @@ class NotePolicy
         return $this->create();
     }
 
-    public function edit()
-    {
-    }
+    public function edit() {}
 
     /**
      * Only officers and above can create notes.

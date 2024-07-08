@@ -13,9 +13,7 @@ class DivisionEdited extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private $division, private $user)
-    {
-    }
+    public function __construct(private $division, private $user) {}
 
     /**
      * Get the notification's delivery channels.

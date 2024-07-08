@@ -34,9 +34,7 @@ trait RecordsActivity
             ->orderBy('created_at', 'desc');
     }
 
-    public static function feed()
-    {
-    }
+    public static function feed() {}
 
     protected static function bootRecordsActivity()
     {

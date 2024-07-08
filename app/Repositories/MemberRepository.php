@@ -27,6 +27,6 @@ class MemberRepository
             FROM members 
             GROUP BY Year(last_promoted_at), Month(last_promoted_at)
             ORDER BY year DESC
-        "))->filter(fn($values) => $values->month !== null);
+        "))->filter(fn ($values) => $values->month !== null);
     }
 }

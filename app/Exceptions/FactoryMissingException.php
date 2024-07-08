@@ -4,6 +4,4 @@ namespace App\Exceptions;
 
 use Exception;
 
-class FactoryMissingException extends Exception
-{
-}
+class FactoryMissingException extends Exception {}
