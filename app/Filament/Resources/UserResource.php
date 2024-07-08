@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
 
 class UserResource extends Resource
 {
@@ -37,11 +38,9 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('member_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('settings')
+                FilamentJsonColumn::make('settings')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Toggle::make('developer')
-                    ->required(),
                 Forms\Components\DateTimePicker::make('last_login_at'),
             ]);
     }
