@@ -19,6 +19,10 @@ class LeaveResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $label = 'Leave of Absence';
+
+     protected static ?string $pluralLabel = 'Leaves of Absence';
+
     public static function form(Form $form): Form
     {
         return $form
