@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Settings\UserSettings;
 use Exception;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * Class User.
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -209,5 +211,10 @@ class User extends Authenticatable
     public function getNameAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->isRole('admin');
     }
 }
