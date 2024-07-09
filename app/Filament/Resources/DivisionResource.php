@@ -17,6 +17,8 @@ class DivisionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Division';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -24,15 +26,12 @@ class DivisionResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
-                    ->maxLength(191),
                 Forms\Components\TextInput::make('handle_id')
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('officer_role_id')
                     ->numeric()
-                    ->default(null),
+                    ->required(),
                 Forms\Components\TextInput::make('forum_app_id')
                     ->required()
                     ->numeric(),
@@ -42,11 +41,15 @@ class DivisionResource extends Resource
                 Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('active'),
+                Forms\Components\Toggle::make('active')
+                    ->default(true),
                 FilamentJsonColumn::make('settings')
+                    ->accent('#f6a821')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('structure')
+                    ->hidden()
+                    ->default('[]')
                     ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('shutdown_at'),
             ]);
