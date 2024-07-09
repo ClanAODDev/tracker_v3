@@ -20,6 +20,7 @@ use App\Policies\SquadPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Sanctum\NewAccessToken;
 
 class AuthServiceProvider extends ServiceProvider
@@ -47,5 +48,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        Gate::define('viewLogViewer', function (?User $user) {
+            return $user->isRole('admin');
+        });
     }
 }
