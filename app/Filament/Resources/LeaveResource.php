@@ -20,6 +20,10 @@ class LeaveResource extends Resource
 
     protected static ?string $pluralLabel = 'Leaves of Absence';
 
+    protected static ?string $navigationGroup = 'Division';
+
+    protected static ?string $navigationParentItem = 'Divisions';
+
     public static function form(Form $form): Form
     {
         return $form
