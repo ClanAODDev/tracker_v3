@@ -1,5 +1,5 @@
 <div class="panel">
-    @foreach ($platoon->squads as $squad)
+    @forelse ($platoon->squads as $squad)
         <a class="list-group-item"
            href="{{ route('squad.show', [$division->slug, $platoon, $squad]) }}">
             {{ $squad->name ?? ordSuffix($loop->iteration) . " Squad" }}<br />
@@ -11,6 +11,10 @@
                 @endif
             </span>
         </a>
-    @endforeach
+    @empty
+        <a href="{{ route('createSquad', [$division->slug, $platoon]) }}" class="list-group-item">
+            Create Squad
+        </a>
+    @endforelse
 
 </div>
