@@ -41,6 +41,10 @@ return [
         'ingame-reports' => [],
         'api-keys' => [],
 
+        'leave_reasons' => [
+            'Military', 'Medical', 'Education', 'Travel', 'Other',
+        ],
+
         // in hours
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
