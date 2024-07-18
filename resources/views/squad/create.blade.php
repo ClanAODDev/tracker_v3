@@ -14,6 +14,7 @@
         <form id="create-squad" method="post" class="margin-top-20"
               action="{{ route('storeSquad', [$division->slug, $platoon->id]) }}">
             @include('squad.forms.edit-squad-form', ['actionText' => 'Create New'])
+            @csrf
         </form>
     </div>
 

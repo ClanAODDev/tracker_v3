@@ -17,7 +17,7 @@
     @endcomponent
 
     <form action="{{ route('division.update-structure', $division->slug) }}" method="post">
-        {{ csrf_field() }}
+        @csrf
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

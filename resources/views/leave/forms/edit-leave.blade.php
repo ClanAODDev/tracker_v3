@@ -1,10 +1,10 @@
 @include('application.partials.errors')
-
+@method('patch')
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">
-            {!! Form::label('end_date', 'Leave End Date') !!}<span class="text-accent">*</span>
-            {{ Form::date('end_date', $leave->end_date->format('Y-m-d'), ['class' => 'form-control', 'placeholder' => 'mm/dd/yyyy']) }}
+            <label for="end_date">Leave End Date</label><span class="text-accent">*</span>
+            <input type="date" value="{{ $leave->end_date->format('Y-m-d') }}" placeholder="mm/dd/yyyy" class="form-control">
         </div>
     </div>
 

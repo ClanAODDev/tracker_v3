@@ -88,7 +88,7 @@
                                 <div class="panel-footer">
 
                                     <form action="{{ route('training.update') }}" method="POST">
-                                        {{ csrf_field() }}
+                                        @csrf
                                         <table class="table table-bordered">
                                             <tr>
                                                 <td>

@@ -1,7 +1,7 @@
 <form id="recruiting-links" method="post"
       action="{{ route('updateDivision', $division->slug) }}#recruiting-settings">
 
-    {{ method_field('PATCH') }}
+    {{ method_field('patch') }}
 
     <div class="row">
 
@@ -71,7 +71,7 @@
         <button type="submit" class="btn btn-success">Save changes</button>
     </div>
 
-    {{ csrf_field() }}
+    @csrf
 </form>
 
 <script>

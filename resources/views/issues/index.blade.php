@@ -33,7 +33,7 @@
                             </div>
                             <div class="panel-body">
                                 <form action="{{ route('github.create-issue') }}" id="create-issue" method="post">
-                                    {{ csrf_field() }}
+                                    @csrf
 
                                     <div class="form-group">
                                         <label for="labels">Issue Type</label>

@@ -24,7 +24,7 @@
 
     </div>
 
-    {{ csrf_field() }}
+    @csrf
 
     <div class="text-right m-t-md">
         <button type="submit" class="btn btn-success">Save changes</button>

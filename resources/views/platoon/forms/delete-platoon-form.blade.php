@@ -1,3 +1,5 @@
+@method('delete')
+
 <div class="panel panel-filled panel-c-danger collapsed">
     <div class="panel-heading panel-toggle">
         <div class="panel-tools">
@@ -22,4 +24,4 @@
     </div>
 </div>
 
-{{ csrf_field() }}
+@csrf

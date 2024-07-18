@@ -12,35 +12,34 @@
 
     <div class="container-fluid">
 
-        {!! Form::model($platoon, ['method' => 'patch', 'route' => ['updatePlatoon', $division->slug, $platoon]]) !!}
-        @include('platoon.forms.edit-platoon-form')
-        {!! Form::close() !!}
+        <form action="{{ route('updatePlatoon', [$division->slug, $platoon]) }}" method="post">
+            @include('platoon.forms.edit-platoon-form')
+        </form>
 
         @can('delete', $platoon)
-            <hr />
-
-            {!! Form::model($platoon, ['method' => 'delete', 'route' => ['updatePlatoon', $division->slug, $platoon]]) !!}
-            @include('platoon.forms.delete-platoon-form')
-            {!! Form::close() !!}
+            <hr/>
+            <form action="{{ route('updatePlatoon', [$division->slug, $platoon]) }}" method="post">
+                @include('platoon.forms.delete-platoon-form')
+            </form>
 
         @endcan
 
         @if(count($platoon->activity))
-            <hr />
+            <hr/>
             @include ('platoon.partials.feed')
         @endif
     </div>
 
 
     <script>
-      // omit leader field if using TBA
-      $('#is_tba').click(function () {
-        if ($('#is_tba').is(':checked')) {
-          $('#leader').prop('disabled', true);
-        } else {
-          $('#leader').prop('disabled', false);
-        }
-      });
+        // omit leader field if using TBA
+        $('#is_tba').click(function () {
+            if ($('#is_tba').is(':checked')) {
+                $('#leader').prop('disabled', true);
+            } else {
+                $('#leader').prop('disabled', false);
+            }
+        });
     </script>
 
 @endsection

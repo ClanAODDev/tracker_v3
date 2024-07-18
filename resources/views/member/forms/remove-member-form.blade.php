@@ -20,11 +20,9 @@
         <p>If you are sure you wish to proceed, provide a brief explanation for the removal, and click to proceed.</p>
 
         <div class="form-group">
-            {!! Form::label('removal_reason', 'Reason') !!}
-            {!! Form::textarea('removal_reason', null, ['class' => 'form-control', 'required' => 'required', 'rows' => 3, 'value' => 'Member removed. Reason: ']) !!}
+            <label for="removal_reason">Reason</label>
+            <textarea name="removal_reason" id="removal_reason" rows="3" class="form-control" required="required">Member removed. Reason: </textarea>
         </div>
-
-        {{ csrf_field() }}
     </div>
     <div class="panel-footer">
         <button type="submit" title="Remove player from AOD" data-member-id="{{ $member->clan_id }}"

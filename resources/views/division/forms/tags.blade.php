@@ -9,7 +9,7 @@
                 @include ('division.partials.default-tags')
                 @include('division.partials.division-tags')
             </div>
-            {{ csrf_field() }}
+            @csrf
 
         </div>
 
