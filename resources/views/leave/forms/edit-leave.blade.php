@@ -10,8 +10,13 @@
 
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('reason') ? ' has-error' : null }}">
-            {!! Form::label('reason', 'Leave Type') !!}<span class="text-accent">*</span>
-            {!! Form::select('reason', ['military' => 'Military', 'medical' => 'Medical', 'education' => 'Education', 'travel' => 'Travel', 'other' => 'Other'], null, ['class' => 'form-control']) !!}
+            <label for="reason">Leave Type</label><span class="text-accent">*</span>
+            <select name="reason" id="reason" class="form-control">
+                @foreach (config('app.aod.leave_reasons') as $reason)
+                    <option value="{{ strtolower($reason) }}">{{ $reason }}</option>
+                @endforeach
+            </select>
+
         </div>
     </div>
 </div>
