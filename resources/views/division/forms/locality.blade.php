@@ -1,7 +1,7 @@
 <form id="locality-settings" method="post"
       action="{{ route('updateDivision', $division->slug) }}#locality-settings">
 
-    {{ method_field('PATCH') }}
+    {{ method_field('patch') }}
     <table class="table">
         @include('division.partials.locality')
     </table>
@@ -13,6 +13,6 @@
         <button type="submit" class="btn btn-success">Save changes</button>
     </div>
 
-    {{ csrf_field() }}
+    @csrf
 
 </form>

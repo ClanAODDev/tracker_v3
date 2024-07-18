@@ -9,7 +9,7 @@
     @endcan
 
 </h4>
-<hr />
+<hr/>
 @if (count($notes))
     <div class="v-timeline">
         @foreach ($notes as $note)
@@ -28,9 +28,10 @@
 @can ('create', App\Models\Note::class)
     <div class="modal fade" id="create-member-note">
         <div class="modal-dialog" role="document" style="background-color: #000;">
-            {!! Form::model(App\Models\Note::class, ['method' => 'post', 'route' => ['storeNote', $member->clan_id]]) !!}
-            @include('member.forms.note-form', ['action' => 'Add Member Note', 'create' => true])
-            {!! Form::close() !!}
+            <form action="{{ route('storeNote', [$member->clan_id]) }}" method="post">
+                @csrf
+                @include('member.forms.note-form', ['action' => 'Add Member Note', 'create' => true])
+            </form>
         </div>
     </div>
 @endcan

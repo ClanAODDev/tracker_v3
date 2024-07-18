@@ -20,7 +20,7 @@
               method="post" id="member-reset-form">
             <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default">Cancel</a>
             <button type="submit" class="btn btn-success">Reset Assignments</button>
-            {{ csrf_field() }}
+            @csrf
         </form>
 @endsection
 

@@ -23,7 +23,7 @@
                 <h4>General</h4>
                 <hr>
                 <form action="{{ route('user.settings.update') }}" method="POST">
-                    {{ csrf_field() }}
+                    @csrf
                     {{ method_field('PATCH') }}
 
                     <div class="form-group">

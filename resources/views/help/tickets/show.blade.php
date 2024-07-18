@@ -31,7 +31,7 @@
                     <div style="display: inline-flex;">
                         <form action="{{ route('help.tickets.assign-to', $ticket) }}" method="post" id="assignTicketTo">
                             {{ method_field('PATCH') }}
-                            {{ csrf_field() }}
+                            @csrf
                             <select class="form-control" name="owner_id" id="owner_id">
                                 <option hidden disabled selected>Assign to...</option>
                                 @foreach (\App\Models\User::admins()->get()->except(auth()->id()) as $admin)
@@ -45,7 +45,7 @@
                                   class="inline" style="margin-left: 10px;">
                                 <button class="btn btn-info" type="submit">Assign to me</button>
                                 {{ method_field('PATCH') }}
-                                {{ csrf_field() }}
+                                @csrf
                             </form>
                         @endif
                         @unless ($ticket->isResolved())
@@ -53,7 +53,7 @@
                                   class="inline" style="margin-left: 10px;">
                                 <button class="btn btn-success" type="submit">Resolve Ticket</button>
                                 {{ method_field('PATCH') }}
-                                {{ csrf_field() }}
+                                @csrf
                             </form>
 
                             <form action="{{ route('help.tickets.reject', $ticket) }}" method="POST"
@@ -63,14 +63,14 @@
                                         class="btn btn-danger"><i class="fas fa-times"></i> Reject
                                 </button>
                                 {{ method_field('PATCH') }}
-                                {{ csrf_field() }}
+                                @csrf
                             </form>
                         @else
                             <form action="{{ route('help.tickets.reopen', $ticket) }}" method="POST" class="inline"
                                   style="margin-left: 10px;">
                                 <button class="btn btn-accent" type="submit">Reopen Ticket</button>
                                 {{ method_field('PATCH') }}
-                                {{ csrf_field() }}
+                                @csrf
                             </form>
                         @endif
                     </div>
@@ -145,7 +145,7 @@
 
 
         <form action="{{ route('help.tickets.comments.store', $ticket) }}" method="POST">
-            {{ csrf_field() }}
+            @csrf
             <div class="form-group">
                 <textarea type="text" class="form-control" name="comment" minlength="5" id="comment"
                           required></textarea>

@@ -16,15 +16,19 @@
 
         {!! Breadcrumbs::render('member-note', $member, $division) !!}
 
-        {!! Form::model($note, ['method' => 'post', 'route' => ['updateNote', $member->clan_id, $note]]) !!}
-        @include ('member.forms.note-form', ['action' => 'Edit Member Note'])
-        {!! Form::close() !!}
+
+        <form action="{{ route('updateNote', [$member->clan_id, $note]) }}" method="post">
+            @csrf
+            @include ('member.forms.note-form', ['action' => 'Edit Member Note'])
+        </form>
 
         @include('member.partials.note-feed')
 
-        {!! Form::model($note, ['method' => 'delete', 'route' => ['deleteNote', $member->clan_id, $note]]) !!}
-        @include ('member.forms.remove-note-form')
-        {!! Form::close() !!}
+        <form action="{{ route('deleteNote', [$member->clan_id, $note]) }}" method="post">
+            {{ method_field('DELETE') }}
+            @csrf
+            @include ('member.forms.remove-note-form')
+        </form>
     </div>
 
 @endsection

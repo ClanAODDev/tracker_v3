@@ -1,4 +1,4 @@
-{{ csrf_field() }}
+@csrf
 <div class="form-group">
     <label for="name">Channel Name</label>
     <input type="text" name="channel-name" class="form-control" autocomplete="off"

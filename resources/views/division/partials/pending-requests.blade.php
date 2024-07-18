@@ -32,7 +32,7 @@
                         <td>
                             <form action="{{ route('division.member-requests.cancel', [$division, $request->id]) }}"
                                   method="post">
-                                {{ csrf_field() }}
+                                @csrf
                                 <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-trash"></i>
                                 </button>
                             </form>

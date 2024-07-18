@@ -42,9 +42,8 @@
             </div>
             <div class="panel-body">
                 <form action="{{ route('leave.store', $division->slug) }}" method="post">
-                    {!! Form::model(App\Models\Note::class, ['method' => 'post', 'route' => ['leave.store', $division->abbreviation]]) !!}
                     @include('leave.forms.create-leave')
-                    {!! Form::close() !!}
+                    @csrf
                 </form>
             </div>
             <div class="panel-footer"><span class="text-accent">*</span> - required</div>

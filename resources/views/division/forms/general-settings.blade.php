@@ -34,7 +34,7 @@
         <span class="help-block"><small>Number of days before a member is considered inactive.</small></span>
     </div>
 
-    {{ csrf_field() }}
+    @csrf
 
     <button type="submit" class="btn btn-success pull-right">Save changes</button>
 
