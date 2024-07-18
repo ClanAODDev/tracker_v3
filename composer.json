@@ -11,7 +11,6 @@
         "barryvdh/laravel-debugbar": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "league/csv": "^9.11",
-        "laravelcollective/html": "^6.0",
         "laravel/tinker": "^2.8",
         "doctrine/annotations": "^1.10.4",
         "wrapi/slack": "^0.1.5",
