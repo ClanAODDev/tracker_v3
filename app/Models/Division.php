@@ -421,6 +421,6 @@ class Division extends Model
 
     public function setSlugAttribute($value)
     {
-        $this->slug = Str::slug($value);
+        $this->attributes['slug']  = Str::slug($this->name);
     }
 }
