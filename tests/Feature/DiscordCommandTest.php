@@ -13,7 +13,7 @@ use Tests\TestCase;
 final class DiscordCommandTest extends TestCase
 {
     /** @test */
-    public function a_slack_command_with_a_valid_token_returns_successful()
+    public function a_discord_command_with_a_valid_token_returns_successful()
     {
         $token = 'a-test-token';
 
@@ -32,7 +32,7 @@ final class DiscordCommandTest extends TestCase
     }
 
     /** @test */
-    public function an_invalid_slack_command_with_a_known_token_fails()
+    public function an_invalid_discord_command_with_a_known_token_fails()
     {
         $token = 'a-test-token';
 
@@ -51,7 +51,7 @@ final class DiscordCommandTest extends TestCase
     }
 
     /** @test */
-    public function a_slack_command_fails_if_it_has_no_known_token()
+    public function a_discord_command_fails_if_it_has_no_known_token()
     {
         $response = $this->json('GET', '/bot/commands/member');
 

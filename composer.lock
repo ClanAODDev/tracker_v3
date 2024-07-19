@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37f04629e0daae49f0d527b5a4b5c8cf",
+    "content-hash": "b6ddadcc9feaca1b7ec94d632fa8b730",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5100,60 +5100,6 @@
             "time": "2024-03-20T18:32:51+00:00"
         },
         {
-            "name": "palanik/wrapi",
-            "version": "v0.1.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/palanik/wrapi-php.git",
-                "reference": "20cd27151af36c28cfdb46c53cfb0de015f32fbf"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/palanik/wrapi-php/zipball/20cd27151af36c28cfdb46c53cfb0de015f32fbf",
-                "reference": "20cd27151af36c28cfdb46c53cfb0de015f32fbf",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": ">=6.1.0",
-                "php": ">=5.5.0",
-                "sabre/uri": "^1.0"
-            },
-            "require-dev": {
-                "internations/http-mock": "0.7.0",
-                "phpunit/phpunit": "^4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "wrapi\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "palanik"
-                }
-            ],
-            "description": "Wrapper for calling Restful API",
-            "homepage": "https://github.com/palanik/wrapi-php",
-            "keywords": [
-                "Guzzle",
-                "api",
-                "function",
-                "functions",
-                "restful",
-                "wrapper"
-            ],
-            "support": {
-                "issues": "https://github.com/palanik/wrapi-php/issues",
-                "source": "https://github.com/palanik/wrapi-php/tree/dev"
-            },
-            "time": "2018-01-22T02:10:09+00:00"
-        },
-        {
             "name": "paragonie/constant_time_encoding",
             "version": "v3.0.0",
             "source": {
@@ -6369,62 +6315,6 @@
                 }
             ],
             "time": "2024-02-26T18:08:49+00:00"
-        },
-        {
-            "name": "sabre/uri",
-            "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sabre-io/uri.git",
-                "reference": "ada354d83579565949d80b2e15593c2371225e61"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/uri/zipball/ada354d83579565949d80b2e15593c2371225e61",
-                "reference": "ada354d83579565949d80b2e15593c2371225e61",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.7"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=4.0,<6.0",
-                "sabre/cs": "~1.0.0"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "lib/functions.php"
-                ],
-                "psr-4": {
-                    "Sabre\\Uri\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Evert Pot",
-                    "email": "me@evertpot.com",
-                    "homepage": "http://evertpot.com/",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Functions for making sense out of URIs.",
-            "homepage": "http://sabre.io/uri/",
-            "keywords": [
-                "rfc3986",
-                "uri",
-                "url"
-            ],
-            "support": {
-                "forum": "https://groups.google.com/group/sabredav-discuss",
-                "issues": "https://github.com/sabre-io/uri/issues",
-                "source": "https://github.com/fruux/sabre-uri"
-            },
-            "time": "2017-02-20T19:59:28+00:00"
         },
         {
             "name": "spatie/backtrace",
@@ -9995,58 +9885,6 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
-        },
-        {
-            "name": "wrapi/slack",
-            "version": "v0.1.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/palanik/slack-php.git",
-                "reference": "36e915b48be3669947107b0607fee7852d6a87dd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/palanik/slack-php/zipball/36e915b48be3669947107b0607fee7852d6a87dd",
-                "reference": "36e915b48be3669947107b0607fee7852d6a87dd",
-                "shasum": ""
-            },
-            "require": {
-                "palanik/wrapi": "^0.1.6",
-                "php": ">=5.5.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "wrapi\\slack\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "palanik"
-                }
-            ],
-            "description": "Wrapper for Slack Web API",
-            "homepage": "https://github.com/palanik/slack-php",
-            "keywords": [
-                "Api Wrapper",
-                "Guzzle",
-                "api",
-                "rest",
-                "slack",
-                "slack wrapper",
-                "slack-api",
-                "slack-web-api",
-                "wrapi"
-            ],
-            "support": {
-                "issues": "https://github.com/palanik/slack-php/issues",
-                "source": "https://github.com/palanik/slack-php/tree/dev"
-            },
-            "time": "2017-09-25T02:48:32+00:00"
         }
     ],
     "packages-dev": [

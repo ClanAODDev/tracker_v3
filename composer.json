@@ -13,7 +13,6 @@
         "league/csv": "^9.11",
         "laravel/tinker": "^2.8",
         "doctrine/annotations": "^1.10.4",
-        "wrapi/slack": "^0.1.5",
         "google/apiclient": "^2.0",
         "brian2694/laravel-toastr": "^5.53",
         "rcrowe/twigbridge": "^0.14.0",
