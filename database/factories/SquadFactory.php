@@ -24,9 +24,8 @@ class SquadFactory extends Factory
     public function definition()
     {
         return [
-            'name' => null,
+            'name' => $this->faker->streetName,
             'platoon_id' => Platoon::factory(),
-            //            'leader_id' => Member::factory(),
         ];
     }
 }
