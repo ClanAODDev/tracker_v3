@@ -9,7 +9,6 @@ use Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Schema;
-use wrapi\slack\slack;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,8 +31,5 @@ class AppServiceProvider extends ServiceProvider
     {
         // register user settings
         $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());
-
-        // register slack api client
-        $this->app->singleton(slack::class, fn () => new slack(config('core.slack.token')));
     }
 }

@@ -31,7 +31,6 @@ return [
     'env' => env('APP_ENV', 'production'),
 
     'aod' => [
-        'slack_webhook' => env('SLACK_WEBHOOK'),
         'discord_webhook' => env('DISCORD_WEBHOOK'),
         'token' => env('AOD_TOKEN'),
         'discord_bot_token' => env('AOD_BOT_TOKEN'),
