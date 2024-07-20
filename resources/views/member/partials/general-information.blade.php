@@ -19,7 +19,7 @@
 
                     <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins" title="{{ $member->join_date->format('Y-m-d') }}">
-                            {{ $member->join_date->diffInYears() }}
+                            {{ floor($member->join_date->diffInYears()) }}
                         </h2>
                         {{ str()->plural('Year') }} <span class="c-white">In AOD</span>
                     </div>
@@ -33,7 +33,8 @@
 
                     <div class="col-md-3 col-xs-12 text-center">
                         <h2 class="no-margins">
-                            <span title="{{ $member->last_voice_activity }}" class="{{  getMemberProfileActivityClass($member->last_voice_activity) }}">
+                            <span title="{{ $member->last_voice_activity }}"
+                                  class="{{  getMemberProfileActivityClass($member->last_voice_activity) }}">
                                 {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</span>
                         </h2>
                         Since Last <span class="c-white">Discord Voice Activity</span>
