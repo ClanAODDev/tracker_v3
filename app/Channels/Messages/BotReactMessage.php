@@ -18,9 +18,7 @@ class BotReactMessage
 
     private $target;
 
-    public function __construct(private $notifiable)
-    {
-    }
+    public function __construct(private $notifiable) {}
 
     public function to(string $channel)
     {

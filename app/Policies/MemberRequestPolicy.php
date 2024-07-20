@@ -79,14 +79,10 @@ class MemberRequestPolicy
     /**
      * @return mixed
      */
-    public function update()
-    {
-    }
+    public function update() {}
 
     /**
      * @return mixed
      */
-    public function delete()
-    {
-    }
+    public function delete() {}
 }

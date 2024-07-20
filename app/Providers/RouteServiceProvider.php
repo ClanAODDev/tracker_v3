@@ -26,7 +26,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
 
@@ -86,14 +86,14 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @param  Router  $router
      */
-    public function map()
+    public function map(): void
     {
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
     }
 
-    protected function mapApiRoutes()
+    protected function mapApiRoutes(): void
     {
         Route::group([
             'middleware' => 'api',
@@ -104,7 +104,7 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
-    protected function mapWebRoutes()
+    protected function mapWebRoutes(): void
     {
         Route::group([
             'middleware' => 'web',

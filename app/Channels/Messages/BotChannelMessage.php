@@ -25,9 +25,7 @@ class BotChannelMessage
 
     private $thumbnail = [];
 
-    public function __construct(private $notifiable)
-    {
-    }
+    public function __construct(private $notifiable) {}
 
     public function title($title)
     {

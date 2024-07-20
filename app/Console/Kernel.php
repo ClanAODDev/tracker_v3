@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
         $schedule->command('do:membersync')->hourly();
         $schedule->command('do:divisioncensus')->weekly();
@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
     /**
      * Register the Closure based commands for the application.
      */
-    protected function commands()
+    protected function commands(): void
     {
         $this->load(__DIR__ . '/Commands');
 

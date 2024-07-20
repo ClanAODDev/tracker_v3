@@ -1,17 +1,22 @@
 @include('application.partials.errors')
-
+@method('patch')
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">
-            {!! Form::label('end_date', 'Leave End Date') !!}<span class="text-accent">*</span>
-            {{ Form::date('end_date', $leave->end_date->format('Y-m-d'), ['class' => 'form-control', 'placeholder' => 'mm/dd/yyyy']) }}
+            <label for="end_date">Leave End Date</label><span class="text-accent">*</span>
+            <input type="date" value="{{ $leave->end_date->format('Y-m-d') }}" placeholder="mm/dd/yyyy" class="form-control">
         </div>
     </div>
 
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('reason') ? ' has-error' : null }}">
-            {!! Form::label('reason', 'Leave Type') !!}<span class="text-accent">*</span>
-            {!! Form::select('reason', ['military' => 'Military', 'medical' => 'Medical', 'education' => 'Education', 'travel' => 'Travel', 'other' => 'Other'], null, ['class' => 'form-control']) !!}
+            <label for="reason">Leave Type</label><span class="text-accent">*</span>
+            <select name="reason" id="reason" class="form-control">
+                @foreach (config('app.aod.leave_reasons') as $reason)
+                    <option value="{{ strtolower($reason) }}">{{ $reason }}</option>
+                @endforeach
+            </select>
+
         </div>
     </div>
 </div>

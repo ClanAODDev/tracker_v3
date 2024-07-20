@@ -5,7 +5,7 @@ namespace App\AOD;
 use App\AOD\Traits\Procedureable;
 use App\Models\Member;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 
 class ClanForumSession
@@ -25,7 +25,7 @@ class ClanForumSession
             throw new Exception('No users exist. Have you created an account?');
         }
 
-        if (app()->environment() === 'local') {
+        if (str_contains(app()->environment(), 'local')) {
             $user_id = config('dev_default_user') ?? 1;
             Auth::login(
                 config('dev_default_user')

@@ -6,24 +6,28 @@ use Closure;
 use Facades\App\AOD\ClanForumSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
      * @param  null|string  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, string ...$guards): Response
     {
         if (ClanForumSession::exists()) {
             return redirect()->intended();
         }
 
-        if (Auth::guard($guard)->check()) {
-            return redirect('/');
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return redirect(RouteServiceProvider::HOME);
+            }
         }
 
         return $next($request);

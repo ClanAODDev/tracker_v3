@@ -22,8 +22,8 @@
                         </div>
 
                         <div class="form-group">
-                            {!! Form::label('is_tba', 'Leader TBA') !!}
-                            <div style="margin-right:5px;float: left;">{!! Form::checkbox('is_tba') !!}</div>
+                            <label for="is_tba">Leader TBA?</label>
+                            <div style="margin-right:5px;float: left;"><input type="checkbox" name="is_tba" id="is_tba"></div>
                             <p>
                                 <small class="slight">If no leader can be assigned</small>
                             </p>
@@ -47,7 +47,7 @@
 
                 </div>
 
-                {{ csrf_field() }}
+                @csrf
 
             </div>
         </div>

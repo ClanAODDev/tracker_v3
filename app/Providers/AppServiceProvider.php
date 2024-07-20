@@ -9,14 +9,13 @@ use Auth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Schema;
-use wrapi\slack\slack;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
         Schema::defaultStringLength(191);
 
@@ -28,12 +27,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register()
+    public function register(): void
     {
         // register user settings
         $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());
-
-        // register slack api client
-        $this->app->singleton(slack::class, fn () => new slack(config('core.slack.token')));
     }
 }

@@ -63,11 +63,11 @@
         </div>
 
         <div class="m-t-xl">
-            {!! Form::model($leave, ['method' => 'patch', 'route' => ['leave.update', $member->clan_id]]) !!}
-            <input type="hidden" value="{{ $leave->id }}" name="leave_id"/>
-            <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}"/>
-            @include('leave.forms.edit-leave')
-            {!! Form::close() !!}
+            <form action="{{ route('leave.update', [$member->clan_id]) }}">
+                <input type="hidden" value="{{ $leave->id }}" name="leave_id"/>
+                <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}"/>
+                @include('leave.forms.edit-leave')
+            </form>
             @if($leave->note && $leave->note->forum_thread_id)
                 <a href="{{ doForumFunction([$leave->note->forum_thread_id], 'showThread') }}" target="_blank"
                    class="btn btn-default">View Forum Thread</a>
@@ -91,9 +91,9 @@
         </div>
 
         <div class="m-t-xl">
-            {!! Form::model($leave, ['method' => 'delete', 'route' => ['leave.delete', $member->clan_id, $leave->id]]) !!}
-            @include('leave.forms.delete-leave')
-            {!! Form::close() !!}
+            <form action="{{ route('leave.delete', [$member->clan_id, $leave->id]) }}">
+                @include('leave.forms.delete-leave')
+            </form>
         </div>
     </div>
 

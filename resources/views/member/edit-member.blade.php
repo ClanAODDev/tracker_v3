@@ -31,7 +31,7 @@
                                                    :positions="{{ $positions }}"
                                                    :position="{{ $member->position->id }}"
                                     ></manage-member>
-                                    <hr />
+                                    <hr/>
                                     <table class="table table-bordered table-condensed">
                                         <tr>
                                             <th>Recruiter</th>
@@ -63,9 +63,11 @@
 
         @can('delete', $member)
             @if ($member->division)
-                {!! Form::model($member, ['method' => 'delete', 'route' => ['deleteMember', $member->clan_id]]) !!}
-                @include('member.forms.remove-member-form')
-                {!! Form::close() !!}
+                <form action="{{ route('deleteMember', [$member->clan_id]) }}" method="post">
+                    @csrf
+                    @method('delete')
+                    @include('member.forms.remove-member-form')
+                </form>
             @endif
         @endcan
     </div>

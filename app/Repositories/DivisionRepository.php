@@ -15,7 +15,18 @@ class DivisionRepository
      */
     public function censusCounts(Division $division, $limit = 52)
     {
-        return collect(\DB::select(\DB::raw("\n                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, created_at as date \n                FROM censuses WHERE division_id = {$division->id} \n                GROUP BY date(created_at) \n                ORDER BY date DESC LIMIT {$limit};\n            ")));
+        return collect(\DB::select('
+            SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, DATE(created_at) as date
+            FROM censuses 
+            WHERE division_id = :division_id
+            GROUP BY DATE(created_at) 
+            ORDER BY date DESC 
+            LIMIT :limit
+        ', [
+            'division_id' => $division->id,
+            'limit' => $limit,
+        ]));
+
     }
 
     /**
@@ -75,7 +86,8 @@ class DivisionRepository
         $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
         $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
         $twoWeeks = $division->members()->where('last_voice_activity', '>=', $twoWeeksAgo);
-        $oneMonth = $division->members()->where('last_voice_activity', '<=', $twoWeeksAgo)->where('last_voice_activity', '>=',
+        $oneMonth = $division->members()->where('last_voice_activity', '<=', $twoWeeksAgo)->where('last_voice_activity',
+            '>=',
             $oneMonthAgo);
         $moreThanOneMonth = $division->members()->where('last_voice_activity', '<=', $oneMonthAgo);
 

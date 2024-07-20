@@ -8,7 +8,5 @@ class ClanStatisticsController extends Controller
 {
     private $clan;
 
-    public function __construct(ClanRepository $clanRepository)
-    {
-    }
+    public function __construct(ClanRepository $clanRepository) {}
 }

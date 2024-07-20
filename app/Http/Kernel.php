@@ -59,16 +59,15 @@ class Kernel extends HttpKernel
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartSession::class,
-            AuthenticateSession::class,
-            HasPrimaryDivision::class,
             ShareErrorsFromSession::class,
-            SubstituteBindings::class,
             VerifyCsrfToken::class,
+            SubstituteBindings::class,
+            HasPrimaryDivision::class,
             IsBanned::class,
         ],
 
         'api' => [
-            'throttle:60,1',
+            ThrottleRequests::class . ':api',
             'bindings',
             'auth:sanctum',
         ],
@@ -81,7 +80,7 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $routeMiddleware = [
+    protected $middlewareAliases = [
         'forumAuth' => ClanForumAuthentication::class,
         'auth' => Authenticate::class,
         'bindings' => SubstituteBindings::class,

@@ -49,7 +49,7 @@
                                             used: {{ $token->last_used_at ? $token->last_used_at->diffForHumans() : 'Never' }}</p>
                                     </div>
                                     <div class="col-md-6">
-                                        {{ csrf_field() }}
+                                        @csrf
                                         {{ method_field('DELETE') }}
                                         <input type="hidden" value="{{ $token->id }}" name="token_id">
                                         <button type="submit" class="btn btn-danger pull-right m-t-sm"><i
@@ -70,7 +70,7 @@
 
                 <form action="{{ route('developer.token.store') }}" method="POST">
 
-                    {{ csrf_field() }}
+                    @csrf
 
 
                     <h4>Generate token</h4>

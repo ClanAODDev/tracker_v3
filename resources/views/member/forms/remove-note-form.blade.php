@@ -10,9 +10,8 @@
         <p>
             Continue if you wish to delete this note from the member's record
         </p>
-        {{ method_field('DELETE') }}
 
-        {{ csrf_field() }}
+        @csrf
     </div>
     <div class="panel-footer">
         <button type="submit" title="Destroy Note"

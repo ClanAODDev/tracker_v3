@@ -2,9 +2,6 @@
 
 namespace App\Models\Bot;
 
-/**
- * Base class for Slack commands.
- */
 class Base
 {
     /**

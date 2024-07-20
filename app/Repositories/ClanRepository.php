@@ -26,13 +26,14 @@ class ClanRepository
      */
     public function censusCounts($limit = 52)
     {
-        return collect(DB::select(
-            DB::raw("
-                SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, sum(weekly_voice_count) as weekly_voice_active, date_format(created_at,'%Y-%m-%d') as date
-                FROM censuses GROUP BY date(created_at)
-                ORDER BY date DESC LIMIT {$limit};
-            ")
-        ));
+        return collect(DB::select("
+            SELECT sum(count) as count, sum(weekly_active_count) as weekly_active, sum(weekly_voice_count) as weekly_voice_active, DATE_FORMAT(created_at, '%Y-%m-%d') as date
+            FROM censuses 
+            GROUP BY DATE(created_at)
+            ORDER BY date DESC 
+            LIMIT ?
+        ", [$limit]));
+
     }
 
     /**
@@ -51,16 +52,13 @@ class ClanRepository
      */
     public function allRankDemographic()
     {
-        return DB::select(
-            DB::raw('
-                SELECT ranks.abbreviation, count(*) AS count
-                FROM members
-                  JOIN ranks
-                    ON ranks.id = members.rank_id
-                WHERE members.division_id != 0
-                GROUP BY rank_id
-                ORDER BY ranks.id ASC
-            ')
-        );
+        return DB::select('
+            SELECT ranks.abbreviation, count(*) AS count
+            FROM members
+            JOIN ranks ON ranks.id = members.rank_id
+            WHERE members.division_id != 0
+            GROUP BY rank_id
+            ORDER BY ranks.id ASC
+        ');
     }
 }

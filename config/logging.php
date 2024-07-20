@@ -43,6 +43,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
+            'replace_placeholders' => true,
         ],
 
         'daily' => [
@@ -82,6 +83,8 @@ return [
         'syslog' => [
             'driver' => 'syslog',
             'level' => 'debug',
+            'facility' => LOG_USER,
+            'replace_placeholders' => true,
         ],
 
         'errorlog' => [
