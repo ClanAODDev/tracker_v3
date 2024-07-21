@@ -2,21 +2,18 @@
 
 namespace App\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Facades\App\AOD\ClanForumSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-use \App\Providers\RouteServiceProvider;
 
 class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
      *
-     * @param  Request  $request
-     * @param  Closure  $next
-     * @param  string  ...$guards
      * @return mixed
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response

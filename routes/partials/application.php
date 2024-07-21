@@ -59,4 +59,4 @@ Route::group(['prefix' => 'primary-nav'], function () {
 Route::get('bot/commands/{command}', 'Bot\BotCommandController@index')->name('bot.commands')->middleware('bot');
 
 // force admin login to use existing auth
-Route::get('/admin/login', fn() => redirect('login'))->name('filament.admin.auth.login');
+Route::get('/admin/login', fn () => redirect('login'))->name('filament.admin.auth.login');
