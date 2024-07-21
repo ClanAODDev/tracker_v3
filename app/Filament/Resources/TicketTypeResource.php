@@ -40,7 +40,6 @@ class TicketTypeResource extends Resource
                 Forms\Components\Select::make('role_access')
                     ->multiple()
                     ->getSearchResultsUsing(fn (string $search): array => Role::all()->pluck('label', 'id')->toArray())
-                    ->pop
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('display_order')
                     ->required()

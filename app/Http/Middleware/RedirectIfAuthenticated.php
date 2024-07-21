@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Facades\App\AOD\ClanForumSession;
 use Illuminate\Http\Request;
@@ -15,7 +16,6 @@ class RedirectIfAuthenticated
     /**
      * Handle an incoming request.
      *
-     * @param  null|string  $guard
      * @return mixed
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response

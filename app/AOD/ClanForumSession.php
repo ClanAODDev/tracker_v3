@@ -5,8 +5,8 @@ namespace App\AOD;
 use App\AOD\Traits\Procedureable;
 use App\Models\Member;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class ClanForumSession
 {

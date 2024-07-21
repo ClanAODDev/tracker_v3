@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use Illuminate\Database\Eloquent\Factories\Factory;
