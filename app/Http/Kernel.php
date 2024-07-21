@@ -3,7 +3,6 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckForMaintenanceMode;
-use App\Http\Middleware\ClanForumAuthentication;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\HasPrimaryDivision;
@@ -27,8 +26,6 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Laravel\Passport\Http\Middleware\CheckForAnyScope;
-use Laravel\Passport\Http\Middleware\CheckScopes;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
@@ -67,7 +64,7 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            ThrottleRequests::class . ':api',
+            'throttle:60,1',
             'bindings',
             'auth:sanctum',
         ],
@@ -81,7 +78,6 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareAliases = [
-        'forumAuth' => ClanForumAuthentication::class,
         'auth' => Authenticate::class,
         'bindings' => SubstituteBindings::class,
         'cache.headers' => SetCacheHeaders::class,
