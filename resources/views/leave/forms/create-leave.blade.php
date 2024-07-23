@@ -9,7 +9,8 @@
         </div>
         <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">
             <label for="end_date">Leave End Date</label><span class="text-accent">*</span>
-            <input type="date" class="form-control" required="required" placeholder="mm/dd/yyyy">
+            <input type="date" class="form-control" required="required"
+                   placeholder="mm/dd/yyyy" id="end_date" name="end_date">
         </div>
         <div class="form-group">
             <label for="note_thread_id">Forum Thread Id</label>

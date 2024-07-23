@@ -15,12 +15,7 @@ class Handle extends Model
         'visible' => 'boolean',
     ];
 
-    protected $fillable = [
-        'label',
-        'type',
-        'comment',
-        'url',
-    ];
+    protected $guarded = [];
 
     public function divisions()
     {

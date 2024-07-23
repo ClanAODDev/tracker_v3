@@ -7,15 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    public function present()
+    protected $guarded = [];
+
+    public function present(): RolePresenter
     {
         return new RolePresenter($this);
     }
 
-    /**
-     * relationship - role belongs to many users.
-     */
-    public function users()
+    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(User::class);
     }

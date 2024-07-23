@@ -3,19 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DivisionResource\Pages;
-use App\Filament\Resources\DivisionResource\RelationManagers\DivisionsRelationManager;
 use App\Models\Division;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class DivisionResource extends Resource
 {
@@ -81,7 +80,7 @@ class DivisionResource extends Resource
                 Forms\Components\Split::make([
                     Section::make([
 
-                        Forms\Components\DateTimePicker::make('shutdown_at')->columns(3)
+                        Forms\Components\DateTimePicker::make('shutdown_at')->columns(3),
 
                     ])->columnSpan(6),
                     Section::make([
@@ -90,9 +89,8 @@ class DivisionResource extends Resource
                             ->label('Division Enabled')
                             ->hint('Disabled divisions are not listed on the tracker or website')
                             ->default(true),
-                    ])->columnSpan(6)
-                ])->from('lg')->columnSpanFull()
-
+                    ])->columnSpan(6),
+                ])->from('lg')->columnSpanFull(),
 
             ]);
     }
@@ -113,7 +111,10 @@ class DivisionResource extends Resource
                     ->boolean(),
             ])
             ->filters([
-                //
+                Filter::make('is_active')
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->label('Hide inactive')
+                    ->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
