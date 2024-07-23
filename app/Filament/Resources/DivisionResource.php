@@ -3,8 +3,14 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DivisionResource\Pages;
+use App\Filament\Resources\DivisionResource\RelationManagers\DivisionsRelationManager;
 use App\Models\Division;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,35 +29,71 @@ class DivisionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('handle_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('officer_role_id')
-                    ->numeric()
-                    ->required(),
-                Forms\Components\TextInput::make('forum_app_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('abbreviation')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Toggle::make('active')
-                    ->default(true),
-                FilamentJsonColumn::make('settings')
-                    ->accent('#f6a821')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\Textarea::make('structure')
-                    ->hidden()
-                    ->default('[]')
-                    ->columnSpanFull(),
-                Forms\Components\DateTimePicker::make('shutdown_at'),
+                Section::make('Tracker Details')
+                    ->schema([
+                        Forms\Components\FileUpload::make('logo')
+                            ->label('Logo (48x48)')
+                            ->hint(str('[Icon Extraction Tool >](https://jarlpenguin.github.io/BeCyIconGrabberPortable/)')->inlineMarkdown()->toHtmlString())
+                            ->required()
+                            ->alignCenter()
+                            ->avatar()
+                            ->directory('logos'),
+
+                        Select::make('handle_id')
+                            ->label('Game Handle')
+                            ->relationship('handle', 'label'),
+
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+
+                        TextInput::make('abbreviation')
+                            ->hint('Should match abbreviation used on forums')
+                            ->maxLength(3)
+                            ->required()
+                            ->maxLength(255),
+
+                        TextInput::make('description')
+                            ->default('Another AOD Division')
+                            ->hint('Deprecated and soon to be removed')
+                            ->maxLength(255),
+                    ]),
+
+                Section::make('Forum Details')
+                    ->description('Division must already have been created in the forums in order to populate these values')
+                    ->schema([
+                        TextInput::make('officer_role_id')
+                            ->hint(str('[View Forum Usergroups](https://www.clanaod.net/forums/admincp/usergroup.php?do=modify)')
+                                ->inlineMarkdown()->toHtmlString())
+                            ->numeric()
+                            ->required(),
+                        TextInput::make('forum_app_id')
+                            ->label('Application form id')
+                            ->hint(
+                                str('[View Division Forms](https://www.clanaod.net/forums/forms.php)')
+                                    ->inlineMarkdown()
+                                    ->toHtmlString()
+                            )
+                            ->required()
+                            ->numeric(),
+                    ]),
+
+                Forms\Components\Split::make([
+                    Section::make([
+
+                        Forms\Components\DateTimePicker::make('shutdown_at')->columns(3)
+
+                    ])->columnSpan(6),
+                    Section::make([
+
+                        Toggle::make('active')
+                            ->label('Division Enabled')
+                            ->hint('Disabled divisions are not listed on the tracker or website')
+                            ->default(true),
+                    ])->columnSpan(6)
+                ])->from('lg')->columnSpanFull()
+
+
             ]);
     }
 
@@ -59,40 +101,16 @@ class DivisionResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('logo'),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('handle_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('officer_role_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('forum_app_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('abbreviation')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('description')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('shutdown_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -110,7 +128,6 @@ class DivisionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 

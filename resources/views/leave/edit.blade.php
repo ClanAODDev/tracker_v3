@@ -63,7 +63,7 @@
         </div>
 
         <div class="m-t-xl">
-            <form action="{{ route('leave.update', [$member->clan_id]) }}">
+            <form action="{{ route('leave.update', [$member->clan_id]) }}" method="post">
                 <input type="hidden" value="{{ $leave->id }}" name="leave_id"/>
                 <input type="hidden" name="requester_id" value="{{ $leave->requester->id }}"/>
                 @include('leave.forms.edit-leave')
@@ -91,7 +91,9 @@
         </div>
 
         <div class="m-t-xl">
-            <form action="{{ route('leave.delete', [$member->clan_id, $leave->id]) }}">
+            <form action="{{ route('leave.delete', [$member->clan_id, $leave->id]) }}" method="post">
+                @csrf
+                @method('delete')
                 @include('leave.forms.delete-leave')
             </form>
         </div>

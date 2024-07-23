@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasColumn('personal_access_tokens', 'expires_at')) {
-            Schema::table('personal_access_tokens', function (Blueprint $table) {
-                $table->timestamp('expires_at')->nullable();
-            });
-        }
+        Schema::table('divisions', function (Blueprint $table) {
+            $table->string('logo')->nullable();
+        });
     }
 
     /**
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('divisions', function (Blueprint $table) {
+            //
+        });
     }
 };
