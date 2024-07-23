@@ -16,7 +16,7 @@
                     <h4 class="text-uppercase">
                         {{ $division->name }}
                         <span class="pull-right">
-                            <img src="{{ getDivisionIconPath($division->abbreviation) }}"
+                            <img src="{{ $division->getLogoPath() }}"
                                  class="division-icon-medium"
                                  title="{{ $division->name }}" />
                         </span>

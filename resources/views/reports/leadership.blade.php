@@ -52,7 +52,7 @@
 
                 @foreach ($divisions as $division)
                     <h4 id="{{ $division->abbreviation }}">
-                        <img src="{{ getDivisionIconPath($division->abbreviation) }}" class="division-icon-medium"/>
+                        <img src="{{ $division->getLogoPath() }}" class="division-icon-medium"/>
                         {{ $division->name }}
                         <span class="badge" title="Sgts and SSgts">{{ $division->sgt_and_ssgt_count }} Sgts*</span>
                         <span class="badge">{{ $division->members_count }} Members</span>

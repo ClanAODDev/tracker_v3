@@ -53,7 +53,7 @@ class MemberRemoved extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))->fields([
+            ->thumbnail($notifiable->getLogoPath())->fields([
                 [
                     'name' => 'Member Removed',
                     'value' => sprintf(

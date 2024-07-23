@@ -50,7 +50,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
+            ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
                     'name' => ':crossed_swords: New Member Recruited (External)',
