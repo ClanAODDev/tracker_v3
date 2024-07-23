@@ -5,7 +5,7 @@
            class="panel panel-filled division-header {{ ($division->isShutdown()) ? 'panel-c-danger' : null }}">
             <div class="panel-body">
                 <h4 class="m-b-none text-uppercase m-t-sm">
-                    <img src="{{ getDivisionIconPath($division->abbreviation) }}"
+                    <img src="{{ $division->getLogoPath() }}"
                          class="pull-right division-icon-medium"/>
                     @if ($division->isShutDown())
                         <strike title="Division is shut down">{{ $division->name }}</strike>

@@ -5,7 +5,8 @@
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">
             <label for="end_date">Leave End Date</label><span class="text-accent">*</span>
-            <input type="date" value="{{ $leave->end_date->format('Y-m-d') }}" placeholder="mm/dd/yyyy" class="form-control">
+            <input type="date" value="{{ $leave->end_date->format('Y-m-d') }}" name="end_date" id="end_date"
+                   placeholder="mm/dd/yyyy" class="form-control">
         </div>
     </div>
 
@@ -26,7 +27,7 @@
     <div class="col-md-6">
         @if (! $leave->approver)
             <div class="form-group">
-                <input type="checkbox" id="approve_leave" name="approve_leave" /> <label
+                <input type="checkbox" id="approve_leave" name="approve_leave"/> <label
                         for="approve_leave">Approve leave of absence?</label>
             </div>
         @endif
