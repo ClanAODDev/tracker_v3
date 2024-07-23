@@ -10,10 +10,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Rank extends Model
 {
-    /**
-     * @return BelongsToMany
-     */
-    public function members()
+    protected $guarded = [];
+
+    public function members(): BelongsToMany
     {
         return $this->hasMany(Member::class);
     }

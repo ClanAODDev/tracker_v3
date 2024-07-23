@@ -11,6 +11,8 @@ class Census extends Model
     use HasCustomAttributes;
     use HasFactory;
 
+    protected $guarded = [];
+
     public function division()
     {
         return $this->belongsTo(Division::class);

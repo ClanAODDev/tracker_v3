@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Activity extends Model
 {
-    protected $fillable = ['subject_id', 'subject_type', 'name', 'division_id', 'user_id'];
+    protected $guarded = [];
 
     protected $with = [
         'user',
