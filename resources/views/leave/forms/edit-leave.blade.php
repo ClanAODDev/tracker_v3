@@ -1,5 +1,6 @@
 @include('application.partials.errors')
 @method('patch')
+@csrf
 <div class="row">
     <div class="col-xs-6">
         <div class="form-group {{ $errors->has('end_date') ? ' has-error' : null }}">

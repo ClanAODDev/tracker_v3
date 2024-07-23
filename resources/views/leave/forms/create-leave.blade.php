@@ -13,7 +13,7 @@
         </div>
         <div class="form-group">
             <label for="note_thread_id">Forum Thread Id</label>
-            <input type="number" name="note_thread_id" id="note_thread_id" class="form-control"">
+            <input type="number" name="note_thread_id" id="note_thread_id" class="form-control">
         </div>
     </div>
     <div class="col-md-8">
@@ -22,12 +22,12 @@
             <div class="col-xs-6">
                 <div class="form-group {{ $errors->has('member_id') ? ' has-error' : null }}">
                     <label for="member_id">Member Id</label><span class="text-accent">*</span>
-                    <input type="number" class="form-control" required="required">
+                    <input type="number" class="form-control" required="required" id="member_id" name="member_id">
                 </div>
             </div>
             <div class="col-xs-6">
                 <label for="leave_type">Leave Type</label><span class="text-accent">*</span>
-                <select name="reason" id="reason" class="form-control">
+                <select name="leave_type" id="leave_type" class="form-control">
                     @foreach (config('app.aod.leave_reasons') as $reason)
                         <option value="{{ strtolower($reason) }}">{{ $reason }}</option>
                     @endforeach
@@ -36,7 +36,8 @@
         </div>
 
         <label for="note_body">Justification</label> <span class="text-accent">*</span>
-        <textarea name="note_body" id="note_body" rows="5" style="resize:vertical" required="required"></textarea>
+        <textarea name="note_body" id="note_body" rows="5" style="resize:vertical" required="required"
+                  class="form-control"></textarea>
     </div>
 </div>
 <button class="btn btn-success pull-right m-t-sm form-group" type="submit">Submit</button>
