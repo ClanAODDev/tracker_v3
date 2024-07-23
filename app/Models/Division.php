@@ -393,10 +393,10 @@ class Division extends Model
     public function getLogoPath()
     {
         if ($this->logo) {
-            return Storage::url($this->logo);
+            return asset(Storage::url($this->logo));
         }
 
-        return asset('/images/logo_v2.svg');
+        return asset('images/logo_v2.svg');
     }
 
     public function isShutdown()
