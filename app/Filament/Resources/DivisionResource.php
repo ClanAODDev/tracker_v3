@@ -24,6 +24,12 @@ class DivisionResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
+    private static string $becy = 'https://jarlpenguin.github.io/BeCyIconGrabberPortable/';
+
+    private static string $forms = 'https://www.clanaod.net/forums/forms.php';
+
+    private static string $usergroup_mod = 'https://www.clanaod.net/forums/admincp/usergroup.php?do=modify';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -32,7 +38,10 @@ class DivisionResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('logo')
                             ->label('Logo (48x48)')
-                            ->hint(str('[Icon Extraction Tool >](https://jarlpenguin.github.io/BeCyIconGrabberPortable/)')->inlineMarkdown()->toHtmlString())
+                            ->hint(str(sprintf(
+                                '[Icon Extraction Tool >](%s)')->inlineMarkdown()->toHtmlString(),
+                                self::$becy
+                            ))
                             ->required()
                             ->alignCenter()
                             ->avatar()
@@ -62,14 +71,19 @@ class DivisionResource extends Resource
                     ->description('Division must already have been created in the forums in order to populate these values')
                     ->schema([
                         TextInput::make('officer_role_id')
-                            ->hint(str('[View Forum Usergroups](https://www.clanaod.net/forums/admincp/usergroup.php?do=modify)')
-                                ->inlineMarkdown()->toHtmlString())
+                            ->hint(str(sprintf(
+                                '[View Forum Usergroups](%s)',
+                                self::$usergroup_mod
+                            ))->inlineMarkdown()->toHtmlString())
                             ->numeric()
                             ->required(),
                         TextInput::make('forum_app_id')
                             ->label('Application form id')
                             ->hint(
-                                str('[View Division Forms](https://www.clanaod.net/forums/forms.php)')
+                                str(sprintf(
+                                    '[View Division Forms](%s)',
+                                    self::$forms
+                                ))
                                     ->inlineMarkdown()
                                     ->toHtmlString()
                             )
