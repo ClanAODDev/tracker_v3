@@ -143,7 +143,7 @@ class Division extends Model
 
         $invalidStates = array_diff($state, $validStates);
 
-        if (!empty($invalidStates)) {
+        if (! empty($invalidStates)) {
             throw new \InvalidArgumentException(sprintf(
                 'Invalid Discord state: %s',
                 implode(', ', $invalidStates)
@@ -332,7 +332,7 @@ class Division extends Model
     public function locality($string)
     {
         $locality = collect($this->settings()->locality);
-        if (!$locality->count()) {
+        if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");
 
             return ucwords($string);
@@ -342,7 +342,7 @@ class Division extends Model
                 return $translation['old-string'] === strtolower($string);
             }
         });
-        if (!$results) {
+        if (! $results) {
             Log::error("The {$string} locality does not exist");
 
             return ucwords($string);
