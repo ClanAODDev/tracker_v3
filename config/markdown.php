@@ -15,6 +15,7 @@ use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
 use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
+use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkRenderer;
 use League\CommonMark\Extension\Table\Table;
 use League\CommonMark\Node\Block\Paragraph;
@@ -58,6 +59,7 @@ return [
         League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension::class,
         League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension::class,
         League\CommonMark\Extension\Autolink\AutolinkExtension::class,
+        League\CommonMark\Extension\Embed\EmbedExtension::class,
     ],
 
     /*
@@ -95,6 +97,9 @@ return [
     ],
 
     'default_attributes' => [
+        Embed::class => [
+            'class' => 'youtube-embed',
+        ],
         Table::class => [
             'class' => ['table', 'table-responsive', 'table-hover'],
         ],
@@ -125,6 +130,12 @@ return [
             },
         ],
 
+    ],
+
+    'embed' => [
+        'adapter' => new OscaroteroEmbedAdapter(),
+        'allowed_domains' => ['youtube.com'],
+        'fallback' => 'link',
     ],
 
     'table' => [
