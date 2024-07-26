@@ -43,7 +43,7 @@
                         <div class="form-group m-t-md">
                             <label for="is_tba">Leader TBA?</label>
                             <div style="margin-right:5px;float: left;">
-                                <input id="is_tba"
+                                <input id="is_tba" name="is_tba"
                                        type="checkbox" {{ (empty($squad->leader_id)) ? "checked" : null }} />
                             </div>
                         </div>
