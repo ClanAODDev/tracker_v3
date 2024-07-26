@@ -38,10 +38,9 @@ class DivisionResource extends Resource
                     ->schema([
                         Forms\Components\FileUpload::make('logo')
                             ->label('Logo (48x48)')
-                            ->hint(str(sprintf(
-                                '[Icon Extraction Tool >](%s)')->inlineMarkdown()->toHtmlString(),
+                            ->hint(str(sprintf('[Icon Extraction Tool >](%s)',
                                 self::$becy
-                            ))
+                            )->inlineMarkdown()->toHtmlString()))
                             ->required()
                             ->alignCenter()
                             ->avatar()
@@ -79,14 +78,10 @@ class DivisionResource extends Resource
                             ->required(),
                         TextInput::make('forum_app_id')
                             ->label('Application form id')
-                            ->hint(
-                                str(sprintf(
-                                    '[View Division Forms](%s)',
-                                    self::$forms
-                                ))
-                                    ->inlineMarkdown()
-                                    ->toHtmlString()
-                            )
+                            ->hint(str(sprintf(
+                                '[View Division Forms](%s)',
+                                self::$forms
+                            ))->inlineMarkdown()->toHtmlString())
                             ->required()
                             ->numeric(),
                     ]),
@@ -126,7 +121,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])
