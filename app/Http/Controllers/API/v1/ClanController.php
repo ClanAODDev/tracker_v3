@@ -46,7 +46,7 @@ class ClanController extends ApiController
      */
     public function streamEvents()
     {
-        $client = new \Google_Client();
+        $client = new \Google_Client;
         $client->setApplicationName('AOD Stream Calendar');
         $client->setDeveloperKey(config('services.google.apiKey'));
         $service = new \Google_Service_Calendar($client);

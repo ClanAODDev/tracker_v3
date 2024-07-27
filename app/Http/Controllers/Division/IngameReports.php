@@ -31,7 +31,7 @@ trait IngameReports
             return [];
         }
 
-        return $this->fetchDestiny2ClanData($requestedClan, new Client());
+        return $this->fetchDestiny2ClanData($requestedClan, new Client);
     }
 
     /**

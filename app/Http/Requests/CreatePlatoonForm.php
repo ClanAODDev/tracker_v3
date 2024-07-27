@@ -55,7 +55,7 @@ class CreatePlatoonForm extends FormRequest
      */
     public function persist()
     {
-        $platoon = new Platoon();
+        $platoon = new Platoon;
 
         $platoon->name = $this->name;
         $platoon->order = $this->order;

@@ -17,7 +17,7 @@ class SyncMemberData
 {
     public static function execute($verbose = false)
     {
-        $divisionInfo = new GetDivisionInfo();
+        $divisionInfo = new GetDivisionInfo;
 
         if (! $syncData = collect($divisionInfo->data)) {
             \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');

@@ -53,7 +53,7 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
 
         $target = $ticket->caller->member->discord;
 
-        return (new BotDMMessage())
+        return (new BotDMMessage)
             ->to($target)
             ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();

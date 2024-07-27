@@ -14,7 +14,7 @@ class AOD extends Model
      */
     public static function request($url, $options = [])
     {
-        $endpoint = (new self())->prepareRequestUrl($url, $options);
+        $endpoint = (new self)->prepareRequestUrl($url, $options);
 
         $ch = curl_init();
 

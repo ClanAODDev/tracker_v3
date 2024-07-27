@@ -131,7 +131,7 @@ class DivisionStructureController extends Controller
      */
     private function compileDivisionData(Division $division)
     {
-        $data = new stdClass();
+        $data = new stdClass;
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->memberCount = $division->members->count();

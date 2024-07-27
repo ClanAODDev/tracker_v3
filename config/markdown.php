@@ -133,7 +133,7 @@ return [
     ],
 
     'embed' => [
-        'adapter' => new OscaroteroEmbedAdapter(),
+        'adapter' => new OscaroteroEmbedAdapter,
         'allowed_domains' => ['youtube.com'],
         'fallback' => 'link',
     ],

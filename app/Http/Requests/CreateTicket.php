@@ -47,8 +47,8 @@ class CreateTicket extends FormRequest
             'division_id' => auth()->user()->member->division_id,
         ]);
 
-        $ticket->notify(new NotifyUserTicketCreated());
-        $ticket->notify(new NotifyAdminTicketCreated());
+        $ticket->notify(new NotifyUserTicketCreated);
+        $ticket->notify(new NotifyAdminTicketCreated);
 
         if ($ticket->type->auto_assign_to) {
             $ticket->ownTo($ticket->type->auto_assign_to);
