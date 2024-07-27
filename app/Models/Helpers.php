@@ -151,15 +151,6 @@ function hasDivisionIcon($abbreviation)
     return File::exists($image);
 }
 
-function getDivisionIconPath($abbreviation)
-{
-    if (hasDivisionIcon($abbreviation)) {
-        return asset("/images/game_icons/48x48/{$abbreviation}.png");
-    }
-
-    return asset('/images/logo_v2.svg');
-}
-
 /**
  * array_keys with recursive implementation.
  *

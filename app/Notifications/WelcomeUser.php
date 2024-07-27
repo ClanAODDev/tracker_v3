@@ -36,7 +36,7 @@ class WelcomeUser extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage())->view(
+        return (new MailMessage)->view(
             'emails.welcome',
             ['user' => $this->user]
         );

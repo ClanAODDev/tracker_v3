@@ -63,7 +63,7 @@ class ClanForumSession
 
             Auth::login($user);
 
-            (new ClanForumPermissions())->handleAccountRoles($member->clan_id, array_merge(
+            (new ClanForumPermissions)->handleAccountRoles($member->clan_id, array_merge(
                 array_map('intval', explode(',', $sessionData->membergroupids)),
                 [$sessionData->usergroupid]
             ));
@@ -81,7 +81,7 @@ class ClanForumSession
             return $authUser;
         }
 
-        $user = new User();
+        $user = new User;
         $user->name = $username;
         $user->email = $email;
         $user->member_id = $clanId;

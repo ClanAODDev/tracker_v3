@@ -42,6 +42,7 @@
                         @can ('delete', $member)
                             <form action="{{ route('member.drop-for-inactivity', [$member->clan_id]) }}" method="post">
                                 @method('delete')
+                                @csrf
                                 <input type="hidden" value="Member removed for inactivity" name="removal_reason"/>
                                 <button type="submit" class="btn btn-danger btn-sm remove-member"
                                         data-member-id="{{ $member->clan_id }}">

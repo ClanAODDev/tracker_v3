@@ -73,3 +73,7 @@ voluptas!
 | SQL Hat           |   True   | 23.99 |
 | Codecademy Tee    |  False   | 19.99 |
 | Codecademy Hoodie |  False   | 42.99 |
+
+### YouTube Embed Example
+
+https://www.youtube.com/watch?v=kCUwIi7qd2M

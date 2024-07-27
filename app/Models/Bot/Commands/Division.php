@@ -39,7 +39,7 @@ class Division extends Base implements Command
                     'color' => 10181046,
                     'author' => [
                         'name' => $division->name,
-                        'icon_url' => getDivisionIconPath($division->abbreviation),
+                        'icon_url' => $division->getLogoPath(),
                         'url' => 'https://clanaod.net/divisions/' . \Str::slug($division->name),
                     ],
                     'fields' => [

@@ -51,7 +51,7 @@ class DivisionCensus extends \Illuminate\Console\Command
 
     protected function recordEntry(Division $division)
     {
-        $census = new \App\Models\Census();
+        $census = new \App\Models\Census;
         $census->division()->associate($division);
         $census->count = $division->members->count();
         $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();

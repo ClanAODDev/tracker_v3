@@ -43,7 +43,7 @@ class NotifyNewTicketOwner extends Notification implements ShouldQueue
     {
         $target = $this->assignedOwner->member->discord;
 
-        return (new BotDMMessage())
+        return (new BotDMMessage)
             ->to($target)
             ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
             ->send();

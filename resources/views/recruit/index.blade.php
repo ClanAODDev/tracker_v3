@@ -30,7 +30,7 @@
                     <a href="{{ route('recruiting.form', [$division->slug]) }}" class="panel panel-filled">
                         <div class="panel-body">
                             <h4>
-                                <img src="{{ getDivisionIconPath($division->abbreviation) }}"
+                                <img src="{{ $division->getLogoPath() }}"
                                      class="division-icon-medium" />
                                 {{ $division->name }}
                             </h4>

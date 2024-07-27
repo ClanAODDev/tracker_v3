@@ -49,7 +49,7 @@ class CreateSquadForm extends FormRequest
 
     public function persist()
     {
-        $squad = new Squad();
+        $squad = new Squad;
 
         $squad->name = $this->name;
         $squad->platoon()->associate($this->route('platoon'));

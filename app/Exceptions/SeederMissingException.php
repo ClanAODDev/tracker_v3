@@ -14,6 +14,6 @@ class SeederMissingException extends Exception implements ProvidesSolution
      */
     public function getSolution(): Solution
     {
-        return new SeederMissingSolution();
+        return new SeederMissingSolution;
     }
 }

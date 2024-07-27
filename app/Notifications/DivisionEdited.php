@@ -35,7 +35,7 @@ class DivisionEdited extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->thumbnail(getDivisionIconPath($notifiable->abbreviation))
+            ->thumbnail($notifiable->getLogoPath())
             ->message(sprintf('%s updated the division settings', $this->user))
             ->info()
             ->send();

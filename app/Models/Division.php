@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -387,6 +388,15 @@ class Division extends Model
     public function isActive()
     {
         return $this->active;
+    }
+
+    public function getLogoPath()
+    {
+        if ($this->logo) {
+            return asset(Storage::url($this->logo));
+        }
+
+        return asset('images/logo_v2.svg');
     }
 
     public function isShutdown()
