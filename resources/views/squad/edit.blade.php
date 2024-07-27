@@ -12,7 +12,7 @@
 
     <div class="container-fluid">
 
-        <form action="{{ route('updateSquad', [$division->slug, $platoon, $squad]) }}">
+        <form action="{{ route('updateSquad', [$division->slug, $platoon, $squad]) }}" method="post">
             @include('squad.forms.edit-squad-form')
             @csrf
         </form>
