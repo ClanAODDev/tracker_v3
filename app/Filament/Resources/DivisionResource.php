@@ -40,7 +40,7 @@ class DivisionResource extends Resource
                             ->label('Logo (48x48)')
                             ->hint(str(sprintf('[Icon Extraction Tool >](%s)',
                                 self::$becy
-                            )->inlineMarkdown()->toHtmlString()))
+                            ))->inlineMarkdown()->toHtmlString())
                             ->required()
                             ->alignCenter()
                             ->avatar()
