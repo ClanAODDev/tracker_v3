@@ -14,6 +14,7 @@
 
         <form action="{{ route('updateSquad', [$division->slug, $platoon, $squad]) }}" method="post">
             @include('squad.forms.edit-squad-form')
+            @method('put')
             @csrf
         </form>
 
@@ -21,6 +22,8 @@
             <hr/>
             <form action="{{ route('deleteSquad', [$division->slug, $platoon, $squad]) }}" method="post">
                 @include('squad.forms.delete-squad-form')
+                @csrf
+                @method('delete')
             </form>
         @endcan
 
