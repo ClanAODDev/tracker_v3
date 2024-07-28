@@ -12,6 +12,3 @@
         <button type="submit" class="btn btn-danger">Delete {{ $division->locality('squad') }}</button>
     </div>
 </div>
-
-@csrf
-@method('delete')
