@@ -30,12 +30,13 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Select::make('Role_id')
+                Select::make('role_id')
                     ->label('Role')
                     ->relationship('role', 'label'),
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('member_id')
+                    ->label('Member')
+                    ->searchable()
+                    ->relationship('member', 'name'),
                 Forms\Components\KeyValue::make('settings')
                     ->required()
                     ->addable(false)
