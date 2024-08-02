@@ -137,22 +137,24 @@
     </li>
 
 
-    @if(Auth::user()->isRole('admin'))
+    @if(Auth::user()->isRole('admin') || Auth::user()->can('manage', \App\Models\MemberRequest::class))
         <li class="nav-category">
             Admin
         </li>
-        <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
-            <a href="/admin">Admin CP</a>
-        </li>
+        @if(Auth::user()->isRole('admin'))
+            <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
+                <a href="/admin">Admin CP</a>
+            </li>
+            <li>
+                <a href="{{ url('/log-viewer') }}">Log Viewer</a>
+            </li>
+        @endif
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
                 Member Requests <span
                     class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
-                    ->count() }}</span>
+                ->count() }}</span>
             </a>
-        </li>
-        <li>
-            <a href="{{ url('/log-viewer') }}">Log Viewer</a>
         </li>
     @endif
 
@@ -213,14 +215,14 @@
 
     <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
                     class="fab
-    fa-lg
-    fa-github"></i></span></a></li>
+fa-lg
+fa-github"></i></span></a></li>
 </ul>
 
 {{--back to top--}}
 <span id="top-link-block" class="hidden">
-    <a href="#top" class="btn btn-default smooth-scroll"
-       onclick="$('html,body').animate({scrollTop:0},'slow'); return false;">
-        <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
-    </a>
+<a href="#top" class="btn btn-default smooth-scroll"
+   onclick="$('html,body').animate({scrollTop:0},'slow'); return false;">
+    <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
+</a>
 </span><!-- /top-link-block -->
