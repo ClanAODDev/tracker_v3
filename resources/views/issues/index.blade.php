@@ -6,7 +6,7 @@
             v3
         @endslot
         @slot ('icon')
-            <img src="{{ asset('images/logo_v2.svg') }}" width="50px" />
+            <img src="{{ asset(config('app.logo')) }}" width="50px" />
         @endslot
         @slot ('heading')
             AOD Tracker

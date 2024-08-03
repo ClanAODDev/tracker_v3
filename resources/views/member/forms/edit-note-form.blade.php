@@ -11,7 +11,7 @@
     <div class="panel-body">
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
             <label for="body" class="slight text-muted">Content</label>
-            <textarea name="body" id="body" rows="2" class="form-control">{{ $note->body ?? null }}</textarea>
+            <textarea name="body" id="body" rows="2" class="form-control">{{ $note->body }}</textarea>
         </div>
     </div>
     <div class="panel-footer">

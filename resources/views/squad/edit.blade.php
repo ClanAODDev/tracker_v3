@@ -12,19 +12,11 @@
 
     <div class="container-fluid">
 
-        <form action="{{ route('updateSquad', [$division->slug, $platoon, $squad]) }}" method="post">
-            @include('squad.forms.edit-squad-form')
-            @method('put')
-            @csrf
-        </form>
+        @include('squad.forms.edit-squad-form')
 
         @can('delete', $squad)
             <hr/>
-            <form action="{{ route('deleteSquad', [$division->slug, $platoon, $squad]) }}" method="post">
-                @include('squad.forms.delete-squad-form')
-                @csrf
-                @method('delete')
-            </form>
+            @include('squad.forms.delete-squad-form')
         @endcan
 
         @if(count($squad->activity))

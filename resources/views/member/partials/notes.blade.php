@@ -30,7 +30,7 @@
         <div class="modal-dialog" role="document" style="background-color: #000;">
             <form action="{{ route('storeNote', [$member->clan_id]) }}" method="post">
                 @csrf
-                @include('member.forms.note-form', ['action' => 'Add Member Note', 'create' => true])
+                @include('member.forms.create-note-form', ['action' => 'Add Member Note', 'create' => true])
             </form>
         </div>
     </div>

@@ -17,6 +17,8 @@ return [
 
     'version' => env('APP_VERSION', '1.0.0'),
 
+    'logo' => env('LOGO', 'images/logo_v2.svg'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

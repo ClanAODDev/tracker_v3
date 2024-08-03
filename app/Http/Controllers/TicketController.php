@@ -124,7 +124,7 @@ class TicketController extends Controller
 
         $ticket->notify(new NotifyCallerTicketUpdated(':white_check_mark: ' . $message));
 
-        if ($ticket->message_id) {
+        if ($ticket->hasExternalMessageId()) {
             $ticket->notify(new TicketReaction('resolved'));
         }
 
@@ -144,7 +144,7 @@ class TicketController extends Controller
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
-        if ($ticket->message_id) {
+        if ($ticket->hasExternalMessageId()) {
             // reopened tickets are assigned to the current admin
             $ticket->notify(new TicketReaction('assigned'));
         }
@@ -164,7 +164,7 @@ class TicketController extends Controller
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
-        if ($ticket->message_id) {
+        if ($ticket->hasExternalMessageId()) {
             $ticket->notify(new TicketReaction('rejected'));
         }
 
@@ -188,7 +188,7 @@ class TicketController extends Controller
         $ticket->notify(new NotifyCallerTicketUpdated($message));
         $ticket->notify(new NotifyNewTicketOwner($assignedUser, auth()->user()));
 
-        if ($ticket->message_id) {
+        if ($ticket->hasExternalMessageId()) {
             $ticket->notify(new TicketReaction('assigned'));
         }
 
@@ -207,7 +207,7 @@ class TicketController extends Controller
 
         $ticket->notify(new NotifyCallerTicketUpdated($message));
 
-        if ($ticket->message_id) {
+        if ($ticket->hasExternalMessageId()) {
             $ticket->notify(new TicketReaction('assigned'));
         }
 
