@@ -28,8 +28,8 @@ class TicketResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(1),
-                Forms\Components\TextInput::make('message_id')
-                    ->required()
+                Forms\Components\TextInput::make('external_message_id')
+                    ->readOnly()
                     ->maxLength(36),
                 Forms\Components\Textarea::make('description')
                     ->required()

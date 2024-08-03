@@ -159,4 +159,9 @@ class Ticket extends Model
             'body' => $comment,
         ]);
     }
+
+    public function hasExternalMessageId(): bool
+    {
+        return (bool) $this->external_message_id;
+    }
 }
