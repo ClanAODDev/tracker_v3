@@ -162,6 +162,6 @@ class Ticket extends Model
 
     public function hasExternalMessageId(): bool
     {
-        return (bool) $this->external_message_id;
+        return ! empty($this->external_message_id);
     }
 }
