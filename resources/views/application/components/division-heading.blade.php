@@ -1,11 +1,6 @@
 <div class="division-header">
     <div class="header-icon">
-        @if ($division)
-            <img src="{{ $division->getLogoPath() }}"
-                 class="division-icon-large"/>
-        @else
-            <img src="{{ asset('images/logo_v2.svg') }}" class="division-icon-large"/>
-        @endif
+        <img src="{{ $division->getLogoPath() }}" class="division-icon-large" />
     </div>
     <div class="header-title">
         <h3 class="m-b-xs">
@@ -15,6 +10,6 @@
             {{ $subheading }}
         </small>
     </div>
-    <hr />
+    <hr/>
 </div>
 

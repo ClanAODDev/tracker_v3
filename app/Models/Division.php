@@ -396,7 +396,7 @@ class Division extends Model
             return asset(Storage::url($this->logo));
         }
 
-        return asset('images/logo_v2.svg');
+        return asset(config('app.logo'));
     }
 
     public function isShutdown()

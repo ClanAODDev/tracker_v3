@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,13 +30,13 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('role_id')
-                    ->required()
-                    ->numeric()
-                    ->default(1),
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('role_id')
+                    ->label('Role')
+                    ->relationship('role', 'label'),
+                Select::make('member_id')
+                    ->label('Member')
+                    ->searchable()
+                    ->relationship('member', 'name'),
                 Forms\Components\KeyValue::make('settings')
                     ->required()
                     ->addable(false)

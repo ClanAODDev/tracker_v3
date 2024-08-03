@@ -16,10 +16,9 @@
 
         {!! Breadcrumbs::render('member-note', $member, $division) !!}
 
-
         <form action="{{ route('updateNote', [$member->clan_id, $note]) }}" method="post">
             @csrf
-            @include ('member.forms.note-form', ['action' => 'Edit Member Note'])
+            @include ('member.forms.edit-note-form', ['action' => 'Edit Member Note'])
         </form>
 
         @include('member.partials.note-feed')

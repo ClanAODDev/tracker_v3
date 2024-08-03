@@ -55,7 +55,7 @@ class BotChannel
             if ($notification instanceof NotifyAdminTicketCreated) {
                 // we need the resulting message id for additional actions
                 $response = json_decode($response->getBody());
-                $notifiable->update(['message_id' => $response->id]);
+                $notifiable->update(['external_message_id' => $response->id]);
             }
 
         } catch (ServerException $exception) {

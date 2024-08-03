@@ -63,7 +63,7 @@ class BotReactMessage
         }
 
         return [
-            'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget, $this->notifiable->message_id),
+            'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget, $this->notifiable->external_message_id),
             'body' => [
                 'emoji' => $this->emote,
                 'exclusive' => true,

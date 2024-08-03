@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TicketResource\Pages;
 use App\Models\Ticket;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,21 +29,24 @@ class TicketResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(1),
-                Forms\Components\TextInput::make('message_id')
-                    ->required()
+                Forms\Components\TextInput::make('external_message_id')
+                    ->readOnly()
                     ->maxLength(36),
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('caller_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('owner_id')
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('caller_id')
+                    ->label('Caller')
+                    ->searchable()
+                    ->relationship('caller', 'name'),
+                Select::make('owner_id')
+                    ->label('Owner')
+                    ->searchable()
+                    ->relationship('owner', 'name'),
+                Select::make('division_id')
+                    ->label('Division')
+                    ->searchable()
+                    ->relationship('division', 'name'),
                 Forms\Components\DateTimePicker::make('resolved_at'),
             ]);
     }
@@ -55,8 +59,6 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('ticket_type_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('message_id')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('caller_id')
                     ->numeric()
                     ->sortable(),
