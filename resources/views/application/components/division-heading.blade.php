@@ -1,6 +1,6 @@
 <div class="division-header">
     <div class="header-icon">
-        <img src="{{ $division->getLogoPath() }}" class="division-icon-large" />
+        <img src="{{ $division ? $division->getLogoPath() : asset(config('app.logo')) }}" class="division-icon-large" />
     </div>
     <div class="header-title">
         <h3 class="m-b-xs">
