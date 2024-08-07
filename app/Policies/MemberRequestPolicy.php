@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Position;
 use App\Models\MemberRequest;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -23,7 +24,10 @@ class MemberRequestPolicy
     public function manage(User $user)
     {
         // are they a SGT and a division XO/CO?
-        if ($user->isRole('sr_ldr') && \in_array($user->member->position_id, [5, 6], true)) {
+        if ($user->isRole('sr_ldr') && \in_array($user->member->position, [
+            Position::EXECUTIVE_OFFICER,
+            Position::COMMANDING_OFFICER,
+        ], true)) {
             return true;
         }
 

@@ -2,9 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Position;
 use App\Filament\Resources\MemberResource\Pages;
 use App\Models\Member;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,45 +25,44 @@ class MemberResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('clan_id')
+                TextInput::make('clan_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('rank_id')
+                TextInput::make('rank_id')
                     ->required()
                     ->numeric()
                     ->default(1),
-                Forms\Components\TextInput::make('platoon_id')
+                TextInput::make('platoon_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('squad_id')
+                TextInput::make('squad_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('position_id')
+                Select::make('position')
                     ->required()
-                    ->numeric()
-                    ->default(1),
-                Forms\Components\TextInput::make('division_id')
+                    ->options(Position::class),
+                TextInput::make('division_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('ts_unique_id')
+                TextInput::make('ts_unique_id')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('discord')
+                TextInput::make('discord')
                     ->maxLength(191)
                     ->default(null),
                 Forms\Components\DateTimePicker::make('last_voice_activity'),
-                Forms\Components\TextInput::make('last_voice_status')
+                TextInput::make('last_voice_status')
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('discord_id')
+                TextInput::make('discord_id')
                     ->numeric()
                     ->default(null),
                 Forms\Components\Toggle::make('flagged_for_inactivity')
                     ->required(),
-                Forms\Components\TextInput::make('posts')
+                TextInput::make('posts')
                     ->required()
                     ->numeric()
                     ->default(0),
@@ -73,12 +75,12 @@ class MemberResource extends Resource
                 Forms\Components\DateTimePicker::make('last_ts_activity'),
                 Forms\Components\DateTimePicker::make('last_promoted_at'),
                 Forms\Components\DateTimePicker::make('last_trained_at'),
-                Forms\Components\TextInput::make('last_trained_by')
+                TextInput::make('last_trained_by')
                     ->numeric()
                     ->default(null),
                 Forms\Components\DateTimePicker::make('xo_at'),
                 Forms\Components\DateTimePicker::make('co_at'),
-                Forms\Components\TextInput::make('recruiter_id')
+                TextInput::make('recruiter_id')
                     ->numeric()
                     ->default(null),
                 Forms\Components\Textarea::make('groups')
@@ -104,8 +106,7 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('squad_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('position_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('position')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('division_id')
                     ->numeric()
