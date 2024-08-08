@@ -30,12 +30,14 @@
 
                     <div class="form-group {{ $errors->has('name') ? ' has-error' : null }}">
                         <label for="name" class="form-label">Squad Name</label>
-                        <input type="text" name="name" id="name" class="form-control">
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $squad->name }}">
                     </div>
 
                     <div class="form-group {{ $errors->has('logo') ? ' has-error' : null }}">
                         <label for="logo" class="form-label">{{ $division->locality('squad') }} Logo URL</label>
-                        <input type="text" name="logo" id="logo" class="form-control" placeholder="https://">
+                        <input type="text" name="logo" id="logo" class="form-control" placeholder="https://"
+                               value="{{ $squad->logo }}"
+                        >
                     </div>
 
                     <div class="row">
@@ -56,7 +58,9 @@
                         <div class="col-xs-4">
                             <div class="form-group {{ $errors->has('leader_id') ? ' has-error' : null }}">
                                 <label for="leader_id">{{ $division->locality('squad leader') }}:</label>
-                                <input type="number" name="leader_id" id="leader_id" class="form-control">
+                                <input type="number" name="leader_id" id="leader_id" class="form-control"
+                                       value="{{ $squad->leader_id }}"
+                                >
                             </div>
                         </div>
                     </div>
