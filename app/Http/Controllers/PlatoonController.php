@@ -199,7 +199,6 @@ class PlatoonController extends Controller
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
-            'position',
             'leave',
         ])->get()->sortByDesc('rank_id');
 

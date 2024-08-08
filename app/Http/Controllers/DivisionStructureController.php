@@ -117,7 +117,6 @@ class DivisionStructureController extends Controller
                             $query->where('id', $division->handle_id);
                         },
                     ],
-                    'leaders.position',
                     'squads',
                     'squads.members',
                     'squads.members.rank'
@@ -146,7 +145,6 @@ class DivisionStructureController extends Controller
 
         $data->leaders = $division->leaders()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'position',
             'rank',
         ])->get();
 
