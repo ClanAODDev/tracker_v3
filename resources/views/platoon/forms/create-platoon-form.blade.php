@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-sm-6">
         <h4>{{ $division->locality('platoon') }} Details</h4>
-        <p>Please provide the details for your {{ $division->locality('platoon') }}. Keep in mind the following when assigning a leader:</p>
+        <p>Please provide the details for your {{ $division->locality('platoon') }}. Keep in mind the following when
+            assigning a leader:</p>
 
         <p>Assigning a {{ $division->locality('platoon leader') }}</p>
         <ul>
@@ -15,10 +16,11 @@
             </li>
 
             <li>
-                <span class="text-success">DOES</span> remove them from any {{ $division->locality('squad') }} they may be in.
+                <span class="text-success">DOES</span> remove them from any {{ $division->locality('squad') }} they may
+                be in.
             </li>
 
-            <br />
+            <br/>
             <li><span class="text-danger">DOES NOT</span> change user account access</li>
         </ul>
 
@@ -33,19 +35,20 @@
                 <div class="form-group {{ $errors->has('name') ? ' has-error' : null }}">
                     <label for="name" class="form-label">{{ $division->locality('platoon') }} Name</label>
                     <input type="text" name="name" id="name" class="form-control"
-                           required="required" value="{{ $platoon->name }}">
+                           required="required" value="{{ old('name') }}">
                 </div>
 
                 <div class="form-group {{ $errors->has('logo') ? ' has-error' : null }}">
                     <label for="logo" class="form-label">{{ $division->locality('platoon') }} Logo URL</label>
                     <input type="text" name="logo" id="logo" class="form-control"
-                           placeholder="https://" value="{{ $platoon->logo }}"
+                           placeholder="https://" value="{{ old('logo') }}"
                     >
                 </div>
 
                 <div class="form-group">
                     <label for="order" class="form-label">{{ $division->locality('platoon') }} Sort Order</label>
-                    <input type="number" class="form-control" name="order" value="{{ $platoon->order }}"
+                    <input type="number" class="form-control" name="order"
+                           value="{{ isset($lastSort) ? $lastSort : old('order') }}"
                     >
                 </div>
 
@@ -53,13 +56,13 @@
                     <div class="col-xs-8">
                         <label for="leader">Search</label>
                         <input type="text" class="form-control search-member" name="leader" id="leader"
-                               autocomplete="off" />
+                               autocomplete="off"/>
                         <i class="fa fa-search pull-right" style="position: absolute; right: 20px; top: 35px;"></i>
                         <div class="form-group m-t-md">
                             <label for="is_tba">Leader TBA?</label>
                             <div style="margin-right:5px;float: left;">
                                 <input id="is_tba"
-                                       type="checkbox" {{ (empty($platoon->leader_id)) ? "checked" : null }} />
+                                       type="checkbox" {{ (empty(old('is_tba'))) ? "checked" : null }} />
                             </div>
                         </div>
                     </div>
@@ -68,7 +71,7 @@
                         <div class="form-group {{ $errors->has('leader_id') ? ' has-error' : null }}">
                             <label for="leader_id">{{ $division->locality('platoon leader') }}:</label>
                             <input type="number" name="leader_id" id="leader_id" class="form-control"
-                                   value="{{ $platoon->leader_id }}">
+                                   value="{{ old('leader_id') }}">
                         </div>
                     </div>
                 </div>

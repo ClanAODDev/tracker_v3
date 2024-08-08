@@ -26,7 +26,7 @@ class CreatePlatoonForm extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'max:40',
+            'name' => 'required|max:40',
             'logo' => 'nullable|url',
             'order' => 'required|integer',
             'leader_id' => [
