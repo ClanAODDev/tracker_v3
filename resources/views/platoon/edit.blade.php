@@ -13,12 +13,16 @@
     <div class="container-fluid">
 
         <form action="{{ route('updatePlatoon', [$division->slug, $platoon]) }}" method="post">
+            @csrf
+            @method('put')
             @include('platoon.forms.edit-platoon-form')
         </form>
 
         @can('delete', $platoon)
             <hr/>
             <form action="{{ route('updatePlatoon', [$division->slug, $platoon]) }}" method="post">
+                @csrf
+                @method('delete')
                 @include('platoon.forms.delete-platoon-form')
             </form>
 
