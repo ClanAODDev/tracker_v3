@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteMember;
 use App\Models\Activity;
+use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
@@ -21,7 +22,7 @@ class InactiveMemberController extends Controller
     /**
      * @return Factory|View
      */
-    public function index($division)
+    public function index(Division $division)
     {
         $inactiveTSMembers = $this->getInactiveMembers($division, 'last_ts_activity');
         $inactiveDiscordMembers = $this->getInactiveMembers($division, 'last_voice_activity');
@@ -56,7 +57,7 @@ class InactiveMemberController extends Controller
         ));
     }
 
-    private function getInactiveMembers($division, $activityColumn)
+    private function getInactiveMembers(Division $division, $activityColumn)
     {
         return $division->members()->whereFlaggedForInactivity(false)
             ->where($activityColumn, '<', now()->today()->subDays($division->settings()->inactivity_days))
