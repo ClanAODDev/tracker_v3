@@ -15,7 +15,7 @@
         @csrf
 
         <div class="container-fluid">
-            @include('platoon.forms.edit-platoon-form')
+            @include('platoon.forms.create-platoon-form')
         </div>
 
     </form>
