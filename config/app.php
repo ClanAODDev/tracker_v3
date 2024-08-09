@@ -19,6 +19,8 @@ return [
 
     'logo' => env('LOGO', 'images/logo_v2.png'),
 
+    'favicon' => env('FAVICON', 'favicon.ico'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
