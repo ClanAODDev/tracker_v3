@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\Position;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,6 +41,8 @@ class Member extends Model
         'last_trained_at' => 'datetime',
         'xo_at' => 'datetime',
         'co_at' => 'datetime',
+
+        'position' => \App\Enums\Position::class,
     ];
 
     protected $guarded = [];
@@ -71,37 +74,30 @@ class Member extends Model
         return $this->hasMany(Note::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
-    public function assignPosition($position): Model
+    public function assignPosition($position)
     {
-        $newPosition = $position instanceof Position ? $position : Position::whereName(strtolower($position))->firstOrFail();
         // reset assignments for specific positions
         if (\in_array(
-            $newPosition->name,
-            ['Commanding Officer', 'Executive Officer', 'General Sergeant', 'Clan Admin'],
+            $position,
+            [Position::COMMANDING_OFFICER, Position::EXECUTIVE_OFFICER, Position::GENERAL_SERGEANT, Position::CLAN_ADMIN],
             true
         )) {
             $this->platoon_id = 0;
             $this->squad_id = 0;
         }
 
-        if ($newPosition->name === 'Executive Officer') {
+        if ($position === Position::EXECUTIVE_OFFICER) {
             $this->xo_at = now();
             $this->co_at = null;
         }
-        if ($newPosition->name === 'Commanding Officer') {
+        if ($position === Position::COMMANDING_OFFICER) {
             $this->co_at = now();
             $this->xo_at = null;
         }
 
-        return $this->position()->associate($newPosition);
-    }
+        $this->position = $position;
 
-    /**
-     * relationship - member belongs to a position.
-     */
-    public function position()
-    {
-        return $this->belongsTo(Position::class);
+        $this->save();
     }
 
     /**
@@ -139,7 +135,7 @@ class Member extends Model
     public function resetPositionAndAssignments()
     {
         $this->update([
-            'division_id' => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position_id' => 1,
+            'division_id' => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position' => Position::MEMBER,
             'flagged_for_inactivity' => false,
             'groups' => null,
         ]);
@@ -268,7 +264,10 @@ class Member extends Model
      */
     public function isDivisionLeader(Division $division)
     {
-        if ($this->division->id === $division->id && \in_array($this->position_id, [5, 6], true)) {
+        if ($this->division->id === $division->id && \in_array($this->position, [
+            Position::EXECUTIVE_OFFICER,
+            Position::COMMANDING_OFFICER,
+        ], true)) {
             return true;
         }
 

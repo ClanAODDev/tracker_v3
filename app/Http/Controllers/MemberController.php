@@ -174,7 +174,7 @@ class MemberController extends Controller
     {
         $member = Member::find($request->member);
         $this->authorize('update', $member);
-        $member->assignPosition(Position::find($request->position));
+        $member->assignPosition($request->position);
         $member->save();
     }
 
@@ -191,7 +191,7 @@ class MemberController extends Controller
 
         $division = $member->division;
 
-        $positions = Position::all()->pluck('id', 'name');
+        $positions = collect(\App\Enums\Position::options())->flip();
 
         return view('member.edit-member', compact(
             'member',
