@@ -33,7 +33,7 @@ class SquadController extends Controller
      */
     public function show(Division $division, Platoon $platoon, Squad $squad)
     {
-        $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave'])->get()->sortByDesc('rank_id');
+        $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave'])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
         $forumActivityGraph = $this->squadRepository->getSquadForumActivity($squad);
