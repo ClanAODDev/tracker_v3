@@ -28,7 +28,7 @@
         <td><code>integer</code></td>
     </tr>
     <tr>
-        <td><code>member.position.name</code></td>
+        <td><code>member.position.getLabel()</code></td>
         <td>position currently held by member</td>
         <td><code>string</code></td>
     </tr>
