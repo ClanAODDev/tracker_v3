@@ -6,7 +6,7 @@
             {!! $member->present()->rankName !!}
         @endslot
         @slot ('subheading')
-            {{ $member->position->name ?? "No Position" }}
+            {{ $member->position->getLabel() ?? "No Position" }}
         @endslot
     @endcomponent
 

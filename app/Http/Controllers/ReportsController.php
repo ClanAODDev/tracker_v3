@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Position;
 use App\Exceptions\FactoryMissingException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
@@ -161,8 +162,11 @@ class ReportsController extends Controller
     {
         $divisions = \App\Models\Division::active()->with([
             'sergeants' => function ($query) {
-                $query->orderByDesc('rank_id')->orWhereIn('position_id', [5, 6]);
-            }, 'sergeants.rank', 'sergeants.position',
+                $query->orderByDesc('rank_id')->orWhereIn('position', [
+                    Position::EXECUTIVE_OFFICER,
+                    Position::COMMANDING_OFFICER,
+                ]);
+            }, 'sergeants.rank',
         ])->withCount('sgtAndSsgt')->get();
 
         $leadership = \App\Models\Member::where('rank_id', '>', 10)

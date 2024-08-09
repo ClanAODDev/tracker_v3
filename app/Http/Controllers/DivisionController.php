@@ -55,7 +55,7 @@ class DivisionController extends Controller
             \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
         )->count();
 
-        $divisionLeaders = $division->leaders()->with('rank', 'position')->get();
+        $divisionLeaders = $division->leaders()->with('rank')->get();
 
         $platoons = $division->platoons()->with('leader.rank')->with(
             'squads.leader',
@@ -129,12 +129,11 @@ class DivisionController extends Controller
      */
     public function partTime(Division $division)
     {
-        $members = $division->partTimeMembers()->with('rank', 'handles')->get()->each(function ($member) use (
-            $division
-        ) {
-            // filter out handles that don't match current division primary handle
-            $member->handle = $member->handles->filter(fn ($handle) => $handle->id === $division->handle_id)->first();
-        });
+        $members = $division->partTimeMembers()->with('rank', 'handles')
+            ->get()->each(function ($member) use ($division) {
+                // filter out handles that don't match current division primary handle
+                $member->handle = $member->handles->filter(fn ($handle) => $handle->id === $division->handle_id)->first();
+            });
 
         return view('division.part-time', compact('division', 'members'));
     }
@@ -177,7 +176,7 @@ class DivisionController extends Controller
     public function members(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave',
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());
@@ -196,7 +195,7 @@ class DivisionController extends Controller
     public function exportAsCSV(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'position', 'leave',
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave',
         ])->get()->sortByDesc('rank_id');
 
         $members = $members->each($this->getMemberHandle());

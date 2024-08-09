@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Rank;
@@ -25,7 +26,7 @@ class MemberFactory extends Factory
             'name' => $this->faker->userName,
             'clan_id' => $this->faker->numberBetween(10000, 99999),
             'rank_id' => Rank::find(rand(1, 10)),
-            'position_id' => 1,
+            'position' => Position::MEMBER,
             'division_id' => Division::factory(),
             'join_date' => $this->faker->dateTimeThisDecade,
             'last_activity' => $this->faker->dateTimeThisMonth,
@@ -41,7 +42,7 @@ class MemberFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'position_id' => 1,
+                'position' => Position::MEMBER,
                 'rank_id' => rand(1, 5),
             ];
         });
@@ -51,7 +52,7 @@ class MemberFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'position_id' => 2,
+                'position' => Position::SQUAD_LEADER,
                 'rank_id' => rand(6, 8),
             ];
         });
@@ -61,7 +62,7 @@ class MemberFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'position_id' => 3,
+                'position' => Position::PLATOON_LEADER,
                 'rank_id' => rand(7, 9),
             ];
         });
@@ -71,7 +72,7 @@ class MemberFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'position_id' => 6,
+                'position' => Position::COMMANDING_OFFICER,
                 'rank_id' => 9,
             ];
         });
@@ -81,7 +82,7 @@ class MemberFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'position_id' => 5,
+                'position' => Position::EXECUTIVE_OFFICER,
                 'rank_id' => 9,
             ];
         });

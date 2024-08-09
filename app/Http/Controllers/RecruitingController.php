@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -195,7 +196,7 @@ class RecruitingController extends Controller
         $member->last_activity = now();
         $member->recruiter_id = auth()->user()->member->clan_id;
         $member->rank_id = $request->rank;
-        $member->position_id = 1;
+        $member->position = Position::MEMBER;
         $member->division_id = $division->id;
         $member->flagged_for_inactivity = false;
         $member->last_promoted_at = now();

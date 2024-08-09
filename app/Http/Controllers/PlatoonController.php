@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Position;
 use App\Http\Requests\CreatePlatoonForm;
 use App\Http\Requests\DeletePlatoonForm;
 use App\Http\Requests\UpdatePlatoonForm;
@@ -91,7 +92,6 @@ class PlatoonController extends Controller
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
-            'position',
             'leave',
         ])->get()->sortByDesc('rank_id');
 
@@ -179,7 +179,7 @@ class PlatoonController extends Controller
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
-            $squad->members = $squad->members->filter(fn ($member) => $member->position_id === 1)->sortbyDesc(function (
+            $squad->members = $squad->members->filter(fn ($member) => $member->position === Position::MEMBER)->sortbyDesc(function (
                 $member
             ) use ($squad) {
                 return $squad->leader && $squad->leader->clan_id === $member->recruiter_id;
@@ -199,7 +199,6 @@ class PlatoonController extends Controller
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'rank',
-            'position',
             'leave',
         ])->get()->sortByDesc('rank_id');
 

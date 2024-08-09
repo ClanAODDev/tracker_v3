@@ -31,7 +31,7 @@ class Division extends Base implements Command
 
         if ($division) {
             foreach ($division->leaders()->get() as $leader) {
-                $leaderData .= $leader->present()->rankName() . ' - ' . $leader->position->name . PHP_EOL;
+                $leaderData .= $leader->present()->rankName() . ' - ' . $leader->position->getLabel() . PHP_EOL;
             }
 
             return [
