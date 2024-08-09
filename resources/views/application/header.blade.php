@@ -1,7 +1,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
-<link href="{{ asset(config('favicon')) }}" type="image/x-icon" rel="Shortcut Icon"/>
+<link href="{{ asset(config('app.favicon')) }}" type="image/x-icon" rel="Shortcut Icon"/>
 
 <!-- vendor styles -->
 <!-- @TODO: bundle CSS resources -->
