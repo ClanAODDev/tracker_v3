@@ -102,7 +102,7 @@ class UpdateSquadForm extends FormRequest
     private function resetLeaderOf($squad)
     {
         if ($squad->leader) {
-            $squad->leader->assignPosition('member')->save();
+            $squad->leader->assignPosition(Position::MEMBER);
             $squad->leader->squad = $squad;
             $squad->leader()->dissociate()->save();
         }

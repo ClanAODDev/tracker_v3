@@ -103,7 +103,7 @@ class UpdatePlatoonForm extends FormRequest
      */
     private function resetLeaderOf($platoon)
     {
-        $platoon->leader->assignPosition('member')->save();
+        $platoon->leader->assignPosition(Position::MEMBER);
 
         $platoon->leader()->dissociate()->save();
     }
