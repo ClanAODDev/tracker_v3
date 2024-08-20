@@ -29,6 +29,7 @@ class ClanForumPermissions
             ->select('officer_role_id')
             ->where('active', true)
             ->whereNotNull('officer_role_id')
+            ->where('officer_role_id', '!=', 0) // never pull floater
             ->pluck('officer_role_id')
             ->toArray();
 
@@ -63,6 +64,9 @@ class ClanForumPermissions
             case !empty(array_intersect($groupIds, $officerRoleIds)):
                 return ($user->role_id !== 2) ? $this->assignRole('officer') : null;
 
+            /*
+             * Default case: no matches, set as member.
+             */
             default:
                 return ($user->role_id !== 1) ? $this->assignRole('member') : null;
         }
