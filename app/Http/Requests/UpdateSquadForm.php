@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Position;
 use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -118,7 +119,6 @@ class UpdateSquadForm extends FormRequest
 
         $leader->squad()->associate($squad)
             ->platoon()->associate($this->route('platoon'))
-            ->assignPosition('squad leader')
-            ->save();
+            ->assignPosition(Position::SQUAD_LEADER);
     }
 }

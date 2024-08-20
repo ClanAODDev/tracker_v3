@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Position;
 use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -124,6 +125,6 @@ class UpdatePlatoonForm extends FormRequest
 
         $leader->platoon()->associate($platoon);
 
-        $leader->assignPosition('platoon leader')->save();
+        $leader->assignPosition(Position::PLATOON_LEADER);
     }
 }
