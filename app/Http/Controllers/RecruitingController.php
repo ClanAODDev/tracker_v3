@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Position;
+use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -59,6 +60,9 @@ class RecruitingController extends Controller
         if ($division->settings()->get('slack_alert_created_member') === 'on') {
             $this->handleNotification($request, $member, $division);
         }
+
+        // create job to sync discord member
+        SyncDiscordMember::dispatch($member);
 
         $this->showSuccessToast('Your recruitment has successfully been completed!');
     }
