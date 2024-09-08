@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\Rank;
 use App\Models\Member;
 use Carbon;
 use Illuminate\Console\Command;
@@ -37,7 +38,7 @@ class SgtActivity extends Command
      */
     public function handle()
     {
-        $sgts = Member::where('rank_id', '>=', 9)
+        $sgts = Member::where('rank', '>=', Rank::SERGEANT)
             ->where('division_id', '!=', 0)
             ->where('division_id', '!=', 7)
             ->select('name', 'last_activity', 'last_ts_activity')

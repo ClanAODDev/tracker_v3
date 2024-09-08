@@ -1,5 +1,5 @@
 <tr role="row" class="{{ ($member->leave) ? 'text-muted' : null }}">
-    <td class="col-hidden">{{ $member->rank_id }}</td>
+    <td class="col-hidden">{{ $member->rank }}</td>
     <td class="col-hidden">{{ $member->last_activity }}</td>
     <td>
         @if (isset($squadView) && $squadView)
@@ -17,7 +17,7 @@
                         class="fa fa-search text-accent"></i></a>
         </span>
     </td>
-    <td class="text-center">{{ $member->rank->abbreviation }}</td>
+    <td class="text-center">{{ $member->rank->getAbbreviation() }}</td>
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
     <td class="text-center">
                     <span class="{{ getActivityClass($member->last_voice_activity, $division) }}"

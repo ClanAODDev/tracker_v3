@@ -39,8 +39,6 @@ class PlatoonController extends Controller
     {
         $this->authorize('create', [Platoon::class, $division]);
 
-        $division->load('unassigned.rank');
-
         $lastCreatedPlatoon = Platoon::whereDivisionId($division->id)
             ->orderByDesc('id')
             ->first();
@@ -91,9 +89,8 @@ class PlatoonController extends Controller
     {
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'rank',
             'leave',
-        ])->get()->sortByDesc('rank_id');
+        ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
 
@@ -121,7 +118,7 @@ class PlatoonController extends Controller
     {
         $this->authorize('update', $platoon);
 
-        $division->load('unassigned.rank')->withCount('unassigned')->get();
+        $division->withCount('unassigned')->get();
 
         return view('platoon.edit', compact('division', 'platoon'));
     }
@@ -173,9 +170,6 @@ class PlatoonController extends Controller
             'squads',
             'squads.members',
             'squads.leader',
-            'unassigned.rank',
-            'squads.leader.rank',
-            'squads.members.rank'
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
@@ -198,16 +192,15 @@ class PlatoonController extends Controller
     {
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'rank',
             'leave',
-        ])->get()->sortByDesc('rank_id');
+        ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
 
         $csv_data = $members->reduce(function ($data, $member) {
             $data[] = [
                 $member->name,
-                $member->rank->abbreviation,
+                $member->rank->getAbbreviation(),
                 $member->join_date,
                 $member->last_activity,
                 $member->last_ts_activity,

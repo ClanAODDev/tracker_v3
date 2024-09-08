@@ -43,6 +43,7 @@ class Member extends Model
         'co_at' => 'datetime',
 
         'position' => \App\Enums\Position::class,
+        'rank' => \App\Enums\Rank::class,
     ];
 
     protected $guarded = [];
@@ -106,14 +107,6 @@ class Member extends Model
     public function assignRank($rank)
     {
         return $this->rank()->associate(Rank::whereName(strtolower($rank))->firstOrFail());
-    }
-
-    /**
-     * relationship - member belongs to a rank.
-     */
-    public function rank()
-    {
-        return $this->belongsTo(Rank::class);
     }
 
     /**
@@ -300,7 +293,7 @@ class Member extends Model
 
     public function getUrlParams()
     {
-        return [$this->clan_id, $this->rank->abbreviation . '-' . $this->name];
+        return [$this->clan_id, $this->rank->getAbbreviation() . '-' . $this->name];
     }
 
     /**

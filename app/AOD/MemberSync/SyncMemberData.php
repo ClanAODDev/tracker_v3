@@ -73,7 +73,7 @@ class SyncMemberData
                 'name' => $oldData['name'],
                 'posts' => $oldData['posts'],
                 'privacy_flag' => $oldData['privacy_flag'],
-                'rank_id' => $oldData['rank_id'],
+                'rank' => $oldData['rank'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
                 'last_voice_status' => $oldData['last_voice_status'],
 
@@ -104,7 +104,7 @@ class SyncMemberData
                     'name' => str_replace('AOD_', '', $newData->username),
                     'posts' => $newData->postcount,
                     'privacy_flag' => $newData->allow_export !== 'yes' ? 0 : 1,
-                    'rank_id' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
+                    'rank' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
                     'last_voice_status' => $newData->lastdiscord_status,
                     'last_activity' => $newData->lastactivity,
@@ -134,12 +134,12 @@ class SyncMemberData
                 foreach ($differences as $key => $value) {
                     $updates[$key] = $newData[$key];
 
-                    if ($key === 'rank_id') {
+                    if ($key === 'rank') {
                         \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], $newData[$key]));
                         $updates['last_promoted_at'] = now();
                         RankAction::create([
                             'member_id' => $member->id,
-                            'rank_id' => $newData[$key],
+                            'rank' => $newData[$key],
                         ]);
                     }
 
@@ -197,7 +197,7 @@ class SyncMemberData
                 'name' => str_replace('AOD_', '', $member->username),
                 'posts' => $member->postcount,
                 'privacy_flag' => $member->allow_export !== 'yes' ? 0 : 1,
-                'rank_id' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
+                'rank' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
                 'ts_unique_id' => $member->tsid,
                 'last_activity' => $member->lastactivity,
                 'last_ts_activity' => $member->lastts_connect,
