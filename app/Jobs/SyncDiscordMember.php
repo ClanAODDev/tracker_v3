@@ -15,16 +15,25 @@ class SyncDiscordMember implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Member $member) {}
+    public function __construct(public Member $member)
+    {
+    }
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
-        $botAPIResponse = $this->member->forumMember();
+        try {
+            $botAPIResponse = (new AODClient)->getForumMember($this->member->clan_id);
+            $botAPIResponse = json_decode($botAPIResponse->getBody())[0];
+        } catch (\Exception $exception) {
+            \Log::error($exception->getMessage());
 
-        if (! empty($botAPIResponse->discordid)) {
+            return;
+        }
+
+        if (!empty($botAPIResponse->discordid)) {
             $this->member->discord_id = $botAPIResponse->discordid;
 
             try {
@@ -34,10 +43,12 @@ class SyncDiscordMember implements ShouldQueue
             }
         }
 
-        if (! empty($botAPIResponse->discordtag)) {
+        if (!empty($botAPIResponse->discordtag)) {
             $this->member->discord = $botAPIResponse->discordtag;
         }
 
-        $this->member->save();
+        if ($this->member->isDirty()) {
+            $this->member->save();
+        }
     }
 }

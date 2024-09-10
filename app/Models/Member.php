@@ -6,7 +6,6 @@ use App\Activities\RecordsActivity;
 use App\Enums\Position;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
-use App\Services\AODClient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -341,22 +340,5 @@ class Member extends Model
                 . PHP_EOL
                 . implode(PHP_EOL, $properties),
         ];
-    }
-
-    /**
-     * Returns the member's forum information via the bot API. Null is returned if the member is not found.
-     * 
-     * @return object|null
-     */
-    public function forumMember()
-    {
-        try {
-            $response = (new AODClient)->getForumMember($this->clan_id);
-            $response = json_decode($response->getBody());
-
-            return $response[0];
-        } catch (\Exception $e) {
-            return null;
-        }
     }
 }
