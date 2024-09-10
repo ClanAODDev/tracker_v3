@@ -40,8 +40,9 @@ class DivisionController extends ApiController
     {
         $divisions = Division::active()
             ->withoutFloaters()
-            ->shuttingDown(false)
-            ->get();
+            ->shuttingDown(
+                request()->has('include-shutdown')
+            )->get();
 
         return $this->respond([
             'data' => $this->divisionTransformer->transformCollection($divisions->all()),
