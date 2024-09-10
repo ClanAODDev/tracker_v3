@@ -248,7 +248,7 @@ class Division extends Model
             return $query->whereNotNull('shutdown_at');
         }
 
-        return $query->whereNull('shutdown_at');
+        return $query;
     }
 
     /**
