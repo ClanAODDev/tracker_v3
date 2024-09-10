@@ -36,9 +36,9 @@ class AODClient
         return $headers;
     }
 
-    private function sendGetRequest($url): ResponseInterface
+    private function send($url, $method = 'GET', $body = null): ResponseInterface
     {
-        return $this->client->send(new Request('GET', $url, $this->buildHeaders()), ['verify' => false]);
+        return $this->client->send(new Request($method, $url, $this->buildHeaders(), $body), ['verify' => false]);
     }
 
     /**
@@ -50,7 +50,7 @@ class AODClient
     {
         $url = sprintf('%s/forum_member/%s', $this->baseUrl, $member_id);
 
-        return $this->sendGetRequest($url);
+        return $this->send($url);
     }
 
     /**
@@ -62,6 +62,6 @@ class AODClient
     {
         $url = sprintf('%s/members/%s/update', $this->baseUrl, $discord_member_id);
 
-        return $this->sendGetRequest($url);
+        return $this->send($url);
     }
 }
