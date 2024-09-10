@@ -15,9 +15,7 @@ class SyncDiscordMember implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public Member $member)
-    {
-    }
+    public function __construct(public Member $member) {}
 
     /**
      * Execute the job.
@@ -33,7 +31,7 @@ class SyncDiscordMember implements ShouldQueue
             return;
         }
 
-        if (!empty($botAPIResponse->discordid)) {
+        if (! empty($botAPIResponse->discordid)) {
             $this->member->discord_id = $botAPIResponse->discordid;
 
             try {
@@ -43,7 +41,7 @@ class SyncDiscordMember implements ShouldQueue
             }
         }
 
-        if (!empty($botAPIResponse->discordtag)) {
+        if (! empty($botAPIResponse->discordtag)) {
             $this->member->discord = $botAPIResponse->discordtag;
         }
 
