@@ -36,6 +36,11 @@ class AODClient
         return $headers;
     }
 
+    private function sendGetRequest($url): ResponseInterface
+    {
+        return $this->client->send(new Request('GET', $url, $this->buildHeaders()), ['verify' => false]);
+    }
+
     /**
      * Get AOD forum member info
      *
@@ -45,7 +50,7 @@ class AODClient
     {
         $url = sprintf('%s/forum_member/%s', $this->baseUrl, $member_id);
 
-        return $this->client->send(new Request('GET', $url, $this->buildHeaders()), ['verify' => false]);
+        return $this->sendGetRequest($url);
     }
 
     /**
@@ -57,6 +62,6 @@ class AODClient
     {
         $url = sprintf('%s/members/%s/update', $this->baseUrl, $discord_member_id);
 
-        return $this->client->send(new Request('GET', $url, $this->buildHeaders()), ['verify' => false]);
+        return $this->sendGetRequest($url);
     }
 }
