@@ -242,10 +242,10 @@ class Division extends Model
     /**
      * @return mixed
      */
-    public function scopeShuttingDown($query, bool $status)
+    public function scopeShuttingDown($query, bool $includeShutdown = false)
     {
-        if ($status) {
-            return $query->whereNotNull('shutdown_at');
+        if (! $includeShutdown) {
+            return $query->whereNull('shutdown_at');
         }
 
         return $query;
