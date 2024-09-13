@@ -39,7 +39,8 @@ class GetDivisionInfo
     protected function fetchData()
     {
         $data = AOD::request($this->source, [
-            'extra' => 1,
+            'extra' => true,
+            'epoch' => true,
             'type' => 'json',
         ]);
 
