@@ -79,13 +79,13 @@ class SyncMemberData
 
                 // these can be null, and they piss me off
                 'last_activity' => $oldData['last_activity'] !== null
-                    ? Carbon::createFromTimeString($oldData['last_activity'])->format('Y-m-d H:i:s')
+                    ? Carbon::createFromTimestamp($oldData['last_activity'])
                     : null,
                 'last_ts_activity' => $oldData['last_ts_activity'] !== null
-                    ? Carbon::createFromTimeString($oldData['last_ts_activity'])->format('Y-m-d H:i:s')
+                    ? Carbon::createFromTimestamp($oldData['last_ts_activity'])
                     : null,
                 'last_voice_activity' => $oldData['last_voice_activity'] !== null
-                    ? Carbon::createFromTimeString($oldData['last_voice_activity'])->format('Y-m-d H:i:s')
+                    ? Carbon::createFromTimestamp($oldData['last_voice_activity'])
                     : null,
             ]);
 
@@ -107,19 +107,9 @@ class SyncMemberData
                     'rank_id' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
                     'last_voice_status' => $newData->lastdiscord_status,
-
-                    // these can be null, and they piss me off
-                    'last_activity' => $newData->lastactivity !== ''
-                        ? "{$newData->lastactivity} {$newData->lastactivity_time}"
-                        : '',
-
-                    'last_ts_activity' => $newData->lastts_connect !== ''
-                        ? "{$newData->lastts_connect} {$newData->lastts_connect_time}"
-                        : '',
-
-                    'last_voice_activity' => (self::isBadDate($newData))
-                        ? "{$newData->lastdiscord_connect} {$newData->lastdiscord_connect_time}"
-                        : 'never_configured',
+                    'last_activity' => $newData->lastactivity,
+                    'last_ts_activity' => $newData->lastts_connect,
+                    'last_voice_activity' => $newData->lastdiscord_connect,
                 ]);
 
             } catch (\Exception $exception) {
@@ -209,16 +199,9 @@ class SyncMemberData
                 'privacy_flag' => $member->allow_export !== 'yes' ? 0 : 1,
                 'rank_id' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
                 'ts_unique_id' => $member->tsid,
-
-                // these can be null, and they piss me off
-                'last_activity' => $member->lastactivity !== ''
-                    ? \Carbon::createFromTimeString("{$member->lastactivity} {$member->lastactivity_time}")
-                        ->format('Y-m-d')
-                    : '',
-                'last_ts_activity' => $member->lastts_connect !== ''
-                    ? \Carbon::createFromTimeString("{$member->lastts_connect} {$member->lastts_connect_time}")
-                        ->format('Y-m-d')
-                    : '',
+                'last_activity' => $member->lastactivity,
+                'last_ts_activity' => $member->lastts_connect,
+                'last_voice_activity' => $newData->lastdiscord_connect,
             ]);
         }
 
