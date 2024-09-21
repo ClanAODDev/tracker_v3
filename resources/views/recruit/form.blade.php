@@ -14,7 +14,7 @@
     <div class="container-fluid" id="recruiting-container">
         <recruiting-process division="{{ $division->slug }}"
                             recruiter_id="{{ auth()->user()->member->clan_id }}"
-                            :ranks="{{ \App\Models\Rank::all()->pluck('abbreviation', 'id') }}"
+                            :ranks="{{ json_encode(\App\Enums\Rank::getAllRanks()) }}"
                             handle-name="{{ $division->handle->label ?? 'Ingame Name' }}"></recruiting-process>
     </div>
 @endsection

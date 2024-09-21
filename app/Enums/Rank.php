@@ -51,4 +51,18 @@ enum Rank: int implements HasLabel
             self::SERGEANT_MAJOR => 'SgtMaj',
         };
     }
+
+    public function getId(): int
+    {
+        return array_search($this, self::cases()) + 1;
+    }
+
+    public static function getAllRanks(): array
+    {
+        $ranks = [];
+        foreach (self::cases() as $rank) {
+            $ranks[$rank->getId()] = $rank->getAbbreviation();
+        }
+        return $ranks;
+    }
 }
