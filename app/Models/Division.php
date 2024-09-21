@@ -266,7 +266,7 @@ class Division extends Model
     {
         return $this->members()->whereIn('rank', [
             \App\Enums\Rank::SERGEANT,
-            \App\Enums\Rank::STAFF_SERGEANT
+            \App\Enums\Rank::STAFF_SERGEANT,
         ]);
     }
 

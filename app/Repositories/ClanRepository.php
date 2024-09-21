@@ -46,7 +46,6 @@ class ClanRepository
 
         return collect($results);
 
-
     }
 
     /**
@@ -80,5 +79,4 @@ class ClanRepository
             ];
         });
     }
-
 }
