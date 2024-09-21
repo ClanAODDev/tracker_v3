@@ -103,14 +103,6 @@ class Member extends Model
     }
 
     /**
-     * @return Model
-     */
-    public function assignRank($rank)
-    {
-        return $this->rank()->associate(Rank::whereName(strtolower($rank))->firstOrFail());
-    }
-
-    /**
      * Enforce a singleton relationship for squad leaders.
      *
      * Prevents members from being a squad leader of more than one squad
