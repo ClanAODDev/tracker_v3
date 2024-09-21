@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Exceptions\FactoryMissingException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
@@ -48,8 +49,10 @@ class ReportsController extends Controller
 
         // break down rank distribution
         $rankDemographic = collect($this->clan->allRankDemographic());
-        $rankDemographic->each(function ($rank) use ($memberCount) {
+        $rankDemographic = $rankDemographic->map(function ($rank) use ($memberCount) {
             $rank->difference = $memberCount - $rank->count;
+
+            return $rank;
         });
 
         return view('reports.clan-statistics')->with(compact(
@@ -72,7 +75,6 @@ class ReportsController extends Controller
         $newMembers = fn ($member) => $member->created_at < \Carbon\Carbon::now()->subDays(2);
 
         $issues = \App\Models\Member::whereHas('division')->with(
-            'rank',
             'division'
         )->get()->filter($invalidDates)->filter($newMembers);
 
@@ -162,17 +164,16 @@ class ReportsController extends Controller
     {
         $divisions = \App\Models\Division::active()->with([
             'sergeants' => function ($query) {
-                $query->orderByDesc('rank_id')->orWhereIn('position', [
+                $query->orderByDesc('rank')->orWhereIn('position', [
                     Position::EXECUTIVE_OFFICER,
                     Position::COMMANDING_OFFICER,
                 ]);
-            }, 'sergeants.rank',
+            },
         ])->withCount('sgtAndSsgt')->get();
 
-        $leadership = \App\Models\Member::where('rank_id', '>', 10)
+        $leadership = \App\Models\Member::where('rank', '>', Rank::STAFF_SERGEANT)
             ->where('division_id', '!=', 0)
-            ->with('rank')
-            ->orderByDesc('rank_id')
+            ->orderByDesc('rank')
             ->orderBy('name')->get();
 
         return view('reports.leadership', compact('divisions', 'leadership'));

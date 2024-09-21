@@ -87,6 +87,6 @@ class MemberPresenter extends Presenter
             return $this->member->name;
         }
 
-        return $this->member->rank->abbreviation . ' ' . $this->member->name;
+        return $this->member->rank->getAbbreviation() . ' ' . $this->member->name;
     }
 }

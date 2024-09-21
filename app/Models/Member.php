@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Activities\RecordsActivity;
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,6 +44,7 @@ class Member extends Model
         'co_at' => 'datetime',
 
         'position' => \App\Enums\Position::class,
+        'rank' => \App\Enums\Rank::class,
     ];
 
     protected $guarded = [];
@@ -98,22 +100,6 @@ class Member extends Model
         $this->position = $position;
 
         $this->save();
-    }
-
-    /**
-     * @return Model
-     */
-    public function assignRank($rank)
-    {
-        return $this->rank()->associate(Rank::whereName(strtolower($rank))->firstOrFail());
-    }
-
-    /**
-     * relationship - member belongs to a rank.
-     */
-    public function rank()
-    {
-        return $this->belongsTo(Rank::class);
     }
 
     /**
@@ -286,21 +272,22 @@ class Member extends Model
     /**
      * @return bool
      */
-    public function isRank($rank)
+    public function isRank(array|Rank $rank): bool
     {
         if (! $this->rank instanceof Rank) {
             return false;
         }
+
         if (\is_array($rank)) {
-            return \in_array(strtolower($this->rank->abbreviation), array_map('strtolower', $rank), true);
+            return \in_array($this->rank, $rank, true);
         }
 
-        return $this->rank->abbreviation === $rank;
+        return $this->rank === $rank;
     }
 
     public function getUrlParams()
     {
-        return [$this->clan_id, $this->rank->abbreviation . '-' . $this->name];
+        return [$this->clan_id, $this->rank->getAbbreviation() . '-' . $this->name];
     }
 
     /**

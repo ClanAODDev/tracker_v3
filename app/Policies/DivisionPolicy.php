@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -44,7 +45,7 @@ class DivisionPolicy
 
         if ($user->member->division->id === $division->id
             && $user->isRole('sr_ldr')
-            && $user->member->isRank(['Sgt', 'SSgt'])
+            && $user->member->isRank([Rank::SERGEANT, Rank::STAFF_SERGEANT])
         ) {
             return true;
         }

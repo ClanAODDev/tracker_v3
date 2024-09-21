@@ -256,7 +256,7 @@ class Division extends Model
      */
     public function sergeants()
     {
-        return $this->members()->where('rank_id', '>', 8);
+        return $this->members()->where('rank', '>', \App\Enums\Rank::SERGEANT);
     }
 
     /**
@@ -264,7 +264,10 @@ class Division extends Model
      */
     public function sgtAndSsgt()
     {
-        return $this->members()->whereIn('rank_id', [9, 10]);
+        return $this->members()->whereIn('rank', [
+            \App\Enums\Rank::SERGEANT,
+            \App\Enums\Rank::STAFF_SERGEANT,
+        ]);
     }
 
     /**
@@ -327,7 +330,7 @@ class Division extends Model
         return $this->members()
             ->where('platoon_id', 0)
             ->whereIn('position', [Position::MEMBER])->orderBy(
-                'rank_id',
+                'rank',
                 'asc'
             )->orderBy('name', 'asc');
     }
