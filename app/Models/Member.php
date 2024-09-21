@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Activities\RecordsActivity;
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -279,16 +280,17 @@ class Member extends Model
     /**
      * @return bool
      */
-    public function isRank($rank)
+    public function isRank(array|Rank $rank): bool
     {
         if (! $this->rank instanceof Rank) {
             return false;
         }
+
         if (\is_array($rank)) {
-            return \in_array(strtolower($this->rank->abbreviation), array_map('strtolower', $rank), true);
+            return \in_array($this->rank, $rank, true);
         }
 
-        return $this->rank->abbreviation === $rank;
+        return $this->rank === $rank;
     }
 
     public function getUrlParams()
