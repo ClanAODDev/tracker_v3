@@ -25,7 +25,7 @@ class MemberFactory extends Factory
         return [
             'name' => $this->faker->userName,
             'clan_id' => $this->faker->numberBetween(10000, 99999),
-            'rank_id' => Rank::find(rand(1, 10)),
+            'rank' => Rank::find(rand(1, 10)),
             'position' => Position::MEMBER,
             'division_id' => Division::factory(),
             'join_date' => $this->faker->dateTimeThisDecade,
@@ -43,7 +43,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::MEMBER,
-                'rank_id' => rand(1, 5),
+                'rank' => rand(\App\Enums\Rank::RECRUIT->value, \App\Enums\Rank::SPECIALIST->value),
             ];
         });
     }
@@ -53,7 +53,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::SQUAD_LEADER,
-                'rank_id' => rand(6, 8),
+                'rank' => rand(\App\Enums\Rank::TRAINER->value, \App\Enums\Rank::CORPORAL->value),
             ];
         });
     }
@@ -63,7 +63,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::PLATOON_LEADER,
-                'rank_id' => rand(7, 9),
+                'rank' => rand(\App\Enums\Rank::LANCE_CORPORAL->value, \App\Enums\Rank::SERGEANT->value),
             ];
         });
     }
@@ -73,7 +73,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::COMMANDING_OFFICER,
-                'rank_id' => 9,
+                'rank' => \App\Enums\Rank::SERGEANT,
             ];
         });
     }
@@ -83,7 +83,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::EXECUTIVE_OFFICER,
-                'rank_id' => 9,
+                'rank' => \App\Enums\Rank::SERGEANT,
             ];
         });
     }
