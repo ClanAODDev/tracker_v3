@@ -3,10 +3,11 @@
 namespace App\Enums;
 
 use App\Traits\EnumOptions;
+use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Support\Str;
 
-enum Rank: int implements HasLabel
+enum Rank: int implements HasLabel, HasColor
 {
     use EnumOptions;
 
@@ -28,8 +29,28 @@ enum Rank: int implements HasLabel
     public function getLabel(): ?string
     {
         return Str::of($this->name)
-            ->replace('_', '')
+            ->replace('_', ' ')
             ->title();
+    }
+
+    public function getColor(): string
+    {
+        return match ($this) {
+            self::RECRUIT => 'gray',
+            self::CADET => 'gray',
+            self::PRIVATE => 'gray',
+            self::PRIVATE_FIRST_CLASS => 'gray',
+            self::SPECIALIST => 'gray',
+            self::TRAINER => 'gray',
+            self::LANCE_CORPORAL => 'gray',
+            self::CORPORAL => 'gray',
+            self::SERGEANT => 'success',
+            self::STAFF_SERGEANT => 'success',
+            self::MASTER_SERGEANT => 'warning',
+            self::FIRST_SERGEANT => 'warning',
+            self::COMMAND_SERGEANT => 'warning',
+            self::SERGEANT_MAJOR => 'warning',
+        };
     }
 
     public function getAbbreviation(): string
@@ -63,6 +84,7 @@ enum Rank: int implements HasLabel
         foreach (self::cases() as $rank) {
             $ranks[$rank->getId()] = $rank->getAbbreviation();
         }
+
         return $ranks;
     }
 }

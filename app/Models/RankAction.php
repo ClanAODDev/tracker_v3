@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Rank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RankAction extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'rank' => Rank::class,
+    ];
 
     public $guarded = [];
 
@@ -26,13 +31,5 @@ class RankAction extends Model
     public function division()
     {
         return $this->belongsTo(Division::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function rank()
-    {
-        return $this->belongsTo(Rank::class);
     }
 }

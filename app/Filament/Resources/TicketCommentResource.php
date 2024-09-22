@@ -27,9 +27,10 @@ class TicketCommentResource extends Resource
                 Forms\Components\Textarea::make('body')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('user_id')
+                    ->relationship(name: 'user', titleAttribute: 'name')
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('ticket_id')
                     ->required()
                     ->numeric(),

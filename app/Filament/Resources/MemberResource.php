@@ -3,9 +3,11 @@
 namespace App\Filament\Resources;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Filament\Resources\MemberResource\Pages;
 use App\Models\Member;
 use Filament\Forms;
+use Filament\Forms\Components\BelongsToSelect;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -31,10 +33,9 @@ class MemberResource extends Resource
                 TextInput::make('clan_id')
                     ->required()
                     ->numeric(),
-                TextInput::make('rank_id')
-                    ->required()
-                    ->numeric()
-                    ->default(1),
+                Forms\Components\Select::make('rank')
+                    ->options(Rank::class)
+                    ->required(),
                 TextInput::make('platoon_id')
                     ->required()
                     ->numeric(),
@@ -44,9 +45,11 @@ class MemberResource extends Resource
                 Select::make('position')
                     ->required()
                     ->options(Position::class),
-                TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->searchable()
+                    ->required(),
                 TextInput::make('ts_unique_id')
                     ->maxLength(255)
                     ->default(null),
@@ -97,30 +100,38 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('clan_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rank_id')
+                Tables\Columns\TextColumn::make('rank')
+                    ->sortable()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('platoon.name')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('platoon_id')
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('squad.name')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('squad_id')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('position')
+                    ->toggleable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('division_id')
+                Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ts_unique_id')
+                    ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('discord')
+                    ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('last_voice_activity')
+                    ->toggleable()
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_voice_status')
+                    ->toggleable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('discord_id')
+                    ->toggleable()
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('flagged_for_inactivity')
@@ -151,9 +162,11 @@ class MemberResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('xo_at')
+                    ->label('Assigned XO')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('co_at')
+                    ->label('Assigned CO')
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('recruiter_id')

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CensusResource\Pages;
 use App\Models\Census;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,9 +23,11 @@ class CensusResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('count')
                     ->required()
                     ->numeric(),
@@ -48,7 +51,7 @@ class CensusResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('division_id')
+                Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('count')

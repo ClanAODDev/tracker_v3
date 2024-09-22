@@ -32,7 +32,7 @@
                             <tbody>
                             @foreach ($rankHistory as $entry)
                                 <tr>
-                                    <td>{{ $entry->rank->name }}</td>
+                                    <td>{{ $entry->rank->getLabel() }}</td>
                                     <td>{{ $entry->created_at->format('Y-m-d') }}</td>
                                 </tr>
                             @endforeach

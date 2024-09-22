@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\TransferResource\Pages;
 use App\Models\Transfer;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,12 +23,16 @@ class TransferResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->searchable()
+                    ->required(),
+                Select::make('member_id')
+                    ->relationship('member', 'name')
+                    ->label('Member')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 
@@ -35,16 +40,16 @@ class TransferResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('division_id')
+                Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member_id')
+                Tables\Columns\TextColumn::make('member.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Transfer Date')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
