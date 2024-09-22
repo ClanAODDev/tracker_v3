@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Models\Member;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -93,7 +94,7 @@ class MemberPresenter extends Presenter
      */
     public function rankName()
     {
-        if ($this->member->rank_id === 14) {
+        if ($this->member->rank === Rank::SERGEANT_MAJOR) {
             return $this->member->name;
         }
 
