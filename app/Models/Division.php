@@ -153,7 +153,7 @@ class Division extends Model
 
         return $this->members()
             ->whereIn('last_voice_status', $state)
-            ->with(['rank', 'platoon']);
+            ->with(['platoon']);
     }
 
     /**
