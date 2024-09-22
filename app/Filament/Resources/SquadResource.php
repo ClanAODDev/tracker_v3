@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SquadResource\Pages;
 use App\Models\Squad;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -30,9 +31,11 @@ class SquadResource extends Resource
                 Forms\Components\TextInput::make('logo')
                     ->maxLength(191)
                     ->default(null),
-                Forms\Components\TextInput::make('platoon_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('platoon_id')
+                    ->relationship('platoon', 'name')
+                    ->label('Platoon')
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('leader_id')
                     ->numeric()
                     ->default(null),
@@ -48,10 +51,10 @@ class SquadResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('logo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('platoon_id')
+                Tables\Columns\TextColumn::make('platoon.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('leader_id')
+                Tables\Columns\TextColumn::make('leader.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

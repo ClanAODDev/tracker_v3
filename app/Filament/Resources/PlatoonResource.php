@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PlatoonResource\Pages;
 use App\Models\Platoon;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -34,12 +35,16 @@ class PlatoonResource extends Resource
                 Forms\Components\TextInput::make('logo')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('leader_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->searchable()
+                    ->required(),
+                Select::make('leader_id')
+                    ->relationship('leader', 'name')
+                    ->label('Leader')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 
@@ -54,10 +59,10 @@ class PlatoonResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('logo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('division_id')
+                Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('leader_id')
+                Tables\Columns\TextColumn::make('leader.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')

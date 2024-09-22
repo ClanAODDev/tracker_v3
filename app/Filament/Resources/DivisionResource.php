@@ -115,13 +115,14 @@ class DivisionResource extends Resource
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('abbreviation')
-                    ->searchable(),
+                    ->searchable()
+                    ->badge(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])
