@@ -6,6 +6,7 @@ use App\Enums\Rank;
 use App\Filament\Resources\RankActionResource\Pages;
 use App\Models\RankAction;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -32,9 +33,11 @@ class RankActionResource extends Resource
                 Forms\Components\Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
-                Forms\Components\TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 
@@ -46,7 +49,7 @@ class RankActionResource extends Resource
                 Tables\Columns\TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('division_id')
+                Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
