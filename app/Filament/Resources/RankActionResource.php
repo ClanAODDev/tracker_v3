@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Rank;
 use App\Filament\Resources\RankActionResource\Pages;
 use App\Models\RankAction;
 use Filament\Forms;
@@ -24,12 +25,13 @@ class RankActionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('rank_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('member_id')
+                    ->relationship(name: 'member', titleAttribute: 'name')
+                    ->searchable()
+                    ->required(),
+                Forms\Components\Select::make('rank')
+                    ->options(Rank::class)
+                    ->required(),
                 Forms\Components\TextInput::make('division_id')
                     ->required()
                     ->numeric(),
@@ -40,12 +42,10 @@ class RankActionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('rank_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('member.name'),
+                Tables\Columns\TextColumn::make('rank')
+                    ->sortable()
+                    ->badge(),
                 Tables\Columns\TextColumn::make('division_id')
                     ->numeric()
                     ->sortable(),
