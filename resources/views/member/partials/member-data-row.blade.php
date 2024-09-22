@@ -11,7 +11,7 @@
         @if ($member->leave)
             <span style="color: lightslategrey" title="On Leave"><i class="fa fa-asterisk"></i></span>
         @endif
-        {!! $member->present()->nameWithIcon !!}
+        {!! $member->present()->coloredName !!}
         <span class="pull-right" title="View Profile">
             <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default btn-xs"><i
                         class="fa fa-search text-accent"></i></a>

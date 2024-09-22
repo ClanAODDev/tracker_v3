@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\Enums\Position;
 use App\Models\Member;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -31,7 +32,7 @@ class MemberPresenter extends Presenter
      */
     public function lastActive($activityType, array $skipUnits = [])
     {
-        if (! in_array($activityType, [
+        if (!in_array($activityType, [
             'last_ts_activity',
             'last_voice_activity',
         ])) {
@@ -63,14 +64,23 @@ class MemberPresenter extends Presenter
      * @param  bool  $showRank
      * @return string
      */
-    public function nameWithIcon($showRank = false)
+    public function coloredName($showRank = false)
     {
         if ($this->member->position) {
             $title = $this->member->position->getLabel() ?: null;
-            $icon = "<i class=\"{$this->member->position->getIcon()}\"></i>";
             $name = $showRank ? $this->rankName() : $this->member->name;
+            $prefix = $this->member->position->getAbbreviation();
 
-            return "<span title=\"{$title}\" class=\"{$this->member->position->getClass()}\">{$icon} {$name}</span>";
+            return strtr(
+                "<span title=\"{title}\" class=\"{$this->member->position->getClass()}\">{prefix} {name}</span>",
+                [
+                    '{prefix}' => $prefix
+                        ? "<strong>{$prefix}</strong>"
+                        : null,
+                    '{title}' => $title,
+                    '{name}' => $name
+                ]
+            );
         }
 
         return $this->member->name;
@@ -87,6 +97,6 @@ class MemberPresenter extends Presenter
             return $this->member->name;
         }
 
-        return $this->member->rank->getAbbreviation() . ' ' . $this->member->name;
+        return $this->member->rank->getAbbreviation().' '.$this->member->name;
     }
 }
