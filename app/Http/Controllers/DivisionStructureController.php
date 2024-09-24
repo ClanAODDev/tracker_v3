@@ -197,7 +197,7 @@ class DivisionStructureController extends Controller
     private function getLeave($division)
     {
         $leave = $division->members()->whereHas('leave')
-            ->with('leave', 'rank')->get();
+            ->with('leave')->get();
 
         return $leave->filter(fn ($member) => $member->leave->approver);
     }
