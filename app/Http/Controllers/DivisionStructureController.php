@@ -119,7 +119,6 @@ class DivisionStructureController extends Controller
                     ],
                     'squads',
                     'squads.members',
-                    'squads.members.rank'
                 )->sortBy('order', 'asc')->get(),
             ],
         ]);
@@ -140,26 +139,20 @@ class DivisionStructureController extends Controller
         $data->locality = $this->getLocality($division);
         $data->generalSergeants = $division->generalSergeants()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'rank',
-        ])->orderBy('rank_id', 'DESC')->orderBy('name', 'ASC')->get();
+        ])->orderBy('rank', 'DESC')->orderBy('name', 'ASC')->get();
 
         $data->leaders = $division->leaders()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'rank',
         ])->get();
 
         $data->partTimeMembers = $division->partTimeMembers()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'rank',
         ])->get();
 
         $data->platoons = $division->platoons()->with([
             'squads.members.handles' => $this->filterHandlesToPrimaryHandle($division),
             'leader.handles' => $this->filterHandlesToPrimaryHandle($division),
-            'squads.members.rank',
-            'squads.leader.rank',
             'squads.leader.handles' => $this->filterHandlesToPrimaryHandle($division),
-            'leader.rank',
         ])->get();
 
         /*
@@ -204,7 +197,7 @@ class DivisionStructureController extends Controller
     private function getLeave($division)
     {
         $leave = $division->members()->whereHas('leave')
-            ->with('leave', 'rank')->get();
+            ->with('leave')->get();
 
         return $leave->filter(fn ($member) => $member->leave->approver);
     }

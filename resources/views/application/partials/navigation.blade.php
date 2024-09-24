@@ -151,9 +151,7 @@
         @endif
         <li class="{{ set_active('admin/member-requests') }}">
             <a href="{{ route('admin.member-request.index') }}">
-                Member Requests <span
-                    class="badge text-info pull-right">{{ \App\Models\MemberRequest::pending()->pastGracePeriod()
-                ->count() }}</span>
+                Member Requests
             </a>
         </li>
     @endif

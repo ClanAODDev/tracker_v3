@@ -80,10 +80,13 @@ class ReportController extends \App\Http\Controllers\Controller
         } catch (\Exception $exception) {
             $members = collect([]);
         }
-        $ranks = $members->pluck('rank.abbreviation')->unique();
-        $counts = $members->groupBy('rank_id')->each(function ($rank) {
+
+        $ranks = $members->pluck('rank')->unique()->map(fn ($rank) => $rank->getAbbreviation());
+
+        $counts = $members->groupBy('rank')->each(function ($rank) {
             $rank->count = \count($rank);
         })->pluck('count');
+
         $promotionPeriods = $repository->promotionPeriods();
 
         return view('division.reports.promotions',
@@ -158,7 +161,7 @@ class ReportController extends \App\Http\Controllers\Controller
             \Carbon\Carbon::parse($month . " {$year}")->endOfMonth(),
         ] : [\Carbon\Carbon::now()->startOfMonth(), \Carbon\Carbon::now()->endOfMonth()];
 
-        return $division->members()->with('rank')->whereBetween('last_promoted_at',
-            $dates)->orderByDesc('rank_id')->get();
+        return $division->members()->whereBetween('last_promoted_at',
+            $dates)->orderByDesc('rank')->get();
     }
 }

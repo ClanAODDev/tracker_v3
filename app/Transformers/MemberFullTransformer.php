@@ -15,8 +15,10 @@ class MemberFullTransformer extends Transformer
             'join_date' => $item->join_date,
             'last_activity' => $item->last_activity,
             'last_ts_activity' => $item->last_ts_activity,
-            'rank_id' => $item->rank_id,
+            'rank' => $item->rank->getAbbreviation(),
             'division_id' => $item->division_id,
+            'position' => $item->position->getLabel(),
+            'discord_id' => $item->discord_id,
         ], \count($item->handles) ? [
             'handles' => $item->handles,
         ] : []);

@@ -53,6 +53,7 @@ elixir(function (mix) {
   mix.webpack("training.js");
   mix.webpack("admin.js");
   mix.webpack("manage-member.js");
+  mix.webpack("voice.js");
 });
 
 

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\LeaveResource\Pages;
 use App\Models\Leave;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,20 +29,35 @@ class LeaveResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('approver_id')
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\TextInput::make('requester_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('member_id')
+                    ->relationship('member', 'name')
+                    ->label('Member')
+                    ->searchable()
+                    ->required(),
+                Select::make('approver_id')
+                    ->relationship('approver', 'name')
+                    ->label('Approver')
+                    ->searchable()
+                    ->required(),
+                Select::make('requester_id')
+                    ->relationship('requester', 'name')
+                    ->label('Requester')
+                    ->searchable()
+                    ->required(),
                 Forms\Components\TextInput::make('reason')
                     ->required(),
-                Forms\Components\TextInput::make('note_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('note_id')
+                    ->relationship(name: 'note', titleAttribute: 'body')
+                    ->createOptionForm([
+                        Forms\Components\Textarea::make('body')
+                            ->required(),
+                        Select::make('type')
+                            ->options([
+                                'misc' => 'Misc',
+                                'negative' => 'Negative',
+                                'positive' => 'Positive',
+                            ]),
+                    ]),
                 Forms\Components\DateTimePicker::make('end_date')
                     ->required(),
                 Forms\Components\Toggle::make('extended'),

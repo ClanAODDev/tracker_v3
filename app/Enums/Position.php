@@ -3,10 +3,9 @@
 namespace App\Enums;
 
 use App\Traits\EnumOptions;
-use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum Position: int implements HasIcon, HasLabel
+enum Position: int implements HasLabel
 {
     use EnumOptions;
 
@@ -31,17 +30,16 @@ enum Position: int implements HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): ?string
+    public function getAbbreviation(): ?string
     {
         return match ($this) {
-            self::MEMBER,
-            self::GENERAL_SERGEANT => '',
+            self::SQUAD_LEADER => 'SL',
+            self::PLATOON_LEADER => 'PL',
+            self::EXECUTIVE_OFFICER => 'XO',
+            self::COMMANDING_OFFICER => 'CO',
+            self::CLAN_ADMIN => 'CA',
 
-            self::SQUAD_LEADER => 'fas fa-shield-alt',
-            self::PLATOON_LEADER => 'fas fa-dot-circle',
-            self::EXECUTIVE_OFFICER => 'fas fa-circle-notch',
-            self::COMMANDING_OFFICER => 'fas fa-circle',
-            self::CLAN_ADMIN => 'fas fa-square',
+            self::MEMBER => '',
         };
     }
 

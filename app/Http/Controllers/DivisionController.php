@@ -41,8 +41,6 @@ class DivisionController extends Controller
     {
         $divisionAnniversaries = $this->division->getDivisionAnniversaries($division);
 
-        $division->load('unassigned.rank');
-
         $censusCounts = $this->division->censusCounts($division);
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
@@ -55,14 +53,13 @@ class DivisionController extends Controller
             \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
         )->count();
 
-        $divisionLeaders = $division->leaders()->with('rank')->get();
+        $divisionLeaders = $division->leaders()->get();
 
-        $platoons = $division->platoons()->with('leader.rank')->with(
+        $platoons = $division->platoons()->with(
             'squads.leader',
-            'squads.leader.rank'
         )->withCount('members')->orderBy('order')->get();
 
-        $generalSergeants = $division->generalSergeants()->with('rank')->get();
+        $generalSergeants = $division->generalSergeants()->get();
 
         return view(
             'division.show',
@@ -129,7 +126,7 @@ class DivisionController extends Controller
      */
     public function partTime(Division $division)
     {
-        $members = $division->partTimeMembers()->with('rank', 'handles')
+        $members = $division->partTimeMembers()->with('handles')
             ->get()->each(function ($member) use ($division) {
                 // filter out handles that don't match current division primary handle
                 $member->handle = $member->handles->filter(fn ($handle) => $handle->id === $division->handle_id)->first();
@@ -176,8 +173,8 @@ class DivisionController extends Controller
     public function members(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave',
-        ])->get()->sortByDesc('rank_id');
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
+        ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
         $forumActivityGraph = $this->division->getDivisionActivity($division);
@@ -195,15 +192,15 @@ class DivisionController extends Controller
     public function exportAsCSV(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'rank', 'leave',
-        ])->get()->sortByDesc('rank_id');
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
+        ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
 
         $csv_data = $members->reduce(function ($data, $member) {
             $data[] = [
                 $member->name,
-                $member->rank->abbreviation,
+                $member->rank->getAbbreviation(),
                 $member->join_date,
                 $member->last_activity,
                 $member->last_ts_activity,

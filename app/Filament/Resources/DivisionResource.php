@@ -115,7 +115,8 @@ class DivisionResource extends Resource
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('abbreviation')
-                    ->searchable(),
+                    ->searchable()
+                    ->badge(),
                 Tables\Columns\IconColumn::make('active')
                     ->boolean(),
             ])

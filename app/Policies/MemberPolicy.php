@@ -103,8 +103,7 @@ class MemberPolicy
             return false;
         }
 
-        // use the abbreviation in case id changes for some reason
-        if ($user->member->rank_id < Rank::whereAbbreviation('sgt')->first()->id) {
+        if ($user->member->rank_id < \App\Enums\Rank::SERGEANT) {
             return false;
         }
 
