@@ -20,7 +20,7 @@ class AdminController extends Controller
     {
         $divisions = Division::orderBy('name')->get();
         $handles = Handle::withCount('divisions')->get();
-        $users = User::with('role', 'member.rank', 'member')->get();
+        $users = User::with('role', 'member')->get();
 
         return view('admin.index', compact(
             'divisions',
