@@ -33,7 +33,7 @@ class MemberPresenter extends Presenter
      */
     public function lastActive($activityType, array $skipUnits = [])
     {
-        if (!in_array($activityType, [
+        if (! in_array($activityType, [
             'last_ts_activity',
             'last_voice_activity',
         ])) {
@@ -79,7 +79,7 @@ class MemberPresenter extends Presenter
                         ? "<strong>{$prefix}</strong>"
                         : null,
                     '{title}' => $title,
-                    '{name}' => $name
+                    '{name}' => $name,
                 ]
             );
         }
@@ -98,6 +98,6 @@ class MemberPresenter extends Presenter
             return $this->member->name;
         }
 
-        return $this->member->rank->getAbbreviation().' '.$this->member->name;
+        return $this->member->rank->getAbbreviation() . ' ' . $this->member->name;
     }
 }

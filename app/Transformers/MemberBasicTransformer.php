@@ -12,11 +12,9 @@ class MemberBasicTransformer extends Transformer
     {
         return [
             'name' => $item->name,
-            'join_date' => $item->join_date,
-            'last_activity' => $item->last_activity,
-            'last_ts_activity' => $item->last_ts_activity,
-            'rank_id' => $item->rank_id,
-            'division_id' => $item->division_id,
+            'position' => $item->position->getLabel(),
+            'rank' => $item->rank->getAbbreviation(),
+            'discord_id' => $item->discord_id,
         ];
     }
 }

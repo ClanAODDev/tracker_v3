@@ -3,7 +3,6 @@
 namespace App\Enums;
 
 use App\Traits\EnumOptions;
-use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
 enum Position: int implements HasLabel
