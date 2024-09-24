@@ -53,7 +53,7 @@ class MemberController extends Controller
 
         if ($name) {
             $members = Member::where('name', 'LIKE', "%{$name}%")
-                ->with('rank', 'division')->get();
+                ->with('division')->get();
         } else {
             $members = [];
         }

@@ -38,7 +38,7 @@ class InactiveMemberController extends Controller
             ->with(['subject', 'subject.rank'])
             ->get();
 
-        $flaggedMembers = $division->members()->with('rank')->whereFlaggedForInactivity(true)->get();
+        $flaggedMembers = $division->members()->whereFlaggedForInactivity(true)->get();
 
         /**
          * Using this to determine the active route, whether filtering
@@ -62,7 +62,7 @@ class InactiveMemberController extends Controller
         return $division->members()->whereFlaggedForInactivity(false)
             ->where($activityColumn, '<', now()->today()->subDays($division->settings()->inactivity_days))
             ->whereDoesntHave('leave')
-            ->with('rank', 'squad')
+            ->with('squad')
             ->orderBy($activityColumn)
             ->get();
     }
