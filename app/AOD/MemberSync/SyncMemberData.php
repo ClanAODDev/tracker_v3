@@ -187,22 +187,30 @@ class SyncMemberData
             ->whereNotIn('userid', $activeIds)->get();
 
         foreach ($membersToAdd as $member) {
-            Member::updateOrCreate([
-                'clan_id' => $member->userid,
-            ], [
-                'allow_pm' => $member->allow_pm,
-                'discord' => $member->discordtag,
-                'discord_id' => $member->discordid,
-                'division_id' => $divisionIds[$member->aoddivision],
-                'name' => str_replace('AOD_', '', $member->username),
-                'posts' => $member->postcount,
-                'privacy_flag' => $member->allow_export !== 'yes' ? 0 : 1,
-                'rank' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
-                'ts_unique_id' => $member->tsid,
-                'last_activity' => $member->lastactivity,
-                'last_ts_activity' => $member->lastts_connect,
-                'last_voice_activity' => $newData->lastdiscord_connect,
-            ]);
+            try {
+                Member::updateOrCreate([
+                    'clan_id' => $member->userid,
+                ], [
+                    'allow_pm' => $member->allow_pm,
+                    'discord' => $member->discordtag,
+                    'discord_id' => $member->discordid,
+                    'division_id' => $divisionIds[$member->aoddivision],
+                    'name' => str_replace('AOD_', '', $member->username),
+                    'posts' => $member->postcount,
+                    'privacy_flag' => $member->allow_export !== 'yes' ? 0 : 1,
+                    'rank' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
+                    'ts_unique_id' => $member->tsid,
+                    'last_activity' => $member->lastactivity,
+                    'last_ts_activity' => $member->lastts_connect,
+                    'last_voice_activity' => $member->lastdiscord_connect,
+                ]);
+            } catch (\Exception $exception) {
+                \Log::error(sprintf(
+                    'Exception thrown when updating member - %d - %s',
+                    $member->userid,
+                    $exception->getMessage()
+                ));
+            }
         }
 
         $syncTable->truncate();
@@ -247,11 +255,6 @@ class SyncMemberData
                 $request->process();
             }
         });
-    }
-
-    private static function isBadDate($newData): bool
-    {
-        return ! empty($newData->lastdiscord_connect) && $newData->lastdiscord_connect !== '1970';
     }
 
     private static function buildSyncTable()
