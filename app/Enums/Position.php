@@ -37,9 +37,9 @@ enum Position: int implements HasLabel
             self::PLATOON_LEADER => 'PL',
             self::EXECUTIVE_OFFICER => 'XO',
             self::COMMANDING_OFFICER => 'CO',
+            self::CLAN_ADMIN => 'CA',
 
-            self::MEMBER,
-            self::CLAN_ADMIN => '',
+            self::MEMBER => '',
         };
     }
 
