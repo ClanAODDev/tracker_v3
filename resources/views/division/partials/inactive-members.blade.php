@@ -17,7 +17,7 @@
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
                         {{ $member->name }}
-                        <span class="text-muted slight">{{ $member->rank->abbreviation }}</span>
+                        <span class="text-muted slight">{{ $member->rank->getAbbreviation() }}</span>
                     </td>
                     <td data-order="{{ $member->last_ts_activity->timestamp ?? null }}">
                         @if ($member->tsInvalid)
