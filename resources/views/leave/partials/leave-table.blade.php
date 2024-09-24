@@ -23,7 +23,7 @@
             </td>
             <td>
                 {{ $member->name }}
-                <span class="text-muted">{{ $member->rank->abbreviation }}</span>
+                <span class="text-muted">{{ $member->rank->getAbbreviation() }}</span>
             </td>
             <td>{{ $member->leave->created_at->format('Y-m-d') }}</td>
             <td title="{{ $member->leave->end_date->diffForHumans() }}">
