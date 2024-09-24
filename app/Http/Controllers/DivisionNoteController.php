@@ -33,7 +33,7 @@ class DivisionNoteController extends Controller
         // omit own notes for security
         $notes = $notes
             ->where('member_id', '!=', auth()->user()->member_id)
-            ->with('member.rank')->orderByDesc('created_at')
+            ->orderByDesc('created_at')
             ->get()
             ->filter(function ($note) {
                 if ($note->type === 'sr_ldr') {

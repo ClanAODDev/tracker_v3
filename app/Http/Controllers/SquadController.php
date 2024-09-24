@@ -153,7 +153,7 @@ class SquadController extends Controller
         $csv_data = $members->reduce(function ($data, $member) {
             $data[] = [
                 $member->name,
-                $member->rank->abbreviation,
+                $member->rank->getAbbreviation(),
                 $member->join_date,
                 $member->last_activity,
                 $member->last_ts_activity,

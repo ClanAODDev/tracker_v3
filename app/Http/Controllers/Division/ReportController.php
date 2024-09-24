@@ -30,7 +30,7 @@ class ReportController extends \App\Http\Controllers\Controller
         $activity = collect(\App\Models\Activity::whereName('recruited_member')->whereDivisionId($division->id)->whereBetween('created_at',
             [
                 $range['start'], $range['end'],
-            ])->with('user.member')->with('user.member.rank')->get())->groupBy('user_id');
+            ])->with('user.member')->get())->groupBy('user_id');
         $members = $activity->map(function ($item) {
             if ($item->first()->user) {
                 return ['recruits' => \count($item), 'member' => $item->first()->user->member];
