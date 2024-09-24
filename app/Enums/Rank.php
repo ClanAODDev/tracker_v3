@@ -7,7 +7,7 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Support\Str;
 
-enum Rank: int implements HasLabel, HasColor
+enum Rank: int implements HasColor, HasLabel
 {
     use EnumOptions;
 

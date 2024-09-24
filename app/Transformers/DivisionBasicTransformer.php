@@ -4,7 +4,7 @@ namespace App\Transformers;
 
 class DivisionBasicTransformer extends Transformer
 {
-    public function __construct(private readonly MemberBasicTransformer $memberTransformer){}
+    public function __construct(private readonly MemberBasicTransformer $memberTransformer) {}
 
     public function transform($item): array
     {
@@ -19,7 +19,7 @@ class DivisionBasicTransformer extends Transformer
             'icon' => $item->getLogoPath(),
             'leadership' => $this->memberTransformer->transformCollection(
                 $item->leaders()->get()->all()
-            )
+            ),
         ];
     }
 }

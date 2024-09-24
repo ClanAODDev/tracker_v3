@@ -269,9 +269,6 @@ class Member extends Model
         return sprintf('https://discordapp.com/users/%d', $this->discord_id);
     }
 
-    /**
-     * @return bool
-     */
     public function isRank(array|Rank $rank): bool
     {
         if (! $this->rank instanceof Rank) {

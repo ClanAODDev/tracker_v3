@@ -52,11 +52,11 @@ class LeaveResource extends Resource
                         Forms\Components\Textarea::make('body')
                             ->required(),
                         Select::make('type')
-                        ->options([
-                            'misc' => 'Misc',
-                            'negative' => 'Negative',
-                            'positive' => 'Positive',
-                        ])
+                            ->options([
+                                'misc' => 'Misc',
+                                'negative' => 'Negative',
+                                'positive' => 'Positive',
+                            ]),
                     ]),
                 Forms\Components\DateTimePicker::make('end_date')
                     ->required(),

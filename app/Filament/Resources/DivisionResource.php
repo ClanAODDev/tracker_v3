@@ -122,7 +122,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])
