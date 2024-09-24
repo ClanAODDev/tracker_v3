@@ -199,7 +199,7 @@ class RecruitingController extends Controller
         $member->join_date = now();
         $member->last_activity = now();
         $member->recruiter_id = auth()->user()->member->clan_id;
-        $member->rank_id = $request->rank;
+        $member->rank = $request->rank;
         $member->position = Position::MEMBER;
         $member->division_id = $division->id;
         $member->flagged_for_inactivity = false;
@@ -220,7 +220,7 @@ class RecruitingController extends Controller
         // track division assignment, rank change
         \App\Models\RankAction::create([
             'member_id' => $member->id,
-            'rank_id' => $request->rank,
+            'rank' => $request->rank,
         ]);
 
         \App\Models\Transfer::create([
