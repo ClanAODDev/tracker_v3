@@ -11,17 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DivisionController extends ApiController
 {
-    private $divisionTransformer;
-
-    private $memberTransformer;
-
     public function __construct(
-        DivisionBasicTransformer $divisionTransformer,
-        MemberBasicTransformer $memberTransformer
-    ) {
-        $this->divisionTransformer = $divisionTransformer;
-        $this->memberTransformer = $memberTransformer;
-    }
+        private readonly DivisionBasicTransformer $divisionTransformer,
+        private readonly MemberBasicTransformer $memberTransformer
+    ) {}
 
     public function update($division, UpdateDivision $request): JsonResponse
     {
@@ -80,7 +73,7 @@ class DivisionController extends ApiController
                 'division' => $this->divisionTransformer->transform($division),
                 'leadership' => $this->memberTransformer->transformCollection(
                     $division->leaders()->get()->all()
-                )
+                ),
             ],
         ]);
     }
