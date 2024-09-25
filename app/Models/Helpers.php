@@ -292,7 +292,7 @@ function approveMemberPath(MemberRequest $memberRequest)
     $args = [
         'userid' => $memberRequest->member->clan_id,
         'division' => $memberRequest->division->name,
-        'rank' => $memberRequest->member->rank->name,
+        'rank' => $memberRequest->member->rank->getLabel(),
         // left empty and at the end so it can be adjusted
         'aodname' => '',
     ];
