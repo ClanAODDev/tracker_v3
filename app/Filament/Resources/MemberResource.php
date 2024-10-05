@@ -56,7 +56,7 @@ class MemberResource extends Resource
                         ->label('Division')
                         ->searchable()
                         ->required(),
-                ]),
+                ])->columns(2),
                 Forms\Components\Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
                         ->maxLength(255)
@@ -70,22 +70,13 @@ class MemberResource extends Resource
                     TextInput::make('discord_id')
                         ->numeric()
                         ->default(null),
-                ]),
+                ])->columns(2),
                 Forms\Components\Section::make('Activity')->schema([
                     Forms\Components\DateTimePicker::make('last_voice_activity'),
                     Forms\Components\DateTimePicker::make('last_activity'),
                     Forms\Components\DateTimePicker::make('last_ts_activity'),
-                ]),
+                ])->columns(3),
 
-                Forms\Components\Toggle::make('flagged_for_inactivity')->required(),
-                TextInput::make('posts')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\Toggle::make('privacy_flag')
-                    ->required(),
-                Forms\Components\Toggle::make('allow_pm')
-                    ->required(),
                 Forms\Components\Section::make('Dates')->schema([
                     Forms\Components\DateTimePicker::make('join_date'),
                     Forms\Components\DateTimePicker::make('last_promoted_at'),
@@ -97,9 +88,24 @@ class MemberResource extends Resource
                     Forms\Components\DateTimePicker::make('co_at'),
                 ]),
 
-                Forms\Components\Textarea::make('groups')
-                    ->readOnly()
-                    ->columnSpanFull(),
+                Forms\Components\Section::make('Forum Metadata')->schema([
+                    Forms\Components\Section::make('Flags')->schema([
+                        Forms\Components\Toggle::make('flagged_for_inactivity')->required(),
+                        Forms\Components\Toggle::make('privacy_flag')
+                            ->required(),
+                        Forms\Components\Toggle::make('allow_pm')
+                            ->required(),
+                    ])->columns(3),
+
+                    Forms\Components\Section::make('Misc')->schema([
+                        TextInput::make('posts')
+                            ->required()
+                            ->numeric()
+                            ->default(0),
+                        Forms\Components\Textarea::make('groups')
+                            ->readOnly(),
+                    ])
+                ])
             ]);
     }
 
