@@ -28,42 +28,56 @@ class MemberResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
-                TextInput::make('clan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('rank')
-                    ->options(Rank::class)
-                    ->required(),
-                TextInput::make('platoon_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('squad_id')
-                    ->required()
-                    ->numeric(),
-                Select::make('position')
-                    ->required()
-                    ->options(Position::class),
-                Select::make('division_id')
-                    ->relationship('division', 'name')
-                    ->label('Division')
-                    ->searchable()
-                    ->required(),
-                TextInput::make('ts_unique_id')
                     ->maxLength(255)
-                    ->default(null),
-                TextInput::make('discord')
-                    ->maxLength(191)
-                    ->default(null),
-                Forms\Components\DateTimePicker::make('last_voice_activity'),
-                TextInput::make('last_voice_status')
-                    ->maxLength(191)
-                    ->default(null),
-                TextInput::make('discord_id')
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\Toggle::make('flagged_for_inactivity')
-                    ->required(),
+                    ->columnSpanFull(),
+                Forms\Components\Section::make('Clan Data')->schema([
+                    TextInput::make('clan_id')
+                        ->required()
+                        ->numeric(),
+                    Forms\Components\Select::make('rank')
+                        ->options(Rank::class)
+                        ->required(),
+                    Select::make('position')
+                        ->required()
+                        ->options(Position::class),
+                    Select::make('platoon_id')
+                        ->relationship('platoon', 'name')
+                        ->label('Platoon')
+                        ->searchable(),
+                    Select::make('squad_id')
+                        ->relationship('squad', 'name')
+                        ->label('Squad')
+                        ->searchable(),
+                    TextInput::make('recruiter_id')
+                        ->numeric()
+                        ->default(null),
+                    Select::make('division_id')
+                        ->relationship('division', 'name')
+                        ->label('Division')
+                        ->searchable()
+                        ->required(),
+                ]),
+                Forms\Components\Section::make('Communications')->schema([
+                    TextInput::make('ts_unique_id')
+                        ->maxLength(255)
+                        ->default(null),
+                    TextInput::make('discord')
+                        ->maxLength(191)
+                        ->default(null),
+                    TextInput::make('last_voice_status')
+                        ->maxLength(191)
+                        ->default(null),
+                    TextInput::make('discord_id')
+                        ->numeric()
+                        ->default(null),
+                ]),
+                Forms\Components\Section::make('Activity')->schema([
+                    Forms\Components\DateTimePicker::make('last_voice_activity'),
+                    Forms\Components\DateTimePicker::make('last_activity'),
+                    Forms\Components\DateTimePicker::make('last_ts_activity'),
+                ]),
+
+                Forms\Components\Toggle::make('flagged_for_inactivity')->required(),
                 TextInput::make('posts')
                     ->required()
                     ->numeric()
@@ -72,20 +86,19 @@ class MemberResource extends Resource
                     ->required(),
                 Forms\Components\Toggle::make('allow_pm')
                     ->required(),
-                Forms\Components\DateTimePicker::make('join_date'),
-                Forms\Components\DateTimePicker::make('last_activity'),
-                Forms\Components\DateTimePicker::make('last_ts_activity'),
-                Forms\Components\DateTimePicker::make('last_promoted_at'),
-                Forms\Components\DateTimePicker::make('last_trained_at'),
-                TextInput::make('last_trained_by')
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\DateTimePicker::make('xo_at'),
-                Forms\Components\DateTimePicker::make('co_at'),
-                TextInput::make('recruiter_id')
-                    ->numeric()
-                    ->default(null),
+                Forms\Components\Section::make('Dates')->schema([
+                    Forms\Components\DateTimePicker::make('join_date'),
+                    Forms\Components\DateTimePicker::make('last_promoted_at'),
+                    Forms\Components\DateTimePicker::make('last_trained_at'),
+                    TextInput::make('last_trained_by')
+                        ->numeric()
+                        ->default(null),
+                    Forms\Components\DateTimePicker::make('xo_at'),
+                    Forms\Components\DateTimePicker::make('co_at'),
+                ]),
+
                 Forms\Components\Textarea::make('groups')
+                    ->readOnly()
                     ->columnSpanFull(),
             ]);
     }
@@ -122,10 +135,6 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('discord')
                     ->toggleable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('last_voice_activity')
-                    ->toggleable()
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('last_voice_status')
                     ->toggleable()
                     ->searchable(),
@@ -146,6 +155,10 @@ class MemberResource extends Resource
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_activity')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('last_voice_activity')
+                    ->toggleable()
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('last_ts_activity')
