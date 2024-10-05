@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Rank;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MemberFactory extends Factory
@@ -25,7 +25,7 @@ class MemberFactory extends Factory
         return [
             'name' => $this->faker->userName,
             'clan_id' => $this->faker->numberBetween(10000, 99999),
-            'rank' => Rank::find(rand(1, 10)),
+            'rank' => Rank::from(rand(1, 10)),
             'position' => Position::MEMBER,
             'division_id' => Division::factory(),
             'join_date' => $this->faker->dateTimeThisDecade,
