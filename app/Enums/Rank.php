@@ -33,22 +33,44 @@ enum Rank: int implements HasColor, HasLabel
             ->title();
     }
 
+    public function getColorHex(): string
+    {
+        return match ($this) {
+            self::RECRUIT,
+            self::CADET,
+            self::PRIVATE,
+            self::PRIVATE_FIRST_CLASS,
+            self::SPECIALIST,
+            self::TRAINER,
+            self::LANCE_CORPORAL,
+            self::CORPORAL => 'red',
+            self::SERGEANT => '#00FF00',
+            self::STAFF_SERGEANT => '#2E2EFE',
+            self::MASTER_SERGEANT => '#CC00FF',
+            self::FIRST_SERGEANT => '#00FFFF',
+            self::COMMAND_SERGEANT => '#FFFF00',
+            self::SERGEANT_MAJOR => '#F09C58',
+        };
+    }
+
     public function getColor(): string
     {
         return match ($this) {
-            self::RECRUIT => 'gray',
-            self::CADET => 'gray',
-            self::PRIVATE => 'gray',
-            self::PRIVATE_FIRST_CLASS => 'gray',
-            self::SPECIALIST => 'gray',
-            self::TRAINER => 'gray',
-            self::LANCE_CORPORAL => 'gray',
+            self::RECRUIT,
+            self::CADET,
+            self::PRIVATE,
+            self::PRIVATE_FIRST_CLASS,
+            self::SPECIALIST,
+            self::TRAINER,
+            self::LANCE_CORPORAL,
             self::CORPORAL => 'gray',
-            self::SERGEANT => 'success',
+
+            self::SERGEANT,
             self::STAFF_SERGEANT => 'success',
-            self::MASTER_SERGEANT => 'warning',
-            self::FIRST_SERGEANT => 'warning',
-            self::COMMAND_SERGEANT => 'warning',
+
+            self::MASTER_SERGEANT,
+            self::FIRST_SERGEANT,
+            self::COMMAND_SERGEANT,
             self::SERGEANT_MAJOR => 'warning',
         };
     }
