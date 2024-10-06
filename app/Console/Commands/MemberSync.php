@@ -75,7 +75,7 @@ class MemberSync extends Command
         }
 
         // complete any outstanding member requests
-        self::processMemberRequests($syncTable->pluck('userid'));
+       $this->processMemberRequests($syncTable->pluck('userid'));
 
         // iterating over members we know exist in the tracker
         $members = Member::whereNotIn('division_id', [0])
@@ -155,7 +155,11 @@ class MemberSync extends Command
             $differences = $newData->diffAssoc($oldData)->filter()->all();
 
             if (\count($differences) > 0) {
-                echo sprintf('Found updates for %s %s', $oldData['name'], PHP_EOL);
+                echo sprintf(
+                    'Found updates for %s (%s) %s',
+                    $oldData['name'],
+                    implode(array_keys($differences)),
+                    PHP_EOL);
 
                 $updates = [];
 
