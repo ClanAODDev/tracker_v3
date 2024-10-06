@@ -75,7 +75,7 @@ class MemberSync extends Command
         }
 
         // complete any outstanding member requests
-       $this->processMemberRequests($syncTable->pluck('userid'));
+        $this->processMemberRequests($syncTable->pluck('userid'));
 
         // iterating over members we know exist in the tracker
         $members = Member::whereNotIn('division_id', [0])
@@ -159,7 +159,8 @@ class MemberSync extends Command
                     'Found updates for %s (%s) %s',
                     $oldData['name'],
                     implode(array_keys($differences)),
-                    PHP_EOL);
+                    PHP_EOL
+                );
 
                 $updates = [];
 
