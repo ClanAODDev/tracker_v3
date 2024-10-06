@@ -27,10 +27,9 @@ class TicketResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('state')
                     ->required(),
-                Forms\Components\TextInput::make('ticket_type_id')
-                    ->required()
-                    ->numeric()
-                    ->default(1),
+                Select::make('ticket_type_id')
+                    ->relationship('type', 'name')
+                    ->label('Ticket Type'),
                 Forms\Components\TextInput::make('external_message_id')
                     ->readOnly()
                     ->maxLength(36),
@@ -57,9 +56,10 @@ class TicketResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->numeric(),
                 Tables\Columns\TextColumn::make('state'),
-                Tables\Columns\TextColumn::make('ticket_type_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('type.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('caller_id')
                     ->numeric()
