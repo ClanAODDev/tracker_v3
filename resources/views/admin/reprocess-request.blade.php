@@ -30,7 +30,11 @@
                 <div class="panel panel-filled">
                     <div class="panel-heading c-white"><strong>Step 1:</strong> Add to AOD</div>
                     <div class="panel-body">
-                        Re-process the member into AOD manually. This will open the mod-cp in a new window.
+                        <p>Re-process the member into AOD manually. This will open the mod-cp in a new window.</p>
+                        <p><strong>Note:</strong> Members with a primary usergroup of <code>Users Awaiting
+                                Moderation</code> will fail. They must use <code>/authlink</code> before they can be
+                            added.
+                        </p>
                     </div>
                     <div class="panel-footer">
                         <a class="btn btn-info" target="_blank"
