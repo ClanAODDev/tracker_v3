@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Activities\RecordsActivity;
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Carbon\Carbon;
@@ -256,7 +257,7 @@ class Division extends Model
      */
     public function sergeants()
     {
-        return $this->members()->where('rank', '>', \App\Enums\Rank::SERGEANT);
+        return $this->members()->where('rank', '>=', Rank::SERGEANT);
     }
 
     /**
@@ -265,8 +266,8 @@ class Division extends Model
     public function sgtAndSsgt()
     {
         return $this->members()->whereIn('rank', [
-            \App\Enums\Rank::SERGEANT,
-            \App\Enums\Rank::STAFF_SERGEANT,
+            Rank::SERGEANT,
+            Rank::STAFF_SERGEANT,
         ]);
     }
 
