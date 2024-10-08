@@ -36,21 +36,13 @@ class MemberSync extends Command
     protected $description = 'Performs member sync with AOD forums';
 
     /**
-     * Create a new command instance.
-     */
-    public function __construct(private readonly GetDivisionInfo $divisionInfo)
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
      */
     public function handle()
     {
-        if (! $syncData = collect($this->divisionInfo->data)) {
+        if (! $syncData = collect((new GetDivisionInfo)->data)) {
             \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
@@ -67,8 +59,6 @@ class MemberSync extends Command
         $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
 
         $syncTable->truncate();
-
-        date_default_timezone_set('UTC');
 
         foreach ($syncData->chunk(50) as $chunk) {
             $syncTable->insert($chunk->toArray());
@@ -111,8 +101,9 @@ class MemberSync extends Command
                 'rank' => $oldData['rank'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
                 'last_voice_status' => $oldData['last_voice_status'],
-                'last_activity' => Carbon::parse($oldData['last_activity']),
-                'last_voice_activity' => Carbon::parse($oldData['last_voice_activity']),
+
+                'last_activity' => Carbon::parse($oldData['last_activity'])->timestamp,
+                'last_voice_activity' => Carbon::parse($oldData['last_voice_activity'])->timestamp,
             ]);
 
             /**
@@ -133,8 +124,8 @@ class MemberSync extends Command
                     'rank' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
                     'last_voice_status' => $newData->lastdiscord_status,
-                    'last_activity' => $this->parseTimestamp($newData->lastactivity),
-                    'last_voice_activity' => $this->parseTimestamp($newData->lastdiscord_connect),
+                    'last_activity' => $newData->lastactivity,
+                    'last_voice_activity' => $newData->lastdiscord_connect,
                 ]);
 
             } catch (\Exception $exception) {
@@ -158,7 +149,7 @@ class MemberSync extends Command
                 echo sprintf(
                     'Found updates for %s (%s) %s',
                     $oldData['name'],
-                    implode(array_keys($differences)),
+                    implode(',', array_keys($differences)),
                     PHP_EOL
                 );
 
@@ -233,16 +224,17 @@ class MemberSync extends Command
                     'privacy_flag' => $member->allow_export !== 'yes' ? 0 : 1,
                     'rank' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
                     'ts_unique_id' => $member->tsid,
-                    'last_activity' => Carbon::parse($member->lastactivity),
-                    'last_voice_activity' => Carbon::parse($member->lastdiscord_connect),
+                    'last_activity' => $member->lastactivity,
+                    'last_voice_activity' => $member->lastdiscord_connect,
                 ]);
             } catch (\Exception $exception) {
-                \Log::error(sprintf(
-                    'Exception thrown when updating member - %d - %s',
-                    $member->userid,
-                    $exception->getMessage()
-                ));
+                \Log::error('Exception thrown when creating member - %d - %s', [
+                    'user' => $member->userid,
+                    'exception' => $exception->getMessage(),
+                ]);
             }
+
+            \Log::info(sprintf('Added %s - %s', $member->username, $member->userid));
         }
 
         $syncTable->truncate();
