@@ -16,7 +16,7 @@
             @foreach ($approved as $request)
                 <tr>
                     <td>
-                        <code>{{ $request->member->name }}</code>
+                        <code>{{ $request->member?->name ?? "UNK - Clan ID#{$request->member_id}"}}</code>
                     </td>
                     <td>{{ $request->approver->name }}</td>
                     <td>{{ $request->division->name }}</td>
