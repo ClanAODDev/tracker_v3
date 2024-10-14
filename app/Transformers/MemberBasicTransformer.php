@@ -13,7 +13,10 @@ class MemberBasicTransformer extends Transformer
         return [
             'name' => $item->name,
             'position' => $item->position->getLabel(),
-            'rank' => $item->rank->getAbbreviation(),
+            'rank' => [
+                'label' => $item->rank->getAbbreviation(),
+                'color' => $item->rank->colorHex()
+            ],
             'discord_id' => (string) $item->discord_id,
         ];
     }
