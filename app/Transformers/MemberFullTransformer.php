@@ -15,7 +15,10 @@ class MemberFullTransformer extends Transformer
             'join_date' => $item->join_date,
             'last_activity' => $item->last_activity,
             'last_ts_activity' => $item->last_ts_activity,
-            'rank' => $item->rank->getAbbreviation(),
+            'rank' => [
+                'label' => $item->rank->getAbbreviation(),
+                'color' => $item->rank->getColorHex()
+            ],
             'division_id' => $item->division_id,
             'position' => $item->position->getLabel(),
             'discord_id' => $item->discord_id,
