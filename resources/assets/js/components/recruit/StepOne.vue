@@ -303,13 +303,20 @@ export default {
      */
     toggleDemoMode: () => {
       store.inDemoMode = !store.inDemoMode;
-      store.member_id = 99999;
-      store.rank = 1;
-      store.forum_name = 'test-user';
-      store.ingame_name = 'test-user';
 
       if (store.inDemoMode) {
+        store.member_id = 99999;
+        store.rank = 1;
+        store.forum_name = 'test-user';
+        store.ingame_name = 'test-user';
+
         toastr.success('Demo mode enabled!', 'Success!');
+      } else {
+        store.member_id = '';
+        store.forum_name = '';
+        store.ingame_name = '';
+
+        toastr.success('Demo mode disabled!', 'Success!');
       }
     },
   },
