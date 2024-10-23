@@ -50,21 +50,29 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
+        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
+
         return (new BotChannelMessage($notifiable))
             ->title($this->primaryDivision->name . ' Division')
             ->thumbnail($this->primaryDivision->getLogoPath())
             ->fields([
                 [
-                    'name' => '**PART TIME MEMBER REMOVED**',
-                    'value' => addslashes(":door: {$this->member->name} [{$this->member->clan_id}] was removed from {$this->primaryDivision->name}, and they were a part-time member in your division"),
+                    'name' => 'Part Time Member Removed',
+                    'value' => sprintf(
+                        ':door: [%s](%s) [%d] was removed from %s and they were a part-time member in your division',
+                        $this->member->name,
+                        route('member', $this->member->getUrlParams()),
+                        $this->member->clan_id,
+                        $this->primaryDivision->name,
+                    ),
                 ],
                 [
                     'name' => 'Reason',
                     'value' => addslashes($this->removalReason),
                 ],
                 [
-                    'name' => 'View Member Profile',
-                    'value' => route('member', $this->member->getUrlParams()),
+                    'name' => $handle->label ?? 'In-Game Handle',
+                    'value' => $handle->pivot->value ?? 'N/A',
                 ],
             ])->error()
             ->send();

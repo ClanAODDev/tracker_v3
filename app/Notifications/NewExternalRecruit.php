@@ -47,6 +47,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
     public function toBot($notifiable)
     {
         $recruiter = $this->recruiter;
+        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $this->member->division->handle_id)->first();
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
@@ -62,6 +63,22 @@ class NewExternalRecruit extends Notification implements ShouldQueue
                         route('member', $this->member->getUrlParams()),
                         $notifiable->name
                     ),
+                ],
+                [
+                    'name' => sprintf(
+                        '%s / %s',
+                        $this->member->division->locality('platoon'),
+                        $this->member->division->locality('squad')
+                    ),
+                    'value' => $this->member->squad ? sprintf(
+                        '%s / %s',
+                        $this->member->platoon->name,
+                        $this->member->squad->name
+                    ) : 'Unassigned',
+                ],
+                [
+                    'name' => $handle->label ?? 'In-Game Handle',
+                    'value' => $handle->pivot->value ?? 'N/A',
                 ],
             ])
             ->info()
