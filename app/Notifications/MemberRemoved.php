@@ -21,14 +21,17 @@ class MemberRemoved extends Notification implements ShouldQueue
 
     private $removalReason;
 
+    private $squad;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct($member, User $remover, $removalReason)
+    public function __construct($member, User $remover, $removalReason, $squad)
     {
         $this->member = $member;
         $this->remover = $remover;
         $this->removalReason = $removalReason;
+        $this->squad = $squad;
     }
 
     /**
@@ -50,6 +53,7 @@ class MemberRemoved extends Notification implements ShouldQueue
     public function toBot($notifiable)
     {
         $remover = $this->remover;
+        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
@@ -64,9 +68,26 @@ class MemberRemoved extends Notification implements ShouldQueue
                         $notifiable->name,
                         $remover->name,
                     ),
-                ], [
+                ],
+                [
                     'name' => 'Reason',
                     'value' => $this->removalReason,
+                ],
+                [
+                    'name' => sprintf(
+                        '%s / %s',
+                        $notifiable->locality('platoon'),
+                        $notifiable->locality('squad')
+                    ),
+                    'value' => $this->squad ? sprintf(
+                        '%s / %s',
+                        $this->squad->platoon->name,
+                        $this->squad->name,
+                    ) : 'Unassigned',
+                ],
+                [
+                    'name' => $handle->label ?? 'In-Game Handle',
+                    'value' => $handle->pivot->value ?? 'N/A',
                 ],
             ])->error()
             ->send();

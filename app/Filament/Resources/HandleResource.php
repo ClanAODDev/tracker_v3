@@ -40,7 +40,7 @@ class HandleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('type')
+                Tables\Columns\TextColumn::make('label')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comments')
                     ->searchable(),

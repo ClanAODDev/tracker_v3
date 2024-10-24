@@ -21,7 +21,7 @@
 
         <div class="form-group">
             <label for="removal_reason">Reason</label>
-            <textarea name="removal_reason" id="removal_reason" rows="3" class="form-control" required="required">Member removed. Reason: </textarea>
+            <textarea name="removal_reason" id="removal_reason" rows="3" class="form-control" required="required"></textarea>
         </div>
     </div>
     <div class="panel-footer">
