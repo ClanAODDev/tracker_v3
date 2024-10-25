@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
 
 class DivisionResource extends Resource
 {
@@ -59,6 +60,8 @@ class DivisionResource extends Resource
                             ->maxLength(3)
                             ->required()
                             ->maxLength(255),
+
+                        FilamentJsonColumn::make('settings'),
 
                         TextInput::make('description')
                             ->default('Another AOD Division')

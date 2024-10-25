@@ -26,7 +26,8 @@ class TicketResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('state')
-                    ->required(),
+                    ->required()
+                    ->default('unassigned'),
                 Select::make('ticket_type_id')
                     ->relationship('type', 'name')
                     ->label('Ticket Type'),
@@ -57,14 +58,15 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
-                    ->numeric(),
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('state'),
                 Tables\Columns\TextColumn::make('type.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('caller_id')
+                Tables\Columns\TextColumn::make('caller.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('owner_id')
+                Tables\Columns\TextColumn::make('owner.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('division_id')
@@ -84,7 +86,7 @@ class TicketResource extends Resource
             ])
             ->filters([
                 Filter::make('hide_resolved')
-                    ->query(fn (Builder $query): Builder => $query->whereNull('resolved_at'))
+                    ->query(fn(Builder $query): Builder => $query->whereNull('resolved_at'))
                     ->label('Hide resolved')
                     ->default(),
             ])
