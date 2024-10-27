@@ -146,11 +146,7 @@ class RecruitingController extends Controller
     public function validateMemberId($member_id)
     {
         if (app()->environment() === 'local') {
-            if ($member_id === 31832) {
-                return ['is_member' => true, 'verified_email' => true];
-            }
-
-            return ['is_member' => false, 'verified_email' => false];
+            return ['is_member' => true, 'verified_email' => true];
         }
 
         $result = $this->callProcedure('get_user', $member_id);
