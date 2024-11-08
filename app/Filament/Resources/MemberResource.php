@@ -107,8 +107,8 @@ class MemberResource extends Resource
                             ->default(0),
                         Forms\Components\Textarea::make('groups')
                             ->readOnly(),
-                    ])
-                ])
+                    ]),
+                ]),
             ]);
     }
 
@@ -214,7 +214,7 @@ class MemberResource extends Resource
                     ->indicator('Rank')
                     ->form([
                         Select::make('rank')
-                            ->options(Rank::class)
+                            ->options(Rank::class),
                     ])->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
@@ -222,12 +222,8 @@ class MemberResource extends Resource
                                 fn (Builder $query, $rank): Builder => $query->where('rank', $rank),
                             );
                     })->indicateUsing(function (array $data) {
-                        if (!$data['rank']) {
-                            return null;
-                        }
-
-                        return 'Rank: ' . $data['rank'];
-                    })
+                        return $data['rank'] ? 'Rank: ' . $data['rank'] : null;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
