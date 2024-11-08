@@ -12,7 +12,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MemberResource extends Resource
 {
@@ -104,8 +107,8 @@ class MemberResource extends Resource
                             ->default(0),
                         Forms\Components\Textarea::make('groups')
                             ->readOnly(),
-                    ])
-                ])
+                    ]),
+                ]),
             ]);
     }
 
@@ -204,7 +207,23 @@ class MemberResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('division')
+                    ->relationship('division', 'name'),
+                Filter::make('rank_id')
+                    ->label('Rank')
+                    ->indicator('Rank')
+                    ->form([
+                        Select::make('rank')
+                            ->options(Rank::class),
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['rank'],
+                                fn (Builder $query, $rank): Builder => $query->where('rank', $rank),
+                            );
+                    })->indicateUsing(function (array $data) {
+                        return $data['rank'] ? 'Rank: ' . $data['rank'] : null;
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -219,7 +238,6 @@ class MemberResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 
