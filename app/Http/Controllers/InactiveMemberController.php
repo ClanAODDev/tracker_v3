@@ -24,11 +24,15 @@ class InactiveMemberController extends Controller
      */
     public function index(Division $division)
     {
-        $inactiveTSMembers = $this->getInactiveMembers($division, 'last_ts_activity');
-        $inactiveDiscordMembers = $this->getInactiveMembers($division, 'last_voice_activity');
+        $inactiveDiscordMembers = $division->members()->whereFlaggedForInactivity(false)
+            ->where('last_voice_activity', '<', now()->today()->subDays($division->settings()->inactivity_days))
+            ->whereDoesntHave('leave', function ($q) {
+                $q->whereDate('end_date', '>', today());
+            })->with('squad')
+            ->orderBy('last_voice_activity')
+            ->get();
 
         if (request()->platoon) {
-            $inactiveTSMembers = $inactiveTSMembers->where('platoon_id', request()->platoon->id);
             $inactiveDiscordMembers = $inactiveDiscordMembers->where('platoon_id', request()->platoon->id);
         }
 
@@ -49,22 +53,11 @@ class InactiveMemberController extends Controller
 
         return view('division.inactive-members', compact(
             'division',
-            'inactiveTSMembers',
             'inactiveDiscordMembers',
             'flaggedMembers',
             'flagActivity',
             'requestPath',
         ));
-    }
-
-    private function getInactiveMembers(Division $division, $activityColumn)
-    {
-        return $division->members()->whereFlaggedForInactivity(false)
-            ->where($activityColumn, '<', now()->today()->subDays($division->settings()->inactivity_days))
-            ->whereDoesntHave('leave')
-            ->with('squad')
-            ->orderBy($activityColumn)
-            ->get();
     }
 
     /**

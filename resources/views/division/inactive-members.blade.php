@@ -32,19 +32,10 @@
         <div class="tabs-container">
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a data-toggle="tab" href="#inactive-ts"
-                       aria-expanded="true"><i class="fab fa-lg fa-teamspeak"></i> &nbsp; TeamSpeak Inactive <span
-                                class="badge">{{
-                       count($inactiveTSMembers)
-                       }}</span></a>
-                </li>
-                <li>
                     <a data-toggle="tab" href="#inactive-discord"
-                       aria-expanded="true"><i class="fab fa-lg fa-discord"></i> &nbsp; Discord Inactive <span
-                                class="badge">{{
-                       count
-                       ($inactiveDiscordMembers)
-                       }}</span></a>
+                       aria-expanded="true"><i class="fab fa-lg fa-discord"></i> &nbsp; Discord Inactive
+                        <span class="badge">{{ count($inactiveDiscordMembers)}}</span>
+                    </a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#flagged"
@@ -54,14 +45,7 @@
                 </li>
             </ul>
             <div class="tab-content">
-                <div id="inactive-ts" class="tab-pane active">
-                    <div class="panel-body">
-                        @include('division.partials.filter-inactive')
-                        @include('division.partials.inactive-members', ['type' => 'ts'])
-                    </div>
-                </div>
-
-                <div id="inactive-discord" class="tab-pane">
+                <div id="inactive-discord" class="tab-pane active">
                     <div class="panel-body">
                         @include('division.partials.filter-inactive')
                         @include('division.partials.inactive-members', ['type' => 'discord'])

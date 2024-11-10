@@ -62,6 +62,9 @@
             <li>
                 <a href="{{ route('member.confirm-reset', $member->clan_id) }}"> Reset Assignments</a>
             </li>
+            <li>
+                <a href="{{ route('member.flag-inactive', $member->clan_id) }}">Flag For Inactivity </a>
+            </li>
         @endcan
     </ul>
 </div>

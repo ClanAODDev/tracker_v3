@@ -3,7 +3,6 @@
         <thead>
         <tr>
             <th>Member</th>
-            <th>Last TS Activity</th>
             <th>Last Discord Voice Activity</th>
             <th class="no-sort"></th>
             <th class="no-sort"></th>
@@ -16,13 +15,6 @@
                     <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
                     {{ $member->name }}
                     <span class="text-muted slight">{{ $member->rank->getAbbreviation() }}</span>
-                </td>
-                <td data-order="{{ $member->last_ts_activity?->timestamp }}">
-                    @if ($member->tsInvalid)
-                        <code title="Misconfiguration"><span class="text-danger">00000</span></code>
-                    @else
-                        <code>{{  $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}</code>
-                    @endif
                 </td>
                 <td data-order="{{ $member->last_voice_activity?->timestamp }}">
                     <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
