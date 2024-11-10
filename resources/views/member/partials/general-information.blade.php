@@ -9,29 +9,21 @@
             <div class="panel-body">
 
                 <div class="row m-t-xs">
-                    <div class="col-md-3 col-xs-12 text-center">
-                        <h2 class="no-margins">
-                            <span title="{{ $member->last_ts_activity }}"
-                                  class="{{  getMemberProfileActivityClass($member->last_ts_activity) }}">{{ $member->present()->lastActive('last_ts_activity', ['weeks','months']) }}</span>
-                        </h2>
-                        Since last <span class="c-white">TS activity</span>
-                    </div>
-
-                    <div class="col-md-3 col-xs-12 text-center">
+                    <div class="col-md-4 col-xs-12 text-center">
                         <h2 class="no-margins" title="{{ $member->join_date->format('Y-m-d') }}">
                             {{ floor($member->join_date->diffInYears()) }}
                         </h2>
                         {{ str()->plural('Year') }} <span class="c-white">In AOD</span>
                     </div>
 
-                    <div class="col-md-3 col-xs-12 text-center">
+                    <div class="col-md-4 col-xs-12 text-center">
                         <h2 class="no-margins">
                             {{ $member->lastPromoted }}
                         </h2>
                         Last <span class="c-white">Promotion Date</span>
                     </div>
 
-                    <div class="col-md-3 col-xs-12 text-center">
+                    <div class="col-md-4 col-xs-12 text-center">
                         <h2 class="no-margins">
                             <span title="{{ $member->last_voice_activity }}"
                                   class="{{  getMemberProfileActivityClass($member->last_voice_activity) }}">

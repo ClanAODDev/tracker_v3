@@ -44,12 +44,11 @@ class SgtActivity extends Command
             ->select('name', 'last_activity', 'last_ts_activity')
             ->orderBy('last_activity')->get();
 
-        $headers = ['name', 'forum activity', 'ts activity'];
+        $headers = ['name', 'forum activity'];
 
         $this->table($headers, $sgts->map(fn ($sgt) => [
             'name' => $sgt->name,
             'last_forum_activity' => Carbon::parse($sgt->last_activity)->diffForHumans(),
-            'last_ts_activity' => Carbon::parse($sgt->last_ts_activity)->diffForHumans(),
         ]));
     }
 }
