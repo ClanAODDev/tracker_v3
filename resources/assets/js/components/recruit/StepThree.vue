@@ -49,7 +49,6 @@
 <script>
     import store from './store.js';
 
-    import TSInfo from './TsInfo.vue';
     import RecapInfo from './RecapInfo.vue';
     import DemoModeNotice from './DemoModeNotice.vue';
     import ProgressBar from './ProgressBar.vue';
@@ -63,7 +62,6 @@
 
         components: {
             'demo-mode-notice': DemoModeNotice,
-            'ts-info': TSInfo,
             'recap-info': RecapInfo,
             'progress-bar': ProgressBar
         },

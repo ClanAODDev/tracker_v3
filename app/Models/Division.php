@@ -115,16 +115,6 @@ class Division extends Model
         return $this->attributes['abbreviation'] = strtolower($value);
     }
 
-    public function mismatchedTSMembers(): HasMany
-    {
-        return $this->members()
-            ->where('join_date', '<', Carbon::today()->subDays(5))
-            ->where(function ($query) {
-                $query->where('last_ts_activity', null)
-                    ->orWhere('last_ts_activity', '0000-00-00 00:00:00');
-            });
-    }
-
     public function misconfiguredDiscordMembers(): HasMany
     {
         return $this->membersOfDiscordState([

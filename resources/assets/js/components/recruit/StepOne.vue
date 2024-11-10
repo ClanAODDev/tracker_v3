@@ -3,14 +3,7 @@
 
     <h3>Getting Started</h3>
 
-    <p>If you haven't already brought your recruit into Teamspeak, you can share that information with them by
-      visiting the teamspeak information page. Additionally, you can acquire the forum member id via the member
-      list, sorted by join date.
-    </p>
-
     <p>
-      <a href="https://www.clanaod.net/forums/showthread.php?t=97502" target="_blank"
-         class="btn btn-default">Teamspeak Info</a>
       <a class="btn btn-default m-l-sm" target="_blank"
          href="https://www.clanaod.net/forums/showthread.php?t=208233">Discord Info</a>
       <a class="btn btn-default m-l-sm" target="_blank"
@@ -22,7 +15,7 @@
 
     <ul class="c-white">
       <li>Maintain TS Activity. Inactivity can result in removal from AOD</li>
-      <li>Engage on TeamSpeak when playing a game AOD supports</li>
+      <li>Engage on Discord VoIP when playing a game AOD supports</li>
       <li>Strive to be a contributing member of your division</li>
       <li>Always be respectful of other clan members and leadership</li>
     </ul>

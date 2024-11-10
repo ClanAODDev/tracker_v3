@@ -10,7 +10,6 @@
         <tr>
             <th class="col-xs-4">Division</th>
             <th class="text-center col-xs-2">Population</th>
-            <th class="text-center col-xs-2">TeamSpeak</th>
             <th class="text-center col-xs-2">Discord</th>
         </tr>
         </thead>
@@ -25,13 +24,6 @@
                     {{ $division->name }}
                 </td>
                 <td class="text-center">{{ $division->census->last()->count}}</td>
-                <td class="text-center slight">
-                    {{ number_format($division->weeklyTsActive / $division->total * 100, 1) }}%
-                    <span class="census-pie"
-                          data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
-                          data-counts="{{ json_encode([$division->popMinusActive, $division->weeklyTsActive]) }}">
-                    </span>
-                </td>
                 <td class="text-center slight">
                     {{ number_format($division->weeklyVoiceActive / $division->total * 100, 1) }}%
                     <span class="census-pie"

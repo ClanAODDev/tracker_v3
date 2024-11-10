@@ -277,7 +277,6 @@ let Platoon = Platoon || {};
                     $('#leader_id, #leader').prop('disabled', false);
                 }
             }
-
         },
     };
 })(jQuery);

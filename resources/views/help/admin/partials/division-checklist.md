@@ -13,9 +13,6 @@ adding a new division. Deviations for deleting a Division will also be noted.
   - [Navigation](#content-navigation-options)
   - [User Profile Fields](#content-user-profile-fields)
 - [Discord](#content-discord)
-- [TeamSpeak](#content-teamspeak)
-  - [Officer Server Group](#content-officer-server-group)
-  - [Flair Server Group](#content-flair-server-groups)
 - [Tracker](#content-tracker)
   - [Creating divisions in Admin CP](#content-creating-divisions-in-admin-cp)
   - [Ingame handles](#content-ingame-handles)
@@ -277,51 +274,6 @@ TODO: Add steps for manual mapping
 
 Auto complete for `/division delete` will show divisions that exist in the tracker that have been added to discord.
 While you can type a custom name, it is highly recommended to use auto complete.
-
-## TeamSpeak
-
-### Officer Server Group
-
-Officer Server Groups provides an easy way to identify division officers on TeamSpeak and gives officers permissions
-required to manage new recruits.
-
-__WARNING__: TeamSpeak Server Groups must be edited using the advanced permissions editor only.
-
-To create a new group:
-
-1. Connect to the AOD TeamSpeak Server
-2. Select `Permissions` &#8594; `Server Groups`
-3. Right click on an existing officer group and select `Copy`
-4. Edit the `Target Name` to `{Division Name} Officer` and click `Ok`
-5. Select the group just created
-6. Enable the `Show Granted Only` option in Permission view
-7. Set `i_icon_id` to the appropriate icon for the division (or clear it until the icon is uploaded)
-
-![TeamSpeak Officer Server Group permissions](/images/docs/officer-server-group.png)
-
-#### Forum Sync Map
-
-The forum sync process maps TeamSpeak server groups to forum groups. Presently this processes is managed directly from
-AOD's server. Please contact Archangel to add or remove group maps.
-
-### Flair Server Groups
-
-Flair Server Groups allow divisions to identify important groups within the division, such as the Reapers competetive
-teams.
-
-__WARNING__: TeamSpeak Server Groups must be edited using the advanced permissions editor only.
-
-To create a new group:
-
-1. Connect to the AOD TeamSpeak Server
-2. Select `Permissions` &#8594; `Server Groups`
-3. Right click on an existing flair group and select `Copy`
-4. Edit the `Target Name` to `{Division Name} [Group Name]` and click `Ok`
-5. Select the group just created
-6. Enable the `Show Granted Only` option in Permission view
-7. Set `i_icon_id` to the appropriate icon for the flair group (or clear it until the icon is uploaded)
-
-![TeamSpeak Flair Server Group permissions](/images/docs/flair-server-group.png)
 
 ## Tracker
 

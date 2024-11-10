@@ -39,9 +39,6 @@
                                href="#forum-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Forum/ModCp
                             </a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
-                               href="#ts-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Teamspeak
-                                Mod</a></li>
-                        <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
                                href="#ds-mod" role="tab"><i class="fas fa-check-circle text-muted"></i> Discord
                                 Mod</a></li>
                         <li><a class="nav-item nav-link btn-default btn" data-toggle="tab"
