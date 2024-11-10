@@ -12,19 +12,15 @@
     {{--5--}}
     <th class='text-center'><strong>Discord Activity</strong></th>
     {{--6--}}
-    <th class='text-center'><strong>TS Activity</strong></th>
-    {{--7--}}
-    <th class="col-hidden">Ts activity Dates</th>
-    {{--8--}}
     <th class='text-center'>
         <string>Last Promoted</string>
     </th>
-    {{--9--}}
+    {{--7--}}
     <th class="col-hidden">Handle</th>
-    {{--10--}}
+    {{--8--}}
     <th class="col-hidden">Posts</th>
-    {{--11--}}
+    {{--9--}}
     <th class="col-hidden">Member Id</th>
-    {{--12--}}
+    {{--10--}}
     <th class='col-hidden'><strong>Discord Activity Dates</strong></th>
 </tr>

@@ -232,12 +232,12 @@ class Division extends Model
      */
     public function scopeActive($query)
     {
-        return $query->whereActive(true)->orderBy('name', 'ASC');
+        $query->whereActive(true)->orderBy('name', 'ASC');
     }
 
     public function scopeWithoutFloaters($query)
     {
-        return $query->where('slug', '!=', 'floater');
+        $query->where('slug', '!=', 'floater');
     }
 
     /**
@@ -246,10 +246,8 @@ class Division extends Model
     public function scopeShuttingDown($query, bool $includeShutdown = false)
     {
         if (! $includeShutdown) {
-            return $query->whereNull('shutdown_at');
+            $query->whereNull('shutdown_at');
         }
-
-        return $query;
     }
 
     /**

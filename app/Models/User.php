@@ -83,9 +83,9 @@ class User extends Authenticatable implements FilamentUser
     /**
      * @return mixed
      */
-    public function scopeAdmins()
+    public function scopeAdmins($query)
     {
-        return $this->whereRoleId(5)->orderBy('name', 'ASC');
+        $query->whereRoleId(5)->orderBy('name', 'ASC');
     }
 
     /**
