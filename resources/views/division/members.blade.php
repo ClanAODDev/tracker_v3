@@ -56,16 +56,6 @@
                 </div>
                 <div class="panel panel-filled hidden-xs hidden-sm">
                     <div class="panel-heading">
-                        TS Activity
-                    </div>
-                    <div class="panel-body">
-                        <canvas class="ts-activity-chart" data-labels="{{ json_encode($tsActivityGraph['labels']) }}"
-                                data-values="{{ json_encode($tsActivityGraph['values']) }}"
-                                data-colors="{{ json_encode($tsActivityGraph['colors']) }}"></canvas>
-                    </div>
-                </div>
-                <div class="panel panel-filled hidden-xs hidden-sm">
-                    <div class="panel-heading">
                         Discord Activity
                     </div>
                     <div class="panel-body">
