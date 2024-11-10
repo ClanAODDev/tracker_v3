@@ -77,8 +77,6 @@
             return divisionHandle === handle.type;
           }).length > 0;
 
-      console.log(hasDivisionHandle);
-
     },
 
     methods: {

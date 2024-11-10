@@ -44,7 +44,6 @@ export default {
 
   computed: {
     isPastGracePeriod() {
-      console.log(this.data.isPastGracePeriod);
       return (this.data.isPastGracePeriod);
     },
   },

@@ -83,5 +83,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/platoon.js?v=2.1') !!}"></script>
+    <script src="{!! asset('/js/platoon.js?v=2.20') !!}"></script>
 @endsection
