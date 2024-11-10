@@ -84,7 +84,7 @@ class Ticket extends Model
      */
     public function scopeNew($query)
     {
-        return $query->where('state', 'new')
+        $query->where('state', 'new')
             ->whereNotIn('state', ['assigned', 'resolved']);
     }
 
@@ -93,13 +93,13 @@ class Ticket extends Model
      */
     public function scopeAssigned($query)
     {
-        return $query->where('state', 'assigned')
+        $query->where('state', 'assigned')
             ->whereNotIn('state', ['new', 'resolved']);
     }
 
     public function scopeResolved($query)
     {
-        return $query->where('state', 'resolved')
+        $query->where('state', 'resolved')
             ->whereNotIn('state', ['new', 'assigned']);
     }
 

@@ -85,7 +85,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function scopeAdmins()
     {
-        return $this->whereRoleId(5)->orderBy('name', 'ASC');
+        $this->whereRoleId(5)->orderBy('name', 'ASC');
     }
 
     /**
