@@ -1,6 +1,7 @@
 @if ($member->memberRequest()->exists() && $member->memberRequest->approved_at == null)
     <div class="alert alert-warning">
-       This member's status request is currently pending. Some details, like teamspeak activity, may not be available until the request is approved.
+        This member's status request is currently pending. Some details, like teamspeak activity, may not be available
+        until the request is approved.
     </div>
 @endif
 @can ('update', $member->clan_id)
@@ -13,11 +14,21 @@
     @endif
 @endcan
 
+@if ($member->flagged_for_inactivity)
+    <div class="alert alert-warning">
+        <i class="fa fa-flag"></i> Member is flagged for removal. <a
+                href="{{ route('member.unflag-inactive', $member->clan_id) . "#flagged" }}"
+                class="alert-link pull-right">
+            Remove flag
+        </a>
+    </div>
+@endif
 
 @if ($member->leave()->exists())
     @if ($member->leave->approver)
         <div class="alert alert-warning">
-            Member has a leave of absence in place for [<strong>{{ $member->leave->reason }}</strong>] until [<strong>{{ $member->leave->end_date->format('Y-m-d') }}</strong>].
+            Member has a leave of absence in place for [<strong>{{ $member->leave->reason }}</strong>] until
+            [<strong>{{ $member->leave->end_date->format('Y-m-d') }}</strong>].
             <a class="alert-link"
                href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}">View Details</a>
         </div>
