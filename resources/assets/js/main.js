@@ -272,12 +272,6 @@ let Tracker = Tracker || {};
                         }
                     );
                 });
-
-                $('[census-data]').bind('sparklineClick', function (ev) {
-                    var sparkline = ev.sparklines[0],
-                        region = sparkline.getCurrentRegionFields();
-                    console.log('Clicked on x=' + region.x + ' y=' + region.y);
-                });
             };
 
             let sparkResize;

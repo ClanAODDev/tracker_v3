@@ -211,16 +211,10 @@ let Platoon = Platoon || {};
                     }, {
                         // sort rank by rank id
                         'iDataSort': 0, 'aTargets': [3]
-                    },
-                        {
-                            // sort ts activity by date
-                            'iDataSort': 7, 'aTargets': [6]
-                        },
-                        {
-                            // sort discord activity by date
-                            'iDataSort': 12, 'aTargets': [5]
-                        }
-                    ],
+                    }, {
+                        // sort discord activity by date
+                        'iDataSort': 10, 'aTargets': [5]
+                    }],
                     select: {
                         style: 'os',
                         selector: 'td:first-child',
@@ -228,14 +222,21 @@ let Platoon = Platoon || {};
                     stateSave: true, paging: false,
                 });
 
+                function updateLinkColor(link, column) {
+                    $(link).css('color', column.visible() ? 'white' : '#949ba2');
+                }
+
+                $('a.toggle-vis').each(function () {
+                    const column = dataTable.column($(this).data('column'));
+                    updateLinkColor(this, column);
+                });
+
                 $('a.toggle-vis').on('click', function (e) {
                     e.preventDefault();
 
-                    // Get the column API object
-                    var column = dataTable.column($(this).attr('data-column'));
-
-                    // Toggle the visibility
+                    const column = dataTable.column($(this).data('column'));
                     column.visible(!column.visible());
+                    updateLinkColor(this, column);
                 });
 
                 $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');

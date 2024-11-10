@@ -51,7 +51,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     public function scopeOnHold($query)
     {
-        return $query->where('hold_placed_at', '!=', null)->where('approved_at', null);
+        $query->where('hold_placed_at', '!=', null)->where('approved_at', null);
     }
 
     public function isOnHold()
@@ -64,7 +64,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopePending($query)
     {
-        return $query->where('approved_at', null)->where('cancelled_at', null)->where('hold_placed_at', null);
+        $query->where('approved_at', null)->where('cancelled_at', null)->where('hold_placed_at', null);
     }
 
     public function getIsPastGracePeriodAttribute()
@@ -74,7 +74,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     public function scopePastGracePeriod($query)
     {
-        return $query->where('created_at', '<=', now()->subHours(2));
+        $query->where('created_at', '<=', now()->subHours(2));
     }
 
     /**
@@ -82,7 +82,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopeApproved($query)
     {
-        return $query->where('approved_at', '!=', null)
+        $query->where('approved_at', '!=', null)
             ->where('processed_at', null);
     }
 
@@ -107,7 +107,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopeCancelled($query)
     {
-        return $query->where('cancelled_at', '!=', null);
+        $query->where('cancelled_at', '!=', null);
     }
 
     /**
@@ -123,7 +123,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopeErrors($query)
     {
-        return $query->where('approved_at', '<=', now()->subHour(4))->where('processed_at', null);
+        $query->where('approved_at', '<=', now()->subHour(4))->where('processed_at', null);
     }
 
     /**
