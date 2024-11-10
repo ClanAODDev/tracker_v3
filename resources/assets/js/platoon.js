@@ -8,7 +8,6 @@ let Platoon = Platoon || {};
             this.handleMembers();
             this.handleSquadMembers();
             this.handleForumActivityChart();
-            this.handleTSActivityChart();
             this.handleVoiceActivityChart();
             this.initAutocomplete();
         },
