@@ -211,16 +211,10 @@ let Platoon = Platoon || {};
                     }, {
                         // sort rank by rank id
                         'iDataSort': 0, 'aTargets': [3]
-                    },
-                        {
-                            // sort ts activity by date
-                            'iDataSort': 7, 'aTargets': [6]
-                        },
-                        {
-                            // sort discord activity by date
-                            'iDataSort': 12, 'aTargets': [5]
-                        }
-                    ],
+                    }, {
+                        // sort discord activity by date
+                        'iDataSort': 10, 'aTargets': [5]
+                    }],
                     select: {
                         style: 'os',
                         selector: 'td:first-child',

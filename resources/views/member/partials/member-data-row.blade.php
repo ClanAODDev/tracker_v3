@@ -25,13 +25,6 @@
                         {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks', 'months']) }}
                     </span>
     </td>
-    <td class="text-center">
-                    <span class="{{ getActivityClass($member->last_ts_activity, $division) }}"
-                          title="{{$member->last_ts_activity}}">
-                        {{ $member->present()->lastActive('last_ts_activity', skipUnits: ['weeks', 'months']) }}
-                    </span>
-    </td>
-    <td class="col-hidden">{{ $member->last_ts_activity }}</td>
     <td class="text-center">{{ $member->last_promoted_at ?? 'Never' }}</td>
     <td class="col-hidden">
         @if ($member->handle)
