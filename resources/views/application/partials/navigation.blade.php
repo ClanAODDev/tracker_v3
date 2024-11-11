@@ -87,9 +87,6 @@
             <li class="{{ set_active('reports/clan-census') }}">
                 <a href="{{ route('reports.clan-census') }}">Clan Census Data</a>
             </li>
-            <li class="{{ set_active('reports/clan-ts-report') }}">
-                <a href="{{ route('reports.clan-ts-report') }}">TS Misconfiguration</a>
-            </li>
             <li class="{{ set_active('reports/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>

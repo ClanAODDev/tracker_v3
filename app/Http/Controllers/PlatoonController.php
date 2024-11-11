@@ -95,7 +95,6 @@ class PlatoonController extends Controller
         $members = $members->each($this->getMemberHandle());
 
         $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
-        $tsActivityGraph = $this->platoon->getPlatoonTSActivity($platoon);
         $voiceActivityGraph = $this->platoon->getPlatoonVoiceActivity($platoon);
 
         return view('platoon.show', compact(
@@ -103,7 +102,6 @@ class PlatoonController extends Controller
             'members',
             'division',
             'forumActivityGraph',
-            'tsActivityGraph',
             'voiceActivityGraph',
         )
         );
@@ -203,7 +201,6 @@ class PlatoonController extends Controller
                 $member->rank->getAbbreviation(),
                 $member->join_date,
                 $member->last_activity,
-                $member->last_ts_activity,
                 $member->last_promoted_at,
                 $member->handle->pivot->value ?? 'N/A',
                 $member->posts,

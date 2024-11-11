@@ -20,9 +20,6 @@
             leadership. Use this page to attempt to communicate with inactive members, and also to process their removal
             from the clan. Members who have an active leave of absence are omitted.</p>
 
-        <p class="text-info">Tabs show inactivity information based exclusively on the indicated service. Both tabs
-            include activity information for TeamSpeak and Discord.</p>
-
         <p><strong>{{ $division->name }}</strong> division inactivity set to
             <code>{{ $division->settings()->inactivity_days }} days</code>
         </p>

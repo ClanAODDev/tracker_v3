@@ -37,10 +37,9 @@ class SquadController extends Controller
 
         $members = $members->each($this->getMemberHandle());
         $forumActivityGraph = $this->squadRepository->getSquadForumActivity($squad);
-        $tsActivityGraph = $this->squadRepository->getSquadTSActivity($squad);
         $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
 
-        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'tsActivityGraph', 'voiceActivityGraph'));
+        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'voiceActivityGraph'));
     }
 
     /**

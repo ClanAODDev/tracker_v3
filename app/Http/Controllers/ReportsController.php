@@ -38,14 +38,11 @@ class ReportsController extends Controller
                 $division
             ) => \count($division->census))->each(function ($division) {
                 $division->total = $division->census->last()->count;
-                $division->popMinusActive = $division->census->last()->count - $division->census->last()->weekly_ts_count;
                 $division->popMinusVoiceActive = $division->census->last()->count - $division->census->last()
                         ->weekly_voice_count;
                 $division->weeklyTsActive = $division->census->last()->weekly_ts_count;
                 $division->weeklyVoiceActive = $division->census->last()->weekly_voice_count;
             });
-
-        $mismatchedTSMembers = $this->clan->teamspeakReport();
 
         // break down rank distribution
         $rankDemographic = collect($this->clan->allRankDemographic());
@@ -62,42 +59,25 @@ class ReportsController extends Controller
             'memberCount',
             'censuses',
             'rankDemographic',
-            'mismatchedTSMembers'
         ));
     }
 
-    /**
-     * @return Factory|View
-     */
-    public function clanTsReport()
-    {
-        $invalidDates = fn ($member) => ! carbon_date_or_null_if_zero($member->last_ts_activity);
-        $newMembers = fn ($member) => $member->created_at < \Carbon\Carbon::now()->subDays(2);
-
-        $issues = \App\Models\Member::whereHas('division')->with(
-            'division'
-        )->get()->filter($invalidDates)->filter($newMembers);
-
-        return view('reports.clan-ts-report', compact('issues'));
-    }
-
-    /**
-     * @return Factory|View
-     */
     public function outstandingMembersReport()
     {
         $clanMax = config('app.aod.maximum_days_inactive');
         $divisions = \App\Models\Division::active()->orderBy('name')->withCount('members')->get();
         $divisions->map(function ($division) use ($clanMax) {
             $divisionMax = $division->settings()->get('inactivity_days');
-            $members = $division->members()->whereDoesntHave('leave')->get();
+            $members = $division->members()->whereDoesntHave('leave', function ($q) {
+                $q->whereDate('end_date', '>', today());
+            })->get();
             $outstandingCount = $members->where(
-                'last_ts_activity',
+                'last_voice_activity',
                 '<',
                 \Carbon\Carbon::now()->subDays($clanMax)->format('Y-m-d')
             )->count();
             $inactiveCount = $members->where(
-                'last_ts_activity',
+                'last_voice_activity',
                 '<',
                 \Carbon\Carbon::now()->subDays($divisionMax)->format('Y-m-d')
             )->count();

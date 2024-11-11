@@ -8,7 +8,6 @@ let Platoon = Platoon || {};
             this.handleMembers();
             this.handleSquadMembers();
             this.handleForumActivityChart();
-            this.handleTSActivityChart();
             this.handleVoiceActivityChart();
             this.initAutocomplete();
         },
@@ -46,39 +45,7 @@ let Platoon = Platoon || {};
                 });
             }
         },
-        handleTSActivityChart: function () {
 
-            var ctx = $('.ts-activity-chart');
-
-            if (ctx.length) {
-                var myDoughnutChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        datasets: [
-                            {
-                                data: ctx.data('values'),
-                                backgroundColor: ctx.data('colors'),
-                                borderWidth: 0,
-                            }],
-                        labels: ctx.data('labels'),
-                    },
-                    options: {
-                        rotation: 1 * Math.PI,
-                        circumference: 1 * Math.PI,
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 5,
-                                fontColor: '#949ba2'
-                            },
-                            label: {
-                                fullWidth: false
-                            }
-                        }
-                    }
-                });
-            }
-        },
         handleVoiceActivityChart: function () {
 
             var ctx = $('.voice-activity-chart');
@@ -277,7 +244,6 @@ let Platoon = Platoon || {};
                     $('#leader_id, #leader').prop('disabled', false);
                 }
             }
-
         },
     };
 })(jQuery);

@@ -7,7 +7,6 @@
             <div class="flot-chart-content" id="flot-line-chart"
                  data-populations="{{ $populations }}"
                  {{--                 data-weekly-active="{{ $weeklyActive }}"--}}
-                 data-weekly-ts="{{ $weeklyTsActive }}"
                  data-weekly-discord="{{ $weeklyDiscordActive }}"
             ></div>
         </div>
@@ -21,12 +20,8 @@
             {{--                <i class="fas fa-dot-circle text-success"></i> - Weekly Discord Active--}}
             {{--            </div>--}}
             <div class="col-md-4 text-center">
-                <i class="fas fa-dot-circle text-info"></i> TeamSpeak
-                <p><small class="text-muted"># active VoiP past week</small></p>
-            </div>
-            <div class="col-md-4 text-center">
                 <i class="fas fa-dot-circle text-warning"></i> Discord
-                <p><small class="text-muted"># active VoiP past week</small></p>
+                <p><small class="text-muted"># active VoIP past week</small></p>
             </div>
         </div>
     </div>

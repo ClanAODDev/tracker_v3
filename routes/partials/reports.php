@@ -9,12 +9,9 @@ Route::group(['prefix' => 'reports'], function () {
 
     Route::get('no-discord', 'ReportsController@usersWithoutDiscordReport')
         ->name('reports.discord');
-    Route::get(
-        'outstanding-inactives',
-        'ReportsController@outstandingMembersReport'
-    )->name('reports.outstanding-inactives');
+    Route::get('outstanding-inactives',
+        'ReportsController@outstandingMembersReport')->name('reports.outstanding-inactives');
     Route::get('/clan-census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
-    Route::get('/clan-ts-report', 'ReportsController@clanTsReport')->name('reports.clan-ts-report');
 
     // other reporty things
     Route::get('leadership', 'ReportsController@leadership')->name('leadership');
