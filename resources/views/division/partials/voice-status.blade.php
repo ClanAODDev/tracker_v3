@@ -1,15 +1,17 @@
-@if($status === 'never_connected')
+@php use App\Enums\DiscordStatus; @endphp
+
+@if($status === DiscordStatus::NEVER_CONNECTED)
     <span class="text-muted">Never connected</span>
 @endif
 
-@if($status === 'never_configured')
+@if($status === \App\Enums\DiscordStatus::NEVER_CONFIGURED)
     <span class="text-warning">Never configured</span>
 @endif
 
-@if($status === 'connected')
+@if($status === \App\Enums\DiscordStatus::CONNECTED)
     <span class="text-success">Connected</span>
 @endif
 
-@if($status === 'disconnected')
+@if($status === \App\Enums\DiscordStatus::DISCONNECTED)
     <span class="text-danger">Disconnected</span>
 @endif
