@@ -98,18 +98,11 @@ class ReportController extends \App\Http\Controllers\Controller
      */
     public function voiceReport(Division $division)
     {
-        $tsIssues = $division->mismatchedTSMembers;
-
-        $discordIssues = $division->membersOfDiscordState([
-            'never_connected',
-            'never_configured',
-            'disconnected',
-        ])->get();
+        $discordIssues = $division->members()->misconfiguredDiscord()->get();
 
         return view('division.reports.voice-report', compact(
             'division',
             'discordIssues',
-            'tsIssues',
         ));
     }
 

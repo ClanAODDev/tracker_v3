@@ -24,11 +24,17 @@ class InactiveMemberController extends Controller
      */
     public function index(Division $division)
     {
-        $inactiveDiscordMembers = $division->members()->whereFlaggedForInactivity(false)
-            ->where('last_voice_activity', '<', now()->today()->subDays($division->settings()->inactivity_days))
-            ->whereDoesntHave('leave', function ($q) {
-                $q->whereDate('end_date', '>', today());
-            })->with('squad')
+        $inactiveDiscordMembers = $division->members()
+            ->where(function ($query) use ($division) {
+                $inactivityThreshold = now()->today()->subDays($division->settings()->inactivity_days);
+                $query->where('last_voice_activity', '<', $inactivityThreshold)
+                    ->orWhereNull('last_voice_activity');
+            })
+            ->where('flagged_for_inactivity', false)
+            ->whereDoesntHave('leave', function ($query) {
+                $query->whereDate('end_date', '>', today());
+            })
+            ->with('squad')
             ->orderBy('last_voice_activity')
             ->get();
 
