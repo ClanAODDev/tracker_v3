@@ -19,15 +19,7 @@ enum Position: int implements HasLabel
 
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::MEMBER => 'Member',
-            self::SQUAD_LEADER => 'Squad Leader',
-            self::PLATOON_LEADER => 'Platoon Leader',
-            self::GENERAL_SERGEANT => 'General Sergeant',
-            self::EXECUTIVE_OFFICER => 'Executive Officer',
-            self::COMMANDING_OFFICER => 'Commanding Officer',
-            self::CLAN_ADMIN => 'Clan Admin',
-        };
+        return ucwords(str_replace('_', ' ', strtolower($this->name)));
     }
 
     public function getAbbreviation(): ?string
@@ -39,7 +31,9 @@ enum Position: int implements HasLabel
             self::COMMANDING_OFFICER => 'CO',
             self::CLAN_ADMIN => 'CA',
 
+            self::GENERAL_SERGEANT,
             self::MEMBER => '',
+
         };
     }
 
