@@ -5,6 +5,7 @@
             <tr>
                 <th>Member Name</th>
                 <th>Last Discord Voice Activity</th>
+                <th>Discord State</th>
                 <th>Squad</th>
                 <th class="no-sort"></th>
                 <th class="no-sort"></th>
@@ -20,6 +21,9 @@
                     </td>
                     <td data-order="{{ $member->last_voice_activity->timestamp ?? null }}">
                         <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
+                    </td>
+                    <td title="{{ $member->last_voice_status?->getDescription() }}">
+                        <code>{{ $member->last_voice_status?->getLabel() ?? 'Unknown' }}</code>
                     </td>
                     <td>{{ $member->squad->name ?? "Untitled" }}</td>
                     <td>

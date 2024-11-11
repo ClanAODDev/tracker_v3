@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Resources\MemberResource\Pages;
@@ -43,21 +44,12 @@ class MemberResource extends Resource
                     Select::make('position')
                         ->required()
                         ->options(Position::class),
-                    Select::make('platoon_id')
-                        ->relationship('platoon', 'name')
-                        ->label('Platoon')
-                        ->searchable(),
-                    Select::make('squad_id')
-                        ->relationship('squad', 'name')
-                        ->label('Squad')
-                        ->searchable(),
                     TextInput::make('recruiter_id')
                         ->numeric()
                         ->default(null),
                     Select::make('division_id')
                         ->relationship('division', 'name')
                         ->label('Division')
-                        ->searchable()
                         ->required(),
                 ])->columns(2),
                 Forms\Components\Section::make('Communications')->schema([
@@ -67,8 +59,8 @@ class MemberResource extends Resource
                     TextInput::make('discord')
                         ->maxLength(191)
                         ->default(null),
-                    TextInput::make('last_voice_status')
-                        ->maxLength(191)
+                    Select::make('last_voice_status')
+                        ->options(DiscordStatus::class)
                         ->default(null),
                     TextInput::make('discord_id')
                         ->numeric()

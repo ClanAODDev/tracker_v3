@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Member\HasCustomAttributes;
@@ -43,8 +44,9 @@ class Member extends Model
         'xo_at' => 'datetime',
         'co_at' => 'datetime',
 
-        'position' => \App\Enums\Position::class,
-        'rank' => \App\Enums\Rank::class,
+        'position' => Position::class,
+        'rank' => Rank::class,
+        'last_voice_status' => DiscordStatus::class,
     ];
 
     protected $guarded = [];
@@ -79,7 +81,7 @@ class Member extends Model
     public function assignPosition($position)
     {
         // reset assignments for specific positions
-        if (\in_array(
+        if (in_array(
             $position,
             [Position::COMMANDING_OFFICER, Position::EXECUTIVE_OFFICER, Position::GENERAL_SERGEANT, Position::CLAN_ADMIN],
             true
@@ -193,7 +195,7 @@ class Member extends Model
      */
     public function expiredLeave()
     {
-        return $this->hasOne(Leave::class)->where('end_date', '<', \Carbon\Carbon::today());
+        return $this->hasOne(Leave::class)->where('end_date', '<', today());
     }
 
     /**
@@ -209,7 +211,7 @@ class Member extends Model
      */
     public function activeLeave()
     {
-        return $this->hasOne(Leave::class)->where('end_date', '>', \Carbon\Carbon::today());
+        return $this->hasOne(Leave::class)->where('end_date', '>', today());
     }
 
     /**
@@ -250,7 +252,7 @@ class Member extends Model
      */
     public function isDivisionLeader(Division $division)
     {
-        if ($this->division->id === $division->id && \in_array($this->position, [
+        if ($this->division->id === $division->id && in_array($this->position, [
             Position::EXECUTIVE_OFFICER,
             Position::COMMANDING_OFFICER,
         ], true)) {
@@ -258,6 +260,15 @@ class Member extends Model
         }
 
         return false;
+    }
+
+    public function scopeMisconfiguredDiscord($query)
+    {
+        $query->whereIn('last_voice_status', [
+            DiscordStatus::NEVER_CONNECTED,
+            DiscordStatus::NEVER_CONFIGURED,
+            DiscordStatus::DISCONNECTED,
+        ]);
     }
 
     public function getDiscordUrl()
@@ -275,8 +286,8 @@ class Member extends Model
             return false;
         }
 
-        if (\is_array($rank)) {
-            return \in_array($this->rank, $rank, true);
+        if (is_array($rank)) {
+            return in_array($this->rank, $rank, true);
         }
 
         return $this->rank === $rank;

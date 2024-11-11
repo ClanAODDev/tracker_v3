@@ -115,38 +115,6 @@ class Division extends Model
         return $this->attributes['abbreviation'] = strtolower($value);
     }
 
-    public function misconfiguredDiscordMembers(): HasMany
-    {
-        return $this->membersOfDiscordState([
-            'never_connected',
-            'never_configured',
-            'disconnected',
-        ]);
-    }
-
-    public function membersOfDiscordState(array $state)
-    {
-        $validStates = [
-            'connected',
-            'never_connected',
-            'disconnected',
-            'never_configured',
-        ];
-
-        $invalidStates = array_diff($state, $validStates);
-
-        if (! empty($invalidStates)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid Discord state: %s',
-                implode(', ', $invalidStates)
-            ));
-        }
-
-        return $this->members()
-            ->whereIn('last_voice_status', $state)
-            ->with(['platoon']);
-    }
-
     /**
      * relationship - division has many members.
      */

@@ -37,7 +37,7 @@
                     <th>Forum Profile</th>
                     <th>{{ $division->locality('platoon') }}</th>
                     <th>Discord</th>
-                    <th>Last Activity</th>
+                    <th>Last VoIP Activity</th>
                     <th class="col-hidden">Clan ID</th>
                 </tr>
                 </thead>
