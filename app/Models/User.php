@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\Rank;
 use App\Settings\UserSettings;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
@@ -192,7 +191,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canRemoveUsers()
     {
-        return $this->member->rank->value >= Rank::SERGEANT->value;
+        return $this->member->rank->value >= \App\Enums\Rank::SERGEANT->value;
     }
 
     /**
