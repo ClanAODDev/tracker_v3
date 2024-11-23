@@ -84,6 +84,6 @@ class UserPolicy
 
     public function train(User $user)
     {
-        return $user->member->rank > Rank::SERGEANT && \in_array($user->role_id, [4, 5], true);
+        return $user->member->rank->value > Rank::SERGEANT->value && \in_array($user->role_id, [4, 5], true);
     }
 }

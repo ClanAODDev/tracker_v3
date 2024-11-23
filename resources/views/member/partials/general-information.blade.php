@@ -68,8 +68,7 @@
     @endif
 
 
-    @if ($member->rank_id >= 9)
-
+    @if ($member->rank->value >= \App\Enums\Rank::SERGEANT->value)
         @component('application.components.data-block')
             @slot('data')
                 {{ $member->last_trained_at ? $member->last_trained_at->format('Y-m-d') : '--' }}
@@ -92,29 +91,28 @@
                 @endslot
             @endcomponent
         @endif
+    @endif
 
-        @if($member->xo_at)
-            @component('application.components.data-block')
-                @slot('data')
-                    {{ $member->xo_at->format('Y-m-d') }}
-                @endslot
-                @slot('title')
-                    <span class="c-white">XO Since</span>
-                @endslot
-            @endcomponent
-        @endif
+    @if($member->xo_at)
+        @component('application.components.data-block')
+            @slot('data')
+                {{ $member->xo_at->format('Y-m-d') }}
+            @endslot
+            @slot('title')
+                <span class="c-white">XO Since</span>
+            @endslot
+        @endcomponent
+    @endif
 
-        @if ($member->co_at)
-            @component('application.components.data-block')
-                @slot('data')
-                    {{ $member->co_at->format('Y-m-d') }}
-                @endslot
-                @slot('title')
-                    <span class="c-white">CO Since</span>
-                @endslot
-            @endcomponent
-        @endif
-
+    @if ($member->co_at)
+        @component('application.components.data-block')
+            @slot('data')
+                {{ $member->co_at->format('Y-m-d') }}
+            @endslot
+            @slot('title')
+                <span class="c-white">CO Since</span>
+            @endslot
+        @endcomponent
     @endif
 
 </div>

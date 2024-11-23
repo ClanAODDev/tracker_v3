@@ -220,7 +220,8 @@ let Platoon = Platoon || {};
                 // handle PM selection
                 dataTable.on("select", function (e, t, a, d) {
                     let l = dataTable.rows($(".selected")).data().toArray().map(function (e) {
-                        return e[11]
+                        // console.log(e);
+                        return e[9]
                     });
                     if (l.length >= 2) {
                         $("#selected-data").show(),

@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Rank;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -65,14 +64,6 @@ class MemberPolicy
             return false;
         }
 
-        $userDivision = $user->member->division;
-        $memberDivision = $member->division;
-
-        // allow CPLs
-        if ($user->isRole(['jr_ldr']) && $userDivision->id === $memberDivision->id) {
-            return true;
-        }
-
         return false;
     }
 
@@ -103,7 +94,7 @@ class MemberPolicy
             return false;
         }
 
-        if ($user->member->rank_id < \App\Enums\Rank::SERGEANT) {
+        if ($user->member->rank->value < \App\Enums\Rank::SERGEANT->value) {
             return false;
         }
 
@@ -132,8 +123,8 @@ class MemberPolicy
         }
 
         // can only promote up to one below your rank
-        $rankAllowed = $userPromoting->member->rank_id - 1;
-        if ($rankAllowed < $memberBeingPromoted->rank_id) {
+        $rankAllowed = $userPromoting->member->rank->value - 1;
+        if ($rankAllowed < $memberBeingPromoted->rank->value) {
             return false;
         }
 

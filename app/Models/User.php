@@ -191,7 +191,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canRemoveUsers()
     {
-        return $this->member->rank_id >= 9;
+        return $this->member->rank->value >= \App\Enums\Rank::SERGEANT->value;
     }
 
     /**

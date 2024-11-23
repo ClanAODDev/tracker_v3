@@ -18,7 +18,8 @@ class ApiTokenPolicy
 
     public function create(User $user): bool
     {
-        return $user->member->rank_id > 6 && \in_array($user->role_id, [2, 3, 4, 5], true);
+        return $user->member->rank->value > \App\Enums\Rank::TRAINER->value
+            && \in_array($user->role_id, [2, 3, 4, 5], true);
     }
 
     public function destroy(User $user, $token): bool
