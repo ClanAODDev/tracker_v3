@@ -40,7 +40,6 @@ class ReportsController extends Controller
                 $division->total = $division->census->last()->count;
                 $division->popMinusVoiceActive = $division->census->last()->count - $division->census->last()
                         ->weekly_voice_count;
-                $division->weeklyTsActive = $division->census->last()->weekly_ts_count;
                 $division->weeklyVoiceActive = $division->census->last()->weekly_voice_count;
             });
 
