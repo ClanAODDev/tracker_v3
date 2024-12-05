@@ -146,19 +146,19 @@ class RecruitingController extends Controller
     public function validateMemberId($member_id)
     {
         if (app()->environment() === 'local') {
-            return ['is_member' => true, 'verified_email' => true];
+            return ['is_member' => true, 'valid_group' => true];
         }
 
         $result = $this->callProcedure('get_user', $member_id);
 
         if (! property_exists($result, 'usergroupid')) {
-            return ['is_member' => false, 'verified_email' => false];
+            return ['is_member' => false, 'valid_group' => false];
         }
 
         return [
             'is_member' => true,
             'username' => $result->username,
-            'verified_email' => $result->usergroupid !== Member::UNVERIFIED_EMAIL_GROUP_ID,
+            'valid_group' => $result->usergroupid === Member::REGISTERED_USER,
         ];
     }
 
@@ -179,7 +179,7 @@ class RecruitingController extends Controller
 
         $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
-        return response()->json(['memberExists' => ! empty($result)]);
+        return response()->json(['memberExists' => !empty($result)]);
     }
 
     /**

@@ -28,7 +28,7 @@ class Member extends Model
     use RecordsActivity;
     use SoftDeletes;
 
-    public const UNVERIFIED_EMAIL_GROUP_ID = 3;
+    public const REGISTERED_USER = 2;
 
     protected static array $recordEvents = [];
 
@@ -123,7 +123,10 @@ class Member extends Model
     public function resetPositionAndAssignments()
     {
         $this->update([
-            'division_id' => 0, 'platoon_id' => 0, 'squad_id' => 0, 'position' => Position::MEMBER,
+            'division_id' => 0,
+            'platoon_id' => 0,
+            'squad_id' => 0,
+            'position' => Position::MEMBER,
             'flagged_for_inactivity' => false,
             'groups' => null,
         ]);

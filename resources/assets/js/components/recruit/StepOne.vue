@@ -269,11 +269,11 @@ export default {
                 store.forum_name = response.data.username;
               }
 
-              if (!response.data.verified_email) {
+              if (!response.data.valid_group) {
                 if (!this.$validator.errors.has('member_id_email')) {
                   this.$validator.errors.add({
                     field: 'member_id_email',
-                    msg: 'The provided member has not completed email verification'
+                    msg: 'The provided member is not in the registered users group. Did they change their email? Authlink?'
                   });
                 }
                 store.verifiedEmail = false;
