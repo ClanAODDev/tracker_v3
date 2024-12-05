@@ -51,18 +51,10 @@ class MemberRequestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('requester_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('member_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('division_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('approver_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('member.name'),
+                Tables\Columns\TextColumn::make('division.name'),
+                Tables\Columns\TextColumn::make('requester.name'),
+                Tables\Columns\TextColumn::make('approver.name'),
                 Tables\Columns\TextColumn::make('approved_at')
                     ->dateTime()
                     ->sortable(),
