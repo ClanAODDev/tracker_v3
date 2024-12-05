@@ -273,7 +273,7 @@ export default {
                 if (!this.$validator.errors.has('member_id_email')) {
                   this.$validator.errors.add({
                     field: 'member_id_email',
-                    msg: 'The provided member is not in the registered users group. Did they change their email? Authlink?'
+                    msg: 'The provided member is not in the registered users group. Did they verify their email? Authlink?'
                   });
                 }
                 store.verifiedEmail = false;
