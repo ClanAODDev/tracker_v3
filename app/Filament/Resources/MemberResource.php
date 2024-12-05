@@ -118,8 +118,6 @@ class MemberResource extends Resource
                     ->badge(),
                 Tables\Columns\TextColumn::make('platoon.name'),
                 Tables\Columns\TextColumn::make('squad.name')
-                    ->numeric()
-                    ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('position')
                     ->toggleable()
