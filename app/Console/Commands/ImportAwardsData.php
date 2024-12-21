@@ -35,6 +35,7 @@ class ImportAwardsData extends Command
                 'name' => 'award_name',
                 'description' => 'award_desc',
                 'display_order' => 'award_displayorder',
+                'image' => 'award_img_url'
             ],
         ],
         'memberAwards' => [
