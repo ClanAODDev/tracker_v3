@@ -9,10 +9,13 @@ class Award extends Model
 {
     use HasFactory;
 
-    // id
-    // name
-    // filename / slug
-    // group_id -- for grouping certain awards (IE tenure based awards, 5-year, 10-year, etc)
-    // rank  -- if an award has a group, only the highest rank of that award will be shown
-    // timestamps
+    protected $guarded = [];
+
+    public function recipients()
+    {
+        return $this->belongsToMany(Member::class, 'award_member', 'award_id', 'member_id')
+            ->using(MemberAward::class)
+            ->withPivot(['reason', 'expires_at'])
+            ->withTimestamps();
+    }
 }

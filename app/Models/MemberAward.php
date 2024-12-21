@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MemberAward extends Model
 {
-    use HasFactory;
+    protected $table = 'award_member';
 
-    // award_id -- award
-    // member_id -- member
-    // presenter_id -- member
-    // justification
-    // timestamps
+    protected $guarded = [];
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+    }
+
+    public function award()
+    {
+        return $this->belongsTo(Award::class, 'award_id');
+    }
 }
