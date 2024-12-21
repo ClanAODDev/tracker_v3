@@ -30,6 +30,7 @@
             </div>
         </div>
 
+        @include ('member.partials.awards')
         @include ('member.partials.handles')
         @include ('member.partials.part-time-divisions')
         @include ('member.partials.member-history')
