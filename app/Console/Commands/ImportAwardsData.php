@@ -6,6 +6,8 @@ use App\Models\Award;
 use App\Models\MemberAward;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ImportAwardsData extends Command
 {
@@ -35,7 +37,7 @@ class ImportAwardsData extends Command
                 'name' => 'award_name',
                 'description' => 'award_desc',
                 'display_order' => 'award_displayorder',
-                'image' => 'award_img_url'
+                'image' => 'award_img_url',
             ],
         ],
         'memberAwards' => [
@@ -64,6 +66,8 @@ class ImportAwardsData extends Command
         foreach ($this->fileMappings as $type => $config) {
             $this->processFile($type, $config);
         }
+
+        $this->importAwardImages();
     }
 
     protected function processFile(string $type, array $config)
@@ -139,5 +143,63 @@ class ImportAwardsData extends Command
     protected function validateHeader(array $columns, array $expectedColumns): bool
     {
         return $columns === $expectedColumns;
+    }
+
+    private function importAwardImages()
+    {
+        $this->info('Starting award image update process...');
+
+        $oldAwardsPath = storage_path('app/old-awards/');
+        $newAwardsPath = storage_path('app/public/awards/');
+
+        if (! file_exists($oldAwardsPath)) {
+            $this->error('Old awards folder not found: ' . $oldAwardsPath);
+
+            return self::FAILURE;
+        }
+
+        if (! is_dir($newAwardsPath)) {
+            Storage::makeDirectory('public/awards');
+        }
+
+        $awards = DB::table('awards')->get(['id', 'image']);
+        $updatedCount = 0;
+
+        foreach ($awards as $award) {
+            $oldFilename = str_replace('/forums/images/awards/', '', $award->image);
+            $oldFilePath = $oldAwardsPath . $oldFilename;
+
+            if (! file_exists($oldFilePath)) {
+                $this->warn("Image not found for award ID {$award->id}: {$oldFilename}");
+
+                continue;
+            }
+
+            $newFilename = $this->generateFilename();
+            $newFilePath = $newAwardsPath . $newFilename;
+
+            if (copy($oldFilePath, $newFilePath)) {
+                $newImageValue = "awards/{$newFilename}";
+                DB::table('awards')
+                    ->where('id', $award->id)
+                    ->update(['image' => $newImageValue]);
+
+                $this->info("Updated award ID {$award->id} to use image: {$newImageValue}");
+                $updatedCount++;
+            } else {
+                $this->error("Failed to copy image for award ID {$award->id}: {$oldFilename}");
+            }
+        }
+
+        $this->info("Process completed. {$updatedCount} awards updated.");
+
+        return self::SUCCESS;
+    }
+
+    private function generateFilename(): string
+    {
+        $randomString = strtoupper(bin2hex(random_bytes(10)));
+
+        return $randomString . '.' .'png';
     }
 }
