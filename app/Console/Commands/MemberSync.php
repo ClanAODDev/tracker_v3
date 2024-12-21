@@ -161,8 +161,7 @@ class MemberSync extends Command
                     $updates[$key] = $newData[$key];
 
                     if ($key === 'rank') {
-                        \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], Rank::from
-                            ($newData[$key])->getLabel()));
+                        \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], Rank::from($newData[$key])->getLabel()));
                         $updates['last_promoted_at'] = now();
                         RankAction::create([
                             'member_id' => $member->id,

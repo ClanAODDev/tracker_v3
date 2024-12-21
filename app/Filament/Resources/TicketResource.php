@@ -86,7 +86,7 @@ class TicketResource extends Resource
             ])
             ->filters([
                 Filter::make('hide_resolved')
-                    ->query(fn(Builder $query): Builder => $query->whereNull('resolved_at'))
+                    ->query(fn (Builder $query): Builder => $query->whereNull('resolved_at'))
                     ->label('Hide resolved')
                     ->default(),
             ])

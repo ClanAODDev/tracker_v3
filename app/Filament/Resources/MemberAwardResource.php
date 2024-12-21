@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MemberAwardResource\Pages;
-use App\Filament\Resources\MemberAwardResource\RelationManagers;
 use App\Models\MemberAward;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class MemberAwardResource extends Resource
 {
@@ -41,8 +38,7 @@ class MemberAwardResource extends Resource
                     Forms\Components\DateTimePicker::make('created_at'),
                     Forms\Components\DateTimePicker::make('updated_at'),
                     Forms\Components\DateTimePicker::make('expires_at'),
-                ])->columns(3)
-
+                ])->columns(3),
 
             ]);
     }
