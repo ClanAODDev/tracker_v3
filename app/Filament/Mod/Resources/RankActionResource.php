@@ -20,8 +20,6 @@ class RankActionResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
-    protected static ?string $navigationParentItem = 'Divisions';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -33,10 +31,11 @@ class RankActionResource extends Resource
                 Forms\Components\Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
-                Select::make('division_id')
-                    ->relationship('division', 'name')
-                    ->label('Division')
-                    ->searchable()
+                Forms\Components\DateTimePicker::make('created_at')
+                    ->default(now())
+                    ->required(),
+                Forms\Components\DateTimePicker::make('updated_at')
+                    ->default(now())
                     ->required(),
             ]);
     }
@@ -49,10 +48,8 @@ class RankActionResource extends Resource
                 Tables\Columns\TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('division.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Date')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -60,7 +57,7 @@ class RankActionResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

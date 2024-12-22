@@ -21,9 +21,7 @@ class LeaveResource extends Resource
 
     protected static ?string $pluralLabel = 'Leaves of Absence';
 
-    protected static ?string $navigationGroup = 'Division';
-
-    protected static ?string $navigationParentItem = 'Divisions';
+    protected static ?string $navigationGroup = 'Moderate';
 
     public static function form(Form $form): Form
     {
@@ -68,13 +66,13 @@ class LeaveResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member_id')
+                Tables\Columns\TextColumn::make('member.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('approver_id')
+                Tables\Columns\TextColumn::make('approver.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('requester_id')
+                Tables\Columns\TextColumn::make('requester.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('reason'),

@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\TransferResource\Pages;
 use App\Models\Transfer;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -32,6 +33,12 @@ class TransferResource extends Resource
                     ->label('Member')
                     ->searchable()
                     ->required(),
+                DateTimePicker::make('created_at')
+                    ->default(now())
+                    ->required(),
+                DateTimePicker::make('updated_at')
+                    ->default(now())
+                    ->required(),
             ]);
     }
 
@@ -53,7 +60,7 @@ class TransferResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MemberAwardResource extends Resource
 {
@@ -16,7 +17,7 @@ class MemberAwardResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static ?string $navigationGroup = 'Moderate';
 
     public static function form(Form $form): Form
     {
@@ -70,8 +71,10 @@ class MemberAwardResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
-                //
+                Tables\Filters\Filter::make('needs approval')
+                    ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
