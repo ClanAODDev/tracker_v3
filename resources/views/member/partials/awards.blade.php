@@ -14,15 +14,20 @@
             @foreach ($member->awards->sortBy('display_order') as $index => $record)
                 <div class="col col-lg-3 col-xl-2 col-sm-6">
                     <a href="#" class="btn btn-default btn-block" style="margin-bottom:20px;">
-                        <div class="panel-body" title="{{ $record->award->description }}" >
+                        <div class="panel-body" title="{{ $record->award->description }}" style="
+                        display:flex; justify-content: space-between; overflow: clip; height:80px;">
                             <img src="{{ asset(Storage::url($record->award->image)) }}"
                                  alt="{{ $record->award->name }}"
-                                 style="overflow: hidden;"
-                                 class="align-self-start pull-left">
-                            <small style="text-align: right; padding-top:10px; " class="pull-right">
-                                <strong><span class="c-white">{{ $record->award->name }}</span></strong> <br/>
-                                <span class="text-muted">{{ $record->created_at->format('M d, Y') }}</span>
-                            </small>
+                                 class="clan-award"
+                            />
+
+                            <div class="col-xs-9 p-0"
+                                 style="height:100%;display:flex;align-items: center;justify-content: center;">
+                                <div class="text-align: right;">
+                                    <span class="c-white">{{ $record->award->name }}</span> <br/>
+                                    <span class="text-muted">{{ $record->created_at->format('M d, Y') }}</span>
+                                </div>
+                            </div>
                         </div>
                     </a>
                 </div>
