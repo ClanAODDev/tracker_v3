@@ -25,6 +25,7 @@ class AwardController extends Controller
         $awards = $awards->active()->withCount('recipients')->with('recipients', 'division')->get();
 
         if ($awards->count() === 0) {
+            $this->showErrorToast('Selected division has no awards assigned. Showing all...');
             return redirect(route('awards.index'));
         }
 
