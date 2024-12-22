@@ -55,8 +55,10 @@ class MemberResource extends Resource
                 Forms\Components\Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
                         ->maxLength(255)
+                        ->readOnly()
                         ->default(null),
                     TextInput::make('discord')
+                        ->readOnly()
                         ->maxLength(191)
                         ->default(null),
                     Select::make('last_voice_status')
@@ -64,6 +66,7 @@ class MemberResource extends Resource
                         ->default(null),
                     TextInput::make('discord_id')
                         ->numeric()
+                        ->readOnly()
                         ->default(null),
                 ])->columns(2),
                 Forms\Components\Section::make('Activity')->schema([
@@ -177,7 +180,7 @@ class MemberResource extends Resource
                     ->label('Assigned CO')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('recruiter_id')
+                Tables\Columns\TextColumn::make('recruiter.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')

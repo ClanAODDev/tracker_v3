@@ -177,7 +177,7 @@ class MemberResource extends Resource
                     ->label('Assigned CO')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('recruiter_id')
+                Tables\Columns\TextColumn::make('recruiter.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')

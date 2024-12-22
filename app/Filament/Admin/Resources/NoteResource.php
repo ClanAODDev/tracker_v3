@@ -45,13 +45,12 @@ class NoteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('forum_thread_id')
+                Tables\Columns\TextColumn::make('body')
+                    ->limit(60),
+                Tables\Columns\TextColumn::make('member.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('author_id')
+                Tables\Columns\TextColumn::make('author.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type'),
