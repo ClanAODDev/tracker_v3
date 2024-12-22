@@ -380,6 +380,11 @@ class Division extends Model
             ->orderBy('created_at', 'desc');
     }
 
+    public function awards()
+    {
+        return $this->hasMany(Award::class);
+    }
+
     /**
      * @return HasMany
      */

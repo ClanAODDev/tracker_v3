@@ -13,9 +13,17 @@ class Award extends Model
 
     public function recipients()
     {
-        return $this->belongsToMany(Member::class, 'award_member', 'award_id', 'member_id')
-            ->using(MemberAward::class)
-            ->withPivot(['reason', 'expires_at'])
-            ->withTimestamps();
+        return $this->belongsToMany(Member::class)
+            ->select('rank', 'name');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class)->select('name');
     }
 }
