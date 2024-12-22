@@ -13,8 +13,8 @@ class Award extends Model
 
     public function recipients()
     {
-        return $this->belongsToMany(Member::class)
-            ->select('rank', 'name');
+        return $this->hasMany(MemberAward::class, 'award_id', 'id')
+            ->with('member');
     }
 
     public function scopeActive($query)
