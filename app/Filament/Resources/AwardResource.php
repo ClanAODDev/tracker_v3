@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AwardResource\Pages;
 use App\Models\Award;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -41,6 +42,10 @@ class AwardResource extends Resource
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(191),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->nullable(),
                 Forms\Components\TextInput::make('display_order')
                     ->required()
                     ->numeric()
