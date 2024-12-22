@@ -55,6 +55,14 @@
     margin: 0;
 }
 
+.member-award-description {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-wrap: wrap
+}
+
 .award-metadata {
     font-weight: 900;
     right: -47px;
