@@ -91,7 +91,10 @@ class AwardResource extends Resource
             ])->defaultSort('display_order')
             ->filters([
                 Tables\Filters\Filter::make('is_active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))
+                    ->query(fn (Builder $query): Builder => $query->where('active', true)),
+                Tables\Filters\SelectFilter::make('division')
+                    ->relationship('division', 'name')
+                    ->multiple(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
