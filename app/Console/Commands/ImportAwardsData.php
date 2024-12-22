@@ -53,6 +53,7 @@ class ImportAwardsData extends Command
             'mapping' => [
                 'award_id' => 'award_id',
                 'member_id' => 'userid',
+                'approved' => true,
                 'reason' => 'issue_reason',
                 'created_at' => 'issue_time',
                 'updated_at' => 'issue_time',
@@ -200,6 +201,6 @@ class ImportAwardsData extends Command
     {
         $randomString = strtoupper(bin2hex(random_bytes(10)));
 
-        return $randomString . '.' .'png';
+        return $randomString . '.' . 'png';
     }
 }
