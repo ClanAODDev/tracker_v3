@@ -38,6 +38,11 @@
     cursor: -webkit-grabbing;
 }
 
+.clan-award {
+    max-width: 60px;
+    max-height: 60px;
+}
+
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
