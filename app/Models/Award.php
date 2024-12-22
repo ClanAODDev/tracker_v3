@@ -14,6 +14,7 @@ class Award extends Model
     public function recipients()
     {
         return $this->hasMany(MemberAward::class, 'award_id', 'id')
+            ->where('approved', true)
             ->with('member');
     }
 
