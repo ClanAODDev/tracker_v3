@@ -14,8 +14,7 @@
             @foreach ($member->awards->sortBy('display_order') as $index => $record)
                 <div class="col col-lg-3 col-xl-2 col-sm-6">
                     <a href="#" class="btn btn-default btn-block" style="margin-bottom:20px;">
-                        <div class="panel-body" title="{{ $record->award->description }}" style="
-                        display:flex; justify-content: space-between; overflow: clip; height:80px;">
+                        <div class="panel-body award-item" title="{{ $record->award->description }}">
                             <img src="{{ asset(Storage::url($record->award->image)) }}"
                                  alt="{{ $record->award->name }}"
                                  class="clan-award"

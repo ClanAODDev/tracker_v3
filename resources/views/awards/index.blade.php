@@ -45,7 +45,7 @@
                                  style="height:100%;display:flex;align-items: center;justify-content: center;">
                                 <div>
                                     <span class="c-white">{{ $award->name }}</span>
-                                    <p style="text-wrap: wrap;margin:0;">
+                                    <p class="award-description">
                                         @if ($award->description)
                                             {{ $award->description }}
                                         @else
@@ -53,8 +53,7 @@
                                         @endif
                                     </p>
 
-                                    <span style="font-weight: 900; right: -47px;bottom: -78px;position: absolute;
-                                    color: rgba(0, 0, 0, .05);font-size: 210px;">{{ $award->recipients_count }}</span>
+                                    <span class="award-metadata">{{ $award->recipients_count }}</span>
 
                                 </div>
 

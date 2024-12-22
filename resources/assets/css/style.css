@@ -43,6 +43,27 @@
     max-height: 60px;
 }
 
+.award-item {
+    display: flex;
+    justify-content: space-between;
+    overflow: clip;
+    height: 80px;
+}
+
+.award-description {
+    text-wrap: wrap;
+    margin: 0;
+}
+
+.award-metadata {
+    font-weight: 900;
+    right: -47px;
+    bottom: -78px;
+    position: absolute;
+    color: rgba(0, 0, 0, .05);
+    font-size: 210px;
+}
+
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
