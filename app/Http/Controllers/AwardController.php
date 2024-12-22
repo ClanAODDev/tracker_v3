@@ -26,6 +26,7 @@ class AwardController extends Controller
 
         if ($awards->count() === 0) {
             $this->showErrorToast('Selected division has no awards assigned. Showing all...');
+
             return redirect(route('awards.index'));
         }
 
