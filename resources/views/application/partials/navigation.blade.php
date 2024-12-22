@@ -140,16 +140,22 @@
     </li>
 
 
-    @if(Auth::user()->isRole('admin') || Auth::user()->can('manage', \App\Models\MemberRequest::class))
+    @if(Auth::user()->isRole(['admin', 'sr_ldr']) || Auth::user()->can('manage', \App\Models\MemberRequest::class))
         <li class="nav-category">
             Admin
         </li>
         @if(Auth::user()->isRole('admin'))
-            <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
-                <a href="/admin">Admin CP</a>
-            </li>
             <li>
                 <a href="{{ url('/log-viewer') }}">Log Viewer</a>
+            </li>
+            <li>
+                <a href="/admin">Admin CP</a>
+            </li>
+        @endif
+
+        @if(Auth::user()->isRole('sr_ldr'))
+            <li>
+                <a href="/mod">Mod CP</a>
             </li>
         @endif
         <li class="{{ set_active('admin/member-requests') }}">
@@ -215,7 +221,7 @@
     </li>
 
     <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
-                    class="fab
+                        class="fab
 fa-lg
 fa-github"></i></span></a></li>
 </ul>

@@ -118,7 +118,9 @@ class ImportAwardsData extends Command
             try {
                 $data = [];
                 foreach ($mapping as $field => $column) {
-                    $data[$field] = $this->transformValue($field, $row[$headerMap[$column]]);
+                    $data[$field] = is_bool($column)
+                        ? $column
+                        : $this->transformValue($field, $row[$headerMap[$column]]);
                 }
 
                 $model::create($data);
