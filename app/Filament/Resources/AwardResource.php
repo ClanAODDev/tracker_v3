@@ -43,10 +43,13 @@ class AwardResource extends Resource
                     ->default(100),
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\Toggle::make('active')
+                        ->default(true)
                         ->required(),
                     Forms\Components\Toggle::make('allow_recommendation')
+                        ->default(false)
                         ->required(),
                     Forms\Components\Toggle::make('allow_request')
+                        ->default(false)
                         ->required(),
                 ])->columns(3),
             ]);
@@ -57,7 +60,7 @@ class AwardResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\ImageColumn::make('image')->label(''),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextInputColumn::make('name')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
@@ -67,6 +70,7 @@ class AwardResource extends Resource
                 Tables\Columns\TextInputColumn::make('display_order')
                     ->rules(['required', 'numeric'])
                     ->sortable(),
+                Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
