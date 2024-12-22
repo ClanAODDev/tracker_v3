@@ -25,6 +25,10 @@ class AwardResource extends Resource
             ->schema([
                 Forms\Components\FileUpload::make('image')
                     ->directory('awards')
+                    ->rules(['dimensions:width=60,height=60'])
+                    ->validationMessages([
+                        'dimensions' => 'Award image size must be 60x60.',
+                    ])
                     ->avatar()
                     ->columnSpanFull()
                     ->alignCenter()
@@ -59,7 +63,7 @@ class AwardResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')->label(''),
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextInputColumn::make('name')
                     ->sortable()
                     ->searchable(),
@@ -68,7 +72,7 @@ class AwardResource extends Resource
                     ->limit(45)
                     ->toggleable(),
                 Tables\Columns\TextInputColumn::make('display_order')
-                    ->rules(['required', 'numeric'])
+                    ->rules(['required', 'numeric', ''])
                     ->sortable(),
                 Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('created_at')
