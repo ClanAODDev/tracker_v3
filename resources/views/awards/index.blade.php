@@ -18,7 +18,7 @@
 
     <div class="container-fluid">
         <h3>
-            Awards and Achievements
+            Achievements
 
             @if ($division = request('division'))
                 - {{ ucwords($division) }}

@@ -2395,7 +2395,6 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 .view-header,
 .division-header {
     min-height: 50px;
-    padding: 0 15px;
 }
 
 .view-header .header-icon {
@@ -2458,10 +2457,6 @@ h6:hover .heading-permalink,
 .heading-permalink:hover {
     text-decoration: none;
     color: #777;
-}
-
-p {
-    margin: 0 0 20px;
 }
 
 .pagination > li > a,
