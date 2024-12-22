@@ -73,28 +73,34 @@
     </li>
 
     <li class="{{ set_active('reports/*') }}">
-        <a href="#reports" data-toggle="collapse" aria-expanded="false">
-            Clan Reports
+        <a href="#clan-information" data-toggle="collapse" aria-expanded="false">
+            Clan Information
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
-        <ul id="reports" class="nav nav-second {{ request()->is('reports/*') ? 'expanded' : 'collapse' }}">
+        <ul id="clan-information" class="nav nav-second {{ request()->is('clan/*') ? 'expanded' : 'collapse' }}">
 
-            <li class="{{ set_active('reports/leadership') }}">
-                <a href="{{ route('leadership') }}">Leadership Structure</a>
+            <li class="{{ set_active('clan/awards') }}">
+                <a href="{{ route('awards.index') }}">Achievements</a>
             </li>
 
-            <li class="{{ set_active('reports/clan-census') }}">
+            <li class="{{ set_active('clan/census') }}">
                 <a href="{{ route('reports.clan-census') }}">Clan Census Data</a>
             </li>
-            <li class="{{ set_active('reports/outstanding-inactives') }}">
-                <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
-            </li>
+
             @if (auth()->user()->isRole('admin'))
-                <li class="{{ set_active('reports/division-turnover') }}">
+                <li class="{{ set_active('clan/division-turnover') }}">
                     <a href="{{ route('reports.division-turnover') }}">Division Turnover</a>
                 </li>
             @endif
+
+            <li class="{{ set_active('clan/leadership') }}">
+                <a href="{{ route('leadership') }}">Leadership Structure</a>
+            </li>
+
+            <li class="{{ set_active('clan/outstanding-inactives') }}">
+                <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
+            </li>
         </ul>
     </li>
 

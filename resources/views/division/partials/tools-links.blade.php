@@ -90,3 +90,7 @@
         <i class="fa fa-users text-accent"></i> Member Requests
     </a>
 @endcan
+
+<a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="btn btn-default">
+    <i class="fa fa-trophy text-accent"></i> Awards
+</a>
