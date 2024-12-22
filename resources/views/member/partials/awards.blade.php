@@ -12,12 +12,12 @@
     <div class="row">
         <div class="row">
             @foreach ($member->awards->sortBy('display_order') as $index => $record)
-                <div class="col-lg-3">
+                <div class="col col-lg-3 col-xl-2 col-sm-6">
                     <a href="#" class="btn btn-default btn-block" style="margin-bottom:20px;">
-                        <div class="panel-body" title="{{ $record->award->description }}">
+                        <div class="panel-body" title="{{ $record->award->description }}" >
                             <img src="{{ asset(Storage::url($record->award->image)) }}"
                                  alt="{{ $record->award->name }}"
-                                 style="overflow: hidden"
+                                 style="overflow: hidden;"
                                  class="align-self-start pull-left">
                             <small style="text-align: right; padding-top:10px; " class="pull-right">
                                 <strong><span class="c-white">{{ $record->award->name }}</span></strong> <br/>
