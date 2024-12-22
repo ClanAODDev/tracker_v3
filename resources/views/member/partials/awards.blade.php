@@ -1,6 +1,6 @@
 @if ($member->awards->count())
     <h4 class="m-t-xl">
-        Awards
+        Achievements
 
         {{--    @can ('manageIngameHandles', $member)--}}
         {{--        <a href="{{ route('member.edit-handles', $member->clan_id) }}" class="btn btn-default pull-right">--}}
@@ -20,8 +20,8 @@
                                  style="overflow: hidden"
                                  class="align-self-start pull-left">
                             <small style="text-align: right; padding-top:10px; " class="pull-right">
-                                <span class="c-white">{{ $record->award->name }}</span> <br/>
-                                <span class="text-muted">Earned {{ $record->created_at->format('M d, Y') }}</span>
+                                <strong><span class="c-white">{{ $record->award->name }}</span></strong> <br/>
+                                <span class="text-muted">{{ $record->created_at->format('M d, Y') }}</span>
                             </small>
                         </div>
                     </a>
