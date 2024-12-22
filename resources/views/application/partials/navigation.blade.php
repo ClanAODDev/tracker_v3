@@ -72,7 +72,7 @@
         <a href="{{ route('memberSearch') }}">Search</a>
     </li>
 
-    <li class="{{ set_active('reports/*') }}">
+    <li class="{{ set_active('clan/*') }}">
         <a href="#clan-information" data-toggle="collapse" aria-expanded="false">
             Clan Information
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
