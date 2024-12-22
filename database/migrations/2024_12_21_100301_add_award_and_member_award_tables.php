@@ -28,6 +28,7 @@ return new class extends Migration
             $table->id();
             $table->integer('award_id');
             $table->integer('member_id');
+            $table->boolean('approved')->default(false);
             $table->string('reason')->nullable();
             $table->timestamp('expires_at')->nullable()->comment('For temporary awards');
             $table->timestamps();
