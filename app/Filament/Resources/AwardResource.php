@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class AwardResource extends Resource
 {
@@ -61,16 +62,11 @@ class AwardResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable()
-                    ->toggleable()->hidden(),
-                Tables\Columns\TextColumn::make('display_order')
-                    ->numeric()
+                    ->limit(45)
+                    ->toggleable(),
+                Tables\Columns\TextInputColumn::make('display_order')
+                    ->rules(['required', 'numeric'])
                     ->sortable(),
-                Tables\Columns\IconColumn::make('active')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('allow_recommendation')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('allow_request')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -79,9 +75,10 @@ class AwardResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->defaultSort('display_order')
             ->filters([
-                //
+                Tables\Filters\Filter::make('is_active')
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -96,7 +93,7 @@ class AwardResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 
