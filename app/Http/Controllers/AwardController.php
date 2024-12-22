@@ -32,11 +32,6 @@ class AwardController extends Controller
         return view('awards.index')->with(compact('awards'));
     }
 
-    public function recommend(Award $award): Award
-    {
-        return $award;
-    }
-
     public function storeRecommendation(Award $award)
     {
         // stub
@@ -44,6 +39,6 @@ class AwardController extends Controller
 
     public function show(Award $award)
     {
-        return $award;
+        return view('awards.show', compact('award'));
     }
 }
