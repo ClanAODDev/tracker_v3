@@ -22,21 +22,21 @@ class MemberAwardResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('award_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('award_id')
+                    ->relationship('award', 'name'),
 
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('member_id')
+                    ->searchable()
+                    ->relationship('member', 'name'),
+
                 Forms\Components\Textarea::make('reason')
                     ->columnSpanFull()
                     ->maxLength(191)
                     ->default(null),
 
                 Forms\Components\Section::make('Metadata')->schema([
-                    Forms\Components\DateTimePicker::make('created_at'),
-                    Forms\Components\DateTimePicker::make('updated_at'),
+                    Forms\Components\DateTimePicker::make('created_at')->default(now()),
+                    Forms\Components\DateTimePicker::make('updated_at')->default(now()),
                     Forms\Components\DateTimePicker::make('expires_at'),
                 ])->columns(3),
 
