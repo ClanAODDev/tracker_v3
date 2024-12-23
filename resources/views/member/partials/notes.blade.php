@@ -24,7 +24,6 @@
     </div>
 @endif
 
-
 @can ('create', App\Models\Note::class)
     <div class="modal fade" id="create-member-note">
         <div class="modal-dialog" role="document" style="background-color: #000;">

@@ -18,7 +18,6 @@ class NoteResource extends Resource
 
     protected static ?string $navigationGroup = 'Moderate';
 
-
     public static function form(Form $form): Form
     {
         return $form
@@ -45,7 +44,7 @@ class NoteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('body')
-                ->limit(60),
+                    ->limit(60),
                 Tables\Columns\TextColumn::make('member.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('author.name')

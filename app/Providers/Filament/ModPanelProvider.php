@@ -38,7 +38,6 @@ class ModPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Mod/Widgets'), for: 'App\\Filament\\Mod\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                //                Widgets\FilamentInfoWidget::class,
             ])
             ->navigationItems([
                 NavigationItem::make('Back to Tracker')
