@@ -54,9 +54,6 @@ class AwardResource extends Resource
                     Forms\Components\Toggle::make('active')
                         ->default(true)
                         ->required(),
-                    Forms\Components\Toggle::make('allow_recommendation')
-                        ->default(false)
-                        ->required(),
                     Forms\Components\Toggle::make('allow_request')
                         ->default(false)
                         ->required(),

@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('display_order')->default(100);
             $table->integer('division_id')->nullable();
             $table->boolean('active')->default(true)->comment('For awards given during certain periods of time');
-            $table->boolean('allow_recommendation')->default(false);
             $table->boolean('allow_request')->default(false);
             $table->timestamps();
         });
