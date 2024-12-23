@@ -18,6 +18,8 @@
 
     <div class="container-fluid">
 
+        {!! Breadcrumbs::render('awards', $award) !!}
+
         <div style="display:flex;align-items: center;justify-content: center;margin-top: 0;">
             <img src="{{ asset(Storage::url($award->image)) }}"
                  class="clan-award hidden-xs hidden-sm"
@@ -34,6 +36,7 @@
                 <div>
                     <a href="#" data-toggle="modal" data-target="#award_modal"
                        title="Request this award for yourself or someone else"
+                       style="margin-left:50px;"
                        class="btn btn-default">Request Award</a>
                 </div>
             @endif
