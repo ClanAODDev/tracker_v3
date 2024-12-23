@@ -61,7 +61,7 @@
         <thead>
         <tr>
             <th>Member</th>
-            <th>Awarded on</th>
+            <th class="text-right">Awarded on</th>
         </tr>
         </thead>
         @foreach ($award->recipients as $record)
@@ -69,7 +69,7 @@
                 <td><a href="{{ route('member', $record->member->getUrlParams()) }}">
                         {{ $record->member->name }}
                     </a></td>
-                <td>{{ $record->created_at->format('Y-m-d') }}</td>
+                <td class="text-right">{{ $record->created_at->format('Y-m-d') }}</td>
             </tr>
         @endforeach
     </table>
