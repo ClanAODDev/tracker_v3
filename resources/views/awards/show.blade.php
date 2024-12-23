@@ -60,27 +60,33 @@
     <hr>
 
     @if ($award->recipients->count())
-        <h4>Award Recipients</h4>
-        <table class="table table-hover basic-datatable">
-            <thead>
-            <tr>
-                <th>Member</th>
-                <th class="text-right">Awarded on</th>
-            </tr>
-            </thead>
-            @foreach ($award->recipients as $record)
-                <tr>
-                    <td><a href="{{ route('member', $record->member->getUrlParams()) }}">
-                            {{ $record->member->name }}
-                        </a></td>
-                    <td class="text-right">{{ $record->created_at->format('Y-m-d') }}</td>
-                </tr>
-            @endforeach
-        </table>
+        <div class="panel panel-filled">
+            <div class="panel-body">
+                <h4 class="text-center text-uppercase">Award Recipients</h4>
+                <table class="table table-hover basic-datatable">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Member</th>
+                        <th class="text-center">Awarded on</th>
+                    </tr>
+                    </thead>
+                    @foreach ($award->recipients as $record)
+                        <tr>
+                            <td class="text-center"><a href="{{ route('member', $record->member->getUrlParams()) }}">
+                                    {{ $record->member->name }}
+                                </a></td>
+                            <td class="text-center">{{ $record->created_at->format('Y-m-d') }}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
+        </div>
+
     @else
         <h3 class="text-muted text-center">No Recipients</h3>
         <p class="text-center">This award remains elusive. Perhaps you are up to the task?</p>
     @endif
+
 
     @include('awards.partials.award-form')
 
