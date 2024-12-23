@@ -80,7 +80,7 @@
 
         <ul id="clan-information" class="nav nav-second {{ request()->is('clan/*') ? 'expanded' : 'collapse' }}">
 
-            <li class="{{ set_active('clan/awards') }}">
+            <li class="{{ set_active(['clan/awards', 'clan/awards/*']) }}">
                 <a href="{{ route('awards.index') }}">Achievements</a>
             </li>
 
