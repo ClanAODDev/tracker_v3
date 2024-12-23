@@ -30,7 +30,7 @@
     @endif
 @endcan
 
-{{-- @if($division->outstandingInactives)
+ @if($division->outstandingInactives)
     <div class="alert alert-default">
         There are
         <code>{{ $division->outstandingInactives }}</code> outstanding
@@ -39,7 +39,7 @@
         except where a leave of absence exists. Please
         <a href="{{ route('division.inactive-members', $division) }}">process these members</a> out of AOD.
     </div>
-@endif --}}
+@endif
 
 @if ($division->members()->misconfiguredDiscord()->count())
     <div class="alert alert-default">
