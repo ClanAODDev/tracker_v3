@@ -57,7 +57,7 @@ class AwardResource extends Resource
                     Forms\Components\Toggle::make('allow_request')
                         ->default(false)
                         ->required(),
-                ])->columns(3),
+                ])->columns(2),
             ]);
     }
 
