@@ -56,7 +56,7 @@
                                         @endif
                                     </p>
 
-                                    <span class="award-metadata">{{ $award->recipients_count }}</span>
+                                    <span class="award-metadata" style="">{{ $award->recipients_count }}</span>
 
                                 </div>
 
