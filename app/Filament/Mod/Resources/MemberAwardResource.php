@@ -56,7 +56,7 @@ class MemberAwardResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('member.name')->searchable(),
                 Tables\Columns\TextColumn::make('reason')
-                    ->searchable(),
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('division.name')
                     ->sortable(),
@@ -78,7 +78,7 @@ class MemberAwardResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\Filter::make('needs approval')
-                    ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('approved', false))->default(),
                 SelectFilter::make('division')->relationship('division', 'name'),
             ])
             ->actions([

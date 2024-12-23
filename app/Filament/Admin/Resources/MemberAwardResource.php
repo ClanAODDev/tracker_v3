@@ -55,7 +55,7 @@ class MemberAwardResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('member.name')->searchable(),
                 Tables\Columns\TextColumn::make('reason')
-                    ->searchable(),
+                    ->toggleable(),
 
                 Tables\Columns\TextColumn::make('division.name')
                     ->sortable(),
