@@ -18,9 +18,10 @@
 
     <div class="container-fluid">
 
-        <div style="display:flex;align-items: center;justify-content: space-around;margin-top: 0;">
+        <div style="display:flex;align-items: center;justify-content: center;margin-top: 0;">
             <img src="{{ asset(Storage::url($award->image)) }}"
-                 class="clan-award"
+                 class="clan-award hidden-xs hidden-sm"
+                 style="margin-right:50px;"
                  alt="{{ $award->name }}"
             />
 
@@ -41,6 +42,10 @@
     </div>
 
     <div class="visible-xs visible-sm text-center">
+        <img src="{{ asset(Storage::url($award->image)) }}"
+             class="clan-award"
+             alt="{{ $award->name }}"
+        />
         <hr>
         <h3>{{ $award->name }}</h3>
         <p>{{ $award->description }}</p>
