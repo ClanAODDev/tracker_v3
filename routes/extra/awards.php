@@ -50,10 +50,10 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         $baseHeight = imagesy($baseImage);
 
         $textOffset = filter_var(request('text-offset'), FILTER_VALIDATE_INT,
-            ['options' => ['min_range' => 1]]) ?: 20;
+            ['options' => ['min_range' => 1, 'max_range' => 45]]) ?: 20;
 
         $imageVerticalShift = filter_var(request('image-offset'), FILTER_VALIDATE_INT,
-            ['options' => ['min_range' => 1]]) ?: 20;
+            ['options' => ['min_range' => 1, 'max_range' => 45]]) ?: 20;
 
         $fontType = in_array(request('font'), ['ttf', 'bitmap'], true)
             ? request('font')
