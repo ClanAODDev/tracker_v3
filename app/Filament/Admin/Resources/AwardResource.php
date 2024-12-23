@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\AwardResource\Pages;
+use App\Filament\Admin\Resources\MemberAwardResource\RelationManagers\MemberAwardsRelationManager;
 use App\Models\Award;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -119,7 +120,7 @@ class AwardResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+            MemberAwardsRelationManager::class,
         ];
     }
 

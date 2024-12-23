@@ -41,8 +41,7 @@ class MemberAwardResource extends Resource
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\DateTimePicker::make('created_at')->default(now()),
                     Forms\Components\DateTimePicker::make('updated_at')->default(now()),
-                    Forms\Components\DateTimePicker::make('expires_at'),
-                ])->columns(3),
+                ])->columns(),
 
             ]);
     }
@@ -62,10 +61,6 @@ class MemberAwardResource extends Resource
                     ->sortable(),
 
                 Tables\Columns\ToggleColumn::make('approved'),
-
-                Tables\Columns\TextColumn::make('expires_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
