@@ -39,7 +39,7 @@
                              style="height:160px; overflow: hidden">
                             <div class="col-xs-3 award-image">
                                 <img src="{{ asset(Storage::url($award->image)) }}"
-                                     class="clan-award-zoom"
+                                     class="clan-award-zoom clan-award"
                                      alt="{{ $award->name }}"
                                 />
                             </div>
