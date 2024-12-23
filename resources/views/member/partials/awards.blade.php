@@ -1,5 +1,5 @@
 @if ($member->awards->count())
-    <h4 class="m-t-xl">Achievements</h4>
+    <h4 class="m-t-xl" id="achievements">Achievements</h4>
     <hr/>
     <div class="row">
 
