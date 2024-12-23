@@ -38,10 +38,13 @@
     cursor: -webkit-grabbing;
 }
 
+.clan-award-zoom {
+    zoom: 1.2;
+}
+
 .clan-award {
     max-width: 60px;
     max-height: 60px;
-    zoom: 1.2;
     align-self: center;
 }
 

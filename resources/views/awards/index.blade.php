@@ -39,7 +39,7 @@
                              style="height:160px; overflow: hidden">
                             <div class="col-xs-3 award-image">
                                 <img src="{{ asset(Storage::url($award->image)) }}"
-                                     class="clan-award"
+                                     class="clan-award-zoom"
                                      alt="{{ $award->name }}"
                                 />
                             </div>
@@ -54,7 +54,7 @@
                                         @endif
                                     </p>
 
-                                    <span class="award-metadata" style="">{{ $award->recipients_count }}</span>
+                                    <span class="award-metadata award-{{ $award->id }}">{{ $award->recipients_count }}</span>
 
                                 </div>
 

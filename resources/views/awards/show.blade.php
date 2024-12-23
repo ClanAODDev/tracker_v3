@@ -44,7 +44,7 @@
 
     <div class="visible-xs visible-sm text-center">
         <img src="{{ asset(Storage::url($award->image)) }}"
-             class="clan-award"
+             class="clan-award clan-award-zoom"
              alt="{{ $award->name }}"
         />
         <hr>
