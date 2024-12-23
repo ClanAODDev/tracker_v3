@@ -44,6 +44,20 @@
     zoom: 1.3;
 }
 
+.award-image {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.award-display-meta {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .award-item {
     display: flex;
     justify-content: space-between;

@@ -37,15 +37,13 @@
                     <a class="panel panel-filled" href="{{ route('awards.show', $award) }}">
                         <div class="panel-body"
                              style="height:160px; overflow: hidden">
-                            <div class="col-xs-3"
-                                 style="height:100%;display:flex;justify-content: center;align-items: center">
+                            <div class="col-xs-3 award-image">
                                 <img src="{{ asset(Storage::url($award->image)) }}"
                                      class="clan-award"
                                      alt="{{ $award->name }}"
                                 />
                             </div>
-                            <div class="col-xs-9 p-0 text-center"
-                                 style="height:100%;display:flex;align-items: center;justify-content: center;">
+                            <div class="col-xs-9 p-0 text-center award-display-meta">
                                 <div>
                                     <span class="c-white">{{ $award->name }}</span>
                                     <p class="award-description">
