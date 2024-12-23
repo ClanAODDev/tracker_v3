@@ -284,10 +284,8 @@ function percent($old_member_count, $new_member_count)
 
 /**
  * Filament member awards table filter
- * @param $division_id
- * @return string
  */
-function reviewDivisionAwardsQuery($division_id)
+function reviewDivisionAwardsQuery($division_id): string
 {
     $params = [
         'tableFilters' => [
