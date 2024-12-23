@@ -33,12 +33,10 @@
             </div>
 
             @if ($award->allow_request)
-                <div>
-                    <a href="#" data-toggle="modal" data-target="#award_modal"
-                       title="Request this award for yourself or someone else"
-                       style="margin-left:50px;"
-                       class="btn btn-default">Request Award</a>
-                </div>
+                <a href="#" data-toggle="modal" data-target="#award_modal"
+                   title="Request this award for yourself or someone else"
+                   style="margin-left:50px;"
+                   class="btn btn-default hidden-xs hidden-sm">Request Award</a>
             @endif
 
         </div>
@@ -52,8 +50,14 @@
         <hr>
         <h3>{{ $award->name }}</h3>
         <p>{{ $award->description }}</p>
-
+        @if ($award->allow_request)
+            <a href="#" data-toggle="modal" data-target="#award_modal"
+               title="Request this award for yourself or someone else"
+               class="btn btn-default m-t-md">Request Award</a>
+        @endif
     </div>
+
+
 
     <hr>
 
