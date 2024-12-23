@@ -18,7 +18,7 @@
 
     <div class="container-fluid">
 
-        {!! Breadcrumbs::render('awards', $award) !!}
+        {!! Breadcrumbs::render('awards.show', $award) !!}
 
         <div style="display:flex;align-items: center;justify-content: center;margin-top: 0;">
             <img src="{{ asset(Storage::url($award->image)) }}"

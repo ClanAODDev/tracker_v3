@@ -17,6 +17,9 @@
     @endcomponent
 
     <div class="container-fluid">
+
+        {!! Breadcrumbs::render('awards.index') !!}
+
         <h3>
             Achievements
 
