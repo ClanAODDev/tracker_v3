@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class AwardResource extends Resource
 {
@@ -100,6 +101,18 @@ class AwardResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                Tables\Actions\BulkAction::make('update_division_id')
+                    ->label('Mass assign to division')
+                    ->form([
+                        Forms\Components\Select::make('division_id')
+                            ->relationship('division', 'name')
+                            ->required(),
+                    ])
+                    ->action(function (Collection $records, array $data) {
+                        $records->each(fn ($record) => $record->update(['division_id' => $data['division_id']]));
+                    })
+                    ->icon('heroicon-o-pencil')
+                    ->deselectRecordsAfterCompletion(),
             ]);
     }
 
