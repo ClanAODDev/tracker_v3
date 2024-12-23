@@ -24,7 +24,7 @@
             Achievements
 
             @if ($division = request('division'))
-                - {{ ucwords($division) }}
+                - {{ ucwords(str_replace('-', ' ', $division)) }}
             @endif
         </h3>
         <p>Stand out as a member of the community by earning one or more of the awards listed below.</p>
