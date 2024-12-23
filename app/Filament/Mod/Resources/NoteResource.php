@@ -28,12 +28,12 @@ class NoteResource extends Resource
                 Forms\Components\TextInput::make('forum_thread_id')
                     ->numeric()
                     ->default(null),
-                Forms\Components\TextInput::make('member_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('author_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('member')
+                    ->relationship('member', 'name')
+                    ->searchable(),
+                Forms\Components\Select::make('author')
+                    ->relationship('author', 'name')
+                    ->searchable(),
                 Forms\Components\TextInput::make('type')
                     ->required(),
             ]);
