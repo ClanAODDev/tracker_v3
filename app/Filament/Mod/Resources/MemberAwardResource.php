@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -57,6 +58,9 @@ class MemberAwardResource extends Resource
                 Tables\Columns\TextColumn::make('reason')
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('division.name')
+                    ->sortable(),
+
                 Tables\Columns\ToggleColumn::make('approved'),
 
                 Tables\Columns\TextColumn::make('expires_at')
@@ -74,7 +78,8 @@ class MemberAwardResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\Filter::make('needs approval')
-                    ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('approved', false))->default(),
+                SelectFilter::make('division')->relationship('division', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

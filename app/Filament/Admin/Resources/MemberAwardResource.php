@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class MemberAwardResource extends Resource
@@ -55,6 +56,10 @@ class MemberAwardResource extends Resource
                 Tables\Columns\TextColumn::make('member.name')->searchable(),
                 Tables\Columns\TextColumn::make('reason')
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('division.name')
+                    ->sortable(),
+
                 Tables\Columns\ToggleColumn::make('approved'),
                 Tables\Columns\TextColumn::make('expires_at')
                     ->dateTime()
@@ -69,7 +74,7 @@ class MemberAwardResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('division')->relationship('division', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -283,6 +283,27 @@ function percent($old_member_count, $new_member_count)
 }
 
 /**
+ * Filament member awards table filter
+ * @param $division_id
+ * @return string
+ */
+function reviewDivisionAwardsQuery($division_id)
+{
+    $params = [
+        'tableFilters' => [
+            'needs approval' => [
+                'isActive' => true,
+            ],
+            'division' => [
+                'value' => $division_id,
+            ],
+        ],
+    ];
+
+    return '?' . http_build_query($params);
+}
+
+/**
  * @return string
  */
 function approveMemberPath(MemberRequest $memberRequest)

@@ -30,7 +30,7 @@
     @endif
 @endcan
 
- @if($division->outstandingInactives)
+@if($division->outstandingInactives && auth()->user()->isRole('sr_ldr'))
     <div class="alert alert-default">
         There are
         <code>{{ $division->outstandingInactives }}</code> outstanding
@@ -41,7 +41,17 @@
     </div>
 @endif
 
-@if ($division->members()->misconfiguredDiscord()->count())
+@if($division->unapproved_awards_count && auth()->user()->isRole('sr_ldr'))
+    <div class="alert alert-default">
+        <i class="fa fa-trophy fa-lg c-white"></i> You have <code>{{ $division->unapproved_awards_count }}</code>
+        pending award {{ str('request')->plural($division->unapproved_awards_count) }}!
+
+        <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id)
+        }}">Review</a>
+    </div>
+@endif
+
+@if ($division->members()->misconfiguredDiscord()->count() && auth()->user()->isRole(['sr_ldr', 'jr_ldr']))
     <div class="alert alert-default">
         There are assigned members with voice comms issues. Please review the
         <a href="{{ route('division.voice-report', $division->slug) }}">Voice Comms Report</a>.

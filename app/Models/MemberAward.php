@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class MemberAward extends Model
 {
@@ -13,6 +14,11 @@ class MemberAward extends Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+    }
+
+    public function division()
+    {
+        return $this->hasManyThrough(Division::class, Award::class, 'id', 'id', 'award_id', 'division_id');
     }
 
     public function award()

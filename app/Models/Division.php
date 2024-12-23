@@ -88,7 +88,7 @@ class Division extends Model
      */
     protected $hidden = ['structure'];
 
-    protected $withCount = ['sergeants', 'members'];
+    protected $withCount = ['sergeants', 'members', 'unapprovedAwards'];
 
     /**
      * @var array
@@ -374,15 +374,25 @@ class Division extends Model
         return $this->shutdown_at;
     }
 
-    public function transfers()
+    public function transfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'division_id')
             ->orderBy('created_at', 'desc');
     }
 
-    public function awards()
+    public function awards(): HasMany
     {
         return $this->hasMany(Award::class);
+    }
+
+    public function memberAwards(): HasManyThrough
+    {
+        return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id');
+    }
+
+    public function unapprovedAwards()
+    {
+        return $this->memberAwards()->where('approved', false);
     }
 
     /**
