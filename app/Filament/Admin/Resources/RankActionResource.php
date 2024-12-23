@@ -33,11 +33,6 @@ class RankActionResource extends Resource
                 Forms\Components\Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
-                Select::make('division_id')
-                    ->relationship('division', 'name')
-                    ->label('Division')
-                    ->searchable()
-                    ->required(),
             ]);
     }
 
@@ -49,9 +44,6 @@ class RankActionResource extends Resource
                 Tables\Columns\TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('division.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
