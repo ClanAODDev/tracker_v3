@@ -25,6 +25,6 @@ class Award extends Model
 
     public function division()
     {
-        return $this->belongsTo(Division::class)->select('id', 'name');
+        return $this->belongsTo(Division::class)->select('id', 'name', 'slug');
     }
 }
