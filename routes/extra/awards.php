@@ -42,7 +42,7 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         $selectedFiles = collect($awards)
             ->take($awardCount)
             ->map(fn($path, $name) => [
-                'path' => Storage::path('public/' . $path),
+                'path' => Storage::path('public/'.$path),
                 'name' => $name,
             ])
             ->values()
@@ -57,11 +57,17 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         $textOffset = 20;
         $imageVerticalShift = 20;
 
+        $fontType = in_array(request('font'), ['ttf', 'bitmap'], true)
+            ? request('font')
+            : 'ttf';
+
         // Calculate spacing and starting x-coordinate for centering
         $spacing = ($baseWidth - ($awardCount * $imageWidth)) / ($awardCount + 1);
         $x = $spacing;
 
-        $maxTextWidth = 110;
+        $maxTextWidth = filter_var(request('text-width'), FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]]) ?: 100;
+
 
         foreach ($selectedFiles as $fileData) {
             $x = placeImageAndText(
@@ -73,7 +79,7 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
                 $textOffset,
                 $baseHeight,
                 $fonts,
-                'ttf', // or bitmap
+                $fontType,
                 $spacing,
                 $maxTextWidth,
                 $imageVerticalShift
@@ -88,9 +94,20 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
     }
 });
 
-function placeImageAndText($baseImage, $fileData, $x, $imageWidth, $imageHeight, $textOffset, $baseHeight, $fonts,
-    $mode, $spacing, $maxTextWidth, $imageVerticalShift)
-{
+function placeImageAndText(
+    $baseImage,
+    $fileData,
+    $x,
+    $imageWidth,
+    $imageHeight,
+    $textOffset,
+    $baseHeight,
+    $fonts,
+    $mode,
+    $spacing,
+    $maxTextWidth,
+    $imageVerticalShift
+) {
     $filePath = $fileData['path'];
     $awardName = $fileData['name'];
 
@@ -129,12 +146,12 @@ function placeImageAndText($baseImage, $fileData, $x, $imageWidth, $imageHeight,
     return $x + $imageWidth + $spacing;
 }
 
-function renderText($image, $fonts, $mode, $font, $text, $x, $y, $color, $maxWidth, $fontSize = 9)
+function renderText($image, $fonts, $mode, $font, $text, $x, $y, $color, $maxWidth, $fontSize = 8)
 {
     if ($mode === 'bitmap') {
         wrapText($image, $font, $text, $x, $y, $color, $maxWidth);
     } elseif ($mode === 'ttf') {
-        wrapTextTtf($image, $fonts['big'], $text, $x, $y, $color, $maxWidth, $fontSize);
+        wrapTextTtf($image, $fonts['tiny'], $text, $x, $y, $color, $maxWidth, $fontSize);
     }
 }
 
