@@ -5,9 +5,11 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\ActivityResource\Pages;
 use App\Models\Activity;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class ActivityResource extends Resource
@@ -31,12 +33,14 @@ class ActivityResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('division_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->label('User')
+                    ->required(),
+                Select::make('division_id')
+                    ->relationship('division', 'name')
+                    ->label('Division')
+                    ->required(),
             ]);
     }
 
@@ -44,17 +48,15 @@ class ActivityResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('subject_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('subject.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subject_type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('user.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('division_id')
+                Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -67,7 +69,9 @@ class ActivityResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('name')->options(
+                    Activity::query()->distinct()->pluck('name', 'name')
+                )
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
