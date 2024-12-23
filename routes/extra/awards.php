@@ -19,36 +19,31 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         $baseImagePath = public_path('images/dynamic-images/bgs/awards_base_image.png');
         abort_unless(file_exists($baseImagePath), 404, 'Base image not found.');
 
-        // Load the base image
         $baseImage = imagecreatefrompng($baseImagePath);
         imagesavealpha($baseImage, true);
 
-        // Fetch awards for the member
         $awards = \App\Models\MemberAward::where('member_id', $member->clan_id)
             ->orderByDesc('created_at')
             ->get()
             ->pluck('award.image', 'award.name')
             ->toArray();
 
-        $awardCount = request()->get('award_count', 4); // Default to 4 awards
-        $awardCount = min(max((int) $awardCount, 1), 4); // Clamp between 1 and 4
+        $awardCount = request()->get('award_count', 4);
+        $awardCount = min(max((int) $awardCount, 1), 4);
 
-        // Ensure there are enough awards to display
         if (count($awards) < $awardCount) {
             gracefulFail();
         }
 
-        // Select random awards based on the requested count
         $selectedFiles = collect($awards)
             ->take($awardCount)
-            ->map(fn($path, $name) => [
-                'path' => Storage::path('public/'.$path),
+            ->map(fn ($path, $name) => [
+                'path' => Storage::path('public/' . $path),
                 'name' => $name,
             ])
             ->values()
             ->toArray();
 
-        // Define dimensions
         $imageWidth = 60;
         $imageHeight = 60;
         $baseWidth = imagesx($baseImage);
@@ -61,13 +56,11 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
             ? request('font')
             : 'ttf';
 
-        // Calculate spacing and starting x-coordinate for centering
         $spacing = ($baseWidth - ($awardCount * $imageWidth)) / ($awardCount + 1);
         $x = $spacing;
 
         $maxTextWidth = filter_var(request('text-width'), FILTER_VALIDATE_INT,
             ['options' => ['min_range' => 1]]) ?: 100;
-
 
         foreach ($selectedFiles as $fileData) {
             $x = placeImageAndText(
@@ -201,8 +194,8 @@ function wrapText($image, $font, $text, $x, $y, $color, $maxWidth)
     $currentLine = '';
 
     foreach ($words as $word) {
-        if (strlen($currentLine.' '.$word) * $charWidth <= $maxWidth) {
-            $currentLine .= ($currentLine ? ' ' : '').$word;
+        if (strlen($currentLine . ' ' . $word) * $charWidth <= $maxWidth) {
+            $currentLine .= ($currentLine ? ' ' : '') . $word;
         } else {
             $lines[] = $currentLine;
             $currentLine = $word;

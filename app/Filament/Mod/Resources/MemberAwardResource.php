@@ -75,7 +75,7 @@ class MemberAwardResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\Filter::make('needs approval')
-                    ->query(fn(Builder $query): Builder => $query->where('approved', false))->default(),
+                    ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
                 SelectFilter::make('division')->relationship('division', 'name'),
             ])
             ->actions([

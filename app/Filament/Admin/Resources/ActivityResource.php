@@ -71,7 +71,7 @@ class ActivityResource extends Resource
             ->filters([
                 SelectFilter::make('name')->options(
                     Activity::query()->distinct()->pluck('name', 'name')
-                )
+                ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
