@@ -29,12 +29,13 @@
                 <p style="max-width:500px;">{{ $award->description }}</p>
             </div>
 
-            <div>
-                <a href="#" data-toggle="modal" data-target="#award_modal"
-                   {{ $award->allow_request ? null : "disabled" }}
-                   title="Request this award for yourself or someone else"
-                   class="btn btn-default {{ $award->allow_request ? null : "disabled" }}">Request Award</a>
-            </div>
+            @if ($award->allow_request)
+                <div>
+                    <a href="#" data-toggle="modal" data-target="#award_modal"
+                       title="Request this award for yourself or someone else"
+                       class="btn btn-default">Request Award</a>
+                </div>
+            @endif
 
         </div>
     </div>
