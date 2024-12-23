@@ -3,7 +3,7 @@
     <hr/>
     <div class="row">
 
-        @foreach ($member->awards->sortBy('display_order') as $index => $record)
+        @foreach ($member->awards->sortBy('award.display_order') as $record)
             <div class="col-lg-3 col-xl-2 col-sm-6">
                 <a href="{{ route('awards.show', $record->award) }}" class="btn btn-default btn-block"
                    style="margin-bottom:20px;">

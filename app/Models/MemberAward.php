@@ -17,6 +17,6 @@ class MemberAward extends Model
 
     public function award()
     {
-        return $this->belongsTo(Award::class, 'award_id');
+        return $this->belongsTo(Award::class, 'award_id')->orderBy('display_order');
     }
 }
