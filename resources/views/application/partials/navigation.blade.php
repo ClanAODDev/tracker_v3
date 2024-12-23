@@ -101,6 +101,14 @@
             <li class="{{ set_active('clan/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>
+
+            @if(Auth::user()->can('manage', \App\Models\MemberRequest::class))
+                <li class="{{ set_active('clan/member-requests') }}">
+                    <a href="{{ route('admin.member-request.index') }}">
+                        Member Requests
+                    </a>
+                </li>
+            @endif
         </ul>
     </li>
 
@@ -140,7 +148,7 @@
     </li>
 
 
-    @if(Auth::user()->isRole(['admin', 'sr_ldr']) || Auth::user()->can('manage', \App\Models\MemberRequest::class))
+    @if(Auth::user()->isRole(['admin', 'sr_ldr']))
         <li class="nav-category">
             Admin
         </li>
@@ -158,11 +166,7 @@
                 <a href="/mod">Mod CP</a>
             </li>
         @endif
-        <li class="{{ set_active('admin/member-requests') }}">
-            <a href="{{ route('admin.member-request.index') }}">
-                Member Requests
-            </a>
-        </li>
+
     @endif
 
     <li class="nav-category">
