@@ -35,7 +35,7 @@ class MemberAwardsRelationManager extends RelationManager
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\DateTimePicker::make('created_at')->default(now()),
                     Forms\Components\DateTimePicker::make('updated_at')->default(now()),
-                ])->columns(3),
+                ])->columns(),
             ]);
     }
 
