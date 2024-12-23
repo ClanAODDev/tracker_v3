@@ -32,7 +32,7 @@
 
                 <div class="col-xl-2 col-md-6">
                     <a class="panel panel-filled" href="{{ route('awards.show', $award) }}">
-                        <div class="panel-body" title="{{ $award->description ?? "No description" }}"
+                        <div class="panel-body"
                              style="height:160px; overflow: hidden">
                             <div class="col-xs-3"
                                  style="height:100%;display:flex;justify-content: center;align-items: center">
