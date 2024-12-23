@@ -10,4 +10,8 @@ Breadcrumbs::for('awards.show', function ($breadcrumbs, $award) {
 Breadcrumbs::for('awards.index', function ($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Awards', route('awards.index'));
+
+    if (request('division')) {
+        $breadcrumbs->push(ucwords(str_replace('-', ' ', request('division'))));
+    }
 });
