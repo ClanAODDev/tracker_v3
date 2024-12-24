@@ -281,7 +281,6 @@ function percent($old_member_count, $new_member_count)
 
     return number_format(($old_member_count / $new_member_count) * 100, 2); // yields 0.76
 }
-
 /**
  * Filament member awards table filter
  */
@@ -292,13 +291,17 @@ function reviewDivisionAwardsQuery($division_id): string
             'needs approval' => [
                 'isActive' => true,
             ],
-            'division' => [
+            'by member division' => [
                 'value' => $division_id,
             ],
         ],
     ];
 
-    return '?' . http_build_query($params);
+    $queryString = Arr::query($params);
+
+    $queryString = str_replace(['%5B', '%5D', '%20'], ['[', ']', ' '], $queryString);
+
+    return '?' . $queryString;
 }
 
 /**

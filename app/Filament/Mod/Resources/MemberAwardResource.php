@@ -59,7 +59,7 @@ class MemberAwardResource extends Resource
                 Tables\Columns\TextColumn::make('reason')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('division.name')
+                Tables\Columns\TextColumn::make('member.division.name')
                     ->sortable(),
 
                 Tables\Columns\ToggleColumn::make('approved'),
@@ -73,11 +73,12 @@ class MemberAwardResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
-            ->filters([
+            ->filters(filters: [
                 Tables\Filters\Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
-                SelectFilter::make('by division')->relationship('division', 'name'),
-                SelectFilter::make('by award')->relationship('award', 'name'),
+                SelectFilter::make('by member division')->relationship('member.division', 'name'),
+                SelectFilter::make('by award division')->relationship('division', 'name'),
+                SelectFilter::make('award')->relationship('award', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

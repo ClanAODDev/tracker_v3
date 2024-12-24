@@ -392,7 +392,8 @@ class Division extends Model
 
     public function unapprovedAwards()
     {
-        return $this->memberAwards()->where('approved', false);
+        return $this->hasManyThrough(MemberAward::class, Member::class, 'division_id', 'member_id', 'id', 'clan_id')
+            ->where('approved', false);
     }
 
     /**
