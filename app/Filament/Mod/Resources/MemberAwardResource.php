@@ -76,7 +76,8 @@ class MemberAwardResource extends Resource
             ->filters([
                 Tables\Filters\Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
-                SelectFilter::make('division')->relationship('division', 'name'),
+                SelectFilter::make('by division')->relationship('division', 'name'),
+                SelectFilter::make('by award')->relationship('award', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
