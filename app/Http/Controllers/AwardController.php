@@ -33,7 +33,7 @@ class AwardController extends Controller
             return redirect(route('awards.index'));
         }
 
-        return view('awards.index')->with(compact('awards'));
+        return view('division.awards.index')->with(compact('awards'));
     }
 
     public function storeRecommendation(Request $request, Award $award)
@@ -65,6 +65,6 @@ class AwardController extends Controller
 
     public function show(Award $award)
     {
-        return view('awards.show', compact('award'));
+        return view('division.awards.show', compact('award'));
     }
 }

@@ -41,10 +41,10 @@
     </div>
 @endif
 
-@if($division->unapproved_awards_count && auth()->user()->isRole('sr_ldr'))
+@if($waiting = $division->unapproved_division_awards_count && auth()->user()->isRole('sr_ldr'))
     <div class="alert alert-default">
-        <i class="fa fa-trophy fa-lg c-white"></i> You have <code>{{ $division->unapproved_awards_count }}</code>
-        pending award {{ str('request')->plural($division->unapproved_awards_count) }}!
+        <i class="fa fa-trophy fa-lg c-white"></i> You have <code>{{ $waiting }}</code>
+        pending award {{ str('request')->plural($waiting) }}!
 
         <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id)
         }}">Review</a>

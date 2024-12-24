@@ -22,7 +22,7 @@
 
         <div style="display:flex;align-items: center;justify-content: center;margin-top: 0;">
             <img src="{{ asset(Storage::url($award->image)) }}"
-                 class="clan-award hidden-xs hidden-sm"
+                 class="clan-award clan-award-zoom hidden-xs hidden-sm"
                  style="margin-right:50px;"
                  alt="{{ $award->name }}"
             />
@@ -44,7 +44,7 @@
 
     <div class="visible-xs visible-sm text-center">
         <img src="{{ asset(Storage::url($award->image)) }}"
-             class="clan-award clan-award-zoom"
+             class="clan-award"
              alt="{{ $award->name }}"
         />
         <hr>
@@ -88,6 +88,6 @@
     @endif
 
 
-    @include('awards.partials.award-form')
+    @include('division.awards.partials.award-form')
 
 @endsection
