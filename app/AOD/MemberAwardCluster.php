@@ -12,12 +12,23 @@ class MemberAwardCluster
     {
         $awards = MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
+            ->where('approved', true)
             ->orderBy('awards.display_order')
             ->select('awards.image')
             ->take(6)
             ->get()
             ->pluck('image')
             ->toArray();
+
+        if (count($awards) === 0) {
+            $noAwardsImage = public_path('images/dynamic-images/bgs/no-awards-base-image.png');
+            if (file_exists($noAwardsImage)) {
+                $brokenImage = imagecreatefrompng($noAwardsImage);
+                header('Content-Type: image/png');
+                imagepng($brokenImage);
+                imagedestroy($brokenImage);
+            }
+        }
 
         $awardWidth = 60;
         $awardHeight = 60;

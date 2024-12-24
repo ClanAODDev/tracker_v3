@@ -33,7 +33,13 @@ class MemberAwardImage
         $awardCount = min(max((int) $awardCount, 1), 4);
 
         if (count($awardsData) < $awardCount) {
-            return $this->gracefulFail();
+            $noAwardsImage = public_path('images/dynamic-images/bgs/no-awards-base-image.png');
+            if (file_exists($noAwardsImage)) {
+                $brokenImage = imagecreatefrompng($noAwardsImage);
+                header('Content-Type: image/png');
+                imagepng($brokenImage);
+                imagedestroy($brokenImage);
+            }
         }
 
         $awards = array_slice($awardsData, 0, $awardCount);
@@ -55,6 +61,7 @@ class MemberAwardImage
         return MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
             ->leftJoin('divisions', 'awards.division_id', '=', 'divisions.id')
+            ->where('approved', true)
             ->orderBy('awards.display_order')
             ->get([
                 'awards.image as award_image',
