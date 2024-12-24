@@ -49,13 +49,13 @@ There are no customization options as this version scales to the number of award
     - **Range**: 1 to 4
     - **Default**: The total number of awards available for the member.
 
-2. **`text-offset`**
+2. **`text_offset`**
     - **Description**: Adjusts the vertical spacing between award images and their labels.
     - **Type**: Integer
     - **Range**: 1 to 45
     - **Default**: 20
 
-3. **`image-offset`**
+3. **`image_offset`**
     - **Description**: Shifts the award images vertically.
     - **Type**: Integer
     - **Range**: 1 to 45
@@ -69,7 +69,7 @@ There are no customization options as this version scales to the number of award
         - `bitmap` (non-antialiased)
     - **Default**: `ttf`
 
-5. **`font-size`**
+5. **`font_size`**
     - **Description**: Adjusts the font size of the award labels.
     - **Type**: Integer
     - **Range**:
@@ -79,13 +79,13 @@ There are no customization options as this version scales to the number of award
         - For `ttf`: 7
         - For `bitmap`: 1
 
-6. **`text-width`**
+6. **`text_container_width`**
     - **Description**: Sets the maximum width for the text before wrapping to a new line.
     - **Type**: Integer
     - **Minimum**: 1
     - **Default**: 100
 
-7. **`text-transform`**
+7. **`text_transform`**
     - **Description**: Controls the case transformation of award labels.
     - **Type**: String
     - **Options**:
