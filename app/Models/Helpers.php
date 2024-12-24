@@ -291,7 +291,7 @@ function reviewDivisionAwardsQuery($division_id): string
             'needs approval' => [
                 'isActive' => true,
             ],
-            'by member division' => [
+            'by division' => [
                 'value' => $division_id,
             ],
         ],

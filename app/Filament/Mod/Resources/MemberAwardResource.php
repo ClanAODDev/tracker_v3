@@ -54,13 +54,13 @@ class MemberAwardResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('award.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('member.name')->searchable(),
                 Tables\Columns\TextColumn::make('reason')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('member.division.name')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('division.name'),
 
                 Tables\Columns\ToggleColumn::make('approved'),
                 Tables\Columns\TextColumn::make('created_at')
@@ -76,8 +76,7 @@ class MemberAwardResource extends Resource
             ->filters(filters: [
                 Tables\Filters\Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
-                SelectFilter::make('by member division')->relationship('member.division', 'name'),
-                SelectFilter::make('by award division')->relationship('division', 'name'),
+                SelectFilter::make('by division')->relationship('division', 'name'),
                 SelectFilter::make('award')->relationship('award', 'name'),
             ])
             ->actions([
