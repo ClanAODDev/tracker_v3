@@ -29,10 +29,10 @@ class FixMissingTenureAwards extends Command
     public function handle()
     {
         $tenureAwards = [
-            20 => 140,
-            15 => 139,
-            10 => 19,
-            5 => 18,
+            20 => 140, // 20 years
+            15 => 139, // 15 years
+            10 => 19,  // 10 years
+            5 => 18,   // 5 years
         ];
 
         $members = Member::whereHas('division')->get();
