@@ -26,7 +26,12 @@ class PruneTenureAwards extends Command
      */
     public function handle()
     {
-        $serviceAwardIds = [18, 19, 139, 40];
+        $serviceAwardIds = [
+            140, // 20 years
+            139, // 15 years
+            19,  // 10 years
+            18,   // 5 years
+        ];
 
         $memberAwards = DB::table('award_member')
             ->whereIn('award_id', $serviceAwardIds)
