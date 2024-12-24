@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
 use App\Filament\Admin\Resources\MemberResource\Pages;
 use App\Models\Member;
 use Filament\Forms;
@@ -225,6 +226,7 @@ class MemberResource extends Resource
     public static function getRelations(): array
     {
         return [
+            AwardsRelationManager::class,
         ];
     }
 
