@@ -48,8 +48,7 @@ class PruneTenureAwards extends Command
                     ->delete();
             }
         }
-        
+
         $this->info('Service awards cleaned up!');
     }
-
 }
