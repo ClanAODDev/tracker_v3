@@ -1,14 +1,17 @@
 <?php
 
 use App\Models\Member;
+use Illuminate\Support\Facades\Storage;
 
 Route::get('members/{member}/my-awards.png', function (Member $member) {
     try {
 
-        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-        header('Cache-Control: post-check=0, pre-check=0', false);
-        header('Pragma: no-cache');
-        header('Content-Type: image/png');
+        if (! request('debug')) {
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Pragma: no-cache');
+            header('Content-Type: image/png');
+        }
 
         $fonts = [
             'tiny' => public_path('fonts/copy0855.ttf'),
@@ -22,28 +25,32 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         $baseImage = imagecreatefrompng($baseImagePath);
         imagesavealpha($baseImage, true);
 
-        $awards = \App\Models\MemberAward::where('member_id', $member->clan_id)
+        $awardsData = \App\Models\MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
+            ->leftJoin('divisions', 'awards.division_id', '=', 'divisions.id')
             ->orderBy('awards.display_order')
-            ->get()
-            ->pluck('award.image', 'award.name')
+            ->get([
+                'awards.image as award_image',
+                'awards.name as award_name',
+                'divisions.abbreviation as division',
+            ])
+            ->map(function ($item) {
+                return [
+                    'award_image' => $item->award_image,
+                    'award_name' => $item->award_name,
+                    'division' => $item->division ? strtoupper($item->division) : null,
+                ];
+            })
             ->toArray();
 
-        $awardCount = request()->get('award_count', count($awards));
+        $awardCount = request()->get('award-count', count($awardsData));
         $awardCount = min(max((int) $awardCount, 1), 4);
 
-        if (count($awards) < $awardCount) {
+        if (count($awardsData) < $awardCount) {
             gracefulFail();
         }
 
-        $selectedFiles = collect($awards)
-            ->take($awardCount)
-            ->map(fn ($path, $name) => [
-                'path' => Storage::path('public/' . $path),
-                'name' => $name,
-            ])
-            ->values()
-            ->toArray();
+        $awards = array_slice($awardsData, 0, $awardCount);
 
         $imageWidth = 60;
         $imageHeight = 60;
@@ -65,15 +72,20 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
                 'min_range' => request('font') === 'ttf' ? 7 : 1,
                 'max_range' => request('font') === 'ttf' ? 12 : 5,
             ],
-        ]) ?: (request('font') === 'ttf' ? 7 : 1);
+        ]) ?: (request('font') === 'ttf' ? 7 : (request('font') === 'bitmap' ? 1 : 7));
+
+        $maxTextWidth = filter_var(request('text-width'), FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]]) ?: 150;
 
         $spacing = ($baseWidth - ($awardCount * $imageWidth)) / ($awardCount + 1);
         $x = $spacing;
 
-        $maxTextWidth = filter_var(request('text-width'), FILTER_VALIDATE_INT,
-            ['options' => ['min_range' => 1]]) ?: 100;
+        if (request('debug')) {
+            dd(compact('fontSize', 'fontType', 'maxTextWidth', 'imageVerticalShift', 'textOffset', 'spacing'));
+        }
 
-        foreach ($selectedFiles as $fileData) {
+        foreach ($awards as $index => $fileData) {
+
             $x = placeImageAndText(
                 $baseImage,
                 $fileData,
@@ -94,7 +106,7 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         imagepng($baseImage);
         imagedestroy($baseImage);
     } catch (\Exception $e) {
-        \Log::error($e->getMessage());
+        \Log::error($e->getMessage(), [$e->getLine(), $e->getFile()]);
         gracefulFail();
     }
 });
@@ -114,8 +126,9 @@ function placeImageAndText(
     $imageVerticalShift,
     $fontSize
 ) {
-    $filePath = $fileData['path'];
-    $awardName = $fileData['name'];
+    $filePath = Storage::path('public/' . $fileData['award_image']);
+    $awardName = $fileData['award_name'];
+    $division = $fileData['division'];
 
     $originalImage = imagecreatefrompng($filePath);
 
@@ -144,7 +157,9 @@ function placeImageAndText(
 
     $textX = $x + ($imageWidth / 2) - ($maxTextWidth / 2);
 
-    renderText($baseImage, $fonts, $mode, 2, $awardName, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
+    $label = $division ? sprintf('[%s] %s', $division, $awardName) : $awardName;
+
+    renderText($baseImage, $fonts, $mode, 2, $label, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
 
     imagedestroy($originalImage);
     imagedestroy($resizedImage);
