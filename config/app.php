@@ -43,6 +43,7 @@ return [
         'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
         'ingame-reports' => [],
         'api-keys' => [],
+        'awards_cache_minutes' => env('AWARDS_CACHE_MINUTES', 60),
 
         'leave_reasons' => [
             'Military', 'Medical', 'Education', 'Travel', 'Other',

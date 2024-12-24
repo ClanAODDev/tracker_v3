@@ -25,9 +25,14 @@ function handleImageGeneration(Member $member, string $cachePrefix, callable $ge
         md5(json_encode(request()->except(['debug'])))
     );
 
-    return Cache::remember($cacheKey, now()->addHour(), function () use ($member, $generateImageCallback) {
-        $imageContent = $generateImageCallback($member);
+    $cacheMins = config('app.aod.awards_cache_minutes');
 
-        return response($imageContent)->header('Content-Type', 'image/png');
-    });
+    return Cache::remember(
+        key: $cacheKey,
+        ttl: now()->addMinutes(-$cacheMins),
+        callback: function () use ($member, $generateImageCallback) {
+            $imageContent = $generateImageCallback($member);
+
+            return response($imageContent)->header('Content-Type', 'image/png');
+        });
 }
