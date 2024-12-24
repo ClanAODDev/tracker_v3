@@ -57,34 +57,34 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         $baseWidth = imagesx($baseImage);
         $baseHeight = imagesy($baseImage);
 
-        $textOffset = filter_var(request('text-offset'), FILTER_VALIDATE_INT,
+        $text_offset = filter_var(request('text_offset'), FILTER_VALIDATE_INT,
             ['options' => ['min_range' => 1, 'max_range' => 45]]) ?: 20;
 
-        $imageVerticalShift = filter_var(request('image-offset'), FILTER_VALIDATE_INT,
+        $image_offset = filter_var(request('image_offset'), FILTER_VALIDATE_INT,
             ['options' => ['min_range' => 1, 'max_range' => 45]]) ?: 20;
 
-        $fontType = in_array(request('font'), ['ttf', 'bitmap'], true)
+        $font = in_array(request('font'), ['ttf', 'bitmap'], true)
             ? request('font')
             : 'ttf';
 
-        $fontSize = filter_var(request('font-size'), FILTER_VALIDATE_INT, [
+        $font_size = filter_var(request('font_size'), FILTER_VALIDATE_INT, [
             'options' => [
                 'min_range' => request('font') === 'ttf' ? 7 : 1,
                 'max_range' => request('font') === 'ttf' ? 12 : 5,
             ],
-        ]) ?: (request('font') === 'ttf' ? 7 : (request('font') === 'bitmap' ? 1 : 7));
+        ]) ?: (request('font') === 'ttf' ? 10 : (request('font') === 'bitmap' ? 1 : 8));
 
-        $maxTextWidth = filter_var(request('text-width'), FILTER_VALIDATE_INT,
-            ['options' => ['min_range' => 1]]) ?: 150;
+        $text_container_width = filter_var(request('text_container_width'), FILTER_VALIDATE_INT,
+            ['options' => ['min_range' => 1]]) ?: 100;
 
         $spacing = ($baseWidth - ($awardCount * $imageWidth)) / ($awardCount + 1);
         $x = $spacing;
 
         if (request('debug')) {
-            dd(compact('fontSize', 'fontType', 'maxTextWidth', 'imageVerticalShift', 'textOffset', 'spacing'));
+            dd(compact('font_size', 'font', 'text_container_width', 'image_offset', 'text_offset', 'spacing'));
         }
 
-        foreach ($awards as $index => $fileData) {
+        foreach ($awards as $fileData) {
 
             $x = placeImageAndText(
                 $baseImage,
@@ -92,14 +92,14 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
                 $x,
                 $imageWidth,
                 $imageHeight,
-                $textOffset,
+                $text_offset,
                 $baseHeight,
                 $fonts,
-                $fontType,
+                $font,
                 $spacing,
-                $maxTextWidth,
-                $imageVerticalShift,
-                $fontSize
+                $text_container_width,
+                $image_offset,
+                $font_size
             );
         }
 
@@ -159,7 +159,7 @@ function placeImageAndText(
 
     $label = $division ? sprintf('[%s] %s', $division, $awardName) : $awardName;
 
-    renderText($baseImage, $fonts, $mode, 2, $label, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
+    renderText($baseImage, $fonts, $mode, $label, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
 
     imagedestroy($originalImage);
     imagedestroy($resizedImage);
@@ -167,9 +167,9 @@ function placeImageAndText(
     return $x + $imageWidth + $spacing;
 }
 
-function renderText($image, $fonts, $mode, $font, $text, $x, $y, $color, $maxWidth, $fontSize)
+function renderText($image, $fonts, $mode, $text, $x, $y, $color, $maxWidth, $fontSize)
 {
-    $text = request('text-transform') === 'upper'
+    $text = request('text_transform') === 'upper'
         ? strtoupper($text)
         : $text;
 
