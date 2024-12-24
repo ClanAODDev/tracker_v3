@@ -23,7 +23,8 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
         imagesavealpha($baseImage, true);
 
         $awards = \App\Models\MemberAward::where('member_id', $member->clan_id)
-            ->orderByDesc('created_at')
+            ->join('awards', 'award_member.award_id', '=', 'awards.id')
+            ->orderBy('awards.display_order')
             ->get()
             ->pluck('award.image', 'award.name')
             ->toArray();
@@ -232,10 +233,12 @@ function gracefulFail()
 
 Route::get('members/{member}/my-awards-cluster.png', function (Member $member) {
     $awards = \App\Models\MemberAward::where('member_id', $member->clan_id)
-        ->orderByDesc('created_at')
-        ->get()
+        ->join('awards', 'award_member.award_id', '=', 'awards.id')
+        ->orderBy('awards.display_order')
+        ->select('awards.image')
         ->take(6)
-        ->pluck('award.image')
+        ->get()
+        ->pluck('image')
         ->toArray();
 
     $awardWidth = 60;
