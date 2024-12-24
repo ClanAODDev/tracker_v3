@@ -17,10 +17,13 @@
                                       class="form-control">{{ old('reason') }}</textarea>
                         </div>
 
-                        <div class="form-group {{ $errors->has('member_id') ? ' has-error' : null }}">
-                            <label for="member_id">Member ID*</label>
-                            <input type="number" name="member_id" id="member_id" class="form-control"
-                                   value="{{ old('member_id') }}" required>
+                        <div class="form-group">
+
+                            <label for="member">Member receiving award*</label>
+                            <input type="text" class="form-control search-member" name="member" id="member"
+                                   autocomplete="off" placeholder="Search"
+                            />
+                            <i class="fa fa-search pull-right" style="position: absolute; right: 20px; top: 35px;"></i>
                         </div>
 
                         <button type="submit" class="btn-default btn pull-right">Submit</button>
