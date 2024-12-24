@@ -261,7 +261,7 @@ Route::get('members/{member}/my-awards-cluster.png', function (Member $member) {
         $awardImagePath = Storage::path('public/' . $awardPath);
 
         if (file_exists($awardImagePath)) {
-            $awardImage = imagecreatefrompng($awardImagePath);
+            $awardImage = @imagecreatefrompng($awardImagePath);
 
             imagesavealpha($awardImage, true);
 
