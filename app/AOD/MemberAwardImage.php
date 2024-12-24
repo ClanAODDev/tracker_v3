@@ -50,7 +50,7 @@ class MemberAwardImage
         return $imageContent;
     }
 
-    protected function fetchAwardsData(Member $member): MemberAward
+    protected function fetchAwardsData(Member $member): array
     {
         return MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
