@@ -12,6 +12,8 @@ member. Details on customization options are provided [here](#single-line-award-
 
 Awards are evenly centered on a fixed image.
 
+Note: specific iterations to include customizations of an award are cached for up to an hour.
+
 ---
 
 ### 2. **Award Cluster Display**
@@ -34,8 +36,6 @@ There are no customization options as this version scales to the number of award
 | **Customization Options** | Yes                                  | No                                    |
 | **Image Dimensions**      | Fixed size, adjusted per award count | Fixed at 60x60 pixels per award       |
 | **Spacing**               | Dynamically calculated               | Fixed at 10 pixels between awards     |
-
-
 
 ---
 
