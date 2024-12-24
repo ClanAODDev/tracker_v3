@@ -44,7 +44,7 @@ class MemberAwardImage
         imagedestroy($baseImage);
     }
 
-    protected function fetchAwardsData(Member $member)
+    protected function fetchAwardsData(Member $member): MemberAward
     {
         return MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
@@ -65,7 +65,7 @@ class MemberAwardImage
             ->toArray();
     }
 
-    protected function placeAwardsOnImage($baseImage, $awards, $awardCount)
+    protected function placeAwardsOnImage($baseImage, $awards, $awardCount): void
     {
         $imageWidth = 60;
         $imageHeight = 60;
@@ -99,7 +99,7 @@ class MemberAwardImage
         }
     }
 
-    protected function placeImageAndText($baseImage, $fileData, $x, $imageWidth, $imageHeight, $textOffset, $baseHeight, $font, $spacing, $maxTextWidth, $imageVerticalShift, $fontSize)
+    protected function placeImageAndText($baseImage, $fileData, $x, $imageWidth, $imageHeight, $textOffset, $baseHeight, $font, $spacing, $maxTextWidth, $imageVerticalShift, $fontSize): mixed
     {
         $filePath = Storage::path('public/' . $fileData['award_image']);
         $awardName = $fileData['award_name'];
@@ -139,7 +139,7 @@ class MemberAwardImage
         return $x + $imageWidth + $spacing;
     }
 
-    protected function renderText($image, $mode, $text, $x, $y, $color, $maxWidth, $fontSize)
+    protected function renderText($image, $mode, $text, $x, $y, $color, $maxWidth, $fontSize): void
     {
         $text = request('text_transform') === 'upper' ? strtoupper($text) : $text;
 
@@ -155,7 +155,7 @@ class MemberAwardImage
         return filter_var($value, FILTER_VALIDATE_INT, ['options' => compact('min', 'max')]) ?: $default;
     }
 
-    protected function filterFontSize($font)
+    protected function filterFontSize($font): mixed
     {
         return filter_var(request('font_size'), FILTER_VALIDATE_INT, [
             'options' => [
@@ -165,7 +165,7 @@ class MemberAwardImage
         ]) ?: ($font === 'ttf' ? 8 : 1);
     }
 
-    protected function gracefulFail()
+    protected function gracefulFail(): void
     {
         $brokenImagePath = public_path('images/dynamic-images/bgs/awards_broke_image.png');
         if (file_exists($brokenImagePath)) {
@@ -178,7 +178,7 @@ class MemberAwardImage
         }
     }
 
-    protected function wrapText($image, $font, $text, $x, $y, $color, $maxWidth)
+    protected function wrapText($image, $font, $text, $x, $y, $color, $maxWidth): void
     {
         $charWidth = imagefontwidth($font);
 
@@ -207,7 +207,7 @@ class MemberAwardImage
         }
     }
 
-    protected function wrapTextTtf($image, $fontPath, $text, $x, $y, $color, $maxWidth, $fontSize)
+    protected function wrapTextTtf($image, $fontPath, $text, $x, $y, $color, $maxWidth, $fontSize): void
     {
         $words = explode(' ', $text);
         $lines = [];

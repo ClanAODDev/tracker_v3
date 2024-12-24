@@ -3,13 +3,14 @@
 namespace App\AOD;
 
 use App\Models\Member;
+use App\Models\MemberAward;
 use Illuminate\Support\Facades\Storage;
 
 class MemberAwardCluster
 {
-    public function generateClusterImage(Member $member)
+    public function generateClusterImage(Member $member): false|string
     {
-        $awards = \App\Models\MemberAward::where('member_id', $member->clan_id)
+        $awards = MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
             ->orderBy('awards.display_order')
             ->select('awards.image')
@@ -18,7 +19,6 @@ class MemberAwardCluster
             ->pluck('image')
             ->toArray();
 
-        // Define image dimensions and layout
         $awardWidth = 60;
         $awardHeight = 60;
         $columns = 3;
@@ -28,16 +28,13 @@ class MemberAwardCluster
         $baseWidth = ($columns * $awardWidth) + (($columns - 1) * $padding);
         $baseHeight = ($rows * $awardHeight) + (($rows - 1) * $padding);
 
-        // Create base image with transparency
         $baseImage = imagecreatetruecolor($baseWidth, $baseHeight);
         imagesavealpha($baseImage, true);
         $transparentColor = imagecolorallocatealpha($baseImage, 0, 0, 0, 127);
         imagefill($baseImage, 0, 0, $transparentColor);
 
-        // Place award images
         $this->placeAwardsOnImage($baseImage, $awards, $awardWidth, $awardHeight, $columns, $padding);
 
-        // Return the final image content
         ob_start();
         imagepng($baseImage);
         imagedestroy($baseImage);
@@ -45,7 +42,7 @@ class MemberAwardCluster
         return ob_get_clean();
     }
 
-    protected function placeAwardsOnImage($baseImage, $awards, $awardWidth, $awardHeight, $columns, $padding)
+    protected function placeAwardsOnImage($baseImage, $awards, $awardWidth, $awardHeight, $columns, $padding): void
     {
         $x = 0;
         $y = 0;
