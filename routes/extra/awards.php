@@ -29,7 +29,7 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
             ->pluck('award.image', 'award.name')
             ->toArray();
 
-        $awardCount = request()->get('award_count', 4);
+        $awardCount = request()->get('award_count', count($awards));
         $awardCount = min(max((int) $awardCount, 1), 4);
 
         if (count($awards) < $awardCount) {
@@ -60,6 +60,13 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
             ? request('font')
             : 'ttf';
 
+        $fontSize = filter_var(request('font-size'), FILTER_VALIDATE_INT, [
+            'options' => [
+                'min_range' => request('font') === 'ttf' ? 7 : 1,
+                'max_range' => request('font') === 'ttf' ? 12 : 5,
+            ],
+        ]) ?: (request('font') === 'ttf' ? 7 : 1);
+
         $spacing = ($baseWidth - ($awardCount * $imageWidth)) / ($awardCount + 1);
         $x = $spacing;
 
@@ -79,7 +86,8 @@ Route::get('members/{member}/my-awards.png', function (Member $member) {
                 $fontType,
                 $spacing,
                 $maxTextWidth,
-                $imageVerticalShift
+                $imageVerticalShift,
+                $fontSize
             );
         }
 
@@ -103,7 +111,8 @@ function placeImageAndText(
     $mode,
     $spacing,
     $maxTextWidth,
-    $imageVerticalShift
+    $imageVerticalShift,
+    $fontSize
 ) {
     $filePath = $fileData['path'];
     $awardName = $fileData['name'];
@@ -135,7 +144,7 @@ function placeImageAndText(
 
     $textX = $x + ($imageWidth / 2) - ($maxTextWidth / 2);
 
-    renderText($baseImage, $fonts, $mode, 2, $awardName, $textX, $textY, $textColor, $maxTextWidth);
+    renderText($baseImage, $fonts, $mode, 2, $awardName, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
 
     imagedestroy($originalImage);
     imagedestroy($resizedImage);
@@ -143,10 +152,14 @@ function placeImageAndText(
     return $x + $imageWidth + $spacing;
 }
 
-function renderText($image, $fonts, $mode, $font, $text, $x, $y, $color, $maxWidth, $fontSize = 8)
+function renderText($image, $fonts, $mode, $font, $text, $x, $y, $color, $maxWidth, $fontSize)
 {
+    $text = request('text-transform') === 'upper'
+        ? strtoupper($text)
+        : $text;
+
     if ($mode === 'bitmap') {
-        wrapText($image, $font, $text, $x, $y, $color, $maxWidth);
+        wrapText($image, $fontSize, $text, $x, $y, $color, $maxWidth);
     } elseif ($mode === 'ttf') {
         wrapTextTtf($image, $fonts['tiny'], $text, $x, $y, $color, $maxWidth, $fontSize);
     }
