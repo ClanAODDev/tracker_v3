@@ -39,6 +39,8 @@ class MemberAwardImage
                 header('Content-Type: image/png');
                 imagepng($brokenImage);
                 imagedestroy($brokenImage);
+
+                exit;
             }
         }
 
