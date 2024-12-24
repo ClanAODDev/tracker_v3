@@ -40,8 +40,14 @@ class MemberAwardImage
         $this->placeAwardsOnImage($baseImage, $awards, $awardCount);
 
         header('Content-Type: image/png');
+
+        ob_start();
         imagepng($baseImage);
+        $imageContent = ob_get_clean();
+
         imagedestroy($baseImage);
+
+        return $imageContent;
     }
 
     protected function fetchAwardsData(Member $member): MemberAward
