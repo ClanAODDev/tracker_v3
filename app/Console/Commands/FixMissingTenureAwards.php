@@ -42,34 +42,32 @@ class FixMissingTenureAwards extends Command
         $missingAwards = 0;
 
         foreach ($members as $member) {
-
             $joinDate = Carbon::parse($member->join_date);
             $yearsOfService = $joinDate->diffInYears(Carbon::now());
 
             $eligibleAwardId = null;
+            $milestone = null;
             foreach ($tenureAwards as $years => $awardId) {
                 if ($yearsOfService >= $years) {
                     $eligibleAwardId = $awardId;
+                    $milestone = $years;
                     break;
                 }
             }
 
             if ($eligibleAwardId) {
-
                 $hasAward = MemberAward::where('member_id', $member->clan_id)
                     ->where('award_id', $eligibleAwardId)
                     ->exists();
 
                 if (! $hasAward) {
-                    $message = "Member ID {$member->clan_id} is missing award ID $eligibleAwardId for tenure of $yearsOfService years.";
-
-                    $missingAwards++;
+                    $message = "Member ID {$member->clan_id} is missing award ID $eligibleAwardId for reaching $milestone years of service.";
 
                     if ($persistChanges) {
                         MemberAward::create([
                             'member_id' => $member->clan_id,
                             'award_id' => $eligibleAwardId,
-                            'reason' => 'Awarded for tenure of ' . $yearsOfService . ' years.',
+                            'reason' => "Awarded for reaching the $milestone-year milestone.",
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now(),
                         ]);
