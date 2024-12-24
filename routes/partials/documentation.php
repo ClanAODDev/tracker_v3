@@ -5,7 +5,8 @@ Route::get('changelog', 'AppController@changelog')->name('changelog');
 Route::group(['prefix' => 'help/docs'], function () {
 
     Route::get('/', 'HelpController@index')->name('help');
-    Route::get('/division-structures', 'HelpController@divisionStructures')->name('divisionStructures');
+    Route::view('/division-structures', 'help.division-structures')->name('divisionStructures');
+    Route::view('/member-awards', 'help.member-awards')->name('help.member-awards');
 
     /**
      * Admin documentation routes

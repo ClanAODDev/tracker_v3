@@ -185,11 +185,13 @@
                 <a href="{{ route('help') }}">General</a>
             </li>
 
-            @if(Auth::user()->isRole('admin'))
+            <li class="{{ set_active(['help/docs/member-awards']) }}">
+                <a href="{{ route('help.member-awards') }}">
+                    Awards Images
+                </a>
+            </li>
 
-                {{--
-                    -- Admin documentation routes go here
-                --}}
+            @if(Auth::user()->isRole('admin'))
 
                 <li class="{{ set_active(['help/docs/admin/division-checklist']) }}">
                     <a href="{{ route('help.admin.division-checklist') }}">
