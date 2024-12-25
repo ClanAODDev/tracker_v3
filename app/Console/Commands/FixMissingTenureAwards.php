@@ -63,6 +63,8 @@ class FixMissingTenureAwards extends Command
                 if (! $hasAward) {
                     $message = "Member ID {$member->clan_id} is missing award ID $eligibleAwardId for reaching $milestone years of service.";
 
+                    ++$missingAwards;
+
                     if ($persistChanges) {
                         MemberAward::create([
                             'member_id' => $member->clan_id,
