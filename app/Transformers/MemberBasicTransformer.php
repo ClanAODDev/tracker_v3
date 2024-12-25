@@ -15,7 +15,7 @@ class MemberBasicTransformer extends Transformer
             'position' => $item->position->getLabel(),
             'rank' => [
                 'label' => $item->rank->getAbbreviation(),
-                'color' => $item->rank->getColorHex()
+                'color' => $item->rank->getColorHex(),
             ],
             'discord_id' => (string) $item->discord_id,
         ];

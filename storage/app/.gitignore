@@ -1,2 +1,5 @@
 *
 !.gitignore
+!vb_award.csv
+!vb_award_user.csv
+!old-awards/

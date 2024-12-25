@@ -72,27 +72,41 @@
         <a href="{{ route('memberSearch') }}">Search</a>
     </li>
 
-    <li class="{{ set_active('reports/*') }}">
-        <a href="#reports" data-toggle="collapse" aria-expanded="false">
-            Clan Reports
+    <li class="{{ set_active('clan/*') }}">
+        <a href="#clan-information" data-toggle="collapse" aria-expanded="false">
+            Clan Information
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
-        <ul id="reports" class="nav nav-second {{ request()->is('reports/*') ? 'expanded' : 'collapse' }}">
+        <ul id="clan-information" class="nav nav-second {{ request()->is('clan/*') ? 'expanded' : 'collapse' }}">
 
-            <li class="{{ set_active('reports/leadership') }}">
+            <li class="{{ set_active(['clan/awards', 'clan/awards/*']) }}">
+                <a href="{{ route('awards.index') }}">Achievements</a>
+            </li>
+
+            <li class="{{ set_active('clan/census') }}">
+                <a href="{{ route('reports.clan-census') }}">Clan Census Data</a>
+            </li>
+
+            @if (auth()->user()->isRole('admin'))
+                <li class="{{ set_active('clan/division-turnover') }}">
+                    <a href="{{ route('reports.division-turnover') }}">Division Turnover</a>
+                </li>
+            @endif
+
+            <li class="{{ set_active('clan/leadership') }}">
                 <a href="{{ route('leadership') }}">Leadership Structure</a>
             </li>
 
-            <li class="{{ set_active('reports/clan-census') }}">
-                <a href="{{ route('reports.clan-census') }}">Clan Census Data</a>
-            </li>
-            <li class="{{ set_active('reports/outstanding-inactives') }}">
+            <li class="{{ set_active('clan/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>
-            @if (auth()->user()->isRole('admin'))
-                <li class="{{ set_active('reports/division-turnover') }}">
-                    <a href="{{ route('reports.division-turnover') }}">Division Turnover</a>
+
+            @if(Auth::user()->can('manage', \App\Models\MemberRequest::class))
+                <li class="{{ set_active('clan/member-requests') }}">
+                    <a href="{{ route('admin.member-request.index') }}">
+                        Member Requests
+                    </a>
                 </li>
             @endif
         </ul>
@@ -134,23 +148,25 @@
     </li>
 
 
-    @if(Auth::user()->isRole('admin') || Auth::user()->can('manage', \App\Models\MemberRequest::class))
+    @if(Auth::user()->isRole(['admin', 'sr_ldr']))
         <li class="nav-category">
             Admin
         </li>
         @if(Auth::user()->isRole('admin'))
-            <li class="{{ set_active(['admin', 'admin/divisions/create', 'admin/handles/create']) }}">
-                <a href="/admin">Admin CP</a>
-            </li>
             <li>
                 <a href="{{ url('/log-viewer') }}">Log Viewer</a>
             </li>
+            <li>
+                <a href="/admin">Admin CP</a>
+            </li>
         @endif
-        <li class="{{ set_active('admin/member-requests') }}">
-            <a href="{{ route('admin.member-request.index') }}">
-                Member Requests
-            </a>
-        </li>
+
+        @if(Auth::user()->isRole('sr_ldr'))
+            <li>
+                <a href="/mod">Mod CP</a>
+            </li>
+        @endif
+
     @endif
 
     <li class="nav-category">
@@ -169,11 +185,13 @@
                 <a href="{{ route('help') }}">General</a>
             </li>
 
-            @if(Auth::user()->isRole('admin'))
+            <li class="{{ set_active(['help/docs/member-awards']) }}">
+                <a href="{{ route('help.member-awards') }}">
+                    Awards Images
+                </a>
+            </li>
 
-                {{--
-                    -- Admin documentation routes go here
-                --}}
+            @if(Auth::user()->isRole('admin'))
 
                 <li class="{{ set_active(['help/docs/admin/division-checklist']) }}">
                     <a href="{{ route('help.admin.division-checklist') }}">
@@ -209,7 +227,7 @@
     </li>
 
     <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
-                    class="fab
+                        class="fab
 fa-lg
 fa-github"></i></span></a></li>
 </ul>
