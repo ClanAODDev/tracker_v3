@@ -70,6 +70,7 @@ class FixMissingTenureAwards extends Command
                             'member_id' => $member->clan_id,
                             'award_id' => $eligibleAwardId,
                             'reason' => "Awarded for reaching the $milestone-year milestone.",
+                            'approved' => true,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now(),
                         ]);
