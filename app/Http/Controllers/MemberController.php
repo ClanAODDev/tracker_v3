@@ -52,8 +52,16 @@ class MemberController extends Controller
         }
 
         if ($name) {
-            $members = Member::where('name', 'LIKE', "%{$name}%")
-                ->with('division')->get();
+            $member_name = Member::where('name', 'LIKE', "%{$name}%")
+                ->with('division');
+
+            $members = Member::withWhereHas('handles', function ($query) use ($name) {
+                $query->where('value', 'LIKE', "%{$name}%");
+            })
+                ->with('division')
+                ->union($member_name)
+                ->orderBy('name')
+                ->get();
         } else {
             $members = [];
         }

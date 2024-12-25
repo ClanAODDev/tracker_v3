@@ -6,7 +6,7 @@
             v3
         @endslot
         @slot ('icon')
-            <img src="{{ asset(config('app.logo')) }}" width="50px" />
+            <img src="{{ asset(config('app.logo')) }}" width="50px"/>
         @endslot
         @slot ('heading')
             AOD Tracker
@@ -21,22 +21,26 @@
         <h4>Search Members</h4>
         <form action="{{ route('memberSearch') }}">
             <div class="form-group" style="position: relative">
-                <input type="text" class="form-control" name="name" value="{{ request()->name }}" />
+                <input type="text" class="form-control" name="name" value="{{ request()->name }}"/>
                 <i class="fa fa-search pull-right" style="position: absolute; right: 10px; top: 10px;"></i>
             </div>
         </form>
 
         @if (request()->name)
-            <hr />
+            <hr/>
             @forelse($members as $member)
                 <a class="panel" href="{{ route('member', $member->getUrlParams()) }}"
                    style="padding-left: 30px; margin-bottom: 0;">
                     <div class="panel-body">
                         <h4 class="m-b-none">
                             <span class="slight">{{ $loop->iteration }}. </span>
-                            {!! Str::limit($member->present()->rankName, 15) !!}
+                            {{ $member->present()->rankName }}
                             <small class="slight text-muted">[{{ $member->clan_id }}]</small>
                             <small class="pull-right">{{ $member->division->name ?? "Ex-AOD" }}</small>
+                            @if (count($member->handles) > 0)
+                                <div><small class="slight">{{ $member->handles->first()->pivot->value }}
+                                        [{{ $member->handles->first()->label }}]</small></div>
+                            @endif
                         </h4>
                     </div>
                 </a>
