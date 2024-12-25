@@ -43,11 +43,12 @@
 
 @if($waiting = $division->unapproved_division_awards_count && auth()->user()->isRole('sr_ldr'))
     <div class="alert alert-default">
-        <i class="fa fa-trophy fa-lg c-white"></i> You have <code>{{ $waiting }}</code>
-        pending award {{ str('request')->plural($waiting) }}!
+        <i class="fa fa-trophy fa-lg c-white"></i> There are <code>{{ $waiting }}</code>
+        pending award {{ str('request')->plural($waiting) }} for approval.
 
-        <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id)
-        }}">Review</a>
+        <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery
+        ($division->id)
+        }}">Manage Requests</a>
     </div>
 @endif
 
