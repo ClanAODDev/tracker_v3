@@ -54,11 +54,14 @@ class FixTenureAwards extends Command
             $extraneousAwards += $this->processExtraneousAwards($member, $this->tenureAwardIds, $milestone, $persistChanges);
         }
 
-        $this->info('Tenure awards assignment complete.');
-        $this->info('Summary:');
-        $this->info("- Missing awards added: {$missingAwards}");
-        $this->info("- Invalid awards removed: {$invalidAwards}");
-        $this->info("- Extraneous awards removed: {$extraneousAwards}");
+        $this->info('Tenure awards summary:');
+        $this->info(sprintf('- Missing awards %s: %d', $persistChanges ? 'added' : 'found', $missingAwards));
+        $this->info(sprintf('- Invalid awards %s: %d', $persistChanges ? 'removed' : 'found', $invalidAwards));
+        $this->info(sprintf('- Extraneous awards %s: %d', $persistChanges ? 'removed' : 'found', $extraneousAwards));
+
+        if (! $persistChanges) {
+            $this->newLine()->warn('No changes made. Run with --persist flag to perform corrections');
+        }
     }
 
     private function determineEligibleAward(array $tenureAwards, int $yearsOfService): array
@@ -72,6 +75,9 @@ class FixTenureAwards extends Command
         return [null, null];
     }
 
+    /**
+     * Check for members missing the appropriate tenure award
+     */
     private function processMissingAwards($member, $eligibleAwardId, $milestone, $persistChanges): int
     {
         if (! $eligibleAwardId) {
@@ -100,6 +106,9 @@ class FixTenureAwards extends Command
         return 0;
     }
 
+    /**
+     * Find members with incorrect tenure awards (10 year award but only have 8 years)
+     */
     private function processInvalidAwards($member, array $tenureAwards, int $yearsOfService, $persistChanges): int
     {
         $invalidCount = 0;
@@ -127,6 +136,9 @@ class FixTenureAwards extends Command
         return $invalidCount;
     }
 
+    /**
+     * Remove all but the longest tenure award earned
+     */
     private function processExtraneousAwards($member, array $tenureAwards, $milestone, $persistChanges): int
     {
         if (! $milestone) {
