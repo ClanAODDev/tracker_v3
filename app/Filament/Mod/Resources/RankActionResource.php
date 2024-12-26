@@ -15,7 +15,7 @@ class RankActionResource extends Resource
 {
     protected static ?string $model = RankAction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-plus';
 
     protected static ?string $navigationGroup = 'Division';
 
