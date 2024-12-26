@@ -48,12 +48,31 @@ class DivisionResource extends Resource
                             Forms\Components\TextInput::make('new-string'),
                         ])->reorderable(false)->columns()->addable(false),
                     ]),
-                Forms\Components\Section::make('Recruiting Tasks')->collapsible()->collapsed()
-                    ->description('Critical steps to perform during recruitment')
+
+                Forms\Components\Section::make('Recruiting')->collapsible()->collapsed()
+                    ->description('Settings related to division recruitment process')
                     ->statePath('settings')->schema([
-                        Forms\Components\Repeater::make('recruiting_tasks')->schema([
-                            Forms\Components\TextInput::make('task_description'),
+                        Forms\Components\Section::make('Tasks')->collapsible()->collapsed()
+                            ->description('Critical steps to perform during recruitment')
+                            ->schema([
+                            Forms\Components\Repeater::make('recruiting_tasks')->schema([
+                                Forms\Components\TextInput::make('task_description'),
+                            ])
                         ]),
+                        Forms\Components\Section::make('Informational threads')->collapsible()->collapsed()
+                            ->description('Important forum threads for new recruits to be aware of')
+                            ->schema([
+                                Forms\Components\Repeater::make('recruiting_threads')->schema([
+                                    Forms\Components\TextInput::make('thread_name'),
+                                    Forms\Components\TextInput::make('thread_id'),
+                                    Forms\Components\TextInput::make('comments')->columnSpanFull(),
+                                ])->columns()
+                            ]),
+                        Forms\Components\Textarea::make('welcome pm')
+                            ->rows(6)
+                            ->columnSpanFull()
+                            ->helperText('Use {{ name }} to insert the new recruit\'s name into your message')
+                            ->statePath('welcome_pm'),
                     ]),
                 Forms\Components\Section::make('Officer Notifications')->collapsible()->collapsed()
                     ->description('Events to notify officer discord channel of')
@@ -75,12 +94,14 @@ class DivisionResource extends Resource
                         Forms\Components\Toggle::make('slack_alert_member_transferred')
                             ->helperText('When a member transfers into or out of the division'),
                     ]),
-                Forms\Components\Textarea::make('welcome pm')
-                    ->rows(6)
-                    ->columnSpanFull()
-                    ->helperText('Use {{ name }} to insert the new recruit\'s name into your message')
-                    ->statePath('settings.welcome_pm'),
-                Forms\Components\MarkdownEditor::make('site_content')->columnSpanFull(),
+                Forms\Components\Section::make('Website')
+                    ->description('Divisional website settings')
+                    ->schema([
+                    Forms\Components\MarkdownEditor::make('site_content')
+                        ->helperText('Changes will prompt an admin review before being published')
+                        ->columnSpanFull(),
+                ])->collapsible()->collapsed()
+
             ]);
     }
 
@@ -92,7 +113,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
