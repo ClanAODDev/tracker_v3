@@ -8,7 +8,7 @@ class DivisionBasicTransformer extends Transformer
 
     public function transform($item): array
     {
-        return [
+        $data = [
             'name' => $item->name,
             'slug' => $item->slug,
             'abbreviation' => $item->abbreviation,
@@ -21,5 +21,11 @@ class DivisionBasicTransformer extends Transformer
                 $item->leaders()->get()->all()
             ),
         ];
+
+        if (request('include_site')) {
+            $data['site_content'] = $item->site_content;
+        }
+
+        return $data;
     }
 }

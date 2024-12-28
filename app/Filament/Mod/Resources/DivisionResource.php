@@ -55,10 +55,10 @@ class DivisionResource extends Resource
                         Forms\Components\Section::make('Tasks')->collapsible()->collapsed()
                             ->description('Critical steps to perform during recruitment')
                             ->schema([
-                            Forms\Components\Repeater::make('recruiting_tasks')->schema([
-                                Forms\Components\TextInput::make('task_description'),
-                            ])
-                        ]),
+                                Forms\Components\Repeater::make('recruiting_tasks')->schema([
+                                    Forms\Components\TextInput::make('task_description'),
+                                ]),
+                            ]),
                         Forms\Components\Section::make('Informational threads')->collapsible()->collapsed()
                             ->description('Important forum threads for new recruits to be aware of')
                             ->schema([
@@ -66,7 +66,7 @@ class DivisionResource extends Resource
                                     Forms\Components\TextInput::make('thread_name'),
                                     Forms\Components\TextInput::make('thread_id'),
                                     Forms\Components\TextInput::make('comments')->columnSpanFull(),
-                                ])->columns()
+                                ])->columns(),
                             ]),
                         Forms\Components\Textarea::make('welcome pm')
                             ->rows(6)
@@ -97,10 +97,10 @@ class DivisionResource extends Resource
                 Forms\Components\Section::make('Website')
                     ->description('Divisional website settings')
                     ->schema([
-                    Forms\Components\MarkdownEditor::make('site_content')
-                        ->helperText('Changes will prompt an admin review before being published')
-                        ->columnSpanFull(),
-                ])->collapsible()->collapsed()
+                        Forms\Components\MarkdownEditor::make('site_content')
+                            ->helperText('Changes will prompt an admin review before being published')
+                            ->columnSpanFull(),
+                    ])->collapsible()->collapsed(),
 
             ]);
     }
@@ -113,7 +113,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

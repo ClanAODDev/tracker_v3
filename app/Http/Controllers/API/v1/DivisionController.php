@@ -52,20 +52,22 @@ class DivisionController extends ApiController
             return $this->setStatusCode(404)->respondWithError('Invalid division provided');
         }
 
-        if (request()->user()->tokenCan('division:read-advanced') && request()->has('include_members')) {
-            $members = $division->members()->paginate(25);
+        if (request()->user()->tokenCan('division:read-advanced')) {
+            if (request()->has('include_members')) {
+                $members = $division->members()->paginate(25);
 
-            return $this->respond(array_merge($this->paginatorDetails($members),
-                [
-                    'data' => [
-                        'division' => $this->divisionTransformer->transform($division),
-                        'members' => $this->memberTransformer->transformCollection(
-                            $members->all()
-                        ),
+                return $this->respond(array_merge($this->paginatorDetails($members),
+                    [
+                        'data' => [
+                            'division' => $this->divisionTransformer->transform($division),
+                            'members' => $this->memberTransformer->transformCollection(
+                                $members->all()
+                            ),
 
-                    ],
-                ]
-            ));
+                        ],
+                    ]
+                ));
+            }
         }
 
         return $this->respond([
