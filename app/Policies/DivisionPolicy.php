@@ -69,16 +69,22 @@ class DivisionPolicy
 
     public function viewAny(User $user)
     {
-        if ($user->isRole('admin')) {
+        $division = $user->member->division;
+
+        if ($user->isRole('admin') || $user->member->division_id === $division->id) {
             return true;
         }
 
         return false;
     }
 
-    public function view(User $user)
+    public function view(User $user, Division $division)
     {
         if ($user->isRole('admin')) {
+            return true;
+        }
+
+        if ($user->member->division_id === $division->id) {
             return true;
         }
 

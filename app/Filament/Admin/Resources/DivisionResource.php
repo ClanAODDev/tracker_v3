@@ -69,6 +69,16 @@ class DivisionResource extends Resource
                             ->maxLength(255),
                     ]),
 
+                Section::make('Website')->schema([
+                    Forms\Components\Section::make('Website')
+                        ->description('Divisional website settings')
+                        ->schema([
+                            Forms\Components\MarkdownEditor::make('site_content')
+                                ->helperText('Changes will prompt an admin review before being published')
+                                ->columnSpanFull(),
+                        ])->collapsible()->collapsed(),
+                ]),
+
                 Section::make('Forum Details')
                     ->description('Division must already have been created in the forums in order to populate these values')
                     ->schema([
