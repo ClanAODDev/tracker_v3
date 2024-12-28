@@ -99,20 +99,20 @@ class DivisionResource extends Resource
                             ->numeric(),
                     ]),
 
-                Forms\Components\Split::make([
-                    Section::make([
+                Section::make('Extra settings')->schema([
 
-                        Forms\Components\DateTimePicker::make('shutdown_at')->columns(3),
+                    Forms\Components\DateTimePicker::make('shutdown_at')->columns(2),
 
-                    ])->columnSpan(6),
-                    Section::make([
+                    Toggle::make('show_on_site')
+                        ->label('Show on site')
+                        ->hint('Toggle on if division should not be visible on the website')
+                        ->default(true)->columns(5),
 
-                        Toggle::make('active')
-                            ->label('Division Enabled')
-                            ->hint('Disabled divisions are not listed on the tracker or website')
-                            ->default(true),
-                    ])->columnSpan(6),
-                ])->from('lg')->columnSpanFull(),
+                    Toggle::make('active')
+                        ->label('Division Enabled')
+                        ->hint('Disabled divisions are not listed on the tracker or website')
+                        ->default(true)->columns(5),
+                ])
 
             ]);
     }
@@ -135,7 +135,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])

@@ -79,6 +79,7 @@ class Division extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+        'show_on_site' => 'boolean',
         'settings' => 'json',
         'shutdown_at' => 'datetime',
     ];

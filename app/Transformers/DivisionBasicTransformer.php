@@ -15,6 +15,7 @@ class DivisionBasicTransformer extends Transformer
             'description' => $item->description,
             'forum_app_id' => $item->forum_app_id,
             'members_count' => $item->members_count,
+            'show_on_site' => $item->show_on_site,
             'officer_channel' => $item->settings()->get('officer_channel'),
             'icon' => $item->getLogoPath(),
             'leadership' => $this->memberTransformer->transformCollection(
