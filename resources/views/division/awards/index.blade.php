@@ -31,7 +31,7 @@
 
         <hr>
         <div class="row">
-            @foreach ($awards->sortBy('display_order') as $award)
+            @forelse ($awards->sortBy('display_order') as $award)
 
                 <div class="col-xl-2 col-md-6">
                     <a class="panel panel-filled" href="{{ route('awards.show', $award) }}">
@@ -62,7 +62,9 @@
                         </div>
                     </a>
                 </div>
-            @endforeach
+            @empty
+                <div class="col-md-12"><p class="text-center text-muted">There are currently no available awards.</p></div>
+            @endforelse
         </div>
     </div>
 @endsection

@@ -19,19 +19,21 @@ class AwardController extends Controller
     {
         $awards = Award::query();
 
-        $awards->when(request('division'), function (Builder $query) {
+        $awards->when(request('division'), function (Builder $query) use ($awards) {
             $query->whereHas('division', function (Builder $query) {
                 $query->where('slug', request('division'));
             });
+
+            if ($awards->count() === 0) {
+                $this->showErrorToast('Selected division has no awards assigned. Showing all...');
+
+                return redirect(route('awards.index'));
+            }
         });
 
         $awards = $awards->active()->withCount('recipients')->with('recipients', 'division')->get();
 
-        if ($awards->count() === 0) {
-            $this->showErrorToast('Selected division has no awards assigned. Showing all...');
 
-            return redirect(route('awards.index'));
-        }
 
         return view('division.awards.index')->with(compact('awards'));
     }
