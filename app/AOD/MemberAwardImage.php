@@ -144,7 +144,9 @@ class MemberAwardImage
         $textY = $yCenter + $imageHeight + $textOffset;
 
         $textX = $x + ($imageWidth / 2) - ($maxTextWidth / 2);
-        $label = $division ? sprintf('[%s] %s', $division, $awardName) : $awardName;
+        $label = request('division_abbreviation') && $division
+            ? sprintf('[%s] %s', $division, $awardName)
+            : $awardName;
 
         $this->renderText($baseImage, $font, $label, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
 
