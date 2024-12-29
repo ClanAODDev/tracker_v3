@@ -105,7 +105,7 @@ class DivisionResource extends Resource
 
                     Toggle::make('show_on_site')
                         ->label('Show on site')
-                        ->hint('Toggle on if division should not be visible on the website')
+                        ->hint('Toggle on if division should be visible on the website')
                         ->default(true)->columns(5),
 
                     Toggle::make('active')
