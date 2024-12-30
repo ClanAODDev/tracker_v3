@@ -35,6 +35,7 @@ class UserResource extends Resource
                     ->relationship('role', 'label'),
                 Select::make('member_id')
                     ->label('Member')
+                    ->required()
                     ->searchable()
                     ->relationship('member', 'name'),
                 Forms\Components\Section::make('Settings')
