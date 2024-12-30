@@ -69,7 +69,10 @@ class SquadResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('division')
-                    ->relationship('platoon.division', 'name')
+                    ->relationship('platoon.division', 'name', function ($query) {
+                        return $query->whereActive(true);
+                    })
+                ->default()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

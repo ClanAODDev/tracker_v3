@@ -75,7 +75,9 @@ class PlatoonResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('division')
-                    ->relationship('division', 'name')
+                    ->relationship('division', 'name', function ($query) {
+                        return $query->whereActive(true);
+                    })->default()
             ])
 
             ->actions([
