@@ -161,7 +161,7 @@
             </li>
         @endif
 
-        @if(Auth::user()->isRole('sr_ldr'))
+        @if(Auth::user()->isRole(['sr_ldr', 'admin']))
             <li>
                 <a href="/mod">Mod CP</a>
             </li>
