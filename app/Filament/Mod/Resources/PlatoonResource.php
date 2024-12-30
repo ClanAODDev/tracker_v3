@@ -42,7 +42,7 @@ class PlatoonResource extends Resource
                     ->relationship('leader', 'name')
                     ->label('Leader')
                     ->searchable()
-                    ->required(),
+                    ->nullable(),
             ]);
     }
 
