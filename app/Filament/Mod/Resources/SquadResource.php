@@ -66,13 +66,13 @@ class SquadResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ])->modifyQueryUsing(function ($query) {
+                $query->whereHas('platoon', function ($query) {
+                    $query->where('division_id', auth()->user()->member->division_id);
+                });
+            })
             ->filters([
-                Tables\Filters\SelectFilter::make('division')
-                    ->relationship('platoon.division', 'name', function ($query) {
-                        return $query->whereActive(true);
-                    })
-                ->default()
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
