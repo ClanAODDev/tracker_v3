@@ -17,7 +17,7 @@ class SquadResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static ?string $navigationGroup = 'Division Organization';
 
     public static function form(Form $form): Form
     {
@@ -32,12 +32,14 @@ class SquadResource extends Resource
                 Select::make('platoon_id')
                     ->relationship('platoon', 'name')
                     ->label('Platoon')
-                    ->searchable()
+                    ->options(\App\Models\Platoon::whereDivisionId(auth()->user()->member->division_id)->pluck('name', 'id'))
                     ->required(),
-                Forms\Components\TextInput::make('leader_id')
-                    ->numeric()
-                    ->default(null),
-                Forms\Components\Toggle::make('gen_pop'),
+                Select::make('leader_id')
+                    ->relationship('leader', 'name')
+                    ->label('Leader')
+                    ->searchable()
+                    ->helperText('Leave blank if position not yet assigned')
+                    ->nullable(),
             ]);
     }
 
@@ -45,13 +47,10 @@ class SquadResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('logo')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('platoon.name')
-                    ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('division.name'),
                 Tables\Columns\TextColumn::make('leader.name')
                     ->numeric()
                     ->sortable(),
@@ -67,11 +66,10 @@ class SquadResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\IconColumn::make('gen_pop')
-                    ->boolean(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('division')
+                    ->relationship('platoon.division', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

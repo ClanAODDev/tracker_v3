@@ -41,6 +41,18 @@ class Squad extends Model
         return $this->belongsTo(Platoon::class);
     }
 
+    public function division()
+    {
+        return $this->hasOneThrough(
+            Division::class,
+            Platoon::class,
+            'id',
+            'id',
+            'platoon_id',
+            'division_id'
+        );
+    }
+
     /**
      * relationship - squad has many members.
      */
@@ -48,7 +60,7 @@ class Squad extends Model
     {
         return $this->hasMany(Member::class)
             ->orderBy('rank', 'desc')
-            ->orderBy('name', 'asc');
+            ->orderBy('name');
     }
 
     /**

@@ -17,13 +17,14 @@ class PlatoonResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static ?string $navigationGroup = 'Division Organization';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('order')
+                    ->label('Sort order')
                     ->required()
                     ->numeric()
                     ->default(0),
@@ -31,18 +32,16 @@ class PlatoonResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('logo')
+                    ->placeholder('https://')
                     ->maxLength(255)
                     ->default(null),
-                Select::make('division_id')
-                    ->relationship('division', 'name')
-                    ->label('Division')
-                    ->searchable()
-                    ->required(),
                 Select::make('leader_id')
                     ->relationship('leader', 'name')
                     ->label('Leader')
                     ->searchable()
+                    ->helperText('Leave blank if position not yet assigned')
                     ->nullable(),
+
             ]);
     }
 
@@ -54,8 +53,6 @@ class PlatoonResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('logo')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
@@ -77,8 +74,10 @@ class PlatoonResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('division')
+                    ->relationship('division', 'name')
             ])
+
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])

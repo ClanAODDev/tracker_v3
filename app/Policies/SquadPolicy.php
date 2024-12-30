@@ -19,7 +19,7 @@ class SquadPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole(['admin', 'sr_ldr'])
+        if ($user->isRole(['admin'])
             || $user->isDeveloper()
         ) {
             return true;
@@ -31,6 +31,10 @@ class SquadPolicy
      */
     public function update(User $user, Squad $squad)
     {
+        if ($user->member->division_id === $squad->platoon->division_id) {
+            return true;
+        }
+
         return false;
     }
 
@@ -47,8 +51,12 @@ class SquadPolicy
     /**
      * @return bool
      */
-    public function create(User $user, Division $division)
+    public function create(User $user)
     {
+        if($user->isRole(['sr_ldr'])) {
+            return true;
+        }
+
         return false;
     }
 }
