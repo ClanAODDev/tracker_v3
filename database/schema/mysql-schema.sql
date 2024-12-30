@@ -324,7 +324,7 @@ CREATE TABLE `platoons` (
   `name` varchar(255) NOT NULL,
   `logo` varchar(255) DEFAULT NULL,
   `division_id` mediumint(9) NOT NULL,
-  `leader_id` mediumint(9) NOT NULL,
+  `leader_id` mediumint(9) NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
