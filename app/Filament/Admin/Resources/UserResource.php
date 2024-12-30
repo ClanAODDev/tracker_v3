@@ -37,10 +37,22 @@ class UserResource extends Resource
                     ->label('Member')
                     ->searchable()
                     ->relationship('member', 'name'),
-                Forms\Components\KeyValue::make('settings')
-                    ->required()
-                    ->addable(false)
-                    ->columnSpanFull(),
+                Forms\Components\Section::make('Settings')
+                    ->columns()
+                    ->statePath('settings')
+                    ->schema([
+                        Forms\Components\Select::make('snow')
+                            ->label(false)
+                            ->helperText('Festive winter snow')
+                            ->options([
+                                'all_the_snow' => 'All the snow',
+                                'some_snow' => 'Some snow',
+                                'no_snow' => 'Disable'
+                            ])->selectablePlaceholder(false),
+                        Forms\Components\Toggle::make('ticket_notifications')
+                            ->helperText('Get notified about ticket events'),
+                    ]),
+
                 Forms\Components\DateTimePicker::make('last_login_at')
                     ->readOnly(),
             ]);
