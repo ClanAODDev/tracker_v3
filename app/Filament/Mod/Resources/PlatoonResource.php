@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\PlatoonResource\Pages;
+use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationManager;
 use App\Models\Platoon;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -36,8 +37,10 @@ class PlatoonResource extends Resource
                     ->maxLength(255)
                     ->default(null),
                 Select::make('leader_id')
-                    ->relationship('leader', 'name')
-                    ->label('Leader')
+                    ->relationship('leader', 'name', function ($query) {
+                        $query->where('division_id', auth()->user()->member->division_id);
+                    })
+                    ->label('Leader (from current division)')
                     ->searchable()
                     ->helperText('Leave blank if position not yet assigned')
                     ->nullable(),
@@ -92,7 +95,7 @@ class PlatoonResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SquadsRelationManager::class,
         ];
     }
 
