@@ -36,7 +36,8 @@ class NoteResource extends Resource
                 Forms\Components\Select::make('author')
                     ->relationship('author', 'name')
                     ->searchable(),
-                Forms\Components\TextInput::make('type')
+                Forms\Components\Select::make('type')
+                    ->options(collect(Note::allNoteTypes()))
                     ->required(),
             ]);
     }
