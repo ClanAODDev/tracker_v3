@@ -45,9 +45,9 @@ class MemberResource extends Resource
                     Select::make('position')
                         ->required()
                         ->options(Position::class),
-                    TextInput::make('recruiter_id')
-                        ->numeric()
-                        ->default(null),
+                    Select::make('recruiter_id')
+                        ->relationship('recruiter', 'name')
+                        ->nullable(),
                     Select::make('division_id')
                         ->relationship('division', 'name')
                         ->label('Division')
@@ -62,29 +62,22 @@ class MemberResource extends Resource
                         ->readOnly()
                         ->maxLength(191)
                         ->default(null),
-                    Select::make('last_voice_status')
-                        ->options(DiscordStatus::class)
-                        ->default(null),
                     TextInput::make('discord_id')
                         ->numeric()
                         ->readOnly()
                         ->default(null),
-                ])->columns(2),
+                ])->columns(),
                 Forms\Components\Section::make('Activity')->schema([
-                    Forms\Components\DateTimePicker::make('last_voice_activity'),
-                    Forms\Components\DateTimePicker::make('last_activity'),
-                    Forms\Components\DateTimePicker::make('last_ts_activity'),
-                ])->columns(3),
+                    Forms\Components\DateTimePicker::make('last_voice_activity')->readOnly(),
+                    Forms\Components\DateTimePicker::make('last_activity')->readOnly(),
+                ])->columns(),
 
                 Forms\Components\Section::make('Dates')->schema([
                     Forms\Components\DateTimePicker::make('join_date'),
                     Forms\Components\DateTimePicker::make('last_promoted_at'),
                     Forms\Components\DateTimePicker::make('last_trained_at'),
-                    TextInput::make('last_trained_by')
-                        ->numeric()
-                        ->default(null),
-                    Forms\Components\DateTimePicker::make('xo_at'),
-                    Forms\Components\DateTimePicker::make('co_at'),
+                    Select::make('last_trained_by')
+                        ->relationship('trainer', 'name'),
                 ]),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
@@ -98,7 +91,7 @@ class MemberResource extends Resource
 
                     Forms\Components\Section::make('Misc')->schema([
                         TextInput::make('posts')
-                            ->required()
+                            ->readOnly()
                             ->numeric()
                             ->default(0),
                         Forms\Components\Textarea::make('groups')
@@ -129,73 +122,6 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ts_unique_id')
-                    ->toggleable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('discord')
-                    ->toggleable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('last_voice_status')
-                    ->toggleable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('discord_id')
-                    ->toggleable()
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('flagged_for_inactivity')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('posts')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('privacy_flag')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('allow_pm')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('join_date')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_activity')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_voice_activity')
-                    ->toggleable()
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_ts_activity')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_promoted_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_trained_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('last_trained_by')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('xo_at')
-                    ->label('Assigned XO')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('co_at')
-                    ->label('Assigned CO')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('recruiter.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('division')
