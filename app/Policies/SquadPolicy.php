@@ -53,7 +53,7 @@ class SquadPolicy
      */
     public function create(User $user)
     {
-        if($user->isRole(['sr_ldr'])) {
+        if ($user->isRole(['sr_ldr'])) {
             return true;
         }
 

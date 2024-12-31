@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Division;
 use App\Models\Platoon;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -38,8 +37,6 @@ class PlatoonPolicy
     }
 
     /**
-     * @param  User  $user
-     * @param  Platoon  $platoon
      * @return bool
      */
     public function update(User $user, Platoon $platoon)
@@ -63,7 +60,7 @@ class PlatoonPolicy
      */
     public function create(User $user)
     {
-        if($user->isRole(['sr_ldr'])) {
+        if ($user->isRole(['sr_ldr'])) {
             return true;
         }
 

@@ -112,7 +112,7 @@ class DivisionResource extends Resource
                         ->label('Division Enabled')
                         ->hint('Disabled divisions are not listed on the tracker or website')
                         ->default(true)->columns(5),
-                ])
+                ]),
 
             ]);
     }
@@ -135,7 +135,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])

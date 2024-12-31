@@ -33,8 +33,6 @@ class AwardController extends Controller
 
         $awards = $awards->active()->withCount('recipients')->with('recipients', 'division')->get();
 
-
-
         return view('division.awards.index')->with(compact('awards'));
     }
 

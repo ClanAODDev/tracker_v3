@@ -48,7 +48,7 @@ class UserResource extends Resource
                             ->options([
                                 'all_the_snow' => 'All the snow',
                                 'some_snow' => 'Some snow',
-                                'no_snow' => 'Disable'
+                                'no_snow' => 'Disable',
                             ])->selectablePlaceholder(false),
                         Forms\Components\Toggle::make('ticket_notifications')
                             ->helperText('Get notified about ticket events'),
