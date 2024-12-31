@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('divisions', function (Blueprint $table) {
-            $table->boolean('show_on_site')->default(true);
-        });
+        if (!Schema::hasColumn('divisions', 'show_on_site')) {
+            Schema::table('divisions', function (Blueprint $table) {
+                $table->boolean('show_on_site')->default(true);
+            });
+        }
     }
 
     /**
