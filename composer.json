@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.31",
+        "laravel/framework": "^11.35",
         "laracasts/flash": "^3.1",
         "doctrine/dbal": "^3.0",
         "barryvdh/laravel-debugbar": "^3.0",
