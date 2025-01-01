@@ -76,7 +76,7 @@ class AwardResource extends Resource
                     ->limit(45)
                     ->toggleable(),
                 Tables\Columns\TextInputColumn::make('display_order')
-                    ->rules(['required', 'numeric', ''])
+                    ->rules(['required', 'numeric'])
                     ->sortable(),
                 Tables\Columns\ToggleColumn::make('active'),
                 Tables\Columns\TextColumn::make('created_at')
