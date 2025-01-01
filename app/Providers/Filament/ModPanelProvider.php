@@ -26,7 +26,6 @@ class ModPanelProvider extends PanelProvider
             ->default()
             ->id('mod')
             ->path('mod')
-            ->login()
             ->colors([
                 'primary' => '#0a8509',
             ])
