@@ -28,7 +28,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     /**
      * @var array
      */
-    protected $fillable = ['reason', 'end_date', 'extended'];
+    protected $guarded = [];
 
     /**
      * @return BelongsTo
@@ -36,6 +36,11 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+    }
+
+    public function division()
+    {
+        return $this->hasOneThrough(Member::class, Division::class, 'id', 'id', 'clan_id', 'division_id');
     }
 
     /**
