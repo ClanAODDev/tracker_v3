@@ -17,6 +17,14 @@ class Leave extends \Illuminate\Database\Eloquent\Model
         'end_date' => 'datetime',
     ];
 
+    public static array $reasons = [
+        'military' => 'Military',
+        'medical' => 'Medical',
+        'education' => 'Education',
+        'travel' => 'Travel',
+        'other' => 'Other',
+    ];
+
     /**
      * @var array
      */
