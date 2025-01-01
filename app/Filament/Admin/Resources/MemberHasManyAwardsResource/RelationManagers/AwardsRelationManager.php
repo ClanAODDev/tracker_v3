@@ -24,7 +24,7 @@ class AwardsRelationManager extends RelationManager
                     ->maxLength(191)
                     ->default(null),
 
-                Forms\Components\Toggle::make('approved'),
+                Forms\Components\Toggle::make('approved')->hiddenOn('create'),
 
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\DateTimePicker::make('created_at')->default(now()),
