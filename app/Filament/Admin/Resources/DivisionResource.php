@@ -61,7 +61,8 @@ class DivisionResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        FilamentJsonColumn::make('settings'),
+                        FilamentJsonColumn::make('settings')
+                            ->hiddenOn('create'),
 
                         TextInput::make('description')
                             ->default('Another AOD Division')
@@ -71,6 +72,7 @@ class DivisionResource extends Resource
 
                 Section::make('Website')->schema([
                     Forms\Components\Section::make('Website')
+                        ->hiddenOn('create')
                         ->description('Divisional website settings')
                         ->schema([
                             Forms\Components\MarkdownEditor::make('site_content')
@@ -135,7 +137,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])
