@@ -22,8 +22,6 @@ class EditLeave extends EditRecord
                 ->hidden(fn ($action) =>
                         // already approved
                     $action->getRecord()->approver_id
-                        // requested by the current user
-                    || $action->getRecord()->requester_id === auth()->id()
                         // leave request for the current user
                     || $action->getRecord()->member_id === auth()->user()->member->clan_id
                 )
