@@ -15,7 +15,7 @@
 
         {!! Breadcrumbs::render('voice-report', $division) !!}
 
-        @if(!count($discordIssues) && !count($tsIssues))
+        @if(!count($discordIssues))
             <p>There no voice comms issues to resolve for the {{ $division->name }} division.</p>
         @endif
 
