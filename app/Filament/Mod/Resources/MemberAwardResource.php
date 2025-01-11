@@ -30,8 +30,13 @@ class MemberAwardResource extends Resource
                     ->relationship('award', 'name'),
 
                 Forms\Components\Select::make('member_id')
+                    ->relationship('member', 'name', function (Builder $query) {
+                        $query->whereHas('division', function (Builder $subQuery) {
+                            $subQuery->where('active', true);
+                        });
+                    })
                     ->searchable()
-                    ->relationship('member', 'name'),
+                    ->required(),
 
                 Forms\Components\Textarea::make('reason')
                     ->columnSpanFull()
@@ -56,7 +61,8 @@ class MemberAwardResource extends Resource
                     ->numeric()
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member.name')->searchable(),
+                Tables\Columns\TextColumn::make('member.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('reason')
                     ->toggleable(),
 
