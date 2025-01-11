@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Division;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class PartTimeMemberCleanup extends Command
 {
@@ -33,7 +32,7 @@ class PartTimeMemberCleanup extends Command
 
         foreach ($divisions as $division) {
             foreach ($division->partTimeMembers as $member) {
-                if ($member->division_id === $division->name) {
+                if ($member->division_id === $division->id) {
                     $this->info("Cleaning up part-time assignment for member {$member->name} in division {$division->name}");
                     $member->partTimeDivisions()->detach($division->name);
                 }
@@ -41,6 +40,7 @@ class PartTimeMemberCleanup extends Command
         }
 
         $this->info('Cleanup completed successfully.');
+
         return self::SUCCESS;
     }
 }
