@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Mansoor\FilamentVersionable\Table\RevisionsAction;
 use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
 
 class DivisionResource extends Resource
@@ -138,12 +139,13 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                RevisionsAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -164,6 +166,7 @@ class DivisionResource extends Resource
             'index' => Pages\ListDivisions::route('/'),
             'create' => Pages\CreateDivision::route('/create'),
             'edit' => Pages\EditDivision::route('/{record}/edit'),
+            'revisions' => Pages\DivisionRevisions::route('/{record}/revisions'),
         ];
     }
 }

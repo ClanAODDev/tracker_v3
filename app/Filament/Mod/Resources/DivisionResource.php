@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Mansoor\FilamentVersionable\Table\RevisionsAction;
 
 class DivisionResource extends Resource
 {
@@ -99,6 +100,21 @@ class DivisionResource extends Resource
                     ->schema([
                         Forms\Components\MarkdownEditor::make('site_content')
                             ->helperText('Changes will prompt an admin review before being published')
+                            ->toolbarButtons([
+                                'blockquote',
+                                'bold',
+                                'bulletList',
+                                'codeBlock',
+                                'heading',
+                                'italic',
+                                'link',
+                                'orderedList',
+                                'redo',
+                                'strike',
+                                'undo',
+                                // 'table',
+                                // 'attachFiles',
+                            ])
                             ->columnSpanFull(),
                     ])->collapsible()->collapsed(),
 
@@ -117,6 +133,7 @@ class DivisionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                RevisionsAction::make(),
             ])
             ->bulkActions([
                 //
@@ -133,6 +150,7 @@ class DivisionResource extends Resource
     public static function getPages(): array
     {
         return [
+            'revisions' => Pages\DivisionRevisions::route('/{record}/revisions'),
             'index' => Pages\ListDivisions::route('/'),
             'edit' => Pages\EditDivision::route('/{record}/edit'),
         ];
