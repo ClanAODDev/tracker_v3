@@ -13,7 +13,7 @@ class PartTimeMemberCleanup extends Command
      *
      * @var string
      */
-    protected $signature = 'app:part-time-member-cleanup';
+    protected $signature = 'do:part-time-member-cleanup';
 
     /**
      * The console command description.

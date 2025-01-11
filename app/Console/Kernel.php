@@ -26,6 +26,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('do:membersync')->hourly();
         $schedule->command('do:divisioncensus')->weekly();
+        $schedule->command('do:part-time-member-cleanup')->weekly();
     }
 
     /**
