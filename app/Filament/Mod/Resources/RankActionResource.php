@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class RankActionResource extends Resource
 {
@@ -24,7 +25,11 @@ class RankActionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('member_id')
-                    ->relationship(name: 'member', titleAttribute: 'name')
+                    ->relationship('member', 'name', function (Builder $query) {
+                        $query->whereHas('division', function (Builder $subQuery) {
+                            $subQuery->where('active', true);
+                        });
+                    })
                     ->searchable()
                     ->required(),
                 Forms\Components\Select::make('rank')
