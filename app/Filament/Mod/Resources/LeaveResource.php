@@ -38,6 +38,7 @@ class LeaveResource extends Resource
                     ->relationship('member', 'name', function ($query) {
                         $query->where('division_id', auth()->user()->member->division_id);
                     })
+                    ->hiddenOn('edit')
                     ->searchable(),
 
                 Forms\Components\Select::make('reason')

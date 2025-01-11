@@ -187,28 +187,6 @@ class MemberController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     *
-     * @throws AuthorizationException
-     */
-    public function edit(Member $member)
-    {
-        $this->authorize('update', $member);
-
-        $division = $member->division;
-
-        $positions = collect(\App\Enums\Position::options())->flip();
-
-        return view('member.edit-member', compact(
-            'member',
-            'division',
-            'positions'
-        ));
-    }
-
-    /**
      * Sync player handles.
      */
     public function updateHandles(Request $request)

@@ -6,7 +6,7 @@
 
         @can('update', $member)
             <li>
-                <a href="{{ route('editMember', $member->clan_id) }}"> Edit member</a>
+                <a href="{{ route('filament.mod.resources.members.edit', $member) }}">Edit Member</a>
             </li>
 
             @can('train', auth()->user())
