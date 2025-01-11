@@ -47,7 +47,9 @@ class DivisionResource extends Resource
                         Forms\Components\Repeater::make('locality')->schema([
                             Forms\Components\TextInput::make('old-string')->readOnly(),
                             Forms\Components\TextInput::make('new-string'),
-                        ])->reorderable(false)->columns()->addable(false),
+                        ])->reorderable(false)->columns()
+                            ->addable(false)
+                            ->deletable(false),
                     ]),
 
                 Forms\Components\Section::make('Recruiting')->collapsible()->collapsed()
