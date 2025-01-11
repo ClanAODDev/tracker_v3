@@ -137,6 +137,15 @@ class MemberResource extends Resource
             ->filters([
                 SelectFilter::make('division_id')
                     ->options(Division::active()->get()->pluck('name', 'id')),
+                Filter::make('Has Active Division')
+                    ->query(function (Builder $query) {
+                        $query->whereNotNull('division_id')
+                            ->whereHas('division', function (Builder $subQuery) {
+                                $subQuery->where('active', true);
+                            });
+                    })
+                    ->label('Has Active Division')
+                    ->default(),
                 Filter::make('rank_id')
                     ->label('Rank')
                     ->indicator('Rank')
@@ -147,10 +156,10 @@ class MemberResource extends Resource
                         return $query
                             ->when(
                                 $data['rank'],
-                                fn (Builder $query, $rank): Builder => $query->where('rank', $rank),
+                                fn(Builder $query, $rank): Builder => $query->where('rank', $rank),
                             );
                     })->indicateUsing(function (array $data) {
-                        return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
+                        return $data['rank'] ? 'Rank: '.Rank::from($data['rank'])->getLabel() : null;
                     }),
             ])
             ->actions([
