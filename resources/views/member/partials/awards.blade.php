@@ -7,7 +7,7 @@
             <div class="col-lg-3 col-xl-2 col-sm-6">
                 <a href="{{ route('awards.show', $record->award) }}" class="btn btn-default btn-block"
                    style="margin-bottom:20px;">
-                    <div class="panel-body award-item" title="{{ $record->award->description }}">
+                    <div class="panel-body award-item" title="{{ $record->reason ?? $record->award->description }}">
                         <img src="{{ asset(Storage::url($record->award->image)) }}"
                              alt="{{ $record->award->name }}"
                              class="clan-award"
