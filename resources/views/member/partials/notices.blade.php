@@ -36,7 +36,7 @@
         <div class="alert alert-warning">
             Member has a leave of absence request that has not yet been approved.
             <a class="alert-link"
-               href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}">View Details</a>
+               href="{{ route('filament.mod.resources.leaves.edit', $member->leave->id) }}">View Details</a>
         </div>
     @endif
 @endif
