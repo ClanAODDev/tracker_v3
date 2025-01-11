@@ -7,6 +7,7 @@ use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
 use App\Filament\Mod\Resources\MemberResource\Pages;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\NotesRelationManager;
+use App\Models\Division;
 use App\Models\Member;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -134,8 +135,8 @@ class MemberResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('division')
-                    ->relationship('division', 'name'),
+                SelectFilter::make('division_id')
+                    ->options(Division::active()->get()->pluck('name', 'id')),
                 Filter::make('rank_id')
                     ->label('Rank')
                     ->indicator('Rank')
