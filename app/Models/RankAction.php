@@ -24,12 +24,4 @@ class RankAction extends Model
     {
         return $this->belongsTo(Member::class);
     }
-
-    /**
-     * @return BelongsTo
-     */
-    public function division()
-    {
-        return $this->belongsTo(Division::class);
-    }
 }

@@ -52,8 +52,16 @@ class MemberController extends Controller
         }
 
         if ($name) {
-            $members = Member::where('name', 'LIKE', "%{$name}%")
-                ->with('division')->get();
+            $member_name = Member::where('name', 'LIKE', "%{$name}%")
+                ->with('division');
+
+            $members = Member::withWhereHas('handles', function ($query) use ($name) {
+                $query->where('value', 'LIKE', "%{$name}%");
+            })
+                ->with('division')
+                ->union($member_name)
+                ->orderBy('name')
+                ->get();
         } else {
             $members = [];
         }
@@ -128,7 +136,7 @@ class MemberController extends Controller
         $division = $member->division;
 
         // hide admin notes from non-admin users
-        $notes = $member->notes()->with('author')->get()
+        $notes = $member->notes()->with('author.member')->get()
             ->filter(function ($note) {
                 if ($note->type === 'sr_ldr') {
                     return auth()->user()->isRole(['sr_ldr', 'admin']);
@@ -176,28 +184,6 @@ class MemberController extends Controller
         $this->authorize('update', $member);
         $member->assignPosition($request->position);
         $member->save();
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     *
-     * @throws AuthorizationException
-     */
-    public function edit(Member $member)
-    {
-        $this->authorize('update', $member);
-
-        $division = $member->division;
-
-        $positions = collect(\App\Enums\Position::options())->flip();
-
-        return view('member.edit-member', compact(
-            'member',
-            'division',
-            'positions'
-        ));
     }
 
     /**

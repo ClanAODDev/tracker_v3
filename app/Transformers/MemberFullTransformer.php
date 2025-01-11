@@ -17,7 +17,7 @@ class MemberFullTransformer extends Transformer
             'last_ts_activity' => $item->last_ts_activity,
             'rank' => [
                 'label' => $item->rank->getAbbreviation(),
-                'color' => $item->rank->getColorHex()
+                'color' => $item->rank->getColorHex(),
             ],
             'division_id' => $item->division_id,
             'position' => $item->position->getLabel(),

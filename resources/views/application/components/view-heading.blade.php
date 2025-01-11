@@ -1,4 +1,4 @@
-<div class="view-header">
+<div class="view-header" style="margin-left: 15px;margin-right: 15px;">
     <div class="pull-right text-right hidden-sm hidden-xs" style="line-height: 14px">
         <small>Clan AOD<br>Tracker<br> <span class="c-white">{{ $currentPage }}</span>
         </small>
@@ -14,5 +14,5 @@
             {{ $subheading }}
         </small>
     </div>
-    <hr />
+    <hr/>
 </div>

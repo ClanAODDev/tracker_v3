@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Enums\Rank;
-use App\Models\Member;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 

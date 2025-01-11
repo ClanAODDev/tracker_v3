@@ -39,7 +39,7 @@ class ReportsController extends Controller
             ) => \count($division->census))->each(function ($division) {
                 $division->total = $division->census->last()->count;
                 $division->popMinusVoiceActive = $division->census->last()->count - $division->census->last()
-                        ->weekly_voice_count;
+                    ->weekly_voice_count;
                 $division->weeklyVoiceActive = $division->census->last()->weekly_voice_count;
             });
 

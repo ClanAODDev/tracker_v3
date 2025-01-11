@@ -1,0 +1,110 @@
+award_id,award_cat_id,award_name,award_desc,award_icon_url,award_img_url,award_displayorder,award_allowrequest,award_active,award_allowrecommend,award_pointvalue
+5,3,PS2 Loyal Soldier,Awarded for earning either BR 120 or ASP Access in Planetside 2,/forums/images/awards/ps2-loyal.png,/forums/images/awards/ps2-loyal.png,800,0,1,0,0
+6,3,PS2 Thunderdome Champion,"",/forums/images/awards/ps2_thunderdome.png,/forums/images/awards/ps2_thunderdome.png,801,0,1,0,0
+16,3,War Thunder - All Star Contributor,"A member that has gone beyond the normal means of helping out the WT division. This can be bringing incredible amounts of members to the division, helping NCO and Non-NCO and alike, creating events or helping out in events",/forums/images/awards/wt-all-star-contributor.png,/forums/images/awards/wt-all-star-contributor.png,1306,0,1,0,0
+18,2,AOD - 5 Years of Service,Member has been in AOD for at least 5 years.,/forums/images/awards/aod_5year.png,/forums/images/awards/aod_5year.png,1,0,1,0,0
+19,2,AOD - 10 Years of Service,Member has been in AOD for at least 10 years,/forums/images/awards/aod_10year.png,/forums/images/awards/aod_10year.png,2,0,1,0,0
+22,3,JK Master Trainer,"",/forums/images/awards/jk-trainer-sm.png,/forums/images/awards/jk-trainer-lg.png,600,0,1,0,0
+23,3,JK Great Recruiter,Has sent at least 3 people to apply,/forums/images/awards/jk-recruiter-sm.png,/forums/images/awards/jk-recruiter-lg.png,601,0,1,0,0
+24,3,JK Great Serious Sunday Captain,Has won Serious Sunday at least 3 times as a Captain,/forums/images/awards/jk-serious-sunday-cpt-sm.png,/forums/images/awards/jk-serious-sunday-cpt-lg.png,602,0,1,0,0
+25,3,JK Serious Sunday MVP,Got MVP on Serious Sunday at least 3 times,/forums/images/awards/jk-serious-sunday-mvp-sm.png,/forums/images/awards/jk-serious-sunday-mvp-lg.png,603,0,1,0,0
+28,3,JK Saber Tournament Champion,Won a Saber Tournament,/forums/images/awards/jk-saber-sm.png,/forums/images/awards/jk-saber-lg.png,606,0,1,0,0
+30,3,JK Melee Tournament Champion,Won a Melee Tournament,/forums/images/awards/jk-melee-sm.png,/forums/images/awards/jk-melee-lg.png,608,0,1,0,0
+32,3,JK Jedi/Sith Force Tournament Winner,"",/forums/images/awards/jk-force-sm.png,/forums/images/awards/jk-force-lg.png,610,0,1,0,0
+41,3,PS2 Reaper Group Member,Member of AOD PlanetSide 2 competitive team.,/forums/images/awards/ps2_reapers.png,/forums/images/awards/ps2_reapers.png,802,0,1,0,0
+42,3,Battlefield League Season Champion,Awarded to the highest scoring squad on the winning team in a season of the AOD Battlefield League.,/forums/images/awards/bf-league-champ.png,/forums/images/awards/bf-league-champ.png,150,0,1,0,0
+43,3,Battlefield CO Invitational Winner,Awarded to winners of Battlefield's CO Invitational Events and lasts until the next event.,/forums/images/awards/bf-co-invitational-v3.png,/forums/images/awards/bf-co-invitational-v3.png,151,0,1,0,0
+44,3,JK Sniper Tournament Champion,Won a Sniper Tournament,/forums/images/awards/jk-sniper-sm.png,/forums/images/awards/jk-sniper-lg.png,611,0,1,0,0
+45,3,JK Pistol Tournament Champion,Won a Pistol Tournament,/forums/images/awards/jk-pistol-sm.png,/forums/images/awards/jk-pistol-lg.png,612,0,1,0,0
+46,3,JK Racing Tournament Champion,Has won a Racing Tournament,/forums/images/awards/jk-racing-sm.png,/forums/images/awards/jk-racing-lg.png,605,0,1,0,0
+56,3,Battlefield XO Challenge,Awarded to winners of Battlefield's XO Challenge Events and lasts until the next event.,/forums/images/awards/bf-xo.png,/forums/images/awards/bf-xo.png,152,0,1,0,0
+58,3,Battlefield Shitbucket Award,Awarded to members who have achieved max rank in a Battlefield game.,/forums/images/awards/bf-shitbucket-sm.png,/forums/images/awards/bf-shitbucket-lg.png,153,0,1,0,0
+68,3,PS2 Zerg Herder,Award to members that have gained the Commander helmet,/forums/images/awards/ps2-zerg.png,/forums/images/awards/ps2-zerg.png,803,0,1,0,0
+71,3,JK Legacy Badge,"",/forums/images/awards/jk-legacy.png,/forums/images/awards/jk-legacy.png,613,0,1,0,0
+76,3,War Thunder - Seal Of Awesomeness,Awarded to winners of a War Thunder contest,/forums/images/awards/wt_awesomeness.png,/forums/images/awards/wt_awesomeness.png,1308,0,1,0,0
+98,3,Battlefield PTFO Master,"Earn 3 of the 4 Playercard Tags: “Battle Scarred”, ""Disseminator"", ""Battle Angel"", and ""Architect of War""",/forums/images/awards/bf-ptfo-new.png,/forums/images/awards/bf-ptfo-new.png,154,0,1,0,0
+99,3,Battlefield Gear Gremlin,Earn Tier 1 with any 3 pieces of Gear,/forums/images/awards/bf-gear-gremlin.png,/forums/images/awards/bf-gear-gremlin.png,155,0,1,0,0
+100,3,Battlefield Master-at-Arms,"Earn Tier 1 with 8 Weapons, or Mastery 350 with a Single Weapon",/forums/images/awards/bf-master-at-arms.png,/forums/images/awards/bf-master-at-arms.png,156,0,1,0,0
+101,3,Battlefield Super Soldier,Reach Tier 1 with 4 Specialists,/forums/images/awards/bf-super-soldier.png,/forums/images/awards/bf-super-soldier.png,157,0,1,0,0
+102,3,Battlefield Heavy Metal Maniac,"Earn Tier 1 with any 2 Vehicles, or Mastery 20 on any 4 Vehicles",/forums/images/awards/bf-heavy-metal-maniac.png,/forums/images/awards/bf-heavy-metal-maniac.png,158,0,1,0,0
+104,3,Destiny 2 Pathfinder,Awarded to members of the pathfinder group who actively lead raids.,/forums/images/awards/d2-pathfinder.png,/forums/images/awards/d2-pathfinder.png,300,0,1,0,0
+126,3,World of Warships - Operation Galore,"Complete the following Operations with 5 stars;
+Defense of Naval Station Newport
+Aegis
+Raptor Rescue
+Narai
+Killer Whale",/forums/images/awards/WoWS_Operations_Galore.png,/forums/images/awards/WoWS_Operations_Galore.png,1500,0,1,0,0
+127,3,World of Warships - Collection Collector,"Complete the following Collections;
+American Cruisers
+Yamamoto Isoroku
+Five Epochs of the Navy
+Naval Aviation (Must buy one coal container)
+In Service of the Motherland (Must buy one coal container)
+Royal Navy Destroyers (Must buy one coal container)""",/forums/images/awards/WoWS_Collection_Collector.png,/forums/images/awards/WoWS_Collection_Collector.png,1501,0,1,0,0
+135,3,Call of Duty - Dedicated Soldier,Awarded to members who have reached Master Prestige during the duration of the current season of Call of Duty.,/forums/images/awards/cod-dedicated-soldier.png,/forums/images/awards/cod-dedicated-soldier.png,280,0,1,0,0
+136,3,Call of Duty - Gilded Guns,Awarded to members who earn Gold on all primary weapons,/forums/images/awards/cod-gilded.png,/forums/images/awards/cod-gilded.png,281,0,1,0,0
+139,2,AOD - 15 Years of Service,Member has been in AOD for at least 15 years.,/forums/images/awards/aod_15year.png,/forums/images/awards/aod_15year.png,3,0,1,0,0
+140,2,AOD - 20 Years of Service,Member has been in AOD for at least 20 years.,/forums/images/awards/aod_20year.png,/forums/images/awards/aod_20year.png,4,0,1,0,0
+147,3,Destiny 2 - Dredgen,Awarded to Guardians who earn the title of 'Dredgen'.,/forums/images/awards/d2-dredgen.png,/forums/images/awards/d2-dredgen.png,302,0,1,0,0
+149,3,Destiny 2 - Cursebreaker,Awarded to Guardians who earn the title of 'Cursebreaker'.,/forums/images/awards/d2-cursebreaker.png,/forums/images/awards/d2-cursebreaker.png,304,0,1,0,0
+151,3,Destiny 2 - Rivensbane,Awarded to Guardians who earn the title of 'Rivensbane'.,/forums/images/awards/d2-rivensbane.png,/forums/images/awards/d2-rivensbane.png,306,0,1,0,0
+160,3,Call of Duty - Answered The Call,Rotated to members who participate in the major quarterly event.,/forums/images/awards/cod-answered.png,/forums/images/awards/cod-answered.png,283,0,1,0,0
+170,3,Call of Duty - Member of the Quarter,Rotated quarterly to all members awarded Member of the Quarter,/forums/images/awards/cod-quarter.png,/forums/images/awards/cod-quarter.png,283,0,1,0,0
+171,3,Call of Duty - Second to None,"Awarded to the winners of our regular monthly events. Currently includes Killathon, Plunderthon, and the Outbreak Events",/forums/images/awards/cod-second-to-none.png,/forums/images/awards/cod-second-to-none.png,285,0,1,0,0
+172,3,Call of Duty - Certified Badass,Awarded to participating members of the winning platoon during our annual Platoon Wars event,/forums/images/awards/cod-platoon.png,/forums/images/awards/cod-platoon.png,286,0,1,0,0
+179,3,War Thunder - Super Squad,Reward given out in Super Squad Saturday events for MVP or winner of competitive match.,/forums/images/awards/wt-super-squad.png,/forums/images/awards/wt-super-squad.png,1307,0,1,0,0
+180,3,War Thunder - Level 100,Members who have reached level 100 in War Thunder.,/forums/images/awards/wt-level100.png,/forums/images/awards/wt-level100.png,1305,0,1,0,0
+182,3,World of Warships - Campaign Master,"Awarded to any member who has completed the following five (5) Campaigns;
+
+Honorable Service
+Science of Victory
+Yamamato Isoroko
+Five Epochs of the Navy
+Hit Hard! Hit Fast! Hit Often!",/forums/images/awards/wows-campaign.png,/forums/images/awards/wows-campaign.png,1503,0,1,0,0
+184,3,World of Warships - Sailor of the Quarter,"This award rotates every 3 months. Members are submitted based on activity, effort & merit and the NCOs vote by poll. Multiple SoQ's can be awarded but no more than 1 per Port.",/forums/images/awards/WoWS_SaileroftheQuarter.png,/forums/images/awards/WoWS_SaileroftheQuarter.png,1504,0,1,0,0
+187,3,World of Warships - Fleet Admiral,"This award is for any member who has completely researched all vessels (excluding freemium/premium) for any 5 Nations. Vessels do not have to be purchased, just researched so roughly 175ish total ships. This includes BBs, CAs, DDs, SSs, and CVs",/forums/images/awards/WoWS_Fleet_Admiral.png,/forums/images/awards/WoWS_Fleet_Admiral.png,1507,0,1,0,0
+188,3,World of Warships - Golden Shellback,"Member who has gone well above and beyond expectations be it recruiting, personal sacrifice, selfless service, time and/or effort. The Golden Shellback is awarded by the CO",/forums/images/awards/WoWS_Golden_Shellback.png,/forums/images/awards/WoWS_Golden_Shellback.png,1508,0,1,0,0
+189,3,World of Warships - Quarterly Event 1st Place,These awards based on placement of the quarterly event,/forums/images/awards/WoWS_V-25Race_1st.png,/forums/images/awards/WoWS_V-25Race_1st.png,1509,0,1,0,0
+190,3,World of Warships - Quarterly Event 2nd Place,These awards based on placement of the quarterly event,/forums/images/awards/WoWS_V-25Race_2nd.png,/forums/images/awards/WoWS_V-25Race_2nd.png,1510,0,1,0,0
+191,3,World of Warships - Quarterly Event 3rd Place,These awards based on placement of the quarterly event,/forums/images/awards/WoWS_V-25Race_3rd.png,/forums/images/awards/WoWS_V-25Race_3rd.png,1511,0,1,0,0
+192,3,World of Warships - Clan Battle Bosun,Awarded to the member who had the greatest impact during the Clan Battle Season per Port,/forums/images/awards/WoWS_V-25Race_Mad_Torpedoman.png,/forums/images/awards/WoWS_V-25Race_Mad_Torpedoman.png,1512,0,1,0,0
+194,3,War Thunder - Squib Maverick Badge,Achieving 1250 Squadron Points in Squadron Battles.,/forums/images/awards/wt-squib-maverick.png,/forums/images/awards/wt-squib-maverick.png,1301,0,1,0,0
+196,3,War Thunder - Tournament Grand Champion Badge,a member that has beaten all the semi-finalist in a Tournament,/forums/images/awards/wt-tournament-grand-champion.png,/forums/images/awards/wt-tournament-grand-champion.png,1303,0,1,0,0
+202,3,Call of Duty - Royale Champion,Awarded to members who have 50 Warzone Wins,/forums/images/awards/COD_VerdanskVeteran.png,/forums/images/awards/COD_VerdanskVeteran.png,287,0,1,0,0
+209,2,AOD - Bug Hunter,Awarded to members who assist with debugging and testing of clan assets and systems.,/forums/images/awards/aod-bughunter.png,/forums/images/awards/aod-bughunter.png,10,0,1,0,0
+210,3,Destiny 2 - Arrivals,Awarded to guardians who earn the title of 'Forerunner',/forums/images/awards/d2-arrivals.png,/forums/images/awards/d2-arrivals.png,308,0,1,0,0
+211,3,Destiny 2 - Vanguard's Dare,Awarded to guardians who accepted the challenge of completing every raid within a 24-hour period and were triumphant,/forums/images/awards/d2-vanguards-dare.png,/forums/images/awards/d2-vanguards-dare.png,307,0,1,0,0
+212,3,Destiny 2 - Flawless,Awarded to guardians who earn the title of 'Flawless',/forums/images/awards/d2-flawless.png,/forums/images/awards/d2-flawless.png,309,0,1,0,0
+213,3,Destiny 2 - Conqueror,Awarded to guardians who earn the title of 'Conqueror',/forums/images/awards/d2-conqueror.png,/forums/images/awards/d2-conqueror.png,310,0,1,0,0
+220,3,Planetside2 - Platoon Commander Basic,Awarded to persons who have passed the Intermediate platoon leading class and have shown skill and improvement when leading AOD platoons.,/forums/images/awards/ps2-basicplatoonleading.png,/forums/images/awards/ps2-basicplatoonleading.png,804,0,1,0,0
+221,3,Planetside2 - Platoon Commander Advanced,Awarded to persons who have passed the advance platoon leading class and have shown greater improvement leading and have commanded a platoon under a Force Commander during ops.,/forums/images/awards/ps2-advancedplatoonleading.png,/forums/images/awards/ps2-advancedplatoonleading.png,805,0,1,0,0
+227,3,War Thunder - 10 Year Anniversary Coin,Award for being a pillar of the community or for doing something extraordinary for the war thunder division.,/forums/images/awards/wt-10th-anniv-coin.png,/forums/images/awards/wt-10th-anniv-coin.png,1309,0,1,0,0
+246,3,Planetside 2 - NCO Hunter,Winner of the NCO Hunting Season event.,/forums/images/awards/ps2-ncohunter.png,/forums/images/awards/ps2-ncohunter.png,806,0,1,0,0
+247,3,New World - Master Crafter,Reach 200 on all crafting trades,/forums/images/awards/nw-mastercrafter.png,/forums/images/awards/nw-mastercrafter.png,650,0,1,0,0
+248,3,New World - Master Refiner,Reach 200 on all refining trades,/forums/images/awards/nw-masterrefiner.png,/forums/images/awards/nw-masterrefiner.png,651,0,1,0,0
+249,3,New World - Master Gatherer,Reach 200 in all gathering trades.,/forums/images/awards/nw-mastergatherer.png,/forums/images/awards/nw-mastergatherer.png,652,0,1,0,0
+250,3,New World - Hand of the Queen,Reach 200 in all trades,/forums/images/awards/nw-handofqueen.png,/forums/images/awards/nw-handofqueen.png,653,0,1,0,0
+251,3,New World - Master of Arms,Level 20 on all weapons,/forums/images/awards/nw-masterofarms.png,/forums/images/awards/nw-masterofarms.png,654,0,1,0,0
+252,3,New World - The Mayor,200 territory standing on any territory,/forums/images/awards/nw-mayor.png,/forums/images/awards/nw-mayor.png,655,0,1,0,0
+253,3,New - World - Reaper,Part of the NW AOD Reapers,/forums/images/awards/nw-reaper.png,/forums/images/awards/nw-reaper.png,656,0,1,0,0
+254,3,New World - Pathfinder,Part of the NW AOD Pathfinders,/forums/images/awards/nw-pathfinders.png,/forums/images/awards/nw-pathfinders.png,657,0,1,0,0
+257,3,Planetside 2 - Guardian Angels Member,Member of AOD PlanetSide cavalry group.,/forums/images/awards/ps2-guardians.png,/forums/images/awards/ps2-guardians.png,807,0,1,0,0
+258,3,Destiny 2 - Gilded,Awarded to Guardians who earn any Gilded title in the current or prior season,/forums/images/awards/d2-gilded.png,/forums/images/awards/d2-gilded.png,311,0,1,0,0
+259,3,Planetside 2 - Master of Arms,For completing the master level of a weapon directive,/forums/images/awards/ps2-master-of-arms.png,/forums/images/awards/ps2-master-of-arms.png,808,0,1,0,0
+269,3,Call of Duty - Most Valuable Badass,Awarded to players that scored in the top 10 during the month-long Platoon Wars event.,/forums/images/awards/cod-mostvaluablebadass.png,/forums/images/awards/cod-mostvaluablebadass.png,288,0,1,0,0
+282,3,War Thunder - Maxed Out!,Has unlocked a rank 7 vehicle in war thunder.,/forums/images/awards/wt-maxed-out.png,/forums/images/awards/wt-maxed-out.png,1310,0,1,0,0
+283,3,War Thunder - Professional Ass Kicker,"Has obtained the God Of War title ingame. (100,000 enemies destroyed)",/forums/images/awards/wt-professional-ass-kicker.png,/forums/images/awards/wt-professional-ass-kicker.png,1311,0,1,0,0
+284,3,War Thunder - Atom Bomb Baby,Has dropped a nuke in war thunder. (screenshot needed),/forums/images/awards/wt-atom-bomb-baby.png,/forums/images/awards/wt-atom-bomb-baby.png,1312,0,1,0,0
+285,3,Destiny 2 - All Hollows Eve B.W.D.G.,"Awarded Once a Year! For Guardians who obtain all the ""All Hallows Eve Seasonal Armour"" and display it terribly at the annual AOD's Halloween Party. Best Worst Dressed Guardian.",/forums/images/awards/d2-all-hallow-eve.png,/forums/images/awards/d2-all-hallow-eve.png,312,0,1,0,0
+286,3,Destiny 2 - Paragon,Awarded to Guardians who reach the maximum rank in a season,/forums/images/awards/d2_rank11paragon.png,/forums/images/awards/d2_rank11paragon.png,313,0,1,0,0
+287,3,Destiny 2 - Virtual Fighter,"For achieving the Destination Seal ""Virtual Fighter"" for Neomuna",/forums/images/awards/d2_virtualfigther.png,/forums/images/awards/d2_virtualfigther.png,305,0,1,0,0
+288,3,Destiny 2 - Reveler,"Has completed all of the annual seasonal events and achieved the Title of ""Reveler"" in game",/forums/images/awards/d2_reveler.png,/forums/images/awards/d2_reveler.png,314,0,1,0,0
+289,3,Destiny 2 - Deadeye,"For mastering all of Destiny 2's weapon archetypes and achieving the title ""Deadeye"" in game",/forums/images/awards/d2_deadeye.png,/forums/images/awards/d2_deadeye.png,315,0,1,0,0
+296,3,Helldivers - Brasch Tactics,Unlock all Stratagems,/forums/images/awards/hd-brashtactics.png,/forums/images/awards/hd-brashtactics.png,501,0,1,0,0
+297,3,Helldivers - Super Destroyer,Fully Upgrade all ship modules,/forums/images/awards/hd-superdestroyer.png,/forums/images/awards/hd-superdestroyer.png,502,0,1,0,0
+298,3,Helldivers - Skull Admiral,Attain Level 50,/forums/images/awards/hd-skulladmiral.png,/forums/images/awards/hd-skulladmiral.png,503,0,1,0,0
+299,3,Helldivers - My Life for Super Earth,Fully complete any 5 Warbonds,/forums/images/awards/hd-lifeforsuperearth.png,/forums/images/awards/hd-lifeforsuperearth.png,504,0,1,0,0
+300,3,Helldivers - Liber-Tea Dispensed,"Obtain 100,000 career enemy kills",/forums/images/awards/hd-libertea.png,/forums/images/awards/hd-libertea.png,505,0,1,0,0
+301,3,Helldivers - Helldivers Never Die,Complete a Helldive difficulty mission with a full AOD squad,/forums/images/awards/hd-helldiversneverdie.png,/forums/images/awards/hd-helldiversneverdie.png,506,0,1,0,0
+302,3,Helldivers - Super Citizen,Awarded to the Heldiver who has won a Division Event,/forums/images/awards/hd-supercitizen.png,/forums/images/awards/hd-supercitizen.png,507,0,1,0,0
+303,3,PlanetSide - Seasonal Grinder,"Awarded for completing the master level of the most recent event directive. Recipients will only retain the badge until the next event directive ends, and can be kept for completing that most recent directive.",/forums/images/awards/ps2-seasonal-grinder.png,/forums/images/awards/ps2-seasonal-grinder.png,810,0,1,0,0

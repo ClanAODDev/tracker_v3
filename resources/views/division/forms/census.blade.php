@@ -5,14 +5,13 @@
             <th>Date</th>
             <th class="text-center">Population</th>
             <th class="text-center" title="Data began collection 4/7/2024">Discord*</th>
-{{--            <th class="text-center">Weekly Forum Active</th>--}}
+            {{--            <th class="text-center">Weekly Forum Active</th>--}}
             {{--<th>Notes</th>--}}
         </tr>
         </thead>
         @foreach ($censuses as $census)
 
             @php
-                $popMinusTs = $census->count - $census->weekly_ts_count;
                 $popMinusDiscord = $census->count - $census->weekly_voice_count;
             @endphp
 

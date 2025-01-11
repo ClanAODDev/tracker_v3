@@ -51,6 +51,12 @@ class Member extends Model
 
     protected $guarded = [];
 
+    public function awards()
+    {
+        return $this->hasMany(MemberAward::class, 'member_id', 'clan_id')
+            ->with('award')->where('approved', true);
+    }
+
     public function present(): MemberPresenter
     {
         return new MemberPresenter($this);

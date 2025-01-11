@@ -36,17 +36,6 @@
 
         @include('application.partials.errors')
 
-        <div class="panel panel-filled panel-c-accent">
-            <div class="panel-heading">
-                Create Request
-            </div>
-            <div class="panel-body">
-                <form action="{{ route('leave.store', $division->slug) }}" method="post">
-                    @include('leave.forms.create-leave')
-                    @csrf
-                </form>
-            </div>
-            <div class="panel-footer"><span class="text-accent">*</span> - required</div>
-        </div>
+
     </div>
 @endsection

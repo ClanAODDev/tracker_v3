@@ -15,7 +15,7 @@
         <tr class="{{ $member->leave->expired ? 'text-danger' : null }}">
             <td>
                 @can('updateLeave', $member)
-                    <a href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}"
+                    <a href="{{ route('filament.mod.resources.leaves.edit', $member->leave->id) }}"
                        class="btn btn-default">
                         <i class="fa fa-search"></i>
                     </a>

@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'reports'], function () {
+Route::group(['prefix' => 'clan'], function () {
     Route::middleware('admin')->get('division-turnover', 'ReportsController@divisionTurnoverReport')
         ->name('reports.division-turnover');
 
@@ -11,7 +11,7 @@ Route::group(['prefix' => 'reports'], function () {
         ->name('reports.discord');
     Route::get('outstanding-inactives',
         'ReportsController@outstandingMembersReport')->name('reports.outstanding-inactives');
-    Route::get('/clan-census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
+    Route::get('/census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
 
     // other reporty things
     Route::get('leadership', 'ReportsController@leadership')->name('leadership');

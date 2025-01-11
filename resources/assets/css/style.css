@@ -38,6 +38,60 @@
     cursor: -webkit-grabbing;
 }
 
+.clan-award-zoom {
+    zoom: 1.2;
+}
+
+.clan-award {
+    max-width: 60px;
+    max-height: 60px;
+    align-self: center;
+}
+
+.award-image {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.award-display-meta {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.award-item {
+    display: flex;
+    justify-content: space-between;
+    overflow: clip;
+    height: 80px;
+}
+
+.award-description {
+    text-wrap: wrap;
+    margin: 0;
+}
+
+.member-award-description {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-wrap: wrap
+}
+
+.award-metadata {
+    letter-spacing: -.1em;
+    font-weight: 900;
+    right: -20px;
+    bottom: -78px;
+    position: absolute;
+    color: rgba(0, 0, 0, .1);
+    font-size: 210px;
+}
+
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -2369,7 +2423,6 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
 .view-header,
 .division-header {
     min-height: 50px;
-    padding: 0 15px;
 }
 
 .view-header .header-icon {
@@ -2432,10 +2485,6 @@ h6:hover .heading-permalink,
 .heading-permalink:hover {
     text-decoration: none;
     color: #777;
-}
-
-p {
-    margin: 0 0 20px;
 }
 
 .pagination > li > a,

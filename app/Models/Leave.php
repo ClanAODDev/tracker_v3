@@ -17,10 +17,18 @@ class Leave extends \Illuminate\Database\Eloquent\Model
         'end_date' => 'datetime',
     ];
 
+    public static array $reasons = [
+        'military' => 'Military',
+        'medical' => 'Medical',
+        'education' => 'Education',
+        'travel' => 'Travel',
+        'other' => 'Other',
+    ];
+
     /**
      * @var array
      */
-    protected $fillable = ['reason', 'end_date', 'extended'];
+    protected $guarded = [];
 
     /**
      * @return BelongsTo
@@ -28,6 +36,11 @@ class Leave extends \Illuminate\Database\Eloquent\Model
     public function member()
     {
         return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+    }
+
+    public function division()
+    {
+        return $this->hasOneThrough(Member::class, Division::class, 'id', 'id', 'clan_id', 'division_id');
     }
 
     /**

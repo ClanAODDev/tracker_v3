@@ -30,12 +30,24 @@
             </div>
         </div>
 
+        @include ('member.partials.awards')
         @include ('member.partials.handles')
         @include ('member.partials.part-time-divisions')
         @include ('member.partials.member-history')
 
         @can('create', \App\Models\Note::class)
             @include ('member.partials.notes')
+        @endcan
+
+        @can('delete', $member)
+            <hr>
+            @if ($member->division)
+                <form action="{{ route('deleteMember', [$member->clan_id]) }}" method="post">
+                    @csrf
+                    @method('delete')
+                    @include('member.forms.remove-member-form')
+                </form>
+            @endif
         @endcan
 
     </div>

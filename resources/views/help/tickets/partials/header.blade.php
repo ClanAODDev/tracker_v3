@@ -1,4 +1,4 @@
-<h4>Create a ticket: {{ ucwords(str_replace('-', ' ', request()->type)) }}</h4>
+<h4>Create a ticket <span class="text-muted">{{ $type->name ?? null }}</span></h4>
 <p>Submit a ticket only if you require assistance from the <strong>MSGT+</strong> team. If you have
     questions regarding the use of this form, please use the Admin discord channel. </p>
 

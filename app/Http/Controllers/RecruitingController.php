@@ -179,7 +179,7 @@ class RecruitingController extends Controller
 
         $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
-        return response()->json(['memberExists' => !empty($result)]);
+        return response()->json(['memberExists' => ! empty($result)]);
     }
 
     /**

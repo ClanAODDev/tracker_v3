@@ -18,6 +18,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Overtrue\LaravelVersionable\Versionable;
+use Overtrue\LaravelVersionable\VersionStrategy;
 
 /**
  * Class Division.
@@ -28,6 +30,11 @@ class Division extends Model
     use Notifiable;
     use RecordsActivity;
     use SoftDeletes;
+    use Versionable;
+
+    protected $versionable = ['site_content'];
+
+    protected $versionStrategy = VersionStrategy::SNAPSHOT;
 
     public array $defaultSettings = [
 
@@ -79,6 +86,7 @@ class Division extends Model
      */
     protected $casts = [
         'active' => 'boolean',
+        'show_on_site' => 'boolean',
         'settings' => 'json',
         'shutdown_at' => 'datetime',
     ];
@@ -88,7 +96,7 @@ class Division extends Model
      */
     protected $hidden = ['structure'];
 
-    protected $withCount = ['sergeants', 'members'];
+    protected $withCount = ['sergeants', 'members', 'unapprovedDivisionAwards'];
 
     /**
      * @var array
@@ -374,10 +382,26 @@ class Division extends Model
         return $this->shutdown_at;
     }
 
-    public function transfers()
+    public function transfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'division_id')
             ->orderBy('created_at', 'desc');
+    }
+
+    public function awards(): HasMany
+    {
+        return $this->hasMany(Award::class);
+    }
+
+    public function memberAwards(): HasManyThrough
+    {
+        return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id');
+    }
+
+    public function unapprovedDivisionAwards()
+    {
+        return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id')
+            ->where('approved', false);
     }
 
     /**

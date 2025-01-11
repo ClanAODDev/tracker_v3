@@ -43,10 +43,7 @@ return [
         'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
         'ingame-reports' => [],
         'api-keys' => [],
-
-        'leave_reasons' => [
-            'Military', 'Medical', 'Education', 'Travel', 'Other',
-        ],
+        'awards_cache_minutes' => env('AWARDS_CACHE_MINUTES', 60),
 
         // in hours
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
@@ -169,6 +166,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\Filament\AdminPanelProvider::class,
+        App\Providers\Filament\ModPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FakerServiceProvider::class,
     ])->toArray(),

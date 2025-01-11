@@ -5,7 +5,11 @@
             <h5 class="m-b-none">
                 {!! $member->present()->rankName !!}
             </h5>
-            <small class="slight">{{ $member->division->name ?? "Ex-AOD" }} [{{ $member->clan_id }}]</small>
+            <div><small class="slight">{{ $member->division->name ?? "Ex-AOD" }} [{{ $member->clan_id }}]</small></div>
+            @if (count($member->handles) > 0)
+                <div><small class="slight">{{ $member->handles->first()->pivot->value }}
+                        [{{ $member->handles->first()->label }}]</small></div>
+            @endif
         </div>
     </a>
 @empty

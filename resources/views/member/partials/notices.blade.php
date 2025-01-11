@@ -30,13 +30,13 @@
             Member has a leave of absence in place for [<strong>{{ $member->leave->reason }}</strong>] until
             [<strong>{{ $member->leave->end_date->format('Y-m-d') }}</strong>].
             <a class="alert-link"
-               href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}">View Details</a>
+               href="{{ route('filament.mod.resources.leaves.edit', $member->leave->id) }}">View Details</a>
         </div>
     @else
         <div class="alert alert-warning">
             Member has a leave of absence request that has not yet been approved.
             <a class="alert-link"
-               href="{{ route('leave.edit', [$member->clan_id, $member->leave->id]) }}">View Details</a>
+               href="{{ route('filament.mod.resources.leaves.edit', $member->leave->id) }}">View Details</a>
         </div>
     @endif
 @endif
