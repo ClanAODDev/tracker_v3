@@ -28,7 +28,6 @@ class PartTimeMemberCleanup extends Command
     public function handle()
     {
         $this->info('Starting cleanup of part-time division assignments...');
-        Log::info('Cleanup of part-time division assignments started.');
 
         $divisions = Division::with('partTimeMembers')->get();
 
@@ -36,14 +35,12 @@ class PartTimeMemberCleanup extends Command
             foreach ($division->partTimeMembers as $member) {
                 if ($member->division_id === $division->name) {
                     $this->info("Cleaning up part-time assignment for member {$member->name} in division {$division->name}");
-                    Log::info("Removed part-time assignment for member ID: {$member->name} in division ID: {$division->name}");
                     $member->partTimeDivisions()->detach($division->name);
                 }
             }
         }
 
         $this->info('Cleanup completed successfully.');
-        Log::info('Cleanup of part-time division assignments completed successfully.');
         return self::SUCCESS;
     }
 }
