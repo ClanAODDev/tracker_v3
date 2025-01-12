@@ -15,8 +15,9 @@ class EditMember extends EditRecord
     {
         if ($record->isDirty('last_trained_by')) {
             $data['last_trained_at'] = now();
-            $record->update($data);
         }
+
+        $record->update($data);
 
         return $record;
     }
