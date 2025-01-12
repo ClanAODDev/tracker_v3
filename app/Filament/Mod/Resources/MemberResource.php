@@ -58,6 +58,7 @@ class MemberResource extends Resource
                         ->options(Position::class),
                     Select::make('recruiter_id')
                         ->relationship('recruiter', 'name')
+                        ->searchable()
                         ->nullable(),
                     Select::make('division_id')
                         ->relationship('division', 'name')
