@@ -35,6 +35,11 @@ class BotChannel
             $message = $notification->toArray($notifiable);
         }
 
+        if (! $message) {
+            // user settings prevented us from continuing, or there's no one to notify
+            return;
+        }
+
         $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), $message['api_uri']);
 
         $headers = [
