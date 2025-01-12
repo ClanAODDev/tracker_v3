@@ -88,6 +88,7 @@ class MemberResource extends Resource
                     Forms\Components\DateTimePicker::make('last_promoted_at'),
                     Forms\Components\DateTimePicker::make('last_trained_at'),
                     Select::make('last_trained_by')
+                        ->searchable()
                         ->relationship('trainer', 'name'),
                 ]),
 
