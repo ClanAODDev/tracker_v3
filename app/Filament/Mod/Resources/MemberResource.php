@@ -64,6 +64,7 @@ class MemberResource extends Resource
                         ->label('Division')
                         ->required(),
                     Select::make('last_trained_by')
+                        ->label('Last Trained By')
                         ->searchable()
                         ->relationship('trainer', 'name'),
                 ])->columns(2),
