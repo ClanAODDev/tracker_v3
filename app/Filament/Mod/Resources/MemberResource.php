@@ -63,6 +63,9 @@ class MemberResource extends Resource
                         ->relationship('division', 'name')
                         ->label('Division')
                         ->required(),
+                    Select::make('last_trained_by')
+                        ->searchable()
+                        ->relationship('trainer', 'name'),
                 ])->columns(2),
                 Forms\Components\Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
@@ -84,12 +87,9 @@ class MemberResource extends Resource
                 ])->columns(),
 
                 Forms\Components\Section::make('Dates')->schema([
-                    Forms\Components\DateTimePicker::make('join_date'),
-                    Forms\Components\DateTimePicker::make('last_promoted_at'),
-                    Forms\Components\DateTimePicker::make('last_trained_at'),
-                    Select::make('last_trained_by')
-                        ->searchable()
-                        ->relationship('trainer', 'name'),
+                    Forms\Components\DateTimePicker::make('join_date')->readOnly(),
+                    Forms\Components\DateTimePicker::make('last_promoted_at')->readOnly(),
+                    Forms\Components\DateTimePicker::make('last_trained_at')->readOnly(),
                 ]),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
