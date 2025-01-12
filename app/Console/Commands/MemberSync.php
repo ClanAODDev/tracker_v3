@@ -183,13 +183,13 @@ class MemberSync extends Command
 
                         // notify new division of transfer
                         $newDivision = Division::find($newData[$key]);
-                        if ($newDivision->settings()->get('slack_alert_member_transferred') === 'on') {
+                        if ($newDivision->settings()->get('slack_alert_member_transferred')) {
                             $newDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
                         }
 
                         // notify old division of transfer
                         $oldDivision = Division::find($oldData[$key]);
-                        if ($oldDivision->settings()->get('slack_alert_member_transferred') === 'on') {
+                        if ($oldDivision->settings()->get('slack_alert_member_transferred')) {
                             $oldDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
                         }
                     }
