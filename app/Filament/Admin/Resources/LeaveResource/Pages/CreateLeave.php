@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Mod\Resources\LeaveResource\Pages;
+namespace App\Filament\Admin\Resources\LeaveResource\Pages;
 
-use App\Filament\Mod\Resources\LeaveResource;
+use App\Filament\Admin\Resources\LeaveResource;
 use App\Models\Member;
 use App\Models\Note;
 use Filament\Resources\Pages\CreateRecord;

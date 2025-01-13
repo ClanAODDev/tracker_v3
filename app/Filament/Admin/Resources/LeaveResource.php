@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Mod\Resources\LeaveResource\Pages;
+use App\Filament\Admin\Resources\LeaveResource\Pages;
 use App\Models\Leave;
 use App\Models\Note;
 use Filament\Forms;
