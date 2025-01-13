@@ -24,7 +24,7 @@ class MemberAwardImage
         $baseImagePath = public_path('images/dynamic-images/bgs/awards_base_image.png');
         abort_unless(file_exists($baseImagePath), 404, 'Base image not found.');
 
-        $baseImage = imagecreatefrompng($baseImagePath);
+        $baseImage = @imagecreatefrompng($baseImagePath);
         imagesavealpha($baseImage, true);
 
         $awardsData = $this->fetchAwardsData($member);
@@ -35,7 +35,7 @@ class MemberAwardImage
         if (count($awardsData) < $awardCount) {
             $noAwardsImage = public_path('images/dynamic-images/bgs/no-awards-base-image.png');
             if (file_exists($noAwardsImage)) {
-                $brokenImage = imagecreatefrompng($noAwardsImage);
+                $brokenImage = @imagecreatefrompng($noAwardsImage);
                 header('Content-Type: image/png');
                 imagepng($brokenImage);
                 imagedestroy($brokenImage);
@@ -120,7 +120,7 @@ class MemberAwardImage
         $awardName = $fileData['award_name'];
         $division = $fileData['division'];
 
-        $originalImage = imagecreatefrompng($filePath);
+        $originalImage = @imagecreatefrompng($filePath);
         $resizedImage = imagecreatetruecolor($imageWidth, $imageHeight);
         imagesavealpha($resizedImage, true);
         $transparentColor = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
@@ -186,7 +186,7 @@ class MemberAwardImage
     {
         $brokenImagePath = public_path('images/dynamic-images/bgs/awards_broke_image.png');
         if (file_exists($brokenImagePath)) {
-            $brokenImage = imagecreatefrompng($brokenImagePath);
+            $brokenImage = @imagecreatefrompng($brokenImagePath);
             header('Content-Type: image/png');
             imagepng($brokenImage);
             imagedestroy($brokenImage);
