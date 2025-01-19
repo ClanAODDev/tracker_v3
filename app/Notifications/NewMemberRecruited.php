@@ -53,6 +53,7 @@ class NewMemberRecruited extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target($notifiable->settings()->get('voice_alert_created_member'))
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [

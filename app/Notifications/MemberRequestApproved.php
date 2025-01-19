@@ -53,6 +53,7 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target($notifiable->settings()->get('voice_alert_member_approved'))
             ->thumbnail($notifiable->getLogoPath())
             ->message(addslashes("**MEMBER STATUS REQUEST** - :thumbsup: A member status request for `{$this->member->name}` was approved by {$this->approver->name}!"))
             ->success()

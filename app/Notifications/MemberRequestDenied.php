@@ -49,6 +49,7 @@ class MemberRequestDenied extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target($notifiable->settings()->get('voice_alert_member_denied'))
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [

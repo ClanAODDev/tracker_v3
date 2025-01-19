@@ -13,7 +13,7 @@ class DivisionEdited extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private $division, private $user) {}
+    public function __construct(private $user) {}
 
     /**
      * Get the notification's delivery channels.
@@ -35,6 +35,7 @@ class DivisionEdited extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target($notifiable->settings()->get('voice_alert_division_edited'))
             ->thumbnail($notifiable->getLogoPath())
             ->message(sprintf('%s updated the division settings', $this->user))
             ->info()

@@ -24,6 +24,12 @@ class DivisionResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $channelOptions = [
+            'officers' => 'Officer Channel',
+            'members' => 'Members Channel',
+            false => 'Disabled',
+        ];
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')->helperText('Consult admin to update')->readOnly(),
@@ -40,7 +46,6 @@ class DivisionResource extends Resource
                     ->helperText('Number of days without VoIP activity before a member is considered inactive.')
                     ->numeric()
                     ->statePath('settings.inactivity_days'),
-                Forms\Components\TextInput::make('division structure')->statePath('settings.division_structure'),
                 Forms\Components\Section::make('Locality')->collapsible()->collapsed()
                     ->description('Update common vernacular to match division needs')
                     ->statePath('settings')->schema([
@@ -82,20 +87,30 @@ class DivisionResource extends Resource
                     ->columns()
                     ->statePath('settings')
                     ->schema([
-                        Forms\Components\Toggle::make('slack_alert_created_member')
-                            ->helperText('When a new member is recruited'),
-                        Forms\Components\Toggle::make('slack_alert_removed_member')
-                            ->helperText('When a member is removed'),
-                        Forms\Components\Toggle::make('slack_alert_division_edited')
-                            ->helperText('When your division\'s settings are edited'),
-                        Forms\Components\Toggle::make('slack_alert_member_approved')
-                            ->helperText('When a member request is approved'),
-                        Forms\Components\Toggle::make('slack_alert_member_denied')
-                            ->helperText('When a member request is denied'),
-                        Forms\Components\Toggle::make('slack_alert_pt_member_removed')
-                            ->helperText('When a part-time member gets removed by their primary division'),
-                        Forms\Components\Toggle::make('slack_alert_member_transferred')
-                            ->helperText('When a member transfers into or out of the division'),
+                        Forms\Components\Select::make('voice_alert_created_member')->options($channelOptions)
+                            ->label('New Recruitments')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_removed_member')->options($channelOptions)
+                            ->label('Member Removals')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_division_edited')->options($channelOptions)
+                            ->label('Division settings changes')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_member_approved')->options($channelOptions)
+                            ->label('New Recruit Approval')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_member_denied')->options($channelOptions)
+                            ->label('New Recruit Denial')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_pt_member_removed')->options($channelOptions)
+                            ->label('Part-Time member removal')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_member_transferred')->options($channelOptions)
+                            ->label('Member Transfer')
+                            ->selectablePlaceholder(false),
+                        Forms\Components\Select::make('voice_alert_rank_changed')->options($channelOptions)
+                            ->label('Member Rank Changes')
+                            ->selectablePlaceholder(false),
                     ]),
                 Forms\Components\Section::make('Website')
                     ->description('Divisional website settings')

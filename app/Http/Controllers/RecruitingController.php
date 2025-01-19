@@ -57,7 +57,7 @@ class RecruitingController extends Controller
         $this->createRequest($member, $division);
 
         // notify slack of recruitment
-        if ($division->settings()->get('slack_alert_created_member')) {
+        if ($division->settings()->get('voice_alert_created_member')) {
             $this->handleNotification($request, $member, $division);
         }
 

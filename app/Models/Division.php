@@ -41,16 +41,17 @@ class Division extends Model
         /**
          * Discord specific settings
          */
-        'slack_alert_created_member' => false,
-        'slack_alert_removed_member' => false,
-        'slack_alert_updated_member' => false,
-        'slack_alert_created_request' => false,
-        'slack_alert_division_edited' => false,
-        'slack_alert_member_denied' => false,
-        'slack_alert_member_approved' => false,
-        'slack_alert_member_transferred' => false,
+        'voice_alert_created_member' => false,
+        'voice_alert_removed_member' => false,
+        'voice_alert_created_request' => false,
+        'voice_alert_division_edited' => false,
+        'voice_alert_member_denied' => false,
+        'voice_alert_member_approved' => false,
+        'voice_alert_member_transferred' => false,
+        'voice_alert_pt_member_removed' => false,
+
         'officer_channel' => '',
-        'slack_alert_pt_member_removed' => false,
+        'member_channel' => '',
 
         /**
          * Recruiting and basic settings
@@ -73,7 +74,8 @@ class Division extends Model
             ['task_description' => 'Reminder that forum login name will change in 24/48 hours'],
             ['task_description' => 'Introduce new member to the other members of the division'],
         ], 'locality' => [
-            ['old-string' => 'squad', 'new-string' => 'squad'], ['old-string' => 'platoon', 'new-string' => 'platoon'],
+            ['old-string' => 'squad', 'new-string' => 'squad'],
+            ['old-string' => 'platoon', 'new-string' => 'platoon'],
             ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
             ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
         ],
@@ -166,8 +168,15 @@ class Division extends Model
         return $this->hasManyThrough(Squad::class, Platoon::class);
     }
 
-    public function routeNotificationForBot()
+    public function routeNotificationForMembers()
     {
+        \Log::info('Routing notification for members');
+        return $this->settings()->get('member_channel');
+    }
+
+    public function routeNotificationForOfficers()
+    {
+        \Log::info('Routing notification for officers');
         return $this->settings()->get('officer_channel');
     }
 
