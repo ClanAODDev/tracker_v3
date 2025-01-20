@@ -100,54 +100,49 @@ class DivisionResource extends Resource
                     ->description('Specify which events should notify and where.')
                     ->aside()
                     ->columns()
-                    ->statePath('settings')
+                    ->statePath('settings.chat_alerts')
                     ->schema([
                         Fieldset::make('Recruitment')
                             ->schema([
-                                Forms\Components\Select::make('voice_alert_created_member')
+                                Forms\Components\Select::make('member_created')
                                     ->options($channelOptions)
-                                    ->label('New Recruitments')
-                                    ->selectablePlaceholder(false),
-                                Forms\Components\Select::make('voice_alert_member_approved')
+                                    ->label('New Recruitments'),
+                                Forms\Components\Select::make('member_approved')
                                     ->options($channelOptions)
-                                    ->label('New Recruit Approval')
-                                    ->selectablePlaceholder(false),
-                                Forms\Components\Select::make('voice_alert_member_denied')
+                                    ->label('New Recruit Approval'),
+                                Forms\Components\Select::make('member_denied')
                                     ->options($channelOptions)
-                                    ->label('New Recruit Denial')
-                                    ->selectablePlaceholder(false),
+                                    ->label('New Recruit Denial'),
                             ])
                             ->columns(3),
 
                         Fieldset::make('Membership Changes')
                             ->schema([
-                                Forms\Components\Select::make('voice_alert_removed_member')
+                                Forms\Components\Select::make('member_removed')
                                     ->options($channelOptions)
-                                    ->label('Member Removals')
-                                    ->selectablePlaceholder(false),
-                                Forms\Components\Select::make('voice_alert_member_transferred')
+                                    ->label('Member Removals'),
+                                Forms\Components\Select::make('member_transferred')
                                     ->options($channelOptions)
-                                    ->label('Member Transfer')
-                                    ->selectablePlaceholder(false),
-                                Forms\Components\Select::make('voice_alert_pt_member_removed')
+                                    ->label('Member Transfer'),
+                                Forms\Components\Select::make('pt_member_removed')
                                     ->options($channelOptions)
-                                    ->label('Part-Time Member Removal')
-                                    ->selectablePlaceholder(false),
+                                    ->label('Part-Time Member Removal'),
                             ])
                             ->columns(3),
 
                         Fieldset::make('Administrative Updates')
                             ->schema([
-                                Forms\Components\Select::make('voice_alert_division_edited')
+                                Forms\Components\Select::make('division_edited')
                                     ->options($channelOptions)
-                                    ->label('Division Settings Changes')
-                                    ->selectablePlaceholder(false),
-                                Forms\Components\Select::make('voice_alert_rank_changed')
+                                    ->label('Division Settings Changes'),
+                                Forms\Components\Select::make('rank_changed')
                                     ->options($channelOptions)
-                                    ->label('Member Rank Changes')
-                                    ->selectablePlaceholder(false),
+                                    ->label('Member Rank Changes'),
+                                Forms\Components\Select::make('member_awarded')
+                                    ->options($channelOptions)
+                                    ->label('Member Awarded'),
                             ])
-                            ->columns(2),
+                            ->columns(3),
                     ]),
                 Forms\Components\Section::make('Website')
                     ->description('Divisional website settings')

@@ -35,7 +35,7 @@ class DivisionEdited extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get('voice_alert_division_edited'))
+            ->target($notifiable->settings()->get('chat_alerts.division_edited'))
             ->thumbnail($notifiable->getLogoPath())
             ->message(sprintf('%s updated the division settings', $this->user))
             ->info()

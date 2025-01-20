@@ -38,18 +38,6 @@ class Division extends Model
 
     public array $defaultSettings = [
 
-        /**
-         * Discord specific settings
-         */
-        'voice_alert_created_member' => false,
-        'voice_alert_removed_member' => false,
-        'voice_alert_created_request' => false,
-        'voice_alert_division_edited' => false,
-        'voice_alert_member_denied' => false,
-        'voice_alert_member_approved' => false,
-        'voice_alert_member_transferred' => false,
-        'voice_alert_pt_member_removed' => false,
-
         'officer_channel' => '',
         'member_channel' => '',
 
@@ -61,19 +49,36 @@ class Division extends Model
         'welcome_area' => '',
         'welcome_pm' => '',
         'inactivity_days' => 30,
+
         'activity_threshold' => [
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
         ],
+
+        'chat_alerts' => [
+            'member_created' => false,
+            'member_removed' => false,
+            'request_created' => false,
+            'division_edited' => false,
+            'member_denied' => false,
+            'member_approved' => false,
+            'member_transferred' => false,
+            'pt_member_removed' => false,
+        ],
+
         'recruiting_threads' => [
             ['thread_name' => 'AOD Code of Conduct', 'thread_id' => 3327, 'comments' => ''],
             ['thread_name' => 'AOD Ranking Structure', 'thread_id' => 3326, 'comments' => ''],
-        ], 'recruiting_tasks' => [
+        ],
+
+        'recruiting_tasks' => [
             ['task_description' => 'Adjust forum profile settings'],
             ['task_description' => 'Copy TS identity unique id to forum profile'],
             ['task_description' => 'Change name on Teamspeak (add AOD_ and rank)'],
             ['task_description' => 'Reminder that forum login name will change in 24/48 hours'],
             ['task_description' => 'Introduce new member to the other members of the division'],
-        ], 'locality' => [
+        ],
+
+        'locality' => [
             ['old-string' => 'squad', 'new-string' => 'squad'],
             ['old-string' => 'platoon', 'new-string' => 'platoon'],
             ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
@@ -171,12 +176,14 @@ class Division extends Model
     public function routeNotificationForMembers()
     {
         \Log::info('Routing notification for members');
+
         return $this->settings()->get('member_channel');
     }
 
     public function routeNotificationForOfficers()
     {
         \Log::info('Routing notification for officers');
+
         return $this->settings()->get('officer_channel');
     }
 

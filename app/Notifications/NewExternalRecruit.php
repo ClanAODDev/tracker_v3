@@ -51,7 +51,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get('voice_alert_created_member'))
+            ->target($notifiable->settings()->get('chat_alerts.member_created'))
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [

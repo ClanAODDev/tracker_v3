@@ -165,7 +165,7 @@ class MemberSync extends Command
 
                         \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], $rank));
 
-                        if ($member->division->settings()->get('voice_alert_rank_changed')) {
+                        if ($member->division->settings()->get('chat_alerts.rank_changed')) {
                             $member->division->notify(new \App\Notifications\MemberRankChanged($member, $rank));
                         }
 
@@ -190,13 +190,13 @@ class MemberSync extends Command
 
                         // notify new division of transfer
                         $newDivision = Division::find($newData[$key]);
-                        if ($newDivision->settings()->get('voice_alert_member_transferred')) {
+                        if ($newDivision->settings()->get('chat_alerts.member_transferred')) {
                             $newDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
                         }
 
                         // notify old division of transfer
                         $oldDivision = Division::find($oldData[$key]);
-                        if ($oldDivision->settings()->get('voice_alert_member_transferred')) {
+                        if ($oldDivision->settings()->get('chat_alerts.member_transferred')) {
                             $oldDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
                         }
                     }

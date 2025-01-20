@@ -40,7 +40,7 @@ class DeleteMember extends FormRequest
         $member = $this->route('member');
 
         if ($member->division()->exists()) {
-            if ($member->division->settings()->get('voice_alert_removed_member')) {
+            if ($member->division->settings()->get('chat_alerts.member_removed')) {
                 $member->division->notify(new MemberRemoved($member, auth()->user(), $this->removal_reason, $member->squad));
             }
         }
@@ -65,7 +65,7 @@ class DeleteMember extends FormRequest
         $divisions = $member->partTimeDivisions()->active()->get();
 
         foreach ($divisions as $division) {
-            if ($division->settings()->get('voice_alert_pt_member_removed')) {
+            if ($division->settings()->get('chat_alerts.pt_member_removed')) {
                 $division->notify(new \App\Notifications\PartTimeMemberRemoved($member, $this->removal_reason));
             }
         }
