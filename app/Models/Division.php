@@ -63,7 +63,7 @@ class Division extends Model
             'member_removed' => false,
             'member_transferred' => false,
             'pt_member_removed' => false,
-            'rank_changes' => false,
+            'rank_changed' => false,
             'request_created' => false,
         ],
 

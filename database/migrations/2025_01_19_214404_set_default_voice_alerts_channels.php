@@ -26,7 +26,7 @@ return new class extends Migration
                 'member_approved' => 'officers',
                 'member_transferred' => 'officers',
                 'pt_member_removed' => 'officers',
-                'rank_changes' => 'officers',
+                'rank_changed' => 'officers',
             ];
 
             foreach ($settings as $key => $value) {
