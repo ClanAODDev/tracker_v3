@@ -13,9 +13,15 @@ return new class extends Migration
             $settings = json_decode($division->settings, true);
 
             if ($settings) {
+                if (isset($settings['chat_alerts']) && is_array($settings['chat_alerts'])) {
+                    foreach ($settings['chat_alerts'] as $key => $value) {
+                        $settings['chat_alerts'][$key] = 'officers';
+                    }
+                }
+
                 foreach ($settings as $key => $value) {
                     if (str_starts_with($key, 'voice_alert_')) {
-                        $settings[$key] = 'officers';
+                        unset($settings[$key]);
                     }
                 }
 
