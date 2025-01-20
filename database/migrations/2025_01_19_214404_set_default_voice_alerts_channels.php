@@ -12,23 +12,32 @@ return new class extends Migration
         DB::table('divisions')->get(['id', 'settings'])->each(function ($division) {
             $settings = json_decode($division->settings, true);
 
-            if ($settings) {
-                if (isset($settings['chat_alerts']) && is_array($settings['chat_alerts'])) {
-                    foreach ($settings['chat_alerts'] as $key => $value) {
-                        $settings['chat_alerts'][$key] = 'officers';
-                    }
-                }
-
-                foreach ($settings as $key => $value) {
-                    if (str_starts_with($key, 'voice_alert_')) {
-                        unset($settings[$key]);
-                    }
-                }
-
-                DB::table('divisions')->where('id', $division->id)->update([
-                    'settings' => json_encode($settings, JSON_UNESCAPED_UNICODE),
-                ]);
+            if (! $settings) {
+                $settings = [];
             }
+
+            $settings['chat_alerts'] = [
+                'member_awarded' => 'officers',
+                'member_created' => 'officers',
+                'member_removed' => 'officers',
+                'request_created' => 'officers',
+                'division_edited' => 'officers',
+                'member_denied' => 'officers',
+                'member_approved' => 'officers',
+                'member_transferred' => 'officers',
+                'pt_member_removed' => 'officers',
+                'rank_changes' => 'officers',
+            ];
+
+            foreach ($settings as $key => $value) {
+                if (str_starts_with($key, 'voice_alert_')) {
+                    unset($settings[$key]);
+                }
+            }
+
+            DB::table('divisions')->where('id', $division->id)->update([
+                'settings' => json_encode($settings, JSON_UNESCAPED_UNICODE),
+            ]);
         });
     }
 

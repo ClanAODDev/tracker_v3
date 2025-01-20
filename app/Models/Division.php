@@ -55,14 +55,16 @@ class Division extends Model
         ],
 
         'chat_alerts' => [
-            'member_created' => false,
-            'member_removed' => false,
-            'request_created' => false,
             'division_edited' => false,
-            'member_denied' => false,
             'member_approved' => false,
+            'member_awarded' => false,
+            'member_created' => false,
+            'member_denied' => false,
+            'member_removed' => false,
             'member_transferred' => false,
             'pt_member_removed' => false,
+            'rank_changes' => false,
+            'request_created' => false,
         ],
 
         'recruiting_threads' => [
