@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
 use App\Models\Division;
 use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -32,26 +33,37 @@ class DivisionResource extends Resource
 
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->helperText('Consult admin to update')->readOnly(),
-                Forms\Components\TextInput::make('description')->helperText('Sub-header division text *DEPRECATING*'),
-                Forms\Components\TextInput::make('division structure')
-                    ->helperText('Numerical id of your division\'s division structure thread *DEPRECATING*')
-                    ->numeric()
-                    ->statePath('settings.division_structure'),
-                Forms\Components\TextInput::make('welcome area')
-                    ->helperText('Numerical id of your division\'s welcome area.')
-                    ->numeric()
-                    ->statePath('settings.welcome_area'),
-                Forms\Components\TextInput::make('inactivity days')
-                    ->helperText('Number of days without VoIP activity before a member is considered inactive.')
-                    ->numeric()
-                    ->statePath('settings.inactivity_days'),
+                Forms\Components\Section::make('General')
+                    ->description('Basic division settings')
+                    ->aside()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')->helperText('Consult admin to update')->readOnly(),
+                        Forms\Components\TextInput::make('description')->helperText('Sub-header division text *DEPRECATING*'),
+                        Forms\Components\TextInput::make('division structure')
+                            ->helperText('Numerical id of your division\'s division structure thread *DEPRECATING*')
+                            ->numeric()
+                            ->statePath('settings.division_structure'),
+                        Forms\Components\TextInput::make('welcome area')
+                            ->helperText('Numerical id of your division\'s welcome area.')
+                            ->numeric()
+                            ->statePath('settings.welcome_area'),
+                        Forms\Components\TextInput::make('inactivity days')
+                            ->helperText('Number of days without VoIP activity before a member is considered inactive.')
+                            ->numeric()
+                            ->statePath('settings.inactivity_days'),
+                    ])->columns(),
+
                 Forms\Components\Section::make('Locality')->collapsible()->collapsed()
                     ->description('Update common vernacular to match division needs')
+                    ->aside()
                     ->statePath('settings')->schema([
                         Forms\Components\Repeater::make('locality')->schema([
-                            Forms\Components\TextInput::make('old-string')->readOnly(),
-                            Forms\Components\TextInput::make('new-string'),
+                            Forms\Components\TextInput::make('old-string')
+                                ->label('Replace')
+                                ->readOnly(),
+                            Forms\Components\TextInput::make('new-string')
+                                ->required()
+                                ->label('With'),
                         ])->reorderable(false)->columns()
                             ->addable(false)
                             ->deletable(false),
@@ -59,12 +71,13 @@ class DivisionResource extends Resource
 
                 Forms\Components\Section::make('Recruiting')->collapsible()->collapsed()
                     ->description('Settings related to division recruitment process')
+                    ->aside()
                     ->statePath('settings')->schema([
                         Forms\Components\Section::make('Tasks')->collapsible()->collapsed()
                             ->description('Critical steps to perform during recruitment')
                             ->schema([
                                 Forms\Components\Repeater::make('recruiting_tasks')->schema([
-                                    Forms\Components\TextInput::make('task_description'),
+                                    Forms\Components\Textarea::make('task_description'),
                                 ]),
                             ]),
                         Forms\Components\Section::make('Informational threads')->collapsible()->collapsed()
@@ -73,7 +86,7 @@ class DivisionResource extends Resource
                                 Forms\Components\Repeater::make('recruiting_threads')->schema([
                                     Forms\Components\TextInput::make('thread_name'),
                                     Forms\Components\TextInput::make('thread_id'),
-                                    Forms\Components\TextInput::make('comments')->columnSpanFull(),
+                                    Forms\Components\Textarea::make('comments')->columnSpanFull(),
                                 ])->columns(),
                             ]),
                         Forms\Components\Textarea::make('welcome pm')
@@ -82,38 +95,63 @@ class DivisionResource extends Resource
                             ->helperText('Use {{ name }} to insert the new recruit\'s name into your message')
                             ->statePath('welcome_pm'),
                     ]),
-                Forms\Components\Section::make('Officer Notifications')->collapsible()->collapsed()
+
+                Forms\Components\Section::make('Chat Notifications')->collapsible()->collapsed()
                     ->description('Specify which events should notify and where.')
+                    ->aside()
                     ->columns()
                     ->statePath('settings')
                     ->schema([
-                        Forms\Components\Select::make('voice_alert_created_member')->options($channelOptions)
-                            ->label('New Recruitments')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_removed_member')->options($channelOptions)
-                            ->label('Member Removals')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_division_edited')->options($channelOptions)
-                            ->label('Division settings changes')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_member_approved')->options($channelOptions)
-                            ->label('New Recruit Approval')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_member_denied')->options($channelOptions)
-                            ->label('New Recruit Denial')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_pt_member_removed')->options($channelOptions)
-                            ->label('Part-Time member removal')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_member_transferred')->options($channelOptions)
-                            ->label('Member Transfer')
-                            ->selectablePlaceholder(false),
-                        Forms\Components\Select::make('voice_alert_rank_changed')->options($channelOptions)
-                            ->label('Member Rank Changes')
-                            ->selectablePlaceholder(false),
+                        Fieldset::make('Recruitment')
+                            ->schema([
+                                Forms\Components\Select::make('voice_alert_created_member')
+                                    ->options($channelOptions)
+                                    ->label('New Recruitments')
+                                    ->selectablePlaceholder(false),
+                                Forms\Components\Select::make('voice_alert_member_approved')
+                                    ->options($channelOptions)
+                                    ->label('New Recruit Approval')
+                                    ->selectablePlaceholder(false),
+                                Forms\Components\Select::make('voice_alert_member_denied')
+                                    ->options($channelOptions)
+                                    ->label('New Recruit Denial')
+                                    ->selectablePlaceholder(false),
+                            ])
+                            ->columns(3),
+
+                        Fieldset::make('Membership Changes')
+                            ->schema([
+                                Forms\Components\Select::make('voice_alert_removed_member')
+                                    ->options($channelOptions)
+                                    ->label('Member Removals')
+                                    ->selectablePlaceholder(false),
+                                Forms\Components\Select::make('voice_alert_member_transferred')
+                                    ->options($channelOptions)
+                                    ->label('Member Transfer')
+                                    ->selectablePlaceholder(false),
+                                Forms\Components\Select::make('voice_alert_pt_member_removed')
+                                    ->options($channelOptions)
+                                    ->label('Part-Time Member Removal')
+                                    ->selectablePlaceholder(false),
+                            ])
+                            ->columns(3),
+
+                        Fieldset::make('Administrative Updates')
+                            ->schema([
+                                Forms\Components\Select::make('voice_alert_division_edited')
+                                    ->options($channelOptions)
+                                    ->label('Division Settings Changes')
+                                    ->selectablePlaceholder(false),
+                                Forms\Components\Select::make('voice_alert_rank_changed')
+                                    ->options($channelOptions)
+                                    ->label('Member Rank Changes')
+                                    ->selectablePlaceholder(false),
+                            ])
+                            ->columns(2),
                     ]),
                 Forms\Components\Section::make('Website')
                     ->description('Divisional website settings')
+                    ->aside()
                     ->schema([
                         Forms\Components\MarkdownEditor::make('site_content')
                             ->helperText('Changes will prompt an admin review before being published')
@@ -133,7 +171,7 @@ class DivisionResource extends Resource
                                 // 'attachFiles',
                             ])
                             ->columnSpanFull(),
-                    ])->collapsible()->collapsed(),
+                    ]),
 
             ]);
     }
