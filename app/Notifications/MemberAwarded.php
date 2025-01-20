@@ -38,7 +38,7 @@ class MemberAwarded extends Notification implements ShouldQueue
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get('chat_alerts.member_awarded'))
-            ->thumbnail(Storage::url($this->award->image))
+            ->thumbnail(asset(Storage::url($this->award->image)))
             ->message(sprintf('%s received an award: %s', $this->member, $this->award->name))
             ->info()
             ->send();
