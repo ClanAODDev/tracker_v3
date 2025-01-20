@@ -19,6 +19,8 @@ class BotChannelMessage
 
     private mixed $message;
 
+    private string $channel;
+
     private int $color;
 
     private $target;
@@ -106,6 +108,10 @@ class BotChannelMessage
      */
     public function target($target)
     {
+        if (!in_array($target, ['officers', 'members'])) {
+            throw new Exception('Invalid channel target');
+        }
+
         $this->target = $target;
 
         return $this;
@@ -124,7 +130,8 @@ class BotChannelMessage
             throw new Exception('A message or fields must be defined');
         }
 
-        $routeTarget = $this->notifiable->routeNotificationFor('bot');
+        $routeTarget = $this->notifiable->routeNotificationFor($this->target);
+
         if (! isset($routeTarget) && ! isset($this->target)) {
             throw new Exception('A channel target must be defined');
         }

@@ -47,6 +47,7 @@ class MemberTransferred extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($this->destinationDivision->name . ' Division')
+            ->target($notifiable->settings()->get('chat_alerts.member_transferred'))
             ->thumbnail($this->destinationDivision->getLogoPath())
             ->fields([
                 [

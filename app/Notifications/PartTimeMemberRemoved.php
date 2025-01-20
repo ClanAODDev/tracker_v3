@@ -54,6 +54,7 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($this->primaryDivision->name . ' Division')
+            ->target($notifiable->settings()->get('chat_alerts.pt_member_removed'))
             ->thumbnail($this->primaryDivision->getLogoPath())
             ->fields([
                 [

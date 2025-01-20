@@ -11,6 +11,7 @@ class UpdateDivision extends FormRequest
         $division->settings()->merge(
             $this->only([
                 'officer_channel',
+                'member_channel'
             ])
         );
     }
@@ -24,6 +25,7 @@ class UpdateDivision extends FormRequest
     {
         return [
             'officer_channel' => 'nullable|alpha_dash',
+            'member_channel' => 'nullable|alpha_dash',
         ];
     }
 }

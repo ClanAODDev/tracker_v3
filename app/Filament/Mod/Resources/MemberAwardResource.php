@@ -43,8 +43,6 @@ class MemberAwardResource extends Resource
                     ->maxLength(191)
                     ->default(null),
 
-                Forms\Components\Toggle::make('approved')->hiddenOn('create'),
-
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\DateTimePicker::make('created_at')->default(now()),
                     Forms\Components\DateTimePicker::make('updated_at')->default(now()),
@@ -68,7 +66,6 @@ class MemberAwardResource extends Resource
 
                 Tables\Columns\TextColumn::make('division.name'),
 
-                Tables\Columns\ToggleColumn::make('approved'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

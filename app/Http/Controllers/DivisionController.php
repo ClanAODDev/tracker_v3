@@ -75,51 +75,6 @@ class DivisionController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     *
-     * @throws AuthorizationException
-     */
-    public function edit(Division $division)
-    {
-        $this->authorize('update', $division);
-        $censuses = $division->census->sortByDesc('created_at')->take(52);
-        $populations = $censuses->values()->map(fn ($census, $key) => [$key, $census->count]);
-        $weeklyActive = $censuses->values()->map(fn ($census, $key) => [$key, $census->weekly_active_count]);
-
-        return view('division.modify', compact('division', 'censuses', 'weeklyActive', 'populations'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @return Response
-     *
-     * @throws Exception
-     *
-     * @internal param Request $request
-     */
-    public function update(UpdateDivision $form, Division $division)
-    {
-        $form->persist();
-
-        if (! $division->wasChanged('settings')) {
-            $this->showInfoToast('No changes were made');
-
-            return back();
-        }
-
-        $division->recordActivity('updated_settings');
-
-        $this->showSuccessToast('Changes saved successfully');
-        if ($division->settings()->get('slack_alert_division_edited')) {
-            $division->notify(new \App\Notifications\DivisionEdited($division, auth()->user()->name));
-        }
-
-        return back();
-    }
 
     /**
      * @return Factory|View
