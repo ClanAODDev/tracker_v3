@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateDivision;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\DivisionRepository;
 use Closure;
-use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -74,7 +72,6 @@ class DivisionController extends Controller
             )
         );
     }
-
 
     /**
      * @return Factory|View

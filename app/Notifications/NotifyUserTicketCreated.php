@@ -4,13 +4,14 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
+use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class NotifyUserTicketCreated extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     /**
      * Get the notification's delivery channels.

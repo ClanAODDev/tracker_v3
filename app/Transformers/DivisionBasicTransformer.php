@@ -25,9 +25,9 @@ class DivisionBasicTransformer extends Transformer
 
         if (request('include_site')) {
             $data['site_content'] = $item->site_content;
-/*            if ($item->versions()->count()) {
-                $data['site_content'] = $item->latestVersion->whereNotNull('approver_id')->first()?->contents['site_content'];
-            }*/
+            /*            if ($item->versions()->count()) {
+                            $data['site_content'] = $item->latestVersion->whereNotNull('approver_id')->first()?->contents['site_content'];
+                        }*/
 
         }
 

@@ -108,7 +108,7 @@ class BotChannelMessage
      */
     public function target($target)
     {
-        if (!in_array($target, ['officers', 'members'])) {
+        if (! in_array($target, ['officers', 'members'])) {
             throw new Exception('Invalid channel target');
         }
 

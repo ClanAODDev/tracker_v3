@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\User;
+use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +13,7 @@ use Illuminate\Notifications\Notification;
 
 class NewMemberRecruited extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     private $member;
 

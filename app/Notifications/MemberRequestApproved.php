@@ -7,6 +7,7 @@ use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\User;
+use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,7 +15,7 @@ use Illuminate\Notifications\Notification;
 
 class MemberRequestApproved extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     private $request;
 

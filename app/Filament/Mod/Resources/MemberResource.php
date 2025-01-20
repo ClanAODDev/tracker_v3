@@ -159,10 +159,10 @@ class MemberResource extends Resource
                         return $query
                             ->when(
                                 $data['rank'],
-                                fn(Builder $query, $rank): Builder => $query->where('rank', $rank),
+                                fn (Builder $query, $rank): Builder => $query->where('rank', $rank),
                             );
                     })->indicateUsing(function (array $data) {
-                        return $data['rank'] ? 'Rank: '.Rank::from($data['rank'])->getLabel() : null;
+                        return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
                     }),
             ])
             ->actions([
@@ -170,7 +170,7 @@ class MemberResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
+                    //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -11,7 +11,7 @@ class UpdateDivision extends FormRequest
         $division->settings()->merge(
             $this->only([
                 'officer_channel',
-                'member_channel'
+                'member_channel',
             ])
         );
     }

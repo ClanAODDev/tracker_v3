@@ -6,13 +6,14 @@ use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\Division;
 use App\Models\Member;
+use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class MemberTransferred extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     private Member $member;
 

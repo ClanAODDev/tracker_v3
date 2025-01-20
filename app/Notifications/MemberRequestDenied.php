@@ -8,13 +8,14 @@ use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class MemberRequestDenied extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     private MemberRequest $request;
 
