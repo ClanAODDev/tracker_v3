@@ -83,7 +83,7 @@ class DivisionResource extends Resource
                             ->statePath('welcome_pm'),
                     ]),
                 Forms\Components\Section::make('Officer Notifications')->collapsible()->collapsed()
-                    ->description('Events to notify officer discord channel of')
+                    ->description('Specify which events should notify and where.')
                     ->columns()
                     ->statePath('settings')
                     ->schema([
