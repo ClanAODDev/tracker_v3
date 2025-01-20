@@ -177,15 +177,11 @@ class Division extends Model
 
     public function routeNotificationForMembers()
     {
-        \Log::info('Routing notification for members');
-
         return $this->settings()->get('member_channel');
     }
 
     public function routeNotificationForOfficers()
     {
-        \Log::info('Routing notification for officers');
-
         return $this->settings()->get('officer_channel');
     }
 
