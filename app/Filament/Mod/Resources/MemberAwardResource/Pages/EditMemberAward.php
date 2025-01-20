@@ -32,7 +32,7 @@ class EditMemberAward extends EditRecord
                     if ($memberAward->member->division->settings()->get('chat_alerts.member_awarded')) {
                         $memberAward->member->division->notify(new MemberAwarded(
                             $memberAward->member->name,
-                            $memberAward->award->name
+                            $memberAward->award
                         ));
                     }
                 }),
