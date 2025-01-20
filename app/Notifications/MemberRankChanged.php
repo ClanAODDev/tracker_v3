@@ -13,13 +13,7 @@ class MemberRankChanged extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    private $names;
-
-    public function __construct($member, $rank)
-    {
-        $this->member = $member;
-        $this->rank = $rank;
-    }
+    public function __construct(private readonly string $member, private readonly string $rank) {}
 
     public function via($notifiable)
     {
