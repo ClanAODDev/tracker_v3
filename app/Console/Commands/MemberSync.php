@@ -43,8 +43,8 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        if (! $syncData = collect((new GetDivisionInfo)->data)) {
-            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
+        if (!$syncData = collect((new GetDivisionInfo)->data)) {
+            \Log::critical(date('Y-m-d H:i:s').' - MEMBER SYNC - No data available');
 
             exit;
         }
@@ -82,7 +82,7 @@ class MemberSync extends Command
 
             $newData = $syncTableMap->get($member->clan_id);
 
-            if (! $newData) {
+            if (!$newData) {
                 // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
 
@@ -166,7 +166,7 @@ class MemberSync extends Command
                         \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], $rank));
 
                         if ($member->division->settings()->get('chat_alerts.rank_changed')) {
-                            $member->division->notify(new \App\Notifications\MemberRankChanged($member, $rank));
+                            $member->division->notify(new \App\Notifications\MemberRankChanged($member->name, $rank));
                         }
 
                         $updates['last_promoted_at'] = now();
