@@ -4,6 +4,8 @@ namespace App\Traits;
 
 trait RetryableNotification
 {
+    public $tries = 4;
+
     public function backoff()
     {
         return [
