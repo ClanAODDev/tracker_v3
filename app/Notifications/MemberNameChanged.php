@@ -14,12 +14,7 @@ class MemberNameChanged extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
-    private $names;
-
-    public function __construct($names)
-    {
-        $this->names = $names;
-    }
+    public function __construct(private readonly array $names) {}
 
     public function via($notifiable)
     {
@@ -37,7 +32,11 @@ class MemberNameChanged extends Notification implements ShouldQueue
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail($notifiable->getLogoPath())
-            ->message(addslashes(":tools: **MEMBER STATUS - NAME CHANGE**\n`{$this->names['oldName']}` is now known as `{$this->names['newName']}`. Please inform the member of this change."))
+            ->message(addslashes(sprintf(
+                ":tools: **MEMBER STATUS - NAME CHANGE**\n`%s` is now known as `%s`. Please inform the member of this change.",
+                $this->names['oldName'],
+                $this->names['newName']
+            )))
             ->success()
             ->send();
     }

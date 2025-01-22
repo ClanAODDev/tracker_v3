@@ -24,10 +24,7 @@ class EditDivision extends EditRecord
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $record->update($data);
-
-        if ($record->settings()->get('chat_alerts.division_edited')) {
-            $record->notify(new DivisionEdited(auth()->user()->name));
-        }
+        $record->notify(new DivisionEdited(auth()->user()->name));
 
         return $record;
     }

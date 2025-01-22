@@ -4,6 +4,9 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Models\Division;
+use App\Models\Member;
+use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,26 +14,20 @@ use Illuminate\Notifications\Notification;
 
 class PartTimeMemberRemoved extends Notification implements ShouldQueue
 {
-    use Queueable, RetryableNotification;
+    use DivisionSettableNotification, Queueable, RetryableNotification;
 
-    private $user;
+    private Division $primaryDivision;
 
-    private $member;
-
-    private $primaryDivision;
-
-    private $removalReason;
+    private string $alertSetting = 'chat_alerts.pt_member_removed';
 
     /**
      * Create a new notification instance.
      *
      * @param  $partTimeDivision
      */
-    public function __construct($member, $removalReason)
+    public function __construct(private readonly Member $member, private readonly string $removalReason)
     {
-        $this->member = $member;
         $this->primaryDivision = $this->member->division;
-        $this->removalReason = $removalReason;
     }
 
     /**
@@ -55,7 +52,7 @@ class PartTimeMemberRemoved extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($this->primaryDivision->name . ' Division')
-            ->target($notifiable->settings()->get('chat_alerts.pt_member_removed'))
+            ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($this->primaryDivision->getLogoPath())
             ->fields([
                 [
