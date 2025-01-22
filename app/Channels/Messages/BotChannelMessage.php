@@ -19,9 +19,9 @@ class BotChannelMessage
 
     private mixed $message;
 
-    private string $channel;
-
     private int $color;
+
+    private mixed $title;
 
     private $target;
 
@@ -36,7 +36,7 @@ class BotChannelMessage
         return $this;
     }
 
-    public function thumbnail($thumbnail)
+    public function thumbnail($thumbnail): static
     {
         $this->thumbnail = ['url' => $thumbnail];
 
@@ -48,7 +48,7 @@ class BotChannelMessage
      *
      * @return $this
      */
-    public function info()
+    public function info(): static
     {
         $this->color = self::INFO;
 
@@ -58,7 +58,7 @@ class BotChannelMessage
     /**
      * Use success-code color.
      */
-    public function success()
+    public function success(): static
     {
         $this->color = self::SUCCESS;
 
@@ -68,7 +68,7 @@ class BotChannelMessage
     /**
      * Use danger-code color.
      */
-    public function error()
+    public function error(): static
     {
         $this->color = self::ERROR;
 
@@ -96,7 +96,7 @@ class BotChannelMessage
     /**
      * @return $this
      */
-    public function message($message)
+    public function message($message): static
     {
         $this->message = $message;
 
@@ -106,10 +106,13 @@ class BotChannelMessage
     /**
      * @return $this
      */
-    public function target($target)
+    public function target($target): static
     {
         if (! in_array($target, ['officers', 'members'])) {
-            throw new Exception('Invalid channel target');
+            throw new Exception(sprintf(
+                'Invalid channel target [%s]. Must be one of "officers" or "members"',
+                $target
+            ));
         }
 
         $this->target = $target;
