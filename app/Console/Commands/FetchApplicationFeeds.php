@@ -49,19 +49,11 @@ class FetchApplicationFeeds extends Command
                 $newItems = $this->rssFeedService->detectNewItems($cacheKey, $rssContent);
 
                 foreach ($newItems as $item) {
-                    $this->processNewItem($division, $item);
+                    $division->notify(new NewDivisionApplication($item->title, $item->link));
                 }
             } catch (\Exception $exception) {
                 // silently fail because we probably don't have a setting
             }
         }
-
-    }
-
-    private function processNewItem(Division $division, $item)
-    {
-        $title = (string) $item->title;
-
-        $division->notify(new NewDivisionApplication($title, (string) $item->link));
     }
 }
