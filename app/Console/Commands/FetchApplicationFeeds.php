@@ -62,8 +62,6 @@ class FetchApplicationFeeds extends Command
     {
         $title = (string) $item->title;
 
-        if (str_contains($title, 'Applying for AOD Membership')) {
-            $division->notify(new NewDivisionApplication($title, (string) $item->link));
-        }
+        $division->notify(new NewDivisionApplication($title, (string) $item->link));
     }
 }
