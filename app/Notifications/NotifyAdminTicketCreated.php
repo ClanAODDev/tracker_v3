@@ -36,6 +36,7 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title('ClanAOD Tracker')
+            ->target('bot')
             ->fields([
                 [
                     'name' => "Ticket: {$notifiable->type->name} - {$authoringUser}",
