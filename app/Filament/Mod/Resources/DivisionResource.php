@@ -73,6 +73,12 @@ class DivisionResource extends Resource
                     ->description('Settings related to division recruitment process')
                     ->aside()
                     ->statePath('settings')->schema([
+
+                        Forms\Components\TextInput::make('Applications Feed')
+                            ->label('Recruit Appplications RSS URL')
+                            ->statePath('recruitment_rss_feed')
+                            ->helperText('RSS feed URL where new division applications are posted'),
+
                         Forms\Components\Section::make('Tasks')->collapsible()->collapsed()
                             ->description('Critical steps to perform during recruitment')
                             ->schema([
