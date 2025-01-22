@@ -23,6 +23,8 @@ class BotChannelMessage
 
     private int $color;
 
+    private mixed $title;
+
     private $target;
 
     private $thumbnail = [];
