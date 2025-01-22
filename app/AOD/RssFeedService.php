@@ -40,7 +40,7 @@ class RssFeedService
             }
         }
 
-        Cache::for($cacheKey, $currentGuids, now()->addDays(30));
+        Cache::put($cacheKey, $currentGuids, now()->addDays(30));
 
         return $newItems;
     }
