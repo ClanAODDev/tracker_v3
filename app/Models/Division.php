@@ -49,6 +49,7 @@ class Division extends Model
         'welcome_area' => '',
         'welcome_pm' => '',
         'inactivity_days' => 30,
+        'recruitment_rss_feed' => '',
 
         'activity_threshold' => [
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
