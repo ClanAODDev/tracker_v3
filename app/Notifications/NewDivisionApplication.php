@@ -4,12 +4,14 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NewDivisionApplication extends Notification
+class NewDivisionApplication extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     /**
      * Create a new notification instance.
@@ -30,6 +32,7 @@ class NewDivisionApplication extends Notification
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target('officers')
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
