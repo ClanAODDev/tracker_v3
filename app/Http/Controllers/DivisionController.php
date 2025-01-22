@@ -51,6 +51,8 @@ class DivisionController extends Controller
             \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
         )->count();
 
+        $division->outstandingAwardRequests = $division->memberAwards()->needsApproval()->count();
+
         $divisionLeaders = $division->leaders()->get();
 
         $platoons = $division->platoons()->with(

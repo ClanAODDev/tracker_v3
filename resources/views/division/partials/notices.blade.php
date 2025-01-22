@@ -30,7 +30,7 @@
     @endif
 @endcan
 
-@if($division->outstandingInactives && auth()->user()->isRole('sr_ldr'))
+@if($division->outstandingAwardRequests && auth()->user()->isRole('sr_ldr'))
     <div class="alert alert-default">
         There are
         <code>{{ $division->outstandingInactives }}</code> outstanding

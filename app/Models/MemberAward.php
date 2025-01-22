@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class MemberAward extends Model
@@ -23,5 +24,10 @@ class MemberAward extends Model
     public function award()
     {
         return $this->belongsTo(Award::class, 'award_id')->orderBy('display_order');
+    }
+
+    public function scopeNeedsApproval(Builder $query):void
+    {
+        $query->where('approved', 0);
     }
 }
