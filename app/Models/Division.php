@@ -106,7 +106,7 @@ class Division extends Model
      */
     protected $hidden = ['structure'];
 
-    protected $withCount = ['sergeants', 'members', 'unapprovedDivisionAwards'];
+    protected $withCount = ['sergeants', 'members'];
 
     /**
      * @var array
@@ -411,12 +411,6 @@ class Division extends Model
     public function memberAwards(): HasManyThrough
     {
         return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id');
-    }
-
-    public function unapprovedDivisionAwards()
-    {
-        return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id')
-            ->where('approved', false);
     }
 
     /**
