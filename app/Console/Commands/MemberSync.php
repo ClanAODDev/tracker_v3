@@ -43,8 +43,8 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        if (!$syncData = collect((new GetDivisionInfo)->data)) {
-            \Log::critical(date('Y-m-d H:i:s').' - MEMBER SYNC - No data available');
+        if (! $syncData = collect((new GetDivisionInfo)->data)) {
+            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
         }
@@ -82,7 +82,7 @@ class MemberSync extends Command
 
             $newData = $syncTableMap->get($member->clan_id);
 
-            if (!$newData) {
+            if (! $newData) {
                 // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
 
@@ -188,17 +188,16 @@ class MemberSync extends Command
                         $updates['squad_id'] = 0;
                         $updates['platoon_id'] = 0;
 
-                        // notify new division of transfer
-                        $newDivision = Division::find($newData[$key]);
-                        if ($newDivision->settings()->get('chat_alerts.member_transferred')) {
-                            $newDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
-                        }
+                        // notify old and new divisions of outgoing, incoming transfer
+                        $divisionIds = [$newData[$key], $oldData[$key]];
+                        $divisions = Division::whereIn('id', $divisionIds)->get()->keyBy('id');
 
-                        // notify old division of transfer
-                        $oldDivision = Division::find($oldData[$key]);
-                        if ($oldDivision->settings()->get('chat_alerts.member_transferred')) {
-                            $oldDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision));
-                        }
+                        $newDivision = $divisions[$newData[$key]];
+                        $oldDivision = $divisions[$oldData[$key]];
+
+                        $newDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision->name));
+                        $oldDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision->name));
+
                     }
 
                     if ($key === 'name' && $user = $member->user) {

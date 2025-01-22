@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\MemberRemoved;
+use App\Notifications\PartTimeMemberRemoved;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
@@ -40,9 +41,9 @@ class DeleteMember extends FormRequest
         $member = $this->route('member');
 
         if ($member->division()->exists()) {
-            if ($member->division->settings()->get('chat_alerts.member_removed')) {
-                $member->division->notify(new MemberRemoved($member, auth()->user(), $this->removal_reason, $member->squad));
-            }
+            $member->division->notify(
+                new MemberRemoved($member, auth()->user(), $this->removal_reason, $member->squad)
+            );
         }
 
         $this->notifyPartTimeDivisions($member);
@@ -65,9 +66,7 @@ class DeleteMember extends FormRequest
         $divisions = $member->partTimeDivisions()->active()->get();
 
         foreach ($divisions as $division) {
-            if ($division->settings()->get('chat_alerts.pt_member_removed')) {
-                $division->notify(new \App\Notifications\PartTimeMemberRemoved($member, $this->removal_reason));
-            }
+            $division->notify(new PartTimeMemberRemoved($member, $this->removal_reason));
         }
     }
 }

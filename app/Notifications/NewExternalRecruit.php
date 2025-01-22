@@ -4,7 +4,9 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Models\Member;
 use App\Models\User;
+use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -13,20 +15,14 @@ use Illuminate\Notifications\Notification;
 
 class NewExternalRecruit extends Notification implements ShouldQueue
 {
-    use Queueable, RetryableNotification;
+    use DivisionSettableNotification, Queueable, RetryableNotification;
 
-    private $member;
-
-    private User $recruiter;
+    private string $alertSetting = 'chat_alerts.member_created';
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($member, User $recruiter)
-    {
-        $this->member = $member;
-        $this->recruiter = $recruiter;
-    }
+    public function __construct(private readonly Member $member, private readonly User $recruiter) {}
 
     /**
      * Get the notification's delivery channels.
@@ -52,7 +48,7 @@ class NewExternalRecruit extends Notification implements ShouldQueue
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get('chat_alerts.member_created'))
+            ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [

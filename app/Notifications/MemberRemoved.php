@@ -4,7 +4,11 @@ namespace App\Notifications;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Models\Division;
+use App\Models\Member;
+use App\Models\Squad;
 use App\Models\User;
+use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,28 +16,18 @@ use Illuminate\Notifications\Notification;
 
 class MemberRemoved extends Notification implements ShouldQueue
 {
-    use Queueable, RetryableNotification;
+    use DivisionSettableNotification, Queueable, RetryableNotification;
 
-    private $user;
-
-    private $member;
-
-    private $remover;
-
-    private $removalReason;
-
-    private $squad;
+    private string $alertSetting = 'chat_alerts.member_removed';
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($member, User $remover, $removalReason, $squad)
-    {
-        $this->member = $member;
-        $this->remover = $remover;
-        $this->removalReason = $removalReason;
-        $this->squad = $squad;
-    }
+    public function __construct(
+        private readonly Member $member,
+        private readonly User $remover,
+        private readonly string $removalReason,
+        private readonly Squad $squad) {}
 
     /**
      * Get the notification's delivery channels.
@@ -51,14 +45,14 @@ class MemberRemoved extends Notification implements ShouldQueue
      *
      * @throws \Exception
      */
-    public function toBot($notifiable)
+    public function toBot(Division $notifiable)
     {
         $remover = $this->remover;
         $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get('chat_alerts.member_removed'))
+            ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())->fields([
                 [
                     'name' => 'Member Removed',

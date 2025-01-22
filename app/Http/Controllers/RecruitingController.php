@@ -50,18 +50,12 @@ class RecruitingController extends Controller
 
         $division = Division::whereSlug($request->division)->first();
 
-        // create or update member record
         $member = $this->createMember($request);
 
-        // request member status
         $this->createRequest($member, $division);
 
-        // notify slack of recruitment
-        if ($division->settings()->get('chat_alerts.member_created')) {
-            $this->handleNotification($request, $member, $division);
-        }
+        $this->handleNotification($request, $member, $division);
 
-        // create job to sync discord member
         SyncDiscordMember::dispatch($member);
 
         $this->showSuccessToast('Your recruitment has successfully been completed!');

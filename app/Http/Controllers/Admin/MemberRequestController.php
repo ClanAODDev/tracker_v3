@@ -116,13 +116,10 @@ class MemberRequestController extends Controller
 
         $memberRequest = MemberRequest::find($requestId);
 
-        if ($memberRequest->division->settings()->get('chat_alerts.member_approved')) {
-            $memberRequest->division->notify(new MemberRequestApproved(
-                $memberRequest,
-                auth()->user(),
-                $memberRequest->member
-            ));
-        }
+        $memberRequest->division->notify(new MemberRequestApproved(
+            auth()->user(),
+            $memberRequest->member
+        ));
 
         $memberRequest->approve();
 
