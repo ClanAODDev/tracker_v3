@@ -75,7 +75,7 @@ class DivisionResource extends Resource
                     ->statePath('settings')->schema([
 
                         Forms\Components\TextInput::make('Applications Feed')
-                            ->label('Recruit Appplications RSS URL')
+                            ->label('Recruit Applications RSS URL')
                             ->statePath('recruitment_rss_feed')
                             ->helperText('RSS feed URL where new division applications are posted'),
 
