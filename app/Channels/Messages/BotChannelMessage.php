@@ -19,8 +19,6 @@ class BotChannelMessage
 
     private mixed $message;
 
-    private string $channel;
-
     private int $color;
 
     private mixed $title;
@@ -108,7 +106,7 @@ class BotChannelMessage
     /**
      * @return $this
      */
-    public function target($target = 'officers'): static
+    public function target($target): static
     {
         if (! in_array($target, ['officers', 'members'])) {
             throw new Exception(sprintf(
