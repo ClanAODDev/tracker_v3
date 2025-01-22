@@ -45,7 +45,7 @@ class MemberRequestController extends Controller
             ->with('member', 'approver', 'division')
             ->get();
 
-        if ($this->isDivisionLeadership()) {
+        if ($this->isDivisionLeadership() && !auth()->user()->isRole('admin')) {
             $pending = $this->filterByDivision($pending);
             $approved = $this->filterByDivision($approved);
             $onHold = $this->filterByDivision($onHold);
