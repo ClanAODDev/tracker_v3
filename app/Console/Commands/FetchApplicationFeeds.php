@@ -14,7 +14,7 @@ class FetchApplicationFeeds extends Command
      *
      * @var string
      */
-    protected $signature = 'app:fetch-application-feeds';
+    protected $signature = 'do:fetch-application-feeds';
 
     protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
 
@@ -35,8 +35,6 @@ class FetchApplicationFeeds extends Command
                 $feedUrl = $division->settings()->get('recruitment_rss_feed');
 
                 if (! $feedUrl) {
-                    \Log::Info("No application feed URL for division: {$division->name}. Skipping!");
-
                     continue;
                 }
 

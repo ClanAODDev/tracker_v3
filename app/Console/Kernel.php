@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command('do:fetch-application-feeds')->everyTenMinutes();
         $schedule->command('do:membersync')->hourly();
         $schedule->command('do:divisioncensus')->weekly();
         $schedule->command('do:part-time-member-cleanup')->weekly();
