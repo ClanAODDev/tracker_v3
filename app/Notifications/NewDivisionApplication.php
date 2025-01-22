@@ -14,27 +14,27 @@ class NewDivisionApplication extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private readonly string $title, private readonly string $link) {}
+    public function __construct(private readonly string $threadTitle, private readonly string $threadLink) {}
 
     /**
      * Get the notification's delivery channels.
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable): array
+    public function via(): array
     {
         return [BotChannel::class];
     }
 
-    public function toBot(object $notifiable)
+    public function toBot($notifiable)
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name' => $this->title,
-                    'value' => $this->link,
+                    'name' => $this->threadTitle,
+                    'value' => $this->threadLink,
                 ],
             ])->info()
             ->send();
