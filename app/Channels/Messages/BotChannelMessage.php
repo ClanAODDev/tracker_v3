@@ -108,7 +108,7 @@ class BotChannelMessage
      */
     public function target($target): static
     {
-        if (! in_array($target, ['officers', 'members'])) {
+        if (! in_array($target, ['officers', 'members', 'bot'])) {
             throw new Exception(sprintf(
                 'Invalid channel target [%s]. Must be one of "officers" or "members"',
                 $target
