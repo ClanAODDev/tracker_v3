@@ -37,7 +37,10 @@ class NewDivisionApplication extends Notification implements ShouldQueue
             ->fields([
                 [
                     'name' => $this->threadTitle,
-                    'value' => $this->threadLink,
+                    'value' => sprintf(
+                        '[View application](%s)',
+                        $this->threadLink
+                    ),
                 ],
             ])->info()
             ->send();
