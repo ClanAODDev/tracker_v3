@@ -46,10 +46,12 @@ class MemberResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
+                    ->readOnly()
                     ->maxLength(255)
                     ->columnSpanFull(),
                 Forms\Components\Section::make('Clan Data')->schema([
                     TextInput::make('clan_id')
+                        ->readOnly()
                         ->required()
                         ->numeric(),
                     Forms\Components\Select::make('rank')
