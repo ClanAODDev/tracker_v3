@@ -35,12 +35,6 @@ class RankActionResource extends Resource
                 Forms\Components\Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
-                Forms\Components\DateTimePicker::make('created_at')
-                    ->default(now())
-                    ->required(),
-                Forms\Components\DateTimePicker::make('updated_at')
-                    ->default(now())
-                    ->required(),
             ]);
     }
 
