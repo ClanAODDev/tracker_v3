@@ -31,7 +31,8 @@
         "valentin-morice/filament-json-column": "^1.5",
         "opcodesio/log-viewer": "^3.10",
         "embed/embed": "^4.4",
-        "mansoor/filament-versionable": "^0.0.12"
+        "mansoor/filament-versionable": "^0.0.12",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
