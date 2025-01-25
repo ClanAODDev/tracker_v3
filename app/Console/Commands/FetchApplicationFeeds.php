@@ -18,32 +18,30 @@ class FetchApplicationFeeds extends Command
 
     protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
 
-    private RssFeedService $rssFeedService;
-
-    public function __construct(RssFeedService $rssFeedService)
-    {
-        parent::__construct();
-        $this->rssFeedService = $rssFeedService;
-    }
-
     public function handle()
     {
         $excludedDivisions = [
             'Bluntz\' Reserves',
-            'Floater'
+            'Floater',
         ];
 
         $divisions = Division::active()->whereNotIn('name', $excludedDivisions)->get();
 
+        $rssFeedService = new RssFeedService;
+
         foreach ($divisions as $division) {
+            \Log::info("Checking {$division->name} for new threads");
+
             try {
                 $feedUrl = $division->settings()->get('recruitment_rss_feed');
 
                 if (! $feedUrl) {
+                    \Log::info('No feed URL found. Continuing...');
+
                     continue;
                 }
 
-                $rssContent = $this->rssFeedService->fetchRssContent($feedUrl);
+                $rssContent = $rssFeedService->fetchRssContent($feedUrl);
                 if (! $rssContent) {
                     \Log::error("Failed to fetch RSS content for division: {$division->name}");
 
@@ -51,13 +49,13 @@ class FetchApplicationFeeds extends Command
                 }
 
                 $cacheKey = "rss_feed_{$division->id}";
-                $newItems = $this->rssFeedService->detectNewItems($cacheKey, $rssContent);
+                $newItems = $rssFeedService->detectNewItems($cacheKey, $rssContent);
 
                 foreach ($newItems as $item) {
                     $division->notify(new NewDivisionApplication($item->title, $item->link));
                 }
             } catch (\Exception $exception) {
-                // silently fail because we probably don't have a setting
+                \Log::error($exception->getMessage());
             }
 
             return self::SUCCESS;
