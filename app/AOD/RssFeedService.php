@@ -8,7 +8,7 @@ use SimpleXMLElement;
 
 class RssFeedService
 {
-    public function fetchRssContent(string $url): ?SimpleXMLElement
+    public function fetchRssContent(string $url): SimpleXMLElement|false
     {
         try {
             $response = Http::get($url);
@@ -17,10 +17,10 @@ class RssFeedService
                 return new SimpleXMLElement($response->body());
             }
         } catch (\Exception $e) {
-            // Handle logging or error reporting
+            \Log::error($e->getMessage());
         }
 
-        return null;
+        return false;
     }
 
     public function detectNewItems(string $cacheKey, SimpleXMLElement $rssContent): array

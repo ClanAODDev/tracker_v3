@@ -42,6 +42,7 @@ class FetchApplicationFeeds extends Command
                 }
 
                 $rssContent = $rssFeedService->fetchRssContent($feedUrl);
+
                 if (! $rssContent) {
                     \Log::error("Failed to fetch RSS content for division: {$division->name}");
 
@@ -57,8 +58,8 @@ class FetchApplicationFeeds extends Command
             } catch (\Exception $exception) {
                 \Log::error($exception->getMessage());
             }
-
-            return self::SUCCESS;
         }
+
+        return self::SUCCESS;
     }
 }
