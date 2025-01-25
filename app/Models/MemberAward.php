@@ -26,7 +26,7 @@ class MemberAward extends Model
         return $this->belongsTo(Award::class, 'award_id')->orderBy('display_order');
     }
 
-    public function scopeNeedsApproval(Builder $query):void
+    public function scopeNeedsApproval(Builder $query): void
     {
         $query->where('approved', 0);
     }

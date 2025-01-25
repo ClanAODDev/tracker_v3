@@ -31,7 +31,6 @@ class TransfersRelationManager extends RelationManager
                     ->label('Effective')
                     ->readOnly()->default(now()),
 
-
             ]);
     }
 
@@ -43,7 +42,7 @@ class TransfersRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('division.name'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Effective')
-                    ->date()
+                    ->date(),
             ])
             ->filters([
                 //

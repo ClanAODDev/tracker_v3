@@ -117,9 +117,9 @@ class DivisionResource extends Resource
                                 Forms\Components\Select::make('member_approved')
                                     ->options($channelOptions)
                                     ->label('New Recruit Approval'),
-//                                Forms\Components\Select::make('member_denied')
-//                                    ->options($channelOptions)
-//                                    ->label('New Recruit Denial'),
+                                //                                Forms\Components\Select::make('member_denied')
+                                //                                    ->options($channelOptions)
+                                //                                    ->label('New Recruit Denial'),
                             ])
                             ->columns(2),
 

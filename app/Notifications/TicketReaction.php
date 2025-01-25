@@ -18,7 +18,7 @@ class TicketReaction extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(private readonly string $status){}
+    public function __construct(private readonly string $status) {}
 
     /**
      * Get the notification's delivery channels.
