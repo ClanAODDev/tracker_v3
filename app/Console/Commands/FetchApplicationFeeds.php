@@ -28,7 +28,12 @@ class FetchApplicationFeeds extends Command
 
     public function handle()
     {
-        $divisions = Division::active()->get();
+        $excludedDivisions = [
+            'Bluntz\' Reserves',
+            'Floater'
+        ];
+
+        $divisions = Division::active()->whereNotIn('name', $excludedDivisions)->get();
 
         foreach ($divisions as $division) {
             try {
@@ -54,6 +59,8 @@ class FetchApplicationFeeds extends Command
             } catch (\Exception $exception) {
                 // silently fail because we probably don't have a setting
             }
+
+            return self::SUCCESS;
         }
     }
 }
