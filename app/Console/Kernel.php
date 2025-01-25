@@ -17,9 +17,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\MemberSync::class,
         Commands\DivisionCensus::class,
+        Commands\FetchApplicationFeeds::class,
+        Commands\MemberSync::class,
         Commands\MakeAODToken::class,
+        Commands\PartTimeMemberCleanup::class,
         Commands\SgtActivity::class,
     ];
 
@@ -28,7 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command(FetchApplicationFeeds::class)->everyFiveMinutes();
+        $schedule->command(FetchApplicationFeeds::class)->everyMinute();
         $schedule->command(MemberSync::class)->hourly();
         $schedule->command(DivisionCensus::class)->weekly();
         $schedule->command(PartTimeMemberCleanup::class)->weekly();
