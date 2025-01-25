@@ -6,6 +6,9 @@ use App\AOD\RssFeedService;
 use App\Models\Division;
 use App\Notifications\NewDivisionApplication;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use SimpleXMLElement;
 
 class FetchApplicationFeeds extends Command
 {
@@ -18,7 +21,7 @@ class FetchApplicationFeeds extends Command
 
     protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
 
-    public function handle()
+    public function handle(): int
     {
         $excludedDivisions = [
             'Bluntz\' Reserves',
@@ -26,8 +29,6 @@ class FetchApplicationFeeds extends Command
         ];
 
         $divisions = Division::active()->whereNotIn('name', $excludedDivisions)->get();
-
-        $rssFeedService = new RssFeedService;
 
         foreach ($divisions as $division) {
             \Log::info("Checking {$division->name} for new threads");
@@ -41,7 +42,7 @@ class FetchApplicationFeeds extends Command
                     continue;
                 }
 
-                $rssContent = $rssFeedService->fetchRssContent($feedUrl);
+                $rssContent = $this->fetchRssContent($feedUrl);
 
                 if (! $rssContent) {
                     \Log::error("Failed to fetch RSS content for division: {$division->name}");
@@ -50,7 +51,7 @@ class FetchApplicationFeeds extends Command
                 }
 
                 $cacheKey = "rss_feed_{$division->id}";
-                $newItems = $rssFeedService->detectNewItems($cacheKey, $rssContent);
+                $newItems = $this->detectNewItems($cacheKey, $rssContent);
 
                 foreach ($newItems as $item) {
                     $division->notify(new NewDivisionApplication($item->title, $item->link));
@@ -61,5 +62,42 @@ class FetchApplicationFeeds extends Command
         }
 
         return self::SUCCESS;
+    }
+
+    public function fetchRssContent(string $url): SimpleXMLElement|false
+    {
+        try {
+            $response = Http::get($url);
+
+            if ($response->ok()) {
+                return new SimpleXMLElement($response->body());
+            }
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+        }
+
+        return false;
+    }
+
+    public function detectNewItems(string $cacheKey, SimpleXMLElement $rssContent): array
+    {
+        $cachedGuids = Cache::get($cacheKey, []);
+
+        $currentGuids = [];
+        $newItems = [];
+
+        foreach ($rssContent->channel->item as $item) {
+            $guid = (string) $item->guid;
+
+            $currentGuids[] = $guid;
+
+            if (! in_array($guid, $cachedGuids)) {
+                $newItems[] = $item;
+            }
+        }
+
+        Cache::put($cacheKey, $currentGuids, now()->addDays(30));
+
+        return $newItems;
     }
 }
