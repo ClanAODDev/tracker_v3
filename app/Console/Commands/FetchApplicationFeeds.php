@@ -91,6 +91,8 @@ class FetchApplicationFeeds extends Command
 
     protected function pruneOldItems(): void
     {
-        DB::table('application_items')->where('pub_date', '<', now()->subDays(30))->delete();
+        DB::table('application_items')
+            ->where('pub_date', '<', now()->subDays(45))
+            ->delete();
     }
 }
