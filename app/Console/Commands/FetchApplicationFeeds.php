@@ -5,18 +5,16 @@ namespace App\Console\Commands;
 use App\Models\Division;
 use App\Notifications\NewDivisionApplication;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use SimpleXMLElement;
 
 class FetchApplicationFeeds extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * Execute the console command.
      */
-    protected $signature = 'do:fetch-application-feeds';
+    protected $signature = 'do:fetch-application-feeds {--notify}';
 
     protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
 
@@ -30,13 +28,10 @@ class FetchApplicationFeeds extends Command
         $divisions = Division::active()->whereNotIn('name', $excludedDivisions)->get();
 
         foreach ($divisions as $division) {
-
             try {
                 $feedUrl = $division->settings()->get('recruitment_rss_feed');
 
                 if (! $feedUrl) {
-                    \Log::info('No feed URL found. Continuing...');
-
                     continue;
                 }
 
@@ -48,21 +43,18 @@ class FetchApplicationFeeds extends Command
                     continue;
                 }
 
-                $cacheKey = "rss_feed_{$division->id}";
-                $newItems = $this->detectNewItems($cacheKey, $rssContent);
-
-                foreach ($newItems as $item) {
-                    $division->notify(new NewDivisionApplication($item->title, $item->link));
-                }
+                $this->processRssFeed($division, $rssContent);
             } catch (\Exception $exception) {
                 \Log::error($exception->getMessage());
             }
         }
 
+        $this->pruneOldItems();
+
         return self::SUCCESS;
     }
 
-    public function fetchRssContent(string $url): SimpleXMLElement|false
+    protected function fetchRssContent(string $url): SimpleXMLElement|false
     {
         try {
             $response = Http::get($url);
@@ -77,25 +69,28 @@ class FetchApplicationFeeds extends Command
         return false;
     }
 
-    public function detectNewItems(string $cacheKey, SimpleXMLElement $rssContent): array
+    protected function processRssFeed(Division $division, SimpleXMLElement $rssContent): void
     {
-        $cachedGuids = Cache::get($cacheKey, []);
-
-        $currentGuids = [];
-        $newItems = [];
-
         foreach ($rssContent->channel->item as $item) {
-            $guid = (string) $item->guid;
+            $threadId = str_replace('https://www.clanaod.net/forums/showthread.php?t=', '', $item->guid);
 
-            $currentGuids[] = $guid;
+            if (DB::table('application_items')->where('guid', $threadId)->exists()) {
+                continue;
+            }
 
-            if (! in_array($guid, $cachedGuids)) {
-                $newItems[] = $item;
+            DB::table('application_items')->insert([
+                'guid' => $threadId,
+                'pub_date' => \Carbon\Carbon::createFromTimeString($item->pubDate),
+            ]);
+
+            if ($this->option('notify')) {
+                $division->notify(new NewDivisionApplication((string) $item->title, (string) $item->link));
             }
         }
+    }
 
-        Cache::put($cacheKey, $currentGuids, now()->addDays(30));
-
-        return $newItems;
+    protected function pruneOldItems(): void
+    {
+        DB::table('application_items')->where('pub_date', '<', now()->subDays(30))->delete();
     }
 }

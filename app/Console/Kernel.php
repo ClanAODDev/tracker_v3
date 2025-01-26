@@ -12,20 +12,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
-    protected $commands = [
-        Commands\DivisionCensus::class,
-        Commands\FetchApplicationFeeds::class,
-        Commands\MemberSync::class,
-        Commands\MakeAODToken::class,
-        Commands\PartTimeMemberCleanup::class,
-        Commands\SgtActivity::class,
-    ];
-
-    /**
      * Define the application's command schedule.
      */
     protected function schedule(Schedule $schedule): void
