@@ -73,7 +73,8 @@ class FetchApplicationFeeds extends Command
                 $threadId = $matches[1];
             }
 
-            if (! $threadId) {
+            if (!$threadId) {
+                // couldn't reliably extract a thread id so let's move on
                 continue;
             }
 
