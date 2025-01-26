@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\AOD\RssFeedService;
 use App\Models\Division;
 use App\Notifications\NewDivisionApplication;
 use Illuminate\Console\Command;
@@ -31,7 +30,6 @@ class FetchApplicationFeeds extends Command
         $divisions = Division::active()->whereNotIn('name', $excludedDivisions)->get();
 
         foreach ($divisions as $division) {
-            \Log::info("Checking {$division->name} for new threads");
 
             try {
                 $feedUrl = $division->settings()->get('recruitment_rss_feed');
