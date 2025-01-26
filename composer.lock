@@ -4,8 +4,87 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44a91ae811b86635e241c39e8a761915",
+    "content-hash": "f5fdbbd5f966d1cf75439805154e7e5e",
     "packages": [
+        {
+            "name": "adrolli/filament-title-with-slug",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adrolli/filament-title-with-slug.git",
+                "reference": "6353baa17136c8e8f365cfc9e3b580ab4c24a87b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adrolli/filament-title-with-slug/zipball/6353baa17136c8e8f365cfc9e3b580ab4c24a87b",
+                "reference": "6353baa17136c8e8f365cfc9e3b580ab4c24a87b",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.1.0",
+                "illuminate/contracts": "^10.0|^11.0",
+                "php": "^8.1|^8.2|^8.3",
+                "spatie/laravel-package-tools": "^1.13.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.8",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.13",
+                "pestphp/pest-plugin-laravel": "^2.2",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^10.3",
+                "roave/security-advisories": "dev-latest",
+                "spatie/laravel-ray": "^1.31"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Camya\\Filament\\FilamentTitleWithSlugServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Camya\\Filament\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Scheibel",
+                    "email": "contact@camya.com",
+                    "homepage": "https://www.camya.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "TitleWithSlugInput - Easy Permalink Slugs for the FilamentPHP Form Builder (PHP / Laravel / Livewire)",
+            "homepage": "https://github.com/adrolli/filament-title-with-slug",
+            "keywords": [
+                "alpinejs",
+                "filament",
+                "framework",
+                "laravel",
+                "livewire",
+                "permalink",
+                "slug",
+                "tailwindcss"
+            ],
+            "support": {
+                "source": "https://github.com/adrolli/filament-title-with-slug/tree/0.0.1"
+            },
+            "time": "2024-09-12T23:18:31+00:00"
+        },
         {
             "name": "anourvalar/eloquent-serialize",
             "version": "1.2.27",
@@ -496,6 +575,79 @@
                 }
             ],
             "time": "2023-12-11T17:09:12+00:00"
+        },
+        {
+            "name": "codeat3/blade-google-material-design-icons",
+            "version": "1.19.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeat3/blade-google-material-design-icons.git",
+                "reference": "7a20f3a763edc54dba69725660eff2b2e99f8dad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeat3/blade-google-material-design-icons/zipball/7a20f3a763edc54dba69725660eff2b2e99f8dad",
+                "reference": "7a20f3a763edc54dba69725660eff2b2e99f8dad",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.1",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "codeat3/blade-icon-generation-helpers": "^0.8",
+                "codeat3/phpcs-styles": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.0|^10.5|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codeat3\\BladeGoogleMaterialDesignIcons\\BladeGoogleMaterialDesignIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codeat3\\BladeGoogleMaterialDesignIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Swapnil Sarwe",
+                    "homepage": "https://swapnilsarwe.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "homepage": "https://driesvints.com"
+                }
+            ],
+            "description": "A package to easily make use of \"Google Fonts Material Icons\" in your Laravel Blade views.",
+            "homepage": "https://github.com/codeat3/blade-google-material-design-icons",
+            "keywords": [
+                "blade",
+                "google",
+                "icons",
+                "laravel",
+                "material"
+            ],
+            "support": {
+                "issues": "https://github.com/codeat3/blade-google-material-design-icons/issues",
+                "source": "https://github.com/codeat3/blade-google-material-design-icons/tree/1.19.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/swapnilsarwe",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-02-28T15:02:13+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -4995,6 +5147,155 @@
             "time": "2024-12-05T17:15:07+00:00"
         },
         {
+            "name": "moox/core",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mooxphp/core.git",
+                "reference": "bf694cc551940e43d09ba29bf27fe60d9edfce62"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mooxphp/core/zipball/bf694cc551940e43d09ba29bf27fe60d9edfce62",
+                "reference": "bf694cc551940e43d09ba29bf27fe60d9edfce62",
+                "shasum": ""
+            },
+            "require": {
+                "adrolli/filament-title-with-slug": "*",
+                "codeat3/blade-google-material-design-icons": "^1.0",
+                "filament/filament": "^3.2",
+                "laravel/framework": "^10.0|^11.0",
+                "pharaonic/laravel-readable": "^1.0.5",
+                "php": "^8.2.0",
+                "ryangjchandler/filament-progress-column": "^1.0",
+                "spatie/laravel-package-tools": "^1.13.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.9",
+                "laravel/pint": "^1.14",
+                "nunomaduro/collision": "^8.1.1||^7.10.0",
+                "orchestra/testbench": "^9.0.0||^8.22.0",
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin-arch": "^3.0",
+                "pestphp/pest-plugin-laravel": "^3.0",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpstan-deprecation-rules": "^1.1",
+                "phpstan/phpstan-phpunit": "^1.3",
+                "spatie/laravel-ray": "^1.35"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Moox\\Core\\CoreServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Moox\\Core\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Moox Developer",
+                    "email": "dev@moox.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Moox Core package cares for many common features. It is required by all Moox packages.",
+            "homepage": "https://moox.org/",
+            "keywords": [
+                "filament",
+                "filament plugin",
+                "laravel",
+                "laravel package"
+            ],
+            "support": {
+                "source": "https://github.com/mooxphp/core/tree/3.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mooxphp",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-18T15:16:30+00:00"
+        },
+        {
+            "name": "moox/jobs",
+            "version": "3.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mooxphp/jobs.git",
+                "reference": "6dbdfaa5c7cc61ae7eaf9a4323f2dad348440769"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mooxphp/jobs/zipball/6dbdfaa5c7cc61ae7eaf9a4323f2dad348440769",
+                "reference": "6dbdfaa5c7cc61ae7eaf9a4323f2dad348440769",
+                "shasum": ""
+            },
+            "require": {
+                "moox/core": "^3.0.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "JobMonitor": "Moox\\Jobs\\JobManagerProvider\\Facade"
+                    },
+                    "providers": [
+                        "Moox\\Jobs\\JobsServiceProvider",
+                        "Moox\\Jobs\\JobManagerProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Moox\\Jobs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alf Drollinger",
+                    "email": "alf@drollinger.info",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Manage Job Queues, Failed Jobs and Batches in Filament.",
+            "homepage": "https://github.com/mooxphp/jobs",
+            "keywords": [
+                "batches",
+                "failed-jobs",
+                "filament",
+                "jobs",
+                "laravel",
+                "monitor",
+                "queues",
+                "redis"
+            ],
+            "support": {
+                "issues": "https://github.com/mooxphp/jobs/issues",
+                "source": "https://github.com/mooxphp/jobs/tree/3.3.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/mooxphp",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-01-21T15:02:22+00:00"
+        },
+        {
             "name": "nesbot/carbon",
             "version": "3.8.4",
             "source": {
@@ -5931,6 +6232,81 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "time": "2020-10-15T08:29:30+00:00"
+        },
+        {
+            "name": "pharaonic/laravel-readable",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Pharaonic/laravel-readable.git",
+                "reference": "cda54a05c6b0bc0ed8d740243a4c392d79f4621c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Pharaonic/laravel-readable/zipball/cda54a05c6b0bc0ed8d740243a4c392d79f4621c",
+                "reference": "cda54a05c6b0bc0ed8d740243a4c392d79f4621c",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": ">=6.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": ">=5.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Readable": "Pharaonic\\Laravel\\Readable\\Readable"
+                    },
+                    "providers": [
+                        "Pharaonic\\Laravel\\Readable\\ReadableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Helpers.php"
+                ],
+                "psr-4": {
+                    "Pharaonic\\Laravel\\Readable\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raggi",
+                    "email": "support@pharaonic.io",
+                    "homepage": "https://pharaonic.io"
+                }
+            ],
+            "description": "Laravel - Readable Number (Integer|decimal) & DateTime & Time Length & File Size.",
+            "keywords": [
+                "human readable",
+                "laravel",
+                "pharaonic",
+                "php",
+                "readable"
+            ],
+            "support": {
+                "issues": "https://github.com/Pharaonic/laravel-readable/issues",
+                "source": "https://github.com/Pharaonic/laravel-readable/tree/1.0.5"
+            },
+            "funding": [
+                {
+                    "url": "https://liberapay.com/Pharaonic",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://www.patreon.com/Pharaonic",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2022-02-14T09:56:07+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -7031,6 +7407,85 @@
                 }
             ],
             "time": "2024-02-26T18:08:49+00:00"
+        },
+        {
+            "name": "ryangjchandler/filament-progress-column",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ryangjchandler/filament-progress-column.git",
+                "reference": "47e44c24fe3a106d9dde0dd7aa724d844dc53feb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ryangjchandler/filament-progress-column/zipball/47e44c24fe3a106d9dde0dd7aa724d844dc53feb",
+                "reference": "47e44c24fe3a106d9dde0dd7aa724d844dc53feb",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "illuminate/contracts": "^11.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.9.2"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^8.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^9.0",
+                "pestphp/pest": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^10.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "FilamentProgressColumn": "RyanChandler\\FilamentProgressColumn\\Facades\\FilamentProgressColumn"
+                    },
+                    "providers": [
+                        "RyanChandler\\FilamentProgressColumn\\FilamentProgressColumnServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RyanChandler\\FilamentProgressColumn\\": "src",
+                    "RyanChandler\\FilamentProgressColumn\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan Chandler",
+                    "email": "support@ryangjchandler.co.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Add a progress bar column to your Filament tables.",
+            "homepage": "https://github.com/ryangjchandler/filament-progress-column",
+            "keywords": [
+                "filament-progress-column",
+                "laravel",
+                "ryangjchandler"
+            ],
+            "support": {
+                "issues": "https://github.com/ryangjchandler/filament-progress-column/issues",
+                "source": "https://github.com/ryangjchandler/filament-progress-column/tree/v1.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ryangjchandler",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-25T23:33:41+00:00"
         },
         {
             "name": "spatie/backtrace",
@@ -14305,14 +14760,15 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2",
         "ext-curl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-simplexml": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

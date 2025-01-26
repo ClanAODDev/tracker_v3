@@ -32,7 +32,8 @@
         "opcodesio/log-viewer": "^3.10",
         "embed/embed": "^4.4",
         "mansoor/filament-versionable": "^0.0.12",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "moox/jobs": "^3.3"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
