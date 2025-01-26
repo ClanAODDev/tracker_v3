@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command(FetchApplicationFeeds::class)->everyFiveMinutes();
+        $schedule->command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes();
         $schedule->command(MemberSync::class)->hourly();
         $schedule->command(DivisionCensus::class)->weekly();
         $schedule->command(PartTimeMemberCleanup::class)->weekly();
