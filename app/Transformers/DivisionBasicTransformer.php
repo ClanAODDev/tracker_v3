@@ -27,7 +27,7 @@ class DivisionBasicTransformer extends Transformer
             $data['settings'] = $item->settings()->only($item->exposedSettings);
         }
 
-        if (request()->has('include_site')) {
+        if (request()->has('include-site')) {
             $data['site_content'] = $item->site_content;
             /*            if ($item->versions()->count()) {
                             $data['site_content'] = $item->latestVersion->whereNotNull('approver_id')->first()?->contents['site_content'];
