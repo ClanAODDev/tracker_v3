@@ -23,7 +23,7 @@ class DivisionBasicTransformer extends Transformer
             ),
         ];
 
-        if (request()->has('include_settings')) {
+        if (request()->has('include-settings')) {
             $data['settings'] = $item->settings()->only($item->exposedSettings);
         }
 
