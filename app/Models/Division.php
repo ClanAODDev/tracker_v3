@@ -36,6 +36,20 @@ class Division extends Model
 
     protected $versionStrategy = VersionStrategy::SNAPSHOT;
 
+    /**
+     * Settings to expose to Division API
+     *
+     * @var array
+     */
+    public array $exposedSettings = [
+        'always_visible_in_discord',
+    ];
+
+    /**
+     * Initial division settings to define on creation
+     *
+     * @var array
+     */
     public array $defaultSettings = [
 
         'officer_channel' => '',

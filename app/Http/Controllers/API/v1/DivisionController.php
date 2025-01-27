@@ -73,9 +73,6 @@ class DivisionController extends ApiController
         return $this->respond([
             'data' => [
                 'division' => $this->divisionTransformer->transform($division),
-                'leadership' => $this->memberTransformer->transformCollection(
-                    $division->leaders()->get()->all()
-                ),
             ],
         ]);
     }

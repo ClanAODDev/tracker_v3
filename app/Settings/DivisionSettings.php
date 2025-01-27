@@ -25,4 +25,9 @@ class DivisionSettings
     {
         return $this->division->update(['settings' => $this->settings]);
     }
+
+    public function only(array $keys): array
+    {
+        return array_intersect_key($this->settings, array_flip($keys));
+    }
 }
