@@ -35,7 +35,7 @@ class AppController extends Controller
         $myDivision->outstandingInactives = $myDivision->members()->whereDoesntHave('leave')
             ->where('last_voice_activity', '<', \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d'))->count();
 
-        $myDivision->outstandingAwardRequests = $myDivision->memberAwards()->needsApproval()->count();
+        $myDivision->outstandingAwardRequests = $myDivision->awards()->whereHas('unapprovedRecipients')->count();
 
         $divisions = Division::active()->withoutFloaters()->withCount('members')
             ->orderBy('name')

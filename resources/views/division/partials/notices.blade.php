@@ -45,9 +45,7 @@
     <div class="alert alert-default">
         <i class="fa fa-trophy fa-lg c-white"></i> Pending award requests for approval.
 
-        <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery
-        ($division->id)
-        }}">Manage Requests</a>
+        <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id) }}">Manage Requests</a>
     </div>
 @endif
 
