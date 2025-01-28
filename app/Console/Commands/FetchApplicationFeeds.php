@@ -5,27 +5,25 @@ namespace App\Console\Commands;
 use App\Models\Division;
 use App\Notifications\NewDivisionApplication;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use SimpleXMLElement;
 
 class FetchApplicationFeeds extends Command
 {
-    /**
-     * Execute the console command.
-     */
+    private string $useragent = 'Tracker - App Scraper';
+
     protected $signature = 'do:fetch-application-feeds {--notify}';
 
     protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
 
     public function handle(): int
     {
-        $excludedDivisions = [
+        $divisions = Division::active()->whereNotIn('name', [
             'Bluntz\' Reserves',
             'Floater',
-        ];
-
-        $divisions = Division::active()->whereNotIn('name', $excludedDivisions)->get();
+        ])->get();
 
         foreach ($divisions as $division) {
             try {
@@ -49,15 +47,13 @@ class FetchApplicationFeeds extends Command
             }
         }
 
-        $this->pruneOldItems();
-
         return self::SUCCESS;
     }
 
     protected function fetchRssContent(string $url): SimpleXMLElement|false
     {
         try {
-            $response = Http::get($url);
+            $response = Http::withUserAgent($this->useragent)->get($url);
 
             if ($response->ok()) {
                 return new SimpleXMLElement($response->body());
@@ -72,27 +68,29 @@ class FetchApplicationFeeds extends Command
     protected function processRssFeed(Division $division, SimpleXMLElement $rssContent): void
     {
         foreach ($rssContent->channel->item as $item) {
-            $threadId = str_replace('https://www.clanaod.net/forums/showthread.php?t=', '', $item->guid);
+            $threadId = null;
+            if (preg_match('/\?t=(\d+)/', $item->guid, $matches)) {
+                $threadId = $matches[1];
+            }
 
-            if (DB::table('application_items')->where('guid', $threadId)->exists()) {
+            if (! $threadId) {
                 continue;
             }
 
-            DB::table('application_items')->insert([
+            $cacheKey = "application_item_{$threadId}";
+
+            if (Cache::has($cacheKey)) {
+                continue;
+            }
+
+            Cache::put($cacheKey, [
                 'guid' => $threadId,
-                'pub_date' => \Carbon\Carbon::createFromTimeString($item->pubDate),
-            ]);
+                'pub_date' => now()->toDateTimeString(),
+            ], now()->addDays(45));
 
             if ($this->option('notify')) {
                 $division->notify(new NewDivisionApplication((string) $item->title, (string) $item->link));
             }
         }
-    }
-
-    protected function pruneOldItems(): void
-    {
-        DB::table('application_items')
-            ->where('pub_date', '<', now()->subDays(45))
-            ->delete();
     }
 }
