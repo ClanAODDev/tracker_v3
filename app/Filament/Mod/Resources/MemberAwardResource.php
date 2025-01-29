@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages;
 use App\Filament\Mod\Resources\MemberAwardResource\RelationManagers\AwardRelationManager;
 use App\Models\MemberAward;
+use App\Notifications\MemberAwarded;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class MemberAwardResource extends Resource
 {
@@ -92,6 +94,27 @@ class MemberAwardResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+
+                    Tables\Actions\BulkAction::make('approve')
+                        ->label('Approve')
+                        ->action(fn (Collection $records) => $records->each->update(['approved' => true])),
+
+                    Tables\Actions\BulkAction::make('approve_and_notify')
+                        ->label('Approve and Notify')
+                        ->action(fn (Collection $records) => $records->each->update(['approved' => true]))
+                        ->requiresConfirmation()
+                        ->modalDescription('This will generate a notification for every award approved.')
+                        ->after(function (Collection $records) {
+                            foreach ($records as $memberAward) {
+                                if ($memberAward->member->division->settings()->get('chat_alerts.member_awarded')) {
+                                    $memberAward->member->division->notify(new MemberAwarded(
+                                        $memberAward->member->name,
+                                        $memberAward->award
+                                    ));
+                                }
+                            }
+                        }),
+
                 ]),
             ]);
     }
