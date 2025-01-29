@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\MemberAwardResource\Pages;
+use App\Filament\Mod\Resources\MemberAwardResource\RelationManagers\AwardRelationManager;
 use App\Models\MemberAward;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -27,7 +28,8 @@ class MemberAwardResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('award_id')
-                    ->relationship('award', 'name'),
+                    ->relationship('award', 'name')
+                    ->hiddenOn('edit'),
 
                 Forms\Components\Select::make('member_id')
                     ->relationship('member', 'name', function (Builder $query) {
@@ -35,18 +37,19 @@ class MemberAwardResource extends Resource
                             $subQuery->where('active', true);
                         });
                     })
+                    ->columnSpanFull()
                     ->searchable()
                     ->required(),
 
                 Forms\Components\Textarea::make('reason')
                     ->columnSpanFull()
-                    ->maxLength(191)
-                    ->default(null),
+                    ->rows(5)
+                    ->readOnly(),
 
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\DateTimePicker::make('created_at')->default(now()),
                     Forms\Components\DateTimePicker::make('updated_at')->default(now()),
-                ])->columns(),
+                ])->columns()->hiddenOn('edit'),
 
             ]);
     }
@@ -62,6 +65,7 @@ class MemberAwardResource extends Resource
                 Tables\Columns\TextColumn::make('member.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('reason')
+                    ->label('Justification')
                     ->toggleable(),
 
                 Tables\Columns\TextColumn::make('division.name'),
@@ -95,7 +99,7 @@ class MemberAwardResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            AwardRelationManager::class,
         ];
     }
 
