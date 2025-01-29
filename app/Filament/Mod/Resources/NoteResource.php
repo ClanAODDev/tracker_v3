@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class NoteResource extends Resource
 {
@@ -67,6 +68,13 @@ class NoteResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->modifyQueryUsing(function (Builder $query): Builder {
+                if (!auth()->user()->isRole(['admin', 'sr_ldr'])) {
+                    return $query->whereNot('type', 'sr_ldr');
+                }
+
+                return $query;
+            })
             ->filters([
                 //
             ])
