@@ -10,7 +10,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberRankChanged extends Notification implements ShouldQueue
+class Promotion extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
@@ -31,9 +31,9 @@ class MemberRankChanged extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get('chat_alerts.rank_changed'))
+            ->target($notifiable->settings()->get('chat_alerts.promotion'))
             ->thumbnail($notifiable->getLogoPath())
-            ->message(addslashes(":tools: **MEMBER STATUS - RANK CHANGE**\n{$this->member} is now  `{$this->rank}`"))
+            ->message(addslashes(":tools: **PROMOTION**\n{$this->member} is promoted to  `{$this->rank}`"))
             ->success()
             ->send();
     }

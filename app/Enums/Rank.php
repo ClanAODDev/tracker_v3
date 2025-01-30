@@ -109,4 +109,9 @@ enum Rank: int implements HasColor, HasLabel
 
         return $ranks;
     }
+
+    public function isPromotion(Rank $previousRank): bool
+    {
+        return $this->value > $previousRank->value;
+    }
 }

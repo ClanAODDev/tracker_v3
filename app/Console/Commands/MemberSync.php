@@ -12,6 +12,7 @@ use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
+use App\Notifications\Promotion;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -161,18 +162,19 @@ class MemberSync extends Command
                     $updates[$key] = $newData[$key];
 
                     if ($key === 'rank') {
-                        $rank = Rank::from($newData[$key])->getLabel();
+                        $newRank = Rank::from($newData[$key]);
+                        $oldRank = Rank::from($oldData[$key]);
 
-                        \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], $rank));
-
-                        if ($member->division->settings()->get('chat_alerts.rank_changed')) {
-                            $member->division->notify(new \App\Notifications\MemberRankChanged($member->name, $rank));
+                        if ($member->division->settings()->get('chat_alerts.member_promoted')) {
+                            if ($newRank->isPromotion(previousRank: $oldRank)) {
+                                $member->division->notify(new Promotion($member->name, $newRank->getLabel()));
+                            }
                         }
 
                         $updates['last_promoted_at'] = now();
                         RankAction::create([
                             'member_id' => $member->id,
-                            'rank' => $newData[$key],
+                            'rank' => $newRank,
                         ]);
                     }
 
