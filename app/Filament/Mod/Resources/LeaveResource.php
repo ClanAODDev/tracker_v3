@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class LeaveResource extends Resource
 {
@@ -25,6 +26,16 @@ class LeaveResource extends Resource
     protected static ?string $navigationGroup = 'Division';
 
     protected static ?string $pluralLabel = 'Leaves of Absence';
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
+    }
 
     public static function form(Form $form): Form
     {

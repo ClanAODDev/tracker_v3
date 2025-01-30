@@ -21,6 +21,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class MemberResource extends Resource
 {
@@ -38,6 +39,11 @@ class MemberResource extends Resource
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return false;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
     }
 
     public static function form(Form $form): Form

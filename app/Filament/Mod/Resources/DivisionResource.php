@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Mansoor\FilamentVersionable\Table\RevisionsAction;
 
 class DivisionResource extends Resource
@@ -22,6 +23,11 @@ class DivisionResource extends Resource
     protected static ?string $label = 'Settings';
 
     protected static ?string $navigationGroup = 'Division';
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
+    }
 
     public static function form(Form $form): Form
     {

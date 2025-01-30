@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class MemberAwardResource extends Resource
@@ -24,6 +25,16 @@ class MemberAwardResource extends Resource
     protected static ?string $navigationGroup = 'Division';
 
     protected static ?string $navigationParentItem = 'Members';
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
+    }
 
     public static function form(Form $form): Form
     {
@@ -96,10 +107,12 @@ class MemberAwardResource extends Resource
 
                     Tables\Actions\BulkAction::make('approve')
                         ->label('Approve')
+                        ->hidden(fn() => !auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true])),
 
                     Tables\Actions\BulkAction::make('approve_and_notify')
                         ->label('Approve and Notify')
+                        ->hidden(fn() => !auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true]))
                         ->requiresConfirmation()
                         ->modalDescription('This will generate a notification for every award approved.')
