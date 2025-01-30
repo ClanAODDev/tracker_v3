@@ -2,7 +2,7 @@
     @csrf
 </form>
 
-<script src="{{ asset('/js/main.js?v=3.3') }}"></script>
+<script src="{{ asset('/js/main.js?v=3.4') }}"></script>
 
 @include('application.partials.snow')
 {{--@include('application.partials.confetti')--}}
