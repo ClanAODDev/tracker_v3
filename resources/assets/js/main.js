@@ -60,20 +60,42 @@ let Tracker = Tracker || {};
          */
         TriggerFilter: function (textArea, callback, delay) {
             var timer = null;
-            if ($('#member-search').length) {
-                textArea.onkeypress = function () {
-                    $('.results-loader').removeClass('hidden');
-                    if (timer) {
-                        window.clearTimeout(timer);
+
+            if (!textArea || !$('#member-search').length) return; // Ensure textArea exists
+
+            var triggerSearch = function () {
+                if (!textArea) return; // Ensure textArea still exists
+
+                $('.results-loader').removeClass('hidden');
+
+                if (timer) {
+                    window.clearTimeout(timer);
+                }
+
+                timer = window.setTimeout(function () {
+                    timer = null;
+                    if (!textArea || textArea.value.trim() === "") {
+                        $('.results-loader').addClass('hidden'); // Hide loader if empty
+                        return; // Do not trigger search if the field is empty
                     }
-                    timer = window.setTimeout(function () {
-                        timer = null;
-                        callback();
-                    }, delay);
-                };
-                textArea = null;
-            }
+                    callback();
+                }, delay);
+            };
+
+            textArea.addEventListener('keydown', triggerSearch);
+            textArea.addEventListener('paste', function () {
+                setTimeout(triggerSearch, 0); // Ensures pasted text is processed first
+            });
+
+            textArea.addEventListener('input', function () {
+                if (!textArea) return;
+                if (textArea.value.trim() === "") {
+                    $('.results-loader').addClass('hidden'); // Hide loader if empty
+                }
+            });
         },
+
+
 
         /**
          * Search members handle
