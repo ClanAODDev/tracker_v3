@@ -92,8 +92,13 @@ class LeaveResource extends Resource
                 Tables\Columns\TextColumn::make('member.division.name'),
                 Tables\Columns\TextColumn::make('reason'),
                 Tables\Columns\TextColumn::make('end_date')
+                    ->extraAttributes(fn (?Model $record) => $record->end_date < now()
+                        ? ['style' => 'background-color: #ff1111; border-radius: 10px;']
+                        : []
+                    )
                     ->dateTime()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
