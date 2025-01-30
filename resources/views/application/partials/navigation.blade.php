@@ -148,7 +148,7 @@
     </li>
 
 
-    @if(Auth::user()->isRole(['admin', 'sr_ldr']))
+    @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
         <li class="nav-category">
             Admin
         </li>
@@ -161,7 +161,7 @@
             </li>
         @endif
 
-        @if(Auth::user()->isRole(['sr_ldr', 'admin']))
+        @if(Auth::user()->isRole(['sr_ldr', 'admin', 'officer']))
             <li>
                 <a href="/mod">Mod CP</a>
             </li>
