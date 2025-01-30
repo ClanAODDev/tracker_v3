@@ -26,8 +26,8 @@ class DivisionResource extends Resource
     public static function form(Form $form): Form
     {
         $channelOptions = [
-            'officers' => 'Officer Channel',
-            'members' => 'Members Channel',
+            'officers' => 'Officers',
+            'members' => 'Members',
             false => 'Disabled',
         ];
 
@@ -142,9 +142,9 @@ class DivisionResource extends Resource
                                 Forms\Components\Select::make('division_edited')
                                     ->options($channelOptions)
                                     ->label('Division Settings Changes'),
-                                Forms\Components\Select::make('rank_changed')
+                                Forms\Components\Select::make('member_promoted')
                                     ->options($channelOptions)
-                                    ->label('Member Rank Changes'),
+                                    ->label('Member Promoted'),
                                 Forms\Components\Select::make('member_awarded')
                                     ->options($channelOptions)
                                     ->label('Member Awarded'),
