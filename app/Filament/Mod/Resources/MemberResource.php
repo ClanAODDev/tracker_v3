@@ -153,6 +153,18 @@ class MemberResource extends Resource
                     })
                     ->label('Has Active Division')
                     ->default(),
+
+                Filter::make('position')
+                    ->form([
+                        Select::make('position')
+                            ->options(Position::class),
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['position'],
+                                fn (Builder $query, $position): Builder => $query->where('position', $position),
+                            );
+                    }),
                 Filter::make('rank_id')
                     ->label('Rank')
                     ->indicator('Rank')

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Position;
 use App\Settings\UserSettings;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
@@ -142,6 +143,26 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return $this->role->name === $role;
+    }
+
+    public function isSquadLeader(): bool
+    {
+        if (!$member = $this->member) {
+            return false;
+        }
+
+        return $member->position == Position::SQUAD_LEADER;
+
+    }
+
+    public function isPlatoonLeader(): bool
+    {
+        if (!$member = $this->member) {
+            return false;
+        }
+
+        return $member->position == Position::PLATOON_LEADER;
+
     }
 
     /**

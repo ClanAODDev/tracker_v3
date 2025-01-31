@@ -6,6 +6,7 @@ use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource\Pages;
 use App\Models\RankAction;
 use Filament\Forms;
+use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -20,21 +21,58 @@ class RankActionResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
+    protected static ?string $navigationParentItem = 'Members';
+
     public static function form(Form $form): Form
     {
+
+
         return $form
             ->schema([
-                Forms\Components\Select::make('member_id')
-                    ->relationship('member', 'name', function (Builder $query) {
-                        $query->whereHas('division', function (Builder $subQuery) {
-                            $subQuery->where('active', true);
-                        });
-                    })
-                    ->searchable()
-                    ->required(),
-                Forms\Components\Select::make('rank')
-                    ->options(Rank::class)
-                    ->required(),
+
+
+                Wizard::make([
+                    Wizard\Step::make('Select Member')
+                        ->schema([
+                            Forms\Components\Select::make('member_id')
+                                ->relationship('member', 'name', function (Builder $query) {
+
+                                    // if squad leader, only members of squad
+
+                                    // if platoon leader, only members of platoon
+
+                                    // if CO/XO, anyone in division
+
+                                    // if sr_ldr, only platoon members
+                                    $query->whereHas('division', function (Builder $subQuery) {
+                                        $subQuery->where('active', true)
+                                        ->where('squad_id', auth()->user()->member->squad_id);
+                                    });
+                                })
+                                ->helperText(function () {
+                                    if (auth()->user()->isSquadLeader()) {
+                                        return "Only squad members can be selected";
+                                    }
+
+                                    if (auth()->user()->isPlatoonLeader()) {
+                                        return "Only platoon members can be selected";
+                                    }
+                                })
+                                ->searchable()
+                                ->required(),
+                        ]),
+                    Wizard\Step::make('Select Rank')
+                        ->schema([
+                            Forms\Components\Select::make('rank')
+                                ->options(Rank::class)
+                                ->required(),
+                        ]),
+                ])->columnSpanFull(),
+
+
+
+
+
             ]);
     }
 
