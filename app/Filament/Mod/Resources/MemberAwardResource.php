@@ -45,8 +45,7 @@ class MemberAwardResource extends Resource
 
                 Forms\Components\Textarea::make('reason')
                     ->columnSpanFull()
-                    ->rows(5)
-                    ->readOnlyOn('edit'),
+                    ->rows(5),
 
                 Forms\Components\Section::make('Metadata')->schema([
                     Forms\Components\DateTimePicker::make('created_at')->default(now()),
