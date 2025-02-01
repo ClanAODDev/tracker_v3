@@ -3,6 +3,8 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\LeaveResource\Pages;
+use App\Filament\Mod\Resources\LeaveResource\RelationManagers\MemberRelationManager;
+use App\Filament\Mod\Resources\LeaveResource\RelationManagers\NoteRelationManager;
 use App\Models\Leave;
 use App\Models\Note;
 use Filament\Forms;
@@ -55,15 +57,15 @@ class LeaveResource extends Resource
                     ->required(),
 
                 Forms\Components\Textarea::make('note.body')
+                    ->hiddenOn('edit')
                     ->label('Justification')
-                    ->required()
                     ->columnSpanFull()
                     ->placeholder(function ($get) {
                         $note_id = $get('note_id');
                         $note = Note::find($note_id);
 
                         return ($note) ? $note->body : '';
-                    })->disabledOn('edit'),
+                    }),
             ]);
     }
 
@@ -112,7 +114,8 @@ class LeaveResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            MemberRelationManager::class,
+            NoteRelationManager::class
         ];
     }
 
