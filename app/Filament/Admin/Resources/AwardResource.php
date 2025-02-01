@@ -78,7 +78,7 @@ class AwardResource extends Resource
                 Tables\Columns\TextInputColumn::make('display_order')
                     ->rules(['required', 'numeric'])
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('active'),
+                Tables\Columns\ToggleColumn::make('allow_request'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
