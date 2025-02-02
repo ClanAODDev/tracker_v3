@@ -43,6 +43,10 @@ class MemberResource extends Resource
 
     public static function canEdit(Model $record): bool
     {
+        if ($record->id === auth()->user()->member_id) {
+            return false;
+        }
+
         return auth()->user()->isRole(['admin', 'sr_ldr']);
     }
 
