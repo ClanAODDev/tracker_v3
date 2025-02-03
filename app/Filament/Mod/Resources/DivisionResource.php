@@ -26,7 +26,7 @@ class DivisionResource extends Resource
 
     public static function canViewAny(): bool
     {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return auth()->user()->isRole(['admin']) || auth()->user()->isDivisionLeader();
     }
 
     public static function form(Form $form): Form
