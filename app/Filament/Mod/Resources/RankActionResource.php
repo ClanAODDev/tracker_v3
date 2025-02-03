@@ -4,6 +4,8 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource\Pages;
+use App\Filament\Mod\Resources\RankActionResource\RelationManagers\MemberRelationManager;
+use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
 use App\Models\RankAction;
 use Filament\Forms;
 use Filament\Forms\Components\Wizard;
@@ -118,7 +120,8 @@ class RankActionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RequesterRelationManager::class,
+            MemberRelationManager::class,
         ];
     }
 
