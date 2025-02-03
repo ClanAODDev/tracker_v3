@@ -123,7 +123,7 @@ class MemberSync extends Command
                     'name' => str_replace('AOD_', '', $newData->username),
                     'posts' => $newData->postcount,
                     'privacy_flag' => $newData->allow_export !== 'yes' ? 0 : 1,
-                    'rank' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
+                    'rank' => convertRankToForum($newData->aodrankval),
                     'ts_unique_id' => $newData->tsid,
                     'last_voice_status' => $newData->lastdiscord_status,
                     'last_activity' => $newData->lastactivity,
@@ -161,22 +161,22 @@ class MemberSync extends Command
                 foreach ($differences as $key => $value) {
                     $updates[$key] = $newData[$key];
 
-                    if ($key === 'rank') {
-                        $newRank = Rank::from($newData[$key]);
-                        $oldRank = Rank::from($oldData[$key]);
-
-                        if ($member->division->settings()->get('chat_alerts.member_promoted')) {
-                            if ($newRank->isPromotion(previousRank: $oldRank)) {
-                                $member->division->notify(new Promotion($member->name, $newRank->getLabel()));
-                            }
-                        }
-
-                        $updates['last_promoted_at'] = now();
-                        RankAction::create([
-                            'member_id' => $member->id,
-                            'rank' => $newRank,
-                        ]);
-                    }
+                    //                    if ($key === 'rank') {
+                    //                        $newRank = Rank::from($newData[$key]);
+                    //                        $oldRank = Rank::from($oldData[$key]);
+                    //
+                    //                        if ($member->division->settings()->get('chat_alerts.member_promoted')) {
+                    //                            if ($newRank->isPromotion(previousRank: $oldRank)) {
+                    //                                $member->division->notify(new Promotion($member->name, $newRank->getLabel()));
+                    //                            }
+                    //                        }
+                    //
+                    //                        $updates['last_promoted_at'] = now();
+                    //                        RankAction::create([
+                    //                            'member_id' => $member->id,
+                    //                            'rank' => $newRank,
+                    //                        ]);
+                    //                    }
 
                     if ($key === 'division_id') {
                         \Log::debug(sprintf('Saw a division change for %s to %s', $oldData['name'], $newData[$key]));

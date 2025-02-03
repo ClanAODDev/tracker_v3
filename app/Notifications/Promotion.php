@@ -33,7 +33,9 @@ class Promotion extends Notification implements ShouldQueue
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get('chat_alerts.member_promoted'))
             ->thumbnail($notifiable->getLogoPath())
-            ->message(addslashes(":tools: **PROMOTION**\n{$this->member} is promoted to  `{$this->rank}`"))
+            ->message(addslashes(
+                ":tools: **PROMOTION**\n{$this->member} has accepted a promotion to  `{$this->rank}`"
+            ))
             ->success()
             ->send();
     }

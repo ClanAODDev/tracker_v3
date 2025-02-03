@@ -147,22 +147,37 @@ class User extends Authenticatable implements FilamentUser
 
     public function isSquadLeader(): bool
     {
-        if (!$member = $this->member) {
+        if (! $member = $this->member) {
             return false;
         }
 
         return $member->position == Position::SQUAD_LEADER;
-
     }
 
     public function isPlatoonLeader(): bool
     {
-        if (!$member = $this->member) {
+        if (! $member = $this->member) {
             return false;
         }
 
         return $member->position == Position::PLATOON_LEADER;
+    }
 
+    public function division()
+    {
+        return $this->hasOneThrough(Division::class, Member::class, 'id', 'id', 'member_id', 'division_id');
+    }
+
+    public function isDivisionLeader(): bool
+    {
+        if (! $member = $this->member) {
+            return false;
+        }
+
+        return in_array($member->position, [
+            Position::COMMANDING_OFFICER,
+            Position::EXECUTIVE_OFFICER,
+        ]);
     }
 
     /**
