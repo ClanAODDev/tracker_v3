@@ -4,7 +4,10 @@ namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
+use App\Jobs\UpdateRankForMember;
 use App\Models\Member;
+use App\Models\RankAction;
+use App\Notifications\PromotionPendingAcceptance;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -45,7 +48,29 @@ class CreateRankAction extends CreateRecord
             $division
         );
 
+        if ($data['approved_at']) {
+            $data['accepted_at'] = $data['approved_at'];
+        }
+
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        /** @var RankAction $record */
+        $record = $this->record;
+
+        if ($record->isApproved()) {
+            try {
+                if ($record->rank->isPromotion($record->member->rank)) {
+                    $record->member->notify(new PromotionPendingAcceptance($record));
+                } else {
+                    UpdateRankForMember::dispatch($record);
+                }
+            } catch (\Exception $exception) {
+                \Log::error($exception->getMessage());
+            }
+        }
     }
 
     protected function getSteps(): array
