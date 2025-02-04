@@ -42,6 +42,11 @@ class RankAction extends Model
             ->whereNot('accepted_at', null);
     }
 
+    public function isApproved()
+    {
+        return $this->approved_at;
+    }
+
     public function approve()
     {
         $this->update([
