@@ -25,7 +25,7 @@ class ModPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('mod')
-            ->path('mod')
+            ->path('operations')
             ->colors([
                 'primary' => '#0a8509',
             ])

@@ -157,13 +157,13 @@
                 <a href="{{ url('/log-viewer') }}">Log Viewer</a>
             </li>
             <li>
-                <a href="/admin">Admin CP</a>
+                <a href="/admin">Admin</a>
             </li>
         @endif
 
         @if(Auth::user()->isRole(['sr_ldr', 'admin', 'officer']))
             <li>
-                <a href="/mod">Mod CP</a>
+                <a href="/operations">Operations</a>
             </li>
         @endif
 
