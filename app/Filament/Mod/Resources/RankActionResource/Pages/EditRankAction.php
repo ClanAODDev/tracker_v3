@@ -2,11 +2,10 @@
 
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
-use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
-use App\Notifications\PromotionPendingAcceptance;
+use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use Filament\Actions;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
@@ -18,10 +17,9 @@ class EditRankAction extends EditRecord
 
     protected function getHeaderActions(): array
     {
+        $commentsAction = [CommentsAction::make()];
 
-        return [
-            CommentsAction::make(),
-
+        $actions = [
             Actions\DeleteAction::make()->label('Deny')
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                 ->hidden(fn ($action) => $action->getRecord()->approved_at),
@@ -35,7 +33,9 @@ class EditRankAction extends EditRecord
                     $record->accepted_at
                     || ! $record->rank->isPromotion($record->member->rank)
                     || ! $record->approved_at
-                    || $record->approved_at?->gt(now()->subMinutes(10))
+                    || $record->approved_at?->gt(now()->subMinutes(
+                        config('app.aod.rank.promotion_acceptance_mins')
+                    ))
                 ))
                 ->requiresConfirmation()
                 ->modalHeading('Requeue Acceptance')
@@ -43,7 +43,7 @@ class EditRankAction extends EditRecord
                 ->after(function (RankAction $action) {
                     try {
                         if ($action->rank->isPromotion($action->member->rank)) {
-                            $action->member->notify(new PromotionPendingAcceptance($action));
+                            $action->member->notify(new NotifyMemberPromotionPendingAcceptance($action));
                         }
                     } catch (\Exception $e) {
                         \Log::error($e->getMessage());
@@ -55,7 +55,7 @@ class EditRankAction extends EditRecord
                 ->action(function (RankAction $action) {
                     if ($action->rank->isPromotion($action->member->rank)) {
                         $action->approve();
-                        $action->member->notify(new PromotionPendingAcceptance($action));
+                        $action->member->notify(new NotifyMemberPromotionPendingAcceptance($action));
                     } else {
                         $action->approveAndAccept();
                         UpdateRankForMember::dispatch($action);
@@ -67,5 +67,9 @@ class EditRankAction extends EditRecord
                 ->modalHeading('Approve Rank Change')
                 ->modalDescription('Are you sure you want to approve this rank change?'),
         ];
+
+        return auth()->user()->canApproveOrDeny($this->getRecord())
+            ? array_merge($actions, $commentsAction)
+            : $actions;
     }
 }
