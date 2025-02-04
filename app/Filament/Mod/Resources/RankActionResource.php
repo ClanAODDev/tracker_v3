@@ -10,7 +10,6 @@ use App\Models\Member;
 use App\Models\RankAction;
 use Carbon\Carbon;
 use Filament\Forms;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -21,7 +20,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Parallax\FilamentComments\Tables\Actions\CommentsAction;
 
 class RankActionResource extends Resource
 {
@@ -37,6 +35,10 @@ class RankActionResource extends Resource
 
         if (! parent::canView($record)) {
             return false;
+        }
+
+        if ($record->requester_id == $authedMember) {
+            return true;
         }
 
         if ($record->member_id == $authedMember) {
@@ -105,7 +107,9 @@ class RankActionResource extends Resource
                         $memberQuery->where('squad_id', $member->squad_id);
                     }
                     if ($user->isDivisionLeader()) {
-                        $memberQuery->where('division_id', $member->division_id);
+                        if (!$user->isRole('admin')) {
+                            $memberQuery->where('division_id', $member->division_id);
+                        }
                     }
                 });
             })->modifyQueryUsing(function (Builder $query) {
@@ -174,7 +178,6 @@ class RankActionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                CommentsAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -206,33 +209,35 @@ class RankActionResource extends Resource
             ->hiddenOn('edit')
             ->searchable()
             ->getSearchResultsUsing(function (string $search): array {
+                $roleLimits = [
+                    'squadLeader' => config('app.aod.rank.max_squad_leader'),
+                    'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
+                    'divisionLeader' => config('app.aod.rank.max_division_leader'),
+                ];
+
                 $currentMember = auth()->user()->member;
+                $user = auth()->user();
 
                 return Member::query()
                     ->where('name', 'like', "%{$search}%")
-                    // can't select self
                     ->where('id', '<>', $currentMember->id)
-                    ->when(auth()->user()->isSquadLeader(), function (Builder $query) use ($currentMember) {
-                        $query->where('squad_id', $currentMember->squad_id);
-                    })
-                    ->when(auth()->user()->isPlatoonLeader(), function (Builder $query) use ($currentMember) {
-                        $query->where('platoon_id', $currentMember->platoon_id);
-                    })
-                    ->when(auth()->user()->isDivisionLeader(), function (Builder $query) use ($currentMember) {
-                        $query->where('division_id', $currentMember->division_id);
-                    })
-                    ->when(auth()->user()->isRole('admin'), function (Builder $query) {
-                        // exclude anyone not in a division
-                        $query->where('division_id', '!=', 0);
-                    })
-                    // exclude members whose rank is above the current user's rank.
+                    ->when($user->isSquadLeader(), fn (Builder $query) => $query->where('squad_id', $currentMember->squad_id)
+                        ->where('rank', '<', $roleLimits['squadLeader'])
+                    )
+                    ->when($user->isPlatoonLeader(), fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
+                        ->where('rank', '<', $roleLimits['platoonLeader'])
+                    )
+                    ->when($user->isDivisionLeader(), fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
+                        ->where('rank', '<', $roleLimits['divisionLeader'])
+                    )
+                    ->when($user->isRole('admin'), fn (Builder $query) => $query->where('division_id', '!=', 0)
+                    )
                     ->where('rank', '<=', $currentMember->rank->value)
-                    ->limit(50)
+                    ->limit(5)
                     ->get()
-                    ->mapWithKeys(function ($member) {
-                        return [$member->id => $member->present()->rankName()];
-                    })
+                    ->mapWithKeys(fn ($member) => [$member->id => $member->present()->rankName()])
                     ->toArray();
+
             })
             ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName())
             ->allowHtml()
@@ -241,9 +246,9 @@ class RankActionResource extends Resource
                 $append = 'You cannot select yourself or others of greater rank.';
 
                 $message = match (true) {
-                    $user->isSquadLeader() => "Only squad members can be selected. {$append}",
-                    $user->isPlatoonLeader() => "Only platoon members can be selected. {$append}",
-                    $user->isDivisionLeader() => "Only division members can be selected. {$append}",
+                    $user->isSquadLeader() => "Only squad members up to PFC can be selected. {$append}",
+                    $user->isPlatoonLeader() => "Only platoon members up to LCpl can be selected. {$append}",
+                    $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
                     default => $append,
                 };
 
