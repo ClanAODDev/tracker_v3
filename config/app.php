@@ -53,6 +53,7 @@ return [
 
         'rank' => [
             'promotion_acceptance_mins' => 5,
+            'update_forums' => false,
             'max_squad_leader' => Rank::SPECIALIST,
             'max_platoon_leader' => Rank::CORPORAL,
             'max_division_leader' => Rank::STAFF_SERGEANT,
