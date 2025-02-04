@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
@@ -11,7 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 
-class PromotionPendingAcceptance extends Notification implements ShouldQueue
+class NotifyMemberPromotionPendingAcceptance extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
@@ -30,7 +30,9 @@ class PromotionPendingAcceptance extends Notification implements ShouldQueue
 
     public function toBot($notifiable): array
     {
-        $route = URL::temporarySignedRoute('promotion.confirm', now()->addMinutes(10), [
+        $route = URL::temporarySignedRoute('promotion.confirm', now()->addMinutes(
+            config('app.aod.rank.promotion_acceptance_mins')
+        ), [
             $notifiable->clan_id,
             $this->action,
         ]);

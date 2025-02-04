@@ -7,7 +7,7 @@ use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\Member;
 use App\Models\RankAction;
-use App\Notifications\PromotionPendingAcceptance;
+use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -59,7 +59,7 @@ class CreateRankAction extends CreateRecord
 
         if ($record->isApproved()) {
             if ($record->rank->isPromotion($record->member->rank)) {
-                $record->member->notify(new PromotionPendingAcceptance($record));
+                $record->member->notify(new NotifyMemberPromotionPendingAcceptance($record));
             } else {
                 UpdateRankForMember::dispatch($record);
             }
