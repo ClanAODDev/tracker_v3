@@ -35,7 +35,6 @@ class TicketTypeResource extends Resource
                 Forms\Components\Select::make('auto_assign_to_id')
                     ->label('Auto-assign to admin user')
                     ->relationship('auto_assign_to', 'name')
-                    ->columnSpanFull()
                     ->searchable(),
                 Forms\Components\Textarea::make('boilerplate')
                     ->columnSpanFull(),
