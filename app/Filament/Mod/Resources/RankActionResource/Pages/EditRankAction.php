@@ -31,13 +31,12 @@ class EditRankAction extends EditRecord
                 ->color('info')
                 // visible only if rank is below user current
                 ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
-                // hidden only if both approved and accepted are set - allows re-queue of temporary accept step
-                ->hidden(fn ($action) => tap($action->getRecord(), function ($record) {
-                    return $record->accepted_at
-                        || ! $record->rank->isPromotion($record->member->rank)
-                        || ! $record->approved_at
-                        || $record->approved_at?->lt(now()->addMinutes(10));
-                }))
+                ->hidden(fn ($action) => ($record = $action->getRecord()) && (
+                    $record->accepted_at
+                    || ! $record->rank->isPromotion($record->member->rank)
+                    || ! $record->approved_at
+                    || $record->approved_at?->gt(now()->subMinutes(10))
+                ))
                 ->requiresConfirmation()
                 ->modalHeading('Requeue Acceptance')
                 ->modalDescription('Confirm that you wish to send the user a new promotion acceptance message')
