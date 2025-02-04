@@ -120,6 +120,11 @@ enum Rank: int implements HasColor, HasLabel
         string $targetRank, $division, bool $asBoolean = false
     ): bool|null|Carbon {
         $user = auth()->user();
+
+        if ($user->isRole('admin')) {
+            return $asBoolean ? true : now();
+        }
+
         $targetRank = Rank::from($targetRank);
 
         if ($user->isPlatoonLeader()) {
