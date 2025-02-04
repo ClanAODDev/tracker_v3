@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Settings\UserSettings;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
@@ -260,5 +261,24 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return false;
+    }
+
+    public function canApproveOrDeny(RankAction $action): bool
+    {
+        $userRank = $this->member->rank;
+        $newRank = $action->rank;
+
+        // User cannot approve/deny if the new rank is higher than their current rank
+        if ($newRank->value > $userRank->value) {
+            return false;
+        }
+
+        // If the promotion is to Sergeant or above, only Master Sergeant+ can approve/deny
+        if ($newRank->value >= Rank::SERGEANT->value) {
+            return $userRank->value >= Rank::MASTER_SERGEANT->value;
+        }
+
+        // If the promotion is to Corporal or below, allow Division Leaders and Admins
+        return $this->isDivisionLeader() || $this->isRole('admin');
     }
 }

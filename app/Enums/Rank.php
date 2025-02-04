@@ -116,23 +116,23 @@ enum Rank: int implements HasColor, HasLabel
         return $this->value > $previousRank->value;
     }
 
-    public static function autoApprovedTimestampForRank(string $targetRank, $division): ?Carbon
-    {
+    public static function autoApprovedTimestampForRank(
+        string $targetRank, $division, bool $asBoolean = false
+    ): bool|null|Carbon {
         $user = auth()->user();
-
         $targetRank = Rank::from($targetRank);
 
         if ($user->isPlatoonLeader()) {
             $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
             if ($targetRank->value <= $maxPlRank->value) {
-                return now();
+                return $asBoolean ? true : now();
             }
         }
 
         if ($user->isDivisionLeader() && $targetRank->value <= Rank::CORPORAL->value) {
-            return now();
+            return $asBoolean ? true : now();
         }
 
-        return null;
+        return $asBoolean ? false : null;
     }
 }

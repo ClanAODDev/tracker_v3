@@ -5,7 +5,6 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource\Pages;
 use App\Filament\Mod\Resources\RankActionResource\RelationManagers\MemberRelationManager;
-use App\Filament\Mod\Resources\RankActionResource\RelationManagers\NotesRelationManager;
 use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
 use App\Models\Member;
 use App\Models\RankAction;
@@ -124,7 +123,7 @@ class RankActionResource extends Resource
                     // Exclude actions that are both approved and accepted
                     $q->whereNull('approved_at')
                         ->orWhereNull('accepted_at');
-                });;
+                });
             })
             ->filters([
                 Filter::make('rank_filter')
@@ -313,16 +312,16 @@ class RankActionResource extends Resource
                 ->options(function (callable $get) {
                     $member = Member::find($get('member_id'));
 
-                    if (!$member) {
+                    if (! $member) {
                         return [];
                     }
 
                     $allRanks = Rank::cases();
-                    usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                    usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
                     $options = array_reduce(
-                        array_filter($allRanks, fn(Rank $r) => $r->value < $member->rank->value),
-                        fn($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
+                        array_filter($allRanks, fn (Rank $r) => $r->value < $member->rank->value),
+                        fn ($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
                         []
                     );
 

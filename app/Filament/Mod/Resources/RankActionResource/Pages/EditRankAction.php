@@ -23,6 +23,7 @@ class EditRankAction extends EditRecord
             CommentsAction::make(),
 
             Actions\DeleteAction::make()->label('Deny')
+                ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                 ->hidden(fn ($action) => $action->getRecord()->approved_at),
 
             Action::make('requeue')
@@ -61,20 +62,7 @@ class EditRankAction extends EditRecord
                         UpdateRankForMember::dispatch($action);
                     }
                 })
-
-                ->visible(function (RankAction $action) {
-                    $user = auth()->user();
-                    $newRank = $action->rank;
-
-                    if ($newRank->value >= Rank::SERGEANT->value) {
-                        // MSGT+ approval authority on SGT+ promotions
-                        return $user->member->rank->value >= Rank::MASTER_SERGEANT->value;
-                    }
-
-                    return $user->isDivisionLeader() || $user->isRole('admin');
-                })
-
-                // hidden only if both approved and accepted are set - allows re-queue of temporary accept step
+                ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                 ->hidden(fn ($action) => $action->getRecord()->approved_at)
                 ->requiresConfirmation()
                 ->modalHeading('Approve Rank Change')
