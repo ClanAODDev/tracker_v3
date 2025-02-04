@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\RankAction;
 use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -61,6 +62,7 @@ class RankActionResource extends Resource
                 Forms\Components\Section::make('Rank Action Details')
                     ->hiddenOn('create')
                     ->schema([
+                        static::getStatusFormField(),
                         static::getMemberFormField(),
                         Select::make('rank')
                             ->options(Rank::class)
@@ -78,6 +80,9 @@ class RankActionResource extends Resource
                 Tables\Columns\TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
+                Tables\Columns\ViewColumn::make('status')
+                    ->label('status')
+                    ->view('filament.forms.components.status-badge'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
                     ->date()
@@ -338,5 +343,13 @@ class RankActionResource extends Resource
             ->required()
             ->rows(5)
             ->columnSpanFull();
+    }
+
+    public static function getStatusFormField()
+    {
+        return Forms\Components\ViewField::make('status')
+            ->label('status')
+            ->view('filament.forms.components.status-badge')
+            ->viewData(['record']);
     }
 }
