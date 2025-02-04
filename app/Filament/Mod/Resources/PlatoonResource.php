@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PlatoonResource extends Resource
 {
@@ -18,7 +19,25 @@ class PlatoonResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division Organization';
+    protected static ?string $navigationGroup = 'Division';
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        if (auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader()) {
+            return true;
+        }
+
+        if (auth()->user()->member->platoon_id == $record->id && auth()->user()->isPlatoonLeader()) {
+            return true;
+        }
+
+        return false;
+    }
 
     public static function form(Form $form): Form
     {
