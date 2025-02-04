@@ -22,7 +22,7 @@ class CreateRankAction extends CreateRecord
         $data['requester_id'] = auth()->user()->member_id;
 
         $member = Member::find($data['member_id']);
-        if (!$member) {
+        if (! $member) {
             throw new \Exception('Member not found.');
         }
 
@@ -37,6 +37,7 @@ class CreateRankAction extends CreateRecord
             $data['rank'] = $newRank->value;
         } elseif ($data['action'] === 'demotion') {
             $data['rank'] = $data['demotion_rank'];
+            $data['accepted_at'] = $data['approved_at'];
         }
 
         unset($data['action'], $data['demotion_rank']);
@@ -48,10 +49,6 @@ class CreateRankAction extends CreateRecord
             $division
         );
 
-        if ($data['approved_at']) {
-            $data['accepted_at'] = $data['approved_at'];
-        }
-
         return $data;
     }
 
@@ -61,10 +58,10 @@ class CreateRankAction extends CreateRecord
         $record = $this->record;
 
         if ($record->isApproved()) {
-            try {
+            if ($record->rank->isPromotion($record->member->rank)) {
+                $record->member->notify(new PromotionPendingAcceptance($record));
+            } else {
                 UpdateRankForMember::dispatch($record);
-            } catch (\Exception $exception) {
-                \Log::error($exception->getMessage());
             }
         }
     }
