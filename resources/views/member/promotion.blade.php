@@ -36,7 +36,12 @@
                 </div>
 
                 <div class="pull-right">
-                    <a href="#" class="btn btn-success">Accept Promotion</a>
+                    <form action="{{ route('promotion.accept', [$member->clan_id, $action]) }}" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-success"
+                                onclick="confirm('Upon acceptance, your forum rank will be updated automatically. ' +
+                        'Press OK to continue...')">Accept Promotion</button>
+                    </form>
                 </div>
 
             </div>

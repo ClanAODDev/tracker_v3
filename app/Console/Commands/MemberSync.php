@@ -4,15 +4,12 @@ namespace App\Console\Commands;
 
 use App\AOD\MemberSync\GetDivisionInfo;
 use App\Enums\Position;
-use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
-use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
-use App\Notifications\Promotion;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
