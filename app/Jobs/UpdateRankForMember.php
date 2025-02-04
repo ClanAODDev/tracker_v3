@@ -28,10 +28,12 @@ class UpdateRankForMember implements ShouldQueue
     public function handle(): void
     {
         // update the forums
-        $this->callProcedure('set_user_rank', [
-            $this->action->member->clan_id,
-            $this->action->rank->getLabel(),
-        ]);
+        if (config('app.aod.rank.update_forums')) {
+            $this->callProcedure('set_user_rank', [
+                $this->action->member->clan_id,
+                $this->action->rank->getLabel(),
+            ]);
+        }
 
         // update the tracker
         $this->action->member->update([
