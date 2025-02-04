@@ -2,7 +2,7 @@
 
 Route::group(['prefix' => 'members'], function () {
     Route::get('/{member}/promotion/{action}', 'PromotionController@confirm')->name('promotion.confirm');
-    Route::post('/{member}/promotion/{action}', 'PromotionController@confirm')->name('promotion.accept');
+    Route::post('/{member}/promotion/{action}', 'PromotionController@accept')->name('promotion.accept');
     Route::post('/{member}/promotion/{action}/decline', 'PromotionController@decline')->name('promotion.decline');
 
     // reset assignments
