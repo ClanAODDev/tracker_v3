@@ -4,8 +4,9 @@ namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\MemberAwardResource\Pages;
 use App\Filament\Mod\Resources\MemberAwardResource\RelationManagers\AwardRelationManager;
+use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
 use App\Models\MemberAward;
-use App\Notifications\MemberAwarded;
+use App\Notifications\Channel\NotifyDivisionMemberAwarded;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,8 +24,6 @@ class MemberAwardResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
 
     protected static ?string $navigationGroup = 'Division';
-
-    protected static ?string $navigationParentItem = 'Members';
 
     public static function canDeleteAny(): bool
     {
@@ -107,19 +106,19 @@ class MemberAwardResource extends Resource
 
                     Tables\Actions\BulkAction::make('approve')
                         ->label('Approve')
-                        ->hidden(fn() => !auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true])),
 
                     Tables\Actions\BulkAction::make('approve_and_notify')
                         ->label('Approve and Notify')
-                        ->hidden(fn() => !auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true]))
                         ->requiresConfirmation()
                         ->modalDescription('This will generate a notification for every award approved.')
                         ->after(function (Collection $records) {
                             foreach ($records as $memberAward) {
                                 if ($memberAward->member->division->settings()->get('chat_alerts.member_awarded')) {
-                                    $memberAward->member->division->notify(new MemberAwarded(
+                                    $memberAward->member->division->notify(new NotifyDivisionMemberAwarded(
                                         $memberAward->member->name,
                                         $memberAward->award
                                     ));

@@ -39,20 +39,19 @@ class EditMemberAward extends EditRecord
             Action::make('approve')
                 ->label('Approve Award')
                 ->action(fn (MemberAward $award) => $award->update(['approved' => true]))
-                ->hidden(fn ($action) =>
-                    // already approved
-                    $action->getRecord()->approved
-                )
+                ->hidden(fn ($action) => $action->getRecord()->approved)
                 ->requiresConfirmation()
                 ->modalHeading('Approve Award')
                 ->modalDescription('Are you sure you want to approve this award?')
                 ->after(function (MemberAward $memberAward) {
                     if ($memberAward->member->division->settings()->get('chat_alerts.member_awarded')) {
-                        $memberAward->member->division->notify(new MemberAwarded(
+                        $memberAward->member->division->notify(new NotifyDivisionMemberAwarded(
                             $memberAward->member->name,
                             $memberAward->award
                         ));
                     }
+
+                    $memberAward->member->notify(new NotifyMemberAwardReceived(award: $memberAward->award->name));
                 }),
         ];
     }
