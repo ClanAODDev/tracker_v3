@@ -151,7 +151,7 @@ class MemberController extends Controller
             ->whereActive(true)
             ->get();
 
-        $rankHistory = $member->rankActions()->get();
+        $rankHistory = $member->rankActions()->approvedAndAccepted()->get();
         $transfers = $member->transfers()->with('division')->get();
 
         $discordStatusLastSeen = sprintf(
