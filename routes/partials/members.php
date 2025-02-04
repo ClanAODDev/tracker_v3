@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 Route::group(['prefix' => 'members'], function () {
     Route::get('/{member}/promotion/{action}', 'PromotionController@confirm')->name('promotion.confirm');
     Route::post('/{member}/promotion/{action}', 'PromotionController@accept')->name('promotion.accept');
