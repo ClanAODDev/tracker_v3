@@ -118,7 +118,7 @@ class MemberController extends Controller
 
         $divisions = Division::active()
             ->whereNotIn('id', $excludedDivisionIds)
-            ->when($member->division, fn($query) => $query->where('id', '!=', $member->division->id))
+            ->when($member->division, fn ($query) => $query->where('id', '!=', $member->division->id))
             ->get();
 
         return view('member.manage-part-time', compact('member', 'division', 'divisions'));

@@ -107,7 +107,7 @@ class RankActionResource extends Resource
                         $memberQuery->where('squad_id', $member->squad_id);
                     }
                     if ($user->isDivisionLeader()) {
-                        if (!$user->isRole('admin')) {
+                        if (! $user->isRole('admin')) {
                             $memberQuery->where('division_id', $member->division_id);
                         }
                     }
