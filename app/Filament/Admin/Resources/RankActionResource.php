@@ -4,8 +4,10 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\Rank;
 use App\Filament\Admin\Resources\RankActionResource\Pages;
+use App\Models\Member;
 use App\Models\RankAction;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,10 +27,21 @@ class RankActionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('member_id')
-                    ->relationship(name: 'member', titleAttribute: 'name')
+                Select::make('member_id')
                     ->searchable()
-                    ->required(),
+                    ->getSearchResultsUsing(function (string $search): array {
+                        $currentMember = auth()->user()->member;
+                        return Member::query()
+                            ->where('name', 'like', "%{$search}%")
+                            ->where('id', '<>', $currentMember->id)
+                            ->limit(10)
+                            ->get()
+                            ->mapWithKeys(fn ($member) => [$member->id => $member->present()->rankName()])
+                            ->toArray();
+
+                    })
+                    ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName()),
+
                 Forms\Components\Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
