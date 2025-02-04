@@ -201,7 +201,6 @@ class DivisionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                RevisionsAction::make(),
             ])
             ->bulkActions([
                 //
