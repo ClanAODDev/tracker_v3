@@ -14,25 +14,11 @@ class BotReactMessage
 
     private string $emote;
 
-    private string $messageId;
-
-    private $target;
-
     public function __construct(private $notifiable) {}
 
     public function to(string $channel)
     {
         $this->channel = $channel;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function target($target)
-    {
-        $this->target = $target;
 
         return $this;
     }
