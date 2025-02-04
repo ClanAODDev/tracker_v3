@@ -22,7 +22,7 @@ class CreateRankAction extends CreateRecord
         $data['requester_id'] = auth()->user()->member_id;
 
         $member = Member::find($data['member_id']);
-        if (! $member) {
+        if (!$member) {
             throw new \Exception('Member not found.');
         }
 
@@ -62,11 +62,7 @@ class CreateRankAction extends CreateRecord
 
         if ($record->isApproved()) {
             try {
-                if ($record->rank->isPromotion($record->member->rank)) {
-                    $record->member->notify(new PromotionPendingAcceptance($record));
-                } else {
-                    UpdateRankForMember::dispatch($record);
-                }
+                UpdateRankForMember::dispatch($record);
             } catch (\Exception $exception) {
                 \Log::error($exception->getMessage());
             }
