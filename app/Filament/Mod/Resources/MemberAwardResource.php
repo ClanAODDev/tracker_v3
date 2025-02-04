@@ -135,6 +135,7 @@ class MemberAwardResource extends Resource
     {
         return [
             AwardRelationManager::class,
+            RequesterRelationManager::class,
         ];
     }
 

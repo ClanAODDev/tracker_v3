@@ -16,6 +16,11 @@ class MemberAward extends Model
         return $this->belongsTo(Member::class, 'member_id', 'clan_id');
     }
 
+    public function requester()
+    {
+        return $this->belongsTo(Member::class);
+    }
+
     public function division()
     {
         return $this->hasManyThrough(Division::class, Award::class, 'id', 'id', 'award_id', 'division_id');
@@ -23,7 +28,7 @@ class MemberAward extends Model
 
     public function award()
     {
-        return $this->belongsTo(Award::class, 'award_id')->orderBy('display_order');
+        return $this->belongsTo(Award::class)->orderBy('display_order');
     }
 
     public function scopeNeedsApproval(Builder $query): void

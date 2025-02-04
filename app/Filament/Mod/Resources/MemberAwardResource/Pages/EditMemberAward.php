@@ -4,9 +4,12 @@ namespace App\Filament\Mod\Resources\MemberAwardResource\Pages;
 
 use App\Filament\Mod\Resources\MemberAwardResource;
 use App\Models\MemberAward;
-use App\Notifications\MemberAwarded;
+use App\Notifications\Channel\NotifyDivisionMemberAwarded;
+use App\Notifications\DM\NotifyMemberAwardReceived;
+use App\Notifications\DM\NotifyRequesterAwardDenied;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMemberAward extends EditRecord
@@ -16,7 +19,22 @@ class EditMemberAward extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+                ->requiresConfirmation()
+                ->modalHeading('Deny Award')
+                ->modalDescription('Are you sure you want to deny this award? The member will be notified.')
+                ->form([
+                    Textarea::make('reason')
+                        ->label('Reason')
+                        ->required(),
+                ])
+                ->label('Deny')
+                ->before(function (array $data, MemberAward $memberAward) {
+                    $memberAward->requester->notify(new NotifyRequesterAwardDenied(
+                        $memberAward->award->name,
+                        $data['reason']
+                    ));
+                }),
 
             Action::make('approve')
                 ->label('Approve Award')
