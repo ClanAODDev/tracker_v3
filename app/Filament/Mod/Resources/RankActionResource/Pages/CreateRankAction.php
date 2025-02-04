@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
+use App\Models\Member;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -13,12 +14,36 @@ class CreateRankAction extends CreateRecord
 
     protected static string $resource = RankActionResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+    public function mutateFormDataBeforeCreate(array $data): array
     {
         $data['requester_id'] = auth()->user()->member_id;
 
+        $member = Member::find($data['member_id']);
+        if (! $member) {
+            throw new \Exception('Member not found.');
+        }
+
+        if ($data['action'] === 'promotion') {
+            $newRankValue = $member->rank->value + 1;
+
+            try {
+                $newRank = Rank::from($newRankValue);
+            } catch (\ValueError $e) {
+                $newRank = Rank::from($member->rank);
+            }
+            $data['rank'] = $newRank->value;
+        } elseif ($data['action'] === 'demotion') {
+            $data['rank'] = $data['demotion_rank'];
+        }
+
+        unset($data['action'], $data['demotion_rank']);
+
         $division = auth()->user()->division;
-        $data['approved_at'] = Rank::autoApprovedTimestampForRank($data['rank'], $division);
+
+        $data['approved_at'] = Rank::autoApprovedTimestampForRank(
+            $data['rank'],
+            $division
+        );
 
         return $data;
     }
@@ -31,9 +56,7 @@ class CreateRankAction extends CreateRecord
                     RankActionResource::getMemberFormField(),
                 ]),
             Step::make('Select Rank')
-                ->schema([
-                    RankActionResource::getRankFormField(),
-                ]),
+                ->schema(RankActionResource::getRankActionFields()),
             Step::make('Justification')
                 ->schema([
                     RankActionResource::getJustificationFormField(),

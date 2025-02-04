@@ -5,13 +5,15 @@ namespace App\Notifications;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Models\RankAction;
+use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
 
-class PromotionPendingAcceptance extends Notification
+class PromotionPendingAcceptance extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     public function __construct(private readonly RankAction $action) {}
 

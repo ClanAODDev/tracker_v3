@@ -28,7 +28,7 @@ class UpdateRankForMember implements ShouldQueue
         // update the forums
         $this->callProcedure('set_user_rank', [
             $this->action->member->clan_id,
-            convertRankToForum($this->action->rank),
+            convertRankToForum($this->action->rank->value),
         ]);
 
         // update the tracker

@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use App\Enums\Rank;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Parallax\FilamentComments\Models\Traits\HasFilamentComments;
 
 class RankAction extends Model
 {
     use HasFactory;
+    use HasFilamentComments;
 
     protected $casts = [
         'rank' => Rank::class,
@@ -33,10 +36,24 @@ class RankAction extends Model
         return $this->belongsTo(Member::class);
     }
 
+    public function scopeApprovedAndAccepted(Builder $query): void
+    {
+        $query->whereNot('approved_at', null)
+            ->whereNot('accepted_at', null);
+    }
+
     public function approve()
     {
         $this->update([
             'approved_at' => now(),
+        ]);
+    }
+
+    public function approveAndAccept()
+    {
+        $this->update([
+            'approved_at' => now(),
+            'accepted_at' => now(),
         ]);
     }
 

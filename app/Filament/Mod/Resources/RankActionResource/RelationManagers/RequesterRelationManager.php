@@ -20,6 +20,7 @@ class RequesterRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->paginated(false)
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
