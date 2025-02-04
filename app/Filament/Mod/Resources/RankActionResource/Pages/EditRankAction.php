@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
+use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
@@ -18,23 +19,22 @@ class EditRankAction extends EditRecord
     protected function getHeaderActions(): array
     {
 
-
         return [
             CommentsAction::make(),
 
             Actions\DeleteAction::make()->label('Deny')
-                ->hidden(fn($action) => $action->getRecord()->approved_at),
+                ->hidden(fn ($action) => $action->getRecord()->approved_at),
 
             Action::make('requeue')
                 ->label('Requeue Acceptance')
                 ->color('info')
                 // visible only if rank is below user current
-                ->visible(fn($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
+                ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
                 // hidden only if both approved and accepted are set - allows re-queue of temporary accept step
-                ->hidden(fn($action) => tap($action->getRecord(), function ($record) {
+                ->hidden(fn ($action) => tap($action->getRecord(), function ($record) {
                     return $record->accepted_at
-                        || !$record->rank->isPromotion($record->member->rank)
-                        || !$record->approved_at
+                        || ! $record->rank->isPromotion($record->member->rank)
+                        || ! $record->approved_at
                         || $record->approved_at?->lt(now()->addMinutes(10));
                 }))
                 ->requiresConfirmation()
@@ -75,7 +75,7 @@ class EditRankAction extends EditRecord
                 })
 
                 // hidden only if both approved and accepted are set - allows re-queue of temporary accept step
-                ->hidden(fn($action) => $action->getRecord()->approved_at)
+                ->hidden(fn ($action) => $action->getRecord()->approved_at)
                 ->requiresConfirmation()
                 ->modalHeading('Approve Rank Change')
                 ->modalDescription('Are you sure you want to approve this rank change?'),
