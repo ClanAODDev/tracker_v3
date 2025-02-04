@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\AOD\Traits\Procedureable;
 use App\Models\RankAction;
 use App\Notifications\Promotion;
+use App\Traits\RetryableJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -12,6 +13,7 @@ class UpdateRankForMember implements ShouldQueue
 {
     use Procedureable;
     use Queueable;
+    use RetryableJob;
 
     /**
      * Create a new job instance.
@@ -37,6 +39,7 @@ class UpdateRankForMember implements ShouldQueue
         ]);
 
         if ($this->action->rank->isPromotion($this->action->member->rank)) {
+            // notifying of promotion
             $this->action->member->division->notify(new Promotion(
                 $this->action->member->name,
                 $this->action->rank->getLabel()
