@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\RankActionResource\Pages;
 
 use App\Filament\Admin\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
+use App\Models\RankAction;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateRankAction extends CreateRecord
@@ -20,6 +21,7 @@ class CreateRankAction extends CreateRecord
 
     protected function afterCreate(): void
     {
+        /** @var RankAction $record */
         $record = $this->record;
 
         try {
@@ -28,5 +30,4 @@ class CreateRankAction extends CreateRecord
             \Log::error($exception->getMessage());
         }
     }
-
 }
