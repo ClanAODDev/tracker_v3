@@ -97,7 +97,6 @@ class MemberSync extends Command
                 'name' => $oldData['name'],
                 'posts' => $oldData['posts'],
                 'privacy_flag' => $oldData['privacy_flag'],
-                'rank' => $oldData['rank'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
                 'last_voice_status' => $oldData['last_voice_status'],
 
@@ -120,7 +119,6 @@ class MemberSync extends Command
                     'name' => str_replace('AOD_', '', $newData->username),
                     'posts' => $newData->postcount,
                     'privacy_flag' => $newData->allow_export !== 'yes' ? 0 : 1,
-                    'rank' => convertRankToForum($newData->aodrankval),
                     'ts_unique_id' => $newData->tsid,
                     'last_voice_status' => $newData->lastdiscord_status,
                     'last_activity' => $newData->lastactivity,
@@ -157,23 +155,6 @@ class MemberSync extends Command
                 // only update things that have changed
                 foreach ($differences as $key => $value) {
                     $updates[$key] = $newData[$key];
-
-                    //                    if ($key === 'rank') {
-                    //                        $newRank = Rank::from($newData[$key]);
-                    //                        $oldRank = Rank::from($oldData[$key]);
-                    //
-                    //                        if ($member->division->settings()->get('chat_alerts.member_promoted')) {
-                    //                            if ($newRank->isPromotion(previousRank: $oldRank)) {
-                    //                                $member->division->notify(new Promotion($member->name, $newRank->getLabel()));
-                    //                            }
-                    //                        }
-                    //
-                    //                        $updates['last_promoted_at'] = now();
-                    //                        RankAction::create([
-                    //                            'member_id' => $member->id,
-                    //                            'rank' => $newRank,
-                    //                        ]);
-                    //                    }
 
                     if ($key === 'division_id') {
                         \Log::debug(sprintf('Saw a division change for %s to %s', $oldData['name'], $newData[$key]));
@@ -228,7 +209,6 @@ class MemberSync extends Command
                     'name' => str_replace('AOD_', '', $member->username),
                     'posts' => $member->postcount,
                     'privacy_flag' => $member->allow_export !== 'yes' ? 0 : 1,
-                    'rank' => ($member->aodrankval - 2 <= 0) ? 1 : $member->aodrankval - 2,
                     'ts_unique_id' => $member->tsid,
                     'last_activity' => $member->lastactivity,
                     'last_voice_activity' => $member->lastdiscord_connect,

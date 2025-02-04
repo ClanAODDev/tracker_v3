@@ -322,11 +322,6 @@ function approveMemberPath(MemberRequest $memberRequest)
     return $base . http_build_query($args);
 }
 
-function convertRankToForum(int $rank): int
-{
-    return max(1, $rank - 2);
-}
-
 function gcd($a, $b)
 {
     $_a = abs($a);
