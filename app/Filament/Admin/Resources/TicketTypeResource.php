@@ -32,9 +32,11 @@ class TicketTypeResource extends Resource
                 Forms\Components\TextInput::make('description')
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('auto_assign_to_id')
-                    ->numeric()
-                    ->default(null),
+                Forms\Components\Select::make('auto_assign_to_id')
+                    ->label('Auto-assign to admin user')
+                    ->relationship('auto_assign_to', 'name')
+                    ->columnSpanFull()
+                    ->searchable(),
                 Forms\Components\Textarea::make('boilerplate')
                     ->columnSpanFull(),
                 Forms\Components\Select::make('role_access')
