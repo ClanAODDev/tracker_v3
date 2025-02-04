@@ -62,8 +62,17 @@ class EditRankAction extends EditRecord
                     }
                 })
 
-                // visible only if rank is below user current
-                ->visible(fn($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
+                ->visible(function (RankAction $action) {
+                    $user = auth()->user();
+                    $newRank = $action->rank;
+
+                    if ($newRank->value >= Rank::SERGEANT->value) {
+                        // MSGT+ approval authority on SGT+ promotions
+                        return $user->member->rank->value >= Rank::MASTER_SERGEANT->value;
+                    }
+
+                    return $user->isDivisionLeader() || $user->isRole('admin');
+                })
 
                 // hidden only if both approved and accepted are set - allows re-queue of temporary accept step
                 ->hidden(fn($action) => $action->getRecord()->approved_at)
