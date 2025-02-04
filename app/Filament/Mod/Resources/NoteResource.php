@@ -19,8 +19,6 @@ class NoteResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
-    protected static ?string $navigationParentItem = 'Members';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -68,12 +66,10 @@ class NoteResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->modifyQueryUsing(function (Builder $query): Builder {
-                if (!auth()->user()->isRole(['admin', 'sr_ldr'])) {
-                    return $query->whereNot('type', 'sr_ldr');
+            ->modifyQueryUsing(function (Builder $query) {
+                if (! auth()->user()->isRole(['admin', 'sr_ldr'])) {
+                    $query->whereNot('type', 'sr_ldr');
                 }
-
-                return $query;
             })
             ->filters([
                 //
