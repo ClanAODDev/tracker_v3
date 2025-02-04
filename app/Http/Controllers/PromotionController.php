@@ -8,16 +8,15 @@ use App\Models\RankAction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Illuminate\Support\Facades\Cache;
 
 class PromotionController extends Controller
 {
     public function confirm(Request $request, Member $member, RankAction $action)
     {
-        if (! $request->hasValidSignature()) {
+        if (!$request->hasValidSignature() || $action->resolved()) {
             throw new InvalidSignatureException;
         }
-
-        $member = request()->member;
 
         $expirationTime = Carbon::createFromTimestamp(request('expires'))->diffForHumans();
 

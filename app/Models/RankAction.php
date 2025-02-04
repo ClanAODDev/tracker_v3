@@ -75,4 +75,9 @@ class RankAction extends Model
             'declined_at' => now(),
         ]);
     }
+
+    public function resolved()
+    {
+        return ($this->accepted_at || $this->declined_at);
+    }
 }
