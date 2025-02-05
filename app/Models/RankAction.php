@@ -76,6 +76,14 @@ class RankAction extends Model
         ]);
     }
 
+    public function deny($deny_reason)
+    {
+        $this->update([
+            'deny_reason' => $deny_reason,
+            'denied_at' => now(),
+        ]);
+    }
+
     public function resolved()
     {
         return $this->accepted_at || $this->declined_at;

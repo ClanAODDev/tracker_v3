@@ -330,23 +330,22 @@ class User extends Authenticatable implements FilamentUser
         $userRank = $this->member->rank;
         $newRank = $action->rank;
 
-        // User cannot approve/deny if the new rank is higher than their current rank
+        // A user cannot approve/deny a rank action for a rank higher than their own
         if ($newRank->value > $userRank->value) {
             return false;
         }
 
-        if ($this->isPlatoonLeader()) {
-            if ($newRank->value <= Rank::from($this->division->settings()->get('max_platoon_leader_rank'))->value) {
-                return true;
-            }
+        // Platoon leaders can approve/deny if within their authorized rank range
+        if ($this->isWithinPlatoonLimit($newRank, $this->division)) {
+            return true;
         }
 
-        // If the promotion is to Sergeant or above, only Master Sergeant+ can approve/deny
+        // For Sergeant and above, require that the user is at least Command Sergeant
         if ($newRank->value >= Rank::SERGEANT->value) {
-            return $userRank->value >= Rank::MASTER_SERGEANT->value;
+            return $userRank->value >= Rank::COMMAND_SERGEANT->value;
         }
 
-        // If the promotion is to Corporal or below, allow Division Leaders and Admins
-        return $this->isDivisionLeader() || $this->isRole('admin');
+        // For ranks below Sergeant, only Division Leaders or Admins can approve/deny
+        return $this->isAdminOrDivisionLeader();
     }
 }
