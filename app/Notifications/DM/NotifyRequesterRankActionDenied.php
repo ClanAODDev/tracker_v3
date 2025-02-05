@@ -4,6 +4,7 @@ namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
+use App\Models\RankAction;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,7 +15,7 @@ class NotifyRequesterRankActionDenied extends Notification implements ShouldQueu
     use Queueable, RetryableNotification;
 
     public function __construct(
-        private readonly string $action,
+        private readonly RankAction $action,
         private readonly string $denialReason,
     ) {}
 
