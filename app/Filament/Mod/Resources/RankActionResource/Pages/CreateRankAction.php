@@ -27,20 +27,23 @@ class CreateRankAction extends CreateRecord
         }
 
         if ($data['action'] === 'promotion') {
-            $newRankValue = $member->rank->value + 1;
-
-            try {
-                $newRank = Rank::from($newRankValue);
-            } catch (\ValueError $e) {
-                $newRank = Rank::from($member->rank);
+            if (isset($data['promotion_rank']) && auth()->user()->isDivisionLeader()) {
+                $data['rank'] = $data['promotion_rank'];
+            } else {
+                $newRankValue = $member->rank->value + 1;
+                try {
+                    $newRank = Rank::from($newRankValue);
+                } catch (\ValueError $e) {
+                    $newRank = $member->rank;
+                }
+                $data['rank'] = $newRank->value;
             }
-            $data['rank'] = $newRank->value;
         } elseif ($data['action'] === 'demotion') {
             $data['rank'] = $data['demotion_rank'];
             $data['accepted_at'] = $data['approved_at'];
         }
 
-        unset($data['action'], $data['demotion_rank']);
+        unset($data['action'], $data['demotion_rank'], $data['promotion_rank']);
 
         $division = auth()->user()->division;
 
@@ -50,6 +53,7 @@ class CreateRankAction extends CreateRecord
         );
 
         return $data;
+
     }
 
     protected function afterCreate(): void

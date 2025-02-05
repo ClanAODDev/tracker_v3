@@ -29,6 +29,26 @@ class RankActionResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
+    public static function getNavigationBadge(): ?string
+    {
+        $user = auth()->user();
+        $member = $user->member;
+
+        if (auth()->user()->isRole('admin')) {
+            return (string) static::$model::where('approved_at', null)->count();
+        }
+
+        return (string) static::$model::whereHas('member', function (Builder $memberQuery) use ($user, $member) {
+            $memberQuery
+                ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
+                ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
+                ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
+                    fn ($q) => $q->where('division_id', $member->division_id));
+        })->where('approved_at', null)->count();
+
+        return null;
+    }
+
     public static function canEdit(Model $record): bool
     {
         $authedMember = auth()->user()->member_id;
@@ -100,17 +120,11 @@ class RankActionResource extends Resource
                 $member = $user->member;
 
                 $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {
-                    if ($user->isPlatoonLeader()) {
-                        $memberQuery->where('platoon_id', $member->platoon_id);
-                    }
-                    if ($user->isSquadLeader()) {
-                        $memberQuery->where('squad_id', $member->squad_id);
-                    }
-                    if ($user->isDivisionLeader()) {
-                        if (! $user->isRole('admin')) {
-                            $memberQuery->where('division_id', $member->division_id);
-                        }
-                    }
+                    $memberQuery
+                        ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
+                        ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
+                        ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
+                            fn ($q) => $q->where('division_id', $member->division_id));
                 });
             })->modifyQueryUsing(function (Builder $query) {
                 $userRank = auth()->user()->member->rank->value;
@@ -120,19 +134,24 @@ class RankActionResource extends Resource
                     $q->where(function ($q1) use ($userRank, $currentMemberId) {
                         // For rank actions not requested by the current member:
                         // - Only include those where the recommended rank is less than the current member's rank
-                        // - rank actions that have not yet been approved
-                        // - and where the rank action’s member is not the current member.
+                        // - And where the rank action’s member is not the current member.
                         $q1->where('rank', '<', $userRank)
-                            ->where('approved_at', null)
                             ->where('member_id', '<>', $currentMemberId);
                     })
                         // OR include any rank actions where the current member is the requester.
                         ->orWhere('requester_id', $currentMemberId);
-                })->where(function ($q) {
-                    // Exclude actions that are both approved and accepted
-                    $q->whereNull('approved_at')
-                        ->orWhereNull('accepted_at');
-                });
+                })
+                    ->where(function ($q) {
+                        // Include actions that are either:
+                        // - Not approved at all, OR
+                        // - Approved, but not yet accepted or declined.
+                        $q->whereNull('approved_at')
+                            ->orWhere(function ($q2) {
+                                $q2->whereNotNull('approved_at')
+                                    ->whereNull('accepted_at')
+                                    ->whereNull('declined_at');
+                            });
+                    });
             })
             ->filters([
                 Filter::make('rank_filter')
@@ -221,14 +240,17 @@ class RankActionResource extends Resource
                 return Member::query()
                     ->where('name', 'like', "%{$search}%")
                     ->where('id', '<>', $currentMember->id)
-                    ->when($user->isSquadLeader(), fn (Builder $query) => $query->where('squad_id', $currentMember->squad_id)
-                        ->where('rank', '<', $roleLimits['squadLeader'])
+                    ->when($user->isSquadLeader(),
+                        fn (Builder $query) => $query->where('squad_id', $currentMember->squad_id)
+                            ->where('rank', '<', $roleLimits['squadLeader'])
                     )
-                    ->when($user->isPlatoonLeader(), fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
-                        ->where('rank', '<', $roleLimits['platoonLeader'])
+                    ->when($user->isPlatoonLeader(),
+                        fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
+                            ->where('rank', '<', $roleLimits['platoonLeader'])
                     )
-                    ->when($user->isDivisionLeader(), fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
-                        ->where('rank', '<', $roleLimits['divisionLeader'])
+                    ->when($user->isDivisionLeader(),
+                        fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
+                            ->where('rank', '<', $roleLimits['divisionLeader'])
                     )
                     ->when($user->isRole('admin'), fn (Builder $query) => $query->where('division_id', '!=', 0)
                     )
@@ -276,29 +298,34 @@ class RankActionResource extends Resource
                 ->options(function (callable $get) {
                     $user = auth()->user();
 
-                    $promotionLabel = 'Promotion';
+                    // If the user is a division leader, allow them to choose a rank to promote to.
+                    if ($user->isDivisionLeader()) {
+                        $promotionLabel = 'Promotion (choose rank to promote to)';
+                    } else {
+                        $promotionLabel = 'Promotion';
+                    }
 
                     $memberId = $get('member_id');
                     if ($memberId) {
                         $member = Member::find($memberId);
                         if ($member) {
-
                             $allRanks = Rank::cases();
                             usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
-                            $currentIndex = null;
-                            foreach ($allRanks as $index => $rank) {
-                                if ($rank->value === $member->rank->value) {
-                                    $currentIndex = $index;
-                                    break;
+                            if (! $user->isDivisionLeader()) {
+                                $currentIndex = null;
+                                foreach ($allRanks as $index => $rank) {
+                                    if ($rank->value === $member->rank->value) {
+                                        $currentIndex = $index;
+                                        break;
+                                    }
                                 }
-                            }
-
-                            if ($currentIndex !== null && isset($allRanks[$currentIndex + 1])) {
-                                $nextRank = $allRanks[$currentIndex + 1];
-                                $promotionLabel = 'Promotion (next rank: ' . ucwords($nextRank->getLabel()) . ')';
-                            } else {
-                                $promotionLabel = 'Promotion (member is at the highest rank)';
+                                if ($currentIndex !== null && isset($allRanks[$currentIndex + 1])) {
+                                    $nextRank = $allRanks[$currentIndex + 1];
+                                    $promotionLabel = 'Promotion (next rank: ' . ucwords($nextRank->getLabel()) . ')';
+                                } else {
+                                    $promotionLabel = 'Promotion (member is at the highest rank)';
+                                }
                             }
                         }
                     }
@@ -307,7 +334,7 @@ class RankActionResource extends Resource
                         'promotion' => $promotionLabel,
                     ];
 
-                    // only permit demotions for admin or division leaders
+                    // Only permit demotions for admin or division leaders.
                     if ($user->isDivisionLeader() || $user->isRole('admin')) {
                         $options['demotion'] = 'Demotion (choose a new, lower rank)';
                     }
@@ -339,6 +366,30 @@ class RankActionResource extends Resource
                 })
                 ->visible(fn (callable $get) => $get('action') === 'demotion')
                 ->required(fn (callable $get) => $get('action') === 'demotion'),
+
+            Select::make('promotion_rank')
+                ->label('Promote to')
+                ->options(function (callable $get) {
+                    $member = Member::find($get('member_id'));
+                    if (! $member) {
+                        return [];
+                    }
+
+                    $allRanks = Rank::cases();
+                    usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
+
+                    $options = [];
+                    foreach ($allRanks as $rank) {
+                        if ($rank->value > $member->rank->value && $rank->value <= Rank::STAFF_SERGEANT->value) {
+                            $options[$rank->value] = ucwords($rank->getLabel());
+                        }
+                    }
+
+                    return $options;
+                })
+                ->visible(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader())
+                ->required(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
+
         ];
     }
 
