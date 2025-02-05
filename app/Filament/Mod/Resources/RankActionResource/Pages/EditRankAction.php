@@ -6,8 +6,10 @@ use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
 use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
+use App\Notifications\DM\NotifyRequesterRankActionDenied;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
 use Parallax\FilamentComments\Actions\CommentsAction;
 
@@ -58,7 +60,7 @@ class EditRankAction extends EditRecord
                 }),
 
             Action::make('approve')
-                ->label('Approve')
+                ->label('Approve change')
                 ->action(function (RankAction $action) {
                     if ($action->rank->isPromotion($action->member->rank)) {
                         $action->approve();
@@ -75,7 +77,7 @@ class EditRankAction extends EditRecord
                 ->modalDescription('Are you sure you want to approve this rank change?'),
         ];
 
-        return auth()->user()->canApproveOrDeny($this->getRecord())
+        return auth()->user()->canManageCommentsFor($this->getRecord())
             ? array_merge($actions, $commentsAction)
             : $actions;
     }

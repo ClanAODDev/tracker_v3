@@ -7,6 +7,7 @@ use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\Member;
 use App\Models\RankAction;
+use App\Models\User;
 use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
@@ -47,7 +48,7 @@ class CreateRankAction extends CreateRecord
 
         $division = auth()->user()->division;
 
-        $data['approved_at'] = Rank::autoApprovedTimestampForRank(
+        $data['approved_at'] = User::autoApprovedTimestampForRank(
             $data['rank'],
             $division
         );

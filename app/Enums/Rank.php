@@ -5,7 +5,6 @@ namespace App\Enums;
 use App\Traits\EnumOptions;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 enum Rank: int implements HasColor, HasLabel
@@ -116,27 +115,5 @@ enum Rank: int implements HasColor, HasLabel
         return $this->value > $previousRank->value;
     }
 
-    public static function autoApprovedTimestampForRank(
-        string $targetRank, $division, bool $asBoolean = false
-    ): bool|null|Carbon {
-        $user = auth()->user();
-        $targetRank = Rank::from($targetRank);
-
-        if ($user->isRole('admin') && $targetRank <= Rank::SERGEANT) {
-            return $asBoolean ? true : now();
-        }
-
-        if ($user->isPlatoonLeader()) {
-            $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
-            if ($targetRank->value <= $maxPlRank->value) {
-                return $asBoolean ? true : now();
-            }
-        }
-
-        if ($user->isDivisionLeader() && $targetRank->value <= Rank::CORPORAL->value) {
-            return $asBoolean ? true : now();
-        }
-
-        return $asBoolean ? false : null;
-    }
+    public static function canManageComments($targetRank): bool {}
 }
