@@ -120,12 +120,13 @@ enum Rank: int implements HasColor, HasLabel
         string $targetRank, $division, bool $asBoolean = false
     ): bool|null|Carbon {
         $user = auth()->user();
+        $targetRank = Rank::from($targetRank);
 
-        if ($user->isRole('admin')) {
+        if ($user->isRole('admin') && $targetRank <= Rank::SERGEANT) {
             return $asBoolean ? true : now();
         }
 
-        $targetRank = Rank::from($targetRank);
+
 
         if ($user->isPlatoonLeader()) {
             $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
