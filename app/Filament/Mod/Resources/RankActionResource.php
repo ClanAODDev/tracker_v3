@@ -14,6 +14,7 @@ use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,26 +30,6 @@ class RankActionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
 
     protected static ?string $navigationGroup = 'Division';
-
-    public static function getNavigationBadge(): ?string
-    {
-        $user = auth()->user();
-        $member = $user->member;
-
-        if (auth()->user()->isRole('admin')) {
-            return (string) static::$model::where('approved_at', null)->count();
-        }
-
-        return (string) static::$model::whereHas('member', function (Builder $memberQuery) use ($user, $member) {
-            $memberQuery
-                ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
-                ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
-                ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
-                    fn ($q) => $q->where('division_id', $member->division_id));
-        })->where('approved_at', null)->count();
-
-        return null;
-    }
 
     public static function canEdit(Model $record): bool
     {
@@ -82,15 +63,28 @@ class RankActionResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Rank Action Details')
-                    ->hiddenOn('create')
-                    ->schema([
-                        static::getStatusFormField(),
-                        Select::make('rank')
-                            ->options(Rank::class)
-                            ->disabledOn('edit'),
-                        static::getJustificationFormField(),
-                    ]),
+
+                Forms\Components\Split::make([
+                    Forms\Components\Section::make('Rank Action Details')
+                        ->hiddenOn('create')
+                        ->schema([
+                            Select::make('rank')
+                                ->options(Rank::class)
+                                ->disabledOn('edit'),
+                            static::getJustificationFormField(),
+                        ]),
+                    Forms\Components\Fieldset::make('Metadata')
+                        ->schema([
+                            ViewField::make('Status')
+                                ->view('filament.forms.components.status-badge')
+                                ->viewData(['record']),
+                            ViewField::make('Type')
+                                ->view('filament.forms.components.type-badge')
+                                ->viewData(['record']),
+                        ])
+                        ->grow(false),
+                ])->columnSpanFull(),
+
             ]);
     }
 
@@ -103,8 +97,9 @@ class RankActionResource extends Resource
                     ->sortable()
                     ->badge(),
                 Tables\Columns\ViewColumn::make('status')
-                    ->label('status')
                     ->view('filament.forms.components.status-badge'),
+                Tables\Columns\ViewColumn::make('type')
+                    ->view('filament.forms.components.type-badge'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
                     ->date()
@@ -282,7 +277,8 @@ class RankActionResource extends Resource
                 ->rules([
                     'required',
                     fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
-                        $get, $min_days_rank_action
+                        $get,
+                        $min_days_rank_action
                     ) {
                         $user = auth()->user();
                         $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
@@ -424,13 +420,5 @@ class RankActionResource extends Resource
             ->required()
             ->rows(5)
             ->columnSpanFull();
-    }
-
-    public static function getStatusFormField()
-    {
-        return Forms\Components\ViewField::make('status')
-            ->label('status')
-            ->view('filament.forms.components.status-badge')
-            ->viewData(['record']);
     }
 }
