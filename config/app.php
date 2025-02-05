@@ -52,8 +52,16 @@ return [
         'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
 
         'rank' => [
+            // time allowed to accept a promotion
             'promotion_acceptance_mins' => 5,
+
+            // minimum days before a new rank action can be created
+            'rank_action_min_days' => 14,
+
+            // rank changes affect forums
             'update_forums' => false,
+
+            // max ranks role can promote to
             'max_squad_leader' => Rank::SPECIALIST,
             'max_platoon_leader' => Rank::CORPORAL,
             'max_division_leader' => Rank::STAFF_SERGEANT,
