@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Jobs\UpdateRankForMember;
 use App\Models\Member;
 use App\Models\RankAction;
+use App\Notifications\Channel\NotifyDivisionMemberPromotion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
-use Illuminate\Support\Facades\Cache;
 
 class PromotionController extends Controller
 {
     public function confirm(Request $request, Member $member, RankAction $action)
     {
-        if (!$request->hasValidSignature() || $action->resolved()) {
+        if (! $request->hasValidSignature() || $action->resolved()) {
             throw new InvalidSignatureException;
         }
 
@@ -28,6 +28,8 @@ class PromotionController extends Controller
         $action->accept();
 
         $this->showSuccessToast('You have accepted your promotion! Your rank will be updated shortly.');
+
+        $member->division->notify(new NotifyDivisionMemberPromotion($member->name, $action->rank->getLabel()));
 
         UpdateRankForMember::dispatch($action);
 
