@@ -228,79 +228,79 @@ class RankActionResource extends Resource
 
         $fields = [
             Select::make('member_id')
-            ->hiddenOn('edit')
-            ->searchable()
-            ->getSearchResultsUsing(function (string $search): array {
-                $roleLimits = [
-                    'squadLeader' => config('app.aod.rank.max_squad_leader'),
-                    'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
-                    'divisionLeader' => config('app.aod.rank.max_division_leader'),
-                ];
+                ->hiddenOn('edit')
+                ->searchable()
+                ->getSearchResultsUsing(function (string $search): array {
+                    $roleLimits = [
+                        'squadLeader' => config('app.aod.rank.max_squad_leader'),
+                        'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
+                        'divisionLeader' => config('app.aod.rank.max_division_leader'),
+                    ];
 
-                $currentMember = auth()->user()->member;
-                $user = auth()->user();
-
-                return Member::query()
-                    ->where('name', 'like', "%{$search}%")
-                    ->where('id', '<>', $currentMember->id)
-                    ->when($user->isSquadLeader(),
-                        fn (Builder $query) => $query->where('squad_id', $currentMember->squad_id)
-                            ->where('rank', '<', $roleLimits['squadLeader'])
-                    )
-                    ->when($user->isPlatoonLeader(),
-                        fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
-                            ->where('rank', '<', $roleLimits['platoonLeader'])
-                    )
-                    ->when($user->isDivisionLeader(),
-                        fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
-                            ->where('rank', '<', $roleLimits['divisionLeader'])
-                    )
-                    ->when($user->isRole('admin'), fn (Builder $query) => $query->where('division_id', '!=', 0)
-                    )
-                    ->where('rank', '<=', $currentMember->rank->value)
-                    ->limit(5)
-                    ->get()
-                    ->mapWithKeys(fn ($member) => [$member->id => $member->present()->rankName()])
-                    ->toArray();
-
-            })
-            ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName())
-            ->allowHtml()
-            ->helperText(function () {
-                $user = auth()->user();
-                $append = 'You cannot select yourself or others of greater rank.';
-
-                $message = match (true) {
-                    $user->isSquadLeader() => "Only squad members up to PFC can be selected. {$append}",
-                    $user->isPlatoonLeader() => "Only platoon members up to LCpl can be selected. {$append}",
-                    $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
-                    default => $append,
-                };
-
-                return $message;
-            })
-            ->rules([
-                'required',
-                fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
-                    $get, $min_days_rank_action
-                ) {
+                    $currentMember = auth()->user()->member;
                     $user = auth()->user();
-                    $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
 
-                    if (! $skipRule) {
-                        $exists = RankAction::where('member_id', $value)
-                            ->where('created_at', '>=', Carbon::now()->subDays($min_days_rank_action))
-                            ->exists();
+                    return Member::query()
+                        ->where('name', 'like', "%{$search}%")
+                        ->where('id', '<>', $currentMember->id)
+                        ->when($user->isSquadLeader(),
+                            fn (Builder $query) => $query->where('squad_id', $currentMember->squad_id)
+                                ->where('rank', '<', $roleLimits['squadLeader'])
+                        )
+                        ->when($user->isPlatoonLeader(),
+                            fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
+                                ->where('rank', '<', $roleLimits['platoonLeader'])
+                        )
+                        ->when($user->isDivisionLeader(),
+                            fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
+                                ->where('rank', '<', $roleLimits['divisionLeader'])
+                        )
+                        ->when($user->isRole('admin'), fn (Builder $query) => $query->where('division_id', '!=', 0)
+                        )
+                        ->where('rank', '<=', $currentMember->rank->value)
+                        ->limit(5)
+                        ->get()
+                        ->mapWithKeys(fn ($member) => [$member->id => $member->present()->rankName()])
+                        ->toArray();
 
-                        if ($exists) {
-                            $fail(sprintf(
-                                "A rank action for this member already exists within the last %s days.",
-                                $min_days_rank_action
-                            ));
+                })
+                ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName())
+                ->allowHtml()
+                ->helperText(function () {
+                    $user = auth()->user();
+                    $append = 'You cannot select yourself or others of greater rank.';
+
+                    $message = match (true) {
+                        $user->isSquadLeader() => "Only squad members up to PFC can be selected. {$append}",
+                        $user->isPlatoonLeader() => "Only platoon members up to LCpl can be selected. {$append}",
+                        $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
+                        default => $append,
+                    };
+
+                    return $message;
+                })
+                ->rules([
+                    'required',
+                    fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
+                        $get, $min_days_rank_action
+                    ) {
+                        $user = auth()->user();
+                        $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
+
+                        if (! $skipRule) {
+                            $exists = RankAction::where('member_id', $value)
+                                ->where('created_at', '>=', Carbon::now()->subDays($min_days_rank_action))
+                                ->exists();
+
+                            if ($exists) {
+                                $fail(sprintf(
+                                    'A rank action for this member already exists within the last %s days.',
+                                    $min_days_rank_action
+                                ));
+                            }
                         }
-                    }
-                },
-            ])
+                    },
+                ]),
         ];
 
         if (auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin')) {

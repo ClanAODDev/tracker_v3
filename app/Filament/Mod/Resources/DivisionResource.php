@@ -12,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Mansoor\FilamentVersionable\Table\RevisionsAction;
 
 class DivisionResource extends Resource
 {

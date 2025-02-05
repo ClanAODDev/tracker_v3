@@ -31,6 +31,7 @@ class RankActionResource extends Resource
                     ->searchable()
                     ->getSearchResultsUsing(function (string $search): array {
                         $currentMember = auth()->user()->member;
+
                         return Member::query()
                             ->where('name', 'like', "%{$search}%")
                             ->where('id', '<>', $currentMember->id)

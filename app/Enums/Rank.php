@@ -126,8 +126,6 @@ enum Rank: int implements HasColor, HasLabel
             return $asBoolean ? true : now();
         }
 
-
-
         if ($user->isPlatoonLeader()) {
             $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
             if ($targetRank->value <= $maxPlRank->value) {

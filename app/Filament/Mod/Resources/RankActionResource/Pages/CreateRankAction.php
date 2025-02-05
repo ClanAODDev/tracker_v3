@@ -22,7 +22,7 @@ class CreateRankAction extends CreateRecord
         $data['requester_id'] = auth()->user()->member_id;
 
         $member = Member::find($data['member_id']);
-        if (!$member) {
+        if (! $member) {
             throw new \Exception('Member not found.');
         }
 
