@@ -5,46 +5,56 @@
 
     <div class="tabs-top">
         <ul class="nav nav-tabs">
-            <li class="active"><a class="nav-link active show" data-toggle="tab" href="#rank-tab"
-                                  aria-expanded="true"><i class="fa fa-trophy text-accent"></i> Rank</a>
+            <li class="active">
+                <a class="nav-link" data-toggle="tab" href="#division-tab" aria-expanded="false">
+                    <i class="fa fa-gamepad text-accent"></i> Division
+                </a>
             </li>
-            <li><a class="nav-link" data-toggle="tab" href="#division-tab" aria-expanded="false"><i class="fa
-            fa-gamepad text-accent"></i>
-                    Division</a></li>
+            @if(!auth()->user()->isRole('member'))
+                <li class="active">
+                    <a class="nav-link active show" data-toggle="tab" href="#rank-tab"
+                       aria-expanded="true"><i class="fa fa-trophy text-accent"></i> Rank</a>
+                </li>
+            @endif
             @if (count($member->recruits))
-                <li><a class="nav-link" data-toggle="tab" href="#recruiting-tab" aria-expanded="false"><i class="fa
-            fa-user-plus text-accent"></i> Recruiting</a></li>
+                <li>
+                    <a class="nav-link" data-toggle="tab" href="#recruiting-tab" aria-expanded="false">
+                        <i class="fa fa-user-plus text-accent"></i> Recruiting
+                    </a>
+                </li>
             @endif
         </ul>
         <div class="tab-content">
-            <div id="rank-tab" class="tab-pane active">
-                <div class="panel-body">
+            @if(!auth()->user()->isRole('member'))
+                <div id="rank-tab" class="tab-pane">
+                    <div class="panel-body">
 
-                    @if ($rankHistory->count() > 0)
+                        @if ($rankHistory->count() > 0)
 
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Date Changed</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($rankHistory as $entry)
+                            <table class="table table-hover">
+                                <thead>
                                 <tr>
-                                    <td>{{ $entry->rank->getLabel() }}</td>
-                                    <td>{{ $entry->created_at->format('Y-m-d') }}</td>
+                                    <th>Rank</th>
+                                    <th>Date Changed</th>
                                 </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                @foreach ($rankHistory as $entry)
+                                    <tr>
+                                        <td>{{ $entry->rank->getLabel() }}</td>
+                                        <td>{{ $entry->created_at->format('Y-m-d') }}</td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
 
-                    @else
-                        <p class="text-muted m-t-sm">This member currently has no rank history.</p>
-                    @endif
+                        @else
+                            <p class="text-muted m-t-sm">This member currently has no rank history.</p>
+                        @endif
+                    </div>
                 </div>
-            </div>
-            <div id="division-tab" class="tab-pane">
+            @endif
+            <div id="division-tab" class="tab-pane active">
                 <div class="panel-body">
 
                     @if ($transfers->count() > 0)
