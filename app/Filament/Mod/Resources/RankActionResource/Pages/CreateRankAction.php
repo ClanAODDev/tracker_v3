@@ -22,7 +22,7 @@ class CreateRankAction extends CreateRecord
         $data['requester_id'] = auth()->user()->member_id;
 
         $member = Member::find($data['member_id']);
-        if (! $member) {
+        if (!$member) {
             throw new \Exception('Member not found.');
         }
 
@@ -43,7 +43,7 @@ class CreateRankAction extends CreateRecord
             $data['accepted_at'] = $data['approved_at'];
         }
 
-        unset($data['action'], $data['demotion_rank'], $data['promotion_rank']);
+        unset($data['action'], $data['demotion_rank'], $data['promotion_rank'], $data['override_existing']);
 
         $division = auth()->user()->division;
 
@@ -74,9 +74,7 @@ class CreateRankAction extends CreateRecord
     {
         return [
             Step::make('Select Member')
-                ->schema([
-                    RankActionResource::getMemberFormField(),
-                ]),
+                ->schema(RankActionResource::getMemberFormFields()),
             Step::make('Select Rank')
                 ->schema(RankActionResource::getRankActionFields()),
             Step::make('Justification')

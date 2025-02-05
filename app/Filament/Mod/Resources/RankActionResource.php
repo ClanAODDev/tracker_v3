@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\RankAction;
 use Carbon\Carbon;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -85,7 +86,6 @@ class RankActionResource extends Resource
                     ->hiddenOn('create')
                     ->schema([
                         static::getStatusFormField(),
-                        static::getMemberFormField(),
                         Select::make('rank')
                             ->options(Rank::class)
                             ->disabledOn('edit'),
@@ -222,7 +222,7 @@ class RankActionResource extends Resource
         ];
     }
 
-    public static function getMemberFormField(): Select
+    public static function getMemberFormFields(): array
     {
         $min_days_rank_action = config('app.aod.rank.rank_action_min_days');
 
@@ -281,16 +281,38 @@ class RankActionResource extends Resource
             })
             ->rules([
                 'required',
-                fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
-                    $exists = RankAction::where('member_id', $get('member_id'))
-                        ->where('created_at', '>=', Carbon::now()->subDays(14))
-                        ->exists();
+                fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
+                    $get, $min_days_rank_action
+                ) {
+                    $user = auth()->user();
+                    $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
 
-                    if ($exists) {
-                        $fail('A rank action for this member already exists within the last 14 days.');
+                    if (! $skipRule) {
+                        $exists = RankAction::where('member_id', $value)
+                            ->where('created_at', '>=', Carbon::now()->subDays($min_days_rank_action))
+                            ->exists();
+
+                        if ($exists) {
+                            $fail(sprintf(
+                                "A rank action for this member already exists within the last %s days.",
+                                $min_days_rank_action
+                            ));
+                        }
                     }
                 },
-            ]);
+            ])
+        ];
+
+        if (auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin')) {
+            $fields[] = Checkbox::make('override_existing')
+                ->label("Override {$min_days_rank_action} Day Rule")
+                ->helperText(sprintf(
+                    'Check this box to bypass the %d-day restriction for rank actions.',
+                    $min_days_rank_action
+                ));
+        }
+
+        return $fields;
     }
 
     public static function getRankActionFields(): array
