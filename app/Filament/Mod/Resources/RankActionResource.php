@@ -208,8 +208,8 @@ class RankActionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RequesterRelationManager::class,
             MemberRelationManager::class,
+            RequesterRelationManager::class,
         ];
     }
 
