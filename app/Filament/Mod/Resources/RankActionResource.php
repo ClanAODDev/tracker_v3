@@ -142,6 +142,7 @@ class RankActionResource extends Resource
                         // - Not approved at all, OR
                         // - Approved, but not yet accepted or declined.
                         $q->whereNull('approved_at')
+                            ->whereNull('denied_at')
                             ->orWhere(function ($q2) {
                                 $q2->whereNotNull('approved_at')
                                     ->whereNull('accepted_at')
