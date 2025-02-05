@@ -41,7 +41,7 @@ class CreateRankAction extends CreateRecord
             }
         } elseif ($data['action'] === 'demotion') {
             $data['rank'] = $data['demotion_rank'];
-            $data['accepted_at'] = $data['approved_at'];
+            $data['accepted_at'] = now();
         }
 
         unset($data['action'], $data['demotion_rank'], $data['promotion_rank'], $data['override_existing']);
