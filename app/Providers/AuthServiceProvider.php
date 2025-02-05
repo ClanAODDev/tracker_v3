@@ -50,7 +50,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('viewLogViewer', function (?User $user) {
-            return $user->isRole('admin');
+            if (auth()->check()) {
+                return $user->isRole('admin');
+            }
+            
+            return false;
         });
     }
 }
