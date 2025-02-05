@@ -1,22 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    /**
-     * Run the migrations.
-     *
-     * This method iterates over all divisions and sets the
-     * settings->max_platoon_leader_rank value to 4.
-     *
-     * @return void
-     */
     public function up()
     {
         $divisions = DB::table('divisions')->get();
@@ -32,14 +19,6 @@ return new class extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * This method reverts the change by removing the
-     * settings->max_platoon_leader_rank key from all divisions.
-     *
-     * @return void
-     */
     public function down()
     {
         $divisions = DB::table('divisions')->get();
