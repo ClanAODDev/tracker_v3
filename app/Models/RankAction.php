@@ -86,6 +86,6 @@ class RankAction extends Model
 
     public function resolved()
     {
-        return $this->accepted_at || $this->declined_at;
+        return $this->accepted_at || $this->declined_at || $this->denied_at;
     }
 }

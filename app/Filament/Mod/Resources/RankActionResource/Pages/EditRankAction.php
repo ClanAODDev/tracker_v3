@@ -89,7 +89,7 @@ class EditRankAction extends EditRecord
                     }
                 })
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
-                ->hidden(fn ($action) => $action->getRecord()->approved_at || $action->getRecord()->denied_at)
+                ->hidden(fn ($action) => $action->getRecord()->resolved())
                 ->requiresConfirmation()
                 ->modalHeading('Approve Rank Change')
                 ->modalDescription('Are you sure you want to approve this rank change?'),
