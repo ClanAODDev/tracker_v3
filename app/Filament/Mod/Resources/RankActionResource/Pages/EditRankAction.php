@@ -15,6 +15,13 @@ class EditRankAction extends EditRecord
 {
     protected static string $resource = RankActionResource::class;
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        unset($data['status'], $data['rank']);
+
+        return $data;
+    }
+
     protected function getHeaderActions(): array
     {
         $commentsAction = [CommentsAction::make()];
