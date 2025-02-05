@@ -39,6 +39,7 @@ class RankActionResource extends Resource
             return false;
         }
 
+
         if ($record->requester_id == $authedMember) {
             return true;
         }
@@ -47,7 +48,7 @@ class RankActionResource extends Resource
             return false;
         }
 
-        if ($record->rank > auth()->user()->member->rank->value) {
+        if ($record->rank->value > auth()->user()->member->rank->value) {
             return false;
         }
 
