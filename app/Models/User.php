@@ -273,6 +273,12 @@ class User extends Authenticatable implements FilamentUser
             return false;
         }
 
+        if ($this->isPlatoonLeader()) {
+            if ($newRank->value <= Rank::from($this->division->settings()->get('max_platoon_leader_rank'))->value) {
+                return true;
+            }
+        }
+
         // If the promotion is to Sergeant or above, only Master Sergeant+ can approve/deny
         if ($newRank->value >= Rank::SERGEANT->value) {
             return $userRank->value >= Rank::MASTER_SERGEANT->value;
