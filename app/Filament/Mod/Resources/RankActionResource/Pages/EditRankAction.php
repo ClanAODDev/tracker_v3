@@ -30,7 +30,7 @@ class EditRankAction extends EditRecord
                 // visible only if rank is below user current
                 ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
                 ->hidden(fn ($action) => ($record = $action->getRecord()) && (
-                    $record->accepted_at
+                    $record->resolved()
                     || ! $record->rank->isPromotion($record->member->rank)
                     || ! $record->approved_at
                     || $record->approved_at?->gt(now()->subMinutes(
