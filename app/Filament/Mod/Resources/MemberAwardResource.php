@@ -25,6 +25,16 @@ class MemberAwardResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
+    public static function getNavigationBadge(): ?string
+    {
+        if (auth()->user()->isDivisionLeader()) {
+            return (string) auth()->user()->division
+                ->awards()->whereHas('unapprovedRecipients')->count();
+        }
+
+        return null;
+    }
+
     public static function canDeleteAny(): bool
     {
         return auth()->user()->isRole(['admin', 'sr_ldr']);
