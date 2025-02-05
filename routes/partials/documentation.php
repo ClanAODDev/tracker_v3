@@ -7,6 +7,7 @@ Route::group(['prefix' => 'help/docs'], function () {
     Route::get('/', 'HelpController@index')->name('help');
     Route::view('/division-structures', 'help.division-structures')->name('divisionStructures');
     Route::view('/member-awards', 'help.member-awards')->name('help.member-awards');
+    Route::view('/managing-rank', 'help.managing-rank')->name('help.managing-rank');
 
     /**
      * Admin documentation routes
