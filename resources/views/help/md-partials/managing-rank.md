@@ -20,9 +20,16 @@ member being promoted or demoted.
 Automatic approvals are rank changes that are immediately approved and moved to the acceptance process. 
 Recommendations must be approved by a platoon or division leader, or an admin.
 
-| Role                    | Can Demote | Automatically Approve Up To | Max Rank to Recommend |      Approve up to      |
-|-------------------------|:----------:|:---------------------------:|:---------------------:|:-----------------------:|
-| Squad Leader            |     ❌      |             --              |         Spec          |           --            |
-| Platoon Leader          |     ❌      |   Pfc <br/>(Configurable)   |          Cpl          | Pfc <br/>(Configurable) |
-| Division Leader (CO/XO) |     ✅      |             Cpl             |         SSgt          |           CPL           |
-| Admin                   |     ✅      |             Sgt             |        SgtMaj         |         SgtMaj          |
+| Role                    | Can demote |   Auto-approve up to    | Max rank to recommend |      Approve up to      |
+|-------------------------|:----------:|:-----------------------:|:---------------------:|:-----------------------:|
+| Squad Leader            |     ❌      |           --            |         Spec          |           --            |
+| Platoon Leader          |     ❌      | Pfc <br/>(Configurable) |          Cpl          | Pfc <br/>(Configurable) |
+| Division Leader (CO/XO) |     ✅      |           Cpl           |         SSgt          |           CPL           |
+| Admin                   |     ✅      |           Cpl           |        SgtMaj         |         SgtMaj          |
+
+
+### Access to comments
+Comments can be made on rank action recommendations. Access to view comments is based on your rank and the rank 
+being considered for the promotion.
+
+- 
