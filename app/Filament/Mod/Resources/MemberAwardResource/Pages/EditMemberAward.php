@@ -6,6 +6,7 @@ use App\Filament\Mod\Resources\MemberAwardResource;
 use App\Models\MemberAward;
 use App\Notifications\Channel\NotifyDivisionMemberAwarded;
 use App\Notifications\DM\NotifyMemberAwardReceived;
+use App\Notifications\DM\NotifyRequesterAwardApproved;
 use App\Notifications\DM\NotifyRequesterAwardDenied;
 use Filament\Actions;
 use Filament\Actions\Action;
@@ -32,14 +33,15 @@ class EditMemberAward extends EditRecord
                 ->before(function (array $data, MemberAward $memberAward) {
                     $memberAward->requester->notify(new NotifyRequesterAwardDenied(
                         $memberAward->award->name,
+                        $memberAward->member->name,
                         $data['reason']
                     ));
                 }),
 
             Action::make('approve')
                 ->label('Approve Award')
-                ->action(fn (MemberAward $award) => $award->update(['approved' => true]))
-                ->hidden(fn ($action) => $action->getRecord()->approved)
+                ->action(fn(MemberAward $award) => $award->update(['approved' => true]))
+                ->hidden(fn($action) => $action->getRecord()->approved)
                 ->requiresConfirmation()
                 ->modalHeading('Approve Award')
                 ->modalDescription('Are you sure you want to approve this award?')
@@ -51,7 +53,11 @@ class EditMemberAward extends EditRecord
                         ));
                     }
 
-                    $memberAward->member->notify(new NotifyMemberAwardReceived(award: $memberAward->award->name));
+                    $memberAward->member->notify(new NotifyMemberAwardReceived($memberAward->award->name));
+                    $memberAward->member->notify(new NotifyRequesterAwardApproved(
+                        $memberAward->award->name,
+                        $memberAward->member->name,
+                    ));
                 }),
         ];
     }

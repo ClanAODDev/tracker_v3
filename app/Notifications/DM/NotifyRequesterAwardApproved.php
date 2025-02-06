@@ -9,13 +9,13 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NotifyRequesterAwardDenied extends Notification implements ShouldQueue
+class NotifyRequesterAwardApproved extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
+
     public function __construct(
         private readonly string $award,
         private readonly string $member,
-        private readonly string $denialReason,
     ) {}
 
     /**
@@ -39,10 +39,9 @@ class NotifyRequesterAwardDenied extends Notification implements ShouldQueue
         return (new BotDMMessage)
             ->to($notifiable->discord_id)
             ->message(sprintf(
-                'Unfortunately the award [%s] you requested for %s was denied - . The reason for the denial was: %s',
-                $this->award,
+                'An award you requested for %s was approved!. They have been notified and their profile was updated with the award: %s',
                 $this->member,
-                $this->denialReason
+                $this->award,
             ))
             ->send();
     }
