@@ -19,7 +19,7 @@ class EditRankAction extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        unset($data['status'], $data['rank']);
+        unset($data['status'], $data['type']);
 
         return $data;
     }
@@ -32,7 +32,7 @@ class EditRankAction extends EditRecord
             Actions\Action::make('deny')->label('Deny change')
                 ->color('danger')
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
-                ->hidden(fn ($action) => $action->getRecord()->denied_at)
+                ->hidden(fn ($action) => $action->getRecord()->resolved())
                 ->requiresConfirmation()
                 ->modalHeading('Deny Rank Action')
                 ->modalDescription('Are you sure you want to deny this rank action? The requester will be notified.')
@@ -57,12 +57,12 @@ class EditRankAction extends EditRecord
                 // visible only if rank is below user current
                 ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
                 ->hidden(fn ($action) => ($record = $action->getRecord()) && (
-                    $record->resolved()
-                    || ! $record->rank->isPromotion($record->member->rank)
+                    ! $record->rank->isPromotion($record->member->rank)
                     || ! $record->approved_at
-                    || $record->approved_at?->gt(now()->subMinutes(
+                    || $record->approved_at->gt(now()->subMinutes(
                         config('app.aod.rank.promotion_acceptance_mins')
                     ))
+                    || $record->accepted_at
                 ))
                 ->requiresConfirmation()
                 ->modalHeading('Requeue Acceptance')

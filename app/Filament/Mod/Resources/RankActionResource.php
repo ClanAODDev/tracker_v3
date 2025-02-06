@@ -39,7 +39,6 @@ class RankActionResource extends Resource
             return false;
         }
 
-
         if ($record->requester_id == $authedMember) {
             return true;
         }
@@ -76,10 +75,10 @@ class RankActionResource extends Resource
                         ]),
                     Forms\Components\Fieldset::make('Metadata')
                         ->schema([
-                            ViewField::make('Status')
+                            ViewField::make('status')
                                 ->view('filament.forms.components.status-badge')
                                 ->viewData(['record']),
-                            ViewField::make('Type')
+                            ViewField::make('type')
                                 ->view('filament.forms.components.type-badge')
                                 ->viewData(['record']),
                         ])
