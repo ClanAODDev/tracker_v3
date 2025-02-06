@@ -84,13 +84,16 @@ class RankAction extends Model
         ]);
     }
 
+    public function actionable()
+    {
+        return is_null($this->approved_at) && is_null($this->denied_at);
+    }
+
     public function resolved()
     {
         return collect([
             $this->accepted_at,
-            $this->approved_at,
             $this->declined_at,
-            $this->denied_at,
         ])->filter()->isNotEmpty();
     }
 }

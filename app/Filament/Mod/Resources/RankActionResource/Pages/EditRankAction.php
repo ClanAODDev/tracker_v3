@@ -32,7 +32,7 @@ class EditRankAction extends EditRecord
             Actions\Action::make('deny')->label('Deny change')
                 ->color('danger')
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
-                ->hidden(fn ($action) => $action->getRecord()->resolved())
+                ->hidden(fn ($action) => !$action->getRecord()->actionable())
                 ->requiresConfirmation()
                 ->modalHeading('Deny Rank Action')
                 ->modalDescription('Are you sure you want to deny this rank action? The requester will be notified.')
@@ -89,7 +89,7 @@ class EditRankAction extends EditRecord
                     }
                 })
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
-                ->hidden(fn ($action) => $action->getRecord()->resolved())
+                ->hidden(fn ($action) => !$action->getRecord()->actionable())
                 ->requiresConfirmation()
                 ->modalHeading('Approve Rank Change')
                 ->modalDescription('Are you sure you want to approve this rank change?'),
