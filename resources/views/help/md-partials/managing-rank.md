@@ -22,10 +22,12 @@ Recommendations must be approved by a platoon or division leader, or an admin.
 
 | Role                    | Can demote |   Auto-approve up to    | Max rank to recommend |      Approve up to      |
 |-------------------------|:----------:|:-----------------------:|:---------------------:|:-----------------------:|
-| Squad Leader            |     ❌      |           --            |         Spec          |           --            |
-| Platoon Leader          |     ❌      | Pfc <br/>(Configurable) |          Cpl          | Pfc <br/>(Configurable) |
+| Squad Leader*           |     ❌      |           --            |         Spec          |           --            |
+| Platoon Leader*         |     ❌      | Pfc <br/>(Configurable) |          Cpl          | Pfc <br/>(Configurable) |
 | Division Leader (CO/XO) |     ✅      |           Cpl           |         SSgt          |           Cpl           |
 | Admin                   |     ✅      |           Cpl           |        SgtMaj         |         SgtMaj          |
+
+**Can only promote members within their assigned platoon/squad*
 
 ### Access to comments
 Comments can be made on rank action recommendations. Access to view comments is based on your rank and the rank 
