@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
