@@ -93,7 +93,7 @@ class MemberResource extends Resource
                         ->maxLength(191)
                         ->default(null),
                     TextInput::make('discord_id')
-                        ->numeric()
+                        ->string()
                         ->readOnly()
                         ->default(null),
                 ])->columns(),
