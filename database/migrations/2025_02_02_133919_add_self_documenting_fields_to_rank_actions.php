@@ -5,20 +5,25 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (!Schema::hasColumns('rank_actions', ['justification', 'requester_id'])) {
-            Schema::table('rank_actions', function (Blueprint $table) {
-                $table->text('justification')->nullable();
-                $table->integer('requester_id')->nullable();
-                $table->dateTime('approved_at')->nullable();
-                $table->dateTime('accepted_at')->nullable();
-                $table->dateTime('declined_at')->nullable();
+        $neededColumns = [
+            'justification' => 'text',
+            'requester_id' => 'integer',
+            'approved_at' => 'dateTime',
+            'accepted_at' => 'dateTime',
+            'declined_at' => 'dateTime',
+        ];
+
+        if (!Schema::hasColumns('rank_actions', $neededColumns)) {
+            Schema::table('rank_actions', function (Blueprint $table) use ($neededColumns) {
+                foreach ($neededColumns as $column => $type) {
+                    $table->$type($column)->nullable();
+                }
             });
 
             DB::table('rank_actions')->update([
