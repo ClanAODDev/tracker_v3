@@ -43,13 +43,6 @@ class DivisionPolicy
             return true;
         }
 
-        if ($user->member->division->id === $division->id
-            && $user->isRole('sr_ldr')
-            && $user->member->isRank([Rank::SERGEANT, Rank::STAFF_SERGEANT])
-        ) {
-            return true;
-        }
-
         return false;
     }
 
