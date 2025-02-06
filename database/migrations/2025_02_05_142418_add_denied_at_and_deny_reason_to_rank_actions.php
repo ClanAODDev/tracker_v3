@@ -14,7 +14,7 @@ return new class extends Migration
         if (! Schema::hasColumns('rank_actions', ['denied_at', 'deny_reason'])) {
             Schema::table('rank_actions', function (Blueprint $table) {
                 $table->dateTime('denied_at')->after('accepted_at')->nullable();
-                $table->string('deny_reason')->after('denied_at')->nullable();
+                $table->text('deny_reason')->after('denied_at')->nullable();
             });
         }
     }

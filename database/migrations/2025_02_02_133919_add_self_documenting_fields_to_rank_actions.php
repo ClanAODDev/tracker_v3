@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('rank_actions', function (Blueprint $table) {
-            $table->string('justification')->nullable();
+            $table->text('justification')->nullable();
             $table->integer('requester_id')->nullable();
             $table->dateTime('approved_at')->nullable();
             $table->dateTime('accepted_at')->nullable();
