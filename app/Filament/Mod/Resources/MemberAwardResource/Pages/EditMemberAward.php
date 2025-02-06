@@ -54,10 +54,14 @@ class EditMemberAward extends EditRecord
                     }
 
                     $memberAward->member->notify(new NotifyMemberAwardReceived($memberAward->award->name));
-                    $memberAward->member->notify(new NotifyRequesterAwardApproved(
-                        $memberAward->award->name,
-                        $memberAward->member->name,
-                    ));
+
+                    // don't send duplicates if requester and receiver are the same
+                    if ($memberAward->requester_id !== $memberAward->member_id) {
+                        $memberAward->member->notify(new NotifyRequesterAwardApproved(
+                            $memberAward->award->name,
+                            $memberAward->member->name,
+                        ));
+                    }
                 }),
         ];
     }
