@@ -41,7 +41,7 @@ class PlatoonPolicy
      */
     public function update(User $user, Platoon $platoon)
     {
-        if ($user->member->division_id === $platoon->division->id) {
+        if ($user->member->division_id === $platoon->division->id && !$user->isRole(['officer', 'member'])) {
             return true;
         }
     }

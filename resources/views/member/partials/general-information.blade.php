@@ -10,7 +10,7 @@
 
                 <div class="row m-t-xs">
                     <div class="col-md-4 col-xs-12 text-center">
-                        <h2 class="no-margins" title="{{ $member->join_date->format('Y-m-d') }}">
+                        <h2 class="no-margins" title="{{ $member->join_date?->format('Y-m-d') }}">
                             {{ floor($member->join_date->diffInYears()) }}
                         </h2>
                         {{ str()->plural('Year') }} <span class="c-white">In AOD</span>
