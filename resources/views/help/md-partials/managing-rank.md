@@ -11,7 +11,6 @@ member being promoted or demoted.
   - If link expires, approver can requeue an acceptance notification- 
 - Upon acceptance, rank is updated on forums and tracker
 
-
 ### Additional considerations
 * Demotions are automatically approved and accepted - only admin/CO/XO may request
 * Denied and declined rank actions are kept for posterity but are hidden from member profile
@@ -25,9 +24,8 @@ Recommendations must be approved by a platoon or division leader, or an admin.
 |-------------------------|:----------:|:-----------------------:|:---------------------:|:-----------------------:|
 | Squad Leader            |     ❌      |           --            |         Spec          |           --            |
 | Platoon Leader          |     ❌      | Pfc <br/>(Configurable) |          Cpl          | Pfc <br/>(Configurable) |
-| Division Leader (CO/XO) |     ✅      |           Cpl           |         SSgt          |           CPL           |
+| Division Leader (CO/XO) |     ✅      |           Cpl           |         SSgt          |           Cpl           |
 | Admin                   |     ✅      |           Cpl           |        SgtMaj         |         SgtMaj          |
-
 
 ### Access to comments
 Comments can be made on rank action recommendations. Access to view comments is based on your rank and the rank 
