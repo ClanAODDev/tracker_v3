@@ -247,7 +247,7 @@ class RankActionResource extends Resource
                             fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
                                 ->where('rank', '<', $roleLimits['platoonLeader'])
                         )
-                        ->when($user->isDivisionLeader(),
+                        ->when($user->isDivisionLeader() && !$user->isRole('admin'),
                             fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
                                 ->where('rank', '<', $roleLimits['divisionLeader'])
                         )
