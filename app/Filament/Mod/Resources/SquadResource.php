@@ -38,10 +38,6 @@ class SquadResource extends Resource
             return true;
         }
 
-        if (auth()->user()->member->squad_id == $record->id && auth()->user()->isSquadLeader()) {
-            return true;
-        }
-
         return false;
     }
 
