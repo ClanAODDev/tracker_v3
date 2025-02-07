@@ -14,7 +14,11 @@ class NotifyDivisionMemberPromotion extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
-    public function __construct(private readonly string $member, private readonly string $rank) {}
+    public function __construct(
+        private readonly string $member,
+        private readonly string $rank,
+        private readonly bool $fromSync = false
+    ) {}
 
     public function via($notifiable)
     {
@@ -34,7 +38,9 @@ class NotifyDivisionMemberPromotion extends Notification implements ShouldQueue
             ->target($notifiable->settings()->get('chat_alerts.member_promoted'))
             ->thumbnail($notifiable->getLogoPath())
             ->message(addslashes(
-                ":tools: **PROMOTION**\n{$this->member} has accepted a promotion to  `{$this->rank}`"
+                $this->fromSync
+                    ? ":tools: **PROMOTION**\n{$this->member} rank is now `{$this->rank}`"
+                    : ":tools: **PROMOTION**\n{$this->member} has accepted a promotion to  `{$this->rank}`"
             ))
             ->success()
             ->send();

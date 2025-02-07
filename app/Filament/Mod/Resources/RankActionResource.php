@@ -34,13 +34,13 @@ class RankActionResource extends Resource
     public static function canEdit(Model $record): bool
     {
         $user = auth()->user();
-        $authedMember = $user->member_id;
+        $memberId = $user->member_id;
 
         if (! parent::canView($record)) {
             return false;
         }
 
-        if ($record->requester_id == $authedMember) {
+        if ($record->requester_id == $memberId) {
             return true;
         }
 
@@ -48,7 +48,7 @@ class RankActionResource extends Resource
             return true;
         }
 
-        if ($record->member_id == $authedMember) {
+        if ($record->member_id == $memberId) {
             return false;
         }
 
@@ -252,7 +252,7 @@ class RankActionResource extends Resource
                             fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
                                 ->where('rank', '<', $roleLimits['platoonLeader'])
                         )
-                        ->when($user->isDivisionLeader() && !$user->isRole('admin'),
+                        ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
                             fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
                                 ->where('rank', '<', $roleLimits['divisionLeader'])
                         )

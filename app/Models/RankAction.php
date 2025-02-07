@@ -52,6 +52,8 @@ class RankAction extends Model
         $this->update([
             'approved_at' => now(),
         ]);
+
+        return $this;
     }
 
     public function approveAndAccept()
@@ -60,6 +62,8 @@ class RankAction extends Model
             'approved_at' => now(),
             'accepted_at' => now(),
         ]);
+
+        return $this;
     }
 
     public function accept()
@@ -67,6 +71,8 @@ class RankAction extends Model
         $this->update([
             'accepted_at' => now(),
         ]);
+
+        return $this;
     }
 
     public function decline()
@@ -74,6 +80,8 @@ class RankAction extends Model
         $this->update([
             'declined_at' => now(),
         ]);
+
+        return $this;
     }
 
     public function deny($deny_reason)
@@ -82,6 +90,8 @@ class RankAction extends Model
             'deny_reason' => $deny_reason,
             'denied_at' => now(),
         ]);
+
+        return $this;
     }
 
     public function actionable()
