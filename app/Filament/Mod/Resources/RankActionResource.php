@@ -33,7 +33,8 @@ class RankActionResource extends Resource
 
     public static function canEdit(Model $record): bool
     {
-        $authedMember = auth()->user()->member_id;
+        $user = auth()->user();
+        $authedMember = $user->member_id;
 
         if (! parent::canView($record)) {
             return false;
@@ -43,15 +44,19 @@ class RankActionResource extends Resource
             return true;
         }
 
+        if ($user->isPlatoonLeader() && $record->member->platoon_id == $user->member->platoon_id) {
+            return true;
+        }
+
         if ($record->member_id == $authedMember) {
             return false;
         }
 
-        if ($record->rank->value > auth()->user()->member->rank->value) {
+        if ($record->rank->value > $user->member->rank->value) {
             return false;
         }
 
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return $user->isRole(['admin', 'sr_ldr']);
     }
 
     public static function canDeleteAny(): bool
