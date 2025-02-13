@@ -33,11 +33,12 @@ Recommendations must be approved by a platoon or division leader, or an admin.
 Comments can be made on rank action recommendations. Access to view comments is based on your rank and the rank 
 being considered for the promotion.
 
-- Promotions to **Sgt or Higher:**  
-  - Only users with a rank of Master Sergeant or above may comment.
+##### Promotions to Sgt or Higher
+- Only users with a rank of Master Sergeant or above may comment
 
-- Promotions to **Cdt, Pvt, or Pfc** - dependent on division configuration
-  - Platoon leaders can comment if the rank action falls within their authorized range.
+##### Promotions to Cdt, Pvt, or Pfc
+- Dependent on division configuration
+- Platoon leaders may comment if the rank action falls within their authorized range
 
-- **All Other Cases:**  
-  - Only Division Leaders or Admins can comment.
+##### All Other Cases
+- Only Division Leaders or Admins can comment
