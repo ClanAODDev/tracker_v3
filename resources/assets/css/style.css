@@ -4193,7 +4193,6 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 .markdown-content ul li {
-    margin-top: -10px;
     margin-bottom: 10px;
 }
 
