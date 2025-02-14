@@ -50,6 +50,8 @@ class MemberSync extends Command
             exit;
         }
 
+        $syncErrors = collect();
+
         $divisionIds = cache()->remember('division_ids', 60 * 60, function () {
             return Division::active()->pluck('name', 'id')->flip();
         });
@@ -136,11 +138,8 @@ class MemberSync extends Command
                     continue;
                 }
 
-                \Log::error('Error syncing member', [
-                    'clan_id' => $member->clan_id,
-                    'division_id' => $newData->aoddivision,
-                    'error' => $exception->getMessage(),
-                ]);
+                $division = $newData->aoddivision;
+                $syncErrors->put($division, $syncErrors->get($division, 0) + 1);
 
                 continue;
             }
@@ -248,6 +247,12 @@ class MemberSync extends Command
             }
 
             \Log::info(sprintf('Added %s - %s', $member->username, $member->userid));
+        }
+
+        if ($syncErrors) {
+            foreach ($syncErrors as $division => $errorCount) {
+                \Log::error(sprintf('%d sync errors for %s', $errorCount, $division));
+            }
         }
 
         $syncTable->truncate();
