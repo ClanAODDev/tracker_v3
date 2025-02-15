@@ -118,6 +118,8 @@ class RankActionResource extends Resource
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
                 $member = $user->member;
+                $userRank = $member->rank->value;
+                $currentMemberId = $member->id;
 
                 $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {
                     $memberQuery
@@ -126,33 +128,24 @@ class RankActionResource extends Resource
                         ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
                             fn ($q) => $q->where('division_id', $member->division_id));
                 });
-            })->modifyQueryUsing(function (Builder $query) {
-                $userRank = auth()->user()->member->rank->value;
-                $currentMemberId = auth()->user()->member_id;
 
                 $query->where(function ($q) use ($userRank, $currentMemberId) {
                     $q->where(function ($q1) use ($userRank, $currentMemberId) {
-                        // For rank actions not requested by the current member:
-                        // - Only include those where the recommended rank is less than the current member's rank
-                        // - And where the rank action’s member is not the current member.
                         $q1->where('rank', '<', $userRank)
                             ->where('member_id', '<>', $currentMemberId);
                     })
-                        // OR include any rank actions where the current member is the requester.
                         ->orWhere('requester_id', $currentMemberId);
-                })
-                    ->where(function ($q) {
-                        // Include actions that are either:
-                        // - Not approved at all, OR
-                        // - Approved, but not yet accepted or declined.
-                        $q->whereNull('approved_at')
-                            ->whereNull('denied_at')
-                            ->orWhere(function ($q2) {
-                                $q2->whereNotNull('approved_at')
-                                    ->whereNull('accepted_at')
-                                    ->whereNull('declined_at');
-                            });
-                    });
+                });
+
+                $query->where(function ($q) {
+                    $q->whereNull('approved_at')
+                        ->whereNull('denied_at')
+                        ->orWhere(function ($q2) {
+                            $q2->whereNotNull('approved_at')
+                                ->whereNull('accepted_at')
+                                ->whereNull('declined_at');
+                        });
+                });
             })
             ->filters([
                 Filter::make('rank_filter')
