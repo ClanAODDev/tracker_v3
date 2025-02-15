@@ -9,6 +9,8 @@ use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use App\Notifications\DM\NotifyRequesterRankActionDenied;
 use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
 use Parallax\FilamentComments\Actions\CommentsAction;
@@ -32,7 +34,7 @@ class EditRankAction extends EditRecord
             Actions\Action::make('deny')->label('Deny change')
                 ->color('danger')
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
-                ->hidden(fn ($action) => !$action->getRecord()->actionable())
+                ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                 ->requiresConfirmation()
                 ->modalHeading('Deny Rank Action')
                 ->modalDescription('Are you sure you want to deny this rank action? The requester will be notified.')
@@ -54,7 +56,6 @@ class EditRankAction extends EditRecord
             Action::make('requeue')
                 ->label('Requeue Acceptance')
                 ->color('info')
-                // visible only if rank is below user current
                 ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
                 ->hidden(fn ($action) => ($record = $action->getRecord()) && (
                     ! $record->rank->isPromotion($record->member->rank)
@@ -79,17 +80,44 @@ class EditRankAction extends EditRecord
 
             Action::make('approve')
                 ->label('Approve change')
-                ->action(function (RankAction $action) {
+                ->closeModalByClickingAway(false)
+                ->form([
+                    Radio::make('notification_type')
+                        ->label('Rank Acceptance Notification')
+                        ->options([
+                            'now' => 'Send Now',
+                            'later' => 'Schedule for Later',
+                        ])
+                        ->default('now')
+                        ->live(),
+                    DateTimePicker::make('scheduled_at')
+                        ->label('Schedule Notification')
+                        ->minDate(now())
+                        ->helperText('Timezone: America/New_York')
+                        ->required()
+                        ->hidden(fn ($get) => $get('notification_type') !== 'later'),
+                ])
+                ->action(function (array $data, RankAction $action) {
                     if ($action->rank->isPromotion($action->member->rank)) {
                         $action->approve();
-                        $action->member->notify(new NotifyMemberPromotionPendingAcceptance($action));
+
+                        $notification = new NotifyMemberPromotionPendingAcceptance($action);
+
+                        if ($data['notification_type'] === 'later') {
+                            $scheduledTime = \Carbon\Carbon::parse($data['scheduled_at']);
+                            $action->member->notify($notification->delay($scheduledTime));
+                        } else {
+                            // Send notification immediately
+                            $action->member->notify($notification);
+                        }
                     } else {
                         $action->approveAndAccept();
                         UpdateRankForMember::dispatch($action);
                     }
                 })
+
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
-                ->hidden(fn ($action) => !$action->getRecord()->actionable())
+                ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                 ->requiresConfirmation()
                 ->modalHeading('Approve Rank Change')
                 ->modalDescription('Are you sure you want to approve this rank change?'),
