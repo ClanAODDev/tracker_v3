@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
+use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
@@ -113,12 +114,26 @@ class EditRankAction extends EditRecord
                         UpdateRankForMember::dispatch($action);
                     }
                 })
-
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                 ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                 ->requiresConfirmation()
                 ->modalHeading('Approve Rank Change')
-                ->modalDescription('Are you sure you want to approve this rank change?'),
+                ->modalDescription('Member will receive a notification prompting them to accept or decline the rank change'),
+
+            Action::make('approve_with_force')
+                ->color('warning')
+                ->requiresConfirmation()
+                ->visible(
+                    fn (RankAction $action) => auth()->user()->canApproveOrDeny($action)
+                        && $action->rank->value <= Rank::PRIVATE_FIRST_CLASS->value
+                )
+                ->hidden(fn (RankAction $action) => $action->accepted_at && ! $action->getRecord()->actionable())
+                ->action(function (RankAction $action) {
+                    $action->approveAndAccept();
+                    UpdateRankForMember::dispatch($action);
+                })
+                ->modalHeading('Approve Rank Change With Force')
+                ->modalDescription('Apply rank change without prompting the user for acceptance'),
         ];
 
         return auth()->user()->canManageCommentsFor($this->getRecord())
