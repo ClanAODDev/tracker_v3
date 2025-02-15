@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -19,7 +20,7 @@ return new class extends Migration {
             'declined_at' => 'dateTime',
         ];
 
-        if (!Schema::hasColumns('rank_actions', $neededColumns)) {
+        if (! Schema::hasColumns('rank_actions', $neededColumns)) {
             Schema::table('rank_actions', function (Blueprint $table) use ($neededColumns) {
                 foreach ($neededColumns as $column => $type) {
                     $table->$type($column)->nullable();

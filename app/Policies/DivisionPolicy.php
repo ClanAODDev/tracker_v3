@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;

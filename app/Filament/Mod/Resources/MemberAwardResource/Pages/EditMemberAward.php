@@ -40,8 +40,8 @@ class EditMemberAward extends EditRecord
 
             Action::make('approve')
                 ->label('Approve Award')
-                ->action(fn(MemberAward $award) => $award->update(['approved' => true]))
-                ->hidden(fn($action) => $action->getRecord()->approved)
+                ->action(fn (MemberAward $award) => $award->update(['approved' => true]))
+                ->hidden(fn ($action) => $action->getRecord()->approved)
                 ->requiresConfirmation()
                 ->modalHeading('Approve Award')
                 ->modalDescription('Are you sure you want to approve this award?')

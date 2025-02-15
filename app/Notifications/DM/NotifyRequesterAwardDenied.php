@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notification;
 class NotifyRequesterAwardDenied extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
+
     public function __construct(
         private readonly string $award,
         private readonly string $member,
