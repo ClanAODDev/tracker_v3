@@ -102,12 +102,10 @@ class EditRankAction extends EditRecord
                         $action->approve();
 
                         $notification = new NotifyMemberPromotionPendingAcceptance($action);
-
                         if ($data['notification_type'] === 'later') {
                             $scheduledTime = \Carbon\Carbon::parse($data['scheduled_at']);
                             $action->member->notify($notification->delay($scheduledTime));
                         } else {
-                            // Send notification immediately
                             $action->member->notify($notification);
                         }
                     } else {
