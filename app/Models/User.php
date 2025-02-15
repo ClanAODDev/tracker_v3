@@ -127,24 +127,18 @@ class User extends Authenticatable implements FilamentUser
 
     /**
      * Check to see if user is a certain role.
-     *
-     * @return bool
      */
-    public function isRole($role)
+    public function isRole(string|array $role): bool
     {
         if (! $this->role instanceof Role) {
             return false;
         }
 
-        if ($this->isDeveloper()) {
-            return true;
-        }
+        $roleName = $this->role->name;
 
-        if (\is_array($role)) {
-            return \in_array($this->role->name, $role, true);
-        }
-
-        return $this->role->name === $role;
+        return is_array($role)
+            ? in_array($roleName, $role, true)
+            : $roleName === $role;
     }
 
     public function isSquadLeader(): bool
