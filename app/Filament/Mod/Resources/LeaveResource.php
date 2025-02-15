@@ -39,16 +39,6 @@ class LeaveResource extends Resource
         return null;
     }
 
-    public static function canEdit(Model $record): bool
-    {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
-    }
-
     public static function form(Form $form): Form
     {
         return $form
