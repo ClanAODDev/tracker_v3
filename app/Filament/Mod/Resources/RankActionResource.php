@@ -36,7 +36,7 @@ class RankActionResource extends Resource
         $user = auth()->user();
         $memberId = $user->member_id;
 
-        if (! parent::canView($record)) {
+        if ($record->member->division_id != $user->division_id) {
             return false;
         }
 
@@ -44,7 +44,10 @@ class RankActionResource extends Resource
             return true;
         }
 
-        if ($user->isPlatoonLeader() && $record->member->platoon_id == $user->member->platoon_id) {
+        if ($user->isPlatoonLeader()
+            && $record->member->platoon_id == $user->member->platoon_id
+            && $record->rank->value < $user->member->rank->value
+        ) {
             return true;
         }
 
