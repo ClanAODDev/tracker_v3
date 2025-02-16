@@ -37,7 +37,7 @@
                     <tr>
                         <td>
                             <a href="{{ route('member', $member->getUrlParams()) }}"><i
-                                    class="fa fa-search"></i></a>
+                                        class="fa fa-search"></i></a>
                             {{ $member->name }}
                             <span class="text-muted slight">{{ $member->rank->getAbbreviation() }}</span>
                         </td>
@@ -58,8 +58,10 @@
                             <small>
                                 @if ($member->division_id === 0)
                                     <i class="fa fa-times text-danger"></i> REMOVED FROM AOD
+                                @elseif ($member->leave()->exists())
+                                    <i class="fa fa-calendar"></i> ON LEAVE
                                 @else
-                                    <span class="text-muted">ACTIVE</span>
+                                    ACTIVE
                                 @endif
                             </small>
                         </td>
