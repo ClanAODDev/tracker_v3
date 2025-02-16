@@ -21,6 +21,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class MemberResource extends Resource
 {
@@ -40,6 +41,15 @@ class MemberResource extends Resource
         return false;
     }
 
+    public static function canEdit(Model $record): bool
+    {
+        if ($record->id === auth()->user()->member_id) {
+            return false;
+        }
+
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -54,9 +64,6 @@ class MemberResource extends Resource
                         ->readOnly()
                         ->required()
                         ->numeric(),
-                    Forms\Components\Select::make('rank')
-                        ->options(Rank::class)
-                        ->required(),
                     Select::make('position')
                         ->required()
                         ->options(Position::class),
@@ -64,10 +71,6 @@ class MemberResource extends Resource
                         ->relationship('recruiter', 'name')
                         ->searchable()
                         ->nullable(),
-                    Select::make('division_id')
-                        ->relationship('division', 'name')
-                        ->label('Division')
-                        ->required(),
                     Select::make('last_trained_by')
                         ->label('Last Trained By')
                         ->searchable()
@@ -83,7 +86,7 @@ class MemberResource extends Resource
                         ->maxLength(191)
                         ->default(null),
                     TextInput::make('discord_id')
-                        ->numeric()
+                        ->string()
                         ->readOnly()
                         ->default(null),
                 ])->columns(),
@@ -96,7 +99,7 @@ class MemberResource extends Resource
                     Forms\Components\DateTimePicker::make('join_date')->readOnly(),
                     Forms\Components\DateTimePicker::make('last_promoted_at')->readOnly(),
                     Forms\Components\DateTimePicker::make('last_trained_at')->readOnly(),
-                ]),
+                ])->columns(3),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([

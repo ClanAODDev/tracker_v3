@@ -31,7 +31,11 @@ class SquadPolicy
      */
     public function update(User $user, Squad $squad)
     {
-        if ($user->member->division_id === $squad->platoon->division_id && !$user->isRole(['officer', 'member'])) {
+        if ($user->isDivisionLeader() && $user->member->division_id === $squad->division->id) {
+            return true;
+        }
+
+        if ($squad->platoon_id = $user->member->platoon_id && $user->isPlatoonLeader()) {
             return true;
         }
 

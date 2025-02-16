@@ -2,8 +2,8 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,6 +26,14 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (InvalidSignatureException $e) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([], 403);
+            }
+
+            return response()->view('errors.link-expired', [], 403);
         });
     }
 }

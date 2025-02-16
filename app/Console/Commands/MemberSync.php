@@ -12,7 +12,7 @@ use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
-use App\Notifications\Promotion;
+use App\Notifications\Channel\NotifyDivisionMemberPromotion;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -49,6 +49,8 @@ class MemberSync extends Command
 
             exit;
         }
+
+        $syncErrors = collect();
 
         $divisionIds = cache()->remember('division_ids', 60 * 60, function () {
             return Division::active()->pluck('name', 'id')->flip();
@@ -100,10 +102,9 @@ class MemberSync extends Command
                 'name' => $oldData['name'],
                 'posts' => $oldData['posts'],
                 'privacy_flag' => $oldData['privacy_flag'],
-                'rank' => $oldData['rank'],
                 'ts_unique_id' => $oldData['ts_unique_id'],
                 'last_voice_status' => $oldData['last_voice_status'],
-
+                'rank' => $oldData['rank'],
                 'last_activity' => Carbon::parse($oldData['last_activity'])->timestamp,
                 'last_voice_activity' => Carbon::parse($oldData['last_voice_activity'])->timestamp,
             ]);
@@ -123,11 +124,12 @@ class MemberSync extends Command
                     'name' => str_replace('AOD_', '', $newData->username),
                     'posts' => $newData->postcount,
                     'privacy_flag' => $newData->allow_export !== 'yes' ? 0 : 1,
-                    'rank' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                     'ts_unique_id' => $newData->tsid,
                     'last_voice_status' => $newData->lastdiscord_status,
                     'last_activity' => $newData->lastactivity,
                     'last_voice_activity' => $newData->lastdiscord_connect,
+
+                    'rank' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                 ]);
 
             } catch (\Exception $exception) {
@@ -136,11 +138,8 @@ class MemberSync extends Command
                     continue;
                 }
 
-                \Log::error('Error syncing member', [
-                    'clan_id' => $member->clan_id,
-                    'division_id' => $newData->aoddivision,
-                    'error' => $exception->getMessage(),
-                ]);
+                $division = $newData->aoddivision;
+                $syncErrors->put($division, $syncErrors->get($division, 0) + 1);
 
                 continue;
             }
@@ -167,7 +166,11 @@ class MemberSync extends Command
 
                         if ($member->division->settings()->get('chat_alerts.member_promoted')) {
                             if ($newRank->isPromotion(previousRank: $oldRank)) {
-                                $member->division->notify(new Promotion($member->name, $newRank->getLabel()));
+                                $member->division->notify(new NotifyDivisionMemberPromotion(
+                                    $member->name,
+                                    $newRank->getLabel(),
+                                    fromSync: true
+                                ));
                             }
                         }
 
@@ -175,7 +178,7 @@ class MemberSync extends Command
                         RankAction::create([
                             'member_id' => $member->id,
                             'rank' => $newRank,
-                        ]);
+                        ])->approveAndAccept();
                     }
 
                     if ($key === 'division_id') {
@@ -244,6 +247,12 @@ class MemberSync extends Command
             }
 
             \Log::info(sprintf('Added %s - %s', $member->username, $member->userid));
+        }
+
+        if ($syncErrors) {
+            foreach ($syncErrors as $division => $errorCount) {
+                \Log::error(sprintf('%d sync errors for %s', $errorCount, $division));
+            }
         }
 
         $syncTable->truncate();

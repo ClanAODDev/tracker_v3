@@ -7,7 +7,6 @@ use App\Notifications\NewDivisionApplication;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use SimpleXMLElement;
 
 class FetchApplicationFeeds extends Command
@@ -73,7 +72,7 @@ class FetchApplicationFeeds extends Command
                 $threadId = $matches[1];
             }
 
-            if (!$threadId) {
+            if (! $threadId) {
                 // couldn't reliably extract a thread id so let's move on
                 continue;
             }

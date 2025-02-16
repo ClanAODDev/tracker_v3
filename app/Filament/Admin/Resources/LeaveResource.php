@@ -108,7 +108,7 @@ class LeaveResource extends Resource
     {
         return [
             MemberRelationManager::class,
-            NoteRelationManager::class
+            NoteRelationManager::class,
         ];
     }
 

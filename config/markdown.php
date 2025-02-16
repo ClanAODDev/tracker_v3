@@ -105,7 +105,7 @@ return [
         ],
 
         Heading::class => [
-            'style' => 'border-bottom: 1px solid #3d404c; padding-bottom:10px',
+            'class' => 'heading-border',
         ],
 
         BlockQuote::class => [

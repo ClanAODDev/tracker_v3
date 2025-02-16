@@ -69,7 +69,7 @@ class MemberResource extends Resource
                         ->options(DiscordStatus::class)
                         ->default(null),
                     TextInput::make('discord_id')
-                        ->numeric()
+                        ->string()
                         ->default(null),
                 ])->columns(2),
                 Forms\Components\Section::make('Activity')->schema([

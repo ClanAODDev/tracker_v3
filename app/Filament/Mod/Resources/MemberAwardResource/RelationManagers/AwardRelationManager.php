@@ -29,6 +29,7 @@ class AwardRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('description')->label('Requirements'),
+                Tables\Columns\TextColumn::make('instructions')->label('Instructions'),
             ])
             ->filters([
                 //

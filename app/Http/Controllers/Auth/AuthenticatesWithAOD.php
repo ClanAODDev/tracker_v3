@@ -3,56 +3,54 @@
 namespace App\Http\Controllers\Auth;
 
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 trait AuthenticatesWithAOD
 {
-    public $email;
+    protected ?string $email = null;
 
-    public $clanId;
+    protected ?int $clanId = null;
 
-    /**
-     * @var Collection
-     */
-    public $roles = [];
+    protected array $roles = [];
 
-    protected function setMemberAttributes($member)
+    protected function setMemberAttributes(object $member): void
     {
-        $this->clanId = $member->userid;
-
+        $this->clanId = (int) $member->userid;
         $this->email = $member->email;
-
         $this->roles = array_merge(
             array_map('intval', explode(',', $member->membergroupids)),
-            [$member->usergroupid]
+            [(int) $member->usergroupid]
         );
     }
 
     /**
      * Authenticates with AOD Community Service.
-     *
-     * @return bool
      */
-    private function validatesCredentials($request)
+    protected function validatesCredentials(Request $request): bool
     {
         try {
             $results = DB::connection('aod_forums')
-                ->select('CALL check_user(:username, :password)', [
-                    'username' => $request->username,
-                    'password' => md5($request->password),
-                ]);
+                ->select(
+                    'CALL check_user(:username, :password)',
+                    [
+                        'username' => $request->input('username'),
+                        'password' => md5($request->input('password')),
+                    ]
+                );
         } catch (Exception $exception) {
+            Log::error('AOD Authentication failed: ' . $exception->getMessage());
+
             return false;
         }
 
         if (! empty($results)) {
-            $member = Arr::first($results);
 
+            $member = Arr::first($results);
             $this->setMemberAttributes($member);
 
-            return $member->valid;
+            return ($member->valid ?? false) ? true : false;
         }
 
         return false;

@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class NoteResource extends Resource
 {
@@ -17,8 +18,6 @@ class NoteResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationGroup = 'Division';
-
-    protected static ?string $navigationParentItem = 'Members';
 
     public static function form(Form $form): Form
     {
@@ -67,6 +66,11 @@ class NoteResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->modifyQueryUsing(function (Builder $query) {
+                if (! auth()->user()->isRole(['admin', 'sr_ldr'])) {
+                    $query->whereNot('type', 'sr_ldr');
+                }
+            })
             ->filters([
                 //
             ])

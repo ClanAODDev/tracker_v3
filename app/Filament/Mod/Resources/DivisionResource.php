@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
 use App\Models\Division;
 use Filament\Forms;
@@ -11,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Mansoor\FilamentVersionable\Table\RevisionsAction;
 
 class DivisionResource extends Resource
 {
@@ -22,6 +22,11 @@ class DivisionResource extends Resource
     protected static ?string $label = 'Settings';
 
     protected static ?string $navigationGroup = 'Division';
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->isRole(['admin']) || auth()->user()->isDivisionLeader();
+    }
 
     public static function form(Form $form): Form
     {
@@ -51,6 +56,14 @@ class DivisionResource extends Resource
                             ->helperText('Number of days without VoIP activity before a member is considered inactive.')
                             ->numeric()
                             ->statePath('settings.inactivity_days'),
+                        Forms\Components\Select::make('Platoon Leader Promotion Authority')
+                            ->statePath('settings.max_platoon_leader_rank')
+                            ->helperText('Highest rank PLs can promote to without approval')
+                            ->options([
+                                Rank::CADET->value => Rank::CADET->getLabel(),
+                                Rank::PRIVATE->value => Rank::PRIVATE->getLabel(),
+                                Rank::PRIVATE_FIRST_CLASS->value => Rank::PRIVATE_FIRST_CLASS->getLabel(),
+                            ]),
                     ])->columns(),
 
                 Forms\Components\Section::make('Locality')->collapsible()->collapsed()
@@ -117,9 +130,6 @@ class DivisionResource extends Resource
                                 Forms\Components\Select::make('member_approved')
                                     ->options($channelOptions)
                                     ->label('New Recruit Approval'),
-                                //                                Forms\Components\Select::make('member_denied')
-                                //                                    ->options($channelOptions)
-                                //                                    ->label('New Recruit Denial'),
                             ])
                             ->columns(2),
 
@@ -190,7 +200,6 @@ class DivisionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                RevisionsAction::make(),
             ])
             ->bulkActions([
                 //

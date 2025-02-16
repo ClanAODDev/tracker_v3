@@ -3,19 +3,23 @@
 namespace App\Providers;
 
 use App\Models\Division;
+use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Note;
 use App\Models\Platoon;
+use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Policies\ApiTokenPolicy;
 use App\Policies\DivisionPolicy;
+use App\Policies\LeavePolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MemberRequestPolicy;
 use App\Policies\NotePolicy;
 use App\Policies\PlatoonPolicy;
+use App\Policies\RankActionPolicy;
 use App\Policies\SquadPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\UserPolicy;
@@ -31,15 +35,17 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Member::class => MemberPolicy::class,
-        Squad::class => SquadPolicy::class,
-        Platoon::class => PlatoonPolicy::class,
         Division::class => DivisionPolicy::class,
-        Note::class => NotePolicy::class,
-        User::class => UserPolicy::class,
+        Leave::class => LeavePolicy::class,
+        Member::class => MemberPolicy::class,
         MemberRequest::class => MemberRequestPolicy::class,
-        Ticket::class => TicketPolicy::class,
         NewAccessToken::class => ApiTokenPolicy::class,
+        Note::class => NotePolicy::class,
+        Platoon::class => PlatoonPolicy::class,
+        RankAction::class => RankActionPolicy::class,
+        Squad::class => SquadPolicy::class,
+        Ticket::class => TicketPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -50,7 +56,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('viewLogViewer', function (?User $user) {
-            return $user->isRole('admin');
+            if (auth()->check()) {
+                return $user->isRole('admin');
+            }
+
+            return false;
         });
     }
 }

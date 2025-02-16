@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SquadResource extends Resource
 {
@@ -17,7 +18,28 @@ class SquadResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division Organization';
+    protected static ?string $navigationGroup = 'Division';
+
+    protected static ?string $navigationParentItem = 'Platoons';
+
+    public static function canDeleteAny(): bool
+    {
+        return auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        if (auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader()) {
+            return true;
+        }
+
+        // allow platoon leader of squad to edit
+        if (auth()->user()->isPlatoonLeader() && $record->platoon->leader_id === auth()->user()->member_id) {
+            return true;
+        }
+
+        return false;
+    }
 
     public static function form(Form $form): Form
     {
@@ -33,6 +55,7 @@ class SquadResource extends Resource
                     ->relationship('platoon', 'name')
                     ->label('Platoon')
                     ->options(\App\Models\Platoon::whereDivisionId(auth()->user()->member->division_id)->pluck('name', 'id'))
+                    ->hiddenOn('edit')
                     ->required(),
                 Select::make('leader_id')
                     ->relationship('leader', 'name')
