@@ -42,8 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         NewAccessToken::class => ApiTokenPolicy::class,
         Note::class => NotePolicy::class,
         Platoon::class => PlatoonPolicy::class,
-        // @TODO
-        // RankAction::class => RankActionPolicy::class,
+        RankAction::class => RankActionPolicy::class,
         Squad::class => SquadPolicy::class,
         Ticket::class => TicketPolicy::class,
         User::class => UserPolicy::class,
