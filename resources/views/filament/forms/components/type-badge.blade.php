@@ -1,18 +1,21 @@
 @php
     $record = $getRecord();
+    $previousRank = $record->member->rank ?? null;
 
-    // Determine if the record is a Promotion or Demotion
-    $typeColor = $record->rank->isPromotion($record->member->rank)
-        ? 'success' // green for Promotion
-        : 'danger'; // red for Demotion
-
-    $typeIcon = $record->rank->isPromotion($record->member->rank)
-        ? 'heroicon-s-arrow-up'   // Up arrow for Promotion
-        : 'heroicon-s-arrow-down'; // Down arrow for Demotion
+    if (!$previousRank) {
+        $typeColor = 'primary';
+        $typeIcon = 'heroicon-s-plus-circle';
+        $badgeText = 'Recruitment';
+    } else {
+        $isPromotion = $record->rank->isPromotion($previousRank);
+        $typeColor = $isPromotion ? 'success' : 'danger';
+        $typeIcon = $isPromotion ? 'heroicon-s-arrow-up' : 'heroicon-s-arrow-down';
+        $badgeText = $isPromotion ? 'Promo' : 'Demo';
+    }
 @endphp
 
 <div class="flex flex-row items-center space-x-4">
     <x-filament::badge :color="$typeColor" class="text-sm font-semibold px-3 py-1" :icon="$typeIcon">
-        {{ $record->rank->isPromotion($record->member->rank) ? 'Promo' : 'Demo' }}
+        {{ $badgeText }}
     </x-filament::badge>
 </div>
