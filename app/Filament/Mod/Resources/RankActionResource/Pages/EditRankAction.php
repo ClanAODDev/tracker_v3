@@ -127,7 +127,7 @@ class EditRankAction extends EditRecord
                     fn (RankAction $action) => auth()->user()->canApproveOrDeny($action)
                         && $action->rank->value <= Rank::PRIVATE_FIRST_CLASS->value
                 )
-                ->hidden(fn (RankAction $action) => $action->accepted_at && ! $action->getRecord()->actionable())
+                ->hidden(fn (RankAction $action) => $action->accepted_at && ! $action->actionable())
                 ->action(function (RankAction $action) {
                     $action->approveAndAccept();
                     UpdateRankForMember::dispatch($action);
