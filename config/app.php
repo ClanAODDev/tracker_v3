@@ -53,7 +53,7 @@ return [
 
         'rank' => [
             // time allowed to accept a promotion
-            'promotion_acceptance_mins' => 5,
+            'promotion_acceptance_mins' => 1440,
 
             // minimum days before a new rank action can be created
             'rank_action_min_days' => 14,
