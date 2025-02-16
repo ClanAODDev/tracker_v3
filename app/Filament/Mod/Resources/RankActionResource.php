@@ -21,7 +21,6 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 
 class RankActionResource extends Resource
 {
@@ -30,42 +29,6 @@ class RankActionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
 
     protected static ?string $navigationGroup = 'Division';
-
-    public static function canEdit(Model $record): bool
-    {
-        $user = auth()->user();
-        $memberId = $user->member_id;
-
-        if ($record->member->division_id != $user->division_id) {
-            return false;
-        }
-
-        if ($record->requester_id == $memberId) {
-            return true;
-        }
-
-        if ($user->isPlatoonLeader()
-            && $record->member->platoon_id == $user->member->platoon_id
-            && $record->rank->value < $user->member->rank->value
-        ) {
-            return true;
-        }
-
-        if ($record->member_id == $memberId) {
-            return false;
-        }
-
-        if ($record->rank->value > $user->member->rank->value) {
-            return false;
-        }
-
-        return $user->isRole(['admin', 'sr_ldr']);
-    }
-
-    public static function canDeleteAny(): bool
-    {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
-    }
 
     public static function form(Form $form): Form
     {
