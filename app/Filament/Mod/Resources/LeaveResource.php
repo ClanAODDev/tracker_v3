@@ -29,15 +29,27 @@ class LeaveResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
+        static $badge = null;
+
+        if ($badge !== null) {
+            return $badge;
+        }
+
         if (auth()->user()->isRole(['admin', 'sr_ldr'])) {
-            return (string) static::$model::where('approver_id', null)
-                ->whereHas('member', function ($memberQuery) {
-                    $memberQuery->where('division_id', auth()->user()->member->division_id);
+            $divisionId = auth()->user()->member->division_id;
+
+            $badge = (string) static::$model::where('approver_id', null)
+                ->whereHas('member', function ($memberQuery) use ($divisionId) {
+                    $memberQuery->where('division_id', $divisionId);
                 })->count();
+
+            return $badge;
         }
 
         return null;
     }
+
+
 
     public static function form(Form $form): Form
     {
