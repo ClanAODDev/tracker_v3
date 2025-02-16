@@ -15,7 +15,7 @@ return new class extends Migration
             Schema::table('leaves', function (Blueprint $table) {
                 $table->dropColumn('extended');
             });
-        };
+        }
     }
 
     /**

@@ -41,7 +41,7 @@
     </div>
 @endif
 
-@if($division->outstandingAwardRequests && auth()->user()->isRole(['sr_ldr']))
+@if($division->outstandingAwardRequests && auth()->user()->isDivisionLeader())
     <div class="alert alert-default">
         <i class="fa fa-trophy fa-lg c-white"></i> Pending award requests for approval.
 

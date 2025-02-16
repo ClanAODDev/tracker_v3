@@ -148,7 +148,7 @@
     </li>
 
 
-    @if(Auth::user()->isRole(['admin', 'sr_ldr']))
+    @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
         <li class="nav-category">
             Admin
         </li>
@@ -157,13 +157,13 @@
                 <a href="{{ url('/log-viewer') }}">Log Viewer</a>
             </li>
             <li>
-                <a href="/admin">Admin CP</a>
+                <a href="/admin">Admin</a>
             </li>
         @endif
 
-        @if(Auth::user()->isRole(['sr_ldr', 'admin']))
+        @if(Auth::user()->isRole(['sr_ldr', 'admin', 'officer']))
             <li>
-                <a href="/mod">Mod CP</a>
+                <a href="/operations">Operations</a>
             </li>
         @endif
 
@@ -191,6 +191,12 @@
                 </a>
             </li>
 
+            <li class="{{ set_active(['help/docs/managing-rank']) }}">
+                <a href="{{ route('help.managing-rank') }}">
+                    Managing Rank
+                </a>
+            </li>
+
             @if(Auth::user()->isRole('admin'))
 
                 <li class="{{ set_active(['help/docs/admin/division-checklist']) }}">
@@ -205,11 +211,11 @@
                     </a>
                 </li>
 
-                <li class="{{ set_active(['help/docs/admin/sink']) }}">
-                    <a href="{{ route('help.admin.sink') }}">
-                        Kitchen Sink
-                    </a>
-                </li>
+{{--                <li class="{{ set_active(['help/docs/admin/sink']) }}">--}}
+{{--                    <a href="{{ route('help.admin.sink') }}">--}}
+{{--                        Kitchen Sink--}}
+{{--                    </a>--}}
+{{--                </li>--}}
 
                 {{--
                     -- End Admin documentation routes
@@ -219,11 +225,6 @@
 
 
         </ul>
-    </li>
-
-
-    <li class="{{ set_active('changelog') }}">
-        <a href="{{ route('changelog') }}">Changelog</a>
     </li>
 
     <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i

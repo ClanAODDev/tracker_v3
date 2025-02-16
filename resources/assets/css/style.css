@@ -2631,15 +2631,6 @@ h6 {
     color: #FFFFFF;
 }
 
-h1,
-.h1,
-h2,
-.h2,
-h3,
-.h3 {
-    margin-bottom: 20px;
-}
-
 .c-accent {
     color: #f6a821;
 }
@@ -4199,4 +4190,25 @@ pre.code-toolbar > .toolbar span:focus {
     50% {
         box-shadow: 0 2em 0 0;
     }
+}
+
+.markdown-content ul li {
+    margin-bottom: 10px;
+}
+
+.markdown-content h3 {
+    margin-top: 20px;
+}
+
+.markdown-content .heading-border {
+    border-bottom: 1px solid #3d404c;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    margin-top:20px;
+}
+
+
+.markdown-content h4.heading-border, h5.heading-border {
+    border: none;
+    padding-bottom:0px;
 }

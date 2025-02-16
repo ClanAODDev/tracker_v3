@@ -114,4 +114,6 @@ enum Rank: int implements HasColor, HasLabel
     {
         return $this->value > $previousRank->value;
     }
+
+    public static function canManageComments($targetRank): bool {}
 }

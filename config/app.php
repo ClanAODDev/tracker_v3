@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Rank;
 use Illuminate\Support\ServiceProvider;
 
 return [
@@ -49,6 +50,22 @@ return [
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
         'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
+
+        'rank' => [
+            // time allowed to accept a promotion
+            'promotion_acceptance_mins' => 1440,
+
+            // minimum days before a new rank action can be created
+            'rank_action_min_days' => 14,
+
+            // rank changes affect forums
+            'update_forums' => false,
+
+            // max ranks role can promote to
+            'max_squad_leader' => Rank::SPECIALIST,
+            'max_platoon_leader' => Rank::CORPORAL,
+            'max_division_leader' => Rank::STAFF_SERGEANT,
+        ],
     ],
 
     'dev_default_user' => env('DEV_DEFAULT_USER', 1),

@@ -30,11 +30,13 @@
         <li>
             <a href="{{ route('division.inactive-members', $division) }}">Manage Inactives</a>
         </li>
-        <li>
-            <a href="{{ route('leave.index', $division) }}">
-                Manage Leaves of Absence
-            </a>
-        </li>
+        @can('create', \App\Models\Leave::class)
+            <li>
+                <a href="{{ route('filament.mod.resources.leaves.index') }}">
+                    Manage Leaves of Absence
+                </a>
+            </li>
+        @endcan
 
         @can ('show', App\Models\Note::class)
             <li>
@@ -72,7 +74,7 @@
             <a href="{{ route('division.voice-report', $division) }}">Voice Comms Issues</a>
         </li>
 
-        <?php $file = Str::camel($division->name); ?>
+            <?php $file = Str::camel($division->name); ?>
         @if (file_exists(resource_path("views/division/reports/ingame-reports/{$file}.blade.php")))
             <li>
                 <a href="{{ route('division.ingame-reports', $division) }}">Ingame Report</a>

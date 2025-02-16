@@ -17,7 +17,7 @@
         @endslot
     @endcomponent
 
-    <div class="container-fluid">
+    <div class="container-fluid markdown-content">
         @include('help.md-partials.member-awards')
     </div>
 @endsection

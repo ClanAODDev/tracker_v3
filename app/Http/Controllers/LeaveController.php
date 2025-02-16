@@ -37,7 +37,7 @@ class LeaveController extends Controller
 
         $expiredLeave = (bool) \count($membersWithLeave->filter(fn ($member) => $member->leave->expired));
 
-        return view('leave.index', compact(
+        return view('division.leave', compact(
             'division',
             'membersWithLeave',
             'expiredLeave'

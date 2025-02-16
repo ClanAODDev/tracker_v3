@@ -53,12 +53,13 @@ class AwardController extends Controller
         ]);
 
         MemberAward::create([
+            'requester_id' => auth()->user()->member_id,
             'award_id' => $award->id,
             'member_id' => $validatedData['member_id'],
             'reason' => $validatedData['reason'],
         ]);
 
-        $this->showSuccessToast('Your request/recommendation has been submitted successfully.');
+        $this->showSuccessToast('Your award request has been submitted successfully.');
 
         return redirect()->back();
     }

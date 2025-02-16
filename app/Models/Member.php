@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Member.
@@ -25,8 +26,14 @@ class Member extends Model
 {
     use HasCustomAttributes;
     use HasFactory;
+    use Notifiable;
     use RecordsActivity;
     use SoftDeletes;
+
+    public function routeNotificationForBot()
+    {
+        return $this->discord;
+    }
 
     public const REGISTERED_USER = 2;
 

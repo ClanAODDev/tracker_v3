@@ -38,8 +38,6 @@ class Division extends Model
 
     /**
      * Settings to expose to Division API
-     *
-     * @var array
      */
     public array $exposedSettings = [
         'always_visible_in_discord',
@@ -47,8 +45,6 @@ class Division extends Model
 
     /**
      * Initial division settings to define on creation
-     *
-     * @var array
      */
     public array $defaultSettings = [
 

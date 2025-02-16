@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
@@ -10,11 +10,15 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class Promotion extends Notification implements ShouldQueue
+class NotifyDivisionMemberPromotion extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
-    public function __construct(private readonly string $member, private readonly string $rank) {}
+    public function __construct(
+        private readonly string $member,
+        private readonly string $rank,
+        private readonly bool $fromSync = false
+    ) {}
 
     public function via($notifiable)
     {
@@ -33,7 +37,11 @@ class Promotion extends Notification implements ShouldQueue
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get('chat_alerts.member_promoted'))
             ->thumbnail($notifiable->getLogoPath())
-            ->message(addslashes(":tools: **PROMOTION**\n{$this->member} is promoted to  `{$this->rank}`"))
+            ->message(addslashes(
+                $this->fromSync
+                    ? ":tools: **PROMOTION**\n{$this->member} rank is now `{$this->rank}`"
+                    : ":tools: **PROMOTION**\n{$this->member} has accepted a promotion to  `{$this->rank}`"
+            ))
             ->success()
             ->send();
     }

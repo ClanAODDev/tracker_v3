@@ -27,7 +27,8 @@ class MemberRemoved extends Notification implements ShouldQueue
         private readonly Member $member,
         private readonly User $remover,
         private readonly string $removalReason,
-        private readonly Squad $squad) {}
+        private readonly ?Squad $squad = null
+    ) {}
 
     /**
      * Get the notification's delivery channels.

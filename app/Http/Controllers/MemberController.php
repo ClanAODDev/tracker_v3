@@ -111,15 +111,15 @@ class MemberController extends Controller
          * omit divisions the member is already part-time in
          * omit member's primary division from list of available divisions.
          */
-        $divisions = Division::active()->get()->except(
-            $member->partTimeDivisions->pluck('id')->toArray()
-        )->filter(function ($division) use ($member) {
-            if ($member->division) {
-                return $division->id !== $member->division->id;
-            }
+        $excludedDivisionIds = array_merge(
+            $member->partTimeDivisions->pluck('id')->toArray(),
+            Division::whereIn('name', ['Floater', "Bluntz' Reserves"])->pluck('id')->toArray()
+        );
 
-            return $division;
-        });
+        $divisions = Division::active()
+            ->whereNotIn('id', $excludedDivisionIds)
+            ->when($member->division, fn ($query) => $query->where('id', '!=', $member->division->id))
+            ->get();
 
         return view('member.manage-part-time', compact('member', 'division', 'divisions'));
     }
@@ -151,7 +151,7 @@ class MemberController extends Controller
             ->whereActive(true)
             ->get();
 
-        $rankHistory = $member->rankActions()->get();
+        $rankHistory = $member->rankActions()->approvedAndAccepted()->get();
         $transfers = $member->transfers()->with('division')->get();
 
         $discordStatusLastSeen = sprintf(

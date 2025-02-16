@@ -41,9 +41,15 @@ class PlatoonPolicy
      */
     public function update(User $user, Platoon $platoon)
     {
-        if ($user->member->division_id === $platoon->division->id && !$user->isRole(['officer', 'member'])) {
+        if ($user->isDivisionLeader() && $user->member->division_id === $platoon->division->id) {
             return true;
         }
+
+        if ($platoon->leader_id == $user->member->clan_id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
