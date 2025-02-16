@@ -31,11 +31,13 @@ class EditMemberAward extends EditRecord
                 ])
                 ->label('Deny')
                 ->before(function (array $data, MemberAward $memberAward) {
-                    $memberAward->requester->notify(new NotifyRequesterAwardDenied(
-                        $memberAward->award->name,
-                        $memberAward->member->name,
-                        $data['reason']
-                    ));
+                    if ($memberAward->requester) {
+                        $memberAward->requester->notify(new NotifyRequesterAwardDenied(
+                            $memberAward->award->name,
+                            $memberAward->member->name,
+                            $data['reason']
+                        ));
+                    }
                 }),
 
             Action::make('approve')
