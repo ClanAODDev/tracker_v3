@@ -30,7 +30,7 @@ class BotChannelMessage
     /**
      * Target resolved on the notifiable
      */
-    private $allowableTargets = [
+    private array $allowableTargets = [
         'officers',     // division-specific
         'members',      // division-specific
         'help',         // #admin
@@ -119,7 +119,7 @@ class BotChannelMessage
     public function target($target): static
     {
         if (! in_array($target, $this->allowableTargets)) {
-            $targets = explode(', ', $this->allowableTargets);
+            $targets = implode(', ', $this->allowableTargets);
             throw new Exception(sprintf(
                 "Invalid channel target [%s]. Must be one of {$targets}",
                 $target
