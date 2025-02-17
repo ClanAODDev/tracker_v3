@@ -34,7 +34,7 @@ class BotChannelMessage
         'officers',     // division-specific
         'members',      // division-specific
         'help',         // #admin
-        'admin',         // #aod-msgt-up
+        'admin',        // #aod-msgt-up
     ];
 
     public function __construct(private $notifiable) {}

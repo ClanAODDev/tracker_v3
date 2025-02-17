@@ -117,7 +117,7 @@ enum Rank: int implements HasColor, HasLabel
         return $this->value > $previousRank->value;
     }
 
-    public function routeNotificationForMsgt()
+    public function routeNotificationForAdmin()
     {
         return config('app.aod.msgt-channel');
     }

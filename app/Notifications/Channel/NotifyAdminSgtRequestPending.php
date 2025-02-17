@@ -32,7 +32,7 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title('SGT+ Request')
-            ->target('msgt')
+            ->target('admin')
             ->message("{$this->requester} submitted a {$this->rank} request for {$this->member}")
             ->info()
             ->send();
