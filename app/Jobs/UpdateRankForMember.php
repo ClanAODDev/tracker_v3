@@ -35,11 +35,6 @@ class UpdateRankForMember implements ShouldQueue
             ]);
         }
 
-        // update the tracker
-        $this->action->member->update([
-            'rank' => $this->action->rank,
-        ]);
-
         if ($this->action->rank->isPromotion($this->action->member->rank)) {
             // notifying of promotion
             $this->action->member->division->notify(new NotifyDivisionMemberPromotion(
@@ -47,5 +42,10 @@ class UpdateRankForMember implements ShouldQueue
                 $this->action->rank->getLabel()
             ));
         }
+
+        // update the tracker
+        $this->action->member->update([
+            'rank' => $this->action->rank,
+        ]);
     }
 }
