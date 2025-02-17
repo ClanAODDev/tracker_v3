@@ -39,7 +39,7 @@ class NotifyDivisionMemberPromotion extends Notification implements ShouldQueue
             ->thumbnail($notifiable->getLogoPath())
             ->message(addslashes(
                 $this->fromSync
-                    ? ":tools: **PROMOTION**\n{$this->member} rank is now `{$this->rank}`"
+                    ? ":tools: **PROMOTION**\n{$this->member} rank is now `{$this->rank}` [Forum Sync Change]"
                     : ":tools: **PROMOTION**\n{$this->member} has accepted a promotion to  `{$this->rank}`"
             ))
             ->success()
