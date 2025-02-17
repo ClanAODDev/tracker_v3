@@ -48,10 +48,12 @@ class EditRankAction extends EditRecord
                     $action->deny($data['deny_reason']);
                 })
                 ->before(function (array $data, RankAction $rankAction) {
-                    $rankAction->requester->notify(new NotifyRequesterRankActionDenied(
-                        $rankAction,
-                        $data['deny_reason']
-                    ));
+                    if ($rankAction->requester) {
+                        $rankAction->requester->notify(new NotifyRequesterRankActionDenied(
+                            $rankAction,
+                            $data['deny_reason']
+                        ));
+                    }
                 }),
 
             Action::make('requeue')

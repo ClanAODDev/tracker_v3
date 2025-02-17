@@ -211,7 +211,9 @@ class RecruitingController extends Controller
         \App\Models\RankAction::create([
             'member_id' => $member->id,
             'rank' => $request->rank,
-        ]);
+            'justification' => 'New recruit',
+            'requester_id' => auth()->user()->member_id,
+        ])->approveAndAccept();
 
         \App\Models\Transfer::create([
             'member_id' => $member->id,
