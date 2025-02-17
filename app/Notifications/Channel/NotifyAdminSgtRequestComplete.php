@@ -6,10 +6,9 @@ use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
+class NotifyAdminSgtRequestComplete extends Notification
 {
     use Queueable;
     use RetryableNotification;
@@ -18,12 +17,15 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
      * Create a new notification instance.
      */
     public function __construct(
-        private readonly string $requester,
         private readonly string $member,
         private readonly string $rank,
-        private readonly string $rankActionId,
     ) {}
 
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
     public function via()
     {
         return [BotChannel::class];
@@ -35,11 +37,9 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
             ->title('SGT+ Request')
             ->target('admin')
             ->message(sprintf(
-                '%s submitted a `%s` request for %s. [View](https://tracker.clanaod.net/operations/rank-actions/%s/edit)',
-                $this->requester,
-                $this->rank,
+                "%s's promotion to `%s` was accepted, but additional permissions may be needed.",
                 $this->member,
-                $this->rankActionId
+                $this->rank,
             ))
             ->info()
             ->send();
