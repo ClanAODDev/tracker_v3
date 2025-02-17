@@ -35,8 +35,6 @@
         : 'heroicon-s-arrow-down'; // Down arrow for Demotion
 @endphp
 
-<div class="flex flex-row items-center space-x-4">
-    <x-filament::badge :color="$color" class="text-sm font-semibold px-3 py-1" :icon="$icon" :title="$title ?? null">
-        {{ $status }}
-    </x-filament::badge>
-</div>
+<x-filament::badge :color="$color" class="text-sm font-semibold px-3 py-1" :icon="$icon" :title="$title ?? null">
+    {{ $status }}
+</x-filament::badge>

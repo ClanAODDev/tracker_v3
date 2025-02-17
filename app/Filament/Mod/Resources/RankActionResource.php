@@ -45,9 +45,11 @@ class RankActionResource extends Resource
                                 ->disabledOn('edit'),
 
                             static::getJustificationFormField(),
+
                             View::make('content_display')
                                 ->view('filament.components.read-only-rich-text')
-                                ->hidden(fn ($record) => $record?->requester_id && $record->requester_id === auth()->user()->member_id)
+                                ->hidden(fn ($record
+                                ) => $record?->requester_id && $record->requester_id === auth()->user()->member_id)
                                 ->visibleOn('edit'),
                         ]),
                     Forms\Components\Fieldset::make('Metadata')
@@ -58,8 +60,15 @@ class RankActionResource extends Resource
                             ViewField::make('type')
                                 ->view('filament.forms.components.type-badge')
                                 ->viewData(['record']),
+                            Forms\Components\DateTimePicker::make('approved_at')
+                                ->visible(fn ($record) => $record->approved_at)
+                                ->readOnly(),
+                            Forms\Components\DateTimePicker::make('requested_at')
+                                ->visible(fn ($record) => $record->requested_at)
+                                ->readOnly(),
                         ])
                         ->grow(false),
+
                 ])->columnSpanFull(),
 
             ]);
