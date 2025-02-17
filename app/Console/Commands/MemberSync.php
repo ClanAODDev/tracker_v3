@@ -200,8 +200,8 @@ class MemberSync extends Command
                         $newDivision = $divisions[$newData[$key]];
                         $oldDivision = $divisions[$oldData[$key]];
 
-                        $newDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision->name));
-                        $oldDivision->notify(new \App\Notifications\MemberTransferred($member, $newDivision->name));
+                        $newDivision->notify(new \App\Notifications\Channel\NotifyDivisionMemberTransferred($member, $newDivision->name));
+                        $oldDivision->notify(new \App\Notifications\Channel\NotifyDivisionMemberTransferred($member, $newDivision->name));
 
                     }
 

@@ -1,38 +1,33 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
-use App\Models\Division;
 use App\Models\Member;
-use App\Models\Squad;
 use App\Models\User;
 use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberRemoved extends Notification implements ShouldQueue
+class NotifyDivisionNewExternalRecruit extends Notification implements ShouldQueue
 {
     use DivisionSettableNotification, Queueable, RetryableNotification;
 
-    private string $alertSetting = 'chat_alerts.member_removed';
+    private string $alertSetting = 'chat_alerts.member_created';
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(
-        private readonly Member $member,
-        private readonly User $remover,
-        private readonly string $removalReason,
-        private readonly ?Squad $squad = null
-    ) {}
+    public function __construct(private readonly Member $member, private readonly User $recruiter) {}
 
     /**
      * Get the notification's delivery channels.
      *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via()
@@ -44,49 +39,47 @@ class MemberRemoved extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function toBot(Division $notifiable)
+    public function toBot($notifiable)
     {
-        $remover = $this->remover;
-        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
+        $recruiter = $this->recruiter;
+        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $this->member->division->handle_id)->first();
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
-            ->thumbnail($notifiable->getLogoPath())->fields([
+            ->thumbnail($notifiable->getLogoPath())
+            ->fields([
                 [
-                    'name' => 'Member Removed',
+                    'name' => ':crossed_swords: New Member Recruited (External)',
                     'value' => sprintf(
-                        ':door: [%s](%s) [%d] was removed from %s by %s.',
+                        '%s from %s just recruited [%s](%s) into the %s Division!',
+                        $recruiter->name,
+                        $recruiter->member->division->name,
                         $this->member->name,
                         route('member', $this->member->getUrlParams()),
-                        $this->member->clan_id,
-                        $notifiable->name,
-                        $remover->name,
+                        $notifiable->name
                     ),
-                ],
-                [
-                    'name' => 'Reason',
-                    'value' => $this->removalReason,
                 ],
                 [
                     'name' => sprintf(
                         '%s / %s',
-                        $notifiable->locality('platoon'),
-                        $notifiable->locality('squad')
+                        $this->member->division->locality('platoon'),
+                        $this->member->division->locality('squad')
                     ),
-                    'value' => $this->squad ? sprintf(
+                    'value' => $this->member->squad ? sprintf(
                         '%s / %s',
-                        $this->squad->platoon->name,
-                        $this->squad->name,
+                        $this->member->platoon->name,
+                        $this->member->squad->name
                     ) : 'Unassigned',
                 ],
                 [
                     'name' => $handle->label ?? 'In-Game Handle',
                     'value' => $handle->pivot->value ?? 'N/A',
                 ],
-            ])->error()
+            ])
+            ->info()
             ->send();
     }
 }

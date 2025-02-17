@@ -3,11 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\Ticket;
-use App\Notifications\NotifyAdminTicketCreated;
-use App\Notifications\NotifyCallerTicketUpdated;
-use App\Notifications\NotifyNewTicketOwner;
-use App\Notifications\NotifyUserTicketCreated;
-use App\Notifications\TicketReaction;
+use App\Notifications\Channel\NotifyAdminTicketCreated;
+use App\Notifications\Channel\NotifyCallerTicketUpdated;
+use App\Notifications\DM\NotifyNewTicketOwner;
+use App\Notifications\DM\NotifyUserTicketCreated;
+use App\Notifications\React\TicketReaction;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTicket extends FormRequest

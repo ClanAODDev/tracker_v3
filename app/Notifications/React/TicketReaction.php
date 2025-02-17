@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\React;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotReactMessage;

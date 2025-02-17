@@ -2,7 +2,7 @@
 
 namespace App\Channels;
 
-use App\Notifications\NotifyAdminTicketCreated;
+use App\Notifications\Channel\NotifyAdminTicketCreated;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;

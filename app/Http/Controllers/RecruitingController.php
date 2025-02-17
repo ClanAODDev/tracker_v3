@@ -242,10 +242,10 @@ class RecruitingController extends Controller
     private function handleNotification(Request $request, $member, $division)
     {
         if ($division->id !== auth()->user()->member->division_id) {
-            return $division->notify(new \App\Notifications\NewExternalRecruit($member, auth()->user()));
+            return $division->notify(new \App\Notifications\Channel\NotifyDivisionNewExternalRecruit($member, auth()->user()));
         }
 
-        return $division->notify(new \App\Notifications\NewMemberRecruited($member, auth()->user()));
+        return $division->notify(new \App\Notifications\Channel\NotifyDivisionNewMemberRecruited($member, auth()->user()));
     }
 
     /**

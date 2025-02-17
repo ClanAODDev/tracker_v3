@@ -3,7 +3,7 @@
 namespace App\Filament\Mod\Resources\DivisionResource\Pages;
 
 use App\Filament\Mod\Resources\DivisionResource;
-use App\Notifications\DivisionEdited;
+use App\Notifications\Channel\NotifyDivisionSettingsEdited;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +24,7 @@ class EditDivision extends EditRecord
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $record->update($data);
-        $record->notify(new DivisionEdited(auth()->user()->name));
+        $record->notify(new NotifyDivisionSettingsEdited(auth()->user()->name));
 
         return $record;
     }
