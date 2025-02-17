@@ -70,6 +70,7 @@ class MemberResource extends Resource
                         ->default(null),
                     TextInput::make('discord_id')
                         ->string()
+                        ->readOnly()
                         ->default(null),
                 ])->columns(2),
                 Forms\Components\Section::make('Activity')->schema([
