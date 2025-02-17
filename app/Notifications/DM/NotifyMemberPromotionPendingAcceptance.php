@@ -5,7 +5,7 @@ namespace App\Notifications\DM;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Models\RankAction;
-use App\Traits\RetryableNotification;
+use App\Notifications\Channel\NotifyDivisionFailedPromotionAcceptance;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\URL;
 
 class NotifyMemberPromotionPendingAcceptance extends Notification implements ShouldQueue
 {
-    use Queueable, RetryableNotification;
+    use Queueable;
 
     public function __construct(private readonly RankAction $action) {}
 
@@ -26,6 +26,13 @@ class NotifyMemberPromotionPendingAcceptance extends Notification implements Sho
     public function via($notifiable)
     {
         return [BotChannel::class];
+    }
+
+    public function failed(): void
+    {
+        $this->action->member->division->notify(
+            new NotifyDivisionFailedPromotionAcceptance($this->action->member)
+        );
     }
 
     public function toBot($notifiable): array

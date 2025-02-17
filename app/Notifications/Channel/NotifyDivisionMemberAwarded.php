@@ -51,8 +51,7 @@ class NotifyDivisionMemberAwarded extends Notification implements ShouldQueue
                         $this->award->description,
                     ),
                 ],
-            ]
-            )
+            ])
             ->info()
             ->send();
     }
