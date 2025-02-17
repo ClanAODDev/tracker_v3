@@ -21,7 +21,7 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
         private readonly string $requester,
         private readonly string $member,
         private readonly string $rank,
-        private readonly string $rankActionId,
+        private readonly int $rankActionId,
     ) {}
 
     public function via()
@@ -35,7 +35,7 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
             ->title('SGT+ Request')
             ->target('admin')
             ->message(sprintf(
-                '%s submitted a `%s` request for %s. [View](https://tracker.clanaod.net/operations/rank-actions/%s/edit)',
+                '%s submitted a `%s` request for %s. [View Rank Action](https://tracker.clanaod.net/operations/rank-actions/%d/edit)',
                 $this->requester,
                 $this->rank,
                 $this->member,
