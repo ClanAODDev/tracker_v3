@@ -35,7 +35,7 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
             ->title('SGT+ Request')
             ->target('admin')
             ->message(sprintf(
-                "%s submitted a %s request for %s. [View](https://tracker.clanaod.net/operations/rank-actions/%d/edit)",
+                "%s submitted a %s request for %s. [View](https://tracker.clanaod.net/operations/rank-actions/%s/edit)",
                 $this->requester,
                 $this->rank,
                 $this->member,
