@@ -47,8 +47,7 @@ class RankActionResource extends Resource
                             static::getJustificationFormField(),
                             View::make('content_display')
                                 ->view('filament.components.read-only-rich-text')
-                                ->hidden(fn($record) => $record?->requester_id && $record->requester_id === auth()->user
-    ()->member_id)
+                                ->hidden(fn ($record) => $record?->requester_id && $record->requester_id === auth()->user()->member_id)
                                 ->visibleOn('edit'),
                         ]),
                     Forms\Components\Fieldset::make('Metadata')
@@ -96,10 +95,10 @@ class RankActionResource extends Resource
 
                 $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {
                     $memberQuery
-                        ->when($user->isPlatoonLeader(), fn($q) => $q->where('platoon_id', $member->platoon_id))
-                        ->when($user->isSquadLeader(), fn($q) => $q->where('squad_id', $member->squad_id))
-                        ->when($user->isDivisionLeader() && !$user->isRole('admin'),
-                            fn($q) => $q->where('division_id', $member->division_id));
+                        ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
+                        ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
+                        ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
+                            fn ($q) => $q->where('division_id', $member->division_id));
                 });
 
                 $query->where(function ($q) use ($userRank, $currentMemberId) {
@@ -127,20 +126,20 @@ class RankActionResource extends Resource
                             ->label('Rank')
                             ->options(function () {
                                 return collect(Rank::cases())
-                                    ->mapWithKeys(fn(Rank $rank) => [$rank->value => $rank->getLabel()])
+                                    ->mapWithKeys(fn (Rank $rank) => [$rank->value => $rank->getLabel()])
                                     ->toArray();
                             })
                             ->placeholder('Select a rank'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
-                        if (!empty($data['rank'])) {
+                        if (! empty($data['rank'])) {
                             $query->where('rank', $data['rank']);
                         }
 
                         return $query;
                     })
-                    ->indicateUsing(fn(array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
-                        ? 'Rank: '.Rank::from($data['rank'])->getLabel()
+                    ->indicateUsing(fn (array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
+                        ? 'Rank: ' . Rank::from($data['rank'])->getLabel()
                         : null),
                 Filter::make('requester_name')
                     ->form([
@@ -149,16 +148,16 @@ class RankActionResource extends Resource
                             ->placeholder('Enter requester name'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
-                        if (!empty($data['requester_name'])) {
+                        if (! empty($data['requester_name'])) {
                             return $query->whereHas('requester', function (Builder $query) use ($data) {
-                                $query->where('name', 'like', '%'.$data['requester_name'].'%');
+                                $query->where('name', 'like', '%' . $data['requester_name'] . '%');
                             });
                         }
 
                         return $query;
                     })->indicateUsing(function (array $data): ?string {
                         return isset($data['requester_name']) && $data['requester_name'] !== ''
-                            ? 'Requester: '.$data['requester_name']
+                            ? 'Requester: ' . $data['requester_name']
                             : null;
                     }),
             ])
@@ -211,27 +210,27 @@ class RankActionResource extends Resource
                         ->where('name', 'like', "%{$search}%")
                         ->where('id', '<>', $currentMember->id)
                         ->when($user->isSquadLeader(),
-                            fn(Builder $query) => $query->where('squad_id', $currentMember->squad_id)
+                            fn (Builder $query) => $query->where('squad_id', $currentMember->squad_id)
                                 ->where('rank', '<', $roleLimits['squadLeader'])
                         )
                         ->when($user->isPlatoonLeader(),
-                            fn(Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
+                            fn (Builder $query) => $query->where('platoon_id', $currentMember->platoon_id)
                                 ->where('rank', '<', $roleLimits['platoonLeader'])
                         )
-                        ->when($user->isDivisionLeader() && !$user->isRole('admin'),
-                            fn(Builder $query) => $query->where('division_id', $currentMember->division_id)
+                        ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
+                            fn (Builder $query) => $query->where('division_id', $currentMember->division_id)
                                 ->where('rank', '<', $roleLimits['divisionLeader'])
                         )
-                        ->when($user->isRole('admin'), fn(Builder $query) => $query->where('division_id', '!=', 0)
+                        ->when($user->isRole('admin'), fn (Builder $query) => $query->where('division_id', '!=', 0)
                         )
                         ->where('rank', '<=', $currentMember->rank->value)
                         ->limit(5)
                         ->get()
-                        ->mapWithKeys(fn($member) => [$member->id => $member->present()->rankName()])
+                        ->mapWithKeys(fn ($member) => [$member->id => $member->present()->rankName()])
                         ->toArray();
 
                 })
-                ->getOptionLabelUsing(fn($value): ?string => Member::find($value)?->present()->rankName())
+                ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName())
                 ->allowHtml()
                 ->helperText(function () {
                     $user = auth()->user();
@@ -248,14 +247,14 @@ class RankActionResource extends Resource
                 })
                 ->rules([
                     'required',
-                    fn(callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
+                    fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
                         $get,
                         $min_days_rank_action
                     ) {
                         $user = auth()->user();
                         $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
 
-                        if (!$skipRule) {
+                        if (! $skipRule) {
                             $exists = RankAction::where('member_id', $value)
                                 ->where('created_at', '>=', Carbon::now()->subDays($min_days_rank_action))
                                 ->exists();
@@ -303,9 +302,9 @@ class RankActionResource extends Resource
                         $member = Member::find($memberId);
                         if ($member) {
                             $allRanks = Rank::cases();
-                            usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                            usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
-                            if (!$user->isDivisionLeader()) {
+                            if (! $user->isDivisionLeader()) {
                                 $currentIndex = null;
                                 foreach ($allRanks as $index => $rank) {
                                     if ($rank->value === $member->rank->value) {
@@ -315,7 +314,7 @@ class RankActionResource extends Resource
                                 }
                                 if ($currentIndex !== null && isset($allRanks[$currentIndex + 1])) {
                                     $nextRank = $allRanks[$currentIndex + 1];
-                                    $promotionLabel = 'Promotion (next rank: '.ucwords($nextRank->getLabel()).')';
+                                    $promotionLabel = 'Promotion (next rank: ' . ucwords($nextRank->getLabel()) . ')';
                                 } else {
                                     $promotionLabel = 'Promotion (member is at the highest rank)';
                                 }
@@ -342,34 +341,34 @@ class RankActionResource extends Resource
                 ->options(function (callable $get) {
                     $member = Member::find($get('member_id'));
 
-                    if (!$member) {
+                    if (! $member) {
                         return [];
                     }
 
                     $allRanks = Rank::cases();
-                    usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                    usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
                     $options = array_reduce(
-                        array_filter($allRanks, fn(Rank $r) => $r->value < $member->rank->value),
-                        fn($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
+                        array_filter($allRanks, fn (Rank $r) => $r->value < $member->rank->value),
+                        fn ($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
                         []
                     );
 
                     return $options;
                 })
-                ->visible(fn(callable $get) => $get('action') === 'demotion')
-                ->required(fn(callable $get) => $get('action') === 'demotion'),
+                ->visible(fn (callable $get) => $get('action') === 'demotion')
+                ->required(fn (callable $get) => $get('action') === 'demotion'),
 
             Select::make('promotion_rank')
                 ->label('Promote to')
                 ->options(function (callable $get) {
                     $member = Member::find($get('member_id'));
-                    if (!$member) {
+                    if (! $member) {
                         return [];
                     }
 
                     $allRanks = Rank::cases();
-                    usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                    usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
                     $options = [];
                     foreach ($allRanks as $rank) {
@@ -380,8 +379,8 @@ class RankActionResource extends Resource
 
                     return $options;
                 })
-                ->visible(fn(callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader())
-                ->required(fn(callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
+                ->visible(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader())
+                ->required(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
 
         ];
     }
@@ -390,7 +389,7 @@ class RankActionResource extends Resource
     {
         return Forms\Components\RichEditor::make('justification')
             ->required()
-            ->hidden(fn($record) => $record?->requester_id && $record->requester_id !== auth()->user()->member_id)
+            ->hidden(fn ($record) => $record?->requester_id && $record->requester_id !== auth()->user()->member_id)
             ->columnSpanFull();
     }
 }

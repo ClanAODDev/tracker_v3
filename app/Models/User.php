@@ -252,7 +252,7 @@ class User extends Authenticatable implements FilamentUser
         }
 
         $roleMapping = [
-            'mod'   => ['admin', 'sr_ldr', 'officer'],
+            'mod' => ['admin', 'sr_ldr', 'officer'],
             'admin' => 'admin',
         ];
 

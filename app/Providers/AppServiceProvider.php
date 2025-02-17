@@ -7,10 +7,10 @@ use App\Models\Observers\TicketTypeObserver;
 use App\Models\TicketType;
 use App\Settings\UserSettings;
 use Auth;
+use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Schema;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(UserSettings::class, fn() => Auth::user()->settings());
+        $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());
 
         $this->app->bind(LogoutResponseContract::class, LogoutResponse::class);
     }
