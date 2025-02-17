@@ -59,7 +59,7 @@ return [
             'rank_action_min_days' => 14,
 
             // rank changes affect forums
-            'update_forums' => false,
+            'update_forums' => true,
 
             // max ranks role can promote to
             'max_squad_leader' => Rank::SPECIALIST,
