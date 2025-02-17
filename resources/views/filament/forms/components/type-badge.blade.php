@@ -1,14 +1,12 @@
 @php
     $record = $getRecord();
 
-    // Determine if the record is a Promotion or Demotion
     $typeColor = $record->rank->isPromotion($record->member->rank)
-        ? 'success' // green for Promotion
-        : 'danger'; // red for Demotion
-
+        ? 'success'
+        : 'danger';
     $typeIcon = $record->rank->isPromotion($record->member->rank)
-        ? 'heroicon-s-arrow-up'   // Up arrow for Promotion
-        : 'heroicon-s-arrow-down'; // Down arrow for Demotion
+        ? 'heroicon-s-arrow-up'
+        : 'heroicon-s-arrow-down';
 @endphp
 
 <div class="flex flex-row items-center space-x-4">
