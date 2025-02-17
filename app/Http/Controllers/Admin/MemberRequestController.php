@@ -6,10 +6,10 @@ use App\Enums\Position;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\MemberRequest;
-use App\Notifications\MemberNameChanged;
-use App\Notifications\MemberRequestApproved;
-use App\Notifications\MemberRequestHoldLifted;
-use App\Notifications\MemberRequestPutOnHold;
+use App\Notifications\Channel\NotifyDivisionMemberNameChanged;
+use App\Notifications\Channel\NotifyDivisionMemberRequestApproved;
+use App\Notifications\Channel\NotifyDivisionMemberRequestHoldLifted;
+use App\Notifications\Channel\NotifyDivisionMemberRequestPutOnHold;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -102,7 +102,7 @@ class MemberRequestController extends Controller
 
         $memberRequest->removeHold();
 
-        $memberRequest->division->notify(new MemberRequestHoldLifted(
+        $memberRequest->division->notify(new NotifyDivisionMemberRequestHoldLifted(
             $memberRequest,
             $memberRequest->member
         ));
@@ -116,7 +116,7 @@ class MemberRequestController extends Controller
 
         $memberRequest = MemberRequest::find($requestId);
 
-        $memberRequest->division->notify(new MemberRequestApproved(
+        $memberRequest->division->notify(new NotifyDivisionMemberRequestApproved(
             auth()->user(),
             $memberRequest->member
         ));
@@ -134,7 +134,7 @@ class MemberRequestController extends Controller
             ]);
 
         $memberRequest->division->notify(
-            new MemberNameChanged([
+            new NotifyDivisionMemberNameChanged([
                 'oldName' => $request->oldName,
                 'newName' => $request->newName,
             ])
@@ -166,7 +166,7 @@ class MemberRequestController extends Controller
 
         $memberRequest->placeOnHold($request->notes);
 
-        $memberRequest->division->notify(new MemberRequestPutOnHold(
+        $memberRequest->division->notify(new NotifyDivisionMemberRequestPutOnHold(
             $memberRequest,
             auth()->user(),
             $memberRequest->member

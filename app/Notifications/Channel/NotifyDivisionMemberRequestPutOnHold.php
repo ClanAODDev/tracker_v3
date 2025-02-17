@@ -1,41 +1,40 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
+use App\Models\MemberRequest;
 use App\Models\User;
-use App\Traits\DivisionSettableNotification;
-use App\Traits\RetryableNotification;
-use Exception;
+use App\Notifications\Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberRequestApproved extends Notification implements ShouldQueue
+class NotifyDivisionMemberRequestPutOnHold extends Notification implements ShouldQueue
 {
-    use DivisionSettableNotification, Queueable, RetryableNotification;
+    use Queueable;
 
-    private User $approver;
+    private MemberRequest $request;
 
     private Member $member;
 
-    private string $alertSetting = 'chat_alerts.member_approved';
+    private User $approver;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(User $approver, Member $member)
+    public function __construct(MemberRequest $memberRequest, User $approver, Member $member)
     {
-        $this->member = $member;
+        $this->request = $memberRequest;
         $this->approver = $approver;
+        $this->member = $member;
     }
 
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
      * @return array
      */
     public function via()
@@ -53,9 +52,8 @@ class MemberRequestApproved extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())
-            ->message(addslashes("**MEMBER STATUS REQUEST** - :thumbsup: A member status request for `{$this->member->name}` was approved by {$this->approver->name}!"))
+            ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$this->approver->name} for the following reason: `{$this->request->notes}`"))
             ->success()
             ->send();
     }

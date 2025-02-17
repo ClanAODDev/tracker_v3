@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Notifications\Exception;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

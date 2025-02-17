@@ -1,28 +1,17 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
-use App\Models\User;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NotifyNewTicketOwner extends Notification implements ShouldQueue
+class NotifyUserTicketCreated extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
-
-    private User $assignedOwner;
-
-    private User $oldUser;
-
-    public function __construct(User $assignedOwner, User $oldUser)
-    {
-        $this->assignedOwner = $assignedOwner;
-        $this->oldUser = $oldUser;
-    }
 
     /**
      * Get the notification's delivery channels.
@@ -42,11 +31,11 @@ class NotifyNewTicketOwner extends Notification implements ShouldQueue
      */
     public function toBot($ticket)
     {
-        $target = $this->assignedOwner->member->discord;
+        $ticketUrl = route('help.tickets.show', $ticket);
 
         return (new BotDMMessage)
-            ->to($target)
-            ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
+            ->to($ticket->caller->member->discord)
+            ->message("Your ticket ({$ticketUrl}) has been created. Any future updates to your ticket will be sent here.")
             ->send();
     }
 }

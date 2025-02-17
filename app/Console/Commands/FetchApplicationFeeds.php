@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Division;
-use App\Notifications\NewDivisionApplication;
+use App\Notifications\Channel\NotifyDivisionNewApplication;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -89,7 +89,7 @@ class FetchApplicationFeeds extends Command
             ], now()->addDays(45));
 
             if ($this->option('notify')) {
-                $division->notify(new NewDivisionApplication((string) $item->title, (string) $item->link));
+                $division->notify(new NotifyDivisionNewApplication((string) $item->title, (string) $item->link));
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
@@ -13,7 +13,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NewMemberRecruited extends Notification implements ShouldQueue
+class NotifyDivisionNewMemberRecruited extends Notification implements ShouldQueue
 {
     use DivisionSettableNotification, Queueable, RetryableNotification;
 

@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Notifications\Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class MemberRequestHoldLifted extends Notification implements ShouldQueue
+class NotifyDivisionMemberRequestHoldLifted extends Notification implements ShouldQueue
 {
     use Queueable;
 

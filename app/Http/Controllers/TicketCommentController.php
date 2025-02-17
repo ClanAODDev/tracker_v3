@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\TicketComment;
-use App\Notifications\NotifyAdminTicketUpdated;
-use App\Notifications\NotifyCallerTicketUpdated;
+use App\Notifications\Channel\NotifyAdminTicketUpdated;
+use App\Notifications\Channel\NotifyCallerTicketUpdated;
 use Illuminate\Http\Request;
 
 class TicketCommentController extends Controller
