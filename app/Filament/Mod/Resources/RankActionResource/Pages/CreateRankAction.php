@@ -67,7 +67,8 @@ class CreateRankAction extends CreateRecord
             $record->rank->notify(new NotifyAdminSgtRequestPending(
                 auth()->user()->name,
                 $record->member->name,
-                $record->rank->getLabel()
+                $record->rank->getLabel(),
+                $record->id
             ));
         }
 
