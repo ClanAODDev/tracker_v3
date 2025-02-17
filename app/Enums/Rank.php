@@ -119,7 +119,7 @@ enum Rank: int implements HasColor, HasLabel
 
     public function routeNotificationForMsgt()
     {
-        return config('app.aod.admin-ticketing-channel');
+        return config('app.aod.msgt-channel');
     }
 
     public static function canManageComments($targetRank): bool {}

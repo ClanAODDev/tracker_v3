@@ -50,6 +50,7 @@ return [
         'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
         'stream_calendar' => env('STREAM_CALENDAR_ID'),
         'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
+        'msgt-channel' => env('MSGT_CHANNEL', 'aod-msgt-up'),
 
         'rank' => [
             // time allowed to accept a promotion
