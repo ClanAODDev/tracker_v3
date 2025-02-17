@@ -11,7 +11,7 @@
                 </a>
             </li>
             @if(!auth()->user()->isRole('member'))
-                <li class="active">
+                <li>
                     <a class="nav-link active show" data-toggle="tab" href="#rank-tab"
                        aria-expanded="true"><i class="fa fa-trophy text-accent"></i> Rank</a>
                 </li>
