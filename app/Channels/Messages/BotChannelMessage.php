@@ -27,6 +27,16 @@ class BotChannelMessage
 
     private $thumbnail = [];
 
+    /**
+     * Target resolved on the notifiable
+     */
+    private $allowableTargets = [
+        'officers',     // division-specific
+        'members',      // division-specific
+        'help',         // #admin
+        'admin',         // #aod-msgt-up
+    ];
+
     public function __construct(private $notifiable) {}
 
     public function title($title)
@@ -108,9 +118,10 @@ class BotChannelMessage
      */
     public function target($target): static
     {
-        if (! in_array($target, ['officers', 'members', 'bot'])) {
+        if (! in_array($target, $this->allowableTargets)) {
+            $targets = explode(', ', $this->allowableTargets);
             throw new Exception(sprintf(
-                'Invalid channel target [%s]. Must be one of "officers" or "members"',
+                "Invalid channel target [%s]. Must be one of {$targets}",
                 $target
             ));
         }

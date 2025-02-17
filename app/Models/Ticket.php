@@ -74,7 +74,7 @@ class Ticket extends Model
     /**
      * @return mixed|Repository
      */
-    public function routeNotificationForBot()
+    public function routeNotificationForHelp()
     {
         return config('app.aod.admin-ticketing-channel');
     }

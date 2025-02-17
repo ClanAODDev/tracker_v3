@@ -5,11 +5,13 @@ namespace App\Enums;
 use App\Traits\EnumOptions;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 enum Rank: int implements HasColor, HasLabel
 {
     use EnumOptions;
+    use Notifiable;
 
     case RECRUIT = 1;
     case CADET = 2;
@@ -113,6 +115,11 @@ enum Rank: int implements HasColor, HasLabel
     public function isPromotion(Rank $previousRank): bool
     {
         return $this->value > $previousRank->value;
+    }
+
+    public function routeNotificationForMsgt()
+    {
+        return config('app.aod.admin-ticketing-channel');
     }
 
     public static function canManageComments($targetRank): bool {}

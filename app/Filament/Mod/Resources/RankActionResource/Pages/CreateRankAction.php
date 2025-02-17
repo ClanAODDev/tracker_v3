@@ -8,6 +8,7 @@ use App\Jobs\UpdateRankForMember;
 use App\Models\Member;
 use App\Models\RankAction;
 use App\Models\User;
+use App\Notifications\Channel\NotifyAdminSgtRequestPending;
 use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
@@ -61,6 +62,14 @@ class CreateRankAction extends CreateRecord
     {
         /** @var RankAction $record */
         $record = $this->record;
+
+        if ($record->rank->value > Rank::SERGEANT->value && $record->rank->isPromotion($record->member->rank)) {
+            $record->rank->notify(new NotifyAdminSgtRequestPending(
+                auth()->user()->name,
+                $record->member->name,
+                $record->rank->getLabel()
+            ));
+        }
 
         if ($record->isApproved()) {
             if ($record->rank->isPromotion($record->member->rank)) {
