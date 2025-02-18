@@ -35,7 +35,7 @@ class BotChannel
             $message = $notification->toArray($notifiable);
         }
 
-        if (! $message) {
+        if (!$message) {
             // user settings prevented us from continuing, or there's no one to notify
             return;
         }
@@ -53,19 +53,14 @@ class BotChannel
 
         $request = new Request('POST', $url, $headers, json_encode($message['body']));
 
-        try {
-            $response = $this->client->send($request, ['verify' => false]);
 
-            // kinda gross, let's refactor at some point
-            if ($notification instanceof NotifyAdminTicketCreated) {
-                // we need the resulting message id for additional actions
-                $response = json_decode($response->getBody());
-                $notifiable->update(['external_message_id' => $response->id]);
-            }
+        $response = $this->client->send($request, ['verify' => false]);
 
-        } catch (ServerException $exception) {
-            \Log::error($exception->getMessage());
-            \Log::error('Failing payload: ' . json_encode($message['body']));
+        // kinda gross, let's refactor at some point
+        if ($notification instanceof NotifyAdminTicketCreated) {
+            // we need the resulting message id for additional actions
+            $response = json_decode($response->getBody());
+            $notifiable->update(['external_message_id' => $response->id]);
         }
     }
 }
