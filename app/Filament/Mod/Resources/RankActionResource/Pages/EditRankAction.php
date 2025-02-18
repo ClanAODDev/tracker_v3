@@ -22,7 +22,8 @@ class EditRankAction extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        unset($data['status'], $data['type']);
+        // don't allow form changes
+        unset($data['status'], $data['type'], $data['approved_at'], $data['accepted_at']);
 
         return $data;
     }
