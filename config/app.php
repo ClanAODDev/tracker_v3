@@ -57,7 +57,7 @@ return [
             'promotion_acceptance_mins' => 1440,
 
             // minimum days before a new rank action can be created
-            'rank_action_min_days' => 14,
+            'rank_action_min_days' => 7,
 
             // rank changes affect forums
             'update_forums' => true,
