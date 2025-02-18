@@ -15,7 +15,9 @@ class BotChannelMessage
 
     private const INFO = 10181046;
 
-    private $fields = [];
+    private const WARNING = 16776960;
+
+    private array $fields = [];
 
     private mixed $message;
 
@@ -61,6 +63,13 @@ class BotChannelMessage
     public function info(): static
     {
         $this->color = self::INFO;
+
+        return $this;
+    }
+
+    public function warning(): static
+    {
+        $this->color = self::WARNING;
 
         return $this;
     }

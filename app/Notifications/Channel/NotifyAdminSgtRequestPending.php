@@ -41,7 +41,7 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
                 $this->member,
                 $this->rankActionId
             ))
-            ->info()
+            ->warning()
             ->send();
     }
 }
