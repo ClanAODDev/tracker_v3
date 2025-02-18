@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\AOD\Traits\Procedureable;
+use App\Enums\Rank;
 use App\Models\RankAction;
+use App\Notifications\Channel\NotifyAdminSgtRequestComplete;
 use App\Notifications\Channel\NotifyDivisionMemberPromotion;
 use App\Traits\RetryableJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,6 +35,14 @@ class UpdateRankForMember implements ShouldQueue
                 $this->action->member->clan_id,
                 $this->action->rank->getLabel(),
             ]);
+        }
+
+
+        if ($this->action->rank->value >= Rank::SERGEANT->value) {
+            $this->action->rank->notify(new NotifyAdminSgtRequestComplete(
+                $this->action->member->name,
+                $this->action->rank->getLabel()
+            ));
         }
 
         if ($this->action->rank->isPromotion($this->action->member->rank)) {

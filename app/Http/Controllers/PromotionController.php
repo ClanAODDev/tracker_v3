@@ -31,18 +31,6 @@ class PromotionController extends Controller
 
         $this->showSuccessToast('You have accepted your promotion! Your rank will be updated shortly.');
 
-        $member->division->notify(new NotifyDivisionMemberPromotion(
-            $member->name,
-            $action->rank->getLabel()
-        ));
-
-        if ($action->rank->value >= Rank::SERGEANT->value) {
-            $action->rank->notify(new NotifyAdminSgtRequestComplete(
-                $action->member->name,
-                $action->rank->getLabel()
-            ));
-        }
-
         UpdateRankForMember::dispatch($action);
 
         return redirect()->route('home');
