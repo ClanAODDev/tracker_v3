@@ -63,7 +63,11 @@ class CreateRankAction extends CreateRecord
         /** @var RankAction $record */
         $record = $this->record;
 
-        if ($record->rank->value > Rank::SERGEANT->value && $record->rank->isPromotion($record->member->rank)) {
+        if (
+            $record->rank->value >= Rank::SERGEANT->value &&
+            $record->rank->value < Rank::FIRST_SERGEANT->value &&
+            $record->rank->isPromotion($record->member->rank)
+        ) {
             $record->rank->notify(new NotifyAdminSgtRequestPending(
                 auth()->user()->name,
                 $record->member->name,
