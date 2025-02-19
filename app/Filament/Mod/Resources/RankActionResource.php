@@ -22,6 +22,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Parallax\FilamentComments\Tables\Actions\CommentsAction;
 
 class RankActionResource extends Resource
 {
@@ -30,6 +31,19 @@ class RankActionResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-user-plus';
 
     protected static ?string $navigationGroup = 'Division';
+
+    public static function getNavigationBadge(): ?string
+    {
+        $user = auth()->user();
+
+        // Make sure to apply the same user-based filtering as the table
+        $pendingCount = static::getModel()::query()
+            ->forUser($user)
+            ->pending()
+            ->count();
+
+        return $pendingCount ? (string) $pendingCount : null;
+    }
 
     public static function form(Form $form): Form
     {
@@ -83,8 +97,10 @@ class RankActionResource extends Resource
                     ->sortable()
                     ->badge(),
                 Tables\Columns\ViewColumn::make('status')
+                    ->toggleable()
                     ->view('filament.forms.components.status-badge'),
                 Tables\Columns\ViewColumn::make('type')
+                    ->toggleable()
                     ->view('filament.forms.components.type-badge'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
@@ -145,7 +161,7 @@ class RankActionResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 CommentsAction::make()
-                    ->visible(fn(RankAction $action) => auth()->user()->canManageCommentsFor($action)),
+                    ->visible(fn (RankAction $action) => auth()->user()->canManageCommentsFor($action)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -193,7 +209,9 @@ class RankActionResource extends Resource
                         ->eligibleForRankAction($user, $search)
                         ->limit(5)
                         ->get()
-                        ->mapWithKeys(fn($member) => [$member->id => $member->present()->rankName()])
+                        ->mapWithKeys(fn ($member) => [
+                            $member->id => $member->present()->rankName(),
+                        ])
                         ->toArray();
 
                 })
@@ -203,14 +221,12 @@ class RankActionResource extends Resource
                     $user = auth()->user();
                     $append = 'You cannot select yourself or others of greater rank.';
 
-                    $message = match (true) {
+                    return match (true) {
                         $user->isSquadLeader() => "Only squad members up to PFC can be selected. {$append}",
                         $user->isPlatoonLeader() => "Only platoon members up to LCpl can be selected. {$append}",
                         $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
                         default => $append,
                     };
-
-                    return $message;
                 })
                 ->rules([
                     'required',
