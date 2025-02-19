@@ -97,36 +97,8 @@ class RankActionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(function (Builder $query) {
-                $user = auth()->user();
-                $member = $user->member;
-                $userRank = $member->rank->value;
-                $currentMemberId = $member->id;
-
-                $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {
-                    $memberQuery
-                        ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
-                        ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
-                        ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
-                            fn ($q) => $q->where('division_id', $member->division_id));
-                });
-
-                $query->where(function ($q) use ($userRank, $currentMemberId) {
-                    $q->where(function ($q1) use ($userRank, $currentMemberId) {
-                        $q1->where('rank', '<', $userRank)
-                            ->where('member_id', '<>', $currentMemberId);
-                    })
-                        ->orWhere('requester_id', $currentMemberId);
-                });
-
-                $query->where(function ($q) {
-                    $q->whereNull('approved_at')
-                        ->whereNull('denied_at')
-                        ->orWhere(function ($q2) {
-                            $q2->whereNotNull('approved_at')
-                                ->whereNull('accepted_at')
-                                ->whereNull('declined_at');
-                        });
-                });
+                $query->with(['member', 'requester']);
+                $query->forUser(auth()->user())->pending();
             })
             ->filters([
                 Filter::make('rank_filter')
