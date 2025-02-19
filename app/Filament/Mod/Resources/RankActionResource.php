@@ -36,7 +36,6 @@ class RankActionResource extends Resource
     {
         $user = auth()->user();
 
-        // Make sure to apply the same user-based filtering as the table
         $pendingCount = static::getModel()::query()
             ->forUser($user)
             ->pending()

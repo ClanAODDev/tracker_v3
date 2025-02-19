@@ -13,7 +13,7 @@
         $icon = 'heroicon-s-x-circle'; // ❌ (or any denial icon)
     } elseif (is_null($record?->approved_at)) {
         // Pending approval
-        $status = 'Approval Needed';
+        $status = 'Approval';
         $title = 'Waiting for Approval';
         $color = 'warning';
         $icon = 'heroicon-s-clock'; // ⏳
