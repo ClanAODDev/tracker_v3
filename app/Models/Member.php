@@ -8,6 +8,7 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -351,5 +352,38 @@ class Member extends Model
                 . PHP_EOL
                 . implode(PHP_EOL, $properties),
         ];
+    }
+
+    public function scopeEligibleForRankAction(Builder $query, $user, ?string $search = null): Builder
+    {
+        $currentMember = $user->member;
+        $roleLimits = [
+            'squadLeader' => config('app.aod.rank.max_squad_leader'),
+            'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
+            'divisionLeader' => config('app.aod.rank.max_division_leader'),
+        ];
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        return $query
+            ->where('id', '<>', $currentMember->id)
+            ->when($user->isSquadLeader(), fn (Builder $query) => $query
+                ->where('squad_id', $currentMember->squad_id)
+                ->where('rank', '<', $roleLimits['squadLeader'])
+            )
+            ->when($user->isPlatoonLeader(), fn (Builder $query) => $query
+                ->where('platoon_id', $currentMember->platoon_id)
+                ->where('rank', '<', $roleLimits['platoonLeader'])
+            )
+            ->when($user->isDivisionLeader() && ! $user->isRole('admin'), fn (Builder $query) => $query
+                ->where('division_id', $currentMember->division_id)
+                ->where('rank', '<', $roleLimits['divisionLeader'])
+            )
+            ->when($user->isRole('admin'), fn (Builder $query) => $query
+                ->where('division_id', '!=', 0)
+            )
+            ->where('rank', '<=', $currentMember->rank->value);
     }
 }
