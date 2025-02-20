@@ -106,4 +106,42 @@ class RankAction extends Model
             $this->declined_at,
         ])->filter()->isNotEmpty();
     }
+
+    public function scopeForUser(Builder $query, $user): Builder
+    {
+        $member = $user->member;
+        $userRank = $member->rank->value;
+        $currentMemberId = $member->id;
+
+        $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {
+            $memberQuery
+                ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
+                ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
+                ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
+                    fn ($q) => $q->where('division_id', $member->division_id));
+        });
+
+        $query->where(function ($q) use ($userRank, $currentMemberId) {
+            $q->where(function ($q1) use ($userRank, $currentMemberId) {
+                $q1->where('rank', '<', $userRank)
+                    ->where('member_id', '<>', $currentMemberId);
+            })
+                ->orWhere('requester_id', $currentMemberId);
+        });
+
+        return $query;
+    }
+
+    public function scopePending(Builder $query): Builder
+    {
+        return $query->where(function ($query) {
+            $query->whereNull('approved_at')
+                ->whereNull('denied_at')
+                ->orWhere(function ($query) {
+                    $query->whereNotNull('approved_at')
+                        ->whereNull('accepted_at')
+                        ->whereNull('declined_at');
+                });
+        });
+    }
 }

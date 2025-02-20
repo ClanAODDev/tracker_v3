@@ -41,7 +41,7 @@ class NotifyAdminSgtRequestComplete extends Notification
                 $this->member,
                 $this->rank,
             ))
-            ->info()
+            ->success()
             ->send();
     }
 }
