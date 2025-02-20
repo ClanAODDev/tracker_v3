@@ -40,7 +40,7 @@ class NotifyMemberAwardReceived extends Notification implements ShouldQueue
             ->message(sprintf(
                 'Congratulations - you received an award! %s. This award has been added to [your profile](%s)',
                 $this->award,
-                route('member.show', $notifiable->getUrlParams())
+                route('member', $notifiable->getUrlParams())
             ))
             ->send();
     }
