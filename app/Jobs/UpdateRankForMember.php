@@ -54,8 +54,12 @@ class UpdateRankForMember implements ShouldQueue
         }
 
         // update the tracker
+        $isPromotion = $this->action->rank->isPromotion($this->action->member->rank);
+
         $this->action->member->update([
             'rank' => $this->action->rank,
+            'last_promoted_at' => $isPromotion ? now() : $this->action->member->last_promoted_at,
         ]);
+
     }
 }
