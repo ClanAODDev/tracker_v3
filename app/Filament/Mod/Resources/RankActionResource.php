@@ -385,7 +385,7 @@ class RankActionResource extends Resource
         return Forms\Components\RichEditor::make('justification')
             ->required()
             ->hidden(fn ($record) => ($record?->requester_id && $record->requester_id !== auth()->user()->member_id)
-                || $record->accepted_at
+                || $record?->accepted_at
             )
             ->columnSpanFull();
     }
