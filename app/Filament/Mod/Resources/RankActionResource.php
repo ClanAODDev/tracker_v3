@@ -53,6 +53,14 @@ class RankActionResource extends Resource
                     Forms\Components\Section::make('Rank Action Details')
                         ->hiddenOn('create')
                         ->schema([
+                            Forms\Components\Fieldset::make('Dates')->schema([
+                                Forms\Components\DateTimePicker::make('approved_at')
+                                    ->visible(fn ($record) => $record->approved_at)
+                                    ->readOnly(),
+                                Forms\Components\DateTimePicker::make('created_at')
+                                    ->label('Requested At')
+                                    ->readOnly(),
+                            ]),
                             Select::make('rank')
                                 ->options(Rank::class)
                                 ->disabledOn('edit'),
@@ -73,12 +81,6 @@ class RankActionResource extends Resource
                             ViewField::make('type')
                                 ->view('filament.forms.components.type-badge')
                                 ->viewData(['record']),
-                            Forms\Components\DateTimePicker::make('approved_at')
-                                ->visible(fn ($record) => $record->approved_at)
-                                ->readOnly(),
-                            Forms\Components\DateTimePicker::make('requested_at')
-                                ->visible(fn ($record) => $record->requested_at)
-                                ->readOnly(),
                         ])
                         ->grow(false),
 
@@ -113,50 +115,61 @@ class RankActionResource extends Resource
             ])->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(function (Builder $query) {
                 $query->with(['member', 'requester']);
-                $query->forUser(auth()->user())->pending();
+                $query->forUser(auth()->user());
             })
-            ->filters([
-                Filter::make('rank_filter')
-                    ->form([
-                        Select::make('rank')
-                            ->label('Rank')
-                            ->options(function () {
-                                return collect(Rank::cases())
-                                    ->mapWithKeys(fn (Rank $rank) => [$rank->value => $rank->getLabel()])
-                                    ->toArray();
-                            })
-                            ->placeholder('Select a rank'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        if (! empty($data['rank'])) {
-                            $query->where('rank', $data['rank']);
-                        }
+            ->filters(
+                [
+                    Filter::make('rank_filter')
+                        ->form([
+                            Select::make('rank')
+                                ->label('Rank')
+                                ->options(function () {
+                                    return collect(Rank::cases())
+                                        ->mapWithKeys(fn (Rank $rank) => [$rank->value => $rank->getLabel()])
+                                        ->toArray();
+                                })
+                                ->placeholder('Select a rank'),
+                        ])
+                        ->query(function (Builder $query, array $data): Builder {
+                            if (! empty($data['rank'])) {
+                                $query->where('rank', $data['rank']);
+                            }
 
-                        return $query;
-                    })
-                    ->indicateUsing(fn (array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
-                        ? 'Rank: ' . Rank::from($data['rank'])->getLabel()
-                        : null),
-                Filter::make('requester_name')
-                    ->form([
-                        TextInput::make('requester_name')
-                            ->label('Requester Name')
-                            ->placeholder('Enter requester name'),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        if (! empty($data['requester_name'])) {
-                            return $query->whereHas('requester', function (Builder $query) use ($data) {
-                                $query->where('name', 'like', '%' . $data['requester_name'] . '%');
-                            });
-                        }
+                            return $query;
+                        })
+                        ->indicateUsing(fn (array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
+                            ? 'Rank: ' . Rank::from($data['rank'])->getLabel()
+                            : null),
 
-                        return $query;
-                    })->indicateUsing(function (array $data): ?string {
-                        return isset($data['requester_name']) && $data['requester_name'] !== ''
-                            ? 'Requester: ' . $data['requester_name']
-                            : null;
-                    }),
-            ])
+                    Filter::make('requester_name')
+                        ->form([
+                            TextInput::make('requester_name')
+                                ->label('Requester Name')
+                                ->placeholder('Enter requester name'),
+                        ])
+                        ->query(function (Builder $query, array $data): Builder {
+                            if (! empty($data['requester_name'])) {
+                                return $query->whereHas('requester', function (Builder $query) use ($data) {
+                                    $query->where('name', 'like', '%' . $data['requester_name'] . '%');
+                                });
+                            }
+
+                            return $query;
+                        })
+                        ->indicateUsing(function (array $data): ?string {
+                            return isset($data['requester_name']) && $data['requester_name'] !== ''
+                                ? 'Requester: ' . $data['requester_name']
+                                : null;
+                        }),
+
+                    Tables\Filters\Filter::make('needs approval')
+                        ->query(function (Builder $query, array $data): Builder {
+                            return empty($data) ? $query : $query->where('approved_at', null);
+                        })
+                        ->default(),
+                ]
+
+            )
             ->actions([
                 Tables\Actions\EditAction::make(),
                 CommentsAction::make()
@@ -371,7 +384,9 @@ class RankActionResource extends Resource
     {
         return Forms\Components\RichEditor::make('justification')
             ->required()
-            ->hidden(fn ($record) => $record?->requester_id && $record->requester_id !== auth()->user()->member_id)
+            ->hidden(fn ($record) => ($record?->requester_id && $record->requester_id !== auth()->user()->member_id)
+                || $record->accepted_at
+            )
             ->columnSpanFull();
     }
 }
