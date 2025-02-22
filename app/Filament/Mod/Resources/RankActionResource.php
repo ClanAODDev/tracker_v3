@@ -55,11 +55,11 @@ class RankActionResource extends Resource
                         ->schema([
                             Forms\Components\Fieldset::make('Dates')->schema([
                                 Forms\Components\DateTimePicker::make('approved_at')
-                                    ->visible(fn($record) => $record->approved_at)
+                                    ->visible(fn ($record) => $record->approved_at)
                                     ->readOnly(),
                                 Forms\Components\DateTimePicker::make('created_at')
                                     ->label('Requested At')
-                                    ->readOnly()
+                                    ->readOnly(),
                             ]),
                             Select::make('rank')
                                 ->options(Rank::class)
