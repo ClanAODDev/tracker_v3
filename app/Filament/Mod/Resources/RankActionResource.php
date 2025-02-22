@@ -53,6 +53,14 @@ class RankActionResource extends Resource
                     Forms\Components\Section::make('Rank Action Details')
                         ->hiddenOn('create')
                         ->schema([
+                            Forms\Components\Fieldset::make('Dates')->schema([
+                                Forms\Components\DateTimePicker::make('approved_at')
+                                    ->visible(fn($record) => $record->approved_at)
+                                    ->readOnly(),
+                                Forms\Components\DateTimePicker::make('created_at')
+                                    ->label('Requested At')
+                                    ->readOnly()
+                            ]),
                             Select::make('rank')
                                 ->options(Rank::class)
                                 ->disabledOn('edit'),
@@ -73,12 +81,6 @@ class RankActionResource extends Resource
                             ViewField::make('type')
                                 ->view('filament.forms.components.type-badge')
                                 ->viewData(['record']),
-                            Forms\Components\DateTimePicker::make('approved_at')
-                                ->visible(fn ($record) => $record->approved_at)
-                                ->readOnly(),
-                            Forms\Components\DateTimePicker::make('requested_at')
-                                ->visible(fn ($record) => $record->requested_at)
-                                ->readOnly(),
                         ])
                         ->grow(false),
 
