@@ -35,7 +35,7 @@ class SquadPolicy
             return true;
         }
 
-        if ($squad->platoon_id = $user->member->platoon_id && $user->isPlatoonLeader()) {
+        if ($squad->platoon_id === $user->member->platoon_id && $user->isPlatoonLeader()) {
             return true;
         }
 
