@@ -162,9 +162,11 @@ class RankActionResource extends Resource
                                 : null;
                         }),
 
-                    Tables\Filters\Filter::make('needs approval')
+                    Tables\Filters\Filter::make('Incomplete')
                         ->query(function (Builder $query, array $data): Builder {
-                            return empty($data) ? $query : $query->where('approved_at', null);
+                            return empty($data) ? $query : $query
+                                ->where('approved_at', null)
+                                ->orWhere('accepted_at', null);
                         })
                         ->default(),
                 ]
