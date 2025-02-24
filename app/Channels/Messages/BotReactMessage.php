@@ -43,7 +43,7 @@ class BotReactMessage
             throw new Exception('A status {assigned, resolved, rejected} must be defined');
         }
 
-        $routeTarget = $this->notifiable->routeNotificationFor('bot');
+        $routeTarget = $this->notifiable->routeNotificationFor('help');
         if (! isset($routeTarget)) {
             throw new Exception('A channel target must be defined');
         }
