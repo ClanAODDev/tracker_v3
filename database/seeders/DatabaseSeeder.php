@@ -12,6 +12,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        if (app()->environment('production')) {
+            $this->error('This seeder should not be run in production!');
+        }
+
         Model::unguard();
 
         $this->call([
