@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes();
         $schedule->command(MemberSync::class)->hourly();
         $schedule->command(DivisionCensus::class)->weekly();
-        $schedule->command(PartTimeMemberCleanup::class)->weekly();
+        $schedule->command(PartTimeMemberCleanup::class)->daily();
     }
 
     /**
