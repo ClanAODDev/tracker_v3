@@ -24,7 +24,7 @@ class MemberFactory extends Factory
     {
         return [
             'name' => $this->faker->userName,
-            'clan_id' => $this->faker->numberBetween(10000, 99999),
+            'clan_id' => $this->faker->numberBetween(1000, 999999),
             'rank' => Rank::from(rand(1, 10)),
             'position' => Position::MEMBER,
             'division_id' => Division::factory(),
@@ -43,27 +43,27 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::MEMBER,
-                'rank' => rand(\App\Enums\Rank::RECRUIT->value, \App\Enums\Rank::SPECIALIST->value),
+                'rank' => rand(Rank::RECRUIT->value, Rank::SPECIALIST->value),
             ];
         });
     }
 
-    public function squadLeader(): self
+    public function ofTypeSquadLeader(): self
     {
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::SQUAD_LEADER,
-                'rank' => rand(\App\Enums\Rank::TRAINER->value, \App\Enums\Rank::CORPORAL->value),
+                'rank' => rand(Rank::TRAINER->value, Rank::CORPORAL->value),
             ];
         });
     }
 
-    public function platoonLeader(): self
+    public function ofTypePlatoonLeader(): self
     {
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::PLATOON_LEADER,
-                'rank' => rand(\App\Enums\Rank::LANCE_CORPORAL->value, \App\Enums\Rank::SERGEANT->value),
+                'rank' => rand(Rank::LANCE_CORPORAL->value, Rank::SERGEANT->value),
             ];
         });
     }
@@ -73,7 +73,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::COMMANDING_OFFICER,
-                'rank' => \App\Enums\Rank::SERGEANT,
+                'rank' => Rank::SERGEANT,
             ];
         });
     }
@@ -83,7 +83,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::EXECUTIVE_OFFICER,
-                'rank' => \App\Enums\Rank::SERGEANT,
+                'rank' => Rank::SERGEANT,
             ];
         });
     }
