@@ -24,7 +24,7 @@ The best way to contribute code changes is by way of a PR. First, make a fork of
 
 #### Building the laravel environment
 
-You will need to ensure, at a minimum, that you have [Docker](https://www.docker.com/) 
+You will need to ensure, at a minimum, that you have [Docker](https://www.docker.com/) or Docker Desktop
 installed. If you don't have PHP installed (or don't want to), you can use the following `docker run` command to get 
 things built.
 
@@ -63,21 +63,14 @@ sail artisan migrate:fresh \
 && sail artisan db:seed --class=ClanSeeder
 ```
 
-Create a user for yourself to authenticate as. Users must be associated with a member who has an active division.
-
 Since we are using Sail for docker configuration, we can use it to interact with the container rather than exec'ing into it manually.
 
 ```shell
 sail tinker
 ```
 
-Then we need to provision an admin user for ourselves. The Tracker will automatically log into the first (and only) user.
-
-```php
-\App\Models\User::factory([
-    'name' => 'Your name'
-])->admin()->create();
-```
+The Tracker will automatically log into the first (and only) user, which has been created as part of the seeding 
+process. Additional users will be created for testing purposes.
 
 
 ### Enforcing code style
