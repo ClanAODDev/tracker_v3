@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Tags\HasTags;
 
 /**
  * Class Member.
@@ -30,6 +31,7 @@ class Member extends Model
     use Notifiable;
     use RecordsActivity;
     use SoftDeletes;
+    use HasTags;
 
     public function routeNotificationForBot()
     {
@@ -85,6 +87,13 @@ class Member extends Model
     {
         return $this->hasMany(RankAction::class, 'member_id')
             ->orderBy('created_at', 'desc');
+    }
+
+    public function officerTags()
+    {
+        return $this
+            ->morphToMany(OfficerTags::class, 'taggable', 'taggables', null, 'tag_id')
+            ->orderBy('order_column');
     }
 
     public function notes()
