@@ -13,15 +13,18 @@ use App\Models\Division;
 use App\Models\Member;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Tags\Tag;
 
 class MemberResource extends Resource
 {
@@ -54,6 +57,8 @@ class MemberResource extends Resource
     {
         return $form
             ->schema([
+                SpatieTagsInput::make('tags')
+                    ->type('officer-tags'),
                 TextInput::make('name')
                     ->required()
                     ->readOnly()
@@ -123,6 +128,8 @@ class MemberResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                SpatieTagsColumn::make('tags')
+                    ->type('officer-tags')->toggleable()->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('clan_id')
                     ->numeric()
                     ->sortable(),
@@ -178,6 +185,14 @@ class MemberResource extends Resource
                     })->indicateUsing(function (array $data) {
                         return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
                     }),
+                SelectFilter::make('tags')
+                    ->multiple()
+                    ->options(Tag::getWithType('officer-tags')->pluck('name', 'name'))
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->when($data['values'], function (Builder $query, $data): Builder {
+                            return $query->withAnyTags(array_values($data), 'officer-tags');
+                        });
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

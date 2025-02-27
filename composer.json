@@ -34,7 +34,8 @@
         "mansoor/filament-versionable": "^0.0.12",
         "ext-simplexml": "*",
         "moox/jobs": "^3.3",
-        "parallax/filament-comments": "^1.4"
+        "parallax/filament-comments": "^1.4",
+        "filament/spatie-laravel-tags-plugin": "^3.2"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
