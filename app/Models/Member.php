@@ -369,6 +369,10 @@ class Member extends Model
 
         return $query
             ->where('id', '<>', $currentMember->id)
+            ->when($user->isMember(), fn (Builder $query) => $query
+                ->where('squad_id', $currentMember->squad_id)
+                ->where('rank', '<', $roleLimits['squadLeader'])
+            )
             ->when($user->isSquadLeader(), fn (Builder $query) => $query
                 ->where('squad_id', $currentMember->squad_id)
                 ->where('rank', '<', $roleLimits['squadLeader'])

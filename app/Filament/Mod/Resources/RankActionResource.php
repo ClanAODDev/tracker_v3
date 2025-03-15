@@ -210,13 +210,6 @@ class RankActionResource extends Resource
                 ->hiddenOn('edit')
                 ->searchable()
                 ->getSearchResultsUsing(function (string $search): array {
-                    $roleLimits = [
-                        'squadLeader' => config('app.aod.rank.max_squad_leader'),
-                        'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
-                        'divisionLeader' => config('app.aod.rank.max_division_leader'),
-                    ];
-
-                    $currentMember = auth()->user()->member;
                     $user = auth()->user();
 
                     return Member::query()

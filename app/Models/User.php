@@ -141,6 +141,15 @@ class User extends Authenticatable implements FilamentUser
             : $roleName === $role;
     }
 
+    public function isMember(): bool
+    {
+        if (! $member = $this->member) {
+            return false;
+        }
+
+        return $member->position == Position::MEMBER;
+    }
+
     public function isSquadLeader(): bool
     {
         if (! $member = $this->member) {
