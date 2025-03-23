@@ -165,8 +165,11 @@ class RankActionResource extends Resource
                     Tables\Filters\Filter::make('Incomplete')
                         ->query(function (Builder $query, array $data): Builder {
                             return empty($data) ? $query : $query
-                                ->where('approved_at', null)
-                                ->orWhere('accepted_at', null);
+                                ->where('denied_at', null)
+                                ->where(function (Builder $query) {
+                                    $query->where('approved_at', null)
+                                        ->orWhere('accepted_at', null);
+                                });
                         })
                         ->default(),
                 ]
