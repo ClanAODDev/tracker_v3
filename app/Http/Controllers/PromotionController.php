@@ -14,9 +14,9 @@ use Illuminate\Routing\Exceptions\InvalidSignatureException;
 
 class PromotionController extends Controller
 {
-    public function confirm(Request $request, Member $member, RankAction $action)
+    public function confirm(Member $member, RankAction $action)
     {
-        if (! $request->hasValidSignature() || $action->resolved()) {
+        if (! request()->hasValidSignature() || $action->resolved()) {
             throw new InvalidSignatureException;
         }
 
@@ -27,21 +27,29 @@ class PromotionController extends Controller
 
     public function accept(Member $member, RankAction $action)
     {
+        if ($action->resolved()) {
+            return redirect()->route('home');
+        }
+
         $action->accept();
 
         $this->showSuccessToast('You have accepted your promotion! Your rank will be updated shortly.');
 
         UpdateRankForMember::dispatch($action);
 
-        return redirect()->route('home');
+        return view('member.promotion-confirm', compact('member', 'action'));
     }
 
     public function decline(Member $member, RankAction $action)
     {
+        if ($action->resolved()) {
+            return redirect()->route('home');
+        }
+
         $action->decline();
 
         $this->showInfoToast('You have declined your promotion.');
 
-        return redirect()->route('home');
+        return view('member.promotion-confirm', compact('member', 'action'));
     }
 }
