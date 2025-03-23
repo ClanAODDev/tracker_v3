@@ -22,13 +22,13 @@
                 <div class="panel-body m-b-n p-0">
 
                     @if (request()->routeIs('promotion.accept'))
-                        <p>Your promotion has been accepted, and will reflect on the forums and discord</p>
-                        <p>Congratulations</p>
-                        <p>You may close this window</p>
+                        <p>Your promotion has been accepted, and will reflect on the forums and discord momentarily.</p>
+                        <p>Congratulations, thank you for your contributions to the AOD community!</p>
+                        <p>You may now close this window</p>
                     @else
                         <p>Your promotion has been declined. No change will be made, but a record will be kept
                             should you change your mind in the future.</p>
-                        <p>You may close this window</p>
+                        <p>You may now close this window</p>
                     @endif
 
                 </div>
