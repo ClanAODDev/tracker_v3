@@ -29,8 +29,6 @@ class PromotionController extends Controller
 
         $action->accept();
 
-        $this->showSuccessToast('You have accepted your promotion! Your rank will be updated shortly.');
-
         UpdateRankForMember::dispatch($action);
 
         return view('member.promotion-confirm', compact('member', 'action'));
@@ -43,8 +41,6 @@ class PromotionController extends Controller
         }
 
         $action->decline();
-
-        $this->showInfoToast('You have declined your promotion.');
 
         return view('member.promotion-confirm', compact('member', 'action'));
     }
