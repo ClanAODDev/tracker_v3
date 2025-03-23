@@ -65,6 +65,8 @@ class Division extends Model
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
         ],
 
+        'max_platoon_leader_rank' => Rank::PRIVATE_FIRST_CLASS,
+
         'chat_alerts' => [
             'division_edited' => false,
             'member_approved' => false,
