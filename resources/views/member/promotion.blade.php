@@ -20,7 +20,6 @@
 
             <div class="panel panel-filled m-t-md">
                 <div class="panel-body m-b-n p-0">
-
                     <p>The Angels of Death congratulate you on your achievements and contributions to the
                         community. Please indicate whether you choose to accept the rank of:</p>
                     <p class="c-white text-uppercase"><strong>{{ $action->rank->getLabel() }}</strong></p>
@@ -31,9 +30,7 @@
                             leadership on next steps.
                         </p>
                     @endif
-
                     <p class="text-muted">This page will expire {{ $expirationTime }}.</p>
-
                 </div>
             </div>
             <div class="pull-left">
