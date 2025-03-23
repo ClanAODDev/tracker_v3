@@ -35,7 +35,7 @@ class BotChannel
             $message = $notification->toArray($notifiable);
         }
 
-        if (!$message) {
+        if (! $message) {
             // user settings prevented us from continuing, or there's no one to notify
             return;
         }
@@ -52,7 +52,6 @@ class BotChannel
         }
 
         $request = new Request('POST', $url, $headers, json_encode($message['body']));
-
 
         $response = $this->client->send($request, ['verify' => false]);
 
