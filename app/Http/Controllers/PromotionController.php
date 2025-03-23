@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Rank;
 use App\Jobs\UpdateRankForMember;
 use App\Models\Member;
 use App\Models\RankAction;
-use App\Notifications\Channel\NotifyAdminSgtRequestComplete;
-use App\Notifications\Channel\NotifyDivisionMemberPromotion;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
 
 class PromotionController extends Controller
