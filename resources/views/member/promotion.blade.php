@@ -20,10 +20,6 @@
 
             <div class="panel panel-filled m-t-md">
                 <div class="panel-body m-b-n p-0">
-                @if(request()->has('accepted'))
-                <-- -->
-                @elseif(request()->has('declined'))
-                @else
                     <p>The Angels of Death congratulate you on your achievements and contributions to the
                         community. Please indicate whether you choose to accept the rank of:</p>
                     <p class="c-white text-uppercase"><strong>{{ $action->rank->getLabel() }}</strong></p>
@@ -35,7 +31,6 @@
                         </p>
                     @endif
                     <p class="text-muted">This page will expire {{ $expirationTime }}.</p>
-                @endif
                 </div>
             </div>
             <div class="pull-left">
