@@ -17,7 +17,8 @@ class NotifyRequesterAwardApproved extends Notification implements ShouldQueue
     public function __construct(
         private readonly string $award,
         private readonly string $member,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the notification's delivery channels.
