@@ -105,10 +105,12 @@ class ClanSeeder extends Seeder
 
     protected function generateDivisionLeadership($division): void
     {
+        // a commander
         Member::factory()->ofTypeCommander()->create([
             'division_id' => $division->id,
         ]);
 
+        // some XOs
         Member::factory()->count(2)->ofTypeExecutiveOfficer()->create([
             'division_id' => $division->id,
         ]);
