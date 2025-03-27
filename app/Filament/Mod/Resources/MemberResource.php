@@ -78,46 +78,41 @@ class MemberResource extends Resource
                 ])->columns(2),
                 Forms\Components\Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
-                        ->maxLength(255)
-                        ->readOnly()
-                        ->default(null),
+                        ->disabled(),
                     TextInput::make('discord')
-                        ->readOnly()
-                        ->maxLength(191)
-                        ->default(null),
+                        ->disabled(),
                     TextInput::make('discord_id')
-                        ->string()
-                        ->readOnly()
-                        ->default(null),
-                ])->columns(),
+                        ->disabled(),
+                ])->columns(3),
                 Forms\Components\Section::make('Activity')->schema([
                     Forms\Components\DateTimePicker::make('last_voice_activity')->readOnly(),
                     Forms\Components\DateTimePicker::make('last_activity')->readOnly(),
                 ])->columns(),
 
                 Forms\Components\Section::make('Dates')->schema([
-                    Forms\Components\DateTimePicker::make('join_date')->readOnly(),
-                    Forms\Components\DateTimePicker::make('last_promoted_at')->readOnly(),
-                    Forms\Components\DateTimePicker::make('last_trained_at')->readOnly(),
+                    Forms\Components\DateTimePicker::make('join_date')->disabled(),
+                    Forms\Components\DateTimePicker::make('last_promoted_at')->disabled(),
+                    Forms\Components\DateTimePicker::make('last_trained_at')->disabled(),
                 ])->columns(3),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([
-                        Forms\Components\Toggle::make('flagged_for_inactivity')->required(),
+                        Forms\Components\Toggle::make('flagged_for_inactivity')
+                            ->disabled(),
                         Forms\Components\Toggle::make('privacy_flag')
-                            ->required(),
+                            ->disabled(),
                         Forms\Components\Toggle::make('allow_pm')
-                            ->required(),
+                            ->disabled(),
                     ])->columns(3),
 
                     Forms\Components\Section::make('Misc')->schema([
                         TextInput::make('posts')
-                            ->readOnly()
+                            ->disabled()
                             ->numeric()
                             ->default(0),
                         Forms\Components\Textarea::make('groups')
-                            ->readOnly(),
-                    ]),
+                            ->disabled(),
+                    ])->columns(),
                 ]),
             ]);
     }

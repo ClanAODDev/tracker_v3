@@ -50,6 +50,39 @@ CREATE TABLE `activities` (
   KEY `activities_division_id_index` (`division_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `award_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `award_member` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `award_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `requester_id` int(11) DEFAULT NULL,
+  `approved` tinyint(1) NOT NULL DEFAULT 0,
+  `reason` varchar(191) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `awards`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `awards` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `description` varchar(191) NOT NULL,
+  `image` varchar(191) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 100,
+  `division_id` int(11) DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'For awards given during certain periods of time',
+  `allow_request` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `instructions` varchar(191) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `censuses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -115,6 +148,9 @@ CREATE TABLE `divisions` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `shutdown_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
+  `logo` varchar(191) DEFAULT NULL,
+  `site_content` text DEFAULT NULL,
+  `show_on_site` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `divisions_abbreviation_unique` (`abbreviation`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
@@ -132,6 +168,22 @@ CREATE TABLE `failed_jobs` (
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `filament_comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `filament_comments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `subject_type` varchar(191) NOT NULL,
+  `subject_id` bigint(20) unsigned NOT NULL,
+  `comment` longtext NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `filament_comments_subject_type_subject_id_index` (`subject_type`,`subject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `handle_member`;
@@ -164,6 +216,91 @@ CREATE TABLE `handles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `job_batch_manager`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `job_batch_manager` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `batch_id` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `total_jobs` int(11) NOT NULL,
+  `pending_jobs` int(11) NOT NULL,
+  `failed_jobs` int(11) NOT NULL,
+  `failed_job_ids` longtext NOT NULL,
+  `options` mediumtext DEFAULT NULL,
+  `cancelled_at` timestamp NULL DEFAULT NULL,
+  `finished_at` timestamp NULL DEFAULT NULL,
+  `status` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `job_batches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `job_batches` (
+  `id` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `total_jobs` int(11) NOT NULL,
+  `pending_jobs` int(11) NOT NULL,
+  `failed_jobs` int(11) NOT NULL,
+  `failed_job_ids` longtext NOT NULL,
+  `options` mediumtext DEFAULT NULL,
+  `cancelled_at` int(11) DEFAULT NULL,
+  `created_at` int(11) NOT NULL,
+  `finished_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `job_manager`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `job_manager` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `job_id` varchar(191) NOT NULL,
+  `name` varchar(191) DEFAULT NULL,
+  `queue` varchar(191) DEFAULT NULL,
+  `connection` varchar(191) DEFAULT NULL,
+  `available_at` timestamp NULL DEFAULT NULL,
+  `started_at` timestamp NULL DEFAULT NULL,
+  `finished_at` timestamp NULL DEFAULT NULL,
+  `failed` tinyint(1) DEFAULT NULL,
+  `attempt` int(11) NOT NULL,
+  `progress` int(11) DEFAULT NULL,
+  `exception_message` text DEFAULT NULL,
+  `status` varchar(191) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `job_queue_worker_id` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `job_manager_job_id_index` (`job_id`),
+  KEY `job_manager_queue_index` (`queue`),
+  KEY `job_manager_status_index` (`status`),
+  KEY `job_manager_job_queue_worker_id_foreign` (`job_queue_worker_id`),
+  CONSTRAINT `job_manager_job_queue_worker_id_foreign` FOREIGN KEY (`job_queue_worker_id`) REFERENCES `job_queue_workers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `job_queue_workers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `job_queue_workers` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `worker_pid` varchar(191) NOT NULL,
+  `queue` varchar(191) NOT NULL,
+  `connection` varchar(191) NOT NULL,
+  `worker_server` varchar(191) DEFAULT NULL,
+  `supervisor` varchar(191) DEFAULT NULL,
+  `status` varchar(191) NOT NULL,
+  `started_at` timestamp NULL DEFAULT NULL,
+  `stopped_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `job_queue_workers_worker_pid_index` (`worker_pid`),
+  KEY `job_queue_workers_queue_index` (`queue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `jobs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -191,7 +328,6 @@ CREATE TABLE `leaves` (
   `reason` enum('military','medical','education','travel','other') NOT NULL DEFAULT 'other',
   `note_id` int(10) unsigned NOT NULL,
   `end_date` datetime NOT NULL,
-  `extended` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -228,10 +364,10 @@ CREATE TABLE `members` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `clan_id` mediumint(8) unsigned NOT NULL,
-  `rank_id` tinyint(4) NOT NULL DEFAULT 1,
+  `rank` tinyint(4) NOT NULL DEFAULT 1,
   `platoon_id` mediumint(9) NOT NULL,
   `squad_id` mediumint(9) NOT NULL,
-  `position_id` tinyint(4) NOT NULL DEFAULT 1,
+  `position` tinyint(4) NOT NULL DEFAULT 1,
   `division_id` int(10) unsigned NOT NULL,
   `ts_unique_id` varchar(255) DEFAULT NULL,
   `discord` varchar(191) DEFAULT NULL,
@@ -324,7 +460,7 @@ CREATE TABLE `platoons` (
   `name` varchar(255) NOT NULL,
   `logo` varchar(255) DEFAULT NULL,
   `division_id` mediumint(9) NOT NULL,
-  `leader_id` mediumint(9) NULL,
+  `leader_id` mediumint(9) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -351,10 +487,16 @@ DROP TABLE IF EXISTS `rank_actions`;
 CREATE TABLE `rank_actions` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
-  `rank_id` int(11) NOT NULL,
-  `division_id` int(11) NOT NULL,
+  `rank` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `justification` text DEFAULT NULL,
+  `requester_id` int(11) DEFAULT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `accepted_at` datetime DEFAULT NULL,
+  `denied_at` datetime DEFAULT NULL,
+  `deny_reason` text DEFAULT NULL,
+  `declined_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -436,7 +578,7 @@ CREATE TABLE `tickets` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `state` enum('new','assigned','resolved','rejected') NOT NULL DEFAULT 'new',
   `ticket_type_id` int(10) unsigned NOT NULL DEFAULT 1,
-  `message_id` char(36) NOT NULL,
+  `external_message_id` char(36) NOT NULL,
   `description` longtext NOT NULL,
   `caller_id` int(10) unsigned NOT NULL,
   `owner_id` int(10) unsigned DEFAULT NULL,
@@ -479,6 +621,23 @@ CREATE TABLE `users` (
   UNIQUE KEY `users_email_unique` (`email`),
   UNIQUE KEY `users_member_id_unique` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `versions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `versions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned DEFAULT NULL,
+  `versionable_type` varchar(191) NOT NULL,
+  `versionable_id` bigint(20) unsigned NOT NULL,
+  `contents` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`contents`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `approver_id` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `versions_versionable_type_versionable_id_index` (`versionable_type`,`versionable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -586,3 +745,37 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (113,'2024_03_21_08
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (114,'2024_04_07_184652_add_voice_census',49);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (115,'2024_05_06_141608_fix_failed_jobs_table',49);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (116,'2024_05_26_110404_add_indexes_to_members',49);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (117,'2019_05_31_042934_create_versions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (118,'2019_12_14_000001_add_expiration_to_personal_access_tokens_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (119,'2020_07_03_163707_add_deleted_at_to_versions',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (120,'2021_03_18_160750_make_user_nullable',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (121,'2024_07_22_155600_add_logo_column_to_divisions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (122,'2024_08_02_165416_rename_message_id_column_on_tickets_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (123,'2024_08_07_105630_rename_position_id_on_members_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (124,'2024_08_18_111718_rename_rank_id_on_members_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (125,'2024_08_18_111718_rename_rank_id_on_rank_actions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (126,'2024_12_21_100301_add_award_and_member_award_tables',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (127,'2024_12_23_131406_drop_division_from_rank_actions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (128,'2024_12_23_131648_drop_expires_at_column_from_award_member_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (129,'2024_12_26_113523_add_site_content_to_divisions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (130,'2024_12_28_171739_add_show_on_site_boolean_column_to_divisions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (131,'2024_12_30_100223_fix_platoon_and_squad_leader_id_columns',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (132,'2025_01_07_210846_add_approved_column_to_versions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (133,'2025_01_19_135739_migrate_notifications_to_voice',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (134,'2025_01_19_214404_set_default_voice_alerts_channels',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (135,'2025_01_26_045100_01_create_job_manager_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (136,'2025_01_26_045100_02_create_job_batch_manager_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (137,'2025_01_26_045100_03_create_job_queue_workers_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (138,'2025_01_26_045100_04_add_foreigns_to_job_manager_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (139,'2025_01_26_045111_create_job_batches_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (140,'2025_01_26_092341_create_application_items_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (141,'2025_01_28_102035_delete_application_items_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (142,'2025_01_30_104749_rename_rank_changed_setting_to_member_promoted',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (143,'2025_02_01_001217_remove_extended_column_on_leaves_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (144,'2025_02_02_133919_add_self_documenting_fields_to_rank_actions',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (145,'2025_02_03_065919_add_requester_to_award_member',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (146,'2025_02_03_094402_add_instructions_field_to_awards',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (147,'2025_02_03_145619_create_filament_comments_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (148,'2025_02_03_145620_add_index_to_subject',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (149,'2025_02_05_142418_add_denied_at_and_deny_reason_to_rank_actions',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (150,'2025_02_05_162521_add_max_pl_rank_approval_setting_to_divisions',50);

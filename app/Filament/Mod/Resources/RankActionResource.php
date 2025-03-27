@@ -165,8 +165,11 @@ class RankActionResource extends Resource
                     Tables\Filters\Filter::make('Incomplete')
                         ->query(function (Builder $query, array $data): Builder {
                             return empty($data) ? $query : $query
-                                ->where('approved_at', null)
-                                ->orWhere('accepted_at', null);
+                                ->where('denied_at', null)
+                                ->where(function (Builder $query) {
+                                    $query->where('approved_at', null)
+                                        ->orWhere('accepted_at', null);
+                                });
                         })
                         ->default(),
                 ]
@@ -210,13 +213,6 @@ class RankActionResource extends Resource
                 ->hiddenOn('edit')
                 ->searchable()
                 ->getSearchResultsUsing(function (string $search): array {
-                    $roleLimits = [
-                        'squadLeader' => config('app.aod.rank.max_squad_leader'),
-                        'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
-                        'divisionLeader' => config('app.aod.rank.max_division_leader'),
-                    ];
-
-                    $currentMember = auth()->user()->member;
                     $user = auth()->user();
 
                     return Member::query()

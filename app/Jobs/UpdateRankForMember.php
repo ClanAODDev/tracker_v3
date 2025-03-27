@@ -37,7 +37,6 @@ class UpdateRankForMember implements ShouldQueue
             ]);
         }
 
-
         if ($this->action->rank->value >= Rank::SERGEANT->value) {
             $this->action->rank->notify(new NotifyAdminSgtRequestComplete(
                 $this->action->member->name,

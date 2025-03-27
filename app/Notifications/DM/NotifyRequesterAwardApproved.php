@@ -4,6 +4,7 @@ namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
+use App\Notifications\Channel\NotifyDivisionFailedAwardApprovalNotice;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -27,6 +28,17 @@ class NotifyRequesterAwardApproved extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         return [BotChannel::class];
+    }
+
+    public function failed(): void
+    {
+        $this->action->member->division->notify(
+            new NotifyDivisionFailedAwardApprovalNotice(
+                $this->action->member,
+                $this->member,
+                $this->award
+            )
+        );
     }
 
     /**
