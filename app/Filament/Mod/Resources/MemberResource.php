@@ -78,17 +78,11 @@ class MemberResource extends Resource
                 ])->columns(2),
                 Forms\Components\Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
-                        ->maxLength(255)
-                        ->readOnly()
-                        ->default(null),
+                        ->disabled(),
                     TextInput::make('discord')
-                        ->readOnly()
-                        ->maxLength(191)
-                        ->default(null),
+                        ->disabled(),
                     TextInput::make('discord_id')
-                        ->string()
-                        ->readOnly()
-                        ->default(null),
+                        ->disabled(),
                 ])->columns(),
                 Forms\Components\Section::make('Activity')->schema([
                     Forms\Components\DateTimePicker::make('last_voice_activity')->readOnly(),
