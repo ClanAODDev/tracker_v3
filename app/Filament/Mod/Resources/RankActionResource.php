@@ -184,16 +184,15 @@ class RankActionResource extends Resource
                 CommentsAction::make()->visible(fn(RankAction $action
                 ) => auth()->user()->canManageCommentsFor($action)),
                 DeleteAction::make()->label('Cancel')
-                    ->visible(fn(RankAction $action) => (
-                            auth()->user()->isDivisionLeader()
-                            || auth()->user()->isRole('admin')
-                            || auth()->id() == $action->requester_id
-                        ) && $action->actionable()
+                    ->hidden(fn(RankAction $action) => !$action->actionable())
+                    ->visible(fn(RankAction $action) => auth()->user()->isDivisionLeader()
+                        || auth()->user()->isRole('admin')
+                        || auth()->id() == $action->requester_id
                     ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    //                                        Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
