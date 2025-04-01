@@ -33,17 +33,25 @@ class EditRankAction extends EditRecord
         $commentsAction = [CommentsAction::make()];
 
         $actions = [
+            Actions\DeleteAction::make('delete')
+                ->label('Cancel Action')
+                ->visible(fn (RankAction $action) => (
+                    auth()->user()->isDivisionLeader()
+                    || auth()->user()->isRole('admin')
+                    || auth()->id() == $action->requester_id
+                ) && $action->actionable())
+                ->requiresConfirmation(),
             Actions\Action::make('deny')->label('Deny change')
-                ->color('danger')
+                ->color('warning')
                 ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                 ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                 ->requiresConfirmation()
                 ->modalHeading('Deny Rank Action')
                 ->modalDescription('Are you sure you want to deny this rank action? The requester will be notified.')
                 ->form([
-                    Textarea::make('deny_reason')
-                        ->label('Reason')
-                        ->required(),
+                Textarea::make('deny_reason')
+                    ->label('Reason')
+                    ->required(),
                 ])
                 ->action(function (array $data, RankAction $action) {
                     $action->deny($data['deny_reason']);

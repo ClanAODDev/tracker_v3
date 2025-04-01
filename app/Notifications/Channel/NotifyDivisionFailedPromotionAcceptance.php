@@ -39,7 +39,7 @@ class NotifyDivisionFailedPromotionAcceptance extends Notification implements Sh
             ->fields([
                 [
                     'name' => sprintf(
-                        '%s was sent a promotion acceptance message, but their Discord privacy settings prevent receiving it.',
+                        '%s was sent a promotion acceptance message, but their Discord privacy settings prevent receiving it. Please work with the user to update their settings. ',
                         $this->member->name
                     ),
                     'value' => sprintf(
