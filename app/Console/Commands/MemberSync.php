@@ -179,6 +179,8 @@ class MemberSync extends Command
                             'member_id' => $member->id,
                             'rank' => $newRank,
                         ])->approveAndAccept();
+
+                        \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], $newRank->getLabel()));
                     }
 
                     if ($key === 'division_id') {
