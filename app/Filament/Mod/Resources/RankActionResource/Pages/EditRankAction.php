@@ -35,11 +35,12 @@ class EditRankAction extends EditRecord
         $actions = [
             Actions\DeleteAction::make('delete')
                 ->label('Cancel Action')
-                ->visible(fn (RankAction $action) => (
+                ->hidden(fn (RankAction $action) => ! $action->actionable() && $action->member->division_id !== 0)
+                ->visible(fn (RankAction $action) =>
                     auth()->user()->isDivisionLeader()
                     || auth()->user()->isRole('admin')
                     || auth()->id() == $action->requester_id
-                ) && $action->actionable())
+                )
                 ->requiresConfirmation(),
             Actions\Action::make('deny')->label('Deny change')
                 ->color('warning')
