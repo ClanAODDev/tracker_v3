@@ -42,7 +42,7 @@ class NotifyDivisionFailedAwardApprovalNotice extends Notification
             ->fields([
                 [
                     'name' => sprintf(
-                        '%s requested an award for %s that was approved [%s], but their Discord privacy settings prevent receiving it.',
+                        '%s requested an award for %s that was approved [%s], but their Discord privacy settings prevent receiving it. Please work with the user to update their settings.',
                         $this->requester->name,
                         $this->member,
                         $this->awardName,
