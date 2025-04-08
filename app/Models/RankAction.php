@@ -117,7 +117,8 @@ class RankAction extends Model
             $memberQuery
                 ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
                 ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
-                ->when($user->isDivisionLeader() && ! $user->isRole('admin'),
+                ->when(! $user->isRole('admin'),
+                    // only show all divisions for admins
                     fn ($q) => $q->where('division_id', $member->division_id));
         });
 
