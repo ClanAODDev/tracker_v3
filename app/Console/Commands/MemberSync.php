@@ -138,10 +138,7 @@ class MemberSync extends Command
                     continue;
                 }
 
-                $division = $newData->aoddivision;
-                $syncErrors->put($division, $syncErrors->get($division, 0) + 1);
-
-                continue;
+                \Log::error("sync error detected. exiting!");
             }
 
             $differences = $newData->diffAssoc($oldData)->filter()->all();

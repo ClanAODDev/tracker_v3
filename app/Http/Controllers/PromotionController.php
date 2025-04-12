@@ -12,7 +12,7 @@ class PromotionController extends Controller
 {
     public function confirm(Member $member, RankAction $action)
     {
-        if (! request()->hasValidSignature() || $action->resolved()) {
+        if (! request()->hasValidSignature() || $action->resolvedByRecipient()) {
             throw new InvalidSignatureException;
         }
 
@@ -23,7 +23,7 @@ class PromotionController extends Controller
 
     public function accept(Member $member, RankAction $action)
     {
-        if ($action->resolved()) {
+        if ($action->resolvedByRecipient()) {
             return redirect()->route('home');
         }
 
@@ -36,7 +36,7 @@ class PromotionController extends Controller
 
     public function decline(Member $member, RankAction $action)
     {
-        if ($action->resolved()) {
+        if ($action->resolvedByRecipient()) {
             return redirect()->route('home');
         }
 
