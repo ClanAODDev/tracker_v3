@@ -99,7 +99,7 @@ class RankAction extends Model
         return is_null($this->approved_at) && is_null($this->denied_at);
     }
 
-    public function resolved()
+    public function resolvedByRecipient()
     {
         return collect([
             $this->accepted_at,
