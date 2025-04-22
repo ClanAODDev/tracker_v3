@@ -11,7 +11,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PlatoonResource extends Resource
 {
@@ -98,11 +100,12 @@ class PlatoonResource extends Resource
                 $query->where('division_id', auth()->user()->member->division_id);
             })
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
 
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -125,5 +128,13 @@ class PlatoonResource extends Resource
             'create' => Pages\CreatePlatoon::route('/create'),
             'edit' => Pages\EditPlatoon::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }
