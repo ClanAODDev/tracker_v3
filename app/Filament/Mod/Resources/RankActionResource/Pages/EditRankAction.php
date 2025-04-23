@@ -36,8 +36,7 @@ class EditRankAction extends EditRecord
             Actions\DeleteAction::make('delete')
                 ->label('Cancel Action')
                 ->hidden(fn (RankAction $action) => ! $action->actionable() && $action->member->division_id !== 0)
-                ->visible(fn (RankAction $action) =>
-                    auth()->user()->isDivisionLeader()
+                ->visible(fn (RankAction $action) => auth()->user()->isDivisionLeader()
                     || auth()->user()->isRole('admin')
                     || auth()->id() == $action->requester_id
                 )
@@ -50,9 +49,9 @@ class EditRankAction extends EditRecord
                 ->modalHeading('Deny Rank Action')
                 ->modalDescription('Are you sure you want to deny this rank action? The requester will be notified.')
                 ->form([
-                Textarea::make('deny_reason')
-                    ->label('Reason')
-                    ->required(),
+                    Textarea::make('deny_reason')
+                        ->label('Reason')
+                        ->required(),
                 ])
                 ->action(function (array $data, RankAction $action) {
                     $action->deny($data['deny_reason']);
