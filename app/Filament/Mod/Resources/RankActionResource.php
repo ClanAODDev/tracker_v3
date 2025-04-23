@@ -330,7 +330,7 @@ class RankActionResource extends Resource
                     ];
 
                     // Only permit demotions for admin or division leaders.
-                    if ($user->isDivisionLeader() || $user->isRole('admin')) {
+                    if (($user->isDivisionLeader() || $user->isRole('admin')) && $member->rank->value >= Rank::CADET->value) {
                         $options['demotion'] = 'Demotion (choose a new, lower rank)';
                     }
 
@@ -341,6 +341,7 @@ class RankActionResource extends Resource
 
             Select::make('demotion_rank')
                 ->label('Demote to')
+                ->helperText('Demotions are immediate and do not alert the member.')
                 ->options(function (callable $get) {
                     $member = Member::find($get('member_id'));
 
@@ -359,7 +360,7 @@ class RankActionResource extends Resource
 
                     return $options;
                 })
-                ->visible(fn(callable $get) => $get('action') === 'demotion')
+                ->visible(fn (callable $get) => $get('action') === 'demotion')
                 ->required(fn(callable $get) => $get('action') === 'demotion'),
 
             Select::make('promotion_rank')
