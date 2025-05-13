@@ -36,7 +36,6 @@ class FixTenureAwards extends Command
     public function handle()
     {
         $members = Member::whereHas('division')->get();
-
         $persistChanges = $this->option('persist');
 
         $missingAwards = 0;
@@ -47,23 +46,56 @@ class FixTenureAwards extends Command
             $joinDate = Carbon::parse($member->join_date);
             $yearsOfService = $joinDate->diffInYears(Carbon::now());
 
-            [$eligibleAwardId, $milestone] = $this->determineEligibleAward($this->tenureAwardIds, $yearsOfService);
+            [$eligibleAwardId, $milestone] =
+                $this->determineEligibleAward($this->tenureAwardIds, $yearsOfService);
 
-            $missingAwards += $this->processMissingAwards($member, $eligibleAwardId, $milestone, $persistChanges);
-            $invalidAwards += $this->processInvalidAwards($member, $this->tenureAwardIds, $yearsOfService, $persistChanges);
-            $extraneousAwards += $this->processExtraneousAwards($member, $this->tenureAwardIds, $milestone, $persistChanges);
+            $missingAwards += $this->processMissingAwards(
+                $member,
+                $eligibleAwardId,
+                $milestone,
+                $persistChanges
+            );
+            $invalidAwards += $this->processInvalidAwards(
+                $member,
+                $this->tenureAwardIds,
+                $yearsOfService,
+                $persistChanges
+            );
+            $extraneousAwards += $this->processExtraneousAwards(
+                $member,
+                $this->tenureAwardIds,
+                $milestone,
+                $persistChanges
+            );
         }
 
         $this->info('Tenure awards summary:');
-        $this->info(sprintf('- Missing awards %s: %d', $persistChanges ? 'added' : 'found', $missingAwards));
-        $this->info(sprintf('- Invalid awards %s: %d', $persistChanges ? 'removed' : 'found', $invalidAwards));
-        $this->info(sprintf('- Extraneous awards %s: %d', $persistChanges ? 'removed' : 'found', $extraneousAwards));
+        $this->info(sprintf(
+            '- Missing awards %s: %d',
+            $persistChanges ? 'added' : 'found',
+            $missingAwards
+        ));
+        $this->info(sprintf(
+            '- Invalid awards %s: %d',
+            $persistChanges ? 'removed' : 'found',
+            $invalidAwards
+        ));
+        $this->info(sprintf(
+            '- Extraneous awards %s: %d',
+            $persistChanges ? 'removed' : 'found',
+            $extraneousAwards
+        ));
 
         if (! $persistChanges) {
-            $this->newLine()->warn('No changes made. Run with --persist flag to perform corrections');
+            $this->newLine()->warn(
+                'No changes made. Run with --persist flag to perform corrections'
+            );
         }
     }
 
+    /**
+     * Determine the highest milestone award they're eligible for today.
+     */
     private function determineEligibleAward(array $tenureAwards, int $yearsOfService): array
     {
         foreach ($tenureAwards as $years => $awardId) {
@@ -76,56 +108,92 @@ class FixTenureAwards extends Command
     }
 
     /**
-     * Check for members missing the appropriate tenure award
+     * Add any missing tenure award for the current milestone,
+     * and also the _upcoming_ milestone if this is their join‑month.
      */
     private function processMissingAwards($member, $eligibleAwardId, $milestone, $persistChanges): int
     {
-        if (! $eligibleAwardId) {
-            return 0;
+        $count = 0;
+        $joinDate = Carbon::parse($member->join_date);
+        $now = Carbon::now();
+        $years = $joinDate->diffInYears($now);
+        $currentMon = $now->month;
+
+        $candidates = [];
+        if ($eligibleAwardId) {
+            $candidates[] = [$eligibleAwardId, $milestone];
         }
 
-        $hasAward = MemberAward::where('member_id', $member->clan_id)
-            ->where('award_id', $eligibleAwardId)
-            ->exists();
+        if ($joinDate->month === $currentMon) {
+            [$nextAwardId, $nextMilestone] =
+                $this->determineEligibleAward($this->tenureAwardIds, $years + 1);
 
-        if (! $hasAward) {
-            if ($persistChanges) {
-                MemberAward::create([
-                    'member_id' => $member->clan_id,
-                    'award_id' => $eligibleAwardId,
-                    'reason' => "Awarded for reaching the $milestone-year milestone.",
-                    'approved' => true,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]);
+            if ($nextAwardId && $nextMilestone > $milestone) {
+                $candidates[] = [$nextAwardId, $nextMilestone];
             }
-
-            return 1;
         }
 
-        return 0;
+        foreach ($candidates as [$awardId, $awardYears]) {
+            $has = MemberAward::where('member_id', $member->clan_id)
+                ->where('award_id', $awardId)
+                ->exists();
+
+            if (! $has) {
+                if ($persistChanges) {
+                    MemberAward::create([
+                        'member_id' => $member->clan_id,
+                        'award_id' => $awardId,
+                        'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
+                        'approved' => true,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ]);
+                }
+                $count++;
+            }
+        }
+
+        return $count;
     }
 
     /**
-     * Find members with incorrect tenure awards (10 year award but only have 8 years)
+     * Remove any tenure awards they’re no longer old enough for.
      */
     private function processInvalidAwards($member, array $tenureAwards, int $yearsOfService, $persistChanges): int
     {
         $invalidCount = 0;
+        $joinDate = Carbon::parse($member->join_date);
+        $now = Carbon::now();
+        $currentMonth = $now->month;
+
+        [, $milestone] = $this->determineEligibleAward($tenureAwards, $yearsOfService);
+
+        $upcomingAwardId = null;
+        if ($joinDate->month === $currentMonth) {
+            [$nextAwardId, $nextMilestone] = $this->determineEligibleAward($tenureAwards, $yearsOfService + 1);
+            if ($nextAwardId && $nextMilestone > $milestone) {
+                $upcomingAwardId = $nextAwardId;
+            }
+        }
+
         $awards = MemberAward::where('member_id', $member->clan_id)
             ->whereIn('award_id', array_values($tenureAwards))
             ->get();
 
         foreach ($awards as $award) {
-            $isInvalid = true;
+            if ($award->award_id === $upcomingAwardId) {
+                continue;
+            }
+
+            $isValid = false;
             foreach ($tenureAwards as $years => $awardId) {
-                if ($yearsOfService >= $years && $award->award_id == $awardId) {
-                    $isInvalid = false;
+                if ($award->award_id === $awardId && $yearsOfService >= $years) {
+                    $isValid = true;
                     break;
                 }
             }
 
-            if ($isInvalid) {
+            if (! $isValid) {
                 if ($persistChanges) {
                     $award->delete();
                 }
@@ -137,7 +205,7 @@ class FixTenureAwards extends Command
     }
 
     /**
-     * Remove all but the longest tenure award earned
+     * Remove all lower‑level tenure awards once a higher milestone is earned.
      */
     private function processExtraneousAwards($member, array $tenureAwards, $milestone, $persistChanges): int
     {
@@ -145,23 +213,23 @@ class FixTenureAwards extends Command
             return 0;
         }
 
-        $extraneousAwardIds = collect($tenureAwards)
+        $toRemoveIds = collect($tenureAwards)
             ->filter(fn ($id, $years) => $years < $milestone)
             ->values()
             ->toArray();
 
-        $awardsToRemove = MemberAward::where('member_id', $member->clan_id)
-            ->whereIn('award_id', $extraneousAwardIds)
+        $toRemove = MemberAward::where('member_id', $member->clan_id)
+            ->whereIn('award_id', $toRemoveIds)
             ->get();
 
-        $removedCount = 0;
-        foreach ($awardsToRemove as $award) {
+        $removed = 0;
+        foreach ($toRemove as $award) {
             if ($persistChanges) {
                 $award->delete();
             }
-            $removedCount++;
+            $removed++;
         }
 
-        return $removedCount;
+        return $removed;
     }
 }
