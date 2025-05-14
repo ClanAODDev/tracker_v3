@@ -213,8 +213,22 @@ class FixTenureAwards extends Command
             return 0;
         }
 
+        $joinDate = Carbon::parse($member->join_date);
+        $now      = Carbon::now();
+        $years    = $joinDate->diffInYears($now);
+        $month    = $now->month;
+
+        $effectiveMilestone = $milestone;
+
+        if ($joinDate->month === $month) {
+            [, $nextMilestone] = $this->determineEligibleAward($tenureAwards, $years + 1);
+            if ($nextMilestone > $effectiveMilestone) {
+                $effectiveMilestone = $nextMilestone;
+            }
+        }
+
         $toRemoveIds = collect($tenureAwards)
-            ->filter(fn ($id, $years) => $years < $milestone)
+            ->filter(fn($id, $years) => $years < $effectiveMilestone)
             ->values()
             ->toArray();
 
