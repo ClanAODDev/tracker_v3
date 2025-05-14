@@ -138,7 +138,9 @@ class MemberSync extends Command
                     continue;
                 }
 
-                \Log::error("sync error detected. exiting!");
+                \Log::error('sync error detected. exiting!');
+
+                exit;
             }
 
             $differences = $newData->diffAssoc($oldData)->filter()->all();

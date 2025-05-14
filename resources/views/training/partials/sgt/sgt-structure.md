@@ -2,7 +2,8 @@
 
 ##### Review both the Sgt structure and the SSgt lists below.
 
-Reference the [leadership structure](https://tracker.clanaod.net/reports/leadership) for guidance on who is a Sgt in AOD and what their role is.
+Reference the [leadership structure](https://tracker.clanaod.net/clan/leadership) for guidance on who is a Sgt in AOD 
+and what their role is.
 
 ##### Explain briefly what a Staff Sergeant's role is:
 

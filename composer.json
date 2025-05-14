@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^11.35",
+        "laravel/framework": "^11.6",
         "laracasts/flash": "^3.1",
         "doctrine/dbal": "^3.0",
         "barryvdh/laravel-debugbar": "^3.0",
@@ -87,7 +87,8 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+	"process-timeout": 600
     },
     "extra": {
         "laravel": {
