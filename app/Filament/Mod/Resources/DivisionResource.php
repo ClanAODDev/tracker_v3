@@ -6,7 +6,12 @@ use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
 use App\Models\Division;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -42,29 +47,54 @@ class DivisionResource extends Resource
                     ->description('Basic division settings')
                     ->aside()
                     ->schema([
-                        Forms\Components\TextInput::make('name')->helperText('Consult admin to update')->readOnly(),
-                        Forms\Components\TextInput::make('description')->helperText('Sub-header division text *DEPRECATING*'),
-                        Forms\Components\TextInput::make('division structure')
-                            ->helperText('Numerical id of your division\'s division structure thread *DEPRECATING*')
-                            ->numeric()
-                            ->statePath('settings.division_structure'),
-                        Forms\Components\TextInput::make('welcome area')
-                            ->helperText('Numerical id of your division\'s welcome area.')
-                            ->numeric()
-                            ->statePath('settings.welcome_area'),
-                        Forms\Components\TextInput::make('inactivity days')
-                            ->helperText('Number of days without VoIP activity before a member is considered inactive.')
-                            ->numeric()
-                            ->statePath('settings.inactivity_days'),
-                        Forms\Components\Select::make('Platoon Leader Promotion Authority')
-                            ->statePath('settings.max_platoon_leader_rank')
-                            ->helperText('Highest rank PLs can promote to without approval')
-                            ->options([
-                                Rank::CADET->value => Rank::CADET->getLabel(),
-                                Rank::PRIVATE->value => Rank::PRIVATE->getLabel(),
-                                Rank::PRIVATE_FIRST_CLASS->value => Rank::PRIVATE_FIRST_CLASS->getLabel(),
+                        Tabs::make('Settings')
+                            ->tabs([
+                                Tabs\Tab::make('General')
+                                    ->schema([
+                                        TextInput::make('name')
+                                            ->label('Division Name')
+                                            ->helperText('Consult admin to update')
+                                            ->readOnly(),
+                                        TextInput::make('description')
+                                            ->label('Sub‑header Text')
+                                            ->helperText('Division sub‑header (*DEPRECATING*)'),
+                                    ])
+                                    ->columns(2),
+
+                                Tabs\Tab::make('Welcome Area')
+                                    ->schema([
+                                        TextInput::make('settings.welcome_area')
+                                            ->label('Welcome Area ID')
+                                            ->numeric()
+                                            ->helperText('Division welcome area ID'),
+
+                                        Forms\Components\Toggle::make('settings.use_welcome_thread')
+                                            ->label('Use Welcome Thread')
+                                            ->helperText('Recruit welcome area is a thread instead of a forum'),
+                                    ])
+                                    ->columns(),
+
+                                Tabs\Tab::make('Behavior')
+                                    ->schema([
+                                        TextInput::make('settings.inactivity_days')
+                                            ->label('Inactivity Threshold')
+                                            ->numeric()
+                                            ->helperText('Days without VoIP before marking inactive'),
+                                    ]),
+
+                                Tabs\Tab::make('Promotion')
+                                    ->schema([
+                                        Select::make('settings.max_platoon_leader_rank')
+                                            ->label('PL Promotion Cap')
+                                            ->options([
+                                                Rank::CADET->value => Rank::CADET->getLabel(),
+                                                Rank::PRIVATE->value => Rank::PRIVATE->getLabel(),
+                                                Rank::PRIVATE_FIRST_CLASS->value => Rank::PRIVATE_FIRST_CLASS->getLabel(),
+                                            ])
+                                            ->helperText('Highest rank PLs can promote to without approval'),
+                                    ]),
                             ]),
-                    ])->columns(),
+                    ]),
 
                 Forms\Components\Section::make('Locality')->collapsible()->collapsed()
                     ->description('Update common vernacular to match division needs')
@@ -116,50 +146,53 @@ class DivisionResource extends Resource
                             ->statePath('welcome_pm'),
                     ]),
 
-                Forms\Components\Section::make('Chat Notifications')->collapsible()->collapsed()
+
+                Forms\Components\Section::make('Chat Notifications')
                     ->description('Specify which events should notify and where.')
                     ->aside()
-                    ->columns()
                     ->statePath('settings.chat_alerts')
                     ->schema([
-                        Fieldset::make('Recruitment')
-                            ->schema([
-                                Forms\Components\Select::make('member_created')
-                                    ->options($channelOptions)
-                                    ->label('New Recruitments'),
-                                Forms\Components\Select::make('member_approved')
-                                    ->options($channelOptions)
-                                    ->label('New Recruit Approval'),
-                            ])
-                            ->columns(2),
+                        Forms\Components\Tabs::make('Chat Notifications')
+                            ->tabs([
+                                Tab::make('Recruitment')
+                                    ->schema([
+                                        Select::make('member_created')
+                                            ->options($channelOptions)
+                                            ->label('New Recruitments'),
+                                        Select::make('member_approved')
+                                            ->options($channelOptions)
+                                            ->label('New Recruit Approval'),
+                                    ])
+                                    ->columns(2),
 
-                        Fieldset::make('Membership Changes')
-                            ->schema([
-                                Forms\Components\Select::make('member_removed')
-                                    ->options($channelOptions)
-                                    ->label('Member Removals'),
-                                Forms\Components\Select::make('member_transferred')
-                                    ->options($channelOptions)
-                                    ->label('Member Transfer'),
-                                Forms\Components\Select::make('pt_member_removed')
-                                    ->options($channelOptions)
-                                    ->label('Part-Time Member Removal'),
-                            ])
-                            ->columns(3),
+                                Tab::make('Membership Changes')
+                                    ->schema([
+                                        Select::make('member_removed')
+                                            ->options($channelOptions)
+                                            ->label('Member Removals'),
+                                        Select::make('member_transferred')
+                                            ->options($channelOptions)
+                                            ->label('Member Transfer'),
+                                        Select::make('pt_member_removed')
+                                            ->options($channelOptions)
+                                            ->label('Part‑Time Member Removal'),
+                                    ])
+                                    ->columns(3),
 
-                        Fieldset::make('Administrative Updates')
-                            ->schema([
-                                Forms\Components\Select::make('division_edited')
-                                    ->options($channelOptions)
-                                    ->label('Division Settings Changes'),
-                                Forms\Components\Select::make('member_promoted')
-                                    ->options($channelOptions)
-                                    ->label('Member Promoted'),
-                                Forms\Components\Select::make('member_awarded')
-                                    ->options($channelOptions)
-                                    ->label('Member Awarded'),
-                            ])
-                            ->columns(3),
+                                Tab::make('Administrative Updates')
+                                    ->schema([
+                                        Select::make('division_edited')
+                                            ->options($channelOptions)
+                                            ->label('Division Settings Changes'),
+                                        Select::make('member_promoted')
+                                            ->options($channelOptions)
+                                            ->label('Member Promoted'),
+                                        Select::make('member_awarded')
+                                            ->options($channelOptions)
+                                            ->label('Member Awarded'),
+                                    ])
+                                    ->columns(3),
+                            ]),
                     ]),
                 Forms\Components\Section::make('Website')
                     ->description('Divisional website settings')
@@ -196,7 +229,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
