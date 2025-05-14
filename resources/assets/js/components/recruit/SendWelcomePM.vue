@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="m-t-xl"><i class="fa fa-envelope-o text-accent"></i> Send Welcome PM</h3>
+        <h4 class="m-t-xl"><i class="fa fa-envelope-o text-accent"></i> Send Welcome PM</h4>
 
         <p>A welcome PM has been prepared to send to your new recruit. Simply copy the message below, and click the button below to open a private message to submit to your new recruit.</p>
 
