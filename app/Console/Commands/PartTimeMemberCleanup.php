@@ -34,7 +34,7 @@ class PartTimeMemberCleanup extends Command
             foreach ($division->partTimeMembers as $member) {
                 if ($member->division_id === $division->id) {
                     $this->info("Cleaning up part-time assignment for member {$member->name} in division {$division->name}");
-                    $member->partTimeDivisions()->detach($division->name);
+                    $member->partTimeDivisions()->detach($division->id);
                 }
             }
         }
