@@ -30,9 +30,9 @@ jobs:
             [ .[] |
               {
                 author: { name: .author.name },
-                title: "[" + (.id[0:7]) + "] " + (.message | split("\n")[0]),
+                title: "[\(.id[0:7])] \(.message | split("\\n")[0])",
                 url: .url,
-                description: ( (.message | split("\n")[1:] | join("\n")) )
+                description: ( .message | split("\\n")[1:] | join("\n") )
               }
             ]
           ')
