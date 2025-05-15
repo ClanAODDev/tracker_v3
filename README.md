@@ -1,5 +1,4 @@
 # ![logo](https://clanaod.net/tracker/images/logo_v2.png) AOD Tracker v3
-
 The AOD Tracker is a member and organizational unit management system. It is specifically built to support AOD
 processes, and as such makes some assumptions about the characteristics of an organization:
 
