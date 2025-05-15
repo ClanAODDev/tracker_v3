@@ -1,0 +1,46 @@
+name: Discord IT Feed notifications
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install jq
+        run: |
+          if ! command -v jq >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y jq
+          fi
+
+      - name: Send commits to Discord IT Feed
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.IT_FEED_WEBHOOK }}
+          COMMITS_JSON: ${{ toJson(github.event.commits) }}
+        run: |
+          if [ -z "$COMMITS_JSON" ] || [ "$COMMITS_JSON" = "[]" ]; then
+            exit 0
+          fi
+
+          EMBEDS=$(echo "$COMMITS_JSON" | jq -c '
+            [ .[] |
+              {
+                author: { name: .author.name },
+                title: "[" + (.id[0:7]) + "] " + (.message | split("\n")[0]),
+                url: .url,
+                description: ( (.message | split("\n")[1:] | join("\n")) )
+              }
+            ]
+          ')
+
+          PAYLOAD=$(jq -n --argjson embeds "$EMBEDS" '{embeds: $embeds}')
+
+          # POST to Discord
+          curl -sSL \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK_URL"
