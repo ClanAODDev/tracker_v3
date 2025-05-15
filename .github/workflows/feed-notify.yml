@@ -26,20 +26,21 @@ jobs:
             exit 0
           fi
 
-          EMBEDS=$(echo "$COMMITS_JSON" | jq -c '
+           EMBEDS=$(echo "$COMMITS_JSON" | jq -c '
             [ .[] |
               {
                 author: { name: .author.name },
-                title: "[\(.id[0:7])] \(.message | split("\\n")[0])",
-                url: .url,
-                description: ( .message | split("\\n")[1:] | join("\n") )
+                title:   (.message | split("\\n")[0]), 
+                url:     .url,
+                description: (
+                  ( .message | split("\\n")[1:] | join("\n") )
+                )
               }
             ]
           ')
 
           PAYLOAD=$(jq -n --argjson embeds "$EMBEDS" '{embeds: $embeds}')
 
-          # POST to Discord
           curl -sSL \
             -H "Content-Type: application/json" \
             -d "$PAYLOAD" \
