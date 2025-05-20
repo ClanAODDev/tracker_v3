@@ -7,7 +7,7 @@
         @else
             <i class="fa fa-exclamation-circle"></i> This division will be shut down on
             <strong>{{ $division->shutdown_at->format('Y-m-d') }}</strong>. Assigned members should begin looking for
-            new divisions and begin transferring.
+            new divisions.
         @endif
     </div>
 @endif

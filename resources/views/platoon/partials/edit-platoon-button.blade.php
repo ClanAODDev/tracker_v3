@@ -5,7 +5,7 @@
             <span class="hidden-xs hidden-sm">Manage Assignments</span>
         </a>
 
-        <a href="{{ route('editPlatoon', [$division->slug, $platoon]) }}"
+        <a href="{{ route('filament.mod.resources.platoons.edit', [$platoon]) }}"
            title="Edit {{ $platoon->name }}" class="btn btn-default">
             <i class="fa fa-wrench text-accent"></i>
             <span class="hidden-xs hidden-sm">Edit {{ $division->locality('platoon') }}</span>
