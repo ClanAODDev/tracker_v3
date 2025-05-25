@@ -32,7 +32,11 @@ class EditDivision extends EditRecord
             $data = $this->handleNewCO($divisionId, $data);
         }
 
-        return $this->handleXOs($divisionId, $data);
+        $data = $this->handleXOs($divisionId, $data);
+
+        unset($data['executive_officers'], $data['new_co']);
+
+        return $data;
     }
 
     protected function handleRecordUpdate(Model $record, array $data): Model
@@ -70,8 +74,6 @@ class EditDivision extends EditRecord
                 ]);
         }
 
-        unset($data['new_co']);
-
         return $data;
     }
 
@@ -98,8 +100,6 @@ class EditDivision extends EditRecord
                     'squad_id' => 0,
                 ]);
         }
-
-        unset($data['executive_officers']);
 
         return $data;
     }
