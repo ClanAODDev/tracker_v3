@@ -191,7 +191,8 @@ class MemberResource extends Resource
 
                 SelectFilter::make('division_id')
                     ->label('Division')
-                    ->options(Division::active()->get()->pluck('name', 'id')),
+                    ->options(Division::active()->get()->pluck('name', 'id'))
+                    ->default(auth()->user()->member->division_id),
 
                 Filter::make('position')
                     ->form([
