@@ -1,6 +1,6 @@
 <div class="panel panel-filled">
     <div class="panel-body">
-        <h1>
+        <h1 class="text-center" style="margin: unset;">
             <i class="pe pe-7s-users pe-lg text-warning"></i> {{ $squad->members->count() }}
             <small class="slight">Members</small>
         </h1>
