@@ -71,8 +71,6 @@ class Platoon extends Model
      */
     public function members()
     {
-        return $this->hasMany(Member::class)
-            ->orderBy('rank', 'desc')
-            ->orderBy('name', 'asc');
+        return $this->hasMany(Member::class);
     }
 }
