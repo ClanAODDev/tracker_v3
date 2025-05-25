@@ -64,11 +64,6 @@ class PlatoonResource extends Resource
                     Forms\Components\TextInput::make('name')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('order')
-                        ->label('Sort order')
-                        ->required()
-                        ->numeric()
-                        ->default(0),
                     Forms\Components\TextInput::make('logo')
                         ->placeholder('https://')
                         ->maxLength(255)
