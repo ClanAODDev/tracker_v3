@@ -3,9 +3,11 @@
 namespace App\Filament\Mod\Resources\SquadResource\Pages;
 
 use App\Filament\Mod\Resources\SquadResource;
+use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSquad extends EditRecord
@@ -74,7 +76,21 @@ class EditSquad extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->action(function ($record) {
+                Member::where('squad_id', $record->id)->update([
+                    'squad_id' => 0,
+                ]);
+
+                $record->delete();
+
+                Notification::make()
+                    ->success()
+                    ->title('Squad has been deleted')
+                    ->body('Assigned members have been updated.')
+                    ->send();
+
+                return redirect()->route('filament.mod.resources.platoons.edit', $record->platoon);
+            }),
         ];
     }
 }
