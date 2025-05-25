@@ -113,7 +113,7 @@ class DivisionResource extends Resource
                                                 ->addable(false)
                                                 ->deletable(false),
                                         ]),
-                                ])
+                                ]),
                             ]),
                     ]),
 

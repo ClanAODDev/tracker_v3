@@ -214,9 +214,9 @@ class FixTenureAwards extends Command
         }
 
         $joinDate = Carbon::parse($member->join_date);
-        $now      = Carbon::now();
-        $years    = $joinDate->diffInYears($now);
-        $month    = $now->month;
+        $now = Carbon::now();
+        $years = $joinDate->diffInYears($now);
+        $month = $now->month;
 
         $effectiveMilestone = $milestone;
 
@@ -228,7 +228,7 @@ class FixTenureAwards extends Command
         }
 
         $toRemoveIds = collect($tenureAwards)
-            ->filter(fn($id, $years) => $years < $effectiveMilestone)
+            ->filter(fn ($id, $years) => $years < $effectiveMilestone)
             ->values()
             ->toArray();
 
