@@ -39,22 +39,11 @@ class MemberPolicy
      */
     public function update(User $user, Member $member)
     {
-        // can't edit yourself
         if ($member->id === auth()->user()->member_id) {
             return false;
         }
 
-        $userDivision = $user->member->division;
-        $memberDivision = $member->division;
-
-        // officers can update anyone within division
-        if ($memberDivision instanceof Division) {
-            if ($user->isRole(['jr_ldr', 'officer']) && $userDivision->id === $memberDivision->id) {
-                return true;
-            }
-        }
-
-        return false;
+        return auth()->user()->isRole(['admin', 'sr_ldr']);
     }
 
     public function updateLeave(User $user, Member $member)
