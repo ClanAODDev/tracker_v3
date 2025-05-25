@@ -242,7 +242,7 @@ class DivisionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PlatoonsRelationManager::class,
         ];
     }
 

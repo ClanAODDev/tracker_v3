@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\SquadResource\Pages;
+use App\Models\Division;
 use App\Models\Squad;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
@@ -46,7 +47,7 @@ class SquadResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(fn(Squad $record) => [
+            ->schema(fn(?Squad $record) => [
                 Forms\Components\Section::make('Basic Info')->schema([
                     Forms\Components\TextInput::make('name')
                         ->maxLength(255)
@@ -54,15 +55,10 @@ class SquadResource extends Resource
                     Forms\Components\TextInput::make('logo')
                         ->maxLength(191)
                         ->default(null),
-                    Select::make('platoon_id')
-                        ->relationship('platoon', 'name')
-                        ->label('Platoon')
-                        ->options(\App\Models\Platoon::whereDivisionId(auth()->user()->member->division_id)->pluck('name',
-                            'id'))
-                        ->hiddenOn('edit')
-                        ->required(),
                 ]),
-                Forms\Components\Section::make('Leadership')->schema([
+                Forms\Components\Section::make('Leadership')
+                    ->hiddenOn('create')
+                    ->schema([
                     Select::make('leader_id')
                         ->label('Leader')
                         ->searchable()
@@ -152,7 +148,6 @@ class SquadResource extends Resource
     {
         return [
             'index' => Pages\ListSquads::route('/'),
-            'create' => Pages\CreateSquad::route('/create'),
             'edit' => Pages\EditSquad::route('/{record}/edit'),
         ];
     }

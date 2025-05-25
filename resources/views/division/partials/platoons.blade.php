@@ -2,8 +2,8 @@
     {{ Str::plural($division->locality('platoon')) }}
 
     @can('create', [App\Models\Platoon::class, $division])
-        <a href="{{ route('createPlatoon', $division->slug) }}"
-           class="btn btn-default pull-right"><i class="fa fa-plus text-success"></i> NEW
+        <a href="{{ route('filament.mod.resources.divisions.edit', $division) }}"
+           class="btn btn-default pull-right"><i class="fa fa-plus text-success"></i> Create {{ $division->locality('platoon') }}
         </a>
     @endcan
 </h3>

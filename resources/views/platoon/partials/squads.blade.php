@@ -13,8 +13,10 @@
         </a>
     @endforeach
 
-    <a href="{{ route('createSquad', [$division->slug, $platoon]) }}" class="list-group-item">
-        <i class="fa fa-plus pull-right text-success"></i> Create Squad
-    </a>
+    @can('update', $platoon)
+        <a href="{{ route('filament.mod.resources.platoons.edit', [$platoon]) }}" class="list-group-item">
+            <i class="fa fa-plus pull-right text-success"></i> Create {{ $division->locality('squad') }}
+        </a>
+    @endcan
 
 </div>
