@@ -55,6 +55,8 @@ class MembersRelationManager extends RelationManager
                     //                    Tables\Actions\DeleteBulkAction::make(),
                     BulkAction::make('member_transfer')
                         ->label('Transfer member(s)')
+                        ->modalWidth('lg')
+                        ->modalDescription('Only members of the same division can be transferred.')
                         ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr'])
                             || (auth()->user()->isPlatoonLeader() && auth()->user()->member->clan_id ==
                                 $this->ownerRecord->leader_id)
@@ -75,7 +77,6 @@ class MembersRelationManager extends RelationManager
                                 ]);
                             });
                         })
-                        ->requiresConfirmation()
                         ->deselectRecordsAfterCompletion()
                         ->color('primary'),
                 ]),

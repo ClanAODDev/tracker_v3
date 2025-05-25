@@ -237,6 +237,8 @@ class MemberResource extends Resource
                     //                    Tables\Actions\DeleteBulkAction::make(),
                     BulkAction::make('member_transfer')
                         ->label('Transfer member(s)')
+                        ->modalWidth('lg')
+                        ->modalDescription('Only members of the same division can be transferred.')
                         ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->icon('heroicon-o-adjustments-vertical')
                         ->form([
