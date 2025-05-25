@@ -92,32 +92,6 @@ class Member extends Model
         return $this->hasMany(Note::class, 'member_id')->orderBy('created_at', 'desc');
     }
 
-    public function assignPosition($position)
-    {
-        // reset assignments for specific positions
-        if (in_array(
-            $position,
-            [Position::COMMANDING_OFFICER, Position::EXECUTIVE_OFFICER, Position::GENERAL_SERGEANT, Position::CLAN_ADMIN],
-            true
-        )) {
-            $this->platoon_id = 0;
-            $this->squad_id = 0;
-        }
-
-        if ($position === Position::EXECUTIVE_OFFICER) {
-            $this->xo_at = now();
-            $this->co_at = null;
-        }
-        if ($position === Position::COMMANDING_OFFICER) {
-            $this->co_at = now();
-            $this->xo_at = null;
-        }
-
-        $this->position = $position;
-
-        $this->save();
-    }
-
     /**
      * Enforce a singleton relationship for squad leaders.
      *
