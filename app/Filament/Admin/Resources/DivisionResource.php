@@ -2,21 +2,25 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource\Pages;
 use App\Models\Division;
+use App\Models\Member;
 use Filament\Forms;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Mansoor\FilamentVersionable\Table\RevisionsAction;
-use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
+use ValentinMorice\FilamentJsonColumn\JsonColumn;
 
 class DivisionResource extends Resource
 {
@@ -48,27 +52,80 @@ class DivisionResource extends Resource
                             ->avatar()
                             ->directory('logos'),
 
-                        Select::make('handle_id')
-                            ->label('Game Handle')
-                            ->relationship('handle', 'label'),
+                        Forms\Components\Fieldset::make()->schema([
+                            TextInput::make('name')
+                                ->required()
+                                ->maxLength(255),
 
-                        TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
+                            Select::make('handle_id')
+                                ->label('Game Handle')
+                                ->relationship('handle', 'label'),
 
-                        TextInput::make('abbreviation')
-                            ->hint('Should match abbreviation used on forums')
-                            ->maxLength(3)
-                            ->required()
-                            ->maxLength(255),
-
-                        FilamentJsonColumn::make('settings')
-                            ->hiddenOn('create'),
+                            TextInput::make('abbreviation')
+                                ->helperText('Should match abbreviation used on forums')
+                                ->maxLength(3)
+                                ->required()
+                                ->maxLength(255),
+                        ])->columns(3),
 
                         TextInput::make('description')
                             ->default('Another AOD Division')
                             ->hint('Deprecated and soon to be removed')
                             ->maxLength(255),
+
+                        JsonColumn::make('settings')
+                            ->hiddenOn('create'),
+                    ]),
+
+                Forms\Components\Section::make('Leadership Management')
+                    ->description('Manage division leaders')
+                    ->schema([
+                        Forms\Components\Section::make()->schema([
+                            TextInput::make('current_co_name')
+                                ->label('Current CO')
+                                ->disabled()
+                                ->dehydrated(false)
+                                ->afterStateHydrated(function ($state, Set $set) use ($form) {
+                                    $coName = \App\Models\Member::query()
+                                        ->where('division_id', $form->getRecord()->id)
+                                        ->where('position', \App\Enums\Position::COMMANDING_OFFICER)
+                                        ->value('name');
+                                    $set('current_co_name', $coName);
+                                }),
+
+                            Select::make('new_co')
+                                ->label('New CO')
+                                ->searchable()
+                                ->options(fn() => Member::where('division_id', $form->getRecord()->id)
+                                    ->pluck('name', 'id')),
+                        ])->columns(),
+
+                        Repeater::make('executive_officers')
+                            ->label('Executive Officers')
+                            ->schema([
+                                Select::make('xo')
+                                    ->label('Executive Officer')
+                                    ->searchable()
+                                    ->options(fn() => Member::where('division_id', $form->getRecord()->id)
+                                        ->pluck('name', 'id')),
+                            ])
+                            ->minItems(0)
+                            ->maxItems(3)
+                            ->addActionLabel('Add XO')
+                            ->afterStateHydrated(function ($state, Set $set) use ($form) {
+                                if (!empty($state)) {
+                                    return;
+                                }
+
+                                $rows = Member::where('division_id', $form->getRecord()->id)
+                                    ->where('position', Position::EXECUTIVE_OFFICER)
+                                    ->pluck('id')
+                                    ->map(fn($id) => ['xo' => $id])
+                                    ->toArray();
+
+                                $set('executive_officers', $rows);
+                            }),
+
                     ]),
 
                 Section::make('Website')
@@ -101,21 +158,21 @@ class DivisionResource extends Resource
                             ))->inlineMarkdown()->toHtmlString())
                             ->required()
                             ->numeric(),
-                    ]),
+                    ])->columns(),
 
                 Section::make('Extra settings')->schema([
 
-                    Forms\Components\DateTimePicker::make('shutdown_at')->columns(2),
+                    Forms\Components\DateTimePicker::make('shutdown_at'),
 
                     Toggle::make('show_on_site')
                         ->label('Show on site')
                         ->hint('Toggle on if division should be visible on the website')
-                        ->default(true)->columns(5),
+                        ->default(true),
 
                     Toggle::make('active')
                         ->label('Division Enabled')
                         ->hint('Disabled divisions are not listed on the tracker or website')
-                        ->default(true)->columns(5),
+                        ->default(true),
                 ]),
 
             ]);
@@ -139,7 +196,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])

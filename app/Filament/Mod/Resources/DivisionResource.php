@@ -4,10 +4,9 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
+use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
 use Filament\Forms;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
@@ -43,6 +42,7 @@ class DivisionResource extends Resource
 
         return $form
             ->schema([
+
                 Forms\Components\Section::make('General')
                     ->description('Basic division settings')
                     ->aside()
@@ -93,26 +93,27 @@ class DivisionResource extends Resource
                                             ])
                                             ->helperText('Highest rank PLs can promote to without approval'),
                                     ]),
+
+                                Tab::make('Locality')->schema([
+                                    Forms\Components\Section::make()
+                                        ->description('Update common vernacular to match division needs')
+                                        ->statePath('settings')->schema([
+                                            Forms\Components\Repeater::make('locality')->schema([
+                                                Forms\Components\TextInput::make('old-string')
+                                                    ->label('Replace')
+                                                    ->readOnly(),
+                                                Forms\Components\TextInput::make('new-string')
+                                                    ->required()
+                                                    ->label('With'),
+                                            ])->reorderable(false)->columns()
+                                                ->addable(false)
+                                                ->deletable(false),
+                                        ]),
+                                ]),
                             ]),
                     ]),
 
-                Forms\Components\Section::make('Locality')->collapsible()->collapsed()
-                    ->description('Update common vernacular to match division needs')
-                    ->aside()
-                    ->statePath('settings')->schema([
-                        Forms\Components\Repeater::make('locality')->schema([
-                            Forms\Components\TextInput::make('old-string')
-                                ->label('Replace')
-                                ->readOnly(),
-                            Forms\Components\TextInput::make('new-string')
-                                ->required()
-                                ->label('With'),
-                        ])->reorderable(false)->columns()
-                            ->addable(false)
-                            ->deletable(false),
-                    ]),
-
-                Forms\Components\Section::make('Recruiting')->collapsible()->collapsed()
+                Forms\Components\Section::make('Recruiting')
                     ->description('Settings related to division recruitment process')
                     ->aside()
                     ->statePath('settings')->schema([
@@ -145,7 +146,6 @@ class DivisionResource extends Resource
                             ->helperText('Use {{ name }} to insert the new recruit\'s name into your message')
                             ->statePath('welcome_pm'),
                     ]),
-
 
                 Forms\Components\Section::make('Chat Notifications')
                     ->description('Specify which events should notify and where.')
@@ -229,7 +229,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -242,7 +242,7 @@ class DivisionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PlatoonsRelationManager::class,
         ];
     }
 

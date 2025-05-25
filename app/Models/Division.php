@@ -301,7 +301,6 @@ class Division extends Model
     {
         return $this->members()->whereIn('position', [
             Position::CLAN_ADMIN,
-            Position::GENERAL_SERGEANT,
         ]);
     }
 

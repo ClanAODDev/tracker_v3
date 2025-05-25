@@ -12,7 +12,6 @@ enum Position: int implements HasLabel
     case MEMBER = 1;
     case SQUAD_LEADER = 2;
     case PLATOON_LEADER = 3;
-    case GENERAL_SERGEANT = 4;
     case EXECUTIVE_OFFICER = 5;
     case COMMANDING_OFFICER = 6;
     case CLAN_ADMIN = 7;
@@ -20,6 +19,18 @@ enum Position: int implements HasLabel
     public function getLabel(): ?string
     {
         return ucwords(str_replace('_', ' ', strtolower($this->name)));
+    }
+
+    protected static function getValues(): array
+    {
+        return [
+            self::MEMBER->value,
+            self::SQUAD_LEADER->value,
+            self::PLATOON_LEADER->value,
+            self::EXECUTIVE_OFFICER->value,
+            self::COMMANDING_OFFICER->value,
+            self::CLAN_ADMIN->value,
+        ];
     }
 
     public function getAbbreviation(): ?string
@@ -31,18 +42,14 @@ enum Position: int implements HasLabel
             self::COMMANDING_OFFICER => 'CO',
             self::CLAN_ADMIN => 'CA',
 
-            self::GENERAL_SERGEANT,
             self::MEMBER => '',
-
         };
     }
 
     public function getClass(): string
     {
         return match ($this) {
-            self::MEMBER,
-            self::GENERAL_SERGEANT => 'text-default',
-
+            self::MEMBER => 'text-default',
             self::SQUAD_LEADER => 'text-info',
             self::PLATOON_LEADER => 'text-warning',
 
