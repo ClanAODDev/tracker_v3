@@ -16,7 +16,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Mansoor\FilamentVersionable\Table\RevisionsAction;
-use ValentinMorice\FilamentJsonColumn\FilamentJsonColumn;
+use ValentinMorice\FilamentJsonColumn\JsonColumn;
 
 class DivisionResource extends Resource
 {

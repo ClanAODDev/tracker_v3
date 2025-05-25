@@ -28,7 +28,7 @@
         "laravel/ui": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "filament/filament": "^3.2",
-        "valentin-morice/filament-json-column": "^1.5",
+        "valentin-morice/filament-json-column": "^2.0.1",
         "opcodesio/log-viewer": "^3.10",
         "embed/embed": "^4.4",
         "mansoor/filament-versionable": "^0.0.12",
