@@ -254,9 +254,9 @@ class MemberResource extends Resource
                                     ])
                                     ->toArray()
                                 )
+                                ->required()
                                 ->searchable()
-                                ->reactive()
-                                ->required(),
+                                ->reactive(),
 
                             Select::make('squad_id')
                                 ->label('Squad')
@@ -265,8 +265,7 @@ class MemberResource extends Resource
                                     ->toArray()
                                 )
                                 ->searchable()
-                                ->disabled(fn (callable $get) => ! $get('platoon_id'))
-                                ->required(),
+                                ->disabled(fn (callable $get) => ! $get('platoon_id')),
                         ])
                         ->before(function (Collection $records, BulkAction $action): bool {
                             if ($records->pluck('division_id')->unique()->count() > 1) {
@@ -288,7 +287,6 @@ class MemberResource extends Resource
                                 'squad_id' => $data['squad_id'],
                             ]);
                         })
-                        ->requiresConfirmation()
                         ->color('primary'),
                 ]),
             ]);
