@@ -95,7 +95,8 @@ class DivisionResource extends Resource
 
                             Select::make('new_co')
                                 ->label('New CO')
-                                ->options(fn () => Member::where('division_id', $form->getRecord()->id)
+                                ->searchable()
+                                ->options(fn() => Member::where('division_id', $form->getRecord()->id)
                                     ->pluck('name', 'id')),
                         ])->columns(),
 
@@ -104,22 +105,22 @@ class DivisionResource extends Resource
                             ->schema([
                                 Select::make('xo')
                                     ->label('Executive Officer')
-                                    ->options(fn () => Member::where('division_id', $form->getRecord()->id)
-                                        ->pluck('name', 'id'))
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->options(fn() => Member::where('division_id', $form->getRecord()->id)
+                                        ->pluck('name', 'id')),
                             ])
                             ->minItems(0)
                             ->maxItems(3)
                             ->addActionLabel('Add XO')
                             ->afterStateHydrated(function ($state, Set $set) use ($form) {
-                                if (! empty($state)) {
+                                if (!empty($state)) {
                                     return;
                                 }
 
                                 $rows = Member::where('division_id', $form->getRecord()->id)
                                     ->where('position', Position::EXECUTIVE_OFFICER)
                                     ->pluck('id')
-                                    ->map(fn ($id) => ['xo' => $id])
+                                    ->map(fn($id) => ['xo' => $id])
                                     ->toArray();
 
                                 $set('executive_officers', $rows);
@@ -195,7 +196,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Filter::make('is_active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
             ])
