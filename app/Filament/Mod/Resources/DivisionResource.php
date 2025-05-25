@@ -2,20 +2,16 @@
 
 namespace App\Filament\Mod\Resources;
 
-use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
-use App\Models\Member;
 use Filament\Forms;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -115,59 +111,6 @@ class DivisionResource extends Resource
                                         ]),
                                 ]),
                             ]),
-                    ]),
-
-                Forms\Components\Section::make('Leadership Management')
-                    ->description('Manage division leaders')
-                    ->aside()
-                    ->schema([
-                        Forms\Components\Section::make()->schema([
-                            TextInput::make('current_co_name')
-                                ->label('Current CO')
-                                ->disabled()
-                                ->dehydrated(false)
-                                ->afterStateHydrated(function ($state, Set $set) use ($form) {
-                                    $coName = \App\Models\Member::query()
-                                        ->where('division_id', $form->getRecord()->id)
-                                        ->where('position', \App\Enums\Position::COMMANDING_OFFICER)
-                                        ->value('name');
-                                    $set('current_co_name', $coName);
-                                }),
-
-                            Select::make('new_co')
-                                ->label('New CO')
-                                ->options(fn () => Member::where('division_id', $form->getRecord()->id)
-                                    ->pluck('name', 'id')),
-                        ])->columns(),
-
-                        Repeater::make('executive_officers')
-                            ->label('Executive Officers')
-                            ->schema([
-                                Select::make('xo')
-                                    ->label('Executive Officer')
-                                    ->options(fn () => Member::where('division_id', $form->getRecord()->id)
-                                        ->pluck('name', 'id'))
-                                    ->searchable()
-                                    ->required(),
-                            ])
-                            ->minItems(0)
-                            ->maxItems(5)
-                            ->addActionLabel('Add XO')
-                            ->afterStateHydrated(function ($state, Set $set) use ($form) {
-                                if (! empty($state)) {
-                                    return;
-                                }
-
-                                $rows = Member::where('division_id', $form->getRecord()->id)
-                                    ->where('position', Position::EXECUTIVE_OFFICER)
-                                    ->pluck('id')
-                                    ->map(fn ($id) => ['xo' => $id])
-                                    ->toArray();
-
-                                $set('executive_officers', $rows);
-                            })
-                            ->required(),
-
                     ]),
 
                 Forms\Components\Section::make('Recruiting')
