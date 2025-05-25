@@ -11,17 +11,23 @@ use App\Filament\Mod\Resources\MemberResource\RelationManagers\RankActionsRelati
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\TransfersRelationManager;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Platoon;
+use App\Models\Squad;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class MemberResource extends Resource
 {
@@ -64,18 +70,23 @@ class MemberResource extends Resource
                         ->readOnly()
                         ->required()
                         ->numeric(),
-                    Select::make('position')
-                        ->required()
-                        ->options(Position::class),
                     Select::make('recruiter_id')
                         ->relationship('recruiter', 'name')
                         ->searchable()
                         ->nullable(),
                     Select::make('last_trained_by')
                         ->label('Last Trained By')
+                        ->helperText('Update when NCO training occurs')
                         ->searchable()
                         ->relationship('trainer', 'name'),
-                ])->columns(2),
+                    TextInput::make('position')
+                        ->label('Position')
+                        ->disabled()
+                        ->dehydrated(false)
+                        ->helperText('Manage via division, platoon, or squad')
+                        ->formatStateUsing(fn ($state) => Position::from($state)->getLabel()),
+                ])->columns(),
+
                 Forms\Components\Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
                         ->disabled(),
@@ -94,6 +105,38 @@ class MemberResource extends Resource
                     Forms\Components\DateTimePicker::make('last_promoted_at')->disabled(),
                     Forms\Components\DateTimePicker::make('last_trained_at')->disabled(),
                 ])->columns(3),
+
+                Forms\Components\Section::make('Division Assignment')->schema([
+                    Select::make('platoon_id')
+                        ->label('Platoon')
+                        ->relationship('platoon', 'name')
+                        ->options(function ($get) {
+                            $divisionId = auth()->user()->member->division_id;
+
+                            return Platoon::where('division_id', $divisionId)
+                                ->pluck('name', 'id')
+                                ->toArray();
+                        })
+                        ->reactive()
+                        ->afterStateUpdated(function ($state, callable $set) {
+
+                            $set('squad_id', null);
+                        }),
+                    Select::make('squad_id')
+                        ->label('Squad')
+                        ->relationship('squad', 'name')
+                        ->options(function ($get) {
+                            $platoonId = $get('platoon_id');
+
+                            if ($platoonId) {
+                                return Squad::where('platoon_id', $platoonId)
+                                    ->pluck('name', 'id')
+                                    ->toArray();
+                            }
+
+                            return [];
+                        }),
+                ])->columns(),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([
@@ -129,8 +172,13 @@ class MemberResource extends Resource
                 Tables\Columns\TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('platoon.name'),
+                Tables\Columns\TextColumn::make('platoon.name')
+                    ->searchable()
+                    ->toggleable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('squad.name')
+                    ->searchable()
+                    ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('position')
                     ->toggleable()
@@ -140,17 +188,10 @@ class MemberResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+
                 SelectFilter::make('division_id')
+                    ->label('Division')
                     ->options(Division::active()->get()->pluck('name', 'id')),
-                Filter::make('Has Active Division')
-                    ->query(function (Builder $query) {
-                        $query->whereNotNull('division_id')
-                            ->whereHas('division', function (Builder $subQuery) {
-                                $subQuery->where('active', true);
-                            });
-                    })
-                    ->label('Has Active Division')
-                    ->default(),
 
                 Filter::make('position')
                     ->form([
@@ -178,6 +219,15 @@ class MemberResource extends Resource
                     })->indicateUsing(function (array $data) {
                         return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
                     }),
+                Filter::make('Has Active Division')
+                    ->query(function (Builder $query) {
+                        $query->whereNotNull('division_id')
+                            ->whereHas('division', function (Builder $subQuery) {
+                                $subQuery->where('active', true);
+                            });
+                    })
+                    ->label('Has Active Division')
+                    ->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -185,6 +235,61 @@ class MemberResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     //                    Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('member_transfer')
+                        ->label('Transfer member(s)')
+                        ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->icon('heroicon-o-adjustments-vertical')
+                        ->form([
+                            Select::make('platoon_id')
+                                ->label('Platoon')
+                                ->options(fn (HasTable $livewire): array => Platoon::with('division')
+                                    ->where('division_id', $livewire
+                                        ->getSelectedTableRecords()
+                                        ->pluck('division_id')
+                                        ->first()
+                                    )
+                                    ->get()
+                                    ->mapWithKeys(fn (Platoon $p) => [
+                                        $p->id => "{$p->division->name} – {$p->name}",
+                                    ])
+                                    ->toArray()
+                                )
+                                ->searchable()
+                                ->reactive()
+                                ->required(),
+
+                            Select::make('squad_id')
+                                ->label('Squad')
+                                ->options(fn (callable $get) => Squad::where('platoon_id', $get('platoon_id'))
+                                    ->pluck('name', 'id')
+                                    ->toArray()
+                                )
+                                ->searchable()
+                                ->disabled(fn (callable $get) => ! $get('platoon_id'))
+                                ->required(),
+                        ])
+                        ->before(function (Collection $records, BulkAction $action): bool {
+                            if ($records->pluck('division_id')->unique()->count() > 1) {
+                                Notification::make()
+                                    ->danger()
+                                    ->title('Multiple divisions selected')
+                                    ->body('Only members of the same division can be transferred')
+                                    ->persistent()
+                                    ->send();
+
+                                $action->cancel();
+                            }
+
+                            return true;
+                        })
+                        ->action(function (Collection $records, array $data): void {
+                            $records->each->update([
+                                'platoon_id' => $data['platoon_id'],
+                                'squad_id' => $data['squad_id'],
+                            ]);
+                        })
+                        ->requiresConfirmation()
+                        ->color('primary'),
                 ]),
             ]);
     }

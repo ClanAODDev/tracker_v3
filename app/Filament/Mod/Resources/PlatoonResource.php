@@ -3,9 +3,12 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\PlatoonResource\Pages;
+use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\MembersRelationManager;
 use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationManager;
+use App\Models\Division;
 use App\Models\Platoon;
 use Filament\Forms;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -30,12 +33,19 @@ class PlatoonResource extends Resource
 
     public static function canEdit(Model $record): bool
     {
-        if (auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader()) {
+        $user = auth()->user();
+        $member = $user->member;
+
+        if ($user->isRole('admin')) {
             return true;
         }
 
-        if (auth()->user()->member->platoon_id == $record->id && auth()->user()->isPlatoonLeader()) {
-            return true;
+        if ($user->isRole('sr_ldr') || $user->isDivisionLeader()) {
+            return $record->division_id === $member->division_id;
+        }
+
+        if ($user->isPlatoonLeader() && $member->clan_id == $record->leader_id) {
+            return $record->division_id === $member->division_id;
         }
 
         return false;
@@ -43,29 +53,64 @@ class PlatoonResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('order')
-                    ->label('Sort order')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('logo')
-                    ->placeholder('https://')
-                    ->maxLength(255)
-                    ->default(null),
-                Select::make('leader_id')
-                    ->relationship('leader', 'name', function ($query) {
-                        $query->where('division_id', auth()->user()->member->division_id);
-                    })
-                    ->label('Leader (from current division)')
-                    ->searchable()
-                    ->helperText('Leave blank if position not yet assigned')
-                    ->nullable(),
+        $divisionId = Division::whereSlug(request('division'))->first()->id ?? auth()->user()->member->division_id;
 
+        return $form
+            ->schema(fn (?Platoon $record) => [
+
+                Hidden::make('division_id')->default($divisionId),
+
+                Forms\Components\Section::make('Basic Info')->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('order')
+                        ->label('Sort order')
+                        ->required()
+                        ->numeric()
+                        ->default(0),
+                    Forms\Components\TextInput::make('logo')
+                        ->placeholder('https://')
+                        ->maxLength(255)
+                        ->default(null),
+                ]),
+
+                Forms\Components\Section::make('Leadership')
+                    ->hiddenOn('create')
+                    ->schema([
+                        Select::make('leader_id')
+                            ->label('Leader')
+                            ->default('--')
+                            ->searchable()
+                            ->reactive()
+                            ->getSearchResultsUsing(function (string $search) use ($record) {
+                                $divisionId = $record->division_id;
+
+                                return \App\Models\Member::query()
+                                    ->where('division_id', $divisionId)
+                                    ->where(function ($query) use ($search) {
+                                        $query->where('name', 'like', "%{$search}%")
+                                            ->orWhere('clan_id', 'like', "%{$search}%");
+                                    })
+                                    ->orderBy('name')
+                                    ->limit(50)
+                                    ->pluck('name', 'clan_id');
+                            })
+                            ->getOptionLabelUsing(fn ($value) => \App\Models\Member::where('clan_id',
+                                $value)->value('name'))
+                            ->helperText('Leave blank if position not yet assigned. Must be from the same division as the platoon being assigned.')
+                            ->nullable(),
+
+                        Hidden::make('original_leader_id')
+                            ->reactive()
+                            ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id',
+                                $record?->leader_id)
+                            ),
+                        Forms\Components\Placeholder::make('Note: Changing Leadership')
+                            ->content("This change will update the new leader's position to Platoon Leader and the previous leader's position to Member. Will also reassign the new leader to this platoon")
+                            ->visible(fn (callable $get
+                            ) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
+                    ]),
             ]);
     }
 
@@ -73,8 +118,8 @@ class PlatoonResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order')
-                    ->numeric()
+                Tables\Columns\TextInputColumn::make('order')
+                    ->width('10px')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -102,14 +147,13 @@ class PlatoonResource extends Resource
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
-
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -118,6 +162,7 @@ class PlatoonResource extends Resource
     {
         return [
             SquadsRelationManager::class,
+            MembersRelationManager::class,
         ];
     }
 
@@ -125,7 +170,6 @@ class PlatoonResource extends Resource
     {
         return [
             'index' => Pages\ListPlatoons::route('/'),
-            'create' => Pages\CreatePlatoon::route('/create'),
             'edit' => Pages\EditPlatoon::route('/{record}/edit'),
         ];
     }

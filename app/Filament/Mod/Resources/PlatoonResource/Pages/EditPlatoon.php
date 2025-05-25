@@ -4,7 +4,11 @@ namespace App\Filament\Mod\Resources\PlatoonResource\Pages;
 
 use App\Enums\Position;
 use App\Filament\Mod\Resources\PlatoonResource;
+use App\Models\Member;
+use App\Models\Platoon;
+use App\Models\Squad;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditPlatoon extends EditRecord
@@ -40,24 +44,56 @@ class EditPlatoon extends EditRecord
 
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
-                \App\Models\Member::where('clan_id', $newLeaderId)?->update([
+                Member::where('clan_id', $newLeaderId)->update([
                     'position' => \App\Enums\Position::PLATOON_LEADER,
                     'platoon_id' => $this->record->id,
                     'squad_id' => 0,
                 ]);
+
+                Platoon::where('leader_id', $newLeaderId)->where('id', '!=',
+                    $this->record->id)->update(['leader_id' => null]);
+
+                Squad::where('leader_id', $newLeaderId)->where('id', '!=',
+                    $this->record->id)->update(['leader_id' => null]);
             }
 
-            \App\Models\Member::where('clan_id', $originalLeaderId)?->update([
-                'position' => Position::MEMBER,
-            ]);
+            if ($originalLeaderId) {
+                Member::where('clan_id', $originalLeaderId)->update([
+                    'position' => Position::MEMBER,
+                    'platoon_id' => null,
+                    'squad_id' => null,
+                ]);
+
+                Platoon::where('leader_id', $originalLeaderId)->where('id', '!=',
+                    $this->record->id)->update(['leader_id' => null]);
+
+                Squad::where('leader_id', $originalLeaderId)->update(['leader_id' => null]);
+            }
         }
     }
-
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+
+            Actions\DeleteAction::make()->action(function ($record) {
+                Member::where('platoon_id', $record->id)->update([
+                    'platoon_id' => 0,
+                    'squad_id' => 0,
+                ]);
+
+                Squad::where('platoon_id', $record->id)->delete();
+
+                $record->delete();
+
+                Notification::make()
+                    ->success()
+                    ->title('Platoon has been deleted')
+                    ->body('Assigned members and squads have been updated.')
+                    ->send();
+
+                return redirect()->route('filament.mod.resources.divisions.edit', $record->division);
+            }),
         ];
     }
 }

@@ -10,10 +10,10 @@
                     <div class="panel-body award-item" title="{{ $record->reason ?? $record->award->description }}">
                         <img src="{{ asset(Storage::url($record->award->image)) }}"
                              alt="{{ $record->award->name }}"
-                             class="clan-award"
+                             class="clan-award" loading="lazy"
                         />
                         <div class="col-xs-9 p-0 member-award-description">
-                            <div class="text-align: right;">
+                            <div>
                                 <span class="c-white">{{ $record->award->name }}</span> <br/>
                                 <span class="text-muted">{{ $record->created_at->format('M d, Y') }}</span>
                             </div>

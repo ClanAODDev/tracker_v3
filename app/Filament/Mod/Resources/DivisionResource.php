@@ -2,17 +2,20 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
+use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
+use App\Models\Member;
 use Filament\Forms;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -43,6 +46,7 @@ class DivisionResource extends Resource
 
         return $form
             ->schema([
+
                 Forms\Components\Section::make('General')
                     ->description('Basic division settings')
                     ->aside()
@@ -93,26 +97,80 @@ class DivisionResource extends Resource
                                             ])
                                             ->helperText('Highest rank PLs can promote to without approval'),
                                     ]),
+
+                                Tab::make('Locality')->schema([
+                                    Forms\Components\Section::make()
+                                        ->description('Update common vernacular to match division needs')
+                                        ->statePath('settings')->schema([
+                                            Forms\Components\Repeater::make('locality')->schema([
+                                                Forms\Components\TextInput::make('old-string')
+                                                    ->label('Replace')
+                                                    ->readOnly(),
+                                                Forms\Components\TextInput::make('new-string')
+                                                    ->required()
+                                                    ->label('With'),
+                                            ])->reorderable(false)->columns()
+                                                ->addable(false)
+                                                ->deletable(false),
+                                        ]),
+                                ]),
                             ]),
                     ]),
 
-                Forms\Components\Section::make('Locality')->collapsible()->collapsed()
-                    ->description('Update common vernacular to match division needs')
+                Forms\Components\Section::make('Leadership Management')
+                    ->description('Manage division leaders')
                     ->aside()
-                    ->statePath('settings')->schema([
-                        Forms\Components\Repeater::make('locality')->schema([
-                            Forms\Components\TextInput::make('old-string')
-                                ->label('Replace')
-                                ->readOnly(),
-                            Forms\Components\TextInput::make('new-string')
-                                ->required()
-                                ->label('With'),
-                        ])->reorderable(false)->columns()
-                            ->addable(false)
-                            ->deletable(false),
+                    ->schema([
+                        Forms\Components\Section::make()->schema([
+                            TextInput::make('current_co_name')
+                                ->label('Current CO')
+                                ->disabled()
+                                ->dehydrated(false)
+                                ->afterStateHydrated(function ($state, Set $set) use ($form) {
+                                    $coName = \App\Models\Member::query()
+                                        ->where('division_id', $form->getRecord()->id)
+                                        ->where('position', \App\Enums\Position::COMMANDING_OFFICER)
+                                        ->value('name');
+                                    $set('current_co_name', $coName);
+                                }),
+
+                            Select::make('new_co')
+                                ->label('New CO')
+                                ->options(fn () => Member::where('division_id', $form->getRecord()->id)
+                                    ->pluck('name', 'id')),
+                        ])->columns(),
+
+                        Repeater::make('executive_officers')
+                            ->label('Executive Officers')
+                            ->schema([
+                                Select::make('xo')
+                                    ->label('Executive Officer')
+                                    ->options(fn () => Member::where('division_id', $form->getRecord()->id)
+                                        ->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->required(),
+                            ])
+                            ->minItems(0)
+                            ->maxItems(5)
+                            ->addActionLabel('Add XO')
+                            ->afterStateHydrated(function ($state, Set $set) use ($form) {
+                                if (! empty($state)) {
+                                    return;
+                                }
+
+                                $rows = Member::where('division_id', $form->getRecord()->id)
+                                    ->where('position', Position::EXECUTIVE_OFFICER)
+                                    ->pluck('id')
+                                    ->map(fn ($id) => ['xo' => $id])
+                                    ->toArray();
+
+                                $set('executive_officers', $rows);
+                            })
+                            ->required(),
+
                     ]),
 
-                Forms\Components\Section::make('Recruiting')->collapsible()->collapsed()
+                Forms\Components\Section::make('Recruiting')
                     ->description('Settings related to division recruitment process')
                     ->aside()
                     ->statePath('settings')->schema([
@@ -145,7 +203,6 @@ class DivisionResource extends Resource
                             ->helperText('Use {{ name }} to insert the new recruit\'s name into your message')
                             ->statePath('welcome_pm'),
                     ]),
-
 
                 Forms\Components\Section::make('Chat Notifications')
                     ->description('Specify which events should notify and where.')
@@ -229,7 +286,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -242,7 +299,7 @@ class DivisionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PlatoonsRelationManager::class,
         ];
     }
 
