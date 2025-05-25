@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\PlatoonResource\Pages;
+use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\MembersRelationManager;
 use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationManager;
 use App\Models\Division;
 use App\Models\Platoon;
@@ -43,7 +44,7 @@ class PlatoonResource extends Resource
             return $record->division_id === $member->division_id;
         }
 
-        if ($user->isPlatoonLeader() && $member->platoon_id == $record->id) {
+        if ($user->isPlatoonLeader() && $member->clan_id == $record->leader_id) {
             return $record->division_id === $member->division_id;
         }
 
@@ -55,7 +56,7 @@ class PlatoonResource extends Resource
         $divisionId = Division::whereSlug(request('division'))->first()->id ?? auth()->user()->member->division_id;
 
         return $form
-            ->schema(fn(?Platoon $record) => [
+            ->schema(fn (?Platoon $record) => [
 
                 Hidden::make('division_id')->default($divisionId),
 
@@ -95,19 +96,19 @@ class PlatoonResource extends Resource
                                     ->limit(50)
                                     ->pluck('name', 'clan_id');
                             })
-                            ->getOptionLabelUsing(fn($value) => \App\Models\Member::where('clan_id',
+                            ->getOptionLabelUsing(fn ($value) => \App\Models\Member::where('clan_id',
                                 $value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the platoon being assigned.')
                             ->nullable(),
 
                         Hidden::make('original_leader_id')
                             ->reactive()
-                            ->afterStateHydrated(fn(callable $set, $state, $record) => $set('original_leader_id',
+                            ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id',
                                 $record?->leader_id)
                             ),
                         Forms\Components\Placeholder::make('Note: Changing Leadership')
                             ->content("This change will update the new leader's position to Platoon Leader and the previous leader's position to Member. Will also reassign the new leader to this platoon")
-                            ->visible(fn(callable $get
+                            ->visible(fn (callable $get
                             ) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
                     ]),
             ]);
@@ -152,7 +153,7 @@ class PlatoonResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -161,6 +162,7 @@ class PlatoonResource extends Resource
     {
         return [
             SquadsRelationManager::class,
+            MembersRelationManager::class,
         ];
     }
 

@@ -2,10 +2,8 @@
 
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
-use App\Filament\Mod\Resources\PlatoonResource;
 use App\Filament\Mod\Resources\SquadResource;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -58,13 +56,13 @@ class SquadsRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->url(fn(Model $record): string => SquadResource::getUrl('edit',
+                Tables\Actions\EditAction::make()->url(fn (Model $record): string => SquadResource::getUrl('edit',
                     ['record' => $record])),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
+                    //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
