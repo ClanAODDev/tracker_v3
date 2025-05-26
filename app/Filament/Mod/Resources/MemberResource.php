@@ -210,15 +210,24 @@ class MemberResource extends Resource
                     ->indicator('Rank')
                     ->form([
                         Select::make('rank')
-                            ->options(Rank::class),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['rank'],
-                                fn (Builder $query, $rank): Builder => $query->where('rank', $rank),
-                            );
-                    })->indicateUsing(function (array $data) {
-                        return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
+                            ->options(Rank::class)
+                            ->multiple()
+                            ->placeholder('Select ranks...'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
+                            return $query->whereIn('rank', $data['rank']);
+                        }
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
+                            // Map each rank to its label for display
+                            return 'Rank: ' . implode(', ', array_map(function ($rank) {
+                                    return Rank::from($rank)->getLabel();  // Assuming Rank is an Enum and has a getLabel() method
+                                }, $data['rank']));
+                        }
+                        return null;
                     }),
                 Filter::make('Has Active Division')
                     ->query(function (Builder $query) {
