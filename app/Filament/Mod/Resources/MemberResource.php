@@ -17,6 +17,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,7 +27,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class MemberResource extends Resource
@@ -37,34 +37,10 @@ class MemberResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
-    {
-        return false;
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        if ($record->id === auth()->user()->member_id) {
-            return false;
-        }
-
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
-    }
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->readOnly()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
                 Forms\Components\Section::make('Clan Data')->schema([
                     TextInput::make('clan_id')
                         ->readOnly()
@@ -110,8 +86,8 @@ class MemberResource extends Resource
                     Select::make('platoon_id')
                         ->label('Platoon')
                         ->relationship('platoon', 'name')
-                        ->options(function ($get) {
-                            $divisionId = auth()->user()->member->division_id;
+                        ->options(function (Get $get) {
+                            $divisionId = $get('division_id');
 
                             return Platoon::where('division_id', $divisionId)
                                 ->pluck('name', 'id')
@@ -125,7 +101,7 @@ class MemberResource extends Resource
                     Select::make('squad_id')
                         ->label('Squad')
                         ->relationship('squad', 'name')
-                        ->options(function ($get) {
+                        ->options(function (Get $get) {
                             $platoonId = $get('platoon_id');
 
                             if ($platoonId) {
@@ -210,15 +186,23 @@ class MemberResource extends Resource
                     ->indicator('Rank')
                     ->form([
                         Select::make('rank')
-                            ->options(Rank::class),
-                    ])->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['rank'],
-                                fn (Builder $query, $rank): Builder => $query->where('rank', $rank),
-                            );
-                    })->indicateUsing(function (array $data) {
-                        return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
+                            ->options(Rank::class)
+                            ->multiple()
+                            ->placeholder('Select ranks...'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
+                            return $query->whereIn('rank', $data['rank']);
+                        }
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data) {
+                        if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
+                            return 'Rank: ' . implode(', ', array_map(function ($rank) {
+                                return Rank::from($rank)->getLabel();
+                            }, $data['rank']));
+                        }
+                        return null;
                     }),
                 Filter::make('Has Active Division')
                     ->query(function (Builder $query) {

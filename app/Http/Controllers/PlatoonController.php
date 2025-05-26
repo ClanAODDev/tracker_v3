@@ -29,46 +29,6 @@ class PlatoonController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     *
-     * @throws AuthorizationException
-     */
-    public function create(Division $division)
-    {
-        $this->authorize('create', [Platoon::class, $division]);
-
-        $lastCreatedPlatoon = Platoon::whereDivisionId($division->id)
-            ->orderByDesc('id')
-            ->first();
-
-        $lastSort = ($lastCreatedPlatoon) ? $lastCreatedPlatoon->order + 100 : 100;
-
-        return view('platoon.create', compact('division', 'lastSort'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return RedirectResponse
-     */
-    public function store(CreatePlatoonForm $form, Division $division)
-    {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
-            return redirect()->back()
-                ->withErrors(['leader' => "Member {$form->leader_id} not to this division!"])
-                ->withInput();
-        }
-
-        $form->persist();
-
-        $this->showSuccessToast("{$division->locality('platoon')} has been created!");
-
-        return redirect()->route('division', $division->slug);
-    }
-
-    /**
      * @param  CreatePlatoonForm  $request
      * @return bool
      */
@@ -103,63 +63,7 @@ class PlatoonController extends Controller
             'division',
             'forumActivityGraph',
             'voiceActivityGraph',
-        )
-        );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     */
-    public function edit(Division $division, Platoon $platoon)
-    {
-        $this->authorize('update', $platoon);
-
-        $division->withCount('unassigned')->get();
-
-        return view('platoon.edit', compact('division', 'platoon'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @return RedirectResponse|Response
-     */
-    public function update(UpdatePlatoonForm $form, Division $division, Platoon $platoon)
-    {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
-            return redirect()->back()
-                ->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])
-                ->withInput();
-        }
-
-        $toastMessage = 'Your changes were saved';
-
-        if ($form->member_ids) {
-            $assignedCount = \count(json_decode($form->member_ids));
-            $toastMessage .= " and {$assignedCount} members were assigned!";
-        }
-
-        $form->persist($platoon);
-
-        $this->showSuccessToast($toastMessage);
-
-        return redirect()->route('platoon', [$division->slug, $platoon]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return RedirectResponse
-     */
-    public function destroy(DeletePlatoonForm $form, Division $division)
-    {
-        $form->persist();
-
-        $this->showSuccessToast('Platoon has been deleted');
-
-        return redirect()->route('division', $division->slug);
+        ));
     }
 
     public function manageSquads($division, $platoon)

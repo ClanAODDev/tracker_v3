@@ -17,9 +17,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\View;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,13 +66,12 @@ class RankActionResource extends Resource
                                 ->options(Rank::class)
                                 ->disabledOn('edit'),
 
-                            static::getJustificationFormField(),
-
-                            View::make('content_display')
-                                ->view('filament.components.read-only-rich-text')
-                                ->hidden(fn ($record
-                                ) => $record?->requester_id && $record->requester_id === auth()->user()->member_id)
-                                ->visibleOn('edit'),
+                            Forms\Components\RichEditor::make('justification')
+                                ->required()
+                                ->disabled(function ($record) {
+                                    return $record->requester_id !== auth()->user()->member_id;
+                                })
+                                ->columnSpanFull(),
                         ]),
                     Forms\Components\Fieldset::make('Metadata')
                         ->schema([
@@ -180,15 +179,10 @@ class RankActionResource extends Resource
 
             )
             ->actions([
-                Tables\Actions\EditAction::make(),
-                CommentsAction::make()->visible(fn (RankAction $action
+                Tables\Actions\ViewAction::make(),
+                CommentsAction::make()->visible(fn (
+                    RankAction $action
                 ) => auth()->user()->canManageCommentsFor($action)),
-                DeleteAction::make()->label('Cancel')
-                    ->hidden(fn (RankAction $action) => ! $action->actionable())
-                    ->visible(fn (RankAction $action) => auth()->user()->isDivisionLeader()
-                        || auth()->user()->isRole('admin')
-                        || auth()->id() == $action->requester_id
-                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -220,6 +214,7 @@ class RankActionResource extends Resource
 
         $fields = [
             Select::make('member_id')
+                ->label('Member')
                 ->hiddenOn('edit')
                 ->searchable()
                 ->getSearchResultsUsing(function (string $search): array {
@@ -391,15 +386,5 @@ class RankActionResource extends Resource
                 ->required(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
 
         ];
-    }
-
-    public static function getJustificationFormField(): Forms\Components\RichEditor
-    {
-        return Forms\Components\RichEditor::make('justification')
-            ->required()
-            ->hidden(fn ($record) => ($record?->requester_id && $record->requester_id !== auth()->user()->member_id)
-                || $record?->accepted_at
-            )
-            ->columnSpanFull();
     }
 }

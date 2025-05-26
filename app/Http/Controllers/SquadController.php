@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateSquadForm;
-use App\Http\Requests\DeleteSquadForm;
-use App\Http\Requests\UpdateSquadForm;
 use App\Models\Division;
 use App\Models\Platoon;
 use App\Models\Squad;
@@ -36,37 +33,11 @@ class SquadController extends Controller
         $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'leave'])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
-        $forumActivityGraph = $this->squadRepository->getSquadForumActivity($squad);
         $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
 
-        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'forumActivityGraph', 'voiceActivityGraph'));
+        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'voiceActivityGraph'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Division $division, Platoon $platoon)
-    {
-        $this->authorize('create', [Squad::class, $division]);
-
-        return view('squad.create', compact('division', 'platoon'));
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CreateSquadForm $form, Division $division, Platoon $platoon)
-    {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
-            return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
-        }
-
-        $form->persist();
-
-        $this->showSuccessToast(ucwords($division->locality('squad')) . ' has been created!');
-
-        return redirect()->route('platoon', [$division->slug, $platoon]);
-    }
 
     public function isMemberOfDivision(Division $division, $request): bool
     {
@@ -74,47 +45,6 @@ class SquadController extends Controller
 
         return $member->division instanceof Division && $member->division->id === $division->id;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @return Response
-     */
-    public function edit(Division $division, Platoon $platoon, Squad $squad)
-    {
-        $this->authorize('update', $squad);
-
-        return view('squad.edit', compact('squad', 'platoon', 'division'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateSquadForm $form, Division $division, Platoon $platoon, Squad $squad)
-    {
-        if ($form->leader_id && ! $this->isMemberOfDivision($division, $form)) {
-            return redirect()->back()->withErrors(['leader_id' => "Member {$form->leader_id} not assigned to this division!"])->withInput();
-        }
-
-        $form->persist();
-
-        $this->showSuccessToast('Squad has been updated');
-
-        return redirect()->route('squad.show', [$division->slug, $platoon, $squad]);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DeleteSquadForm $form, Division $division, Platoon $platoon)
-    {
-        $form->persist();
-
-        $this->showSuccessToast('Squad has been deleted');
-
-        return redirect()->route('platoon', [$division->slug, $platoon]);
-    }
-
     /**
      * Assign a member to a squad.
      */

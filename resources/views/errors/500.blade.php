@@ -20,7 +20,10 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-                An application error occurred. Please contact your division leadership or a clan administrator to report the problem.
+                <p>It looks like something went terribly wrong.</p>
+
+                <p>Report this issue to the clan admins! The error you found is: <code>{{ $exception->getMessage()
+                }}</code></p>
             </div>
         </div>
 

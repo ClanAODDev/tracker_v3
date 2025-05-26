@@ -33,11 +33,6 @@ class SquadRepository
         return $this->getActivityFor('last_activity', $squad);
     }
 
-    public function getSquadTSActivity(Squad $squad): array
-    {
-        return $this->getActivityFor('last_ts_activity', $squad);
-    }
-
     public function getSquadVoiceActivity(Squad $squad): array
     {
         return $this->getActivityFor('last_voice_activity', $squad);

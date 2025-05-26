@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeleteMember;
 use App\Models\Division;
 use App\Models\Handle;
 use App\Models\Member;
 use App\Models\Platoon;
-use App\Models\Position;
 use App\Repositories\MemberRepository;
 use Carbon\Carbon;
-use Illuminate\Auth\Access\AuthorizationException;
+
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,17 +22,10 @@ use Illuminate\View\View;
 class MemberController extends Controller
 {
     /**
-     * @var MemberRepository
-     */
-    protected $member;
-
-    /**
      * MemberController constructor.
      */
-    public function __construct(MemberRepository $member)
+    public function __construct(protected MemberRepository $member)
     {
-        $this->member = $member;
-
         $this->middleware('auth');
     }
 
@@ -174,19 +165,6 @@ class MemberController extends Controller
     }
 
     /**
-     * Assigns a position to the given member.
-     *
-     * @throws AuthorizationException
-     */
-    public function updatePosition(Request $request)
-    {
-        $member = Member::find($request->member);
-        $this->authorize('update', $member);
-        $member->assignPosition($request->position);
-        $member->save();
-    }
-
-    /**
      * Sync player handles.
      */
     public function updateHandles(Request $request)
@@ -202,26 +180,6 @@ class MemberController extends Controller
 
         $member->handles()->sync($handles);
         $this->showSuccessToast('Member handles have been updated!');
-    }
-
-    /**
-     * Remove member from AOD.
-     *
-     * @return Response
-     */
-    public function destroy(Member $member, DeleteMember $form)
-    {
-        $division = $member->division;
-
-        $form->persist();
-
-        $member->recordActivity('removed');
-
-        $this->showSuccessToast(
-            ucwords($member->name ?? 'Member') . ' has been removed.'
-        );
-
-        return redirect()->route('division', [$division->slug]);
     }
 
     public function assignPlatoon($member)

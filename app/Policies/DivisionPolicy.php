@@ -59,12 +59,16 @@ class DivisionPolicy
         return false;
     }
 
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         $division = $user->member->division;
 
-        if ($user->isRole('admin') || $user->member->division_id === $division->id) {
+        if ($user->isRole('admin')) {
             return true;
+        }
+
+        if (auth()->user()->isDivisionLeader()) {
+            return $user->member->division_id === $division->id;
         }
 
         return false;

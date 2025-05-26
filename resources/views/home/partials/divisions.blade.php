@@ -6,9 +6,10 @@
             <div class="panel-body">
                 <h4 class="m-b-none text-uppercase m-t-sm">
                     <img src="{{ $division->getLogoPath() }}"
-                         class="pull-right division-icon-medium"/>
+                         class="pull-right division-icon-medium" alt=""/>
                     @if ($division->isShutDown())
-                        <strike title="Division is shut down">{{ $division->name }}</strike>
+                        <span title="Division is shut down"
+                              style="text-decoration: line-through;">{{ $division->name }}</span>
                     @else
                         {{ $division->name }}
                     @endif
