@@ -22,6 +22,7 @@ class SquadsRelationManager extends RelationManager
                 ->default(null),
             Forms\Components\TextInput::make('logo')
                 ->maxLength(191)
+                ->placeholder('https://')
                 ->default(null),
         ]);
     }
