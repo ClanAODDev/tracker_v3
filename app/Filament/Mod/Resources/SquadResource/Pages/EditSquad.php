@@ -76,7 +76,9 @@ class EditSquad extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->action(function ($record) {
+            Actions\DeleteAction::make()
+                ->modalDescription('Assigned members will be removed from this squad. Are you sure?')
+                ->action(function ($record) {
                 Member::where('squad_id', $record->id)->update([
                     'squad_id' => 0,
                 ]);

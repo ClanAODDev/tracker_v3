@@ -26,9 +26,15 @@ class PlatoonResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
-    public static function canDeleteAny(): bool
+    public static function canDelete($record): bool
     {
-        return auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader();
+        if (auth()->user()->isRole(['admin'])) {
+            return true;
+        }
+
+        if (auth()->user()->isRole(['sr_ldr']) || auth()->user()->isDivisionLeader()) {
+            return $record->division_id === auth()->user()->member->division_id;
+        }
     }
 
     public static function canEdit(Model $record): bool
@@ -68,7 +74,7 @@ class PlatoonResource extends Resource
                         ->placeholder('https://')
                         ->maxLength(255)
                         ->default(null),
-                ]),
+                ])->columns(),
 
                 Forms\Components\Section::make('Leadership')
                     ->hiddenOn('create')

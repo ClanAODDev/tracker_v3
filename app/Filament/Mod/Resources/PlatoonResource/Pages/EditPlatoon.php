@@ -76,7 +76,9 @@ class EditPlatoon extends EditRecord
     {
         return [
 
-            Actions\DeleteAction::make()->action(function ($record) {
+            Actions\DeleteAction::make()
+                ->modalDescription('Assigned members will be removed from this platoon and any squads within. Are you sure?')
+                ->action(function ($record) {
                 Member::where('platoon_id', $record->id)->update([
                     'platoon_id' => 0,
                     'squad_id' => 0,
