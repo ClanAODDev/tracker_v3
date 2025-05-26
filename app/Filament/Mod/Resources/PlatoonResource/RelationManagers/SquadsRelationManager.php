@@ -58,11 +58,9 @@ class SquadsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make()->url(fn (Model $record): string => SquadResource::getUrl('edit',
                     ['record' => $record])),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

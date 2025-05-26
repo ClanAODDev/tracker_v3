@@ -63,7 +63,7 @@ class SquadResource extends Resource
                             Forms\Components\TextInput::make('logo')
                                 ->maxLength(191)
                                 ->default(null),
-                        ]),
+                        ])->columns(),
 
                         Forms\Components\Section::make('Leadership')->schema([
                             Select::make('leader_id')
