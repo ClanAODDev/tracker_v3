@@ -27,6 +27,8 @@ class RankActionsRelationManager extends RelationManager
                     ->required(),
                 Forms\Components\DateTimePicker::make('created_at')
                     ->label('Effective'),
+                Forms\Components\RichEditor::make('justification')
+                    ->hidden(fn ($record) => $record->justification === null),
             ]);
 
     }
@@ -35,7 +37,7 @@ class RankActionsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('rank')
-            ->modifyQueryUsing(fn ($query) => $query->approvedAndAccepted())
+            ->modifyQueryUsing(fn($query) => $query->approvedAndAccepted())
             ->columns([
                 Tables\Columns\TextColumn::make('rank'),
                 Tables\Columns\TextColumn::make('created_at')
@@ -51,6 +53,7 @@ class RankActionsRelationManager extends RelationManager
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

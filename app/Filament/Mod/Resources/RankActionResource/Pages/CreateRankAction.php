@@ -10,6 +10,7 @@ use App\Models\RankAction;
 use App\Models\User;
 use App\Notifications\Channel\NotifyAdminSgtRequestPending;
 use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -24,7 +25,7 @@ class CreateRankAction extends CreateRecord
         $data['requester_id'] = auth()->user()->member_id;
 
         $member = Member::find($data['member_id']);
-        if (! $member) {
+        if (!$member) {
             throw new \Exception('Member not found.');
         }
 
@@ -94,7 +95,9 @@ class CreateRankAction extends CreateRecord
                 ->schema(RankActionResource::getRankActionFields()),
             Step::make('Justification')
                 ->schema([
-                    RankActionResource::getJustificationFormField(),
+                    RichEditor::make('Justification')
+                        ->required()
+                        ->columnSpanFull()
                 ]),
         ];
     }
