@@ -37,25 +37,6 @@ class MemberResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
-
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
-    {
-        return false;
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        if ($record->id === auth()->user()->member_id) {
-            return false;
-        }
-
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
-    }
-
     public static function form(Form $form): Form
     {
         return $form
