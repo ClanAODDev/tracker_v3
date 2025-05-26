@@ -26,7 +26,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class MemberResource extends Resource
@@ -41,11 +40,6 @@ class MemberResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->readOnly()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
                 Forms\Components\Section::make('Clan Data')->schema([
                     TextInput::make('clan_id')
                         ->readOnly()
@@ -203,10 +197,9 @@ class MemberResource extends Resource
                     })
                     ->indicateUsing(function (array $data) {
                         if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
-                            // Map each rank to its label for display
                             return 'Rank: ' . implode(', ', array_map(function ($rank) {
-                                    return Rank::from($rank)->getLabel();  // Assuming Rank is an Enum and has a getLabel() method
-                                }, $data['rank']));
+                                return Rank::from($rank)->getLabel();
+                            }, $data['rank']));
                         }
                         return null;
                     }),
