@@ -17,6 +17,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -85,8 +86,8 @@ class MemberResource extends Resource
                     Select::make('platoon_id')
                         ->label('Platoon')
                         ->relationship('platoon', 'name')
-                        ->options(function ($get) {
-                            $divisionId = auth()->user()->member->division_id;
+                        ->options(function (Get $get) {
+                            $divisionId = $get('division_id');
 
                             return Platoon::where('division_id', $divisionId)
                                 ->pluck('name', 'id')
@@ -100,7 +101,7 @@ class MemberResource extends Resource
                     Select::make('squad_id')
                         ->label('Squad')
                         ->relationship('squad', 'name')
-                        ->options(function ($get) {
+                        ->options(function (Get $get) {
                             $platoonId = $get('platoon_id');
 
                             if ($platoonId) {
