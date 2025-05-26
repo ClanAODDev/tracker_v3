@@ -39,7 +39,7 @@
             @include ('member.partials.notes')
         @endcan
 
-        @can('delete', $member)
+        @can('separate', $member)
             <hr>
             @if ($member->division)
                 <form action="{{ route('deleteMember', [$member->clan_id]) }}" method="post">

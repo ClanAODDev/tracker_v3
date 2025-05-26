@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
@@ -14,15 +15,12 @@ class MemberPolicy
     public function before(User $user)
     {
         // MSgts, SGTs, developers have access to all members
-        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
+        if ($user->isRole('admin') || $user->isDeveloper()) {
             return true;
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function create(User $user)
+    public function recruit(User $user): bool
     {
         // member role cannot recruit members
         if ($user->role_id > 1) {
@@ -32,18 +30,22 @@ class MemberPolicy
         return false;
     }
 
+    public function create(User $user): bool
+    {
+        // member creation only happens through the recruitment process
+        return false;
+    }
+
     /**
      * Can the user update the given member?
-     *
-     * @return bool
      */
-    public function update(User $user, Member $member)
+    public function update(User $user, Member $member): bool
     {
         if ($member->id === auth()->user()->member_id) {
             return false;
         }
 
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return auth()->user()->isRole('sr_ldr');
     }
 
     public function updateLeave(User $user, Member $member)
@@ -53,12 +55,7 @@ class MemberPolicy
             return false;
         }
 
-        return false;
-    }
-
-    public function reset(User $user)
-    {
-        return false;
+        return auth()->user()->isRole('sr_ldr');
     }
 
     public function view()
@@ -71,23 +68,31 @@ class MemberPolicy
         return true;
     }
 
-    /**
-     * Determines policy for removing members.
-     *
-     * @return bool
-     */
-    public function delete(User $user, Member $member)
+    public function delete(): bool
     {
-        // can't delete yourself
+        // deletion not possible, only removal from AOD
+        return false;
+    }
+
+    /**
+     * Separate member from the clan.
+     */
+    public function separate(User $user, Member $member): bool
+    {
         if ($member->id === $user->member->id) {
             return false;
         }
 
-        if ($user->member->rank->value < \App\Enums\Rank::SERGEANT->value) {
+        // can't remove members above your rank
+        if ($user->member->rank->value <= $member->rank->value) {
             return false;
         }
 
-        return true;
+        if ($user->member->rank->value <= Rank::SERGEANT->value) {
+            return true;
+        }
+
+        return false;
     }
 
     public function managePartTime(User $user, Member $member)

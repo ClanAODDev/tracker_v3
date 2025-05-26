@@ -27,11 +27,6 @@ class DivisionResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
-    public static function canViewAny(): bool
-    {
-        return auth()->user()->isRole(['admin']) || auth()->user()->isDivisionLeader();
-    }
-
     public static function form(Form $form): Form
     {
         $channelOptions = [

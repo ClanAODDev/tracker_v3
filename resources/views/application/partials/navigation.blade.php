@@ -62,7 +62,7 @@
         </ul>
     </li>
 
-    @can('create', App\Models\Member::class)
+    @can('recruit', App\Models\Member::class)
         <li class="{{ set_active('recruit') }}">
             <a href="{{ route('recruiting.initial') }}">Add New Recruit</a>
         </li>
