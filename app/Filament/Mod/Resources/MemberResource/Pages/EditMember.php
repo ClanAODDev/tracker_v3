@@ -12,6 +12,13 @@ class EditMember extends EditRecord
 {
     protected static string $resource = MemberResource::class;
 
+    public function getTitle(): string
+    {
+        return $this->record->division_id
+            ? $this->record->name
+            : sprintf('[Ex-AOD] %s', $this->record->name);
+    }
+
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         if ($record->isDirty('last_trained_by')) {
