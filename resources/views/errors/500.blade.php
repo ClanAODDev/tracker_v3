@@ -20,10 +20,10 @@
 
         <div class="panel panel-filled">
             <div class="panel-body">
-                <p>It looks like something went terribly wrong.</p>
+                <p>It looks like something went terribly wrong. Report this issue to the clan admins! The error you
+                    found is:</p>
 
-                <p>Report this issue to the clan admins! The error you found is: <code>{{ $exception->getMessage()
-                }}</code></p>
+                <p><code>{{ $exception->getMessage()}}</code></p>
             </div>
         </div>
 
