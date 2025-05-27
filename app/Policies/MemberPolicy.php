@@ -83,12 +83,7 @@ class MemberPolicy
             return false;
         }
 
-        // can't remove members above your rank
-        if ($user->member->rank->value <= $member->rank->value) {
-            return false;
-        }
-
-        if ($user->member->rank->value <= Rank::SERGEANT->value) {
+        if ($member->rank->value < $user->member->rank->value) {
             return true;
         }
 

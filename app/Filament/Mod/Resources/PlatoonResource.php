@@ -35,6 +35,8 @@ class PlatoonResource extends Resource
         if (auth()->user()->isRole(['sr_ldr']) || auth()->user()->isDivisionLeader()) {
             return $record->division_id === auth()->user()->member->division_id;
         }
+
+        return false;
     }
 
     public static function canEdit(Model $record): bool
