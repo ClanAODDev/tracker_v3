@@ -6,7 +6,7 @@ use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ThrottlesLogins;

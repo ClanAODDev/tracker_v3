@@ -117,6 +117,11 @@ enum Rank: int implements HasColor, HasLabel
         return $this->value > $previousRank->value;
     }
 
+    public function isOfficer(): bool
+    {
+        return $this->value >= self::LANCE_CORPORAL->value;
+    }
+
     public function routeNotificationForAdmin()
     {
         return config('app.aod.msgt-channel');
