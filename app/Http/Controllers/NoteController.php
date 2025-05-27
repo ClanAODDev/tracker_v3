@@ -33,7 +33,7 @@ class NoteController extends Controller
      */
     public function edit(Member $member, Note $note)
     {
-        $this->authorize('delete', $member);
+        $this->authorize('separate', $member);
 
         $division = $member->division;
 
@@ -55,7 +55,7 @@ class NoteController extends Controller
      */
     public function update(Request $request, Member $member, Note $note)
     {
-        $this->authorize('delete', $member);
+        $this->authorize('separate', $member);
 
         $this->validate(request(), [
             'body.required' => 'You must provide content for your note',

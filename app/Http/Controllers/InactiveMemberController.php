@@ -104,7 +104,7 @@ class InactiveMemberController extends Controller
 
     public function removeMember(Member $member, DeleteMember $form)
     {
-        $this->authorize('delete', $member);
+        $this->authorize('separate', $member);
         $division = $member->division;
         $form->persist();
         $this->showSuccessToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
