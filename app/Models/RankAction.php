@@ -18,6 +18,7 @@ class RankAction extends Model
         'rank' => Rank::class,
         'approved_at' => 'datetime',
         'accepted_at' => 'datetime',
+        'awarded_at' => 'datetime',
         'declined_at' => 'datetime',
     ];
 
@@ -56,11 +57,23 @@ class RankAction extends Model
         return $this;
     }
 
-    public function approveAndAccept()
+    public function award()
     {
         $this->update([
-            'approved_at' => now(),
-            'accepted_at' => now(),
+            'awarded_at' => now(),
+        ]);
+
+        return $this;
+    }
+
+    public function approveAndAccept()
+    {
+        $now = now();
+
+        $this->update([
+            'approved_at' => $now,
+            'accepted_at' => $now,
+            'awarded_at' => $now,
         ]);
 
         return $this;

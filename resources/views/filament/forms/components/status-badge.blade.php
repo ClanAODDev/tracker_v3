@@ -17,7 +17,13 @@
         $title = 'Waiting for Approval';
         $color = 'warning';
         $icon = 'heroicon-s-clock'; // ⏳
-    } elseif (!is_null($record?->approved_at) && is_null($record?->accepted_at)) {
+     } elseif ($record?->rank->isOfficer() && is_null($record?->awarded_at)) {
+        // Pending approval
+        $status = 'Awaiting Award';
+        $title = 'Requester action required';
+        $color = 'primary';
+        $icon = 'heroicon-s-clock'; // ⏳
+    } elseif (!is_null($record?->approved_at || $record?->awarded_at) && is_null($record?->accepted_at)) {
         // Pending acceptance
         $status = 'Acceptance';
         $title = 'Waiting for Member Acceptance';
