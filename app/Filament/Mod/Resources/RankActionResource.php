@@ -9,15 +9,17 @@ use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRela
 use App\Models\Member;
 use App\Models\RankAction;
 use Carbon\Carbon;
-use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\View;
 use Filament\Forms\Components\ViewField;
 use Filament\Forms\Form;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
@@ -50,41 +52,47 @@ class RankActionResource extends Resource
         return $form
             ->schema([
 
-                Forms\Components\Split::make([
-                    Forms\Components\Section::make('Rank Action Details')
-                        ->hiddenOn('create')
-                        ->schema([
-                            Forms\Components\Fieldset::make('Dates')->schema([
-                                Forms\Components\DateTimePicker::make('approved_at')
-                                    ->visible(fn ($record) => $record->approved_at)
-                                    ->readOnly(),
-                                Forms\Components\DateTimePicker::make('created_at')
-                                    ->label('Requested At')
-                                    ->readOnly(),
-                            ]),
-                            Select::make('rank')
-                                ->options(Rank::class)
-                                ->disabledOn('edit'),
+                Grid::make()
+                    ->schema([
+                        Fieldset::make('Metadata')
+                            ->schema([
+                                ViewField::make('status')
+                                    ->view('filament.forms.components.status-badge')
+                                    ->viewData(['record']),
+                                ViewField::make('type')
+                                    ->view('filament.forms.components.type-badge')
+                                    ->viewData(['record']),
+                            ])
+                            ->columnSpan(2),
 
-                            Forms\Components\RichEditor::make('justification')
-                                ->required()
-                                ->disabled(function ($record) {
-                                    return $record->requester_id !== auth()->user()->member_id;
-                                })
-                                ->columnSpanFull(),
-                        ]),
-                    Forms\Components\Fieldset::make('Metadata')
-                        ->schema([
-                            ViewField::make('status')
-                                ->view('filament.forms.components.status-badge')
-                                ->viewData(['record']),
-                            ViewField::make('type')
-                                ->view('filament.forms.components.type-badge')
-                                ->viewData(['record']),
-                        ])
-                        ->grow(false),
-
-                ])->columnSpanFull(),
+                        Section::make('Rank Action Details')
+                            ->hiddenOn('create')
+                            ->schema([
+                                Fieldset::make('Dates')->schema([
+                                    DateTimePicker::make('awarded_at')
+                                        ->visible(fn ($record) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
+                                        ->label('Awarded At')
+                                        ->readOnly(),
+                                    DateTimePicker::make('approved_at')
+                                        ->visible(fn ($record) => $record->approved_at)
+                                        ->readOnly(),
+                                    DateTimePicker::make('created_at')
+                                        ->label('Requested At')
+                                        ->readOnly(),
+                                ])->columns(3),
+                                Select::make('rank')
+                                    ->options(Rank::class)
+                                    ->disabledOn('edit'),
+                                RichEditor::make('justification')
+                                    ->required()
+                                    ->disabled(function ($record) {
+                                        return $record->requester_id !== auth()->user()->member_id;
+                                    })
+                                    ->columnSpanFull(),
+                            ])
+                            ->columnSpan(2),
+                    ])
+                    ->columns(),
 
             ]);
     }
