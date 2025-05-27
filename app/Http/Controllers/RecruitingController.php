@@ -34,7 +34,7 @@ class RecruitingController extends Controller
      */
     public function index()
     {
-        $this->authorize('create', Member::class);
+        $this->authorize('recruit', Member::class);
 
         $divisions = Division::active()->where('shutdown_at', null)->get();
 
@@ -46,7 +46,7 @@ class RecruitingController extends Controller
      */
     public function submitRecruitment(Request $request)
     {
-        $this->authorize('create', Member::class);
+        $this->authorize('recruit', Member::class);
 
         $division = Division::whereSlug($request->division)->first();
 
@@ -64,7 +64,7 @@ class RecruitingController extends Controller
     public function form(Division $division)
     {
 
-        $this->authorize('create', Member::class);
+        $this->authorize('recruit', Member::class);
         if ($division->isShutdown()) {
             $this->showErrorToast('This division has been shutdown and cannot receive new members');
 
