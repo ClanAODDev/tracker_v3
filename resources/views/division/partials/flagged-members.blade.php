@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     <div class="btn-group-xs">
-                        @can ('delete', $member)
+                        @can ('separate', $member)
                             <form action="{{ route('member.drop-for-inactivity', [$member->clan_id]) }}" method="post">
                                 @method('delete')
                                 @csrf
