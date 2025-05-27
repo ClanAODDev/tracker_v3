@@ -18,7 +18,7 @@
         $color = 'warning';
         $icon = 'heroicon-s-clock'; // ⏳
      } elseif ($record?->rank->isOfficer() && is_null($record?->awarded_at)) {
-        // Pending approval
+        // Pending award
         $status = 'Awaiting Award';
         $title = 'Requester action required';
         $color = 'primary';
