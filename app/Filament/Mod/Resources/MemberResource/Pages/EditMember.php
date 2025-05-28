@@ -56,7 +56,7 @@ class EditMember extends EditRecord
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->url(fn () => sprintf(
                         'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=%s',
-                        $this->record->id
+                        $this->record->clan_id
                     ))
                     ->openUrlInNewTab()
                     ->color('danger'),
@@ -94,7 +94,7 @@ class EditMember extends EditRecord
             ])->label('Remove...')
                 ->icon('heroicon-m-trash')
                 ->color('danger')
-                ->visible(fn () => auth()->user()->can('separate', $this->record))
+                ->visible(fn () => auth()->user()->can('separate', $this->record) && $this->record->division_id)
                 ->button(),
 
         ];
