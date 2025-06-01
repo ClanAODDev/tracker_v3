@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Filament\Mod\Resources\TransferResource\Pages;
+use App\Jobs\UpdateDivisionForMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Transfer;
@@ -155,7 +156,7 @@ class TransferResource extends Resource
                     ->requiresConfirmation()
                     ->action(function (Transfer $record) {
                         $record->approve();
-
+                        UpdateDivisionForMember::dispatch($record);
                     })
                     ->visible(fn (Transfer $record) => $record->canApprove() && ! $record->approved_at),
             ])
