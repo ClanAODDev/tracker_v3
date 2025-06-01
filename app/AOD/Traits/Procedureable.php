@@ -4,15 +4,27 @@ namespace App\AOD\Traits;
 
 trait Procedureable
 {
-    private function callProcedure($procedure, $data)
+    /**
+     * should not be called directly, move implementation to a service class
+     */
+    private function callProcedure($procedure, $data, $connection = 'aod_forums')
     {
+        /*
+        $backtrace = debug_backtrace();
+        $caller = $backtrace[1] ?? null;
+
+        if ($caller && isset($caller['class']) && !str_contains($caller['class'], 'Procedureable')) {
+            throw new \RuntimeException("Direct access to callProcedure is not allowed.");
+        }
+        */
+
         try {
             if (\is_array($data)) {
                 $stringKeys = implode(',', array_map(fn ($key) => ':' . $key, array_keys($data)));
-                $results = collect(\DB::connection('aod_forums')
+                $results = collect(\DB::connection($connection)
                     ->select("CALL {$procedure}({$stringKeys})", $data))->first();
             } elseif (\is_string($data) || \is_int($data)) {
-                $results = collect(\DB::connection('aod_forums')
+                $results = collect(\DB::connection($connection)
                     ->select("CALL {$procedure}('{$data}')"))->first();
             }
 
@@ -28,5 +40,14 @@ trait Procedureable
 
             return collect([]);
         }
+    }
+
+    public function checkValidSessionData($sessionData): bool
+    {
+        $this->callProcedure('check_session', [
+            'session' => $_COOKIE[$this->sessionKey],
+        ]);
+
+        return isset($sessionData->userid, $sessionData->username, $sessionData->email, $sessionData->membergroupids, $sessionData->usergroupid);
     }
 }
