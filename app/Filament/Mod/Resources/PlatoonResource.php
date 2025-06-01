@@ -15,49 +15,15 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PlatoonResource extends Resource
 {
     protected static ?string $model = Platoon::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-square-2-stack';
 
-    protected static ?string $navigationGroup = 'Division';
-
-    public static function canDelete($record): bool
-    {
-        if (auth()->user()->isRole(['admin'])) {
-            return true;
-        }
-
-        if (auth()->user()->isRole(['sr_ldr']) || auth()->user()->isDivisionLeader()) {
-            return $record->division_id === auth()->user()->member->division_id;
-        }
-
-        return false;
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        $user = auth()->user();
-        $member = $user->member;
-
-        if ($user->isRole('admin')) {
-            return true;
-        }
-
-        if ($user->isRole('sr_ldr') || $user->isDivisionLeader()) {
-            return $record->division_id === $member->division_id;
-        }
-
-        if ($user->isPlatoonLeader() && $member->clan_id == $record->leader_id) {
-            return $record->division_id === $member->division_id;
-        }
-
-        return false;
-    }
+    protected static ?string $navigationGroup = 'Organization';
 
     public static function form(Form $form): Form
     {

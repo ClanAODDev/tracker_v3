@@ -12,42 +12,15 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SquadResource extends Resource
 {
     protected static ?string $model = Squad::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
-    protected static ?string $navigationGroup = 'Division';
-
-    protected static ?string $navigationParentItem = 'Platoons';
-
-    public static function canDeleteAny(): bool
-    {
-        return auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader();
-    }
-
-    public static function canDelete(Model $record): bool
-    {
-        return auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader();
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        if (auth()->user()->isRole(['admin', 'sr_ldr']) || auth()->user()->isDivisionLeader()) {
-            return true;
-        }
-
-        // allow platoon leader of squad to edit
-        if (auth()->user()->isPlatoonLeader() && $record->platoon->leader_id === auth()->user()->member->clan_id) {
-            return true;
-        }
-
-        return false;
-    }
+    protected static ?string $navigationGroup = 'Organization';
 
     public static function form(Form $form): Form
     {
