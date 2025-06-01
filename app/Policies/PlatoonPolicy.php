@@ -20,33 +20,21 @@ class PlatoonPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole(['admin']) || $user->isDeveloper()) {
+        if ($user->isRole('admin') || $user->isDeveloper()) {
             return true;
         }
     }
 
-    public function viewAny(User $user)
+    public function update(User $user, Platoon $platoon): bool
     {
-        $division = $user->member->division;
+        $member = $user->member;
 
-        if ($user->member->division_id === $division->id) {
-            return true;
+        if ($user->isRole('sr_ldr') || $user->isDivisionLeader()) {
+            return $platoon->division_id === $member->division_id;
         }
 
-        return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function update(User $user, Platoon $platoon)
-    {
-        if ($user->isDivisionLeader() && $user->member->division_id === $platoon->division->id) {
-            return true;
-        }
-
-        if ($platoon->leader_id == $user->member->clan_id) {
-            return true;
+        if ($user->isPlatoonLeader() && $member->clan_id == $platoon->leader_id) {
+            return $platoon->division_id === $member->division_id;
         }
 
         return false;
@@ -57,7 +45,10 @@ class PlatoonPolicy
      */
     public function delete(User $user, Platoon $platoon)
     {
-        // only allow sr_ldrs and above to delete platoons
+        if (auth()->user()->isRole('sr_ldr') || auth()->user()->isDivisionLeader()) {
+            return $platoon->division_id === auth()->user()->member->division_id;
+        }
+
         return false;
     }
 
@@ -66,7 +57,7 @@ class PlatoonPolicy
      */
     public function create(User $user)
     {
-        if ($user->isRole(['sr_ldr'])) {
+        if ($user->isRole('sr_ldr')) {
             return true;
         }
 

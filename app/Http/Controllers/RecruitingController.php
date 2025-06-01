@@ -218,6 +218,7 @@ class RecruitingController extends Controller
         \App\Models\Transfer::create([
             'member_id' => $member->id,
             'division_id' => $division->id,
+            'approved_at' => now(),
         ]);
 
         return $member;

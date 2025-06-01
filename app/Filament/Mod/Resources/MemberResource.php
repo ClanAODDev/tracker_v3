@@ -83,6 +83,8 @@ class MemberResource extends Resource
                 ])->columns(3),
 
                 Forms\Components\Section::make('Division Assignment')->schema([
+                    Forms\Components\Placeholder::make('Division')
+                        ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
                     Select::make('platoon_id')
                         ->label('Platoon')
                         ->relationship('platoon', 'name')
@@ -112,7 +114,7 @@ class MemberResource extends Resource
 
                             return [];
                         }),
-                ])->columns(),
+                ])->columns(3),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([
@@ -194,6 +196,7 @@ class MemberResource extends Resource
                         if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
                             return $query->whereIn('rank', $data['rank']);
                         }
+
                         return $query;
                     })
                     ->indicateUsing(function (array $data) {
@@ -202,6 +205,7 @@ class MemberResource extends Resource
                                 return Rank::from($rank)->getLabel();
                             }, $data['rank']));
                         }
+
                         return null;
                     }),
                 Filter::make('Has Active Division')
