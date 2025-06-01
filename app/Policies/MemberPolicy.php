@@ -97,7 +97,7 @@ class MemberPolicy
             return true;
         }
 
-        if ($user->isRole('officer')) {
+        if ($user->isRole(['officer','sr_ldr'])) {
             return true;
         }
 
@@ -132,7 +132,7 @@ class MemberPolicy
             return true;
         }
 
-        if ($user->isRole('officer')) {
+        if ($user->isRole(['officer', 'sr_ldr'])) {
             return true;
         }
 
