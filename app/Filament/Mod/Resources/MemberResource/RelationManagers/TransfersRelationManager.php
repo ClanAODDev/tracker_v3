@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\MemberResource\RelationManagers;
 
+use App\Filament\Mod\Resources\TransferResource;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -13,24 +14,17 @@ class TransfersRelationManager extends RelationManager
 {
     protected static string $relationship = 'transfers';
 
-    public function isReadOnly(): bool
-    {
-        return true;
-    }
-
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-
                 Select::make('division_id')
                     ->relationship('division', 'name')
                     ->label('Division')
                     ->required(),
                 Forms\Components\DateTimePicker::make('created_at')
-                    ->label('Effective')
+                    ->label('Requested')
                     ->readOnly()->default(now()),
-
             ]);
     }
 
@@ -48,11 +42,11 @@ class TransfersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->url(fn(): string => TransferResource::getUrl('create', [
+                    'member_id' => $this->ownerRecord->id
+                ])),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
