@@ -80,8 +80,9 @@ class TransferResource extends Resource
 
                                 Forms\Components\Placeholder::make('current_division')
                                     ->label('Transferring From')
-                                    ->content(fn (Forms\Get $get
-                                    ) => $get('current_division') ?? optional(Member::find($get('member_id')))->division->name ?? '--'
+                                    ->content(fn (Forms\Get $get) => $get('current_division')
+                                        ?? optional(Member::find($get('member_id')))->division->name
+                                        ?? '--'
                                     ),
                             ]),
 
@@ -104,6 +105,7 @@ class TransferResource extends Resource
                                     ->required()
                                     ->disabledOn('edit')
                                     ->default('division_id')
+                                    ->helperText('Upon creation, both the assigned division and the new division will be notified of this transfer request.')
                                     ->reactive(),
                             ]),
                     ]),
