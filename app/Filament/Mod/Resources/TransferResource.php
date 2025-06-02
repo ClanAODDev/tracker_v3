@@ -73,7 +73,7 @@ class TransferResource extends Resource
 
                         return $query;
                     })
-                    ->default(),
+                    ->default(false),
 
                 Filter::make('incomplete')
                     ->label('Incomplete')
