@@ -3,16 +3,11 @@
 namespace App\Console\Commands;
 
 use App\AOD\MemberSync\GetDivisionInfo;
-use App\Enums\Position;
-use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
-use App\Models\RankAction;
 use App\Models\Squad;
-use App\Models\Transfer;
-use App\Notifications\Channel\NotifyDivisionMemberPromotion;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -158,53 +153,6 @@ class MemberSync extends Command
                 // only update things that have changed
                 foreach ($differences as $key => $value) {
                     $updates[$key] = $newData[$key];
-
-                    if ($key === 'rank') {
-                        $newRank = Rank::from($newData[$key]);
-                        $oldRank = Rank::from($oldData[$key]);
-
-                        if ($member->division->settings()->get('chat_alerts.member_promoted')) {
-                            if ($newRank->isPromotion(previousRank: $oldRank)) {
-                                $member->division->notify(new NotifyDivisionMemberPromotion(
-                                    $member->name,
-                                    $newRank->getLabel(),
-                                    fromSync: true
-                                ));
-                            }
-                        }
-
-                        $updates['last_promoted_at'] = now();
-                        RankAction::create([
-                            'member_id' => $member->id,
-                            'rank' => $newRank,
-                        ])->approveAndAccept();
-
-                        \Log::debug(sprintf('Saw a rank change for %s to %s', $oldData['name'], $newRank->getLabel()));
-                    }
-
-                    if ($key === 'division_id') {
-                        \Log::debug(sprintf('Saw a division change for %s to %s', $oldData['name'], $newData[$key]));
-                        Transfer::create([
-                            'member_id' => $member->id,
-                            'division_id' => $newData[$key],
-                        ]);
-
-                        // wipe old division assignments
-                        $updates['position'] = Position::MEMBER;
-                        $updates['squad_id'] = 0;
-                        $updates['platoon_id'] = 0;
-
-                        // notify old and new divisions of outgoing, incoming transfer
-                        $divisionIds = [$newData[$key], $oldData[$key]];
-                        $divisions = Division::whereIn('id', $divisionIds)->get()->keyBy('id');
-
-                        $newDivision = $divisions[$newData[$key]];
-                        $oldDivision = $divisions[$oldData[$key]];
-
-                        $newDivision->notify(new \App\Notifications\Channel\NotifyDivisionMemberTransferred($member, $newDivision->name));
-                        $oldDivision->notify(new \App\Notifications\Channel\NotifyDivisionMemberTransferred($member, $newDivision->name));
-
-                    }
 
                     if ($key === 'name' && $user = $member->user) {
                         \Log::debug(sprintf('Saw a username change for %s to %s', $oldData[$key], $newData[$key]));

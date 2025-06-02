@@ -28,13 +28,6 @@
                             <a href="{{ doForumFunction([$note->forum_thread_id], 'showThread') }}"
                                target="_blank" class="btn btn-default btn-xs m-l-sm">View Discussion</a>
                         @endif
-
-                        @if ($member->division)
-                            @can('edit', [$note, $member->clan_id])
-                                <a href="{{ route('editNote', [$member->clan_id, $note]) }}"
-                                   class="btn btn-default btn-xs">Edit</a>
-                            @endcan
-                        @endif
                 </div>
             </div>
         </div>

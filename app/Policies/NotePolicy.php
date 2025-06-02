@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -16,7 +17,6 @@ class NotePolicy
 
     public function before(User $user)
     {
-        // MSgts, SGTs, developers have access to all members
         if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
             return true;
         }
@@ -27,33 +27,35 @@ class NotePolicy
      *
      * @return bool
      */
-    public function show()
+    public function show(User $user): bool
     {
-        return $this->create();
-    }
+        if ($user->isRole('member')) {
+            return false;
+        }
 
-    public function edit() {}
+        return true;
+    }
 
     /**
      * Only officers and above can create notes.
      *
      * @return bool
      */
-    public function create()
+    public function create(User $user): bool
     {
-        if (auth()->user()->isRole('member')) {
+        if ($user->isRole('member')) {
             return false;
         }
 
         return true;
     }
 
-    public function delete()
+    public function delete(User $user, Note $note): bool
     {
-        if (auth()->user()->isRole('member')) {
-            return false;
+        if ($user->isDivisionLeader() && $note->division_id === $user->division_id) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

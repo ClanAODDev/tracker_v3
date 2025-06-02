@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Division;
 use App\Models\Squad;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -26,30 +25,39 @@ class SquadPolicy
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function update(User $user, Squad $squad)
+    public static function deleteAny(User $user): bool
     {
-        if ($user->isDivisionLeader() && $user->member->division_id === $squad->division->id) {
+        return $user->isRole(['admin', 'sr_ldr']) || $user->isDivisionLeader();
+    }
+
+    public static function delete(User $user, Squad $squad): bool
+    {
+        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDivisionLeader()) {
             return true;
         }
 
-        if ($squad->platoon_id === $user->member->platoon_id && $user->isPlatoonLeader()) {
+        if ($user->isPlatoonLeader() && $squad->platoon->leader_id === $user->member->clan_id) {
             return true;
         }
 
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function delete(User $user, Squad $squad)
+    public static function update(User $user, Squad $squad): bool
     {
+        if ($user->isRole('sr_ldr')) {
+            return true;
+        }
+
+        if ($user->isDivisionLeader() && $user->member->division_id === $squad->division->id) {
+            return true;
+        }
+
+        if ($user->isPlatoonLeader() && $squad->platoon->leader_id === $user->member->clan_id) {
+            return true;
+        }
+
         return false;
-        // mimic create permissions
-        // return $this->create($user, $squad->division);
     }
 
     /**

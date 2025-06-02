@@ -15,15 +15,15 @@ historical purposes.
 
 ## Contributing
 
-The Tracker is a large project that has been in development since 2015, and is the result of quite a few contributors over the years. If you have an interest in helping develop a feature, fix bugs, or even just provide general feedback, we welcomee you! 
+The Tracker is a large project that has been in development since 2015 and is the result of quite a few contributors over the years. If you have an interest in helping develop a feature, fix bugs, or even just provide general feedback, we welcome you! 
 
-The best way to contribute code changes is by way of a PR. First, make a fork of this repo, clone the fork to your local development environment, and follow the steps for local installation. Then when you are ready, submit a pull request of the changes from your fork. Please ensure you pay attention to the code style section, and explain any signiicant alterations your PR may make.
+The best way to contribute code changes is by way of a PR. First, make a fork of this repo, clone the fork to your local development environment, and follow the steps for local installation. Then, when you are ready, submit a pull request of the changes from your fork. Please ensure you pay attention to the code style section, and explain any significant alterations your PR may make.
 
 ## Local Installation
 
 #### Building the laravel environment
 
-You will need to ensure, at a minimum, that you have [Docker](https://www.docker.com/) or Docker Desktop
+You will need to ensure, at a minimum, you have [Docker](https://www.docker.com/) or Docker Desktop
 installed. If you don't have PHP installed (or don't want to), you can use the following `docker run` command to get 
 things built.
 
@@ -33,7 +33,7 @@ docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v "$(pwd):/var/www/html" \
     -w /var/www/html \
-    laravelsail/php82-composer:latest \
+    laravelsail/php83-composer:latest \
     composer install --ignore-platform-reqs
 ```
 
@@ -76,4 +76,4 @@ process. Additional users will be created for testing purposes.
 Everyone has their own preferences for how code should look. For cases where there are wild differences, we use `.
 ./vendor/bin/pint` to make things consistent throughout the repo. Feel free to run this before committing!
 
-Eventually we'll add this to a GitHub Action so it happens automatically....
+Eventually we'll add this to a GitHub Action so it happens automatically...
