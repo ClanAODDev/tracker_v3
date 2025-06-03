@@ -190,7 +190,7 @@ class RankActionResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 CommentsAction::make()->visible(fn (
                     RankAction $action
-                ) => auth()->user()->canManageCommentsFor($action)),
+                ) => auth()->user()->canManageRankActionCommentsFor($action)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

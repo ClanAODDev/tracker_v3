@@ -316,7 +316,7 @@ class User extends Authenticatable implements FilamentUser
         return $asBoolean ? false : null;
     }
 
-    public function canManageCommentsFor(RankAction $action): bool
+    public function canManageRankActionCommentsFor(RankAction $action): bool
     {
         $userRank = $this->member->rank;
         $newRank = $action->rank;

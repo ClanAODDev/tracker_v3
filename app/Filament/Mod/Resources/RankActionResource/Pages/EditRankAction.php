@@ -233,7 +233,7 @@ class EditRankAction extends EditRecord
         ];
 
         return
-            auth()->user()->canManageCommentsFor($this->getRecord())
+            auth()->user()->canManageRankActionCommentsFor($this->getRecord())
                 ? array_merge($actions, $commentsAction)
                 : $actions;
     }
