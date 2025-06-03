@@ -59,18 +59,16 @@ class RankActionResource extends Resource
                                 ViewField::make('status')
                                     ->view('filament.forms.components.status-badge')
                                     ->viewData(['record']),
-                                ViewField::make('type')
-                                    ->view('filament.forms.components.type-badge')
-                                    ->viewData(['record']),
                             ])
-                            ->columnSpan(2),
+                            ->columns(),
 
                         Section::make('Rank Action Details')
                             ->hiddenOn('create')
                             ->schema([
                                 Fieldset::make('Dates')->schema([
                                     DateTimePicker::make('awarded_at')
-                                        ->visible(fn ($record) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
+                                        ->visible(fn ($record
+                                        ) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
                                         ->label('Awarded At')
                                         ->readOnly(),
                                     DateTimePicker::make('approved_at')
@@ -111,9 +109,6 @@ class RankActionResource extends Resource
                 Tables\Columns\ViewColumn::make('status')
                     ->toggleable()
                     ->view('filament.forms.components.status-badge'),
-                Tables\Columns\ViewColumn::make('type')
-                    ->toggleable()
-                    ->view('filament.forms.components.type-badge'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')
                     ->date()
@@ -190,7 +185,7 @@ class RankActionResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 CommentsAction::make()->visible(fn (
                     RankAction $action
-                ) => auth()->user()->canManageCommentsFor($action)),
+                ) => auth()->user()->canManageRankActionCommentsFor($action)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
