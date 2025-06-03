@@ -316,6 +316,13 @@ class User extends Authenticatable implements FilamentUser
         return $asBoolean ? false : null;
     }
 
+    public function canManageTransferCommentsFor(Transfer $transfer): bool
+    {
+
+        // Only Division Leaders or Admins can manage comments on transfers
+        return $this->isAdminOrDivisionLeader();
+    }
+
     public function canManageRankActionCommentsFor(RankAction $action): bool
     {
         $userRank = $this->member->rank;
