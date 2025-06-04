@@ -7,12 +7,14 @@ use App\Jobs\UpdateDivisionForMember;
 use App\Models\Division;
 use App\Models\Transfer;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Parallax\FilamentComments\Tables\Actions\CommentsAction;
 
 class TransferResource extends Resource
 {
@@ -27,8 +29,10 @@ class TransferResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('member.name')
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->icon(fn ($record) => $record->hold_placed_at ? 'heroicon-s-stop' : null)
+                    ->iconColor('warning')
+                    ->iconPosition(IconPosition::Before),
                 Tables\Columns\TextColumn::make('division.name')
                     ->label('To')
                     ->sortable(),
@@ -86,29 +90,66 @@ class TransferResource extends Resource
 
             ])
             ->actions([
-                Tables\Actions\DeleteAction::make(),
-
-                Action::make('Approve')
+                CommentsAction::make()
                     ->button()
-                    ->icon('heroicon-o-check')
-                    ->requiresConfirmation()
-                    ->action(function (Transfer $record) {
-                        $record->approve();
-                        UpdateDivisionForMember::dispatch($record);
-                    })
-                    ->visible(fn (Transfer $record) => $record->canApprove() && ! $record->approved_at),
+                    ->color('info')
+                    ->size('lg')
+                    ->visible(fn (
+                        Transfer $transfer
+                    ) => auth()->user()->canManageTransferCommentsFor($transfer)),
+
+                Tables\Actions\BulkActionGroup::make([
+
+                    Action::make('Hold')
+                        ->label('Place Hold')
+                        ->color('warning')
+                        ->icon('heroicon-s-stop')
+                        ->requiresConfirmation()
+                        ->action(function (Transfer $record) {
+                            $record->update(['hold_placed_at' => now()]);
+                        })
+                        ->visible(fn (Transfer $record) => ! $record->hold_placed_at && ! $record->approved_at)
+                        ->hidden(fn (Transfer $record) => $record->approved_at),
+
+                    Action::make('Remove Hold')
+                        ->label('Remove Hold')
+                        ->color('warning')
+                        ->icon('heroicon-o-stop')
+                        ->requiresConfirmation()
+                        ->action(function (Transfer $record) {
+                            $record->update(['hold_placed_at' => null]);
+                        })
+                        ->visible(fn (Transfer $record) => $record->hold_placed_at)
+                        ->hidden(fn (Transfer $record) => $record->approved_at),
+
+                    Action::make('Approve')
+                        ->label('Approve')
+                        ->color('success')
+                        ->modalHeading('Approve transfer')
+                        ->icon('heroicon-o-check')
+                        ->requiresConfirmation()
+                        ->action(function (Transfer $record) {
+                            $record->approve();
+                            UpdateDivisionForMember::dispatch($record);
+                        })
+                        ->visible(fn (Transfer $record) => ! $record->approved_at && ! $record->hold_placed_at),
+                    Tables\Actions\DeleteAction::make()->hidden(fn (Transfer $record) => $record->hold_placed_at),
+                ])
+                    ->visible(fn (Transfer $record) => $record->canApprove())
+                    ->label('Manage'),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     /*Tables\Actions\BulkAction::make(
-                        'approve_selected')
-                        ->label('Approve Selected')
-                        ->icon('heroicon-o-check')
-                        ->requiresConfirmation()
-                        ->action(function (Collection $records) {
-                            $records->each->approve();
-                        }
-                    ),*/
+                'approve_selected')
+                ->label('Approve Selected')
+                ->icon('heroicon-o-check')
+                ->requiresConfirmation()
+                ->action(function (Collection $records) {
+                    $records->each->approve();
+                }
+            ),*/
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

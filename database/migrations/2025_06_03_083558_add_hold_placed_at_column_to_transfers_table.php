@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rank_actions', function (Blueprint $table) {
-            $table->dateTime('awarded_at')->nullable()->after('accepted_at');
+        Schema::table('transfers', function (Blueprint $table) {
+            $table->dateTime('hold_placed_at')->nullable()->after('approved_at');
         });
     }
 
