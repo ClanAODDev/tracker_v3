@@ -31,8 +31,7 @@
                            class="btn btn-default btn-sm">Forum PM</a>
                     </td>
                     <td class="text-center">
-                        {{-- @TODO: create separate permission for inactive flagging --}}
-                        @can ('update', $member)
+                        @can('flag-inactive', \App\Models\Member::class)
                             <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
                                class="btn btn-warning btn-sm">
                                 <i class="fa fa-flag"></i>

@@ -48,6 +48,11 @@ class MemberPolicy
         return auth()->user()->isRole('sr_ldr');
     }
 
+    public function flagInactive(User $user): bool
+    {
+        return $user->isRole(['officer', 'sr_ldr']);
+    }
+
     public function updateLeave(User $user, Member $member)
     {
         // can't edit yourself
