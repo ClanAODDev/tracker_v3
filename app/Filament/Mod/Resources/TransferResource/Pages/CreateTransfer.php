@@ -98,6 +98,7 @@ class CreateTransfer extends CreateRecord
 
                     Placeholder::make('current_division')
                         ->label('Transferring From')
+                        ->visible(fn (Get $get) => $get('current_division') !== null)
                         ->content(fn (Get $get) => $get('current_division')
                             ?? optional(Member::find($get('member_id')))->division->name
                             ?? '--'

@@ -48,6 +48,11 @@ class MemberPolicy
         return auth()->user()->isRole('sr_ldr');
     }
 
+    public function flagInactive(User $user): bool
+    {
+        return $user->isRole(['officer', 'sr_ldr']);
+    }
+
     public function updateLeave(User $user, Member $member)
     {
         // can't edit yourself
@@ -83,11 +88,11 @@ class MemberPolicy
             return false;
         }
 
-        if ($member->rank->value < $user->member->rank->value) {
-            return true;
+        if (!$user->isRole('sr_ldr')) {
+            return false;
         }
 
-        return false;
+        return $member->rank->value < $user->member->rank->value;
     }
 
     public function managePartTime(User $user, Member $member)

@@ -21,7 +21,7 @@
 
                 </td>
                 <td>
-                    @can ('update', $member)
+                    @can('flag-inactive', $member)
                         <a href="{{ route('member.unflag-inactive', $member->clan_id) . "#flagged" }}"
                            class="btn btn-warning btn-sm">
                             <i class="fa fa-flag"></i>
@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     <div class="btn-group-xs">
-                        @can ('separate', $member)
+                        @can('separate', $member)
                             <form action="{{ route('member.drop-for-inactivity', [$member->clan_id]) }}" method="post">
                                 @method('delete')
                                 @csrf
