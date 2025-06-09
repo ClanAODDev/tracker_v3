@@ -88,11 +88,11 @@ class MemberPolicy
             return false;
         }
 
-        if ($member->rank->value < $user->member->rank->value) {
-            return true;
+        if (!$user->isRole('sr_ldr')) {
+            return false;
         }
 
-        return false;
+        return $member->rank->value < $user->member->rank->value;
     }
 
     public function managePartTime(User $user, Member $member)

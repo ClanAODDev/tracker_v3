@@ -75,7 +75,7 @@ class InactiveMemberController extends Controller
      */
     public function create(Member $member)
     {
-        $this->authorize('update', $member);
+        $this->authorize('flag-inactive', $member);
         $member->flagged_for_inactivity = true;
         $member->save();
         $member->recordActivity('flagged');
@@ -93,7 +93,7 @@ class InactiveMemberController extends Controller
      */
     public function destroy(Member $member)
     {
-        $this->authorize('update', $member);
+        $this->authorize('flag-inactive', $member);
         $member->flagged_for_inactivity = false;
         $member->save();
         $member->recordActivity('unflagged');
