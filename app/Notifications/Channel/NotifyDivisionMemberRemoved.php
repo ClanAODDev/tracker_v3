@@ -25,8 +25,8 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
      */
     public function __construct(
         private readonly Member $member,
-        private readonly User $remover,
-        private readonly string $removalReason,
+        private readonly ?User $remover,
+        private readonly ?string $removalReason,
         private readonly ?Squad $squad = null
     ) {}
 
@@ -48,13 +48,17 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
      */
     public function toBot(Division $notifiable)
     {
-        $remover = $this->remover;
+        $removerName = $this->remover?->name ?? 'Forum sync';
+
         $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
+        $reason = $this->removalReason
+            ? ['name' => 'Reason', 'value' => $this->removalReason]
+            : null;
 
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
-            ->thumbnail($notifiable->getLogoPath())->fields([
+            ->thumbnail($notifiable->getLogoPath())->fields(array_values(array_filter([
                 [
                     'name' => 'Member Removed',
                     'value' => sprintf(
@@ -63,13 +67,10 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                         route('member', $this->member->getUrlParams()),
                         $this->member->clan_id,
                         $notifiable->name,
-                        $remover->name,
+                        $removerName,
                     ),
                 ],
-                [
-                    'name' => 'Reason',
-                    'value' => $this->removalReason,
-                ],
+                $reason,
                 [
                     'name' => sprintf(
                         '%s / %s',
@@ -79,14 +80,14 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                     'value' => $this->squad ? sprintf(
                         '%s / %s',
                         $this->squad->platoon->name,
-                        $this->squad->name,
+                        $this->squad->name
                     ) : 'Unassigned',
                 ],
                 [
-                    'name' => $handle->label ?? 'In-Game Handle',
-                    'value' => $handle->pivot->value ?? 'N/A',
+                    'name' => $handle?->label ?? 'In-Game Handle',
+                    'value' => $handle?->pivot?->value ?? 'N/A',
                 ],
-            ])->error()
+            ], fn ($field) => $field !== null)))->error()
             ->send();
     }
 }

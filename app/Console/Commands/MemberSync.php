@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
@@ -39,8 +40,8 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        if (! $syncData = collect((new GetDivisionInfo)->data)) {
-            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
+        if (!$syncData = collect((new GetDivisionInfo)->data)) {
+            \Log::critical(date('Y-m-d H:i:s').' - MEMBER SYNC - No data available');
 
             exit;
         }
@@ -80,7 +81,7 @@ class MemberSync extends Command
 
             $newData = $syncTableMap->get($member->clan_id);
 
-            if (! $newData) {
+            if (!$newData) {
                 // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
 
@@ -209,6 +210,12 @@ class MemberSync extends Command
 
     private static function hardResetMember(Member $member)
     {
+        $member->division->notify(new NotifyDivisionMemberRemoved(
+            member: $member,
+            remover: null,
+            removalReason: null
+        ));
+
         // reset member data
         $member->resetPositionAndAssignments();
 
