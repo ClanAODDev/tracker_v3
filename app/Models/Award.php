@@ -11,6 +11,15 @@ class Award extends Model
 
     protected $guarded = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (self $award) {
+            $award->recipients()->each->delete();
+        });
+    }
+
     public function recipients()
     {
         return $this->hasMany(MemberAward::class, 'award_id', 'id')
