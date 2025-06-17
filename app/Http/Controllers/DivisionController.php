@@ -131,10 +131,9 @@ class DivisionController extends Controller
         ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
-        $forumActivityGraph = $this->division->getDivisionActivity($division);
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
 
-        return view('division.members', compact('division', 'members', 'forumActivityGraph', 'voiceActivityGraph'));
+        return view('division.members', compact('division', 'members', 'voiceActivityGraph'));
     }
 
     /**
