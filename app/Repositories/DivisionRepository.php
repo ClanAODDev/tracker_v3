@@ -3,12 +3,16 @@
 namespace App\Repositories;
 
 use App\Models\Division;
+use App\Traits\HasActivityGraph;
 
 /**
  * Class DivisionRepository.
  */
 class DivisionRepository
 {
+
+    use HasActivityGraph;
+
     /**
      * @param  int  $limit
      * @return \Illuminate\Support\Collection
@@ -43,40 +47,9 @@ class DivisionRepository
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function getDivisionActivity(Division $division)
-    {
-        $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
-        $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
-        $twoWeeks = $division->members()->where('last_activity', '>=', $twoWeeksAgo);
-        $oneMonth = $division->members()->where('last_activity', '<=', $twoWeeksAgo)->where('last_activity', '>=',
-            $oneMonthAgo);
-        $moreThanOneMonth = $division->members()->where('last_activity', '<=', $oneMonthAgo);
-
-        return [
-            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
-            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
-            'colors' => ['#28b62c', '#ff851b', '#ff4136'],
-        ];
-    }
-
     public function getDivisionVoiceActivity(Division $division)
     {
-        $twoWeeksAgo = \Carbon\Carbon::now()->subDays(14);
-        $oneMonthAgo = \Carbon\Carbon::now()->subDays(30);
-        $twoWeeks = $division->members()->where('last_voice_activity', '>=', $twoWeeksAgo);
-        $oneMonth = $division->members()->where('last_voice_activity', '<=', $twoWeeksAgo)->where('last_voice_activity',
-            '>=',
-            $oneMonthAgo);
-        $moreThanOneMonth = $division->members()->where('last_voice_activity', '<=', $oneMonthAgo);
-
-        return [
-            'labels' => ['Less than 2 weeks', 'Less than 1 month', 'More than 1 month'],
-            'values' => [$twoWeeks->count(), $oneMonth->count(), $moreThanOneMonth->count()],
-            'colors' => ['#28b62c', '#ff851b', '#ff4136'],
-        ];
+        return $this->getActivity('last_voice_activity', $division);
     }
 
     public function getDivisionAnniversaries(Division $division)
