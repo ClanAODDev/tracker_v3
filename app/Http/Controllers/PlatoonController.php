@@ -54,14 +54,12 @@ class PlatoonController extends Controller
 
         $members = $members->each($this->getMemberHandle());
 
-        $forumActivityGraph = $this->platoon->getPlatoonForumActivity($platoon);
         $voiceActivityGraph = $this->platoon->getPlatoonVoiceActivity($platoon);
 
         return view('platoon.show', compact(
             'platoon',
             'members',
             'division',
-            'forumActivityGraph',
             'voiceActivityGraph',
         ));
     }
