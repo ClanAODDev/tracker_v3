@@ -37,6 +37,11 @@ class RankAction extends Model
         return $this->belongsTo(Member::class);
     }
 
+    public function approver()
+    {
+        return $this->belongsTo(Member::class);
+    }
+
     public function scopeApprovedAndAccepted(Builder $query): void
     {
         $query->whereNot('approved_at', null)
@@ -51,6 +56,7 @@ class RankAction extends Model
     public function approve()
     {
         $this->update([
+            'approver_id' => auth()->user()->member_id,
             'approved_at' => now(),
         ]);
 
