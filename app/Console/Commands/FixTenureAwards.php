@@ -232,8 +232,18 @@ class FixTenureAwards extends Command
             }
         }
 
-        $toRemoveIds = collect($tenureAwards)
-            ->filter(fn ($id, $years) => $years < $effectiveMilestone)
+        $keepAwardIds = [];
+
+        if ($milestone) {
+            $keepAwardIds[] = $this->tenureAwardIds[$milestone];
+        }
+
+        if ($effectiveMilestone && $effectiveMilestone !== $milestone) {
+            $keepAwardIds[] = $this->tenureAwardIds[$effectiveMilestone];
+        }
+
+        $toRemoveIds = collect($this->tenureAwardIds)
+            ->reject(fn ($id) => in_array($id, $keepAwardIds))
             ->values()
             ->toArray();
 
