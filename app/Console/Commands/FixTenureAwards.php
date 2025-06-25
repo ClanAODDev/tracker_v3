@@ -98,6 +98,7 @@ class FixTenureAwards extends Command
      */
     private function determineEligibleAward(array $tenureAwards, int $yearsOfService): array
     {
+        krsort($tenureAwards);
         foreach ($tenureAwards as $years => $awardId) {
             if ($yearsOfService >= $years) {
                 return [$awardId, $years];
