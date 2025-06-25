@@ -141,14 +141,18 @@ class FixTenureAwards extends Command
 
             if (! $has) {
                 if ($persistChanges) {
-                    MemberAward::create([
-                        'member_id' => $member->clan_id,
-                        'award_id' => $awardId,
-                        'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
-                        'approved' => true,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now(),
-                    ]);
+                    MemberAward::firstOrCreate(
+                        [
+                            'member_id' => $member->clan_id,
+                            'award_id' => $awardId,
+                        ],
+                        [
+                            'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
+                            'approved' => true,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]
+                    );
                 }
                 $count++;
             }
