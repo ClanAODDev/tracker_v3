@@ -150,6 +150,9 @@ class DivisionResource extends Resource
                             ->tabs([
                                 Tab::make('Recruitment')
                                     ->schema([
+                                        Select::make('member_applied')
+                                            ->options($channelOptions)
+                                            ->label('New Applications'),
                                         Select::make('member_created')
                                             ->options($channelOptions)
                                             ->label('New Recruitments'),
@@ -157,7 +160,7 @@ class DivisionResource extends Resource
                                             ->options($channelOptions)
                                             ->label('New Recruit Approval'),
                                     ])
-                                    ->columns(2),
+                                    ->columns(3),
 
                                 Tab::make('Membership Changes')
                                     ->schema([
@@ -223,7 +226,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

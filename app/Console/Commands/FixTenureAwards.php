@@ -98,6 +98,7 @@ class FixTenureAwards extends Command
      */
     private function determineEligibleAward(array $tenureAwards, int $yearsOfService): array
     {
+        krsort($tenureAwards);
         foreach ($tenureAwards as $years => $awardId) {
             if ($yearsOfService >= $years) {
                 return [$awardId, $years];
@@ -140,14 +141,18 @@ class FixTenureAwards extends Command
 
             if (! $has) {
                 if ($persistChanges) {
-                    MemberAward::create([
-                        'member_id' => $member->clan_id,
-                        'award_id' => $awardId,
-                        'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
-                        'approved' => true,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now(),
-                    ]);
+                    MemberAward::firstOrCreate(
+                        [
+                            'member_id' => $member->clan_id,
+                            'award_id' => $awardId,
+                        ],
+                        [
+                            'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
+                            'approved' => true,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]
+                    );
                 }
                 $count++;
             }
@@ -227,8 +232,18 @@ class FixTenureAwards extends Command
             }
         }
 
-        $toRemoveIds = collect($tenureAwards)
-            ->filter(fn ($id, $years) => $years < $effectiveMilestone)
+        $keepAwardIds = [];
+
+        if ($milestone) {
+            $keepAwardIds[] = $this->tenureAwardIds[$milestone];
+        }
+
+        if ($effectiveMilestone && $effectiveMilestone !== $milestone) {
+            $keepAwardIds[] = $this->tenureAwardIds[$effectiveMilestone];
+        }
+
+        $toRemoveIds = collect($this->tenureAwardIds)
+            ->reject(fn ($id) => in_array($id, $keepAwardIds))
             ->values()
             ->toArray();
 
