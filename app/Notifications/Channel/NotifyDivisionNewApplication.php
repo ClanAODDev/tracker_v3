@@ -13,6 +13,8 @@ class NotifyDivisionNewApplication extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
+    private string $alertSetting = 'chat_alerts.member_applied';
+
     /**
      * Create a new notification instance.
      */
@@ -32,7 +34,7 @@ class NotifyDivisionNewApplication extends Notification implements ShouldQueue
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
-            ->target('officers')
+            ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
