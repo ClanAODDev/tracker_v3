@@ -64,25 +64,39 @@ class CreateRankAction extends CreateRecord
         /** @var RankAction $record */
         $record = $this->record;
 
+        // fast track promotions up to platoon lead limit (Cdt <-> PFC)
+        if (auth()->user()->canApproveOrDeny($record)) {
+            $record->approveAndAccept();
+            UpdateRankForMember::dispatch($record);
+        }
+
+        // notify admins if a Sergeant rank request is pending
         if (
             $record->rank->value >= Rank::SERGEANT->value &&
             $record->rank->value < Rank::FIRST_SERGEANT->value &&
             $record->rank->isPromotion($record->member->rank)
         ) {
+            $userName = auth()->check() ? auth()->user()->name : 'System';
+
             $record->rank->notify(new NotifyAdminSgtRequestPending(
-                auth()->user()->name,
+                $userName,
                 $record->member->name,
                 $record->rank->getLabel(),
                 $record->id
             ));
         }
 
-        if ($record->isApproved()) {
-            if ($record->rank->isPromotion($record->member->rank)) {
-                $record->member->notify(new NotifyMemberPromotionPendingAcceptance($record));
-            } else {
-                UpdateRankForMember::dispatch($record);
-            }
+        // if additional approval is needed, stop here
+        if (! $record->isApproved()) {
+            return;
+        }
+
+        // promotions beyond platoon lead limit (>= SPC) require acceptance
+        if ($record->rank->isPromotion($record->member->rank) && !$record->accepted_at) {
+            $record->member->notify(new NotifyMemberPromotionPendingAcceptance($record));
+        } else  {
+            // demotions are automatically accepted and applied
+            UpdateRankForMember::dispatch($record);
         }
     }
 
