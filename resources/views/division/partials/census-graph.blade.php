@@ -16,7 +16,7 @@
                 <i class="fas fa-dot-circle text-success"></i> Division Population
             </div>
             <div class="col-md-6 text-center">
-                <i class="fas fa-dot-circle text-warning"></i> Discord
+                <i class="fas fa-dot-circle text-info"></i> Discord
                 <p><small class="text-muted"># active VoIP past week</small></p>
             </div>
         </div>
