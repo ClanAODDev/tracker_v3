@@ -51,8 +51,7 @@ class EditMember extends EditRecord
             ActionGroup::make([
 
                 Action::make('trigger_external_removal')
-                    ->label(fn (Component $livewire
-                    ) => $livewire->state['external_removal_done'] ?? false ? 'External Removal Initiated' : 'Forum removal')
+                    ->label('Step 1: Forum removal')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->url(fn () => sprintf(
                         'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=%s',
@@ -62,7 +61,7 @@ class EditMember extends EditRecord
                     ->color('danger'),
 
                 Action::make('remove_member')
-                    ->label('Tracker removal')
+                    ->label('Step 2: Tracker removal')
                     ->icon('heroicon-o-trash')
                     ->color('warning')
                     ->modalDescription('This will only remove the member from the tracker, and reset any division, squad, or platoon assignments. Please provide a reason for the removal. Note: If you have not done forum removal, the member will be restored on the next sync.')
