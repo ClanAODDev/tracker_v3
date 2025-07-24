@@ -18,8 +18,8 @@ class SquadsRelationManager extends RelationManager
     {
         return $form->schema([
             Forms\Components\TextInput::make('name')
-                ->maxLength(255)
-                ->default(null),
+                ->required()
+                ->maxLength(255),
             Forms\Components\TextInput::make('logo')
                 ->maxLength(191)
                 ->placeholder('https://')
