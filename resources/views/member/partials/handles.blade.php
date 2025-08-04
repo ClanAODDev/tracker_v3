@@ -11,7 +11,6 @@
         pull-right"><i class="fa fa-cog text-accent"></i> Manage
             </a>
         @endif
-
     @endcan
 </h4>
 <hr/>
