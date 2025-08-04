@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
+use App\Services\MemberHandleService;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Textarea;
@@ -25,11 +26,27 @@ class EditMember extends EditRecord
             : sprintf('[Ex-AOD] %s', $this->record->name);
     }
 
+    public function mutateFormDataBeforeFill(array $data): array
+    {
+        if (isset($data['id'])) {
+            $member = \App\Models\Member::find($data['id']);
+            if ($member) {
+                $data['handleGroups'] = \App\Services\MemberHandleService::getGroupedHandles($member);
+            }
+        }
+
+        return $data;
+    }
+
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         if ($record->isDirty('last_trained_by')) {
             $data['last_trained_at'] = now();
         }
+
+        MemberHandleService::saveHandles($record, $data['handleGroups']);
+
+        unset($data['handleGroups']);
 
         $record->update($data);
 
@@ -39,7 +56,6 @@ class EditMember extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            //            Actions\DeleteAction::make(),
             Action::make('view_profile')
                 ->label('View Profile')
                 ->outlined()
