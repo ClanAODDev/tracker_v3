@@ -31,6 +31,7 @@ class IngameHandlesForm
                 return 'New Handle Type';
             })
             ->defaultItems(1)
+
             ->schema([
                 Select::make('handle_id')
                     ->label('Handle Type')
@@ -55,6 +56,7 @@ class IngameHandlesForm
 
                 Repeater::make('handles')
                     ->label('Handles')
+                    ->reorderable(false)
                     ->grid()
                     ->defaultItems(1)
                     ->minItems(1)
