@@ -7,6 +7,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
 
 class IngameHandlesForm
 {
@@ -16,7 +17,10 @@ class IngameHandlesForm
             ->label('Handle Types')
             ->collapsible()
             ->reorderable(false)
-            ->collapsed()
+            ->collapsed(function (Get $get) use ($statePath) {
+                $allGroups = $get($statePath) ?? [];
+                return count($allGroups) > 1;
+            })
             ->itemLabel(function (array $state) {
                 if (! empty($state['handle_id'])) {
                     $handle = \App\Models\Handle::find($state['handle_id']);
@@ -30,9 +34,9 @@ class IngameHandlesForm
             ->schema([
                 Select::make('handle_id')
                     ->label('Handle Type')
-                    ->options(function (\Filament\Forms\Get $get) {
+                    ->options(function (Get $get) use ($statePath) {
 
-                        $allGroups = $get('../../handleGroups') ?? [];
+                        $allGroups = $get("../../{$statePath}}") ?? [];
                         $usedHandleIds = collect($allGroups)
                             ->pluck('handle_id')
                             ->filter()
@@ -64,7 +68,7 @@ class IngameHandlesForm
                         Toggle::make('primary')
                             ->label('Primary')
                             ->helperText('Only one primary handle per type is allowed.')
-                            ->default(function (\Filament\Forms\Get $get) {
+                            ->default(function (Get $get) {
                                 $handles = $get('../../handles');
 
                                 return count($handles) === 1; // Default to true if only one handle
@@ -72,7 +76,7 @@ class IngameHandlesForm
                             ->reactive()
                             ->afterStateUpdated(function (
                                 bool $state,
-                                \Filament\Forms\Get $get,
+                                Get $get,
                                 \Filament\Forms\Set $set
                             ) {
                                 if (! $state) {
