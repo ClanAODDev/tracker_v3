@@ -24,8 +24,6 @@ class NotePolicy
 
     /**
      * Officers and above can see notes.
-     *
-     * @return bool
      */
     public function show(User $user): bool
     {
@@ -38,8 +36,6 @@ class NotePolicy
 
     /**
      * Only officers and above can create notes.
-     *
-     * @return bool
      */
     public function create(User $user): bool
     {

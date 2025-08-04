@@ -22,10 +22,13 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
      * Create a new notification instance.
      */
     public const TYPE_INCOMING = 'INCOMING';
+
     public const TYPE_OUTGOING = 'OUTGOING';
 
     private readonly Member $member;
+
     private readonly string $destinationDivision;
+
     private readonly string $type;
 
     public function __construct(
@@ -35,7 +38,7 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
     ) {
         $type = strtoupper($type);
 
-        if (!in_array($type, [self::TYPE_INCOMING, self::TYPE_OUTGOING], true)) {
+        if (! in_array($type, [self::TYPE_INCOMING, self::TYPE_OUTGOING], true)) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid transfer type "%s"; must be "%s" or "%s".',
                 $type,
@@ -78,10 +81,10 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
 
         $label = strtolower($this->type);
 
-        $queryString = '?'.http_build_query($filters);
+        $queryString = '?' . http_build_query($filters);
 
         $baseUrl = route('filament.mod.resources.transfers.index');
-        $manageUrl = $baseUrl.$queryString;
+        $manageUrl = $baseUrl . $queryString;
 
         return (new BotChannelMessage($notifiable))
             ->title("{$notifiable->name} Division")

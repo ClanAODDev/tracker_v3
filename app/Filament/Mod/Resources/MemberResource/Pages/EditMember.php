@@ -13,7 +13,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
-use Livewire\Component;
 
 class EditMember extends EditRecord
 {

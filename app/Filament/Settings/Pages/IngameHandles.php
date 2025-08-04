@@ -5,16 +5,16 @@ namespace App\Filament\Settings\Pages;
 use App\Models\Handle;
 use App\Models\Member;
 use Filament\Actions\Action;
+use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -27,6 +27,7 @@ class IngameHandles extends Page implements HasForms
     protected static string $view = 'filament.settings.pages.profile';
 
     public ?Member $record = null;
+
     public array $formData = [];
 
     public function mount(): void
@@ -43,6 +44,7 @@ class IngameHandles extends Page implements HasForms
             ->groupBy('handle_id')
             ->sortBy(function ($group, $handleId) {
                 $handle = Handle::find($handleId);
+
                 return $handle?->label ?? '';
             })
             ->map(function ($group) {
@@ -72,17 +74,18 @@ class IngameHandles extends Page implements HasForms
         return [
             Action::make('Save Handles')->extraAttributes([
                 'wire:click.prevent' => 'save',
-            ])->submit('handles-form')
+            ])->submit('handles-form'),
         ];
     }
 
     public function save(): void
     {
-        if (!$this->record) {
+        if (! $this->record) {
             Notification::make()
                 ->title('Unable to save: No member record found.')
                 ->danger()
                 ->send();
+
             return;
         }
 
@@ -91,7 +94,7 @@ class IngameHandles extends Page implements HasForms
         // Ensure exactly one primary per handle type
         foreach ($data as &$group) {
             $primaries = collect($group['handles'])->where('primary', true);
-            if ($primaries->count() === 0 && !empty($group['handles'])) {
+            if ($primaries->count() === 0 && ! empty($group['handles'])) {
                 $group['handles'][0]['primary'] = true;
             } elseif ($primaries->count() > 1) {
                 $firstPrimary = $primaries->keys()->first();
@@ -106,7 +109,7 @@ class IngameHandles extends Page implements HasForms
         $flattened = [];
         foreach ($data as $group) {
             $handleId = $group['handle_id'] ?? null;
-            if (!$handleId) {
+            if (! $handleId) {
                 continue;
             }
 
@@ -132,7 +135,7 @@ class IngameHandles extends Page implements HasForms
         $formIds = collect($flattened)->pluck('id')->filter()->toArray();
         $idsToDelete = array_diff($existingIds, $formIds);
 
-        if (!empty($idsToDelete)) {
+        if (! empty($idsToDelete)) {
             DB::table('handle_member')
                 ->where('member_id', $this->record->id)
                 ->whereIn('id', $idsToDelete)
@@ -141,7 +144,7 @@ class IngameHandles extends Page implements HasForms
 
         // Insert or update
         foreach ($flattened as $row) {
-            if (!empty($row['id'])) {
+            if (! empty($row['id'])) {
                 DB::table('handle_member')
                     ->where('id', $row['id'])
                     ->update([
@@ -180,10 +183,12 @@ class IngameHandles extends Page implements HasForms
                             ->label('Handle Types')
                             ->collapsible()
                             ->itemLabel(function (array $state) {
-                                if (!empty($state['handle_id'])) {
+                                if (! empty($state['handle_id'])) {
                                     $handle = Handle::find($state['handle_id']);
+
                                     return $handle?->label ?? 'New Handle Type';
                                 }
+
                                 return 'New Handle Type';
                             })
                             ->reorderable(false)
@@ -194,8 +199,9 @@ class IngameHandles extends Page implements HasForms
                                     ->label('Handle Type')
                                     ->disabled(function (\Filament\Forms\Get $get) {
                                         $handles = $get('handles') ?? [];
+
                                         // Disable if any existing handle in this group has an ID
-                                        return collect($handles)->contains(fn($h) => !empty($h['id']));
+                                        return collect($handles)->contains(fn ($h) => ! empty($h['id']));
                                     })
                                     ->options(function (\Filament\Forms\Get $get, \Filament\Forms\Set $set) {
                                         // Get all handle IDs already used in the form
@@ -282,7 +288,7 @@ class IngameHandles extends Page implements HasForms
 
                                                 $set('../../handles', array_values($allHandles));
 
-                                            })
+                                            }),
                                     ]),
                             ]),
                     ]),

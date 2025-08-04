@@ -226,7 +226,7 @@ class DivisionResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true))->default(),
+                    ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
