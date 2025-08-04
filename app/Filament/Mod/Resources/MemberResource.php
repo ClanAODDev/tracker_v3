@@ -118,6 +118,16 @@ class MemberResource extends Resource
                         }),
                 ])->columns(3),
 
+                Forms\Components\Section::make('In-game Handles')
+                    ->id('ingame-handles')
+                    ->schema([
+                        IngameHandlesForm::make()
+                            ->default(fn ($record) => $record
+                                ? MemberHandleService::getGroupedHandles($record)
+                                : []
+                            ),
+                    ]),
+
                 Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([
                         Forms\Components\Toggle::make('flagged_for_inactivity')
@@ -137,14 +147,6 @@ class MemberResource extends Resource
                             ->disabled(),
                     ])->columns(),
                 ]),
-                Forms\Components\Section::make('In-game Handles')
-                    ->schema([
-                        IngameHandlesForm::make()
-                            ->default(fn ($record) => $record
-                                ? MemberHandleService::getGroupedHandles($record)
-                                : []
-                            ),
-                    ]),
             ]);
     }
 
