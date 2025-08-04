@@ -2,9 +2,16 @@
     Handles
 
     @can ('manageIngameHandles', $member)
-        <a href="{{ route('member.edit-handles', $member->clan_id) }}" class="btn btn-default pull-right">
-            <i class="fa fa-cog text-accent"></i> Manage
-        </a>
+        @if ($member->id === auth()->user()->member_id)
+            <a href="{{ route('filament.settings.pages.ingame-handles', $member) }}"
+               class="btn btn-default pull-right"><i class="fa fa-cog text-accent"></i> Manage
+            </a>
+        @else
+            <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles" class="btn btn-default
+        pull-right"><i class="fa fa-cog text-accent"></i> Manage
+            </a>
+        @endif
+
     @endcan
 </h4>
 <hr/>
