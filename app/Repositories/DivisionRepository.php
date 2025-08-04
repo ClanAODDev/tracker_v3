@@ -10,7 +10,6 @@ use App\Traits\HasActivityGraph;
  */
 class DivisionRepository
 {
-
     use HasActivityGraph;
 
     /**

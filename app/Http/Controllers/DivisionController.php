@@ -83,7 +83,8 @@ class DivisionController extends Controller
         $members = $division->partTimeMembers()->with('handles')
             ->get()->each(function ($member) use ($division) {
                 // filter out handles that don't match current division primary handle
-                $member->handle = $member->handles->filter(fn ($handle) => $handle->id === $division->handle_id)->first();
+                $member->handle = $member->handles()->wherePivot('primary', true)->get()->filter(fn ($handle
+                ) => $handle->id === $division->handle_id)->first();
             });
 
         return view('division.part-time', compact('division', 'members'));
@@ -193,7 +194,8 @@ class DivisionController extends Controller
     private function filterHandlesToPrimaryHandle($division)
     {
         return function ($query) use ($division) {
-            $query->where('id', $division->handle_id);
+            $query->where('handles.id', $division->handle_id)
+                ->wherePivot('primary', true);
         };
     }
 

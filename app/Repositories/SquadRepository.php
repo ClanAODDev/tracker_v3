@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Squad;
 use App\Traits\HasActivityGraph;
-use Carbon\CarbonImmutable;
 
 class SquadRepository
 {

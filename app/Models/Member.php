@@ -205,6 +205,11 @@ class Member extends Model
         return $this->hasOne(Leave::class)->where('end_date', '>', today());
     }
 
+    public function memberHandles()
+    {
+        return $this->hasMany(MemberHandle::class);
+    }
+
     /**
      * -------------------------------------
      * Policy object refers to these methods

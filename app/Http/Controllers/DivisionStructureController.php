@@ -113,8 +113,8 @@ class DivisionStructureController extends Controller
                 'platoons' => $division->platoons()->with(
                     [
                         'squads.members.handles' => function ($query) use ($division) {
-                            // filtering handles for just the relevant one
-                            $query->where('id', $division->handle_id);
+                            $query->where('handles.id', $division->handle_id)
+                                ->wherePivot('primary', true);
                         },
                     ],
                     'squads',
@@ -220,7 +220,9 @@ class DivisionStructureController extends Controller
     private function filterHandlesToPrimaryHandle($division)
     {
         return function ($query) use ($division) {
-            $query->where('id', $division->handle_id);
+            $query
+                ->where('handles.id', $division->handle_id)
+                ->wherePivot('primary', true);
         };
     }
 

@@ -40,8 +40,8 @@ class MemberSync extends Command
      */
     public function handle()
     {
-        if (!$syncData = collect((new GetDivisionInfo)->data)) {
-            \Log::critical(date('Y-m-d H:i:s').' - MEMBER SYNC - No data available');
+        if (! $syncData = collect((new GetDivisionInfo)->data)) {
+            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
         }
@@ -81,7 +81,7 @@ class MemberSync extends Command
 
             $newData = $syncTableMap->get($member->clan_id);
 
-            if (!$newData) {
+            if (! $newData) {
                 // member does not exist in sync data, so must be removed
                 self::hardResetMember($member);
 

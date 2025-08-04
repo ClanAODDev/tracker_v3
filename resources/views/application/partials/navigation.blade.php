@@ -38,7 +38,7 @@
             @endif
 
             <li>
-                <a href="{{ route('user.settings.show') }}">
+                <a href="{{ route('filament.settings.pages.dashboard') }}">
                     User Settings
                 </a>
             </li>

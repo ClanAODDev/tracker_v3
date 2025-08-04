@@ -22,7 +22,7 @@ trait HasActivityGraph
 
         // Define cutoffs including the final maxDays
         $cutoffs = collect(range(1, $buckets))
-            ->map(fn($i) => (int) round($maxDays * $i / $buckets))
+            ->map(fn ($i) => (int) round($maxDays * $i / $buckets))
             ->all();
 
         $labels = [];
@@ -54,5 +54,4 @@ trait HasActivityGraph
 
         return compact('labels', 'values', 'colors');
     }
-
 }

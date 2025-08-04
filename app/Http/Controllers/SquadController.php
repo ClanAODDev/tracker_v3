@@ -30,7 +30,9 @@ class SquadController extends Controller
      */
     public function show(Division $division, Platoon $platoon, Squad $squad)
     {
-        $members = $squad->members()->with(['handles' => $this->filterHandlesToPrimaryHandle($division), 'leave'])->get()->sortByDesc('rank');
+        $members = $squad->members()->with([
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
+        ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
         $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
@@ -38,13 +40,13 @@ class SquadController extends Controller
         return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'voiceActivityGraph'));
     }
 
-
     public function isMemberOfDivision(Division $division, $request): bool
     {
         $member = \App\Models\Member::whereClanId($request->leader_id)->first();
 
         return $member->division instanceof Division && $member->division->id === $division->id;
     }
+
     /**
      * Assign a member to a squad.
      */
@@ -120,7 +122,8 @@ class SquadController extends Controller
     private function filterHandlesToPrimaryHandle($division): Closure
     {
         return function ($query) use ($division) {
-            $query->where('id', $division->handle_id);
+            $query->where('handles.id', $division->handle_id)
+                ->wherePivot('primary', true);
         };
     }
 
