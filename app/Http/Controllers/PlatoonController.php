@@ -4,15 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\Position;
 use App\Http\Requests\CreatePlatoonForm;
-use App\Http\Requests\DeletePlatoonForm;
-use App\Http\Requests\UpdatePlatoonForm;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\PlatoonRepository;
 use Closure;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -73,7 +69,8 @@ class PlatoonController extends Controller
         );
 
         $platoon->squads = $platoon->squads->each(function ($squad) {
-            $squad->members = $squad->members->filter(fn ($member) => $member->position === Position::MEMBER)->sortbyDesc(function (
+            $squad->members = $squad->members->filter(fn ($member
+            ) => $member->position === Position::MEMBER)->sortbyDesc(function (
                 $member
             ) use ($squad) {
                 return $squad->leader && $squad->leader->clan_id === $member->recruiter_id;
@@ -140,7 +137,8 @@ class PlatoonController extends Controller
     private function filterHandlesToPrimaryHandle($division)
     {
         return function ($query) use ($division) {
-            $query->where('id', $division->handle_id);
+            $query->where('handles.id', $division->handle_id)
+                ->wherePivot('primary', true);
         };
     }
 

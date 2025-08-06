@@ -37,7 +37,7 @@ class RankActionsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('rank')
-            ->modifyQueryUsing(fn($query) => $query->approvedAndAccepted())
+            ->modifyQueryUsing(fn ($query) => $query->approvedAndAccepted())
             ->columns([
                 Tables\Columns\TextColumn::make('rank'),
                 Tables\Columns\TextColumn::make('created_at')

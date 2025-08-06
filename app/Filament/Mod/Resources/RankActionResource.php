@@ -4,8 +4,6 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource\Pages;
-use App\Filament\Mod\Resources\RankActionResource\RelationManagers\MemberRelationManager;
-use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
 use App\Models\Member;
 use App\Models\RankAction;
 use Carbon\Carbon;
@@ -66,18 +64,18 @@ class RankActionResource extends Resource
                                     Placeholder::make('member_name')
                                         ->label('Member Affected')
                                         ->hiddenOn('create')
-                                        ->content(fn($record) => $record->member->name),
+                                        ->content(fn ($record) => $record->member->name),
 
                                     Placeholder::make('requester_name')
                                         ->label('Recommended By')
                                         ->hiddenOn('create')
-                                        ->content(fn($record) => $record->requester->name),
+                                        ->content(fn ($record) => $record->requester->name),
 
                                     Placeholder::make('requester_name')
                                         ->label('Approved By')
-                                        ->visible(fn($record) => $record->approved_at && $record->approver)
+                                        ->visible(fn ($record) => $record->approved_at && $record->approver)
                                         ->hiddenOn('create')
-                                        ->content(fn($record) => $record->approver->name),
+                                        ->content(fn ($record) => $record->approver->name),
                                 ])->columns(3),
                                 Select::make('rank')
                                     ->options(Rank::class)
@@ -85,12 +83,12 @@ class RankActionResource extends Resource
                                     ->disabledOn('edit'),
                                 Fieldset::make('Dates')->schema([
                                     DateTimePicker::make('awarded_at')
-                                        ->visible(fn($record
+                                        ->visible(fn ($record
                                         ) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
                                         ->label('Awarded At')
                                         ->readOnly(),
                                     DateTimePicker::make('approved_at')
-                                        ->visible(fn($record) => $record->approved_at)
+                                        ->visible(fn ($record) => $record->approved_at)
                                         ->readOnly(),
                                     DateTimePicker::make('created_at')
                                         ->label('Requested At')
@@ -117,7 +115,7 @@ class RankActionResource extends Resource
                 Tables\Columns\TextColumn::make('member.name'),
                 Tables\Columns\TextColumn::make('member.division.name')
                     ->sortable()
-                    ->visible(fn() => auth()->user()->isRole('admin')),
+                    ->visible(fn () => auth()->user()->isRole('admin')),
                 Tables\Columns\TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
@@ -146,20 +144,20 @@ class RankActionResource extends Resource
                                 ->label('Rank')
                                 ->options(function () {
                                     return collect(Rank::cases())
-                                        ->mapWithKeys(fn(Rank $rank) => [$rank->value => $rank->getLabel()])
+                                        ->mapWithKeys(fn (Rank $rank) => [$rank->value => $rank->getLabel()])
                                         ->toArray();
                                 })
                                 ->placeholder('Select a rank'),
                         ])
                         ->query(function (Builder $query, array $data): Builder {
-                            if (!empty($data['rank'])) {
+                            if (! empty($data['rank'])) {
                                 $query->where('rank', $data['rank']);
                             }
 
                             return $query;
                         })
-                        ->indicateUsing(fn(array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
-                            ? 'Rank: '.Rank::from($data['rank'])->getLabel()
+                        ->indicateUsing(fn (array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
+                            ? 'Rank: ' . Rank::from($data['rank'])->getLabel()
                             : null),
 
                     Filter::make('requester_name')
@@ -169,9 +167,9 @@ class RankActionResource extends Resource
                                 ->placeholder('Enter requester name'),
                         ])
                         ->query(function (Builder $query, array $data): Builder {
-                            if (!empty($data['requester_name'])) {
+                            if (! empty($data['requester_name'])) {
                                 return $query->whereHas('requester', function (Builder $query) use ($data) {
-                                    $query->where('name', 'like', '%'.$data['requester_name'].'%');
+                                    $query->where('name', 'like', '%' . $data['requester_name'] . '%');
                                 });
                             }
 
@@ -179,7 +177,7 @@ class RankActionResource extends Resource
                         })
                         ->indicateUsing(function (array $data): ?string {
                             return isset($data['requester_name']) && $data['requester_name'] !== ''
-                                ? 'Requester: '.$data['requester_name']
+                                ? 'Requester: ' . $data['requester_name']
                                 : null;
                         }),
 
@@ -198,7 +196,7 @@ class RankActionResource extends Resource
             )
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                CommentsAction::make()->visible(fn(
+                CommentsAction::make()->visible(fn (
                     RankAction $action
                 ) => auth()->user()->canManageRankActionCommentsFor($action)),
             ])
@@ -241,13 +239,13 @@ class RankActionResource extends Resource
                         ->eligibleForRankAction($user, $search)
                         ->limit(5)
                         ->get()
-                        ->mapWithKeys(fn($member) => [
+                        ->mapWithKeys(fn ($member) => [
                             $member->id => $member->present()->rankName(),
                         ])
                         ->toArray();
 
                 })
-                ->getOptionLabelUsing(fn($value): ?string => Member::find($value)?->present()->rankName())
+                ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName())
                 ->allowHtml()
                 ->helperText(function () {
                     $user = auth()->user();
@@ -262,14 +260,14 @@ class RankActionResource extends Resource
                 })
                 ->rules([
                     'required',
-                    fn(callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
+                    fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
                         $get,
                         $min_days_rank_action
                     ) {
                         $user = auth()->user();
                         $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
 
-                        if (!$skipRule) {
+                        if (! $skipRule) {
                             $exists = RankAction::where('member_id', $value)
                                 ->where('created_at', '>=', Carbon::now()->subDays($min_days_rank_action))
                                 ->exists();
@@ -317,9 +315,9 @@ class RankActionResource extends Resource
                         $member = Member::find($memberId);
                         if ($member) {
                             $allRanks = Rank::cases();
-                            usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                            usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
-                            if (!$user->isDivisionLeader()) {
+                            if (! $user->isDivisionLeader()) {
                                 $currentIndex = null;
                                 foreach ($allRanks as $index => $rank) {
                                     if ($rank->value === $member->rank->value) {
@@ -329,7 +327,7 @@ class RankActionResource extends Resource
                                 }
                                 if ($currentIndex !== null && isset($allRanks[$currentIndex + 1])) {
                                     $nextRank = $allRanks[$currentIndex + 1];
-                                    $promotionLabel = 'Promotion (next rank: '.ucwords($nextRank->getLabel()).')';
+                                    $promotionLabel = 'Promotion (next rank: ' . ucwords($nextRank->getLabel()) . ')';
                                 } else {
                                     $promotionLabel = 'Promotion (member is at the highest rank)';
                                 }
@@ -361,34 +359,34 @@ class RankActionResource extends Resource
                 ->options(function (callable $get) {
                     $member = Member::find($get('member_id'));
 
-                    if (!$member) {
+                    if (! $member) {
                         return [];
                     }
 
                     $allRanks = Rank::cases();
-                    usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                    usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
                     $options = array_reduce(
-                        array_filter($allRanks, fn(Rank $r) => $r->value < $member->rank->value),
-                        fn($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
+                        array_filter($allRanks, fn (Rank $r) => $r->value < $member->rank->value),
+                        fn ($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
                         []
                     );
 
                     return $options;
                 })
-                ->visible(fn(callable $get) => $get('action') === 'demotion')
-                ->required(fn(callable $get) => $get('action') === 'demotion'),
+                ->visible(fn (callable $get) => $get('action') === 'demotion')
+                ->required(fn (callable $get) => $get('action') === 'demotion'),
 
             Select::make('promotion_rank')
                 ->label('Promote to')
                 ->options(function (callable $get) {
                     $member = Member::find($get('member_id'));
-                    if (!$member) {
+                    if (! $member) {
                         return [];
                     }
 
                     $allRanks = Rank::cases();
-                    usort($allRanks, fn(Rank $a, Rank $b) => $a->value <=> $b->value);
+                    usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
                     $options = [];
                     foreach ($allRanks as $rank) {
@@ -399,8 +397,8 @@ class RankActionResource extends Resource
 
                     return $options;
                 })
-                ->visible(fn(callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader())
-                ->required(fn(callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
+                ->visible(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader())
+                ->required(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
 
         ];
     }

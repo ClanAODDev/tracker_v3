@@ -11,19 +11,19 @@ Route::get('requests-count.png', function () {
     $tinyboldfont = public_path('fonts/copy0866.ttf');
     $bigfont = public_path('fonts/din-black.otf');
 
-    if (!file_exists($tinyfont) || !file_exists($bigfont)) {
+    if (! file_exists($tinyfont) || ! file_exists($bigfont)) {
         return response('Font file missing', 500)
             ->header('Content-Type', 'text/plain');
     }
 
     $bgPath = public_path('images/dynamic-images/bgs/pending-requests.jpg');
-    if (!file_exists($bgPath)) {
+    if (! file_exists($bgPath)) {
         return response('Background image not found', 500)
             ->header('Content-Type', 'text/plain');
     }
 
     $im = imagecreatefromjpeg($bgPath);
-    if (!$im) {
+    if (! $im) {
         return response('Failed to load image', 500)
             ->header('Content-Type', 'text/plain');
     }

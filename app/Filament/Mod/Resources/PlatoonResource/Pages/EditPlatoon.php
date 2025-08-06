@@ -79,23 +79,23 @@ class EditPlatoon extends EditRecord
             Actions\DeleteAction::make()
                 ->modalDescription('Assigned members will be removed from this platoon and any squads within. Are you sure?')
                 ->action(function ($record) {
-                Member::where('platoon_id', $record->id)->update([
-                    'platoon_id' => 0,
-                    'squad_id' => 0,
-                ]);
+                    Member::where('platoon_id', $record->id)->update([
+                        'platoon_id' => 0,
+                        'squad_id' => 0,
+                    ]);
 
-                Squad::where('platoon_id', $record->id)->delete();
+                    Squad::where('platoon_id', $record->id)->delete();
 
-                $record->delete();
+                    $record->delete();
 
-                Notification::make()
-                    ->success()
-                    ->title('Platoon has been deleted')
-                    ->body('Assigned members and squads have been updated.')
-                    ->send();
+                    Notification::make()
+                        ->success()
+                        ->title('Platoon has been deleted')
+                        ->body('Assigned members and squads have been updated.')
+                        ->send();
 
-                return redirect()->route('filament.mod.resources.divisions.edit', $record->division);
-            }),
+                    return redirect()->route('filament.mod.resources.divisions.edit', $record->division);
+                }),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
+use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Mod\Resources\MemberResource\Pages;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\NotesRelationManager;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\RankActionsRelationManager;
@@ -13,6 +14,7 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Services\MemberHandleService;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -82,10 +84,12 @@ class MemberResource extends Resource
                     Forms\Components\DateTimePicker::make('last_trained_at')->disabled(),
                 ])->columns(3),
 
-                Forms\Components\Section::make('Division Assignment')->schema([
+                Forms\Components\Section::make('Division Assignment')
+                    ->schema([
                     Forms\Components\Placeholder::make('Division')
                         ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
                     Select::make('platoon_id')
+                        ->nullable(true)
                         ->label('Platoon')
                         ->relationship('platoon', 'name')
                         ->options(function (Get $get) {
@@ -95,14 +99,25 @@ class MemberResource extends Resource
                                 ->pluck('name', 'id')
                                 ->toArray();
                         })
+                        ->afterStateHydrated(function ($state, callable $set) {
+                            if ($state === 0) {
+                                $set('platoon_id', null);
+                            }
+                        })
                         ->reactive()
-                        ->afterStateUpdated(function ($state, callable $set) {
 
+                        ->afterStateUpdated(function ($state, callable $set) {
                             $set('squad_id', null);
                         }),
                     Select::make('squad_id')
                         ->label('Squad')
+                        ->nullable(true)
                         ->relationship('squad', 'name')
+                        ->afterStateHydrated(function ($state, callable $set) {
+                            if ($state === 0) {
+                                $set('squad_id', null);
+                            }
+                        })
                         ->options(function (Get $get) {
                             $platoonId = $get('platoon_id');
 
@@ -115,6 +130,16 @@ class MemberResource extends Resource
                             return [];
                         }),
                 ])->columns(3),
+
+                Forms\Components\Section::make('In-game Handles')
+                    ->id('ingame-handles')
+                    ->schema([
+                        IngameHandlesForm::make()
+                            ->default(fn ($record) => $record
+                                ? MemberHandleService::getGroupedHandles($record)
+                                : []
+                            ),
+                    ]),
 
                 Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([

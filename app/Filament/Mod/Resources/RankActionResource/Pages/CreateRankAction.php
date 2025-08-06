@@ -25,7 +25,7 @@ class CreateRankAction extends CreateRecord
         $data['requester_id'] = auth()->user()->member_id;
 
         $member = Member::find($data['member_id']);
-        if (!$member) {
+        if (! $member) {
             throw new \Exception('Member not found.');
         }
 
@@ -92,9 +92,9 @@ class CreateRankAction extends CreateRecord
         }
 
         // promotions beyond platoon lead limit (>= SPC) require acceptance
-        if ($record->rank->isPromotion($record->member->rank) && !$record->accepted_at) {
+        if ($record->rank->isPromotion($record->member->rank) && ! $record->accepted_at) {
             $record->member->notify(new NotifyMemberPromotionPendingAcceptance($record));
-        } else  {
+        } else {
             // demotions are automatically accepted and applied
             UpdateRankForMember::dispatch($record);
         }
@@ -111,7 +111,7 @@ class CreateRankAction extends CreateRecord
                 ->schema([
                     RichEditor::make('Justification')
                         ->required()
-                        ->columnSpanFull()
+                        ->columnSpanFull(),
                 ]),
         ];
     }

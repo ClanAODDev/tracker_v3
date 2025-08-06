@@ -42,8 +42,8 @@ class TransfersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->url(fn(): string => TransferResource::getUrl('create', [
-                    'member_id' => $this->ownerRecord->id
+                Tables\Actions\CreateAction::make()->url(fn (): string => TransferResource::getUrl('create', [
+                    'member_id' => $this->ownerRecord->id,
                 ])),
             ])
             ->actions([
