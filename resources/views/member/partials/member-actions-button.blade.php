@@ -44,7 +44,7 @@
         @can ('manageIngameHandles', $member)
             <li>
                 @if ($member->id === auth()->user()->member_id)
-                    <a href="{{ route('filament.settings.pages.ingame-handles') }}">Manage Ingame Handles</a>
+                    <a href="{{ route('filament.profile.pages.ingame-handles') }}">Manage Ingame Handles</a>
                 @else
                     <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles">Manage Ingame Handles</a>
                 @endif

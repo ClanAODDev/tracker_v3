@@ -17,7 +17,7 @@ class NotePolicy
 
     public function before(User $user)
     {
-        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDeveloper()) {
+        if ($user->isRole('admin') || $user->isDeveloper()) {
             return true;
         }
     }
@@ -34,6 +34,15 @@ class NotePolicy
         return true;
     }
 
+    public function edit(User $user, Note $note): bool
+    {
+        if ($user->isDivisionLeader()) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Only officers and above can create notes.
      */
@@ -48,7 +57,7 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
-        if ($user->isDivisionLeader() && $note->division_id === $user->division_id) {
+        if ($user->isDivisionLeader()) {
             return true;
         }
 
