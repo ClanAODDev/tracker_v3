@@ -38,14 +38,14 @@
             @endif
 
             <li>
-                <a href="{{ route('filament.settings.pages.dashboard') }}">
-                    User Settings
+                <a href="{{ route('filament.profile.pages.dashboard') }}">
+                    Manage Profile
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('member', auth()->user()->member->getUrlParams()) }}">
-                    Member Profile
+                    Tracker Profile
                 </a>
             </li>
 

@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Filament\Settings\Pages;
+namespace App\Filament\Profile\Pages;
 
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Models\Member;
-use App\Services\MemberHandleService;
 use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -19,7 +18,9 @@ class IngameHandles extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
-    protected static string $view = 'filament.settings.pages.profile';
+    protected static string $view = 'filament.profile.pages.ingame-handles';
+
+    protected static ?string $navigationGroup = 'User';
 
     public ?Member $record = null;
 
@@ -28,7 +29,7 @@ class IngameHandles extends Page implements HasForms
     public function mount(): void
     {
         $this->record = auth()->user()->member;
-        $this->formData['handleGroups'] = MemberHandleService::getGroupedHandles($this->record);
+        $this->formData['handleGroups'] = IngameHandlesForm::getGroupedHandles($this->record);
     }
 
     protected function getHeaderActions(): array
@@ -52,9 +53,16 @@ class IngameHandles extends Page implements HasForms
         }
 
         // resource forms automatically validate, but we have explicitly call it here
-        $this->form->validate();
-
-        MemberHandleService::saveHandles($this->record, $this->formData['handleGroups']);
+        try {
+            $this->form->validate();
+            IngameHandlesForm::saveHandles($this->record, $this->formData['handleGroups']);
+        } catch (\Exception $exception) {
+            Notification::make()
+                ->title('Something went wrong while updating handles')
+                ->danger()
+                ->send();
+            \Log::error($exception->getMessage());
+        }
 
         Notification::make()
             ->title('Handles updated successfully')

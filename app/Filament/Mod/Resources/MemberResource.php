@@ -61,7 +61,7 @@ class MemberResource extends Resource
                         ->label('Position')
                         ->disabled()
                         ->dehydrated(false)
-                        ->helperText('Manage via division, platoon, or squad')
+                        ->helperText('Manage by editing division, platoon, or squad')
                         ->formatStateUsing(fn ($state) => Position::from($state)->getLabel()),
                 ])->columns(),
 
@@ -86,50 +86,50 @@ class MemberResource extends Resource
 
                 Forms\Components\Section::make('Division Assignment')
                     ->schema([
-                    Forms\Components\Placeholder::make('Division')
-                        ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
-                    Select::make('platoon_id')
-                        ->nullable(true)
-                        ->label('Platoon')
-                        ->relationship('platoon', 'name')
-                        ->options(function (Get $get) {
-                            $divisionId = $get('division_id');
+                        Forms\Components\Placeholder::make('Division')
+                            ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
+                        Select::make('platoon_id')
+                            ->nullable(true)
+                            ->label('Platoon')
+                            ->relationship('platoon', 'name')
+                            ->options(function (Get $get) {
+                                $divisionId = $get('division_id');
 
-                            return Platoon::where('division_id', $divisionId)
-                                ->pluck('name', 'id')
-                                ->toArray();
-                        })
-                        ->afterStateHydrated(function ($state, callable $set) {
-                            if ($state === 0) {
-                                $set('platoon_id', null);
-                            }
-                        })
-                        ->reactive()
-
-                        ->afterStateUpdated(function ($state, callable $set) {
-                            $set('squad_id', null);
-                        }),
-                    Select::make('squad_id')
-                        ->label('Squad')
-                        ->nullable(true)
-                        ->relationship('squad', 'name')
-                        ->afterStateHydrated(function ($state, callable $set) {
-                            if ($state === 0) {
-                                $set('squad_id', null);
-                            }
-                        })
-                        ->options(function (Get $get) {
-                            $platoonId = $get('platoon_id');
-
-                            if ($platoonId) {
-                                return Squad::where('platoon_id', $platoonId)
+                                return Platoon::where('division_id', $divisionId)
                                     ->pluck('name', 'id')
                                     ->toArray();
-                            }
+                            })
+                            ->afterStateHydrated(function ($state, callable $set) {
+                                if ($state === 0) {
+                                    $set('platoon_id', null);
+                                }
+                            })
+                            ->reactive()
 
-                            return [];
-                        }),
-                ])->columns(3),
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $set('squad_id', null);
+                            }),
+                        Select::make('squad_id')
+                            ->label('Squad')
+                            ->nullable(true)
+                            ->relationship('squad', 'name')
+                            ->afterStateHydrated(function ($state, callable $set) {
+                                if ($state === 0) {
+                                    $set('squad_id', null);
+                                }
+                            })
+                            ->options(function (Get $get) {
+                                $platoonId = $get('platoon_id');
+
+                                if ($platoonId) {
+                                    return Squad::where('platoon_id', $platoonId)
+                                        ->pluck('name', 'id')
+                                        ->toArray();
+                                }
+
+                                return [];
+                            }),
+                    ])->columns(3),
 
                 Forms\Components\Section::make('In-game Handles')
                     ->id('ingame-handles')

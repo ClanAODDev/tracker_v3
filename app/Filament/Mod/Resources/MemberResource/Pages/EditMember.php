@@ -2,12 +2,12 @@
 
 namespace App\Filament\Mod\Resources\MemberResource\Pages;
 
+use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Mod\Resources\MemberResource;
 use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
-use App\Services\MemberHandleService;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Textarea;
@@ -31,7 +31,7 @@ class EditMember extends EditRecord
         if (isset($data['id'])) {
             $member = \App\Models\Member::find($data['id']);
             if ($member) {
-                $data['handleGroups'] = \App\Services\MemberHandleService::getGroupedHandles($member);
+                $data['handleGroups'] = IngameHandlesForm::getGroupedHandles($member);
             }
         }
 
@@ -44,7 +44,7 @@ class EditMember extends EditRecord
             $data['last_trained_at'] = now();
         }
 
-        MemberHandleService::saveHandles($record, $data['handleGroups']);
+        IngameHandlesForm::saveHandles($record, $data['handleGroups']);
 
         unset($data['handleGroups']);
 
