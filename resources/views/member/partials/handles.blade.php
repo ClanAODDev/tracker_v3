@@ -3,7 +3,7 @@
 
     @can ('manageIngameHandles', $member)
         @if ($member->id === auth()->user()->member_id)
-            <a href="{{ route('filament.settings.pages.ingame-handles') }}"
+            <a href="{{ route('filament.profile.pages.ingame-handles') }}"
                class="btn btn-default pull-right"><i class="fa fa-cog text-accent"></i> Manage
             </a>
         @else
