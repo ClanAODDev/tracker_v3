@@ -6,6 +6,7 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
 use App\Filament\Forms\Components\IngameHandlesForm;
+use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource\Pages;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\NotesRelationManager;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\RankActionsRelationManager;
@@ -14,7 +15,6 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
-use App\Services\MemberHandleService;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -131,17 +131,34 @@ class MemberResource extends Resource
                             }),
                     ])->columns(3),
 
+
+                Forms\Components\Section::make('Part-time Divisions')
+                    ->id('part-time-divisions')
+                    ->collapsible()
+                    ->collapsed()
+                    ->description('Select any additional divisions this member is part-time in.')
+                    ->schema([
+                        PartTimeDivisionsForm::makeUsingFormModel(),
+                    ]),
+
                 Forms\Components\Section::make('In-game Handles')
                     ->id('ingame-handles')
+                    ->description('In-game handles and alts for this member.')
+                    ->collapsed()
+                    ->collapsible()
                     ->schema([
                         IngameHandlesForm::make()
                             ->default(fn ($record) => $record
-                                ? MemberHandleService::getGroupedHandles($record)
+                                ? IngameHandlesForm::getGroupedHandles($record)
                                 : []
                             ),
                     ]),
 
-                Forms\Components\Section::make('Forum Metadata')->schema([
+                Forms\Components\Section::make('Forum Metadata')
+                    ->description('Forum settings and metadata for this member.')
+                    ->collapsible()
+                    ->collapsed()
+                    ->schema([
                     Forms\Components\Section::make('Flags')->schema([
                         Forms\Components\Toggle::make('flagged_for_inactivity')
                             ->disabled(),

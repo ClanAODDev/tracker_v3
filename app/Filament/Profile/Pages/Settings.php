@@ -31,9 +31,9 @@ class Settings extends Page implements HasForms
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('Save Settings')->extraAttributes([
-                'wire:click.prevent' => 'save',
-            ])->submit('settings-form'),
+            Action::make('Save Settings')
+                ->action('save')
+                ->keyBindings(['mod+s']),
         ];
     }
 
@@ -69,6 +69,7 @@ class Settings extends Page implements HasForms
                 Forms\Components\Section::make('Misc')
                     ->schema([
                         Forms\Components\Select::make('snow')
+                            ->selectablePlaceholder(false)
                             ->hintIcon('heroicon-o-cloud')
                             ->options([
                                 'no_snow' => 'None',

@@ -51,6 +51,7 @@ class MemberAwardResource extends Resource
             ->schema([
                 Forms\Components\Select::make('award_id')
                     ->relationship('award', 'name')
+                    ->required()
                     ->hiddenOn('edit'),
 
                 Forms\Components\Select::make('member_id')
@@ -64,6 +65,7 @@ class MemberAwardResource extends Resource
                     ->required(),
 
                 Forms\Components\Textarea::make('reason')
+                    ->required()
                     ->columnSpanFull()
                     ->rows(5),
 

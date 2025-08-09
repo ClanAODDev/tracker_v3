@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Division;
-use App\Models\Handle;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\MemberRepository;
@@ -12,7 +10,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 /**
@@ -80,40 +77,6 @@ class MemberController extends Controller
         ]);
     }
 
-    public function editHandles(Member $member)
-    {
-        $this->authorize('manageIngameHandles', $member);
-
-        $handles = $this->getHandles($member);
-
-        $division = $member->division;
-
-        return view('member.manage-ingame-handles', compact('handles', 'member', 'division'));
-    }
-
-    public function editPartTime(Member $member)
-    {
-        $this->authorize('managePartTime', $member);
-
-        $division = $member->division;
-
-        /**
-         * omit divisions the member is already part-time in
-         * omit member's primary division from list of available divisions.
-         */
-        $excludedDivisionIds = array_merge(
-            $member->partTimeDivisions->pluck('id')->toArray(),
-            Division::whereIn('name', ['Floater', "Bluntz' Reserves"])->pluck('id')->toArray()
-        );
-
-        $divisions = Division::active()
-            ->whereNotIn('id', $excludedDivisionIds)
-            ->when($member->division, fn ($query) => $query->where('id', '!=', $member->division->id))
-            ->get();
-
-        return view('member.manage-part-time', compact('member', 'division', 'divisions'));
-    }
-
     /**
      * Display the specified resource.
      *
@@ -163,24 +126,6 @@ class MemberController extends Controller
         ));
     }
 
-    /**
-     * Sync player handles.
-     */
-    public function updateHandles(Request $request)
-    {
-        $member = Member::find($request->member_id);
-        $handles = [];
-
-        foreach ($request->handles as $handle) {
-            $handles[$handle['id']] = [
-                'value' => $handle['value'],
-            ];
-        }
-
-        $member->handles()->sync($handles);
-        $this->showSuccessToast('Member handles have been updated!');
-    }
-
     public function assignPlatoon($member)
     {
         $platoon = Platoon::find(request()->platoon_id);
@@ -209,31 +154,5 @@ class MemberController extends Controller
         $this->showSuccessToast('Member assignments reset successfully');
 
         return redirect()->route('member', $member->getUrlParams());
-    }
-
-    /**
-     * @return Collection
-     */
-    private function getHandles(Member $member)
-    {
-        $handles = Handle::all()->map(function ($handle) use ($member) {
-            $newHandle = [
-                'id' => $handle->id,
-                'label' => $handle->label,
-                'type' => $handle->type,
-                'comments' => $handle->comments,
-                'enabled' => false,
-            ];
-
-            if ($member->handles->contains($handle->id)) {
-                $newHandle['enabled'] = true;
-                $newHandle['value'] = $member->handles->filter(fn ($myHandle
-                ) => $handle->type === $myHandle->type)->first()->pivot->value;
-            }
-
-            return $newHandle;
-        });
-
-        return $handles->sortBy('type')->values();
     }
 }
