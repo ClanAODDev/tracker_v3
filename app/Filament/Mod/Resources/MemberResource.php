@@ -131,8 +131,21 @@ class MemberResource extends Resource
                             }),
                     ])->columns(3),
 
+
+                Forms\Components\Section::make('Part-time Divisions')
+                    ->id('part-time-divisions')
+                    ->collapsible()
+                    ->collapsed()
+                    ->description('Select any additional divisions this member is part-time in.')
+                    ->schema([
+                        PartTimeDivisionsForm::makeUsingFormModel(),
+                    ]),
+
                 Forms\Components\Section::make('In-game Handles')
                     ->id('ingame-handles')
+                    ->description('In-game handles and alts for this member.')
+                    ->collapsed()
+                    ->collapsible()
                     ->schema([
                         IngameHandlesForm::make()
                             ->default(fn ($record) => $record
@@ -141,13 +154,11 @@ class MemberResource extends Resource
                             ),
                     ]),
 
-                Forms\Components\Section::make('Part-time Divisions')
-                    ->description('Select any additional divisions this member is part-time in.')
+                Forms\Components\Section::make('Forum Metadata')
+                    ->description('Forum settings and metadata for this member.')
+                    ->collapsible()
+                    ->collapsed()
                     ->schema([
-                        PartTimeDivisionsForm::makeUsingFormModel(),
-                    ]),
-
-                Forms\Components\Section::make('Forum Metadata')->schema([
                     Forms\Components\Section::make('Flags')->schema([
                         Forms\Components\Toggle::make('flagged_for_inactivity')
                             ->disabled(),
