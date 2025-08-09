@@ -41,24 +41,6 @@
             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}" target="_blank">View forum profile</a>
         </li>
 
-        @can ('manageIngameHandles', $member)
-            <li>
-                @if ($member->id === auth()->user()->member_id)
-                    <a href="{{ route('filament.profile.pages.ingame-handles') }}">Manage Ingame Handles</a>
-                @else
-                    <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles">Manage Ingame Handles</a>
-                @endif
-            </li>
-        @endcan
-
-        @can ('managePartTime', $member)
-            <li>
-                <a href="{{ route('member.edit-part-time', $member->clan_id) }}">
-                    Manage Part-Time
-                </a>
-            </li>
-        @endcan
-
         @can('update', $member)
             <li class="divider"></li>
             <li>

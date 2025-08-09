@@ -1,10 +1,15 @@
 <h4 class="m-t-xl">
     Part-Time Divisions
     @can ('managePartTime', $member)
-        <a href="{{ route('member.edit-part-time', $member->clan_id) }}"
-           class="btn btn-default pull-right">
-            <i class="fa fa-cog text-accent"></i> Manage
-        </a>
+            @if ($member->id === auth()->user()->member_id)
+                <a href="{{ route('filament.profile.pages.part-time') }}"
+                   class="btn btn-default pull-right"><i class="fa fa-cog text-accent"></i> Manage
+                </a>
+            @else
+                <a href="{{ route('filament.mod.resources.members.edit', $member) }}#part-time-divisions"
+                   class="btn btn-default pull-right"><i class="fa fa-cog text-accent"></i> Manage
+                </a>
+            @endif
     @endcan
 </h4>
 <hr />
