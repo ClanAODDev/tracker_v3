@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources\MemberResource\Pages;
 
 use App\Filament\Forms\Components\IngameHandlesForm;
+use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource;
 use App\Models\Member;
 use App\Models\Note;
@@ -45,6 +46,11 @@ class EditMember extends EditRecord
         }
 
         IngameHandlesForm::saveHandles($record, $data['handleGroups']);
+
+        PartTimeDivisionsForm::sync(
+            $this->record,
+            PartTimeDivisionsForm::selectedFrom($this->data ?? [])
+        );
 
         unset($data['handleGroups']);
 

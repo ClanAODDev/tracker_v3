@@ -42,7 +42,7 @@ class ProfilePanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Profile/Widgets'), for: 'App\\Filament\\Profile\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                //                Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
