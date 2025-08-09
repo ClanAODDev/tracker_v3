@@ -35,9 +35,9 @@ class IngameHandles extends Page implements HasForms
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('Save Handles')->extraAttributes([
-                'wire:click.prevent' => 'save',
-            ])->submit('handles-form'),
+            Action::make('Save Handles')
+                ->action('save')
+                ->keyBindings(['mod+s']),
         ];
     }
 
