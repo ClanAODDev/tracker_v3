@@ -79,6 +79,7 @@ class DivisionResource extends Resource
 
                 Forms\Components\Section::make('Leadership Management')
                     ->description('Manage division leaders')
+                    ->hiddenOn('create')
                     ->schema([
                         Forms\Components\Section::make()->schema([
                             TextInput::make('current_co_name')
