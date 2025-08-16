@@ -22,21 +22,9 @@ class ClanController extends ApiController
      *
      * @return JsonResponse
      */
-    public function teamspeakPopulationCount()
-    {
-        $data = \App\Services\AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_ts_population_json&');
-
-        return $this->respond(['data' => $data]);
-    }
-
-    /**
-     * Deprecated when website migrates to tracker.
-     *
-     * @return JsonResponse
-     */
     public function discordPopulationCount()
     {
-        $data = \App\Services\AOD::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
+        $data = \App\Services\AODForumService::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
 
         return $this->respond(['data' => $data]);
     }

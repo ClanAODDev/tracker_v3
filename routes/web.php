@@ -14,5 +14,4 @@ require 'partials/members.php';
 require 'partials/divisions.php';
 require 'partials/reports.php';
 require 'partials/clan.php';
-require 'partials/website.php';
 require 'partials/documentation.php';
