@@ -88,7 +88,7 @@ class DivisionResource extends Resource
                                 ->dehydrated(false)
                                 ->afterStateHydrated(function ($state, Set $set) use ($form) {
                                     $coName = \App\Models\Member::query()
-                                        ->where('division_id', $form->getRecord()->id)
+                                        ->where('division_id', $form->getRecord()?->id)
                                         ->where('position', \App\Enums\Position::COMMANDING_OFFICER)
                                         ->value('name');
                                     $set('current_co_name', $coName);
@@ -97,7 +97,7 @@ class DivisionResource extends Resource
                             Select::make('new_co')
                                 ->label('New CO')
                                 ->searchable()
-                                ->options(fn () => Member::where('division_id', $form->getRecord()->id)
+                                ->options(fn () => Member::where('division_id', $form->getRecord()?->id)
                                     ->pluck('name', 'id')),
                         ])->columns(),
 
@@ -107,7 +107,7 @@ class DivisionResource extends Resource
                                 Select::make('xo')
                                     ->label('Executive Officer')
                                     ->searchable()
-                                    ->options(fn () => Member::where('division_id', $form->getRecord()->id)
+                                    ->options(fn () => Member::where('division_id', $form->getRecord()?->id)
                                         ->pluck('name', 'id')),
                             ])
                             ->minItems(0)
