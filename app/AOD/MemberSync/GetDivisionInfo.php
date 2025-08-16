@@ -2,7 +2,7 @@
 
 namespace App\AOD\MemberSync;
 
-use App\Services\AOD;
+use App\Services\AODForumService;
 use Log;
 
 class GetDivisionInfo
@@ -34,24 +34,18 @@ class GetDivisionInfo
     /**
      * Fetches member data per division.
      *
-     * @return mixed
+     * @return array
      */
-    protected function fetchData()
+    protected function fetchData(): array
     {
-        $data = AOD::request($this->source, [
+        $data = AODForumService::fetchInfo([
             'extra' => true,
             'epoch' => true,
             'type' => 'json',
         ]);
 
-        if (! \is_object($data)) {
-            Log::critical('ERROR: Member sync returning invalid.');
-
-            exit;
-        }
-
-        if (property_exists($data, 'error')) {
-            Log::critical("ERROR: Member sync returned error: {$data->error}");
+        if (array_key_exists('error', $data)) {
+            Log::critical("ERROR: Member sync returned error: {$data['error']}");
 
             exit;
         }
@@ -66,15 +60,15 @@ class GetDivisionInfo
      *
      * @return array
      */
-    protected function prepareData($json)
+    protected function prepareData($data): array
     {
         $prepared = [];
         $memberCount = 0;
 
-        foreach ($json->data as $member) {
+        foreach ($data['data'] as $member) {
             $columnCount = 0;
 
-            foreach ($json->column_order as $column) {
+            foreach ($data['column_order'] as $column) {
                 $prepared[$memberCount][$column] = $member[$columnCount];
                 $columnCount++;
             }
