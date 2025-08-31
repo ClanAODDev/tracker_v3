@@ -28,10 +28,11 @@ class HandleResource extends Resource
                 Forms\Components\TextInput::make('type')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('comments')
+                Forms\Components\Textarea::make('comments')
                     ->maxLength(255)
+                    ->columnSpanFull()
                     ->default(null),
-                Forms\Components\Textarea::make('url')
+                Forms\Components\TextInput::make('url')
                     ->columnSpanFull(),
             ]);
     }
