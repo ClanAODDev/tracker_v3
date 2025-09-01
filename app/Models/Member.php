@@ -123,7 +123,7 @@ class Member extends Model
     public function scopeUnassignedSquadLeaders($query)
     {
         return $query
-            ->where('position', 2)
+            ->where('position', Position::SQUAD_LEADER)
             ->whereNotIn('clan_id', function ($q) {
                 $q->select('leader_id')->from('squads')->whereNotNull('leader_id');
             });
@@ -132,7 +132,7 @@ class Member extends Model
     public function scopeUnassignedPlatoonLeaders($query)
     {
         return $query
-            ->where('position', 3)
+            ->where('position', Position::PLATOON_LEADER)
             ->whereNotIn('clan_id', function ($q) {
                 $q->select('leader_id')->from('platoons')->whereNotNull('leader_id');
             });
