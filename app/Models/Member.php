@@ -120,6 +120,24 @@ class Member extends Model
         ]);
     }
 
+    public function scopeUnassignedSquadLeaders($query)
+    {
+        return $query
+            ->where('position', 2)
+            ->whereNotIn('clan_id', function ($q) {
+                $q->select('leader_id')->from('squads')->whereNotNull('leader_id');
+            });
+    }
+
+    public function scopeUnassignedPlatoonLeaders($query)
+    {
+        return $query
+            ->where('position', 3)
+            ->whereNotIn('clan_id', function ($q) {
+                $q->select('leader_id')->from('platoons')->whereNotNull('leader_id');
+            });
+    }
+
     /**
      * Handle Staff Sergeant assignments
      * division/.
