@@ -152,12 +152,15 @@ class DivisionResource extends Resource
                                     ->schema([
                                         Select::make('member_applied')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('New Applications'),
                                         Select::make('member_created')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('New Recruitments'),
                                         Select::make('member_approved')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('New Recruit Approval'),
                                     ])
                                     ->columns(3),
@@ -166,12 +169,15 @@ class DivisionResource extends Resource
                                     ->schema([
                                         Select::make('member_removed')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('Member Removals'),
                                         Select::make('member_transferred')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('Member Transfer'),
                                         Select::make('pt_member_removed')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('Part‑Time Member Removal'),
                                     ])
                                     ->columns(3),
@@ -180,12 +186,15 @@ class DivisionResource extends Resource
                                     ->schema([
                                         Select::make('division_edited')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('Division Settings Changes'),
                                         Select::make('member_promoted')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('Member Promoted'),
                                         Select::make('member_awarded')
                                             ->options($channelOptions)
+                                            ->default(false)
                                             ->label('Member Awarded'),
                                     ])
                                     ->columns(3),
