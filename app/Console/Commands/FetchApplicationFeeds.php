@@ -7,6 +7,7 @@ use App\Notifications\Channel\NotifyDivisionNewApplication;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use SimpleXMLElement;
 
 class FetchApplicationFeeds extends Command
@@ -89,7 +90,14 @@ class FetchApplicationFeeds extends Command
             ], now()->addDays(45));
 
             if ($this->option('notify')) {
-                $division->notify(new NotifyDivisionNewApplication((string) $item->title, (string) $item->link));
+                $link = Str::of((string) $item->link)
+                    ->when(fn ($v) => ! Str::startsWith($v, ['http://', 'https://']),
+                        fn ($v) => Str::startsWith($v, '//')
+                            ? $v->prepend('https:')
+                            : $v->prepend('https://')->ltrim('/')
+                    )
+                    ->toString();
+                $division->notify(new NotifyDivisionNewApplication((string) $item->title, $link));
             }
         }
     }

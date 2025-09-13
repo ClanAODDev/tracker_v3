@@ -12,8 +12,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     protected $casts = [
         'approved_at' => 'datetime',
-        'cancelled_at' => 'datetime',
-        'processed_at' => 'datetime',
         'hold_placed_at' => 'datetime',
     ];
 
@@ -56,7 +54,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
 
     public function isOnHold()
     {
-        return $this->hold_placed_at;
+        return (bool) $this->hold_placed_at;
     }
 
     /**
@@ -64,7 +62,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopePending($query)
     {
-        $query->where('approved_at', null)->where('cancelled_at', null)->where('hold_placed_at', null);
+        $query->where('approved_at', null)->where('hold_placed_at', null);
     }
 
     public function getIsPastGracePeriodAttribute()
@@ -82,8 +80,7 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
      */
     public function scopeApproved($query)
     {
-        $query->where('approved_at', '!=', null)
-            ->where('processed_at', null);
+        $query->where('approved_at', '!=', null);
     }
 
     /**
@@ -95,22 +92,6 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * @return bool
-     */
-    public function isCancelled()
-    {
-        return $this->cancelled_at !== null;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function scopeCancelled($query)
-    {
-        $query->where('cancelled_at', '!=', null);
-    }
-
-    /**
      * @return string
      */
     public function getApprovePathAttribute()
@@ -119,32 +100,12 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * @return mixed
-     */
-    public function scopeErrors($query)
-    {
-        $query->where('approved_at', '<=', now()->subHour(4))->where('processed_at', null);
-    }
-
-    /**
      * Approve a member request.
      */
     public function approve()
     {
         $this->update([
-            'approver_id' => auth()->user()->member->clan_id, 'approved_at' => now(), 'cancelled_at' => null,
-        ]);
-    }
-
-    /**
-     * Cancel a member request.
-     *
-     * @param  $notes
-     */
-    public function cancel()
-    {
-        $this->update([
-            'cancelled_at' => now(), 'canceller_id' => auth()->user()->member->clan_id, 'notes' => request('notes'),
+            'approver_id' => auth()->user()->member->clan_id, 'approved_at' => now(),
         ]);
     }
 
@@ -164,22 +125,18 @@ class MemberRequest extends \Illuminate\Database\Eloquent\Model
     /**
      * @return BelongsTo
      */
-    public function canceller()
+    public function holder()
     {
-        return $this->belongsTo(Member::class, 'canceller_id', 'clan_id');
-    }
-
-    /**
-     * mark a request processed.
-     */
-    public function process()
-    {
-        $this->update(['processed_at' => now()]);
+        return $this->belongsTo(Member::class, 'holder_id', 'clan_id');
     }
 
     public function placeOnHold($notes)
     {
-        $this->update(['hold_placed_at' => now(), 'approver_id' => auth()->user()->member->clan_id, 'notes' => $notes]);
+        $this->update([
+            'hold_placed_at' => now(),
+            'holder_id' => auth()->user()->member->clan_id,
+            'notes' => $notes,
+        ]);
     }
 
     public function removeHold()

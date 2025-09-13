@@ -12,21 +12,16 @@
 {{-- pending member requests --}}
 @can('manage', \App\Models\MemberRequest::class)
     @php
-        $cancelledCount = $division->memberRequests()->cancelled()->count();
         $pendingCount   = $division->memberRequests()->pending()->count();
     @endphp
 
-    @if ($cancelledCount)
-        <div class="alert alert-warning">
-            <i class="fa fa-exclamation-triangle"></i>
-            There {{ $cancelledCount === 1 ? 'is' : 'are' }} <code>{{ $cancelledCount }}</code> cancelled {{ Str::plural('member request', $cancelledCount) }} needing attention.
-            <a href="{{ route('admin.member-request.index') }}" class="alert-link pull-right">Manage Member Requests</a>
-        </div>
-    @elseif ($pendingCount)
+    @if ($pendingCount)
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-circle"></i>
             There {{ $pendingCount === 1 ? 'is' : 'are' }} <code>{{ $pendingCount }}</code> pending {{ Str::plural('member request', $pendingCount) }}.
-            <a href="{{ route('admin.member-request.index') }}" class="alert-link pull-right">Manage Member Requests</a>
+            <a href="{{ route('filament.mod.resources.member-requests.index')  . '?tableFilters[status][value]=pending'}}" class="alert-link
+            pull-right">Manage Member
+                Requests</a>
         </div>
     @endif
 @endcan
