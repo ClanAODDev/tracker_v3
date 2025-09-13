@@ -52,6 +52,7 @@ class NotifyDivisionMemberRequestPutOnHold extends Notification implements Shoul
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target('officers')
             ->thumbnail($notifiable->getLogoPath())
             ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: A member status request for `{$this->member->name}` was put on hold by {$this->approver->name} for the following reason: `{$this->request->notes}`"))
             ->success()
