@@ -31,6 +31,7 @@ class NotifyDivisionMemberNameChanged extends Notification implements ShouldQueu
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target('officers')
             ->thumbnail($notifiable->getLogoPath())
             ->message(addslashes(sprintf(
                 ":tools: **MEMBER STATUS - NAME CHANGE**\n`%s` is now known as `%s`. Please inform the member of this change.",

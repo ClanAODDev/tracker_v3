@@ -49,6 +49,7 @@ class NotifyDivisionMemberRequestHoldLifted extends Notification implements Shou
     {
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
+            ->target('officers')
             ->thumbnail($notifiable->getLogoPath())
             ->message(addslashes("**MEMBER STATUS REQUEST ON HOLD** - :hourglass: The hold placed on `{$this->member->name}` has been lifted. Your request will be processed soon."))
             ->success()
