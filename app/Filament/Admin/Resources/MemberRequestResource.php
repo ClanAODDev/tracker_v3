@@ -39,7 +39,7 @@ class MemberRequestResource extends Resource
                 Forms\Components\TextInput::make('canceller_id')
                     ->numeric()
                     ->default(null),
-                Forms\Components\TextInput::make('notes')
+                Forms\Components\Textarea::make('notes')
                     ->maxLength(255)
                     ->default(null),
                 Forms\Components\DateTimePicker::make('hold_placed_at'),

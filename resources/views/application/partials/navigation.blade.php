@@ -68,6 +68,14 @@
         </li>
     @endcan
 
+    @if(Auth::user()->can('manage', \App\Models\MemberRequest::class))
+        <li>
+            <a href="{{ route('filament.mod.resources.member-requests.index'). '?tableFilters[status][value]=pending'}}">
+                Member Requests
+            </a>
+        </li>
+    @endif
+
     <li class="{{ set_active('search/members') }} visible-xs">
         <a href="{{ route('memberSearch') }}">Search</a>
     </li>
@@ -101,14 +109,6 @@
             <li class="{{ set_active('clan/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>
-
-            @if(Auth::user()->can('manage', \App\Models\MemberRequest::class))
-                <li class="{{ set_active('clan/member-requests') }}">
-                    <a href="{{ route('admin.member-request.index') }}">
-                        Member Requests
-                    </a>
-                </li>
-            @endif
         </ul>
     </li>
 
@@ -211,11 +211,11 @@
                     </a>
                 </li>
 
-{{--                <li class="{{ set_active(['help/docs/admin/sink']) }}">--}}
-{{--                    <a href="{{ route('help.admin.sink') }}">--}}
-{{--                        Kitchen Sink--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                {{--                <li class="{{ set_active(['help/docs/admin/sink']) }}">--}}
+                {{--                    <a href="{{ route('help.admin.sink') }}">--}}
+                {{--                        Kitchen Sink--}}
+                {{--                    </a>--}}
+                {{--                </li>--}}
 
                 {{--
                     -- End Admin documentation routes
