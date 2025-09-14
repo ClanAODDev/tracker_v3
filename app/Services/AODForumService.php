@@ -75,20 +75,18 @@ class AODForumService
     }
 
     public static function removeForumMember(
-        int $memberIdBeingAdded,
+        int $memberIdBeingRemoved,
         int $impersonatingMemberId,
     ): array|string {
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
             'aod_userid' => $impersonatingMemberId,
             'do' => 'remaod',
-            'u' => $memberIdBeingAdded,
+            'u' => $memberIdBeingRemoved,
         ]);
 
         if (! is_string($response) || ! str_contains($response, self::SUCCESS)) {
-            \Log::error($response);
-
-            return false;
+            throw new \RuntimeException("Failed to remove member $memberIdBeingRemoved - $response");
         }
 
         return true;

@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources\MemberResource\Pages;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource;
+use App\Jobs\RemoveClanMember;
 use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
@@ -66,57 +67,43 @@ class EditMember extends EditRecord
                 ->label('View Profile')
                 ->outlined()
                 ->icon('heroicon-o-eye')
-                ->url(fn ($record) => route('member', $record->getUrlParams()))
+                ->url(fn($record) => route('member', $record->getUrlParams()))
                 ->openUrlInNewTab(),
 
-            ActionGroup::make([
-
-                Action::make('trigger_external_removal')
-                    ->label('Step 1: Forum removal')
-                    ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->url(fn () => sprintf(
-                        'https://www.clanaod.net/forums/modcp/aodmember.php?do=remaod&u=%s',
-                        $this->record->clan_id
-                    ))
-                    ->openUrlInNewTab()
-                    ->color('danger'),
-
-                Action::make('remove_member')
-                    ->label('Step 2: Tracker removal')
-                    ->icon('heroicon-o-trash')
-                    ->color('warning')
-                    ->modalDescription('This will only remove the member from the tracker, and reset any division, squad, or platoon assignments. Please provide a reason for the removal. Note: If you have not done forum removal, the member will be restored on the next sync.')
-                    ->form([
-                        Textarea::make('removal_reason')
-                            ->label('Reason for Removal')
-                            ->required(),
-                    ])
-                    ->action(function (Member $member, array $data) {
-
-                        Note::create([
-                            'type' => 'negative',
-                            'body' => 'Member removal:' . $data['removal_reason'],
-                            'author_id' => auth()->id(),
-                            'member_id' => $member->id,
-                        ]);
-
-                        $this->notifyDivisions($member, $data['removal_reason']);
-
-                        $member->resetPositionAndAssignments();
-
-                        Notification::make()
-                            ->title('Member Removed')
-                            ->body($data['removal_reason'] ?? 'Member removed successfully')
-                            ->success()
-                            ->send();
-                    }),
-
-            ])->label('Remove...')
-                ->icon('heroicon-m-trash')
+            Action::make('remove_member')
+                ->label('Remove Member')
+                ->icon('heroicon-o-trash')
                 ->color('danger')
-                ->visible(fn () => auth()->user()->can('separate', $this->record) && $this->record->division_id)
-                ->button(),
+                ->modalDescription('This will remove the member from the clan and reset their position and assignments. This action cannot be undone.')
+                ->form([
+                    Textarea::make('removal_reason')
+                        ->label('Reason for Removal')
+                        ->required(),
+                ])
+                ->hidden(fn(): bool => ! $this->record->division_id)
+                ->action(function (Member $member, array $data) {
+                    Note::create([
+                        'type' => 'negative',
+                        'body' => 'Member removal:'.$data['removal_reason'],
+                        'author_id' => auth()->id(),
+                        'member_id' => $member->id,
+                    ]);
 
+                    $this->notifyDivisions($member, $data['removal_reason']);
+
+                    $member->resetPositionAndAssignments();
+
+                    RemoveClanMember::dispatch(
+                        impersonatingMemberId: auth()->user()->member->clan_id,
+                        memberIdBeingRemoved: $member->clan_id
+                    );
+
+                    Notification::make()
+                        ->title('Member Removed')
+                        ->body($data['removal_reason'] ?? 'Member removed successfully')
+                        ->success()
+                        ->send();
+                }),
         ];
     }
 
