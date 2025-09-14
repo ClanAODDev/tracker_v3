@@ -64,9 +64,6 @@ class MemberSync extends Command
             $syncTable->insert($chunk->toArray());
         }
 
-        // complete any outstanding member requests
-        $this->processMemberRequests($syncTable->pluck('userid'));
-
         // iterating over members we know exist in the tracker
         $members = Member::whereNotIn('division_id', [0])
             // skip pending member requests
