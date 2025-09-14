@@ -36,7 +36,9 @@
                                 @method('delete')
                                 @csrf
                                 <input type="hidden" value="Member removed for inactivity" name="removal_reason"/>
-                                <button type="submit" class="btn btn-danger btn-sm remove-member"
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm remove-member"
+                                        onclick="return confirm('Are you sure you want to remove {{ addslashes($member->name) }} from AOD?')"
                                         data-member-id="{{ $member->clan_id }}">
                                     <i class="fa fa-trash text-danger"></i> Remove
                                 </button>
