@@ -12,14 +12,6 @@ var Division = Division || {};
           revert: true,
         });
 
-        // $('.squad').droppable({
-        //   hoverClass: 'panel-c-success',
-        //   greedy: true,
-        //   drop: function (event, ui) {
-        //     alert('asdf');
-        //   }
-        // });
-
         $('.platoon').droppable({
           hoverClass: 'panel-c-success',
           drop: function (event, ui) {

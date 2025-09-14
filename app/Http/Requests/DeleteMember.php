@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Jobs\RemoveClanMember;
 use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
@@ -45,6 +46,11 @@ class DeleteMember extends FormRequest
                 new NotifyDivisionMemberRemoved($member, auth()->user(), $this->removal_reason, $member->squad)
             );
         }
+
+        RemoveClanMember::dispatch(
+            impersonatingMemberId: auth()->user()->member->clan_id,
+            memberIdBeingRemoved: $member->clan_id
+        );
 
         $this->notifyPartTimeDivisions($member);
         $this->createRemovalNote($member);
