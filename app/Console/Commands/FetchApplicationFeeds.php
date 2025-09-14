@@ -89,7 +89,11 @@ class FetchApplicationFeeds extends Command
             ], now()->addDays(45));
 
             if ($this->option('notify')) {
-                $division->notify(new NotifyDivisionNewApplication((string) $item->title, (string) $item->link));
+                $link = (string) $item->link;
+                $link = preg_match('#^https?://#i', $link)
+                    ? $link
+                    : 'https:' . (str_starts_with($link, '//') ? $link : '//' . ltrim($link, '/'));
+                $division->notify(new NotifyDivisionNewApplication((string) $item->title, $link));
             }
         }
     }
