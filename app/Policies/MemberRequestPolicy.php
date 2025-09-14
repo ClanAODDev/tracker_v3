@@ -23,7 +23,6 @@ class MemberRequestPolicy
      */
     public function manage(User $user)
     {
-        // are they a SGT and a division XO/CO?
         if ($user->isRole('sr_ldr') && \in_array($user->member->position, [
             Position::EXECUTIVE_OFFICER,
             Position::COMMANDING_OFFICER,
@@ -37,12 +36,8 @@ class MemberRequestPolicy
     /**
      * @return bool
      */
-    public function edit(User $user, MemberRequest $memberRequest)
+    public function update(User $user, MemberRequest $memberRequest)
     {
-        if ($memberRequest->isApproved() || ! $memberRequest->isCancelled()) {
-            return false;
-        }
-
         if ($user->isRole(['sr_ldr', 'admin'])) {
             return true;
         }
@@ -79,11 +74,6 @@ class MemberRequestPolicy
     {
         return true;
     }
-
-    /**
-     * @return mixed
-     */
-    public function update() {}
 
     /**
      * @return mixed
