@@ -32,8 +32,6 @@ class AODForumService
                 ->retry(2, 200)
                 ->get($url, $params);
 
-            \Log::info($url, $params);
-
             $clean = strip_tags($resp->body());
             $clean = preg_replace('/\s+/', ' ', $clean);
             $parts = explode(' ', trim($clean));
