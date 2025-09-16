@@ -20,15 +20,15 @@ class NotifyDivisionMemberRequestPutOnHold extends Notification implements Shoul
 
     private Member $member;
 
-    private User $approver;
+    private User $holder;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(MemberRequest $memberRequest, User $approver, Member $member)
+    public function __construct(MemberRequest $memberRequest, User $holder, Member $member)
     {
         $this->request = $memberRequest;
-        $this->approver = $approver;
+        $this->holder = $holder;
         $this->member = $member;
     }
 
@@ -59,7 +59,7 @@ class NotifyDivisionMemberRequestPutOnHold extends Notification implements Shoul
                     'name' => sprintf(
                         'A member status request for %s was put on hold by %s.',
                         $this->member->name,
-                        $this->canceller->name,
+                        $this->holder->name,
                     ),
                     'value' => 'Reason: ' . $this->request->notes,
                 ],

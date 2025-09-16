@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Position;
 use App\Filament\Mod\Resources\MemberRequestResource\Pages;
 use App\Models\MemberRequest;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,6 +24,8 @@ class MemberRequestResource extends Resource
     protected static ?string $navigationLabel = 'Member Requests';
 
     protected static ?string $pluralLabel = 'Member Requests';
+
+    protected static ?string $navigationGroup = 'Division';
 
     public static function getNavigationBadge(): ?string
     {
@@ -99,7 +102,8 @@ class MemberRequestResource extends Resource
 
                 Forms\Components\Wizard\Step::make('On Hold')
                     ->icon('heroicon-o-pause-circle')
-                    ->label(fn (?Model $record): string => "On Hold [{$record->holder->name}]")
+                    ->label(fn (?Model $record): string => 'On Hold' . ($record && $record->holder ? ' - 
+                    ' . $record->holder->name : ''))
                     ->visible(fn (
                         string $operation,
                         ?MemberRequest $record
@@ -168,21 +172,24 @@ class MemberRequestResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('division.name')
-                    ->label('Division')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('member.name')
                     ->label('Member')
                     ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('division.name')
+                    ->label('Division')
+                    ->sortable()
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('requester.name')
                     ->label('Requester')
                     ->toggleable()
+                    ->toggledHiddenByDefault()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('approver.name')
                     ->label('Approver')
                     ->toggleable()
+                    ->toggledHiddenByDefault()
                     ->default('-'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
@@ -206,10 +213,24 @@ class MemberRequestResource extends Resource
                         'danger' => 'On Hold',
                     ]),
                 Tables\Columns\TextColumn::make('approved_at')
-                    ->label('Approved At')
-                    ->dateTime()
+                    ->label('Approved')
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->diffForHumans())
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->tooltip(fn ($state) => Carbon::parse($state)->toDayDateTimeString()),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->sortable()
+                    ->toggleable()
+                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->diffForHumans())
+                    ->tooltip(fn ($state) => Carbon::parse($state)->toDayDateTimeString())
+                    ->color(function ($state, $record) {
+                        return ! $record->isApproved() &&
+                        Carbon::parse($state)->lt(now()->subHours(2))
+                            ? 'warning'
+                            : null;
+                    }),
+
             ])
             ->defaultSort('id', 'desc')
             ->filters([
