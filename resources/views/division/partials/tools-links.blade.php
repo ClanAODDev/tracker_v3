@@ -88,7 +88,7 @@
 </a>
 
 @can('manage', \App\Models\MemberRequest::class)
-    <a href="{{ route('admin.member-request.index') }}" class="btn btn-default">
+    <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="btn btn-default">
         <i class="fa fa-users text-accent"></i> Member Requests
     </a>
 @endcan
