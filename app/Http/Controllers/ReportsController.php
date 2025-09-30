@@ -141,19 +141,28 @@ class ReportsController extends Controller
      */
     public function leadership()
     {
-        $divisions = \App\Models\Division::active()->with([
-            'sergeants' => function ($query) {
-                $query->orderByDesc('rank')->orWhereIn('position', [
-                    Position::EXECUTIVE_OFFICER,
-                    Position::COMMANDING_OFFICER,
-                ]);
-            },
-        ])->withCount('sgtAndSsgt')->get();
+        $divisions = \App\Models\Division::active()
+            ->with([
+                'sergeants' => function ($query) {
+                    $query
+                        ->orderByRaw('
+                    CASE 
+                        WHEN position = ? THEN 9999
+                        ELSE -position 
+                    END ASC
+                ', [Position::CLAN_ADMIN->value])
+                        ->orderByDesc('rank');
+                },
+            ])
+            ->withCount('sgtAndSsgt')
+            ->get();
 
-        $leadership = \App\Models\Member::where('rank', '>', Rank::STAFF_SERGEANT)
+        $leadership = \App\Models\Member::query()
+            ->where('rank', '>', Rank::STAFF_SERGEANT)
             ->where('division_id', '!=', 0)
             ->orderByDesc('rank')
-            ->orderBy('name')->get();
+            ->orderBy('name')
+            ->get();
 
         return view('reports.leadership', compact('divisions', 'leadership'));
     }
