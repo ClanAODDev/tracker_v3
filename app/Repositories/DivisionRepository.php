@@ -93,38 +93,59 @@ class DivisionRepository
     }
 
     /**
-     * @param  null  $startDate
-     * @return mixed
+     * @param string      $divisionId
+     * @param string      $startDate   YYYY-MM-DD
+     * @param string|null $endDate     YYYY-MM-DD (optional)
      */
-    public function recruitsLast6Months($divisionId, $startDate)
+    public function recruitsLast6Months($divisionId, $startDate, string $endDate = null)
     {
-        return \DB::table('activities')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count(*) as recruits')->from('activities')->where('activities.name',
-            '=', 'recruited_member')->where('division_id', '=', $divisionId)->where('created_at', '>=',
-                $startDate)->orderBy('activities.created_at')->groupby('date')->get();
+        $end = $endDate ?? now()->endOfMonth()->toDateString();
+
+        return \DB::table('activities')
+            ->where('name', 'recruited_member')
+            ->where('division_id', $divisionId)
+            ->whereBetween('created_at', [$startDate, $end])
+            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket')
+            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
+            ->selectRaw('COUNT(*) as recruits')
+            ->groupBy('bucket', 'date')
+            ->orderBy('bucket')
+            ->get();
     }
 
-    /**
-     * @param  null  $startDate
-     * @return mixed
-     */
-    public function removalsLast6Months($divisionId, $startDate)
+    public function removalsLast6Months($divisionId, $startDate, $endDate = null)
     {
-        return \DB::table('activities')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
-            ->selectRaw('count(*) as removals')->from('activities')
-            ->where('activities.name', '=', 'removed_member')
-            ->where('created_at', '>=', $startDate)
-            ->where('division_id', '=', $divisionId)->groupby('date')
-            ->orderBy('activities.created_at', 'ASC')->get();
+        $end = $endDate ?? now()->endOfMonth()->toDateString();
+
+        return \DB::table('activities')
+            ->where('name', 'removed_member')
+            ->where('division_id', $divisionId)
+            ->whereBetween('created_at', [$startDate, $end])
+            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket')
+            ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
+            ->selectRaw('COUNT(*) as removals')
+            ->groupBy('bucket', 'date')
+            ->orderBy('bucket')
+            ->get();
     }
 
-    /**
-     * @param  null  $startDate
-     * @return mixed
-     */
-    public function populationLast6Months($divisionId, $startDate)
+    public function populationLast6Months($divisionId, $startDate, $endDate = null)
     {
-        return \DB::table('censuses')->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')->selectRaw('count')->from('censuses')->where('division_id',
-            '=', $divisionId)->where('created_at', '>=', $startDate)->groupby('date')->orderBy('created_at',
-                'ASC')->get();
+        $end = $endDate ?? now()->endOfMonth()->toDateString();
+
+        $sub = \DB::table('censuses')
+            ->where('division_id', $divisionId)
+            ->whereBetween('created_at', [$startDate, $end])
+            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket, `count`');
+
+        return \DB::query()
+            ->fromSub($sub, 'c')
+            ->selectRaw('bucket')
+            ->selectRaw('MAX(`count`) as count')
+            ->selectRaw('DATE_FORMAT(STR_TO_DATE(CONCAT(bucket, "-01"), "%Y-%m-%d"), "%b %y") as date')
+            ->groupBy('bucket')
+            ->orderBy('bucket')
+            ->get();
     }
+
 }

@@ -18,16 +18,16 @@
 
         @include ('division.partials.filter-promotions')
 
-        @if ($year && $month && count($members))
-            <h4>{{ $month }} {{ $year }} Promotions</h4>
+        @if ($year && $month && $promotions->count())
+            <h4>{{ \Carbon\Carbon::createFromDate((int)$year, (int)$month, 1)->format('F Y') }} Promotions</h4>
             <hr />
-        @elseif (count($members))
-            <h4>{{ Carbon::now()->format('F Y') }} Promotions</h4>
+        @elseif ($promotions->count())
+            <h4>{{ \Carbon\Carbon::now()->format('F Y') }} Promotions</h4>
             <hr />
         @endif
 
-        @if (count($members))
-            @include ('division.partials.member-promotions')
+        @if ($promotions->count())
+            @include ('division.partials.member-promotions', ['promotions' => $promotions])
         @else
             <p>No promotions found.</p>
         @endif
@@ -38,4 +38,3 @@
 @section('footer_scripts')
     <script src="{!! asset('/js/division.js?v=2.2') !!}"></script>
 @endsection
-

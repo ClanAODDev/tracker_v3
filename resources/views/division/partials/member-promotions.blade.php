@@ -2,25 +2,28 @@
     <div class="col-md-9">
         <div class="panel panel-filled">
             <div class="panel-body">
-                @foreach ($members->groupBy('rank.name') as $rank=>$rankGroup)
+                @foreach ($promotions->groupBy(fn ($a) => $a->rank?->name ?? 'Unspecified') as $rankName => $group)
                     <div class="panel m-b-none">
                         <div class="panel-body">
                             <table class="table table-condensed">
                                 <thead>
                                 <tr>
-                                    <th>{{ $rank }}</th>
+                                    <th>{{ $rankName }}</th>
+                                    <th class="text-right text-muted slight">Approved At</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach ($rankGroup as $member)
+                                @foreach ($group as $action)
                                     <tr>
-                                        <td>{{ $member->name }}</td>
-                                        <td class="text-right text-muted slight">{{ $member->last_promoted_at }}</td>
+                                        <td>{{ $action->member?->name }}</td>
+                                        <td class="text-right text-muted slight">
+                                            {{ optional($action->approved_at)->toDateTimeString() }}
+                                        </td>
                                     </tr>
                                 @endforeach
                                 <tr>
                                     <td class="text-accent">Total</td>
-                                    <td class="text-accent text-right">{{ $rankGroup->count() }}</td>
+                                    <td class="text-accent text-right">{{ $group->count() }}</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -35,7 +38,7 @@
         <div class="panel panel-filled">
             <div class="panel-body">
                 <canvas class="promotions-chart"
-                        data-labels="{{ json_encode($ranks->values()) }}"
+                        data-labels="{{ json_encode($ranks) }}"
                         data-values="{{ json_encode($counts) }}"
                 ></canvas>
             </div>
@@ -47,8 +50,8 @@
 
                 <pre id="bb-code-promos">@include('division.partials.promo-bb-code')</pre>
 
-                <button data-clipboard-target="#bb-code-promos" class="copy-to-clipboard btn-success btn"><i
-                            class="fa fa-clone"></i> Copy BB-Code
+                <button data-clipboard-target="#bb-code-promos" class="copy-to-clipboard btn-success btn">
+                    <i class="fa fa-clone"></i> Copy BB-Code
                 </button>
             </div>
         </div>
