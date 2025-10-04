@@ -54,7 +54,7 @@ class DeleteMember extends FormRequest
 
         $this->notifyPartTimeDivisions($member);
         $this->createRemovalNote($member);
-        $member->resetPositionAndAssignments();
+        $member->reset();
     }
 
     private function createRemovalNote($member)

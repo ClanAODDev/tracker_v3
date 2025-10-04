@@ -108,7 +108,7 @@ class Member extends Model
      * Resets member's positions and division assignments
      * including part-time divisions.
      */
-    public function resetPositionAndAssignments()
+    public function reset()
     {
         $this->update([
             'division_id' => 0,
@@ -118,6 +118,8 @@ class Member extends Model
             'flagged_for_inactivity' => false,
             'groups' => null,
         ]);
+
+        $this->partTimeDivisions()->delete();
     }
 
     public function scopeUnassignedSquadLeaders($query)
@@ -139,9 +141,6 @@ class Member extends Model
     }
 
     /**
-     * Handle Staff Sergeant assignments
-     * division/.
-     *
      * @return BelongsToMany
      */
     public function partTimeDivisions()

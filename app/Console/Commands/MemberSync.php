@@ -214,7 +214,7 @@ class MemberSync extends Command
         ));
 
         // reset member data
-        $member->resetPositionAndAssignments();
+        $member->reset();
 
         // reset any leadership assignments
         $assignments = collect([

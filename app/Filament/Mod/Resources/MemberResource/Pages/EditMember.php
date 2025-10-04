@@ -91,12 +91,13 @@ class EditMember extends EditRecord
 
                     $this->notifyDivisions($member, $data['removal_reason']);
 
-                    $member->resetPositionAndAssignments();
-
                     RemoveClanMember::dispatch(
                         impersonatingMemberId: auth()->user()->member->clan_id,
-                        memberIdBeingRemoved: $member->clan_id
+                        memberIdBeingRemoved: $member->clan_id,
+                        division: $member->division->name,
                     );
+
+                    $member->reset();
 
                     Notification::make()
                         ->title('Member Removed')
