@@ -17,7 +17,8 @@ class RemoveClanMember implements ShouldQueue
      */
     public function __construct(
         private readonly int $memberIdBeingRemoved,
-        private readonly int $impersonatingMemberId
+        private readonly int $impersonatingMemberId,
+        private readonly string $division,
     ) {}
 
     /**
@@ -30,6 +31,7 @@ class RemoveClanMember implements ShouldQueue
         AODForumService::removeForumMember(
             memberIdBeingRemoved: $this->memberIdBeingRemoved,
             impersonatingMemberId: $this->impersonatingMemberId,
+            division: $this->division
         );
     }
 }

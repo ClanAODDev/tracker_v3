@@ -7,14 +7,13 @@ use Illuminate\Support\Facades\Http;
 class AODForumService
 {
     private const AGENT = 'AOD Division Tracker';
-
     private const DEFAULT_TOKEN_PARAM = 'authcode2';
-
     private const INFO_URL = 'https://www.clanaod.net/forums/aodinfo.php';
-
     private const MODCP_URL = 'https://www.clanaod.net/forums/modcp/aodmember.php';
-
     private const SUCCESS = 'saved_user_x_successfully';
+
+    const REMOVE_FROM_AOD = 'remaod';
+    const ADD_TO_AOD = 'addaod';
 
     public static function request(string $url, array $options = []): array|string
     {
@@ -58,7 +57,7 @@ class AODForumService
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
             'aod_userid' => $impersonatingMemberId,
-            'do' => 'addaod',
+            'do' => self::ADD_TO_AOD,
             'aodname' => $name,
             'rank' => $rank,
             'division' => $division,
@@ -75,11 +74,13 @@ class AODForumService
     public static function removeForumMember(
         int $memberIdBeingRemoved,
         int $impersonatingMemberId,
+        string $division,
     ): array|string {
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
             'aod_userid' => $impersonatingMemberId,
-            'do' => 'remaod',
+            'division' => $division,
+            'do' => self::REMOVE_FROM_AOD,
             'u' => $memberIdBeingRemoved,
         ]);
 
