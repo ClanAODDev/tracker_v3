@@ -2,7 +2,10 @@
 
 namespace App\Filament\Admin\Resources\MemberResource\Pages;
 
+use App\Console\Commands\FixTenureAwards;
+use App\Filament\Actions\Members\CleanupTenureAwards;
 use App\Filament\Actions\Members\CleanupUnassignedLeadersAction;
+use App\Filament\Actions\Members\PartTimeMemberCleanupAction;
 use App\Filament\Admin\Resources\MemberResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -18,7 +21,9 @@ class ListMembers extends ListRecords
             Actions\CreateAction::make(),
 
             Actions\ActionGroup::make([
+                CleanupTenureAwards::make(),
                 CleanupUnassignedLeadersAction::make(),
+                PartTimeMemberCleanupAction::make(),
             ])->label('Cleanup Actions')
                 ->color('primary')
                 ->button()
