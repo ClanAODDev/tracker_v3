@@ -18,8 +18,6 @@ class CleanupUnassignedLeadersAction extends Action
         parent::setUp();
 
         $this->label('Unassigned leaders')
-            ->icon('heroicon-o-wrench-screwdriver')
-            ->color('warning')
             ->requiresConfirmation()
             ->form([
 
@@ -89,6 +87,7 @@ class CleanupUnassignedLeadersAction extends Action
                 Notification::make()
                     ->title('Maintenance action completed')
                     ->body($summary)
+                    ->persistent()
                     ->success()
                     ->send();
             });
