@@ -94,7 +94,6 @@ class EditMember extends EditRecord
                     RemoveClanMember::dispatch(
                         impersonatingMemberId: auth()->user()->member->clan_id,
                         memberIdBeingRemoved: $member->clan_id,
-                        division: $member->division->name,
                     );
 
                     $member->reset();
