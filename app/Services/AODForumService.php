@@ -74,12 +74,10 @@ class AODForumService
     public static function removeForumMember(
         int $memberIdBeingRemoved,
         int $impersonatingMemberId,
-        string $division,
     ): array|string {
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
             'aod_userid' => $impersonatingMemberId,
-            'division' => $division,
             'do' => self::REMOVE_FROM_AOD,
             'u' => $memberIdBeingRemoved,
         ]);
