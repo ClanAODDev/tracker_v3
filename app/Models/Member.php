@@ -118,6 +118,8 @@ class Member extends Model
             'flagged_for_inactivity' => false,
             'groups' => null,
         ]);
+
+        $this->partTimeDivisions()->detach();
     }
 
     public function scopeUnassignedSquadLeaders($query)
