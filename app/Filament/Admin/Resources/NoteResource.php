@@ -69,7 +69,7 @@ class NoteResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
