@@ -200,6 +200,8 @@ class DivisionResource extends Resource
                     ->query(fn (Builder $query): Builder => $query->where('active', true))
                     ->label('Hide inactive')
                     ->default(),
+
+                TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
