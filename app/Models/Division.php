@@ -41,6 +41,7 @@ class Division extends Model
      */
     public array $exposedSettings = [
         'always_visible_in_discord',
+        'meta_description'
     ];
 
     /**
