@@ -222,6 +222,10 @@ class DivisionResource extends Resource
                                 // 'attachFiles',
                             ])
                             ->columnSpanFull(),
+                        Forms\Components\Textarea::make('meta_description')
+                            ->maxLength(100)
+                            ->statePath('settings.meta_description')
+                            ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
                     ]),
 
             ]);
