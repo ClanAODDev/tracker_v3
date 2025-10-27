@@ -10,7 +10,7 @@
                 {{ thread.thread_name }}
 
                 <button class="btn btn-xs btn-default copy-to-clipboard" type="button"
-                        :data-clipboard-text="thread.url">
+                        :data-clipboard-text="thread.thread_url">
                     <i class="fa fa-clone"></i>
                 </button>
 
