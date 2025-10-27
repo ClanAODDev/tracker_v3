@@ -62,7 +62,7 @@ class MemberResource extends Resource
                         ->disabled()
                         ->dehydrated(false)
                         ->helperText('Manage by editing division, platoon, or squad')
-                        ->formatStateUsing(fn ($state) => Position::from($state)->getLabel()),
+                        ->formatStateUsing(fn($state) => Position::from($state)->getLabel()),
                 ])->columns(),
 
                 Forms\Components\Section::make('Communications')->schema([
@@ -87,7 +87,7 @@ class MemberResource extends Resource
                 Forms\Components\Section::make('Division Assignment')
                     ->schema([
                         Forms\Components\Placeholder::make('Division')
-                            ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
+                            ->content(fn(Member $record): string => $record->division?->name ?? 'None'),
                         Select::make('platoon_id')
                             ->nullable(true)
                             ->label('Platoon')
@@ -105,7 +105,6 @@ class MemberResource extends Resource
                                 }
                             })
                             ->reactive()
-
                             ->afterStateUpdated(function ($state, callable $set) {
                                 $set('squad_id', null);
                             }),
@@ -148,7 +147,7 @@ class MemberResource extends Resource
                     ->collapsible()
                     ->schema([
                         IngameHandlesForm::make()
-                            ->default(fn ($record) => $record
+                            ->default(fn($record) => $record
                                 ? IngameHandlesForm::getGroupedHandles($record)
                                 : []
                             ),
@@ -159,24 +158,24 @@ class MemberResource extends Resource
                     ->collapsible()
                     ->collapsed()
                     ->schema([
-                    Forms\Components\Section::make('Flags')->schema([
-                        Forms\Components\Toggle::make('flagged_for_inactivity')
-                            ->disabled(),
-                        Forms\Components\Toggle::make('privacy_flag')
-                            ->disabled(),
-                        Forms\Components\Toggle::make('allow_pm')
-                            ->disabled(),
-                    ])->columns(3),
+                        Forms\Components\Section::make('Flags')->schema([
+                            Forms\Components\Toggle::make('flagged_for_inactivity')
+                                ->disabled(),
+                            Forms\Components\Toggle::make('privacy_flag')
+                                ->disabled(),
+                            Forms\Components\Toggle::make('allow_pm')
+                                ->disabled(),
+                        ])->columns(3),
 
-                    Forms\Components\Section::make('Misc')->schema([
-                        TextInput::make('posts')
-                            ->disabled()
-                            ->numeric()
-                            ->default(0),
-                        Forms\Components\Textarea::make('groups')
-                            ->disabled(),
-                    ])->columns(),
-                ]),
+                        Forms\Components\Section::make('Misc')->schema([
+                            TextInput::make('posts')
+                                ->disabled()
+                                ->numeric()
+                                ->default(0),
+                            Forms\Components\Textarea::make('groups')
+                                ->disabled(),
+                        ])->columns(),
+                    ]),
             ]);
     }
 
@@ -209,10 +208,6 @@ class MemberResource extends Resource
             ])
             ->filters([
 
-                SelectFilter::make('division_id')
-                    ->label('Division')
-                    ->options(Division::active()->get()->pluck('name', 'id'))
-                    ->default(auth()->user()->member->division_id),
 
                 Filter::make('position')
                     ->form([
@@ -222,9 +217,91 @@ class MemberResource extends Resource
                         return $query
                             ->when(
                                 $data['position'],
-                                fn (Builder $query, $position): Builder => $query->where('position', $position),
+                                fn(Builder $query, $position): Builder => $query->where('position', $position),
                             );
                     }),
+
+                Filter::make('unit')
+                    ->label('Unit')
+                    ->indicator('Unit')
+                    ->form([
+
+                        Select::make('division')
+                            ->label('Division')
+                            ->options(Division::active()->orderBy('name')->pluck('name', 'id'))
+                            ->searchable()
+                            ->preload()
+                            ->default(optional(auth()->user()->member)->division_id)
+                            ->live()
+                            ->afterStateUpdated(function (callable $set) {
+
+                                $set('platoon', []);
+                                $set('squad', []);
+                            }),
+
+                        Select::make('platoon')
+                            ->label('Platoon')
+                            ->options(function (callable $get) {
+                                $divisionId = $get('division');
+                                if (!$divisionId) return [];
+                                return Platoon::where('division_id', $divisionId)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id');
+                            })
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->disabled(fn (callable $get) => empty($get('division')))
+                            ->afterStateUpdated(function (callable $set) {
+                                $set('squad', []);
+                            }),
+
+                        Select::make('squad')
+                            ->label('Squad')
+                            ->options(function (callable $get) {
+                                $platoons = (array) ($get('platoon') ?? []);
+                                if (empty($platoons)) return [];
+                                return Squad::whereIn('platoon_id', $platoons)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id');
+                            })
+                            ->multiple()
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->disabled(fn (callable $get) => empty($get('platoon'))),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        $division = $data['division'] ?? null;
+                        $platoons = $data['platoon'] ?? [];
+                        $squads   = $data['squad'] ?? [];
+
+                        if ($squads)   return $query->whereIn('squad_id', $squads);
+                        if ($platoons) return $query->whereIn('platoon_id', $platoons);
+                        if ($division) return $query->where('division_id', $division);
+
+                        return $query;
+                    })
+                    ->indicateUsing(function (array $data) {
+                        $parts = [];
+
+                        if (!empty($data['division'])) {
+                            if ($name = Division::whereKey($data['division'])->value('name')) {
+                                $parts[] = "Division: {$name}";
+                            }
+                        }
+                        if (!empty($data['platoon'])) {
+                            $parts[] = 'Platoon: ' . Platoon::whereIn('id', $data['platoon'])->pluck('name')->implode(', ');
+                        }
+                        if (!empty($data['squad'])) {
+                            $parts[] = 'Squad: ' . Squad::whereIn('id', $data['squad'])->pluck('name')->implode(', ');
+                        }
+
+                        return $parts ? implode(' | ', $parts) : null;
+                    }),
+
+
                 Filter::make('rank_id')
                     ->label('Rank')
                     ->indicator('Rank')
@@ -243,9 +320,9 @@ class MemberResource extends Resource
                     })
                     ->indicateUsing(function (array $data) {
                         if (isset($data['rank']) && is_array($data['rank']) && count($data['rank']) > 0) {
-                            return 'Rank: ' . implode(', ', array_map(function ($rank) {
-                                return Rank::from($rank)->getLabel();
-                            }, $data['rank']));
+                            return 'Rank: '.implode(', ', array_map(function ($rank) {
+                                    return Rank::from($rank)->getLabel();
+                                }, $data['rank']));
                         }
 
                         return null;
@@ -270,19 +347,19 @@ class MemberResource extends Resource
                         ->label('Transfer member(s)')
                         ->modalWidth('lg')
                         ->modalDescription('Only members of the same division can be transferred.')
-                        ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->visible(fn(): bool => auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->icon('heroicon-o-adjustments-vertical')
                         ->form([
                             Select::make('platoon_id')
                                 ->label('Platoon')
-                                ->options(fn (HasTable $livewire): array => Platoon::with('division')
+                                ->options(fn(HasTable $livewire): array => Platoon::with('division')
                                     ->where('division_id', $livewire
                                         ->getSelectedTableRecords()
                                         ->pluck('division_id')
                                         ->first()
                                     )
                                     ->get()
-                                    ->mapWithKeys(fn (Platoon $p) => [
+                                    ->mapWithKeys(fn(Platoon $p) => [
                                         $p->id => "{$p->division->name} – {$p->name}",
                                     ])
                                     ->toArray()
@@ -293,12 +370,12 @@ class MemberResource extends Resource
 
                             Select::make('squad_id')
                                 ->label('Squad')
-                                ->options(fn (callable $get) => Squad::where('platoon_id', $get('platoon_id'))
+                                ->options(fn(callable $get) => Squad::where('platoon_id', $get('platoon_id'))
                                     ->pluck('name', 'id')
                                     ->toArray()
                                 )
                                 ->searchable()
-                                ->disabled(fn (callable $get) => ! $get('platoon_id')),
+                                ->disabled(fn(callable $get) => !$get('platoon_id')),
                         ])
                         ->before(function (Collection $records, BulkAction $action): bool {
                             if ($records->pluck('division_id')->unique()->count() > 1) {
