@@ -122,16 +122,9 @@ class RecruitingController extends Controller
      */
     public function doThreadCheck(Request $request)
     {
-
         $division = Division::whereSlug($request->division)->first();
 
-        $threads = $division->settings()->get('recruiting_threads');
-
-        foreach ($threads as $key => $thread) {
-            $threads[$key]['url'] = doForumFunction([$threads[$key]['thread_id']], 'showThread');
-        }
-
-        return $threads;
+        return $division->settings()->get('recruiting_threads');
     }
 
     /**

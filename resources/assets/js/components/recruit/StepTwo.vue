@@ -5,8 +5,6 @@
 
         <h3><i class="fa fa-pencil-square-o text-accent"></i> Step 2: Member Agreement</h3>
 
-        <p>AOD members are required to read and reply to posts in the AOD community forums. Your division may have additional threads that you require new members to reply to.</p>
-
         <hr />
         <division-threads v-if=" ! store.loadingThreads"></division-threads>
         <div v-else><p>Searching threads for posts by member <code>#{{ store.member_id }}</code></p></div>
