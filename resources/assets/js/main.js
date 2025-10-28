@@ -12,7 +12,6 @@ let Tracker = Tracker || {};
             // misc functionality, visual
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
-            Tracker.ResetLocality();
         },
         /**
          * Handle member search

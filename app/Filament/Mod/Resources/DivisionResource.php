@@ -122,22 +122,25 @@ class DivisionResource extends Resource
                             ->description('Critical steps to perform during recruitment')
                             ->schema([
                                 Forms\Components\Repeater::make('recruiting_tasks')->schema([
-                                    Forms\Components\Textarea::make('task_description'),
+                                    Forms\Components\Textarea::make('task_description')->hiddenLabel(),
                                 ]),
                             ]),
                         Forms\Components\Section::make('Informational threads')->collapsible()->collapsed()
                             ->description('Important forum threads for new recruits to be aware of')
                             ->schema([
                                 Forms\Components\Repeater::make('recruiting_threads')->schema([
-                                    Forms\Components\TextInput::make('thread_name'),
-                                    Forms\Components\TextInput::make('thread_id'),
+                                    Forms\Components\TextInput::make('thread_name')->columnSpanFull(),
+                                    Forms\Components\TextInput::make('thread_url')
+                                        ->label('Thread URL')
+                                        ->url()
+                                        ->columnSpanFull(),
                                     Forms\Components\Textarea::make('comments')->columnSpanFull(),
-                                ])->columns(),
+                                ]),
                             ]),
-                        Forms\Components\Textarea::make('welcome pm')
+                        Forms\Components\Textarea::make('welcome dm')
                             ->rows(6)
                             ->columnSpanFull()
-                            ->helperText('Use {{ name }} to insert the new recruit\'s name into your message')
+                            ->helperText('Available replacement tags (wrap with {{ tag }}): ingame_name, name')
                             ->statePath('welcome_pm'),
                     ]),
 

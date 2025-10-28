@@ -32,8 +32,6 @@
             </div>
         </div>
 
-        <ts-info></ts-info>
-
         <hr/>
 
         <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i>
