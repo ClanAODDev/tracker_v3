@@ -9,7 +9,7 @@ class SendBulkPm extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('create', \App\Models\Member::class);
+        return $this->user()->can('recruit', \App\Models\Member::class);
     }
 
     public function rules(): array
