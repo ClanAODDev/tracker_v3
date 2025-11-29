@@ -8,6 +8,10 @@ class TicketType extends Model
 {
     public $guarded = [];
 
+    protected $casts = [
+        'role_access' => 'array',
+    ];
+
     /**
      * @var mixed
      */
