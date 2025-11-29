@@ -17,6 +17,7 @@ class EditDivision extends EditRecord
     {
         return [
             Actions\DeleteAction::make(),
+            Actions\RestoreAction::make(),
             RevisionsAction::make(),
         ];
     }

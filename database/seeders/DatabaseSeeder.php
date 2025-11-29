@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PositionSeeder::class,
             RankSeeder::class,
-            RoleSeeder::class,
             TicketTypeSeeder::class,
         ]);
     }

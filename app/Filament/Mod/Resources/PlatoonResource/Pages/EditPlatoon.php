@@ -96,6 +96,7 @@ class EditPlatoon extends EditRecord
 
                     return redirect()->route('filament.mod.resources.divisions.edit', $record->division);
                 }),
+            Actions\RestoreAction::make(),
         ];
     }
 }

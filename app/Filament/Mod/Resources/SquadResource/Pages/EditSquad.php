@@ -93,6 +93,7 @@ class EditSquad extends EditRecord
 
                     return redirect()->route('filament.mod.resources.platoons.edit', $record->platoon);
                 }),
+            Actions\RestoreAction::make(),
         ];
     }
 }

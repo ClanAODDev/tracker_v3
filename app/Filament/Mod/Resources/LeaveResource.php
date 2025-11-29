@@ -27,23 +27,17 @@ class LeaveResource extends Resource
 
     protected static ?string $pluralLabel = 'Leaves of Absence';
 
+    protected static bool $isScopedToTenant = false;
+
     public static function getNavigationBadge(): ?string
     {
-        static $badge = null;
-
-        if ($badge !== null) {
-            return $badge;
-        }
-
         if (auth()->user()->isRole(['admin', 'sr_ldr'])) {
             $divisionId = auth()->user()->member->division_id;
 
-            $badge = (string) static::$model::where('approver_id', null)
+            return (string) static::$model::where('approver_id', null)
                 ->whereHas('member', function ($memberQuery) use ($divisionId) {
                     $memberQuery->where('division_id', $divisionId);
                 })->count();
-
-            return $badge;
         }
 
         return null;

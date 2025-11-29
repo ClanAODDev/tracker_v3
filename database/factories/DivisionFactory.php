@@ -27,9 +27,11 @@ class DivisionFactory extends Factory
             'name' => $game['name'],
             'slug' => Str::slug($game['name']),
             'handle_id' => Handle::factory(),
-            'abbreviation' => strtolower($game['abbreviation']),
+            'abbreviation' => $this->faker->unique()->lexify('???'),
             'description' => $this->faker->sentence,
             'forum_app_id' => rand(100, 999),
+            'officer_role_id' => rand(100, 999),
+            'logo' => 'logos/test-logo.png',
             'active' => true,
             'settings' => '[]',
         ];

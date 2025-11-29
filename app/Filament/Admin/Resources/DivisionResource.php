@@ -31,6 +31,10 @@ class DivisionResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $recordRouteKeyName = 'id';
+
     private static string $becy = 'https://jarlpenguin.github.io/BeCyIconGrabberPortable/';
 
     private static string $forms = 'https://www.clanaod.net/forums/forms.php';
@@ -48,7 +52,7 @@ class DivisionResource extends Resource
                             ->hint(str(sprintf('[Icon Extraction Tool >](%s)',
                                 self::$becy
                             ))->inlineMarkdown()->toHtmlString())
-                            ->required()
+                            ->required(fn ($livewire) => $livewire instanceof \App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision)
                             ->alignCenter()
                             ->avatar()
                             ->directory('logos'),
@@ -65,8 +69,7 @@ class DivisionResource extends Resource
                             TextInput::make('abbreviation')
                                 ->helperText('Should match abbreviation used on forums')
                                 ->maxLength(3)
-                                ->required()
-                                ->maxLength(255),
+                                ->required(),
                         ])->columns(3),
 
                         TextInput::make('description')
@@ -229,5 +232,13 @@ class DivisionResource extends Resource
             'edit' => Pages\EditDivision::route('/{record}/edit'),
             'revisions' => Pages\DivisionRevisions::route('/{record}/revisions'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                \Illuminate\Database\Eloquent\SoftDeletingScope::class,
+            ]);
     }
 }

@@ -39,6 +39,10 @@ class MemberResource extends Resource
 
     protected static ?string $navigationGroup = 'Division';
 
+    protected static bool $isScopedToTenant = false;
+
+    protected static ?string $recordRouteKeyName = 'clan_id';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -207,7 +211,10 @@ class MemberResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-
+                SelectFilter::make('division')
+                    ->relationship('division', 'name')
+                    ->searchable()
+                    ->preload(),
 
                 Filter::make('position')
                     ->form([
@@ -418,5 +425,13 @@ class MemberResource extends Resource
             'index' => Pages\ListMembers::route('/'),
             'edit' => Pages\EditMember::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                \Illuminate\Database\Eloquent\SoftDeletingScope::class,
+            ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Enums\Role as RoleEnum;
 use App\Settings\UserSettings;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
@@ -58,6 +59,7 @@ class User extends Authenticatable implements FilamentUser
      * @var array
      */
     protected $casts = [
+        'role' => RoleEnum::class,
         'developer' => 'boolean',
         'settings' => 'json',
         'last_login_at' => 'datetime',
@@ -88,7 +90,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function scopeAdmins($query)
     {
-        $query->whereRoleId(5)->orderBy('name', 'ASC');
+        $query->where('role', RoleEnum::ADMIN->value)->orderBy('name', 'ASC');
     }
 
     /**
@@ -128,13 +130,17 @@ class User extends Authenticatable implements FilamentUser
     /**
      * Check to see if user is a certain role.
      */
-    public function isRole(string|array $role): bool
+    public function isRole(string|array|RoleEnum $role): bool
     {
-        if (!$this->role instanceof Role) {
+        if (!$this->role instanceof RoleEnum) {
             return false;
         }
 
-        $roleName = $this->role->name;
+        if ($role instanceof RoleEnum) {
+            return $this->role === $role;
+        }
+
+        $roleName = $this->role->value;
 
         return is_array($role)
             ? in_array($roleName, $role, true)
@@ -198,31 +204,14 @@ class User extends Authenticatable implements FilamentUser
     /**
      * Assign a role to a user.
      */
-    public function assignRole($role)
+    public function assignRole(RoleEnum|string $role): void
     {
-        if ($role instanceof Role) {
-            $this->role()->associate($role)->save();
-
-            return;
+        if (is_string($role)) {
+            $role = RoleEnum::from($role);
         }
 
-        if (\is_string($role)) {
-            $role = Role::whereName(strtolower($role))->firstOrFail();
-        }
-
-        if (\is_int($role)) {
-            $role = Role::find($role);
-        }
-
-        $this->role()->associate($role)->save();
-    }
-
-    /**
-     * relationship - user belongs to a role.
-     */
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
+        $this->role = $role;
+        $this->save();
     }
 
     /**
@@ -260,19 +249,11 @@ class User extends Authenticatable implements FilamentUser
             return true;
         }
 
-        $panelToRoleMapping = [
-            'mod' => ['admin', 'sr_ldr', 'officer'],
-            'admin' => 'admin',
-            'profile' => ['admin', 'sr_ldr', 'officer', 'member'],
-        ];
-
-        $panelId = $panel->getId();
-
-        if (isset($panelToRoleMapping[$panelId])) {
-            return $this->isRole($panelToRoleMapping[$panelId]);
+        if (!$this->role instanceof RoleEnum) {
+            return false;
         }
 
-        return false;
+        return $this->role->canAccessPanel($panel->getId());
     }
 
     private function isWithinPlatoonLimit(Rank $targetRank, $division): bool

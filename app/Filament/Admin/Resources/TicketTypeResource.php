@@ -2,8 +2,8 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\Role;
 use App\Filament\Admin\Resources\TicketTypeResource\Pages;
-use App\Models\Role;
 use App\Models\TicketType;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -40,7 +40,7 @@ class TicketTypeResource extends Resource
                     ->columnSpanFull(),
                 Forms\Components\Select::make('role_access')
                     ->multiple()
-                    ->getSearchResultsUsing(fn (string $search): array => Role::all()->pluck('label', 'id')->toArray())
+                    ->options(collect(Role::cases())->mapWithKeys(fn (Role $role) => [$role->value => $role->getLabel()]))
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('display_order')
                     ->required()

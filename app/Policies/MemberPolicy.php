@@ -22,12 +22,7 @@ class MemberPolicy
 
     public function recruit(User $user): bool
     {
-        // member role cannot recruit members
-        if ($user->role_id > 1) {
-            return true;
-        }
-
-        return false;
+        return !$user->isRole('member');
     }
 
     public function create(User $user): bool
