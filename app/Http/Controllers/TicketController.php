@@ -31,8 +31,8 @@ class TicketController extends Controller
             ->get();
 
         $ticketTypes = $ticketTypes->filter(function ($type) {
-            return collect(json_decode($type->role_access))->contains(auth()->user()->role_id)
-                || empty(json_decode($type->role_access));
+            return collect($type->role_access)->contains(auth()->user()->role_id)
+                || empty($type->role_access);
         });
 
         return view('help.tickets.setup', compact('ticketTypes'));
