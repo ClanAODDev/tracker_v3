@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -72,6 +73,7 @@ class AwardResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->query(fn (Award $record) => $record->withCount('recipients'))
             ->columns([
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('name')
@@ -81,6 +83,7 @@ class AwardResource extends Resource
                     ->searchable()
                     ->limit(45)
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('recipients_count')->label('Recipients'),
                 Tables\Columns\TextInputColumn::make('display_order')
                     ->rules(['required', 'numeric'])
                     ->sortable(),
