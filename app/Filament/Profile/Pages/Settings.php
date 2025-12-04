@@ -42,6 +42,15 @@ class Settings extends Page implements HasForms
         try {
             $this->form->validate();
 
+            if (isset($this->settings['ticket_notifications'])) {
+                $value = $this->settings['ticket_notifications'];
+                if ($value === 'on' || $value === '1' || $value === 1) {
+                    $this->settings['ticket_notifications'] = true;
+                } elseif ($value === 'off' || $value === '0' || $value === 0) {
+                    $this->settings['ticket_notifications'] = false;
+                }
+            }
+
             $user = auth()->user();
             $user->settings = array_merge($user->defaultSettings, $this->settings);
             $user->save();
