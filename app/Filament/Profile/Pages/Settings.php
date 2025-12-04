@@ -46,6 +46,10 @@ class Settings extends Page implements HasForms
             $user->settings = array_merge($user->defaultSettings, $this->settings);
             $user->save();
 
+            Notification::make()
+                ->title('Settings updated successfully')
+                ->success()
+                ->send();
         } catch (\Exception $exception) {
             Notification::make()
                 ->title('Something went wrong while saving your settings.')
@@ -53,11 +57,6 @@ class Settings extends Page implements HasForms
                 ->send();
             \Log::error($exception->getMessage());
         }
-
-        Notification::make()
-            ->title('Settings updated successfully')
-            ->success()
-            ->send();
     }
 
     public function form(Form $form): Form
