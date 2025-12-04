@@ -260,13 +260,16 @@ class User extends Authenticatable implements FilamentUser
             return true;
         }
 
+        $panelId = $panel->getId();
+
+        if ($panelId === 'profile') {
+            return true;
+        }
+
         $panelToRoleMapping = [
             'mod' => ['admin', 'sr_ldr', 'officer'],
             'admin' => 'admin',
-            'profile' => ['admin', 'sr_ldr', 'officer', 'member'],
         ];
-
-        $panelId = $panel->getId();
 
         if (isset($panelToRoleMapping[$panelId])) {
             return $this->isRole($panelToRoleMapping[$panelId]);
