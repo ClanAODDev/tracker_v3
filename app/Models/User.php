@@ -25,7 +25,7 @@ class User extends Authenticatable implements FilamentUser
     use Notifiable;
 
     public array $defaultSettings = [
-        'snow' => false,
+        'snow' => 'no_snow',
         'ticket_notifications' => true,
     ];
 
