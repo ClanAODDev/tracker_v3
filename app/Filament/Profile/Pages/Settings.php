@@ -81,6 +81,7 @@ class Settings extends Page implements HasForms
 
                 Forms\Components\Section::make('Discord')->schema([
                     Forms\Components\Toggle::make('ticket_notifications')
+                        ->default(false)
                         ->hintIcon('heroicon-o-chat-bubble-left-right')
                         ->helperText('Receive Discord notifications when your ticket is updated')
                         ->label('Ticket notifications'),
