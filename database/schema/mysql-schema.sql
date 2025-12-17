@@ -80,6 +80,7 @@ CREATE TABLE `awards` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `instructions` varchar(191) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -190,12 +191,14 @@ DROP TABLE IF EXISTS `handle_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `handle_member` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `handle_id` int(10) unsigned NOT NULL,
+  `primary` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'Indicates if this is the primary handle for the handle type',
   `member_id` int(10) unsigned NOT NULL,
   `value` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`handle_id`,`member_id`),
+  PRIMARY KEY (`id`),
   KEY `handle_member_handle_id_index` (`handle_id`),
   KEY `handle_member_member_id_index` (`member_id`),
   CONSTRAINT `handle_member_handle_id_foreign` FOREIGN KEY (`handle_id`) REFERENCES `handles` (`id`) ON DELETE CASCADE,
@@ -207,14 +210,14 @@ DROP TABLE IF EXISTS `handles`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `handles` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `label` text NOT NULL,
+  `label` mediumtext NOT NULL,
   `type` varchar(255) NOT NULL,
   `comments` varchar(255) DEFAULT NULL,
-  `url` text DEFAULT NULL,
+  `url` mediumtext DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `job_batch_manager`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -346,11 +349,9 @@ CREATE TABLE `member_requests` (
   `division_id` int(10) unsigned NOT NULL,
   `approver_id` int(10) unsigned DEFAULT NULL,
   `approved_at` timestamp NULL DEFAULT NULL,
-  `cancelled_at` timestamp NULL DEFAULT NULL,
-  `canceller_id` int(10) unsigned DEFAULT NULL,
+  `holder_id` int(10) unsigned DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `hold_placed_at` timestamp NULL DEFAULT NULL,
-  `processed_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -376,7 +377,7 @@ CREATE TABLE `members` (
   `discord_id` bigint(20) DEFAULT NULL,
   `flagged_for_inactivity` tinyint(1) NOT NULL,
   `posts` int(10) unsigned NOT NULL DEFAULT 0,
-  `privacy_flag` tinyint(1) NOT NULL DEFAULT 0,
+  `privacy_flag` tinyint(1) NOT NULL,
   `allow_pm` tinyint(1) NOT NULL DEFAULT 1,
   `join_date` timestamp NULL DEFAULT NULL,
   `last_activity` datetime DEFAULT NULL,
@@ -390,10 +391,10 @@ CREATE TABLE `members` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `groups` text DEFAULT NULL,
+  `groups` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `members_clan_id_unique` (`clan_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `migrations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -444,8 +445,8 @@ CREATE TABLE `personal_access_tokens` (
   `abilities` text DEFAULT NULL,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `expires_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
   KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
@@ -487,6 +488,7 @@ DROP TABLE IF EXISTS `rank_actions`;
 CREATE TABLE `rank_actions` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
+  `approver_id` int(11) DEFAULT NULL,
   `rank` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -494,6 +496,7 @@ CREATE TABLE `rank_actions` (
   `requester_id` int(11) DEFAULT NULL,
   `approved_at` datetime DEFAULT NULL,
   `accepted_at` datetime DEFAULT NULL,
+  `awarded_at` datetime DEFAULT NULL,
   `denied_at` datetime DEFAULT NULL,
   `deny_reason` text DEFAULT NULL,
   `declined_at` datetime DEFAULT NULL,
@@ -564,7 +567,7 @@ CREATE TABLE `ticket_types` (
   `description` varchar(191) NOT NULL,
   `auto_assign_to_id` int(11) DEFAULT NULL,
   `boilerplate` text DEFAULT NULL,
-  `role_access` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`role_access`)),
+  `role_access` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT 100,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -596,6 +599,8 @@ CREATE TABLE `transfers` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `division_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
+  `approved_at` datetime DEFAULT NULL,
+  `hold_placed_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -630,7 +635,7 @@ CREATE TABLE `versions` (
   `user_id` bigint(20) unsigned DEFAULT NULL,
   `versionable_type` varchar(191) NOT NULL,
   `versionable_id` bigint(20) unsigned NOT NULL,
-  `contents` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`contents`)),
+  `contents` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -674,6 +679,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (25,'2016_12_10_203
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (26,'2016_12_16_082909_add_gen_pop_to_squads',6);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (27,'2016_12_21_113036_add_soft_deletes_to_squads',6);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (28,'2016_12_25_232444_drop_locality_column_from_divisions',7);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (29,'2016_06_01_000001_create_oauth_auth_codes_table',8);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (30,'2016_06_01_000002_create_oauth_access_tokens_table',8);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (31,'2016_06_01_000003_create_oauth_refresh_tokens_table',8);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (32,'2016_06_01_000004_create_oauth_clients_table',8);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (33,'2016_06_01_000005_create_oauth_personal_access_clients_table',8);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (35,'2017_03_11_174914_add_colors_to_ranks',9);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (36,'2017_03_12_110429_add_name_to_squads',9);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (37,'2017_03_21_143857_create_handle_member_pivot_table',9);
@@ -723,59 +733,73 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (91,'2020_07_12_163
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (92,'2020_07_28_212123_add_shutdown_timestamp_to_divisions',41);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (93,'2020_10_11_122223_rename_staff_sergeants_table',42);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (94,'2020_10_18_143138_change_ticket_type_column',43);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (95,'2020_10_18_144619_create_ticket_comments_table',44);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (96,'2020_11_15_174622_add_ticket_boilerplate_column_to_ticket_types_table',44);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (97,'2020_11_17_110142_add_display_order_to_ticket_types_table',45);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (98,'2020_11_17_131641_add_rejected_to_ticket_types_enum',46);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (99,'2020_11_18_013001_create_failed_jobs_table',47);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (100,'2019_12_14_000001_create_personal_access_tokens_table',48);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (101,'2020_11_28_201211_add_role_access_to_ticket_types',48);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (102,'2021_06_10_080357_drop_staff_sergeants',48);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (103,'2021_07_03_132912_drop_oauth_tables_for_passport',48);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (104,'2021_07_05_095319_add_application_id_to_divisions_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (105,'2021_07_05_095336_add_privacy_flag_to_members_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (106,'2021_07_07_230419_add_slug_to_divisions_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (107,'2021_09_16_184407_add_allow_pm_column_to_members_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (108,'2021_12_31_150017_create_transfers_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (109,'2021_12_31_150144_create_rank_actions_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (110,'2023_01_03_134718_add_discord_id_to_members_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (111,'2023_05_17_143601_add_message_id_to_tickets_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (112,'2023_05_31_161731_add_auto_assign_to_column_to_ticket_types_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (113,'2024_03_21_083940_add_discord_member_data',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (114,'2024_04_07_184652_add_voice_census',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (115,'2024_05_06_141608_fix_failed_jobs_table',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (116,'2024_05_26_110404_add_indexes_to_members',49);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (117,'2019_05_31_042934_create_versions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (118,'2019_12_14_000001_add_expiration_to_personal_access_tokens_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (119,'2020_07_03_163707_add_deleted_at_to_versions',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (120,'2021_03_18_160750_make_user_nullable',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (121,'2024_07_22_155600_add_logo_column_to_divisions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (122,'2024_08_02_165416_rename_message_id_column_on_tickets_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (123,'2024_08_07_105630_rename_position_id_on_members_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (124,'2024_08_18_111718_rename_rank_id_on_members_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (125,'2024_08_18_111718_rename_rank_id_on_rank_actions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (126,'2024_12_21_100301_add_award_and_member_award_tables',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (127,'2024_12_23_131406_drop_division_from_rank_actions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (128,'2024_12_23_131648_drop_expires_at_column_from_award_member_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (129,'2024_12_26_113523_add_site_content_to_divisions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (130,'2024_12_28_171739_add_show_on_site_boolean_column_to_divisions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (131,'2024_12_30_100223_fix_platoon_and_squad_leader_id_columns',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (132,'2025_01_07_210846_add_approved_column_to_versions_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (133,'2025_01_19_135739_migrate_notifications_to_voice',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (134,'2025_01_19_214404_set_default_voice_alerts_channels',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (135,'2025_01_26_045100_01_create_job_manager_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (136,'2025_01_26_045100_02_create_job_batch_manager_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (137,'2025_01_26_045100_03_create_job_queue_workers_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (138,'2025_01_26_045100_04_add_foreigns_to_job_manager_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (139,'2025_01_26_045111_create_job_batches_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (140,'2025_01_26_092341_create_application_items_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (141,'2025_01_28_102035_delete_application_items_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (142,'2025_01_30_104749_rename_rank_changed_setting_to_member_promoted',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (143,'2025_02_01_001217_remove_extended_column_on_leaves_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (144,'2025_02_02_133919_add_self_documenting_fields_to_rank_actions',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (145,'2025_02_03_065919_add_requester_to_award_member',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (146,'2025_02_03_094402_add_instructions_field_to_awards',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (147,'2025_02_03_145619_create_filament_comments_table',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (148,'2025_02_03_145620_add_index_to_subject',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (149,'2025_02_05_142418_add_denied_at_and_deny_reason_to_rank_actions',50);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (150,'2025_02_05_162521_add_max_pl_rank_approval_setting_to_divisions',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (95,'2020_10_18_144619_create_ticket_comments_table',43);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (96,'2020_11_15_174622_add_ticket_boilerplate_column_to_ticket_types_table',43);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (97,'2020_11_17_110142_add_display_order_to_ticket_types_table',44);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (98,'2020_11_17_131641_add_rejected_to_ticket_types_enum',45);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (99,'2020_11_18_013001_create_failed_jobs_table',46);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (100,'2020_11_28_201211_add_role_access_to_ticket_types',47);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (101,'2021_06_10_080357_drop_staff_sergeants',48);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (102,'2021_07_05_095319_add_application_id_to_divisions_table',49);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (103,'2021_07_05_095336_add_privacy_flag_to_members_table',49);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (104,'2019_12_14_000001_create_personal_access_tokens_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (105,'2021_07_07_230419_add_slug_to_divisions_table',50);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (106,'2021_09_16_184407_add_allow_pm_column_to_members_table',51);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (107,'2021_12_30_135818_create_aod_member_sync_table',52);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (108,'2021_12_31_150017_create_transfers_table',52);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (109,'2021_12_31_150144_create_rank_actions_table',52);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (110,'2023_01_03_134514_add_discord_id_to_sync_table',53);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (111,'2023_01_03_134718_add_discord_id_to_members_table',53);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (112,'2023_05_17_143601_add_message_id_to_tickets_table',54);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (113,'2023_05_31_161731_add_auto_assign_to_column_to_ticket_types_table',55);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (115,'2024_03_21_080438_add_discord_data_to_member_sync',56);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (116,'2024_03_21_083940_add_discord_member_data',57);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (117,'2024_04_07_184652_add_voice_census',58);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (118,'2024_05_06_141608_fix_failed_jobs_table',59);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (119,'2024_05_26_110404_add_indexes_to_members',60);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (120,'2019_12_14_000001_add_expiration_to_personal_access_tokens_table',61);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (121,'2024_07_22_155600_add_logo_column_to_divisions_table',62);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (122,'2024_08_02_165416_rename_message_id_column_on_tickets_table',63);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (123,'2024_08_07_105630_rename_position_id_on_members_table',64);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (124,'2024_08_18_111718_rename_rank_id_on_members_table',65);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (125,'2024_08_18_111718_rename_rank_id_on_rank_actions_table',65);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (126,'2019_05_31_042934_create_versions_table',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (127,'2020_07_03_163707_add_deleted_at_to_versions',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (128,'2021_03_18_160750_make_user_nullable',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (129,'2024_12_21_100301_add_award_and_member_award_tables',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (130,'2024_12_23_131406_drop_division_from_rank_actions_table',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (131,'2024_12_23_131648_drop_expires_at_column_from_award_member_table',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (132,'2024_12_26_113523_add_site_content_to_divisions_table',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (133,'2024_12_28_171739_add_show_on_site_boolean_column_to_divisions_table',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (134,'2024_12_30_100223_fix_platoon_and_squad_leader_id_columns',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (135,'2025_01_07_210846_add_approved_column_to_versions_table',66);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (136,'2025_01_19_135739_migrate_notifications_to_voice',67);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (137,'2025_01_19_214404_set_default_voice_alerts_channels',67);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (138,'2025_01_26_045100_01_create_job_manager_table',68);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (139,'2025_01_26_045100_02_create_job_batch_manager_table',68);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (140,'2025_01_26_045100_03_create_job_queue_workers_table',68);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (141,'2025_01_26_045100_04_add_foreigns_to_job_manager_table',68);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (142,'2025_01_26_045111_create_job_batches_table',68);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (143,'2025_01_26_092341_create_application_items_table',69);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (144,'2025_01_28_102035_delete_application_items_table',70);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (145,'2025_01_30_104749_rename_rank_changed_setting_to_member_promoted',71);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (146,'2025_02_01_001217_remove_extended_column_on_leaves_table',72);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (147,'2025_02_02_133919_add_self_documenting_fields_to_rank_actions',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (148,'2025_02_03_065919_add_requester_to_award_member',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (149,'2025_02_03_094402_add_instructions_field_to_awards',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (150,'2025_02_03_145619_create_filament_comments_table',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (151,'2025_02_03_145620_add_index_to_subject',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (152,'2025_02_05_142418_add_denied_at_and_deny_reason_to_rank_actions',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (153,'2025_02_05_162521_add_max_pl_rank_approval_setting_to_divisions',73);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (154,'2025_04_13_201351_add_awarded_at_field_to_rank_actions_table',74);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (155,'2025_05_31_144027_add_approved_at_column_to_transfers',75);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (156,'2025_06_03_083558_add_hold_placed_at_column_to_transfers_table',76);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (157,'2025_06_19_104122_add_approver_to_rank_actions_table',77);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (158,'2025_06_26_055413_add_member_applied_setting_to_divisions',78);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (159,'2025_08_02_104753_add_incrementing_id_and_primary_bool_to_member_handle',79);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (160,'2025_09_13_165838_update_member_requests_fields',80);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (161,'2025_10_27_095305_add_division_thread_url_support',81);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (162,'2025_12_01_130452_add_soft_delete_to_awards',82);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (163,'2025_12_04_165900_update_user_settings_snow_value',83);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (164,'2025_12_04_171021_fix_ticket_notifications_string_values',84);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (165,'2025_12_17_181807_convert_members_and_handles_tables_to_utf8mb4',85);
