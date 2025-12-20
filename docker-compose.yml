@@ -55,6 +55,7 @@ services:
 
 networks:
     sail:
+        name: tracker_site_bridge
         driver: bridge
 volumes:
     sailmariadb:
