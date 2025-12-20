@@ -32,7 +32,17 @@ class DivisionBasicTransformer extends Transformer
         }
 
         if (request()->has('include-screenshots')) {
-            $data['screenshots'] = $item->screenshots ?? [];
+            $screenshots = $item->screenshots ?? [];
+            $data['screenshots'] = array_map(function ($screenshot) {
+                if (is_string($screenshot)) {
+                    return ['url' => asset('storage/' . $screenshot), 'caption' => null];
+                }
+
+                return [
+                    'url' => isset($screenshot['image']) ? asset('storage/' . $screenshot['image']) : ($screenshot['url'] ?? null),
+                    'caption' => $screenshot['caption'] ?? null,
+                ];
+            }, $screenshots);
         }
 
         return $data;
