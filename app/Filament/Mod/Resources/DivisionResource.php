@@ -228,30 +228,21 @@ class DivisionResource extends Resource
                             ->statePath('settings.meta_description')
                             ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
                         Forms\Components\Section::make('Screenshot Gallery')
-                            ->description('Add screenshots to display on your division page')
+                            ->description('Upload screenshots to display on your division page')
                             ->collapsible()
                             ->collapsed()
                             ->schema([
-                                Forms\Components\Repeater::make('screenshots')
-                                    ->schema([
-                                        Forms\Components\TextInput::make('url')
-                                            ->label('Image URL')
-                                            ->url()
-                                            ->required()
-                                            ->regex('/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i')
-                                            ->validationMessages([
-                                                'regex' => 'URL must end with an image extension (.jpg, .png, .gif, .webp)',
-                                            ])
-                                            ->columnSpan(2),
-                                        Forms\Components\TextInput::make('caption')
-                                            ->maxLength(100)
-                                            ->columnSpan(2),
-                                    ])
-                                    ->columns(2)
+                                Forms\Components\FileUpload::make('screenshots')
+                                    ->label('Screenshots')
+                                    ->multiple()
+                                    ->disk('public')
+                                    ->directory('division-screenshots')
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                    ->maxSize(5120)
+                                    ->maxFiles(20)
                                     ->reorderable()
-                                    ->collapsible()
-                                    ->itemLabel(fn (array $state): ?string => $state['caption'] ?? $state['url'] ?? null)
-                                    ->defaultItems(0),
+                                    ->appendFiles()
+                                    ->helperText('Drag and drop to reorder. Max 20 images, 5MB each.'),
                             ]),
                     ]),
 
