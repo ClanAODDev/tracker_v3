@@ -221,14 +221,38 @@ class DivisionResource extends Resource
                                 'redo',
                                 'strike',
                                 'undo',
-                                // 'table',
-                                // 'attachFiles',
                             ])
                             ->columnSpanFull(),
                         Forms\Components\Textarea::make('meta_description')
                             ->maxLength(100)
                             ->statePath('settings.meta_description')
                             ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
+                        Forms\Components\Section::make('Screenshot Gallery')
+                            ->description('Add screenshots to display on your division page')
+                            ->collapsible()
+                            ->collapsed()
+                            ->schema([
+                                Forms\Components\Repeater::make('screenshots')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('url')
+                                            ->label('Image URL')
+                                            ->url()
+                                            ->required()
+                                            ->regex('/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i')
+                                            ->validationMessages([
+                                                'regex' => 'URL must end with an image extension (.jpg, .png, .gif, .webp)',
+                                            ])
+                                            ->columnSpan(2),
+                                        Forms\Components\TextInput::make('caption')
+                                            ->maxLength(100)
+                                            ->columnSpan(2),
+                                    ])
+                                    ->columns(2)
+                                    ->reorderable()
+                                    ->collapsible()
+                                    ->itemLabel(fn (array $state): ?string => $state['caption'] ?? $state['url'] ?? null)
+                                    ->defaultItems(0),
+                            ]),
                     ]),
 
             ]);

@@ -41,7 +41,7 @@ class Division extends Model
      */
     public array $exposedSettings = [
         'always_visible_in_discord',
-        'meta_description'
+        'meta_description',
     ];
 
     /**
@@ -111,6 +111,7 @@ class Division extends Model
         'active' => 'boolean',
         'show_on_site' => 'boolean',
         'settings' => 'json',
+        'screenshots' => 'array',
         'shutdown_at' => 'datetime',
     ];
 
