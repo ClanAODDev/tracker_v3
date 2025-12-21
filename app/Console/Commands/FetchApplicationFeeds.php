@@ -14,7 +14,7 @@ class FetchApplicationFeeds extends Command
 {
     private string $useragent = 'Tracker - App Scraper';
 
-    protected $signature = 'do:fetch-application-feeds {--notify}';
+    protected $signature = 'do:fetch-application-feeds {--notify} {--fresh : Clear cached items and process all feeds as new}';
 
     protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
 
@@ -79,6 +79,10 @@ class FetchApplicationFeeds extends Command
             }
 
             $cacheKey = "application_item_{$threadId}";
+
+            if ($this->option('fresh')) {
+                Cache::forget($cacheKey);
+            }
 
             if (Cache::has($cacheKey)) {
                 continue;
