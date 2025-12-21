@@ -116,6 +116,41 @@ class DivisionResource extends Resource
                         Forms\Components\TextInput::make('Applications Feed')
                             ->label('Recruit Applications RSS URL')
                             ->statePath('recruitment_rss_feed')
+                            ->url()
+                            ->rules([
+                                fn (): \Closure => function (string $attribute, $value, \Closure $fail) {
+                                    if (empty($value)) {
+                                        return;
+                                    }
+
+                                    try {
+                                        $response = \Illuminate\Support\Facades\Http::withUserAgent('Tracker - RSS Validator')
+                                            ->timeout(10)
+                                            ->get($value);
+
+                                        if (! $response->ok()) {
+                                            $fail('The URL returned an error (HTTP ' . $response->status() . ')');
+
+                                            return;
+                                        }
+
+                                        $content = $response->body();
+                                        $xml = @simplexml_load_string($content);
+
+                                        if ($xml === false) {
+                                            $fail('The URL does not return valid XML');
+
+                                            return;
+                                        }
+
+                                        if (! isset($xml->channel) && ! isset($xml->entry)) {
+                                            $fail('The URL does not appear to be a valid RSS or Atom feed');
+                                        }
+                                    } catch (\Exception $e) {
+                                        $fail('Could not fetch URL: ' . $e->getMessage());
+                                    }
+                                },
+                            ])
                             ->helperText('RSS feed URL where new division applications are posted'),
 
                         Forms\Components\Section::make('Tasks')->collapsible()->collapsed()
