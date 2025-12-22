@@ -9,13 +9,33 @@ use Illuminate\Support\Facades\Auth;
 
 class ActivityTrendsWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Activity Trends (Last 30 Days)';
-
     protected static ?int $sort = 2;
 
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $maxHeight = '300px';
+
+    public ?string $filter = '30';
+
+    protected function getFilters(): ?array
+    {
+        return [
+            '30' => '30 Days',
+            '90' => '90 Days',
+            '365' => '1 Year',
+        ];
+    }
+
+    public function getHeading(): string
+    {
+        $days = $this->filter ?? '30';
+        $label = match ($days) {
+            '365' => '1 Year',
+            default => "{$days} Days",
+        };
+
+        return "Activity Trends (Last {$label})";
+    }
 
     protected function getData(): array
     {
@@ -28,9 +48,11 @@ class ActivityTrendsWidget extends ChartWidget
             ];
         }
 
+        $days = (int) ($this->filter ?? 30);
+
         $censuses = Census::where('division_id', $division->id)
             ->latest('created_at')
-            ->take(30)
+            ->take($days)
             ->get()
             ->reverse()
             ->values();
