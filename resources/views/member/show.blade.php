@@ -132,5 +132,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{{ asset('js/member-tags.js') }}"></script>
+    @vite(['resources/assets/js/member-tags.js'])
 @endsection

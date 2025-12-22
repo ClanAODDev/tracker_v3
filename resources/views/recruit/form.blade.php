@@ -20,5 +20,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/recruiting.js?v=7.6') !!}"></script>
+    @vite(['resources/assets/js/recruiting.js'])
 @endsection

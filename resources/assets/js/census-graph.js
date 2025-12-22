@@ -1,4 +1,4 @@
-// Flot charts data and options
+const $ = window.jQuery;
 var populationData = $("#flot-line-chart").data("populations"),
     discordData = $("#flot-line-chart").data("weekly-discord");
 // data1 = $('#flot-line-chart').data('weekly-active'),

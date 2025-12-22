@@ -1,0 +1,53 @@
+{
+  "resources/assets/css/style.css": {
+    "file": "assets/style-BFWlJaVt.css",
+    "src": "resources/assets/css/style.css",
+    "isEntry": true,
+    "name": "style",
+    "names": [
+      "style.css"
+    ]
+  },
+  "resources/assets/js/census-graph.js": {
+    "file": "assets/census-graph-JM5lcZ3s.js",
+    "name": "census-graph",
+    "src": "resources/assets/js/census-graph.js",
+    "isEntry": true
+  },
+  "resources/assets/js/division.js": {
+    "file": "assets/division-DQyxYo0k.js",
+    "name": "division",
+    "src": "resources/assets/js/division.js",
+    "isEntry": true
+  },
+  "resources/assets/js/main.js": {
+    "file": "assets/main-DU_4ei7a.js",
+    "name": "main",
+    "src": "resources/assets/js/main.js",
+    "isEntry": true
+  },
+  "resources/assets/js/member-tags.js": {
+    "file": "assets/member-tags-7r4gY2Ep.js",
+    "name": "member-tags",
+    "src": "resources/assets/js/member-tags.js",
+    "isEntry": true
+  },
+  "resources/assets/js/platoon.js": {
+    "file": "assets/platoon-fjXNmu_j.js",
+    "name": "platoon",
+    "src": "resources/assets/js/platoon.js",
+    "isEntry": true
+  },
+  "resources/assets/js/recruiting.js": {
+    "file": "assets/recruiting-BgwxPsGp.js",
+    "name": "recruiting",
+    "src": "resources/assets/js/recruiting.js",
+    "isEntry": true
+  },
+  "resources/assets/js/voice.js": {
+    "file": "assets/voice-CwTlL-xb.js",
+    "name": "voice",
+    "src": "resources/assets/js/voice.js",
+    "isEntry": true
+  }
+}
