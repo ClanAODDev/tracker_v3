@@ -36,5 +36,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/division.js?v=2.2') !!}"></script>
+    @vite(['resources/assets/js/division.js'])
 @endsection

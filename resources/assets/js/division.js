@@ -92,6 +92,6 @@ var Division = Division || {};
 
     },
   };
-})(jQuery);
+})(window.jQuery);
 
 Division.setup();

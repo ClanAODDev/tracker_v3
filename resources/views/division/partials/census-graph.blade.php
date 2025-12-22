@@ -24,5 +24,5 @@
 </div>
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/census-graph.js?v=3.2') !!}"></script>
+    @vite(['resources/assets/js/census-graph.js'])
 @endsection

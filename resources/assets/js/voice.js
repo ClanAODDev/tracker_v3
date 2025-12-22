@@ -1,3 +1,4 @@
+const $ = window.jQuery;
 if ($('.members-table').length) {
     var dataTable = $('table.members-table').DataTable({
         oLanguage: {

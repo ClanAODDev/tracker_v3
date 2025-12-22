@@ -93,5 +93,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/voice.js?v=1') !!}"></script>
+    @vite(['resources/assets/js/voice.js'])
 @endsection

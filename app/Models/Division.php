@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
@@ -183,6 +184,11 @@ class Division extends Model
     public function census(): HasMany
     {
         return $this->hasMany(Census::class);
+    }
+
+    public function latestCensus(): HasOne
+    {
+        return $this->hasOne(Census::class)->latestOfMany();
     }
 
     public function squads(): HasManyThrough

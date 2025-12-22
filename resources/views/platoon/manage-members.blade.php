@@ -81,5 +81,5 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="{!! asset('/js/platoon.js') !!}"></script>
+    @vite(['resources/assets/js/platoon.js'])
 @endsection

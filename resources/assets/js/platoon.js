@@ -1,4 +1,4 @@
-let Platoon = Platoon || {};
+var Platoon = Platoon || {};
 
 (function ($) {
 
@@ -471,6 +471,6 @@ let Platoon = Platoon || {};
             });
         },
     };
-})(jQuery);
+})(window.jQuery);
 
 Platoon.setup();

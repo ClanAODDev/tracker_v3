@@ -1,4 +1,4 @@
-let Tracker = Tracker || {};
+var Tracker = Tracker || {};
 
 (function ($) {
 
@@ -310,7 +310,7 @@ let Tracker = Tracker || {};
 
     };
 
-})(jQuery);
+})(window.jQuery);
 
 Tracker.Setup();
 

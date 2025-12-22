@@ -1,4 +1,4 @@
-let MemberTags = MemberTags || {};
+var MemberTags = MemberTags || {};
 
 (function ($) {
 
@@ -160,6 +160,6 @@ let MemberTags = MemberTags || {};
         }
     };
 
-})(jQuery);
+})(window.jQuery);
 
 MemberTags.setup();
