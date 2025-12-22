@@ -33,10 +33,8 @@ class DivisionStatsWidget extends BaseWidget
             ->first();
 
         $memberCount = $latestCensus?->count ?? $division->members()->count();
-        $weeklyActive = $latestCensus?->weekly_active_count ?? 0;
         $weeklyVoice = $latestCensus?->weekly_voice_count ?? 0;
 
-        $activePercent = $memberCount > 0 ? round(($weeklyActive / $memberCount) * 100) : 0;
         $voicePercent = $memberCount > 0 ? round(($weeklyVoice / $memberCount) * 100) : 0;
 
         $tagCount = DivisionTag::forDivision($division->id)->count();
@@ -50,11 +48,6 @@ class DivisionStatsWidget extends BaseWidget
                 ->descriptionIcon($this->getTrendIcon($latestCensus?->count, $previousCensus?->count))
                 ->chart($populationTrend)
                 ->color($this->getTrendColor($latestCensus?->count, $previousCensus?->count)),
-
-            Stat::make('Weekly Active', number_format($weeklyActive))
-                ->description("{$activePercent}% of division")
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color($activePercent >= 50 ? 'success' : ($activePercent >= 25 ? 'warning' : 'danger')),
 
             Stat::make('Weekly Voice', number_format($weeklyVoice))
                 ->description("{$voicePercent}% of division")

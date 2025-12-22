@@ -21,17 +21,17 @@ class ClanActivityTrendsWidget extends ChartWidget
         $trends = Census::select(
             DB::raw('DATE(created_at) as date'),
             DB::raw('SUM(count) as total_population'),
-            DB::raw('SUM(weekly_active_count) as total_active'),
             DB::raw('SUM(weekly_voice_count) as total_voice')
         )
             ->groupBy('date')
-            ->orderBy('date')
+            ->orderByDesc('date')
             ->take(30)
-            ->get();
+            ->get()
+            ->reverse()
+            ->values();
 
         $labels = $trends->map(fn ($t) => \Carbon\Carbon::parse($t->date)->format('M j'))->toArray();
         $population = $trends->pluck('total_population')->toArray();
-        $weeklyActive = $trends->pluck('total_active')->toArray();
         $weeklyVoice = $trends->pluck('total_voice')->toArray();
 
         return [
@@ -41,14 +41,6 @@ class ClanActivityTrendsWidget extends ChartWidget
                     'data' => $population,
                     'borderColor' => '#3b82f6',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
-                    'fill' => true,
-                    'tension' => 0.3,
-                ],
-                [
-                    'label' => 'Weekly Active',
-                    'data' => $weeklyActive,
-                    'borderColor' => '#10b981',
-                    'backgroundColor' => 'rgba(16, 185, 129, 0.1)',
                     'fill' => true,
                     'tension' => 0.3,
                 ],

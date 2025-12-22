@@ -23,14 +23,12 @@ class ClanStatsWidget extends BaseWidget
             ->pluck('id');
 
         $clanStats = Census::whereIn('id', $latestCensuses)
-            ->selectRaw('SUM(count) as total_count, SUM(weekly_active_count) as total_active, SUM(weekly_voice_count) as total_voice')
+            ->selectRaw('SUM(count) as total_count, SUM(weekly_voice_count) as total_voice')
             ->first();
 
         $totalFromCensus = $clanStats->total_count ?? $totalMembers;
-        $totalActive = $clanStats->total_active ?? 0;
         $totalVoice = $clanStats->total_voice ?? 0;
 
-        $activePercent = $totalFromCensus > 0 ? round(($totalActive / $totalFromCensus) * 100) : 0;
         $voicePercent = $totalFromCensus > 0 ? round(($totalVoice / $totalFromCensus) * 100) : 0;
 
         $recruitsThisMonth = Member::where('join_date', '>=', now()->startOfMonth())->count();
@@ -47,11 +45,6 @@ class ClanStatsWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->chart($populationTrend)
                 ->color('primary'),
-
-            Stat::make('Clan Weekly Active', number_format($totalActive))
-                ->description("{$activePercent}% activity rate")
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color($activePercent >= 50 ? 'success' : ($activePercent >= 25 ? 'warning' : 'danger')),
 
             Stat::make('Clan Weekly Voice', number_format($totalVoice))
                 ->description("{$voicePercent}% voice participation")
