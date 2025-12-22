@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Widgets;
 use App\Models\Census;
 use App\Models\Division;
 use App\Models\DivisionTag;
+use App\Models\Member;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,12 @@ class DivisionStatsWidget extends BaseWidget
         $taggedMemberCount = $division->members()->whereHas('tags')->count();
 
         $populationTrend = $this->getPopulationTrend($division);
+        $voiceTrend = $this->getVoiceTrend($division);
+        $recruitsTrend = $this->getRecruitsTrend($division);
+
+        $recruitsThisMonth = Member::where('division_id', $division->id)
+            ->where('join_date', '>=', now()->subDays(30))
+            ->count();
 
         return [
             Stat::make('Total Members', number_format($memberCount))
@@ -52,12 +59,19 @@ class DivisionStatsWidget extends BaseWidget
             Stat::make('Weekly Voice', number_format($weeklyVoice))
                 ->description("{$voicePercent}% of division")
                 ->descriptionIcon('heroicon-m-speaker-wave')
+                ->chart($voiceTrend)
                 ->color($voicePercent >= 30 ? 'success' : ($voicePercent >= 15 ? 'warning' : 'danger')),
+
+            Stat::make('Recruits (30d)', number_format($recruitsThisMonth))
+                ->description('New members')
+                ->descriptionIcon('heroicon-m-user-plus')
+                ->chart($recruitsTrend)
+                ->color('info'),
 
             Stat::make('Tags in Use', $tagCount)
                 ->description("{$taggedMemberCount} members tagged")
                 ->descriptionIcon('heroicon-m-tag')
-                ->color('info'),
+                ->color('gray'),
         ];
     }
 
@@ -75,6 +89,31 @@ class DivisionStatsWidget extends BaseWidget
             ->reverse()
             ->values()
             ->toArray();
+    }
+
+    protected function getVoiceTrend(Division $division): array
+    {
+        return Census::where('division_id', $division->id)
+            ->latest()
+            ->take(14)
+            ->pluck('weekly_voice_count')
+            ->reverse()
+            ->values()
+            ->toArray();
+    }
+
+    protected function getRecruitsTrend(Division $division): array
+    {
+        $data = [];
+        for ($i = 13; $i >= 0; $i--) {
+            $start = now()->subDays(($i + 1) * 7);
+            $end = now()->subDays($i * 7);
+            $data[] = Member::where('division_id', $division->id)
+                ->whereBetween('join_date', [$start, $end])
+                ->count();
+        }
+
+        return $data;
     }
 
     protected function getTrendDescription(?int $current, ?int $previous): string
