@@ -65,7 +65,7 @@ class BulkTagController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:25',
             'visibility' => 'nullable|string|in:' . implode(',', $validVisibilities),
         ]);
 
@@ -116,7 +116,7 @@ class BulkTagController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:50',
+            'name' => 'required|string|max:25',
             'visibility' => 'nullable|string|in:' . implode(',', $validVisibilities),
         ]);
 

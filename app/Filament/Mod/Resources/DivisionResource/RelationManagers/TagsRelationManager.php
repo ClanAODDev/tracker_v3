@@ -35,7 +35,7 @@ class TagsRelationManager extends RelationManager
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(50),
+                    ->maxLength(25),
                 Forms\Components\Select::make('visibility')
                     ->options($visibilityOptions)
                     ->default(TagVisibility::PUBLIC->value)

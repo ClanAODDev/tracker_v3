@@ -106,7 +106,7 @@
                             <div class="form-group">
                                 <label for="new-tag-name">Tag Name</label>
                                 <input type="text" id="new-tag-name" name="name" class="form-control"
-                                       placeholder="Enter tag name" maxlength="50" required>
+                                       placeholder="Enter tag name" maxlength="25" required>
                             </div>
                             <div class="form-group">
                                 <label for="new-tag-visibility">Visibility</label>

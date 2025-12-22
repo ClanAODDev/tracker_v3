@@ -37,7 +37,7 @@ class GlobalTagResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(50),
+                    ->maxLength(25),
                 Forms\Components\Select::make('visibility')
                     ->options(collect(TagVisibility::cases())
                         ->mapWithKeys(fn ($v) => [$v->value => $v->label()]))
