@@ -1,6 +1,6 @@
 <tr>
     {{--checkbox--}}
-    <th class='bulk-select-col'><input type='checkbox' id='select-all-members' title='Select All'></th>
+    <th class='bulk-select-col no-sort'><input type='checkbox' id='select-all-members' title='Select All'></th>
     {{--0--}}
     <th class='col-hidden'><strong>Rank Id</strong></th>
     {{--1--}}

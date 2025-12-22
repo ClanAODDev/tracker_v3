@@ -81,7 +81,7 @@ let MemberTags = MemberTags || {};
 
                     var html = '';
                     if (unassigned.length === 0) {
-                        html += '<li class="dropdown-header">No tags available</li>';
+                        html += '<li><a href="#" class="text-muted" style="pointer-events: none;">No tags available</a></li>';
                     } else {
                         unassigned.forEach(function (tag) {
                             html += '<li class="tag-option" data-tag-id="' + tag.id + '" data-tag-name="' + tag.name + '" data-tag-visibility="' + tag.visibility + '">';
@@ -96,7 +96,7 @@ let MemberTags = MemberTags || {};
                     $dropdown.html(html);
                 },
                 error: function () {
-                    $dropdown.html('<li class="dropdown-header text-danger">Failed to load</li>');
+                    $dropdown.html('<li><a href="#" class="text-danger" style="pointer-events: none;">Failed to load</a></li>');
                 }
             });
         },
