@@ -2,13 +2,13 @@
 
 namespace App\Filament\Mod\Widgets;
 
-use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RankDistributionTableWidget extends BaseWidget
 {
@@ -18,28 +18,16 @@ class RankDistributionTableWidget extends BaseWidget
 
     protected static ?string $heading = 'Rank Breakdown';
 
-    public function getTableRecordKey($record): string
-    {
-        return (string) $record->rank->value;
-    }
-
     public function table(Table $table): Table
     {
         $division = $this->getDivision();
-
-        $rankCounts = $division
-            ? Member::where('division_id', $division->id)
-                ->selectRaw('rank, COUNT(*) as member_count')
-                ->groupBy('rank')
-                ->orderByDesc('member_count')
-                ->get()
-            : collect();
+        $divisionId = $division?->id;
 
         return $table
             ->query(
                 Member::query()
-                    ->selectRaw('rank, COUNT(*) as member_count')
-                    ->where('division_id', $division?->id)
+                    ->select('rank', DB::raw('COUNT(*) as member_count'), DB::raw('MIN(id) as id'))
+                    ->where('division_id', $divisionId)
                     ->groupBy('rank')
                     ->orderByDesc('member_count')
             )
@@ -60,10 +48,9 @@ class RankDistributionTableWidget extends BaseWidget
                 Tables\Actions\Action::make('viewMembers')
                     ->label('View')
                     ->icon('heroicon-o-users')
-                    ->modalHeading(fn ($record) => 'Members with rank: ' . Rank::from($record->rank->value)->getLabel())
-                    ->modalContent(function ($record) {
-                        $division = $this->getDivision();
-                        $members = Member::where('division_id', $division->id)
+                    ->modalHeading(fn ($record) => 'Members with rank: ' . $record->rank->getLabel())
+                    ->modalContent(function ($record) use ($divisionId) {
+                        $members = Member::where('division_id', $divisionId)
                             ->where('rank', $record->rank->value)
                             ->orderBy('name')
                             ->get();
