@@ -16,80 +16,14 @@ class DivisionLeaderboardWidget extends BaseWidget
 
     protected static ?string $heading = 'Division Leaderboards';
 
-    public ?string $leaderboardType = 'activity';
+    public ?string $leaderboardType = 'voice';
 
     public function table(Table $table): Table
     {
         return match ($this->leaderboardType) {
-            'voice' => $this->voiceLeaderboard($table),
             'recruiting' => $this->recruitingLeaderboard($table),
-            default => $this->activityLeaderboard($table),
+            default => $this->voiceLeaderboard($table),
         };
-    }
-
-    protected function activityLeaderboard(Table $table): Table
-    {
-        return $table
-            ->query(
-                Division::query()
-                    ->whereHas('members')
-                    ->with('latestCensus')
-            )
-            ->columns([
-                Tables\Columns\TextColumn::make('rank')
-                    ->label('#')
-                    ->rowIndex()
-                    ->alignCenter(),
-
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Division')
-                    ->url(fn (Division $record) => route('division', $record->abbreviation)),
-
-                Tables\Columns\TextColumn::make('latestCensus.count')
-                    ->label('Members')
-                    ->alignCenter()
-                    ->default(0),
-
-                Tables\Columns\TextColumn::make('latestCensus.weekly_active_count')
-                    ->label('Weekly Active')
-                    ->alignCenter()
-                    ->default(0),
-
-                Tables\Columns\TextColumn::make('activity_rate')
-                    ->label('Activity Rate')
-                    ->alignCenter()
-                    ->state(function (Division $record) {
-                        $census = $record->latestCensus;
-                        if (! $census || $census->count == 0) {
-                            return 0;
-                        }
-
-                        return round(($census->weekly_active_count / $census->count) * 100);
-                    })
-                    ->formatStateUsing(fn ($state) => $state . '%')
-                    ->badge()
-                    ->color(fn ($state) => $state >= 50 ? 'success' : ($state >= 25 ? 'warning' : 'danger'))
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query->orderByRaw(
-                            "(SELECT weekly_active_count * 100.0 / NULLIF(count, 0) FROM censuses
-                              WHERE censuses.division_id = divisions.id
-                              ORDER BY id DESC LIMIT 1) {$direction}"
-                        );
-                    }),
-            ])
-            ->defaultSort('activity_rate', 'desc')
-            ->headerActions([
-                Tables\Actions\Action::make('viewVoice')
-                    ->label('Voice Leaders')
-                    ->icon('heroicon-o-speaker-wave')
-                    ->action(fn () => $this->leaderboardType = 'voice'),
-                Tables\Actions\Action::make('viewRecruiting')
-                    ->label('Top Recruiters')
-                    ->icon('heroicon-o-user-plus')
-                    ->action(fn () => $this->leaderboardType = 'recruiting'),
-            ])
-            ->paginated([5, 10])
-            ->defaultPaginationPageOption(5);
     }
 
     protected function voiceLeaderboard(Table $table): Table
@@ -144,10 +78,6 @@ class DivisionLeaderboardWidget extends BaseWidget
             ])
             ->defaultSort('voice_rate', 'desc')
             ->headerActions([
-                Tables\Actions\Action::make('viewActivity')
-                    ->label('Activity Leaders')
-                    ->icon('heroicon-o-arrow-trending-up')
-                    ->action(fn () => $this->leaderboardType = 'activity'),
                 Tables\Actions\Action::make('viewRecruiting')
                     ->label('Top Recruiters')
                     ->icon('heroicon-o-user-plus')
@@ -192,10 +122,6 @@ class DivisionLeaderboardWidget extends BaseWidget
             ])
             ->defaultSort('recruits_count', 'desc')
             ->headerActions([
-                Tables\Actions\Action::make('viewActivity')
-                    ->label('Activity Leaders')
-                    ->icon('heroicon-o-arrow-trending-up')
-                    ->action(fn () => $this->leaderboardType = 'activity'),
                 Tables\Actions\Action::make('viewVoice')
                     ->label('Voice Leaders')
                     ->icon('heroicon-o-speaker-wave')

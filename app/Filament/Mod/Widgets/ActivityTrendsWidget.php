@@ -29,13 +29,14 @@ class ActivityTrendsWidget extends ChartWidget
         }
 
         $censuses = Census::where('division_id', $division->id)
-            ->orderBy('created_at')
+            ->latest('created_at')
             ->take(30)
-            ->get();
+            ->get()
+            ->reverse()
+            ->values();
 
         $labels = $censuses->map(fn ($c) => $c->created_at->format('M j'))->toArray();
         $population = $censuses->pluck('count')->toArray();
-        $weeklyActive = $censuses->pluck('weekly_active_count')->toArray();
         $weeklyVoice = $censuses->pluck('weekly_voice_count')->toArray();
 
         return [
@@ -45,14 +46,6 @@ class ActivityTrendsWidget extends ChartWidget
                     'data' => $population,
                     'borderColor' => '#3b82f6',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
-                    'fill' => true,
-                    'tension' => 0.3,
-                ],
-                [
-                    'label' => 'Weekly Active',
-                    'data' => $weeklyActive,
-                    'borderColor' => '#10b981',
-                    'backgroundColor' => 'rgba(16, 185, 129, 0.1)',
                     'fill' => true,
                     'tension' => 0.3,
                 ],
