@@ -102,7 +102,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function recordActivity($name, $related)
     {
-        if (!method_exists($related, 'recordActivity')) {
+        if (! method_exists($related, 'recordActivity')) {
             throw new Exception('..');
         }
 
@@ -130,7 +130,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function isRole(string|array $role): bool
     {
-        if (!$this->role instanceof Role) {
+        if (! $this->role instanceof Role) {
             return false;
         }
 
@@ -143,7 +143,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isMember(): bool
     {
-        if (!$member = $this->member) {
+        if (! $member = $this->member) {
             return false;
         }
 
@@ -152,7 +152,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isSquadLeader(): bool
     {
-        if (!$member = $this->member) {
+        if (! $member = $this->member) {
             return false;
         }
 
@@ -161,7 +161,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isPlatoonLeader(): bool
     {
-        if (!$member = $this->member) {
+        if (! $member = $this->member) {
             return false;
         }
 
@@ -175,7 +175,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isDivisionLeader(): bool
     {
-        if (!$member = $this->member) {
+        if (! $member = $this->member) {
             return false;
         }
 

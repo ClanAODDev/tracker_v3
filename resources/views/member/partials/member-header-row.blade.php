@@ -1,4 +1,6 @@
 <tr>
+    {{--checkbox--}}
+    <th class='bulk-select-col'><input type='checkbox' id='select-all-members' title='Select All'></th>
     {{--0--}}
     <th class='col-hidden'><strong>Rank Id</strong></th>
     {{--1--}}
@@ -16,11 +18,15 @@
         <string>Last Promoted</string>
     </th>
     {{--7--}}
-    <th class="col-hidden">Handle</th>
+    <th class='no-search hidden-xs hidden-sm'><strong>Tags</strong></th>
     {{--8--}}
-    <th class="col-hidden">Posts</th>
+    <th class="col-hidden">Handle</th>
     {{--9--}}
-    <th class="col-hidden">Member Id</th>
+    <th class="col-hidden">Posts</th>
     {{--10--}}
+    <th class="col-hidden">Member Id</th>
+    {{--11--}}
     <th class='col-hidden'><strong>Discord Activity Dates</strong></th>
+    {{--12--}}
+    <th class='col-hidden'><strong>Tag IDs</strong></th>
 </tr>

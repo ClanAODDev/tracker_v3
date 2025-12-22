@@ -7,9 +7,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Tables\Actions\BulkAction;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\DB;
 
 class PartTimeMemberCleanupAction
@@ -49,7 +47,7 @@ class PartTimeMemberCleanupAction
 
     private static function runCleanupForMembers(iterable $members, bool $persist): array
     {
-        $checked  = 0;
+        $checked = 0;
         $affected = 0;
         $detached = 0;
 
@@ -81,10 +79,10 @@ class PartTimeMemberCleanupAction
     private static function notifySummary(array $summary, bool $persist): void
     {
         $mode = $persist ? 'Applied' : 'Dry run';
-        $body = implode("<br />", [
+        $body = implode('<br />', [
             "{$mode} part-time cleanup:",
             "- Assignments scanned: {$summary['checked']}",
-            "- Excessive entries " . ($persist ? 'removed' : 'found') . ": {$summary['detached']}",
+            '- Excessive entries ' . ($persist ? 'removed' : 'found') . ": {$summary['detached']}",
         ]);
 
         Notification::make()

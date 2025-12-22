@@ -52,6 +52,7 @@ elixir(function (mix) {
   mix.webpack("recruiting.js");
   mix.webpack("training.js");
   mix.webpack("voice.js");
+  mix.webpack("member-tags.js");
 });
 
 

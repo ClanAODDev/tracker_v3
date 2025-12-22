@@ -93,11 +93,11 @@ class DivisionRepository
     }
 
     /**
-     * @param string      $divisionId
-     * @param string      $startDate   YYYY-MM-DD
-     * @param string|null $endDate     YYYY-MM-DD (optional)
+     * @param  string  $divisionId
+     * @param  string  $startDate  YYYY-MM-DD
+     * @param  string|null  $endDate  YYYY-MM-DD (optional)
      */
-    public function recruitsLast6Months($divisionId, $startDate, string $endDate = null)
+    public function recruitsLast6Months($divisionId, $startDate, ?string $endDate = null)
     {
         $end = $endDate ?? now()->endOfMonth()->toDateString();
 
@@ -147,5 +147,4 @@ class DivisionRepository
             ->orderBy('bucket')
             ->get();
     }
-
 }

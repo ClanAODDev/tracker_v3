@@ -241,6 +241,13 @@ class Member extends Model
         return $this->belongsToMany(Handle::class)->withPivot('value');
     }
 
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(DivisionTag::class, 'member_tag')
+            ->withPivot('assigned_by')
+            ->withTimestamps();
+    }
+
     /**
      * @return bool
      */

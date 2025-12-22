@@ -1,4 +1,20 @@
+@php
+    $user = auth()->user();
+    $visibleMemberTags = $member->tags->filter(function ($tag) use ($user) {
+        if (!$user) {
+            return $tag->visibility === \App\Enums\TagVisibility::PUBLIC;
+        }
+        if ($user->isRole(['admin', 'sr_ldr'])) {
+            return true;
+        }
+        if ($user->isRole('officer')) {
+            return in_array($tag->visibility, [\App\Enums\TagVisibility::PUBLIC, \App\Enums\TagVisibility::OFFICERS]);
+        }
+        return $tag->visibility === \App\Enums\TagVisibility::PUBLIC;
+    });
+@endphp
 <tr role="row" class="{{ ($member->leave) ? 'text-muted' : null }}">
+    <td class="bulk-select-col"><input type="checkbox" class="member-checkbox" value="{{ $member->clan_id }}"></td>
     <td class="col-hidden">{{ $member->rank }}</td>
     <td class="col-hidden">{{ $member->last_activity }}</td>
     <td>
@@ -26,6 +42,11 @@
                     </span>
     </td>
     <td class="text-center">{{ $member->last_promoted_at ?? 'Never' }}</td>
+    <td class="hidden-xs hidden-sm table-tags-cell">
+        @foreach($visibleMemberTags as $tag)
+            <span class="badge table-tag tag-visibility-{{ $tag->visibility->value }}" title="{{ $tag->division?->name ?? 'Global' }}">{{ $tag->name }}</span>
+        @endforeach
+    </td>
     <td class="col-hidden">
         @if ($member->handle)
             @if ($member->handle->url)
@@ -46,4 +67,5 @@
         {{ $member->clan_id }}
     </td>
     <td class="col-hidden">{{ $member->last_voice_activity }}</td>
+    <td class="col-hidden">{{ $member->tags->pluck('id')->join(',') }}</td>
 </tr>

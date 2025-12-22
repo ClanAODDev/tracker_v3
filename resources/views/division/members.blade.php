@@ -25,6 +25,7 @@
                     </div>
                     <div class='panel-body border-bottom'>
                         <div id='playerFilter'></div>
+                        @include('member.partials.tag-filter')
                         @include ('member.partials.members-table-toggle')
                     </div>
                     <div class="table-responsive">

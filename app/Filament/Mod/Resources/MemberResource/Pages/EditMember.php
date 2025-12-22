@@ -11,7 +11,6 @@ use App\Models\Note;
 use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -67,7 +66,7 @@ class EditMember extends EditRecord
                 ->label('View Profile')
                 ->outlined()
                 ->icon('heroicon-o-eye')
-                ->url(fn($record) => route('member', $record->getUrlParams()))
+                ->url(fn ($record) => route('member', $record->getUrlParams()))
                 ->openUrlInNewTab(),
 
             Action::make('remove_member')
@@ -80,11 +79,11 @@ class EditMember extends EditRecord
                         ->label('Reason for Removal')
                         ->required(),
                 ])
-                ->hidden(fn(): bool => ! $this->record->division_id)
+                ->hidden(fn (): bool => ! $this->record->division_id)
                 ->action(function (Member $member, array $data) {
                     Note::create([
                         'type' => 'negative',
-                        'body' => 'Member removal:'.$data['removal_reason'],
+                        'body' => 'Member removal:' . $data['removal_reason'],
                         'author_id' => auth()->id(),
                         'member_id' => $member->id,
                     ]);

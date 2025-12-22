@@ -10,7 +10,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -73,7 +72,7 @@ class AwardResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(fn(Award $record) => $record->withCount('recipients'))
+            ->query(fn (Award $record) => $record->withCount('recipients'))
             ->columns([
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('name')
@@ -101,7 +100,7 @@ class AwardResource extends Resource
             ])->defaultSort('display_order')
             ->filters([
                 Tables\Filters\Filter::make('is_active')
-                    ->query(fn(Builder $query): Builder => $query->where('active', true)),
+                    ->query(fn (Builder $query): Builder => $query->where('active', true)),
                 Tables\Filters\SelectFilter::make('division')
                     ->relationship('division', 'name')
                     ->multiple(),
@@ -120,7 +119,7 @@ class AwardResource extends Resource
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data) {
-                            $records->each(fn($record) => $record->update(['division_id' => $data['division_id']]));
+                            $records->each(fn ($record) => $record->update(['division_id' => $data['division_id']]));
                         })
                         ->color('primary')
                         ->icon('heroicon-o-circle-stack')
@@ -128,7 +127,7 @@ class AwardResource extends Resource
                 ]),
             ])->filters([
                 Tables\Filters\Filter::make('is_active_division')
-                    ->query(fn($query) => $query->active()),
+                    ->query(fn ($query) => $query->active()),
                 SelectFilter::make('by division')->relationship('division', 'name'),
 
             ]);

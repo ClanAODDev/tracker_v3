@@ -16,7 +16,7 @@ class CleanupTenureAwards
         20 => 140,
         15 => 139,
         10 => 19,
-        5  => 18,
+        5 => 18,
     ];
 
     /**
@@ -61,12 +61,12 @@ class CleanupTenureAwards
 
             [$eligibleAwardId, $milestone] = self::determineEligibleAward(self::TENURE_AWARD_IDS, $years);
 
-            $missing    += self::processMissingAwards($member, $eligibleAwardId, $milestone, $persist);
-            $invalid    += self::processInvalidAwards($member, self::TENURE_AWARD_IDS, $years, $persist);
+            $missing += self::processMissingAwards($member, $eligibleAwardId, $milestone, $persist);
+            $invalid += self::processInvalidAwards($member, self::TENURE_AWARD_IDS, $years, $persist);
             $extraneous += self::processExtraneousAwards($member, self::TENURE_AWARD_IDS, $milestone, $persist);
         }
 
-        return compact('missing','invalid','extraneous');
+        return compact('missing', 'invalid', 'extraneous');
     }
 
     private static function determineEligibleAward(array $awards, int $years): array
@@ -77,6 +77,7 @@ class CleanupTenureAwards
                 return [$awardId, $milestone];
             }
         }
+
         return [null, null];
     }
 
@@ -94,21 +95,21 @@ class CleanupTenureAwards
 
         if ($joinDate->month === $now->month) {
             [$nextAwardId, $nextMilestone] = self::determineEligibleAward(self::TENURE_AWARD_IDS, $years + 1);
-            if ($nextAwardId && $nextMilestone > (int)$milestone) {
+            if ($nextAwardId && $nextMilestone > (int) $milestone) {
                 $candidates[] = [$nextAwardId, $nextMilestone];
             }
         }
 
         foreach ($candidates as [$awardId, $awardYears]) {
-            $has = MemberAward::where('member_id',$member->clan_id)
-                ->where('award_id',$awardId)
+            $has = MemberAward::where('member_id', $member->clan_id)
+                ->where('award_id', $awardId)
                 ->exists();
 
             if (! $has) {
                 if ($persist) {
                     MemberAward::firstOrCreate([
                         'member_id' => $member->clan_id,
-                        'award_id'  => $awardId,
+                        'award_id' => $awardId,
                     ], [
                         'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
                         'approved' => true,
@@ -128,27 +129,32 @@ class CleanupTenureAwards
         $upcoming = null;
 
         if (Carbon::parse($member->join_date)->month === now()->month) {
-            [$nextAwardId, $nextMilestone] = self::determineEligibleAward($tenureAwards, $years+1);
-            if ($nextAwardId && $nextMilestone > (int)$milestone) {
+            [$nextAwardId, $nextMilestone] = self::determineEligibleAward($tenureAwards, $years + 1);
+            if ($nextAwardId && $nextMilestone > (int) $milestone) {
                 $upcoming = $nextAwardId;
             }
         }
 
-        $awards = MemberAward::where('member_id',$member->clan_id)
-            ->whereIn('award_id',array_values($tenureAwards))
+        $awards = MemberAward::where('member_id', $member->clan_id)
+            ->whereIn('award_id', array_values($tenureAwards))
             ->get();
 
         foreach ($awards as $award) {
-            if ($award->award_id === $upcoming) continue;
+            if ($award->award_id === $upcoming) {
+                continue;
+            }
 
             $valid = false;
-            foreach ($tenureAwards as $yrs=>$awardId) {
-                if ($award->award_id===$awardId && $years >= $yrs) {
-                    $valid = true; break;
+            foreach ($tenureAwards as $yrs => $awardId) {
+                if ($award->award_id === $awardId && $years >= $yrs) {
+                    $valid = true;
+                    break;
                 }
             }
             if (! $valid) {
-                if ($persist) $award->delete();
+                if ($persist) {
+                    $award->delete();
+                }
                 $count++;
             }
         }
@@ -158,7 +164,9 @@ class CleanupTenureAwards
 
     private static function processExtraneousAwards($member, array $tenureAwards, ?int $milestone, bool $persist): int
     {
-        if (! $milestone) return 0;
+        if (! $milestone) {
+            return 0;
+        }
 
         $joinDate = Carbon::parse($member->join_date);
         $now = now();
@@ -166,8 +174,10 @@ class CleanupTenureAwards
 
         $effective = $milestone;
         if ($joinDate->month === $now->month) {
-            [, $nextMilestone] = self::determineEligibleAward($tenureAwards, $years+1);
-            if ($nextMilestone > $effective) $effective = $nextMilestone;
+            [, $nextMilestone] = self::determineEligibleAward($tenureAwards, $years + 1);
+            if ($nextMilestone > $effective) {
+                $effective = $nextMilestone;
+            }
         }
 
         $keep = [$tenureAwards[$milestone]];
@@ -175,13 +185,15 @@ class CleanupTenureAwards
             $keep[] = $tenureAwards[$effective];
         }
 
-        $toRemove = MemberAward::where('member_id',$member->clan_id)
-            ->whereIn('award_id',array_diff($tenureAwards,$keep))
+        $toRemove = MemberAward::where('member_id', $member->clan_id)
+            ->whereIn('award_id', array_diff($tenureAwards, $keep))
             ->get();
 
         $removed = 0;
         foreach ($toRemove as $award) {
-            if ($persist) $award->delete();
+            if ($persist) {
+                $award->delete();
+            }
             $removed++;
         }
 
@@ -191,11 +203,11 @@ class CleanupTenureAwards
     private static function notifySummary(array $summary, bool $persist): void
     {
         $mode = $persist ? 'Applied' : 'Dry-run';
-        $body = implode("<br />", [
+        $body = implode('<br />', [
             "{$mode} tenure award corrections:",
-            "- Missing awards ".($persist?'added':'found').": {$summary['missing']}",
-            "- Invalid awards ".($persist?'removed':'found').": {$summary['invalid']}",
-            "- Extraneous awards ".($persist?'removed':'found').": {$summary['extraneous']}",
+            '- Missing awards ' . ($persist ? 'added' : 'found') . ": {$summary['missing']}",
+            '- Invalid awards ' . ($persist ? 'removed' : 'found') . ": {$summary['invalid']}",
+            '- Extraneous awards ' . ($persist ? 'removed' : 'found') . ": {$summary['extraneous']}",
         ]);
 
         Notification::make()

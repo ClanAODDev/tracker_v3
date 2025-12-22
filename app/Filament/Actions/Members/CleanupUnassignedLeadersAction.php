@@ -102,6 +102,7 @@ class CleanupUnassignedLeadersAction extends Action
     {
         $c2 = Member::unassignedSquadLeaders()->count();
         $c3 = Member::unassignedPlatoonLeaders()->count();
+
         return [$c2, $c3];
     }
 

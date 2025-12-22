@@ -100,4 +100,12 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     });
 
     Route::post('private-message', 'PmController@create')->name('private-message.create');
+    Route::post('bulk-tags', 'BulkTagController@create')->name('bulk-tags.create');
+    Route::post('bulk-tags/store', 'BulkTagController@store')->name('bulk-tags.store');
+    Route::post('bulk-tags/create-tag', 'BulkTagController@createDivisionTag')->name('bulk-tags.create-tag');
+    Route::get('member-tags/{member}', 'BulkTagController@edit')->name('member-tags.edit');
+    Route::get('member-tags/{member}/json', 'BulkTagController@getTags')->name('member-tags.get');
+    Route::post('member-tags/{member}/add', 'BulkTagController@addTag')->name('member-tags.add');
+    Route::post('member-tags/{member}/remove', 'BulkTagController@removeTag')->name('member-tags.remove');
+    Route::post('member-tags/{member}/create', 'BulkTagController@createTag')->name('member-tags.create');
 });
