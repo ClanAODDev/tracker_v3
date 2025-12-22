@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Widgets;
 
+use App\Enums\TagVisibility;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use Filament\Tables;
@@ -66,6 +67,24 @@ class TagUsageWidget extends BaseWidget
                     ->default('Global')
                     ->badge()
                     ->color(fn (DivisionTag $record) => $record->division_id ? 'info' : 'gray'),
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('id')
+                    ->label('Tag')
+                    ->options(fn () => DivisionTag::forDivision($this->getDivision()?->id)
+                        ->visibleTo()
+                        ->orderBy('name')
+                        ->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload(),
+
+                Tables\Filters\SelectFilter::make('visibility')
+                    ->label('Visibility')
+                    ->options([
+                        TagVisibility::PUBLIC->value => TagVisibility::PUBLIC->label(),
+                        TagVisibility::OFFICERS->value => TagVisibility::OFFICERS->label(),
+                        TagVisibility::SENIOR_LEADERS->value => TagVisibility::SENIOR_LEADERS->label(),
+                    ]),
             ])
             ->paginated([5, 10, 25])
             ->defaultPaginationPageOption(5)
