@@ -374,7 +374,7 @@ let Platoon = Platoon || {};
                     return true;
                 }
 
-                var memberTags = data[12] ? data[12].split(',') : [];
+                var memberTags = data[13] ? data[13].split(',') : [];
 
                 for (var i = 0; i < selectedTags.length; i++) {
                     if (memberTags.indexOf(selectedTags[i]) !== -1) {
