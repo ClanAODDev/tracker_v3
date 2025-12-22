@@ -75,7 +75,8 @@ class IngameHandles extends Page implements HasForms
         return $form
             ->statePath('formData')
             ->schema([
-                Forms\Components\Section::make('Handles')
+                Forms\Components\Section::make('Your In-Game Handles')
+                    ->description('Add your usernames for different games and platforms so other members can find and play with you.')
                     ->columns(1)
                     ->schema([
                         IngameHandlesForm::make(),
