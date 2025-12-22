@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Division;
+use App\Models\DivisionTag;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -14,6 +15,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Policies\ApiTokenPolicy;
 use App\Policies\DivisionPolicy;
+use App\Policies\DivisionTagPolicy;
 use App\Policies\LeavePolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MemberRequestPolicy;
@@ -36,6 +38,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Division::class => DivisionPolicy::class,
+        DivisionTag::class => DivisionTagPolicy::class,
         Leave::class => LeavePolicy::class,
         Member::class => MemberPolicy::class,
         MemberRequest::class => MemberRequestPolicy::class,

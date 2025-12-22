@@ -33,8 +33,6 @@ class GetDivisionInfo
 
     /**
      * Fetches member data per division.
-     *
-     * @return array
      */
     protected function fetchData(): array
     {
@@ -57,8 +55,6 @@ class GetDivisionInfo
      * forum data dump comes as flat array
      * so we need to build an associative
      * array from the column sort data.
-     *
-     * @return array
      */
     protected function prepareData($data): array
     {

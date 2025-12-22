@@ -128,7 +128,7 @@ class DivisionController extends Controller
     public function members(Division $division)
     {
         $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags',
         ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());

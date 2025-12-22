@@ -5,7 +5,6 @@ namespace App\Console;
 use App\Console\Commands\DivisionCensus;
 use App\Console\Commands\FetchApplicationFeeds;
 use App\Console\Commands\MemberSync;
-use App\Console\Commands\PartTimeMemberCleanup;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

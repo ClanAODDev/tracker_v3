@@ -31,7 +31,7 @@ class SquadController extends Controller
     public function show(Division $division, Platoon $platoon, Squad $squad)
     {
         $members = $squad->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags',
         ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());

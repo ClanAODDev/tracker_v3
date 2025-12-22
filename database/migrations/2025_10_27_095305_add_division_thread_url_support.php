@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -42,7 +40,6 @@ JOIN (
 ) x ON x.id = d.id
 SET d.settings = JSON_SET(d.settings, '$.recruiting_threads', x.new_threads);
 SQL);
-
 
     }
 };

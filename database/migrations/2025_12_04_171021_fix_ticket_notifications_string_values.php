@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -18,7 +16,7 @@ return new class extends Migration
                     $settings['ticket_notifications'] = true;
                 } elseif ($value === 'off' || $value === '0' || $value === 0) {
                     $settings['ticket_notifications'] = false;
-                } elseif (!is_bool($value)) {
+                } elseif (! is_bool($value)) {
                     $settings['ticket_notifications'] = true;
                 }
 
@@ -28,7 +26,5 @@ return new class extends Migration
         });
     }
 
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 };

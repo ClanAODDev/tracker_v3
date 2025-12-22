@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Member;
 use App\Services\AODForumService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
