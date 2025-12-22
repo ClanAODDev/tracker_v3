@@ -44,7 +44,7 @@
             >
                 @foreach ($visibleTags as $tag)
                     <span class="badge member-tag tag-visibility-{{ $tag->visibility->value }}"
-                          title="{{ $tag->division->name }}" data-tag-id="{{ $tag->id }}"
+                          title="{{ $tag->division?->name }}" data-tag-id="{{ $tag->id }}"
                           data-visibility="{{ $tag->visibility->value }}">
                         {{ $tag->name }}
                         @can('assign', [App\Models\DivisionTag::class, $member])
