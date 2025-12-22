@@ -41,12 +41,20 @@ window.Vue.prototype.authorize = function (handler) {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = require('axios');
+var axiosLib = require('axios');
+window.axios = axiosLib.default || axiosLib;
 
-window.axios.defaults.headers.common = {
-  'X-CSRF-TOKEN': window.Laravel.csrfToken,
-  'X-Requested-With': 'XMLHttpRequest'
-};
+if (window.axios.defaults && window.axios.defaults.headers && window.axios.defaults.headers.common) {
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
+  window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+} else {
+  window.axios.defaults = window.axios.defaults || {};
+  window.axios.defaults.headers = window.axios.defaults.headers || {};
+  window.axios.defaults.headers.common = {
+    'X-CSRF-TOKEN': window.Laravel.csrfToken,
+    'X-Requested-With': 'XMLHttpRequest'
+  };
+}
 
 window.toastr.options = {
   'preventDuplicates': true,

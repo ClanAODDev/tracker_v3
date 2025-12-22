@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Division;
 
-use App\Models\Activity;
 use App\Models\Division;
 use App\Models\RankAction;
 use App\Models\User;
@@ -30,7 +29,7 @@ class ReportController extends \App\Http\Controllers\Controller
     public function retentionReport(Division $division)
     {
         $defaultStart = now()->subMonthsNoOverflow(6)->startOfMonth();
-        $defaultEnd   = now()->endOfMonth();
+        $defaultEnd = now()->endOfMonth();
 
         $start = request()->filled('start')
             ? Carbon::parse(request('start'))->startOfDay()
@@ -62,12 +61,13 @@ class ReportController extends \App\Http\Controllers\Controller
         $members = $activityCounts
             ->map(function ($row) use ($users) {
                 $user = $users->get($row->user_id);
-                if (!$user || !$user->member) {
+                if (! $user || ! $user->member) {
                     return null;
                 }
+
                 return [
                     'recruits' => (int) $row->recruits,
-                    'member'   => $user->member,
+                    'member' => $user->member,
                 ];
             })
             ->filter()

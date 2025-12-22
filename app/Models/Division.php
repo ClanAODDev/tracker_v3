@@ -425,6 +425,11 @@ class Division extends Model
         return $this->hasMany(Award::class);
     }
 
+    public function tags(): HasMany
+    {
+        return $this->hasMany(DivisionTag::class)->orderBy('name');
+    }
+
     public function memberAwards(): HasManyThrough
     {
         return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id');

@@ -13,6 +13,11 @@ class ListMembers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('manage_tags')
+                ->label('Manage Tags')
+                ->icon('heroicon-o-tag')
+                ->url(MemberResource::getUrl('tags'))
+                ->color('gray'),
             Actions\CreateAction::make(),
         ];
     }

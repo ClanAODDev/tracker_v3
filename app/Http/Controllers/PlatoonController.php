@@ -46,6 +46,7 @@ class PlatoonController extends Controller
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'leave',
+            'tags',
         ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());

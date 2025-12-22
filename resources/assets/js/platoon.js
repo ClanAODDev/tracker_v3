@@ -4,12 +4,16 @@ let Platoon = Platoon || {};
 
     Platoon = {
 
+        dataTable: null,
+
         setup: function () {
             this.handleMembers();
             this.handleSquadMembers();
             this.handleForumActivityChart();
             this.handleVoiceActivityChart();
             this.initAutocomplete();
+            this.initTagFilter();
+            this.initBulkTags();
         },
 
         handleForumActivityChart: function () {
@@ -157,7 +161,8 @@ let Platoon = Platoon || {};
              * Handle platoons, squads, members tables
              */
             if ($('.members-table').length) {
-                var dataTable = $('table.members-table').DataTable({
+                var self = this;
+                self.dataTable = $('table.members-table').DataTable({
                     'initComplete': function (settings, json) {
                         setTimeout(function () {
                             $('.ld-loading').removeClass('ld-loading');
@@ -165,28 +170,41 @@ let Platoon = Platoon || {};
                     },
                     autoWidth: true, bInfo: false,
                     oLanguage: {
-                        sLengthMenu: '' // _MENU_
+                        sLengthMenu: ''
                     },
                     columnDefs: [{
-                        orderable: false,
-                        className: 'select-checkbox',
-                        targets: 0
+                        targets: 0, visible: false, orderable: false, searchable: false
+                    }, {
+                        targets: 8, visible: false
                     }, {
                         targets: 'no-search', searchable: false
                     }, {
                         targets: 'col-hidden', visible: false
                     }, {
-                        // sort rank by rank id
-                        'iDataSort': 0, 'aTargets': [3]
+                        'iDataSort': 1, 'aTargets': [4]
                     }, {
-                        // sort discord activity by date
-                        'iDataSort': 10, 'aTargets': [5]
+                        'iDataSort': 12, 'aTargets': [6]
                     }],
-                    select: {
-                        style: 'os',
-                        selector: 'td:first-child',
+                    stateSave: true,
+                    stateSaveParams: function(settings, data) {
+                        data.columns[0].visible = false;
+                        data.columns[3].visible = true;
                     },
-                    stateSave: true, paging: false,
+                    stateLoadParams: function(settings, data) {
+                        data.columns[0].visible = false;
+                        data.columns[3].visible = true;
+                    },
+                    paging: false,
+                });
+
+                self.dataTable.column(0).visible(false);
+
+                var resizeTimer;
+                $(window).on('resize', function() {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(function() {
+                        self.dataTable.columns.adjust().draw();
+                    }, 100);
                 });
 
                 function updateLinkColor(link, column) {
@@ -194,40 +212,127 @@ let Platoon = Platoon || {};
                 }
 
                 $('a.toggle-vis').each(function () {
-                    const column = dataTable.column($(this).data('column'));
+                    var column = self.dataTable.column($(this).data('column'));
                     updateLinkColor(this, column);
                 });
 
                 $('a.toggle-vis').on('click', function (e) {
                     e.preventDefault();
-
-                    const column = dataTable.column($(this).data('column'));
+                    var column = self.dataTable.column($(this).data('column'));
                     column.visible(!column.visible());
                     updateLinkColor(this, column);
                 });
 
-                $('.dataTables_filter input').appendTo('#playerFilter').removeClass('input-sm');
-
-                $('#playerFilter input').attr({
+                var $searchInput = $('.dataTables_filter input').removeClass('input-sm');
+                $searchInput.attr({
                     'placeholder': 'Search Players',
                     'class': 'form-control'
                 });
 
+                $('#playerFilter').append($searchInput);
                 $('.dataTables_filter label').remove();
+
+                var $tagFilter = $('#tag-filter');
+                if ($tagFilter.length) {
+                    var $tagWrapper = $('<div class="tag-filter-wrapper"></div>');
+                    $tagWrapper.append($tagFilter);
+                    $('#playerFilter').append($tagWrapper);
+                }
+
+                var $bulkToggle = $('<button type="button" class="btn btn-default bulk-mode-toggle"><i class="fa fa-check-square-o"></i> Bulk Mode</button>');
+                $('#playerFilter').append($bulkToggle);
 
                 $('.no-sort').removeClass('sorting');
 
-                // handle PM selection
-                dataTable.on("select", function (e, t, a, d) {
-                    let l = dataTable.rows($(".selected")).data().toArray().map(function (e) {
-                        // console.log(e);
-                        return e[9]
-                    });
-                    if (l.length >= 2) {
-                        $("#selected-data").show(),
-                            $("#selected-data .status-text").text("With selected (" + l.length + ")"),
-                            $("#pm-member-data").val(l);
+                var bulkModeActive = false;
+
+                function toggleBulkMode() {
+                    bulkModeActive = !bulkModeActive;
+                    var checkboxCol = self.dataTable.column(0);
+                    checkboxCol.visible(bulkModeActive);
+
+                    if (bulkModeActive) {
+                        $bulkToggle.addClass('active btn-accent').removeClass('btn-default');
+                        $bulkToggle.html('<i class="fa fa-check-circle"></i> Exit Bulk Mode');
+                        $('.members-table').addClass('bulk-mode');
+                    } else {
+                        $bulkToggle.removeClass('active btn-accent').addClass('btn-default');
+                        $bulkToggle.html('<i class="fa fa-check-square-o"></i> Bulk Mode');
+                        $('.members-table').removeClass('bulk-mode');
+                        $('.member-checkbox, #select-all-members').prop('checked', false);
+                        updateBulkSelection();
                     }
+                }
+
+                $bulkToggle.on('click', function() {
+                    toggleBulkMode();
+                });
+
+                function updateBulkSelection() {
+                    var selected = [];
+                    $('.member-checkbox:checked').each(function() {
+                        selected.push($(this).val());
+                    });
+
+                    if (selected.length >= 2) {
+                        $("#selected-data").css('display', 'block');
+                        $("#selected-data .status-text").text(selected.length + " members selected");
+                        $("#pm-member-data").val(selected);
+                        $("#tag-member-data").val(selected);
+                    } else {
+                        $("#selected-data").hide();
+                        $("#pm-member-data").val('');
+                        $("#tag-member-data").val('');
+                    }
+
+                    var total = $('.member-checkbox').length;
+                    var checked = $('.member-checkbox:checked').length;
+                    $('#select-all-members').prop('checked', checked > 0 && checked === total);
+                    $('#select-all-members').prop('indeterminate', checked > 0 && checked < total);
+                }
+
+                $(document).on('click', '.bulk-action-close', function() {
+                    $('.member-checkbox, #select-all-members').prop('checked', false);
+                    updateBulkSelection();
+                });
+
+                $(document).on('change', '.member-checkbox', function() {
+                    updateBulkSelection();
+                });
+
+                $(document).on('change', '#select-all-members', function() {
+                    var isChecked = $(this).prop('checked');
+                    $('.member-checkbox').prop('checked', isChecked);
+                    updateBulkSelection();
+                });
+
+                var isDragging = false;
+                var dragStartRow = null;
+                var dragCheckState = true;
+
+                $(document).on('mousedown', '.members-table.bulk-mode tbody tr', function(e) {
+                    if ($(e.target).closest('a, button, input, .btn').length) return;
+                    if (e.which !== 1) return;
+
+                    isDragging = true;
+                    dragStartRow = $(this).index();
+                    var $checkbox = $(this).find('.member-checkbox');
+                    dragCheckState = !$checkbox.prop('checked');
+                    $checkbox.prop('checked', dragCheckState);
+                    updateBulkSelection();
+                    e.preventDefault();
+                });
+
+                $(document).on('mouseenter', '.members-table.bulk-mode tbody tr', function() {
+                    if (!isDragging) return;
+                    var $checkbox = $(this).find('.member-checkbox');
+                    $checkbox.prop('checked', dragCheckState);
+                    updateBulkSelection();
+                });
+
+                $(document).on('mouseup', function() {
+                    isDragging = false;
+                    dragStartRow = null;
                 });
             }
 
@@ -245,6 +350,125 @@ let Platoon = Platoon || {};
                     $('#leader_id, #leader').prop('disabled', false);
                 }
             }
+        },
+
+        initTagFilter: function () {
+            var self = this;
+            var $tagFilter = $('#tag-filter');
+
+            if (!$tagFilter.length || !self.dataTable) {
+                return;
+            }
+
+            $tagFilter.select2({
+                placeholder: 'Filter by tag',
+                allowClear: true
+            }).on('change', function () {
+                self.dataTable.draw();
+            });
+
+            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                var selectedTags = $tagFilter.val();
+
+                if (!selectedTags || selectedTags.length === 0) {
+                    return true;
+                }
+
+                var memberTags = data[13] ? data[13].split(',') : [];
+
+                for (var i = 0; i < selectedTags.length; i++) {
+                    if (memberTags.indexOf(selectedTags[i]) !== -1) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+        },
+
+        initBulkTags: function () {
+            var $modal = $('#bulk-tags-modal');
+            if (!$modal.length) return;
+
+            var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+            function getSelectedMemberIds() {
+                return $('#tag-member-data').val() ? $('#tag-member-data').val().split(',') : [];
+            }
+
+            function getSelectedTagIds() {
+                var tagIds = [];
+                $('.bulk-tag-checkbox:checked').each(function() {
+                    tagIds.push($(this).val());
+                });
+                return tagIds;
+            }
+
+            function updateButtonState() {
+                var hasSelectedTags = getSelectedTagIds().length > 0;
+                $('#bulk-assign-tags, #bulk-remove-tags').prop('disabled', !hasSelectedTags);
+            }
+
+            $modal.on('show.bs.modal', function() {
+                var memberCount = getSelectedMemberIds().length;
+                $('#bulk-tags-member-count').text(memberCount + ' member' + (memberCount !== 1 ? 's' : '') + ' selected');
+                $('.bulk-tag-checkbox').prop('checked', false).trigger('change');
+            });
+
+            $(document).on('change', '.bulk-tag-checkbox', function() {
+                var $badge = $(this).siblings('.bulk-tag-badge');
+                if (this.checked) {
+                    $badge.addClass('selected');
+                } else {
+                    $badge.removeClass('selected');
+                }
+                updateButtonState();
+            });
+
+            function bulkTagAction(action) {
+                var memberIds = getSelectedMemberIds();
+                var tagIds = getSelectedTagIds();
+                var url = $modal.data('store-url');
+
+                if (tagIds.length === 0) {
+                    toastr.warning('Please select at least one tag');
+                    return;
+                }
+
+                var $btns = $('#bulk-assign-tags, #bulk-remove-tags');
+                $btns.prop('disabled', true);
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        member_ids: memberIds,
+                        tags: tagIds,
+                        action: action,
+                        _token: csrfToken
+                    },
+                    success: function() {
+                        var msg = action === 'assign' ? 'Tags assigned to ' : 'Tags removed from ';
+                        toastr.success(msg + memberIds.length + ' members');
+                        $modal.modal('hide');
+                        location.reload();
+                    },
+                    error: function() {
+                        toastr.error('Failed to ' + action + ' tags');
+                    },
+                    complete: function() {
+                        updateButtonState();
+                    }
+                });
+            }
+
+            $(document).on('click', '#bulk-assign-tags', function() {
+                bulkTagAction('assign');
+            });
+
+            $(document).on('click', '#bulk-remove-tags', function() {
+                bulkTagAction('remove');
+            });
         },
     };
 })(jQuery);

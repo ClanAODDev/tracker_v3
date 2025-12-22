@@ -7,12 +7,17 @@ use Illuminate\Support\Facades\Http;
 class AODForumService
 {
     private const AGENT = 'AOD Division Tracker';
+
     private const DEFAULT_TOKEN_PARAM = 'authcode2';
+
     private const INFO_URL = 'https://www.clanaod.net/forums/aodinfo.php';
+
     private const MODCP_URL = 'https://www.clanaod.net/forums/modcp/aodmember.php';
+
     private const SUCCESS = 'saved_user_x_successfully';
 
     const REMOVE_FROM_AOD = 'remaod';
+
     const ADD_TO_AOD = 'addaod';
 
     public static function request(string $url, array $options = []): array|string
