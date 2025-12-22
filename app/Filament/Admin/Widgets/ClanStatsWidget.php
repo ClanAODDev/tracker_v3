@@ -39,6 +39,8 @@ class ClanStatsWidget extends BaseWidget
         ])->count();
 
         $populationTrend = $this->getClanPopulationTrend();
+        $voiceTrend = $this->getClanVoiceTrend();
+        $recruitsTrend = $this->getClanRecruitsTrend();
 
         return [
             Stat::make('Total Clan Members', number_format($totalFromCensus))
@@ -50,11 +52,13 @@ class ClanStatsWidget extends BaseWidget
             Stat::make('Clan Weekly Voice', number_format($totalVoice))
                 ->description("{$voicePercent}% voice participation")
                 ->descriptionIcon('heroicon-m-speaker-wave')
+                ->chart($voiceTrend)
                 ->color($voicePercent >= 30 ? 'success' : ($voicePercent >= 15 ? 'warning' : 'danger')),
 
             Stat::make('Recruits This Month', number_format($recruitsThisMonth))
                 ->description($this->getRecruitTrendDescription($recruitsThisMonth, $recruitsLastMonth))
                 ->descriptionIcon($this->getRecruitTrendIcon($recruitsThisMonth, $recruitsLastMonth))
+                ->chart($recruitsTrend)
                 ->color($this->getRecruitTrendColor($recruitsThisMonth, $recruitsLastMonth)),
         ];
     }
@@ -72,6 +76,33 @@ class ClanStatsWidget extends BaseWidget
             ->reverse()
             ->values()
             ->toArray();
+    }
+
+    protected function getClanVoiceTrend(): array
+    {
+        $activeDivisionIds = Division::whereHas('members')->pluck('id');
+
+        return Census::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(weekly_voice_count) as total'))
+            ->whereIn('division_id', $activeDivisionIds)
+            ->groupBy('date')
+            ->orderByDesc('date')
+            ->take(14)
+            ->pluck('total')
+            ->reverse()
+            ->values()
+            ->toArray();
+    }
+
+    protected function getClanRecruitsTrend(): array
+    {
+        $data = [];
+        for ($i = 13; $i >= 0; $i--) {
+            $start = now()->subDays(($i + 1) * 7);
+            $end = now()->subDays($i * 7);
+            $data[] = Member::whereBetween('join_date', [$start, $end])->count();
+        }
+
+        return $data;
     }
 
     protected function getRecruitTrendDescription(int $current, int $previous): string
