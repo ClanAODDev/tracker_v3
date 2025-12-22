@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Widgets;
 
 use App\Models\Census;
+use App\Models\Division;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
@@ -18,11 +19,14 @@ class ClanActivityTrendsWidget extends ChartWidget
 
     protected function getData(): array
     {
+        $activeDivisionIds = Division::whereHas('members')->pluck('id');
+
         $trends = Census::select(
             DB::raw('DATE(created_at) as date'),
             DB::raw('SUM(count) as total_population'),
             DB::raw('SUM(weekly_voice_count) as total_voice')
         )
+            ->whereIn('division_id', $activeDivisionIds)
             ->groupBy('date')
             ->orderByDesc('date')
             ->take(30)
