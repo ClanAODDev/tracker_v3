@@ -9,4 +9,13 @@
         <a class="toggle-vis btn btn-default" href="#" data-column="9">Handle</a>
         <a class="toggle-vis btn btn-default" href="#" data-column="10">Posts</a>
     </div>
+    @if(isset($includeParttimers))
+    <div class="m-t-md btn-group m-l-md">
+        <div class="btn hidden-xs" style="pointer-events: none">Filter</div>
+        <a class="btn {{ $includeParttimers ? 'btn-accent' : 'btn-default' }}"
+           href="{{ request()->fullUrlWithQuery(['parttimers' => $includeParttimers ? null : 1]) }}">
+            <i class="fa fa-users"></i> Include Part-Timers
+        </a>
+    </div>
+    @endif
 </div>

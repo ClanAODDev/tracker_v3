@@ -127,14 +127,28 @@ class DivisionController extends Controller
      */
     public function members(Division $division)
     {
-        $members = $division->members()->with([
+        $includeParttimers = request()->boolean('parttimers');
+
+        $query = $division->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags',
-        ])->get()->sortByDesc('rank');
+        ]);
+
+        if ($includeParttimers) {
+            $parttimeMembers = Member::whereHas('partTimeDivisions', function ($q) use ($division) {
+                $q->where('division_id', $division->id);
+            })->with([
+                'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags', 'division',
+            ])->get();
+
+            $members = $query->get()->merge($parttimeMembers)->sortByDesc('rank');
+        } else {
+            $members = $query->get()->sortByDesc('rank');
+        }
 
         $members = $members->each($this->getMemberHandle());
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
 
-        return view('division.members', compact('division', 'members', 'voiceActivityGraph'));
+        return view('division.members', compact('division', 'members', 'voiceActivityGraph', 'includeParttimers'));
     }
 
     /**

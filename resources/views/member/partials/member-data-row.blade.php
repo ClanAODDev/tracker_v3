@@ -28,6 +28,10 @@
             <span style="color: lightslategrey" title="On Leave"><i class="fa fa-asterisk"></i></span>
         @endif
         {!! $member->present()->coloredName !!}
+        @if (isset($division) && $member->division_id !== $division->id)
+            <span class="text-info" title="Part-Timer (Primary: {{ $member->division?->name ?? 'None' }})"><i
+                        class="fa fa-clock"></i></span>
+        @endif
         <span class="pull-right" title="View Profile">
             <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default btn-xs"><i
                         class="fa fa-search text-accent"></i></a>
@@ -44,7 +48,8 @@
     <td class="text-center">{{ $member->last_promoted_at ?? 'Never' }}</td>
     <td class="hidden-xs hidden-sm table-tags-cell">
         @foreach($visibleMemberTags as $tag)
-            <span class="badge table-tag tag-visibility-{{ $tag->visibility->value }}" title="{{ $tag->division?->name ?? 'Global' }}">{{ $tag->name }}</span>
+            <span class="badge table-tag tag-visibility-{{ $tag->visibility->value }}"
+                  title="{{ $tag->division?->name ?? 'Global' }}">{{ $tag->name }}</span>
         @endforeach
     </td>
     <td class="col-hidden">

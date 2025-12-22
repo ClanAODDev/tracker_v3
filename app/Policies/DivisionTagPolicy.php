@@ -70,14 +70,45 @@ class DivisionTagPolicy
         }
 
         $userMember = $user->member;
-        if (! $userMember || ! $userMember->rank) {
+        if (! $userMember) {
             return false;
         }
 
-        if (! $member->rank) {
+        return $this->memberIsInUserScope($userMember, $member);
+    }
+
+    protected function memberIsInUserScope(Member $userMember, Member $targetMember): bool
+    {
+        $userDivisionId = $userMember->division_id;
+
+        if (! $userDivisionId) {
+            return false;
+        }
+
+        if ($targetMember->division_id === $userDivisionId) {
             return true;
         }
 
-        return $userMember->rank->value > $member->rank->value;
+        return $targetMember->partTimeDivisions()
+            ->where('division_id', $userDivisionId)
+            ->exists();
+    }
+
+    public function getAssignableTags(User $user, Member $member): \Illuminate\Database\Eloquent\Builder
+    {
+        if ($user->isRole('admin')) {
+            return DivisionTag::query()
+                ->visibleTo($user)
+                ->orderBy('name');
+        }
+
+        $userDivisionId = $user->member?->division_id;
+
+        if (! $userDivisionId) {
+            return DivisionTag::query()->whereRaw('1 = 0');
+        }
+
+        return DivisionTag::forDivision($userDivisionId)
+            ->visibleTo($user);
     }
 }
