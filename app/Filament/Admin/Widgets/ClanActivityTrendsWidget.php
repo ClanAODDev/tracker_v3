@@ -9,17 +9,38 @@ use Illuminate\Support\Facades\DB;
 
 class ClanActivityTrendsWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Clan Activity Trends (Last 30 Days)';
-
     protected static ?int $sort = 3;
 
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $maxHeight = '300px';
 
+    public ?string $filter = '30';
+
+    protected function getFilters(): ?array
+    {
+        return [
+            '30' => '30 Days',
+            '90' => '90 Days',
+            '365' => '1 Year',
+        ];
+    }
+
+    public function getHeading(): string
+    {
+        $days = $this->filter ?? '30';
+        $label = match ($days) {
+            '365' => '1 Year',
+            default => "{$days} Days",
+        };
+
+        return "Clan Activity Trends (Last {$label})";
+    }
+
     protected function getData(): array
     {
         $activeDivisionIds = Division::whereHas('members')->pluck('id');
+        $days = (int) ($this->filter ?? 30);
 
         $trends = Census::select(
             DB::raw('DATE(created_at) as date'),
@@ -29,7 +50,7 @@ class ClanActivityTrendsWidget extends ChartWidget
             ->whereIn('division_id', $activeDivisionIds)
             ->groupBy('date')
             ->orderByDesc('date')
-            ->take(30)
+            ->take($days)
             ->get()
             ->reverse()
             ->values();
