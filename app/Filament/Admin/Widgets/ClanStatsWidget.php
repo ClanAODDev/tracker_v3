@@ -15,10 +15,11 @@ class ClanStatsWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $totalMembers = Member::count();
-        $activeDivisions = Division::whereHas('members')->count();
+        $activeDivisionIds = Division::whereHas('members')->pluck('id');
+        $activeDivisions = $activeDivisionIds->count();
 
         $latestCensuses = Census::select('division_id', DB::raw('MAX(id) as id'))
+            ->whereIn('division_id', $activeDivisionIds)
             ->groupBy('division_id')
             ->pluck('id');
 
@@ -26,7 +27,7 @@ class ClanStatsWidget extends BaseWidget
             ->selectRaw('SUM(count) as total_count, SUM(weekly_voice_count) as total_voice')
             ->first();
 
-        $totalFromCensus = $clanStats->total_count ?? $totalMembers;
+        $totalFromCensus = $clanStats->total_count ?? Member::whereIn('division_id', $activeDivisionIds)->count();
         $totalVoice = $clanStats->total_voice ?? 0;
 
         $voicePercent = $totalFromCensus > 0 ? round(($totalVoice / $totalFromCensus) * 100) : 0;
@@ -60,11 +61,16 @@ class ClanStatsWidget extends BaseWidget
 
     protected function getClanPopulationTrend(): array
     {
+        $activeDivisionIds = Division::whereHas('members')->pluck('id');
+
         return Census::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(count) as total'))
+            ->whereIn('division_id', $activeDivisionIds)
             ->groupBy('date')
-            ->orderBy('date')
+            ->orderByDesc('date')
             ->take(14)
             ->pluck('total')
+            ->reverse()
+            ->values()
             ->toArray();
     }
 

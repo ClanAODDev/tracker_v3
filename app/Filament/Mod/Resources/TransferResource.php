@@ -36,9 +36,6 @@ class TransferResource extends Resource
                 Tables\Columns\TextColumn::make('division.name')
                     ->label('To')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member.division.name')
-                    ->label('From')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('member.rank')
                     ->label('Rank')
                     ->sortable()
@@ -141,15 +138,6 @@ class TransferResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    /*Tables\Actions\BulkAction::make(
-                'approve_selected')
-                ->label('Approve Selected')
-                ->icon('heroicon-o-check')
-                ->requiresConfirmation()
-                ->action(function (Collection $records) {
-                    $records->each->approve();
-                }
-            ),*/
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
