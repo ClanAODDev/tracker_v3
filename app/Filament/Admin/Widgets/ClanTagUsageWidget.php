@@ -89,6 +89,17 @@ class ClanTagUsageWidget extends BaseWidget
                     ->badge()
                     ->color('primary'),
             ])
+            ->actions([
+                Tables\Actions\Action::make('viewMembers')
+                    ->label('View Members')
+                    ->icon('heroicon-o-users')
+                    ->modalHeading(fn (DivisionTag $record) => "Members with \"{$record->name}\" tag")
+                    ->modalContent(fn (DivisionTag $record) => view('filament.admin.widgets.tag-members-modal', [
+                        'members' => $record->members()->with('division')->orderBy('name')->get(),
+                    ]))
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Close'),
+            ])
             ->defaultSort('members_count', 'desc')
             ->paginated([10, 25, 50])
             ->defaultPaginationPageOption(10)

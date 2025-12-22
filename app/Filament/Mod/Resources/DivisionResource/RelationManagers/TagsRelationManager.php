@@ -46,6 +46,9 @@ class TagsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                return $query->withoutGlobalScopes();
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()

@@ -80,7 +80,7 @@ class RankDistributionWidget extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
     }
 
     protected function getOptions(): array
@@ -88,8 +88,12 @@ class RankDistributionWidget extends ChartWidget
         return [
             'plugins' => [
                 'legend' => [
-                    'display' => true,
-                    'position' => 'right',
+                    'display' => false,
+                ],
+            ],
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
                 ],
             ],
         ];

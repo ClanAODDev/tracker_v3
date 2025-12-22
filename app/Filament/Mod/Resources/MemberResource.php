@@ -12,9 +12,11 @@ use App\Filament\Mod\Resources\MemberResource\RelationManagers\NotesRelationMana
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\RankActionsRelationManager;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\TransfersRelationManager;
 use App\Models\Division;
+use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Policies\DivisionTagPolicy;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -138,6 +140,38 @@ class MemberResource extends Resource
                         PartTimeDivisionsForm::makeUsingFormModel(),
                     ]),
 
+                Forms\Components\Section::make('Member Tags')
+                    ->id('member-tags')
+                    ->collapsible()
+                    ->collapsed()
+                    ->description('Assign tags to this member for tracking and organization.')
+                    ->visible(function (?Member $record) {
+                        if (! $record) {
+                            return false;
+                        }
+
+                        return auth()->user()->can('assign', [DivisionTag::class, $record]);
+                    })
+                    ->schema([
+                        Forms\Components\CheckboxList::make('tags')
+                            ->relationship('tags', 'name')
+                            ->options(function (?Member $record) {
+                                if (! $record) {
+                                    return [];
+                                }
+
+                                $policy = new DivisionTagPolicy;
+
+                                return $policy->getAssignableTags(auth()->user(), $record)
+                                    ->pluck('name', 'id');
+                            })
+                            ->searchable()
+                            ->bulkToggleable()
+                            ->columns(3)
+                            ->gridDirection('row')
+                            ->extraAttributes(['class' => 'max-h-64 overflow-y-auto']),
+                    ]),
+
                 Forms\Components\Section::make('In-game Handles')
                     ->id('ingame-handles')
                     ->description('In-game handles and alts for this member.')
@@ -230,6 +264,7 @@ class MemberResource extends Resource
                             ->preload()
                             ->default(optional(auth()->user()->member)->division_id)
                             ->live()
+                            ->visible(fn () => auth()->user()->isRole('admin'))
                             ->afterStateUpdated(function (callable $set) {
 
                                 $set('platoon', []);
@@ -239,7 +274,7 @@ class MemberResource extends Resource
                         Select::make('platoon')
                             ->label('Platoon')
                             ->options(function (callable $get) {
-                                $divisionId = $get('division');
+                                $divisionId = $get('division') ?? auth()->user()->member?->division_id;
                                 if (! $divisionId) {
                                     return [];
                                 }
@@ -252,7 +287,6 @@ class MemberResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->disabled(fn (callable $get) => empty($get('division')))
                             ->afterStateUpdated(function (callable $set) {
                                 $set('squad', []);
                             }),
@@ -295,7 +329,7 @@ class MemberResource extends Resource
                     ->indicateUsing(function (array $data) {
                         $parts = [];
 
-                        if (! empty($data['division'])) {
+                        if (! empty($data['division']) && auth()->user()->isRole('admin')) {
                             if ($name = Division::whereKey($data['division'])->value('name')) {
                                 $parts[] = "Division: {$name}";
                             }
@@ -344,13 +378,45 @@ class MemberResource extends Resource
                     })
                     ->label('Has Active Division')
                     ->default(),
+
+                Tables\Filters\SelectFilter::make('member_scope')
+                    ->label('Show Members')
+                    ->options([
+                        'division' => 'My Division Only',
+                        'with_parttimers' => 'Include Part-Timers',
+                    ])
+                    ->default('division')
+                    ->visible(fn () => ! auth()->user()->isRole('admin'))
+                    ->query(function (Builder $query, array $data) {
+                        $user = auth()->user();
+                        if ($user->isRole('admin')) {
+                            return;
+                        }
+
+                        $userDivisionId = $user->member?->division_id;
+                        if (! $userDivisionId) {
+                            return;
+                        }
+
+                        $value = $data['value'] ?? 'division';
+
+                        if ($value === 'with_parttimers') {
+                            $query->where(function (Builder $q) use ($userDivisionId) {
+                                $q->where('division_id', $userDivisionId)
+                                    ->orWhereHas('partTimeDivisions', function (Builder $pq) use ($userDivisionId) {
+                                        $pq->where('division_id', $userDivisionId);
+                                    });
+                            });
+                        } else {
+                            $query->where('division_id', $userDivisionId);
+                        }
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    //                    Tables\Actions\DeleteBulkAction::make(),
                     BulkAction::make('member_transfer')
                         ->label('Transfer member(s)')
                         ->modalWidth('lg')
@@ -385,7 +451,10 @@ class MemberResource extends Resource
                                 ->searchable()
                                 ->disabled(fn (callable $get) => ! $get('platoon_id')),
                         ])
-                        ->before(function (Collection $records, BulkAction $action): bool {
+                        ->beforeFormFilled(function (Collection $records, BulkAction $action): void {
+                            $user = auth()->user();
+                            $userDivisionId = $user->member?->division_id;
+
                             if ($records->pluck('division_id')->unique()->count() > 1) {
                                 Notification::make()
                                     ->danger()
@@ -397,7 +466,20 @@ class MemberResource extends Resource
                                 $action->cancel();
                             }
 
-                            return true;
+                            if (! $user->isRole('admin') && $userDivisionId) {
+                                $partTimersSelected = $records->contains(fn ($member) => $member->division_id !== $userDivisionId);
+
+                                if ($partTimersSelected) {
+                                    Notification::make()
+                                        ->danger()
+                                        ->title('Cannot transfer part-timers')
+                                        ->body('You can only transfer members whose primary division is your division')
+                                        ->persistent()
+                                        ->send();
+
+                                    $action->cancel();
+                                }
+                            }
                         })
                         ->action(function (Collection $records, array $data): void {
                             $records->each->update([
@@ -406,6 +488,74 @@ class MemberResource extends Resource
                             ]);
                         })
                         ->color('primary'),
+
+                    BulkAction::make('assign_tags')
+                        ->label('Assign Tags')
+                        ->icon('heroicon-o-tag')
+                        ->visible(fn () => auth()->user()->can('assign', DivisionTag::class))
+                        ->form([
+                            Select::make('tags')
+                                ->label('Tags to Assign')
+                                ->multiple()
+                                ->options(fn () => DivisionTag::forDivision(auth()->user()->member?->division_id)
+                                    ->assignableBy()
+                                    ->pluck('name', 'id'))
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $user = auth()->user();
+                            $assignerId = $user->member?->id;
+
+                            foreach ($records as $member) {
+                                if (! $user->can('assign', [DivisionTag::class, $member])) {
+                                    continue;
+                                }
+
+                                $pivotData = [];
+                                foreach ($data['tags'] as $tagId) {
+                                    $pivotData[$tagId] = ['assigned_by' => $assignerId];
+                                }
+                                $member->tags()->syncWithoutDetaching($pivotData);
+                            }
+
+                            Notification::make()
+                                ->title('Tags assigned successfully')
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
+
+                    BulkAction::make('remove_tags')
+                        ->label('Remove Tags')
+                        ->icon('heroicon-o-x-mark')
+                        ->color('danger')
+                        ->visible(fn () => auth()->user()->can('assign', DivisionTag::class))
+                        ->form([
+                            Select::make('tags')
+                                ->label('Tags to Remove')
+                                ->multiple()
+                                ->options(fn () => DivisionTag::forDivision(auth()->user()->member?->division_id)
+                                    ->assignableBy()
+                                    ->pluck('name', 'id'))
+                                ->required(),
+                        ])
+                        ->action(function (Collection $records, array $data): void {
+                            $user = auth()->user();
+
+                            foreach ($records as $member) {
+                                if (! $user->can('assign', [DivisionTag::class, $member])) {
+                                    continue;
+                                }
+
+                                $member->tags()->detach($data['tags']);
+                            }
+
+                            Notification::make()
+                                ->title('Tags removed successfully')
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
@@ -425,7 +575,6 @@ class MemberResource extends Resource
         return [
             'index' => Pages\ListMembers::route('/'),
             'edit' => Pages\EditMember::route('/{record}/edit'),
-            'tags' => Pages\ManageMemberTags::route('/tags'),
         ];
     }
 }
