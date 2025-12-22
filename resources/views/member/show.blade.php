@@ -20,19 +20,7 @@
         @endslot
         @slot ('subheading')
             @php
-                $user = auth()->user();
-                $visibleTags = $member->tags->filter(function ($tag) use ($user) {
-                    if (!$user) {
-                        return $tag->visibility === \App\Enums\TagVisibility::PUBLIC;
-                    }
-                    if ($user->isRole(['admin', 'sr_ldr'])) {
-                        return true;
-                    }
-                    if ($user->isRole('officer')) {
-                        return in_array($tag->visibility, [\App\Enums\TagVisibility::PUBLIC, \App\Enums\TagVisibility::OFFICERS]);
-                    }
-                    return $tag->visibility === \App\Enums\TagVisibility::PUBLIC;
-                });
+                $visibleTags = $member->tags->filter(fn ($tag) => $tag->isVisibleTo());
             @endphp
             <div class="member-tags" id="member-tags-display"
                  @can('assign', [App\Models\DivisionTag::class, $member])

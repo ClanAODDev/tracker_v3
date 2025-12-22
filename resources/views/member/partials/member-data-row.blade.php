@@ -1,17 +1,5 @@
 @php
-    $user = auth()->user();
-    $visibleMemberTags = $member->tags->filter(function ($tag) use ($user) {
-        if (!$user) {
-            return $tag->visibility === \App\Enums\TagVisibility::PUBLIC;
-        }
-        if ($user->isRole(['admin', 'sr_ldr'])) {
-            return true;
-        }
-        if ($user->isRole('officer')) {
-            return in_array($tag->visibility, [\App\Enums\TagVisibility::PUBLIC, \App\Enums\TagVisibility::OFFICERS]);
-        }
-        return $tag->visibility === \App\Enums\TagVisibility::PUBLIC;
-    });
+    $visibleMemberTags = $member->tags->filter(fn ($tag) => $tag->isVisibleTo());
 @endphp
 <tr role="row" class="{{ ($member->leave) ? 'text-muted' : null }}">
     <td class="bulk-select-col"><input type="checkbox" class="member-checkbox" value="{{ $member->clan_id }}"></td>

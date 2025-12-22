@@ -55,6 +55,25 @@ class DivisionTag extends Model
         return $this->division_id === null;
     }
 
+    public function isVisibleTo(?User $user = null): bool
+    {
+        $user = $user ?? auth()->user();
+
+        if (! $user) {
+            return $this->visibility === TagVisibility::PUBLIC;
+        }
+
+        if ($user->isRole(['admin', 'sr_ldr'])) {
+            return true;
+        }
+
+        if ($user->isRole('officer')) {
+            return in_array($this->visibility, [TagVisibility::PUBLIC, TagVisibility::OFFICERS]);
+        }
+
+        return $this->visibility === TagVisibility::PUBLIC;
+    }
+
     public function scopeVisibleTo(Builder $query, ?User $user = null): Builder
     {
         $user = $user ?? auth()->user();
