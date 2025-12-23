@@ -55,7 +55,18 @@ class MemberRepository
 
     public function loadProfileRelations(Member $member): Member
     {
-        return $member->load('recruits', 'recruits.division', 'awards.award');
+        return $member->load([
+            'division',
+            'recruiter',
+            'recruits',
+            'recruits.division',
+            'awards.award',
+            'leave',
+            'handles',
+            'user',
+            'trainer',
+            'tags',
+        ]);
     }
 
     public function getDivisionComparison(Member $member, Division $division): ?object
