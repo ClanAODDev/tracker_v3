@@ -85,7 +85,7 @@ class EditRankAction extends EditRecord
 
                         $isPromotion = $rank->isPromotion($memberRank);
 
-                        $promotionAcceptanceWindow = now()->subMinutes(config('app.aod.rank.promotion_acceptance_mins'));
+                        $promotionAcceptanceWindow = now()->subMinutes(config('aod.rank.promotion_acceptance_mins'));
 
                         return ! $isPromotion
                             || ! $approvedAt

@@ -38,7 +38,7 @@ class ClanController extends ApiController
         $client->setApplicationName('AOD Stream Calendar');
         $client->setDeveloperKey(config('services.google.apiKey'));
         $service = new \Google_Service_Calendar($client);
-        $eventStream = $service->events->listEvents(config('app.aod.stream_calendar'), [
+        $eventStream = $service->events->listEvents(config('aod.stream_calendar'), [
             'timeMin' => now()->format(self::RFC3339), 'timeMax' => now()->addDays(7)->format(self::RFC3339),
             'singleEvents' => true, 'orderBy' => 'startTime',
         ]);

@@ -15,7 +15,7 @@ class VerifyBotToken
      */
     public function handle($request, Closure $next)
     {
-        $app_tokens = explode(',', config('app.aod.bot_cmd_tokens'));
+        $app_tokens = explode(',', config('aod.bot_cmd_tokens'));
 
         if (\in_array($request->token, $app_tokens, true) && ! empty($request->token)) {
             return $next($request);

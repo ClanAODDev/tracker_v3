@@ -40,11 +40,11 @@ class BotChannel
             return;
         }
 
-        $url = sprintf('%s/%s', config('app.aod.bot_api_base_url'), $message['api_uri']);
+        $url = sprintf('%s/%s', config('aod.bot_api_base_url'), $message['api_uri']);
 
         $headers = [
             'Content-Type' => 'application/json',
-            'Authorization' => sprintf('Bearer %s', config('app.aod.discord_bot_token')),
+            'Authorization' => sprintf('Bearer %s', config('aod.discord_bot_token')),
         ];
 
         if (auth()->check()) {

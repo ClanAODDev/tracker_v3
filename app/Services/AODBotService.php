@@ -17,8 +17,8 @@ class AODBotService
 
     public function __construct()
     {
-        $this->baseUrl = config('app.aod.bot_api_base_url');
-        $this->token = config('app.aod.discord_bot_token');
+        $this->baseUrl = config('aod.bot_api_base_url');
+        $this->token = config('aod.discord_bot_token');
         $this->client = new Client;
     }
 

@@ -17,7 +17,7 @@ trait IngameReports
      */
     public function destiny2($clanId = null)
     {
-        $clans = explode(',', config('app.aod.ingame-reports.destiny-2-clans'));
+        $clans = explode(',', config('aod.ingame-reports.destiny-2-clans'));
 
         $requestedClan = $clanId ?: $clans[0];
 

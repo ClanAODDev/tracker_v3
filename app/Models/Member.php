@@ -364,9 +364,9 @@ class Member extends Model
     {
         $currentMember = $user->member;
         $roleLimits = [
-            'squadLeader' => config('app.aod.rank.max_squad_leader'),
-            'platoonLeader' => config('app.aod.rank.max_platoon_leader'),
-            'divisionLeader' => config('app.aod.rank.max_division_leader'),
+            'squadLeader' => config('aod.rank.max_squad_leader'),
+            'platoonLeader' => config('aod.rank.max_platoon_leader'),
+            'divisionLeader' => config('aod.rank.max_division_leader'),
         ];
 
         if ($search) {

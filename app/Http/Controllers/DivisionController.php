@@ -37,7 +37,7 @@ class DivisionController extends Controller
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
-        $maxDays = config('app.aod.maximum_days_inactive');
+        $maxDays = config('aod.maximum_days_inactive');
 
         $division->outstandingInactives = $division->members()->whereDoesntHave('leave')->where(
             'last_voice_activity',

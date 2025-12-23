@@ -76,7 +76,7 @@ class Ticket extends Model
      */
     public function routeNotificationForHelp()
     {
-        return config('app.aod.admin-ticketing-channel');
+        return config('aod.admin-ticketing-channel');
     }
 
     /**

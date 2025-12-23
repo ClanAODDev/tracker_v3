@@ -64,6 +64,6 @@ class Award extends Model
             return asset(Storage::url($this->image));
         }
 
-        return asset(config('app.logo'));
+        return asset(config('aod.logo'));
     }
 }

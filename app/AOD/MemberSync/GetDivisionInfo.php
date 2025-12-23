@@ -23,7 +23,7 @@ class GetDivisionInfo
      */
     public function __construct()
     {
-        if (! config('app.aod.token')) {
+        if (! config('aod.token')) {
             throw new \Exception('ERROR: AOD Token not defined in configuration.');
             exit;
         }

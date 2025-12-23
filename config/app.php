@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\Rank;
 use Illuminate\Support\ServiceProvider;
 
 return [
@@ -18,8 +17,6 @@ return [
 
     'version' => env('APP_VERSION', '1.0.0'),
 
-    'logo' => env('LOGO', 'images/logo_v2.png'),
-
     'favicon' => env('FAVICON', 'favicon.ico'),
 
     /*
@@ -34,40 +31,6 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-
-    'aod' => [
-        'discord_webhook' => env('DISCORD_WEBHOOK'),
-        'token' => env('AOD_TOKEN'),
-        'discord_bot_token' => env('AOD_BOT_TOKEN'),
-        'bot_api_base_url' => env('BOT_API_BASE_URL'),
-        'bot_cmd_tokens' => env('BOT_COMMAND_TOKENS'),
-        'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
-        'ingame-reports' => [],
-        'api-keys' => [],
-        'awards_cache_minutes' => env('AWARDS_CACHE_MINUTES', 60),
-
-        // in hours
-        'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
-        'stream_calendar' => env('STREAM_CALENDAR_ID'),
-        'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
-        'msgt-channel' => env('MSGT_CHANNEL', 'aod-msgt-up'),
-
-        'rank' => [
-            // time allowed to accept a promotion
-            'promotion_acceptance_mins' => 1440,
-
-            // minimum days before a new rank action can be created
-            'rank_action_min_days' => 7,
-
-            // rank changes affect forums
-            'update_forums' => true,
-
-            // max ranks role can promote to
-            'max_squad_leader' => Rank::SPECIALIST,
-            'max_platoon_leader' => Rank::CORPORAL,
-            'max_division_leader' => Rank::STAFF_SERGEANT,
-        ],
-    ],
 
     'dev_default_user' => env('DEV_DEFAULT_USER', 1),
 

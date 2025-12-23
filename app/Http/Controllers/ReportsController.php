@@ -65,7 +65,7 @@ class ReportsController extends Controller
 
     public function outstandingMembersReport()
     {
-        $clanMax = config('app.aod.maximum_days_inactive');
+        $clanMax = config('aod.maximum_days_inactive');
         $clanMaxDate = now()->subDays($clanMax)->format('Y-m-d');
 
         $divisions = Division::active()

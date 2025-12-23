@@ -30,7 +30,7 @@ class AppController extends Controller
     {
         $myDivision = \Auth::user()->member->division;
 
-        $maxDays = config('app.aod.maximum_days_inactive');
+        $maxDays = config('aod.maximum_days_inactive');
 
         $myDivision->outstandingInactives = $myDivision->members()->whereDoesntHave('leave')
             ->where('last_voice_activity', '<', \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d'))->count();

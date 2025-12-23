@@ -38,7 +38,7 @@ class NotifyMemberOfficerPromotionPendingAcceptance extends Notification impleme
     public function toBot($notifiable): array
     {
         $route = URL::temporarySignedRoute('promotion.confirm', now()->addMinutes(
-            config('app.aod.rank.promotion_acceptance_mins')
+            config('aod.rank.promotion_acceptance_mins')
         ), [
             $notifiable->clan_id,
             $this->action,

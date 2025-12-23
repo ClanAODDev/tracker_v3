@@ -225,7 +225,7 @@ class RankActionResource extends Resource
 
     public static function getMemberFormFields(): array
     {
-        $min_days_rank_action = config('app.aod.rank.rank_action_min_days');
+        $min_days_rank_action = config('aod.rank.rank_action_min_days');
 
         $fields = [
             Select::make('member_id')

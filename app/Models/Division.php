@@ -408,7 +408,7 @@ class Division extends Model
             return asset(Storage::url($this->logo));
         }
 
-        return asset(config('app.logo'));
+        return asset(config('aod.logo'));
     }
 
     public function isShutdown()
