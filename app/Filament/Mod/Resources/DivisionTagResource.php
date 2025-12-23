@@ -1,26 +1,40 @@
 <?php
 
-namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
+namespace App\Filament\Mod\Resources;
 
 use App\Enums\TagVisibility;
+use App\Filament\Mod\Resources\DivisionTagResource\Pages;
+use App\Filament\Mod\Resources\DivisionTagResource\RelationManagers\MembersRelationManager;
 use App\Models\DivisionTag;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-class TagsRelationManager extends RelationManager
+class DivisionTagResource extends Resource
 {
-    protected static string $relationship = 'tags';
+    protected static ?string $model = DivisionTag::class;
 
-    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
+    protected static ?string $navigationGroup = 'Division';
+
+    public static function getEloquentQuery(): Builder
+    {
+        $divisionId = auth()->user()->member?->division_id;
+
+        return parent::getEloquentQuery()
+            ->where('division_id', $divisionId);
+    }
+
+    public static function canAccess(): bool
     {
         return auth()->user()->can('viewAny', DivisionTag::class);
     }
 
-    public function form(Form $form): Form
+    public static function form(Form $form): Form
     {
         $user = auth()->user();
         $isSeniorLeader = $user?->isRole(['admin', 'sr_ldr']) ?? false;
@@ -43,12 +57,9 @@ class TagsRelationManager extends RelationManager
             ]);
     }
 
-    public function table(Table $table): Table
+    public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(function ($query) {
-                return $query->withoutGlobalScopes();
-            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -69,21 +80,30 @@ class TagsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->visible(fn () => auth()->user()->can('create', DivisionTag::class)),
-            ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->visible(fn (DivisionTag $record) => auth()->user()->can('update', $record)),
-                Tables\Actions\DeleteAction::make()
-                    ->visible(fn (DivisionTag $record) => auth()->user()->can('delete', $record)),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()->can('create', DivisionTag::class)),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            MembersRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListDivisionTags::route('/'),
+            'create' => Pages\CreateDivisionTag::route('/create'),
+            'edit' => Pages\EditDivisionTag::route('/{record}/edit'),
+        ];
     }
 }

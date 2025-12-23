@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Enums\TagVisibility;
 use App\Filament\Admin\Resources\GlobalTagResource\Pages;
+use App\Filament\Admin\Resources\GlobalTagResource\RelationManagers\MembersRelationManager;
 use App\Models\DivisionTag;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -78,6 +79,13 @@ class GlobalTagResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            MembersRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
