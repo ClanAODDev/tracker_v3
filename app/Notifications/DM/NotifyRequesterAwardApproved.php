@@ -4,6 +4,7 @@ namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
+use App\Models\MemberAward;
 use App\Notifications\Channel\NotifyDivisionFailedAwardApprovalNotice;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
@@ -15,16 +16,9 @@ class NotifyRequesterAwardApproved extends Notification implements ShouldQueue
     use Queueable, RetryableNotification;
 
     public function __construct(
-        private readonly string $award,
-        private readonly string $member,
+        private readonly MemberAward $memberAward,
     ) {}
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via($notifiable)
     {
         return [BotChannel::class];
@@ -32,28 +26,23 @@ class NotifyRequesterAwardApproved extends Notification implements ShouldQueue
 
     public function failed(): void
     {
-        $this->action->member->division->notify(
+        $this->memberAward->member->division?->notify(
             new NotifyDivisionFailedAwardApprovalNotice(
-                $this->action->member,
-                $this->member,
-                $this->award
+                $this->memberAward->requester,
+                $this->memberAward->member->name,
+                $this->memberAward->award->name
             )
         );
     }
 
-    /**
-     * @return array
-     *
-     * @throws \Exception
-     */
     public function toBot($notifiable)
     {
         return (new BotDMMessage)
             ->to($notifiable->discord_id)
             ->message(sprintf(
-                'An award you requested for %s was approved!. They have been notified and their profile was updated with the award: %s',
-                $this->member,
-                $this->award,
+                'An award you requested for %s was approved! They have been notified and their profile was updated with the award: %s',
+                $this->memberAward->member->name,
+                $this->memberAward->award->name,
             ))
             ->send();
     }
