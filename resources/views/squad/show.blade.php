@@ -28,7 +28,7 @@
             </div>
             <div class="col-md-2">
                 @include('platoon.partials.squads')
-                @include('squad.partials.member-stats')
+                @include('member.partials.unit-stats', ['members' => $members, 'voiceActivityGraph' => $voiceActivityGraph, 'division' => $division])
             </div>
         </div>
     </div>
