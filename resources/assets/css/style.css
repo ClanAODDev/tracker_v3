@@ -134,6 +134,10 @@
     );
 }
 
+.panel.panel-filled.award-detail .panel-body {
+    padding-top: 25px;
+}
+
 .award-card .panel-body {
     height: 160px;
     display: flex;

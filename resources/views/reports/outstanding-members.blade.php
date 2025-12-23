@@ -18,12 +18,13 @@
 
     <div class="container-fluid">
 
-        <div class="row m-b-lg">
+        <div class="row m-b-lg stats-row">
             <div class="col-md-3">
                 <div class="panel panel-filled">
                     <div class="panel-body text-center">
                         <h1 style="margin: 0;">{{ number_format($totals->population) }}</h1>
                         <div class="text-muted">Total Members</div>
+                        <small class="slight">&nbsp;</small>
                     </div>
                 </div>
             </div>
