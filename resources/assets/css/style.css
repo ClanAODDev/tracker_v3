@@ -138,6 +138,44 @@
     padding-top: 25px;
 }
 
+.member-award-card {
+    display: block;
+    transition: transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+.member-award-card.panel-filled {
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(68, 70, 79, 0.5),
+        rgba(68, 70, 79, 0.5) 20px,
+        rgba(68, 70, 79, 0.4) 20px,
+        rgba(68, 70, 79, 0.4) 40px
+    );
+}
+
+.member-award-card:hover {
+    transform: translateY(-3px);
+    text-decoration: none;
+}
+
+.member-award-card.panel-filled:hover {
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(68, 70, 79, 0.5),
+        rgba(68, 70, 79, 0.5) 20px,
+        rgba(68, 70, 79, 0.4) 20px,
+        rgba(68, 70, 79, 0.4) 40px
+    );
+}
+
+.member-award-card .panel-body {
+    padding: 15px;
+}
+
 .award-card .panel-body {
     height: 160px;
     display: flex;

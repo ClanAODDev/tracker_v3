@@ -43,4 +43,17 @@ class Award extends Model
     {
         return $this->belongsTo(Division::class)->select('id', 'name', 'slug');
     }
+
+    public function getRarity(?int $count = null): string
+    {
+        $count ??= $this->recipients_count ?? $this->recipients()->count();
+
+        return match (true) {
+            $count === 0 => 'mythic',
+            $count <= 10 => 'legendary',
+            $count <= 30 => 'epic',
+            $count <= 50 => 'rare',
+            default => 'common',
+        };
+    }
 }

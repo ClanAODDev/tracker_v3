@@ -1,27 +1,25 @@
 @if ($member->awards->count())
     <h4 class="m-t-xl" id="achievements">Achievements</h4>
     <hr/>
-    <div class="row">
-
+    <div class="row award-grid">
         @foreach ($member->awards->sortBy('award.display_order') as $record)
-            <div class="col-lg-3 col-xl-2 col-sm-6">
-                <a href="{{ route('awards.show', $record->award) }}" class="btn btn-default btn-block"
-                   style="margin-bottom:20px;">
-                    <div class="panel-body award-item" title="{{ $record->reason ?? $record->award->description }}">
+            @php $rarity = $record->award->getRarity(); @endphp
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <a href="{{ route('awards.show', $record->award) }}"
+                   class="panel panel-filled member-award-card"
+                   title="{{ $record->reason ?? $record->award->description }}">
+                    <div class="rarity-indicator rarity-{{ $rarity }}"></div>
+                    <div class="panel-body text-center">
                         <img src="{{ asset(Storage::url($record->award->image)) }}"
                              alt="{{ $record->award->name }}"
                              class="clan-award" loading="lazy"
+                             style="margin-bottom: 8px;"
                         />
-                        <div class="col-xs-9 p-0 member-award-description">
-                            <div>
-                                <span class="c-white">{{ $record->award->name }}</span> <br/>
-                                <span class="text-muted">{{ $record->created_at->format('M d, Y') }}</span>
-                            </div>
-                        </div>
+                        <div class="award-card-name">{{ $record->award->name }}</div>
+                        <span class="award-pill pill-{{ $rarity }}">{{ $record->created_at->format('M d, Y') }}</span>
                     </div>
                 </a>
             </div>
         @endforeach
     </div>
-
 @endif

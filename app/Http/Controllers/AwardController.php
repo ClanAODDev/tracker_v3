@@ -39,7 +39,7 @@ class AwardController extends Controller
         $maxRecipients = $awards->max('recipients_count') ?: 1;
         $awards->each(function ($award) use ($maxRecipients) {
             $award->popularityPct = round($award->recipients_count / $maxRecipients * 100);
-            $award->rarity = $this->calculateRarity($award->recipients_count);
+            $award->rarity = $award->getRarity();
         });
 
         $clanAwards = $awards->whereNull('division_id')->values();
@@ -81,7 +81,7 @@ class AwardController extends Controller
                 ->where('approved', true)
                 ->orderByDesc('created_at')
                 ->first()?->created_at,
-            'rarity' => $this->calculateRarity($award->recipients_count),
+            'rarity' => $award->getRarity(),
         ];
 
         return view('division.awards.show', compact('award', 'recipients', 'stats'));
@@ -113,16 +113,5 @@ class AwardController extends Controller
         $this->showSuccessToast('Your award request has been submitted successfully.');
 
         return redirect()->back();
-    }
-
-    private function calculateRarity(int $count): string
-    {
-        return match (true) {
-            $count === 0 => 'mythic',
-            $count <= 10 => 'legendary',
-            $count <= 30 => 'epic',
-            $count <= 50 => 'rare',
-            default => 'common',
-        };
     }
 }
