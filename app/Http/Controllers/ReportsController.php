@@ -5,59 +5,61 @@ namespace App\Http\Controllers;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Exceptions\FactoryMissingException;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\View\View;
+use App\Models\Division;
+use App\Repositories\ClanRepository;
 
 class ReportsController extends Controller
 {
-    public function __construct(\App\Repositories\ClanRepository $clanRepository)
+    public function __construct(private ClanRepository $clan)
     {
         $this->middleware('auth');
-        $this->clan = $clanRepository;
     }
 
-    /**
-     * @return Factory|View
-     */
     public function clanCensusReport()
     {
-        $memberCount = $this->clan->totalActiveMembers();
+        $censusCounts = $this->clan->censusCounts();
 
-        if (! $this->clan->censusCounts()->count()) {
+        if ($censusCounts->isEmpty()) {
             throw new FactoryMissingException('You might need to run the `census` factory');
         }
 
-        // get our census information, and organize it
-        $censusCounts = $this->clan->censusCounts();
+        $memberCount = $this->clan->totalActiveMembers();
         $previousCensus = $censusCounts->first();
         $lastYearCensus = $censusCounts->reverse();
 
-        // fetch all divisions and eager load census data
-        $censuses = \App\Models\Division::active()->orderBy('name')->withoutFloaters()
-            ->with('census')->get()->filter(fn (
-                $division
-            ) => \count($division->census))->each(function ($division) {
-                $division->total = $division->census->last()->count;
-                $division->popMinusVoiceActive = $division->census->last()->count - $division->census->last()
-                    ->weekly_voice_count;
-                $division->weeklyVoiceActive = $division->census->last()->weekly_voice_count;
+        $censuses = Division::active()
+            ->orderBy('name')
+            ->withoutFloaters()
+            ->with('census')
+            ->get()
+            ->filter(fn ($division) => $division->census->isNotEmpty())
+            ->each(function ($division) {
+                $latest = $division->census->last();
+                $division->latestCensus = $latest;
+                $division->population = $latest->count;
+                $division->weeklyVoiceActive = $latest->weekly_voice_count;
+                $division->weeklyVoicePercent = $latest->count > 0
+                    ? round($latest->weekly_voice_count / $latest->count * 100, 1)
+                    : 0;
             });
 
-        // break down rank distribution
-        $rankDemographic = collect($this->clan->allRankDemographic());
-        $rankDemographic = $rankDemographic->map(function ($rank) use ($memberCount) {
-            $rank->difference = $memberCount - $rank->count;
+        $totalPopulation = $censuses->sum('population');
+        $totalVoiceActive = $censuses->sum('weeklyVoiceActive');
+
+        $rankDemographic = $this->clan->allRankDemographic()->map(function ($rank) use ($memberCount) {
+            $rank->percent = $memberCount > 0 ? round($rank->count / $memberCount * 100, 1) : 0;
 
             return $rank;
         });
 
-        return view('reports.clan-statistics')->with(compact(
+        return view('reports.clan-statistics', compact(
             'memberCount',
             'previousCensus',
             'lastYearCensus',
-            'memberCount',
             'censuses',
             'rankDemographic',
+            'totalPopulation',
+            'totalVoiceActive',
         ));
     }
 
