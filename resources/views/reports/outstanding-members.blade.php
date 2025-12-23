@@ -3,10 +3,10 @@
 
     @component ('application.components.view-heading')
         @slot ('currentPage')
-            Admin CP
+            Statistics
         @endslot
         @slot ('icon')
-            <img src="{{ asset(config('app.logo')) }}" width="50px" />
+            <i class="pe page-header-icon pe-7s-graph2"></i>
         @endslot
         @slot ('heading')
             AOD Tracker
@@ -18,46 +18,143 @@
 
     <div class="container-fluid">
 
-        <p>Outstanding inactive members are those whose last Discord VoIP activity exceeds the clan maximum, currently
-            <code>{{ config('app.aod.maximum_days_inactive') }} days</code>. Additionally, divisions can define a specific number of days before a member is listed as inactive, typically between 30-45 days.
-        </p>
+        <div class="row m-b-lg">
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">{{ number_format($totals->population) }}</h1>
+                        <div class="text-muted">Total Members</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">
+                            <span class="text-danger">{{ $totals->outstanding }}</span>
+                        </h1>
+                        <div class="text-muted">&gt; {{ $clanMax }} Days</div>
+                        <small class="slight">{{ $totals->pctOutstanding }}% of clan</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">
+                            <span class="text-warning">{{ $totals->inactive }}</span>
+                        </h1>
+                        <div class="text-muted">&gt; Division Max</div>
+                        <small class="slight">{{ $totals->pctInactive }}% of clan</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">
+                            <span class="text-success">{{ $totals->population - $totals->inactive }}</span>
+                        </h1>
+                        <div class="text-muted">Active</div>
+                        <small class="slight">{{ $totals->population > 0 ? round(($totals->population - $totals->inactive) / $totals->population * 100, 1) : 0 }}% of clan</small>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <p>Percent inactive represents the percentage of the division that consists of inactive members.</p>
+        <div class="row m-b-lg">
+            <div class="col-md-12">
+                <p>
+                    <strong>Outstanding</strong> members exceed the clan maximum of <code>{{ $clanMax }} days</code>.
+                    <strong>Inactive</strong> members exceed their division's configured threshold (typically 30-45 days).
+                    Members on leave are excluded from these counts.
+                </p>
+            </div>
+        </div>
 
-        <table class="table table-striped basic-datatable">
-            <thead>
-            <tr>
-                <th>Division</th>
-                <th>&gt; {{ config('app.aod.maximum_days_inactive') }} days</th>
-                <th>&gt; Division Max</th>
-                <th>Percent Inactive</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($divisions as $division)
+        <div class="panel table-responsive">
+            <div class="panel-heading">
+                Inactivity by Division
+                <span class="text-muted pull-right">{{ now()->format('M j, Y') }}</span>
+            </div>
+
+            <table class="table table-hover basic-datatable">
+                <thead>
                 <tr>
-                    <td>
-                        {{ $division->name }}
-                        <a href="{{ route('division', $division) }}" class="pull-right btn btn-default btn-xs">
-                            <i class="fa fa-search"></i>
-                        </a>
+                    <th class="col-xs-3">Division</th>
+                    <th class="text-center col-xs-1">Pop</th>
+                    <th class="text-center col-xs-2">&gt; {{ $clanMax }}d (Outstanding)</th>
+                    <th class="text-center col-xs-2">&gt; Div Max (Inactive)</th>
+                    <th class="text-center col-xs-3">Health</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                @foreach ($divisions as $division)
+                    <tr>
+                        <td>
+                            {{ $division->name }}
+                            <a href="{{ route('division', $division) }}" class="btn btn-default btn-xs pull-right">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </td>
+                        <td class="text-center text-muted">{{ $division->members_count }}</td>
+                        <td class="text-center" data-order="{{ $division->outstandingCount }}">
+                            @if($division->outstandingCount > 0)
+                                <span class="text-danger">{{ $division->outstandingCount }}</span>
+                                <small class="text-muted">({{ $division->pctOutstanding }}%)</small>
+                            @else
+                                <span class="text-success">0</span>
+                            @endif
+                        </td>
+                        <td class="text-center" data-order="{{ $division->inactiveCount }}">
+                            {{ $division->inactiveCount }}
+                            <small class="text-muted">({{ $division->pctInactive }}%)</small>
+                            <a href="{{ route('division.inactive-members', $division) }}" class="btn btn-default btn-xs pull-right" title="View inactive members">
+                                <i class="fa fa-list"></i>
+                            </a>
+                        </td>
+                        <td data-order="{{ 100 - $division->pctInactive }}">
+                            <div class="progress" style="margin-bottom: 0; background-color: #404652;">
+                                <div class="progress-bar progress-bar-success" style="width: {{ 100 - $division->pctInactive }}%"></div>
+                                <div class="progress-bar progress-bar-warning" style="width: {{ $division->pctInactive - $division->pctOutstanding }}%"></div>
+                                <div class="progress-bar progress-bar-danger" style="width: {{ $division->pctOutstanding }}%"></div>
+                            </div>
+                            <small class="text-muted">{{ $division->divisionMax }}d threshold</small>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+
+                <tfoot>
+                <tr class="active">
+                    <td><strong>Clan Total</strong></td>
+                    <td class="text-center"><strong>{{ number_format($totals->population) }}</strong></td>
+                    <td class="text-center">
+                        <strong class="text-danger">{{ $totals->outstanding }}</strong>
+                        <span class="text-muted">({{ $totals->pctOutstanding }}%)</span>
                     </td>
-                    <td>{{ $division->outstanding_members }}</td>
-                    <td>{{ $division->inactive_members }}</td>
+                    <td class="text-center">
+                        <strong>{{ $totals->inactive }}</strong>
+                        <span class="text-muted">({{ $totals->pctInactive }}%)</span>
+                    </td>
                     <td>
-                        {{ $division->percent_inactive }}%
-                        <span class="census-pie"
-                              data-colors="{{ json_encode(['#404652', '#1bbf89']) }}"
-                              data-counts="{{ json_encode([$division->members_count-$division->inactive_members, $division->inactive_members]) }}">
-                    </span>
-                        <a href="{{ route('division.inactive-members', $division) }}" class="btn btn-default pull-right btn-xs">
-                            <i class="fa fa-search"></i>
-                        </a>
+                        <div class="progress" style="margin-bottom: 0; background-color: #404652;">
+                            <div class="progress-bar progress-bar-success" style="width: {{ 100 - $totals->pctInactive }}%"></div>
+                            <div class="progress-bar progress-bar-warning" style="width: {{ $totals->pctInactive - $totals->pctOutstanding }}%"></div>
+                            <div class="progress-bar progress-bar-danger" style="width: {{ $totals->pctOutstanding }}%"></div>
+                        </div>
                     </td>
                 </tr>
-            @endforeach
-            </tbody>
-        </table>
+                </tfoot>
+            </table>
+
+            <div class="panel-footer text-muted">
+                <span class="text-success">&#9632;</span> Active
+                <span class="text-warning" style="margin-left: 10px;">&#9632;</span> Inactive (&gt; Division Max)
+                <span class="text-danger" style="margin-left: 10px;">&#9632;</span> Outstanding (&gt; {{ $clanMax }}d)
+            </div>
+        </div>
 
     </div>
 

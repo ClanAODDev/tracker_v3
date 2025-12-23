@@ -3,16 +3,16 @@
 @section('content')
     @component ('application.components.view-heading')
         @slot ('currentPage')
-            v3
+            Awards
         @endslot
         @slot ('icon')
-            <img src="{{ asset(config('app.logo')) }}" width="50px"/>
+            <i class="pe page-header-icon pe-7s-medal"></i>
         @endslot
         @slot ('heading')
             AOD Tracker
         @endslot
         @slot ('subheading')
-            Manage divisions and members within the AOD organization
+            {{ $award->name }}
         @endslot
     @endcomponent
 
@@ -20,73 +20,164 @@
 
         {!! Breadcrumbs::render('awards.show', $award) !!}
 
-        <div style="display:flex;align-items: center;justify-content: center;margin-top: 0;">
-            <img src="{{ asset(Storage::url($award->image)) }}"
-                 class="clan-award clan-award-zoom hidden-xs hidden-sm"
-                 style="margin-right:50px;"
-                 alt="{{ $award->name }}"
-            />
-
-            <div class="hidden-xs hidden-sm text-center">
-                <h3>{{ $award->name }}</h3>
-                <p style="max-width:500px;">{{ $award->description }}</p>
+        <div class="row m-b-lg">
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">{{ $stats->total }}</h1>
+                        <div class="text-muted">Total Recipients</div>
+                    </div>
+                </div>
             </div>
-
-            @if ($award->allow_request)
-                <a href="#" data-toggle="modal" data-target="#award_modal"
-                   title="Request this award for yourself or someone else"
-                   style="margin-left:50px;"
-                   class="btn btn-default hidden-xs hidden-sm">Request Award</a>
-            @endif
-
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">
+                            <span class="text-info">{{ $stats->firstAwarded?->format('M Y') ?? '-' }}</span>
+                        </h1>
+                        <div class="text-muted">First Awarded</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">
+                            <span class="text-success">{{ $stats->lastAwarded?->format('M Y') ?? '-' }}</span>
+                        </h1>
+                        <div class="text-muted">Most Recent</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="panel panel-filled">
+                    <div class="panel-body text-center">
+                        <h1 style="margin: 0;">
+                            @if ($award->allow_request)
+                                <span class="text-success"><i class="fa fa-check"></i></span>
+                            @else
+                                <span class="text-muted"><i class="fa fa-times"></i></span>
+                            @endif
+                        </h1>
+                        <div class="text-muted">Requestable</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="visible-xs visible-sm text-center">
-        <img src="{{ asset(Storage::url($award->image)) }}"
-             class="clan-award"
-             alt="{{ $award->name }}"
-        />
-        <hr>
-        <h3>{{ $award->name }}</h3>
-        <p>{{ $award->description }}</p>
-        @if ($award->allow_request)
-            <a href="#" data-toggle="modal" data-target="#award_modal"
-               title="Request this award for yourself or someone else"
-               class="btn btn-default m-t-md">Request Award</a>
-        @endif
-    </div>
-
-    <hr>
-
-    @if ($award->recipients->count())
         <div class="panel panel-filled">
             <div class="panel-body">
-                <h4 class="text-center text-uppercase">Award Recipients</h4>
-                <table class="table table-hover basic-datatable">
-                    <thead>
-                    <tr>
-                        <th class="text-center">Member</th>
-                        <th class="text-center">Awarded on</th>
-                    </tr>
-                    </thead>
-                    @foreach ($award->recipients as $record)
-                        <tr>
-                            <td class="text-center"><a href="{{ route('member', $record->member->getUrlParams()) }}">
-                                    {{ $record->member->name }}
-                                </a></td>
-                            <td class="text-center">{{ $record->created_at->format('Y-m-d') }}</td>
-                        </tr>
-                    @endforeach
-                </table>
+                <div style="display:flex;align-items: center;justify-content: center;">
+                    <img src="{{ asset(Storage::url($award->image)) }}"
+                         class="clan-award clan-award-zoom hidden-xs hidden-sm"
+                         style="margin-right:50px;"
+                         alt="{{ $award->name }}"
+                    />
+
+                    <div class="hidden-xs hidden-sm text-center">
+                        <h3>{{ $award->name }}</h3>
+                        @if ($award->division)
+                            <span class="label label-default">{{ $award->division->name }}</span>
+                        @else
+                            <span class="label label-warning">Clan-Wide</span>
+                        @endif
+                        <p style="max-width:500px; margin-top: 15px;">{{ $award->description }}</p>
+                    </div>
+
+                    @if ($award->allow_request)
+                        <a href="#" data-toggle="modal" data-target="#award_modal"
+                           title="Request this award for yourself or someone else"
+                           style="margin-left:50px;"
+                           class="btn btn-default hidden-xs hidden-sm">Request Award</a>
+                    @endif
+                </div>
+
+                <div class="visible-xs visible-sm text-center">
+                    <img src="{{ asset(Storage::url($award->image)) }}"
+                         class="clan-award"
+                         alt="{{ $award->name }}"
+                    />
+                    <h3>{{ $award->name }}</h3>
+                    @if ($award->division)
+                        <span class="label label-default">{{ $award->division->name }}</span>
+                    @else
+                        <span class="label label-warning">Clan-Wide</span>
+                    @endif
+                    <p>{{ $award->description }}</p>
+                    @if ($award->allow_request)
+                        <a href="#" data-toggle="modal" data-target="#award_modal"
+                           title="Request this award for yourself or someone else"
+                           class="btn btn-default m-t-md">Request Award</a>
+                    @endif
+                </div>
             </div>
         </div>
 
-    @else
-        <h3 class="text-muted text-center">No Recipients</h3>
-        <p class="text-center">This award remains elusive. Perhaps you are up to the task?</p>
-    @endif
-
+        @if ($recipients->count())
+            <div class="panel panel-filled">
+                <div class="panel-heading">
+                    Award Recipients
+                    <span class="badge pull-right">{{ $recipients->total() }}</span>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th class="text-center hidden-xs">Division</th>
+                            <th class="text-center hidden-xs">Rank</th>
+                            <th class="text-center">Awarded</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($recipients as $record)
+                            <tr>
+                                <td>
+                                    @if ($record->member)
+                                        <a href="{{ route('member', $record->member->getUrlParams()) }}">
+                                            {{ $record->member->name }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">Unknown Member</span>
+                                    @endif
+                                </td>
+                                <td class="text-center hidden-xs">
+                                    @if ($record->member?->division)
+                                        <a href="{{ route('division', $record->member->division) }}">
+                                            {{ $record->member->division->name }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td class="text-center hidden-xs">
+                                    @if ($record->member)
+                                        {{ $record->member->rank->getAbbreviation() }}
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">{{ $record->created_at->format('M j, Y') }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @if ($recipients->hasPages())
+                    <div class="panel-footer text-center">
+                        {{ $recipients->links() }}
+                    </div>
+                @endif
+            </div>
+        @else
+            <div class="panel panel-filled">
+                <div class="panel-body text-center">
+                    <h3 class="text-muted">No Recipients</h3>
+                    <p class="text-muted">This award remains elusive. Perhaps you are up to the task?</p>
+                </div>
+            </div>
+        @endif
+    </div>
 
     @include('division.awards.partials.award-form')
 

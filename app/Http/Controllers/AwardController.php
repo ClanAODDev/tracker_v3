@@ -17,23 +17,72 @@ class AwardController extends Controller
 
     public function index()
     {
-        $awards = Award::query();
+        $divisionSlug = request('division');
 
-        $awards->when(request('division'), function (Builder $query) use ($awards) {
-            $query->whereHas('division', function (Builder $query) {
-                $query->where('slug', request('division'));
-            });
+        $query = Award::active()
+            ->orderBy('display_order')
+            ->withCount('recipients')
+            ->with('division');
 
-            if ($awards->count() === 0) {
-                $this->showErrorToast('Selected division has no awards assigned. Showing all...');
+        if ($divisionSlug) {
+            $query->whereHas('division', fn (Builder $q) => $q->where('slug', $divisionSlug));
+        }
 
-                return redirect(route('awards.index'));
-            }
+        $awards = $query->get();
+
+        if ($divisionSlug && $awards->isEmpty()) {
+            $this->showErrorToast('Selected division has no awards assigned. Showing all...');
+
+            return redirect(route('awards.index'));
+        }
+
+        $maxRecipients = $awards->max('recipients_count') ?: 1;
+        $awards->each(function ($award) use ($maxRecipients) {
+            $award->popularityPct = round($award->recipients_count / $maxRecipients * 100);
+            $award->rarity = $this->calculateRarity($award->recipients_count);
         });
 
-        $awards = $awards->active()->withCount('recipients')->with('recipients', 'division')->get();
+        $clanAwards = $awards->whereNull('division_id')->values();
+        $divisionAwards = $awards->whereNotNull('division_id')->groupBy('division.name');
 
-        return view('division.awards.index')->with(compact('awards'));
+        $totals = (object) [
+            'awards' => $awards->count(),
+            'recipients' => $awards->sum('recipients_count'),
+            'requestable' => $awards->where('allow_request', true)->count(),
+        ];
+
+        return view('division.awards.index', compact(
+            'awards',
+            'clanAwards',
+            'divisionAwards',
+            'totals',
+            'divisionSlug'
+        ));
+    }
+
+    public function show(Award $award)
+    {
+        $award->load(['division']);
+
+        $recipients = MemberAward::where('award_id', $award->id)
+            ->where('approved', true)
+            ->with(['member:clan_id,name,rank,division_id', 'member.division:id,name,slug'])
+            ->orderByDesc('created_at')
+            ->paginate(50);
+
+        $stats = (object) [
+            'total' => $recipients->total(),
+            'firstAwarded' => MemberAward::where('award_id', $award->id)
+                ->where('approved', true)
+                ->orderBy('created_at')
+                ->first()?->created_at,
+            'lastAwarded' => MemberAward::where('award_id', $award->id)
+                ->where('approved', true)
+                ->orderByDesc('created_at')
+                ->first()?->created_at,
+        ];
+
+        return view('division.awards.show', compact('award', 'recipients', 'stats'));
     }
 
     public function storeRecommendation(Request $request, Award $award)
@@ -64,8 +113,14 @@ class AwardController extends Controller
         return redirect()->back();
     }
 
-    public function show(Award $award)
+    private function calculateRarity(int $count): string
     {
-        return view('division.awards.show', compact('award'));
+        return match (true) {
+            $count === 0 => 'mythic',
+            $count <= 10 => 'legendary',
+            $count <= 30 => 'epic',
+            $count <= 50 => 'rare',
+            default => 'common',
+        };
     }
 }

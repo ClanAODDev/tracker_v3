@@ -66,30 +66,39 @@ class ReportsController extends Controller
     public function outstandingMembersReport()
     {
         $clanMax = config('app.aod.maximum_days_inactive');
-        $divisions = \App\Models\Division::active()->orderBy('name')->withCount('members')->get();
-        $divisions->map(function ($division) use ($clanMax) {
-            $divisionMax = $division->settings()->get('inactivity_days');
-            $members = $division->members()->whereDoesntHave('leave', function ($q) {
-                $q->whereDate('end_date', '>', today());
-            })->get();
-            $outstandingCount = $members->where(
-                'last_voice_activity',
-                '<',
-                \Carbon\Carbon::now()->subDays($clanMax)->format('Y-m-d')
-            )->count();
-            $inactiveCount = $members->where(
-                'last_voice_activity',
-                '<',
-                \Carbon\Carbon::now()->subDays($divisionMax)->format('Y-m-d')
-            )->count();
-            $division->outstanding_members = $outstandingCount;
-            $division->inactive_members = $inactiveCount;
-            $division->percent_inactive = number_format($inactiveCount / max($division->members_count, 1) * 100, 1);
+        $clanMaxDate = now()->subDays($clanMax)->format('Y-m-d');
 
-            return $division;
-        });
+        $divisions = Division::active()
+            ->orderBy('name')
+            ->withCount('members')
+            ->get()
+            ->each(function ($division) use ($clanMax, $clanMaxDate) {
+                $divisionMax = $division->settings()->get('inactivity_days') ?? $clanMax;
+                $divisionMaxDate = now()->subDays($divisionMax)->format('Y-m-d');
 
-        return view('reports.outstanding-members', compact('divisions'));
+                $baseQuery = $division->members()->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()));
+
+                $division->divisionMax = $divisionMax;
+                $division->outstandingCount = (clone $baseQuery)->where('last_voice_activity', '<', $clanMaxDate)->count();
+                $division->inactiveCount = (clone $baseQuery)->where('last_voice_activity', '<', $divisionMaxDate)->count();
+                $division->activeCount = $division->members_count - $division->inactiveCount;
+                $division->pctInactive = $division->members_count > 0
+                    ? round($division->inactiveCount / $division->members_count * 100, 1)
+                    : 0;
+                $division->pctOutstanding = $division->members_count > 0
+                    ? round($division->outstandingCount / $division->members_count * 100, 1)
+                    : 0;
+            });
+
+        $totals = (object) [
+            'population' => $divisions->sum('members_count'),
+            'outstanding' => $divisions->sum('outstandingCount'),
+            'inactive' => $divisions->sum('inactiveCount'),
+        ];
+        $totals->pctOutstanding = $totals->population > 0 ? round($totals->outstanding / $totals->population * 100, 1) : 0;
+        $totals->pctInactive = $totals->population > 0 ? round($totals->inactive / $totals->population * 100, 1) : 0;
+
+        return view('reports.outstanding-members', compact('divisions', 'totals', 'clanMax'));
     }
 
     /**
