@@ -1,41 +1,50 @@
-<h4 class="m-t-xl">
-    Member Notes
-
-    @can('create', App\Models\Note::class)
-        <span class="pull-right">
-            <a href="#" class="btn-add-note btn btn-default" data-toggle="modal"
-               data-target="#create-member-note"><i class="fa fa-comment text-accent"></i> Add note</a>
-        </span>
-    @endcan
-
-</h4>
-<hr/>
-@if (count($notes))
-    <div class="v-timeline">
-        @foreach ($notes as $note)
-            @include ('member.partials.note')
-        @endforeach
-    </div>
-@else
-    <div class="panel panel-filled">
-        <div class="panel-body">
-            <p class="text-muted m-t-sm">Member currently has no notes recorded.</p>
+@can('create', App\Models\Note::class)
+    <div class="modal fade" id="notes-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">
+                        Member Notes
+                        @if(count($notes))
+                            <span class="badge">{{ count($notes) }}</span>
+                        @endif
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    @if (count($notes))
+                        <div class="notes-list">
+                            @foreach ($notes as $note)
+                                @include ('member.partials.note')
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center p-lg">
+                            <i class="fa fa-sticky-note fa-3x text-muted m-b-md" style="opacity: 0.3;"></i>
+                            <p class="text-muted">No notes recorded for this member.</p>
+                        </div>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-accent" data-toggle="modal" data-target="#create-member-note" data-dismiss="modal">
+                        <i class="fa fa-plus"></i> Add Note
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-@endif
 
-@can ('create', App\Models\Note::class)
-    <div class="modal fade" id="create-member-note">
-        <div class="modal-dialog" role="document" style="background-color: #000;">
+    <div class="modal fade" id="create-member-note" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
             <form action="{{ route('storeNote', [$member->clan_id]) }}" method="post">
                 @csrf
                 @include('member.forms.create-note-form', ['action' => 'Add Member Note', 'create' => true])
             </form>
         </div>
     </div>
+
+    @if ($errors->count())
+        <script>$('#create-member-note').modal();</script>
+    @endif
 @endcan
-
-@if ($errors->count())
-    <script>$('#create-member-note').modal();</script>
-@endif
-

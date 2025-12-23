@@ -69,7 +69,7 @@
             <div class="rarity-indicator rarity-{{ $stats->rarity }}"></div>
             <div class="panel-body">
                 <div style="display:flex;align-items: center;justify-content: center;">
-                    <img src="{{ asset(Storage::url($award->image)) }}"
+                    <img src="{{ $award->getImagePath() }}"
                          class="clan-award clan-award-zoom hidden-xs hidden-sm"
                          style="margin-right:50px;"
                          alt="{{ $award->name }}"
@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="visible-xs visible-sm text-center">
-                    <img src="{{ asset(Storage::url($award->image)) }}"
+                    <img src="{{ $award->getImagePath() }}"
                          class="clan-award"
                          alt="{{ $award->name }}"
                     />

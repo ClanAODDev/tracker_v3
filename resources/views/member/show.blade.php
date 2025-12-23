@@ -68,22 +68,16 @@
 
         @include ('member.partials.notices')
 
-        <div class="row m-b-xl">
-            <div class="col-md-12">
-                @include ('member.partials.general-information')
-            </div>
-        </div>
+        @include ('member.partials.member-stats')
 
         @include ('member.partials.awards')
         @include ('member.partials.handles')
         @include ('member.partials.part-time-divisions')
         @include ('member.partials.member-history')
 
-        @can('create', \App\Models\Note::class)
-            @include ('member.partials.notes')
-        @endcan
-
     </div>
+
+    @include ('member.partials.notes')
 
     @can('create', App\Models\DivisionTag::class)
         @php

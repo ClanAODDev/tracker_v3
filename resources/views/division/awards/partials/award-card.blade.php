@@ -2,7 +2,7 @@
     <a class="panel panel-filled award-card" href="{{ route('awards.show', $award) }}">
         <div class="rarity-indicator rarity-{{ $award->rarity }}" title="{{ ucfirst($award->rarity) }}"></div>
         <div class="panel-body text-center">
-            <img src="{{ asset(Storage::url($award->image)) }}"
+            <img src="{{ $award->getImagePath() }}"
                  class="clan-award-zoom clan-award"
                  alt="{{ $award->name }}"
                  loading="lazy"

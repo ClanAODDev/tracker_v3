@@ -2,34 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\MemberStatsData;
+use App\Data\NoteStatsData;
 use App\Models\Member;
 use App\Models\Platoon;
+use App\Repositories\MemberRepository;
+use App\Services\RankTimelineService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        private MemberRepository $memberRepository,
+        private RankTimelineService $rankTimelineService,
+    ) {
         $this->middleware('auth');
     }
 
     public function search($name = null)
     {
         $name = $name ?: request()->name;
-
-        $members = [];
-
-        if ($name) {
-            $byName = Member::where('name', 'LIKE', "%{$name}%")->with('division');
-
-            $members = Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$name}%"))
-                ->with('division')
-                ->union($byName)
-                ->orderBy('name')
-                ->get();
-        }
+        $members = $name ? $this->memberRepository->search($name) : collect();
 
         if (request()->ajax()) {
             return view('member.search-ajax', compact('members'));
@@ -40,31 +35,35 @@ class MemberController extends Controller
 
     public function searchAutoComplete(Request $request)
     {
-        return Member::where('name', 'LIKE', "%{$request->input('query')}%")
-            ->take(5)
-            ->get()
-            ->map(fn ($member) => [
-                'id' => $member->clan_id,
-                'label' => $member->name,
-            ]);
+        return $this->memberRepository->searchAutocomplete($request->input('query'));
     }
 
     public function show(Member $member)
     {
         $division = $member->division;
+        $canViewSrLdr = auth()->user()->isRole(['sr_ldr', 'admin']);
 
-        $notes = $member->notes()->with('author.member')->get()
-            ->filter(fn ($note) => $note->type !== 'sr_ldr' || auth()->user()->isRole(['sr_ldr', 'admin']));
+        $this->memberRepository->loadProfileRelations($member);
 
-        $member->load('recruits', 'recruits.division');
+        $notes = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
+        $rankHistory = $this->memberRepository->getRankHistory($member);
+        $transfers = $this->memberRepository->getTransfers($member);
+        $partTimeDivisions = $this->memberRepository->getPartTimeDivisions($member);
+
+        $memberStats = MemberStatsData::fromMember($member, $division, $this->memberRepository);
+        $noteStats = NoteStatsData::fromNotes($notes);
+        $rankTimeline = $this->rankTimelineService->buildTimeline($member, $rankHistory);
 
         return view('member.show', [
             'member' => $member,
             'division' => $division,
             'notes' => $notes,
-            'partTimeDivisions' => $member->partTimeDivisions()->whereActive(true)->get(),
-            'rankHistory' => $member->rankActions()->approvedAndAccepted()->get(),
-            'transfers' => $member->transfers()->with('division')->get(),
+            'noteStats' => $noteStats,
+            'partTimeDivisions' => $partTimeDivisions,
+            'rankHistory' => $rankHistory,
+            'rankTimeline' => $rankTimeline,
+            'transfers' => $transfers,
+            'memberStats' => $memberStats,
         ]);
     }
 

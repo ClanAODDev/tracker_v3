@@ -1,0 +1,210 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Member;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+
+class RankTimelineService
+{
+    public function buildTimeline(Member $member, Collection $rankHistory): object
+    {
+        $chronologicalHistory = $rankHistory->sortBy('created_at')->values();
+        $progressionOnly = $this->filterToProgression($chronologicalHistory);
+        $isOfficer = $member->rank->isOfficer();
+
+        $nodes = $this->buildNodes($member, $progressionOnly, $isOfficer);
+        $historyItems = $this->buildHistoryItems($member, $chronologicalHistory);
+
+        return (object) [
+            'nodes' => $nodes,
+            'historyItems' => $historyItems,
+            'hasHistory' => $chronologicalHistory->count() > 0 || $member->join_date !== null,
+        ];
+    }
+
+    private function filterToProgression(Collection $history): Collection
+    {
+        $highWaterMark = 0;
+
+        return $history->filter(function ($entry) use (&$highWaterMark) {
+            if ($entry->rank->value > $highWaterMark) {
+                $highWaterMark = $entry->rank->value;
+
+                return true;
+            }
+
+            return false;
+        })->values();
+    }
+
+    private function buildNodes(Member $member, Collection $progressionOnly, bool $isOfficer): Collection
+    {
+        $nodes = collect();
+        $nodeIndex = 0;
+
+        $nodes->push($this->createJoinNode($member, $nodeIndex));
+        $nodeIndex++;
+
+        if ($isOfficer && $progressionOnly->count() > 0) {
+            $enlistedRanks = $progressionOnly->filter(fn ($e) => ! $e->rank->isOfficer());
+            $officerRanks = $progressionOnly->filter(fn ($e) => $e->rank->isOfficer())->values();
+
+            if ($enlistedRanks->count() > 0) {
+                $nodes = $this->addEnlistedConsolidatedNode($nodes, $member, $enlistedRanks, $officerRanks, $nodeIndex);
+                $nodeIndex++;
+
+                foreach ($officerRanks as $index => $entry) {
+                    $prevDate = $index === 0
+                        ? $officerRanks->first()->created_at
+                        : $officerRanks->get($index - 1)->created_at;
+
+                    $duration = $index === 0 ? null : $this->formatDuration($prevDate, $entry->created_at);
+
+                    $nodes->push($this->createRankNode($entry, $nodeIndex, $duration));
+                    $nodeIndex++;
+                }
+
+                $lastOfficerRank = $officerRanks->last();
+                $finalDuration = $this->formatDuration($lastOfficerRank->created_at, now());
+            } else {
+                $nodes = $this->addStandardNodes($nodes, $member, $progressionOnly, $nodeIndex);
+                $finalDuration = $progressionOnly->count() > 0
+                    ? $this->formatDuration($progressionOnly->last()->created_at, now())
+                    : null;
+            }
+        } else {
+            $nodes = $this->addStandardNodes($nodes, $member, $progressionOnly, $nodeIndex);
+            $finalDuration = $progressionOnly->count() > 0
+                ? $this->formatDuration($progressionOnly->last()->created_at, now())
+                : null;
+        }
+
+        $nodes->push($this->createCurrentRankNode($member, $nodeIndex, $finalDuration));
+
+        return $nodes;
+    }
+
+    private function addStandardNodes(Collection $nodes, Member $member, Collection $progression, int &$nodeIndex): Collection
+    {
+        if ($member->join_date && $progression->count() > 0) {
+            $firstPromotion = $progression->first();
+            $initialDuration = $this->formatDuration($member->join_date, $firstPromotion->created_at);
+            $nodes->last()->duration = $initialDuration;
+        }
+
+        foreach ($progression as $index => $entry) {
+            $duration = null;
+            if ($index < $progression->count() - 1) {
+                $nextEntry = $progression->get($index + 1);
+                $duration = $this->formatDuration($entry->created_at, $nextEntry->created_at);
+            }
+
+            $nodes->push($this->createRankNode($entry, $nodeIndex, $duration));
+            $nodeIndex++;
+        }
+
+        return $nodes;
+    }
+
+    private function addEnlistedConsolidatedNode(
+        Collection $nodes,
+        Member $member,
+        Collection $enlistedRanks,
+        Collection $officerRanks,
+        int $nodeIndex
+    ): Collection {
+        $enlistedStart = $member->join_date ?? $enlistedRanks->first()->created_at;
+        $enlistedEnd = $officerRanks->first()->created_at;
+        $enlistedDuration = $this->formatDuration($enlistedStart, $enlistedEnd);
+
+        $nodes->last()->duration = $enlistedDuration;
+
+        $nodes->push((object) [
+            'type' => 'consolidated',
+            'label' => 'Enlisted',
+            'dateRange' => $enlistedRanks->first()->created_at->format('M Y') . ' - ' . $enlistedRanks->last()->created_at->format('M Y'),
+            'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
+            'duration' => null,
+        ]);
+
+        return $nodes;
+    }
+
+    private function createJoinNode(Member $member, int $nodeIndex): object
+    {
+        return (object) [
+            'type' => 'join',
+            'date' => $member->join_date?->format('M Y'),
+            'label' => 'Joined AOD',
+            'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
+            'duration' => null,
+        ];
+    }
+
+    private function createRankNode(object $entry, int $nodeIndex, ?string $duration): object
+    {
+        return (object) [
+            'type' => 'promotion',
+            'rank' => $entry->rank->getAbbreviation(),
+            'date' => $entry->created_at->format('M Y'),
+            'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
+            'duration' => $duration,
+        ];
+    }
+
+    private function createCurrentRankNode(Member $member, int $nodeIndex, ?string $duration): object
+    {
+        return (object) [
+            'type' => 'current',
+            'rank' => $member->rank->getAbbreviation(),
+            'label' => 'Current Rank',
+            'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
+            'duration' => null,
+        ];
+    }
+
+    private function buildHistoryItems(Member $member, Collection $chronologicalHistory): Collection
+    {
+        $items = collect();
+
+        if ($member->join_date) {
+            $items->push((object) [
+                'type' => 'join',
+                'date' => $member->join_date->format('M j, Y'),
+                'label' => 'Joined AOD',
+            ]);
+        }
+
+        $prevRank = null;
+        foreach ($chronologicalHistory as $entry) {
+            $isDemotion = $prevRank && $entry->rank->value < $prevRank->value;
+
+            $items->push((object) [
+                'type' => $isDemotion ? 'demotion' : 'promotion',
+                'date' => $entry->created_at->format('M j, Y'),
+                'rank' => $entry->rank->getAbbreviation(),
+            ]);
+
+            $prevRank = $entry->rank;
+        }
+
+        return $items;
+    }
+
+    private function formatDuration(Carbon $start, Carbon $end): string
+    {
+        $months = (int) $start->diffInMonths($end);
+        $years = (int) floor($months / 12);
+        $remainingMonths = $months % 12;
+
+        if ($years > 0) {
+            return $remainingMonths > 0
+                ? "{$years}y {$remainingMonths}m"
+                : "{$years}y";
+        }
+
+        return "{$months}m";
+    }
+}

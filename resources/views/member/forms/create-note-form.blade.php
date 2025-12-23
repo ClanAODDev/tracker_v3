@@ -1,32 +1,45 @@
 @include('application.partials.errors')
-<div class="panel panel-filled">
-    <div class="panel-heading">{{ $action }}</div>
-    <div class="panel-body">
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title">{{ $action }}</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-group {{ $errors->has('type') ? ' has-error' : null }}">
+            <label class="control-label">Note Type</label>
+            <div class="note-type-selector">
+                @foreach (\App\Models\Note::allNoteTypes() as $value => $label)
+                    <label class="note-type-option {{ $value }}">
+                        <input type="radio" name="type" value="{{ $value }}" {{ $loop->first ? 'checked' : '' }}>
+                        <span class="note-type-card">
+                            <span class="note-type-icon">
+                                @if($value === 'positive')
+                                    <i class="fa fa-thumbs-up"></i>
+                                @elseif($value === 'negative')
+                                    <i class="fa fa-thumbs-down"></i>
+                                @elseif($value === 'sr_ldr')
+                                    <i class="fas fa-shield-alt"></i>
+                                @else
+                                    <i class="fa fa-comment"></i>
+                                @endif
+                            </span>
+                            <span class="note-type-label">{{ $label }}</span>
+                        </span>
+                    </label>
+                @endforeach
+            </div>
+        </div>
+
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
-            <label for="body" class="slight text-muted">Content</label>
-            <textarea name="body" id="body" rows="2" class="form-control">{{ old('body') }}</textarea>
+            <label for="body" class="control-label">Note Content</label>
+            <textarea name="body" id="body" rows="4" class="form-control"
+                      placeholder="Enter your note here..." style="resize: vertical;">{{ old('body') }}</textarea>
         </div>
     </div>
-    <div class="panel-footer">
-        <div class="row">
-            <div class="col-sm-4 form-group">
-                <label for="type" class="slight text-muted">Note Type</label>
-                <select name="type" id="type" class="form-control">
-                    @foreach (\App\Models\Note::allNoteTypes() as $value => $label)
-                        <option value="{{ $value }}">{{ $label }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-sm-4 form-group">
-                <label for="forum_thread_id" class="slight text-muted">Forum Thread Id</label>
-                <input type="number" name="forum_thread_id" id="forum_thread_id"
-                       class="form-control" value="{{ old('forum_thread_id') }}">
-            </div>
-
-            <div class="col-xs-4 form-group">
-                <button type="submit" class="btn btn-default btn-block" style="margin-top:23px">Submit</button>
-            </div>
-        </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-accent">
+            <i class="fa fa-plus"></i> Add Note
+        </button>
     </div>
 </div>

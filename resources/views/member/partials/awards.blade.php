@@ -1,5 +1,19 @@
 @if ($member->awards->count())
-    <h4 class="m-t-xl" id="achievements">Achievements</h4>
+    <div class="achievements-header m-t-xl" id="achievements">
+        <h4>
+            Achievements
+            <span class="badge">{{ $memberStats->awards->total }}</span>
+        </h4>
+        <div class="rarity-summary">
+            @foreach(['mythic', 'legendary', 'epic', 'rare', 'common'] as $rarity)
+                @if($memberStats->awards->byRarity->get($rarity, 0) > 0)
+                    <span class="award-pill pill-{{ $rarity }}">
+                        {{ $memberStats->awards->byRarity->get($rarity) }} {{ ucfirst($rarity) }}
+                    </span>
+                @endif
+            @endforeach
+        </div>
+    </div>
     <hr/>
     <div class="row award-grid">
         @foreach ($member->awards->sortBy('award.display_order') as $record)
@@ -10,7 +24,7 @@
                    title="{{ $record->reason ?? $record->award->description }}">
                     <div class="rarity-indicator rarity-{{ $rarity }}"></div>
                     <div class="panel-body text-center">
-                        <img src="{{ asset(Storage::url($record->award->image)) }}"
+                        <img src="{{ $record->award->getImagePath() }}"
                              alt="{{ $record->award->name }}"
                              class="clan-award" loading="lazy"
                              style="margin-bottom: 8px;"

@@ -1,7 +1,7 @@
 <div class="btn-group pull-right text-capitalize">
     <button data-toggle="dropdown" class="member-actions btn btn-default dropdown-toggle" aria-expanded="true">
-        <i class="fa fa-wrench text-accent"></i> Actions <span
-                class="caret"></span></button>
+        <i class="fa fa-wrench text-accent"></i> Actions <span class="caret"></span>
+    </button>
     <ul class="dropdown-menu">
 
         @can('update', $member)

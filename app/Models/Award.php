@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Award extends Model
 {
@@ -55,5 +56,14 @@ class Award extends Model
             $count <= 50 => 'rare',
             default => 'common',
         };
+    }
+
+    public function getImagePath(): string
+    {
+        if ($this->image && Storage::exists($this->image)) {
+            return asset(Storage::url($this->image));
+        }
+
+        return asset(config('app.logo'));
     }
 }

@@ -1,45 +1,24 @@
-<h4 class="m-t-xl">
-    Part-Time Divisions
-    @can ('managePartTime', $member)
-            @if ($member->id === auth()->user()->member_id)
+@if($partTimeDivisions->count() > 0)
+    <h4 class="m-t-xl">
+        Part-Time Divisions
+        @can('managePartTime', $member)
+            @if($member->id === auth()->user()->member_id)
                 <a href="{{ route('filament.profile.pages.part-time-divisions') }}"
-                   class="btn btn-default pull-right"><i class="fa fa-cog text-accent"></i> Manage
-                </a>
+                   class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
             @else
                 <a href="{{ route('filament.mod.resources.members.edit', $member) }}#part-time-divisions"
-                   class="btn btn-default pull-right"><i class="fa fa-cog text-accent"></i> Manage
-                </a>
+                   class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
             @endif
-    @endcan
-</h4>
-<hr />
-<div class="row">
-    @forelse ($partTimeDivisions as $division)
-        <div class="col-md-4">
-            <a href="{{ route('division', $division->slug) }}" class="panel panel-filled">
-                <div class="panel-body">
-                    <h4 class="text-uppercase">
-                        {{ $division->name }}
-                        <span class="pull-right">
-                            <img src="{{ $division->getLogoPath() }}"
-                                 class="division-icon-medium"
-                                 title="{{ $division->name }}" />
-                        </span>
-                    </h4>
-                    <span class="small text-uppercase">Since {{ $division->pivot->created_at->format('M d, Y') }}</span>
-                </div>
+        @endcan
+    </h4>
+    <hr/>
+    <div class="division-chips">
+        @foreach($partTimeDivisions as $division)
+            <a href="{{ route('division', $division->slug) }}" class="division-chip">
+                <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-chip-icon">
+                <span class="division-chip-name">{{ $division->name }}</span>
+                <span class="division-chip-date">{{ $division->pivot->created_at->format('M Y') }}</span>
             </a>
-        </div>
-    @empty
-        <div class="col-md-12">
-            <div class="panel panel-filled panel-c-info">
-                <div class="panel-body">
-                    <h4 class="m-b-none text-uppercase">
-                        Not part-time in any divisions
-                    </h4>
-                    <span class="slight">Division NCOs can add part-time members</span>
-                </div>
-            </div>
-        </div>
-    @endforelse
-</div>
+        @endforeach
+    </div>
+@endif

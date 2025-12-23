@@ -1,126 +1,24 @@
-<h4 class="m-t-xl">Member History</h4>
-<hr>
-
-<div class="tabs-container">
-
-    <div class="tabs-top">
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a class="nav-link" data-toggle="tab" href="#division-tab" aria-expanded="false">
-                    <i class="fa fa-gamepad text-accent"></i> Division
-                </a>
-            </li>
-            @if(!auth()->user()->isRole('member'))
-                <li>
-                    <a class="nav-link active show" data-toggle="tab" href="#rank-tab"
-                       aria-expanded="true"><i class="fa fa-trophy text-accent"></i> Rank</a>
-                </li>
-            @endif
-            @if (count($member->recruits))
-                <li>
-                    <a class="nav-link" data-toggle="tab" href="#recruiting-tab" aria-expanded="false">
-                        <i class="fa fa-user-plus text-accent"></i> Recruiting
-                    </a>
-                </li>
-            @endif
-        </ul>
-        <div class="tab-content">
-            @if(!auth()->user()->isRole('member'))
-                <div id="rank-tab" class="tab-pane">
-                    <div class="panel-body">
-
-                        @if ($rankHistory->count() > 0)
-
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Date Changed</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach ($rankHistory as $entry)
-                                    <tr>
-                                        <td>{{ $entry->rank->getLabel() }}</td>
-                                        <td>{{ $entry->created_at->format('Y-m-d') }}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-
-                        @else
-                            <p class="text-muted m-t-sm">This member currently has no rank history.</p>
-                        @endif
-                    </div>
-                </div>
-            @endif
-            <div id="division-tab" class="tab-pane active">
-                <div class="panel-body">
-
-                    @if ($transfers->count() > 0)
-
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Division</th>
-                                <th>Date Assigned</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            @foreach ($transfers as $transfer)
-                                <tr>
-                                    <td>{{ $transfer->division->name }}</td>
-                                    <td>{{ $transfer->created_at->format('Y-m-d') }}</td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-
-                    @else
-                        <p class="text-muted m-t-sm">This member currently has no division assignment history.</p>
-                    @endif
-
-                </div>
-            </div>
-            <div id="recruiting-tab" class="tab-pane">
-
-                <div class="panel-body">
-
-
-                    @if (count($member->recruits))
-
-                        <table class="table basic-datatable">
-                            <thead>
-                            <tr>
-                                <th>Member</th>
-                                <th>Join Date</th>
-                                <th>Primary Division</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($member->recruits as $recruit)
-                                <tr>
-                                    <td>
-                                        {{ $recruit->present()->rankName }}
-                                        <span class="pull-right">
-                    <a href="{{ route('member', $recruit->getUrlParams()) }}">
-                        <i class="fa fa-search"></i>
-                    </a>
-                </span>
-                                    </td>
-                                    <td>{{ $recruit->join_date }}</td>
-                                    <td>
-                                        {{ $recruit->division->name ?? "Ex-AOD" }}
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-
-                    @endif
-                </div>
-            </div>
-        </div>
+@if($transfers->count() > 1)
+    <h4 class="m-t-xl">Past Divisions</h4>
+    <hr/>
+    <div class="division-chips">
+        @php
+            $sortedTransfers = $transfers->sortBy('created_at')->values();
+        @endphp
+        @foreach($sortedTransfers->slice(0, -1) as $index => $transfer)
+            @php
+                $nextTransfer = $sortedTransfers->get($index + 1);
+                $duration = $transfer->created_at->diff($nextTransfer->created_at);
+                $durationText = '';
+                if ($duration->y > 0) $durationText .= $duration->y . 'y ';
+                if ($duration->m > 0) $durationText .= $duration->m . 'm';
+                if (!$durationText) $durationText = '<1m';
+            @endphp
+            <a href="{{ route('division', $transfer->division) }}" class="division-chip">
+                <img src="{{ $transfer->division->getLogoPath() }}" alt="{{ $transfer->division->name }}" class="division-chip-icon">
+                <span class="division-chip-name">{{ $transfer->division->name }}</span>
+                <span class="division-chip-date">{{ trim($durationText) }}</span>
+            </a>
+        @endforeach
     </div>
-</div>
+@endif

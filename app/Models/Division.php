@@ -404,7 +404,7 @@ class Division extends Model
 
     public function getLogoPath()
     {
-        if ($this->logo) {
+        if ($this->logo && Storage::exists($this->logo)) {
             return asset(Storage::url($this->logo));
         }
 
