@@ -65,7 +65,8 @@
             </div>
         </div>
 
-        <div class="panel panel-filled">
+        <div class="panel panel-filled award-detail" style="position: relative; overflow: hidden;">
+            <div class="rarity-indicator rarity-{{ $stats->rarity }}"></div>
             <div class="panel-body">
                 <div style="display:flex;align-items: center;justify-content: center;">
                     <img src="{{ asset(Storage::url($award->image)) }}"
@@ -81,6 +82,7 @@
                         @else
                             <span class="label label-warning">Clan-Wide</span>
                         @endif
+                        <span class="award-pill pill-{{ $stats->rarity }}" style="margin-left: 5px;">{{ ucfirst($stats->rarity) }}</span>
                         <p style="max-width:500px; margin-top: 15px;">{{ $award->description }}</p>
                     </div>
 
@@ -103,6 +105,7 @@
                     @else
                         <span class="label label-warning">Clan-Wide</span>
                     @endif
+                    <span class="award-pill pill-{{ $stats->rarity }}">{{ ucfirst($stats->rarity) }}</span>
                     <p>{{ $award->description }}</p>
                     @if ($award->allow_request)
                         <a href="#" data-toggle="modal" data-target="#award_modal"

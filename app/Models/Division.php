@@ -404,10 +404,6 @@ class Division extends Model
 
     public function getLogoPath()
     {
-        if (in_array(env('APP_ENV'), ['testing', 'local', 'development'])) {
-            return asset('images/logo_v2.svg');
-        }
-
         if ($this->logo) {
             return asset(Storage::url($this->logo));
         }

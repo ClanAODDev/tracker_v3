@@ -63,6 +63,7 @@ class AwardController extends Controller
     public function show(Award $award)
     {
         $award->load(['division']);
+        $award->loadCount('recipients');
 
         $recipients = MemberAward::where('award_id', $award->id)
             ->where('approved', true)
@@ -80,6 +81,7 @@ class AwardController extends Controller
                 ->where('approved', true)
                 ->orderByDesc('created_at')
                 ->first()?->created_at,
+            'rarity' => $this->calculateRarity($award->recipients_count),
         ];
 
         return view('division.awards.show', compact('award', 'recipients', 'stats'));
