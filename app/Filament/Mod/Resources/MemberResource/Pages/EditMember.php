@@ -6,11 +6,13 @@ use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource;
 use App\Jobs\RemoveClanMember;
+use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
@@ -78,12 +80,29 @@ class EditMember extends EditRecord
                     Textarea::make('removal_reason')
                         ->label('Reason for Removal')
                         ->required(),
+                    Select::make('global_tag_id')
+                        ->label('Apply Clan-Wide Tag')
+                        ->helperText('Optionally tag this member before removal (e.g., "Do Not Recruit")')
+                        ->options(fn () => DivisionTag::global()
+                            ->visibleTo()
+                            ->orderBy('name')
+                            ->pluck('name', 'id'))
+                        ->searchable()
+                        ->preload(),
                 ])
                 ->hidden(fn (): bool => ! $this->record->division_id)
-                ->action(function (Member $member, array $data) {
+                ->action(function (array $data) {
+                    $member = $this->record;
+
+                    if (! empty($data['global_tag_id'])) {
+                        $member->tags()->syncWithoutDetaching([
+                            $data['global_tag_id'] => ['assigned_by' => auth()->user()->member?->id],
+                        ]);
+                    }
+
                     Note::create([
                         'type' => 'negative',
-                        'body' => 'Member removal:' . $data['removal_reason'],
+                        'body' => 'Member removal: ' . $data['removal_reason'],
                         'author_id' => auth()->id(),
                         'member_id' => $member->id,
                     ]);

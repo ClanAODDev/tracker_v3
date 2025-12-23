@@ -120,6 +120,9 @@ class Member extends Model
         ]);
 
         $this->partTimeDivisions()->detach();
+
+        $divisionSpecificTagIds = $this->tags()->whereNotNull('division_tags.division_id')->pluck('division_tags.id');
+        $this->tags()->detach($divisionSpecificTagIds);
     }
 
     public function scopeUnassignedSquadLeaders($query)
