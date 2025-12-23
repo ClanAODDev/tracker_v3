@@ -73,13 +73,6 @@
         <li>
             <a href="{{ route('division.voice-report', $division) }}">Voice Comms Issues</a>
         </li>
-
-            <?php $file = Str::camel($division->name); ?>
-        @if (file_exists(resource_path("views/division/reports/ingame-reports/{$file}.blade.php")))
-            <li>
-                <a href="{{ route('division.ingame-reports', $division) }}">Ingame Report</a>
-            </li>
-        @endif
     </ul>
 </div>
 
