@@ -48,7 +48,7 @@ class AwardResource extends Resource
                 Forms\Components\Textarea::make('instructions')
                     ->placeholder('Ex. include a imgur link to screenshot, or link to game profile')
                     ->columnSpanFull()
-                    ->required()
+                    ->nullable()
                     ->maxLength(191),
                 Select::make('division_id')
                     ->relationship('division', 'name')

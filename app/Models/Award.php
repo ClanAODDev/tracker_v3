@@ -60,7 +60,7 @@ class Award extends Model
 
     public function getImagePath(): string
     {
-        if ($this->image && Storage::exists($this->image)) {
+        if ($this->image && Storage::disk('public')->exists($this->image)) {
             return asset(Storage::url($this->image));
         }
 
