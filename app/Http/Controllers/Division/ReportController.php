@@ -15,8 +15,6 @@ use Illuminate\View\View;
 
 class ReportController extends \App\Http\Controllers\Controller
 {
-    use IngameReports;
-
     public function __construct(DivisionRepository $division)
     {
         $this->division = $division;
