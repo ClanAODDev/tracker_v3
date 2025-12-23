@@ -130,14 +130,14 @@ class DivisionController extends Controller
         $includeParttimers = request()->boolean('parttimers');
 
         $query = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags',
+            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags.division',
         ]);
 
         if ($includeParttimers) {
             $parttimeMembers = Member::whereHas('partTimeDivisions', function ($q) use ($division) {
                 $q->where('division_id', $division->id);
             })->with([
-                'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags', 'division',
+                'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags.division', 'division',
             ])->get();
 
             $members = $query->get()->merge($parttimeMembers)->sortByDesc('rank');

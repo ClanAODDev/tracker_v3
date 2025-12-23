@@ -43,10 +43,12 @@ class PlatoonController extends Controller
      */
     public function show(Division $division, Platoon $platoon)
     {
+        $platoon->load('squads.leader');
+
         $members = $platoon->members()->with([
             'handles' => $this->filterHandlesToPrimaryHandle($division),
             'leave',
-            'tags',
+            'tags.division',
         ])->get()->sortByDesc('rank');
 
         $members = $members->each($this->getMemberHandle());
