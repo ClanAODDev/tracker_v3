@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Position;
-use App\Http\Requests\CreatePlatoonForm;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\PlatoonRepository;
 use Closure;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PlatoonController extends Controller
 {
@@ -36,11 +34,6 @@ class PlatoonController extends Controller
             && $member->division->id === $division->id;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return Response|StreamedResponse
-     */
     public function show(Division $division, Platoon $platoon)
     {
         $platoon->load('squads.leader');
@@ -81,57 +74,6 @@ class PlatoonController extends Controller
         });
 
         return view('platoon.manage-members', compact('division', 'platoon'));
-    }
-
-    /**
-     * Export platoon members as CSV.
-     *
-     * @return StreamedResponse
-     */
-    public function exportAsCSV(Division $division, Platoon $platoon)
-    {
-        $members = $platoon->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division),
-            'leave',
-        ])->get()->sortByDesc('rank');
-
-        $members = $members->each($this->getMemberHandle());
-
-        $csv_data = $members->reduce(function ($data, $member) {
-            $data[] = [
-                $member->name,
-                $member->rank->getAbbreviation(),
-                $member->join_date,
-                $member->last_activity,
-                $member->last_promoted_at,
-                $member->handle->pivot->value ?? 'N/A',
-                $member->posts,
-            ];
-
-            return $data;
-        }, [
-            [
-                'Name',
-                'Rank',
-                'Join Date',
-                'Last Forum Activity',
-                'Last Comms Activity',
-                'Last Promoted',
-                'Member Handle',
-                'Member Forum Posts',
-            ],
-        ]);
-
-        return new StreamedResponse(function () use ($csv_data) {
-            $handle = fopen('php://output', 'w');
-            foreach ($csv_data as $row) {
-                fputcsv($handle, $row);
-            }
-            fclose($handle);
-        }, 200, [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=members.csv',
-        ]);
     }
 
     /**

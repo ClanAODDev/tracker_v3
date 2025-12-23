@@ -12,7 +12,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Class DivisionController.
@@ -149,57 +148,6 @@ class DivisionController extends Controller
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
 
         return view('division.members', compact('division', 'members', 'voiceActivityGraph', 'includeParttimers'));
-    }
-
-    /**
-     * Export platoon members as CSV.
-     *
-     * @return StreamedResponse
-     */
-    public function exportAsCSV(Division $division)
-    {
-        $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
-        ])->get()->sortByDesc('rank');
-
-        $members = $members->each($this->getMemberHandle());
-
-        $csv_data = $members->reduce(function ($data, $member) {
-            $data[] = [
-                $member->name,
-                $member->rank->getAbbreviation(),
-                $member->join_date,
-                $member->last_activity,
-                $member->last_ts_activity,
-                $member->last_promoted_at,
-                $member->handle->pivot->value ?? 'N/A',
-                $member->posts,
-            ];
-
-            return $data;
-        }, [
-            [
-                'Name',
-                'Rank',
-                'Join Date',
-                'Last Forum Activity',
-                'Last Comms Activity',
-                'Last Promoted',
-                'Member Handle',
-                'Member Forum Posts',
-            ],
-        ]);
-
-        return new StreamedResponse(function () use ($csv_data) {
-            $handle = fopen('php://output', 'w');
-            foreach ($csv_data as $row) {
-                fputcsv($handle, $row);
-            }
-            fclose($handle);
-        }, 200, [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=members.csv',
-        ]);
     }
 
     /**
