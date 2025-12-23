@@ -21,36 +21,43 @@
         @slot ('subheading')
             @php
                 $visibleTags = $member->tags->filter(fn ($tag) => $tag->isVisibleTo());
+                $tagDivision = $division ?? (auth()->user()->isRole('admin') ? App\Models\Division::where('slug', 'floater')->first() : null);
             @endphp
             <div class="member-tags" id="member-tags-display"
-                 @can('assign', [App\Models\DivisionTag::class, $member])
-                     data-tags-url="{{ route('member-tags.get', [$division, $member->clan_id]) }}"
-                 data-add-url="{{ route('member-tags.add', [$division, $member->clan_id]) }}"
-                 data-remove-url="{{ route('member-tags.remove', [$division, $member->clan_id]) }}"
-                 data-create-url="{{ route('member-tags.create', [$division, $member->clan_id]) }}"
-                    @endcan
+                 @if ($tagDivision)
+                     @can('assign', [App\Models\DivisionTag::class, $member])
+                         data-tags-url="{{ route('member-tags.get', [$tagDivision, $member->clan_id]) }}"
+                         data-add-url="{{ route('member-tags.add', [$tagDivision, $member->clan_id]) }}"
+                         data-remove-url="{{ route('member-tags.remove', [$tagDivision, $member->clan_id]) }}"
+                         data-create-url="{{ route('member-tags.create', [$tagDivision, $member->clan_id]) }}"
+                     @endcan
+                 @endif
             >
                 @foreach ($visibleTags as $tag)
                     <span class="badge member-tag tag-visibility-{{ $tag->visibility->value }}"
                           title="{{ $tag->division?->name }}" data-tag-id="{{ $tag->id }}"
                           data-visibility="{{ $tag->visibility->value }}">
                         {{ $tag->name }}
-                        @can('assign', [App\Models\DivisionTag::class, $member])
-                            <span class="remove-tag"
-                                  style="margin-left: 4px; cursor: pointer; opacity: 0;">&times;</span>
-                        @endcan
+                        @if ($tagDivision)
+                            @can('assign', [App\Models\DivisionTag::class, $member])
+                                <span class="remove-tag"
+                                      style="margin-left: 4px; cursor: pointer; opacity: 0;">&times;</span>
+                            @endcan
+                        @endif
                     </span>
                 @endforeach
-                @can('assign', [App\Models\DivisionTag::class, $member])
-                    <div class="dropdown" style="display: inline-block;">
-                        <a href="#" class="badge badge-default" title="Add tag" data-toggle="dropdown">
-                            <i class="fa fa-plus"></i>
-                        </a>
-                        <ul class="dropdown-menu" id="available-tags-dropdown">
-                            <li class="dropdown-header">Loading...</li>
-                        </ul>
-                    </div>
-                @endcan
+                @if ($tagDivision)
+                    @can('assign', [App\Models\DivisionTag::class, $member])
+                        <div class="dropdown" style="display: inline-block;">
+                            <a href="#" class="badge badge-default" title="Add tag" data-toggle="dropdown">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                            <ul class="dropdown-menu" id="available-tags-dropdown">
+                                <li class="dropdown-header">Loading...</li>
+                            </ul>
+                        </div>
+                    @endcan
+                @endif
             </div>
         @endslot
     @endcomponent
