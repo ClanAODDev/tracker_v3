@@ -92,6 +92,72 @@
     font-size: 210px;
 }
 
+.award-card {
+    display: block;
+    transition: transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.award-card:hover {
+    transform: translateY(-3px);
+}
+
+.award-card-name {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 5px;
+    line-height: 1.3;
+}
+
+.award-card-count {
+    font-size: 12px;
+}
+
+.award-card-division {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    opacity: 0.7;
+}
+
+.award-card-division img {
+    width: 20px;
+    height: 20px;
+}
+
+.rarity-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.rarity-mythic, .rarity-indicator.rarity-mythic { background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #ff6b6b); background-size: 200% 100%; animation: mythic-shimmer 2s linear infinite; }
+.rarity-legendary, .rarity-indicator.rarity-legendary { background: #ff9f43; }
+.rarity-epic, .rarity-indicator.rarity-epic { background: #a55eea; }
+.rarity-rare, .rarity-indicator.rarity-rare { background: #45aaf2; }
+.rarity-common, .rarity-indicator.rarity-common { background: #778ca3; }
+
+.text-mythic { color: #ff6b6b; }
+.text-legendary { color: #ff9f43; }
+.text-epic { color: #a55eea; }
+.text-rare { color: #45aaf2; }
+.text-common { color: #778ca3; }
+
+.progress-bar-mythic { background: linear-gradient(90deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff); }
+.progress-bar-legendary { background: #ff9f43; }
+.progress-bar-epic { background: #a55eea; }
+.progress-bar-rare { background: #45aaf2; }
+.progress-bar-common { background: #778ca3; }
+
+@keyframes mythic-shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

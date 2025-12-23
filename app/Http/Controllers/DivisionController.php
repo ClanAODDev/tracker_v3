@@ -5,26 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\DivisionRepository;
-use Closure;
+use App\Services\MemberQueryService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
-/**
- * Class DivisionController.
- */
 class DivisionController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     */
-    public function __construct(DivisionRepository $division)
-    {
-        $this->division = $division;
+    public function __construct(
+        private DivisionRepository $division,
+        private MemberQueryService $memberQuery,
+    ) {
         $this->middleware('auth');
     }
 
@@ -122,104 +116,24 @@ class DivisionController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * @return Factory|View
-     */
     public function members(Division $division)
     {
         $includeParttimers = request()->boolean('parttimers');
 
-        $query = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags',
-        ]);
+        $members = $this->memberQuery->loadSortedMembers($division->members(), $division);
 
         if ($includeParttimers) {
-            $parttimeMembers = Member::whereHas('partTimeDivisions', function ($q) use ($division) {
-                $q->where('division_id', $division->id);
-            })->with([
-                'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave', 'tags', 'division',
-            ])->get();
+            $parttimeQuery = Member::whereHas('partTimeDivisions', fn ($q) => $q->where('division_id', $division->id));
+            $parttimeMembers = $this->memberQuery->withStandardRelations($parttimeQuery, $division)
+                ->with('division')
+                ->get();
+            $this->memberQuery->extractHandles($parttimeMembers);
 
-            $members = $query->get()->merge($parttimeMembers)->sortByDesc('rank');
-        } else {
-            $members = $query->get()->sortByDesc('rank');
+            $members = $members->merge($parttimeMembers)->sortByDesc('rank');
         }
 
-        $members = $members->each($this->getMemberHandle());
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
 
         return view('division.members', compact('division', 'members', 'voiceActivityGraph', 'includeParttimers'));
-    }
-
-    /**
-     * Export platoon members as CSV.
-     *
-     * @return StreamedResponse
-     */
-    public function exportAsCSV(Division $division)
-    {
-        $members = $division->members()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division), 'leave',
-        ])->get()->sortByDesc('rank');
-
-        $members = $members->each($this->getMemberHandle());
-
-        $csv_data = $members->reduce(function ($data, $member) {
-            $data[] = [
-                $member->name,
-                $member->rank->getAbbreviation(),
-                $member->join_date,
-                $member->last_activity,
-                $member->last_ts_activity,
-                $member->last_promoted_at,
-                $member->handle->pivot->value ?? 'N/A',
-                $member->posts,
-            ];
-
-            return $data;
-        }, [
-            [
-                'Name',
-                'Rank',
-                'Join Date',
-                'Last Forum Activity',
-                'Last Comms Activity',
-                'Last Promoted',
-                'Member Handle',
-                'Member Forum Posts',
-            ],
-        ]);
-
-        return new StreamedResponse(function () use ($csv_data) {
-            $handle = fopen('php://output', 'w');
-            foreach ($csv_data as $row) {
-                fputcsv($handle, $row);
-            }
-            fclose($handle);
-        }, 200, [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=members.csv',
-        ]);
-    }
-
-    /**
-     * @return Closure
-     */
-    private function filterHandlesToPrimaryHandle($division)
-    {
-        return function ($query) use ($division) {
-            $query->where('handles.id', $division->handle_id)
-                ->wherePivot('primary', true);
-        };
-    }
-
-    /**
-     * @return Closure
-     */
-    private function getMemberHandle()
-    {
-        return function ($member) {
-            $member->handle = $member->handles->first();
-        };
     }
 }

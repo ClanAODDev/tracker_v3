@@ -4,53 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\Platoon;
-use App\Repositories\MemberRepository;
-use Carbon\Carbon;
-use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\View\View;
 
-/**
- * Class MemberController.
- */
 class MemberController extends Controller
 {
-    /**
-     * MemberController constructor.
-     */
-    public function __construct(protected MemberRepository $member)
+    public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * Search for a member.
-     *
-     * @return Factory|View
-     *
-     * @internal param $name
-     */
     public function search($name = null)
     {
-        if (! $name) {
-            $name = request()->name;
-        }
+        $name = $name ?: request()->name;
+
+        $members = [];
 
         if ($name) {
-            $member_name = Member::where('name', 'LIKE', "%{$name}%")
-                ->with('division');
+            $byName = Member::where('name', 'LIKE', "%{$name}%")->with('division');
 
-            $members = Member::withWhereHas('handles', function ($query) use ($name) {
-                $query->where('value', 'LIKE', "%{$name}%");
-            })
+            $members = Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$name}%"))
                 ->with('division')
-                ->union($member_name)
+                ->union($byName)
                 ->orderBy('name')
                 ->get();
-        } else {
-            $members = [];
         }
 
         if (request()->ajax()) {
@@ -60,92 +38,56 @@ class MemberController extends Controller
         return view('member.search', compact('members'));
     }
 
-    /**
-     * Endpoint for Bootcomplete.
-     *
-     * @return mixed
-     */
     public function searchAutoComplete(Request $request)
     {
-        $query = $request->input('query');
-
-        $members = Member::where('name', 'LIKE', "%{$query}%")->take(5)->get();
-
-        return $members->map(fn ($member) => [
-            'id' => $member->clan_id,
-            'label' => $member->name,
-        ]);
+        return Member::where('name', 'LIKE', "%{$request->input('query')}%")
+            ->take(5)
+            ->get()
+            ->map(fn ($member) => [
+                'id' => $member->clan_id,
+                'label' => $member->name,
+            ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return Response
-     *
-     * @internal param int $id
-     */
     public function show(Member $member)
     {
         $division = $member->division;
 
-        // hide admin notes from non-admin users
         $notes = $member->notes()->with('author.member')->get()
-            ->filter(function ($note) {
-                if ($note->type === 'sr_ldr') {
-                    return auth()->user()->isRole(['sr_ldr', 'admin']);
-                }
-
-                return true;
-            });
+            ->filter(fn ($note) => $note->type !== 'sr_ldr' || auth()->user()->isRole(['sr_ldr', 'admin']));
 
         $member->load('recruits', 'recruits.division');
 
-        $partTimeDivisions = $member->partTimeDivisions()
-            ->whereActive(true)
-            ->get();
-
-        $rankHistory = $member->rankActions()->approvedAndAccepted()->get();
-        $transfers = $member->transfers()->with('division')->get();
-
-        $discordStatusLastSeen = sprintf(
-            '%s &mdash; Last seen: %s',
-            $member->voiceStatus,
-            ($member->last_voice_activity && ! str_contains($member->last_voice_activity, '1970'))
-                ? Carbon::createFromTimeString($member->last_voice_activity)->format('Y-m-d g:i A')
-                : 'Never'
-        );
-
-        return view('member.show', compact(
-            'member',
-            'division',
-            'notes',
-            'partTimeDivisions',
-            'rankHistory',
-            'transfers',
-            'discordStatusLastSeen',
-        ));
+        return view('member.show', [
+            'member' => $member,
+            'division' => $division,
+            'notes' => $notes,
+            'partTimeDivisions' => $member->partTimeDivisions()->whereActive(true)->get(),
+            'rankHistory' => $member->rankActions()->approvedAndAccepted()->get(),
+            'transfers' => $member->transfers()->with('division')->get(),
+        ]);
     }
 
-    public function assignPlatoon($member)
+    public function assignPlatoon(Member $member): JsonResponse
     {
         $platoon = Platoon::find(request()->platoon_id);
         $member->platoon_id = $platoon->id;
         $member->save();
+
+        return response()->json(['success' => true]);
     }
 
-    public function confirmUnassign($member)
+    public function confirmUnassign(Member $member)
     {
         $this->authorize('reset', $member);
 
-        $division = $member->division;
-
-        return view('member.confirm-unassign', compact('member', 'division'));
+        return view('member.confirm-unassign', [
+            'member' => $member,
+            'division' => $member->division,
+        ]);
     }
 
-    /**
-     * @return RedirectResponse
-     */
-    public function unassignMember($member)
+    public function unassignMember(Member $member): RedirectResponse
     {
         $member->squad_id = 0;
         $member->platoon_id = 0;

@@ -5,12 +5,11 @@
     </div>
 
     <table class="table table-hover basic-datatable">
-
         <thead>
         <tr>
             <th class="col-xs-4">Division</th>
             <th class="text-center col-xs-2">Population</th>
-            <th class="text-center col-xs-2">Discord</th>
+            <th class="text-center col-xs-2">Weekly Discord</th>
         </tr>
         </thead>
 
@@ -23,22 +22,32 @@
                     </a>
                     {{ $division->name }}
                 </td>
-                <td class="text-center">{{ $division->census->last()->count}}</td>
+                <td class="text-center">{{ $division->population }}</td>
                 <td class="text-center slight">
-                    {{ number_format($division->weeklyVoiceActive / $division->total * 100, 1) }}%
+                    {{ $division->weeklyVoicePercent }}%
                     <span class="census-pie"
                           data-colors="{{ json_encode(['#404652', '#56C0E0']) }}"
-                          data-counts="{{ json_encode([$division->popMinusVoiceActive, $division->weeklyVoiceActive])
-                          }}">
+                          data-counts="{{ json_encode([$division->population - $division->weeklyVoiceActive, $division->weeklyVoiceActive]) }}">
                     </span>
                 </td>
             </tr>
         @endforeach
         </tbody>
+
+        <tfoot>
+        <tr class="active">
+            <td><strong>Total</strong></td>
+            <td class="text-center"><strong>{{ number_format($totalPopulation) }}</strong></td>
+            <td class="text-center">
+                <strong>{{ $totalPopulation > 0 ? number_format($totalVoiceActive / $totalPopulation * 100, 1) : 0 }}%</strong>
+                <small class="text-muted">({{ number_format($totalVoiceActive) }})</small>
+            </td>
+        </tr>
+        </tfoot>
     </table>
 
     <div class="panel-footer text-muted">
-        <p>Populations reflect data collected during last census.</p>
+        Populations reflect data collected during last census.
     </div>
 </div>
 

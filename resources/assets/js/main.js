@@ -227,16 +227,27 @@ var Tracker = Tracker || {};
             }
 
             var sparklineCharts = function () {
-                $('[census-data]').sparkline(
-                    $('[census-data]').data('counts'), {
+                $('[census-data]').each(function () {
+                    var $el = $(this);
+                    $el.sparkline($el.data('counts'), {
                         type: 'line',
                         lineColor: '#fff',
-                        lineWidth: 3,
+                        lineWidth: 2,
                         fillColor: '#404652',
                         height: 50,
                         width: '100%'
+                    });
+
+                    if ($el.data('weekly-voice')) {
+                        $el.sparkline($el.data('weekly-voice'), {
+                            type: 'line',
+                            lineColor: '#56C0E0',
+                            lineWidth: 2,
+                            fillColor: 'rgba(86, 192, 224, 0.3)',
+                            composite: true
+                        });
                     }
-                );
+                });
 
                 $('.census-pie').each(function () {
                     $(this).sparkline(

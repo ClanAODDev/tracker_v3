@@ -33,7 +33,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
         ->name('division.inactive-ts-forums');
 
     Route::get('/members', 'DivisionController@members')->name('division.members');
-    Route::get('/members/csv', 'DivisionController@exportAsCSV')->name('division.export-csv');
 
     Route::get('/notes', 'DivisionNoteController@index')->name('division.notes');
 
@@ -76,7 +75,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
         Route::get('{platoon}', 'PlatoonController@show')->name('platoon');
         Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
         Route::get('{platoon}/manage-assignments', 'PlatoonController@manageSquads')->name('platoon.manage-squads');
-        Route::get('{platoon}/csv', 'PlatoonController@exportAsCsv')->name('platoon.export-csv');
 
         Route::post('', 'PlatoonController@store')->name('savePlatoon');
         Route::put('{platoon}', 'PlatoonController@update')->name('updatePlatoon');
@@ -95,7 +93,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
             Route::put('{squad}', 'SquadController@update')->name('updateSquad');
             Route::patch('{squad}', 'SquadController@update');
             Route::delete('{squad}', 'SquadController@destroy')->name('deleteSquad');
-            Route::get('{squad}/csv', 'SquadController@exportAsCsv')->name('squad.export-csv');
         });
     });
 
