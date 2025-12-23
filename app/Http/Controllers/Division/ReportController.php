@@ -99,25 +99,6 @@ class ReportController extends \App\Http\Controllers\Controller
         ));
     }
 
-    /**
-     * @param  null|mixed  $customAttr
-     * @return Factory|View
-     */
-    public function ingameReport(Division $division, $customAttr = null)
-    {
-        $method = \Illuminate\Support\Str::camel($division->name);
-        if (method_exists($this, $method)) {
-            $data = $this->{$method}($customAttr);
-        } else {
-            $data = [];
-        }
-
-        return view('division.reports.ingame-report', compact('division', 'data'));
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View
-     */
     public function voiceReport(Division $division)
     {
         $discordIssues = $division->members()->misconfiguredDiscord()->get();

@@ -56,12 +56,6 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
         'Division\ReportController@promotionsReport'
     )->middleware(['auth'])
         ->name('division.promotions');
-    Route::get(
-        '/ingame-report/{customAttr?}',
-        'Division\ReportController@ingameReport'
-    )->middleware(['auth'])
-        ->name('division.ingame-reports');
-
     /*
      * member requests.
      */

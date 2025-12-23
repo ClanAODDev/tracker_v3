@@ -45,7 +45,6 @@ function registerDivisionSubPages()
         'teamspeak-report',
         'retention-report',
         'voice-report',
-        'ingame-report',
         'promotions',
         'members',
         'member-requests',

@@ -11,8 +11,6 @@ return [
     'bot_api_base_url' => env('BOT_API_BASE_URL'),
     'bot_cmd_tokens' => env('BOT_COMMAND_TOKENS'),
     'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
-    'ingame-reports' => [],
-    'api-keys' => [],
 
     'request_grace_period' => env('REQUEST_GRACE_PERIOD', 2),
     'stream_calendar' => env('STREAM_CALENDAR_ID'),

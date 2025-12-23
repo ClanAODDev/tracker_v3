@@ -25,7 +25,7 @@ function handleImageGeneration(Member $member, string $cachePrefix, callable $ge
         md5(json_encode(request()->except(['debug'])))
     );
 
-    $cacheMins = config('app.aod.awards_cache_minutes');
+    $cacheMins = config('aod.awards.cache_minutes');
 
     return Cache::remember(
         key: $cacheKey,

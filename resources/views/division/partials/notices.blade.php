@@ -30,7 +30,7 @@
 @if ($division->outstandingInactives && auth()->user()->isRole('sr_ldr'))
     <div class="alert alert-default">
         <i class="fa fa-user-clock"></i>
-        There {{ $division->outstandingInactives === 1 ? 'is' : 'are' }} <code>{{ $division->outstandingInactives }}</code> inactive {{ Str::plural('member', $division->outstandingInactives) }} whose last activity exceeds <code>{{ config('app.aod.maximum_days_inactive') }}</code> days. Please <a href="{{ route('division.inactive-members', $division) }}" class="alert-link">process these members</a> out of AOD.
+        There {{ $division->outstandingInactives === 1 ? 'is' : 'are' }} <code>{{ $division->outstandingInactives }}</code> inactive {{ Str::plural('member', $division->outstandingInactives) }} whose last activity exceeds <code>{{ config('aod.maximum_days_inactive') }}</code> days. Please <a href="{{ route('division.inactive-members', $division) }}" class="alert-link">process these members</a> out of AOD.
     </div>
 @endif
 
