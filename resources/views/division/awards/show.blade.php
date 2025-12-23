@@ -79,6 +79,9 @@
                         <h3>{{ $award->name }}</h3>
                         @if ($award->division)
                             <span class="label label-default">{{ $award->division->name }}</span>
+                            @unless($award->division->active)
+                                <span class="label label-warning">Legacy</span>
+                            @endunless
                         @else
                             <span class="label label-warning">Clan-Wide</span>
                         @endif
@@ -86,7 +89,7 @@
                         <p style="max-width:500px; margin-top: 15px;">{{ $award->description }}</p>
                     </div>
 
-                    @if ($award->allow_request)
+                    @if ($award->allow_request && ($award->division?->active ?? true))
                         <a href="#" data-toggle="modal" data-target="#award_modal"
                            title="Request this award for yourself or someone else"
                            style="margin-left:50px;"
@@ -102,12 +105,15 @@
                     <h3>{{ $award->name }}</h3>
                     @if ($award->division)
                         <span class="label label-default">{{ $award->division->name }}</span>
+                        @unless($award->division->active)
+                            <span class="label label-warning">Legacy</span>
+                        @endunless
                     @else
                         <span class="label label-warning">Clan-Wide</span>
                     @endif
                     <span class="award-pill pill-{{ $stats->rarity }}">{{ ucfirst($stats->rarity) }}</span>
                     <p>{{ $award->description }}</p>
-                    @if ($award->allow_request)
+                    @if ($award->allow_request && ($award->division?->active ?? true))
                         <a href="#" data-toggle="modal" data-target="#award_modal"
                            title="Request this award for yourself or someone else"
                            class="btn btn-default m-t-md">Request Award</a>

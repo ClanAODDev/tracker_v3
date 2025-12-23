@@ -54,6 +54,23 @@
         <div class="row m-b-lg">
             <div class="col-md-12">
                 <p>Stand out as a member of the community by earning one or more of the awards listed below.</p>
+                <div class="rarity-legend">
+                    @foreach (config('aod.awards.rarity') as $key => $rarity)
+                        <div class="rarity-legend-item">
+                            <span class="rarity-dot rarity-{{ $key }}"></span>
+                            <span class="rarity-label">{{ $rarity['label'] }}</span>
+                            <span class="rarity-range">
+                                @if ($rarity['max'] === null)
+                                    {{ $rarity['min'] }}+
+                                @elseif ($rarity['min'] === $rarity['max'])
+                                    {{ $rarity['min'] }} {{ Str::plural('recipient', $rarity['min']) }}
+                                @else
+                                    {{ $rarity['min'] }}-{{ $rarity['max'] }}
+                                @endif
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -73,7 +90,7 @@
             </div>
         @endif
 
-        @forelse ($divisionAwards as $divisionName => $awards)
+        @forelse ($activeAwards as $divisionName => $awards)
             @php $division = $awards->first()->division; @endphp
             <div class="panel panel-filled">
                 <div class="panel-heading">
@@ -90,19 +107,36 @@
                 </div>
             </div>
         @empty
-            @if ($clanAwards->isEmpty())
+            @if ($clanAwards->isEmpty() && $legacyAwards->isEmpty())
                 <div class="text-center text-muted">
                     <p>There are currently no available awards.</p>
                 </div>
             @endif
         @endforelse
 
-        <div class="panel-footer text-muted">
-            <span class="text-mythic">&#9632;</span> Mythic (0)
-            <span class="text-legendary" style="margin-left: 10px;">&#9632;</span> Legendary (1-10)
-            <span class="text-epic" style="margin-left: 10px;">&#9632;</span> Epic (11-30)
-            <span class="text-rare" style="margin-left: 10px;">&#9632;</span> Rare (31-50)
-            <span class="text-common" style="margin-left: 10px;">&#9632;</span> Common (50+)
-        </div>
+        @if ($legacyAwards->isNotEmpty() && !$divisionSlug)
+            <div class="panel panel-filled" style="opacity: 0.75;">
+                <div class="panel-heading">
+                    <i class="fa fa-archive text-muted"></i> Legacy Awards
+                    <span class="badge pull-right">{{ $legacyAwards->flatten()->count() }}</span>
+                </div>
+                <div class="panel-body">
+                    <p class="text-muted m-b-md">Awards from divisions that are no longer active. These awards are no longer requestable but remain on member profiles.</p>
+                    @foreach ($legacyAwards as $divisionName => $awards)
+                        @php $division = $awards->first()->division; @endphp
+                        <h5 class="text-muted m-t-md">
+                            <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; opacity: 0.7;">
+                            {{ $divisionName }}
+                        </h5>
+                        <div class="row award-grid">
+                            @foreach ($awards as $award)
+                                @include('division.awards.partials.award-card', ['award' => $award, 'legacy' => true, 'small' => true])
+                            @endforeach
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
     </div>
 @endsection

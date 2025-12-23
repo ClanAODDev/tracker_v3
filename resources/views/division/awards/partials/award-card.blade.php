@@ -1,5 +1,5 @@
-<div class="col-lg-3 col-md-4 col-sm-6">
-    <a class="panel panel-filled award-card" href="{{ route('awards.show', $award) }}">
+<div class="{{ !empty($small) ? 'col-lg-2 col-md-3 col-sm-4' : 'col-lg-3 col-md-4 col-sm-6' }}">
+    <a class="panel panel-filled award-card award-card-{{ $award->rarity }}" href="{{ route('awards.show', $award) }}">
         <div class="rarity-indicator rarity-{{ $award->rarity }}" title="{{ ucfirst($award->rarity) }}"></div>
         <div class="panel-body text-center">
             <img src="{{ $award->getImagePath() }}"
@@ -10,7 +10,7 @@
             />
             <div class="award-card-name">
                 {{ $award->division ? Str::replace($award->division->name . ' - ', '', $award->name) : $award->name }}
-                @if ($award->allow_request)
+                @if ($award->allow_request && empty($legacy))
                     <i class="fa fa-hand-paper-o text-success" title="Requestable"></i>
                 @endif
             </div>

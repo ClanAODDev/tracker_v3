@@ -18,9 +18,9 @@
     <div class="row award-grid">
         @foreach ($member->awards->sortBy('award.display_order') as $record)
             @php $rarity = $record->award->getRarity(); @endphp
-            <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="col-lg-2 col-md-3 col-sm-4">
                 <a href="{{ route('awards.show', $record->award) }}"
-                   class="panel panel-filled member-award-card"
+                   class="panel panel-filled member-award-card member-award-card-{{ $rarity }}"
                    title="{{ $record->reason ?? $record->award->description }}">
                     <div class="rarity-indicator rarity-{{ $rarity }}"></div>
                     <div class="panel-body text-center">

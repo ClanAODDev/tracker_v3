@@ -28,7 +28,18 @@ class AwardController extends Controller
             $query->whereHas('division', fn (Builder $q) => $q->where('slug', $divisionSlug));
         }
 
-        $awards = $query->get();
+        $allAwards = $query->get();
+
+        $awards = $allAwards->filter(function ($award) {
+            if ($award->division_id === null) {
+                return true;
+            }
+            if ($award->division?->active) {
+                return true;
+            }
+
+            return $award->recipients_count > 0;
+        });
 
         if ($divisionSlug && $awards->isEmpty()) {
             $this->showErrorToast('Selected division has no awards assigned. Showing all...');
@@ -43,18 +54,29 @@ class AwardController extends Controller
         });
 
         $clanAwards = $awards->whereNull('division_id')->values();
-        $divisionAwards = $awards->whereNotNull('division_id')->groupBy('division.name');
 
+        $activeAwards = $awards
+            ->whereNotNull('division_id')
+            ->filter(fn ($award) => $award->division?->active)
+            ->groupBy('division.name');
+
+        $legacyAwards = $awards
+            ->whereNotNull('division_id')
+            ->filter(fn ($award) => ! $award->division?->active && $award->recipients_count > 0)
+            ->groupBy('division.name');
+
+        $activeAndClanAwards = $awards->filter(fn ($a) => $a->division_id === null || $a->division?->active);
         $totals = (object) [
             'awards' => $awards->count(),
             'recipients' => $awards->sum('recipients_count'),
-            'requestable' => $awards->where('allow_request', true)->count(),
+            'requestable' => $activeAndClanAwards->where('allow_request', true)->count(),
         ];
 
         return view('division.awards.index', compact(
             'awards',
             'clanAwards',
-            'divisionAwards',
+            'activeAwards',
+            'legacyAwards',
             'totals',
             'divisionSlug'
         ));
@@ -91,6 +113,10 @@ class AwardController extends Controller
     {
         if (! $award->allow_request) {
             return redirect()->back()->withErrors(['award' => 'Award requests are not allowed for this award.']);
+        }
+
+        if ($award->division && ! $award->division->active) {
+            return redirect()->back()->withErrors(['award' => 'This is a legacy award and cannot be requested.']);
         }
 
         $validatedData = $request->validate([
