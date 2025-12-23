@@ -123,19 +123,32 @@ class ReportsController extends Controller
         }
     }
 
-    /**
-     * @return mixed
-     */
     public function divisionTurnoverReport()
     {
-        $divisions = \App\Models\Division::active()->withCount(
-            'members',
-            'newMembersLast30',
-            'newMembersLast60',
-            'newMembersLast90'
-        )->get();
+        $divisions = Division::active()
+            ->orderBy('name')
+            ->withCount('members', 'newMembersLast30', 'newMembersLast60', 'newMembersLast90')
+            ->get()
+            ->each(function ($division) {
+                $pop = $division->members_count ?: 1;
+                $division->pct30 = round($division->new_members_last30_count / $pop * 100, 1);
+                $division->pct60 = round($division->new_members_last60_count / $pop * 100, 1);
+                $division->pct90 = round($division->new_members_last90_count / $pop * 100, 1);
+            });
 
-        return view('reports.division-turnover', compact('divisions'));
+        $totals = (object) [
+            'population' => $divisions->sum('members_count'),
+            'last30' => $divisions->sum('new_members_last30_count'),
+            'last60' => $divisions->sum('new_members_last60_count'),
+            'last90' => $divisions->sum('new_members_last90_count'),
+        ];
+
+        $totalPop = $totals->population ?: 1;
+        $totals->pct30 = round($totals->last30 / $totalPop * 100, 1);
+        $totals->pct60 = round($totals->last60 / $totalPop * 100, 1);
+        $totals->pct90 = round($totals->last90 / $totalPop * 100, 1);
+
+        return view('reports.division-turnover', compact('divisions', 'totals'));
     }
 
     /**
