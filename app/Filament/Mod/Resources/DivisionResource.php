@@ -307,7 +307,6 @@ class DivisionResource extends Resource
     {
         return [
             PlatoonsRelationManager::class,
-            TagsRelationManager::class,
         ];
     }
 
