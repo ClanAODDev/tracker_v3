@@ -64,7 +64,7 @@
                     <span class="badge pull-right">{{ $clanAwards->count() }}</span>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
+                    <div class="row award-grid">
                         @foreach ($clanAwards as $award)
                             @include('division.awards.partials.award-card', ['award' => $award])
                         @endforeach
@@ -82,7 +82,7 @@
                     <span class="badge pull-right">{{ $awards->count() }}</span>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
+                    <div class="row award-grid">
                         @foreach ($awards as $award)
                             @include('division.awards.partials.award-card', ['award' => $award])
                         @endforeach
@@ -99,9 +99,9 @@
 
         <div class="panel-footer text-muted">
             <span class="text-mythic">&#9632;</span> Mythic (0)
-            <span class="text-legendary" style="margin-left: 10px;">&#9632;</span> Legendary (1-5)
-            <span class="text-epic" style="margin-left: 10px;">&#9632;</span> Epic (6-20)
-            <span class="text-rare" style="margin-left: 10px;">&#9632;</span> Rare (21-50)
+            <span class="text-legendary" style="margin-left: 10px;">&#9632;</span> Legendary (1-10)
+            <span class="text-epic" style="margin-left: 10px;">&#9632;</span> Epic (11-30)
+            <span class="text-rare" style="margin-left: 10px;">&#9632;</span> Rare (31-50)
             <span class="text-common" style="margin-left: 10px;">&#9632;</span> Common (50+)
         </div>
     </div>
