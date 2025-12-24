@@ -53,7 +53,6 @@
 
         <div class="row m-b-lg">
             <div class="col-md-12">
-                <p>Stand out as a member of the community by earning one or more of the awards listed below.</p>
                 <div class="rarity-legend">
                     @foreach (config('aod.awards.rarity') as $key => $rarity)
                         <div class="rarity-legend-item rarity-filter active" data-rarity="{{ $key }}">
