@@ -56,11 +56,11 @@ class RankTimelineService
                 $nodeIndex++;
 
                 foreach ($officerRanks as $index => $entry) {
-                    $prevDate = $index === 0
-                        ? $officerRanks->first()->created_at
-                        : $officerRanks->get($index - 1)->created_at;
-
-                    $duration = $index === 0 ? null : $this->formatDuration($prevDate, $entry->created_at);
+                    $duration = null;
+                    if ($index < $officerRanks->count() - 1) {
+                        $nextEntry = $officerRanks->get($index + 1);
+                        $duration = $this->formatDuration($entry->created_at, $nextEntry->created_at);
+                    }
 
                     $nodes->push($this->createRankNode($entry, $nodeIndex, $duration));
                     $nodeIndex++;
@@ -116,17 +116,20 @@ class RankTimelineService
         int $nodeIndex
     ): Collection {
         $enlistedStart = $member->join_date ?? $enlistedRanks->first()->created_at;
-        $enlistedEnd = $officerRanks->first()->created_at;
-        $enlistedDuration = $this->formatDuration($enlistedStart, $enlistedEnd);
+        $firstEnlistedDate = $enlistedRanks->first()->created_at;
+        $lastEnlistedDate = $enlistedRanks->last()->created_at;
+        $firstOfficerDate = $officerRanks->first()->created_at;
 
-        $nodes->last()->duration = $enlistedDuration;
+        $nodes->last()->duration = $this->formatDuration($enlistedStart, $firstEnlistedDate);
+
+        $durationToFirstOfficer = $this->formatDuration($lastEnlistedDate, $firstOfficerDate);
 
         $nodes->push((object) [
             'type' => 'consolidated',
             'label' => 'Enlisted',
-            'dateRange' => $enlistedRanks->first()->created_at->format('M Y') . ' - ' . $enlistedRanks->last()->created_at->format('M Y'),
+            'dateRange' => $firstEnlistedDate->format('M Y') . ' - ' . $lastEnlistedDate->format('M Y'),
             'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
-            'duration' => null,
+            'duration' => $durationToFirstOfficer,
         ]);
 
         return $nodes;
