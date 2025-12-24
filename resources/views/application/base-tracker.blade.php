@@ -8,7 +8,15 @@
 </head>
 
 @if (Auth::check() && Auth::user()->member && Auth::user()->member->division)
-    <body class="{{ session('primary_nav_collapsed') === true ? 'nav-toggle' : null }}">
+    @php
+        $userSettings = Auth::user()->settings;
+        $bodyClasses = collect([
+            session('primary_nav_collapsed') === true ? 'nav-toggle' : null,
+            ($userSettings['disable_animations'] ?? false) ? 'no-animations' : null,
+            ($userSettings['mobile_nav_side'] ?? 'right') === 'left' ? 'mobile-nav-left' : null,
+        ])->filter()->implode(' ');
+    @endphp
+    <body class="{{ $bodyClasses }}">
     {!! Toastr::message() !!}
 
     <div class="wrapper">
@@ -30,6 +38,8 @@
                 @include('application.partials.mobile-navigation')
             </div>
         </aside>
+
+        @include('application.partials.settings-slideover')
 
         <section class="search-results closed text-center"></section>
         <section class="content">

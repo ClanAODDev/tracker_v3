@@ -3,8 +3,9 @@
         Part-Time Divisions
         @can('managePartTime', $member)
             @if($member->id === auth()->user()->member_id)
-                <a href="{{ route('filament.profile.pages.part-time-divisions') }}"
-                   class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
+                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal">
+                    <i class="fa fa-cog"></i> Manage
+                </button>
             @else
                 <a href="{{ route('filament.mod.resources.members.edit', $member) }}#part-time-divisions"
                    class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>

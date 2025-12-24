@@ -1,0 +1,339 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.mobile-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: $color-muted;
+    font-size: 24px;
+    padding: 15px 20px;
+    cursor: pointer;
+    @include transition(color 0.2s);
+
+    &:hover,
+    &:focus {
+        color: $color-accent;
+        outline: none;
+    }
+}
+
+.mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    @include transition(opacity 0.3s ease, visibility 0.3s ease);
+
+    &.active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.mobile-nav-drawer {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -330px;
+    width: 300px;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1a1a 0%, $color-nav-active 100%);
+    z-index: 1001;
+    overflow-y: auto;
+    @include transition(right 0.3s ease);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+
+    &.active {
+        right: 0;
+    }
+}
+
+.mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.mobile-nav-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mobile-nav-close {
+    background: none;
+    border: none;
+    color: $color-muted;
+    font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+    @include transition(color 0.2s);
+
+    &:hover,
+    &:focus {
+        color: $color-accent;
+        outline: none;
+    }
+}
+
+.mobile-nav-content {
+    padding: 10px 0;
+
+    .luna-nav {
+        padding: 0;
+        margin: 0;
+
+        > li > a {
+            padding: 16px 20px;
+            font-size: 16px;
+            display: block;
+            color: #c8ccd0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.05);
+                color: #fff;
+            }
+        }
+
+        .nav-category {
+            padding: 20px 20px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            border-bottom: none;
+        }
+    }
+
+    .nav-second {
+        background: rgba(0, 0, 0, 0.2);
+
+        li a {
+            padding: 14px 20px 14px 35px;
+            font-size: 14px;
+        }
+    }
+}
+
+body.mobile-nav-open {
+    overflow: hidden;
+}
+
+.mobile-search-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: $color-muted;
+    font-size: 20px;
+    padding: 15px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        color: $color-accent;
+        outline: none;
+    }
+}
+
+.mobile-search-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $color-bg-dark;
+    z-index: 1060;
+    flex-direction: column;
+
+    &.active {
+        display: flex;
+    }
+}
+
+.mobile-search-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: $color-bg-darker;
+    gap: 10px;
+}
+
+.mobile-search-input-wrap {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: $color-bg-input;
+    border-radius: 8px;
+    padding: 0 12px;
+
+    i {
+        color: #888;
+        font-size: 16px;
+    }
+
+    input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #fff;
+        padding: 12px 10px;
+        font-size: 16px;
+        outline: none;
+
+        &::placeholder {
+            color: #888;
+        }
+    }
+}
+
+.mobile-searchclear {
+    color: #666;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+
+    &.visible {
+        display: block;
+    }
+}
+
+.mobile-search-close {
+    background: none;
+    border: none;
+    color: $color-accent;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.mobile-search-loader {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 20px;
+    color: #888;
+    font-size: 14px;
+
+    &.active {
+        display: flex;
+    }
+}
+
+.mobile-spinner {
+    @include spinner(32px, 3px, $color-accent);
+}
+
+.mobile-search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+
+    .search-result-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        background: #363942;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        color: #fff;
+        text-decoration: none;
+
+        &:hover {
+            background: #3f434e;
+        }
+    }
+}
+
+body.mobile-search-open {
+    overflow: hidden;
+}
+
+@include respond-to(sm) {
+    .mobile-search-toggle {
+        display: block;
+        position: absolute;
+        right: 55px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .mobile-nav-toggle {
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .navbar-header {
+        position: relative;
+    }
+
+    .mobile-nav-overlay,
+    .mobile-nav-drawer {
+        display: block;
+    }
+
+    .navigation {
+        display: none !important;
+    }
+
+    #navbar {
+        display: none !important;
+    }
+
+    .navbar-default {
+        min-height: 60px;
+    }
+}
+
+@include respond-to(sm) {
+    body.mobile-nav-left {
+        .mobile-nav-toggle {
+            right: auto;
+            left: 10px;
+        }
+
+        .mobile-search-toggle {
+            right: auto;
+            left: 55px;
+        }
+
+        .navbar-header {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        .navbar-brand {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .mobile-nav-drawer {
+            right: auto;
+            left: -330px;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
+
+            &.active {
+                left: 0;
+                right: auto;
+            }
+        }
+    }
+}

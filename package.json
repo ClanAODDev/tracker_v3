@@ -20,6 +20,7 @@
     "laravel-vite-plugin": "^2.0.1",
     "lodash": "^4.17.21",
     "popper.js": "^1.12",
+    "sass": "^1.97.1",
     "vee-validate": "^2.0.0-rc.3",
     "vite": "^7.3.0",
     "vue": "^2.6.14",

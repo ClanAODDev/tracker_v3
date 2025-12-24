@@ -11,6 +11,9 @@
             TRACKER
             <span>{{ config('app.version') }}</span>
         </a>
+        <button class="mobile-settings-toggle visible-xs" title="Settings">
+            <i class="fa fa-cog"></i>
+        </button>
         <button class="mobile-search-toggle visible-xs">
             <i class="fa fa-search"></i>
         </button>
@@ -26,12 +29,18 @@
         </div>
 
         <div class="navbar-form navbar-left hidden-xs">
-            <img src="{{ asset('images/loading_2.gif') }}" alt="Results loading..."
-                 class="hidden results-loader" style="opacity: .5" />
-            <input type="text" class="form-control" id="member-search" name="search"
-                   placeholder="Search for a player..." />
-            <span id="searchclear" class="fa fa-times-circle fa-2x text-muted pull-right"></span>
+            <div class="desktop-search-wrap">
+                <i class="fa fa-search"></i>
+                <input type="text" id="member-search" name="search"
+                       placeholder="Search for a player..." autocomplete="off" />
+                <img src="{{ asset('images/loading_2.gif') }}" alt="Loading..."
+                     class="desktop-search-loader" />
+                <span id="searchclear" class="fa fa-times-circle"></span>
+            </div>
         </div>
+        <button class="settings-toggle hidden-xs" title="Settings">
+            <i class="fa fa-cog"></i>
+        </button>
     </div>
 </div>
 

@@ -27,6 +27,8 @@ class User extends Authenticatable implements FilamentUser
     public array $defaultSettings = [
         'snow' => 'no_snow',
         'ticket_notifications' => true,
+        'disable_animations' => false,
+        'mobile_nav_side' => 'right',
     ];
 
     /**
@@ -62,6 +64,13 @@ class User extends Authenticatable implements FilamentUser
         'settings' => 'json',
         'last_login_at' => 'datetime',
     ];
+
+    public function getSettingsAttribute($value): array
+    {
+        $stored = is_string($value) ? json_decode($value, true) : ($value ?? []);
+
+        return array_merge($this->defaultSettings, $stored);
+    }
 
     public static function boot()
     {
@@ -261,10 +270,6 @@ class User extends Authenticatable implements FilamentUser
         }
 
         $panelId = $panel->getId();
-
-        if ($panelId === 'profile') {
-            return true;
-        }
 
         $panelToRoleMapping = [
             'mod' => ['admin', 'sr_ldr', 'officer'],

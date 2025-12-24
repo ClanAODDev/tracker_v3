@@ -3,8 +3,9 @@
         Handles
         @can('manageIngameHandles', $member)
             @if($member->id === auth()->user()->member_id)
-                <a href="{{ route('filament.profile.pages.ingame-handles') }}"
-                   class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
+                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ingame-handles-modal">
+                    <i class="fa fa-cog"></i> Manage
+                </button>
             @else
                 <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles"
                    class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>

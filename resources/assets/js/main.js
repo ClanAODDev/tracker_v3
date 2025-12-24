@@ -21,6 +21,8 @@ var Tracker = Tracker || {};
             Tracker.InitMemberSearch();
             Tracker.InitCollectionSearch();
             Tracker.InitSmoothScroll();
+            Tracker.InitSettings();
+            Tracker.InitProfileModals();
         },
 
         InitNavToggle: function () {
@@ -369,11 +371,13 @@ var Tracker = Tracker || {};
             var $input = $('#member-search');
             if (!$input.length) return;
 
+            var $loader = $('.desktop-search-loader');
+            var $clearBtn = $('#searchclear');
             var timer = null;
             var delay = 1000;
 
             function triggerSearch() {
-                $('.results-loader').removeClass('hidden');
+                $loader.addClass('active');
 
                 if (timer) {
                     clearTimeout(timer);
@@ -383,7 +387,7 @@ var Tracker = Tracker || {};
                     timer = null;
                     var value = $input.val().trim();
                     if (!value) {
-                        $('.results-loader').addClass('hidden');
+                        $loader.removeClass('active');
                         return;
                     }
                     Tracker.GetSearchResults();
@@ -395,15 +399,27 @@ var Tracker = Tracker || {};
                 setTimeout(triggerSearch, 0);
             });
             $input.on('input', function () {
-                if (!$input.val().trim()) {
-                    $('.results-loader').addClass('hidden');
+                var hasValue = $input.val().trim();
+                if (!hasValue) {
+                    $loader.removeClass('active');
+                    $clearBtn.removeClass('visible');
                 }
             });
 
-            $('#searchclear').on('click', function () {
+            function clearSearch() {
                 $('section.search-results').addClass('closed').removeClass('open');
+                $('body').removeClass('search-active');
+                $('.content').css('margin-top', '');
                 $input.val('');
-                $(this).hide();
+                $clearBtn.removeClass('visible');
+            }
+
+            $clearBtn.on('click', clearSearch);
+
+            $('.content').on('click', function () {
+                if ($('body').hasClass('search-active')) {
+                    clearSearch();
+                }
             });
         },
 
@@ -416,9 +432,16 @@ var Tracker = Tracker || {};
                 type: 'GET',
                 success: function (response) {
                     window.scrollTo(0, 0);
-                    $('.results-loader').addClass('hidden');
-                    $('#searchclear').show();
-                    $('section.search-results').html(response).addClass('open').removeClass('closed');
+                    $('.desktop-search-loader').removeClass('active');
+                    $('#searchclear').addClass('visible');
+
+                    var $results = $('section.search-results');
+                    $results.html(response).addClass('open').removeClass('closed');
+                    $('body').addClass('search-active');
+
+                    setTimeout(function () {
+                        $('.content').css('margin-top', '20px');
+                    }, 50);
                 }
             });
         },
@@ -454,6 +477,219 @@ var Tracker = Tracker || {};
 
             $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
                 $.sparkline_display_visible();
+            });
+        },
+
+        InitSettings: function () {
+            var $toggle = $('.settings-toggle, .mobile-settings-toggle');
+            var $overlay = $('.settings-overlay');
+            var $slideover = $('.settings-slideover');
+            var $close = $('.settings-close');
+
+            if (!$toggle.length) return;
+
+            function openSettings() {
+                $overlay.addClass('active');
+                $slideover.addClass('active');
+                $toggle.addClass('active');
+                $('body').addClass('settings-open');
+            }
+
+            function closeSettings() {
+                $overlay.removeClass('active');
+                $slideover.removeClass('active');
+                $toggle.removeClass('active');
+                $('body').removeClass('settings-open');
+            }
+
+            $toggle.on('click', function (e) {
+                e.preventDefault();
+                if ($slideover.hasClass('active')) {
+                    closeSettings();
+                } else {
+                    openSettings();
+                }
+            });
+
+            $overlay.on('click', closeSettings);
+            $close.on('click', closeSettings);
+
+            $(document).on('keydown', function (e) {
+                if (e.key === 'Escape' && $slideover.hasClass('active')) {
+                    closeSettings();
+                }
+            });
+
+            var saveTimer = null;
+            var $status = $('.settings-save-status');
+
+            function saveSettings() {
+                if (saveTimer) clearTimeout(saveTimer);
+
+                $status.text('Saving...').removeClass('saved error').addClass('saving');
+
+                var formData = {
+                    _token: $('input[name="_token"]').val(),
+                    disable_animations: $('#setting-disable-animations').is(':checked'),
+                    mobile_nav_side: $('#setting-mobile-nav-side').val(),
+                    snow: $('#setting-snow').val(),
+                    ticket_notifications: $('#setting-ticket-notifications').is(':checked')
+                };
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/settings',
+                    type: 'POST',
+                    data: formData,
+                    success: function () {
+                        $status.text('Saved').removeClass('saving error').addClass('saved');
+                        saveTimer = setTimeout(function () {
+                            $status.text('').removeClass('saved');
+                        }, 2000);
+
+                        Tracker.ApplySettings(formData);
+                    },
+                    error: function () {
+                        $status.text('Error saving').removeClass('saving saved').addClass('error');
+                    }
+                });
+            }
+
+            $('#setting-disable-animations, #setting-ticket-notifications').on('change', saveSettings);
+
+            $('.settings-btn[data-setting]').on('click', function () {
+                var $btn = $(this);
+                var setting = $btn.data('setting');
+                var value = $btn.data('value');
+
+                $btn.siblings('.settings-btn').removeClass('active');
+                $btn.addClass('active');
+                $('#setting-' + setting.replace('_', '-')).val(value);
+
+                saveSettings();
+            });
+        },
+
+        ApplySettings: function (settings) {
+            if (settings.disable_animations) {
+                $('body').addClass('no-animations');
+            } else {
+                $('body').removeClass('no-animations');
+            }
+
+            if (settings.mobile_nav_side === 'left') {
+                $('body').addClass('mobile-nav-left');
+            } else {
+                $('body').removeClass('mobile-nav-left');
+            }
+        },
+
+        InitProfileModals: function () {
+            var $partTimeModal = $('#part-time-divisions-modal');
+            var $handlesModal = $('#ingame-handles-modal');
+
+            if (!$partTimeModal.length && !$handlesModal.length) return;
+
+            $partTimeModal.add($handlesModal).on('show.bs.modal', function () {
+                $('.settings-overlay').removeClass('active');
+                $('.settings-slideover').removeClass('active');
+                $('.settings-toggle, .mobile-settings-toggle').removeClass('active');
+                $('body').removeClass('settings-open');
+            });
+
+            $('#save-part-time-divisions').on('click', function () {
+                var $btn = $(this);
+                var $status = $partTimeModal.find('.modal-save-status');
+                var divisions = [];
+
+                $partTimeModal.find('input[name="divisions[]"]:checked').each(function () {
+                    divisions.push($(this).val());
+                });
+
+                $btn.prop('disabled', true);
+                $status.text('Saving...').removeClass('saved error').addClass('saving');
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/settings/part-time-divisions',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name=csrf-token]').attr('content'),
+                        divisions: divisions
+                    },
+                    success: function (response) {
+                        $status.text('Saved!').removeClass('saving error').addClass('saved');
+                        $('.settings-link-btn[data-target="#part-time-divisions-modal"] .settings-link-count').text(response.count);
+                        setTimeout(function () {
+                            $partTimeModal.modal('hide');
+                            $status.text('').removeClass('saved');
+                        }, 1000);
+                    },
+                    error: function () {
+                        $status.text('Error saving').removeClass('saving saved').addClass('error');
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+
+            var handleIndex = $('#handles-container .handle-row').length;
+
+            $('#add-handle').on('click', function () {
+                var template = $('#handle-row-template').html();
+                var newRow = template.replace(/__INDEX__/g, handleIndex);
+                $('#handles-container').append(newRow);
+                handleIndex++;
+            });
+
+            $(document).on('click', '.remove-handle', function () {
+                $(this).closest('.handle-row').remove();
+            });
+
+            $('#save-ingame-handles').on('click', function () {
+                var $btn = $(this);
+                var $status = $handlesModal.find('.modal-save-status');
+                var handles = [];
+
+                $('#handles-container .handle-row').each(function (index) {
+                    var $row = $(this);
+                    var handleId = $row.find('.handle-select').val();
+                    var value = $row.find('input[type="text"]').val();
+
+                    if (handleId && value) {
+                        handles.push({
+                            id: $row.data('id') || '',
+                            handle_id: handleId,
+                            value: value,
+                            primary: $row.find('.handle-primary input').is(':checked') ? 1 : 0
+                        });
+                    }
+                });
+
+                $btn.prop('disabled', true);
+                $status.text('Saving...').removeClass('saved error').addClass('saving');
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/settings/ingame-handles',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name=csrf-token]').attr('content'),
+                        handles: handles
+                    },
+                    success: function (response) {
+                        $status.text('Saved!').removeClass('saving error').addClass('saved');
+                        $('.settings-link-btn[data-target="#ingame-handles-modal"] .settings-link-count').text(response.count);
+                        setTimeout(function () {
+                            $handlesModal.modal('hide');
+                            $status.text('').removeClass('saved');
+                        }, 1000);
+                    },
+                    error: function () {
+                        $status.text('Error saving').removeClass('saving saved').addClass('error');
+                    },
+                    complete: function () {
+                        $btn.prop('disabled', false);
+                    }
+                });
             });
         }
 

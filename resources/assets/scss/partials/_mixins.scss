@@ -1,0 +1,127 @@
+@use "sass:color";
+@use 'variables' as *;
+
+@mixin btn-variant($btn-color) {
+    color: $color-muted;
+    background-color: transparent;
+    border-color: $btn-color;
+
+    &:focus,
+    &.focus {
+        color: #ffffff;
+        background-color: rgba($btn-color, 0.1);
+        border-color: $btn-color;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    &:hover {
+        color: #ffffff;
+        background-color: rgba($btn-color, 0.1);
+        border-color: $btn-color;
+    }
+
+    &:active,
+    &.active,
+    .open > .dropdown-toggle#{&} {
+        color: #ffffff;
+        background-color: rgba($btn-color, 0.1);
+        border-color: $btn-color;
+        background-image: none;
+    }
+
+    &:active:hover,
+    &.active:hover,
+    .open > .dropdown-toggle#{&}:hover,
+    &:active:focus,
+    &.active:focus,
+    .open > .dropdown-toggle#{&}:focus,
+    &:active.focus,
+    &.active.focus,
+    .open > .dropdown-toggle#{&}.focus {
+        color: #ffffff;
+        background-color: rgba($btn-color, 0.1);
+        border-color: color.adjust($btn-color, $lightness: 10%);
+        outline: 0;
+        box-shadow: none;
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus,
+        &.focus {
+            background-color: rgba($btn-color, 0.1);
+            border-color: $btn-color;
+        }
+    }
+
+    .badge {
+        color: transparent;
+        background-color: $color-muted;
+    }
+}
+
+@mixin transition($props...) {
+    transition: $props;
+}
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin panel-color($color) {
+    border-left: 3px solid $color;
+}
+
+@mixin card-hover($shadow-color: rgba(0, 0, 0, 0.2)) {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px $shadow-color;
+    }
+}
+
+@mixin rarity-glow($color, $intensity: 0.35) {
+    box-shadow: 0 2px 8px 0 rgba($color, $intensity);
+}
+
+@mixin text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+$breakpoint-xs: 576px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == xs {
+        @media (max-width: $breakpoint-xs) { @content; }
+    } @else if $breakpoint == sm {
+        @media (max-width: $breakpoint-sm) { @content; }
+    } @else if $breakpoint == md {
+        @media (max-width: $breakpoint-md) { @content; }
+    } @else if $breakpoint == lg {
+        @media (max-width: $breakpoint-lg) { @content; }
+    }
+}
+
+@mixin spinner($size: 32px, $border-width: 3px, $color: $color-accent) {
+    width: $size;
+    height: $size;
+    border: $border-width solid rgba($color, 0.2);
+    border-top-color: $color;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

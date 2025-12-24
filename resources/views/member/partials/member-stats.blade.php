@@ -1,7 +1,7 @@
 <div class="member-profile-section">
     <div class="row member-stat-row">
-        <div class="col-lg-3 col-md-6 col-xs-12">
-            <div class="panel panel-filled member-stat-card stat-tenure" data-toggle="modal" data-target="#tenure-modal" style="cursor: pointer;">
+        <div class="col-lg-3 col-xs-6 ">
+            <div class="panel panel-filled member-stat-card stat-tenure" data-toggle="modal" data-target="#tenure-modal" style="cursor: pointer; --i: 0">
                 <div class="stat-indicator"></div>
                 <div class="panel-body">
                     <div class="stat-icon">
@@ -23,8 +23,8 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-xs-12">
-            <div class="panel panel-filled member-stat-card stat-activity stat-{{ $memberStats->activity->health }}">
+        <div class="col-lg-3 col-xs-6">
+            <div class="panel panel-filled member-stat-card stat-activity stat-{{ $memberStats->activity->health }}" style="--i: 1">
                 <div class="stat-indicator"></div>
                 <div class="panel-body">
                     <div class="stat-icon">
@@ -55,8 +55,8 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-xs-12">
-            <div class="panel panel-filled member-stat-card stat-recruiting">
+        <div class="col-lg-3 col-xs-6">
+            <div class="panel panel-filled member-stat-card stat-recruiting" style="--i: 2">
                 <div class="stat-indicator"></div>
                 <div class="panel-body">
                     <div class="stat-icon">
@@ -86,9 +86,9 @@
         </div>
 
         @can('create', App\Models\Note::class)
-            <div class="col-lg-3 col-md-6 col-xs-12">
+            <div class="col-lg-3 col-xs-6">
                 <div class="panel panel-filled member-stat-card stat-notes {{ $noteStats->latestType ? 'latest-' . $noteStats->latestType : '' }}"
-                     data-toggle="modal" data-target="#notes-modal" style="cursor: pointer;">
+                     data-toggle="modal" data-target="#notes-modal" style="cursor: pointer; --i: 3">
                     <div class="stat-indicator"></div>
                     <div class="panel-body">
                         <div class="stat-icon">
@@ -208,18 +208,22 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="comparison-metric">
+                                <div class="comparison-metric" style="--i: 0">
                                     <div class="comparison-header">
                                         <span class="comparison-label">Tenure</span>
                                         <span class="comparison-percentile {{ $memberStats->divisionComparison->tenureBetter ? 'text-success' : '' }}">
-                                            Top {{ max(1, 100 - $memberStats->divisionComparison->tenurePercentile) }}%
+                                            @if($memberStats->divisionComparison->tenurePercentile >= 50)
+                                                Top {{ max(1, 100 - $memberStats->divisionComparison->tenurePercentile) }}%
+                                            @else
+                                                Bottom {{ max(1, $memberStats->divisionComparison->tenurePercentile) }}%
+                                            @endif
                                         </span>
                                     </div>
                                     <div class="comparison-bar-container">
                                         <div class="comparison-bar">
                                             <div class="comparison-avg" style="left: 50%;" title="Division avg: {{ $memberStats->divisionComparison->avgTenureYears }}y"></div>
                                             <div class="comparison-member {{ $memberStats->divisionComparison->tenureBetter ? 'better' : 'worse' }}"
-                                                 style="left: {{ min(95, max(5, $memberStats->divisionComparison->tenurePercentile)) }}%"
+                                                 style="--final-pos: {{ min(95, max(5, $memberStats->divisionComparison->tenurePercentile)) }}%"
                                                  title="Your tenure: {{ $memberStats->tenure->years }}y {{ $memberStats->tenure->months }}m"></div>
                                         </div>
                                     </div>
@@ -231,12 +235,16 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="comparison-metric">
+                                <div class="comparison-metric" style="--i: 1">
                                     <div class="comparison-header">
                                         <span class="comparison-label">Voice Activity</span>
                                         <span class="comparison-percentile {{ $memberStats->divisionComparison->activityBetter ? 'text-success' : '' }}">
                                             @if($memberStats->activity->daysSinceVoice !== null)
-                                                Top {{ max(1, 100 - $memberStats->divisionComparison->activityPercentile) }}%
+                                                @if($memberStats->divisionComparison->activityPercentile >= 50)
+                                                    Top {{ max(1, 100 - $memberStats->divisionComparison->activityPercentile) }}%
+                                                @else
+                                                    Bottom {{ max(1, $memberStats->divisionComparison->activityPercentile) }}%
+                                                @endif
                                             @else
                                                 N/A
                                             @endif
@@ -247,7 +255,7 @@
                                             <div class="comparison-avg" style="left: 50%;" title="Division avg: {{ $memberStats->divisionComparison->avgVoiceDays }}d"></div>
                                             @if($memberStats->activity->daysSinceVoice !== null)
                                                 <div class="comparison-member {{ $memberStats->divisionComparison->activityBetter ? 'better' : 'worse' }}"
-                                                     style="left: {{ min(95, max(5, $memberStats->divisionComparison->activityPercentile)) }}%"
+                                                     style="--final-pos: {{ min(95, max(5, $memberStats->divisionComparison->activityPercentile)) }}%"
                                                      title="Your activity: {{ $memberStats->activity->daysSinceVoice }}d ago"></div>
                                             @endif
                                         </div>

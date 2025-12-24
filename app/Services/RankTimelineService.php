@@ -65,23 +65,12 @@ class RankTimelineService
                     $nodes->push($this->createRankNode($entry, $nodeIndex, $duration));
                     $nodeIndex++;
                 }
-
-                $lastOfficerRank = $officerRanks->last();
-                $finalDuration = $this->formatDuration($lastOfficerRank->created_at, now());
             } else {
                 $nodes = $this->addStandardNodes($nodes, $member, $progressionOnly, $nodeIndex);
-                $finalDuration = $progressionOnly->count() > 0
-                    ? $this->formatDuration($progressionOnly->last()->created_at, now())
-                    : null;
             }
         } else {
             $nodes = $this->addStandardNodes($nodes, $member, $progressionOnly, $nodeIndex);
-            $finalDuration = $progressionOnly->count() > 0
-                ? $this->formatDuration($progressionOnly->last()->created_at, now())
-                : null;
         }
-
-        $nodes->push($this->createCurrentRankNode($member, $nodeIndex, $finalDuration));
 
         return $nodes;
     }
@@ -154,17 +143,6 @@ class RankTimelineService
             'date' => $entry->created_at->format('M Y'),
             'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
             'duration' => $duration,
-        ];
-    }
-
-    private function createCurrentRankNode(Member $member, int $nodeIndex, ?string $duration): object
-    {
-        return (object) [
-            'type' => 'current',
-            'rank' => $member->rank->getAbbreviation(),
-            'label' => 'Current Rank',
-            'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
-            'duration' => null,
         ];
     }
 

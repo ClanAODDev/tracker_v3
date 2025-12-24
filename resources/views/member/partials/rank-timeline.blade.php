@@ -5,7 +5,7 @@
 
             @foreach($rankTimeline->nodes as $index => $node)
                 @if($node->type === 'join')
-                    <div class="timeline-node timeline-start timeline-{{ $node->position }}">
+                    <div class="timeline-node timeline-start timeline-{{ $node->position }}" style="--i: {{ $index }}">
                         <div class="timeline-marker marker-join"></div>
                         <div class="timeline-content">
                             <div class="timeline-date">{{ $node->date }}</div>
@@ -13,8 +13,8 @@
                         </div>
                     </div>
                 @elseif($node->type === 'consolidated')
-                    <div class="timeline-duration-connector">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
-                    <div class="timeline-node timeline-{{ $node->position }}">
+                    <div class="timeline-duration-connector" style="--i: {{ $index }}">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
+                    <div class="timeline-node timeline-{{ $node->position }}" style="--i: {{ $index }}">
                         <div class="timeline-marker marker-promotion"></div>
                         <div class="timeline-content">
                             <div class="timeline-rank timeline-rank-consolidated">{{ $node->label }}</div>
@@ -22,21 +22,12 @@
                         </div>
                     </div>
                 @elseif($node->type === 'promotion')
-                    <div class="timeline-duration-connector">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
-                    <div class="timeline-node timeline-{{ $node->position }}">
+                    <div class="timeline-duration-connector" style="--i: {{ $index }}">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
+                    <div class="timeline-node timeline-{{ $node->position }}" style="--i: {{ $index }}">
                         <div class="timeline-marker marker-promotion"></div>
                         <div class="timeline-content">
                             <div class="timeline-rank">{{ $node->rank }}</div>
                             <div class="timeline-date">{{ $node->date }}</div>
-                        </div>
-                    </div>
-                @elseif($node->type === 'current')
-                    <div class="timeline-duration-connector">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
-                    <div class="timeline-node timeline-current timeline-{{ $node->position }}">
-                        <div class="timeline-marker marker-current"></div>
-                        <div class="timeline-content">
-                            <div class="timeline-rank current">{{ $node->rank }}</div>
-                            <div class="timeline-label">{{ $node->label }}</div>
                         </div>
                     </div>
                 @endif

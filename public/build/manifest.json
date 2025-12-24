@@ -1,13 +1,4 @@
 {
-  "resources/assets/css/style.css": {
-    "file": "assets/style-D5f9CLLu.css",
-    "src": "resources/assets/css/style.css",
-    "isEntry": true,
-    "name": "style",
-    "names": [
-      "style.css"
-    ]
-  },
   "resources/assets/js/census-graph.js": {
     "file": "assets/census-graph-JM5lcZ3s.js",
     "name": "census-graph",
@@ -21,7 +12,7 @@
     "isEntry": true
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-DjzMGnnA.js",
+    "file": "assets/main-DSpPQOac.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true
@@ -49,5 +40,14 @@
     "name": "voice",
     "src": "resources/assets/js/voice.js",
     "isEntry": true
+  },
+  "resources/assets/scss/main.scss": {
+    "file": "assets/main-B51m3-KF.css",
+    "src": "resources/assets/scss/main.scss",
+    "isEntry": true,
+    "name": "main",
+    "names": [
+      "main.css"
+    ]
   }
 }

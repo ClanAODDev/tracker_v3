@@ -1,0 +1,73 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.btn {
+    color: inherit;
+    background-color: transparent;
+
+    &:active,
+    &.active {
+        box-shadow: none;
+    }
+
+    &.btn-w-sm { min-width: 80px; }
+    &.btn-w-md { min-width: 120px; }
+    &.btn-w-lg { min-width: 160px; }
+    &.btn-rounded { border-radius: 50px; }
+    &.btn-squared { border-radius: 0; }
+}
+
+.buttons-margin .btn {
+    margin-bottom: 5px;
+}
+
+.btn-accent {
+    @include btn-variant($color-accent);
+}
+
+.btn-default {
+    @include btn-variant(#616779);
+
+    &:hover,
+    &:active,
+    &:active:focus,
+    &:focus,
+    &.active {
+        background-color: $color-bg-panel;
+    }
+}
+
+.btn-primary {
+    @include btn-variant($color-primary);
+}
+
+.btn-success {
+    @include btn-variant($color-success);
+}
+
+.btn-info {
+    @include btn-variant($color-info);
+}
+
+.btn-warning {
+    @include btn-variant($color-accent-light);
+}
+
+.btn-danger {
+    @include btn-variant($color-danger);
+}
+
+.btn-link {
+    &:hover,
+    &:active,
+    &:active:focus,
+    &:focus,
+    &.active {
+        color: $color-accent;
+        text-decoration: none;
+    }
+}
+
+.panel-toggle {
+    cursor: pointer;
+}
