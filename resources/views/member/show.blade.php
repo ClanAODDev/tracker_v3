@@ -12,7 +12,8 @@
                     @elseif ($member->division_id == 0)
                         <i class="fa fa-user-times"></i> Ex-AOD
                     @else
-                        {{ $member->position?->getLabel() ?? "No Position" }}
+                        <span class="hidden-xs">{{ $member->position?->getLabel() ?? "No Position" }}</span>
+                        <span class="visible-xs-inline">{{ $member->position?->getAbbreviation() ?: ($member->position?->getLabel() ?? "No Position") }}</span>
                     @endif
                 </span>
                 @include('member.partials.member-actions-button', ['member' => $member])
