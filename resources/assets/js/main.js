@@ -5,14 +5,207 @@ var Tracker = Tracker || {};
     Tracker = {
 
         Setup: function () {
-            Tracker.GeneralInit();
-            Tracker.SearchMembers();
-            Tracker.SearchCollection();
+            Tracker.InitNavToggle();
+            Tracker.InitBackToTop();
+            Tracker.InitClipboard();
+            Tracker.InitDataTables();
+            Tracker.InitSparklines();
+            Tracker.InitPanels();
+            Tracker.InitSubNavCollapse();
+            Tracker.InitMemberAutocomplete();
             Tracker.InitMobileNav();
+            Tracker.InitMobileSearch();
             Tracker.InitRarityFilter();
-
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
+            Tracker.InitMemberSearch();
+            Tracker.InitCollectionSearch();
+            Tracker.InitSmoothScroll();
+        },
+
+        InitNavToggle: function () {
+            var $toggle = $('.left-nav-toggle a');
+            if (!$toggle.length) return;
+
+            $toggle.on('click', function (e) {
+                e.preventDefault();
+                $('body').toggleClass('nav-toggle');
+
+                if ($('body').hasClass('nav-toggle')) {
+                    $.get(window.Laravel.appPath + '/primary-nav/collapse');
+                } else {
+                    $.get(window.Laravel.appPath + '/primary-nav/decollapse');
+                }
+
+                Tracker.RefreshSparklines();
+            });
+        },
+
+        InitBackToTop: function () {
+            if (($(window).height() + 100) >= $(document).height()) return;
+
+            $('#top-link-block').removeClass('hidden').affix({
+                offset: { top: 100 }
+            });
+        },
+
+        InitSmoothScroll: function () {
+            $('.smooth-scroll').on('click', function (e) {
+                e.preventDefault();
+                var targetId = $(this).attr('href');
+                var $target = $(targetId);
+                if (!$target.length) return;
+
+                var top = $target.offset().top - 90;
+                $('html, body').stop().animate({ scrollTop: top }, 750);
+                window.location.hash = targetId.substr(1);
+            });
+        },
+
+        InitClipboard: function () {
+            if (typeof Clipboard === 'undefined') return;
+            if (!$('.copy-to-clipboard').length) return;
+
+            var clipboard = new Clipboard('.copy-to-clipboard');
+            clipboard.on('success', function (e) {
+                toastr.success('Copied!');
+                e.clearSelection();
+            });
+        },
+
+        InitDataTables: function () {
+            var $basicTable = $('table.basic-datatable');
+            var $advTable = $('table.adv-datatable');
+
+            if ($basicTable.length) {
+                var basicDatatable = $basicTable.DataTable({
+                    paging: false,
+                    bFilter: false,
+                    stateSave: true,
+                    bInfo: false,
+                    order: [],
+                    columnDefs: [
+                        { targets: 'no-sort', orderable: false }
+                    ],
+                    select: {
+                        style: 'os',
+                        selector: 'td:first-child'
+                    }
+                });
+
+                if ($('.for-pm-selection').length) {
+                    basicDatatable.on('select', function () {
+                        var selected = basicDatatable.rows($('.selected')).data().toArray().map(function (row) {
+                            return row[4];
+                        });
+                        if (selected.length >= 2) {
+                            $('#selected-data').show();
+                            $('#selected-data .status-text').text('With selected (' + selected.length + ')');
+                            $('#pm-member-data').val(selected);
+                        }
+                    });
+                }
+            }
+
+            if ($advTable.length) {
+                $advTable.DataTable({
+                    order: [],
+                    columnDefs: [
+                        { targets: 'no-sort', orderable: false }
+                    ]
+                });
+            }
+        },
+
+        InitSparklines: function () {
+            Tracker.RefreshSparklines();
+
+            var resizeTimer;
+            $(window).on('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(Tracker.RefreshSparklines, 100);
+            });
+        },
+
+        RefreshSparklines: function () {
+            $('[census-data]').each(function () {
+                var $el = $(this);
+                var inContainer = $el.closest('.census-sparkline-container').length > 0;
+                var chartHeight = inContainer ? 80 : 50;
+
+                $el.sparkline($el.data('counts'), {
+                    type: 'line',
+                    lineColor: '#fff',
+                    lineWidth: 2,
+                    fillColor: '#404652',
+                    height: chartHeight,
+                    width: '100%'
+                });
+
+                if ($el.data('weekly-voice')) {
+                    $el.sparkline($el.data('weekly-voice'), {
+                        type: 'line',
+                        lineColor: '#1bbf89',
+                        lineWidth: 2,
+                        fillColor: 'rgba(27, 191, 137, 0.2)',
+                        height: chartHeight,
+                        composite: true
+                    });
+                }
+            });
+
+            $('.census-pie').each(function () {
+                var $el = $(this);
+                $el.sparkline($el.data('counts'), {
+                    type: 'pie',
+                    sliceColors: $el.data('colors')
+                });
+            });
+        },
+
+        InitPanels: function () {
+            $('.panel-toggle').on('click', function (e) {
+                e.preventDefault();
+                var $panel = $(e.target).closest('div.panel');
+                var $icon = $(e.target).closest('i.toggle-icon');
+                var $iconNotLinked = $(e.target).find('i.toggle-icon');
+
+                $panel.find('div.panel-body').slideToggle(300);
+                $panel.find('div.panel-footer').slideToggle(200);
+
+                $icon.toggleClass('fa-chevron-up fa-chevron-down');
+                $iconNotLinked.toggleClass('fa-chevron-up fa-chevron-down');
+                $panel.toggleClass('panel-collapse');
+
+                setTimeout(function () {
+                    $panel.resize();
+                    $panel.find('[id^=map-]').resize();
+                }, 50);
+            });
+
+            $('.panel-close').on('click', function (e) {
+                e.preventDefault();
+                $(e.target).closest('div.panel').remove();
+            });
+        },
+
+        InitSubNavCollapse: function () {
+            $('.nav-second').on('show.bs.collapse', function () {
+                $('.nav-second.in').collapse('hide');
+            });
+        },
+
+        InitMemberAutocomplete: function () {
+            var $search = $('.search-member');
+            if (!$search.length) return;
+
+            $search.bootcomplete({
+                url: window.Laravel.appPath + '/search-member/',
+                minLength: 3,
+                idField: true,
+                method: 'POST',
+                dataParams: { _token: $('meta[name=csrf-token]').attr('content') }
+            });
         },
 
         InitMobileNav: function () {
@@ -20,18 +213,19 @@ var Tracker = Tracker || {};
             var $drawer = $('.mobile-nav-drawer');
             var $overlay = $('.mobile-nav-overlay');
             var $close = $('.mobile-nav-close');
-            var $body = $('body');
+
+            if (!$drawer.length) return;
 
             function openNav() {
                 $drawer.addClass('active');
                 $overlay.addClass('active');
-                $body.addClass('mobile-nav-open');
+                $('body').addClass('mobile-nav-open');
             }
 
             function closeNav() {
                 $drawer.removeClass('active');
                 $overlay.removeClass('active');
-                $body.removeClass('mobile-nav-open');
+                $('body').removeClass('mobile-nav-open');
             }
 
             $toggle.on('click', function (e) {
@@ -48,11 +242,9 @@ var Tracker = Tracker || {};
                 closeNav();
             });
 
-            $overlay.on('click', function () {
-                closeNav();
-            });
+            $overlay.on('click', closeNav);
 
-            $drawer.find('a').on('click', function (e) {
+            $drawer.find('a').on('click', function () {
                 var $link = $(this);
                 if ($link.attr('data-toggle') === 'collapse' || $link.attr('href') === '#') {
                     return;
@@ -61,12 +253,97 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitRarityFilter: function () {
-            if (!$('.rarity-filter').length) return;
+        InitMobileSearch: function () {
+            var $toggle = $('.mobile-search-toggle');
+            var $modal = $('.mobile-search-modal');
+            var $input = $('#mobile-member-search');
+            var $close = $('.mobile-search-close');
+            var $clear = $('.mobile-searchclear');
+            var $results = $('.mobile-search-results');
+            var $loader = $('.mobile-search-loader');
 
-            $('.rarity-filter').on('click', function () {
-                var $filter = $(this);
-                $filter.toggleClass('active');
+            if (!$modal.length) return;
+
+            var timer = null;
+            var delay = 500;
+
+            function openSearch() {
+                $modal.addClass('active');
+                $('body').addClass('mobile-search-open');
+                $input.focus();
+            }
+
+            function closeSearch() {
+                $modal.removeClass('active');
+                $('body').removeClass('mobile-search-open');
+                $input.val('');
+                $clear.removeClass('visible');
+                $results.empty();
+                $loader.removeClass('active');
+            }
+
+            function performSearch() {
+                var query = $input.val().trim();
+                if (!query) {
+                    $loader.removeClass('active');
+                    $results.empty();
+                    return;
+                }
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/search/members/' + query,
+                    type: 'GET',
+                    success: function (response) {
+                        $loader.removeClass('active');
+                        $results.html(response);
+                    }
+                });
+            }
+
+            $toggle.on('click', function (e) {
+                e.preventDefault();
+                openSearch();
+            });
+
+            $close.on('click', closeSearch);
+
+            $clear.on('click', function () {
+                $input.val('').focus();
+                $clear.removeClass('visible');
+                $results.empty();
+            });
+
+            $input.on('input', function () {
+                var value = $input.val().trim();
+                $clear.toggleClass('visible', value.length > 0);
+
+                if (timer) {
+                    clearTimeout(timer);
+                }
+
+                if (!value) {
+                    $results.empty();
+                    $loader.removeClass('active');
+                    return;
+                }
+
+                $loader.addClass('active');
+                timer = setTimeout(performSearch, delay);
+            });
+
+            $input.on('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    closeSearch();
+                }
+            });
+        },
+
+        InitRarityFilter: function () {
+            var $filters = $('.rarity-filter');
+            if (!$filters.length) return;
+
+            $filters.on('click', function () {
+                $(this).toggleClass('active');
 
                 var activeRarities = $('.rarity-filter.active').map(function () {
                     return $(this).data('rarity');
@@ -82,324 +359,106 @@ var Tracker = Tracker || {};
                         }
                     });
 
-                    if (activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1) {
-                        $card.closest('[class*="col-"]').show();
-                    } else {
-                        $card.closest('[class*="col-"]').hide();
-                    }
+                    var show = activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1;
+                    $card.closest('[class*="col-"]').toggle(show);
                 });
             });
         },
 
-        SearchMembers: function () {
-            this.TriggerFilter(document.getElementById('member-search'), this.GetSearchResults, 1000);
-            $('#searchclear').click(function () {
-                $('section.search-results').addClass('closed').removeClass('open');
-                $('#member-search').val('');
-                $('#searchclear').css('display', 'none');
-            });
-        },
-        /**
-         * Handle repeater fields
-         *
-         * @constructor
-         */
-        InitRepeater: function () {
-            $('.repeater').repeater({
-                isFirstItemUndeletable: true,
-            });
-        },
-        /**
-         * Handle tab activation on URL navigation
-         *
-         * @constructor
-         */
-        InitTabActivate: function () {
-            $('.nav-tabs').stickyTabs();
+        InitMemberSearch: function () {
+            var $input = $('#member-search');
+            if (!$input.length) return;
 
-            // handle sparklines that aren't visible on the dom initially
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                $.sparkline_display_visible();
-            });
-        },
-
-        /**
-         * Textarea event listener
-         *
-         * @param textArea
-         * @param callback
-         * @param delay
-         * @constructor
-         */
-        TriggerFilter: function (textArea, callback, delay) {
             var timer = null;
+            var delay = 1000;
 
-            if (!textArea || !$('#member-search').length) return; // Ensure textArea exists
-
-            var triggerSearch = function () {
-                if (!textArea) return; // Ensure textArea still exists
-
+            function triggerSearch() {
                 $('.results-loader').removeClass('hidden');
 
                 if (timer) {
-                    window.clearTimeout(timer);
+                    clearTimeout(timer);
                 }
 
-                timer = window.setTimeout(function () {
+                timer = setTimeout(function () {
                     timer = null;
-                    if (!textArea || textArea.value.trim() === "") {
-                        $('.results-loader').addClass('hidden'); // Hide loader if empty
-                        return; // Do not trigger search if the field is empty
-                    }
-                    callback();
-                }, delay);
-            };
-
-            textArea.addEventListener('keydown', triggerSearch);
-            textArea.addEventListener('paste', function () {
-                setTimeout(triggerSearch, 0); // Ensures pasted text is processed first
-            });
-
-            textArea.addEventListener('input', function () {
-                if (!textArea) return;
-                if (textArea.value.trim() === "") {
-                    $('.results-loader').addClass('hidden'); // Hide loader if empty
-                }
-            });
-        },
-
-
-
-        /**
-         * Search members handle
-         *
-         * @constructor
-         */
-        GetSearchResults: function () {
-            if ($('#member-search').val()) {
-                var name = $('input#member-search').val(),
-                    base_url = window.Laravel.appPath;
-
-                $.ajax({
-                    url: base_url + '/search/members/' + name,
-                    type: 'GET',
-                    success: function (response) {
-                        window.scrollTo(0, 0);
+                    var value = $input.val().trim();
+                    if (!value) {
                         $('.results-loader').addClass('hidden');
-                        $('#searchclear').css('display', 'block');
-                        $('section.search-results').html(response);
-                        $('section.search-results').addClass('open').removeClass('closed');
+                        return;
                     }
-                });
+                    Tracker.GetSearchResults();
+                }, delay);
             }
-        },
 
-        /**
-         * Format a human readable number
-         *
-         * @param num
-         * @returns {string}
-         * @constructor
-         */
-        FormatNumber: function (num) {
-            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-        },
-
-        /**
-         * Filter a collection of items
-         *
-         * @constructor
-         */
-        SearchCollection: function () {
-            $('#search-collection').keyup(function () {
-                let value = $(this).val(),
-                    exp = new RegExp('^' + value, 'i'),
-                    items = '.collection .collection-item';
-                $(items).each(function () {
-                    // toggle items that don't meet criteria
-                    let isMatch = exp.test($(this).text());
-                    $(this).toggle(isMatch);
-
-                });
+            $input.on('keydown', triggerSearch);
+            $input.on('paste', function () {
+                setTimeout(triggerSearch, 0);
             });
-        },
-
-        smoothScroll: function () {
-            $('.smooth-scroll').click(function (e) {
-                e.preventDefault();
-                var targetId = $(this).attr('href');
-                var top = $(targetId).offset().top - 90;
-                $('html, body').stop().animate({scrollTop: top}, 750);
-                window.location.hash = $.attr(this, 'href').substr(1);
-            });
-
-        },
-
-        GeneralInit: function () {
-
-            // handle primary nav collapse
-            $('.left-nav-toggle a').click(function () {
-                if ($('body').hasClass('nav-toggle')) {
-                    $.get(window.Laravel.appPath + '/primary-nav/decollapse');
-                } else {
-                    $.get(window.Laravel.appPath + '/primary-nav/collapse');
+            $input.on('input', function () {
+                if (!$input.val().trim()) {
+                    $('.results-loader').addClass('hidden');
                 }
             });
 
-            // Only enable if the document has a long scroll bar
-            // Note the window height + offset
-            if (($(window).height() + 100) < $(document).height()) {
-                $('#top-link-block').removeClass('hidden').affix({
-                    // how far to scroll down before link "slides" into view
-                    offset: {top: 100}
-                });
-            }
-
-            this.smoothScroll();
-
-            var clipboard = new Clipboard('.copy-to-clipboard');
-
-            clipboard.on('success', function (e) {
-                toastr.success('Copied!');
-                e.clearSelection();
+            $('#searchclear').on('click', function () {
+                $('section.search-results').addClass('closed').removeClass('open');
+                $input.val('');
+                $(this).hide();
             });
-
-            var basicDatatable = $('table.basic-datatable').DataTable({
-                paging: false,
-                bFilter: false,
-                stateSave: true,
-                bInfo: false,
-                order: [],
-                columnDefs: [
-                    {targets: 'no-sort', orderable: false}
-                ],
-                select: {
-                    style: 'os',
-                    selector: 'td:first-child',
-                },
-            });
-
-            var advDataTable = $('table.adv-datatable').DataTable({
-                order: [],
-                columnDefs: [
-                    {targets: 'no-sort', orderable: false}
-                ]
-            });
-
-            if ($('.for-pm-selection').length) {
-                // handle PM selection
-                basicDatatable.on("select", function (e, t, a, d) {
-                    let l = basicDatatable.rows($(".selected")).data().toArray().map(function (e) {
-                        return e[4]
-                    });
-                    if (l.length >= 2) {
-                        $("#selected-data").show(),
-                            $("#selected-data .status-text").text("With selected (" + l.length + ")"),
-                            $("#pm-member-data").val(l);
-                    }
-                });
-            }
-
-            var sparklineCharts = function () {
-                $('[census-data]').each(function () {
-                    var $el = $(this);
-                    var inContainer = $el.closest('.census-sparkline-container').length > 0;
-                    var chartHeight = inContainer ? 80 : 50;
-
-                    $el.sparkline($el.data('counts'), {
-                        type: 'line',
-                        lineColor: '#fff',
-                        lineWidth: 2,
-                        fillColor: '#404652',
-                        height: chartHeight,
-                        width: '100%'
-                    });
-
-                    if ($el.data('weekly-voice')) {
-                        $el.sparkline($el.data('weekly-voice'), {
-                            type: 'line',
-                            lineColor: '#1bbf89',
-                            lineWidth: 2,
-                            fillColor: 'rgba(27, 191, 137, 0.2)',
-                            height: chartHeight,
-                            composite: true
-                        });
-                    }
-                });
-
-                $('.census-pie').each(function () {
-                    $(this).sparkline(
-                        $(this).data('counts'), {
-                            type: 'pie',
-                            sliceColors: $(this).data('colors')
-                        }
-                    );
-                });
-            };
-
-            let sparkResize;
-
-            $(window).resize(function () {
-                clearTimeout(sparkResize);
-                sparkResize = setTimeout(sparklineCharts, 100);
-            });
-
-            sparklineCharts();
-
-            // Handle minimalize left menu
-            $('.left-nav-toggle a').on('click', function (event) {
-                event.preventDefault();
-                $('body').toggleClass('nav-toggle');
-                clearTimeout(sparkResize);
-                sparkResize = setTimeout(sparklineCharts, 100);
-            });
-
-            // Hide all open sub nav menu list
-            $('.nav-second').on('show.bs.collapse', function () {
-                $('.nav-second.in').collapse('hide');
-            });
-
-            // Handle panel toggle
-            $('.panel-toggle').on('click', function (event) {
-                event.preventDefault();
-                var hpanel = $(event.target).closest('div.panel');
-                var icon = $(event.target).closest('i.toggle-icon');
-                var iconNotLinked = $(event.target).find('i.toggle-icon');
-                var body = hpanel.find('div.panel-body');
-                var footer = hpanel.find('div.panel-footer');
-                body.slideToggle(300);
-                footer.slideToggle(200);
-
-                // Toggle icon from up to down
-                icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
-                iconNotLinked.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
-                hpanel.toggleClass('').toggleClass('panel-collapse');
-                setTimeout(function () {
-                    hpanel.resize();
-                    hpanel.find('[id^=map-]').resize();
-                }, 50);
-            });
-
-            // Handle panel close
-            $('.panel-close').on('click', function (event) {
-                event.preventDefault();
-                var hpanel = $(event.target).closest('div.panel');
-                hpanel.remove();
-            });
-
-            $('.search-member').bootcomplete({
-                url: window.Laravel.appPath + '/search-member/',
-                minLength: 3,
-                idField: true,
-                method: 'POST',
-                dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
-            });
-
         },
+
+        GetSearchResults: function () {
+            var name = $('#member-search').val();
+            if (!name) return;
+
+            $.ajax({
+                url: window.Laravel.appPath + '/search/members/' + name,
+                type: 'GET',
+                success: function (response) {
+                    window.scrollTo(0, 0);
+                    $('.results-loader').addClass('hidden');
+                    $('#searchclear').show();
+                    $('section.search-results').html(response).addClass('open').removeClass('closed');
+                }
+            });
+        },
+
+        InitCollectionSearch: function () {
+            var $input = $('#search-collection');
+            if (!$input.length) return;
+
+            $input.on('keyup', function () {
+                var value = $(this).val();
+                var exp = new RegExp('^' + value, 'i');
+
+                $('.collection .collection-item').each(function () {
+                    $(this).toggle(exp.test($(this).text()));
+                });
+            });
+        },
+
+        InitRepeater: function () {
+            var $repeater = $('.repeater');
+            if (!$repeater.length) return;
+
+            $repeater.repeater({
+                isFirstItemUndeletable: true
+            });
+        },
+
+        InitTabActivate: function () {
+            var $tabs = $('.nav-tabs');
+            if (!$tabs.length) return;
+
+            $tabs.stickyTabs();
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+                $.sparkline_display_visible();
+            });
+        }
 
     };
 
 })(window.jQuery);
 
 Tracker.Setup();
-

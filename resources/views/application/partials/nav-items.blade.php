@@ -78,9 +78,11 @@
         </li>
     @endif
 
-    <li class="{{ set_active('search/members') }}{{ $isMobile ? '' : ' visible-xs' }}">
-        <a href="{{ route('memberSearch') }}">Search</a>
-    </li>
+    @unless($isMobile)
+        <li class="{{ set_active('search/members') }} visible-xs">
+            <a href="{{ route('memberSearch') }}">Search</a>
+        </li>
+    @endunless
 
     <li class="{{ set_active('clan/*') }}">
         <a href="#{{ $idPrefix }}clan-information" data-toggle="collapse" aria-expanded="false">

@@ -11,6 +11,9 @@
             TRACKER
             <span>{{ config('app.version') }}</span>
         </a>
+        <button class="mobile-search-toggle visible-xs">
+            <i class="fa fa-search"></i>
+        </button>
         <button class="mobile-nav-toggle visible-xs">
             <i class="fa fa-bars"></i>
         </button>
@@ -30,4 +33,20 @@
             <span id="searchclear" class="fa fa-times-circle fa-2x text-muted pull-right"></span>
         </div>
     </div>
+</div>
+
+<div class="mobile-search-modal">
+    <div class="mobile-search-header">
+        <div class="mobile-search-input-wrap">
+            <i class="fa fa-search"></i>
+            <input type="text" id="mobile-member-search" placeholder="Search for a player..." autocomplete="off" />
+            <span class="mobile-searchclear fa fa-times-circle"></span>
+        </div>
+        <button class="mobile-search-close">Cancel</button>
+    </div>
+    <div class="mobile-search-loader">
+        <div class="mobile-spinner"></div>
+        <span>Searching...</span>
+    </div>
+    <div class="mobile-search-results"></div>
 </div>
