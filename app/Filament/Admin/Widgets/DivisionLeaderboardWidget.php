@@ -42,7 +42,7 @@ class DivisionLeaderboardWidget extends BaseWidget
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Division')
-                    ->url(fn (Division $record) => route('division', $record->abbreviation)),
+                    ->url(fn (Division $record) => route('division', $record->slug)),
 
                 Tables\Columns\TextColumn::make('latestCensus.count')
                     ->label('Members')
@@ -106,7 +106,7 @@ class DivisionLeaderboardWidget extends BaseWidget
 
                 Tables\Columns\TextColumn::make('name')
                     ->label('Division')
-                    ->url(fn (Division $record) => route('division', $record->abbreviation)),
+                    ->url(fn (Division $record) => route('division', $record->slug)),
 
                 Tables\Columns\TextColumn::make('recruits_count')
                     ->label('Recruits (30 days)')

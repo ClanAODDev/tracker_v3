@@ -945,10 +945,41 @@ a.org-node:hover {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 8px;
+    flex: 1 1 calc(20% - 10px);
     min-width: 220px;
-    flex: 1;
-    max-width: 300px;
+    max-width: calc(25% - 9px);
+    min-height: 60px;
+    box-sizing: border-box;
     transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (max-width: 1200px) {
+    .handle-card {
+        flex: 1 1 calc(25% - 9px);
+        max-width: calc(33.333% - 8px);
+    }
+}
+
+@media (max-width: 992px) {
+    .handle-card {
+        flex: 1 1 calc(33.333% - 8px);
+        max-width: calc(50% - 6px);
+    }
+}
+
+@media (max-width: 768px) {
+    .handle-card {
+        flex: 1 1 calc(50% - 6px);
+        max-width: 100%;
+        min-width: 180px;
+    }
+}
+
+@media (max-width: 480px) {
+    .handle-card {
+        flex: 1 1 100%;
+        min-width: unset;
+    }
 }
 
 .handle-card:hover {

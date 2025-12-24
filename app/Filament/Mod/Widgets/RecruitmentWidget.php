@@ -48,6 +48,7 @@ class RecruitmentWidget extends BaseWidget
         return $table
             ->query(
                 Member::query()
+                    ->with('recruiter')
                     ->when($division, fn (Builder $q) => $q->where('division_id', $division->id))
                     ->whereNotNull('join_date')
                     ->where('join_date', '>=', now()->subDays($this->days))
@@ -57,7 +58,7 @@ class RecruitmentWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('name')
                     ->label('Member')
                     ->searchable()
-                    ->url(fn (Member $record) => route('member', $record->clan_id)),
+                    ->url(fn (Member $record) => $record->clan_id ? route('member', $record->clan_id) : null),
 
                 Tables\Columns\TextColumn::make('rank')
                     ->label('Rank')

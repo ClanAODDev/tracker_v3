@@ -37,7 +37,7 @@ class DivisionPerformanceWidget extends BaseWidget
                     ->label('Division')
                     ->searchable()
                     ->sortable()
-                    ->url(fn (Division $record) => route('division', $record->abbreviation)),
+                    ->url(fn (Division $record) => route('division', $record->slug)),
 
                 Tables\Columns\TextColumn::make('latestCensus.count')
                     ->label('Members')
