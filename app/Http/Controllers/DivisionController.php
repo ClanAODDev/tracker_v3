@@ -2,71 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\UnitStatsData;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\DivisionRepository;
+use App\Services\DivisionShowService;
 use App\Services\MemberQueryService;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 class DivisionController extends Controller
 {
     public function __construct(
         private DivisionRepository $division,
+        private DivisionShowService $divisionShow,
         private MemberQueryService $memberQuery,
     ) {
         $this->middleware('auth');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return Factory|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\View|Response
-     *
-     * @internal param int $id
-     */
-    public function show(Division $division)
+    public function show(Division $division): View
     {
-        $divisionAnniversaries = $this->division->getDivisionAnniversaries($division);
-
-        $censusCounts = $this->division->censusCounts($division);
-        $previousCensus = $censusCounts->first();
-        $lastYearCensus = $censusCounts->reverse();
-
-        $maxDays = config('aod.maximum_days_inactive');
-
-        $division->outstandingInactives = $division->members()->whereDoesntHave('leave')->where(
-            'last_voice_activity',
-            '<',
-            \Carbon\Carbon::now()->subDays($maxDays)->format('Y-m-d')
-        )->count();
-
-        $division->outstandingAwardRequests = $division->awards()->whereHas('unapprovedRecipients')->count();
-
-        $divisionLeaders = $division->leaders()->get();
-
-        $platoons = $division->platoons()->with(
-            'squads.leader',
-        )->withCount('members')->orderBy('order')->get();
-
-        $generalSergeants = $division->generalSergeants()->get();
-
-        return view(
-            'division.show',
-            compact(
-                'division',
-                'previousCensus',
-                'platoons',
-                'lastYearCensus',
-                'divisionLeaders',
-                'generalSergeants',
-                'divisionAnniversaries',
-            )
-        );
+        return view('division.show', $this->divisionShow->getShowData($division)->toArray());
     }
 
     /**
@@ -133,7 +91,8 @@ class DivisionController extends Controller
         }
 
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
+        $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
-        return view('division.members', compact('division', 'members', 'voiceActivityGraph', 'includeParttimers'));
+        return view('division.members', compact('division', 'members', 'unitStats', 'includeParttimers'));
     }
 }

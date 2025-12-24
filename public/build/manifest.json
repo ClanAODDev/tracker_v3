@@ -1,6 +1,6 @@
 {
   "resources/assets/css/style.css": {
-    "file": "assets/style-CeAfdd8W.css",
+    "file": "assets/style-CWpEjyNu.css",
     "src": "resources/assets/css/style.css",
     "isEntry": true,
     "name": "style",
@@ -15,13 +15,13 @@
     "isEntry": true
   },
   "resources/assets/js/division.js": {
-    "file": "assets/division-DQyxYo0k.js",
+    "file": "assets/division-gOjRVpxk.js",
     "name": "division",
     "src": "resources/assets/js/division.js",
     "isEntry": true
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-Ka--t4CB.js",
+    "file": "assets/main-DMtY8RW5.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true

@@ -17,6 +17,12 @@
 <div class="row">
 
     @forelse ($platoons as $platoon)
+        @php
+            $voiceRate = $platoon->members_count > 0
+                ? round(($platoon->voice_active_count / $platoon->members_count) * 100)
+                : 0;
+            $voiceClass = $voiceRate >= 30 ? 'text-success' : ($voiceRate >= 15 ? 'text-warning' : 'text-muted');
+        @endphp
         <div class="col-md-6">
             <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
                class="panel panel-filled platoon" data-platoon-id="{{ $platoon->id }}">
@@ -29,6 +35,9 @@
                         @endif
                         {{ $platoon->name }}
                         <label class="badge">{{ $platoon->members_count }} Assigned</label>
+                        <label class="badge {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
+                            <i class="fa fa-headset"></i> {{ $voiceRate }}%
+                        </label>
                     </h4>
 
                     @if ($platoon->leader)

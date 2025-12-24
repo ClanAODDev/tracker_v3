@@ -1,6 +1,6 @@
 <div class="btn-group pull-right text-capitalize">
     <button data-toggle="dropdown" class="member-actions btn btn-default dropdown-toggle" aria-expanded="true">
-        <i class="fa fa-wrench text-accent"></i> Actions <span class="caret"></span>
+        <i class="fa fa-wrench text-accent"></i> <span class="hidden-xs">Actions</span> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
 

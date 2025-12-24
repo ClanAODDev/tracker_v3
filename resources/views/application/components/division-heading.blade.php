@@ -1,4 +1,4 @@
-<div class="division-header">
+<div class="division-header m-md">
     <div class="header-icon">
         <img src="{{ $division ? $division->getLogoPath() : asset(config('aod.logo')) }}" class="division-icon-large" />
     </div>

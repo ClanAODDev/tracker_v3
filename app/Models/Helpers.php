@@ -407,3 +407,40 @@ function add_query_params(array $params = [])
 
     return url()->current() . '?' . urldecode(http_build_query($query));
 }
+
+function getAnniversaryTrophy(int $years): ?array
+{
+    if ($years < 5) {
+        return null;
+    }
+
+    if ($years >= 20) {
+        return [
+            'class' => 'fas fa-trophy fa-lg',
+            'color' => '#E5E4E2',
+            'title' => '20+ Years',
+        ];
+    }
+
+    if ($years >= 15) {
+        return [
+            'class' => 'fas fa-trophy',
+            'color' => '#D4AF37',
+            'title' => '15+ Years',
+        ];
+    }
+
+    if ($years >= 10) {
+        return [
+            'class' => 'fas fa-trophy',
+            'color' => '#C0C0C0',
+            'title' => '10+ Years',
+        ];
+    }
+
+    return [
+        'class' => 'fas fa-trophy',
+        'color' => '#cd7f32',
+        'title' => '5+ Years',
+    ];
+}

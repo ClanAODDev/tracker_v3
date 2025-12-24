@@ -1,35 +1,20 @@
-<h1>
-    <i class="pe pe-7s-users text-warning"> </i>
-
-    {{ number_format($division->members->count()) }}
-
-    @if($previousCensus)
-        <div class="slight" style="display: inline-block">
-            @if (is_int($previousCensus) && $division->members->count())
-                @if($division->members->count() < $previousCensus->count)
-                    <i class="fa fa-play fa-rotate-90 c-white"></i>
-                @else
-                    <i class="fa fa-play fa-rotate-270 text-warning"></i>
-                @endif
-                {{ abs(number_format((1 - $previousCensus->count / $division->members->count()) * 100, 2)) }}%
-            @endif
-        </div>
-    @endif
-</h1>
-
-<div class="small">
-    <span class="c-white">Total active members</span> in the {{ $division->name }} Division.
-    @if ($previousCensus)
-        Percent difference from previous count of
-        <strong>{{ $previousCensus->count }}</strong> on
-        <strong>{{ $previousCensus->date }}</strong>. Census data is collected weekly.
-    @endif
-</div>
-
 <div class="m-t-md">
     <div class="row">
         <div class="col-md-12">
-            <div data-counts="{{ json_encode($lastYearCensus->pluck('count')) }}" census-data></div>
+            <div class="census-sparkline-container">
+                <div data-counts="{{ json_encode($chartData['population']) }}"
+                     data-weekly-voice="{{ json_encode($chartData['voiceActive']) }}"
+                     census-data></div>
+                <div class="census-legend">
+                    <span class="legend-item"><span class="legend-line legend-population"></span> Members</span>
+                    <span class="legend-item"><span class="legend-line legend-voice"></span> Voice Active</span>
+                </div>
+            </div>
+            @if ($previousCensus)
+                <p class="small text-muted m-t-sm">
+                    Weekly census data. Previous: <strong>{{ $previousCensus->count }}</strong> members on <strong>{{ $previousCensus->date }}</strong>
+                </p>
+            @endif
         </div>
     </div>
 </div>

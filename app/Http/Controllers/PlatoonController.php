@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\UnitStatsData;
 use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Platoon;
@@ -19,12 +20,13 @@ class PlatoonController extends Controller
 
     public function show(Division $division, Platoon $platoon)
     {
-        $platoon->load('squads.leader');
+        $platoon->load('squads.leader', 'squads.members');
 
         $members = $this->memberQuery->loadSortedMembers($platoon->members(), $division);
         $voiceActivityGraph = $this->platoon->getPlatoonVoiceActivity($platoon);
+        $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
-        return view('platoon.show', compact('platoon', 'members', 'division', 'voiceActivityGraph'));
+        return view('platoon.show', compact('platoon', 'members', 'division', 'unitStats'));
     }
 
     public function manageSquads($division, $platoon)

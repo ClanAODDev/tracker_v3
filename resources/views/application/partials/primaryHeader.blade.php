@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="navbar-header">
-        <div id="mobile-menu">
+        <div id="mobile-menu" class="hidden-xs">
             <div class="left-nav-toggle">
                 <a href="#">
                     <i class="stroke-hamburgermenu"></i>
@@ -11,15 +11,18 @@
             TRACKER
             <span>{{ config('app.version') }}</span>
         </a>
+        <button class="mobile-nav-toggle visible-xs">
+            <i class="fa fa-bars"></i>
+        </button>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-        <div class="left-nav-toggle">
+        <div class="left-nav-toggle hidden-xs">
             <a href="#">
                 <i class="stroke-hamburgermenu"></i>
             </a>
         </div>
 
-        <div class="navbar-form navbar-left">
+        <div class="navbar-form navbar-left hidden-xs">
             <img src="{{ asset('images/loading_2.gif') }}" alt="Results loading..."
                  class="hidden results-loader" style="opacity: .5" />
             <input type="text" class="form-control" id="member-search" name="search"

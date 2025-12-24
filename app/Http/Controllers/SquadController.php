@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\UnitStatsData;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -26,8 +27,9 @@ class SquadController extends Controller
 
         $members = $this->memberQuery->loadSortedMembers($squad->members(), $division);
         $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
+        $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
-        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'voiceActivityGraph'));
+        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'unitStats'));
     }
 
     public function assignMember(Request $request): JsonResponse

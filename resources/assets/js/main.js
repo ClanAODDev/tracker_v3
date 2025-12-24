@@ -8,10 +8,57 @@ var Tracker = Tracker || {};
             Tracker.GeneralInit();
             Tracker.SearchMembers();
             Tracker.SearchCollection();
+            Tracker.InitMobileNav();
 
             // misc functionality, visual
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
+        },
+
+        InitMobileNav: function () {
+            var $toggle = $('.mobile-nav-toggle');
+            var $drawer = $('.mobile-nav-drawer');
+            var $overlay = $('.mobile-nav-overlay');
+            var $close = $('.mobile-nav-close');
+            var $body = $('body');
+
+            function openNav() {
+                $drawer.addClass('active');
+                $overlay.addClass('active');
+                $body.addClass('mobile-nav-open');
+            }
+
+            function closeNav() {
+                $drawer.removeClass('active');
+                $overlay.removeClass('active');
+                $body.removeClass('mobile-nav-open');
+            }
+
+            $toggle.on('click', function (e) {
+                e.preventDefault();
+                if ($drawer.hasClass('active')) {
+                    closeNav();
+                } else {
+                    openNav();
+                }
+            });
+
+            $close.on('click', function (e) {
+                e.preventDefault();
+                closeNav();
+            });
+
+            $overlay.on('click', function () {
+                closeNav();
+            });
+
+            $drawer.find('a').on('click', function (e) {
+                var $link = $(this);
+                if ($link.attr('data-toggle') === 'collapse' || $link.attr('href') === '#') {
+                    return;
+                }
+                closeNav();
+            });
         },
         /**
          * Handle member search
@@ -229,21 +276,25 @@ var Tracker = Tracker || {};
             var sparklineCharts = function () {
                 $('[census-data]').each(function () {
                     var $el = $(this);
+                    var inContainer = $el.closest('.census-sparkline-container').length > 0;
+                    var chartHeight = inContainer ? 80 : 50;
+
                     $el.sparkline($el.data('counts'), {
                         type: 'line',
                         lineColor: '#fff',
                         lineWidth: 2,
                         fillColor: '#404652',
-                        height: 50,
+                        height: chartHeight,
                         width: '100%'
                     });
 
                     if ($el.data('weekly-voice')) {
                         $el.sparkline($el.data('weekly-voice'), {
                             type: 'line',
-                            lineColor: '#56C0E0',
+                            lineColor: '#1bbf89',
                             lineWidth: 2,
-                            fillColor: 'rgba(86, 192, 224, 0.3)',
+                            fillColor: 'rgba(27, 191, 137, 0.2)',
+                            height: chartHeight,
                             composite: true
                         });
                     }

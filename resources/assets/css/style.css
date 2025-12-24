@@ -344,6 +344,136 @@
     font-size: 13px;
 }
 
+.panel-filled .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    margin-right: 15px;
+}
+
+.panel-filled .stat-icon i {
+    font-size: 22px;
+}
+
+.panel-filled .stat-content {
+    overflow: hidden;
+}
+
+.panel-filled .stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+    display: block;
+}
+
+.panel-filled .stat-value small {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.panel-filled .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-top: 4px;
+}
+
+.census-sparkline-container {
+    background-color: rgba(68, 70, 79, 0.5);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.census-sparkline-container [census-data] {
+    height: 80px;
+}
+
+.census-legend {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.census-legend .legend-item {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 15px;
+}
+
+.census-legend .legend-line {
+    display: inline-block;
+    width: 20px;
+    height: 2px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.census-legend .legend-population {
+    background: #fff;
+}
+
+.census-legend .legend-voice {
+    background: #1bbf89;
+}
+
+.anniversary-btn {
+    margin: 0 8px 8px 0;
+}
+
+.unit-stats-total {
+    margin: unset;
+}
+
+.unit-stats-row {
+    padding: 10px 15px;
+}
+
+.unit-stats-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+}
+
+.unit-stats-value {
+    font-size: 18px;
+}
+
+.squad-stats {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.squad-stat-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+}
+
+.squad-stat-badge.voice-high {
+    background: rgba(27, 191, 137, 0.2);
+    color: #1bbf89;
+}
+
+.squad-stat-badge.voice-mid {
+    background: rgba(247, 175, 62, 0.2);
+    color: #f7af3e;
+}
+
+.squad-stat-badge.voice-low {
+    background: rgba(219, 82, 75, 0.2);
+    color: #db524b;
+}
+
 .member-stat-card .panel-footer.milestone-badges {
     background: rgba(0,0,0,0.2);
     padding: 8px 15px;
@@ -975,7 +1105,7 @@ a.org-node:hover {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .handle-card {
         flex: 1 1 100%;
         min-width: unset;
@@ -3165,7 +3295,7 @@ body.nav-toggle .navigation:before {
 
     .content {
         margin-left: 0;
-        padding: 30px 0 10px 0;
+        padding: 30px 0 50px 0;
     }
 
     .navigation {
@@ -3188,6 +3318,168 @@ body.nav-toggle .navigation:before {
 
     body.nav-toggle .navigation:before {
         left: 0;
+    }
+}
+
+.mobile-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #949ba2;
+    font-size: 24px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.mobile-nav-toggle:hover,
+.mobile-nav-toggle:focus {
+    color: #f6a821;
+    outline: none;
+}
+
+.mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-drawer {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1a1a 0%, #24262d 100%);
+    z-index: 1001;
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-nav-drawer.active {
+    right: 0;
+}
+
+.mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.mobile-nav-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mobile-nav-close {
+    background: none;
+    border: none;
+    color: #949ba2;
+    font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.mobile-nav-close:hover,
+.mobile-nav-close:focus {
+    color: #f6a821;
+    outline: none;
+}
+
+.mobile-nav-content {
+    padding: 10px 0;
+}
+
+.mobile-nav-content .luna-nav {
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-nav-content .luna-nav > li > a {
+    padding: 16px 20px;
+    font-size: 16px;
+    display: block;
+    color: #c8ccd0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobile-nav-content .luna-nav > li > a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.mobile-nav-content .luna-nav .nav-category {
+    padding: 20px 20px 10px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.4);
+    border-bottom: none;
+}
+
+.mobile-nav-content .nav-second {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.mobile-nav-content .nav-second li a {
+    padding: 14px 20px 14px 35px;
+    font-size: 14px;
+}
+
+body.mobile-nav-open {
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    .mobile-nav-toggle {
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .navbar-header {
+        position: relative;
+    }
+
+    .mobile-nav-overlay,
+    .mobile-nav-drawer {
+        display: block;
+    }
+
+    .navigation {
+        display: none !important;
+    }
+
+    #navbar {
+        display: none !important;
+    }
+
+    .navbar-default {
+        min-height: 60px;
     }
 }
 

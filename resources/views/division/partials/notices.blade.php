@@ -26,29 +26,34 @@
     @endif
 @endcan
 
-{{-- pending award requests --}}
-@if ($division->outstandingInactives && auth()->user()->isRole('sr_ldr'))
+{{-- outstanding inactives --}}
+@if (($outstandingInactives ?? 0) && auth()->user()->isRole('sr_ldr'))
     <div class="alert alert-default">
         <i class="fa fa-user-clock"></i>
-        There {{ $division->outstandingInactives === 1 ? 'is' : 'are' }} <code>{{ $division->outstandingInactives }}</code> inactive {{ Str::plural('member', $division->outstandingInactives) }} whose last activity exceeds <code>{{ config('aod.maximum_days_inactive') }}</code> days. Please <a href="{{ route('division.inactive-members', $division) }}" class="alert-link">process these members</a> out of AOD.
+        There {{ $outstandingInactives === 1 ? 'is' : 'are' }} <code>{{ $outstandingInactives }}</code> inactive {{ Str::plural('member', $outstandingInactives) }} whose last activity exceeds <code>{{ config('aod.maximum_days_inactive') }}</code> days. Please <a href="{{ route('division.inactive-members', $division) }}" class="alert-link">process these members</a> out of AOD.
     </div>
 @endif
 
-{{-- pending transfers --}}
-@if ($division->outstandingAwardRequests && auth()->user()->isDivisionLeader())
+{{-- pending award requests --}}
+@if (($outstandingAwardRequests ?? 0) && auth()->user()->isDivisionLeader())
     <div class="alert alert-default">
         <i class="fa fa-trophy"></i>
-        There {{ $division->outstandingAwardRequests === 1 ? 'is' : 'are' }} <code>{{ $division->outstandingAwardRequests }}</code> pending award {{ Str::plural('request', $division->outstandingAwardRequests) }} for approval.
+        There {{ $outstandingAwardRequests === 1 ? 'is' : 'are' }} <code>{{ $outstandingAwardRequests }}</code> pending award {{ Str::plural('request', $outstandingAwardRequests) }} for approval.
         <a href="{{ route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id) }}" class="alert-link">Manage Requests</a>
     </div>
 @endif
 
 {{-- misconfigured comms --}}
-@if ($division->members()->misconfiguredDiscord()->count() && auth()->user()->isRole(['sr_ldr', 'jr_ldr']))
-    <div class="alert alert-default">
-        <i class="fa fa-comments"></i>
-        There {{ $division->members()->misconfiguredDiscord()->count() === 1 ? 'is' : 'are' }} member{{ $division->members()->misconfiguredDiscord()->count() === 1 ? '' : 's' }} with voice‐comms issues. Please review the <a href="{{ route('division.voice-report', $division->slug) }}" class="alert-link">Voice Comms Report</a>.
-    </div>
+@if (auth()->user()->isRole(['sr_ldr', 'jr_ldr']))
+    @php
+        $misconfiguredCount = $division->members()->misconfiguredDiscord()->count();
+    @endphp
+    @if ($misconfiguredCount)
+        <div class="alert alert-default">
+            <i class="fa fa-comments"></i>
+            There {{ $misconfiguredCount === 1 ? 'is' : 'are' }} {{ $misconfiguredCount }} member{{ $misconfiguredCount === 1 ? '' : 's' }} with voice-comms issues. Please review the <a href="{{ route('division.voice-report', $division->slug) }}" class="alert-link">Voice Comms Report</a>.
+        </div>
+    @endif
 @endif
 
 {{-- unassigned members --}}

@@ -20,6 +20,17 @@
             @include('application.partials.navigation')
         </aside>
 
+        <div class="mobile-nav-overlay"></div>
+        <aside class="mobile-nav-drawer">
+            <div class="mobile-nav-header">
+                <span class="mobile-nav-title">Menu</span>
+                <button class="mobile-nav-close"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="mobile-nav-content">
+                @include('application.partials.mobile-navigation')
+            </div>
+        </aside>
+
         <section class="search-results closed text-center"></section>
         <section class="content">
             @include('application.partials.alert')

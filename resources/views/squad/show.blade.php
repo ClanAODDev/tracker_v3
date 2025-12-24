@@ -18,7 +18,7 @@
         @include('division.partials.select-panel')
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-lg-10 col-md-9">
                 <div class="panel panel-filled ld-loading">
                     <div class="loader">
                         <div class="loader-bar"></div>
@@ -26,9 +26,9 @@
                     @include('squad.partials.squad-members')
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-lg-2 col-md-3">
                 @include('platoon.partials.squads')
-                @include('member.partials.unit-stats', ['members' => $members, 'voiceActivityGraph' => $voiceActivityGraph, 'division' => $division])
+                @include('member.partials.unit-stats', ['unitStats' => $unitStats])
             </div>
         </div>
     </div>

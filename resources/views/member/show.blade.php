@@ -50,7 +50,7 @@
                     @can('assign', [App\Models\DivisionTag::class, $member])
                         <div class="dropdown" style="display: inline-block;">
                             <a href="#" class="badge badge-default" title="Add tag" data-toggle="dropdown">
-                                <i class="fa fa-plus"></i>
+                                <i class="fa fa-plus"></i> ADD TAG
                             </a>
                             <ul class="dropdown-menu" id="available-tags-dropdown">
                                 <li class="dropdown-header">Loading...</li>
@@ -67,9 +67,7 @@
         {!! Breadcrumbs::render('member', $member, $division) !!}
 
         @include ('member.partials.notices')
-
         @include ('member.partials.member-stats')
-
         @include ('member.partials.awards')
         @include ('member.partials.handles')
         @include ('member.partials.part-time-divisions')

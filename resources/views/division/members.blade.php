@@ -18,7 +18,7 @@
         @include('division.partials.select-panel')
 
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-lg-10 col-md-9">
                 <div class="panel panel-filled m-b-xl" id="{{ $division->abbreviation }}">
                     <div class="panel-heading">
                         {{ $division->name }} Division
@@ -46,8 +46,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
-                @include('member.partials.unit-stats', ['members' => $members, 'voiceActivityGraph' => $voiceActivityGraph, 'division' => $division])
+            <div class="col-lg-2 col-md-3">
+                @include('member.partials.unit-stats', ['unitStats' => $unitStats])
             </div>
         </div>
     </div>
