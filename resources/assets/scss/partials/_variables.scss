@@ -104,4 +104,21 @@ $rarity-unclaimed: #4a4a4a;
     --rarity-rare: #{$rarity-rare};
     --rarity-common: #{$rarity-common};
     --rarity-unclaimed: #{$rarity-unclaimed};
+
+    --color-green: #{$color-green};
+    --color-green-light: #{$color-green-light};
+    --color-red: #{$color-red};
+    --color-orange: #{$color-orange};
+    --color-indigo: #{$color-indigo};
+    --color-purple: #{$color-purple};
+    --color-teal: #{$color-teal};
+    --color-gold: #{$color-gold};
+
+    --overlay-light: rgba(255, 255, 255, 0.1);
+    --overlay-light-hover: rgba(255, 255, 255, 0.05);
+    --overlay-light-subtle: rgba(255, 255, 255, 0.08);
+    --overlay-dark: rgba(0, 0, 0, 0.2);
+    --overlay-dark-focus: rgba(0, 0, 0, 0.3);
+    --text-muted-light: rgba(255, 255, 255, 0.4);
+    --text-muted-medium: rgba(255, 255, 255, 0.7);
 }

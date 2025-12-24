@@ -25,15 +25,15 @@
                         class="fa fa-search text-accent"></i></a>
         </span>
     </td>
-    <td class="text-center">{{ $member->rank->getAbbreviation() }}</td>
+    <td class="text-center hidden-xs">{{ $member->rank->getAbbreviation() }}</td>
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
-    <td class="text-center">
+    <td class="text-center hidden-xs">
                     <span class="{{ getActivityClass($member->last_voice_activity, $division) }}"
                           title="{{$member->last_voice_activity}}">
                         {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks', 'months']) }}
                     </span>
     </td>
-    <td class="text-center">{{ $member->last_promoted_at ?? 'Never' }}</td>
+    <td class="text-center hidden-xs">{{ $member->last_promoted_at ?? 'Never' }}</td>
     <td class="hidden-xs hidden-sm table-tags-cell">
         @foreach($visibleMemberTags as $tag)
             <span class="badge table-tag tag-visibility-{{ $tag->visibility->value }}"

@@ -166,9 +166,10 @@ var Platoon = Platoon || {};
                     'initComplete': function (settings, json) {
                         setTimeout(function () {
                             $('.ld-loading').removeClass('ld-loading');
+                            self.dataTable.columns.adjust();
                         }, 2000);
                     },
-                    autoWidth: true, bInfo: false,
+                    autoWidth: false, bInfo: false,
                     oLanguage: {
                         sLengthMenu: ''
                     },
@@ -207,20 +208,24 @@ var Platoon = Platoon || {};
                     }, 100);
                 });
 
-                function updateLinkColor(link, column) {
-                    $(link).css('color', column.visible() ? 'white' : '#949ba2');
+                function updateToggleState(link, column) {
+                    if (column.visible()) {
+                        $(link).addClass('active');
+                    } else {
+                        $(link).removeClass('active');
+                    }
                 }
 
                 $('a.toggle-vis').each(function () {
                     var column = self.dataTable.column($(this).data('column'));
-                    updateLinkColor(this, column);
+                    updateToggleState(this, column);
                 });
 
                 $('a.toggle-vis').on('click', function (e) {
                     e.preventDefault();
                     var column = self.dataTable.column($(this).data('column'));
                     column.visible(!column.visible());
-                    updateLinkColor(this, column);
+                    updateToggleState(this, column);
                 });
 
                 var $searchInput = $('.dataTables_filter input').removeClass('input-sm');

@@ -8,14 +8,14 @@
     {{--2--}}
     <th><strong>Member</strong></th>
     {{--3--}}
-    <th class='no-search text-center'><strong>Rank</strong></th>
+    <th class='no-search text-center hidden-xs'><strong>Rank</strong></th>
     {{--4--}}
     <th class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
     {{--5--}}
-    <th class='text-center'><strong>Discord Activity</strong></th>
+    <th class='text-center hidden-xs'><strong>Discord Activity</strong></th>
     {{--6--}}
-    <th class='text-center'>
-        <string>Last Promoted</string>
+    <th class='text-center hidden-xs'>
+        <strong>Last Promoted</strong>
     </th>
     {{--7--}}
     <th class='no-search hidden-xs hidden-sm'><strong>Tags</strong></th>

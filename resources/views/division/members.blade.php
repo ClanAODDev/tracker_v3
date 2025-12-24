@@ -4,7 +4,7 @@
 
     @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
-            <span class="hidden-xs">{{ $division->name }}</span>
+            {{ $division->name }}
         @endslot
         @slot ('subheading')
             Division Members

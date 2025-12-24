@@ -2,13 +2,13 @@
 @use 'variables' as *;
 
 @mixin btn-variant($btn-color) {
-    color: $color-muted;
+    color: var(--color-muted);
     background-color: transparent;
     border-color: $btn-color;
 
     &:focus,
     &.focus {
-        color: #ffffff;
+        color: var(--color-white);
         background-color: rgba($btn-color, 0.1);
         border-color: $btn-color;
         outline: 0;
@@ -16,7 +16,7 @@
     }
 
     &:hover {
-        color: #ffffff;
+        color: var(--color-white);
         background-color: rgba($btn-color, 0.1);
         border-color: $btn-color;
     }
@@ -24,7 +24,7 @@
     &:active,
     &.active,
     .open > .dropdown-toggle#{&} {
-        color: #ffffff;
+        color: var(--color-white);
         background-color: rgba($btn-color, 0.1);
         border-color: $btn-color;
         background-image: none;
@@ -39,7 +39,7 @@
     &:active.focus,
     &.active.focus,
     .open > .dropdown-toggle#{&}.focus {
-        color: #ffffff;
+        color: var(--color-white);
         background-color: rgba($btn-color, 0.1);
         border-color: color.adjust($btn-color, $lightness: 10%);
         outline: 0;
@@ -59,7 +59,7 @@
 
     .badge {
         color: transparent;
-        background-color: $color-muted;
+        background-color: var(--color-muted);
     }
 }
 

@@ -5,7 +5,7 @@
     display: none;
     background: none;
     border: none;
-    color: $color-muted;
+    color: var(--color-muted);
     font-size: 24px;
     padding: 15px 20px;
     cursor: pointer;
@@ -13,7 +13,7 @@
 
     &:hover,
     &:focus {
-        color: $color-accent;
+        color: var(--color-accent);
         outline: none;
     }
 }
@@ -44,7 +44,7 @@
     right: -330px;
     width: 300px;
     height: 100%;
-    background: linear-gradient(180deg, #1a1a1a 0%, $color-nav-active 100%);
+    background: linear-gradient(180deg, var(--color-bg-darker) 0%, var(--color-nav-active) 100%);
     z-index: 1001;
     overflow-y: auto;
     @include transition(right 0.3s ease);
@@ -67,7 +67,7 @@
 .mobile-nav-title {
     font-size: 18px;
     font-weight: 600;
-    color: #fff;
+    color: var(--color-white);
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -75,7 +75,7 @@
 .mobile-nav-close {
     background: none;
     border: none;
-    color: $color-muted;
+    color: var(--color-muted);
     font-size: 24px;
     padding: 5px 10px;
     cursor: pointer;
@@ -83,7 +83,7 @@
 
     &:hover,
     &:focus {
-        color: $color-accent;
+        color: var(--color-accent);
         outline: none;
     }
 }
@@ -99,12 +99,12 @@
             padding: 16px 20px;
             font-size: 16px;
             display: block;
-            color: #c8ccd0;
+            color: var(--color-gray-300);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
             &:hover {
                 background: rgba(255, 255, 255, 0.05);
-                color: #fff;
+                color: var(--color-white);
             }
         }
 
@@ -136,14 +136,14 @@ body.mobile-nav-open {
     display: none;
     background: none;
     border: none;
-    color: $color-muted;
+    color: var(--color-muted);
     font-size: 20px;
     padding: 15px;
     cursor: pointer;
 
     &:hover,
     &:focus {
-        color: $color-accent;
+        color: var(--color-accent);
         outline: none;
     }
 }
@@ -155,7 +155,7 @@ body.mobile-nav-open {
     left: 0;
     right: 0;
     bottom: 0;
-    background: $color-bg-dark;
+    background: var(--color-bg-dark);
     z-index: 1060;
     flex-direction: column;
 
@@ -168,7 +168,7 @@ body.mobile-nav-open {
     display: flex;
     align-items: center;
     padding: 10px 15px;
-    background: $color-bg-darker;
+    background: var(--color-bg-darker);
     gap: 10px;
 }
 
@@ -177,12 +177,12 @@ body.mobile-nav-open {
     position: relative;
     display: flex;
     align-items: center;
-    background: $color-bg-input;
+    background: var(--color-bg-input);
     border-radius: 8px;
     padding: 0 12px;
 
     i {
-        color: #888;
+        color: var(--color-gray-600);
         font-size: 16px;
     }
 
@@ -190,19 +190,19 @@ body.mobile-nav-open {
         flex: 1;
         background: transparent;
         border: none;
-        color: #fff;
+        color: var(--color-white);
         padding: 12px 10px;
         font-size: 16px;
         outline: none;
 
         &::placeholder {
-            color: #888;
+            color: var(--color-gray-600);
         }
     }
 }
 
 .mobile-searchclear {
-    color: #666;
+    color: var(--color-gray-700);
     font-size: 18px;
     cursor: pointer;
     display: none;
@@ -215,7 +215,7 @@ body.mobile-nav-open {
 .mobile-search-close {
     background: none;
     border: none;
-    color: $color-accent;
+    color: var(--color-accent);
     font-size: 16px;
     padding: 10px;
     cursor: pointer;
@@ -227,7 +227,7 @@ body.mobile-nav-open {
     align-items: center;
     gap: 12px;
     padding: 40px 20px;
-    color: #888;
+    color: var(--color-gray-600);
     font-size: 14px;
 
     &.active {
@@ -248,14 +248,14 @@ body.mobile-nav-open {
         display: flex;
         align-items: center;
         padding: 12px 15px;
-        background: #363942;
+        background: var(--color-bg-input);
         border-radius: 6px;
         margin-bottom: 8px;
-        color: #fff;
+        color: var(--color-white);
         text-decoration: none;
 
         &:hover {
-            background: #3f434e;
+            background: var(--color-bg-hover);
         }
     }
 }

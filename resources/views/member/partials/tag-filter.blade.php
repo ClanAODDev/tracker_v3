@@ -6,8 +6,10 @@
         }])
         ->get();
 @endphp
+@if($visibleTags->isNotEmpty())
 <select id="tag-filter" multiple="multiple" placeholder="Filter by tag">
     @foreach($visibleTags as $tag)
         <option value="{{ $tag->id }}" data-count="{{ $tag->members_count }}">{{ $tag->name }} ({{ $tag->members_count }})</option>
     @endforeach
 </select>
+@endif

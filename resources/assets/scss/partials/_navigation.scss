@@ -3,7 +3,7 @@
 
 .navigation {
     margin-top: 60px;
-    background-color: $color-nav-active;
+    background-color: var(--color-nav-active);
     width: 200px;
     position: absolute;
     left: 0;
@@ -12,7 +12,7 @@
     transition: left 0.3s ease-out;
 
     nav {
-        background-color: #2a2d35;
+        background-color: var(--color-nav-bg);
     }
 
     &:before {
@@ -23,7 +23,7 @@
         bottom: 0;
         z-index: -1;
         left: 0;
-        background-color: $color-nav-active;
+        background-color: var(--color-nav-active);
         width: 200px;
     }
 
@@ -70,28 +70,28 @@ body.nav-toggle {
 
 .navbar-default {
     border-bottom: none;
-    background-color: #FFFFFF;
+    background-color: var(--color-white);
 
     .navbar-brand {
         width: 200px;
-        background-color: $color-accent;
+        background-color: var(--color-accent);
         height: 60px;
         padding: 20px 25px;
         font-weight: 400;
-        color: #FFFFFF;
+        color: var(--color-white);
 
         &:focus {
             width: 200px;
-            background-color: $color-accent;
+            background-color: var(--color-accent);
             height: 60px;
             padding: 20px 25px;
             font-weight: 400;
-            color: #FFFFFF;
+            color: var(--color-white);
         }
 
         &:hover {
-            color: #FFFFFF;
-            background-color: $color-accent-hover;
+            color: var(--color-white);
+            background-color: var(--color-accent-hover);
         }
 
         span {
@@ -99,12 +99,12 @@ body.nav-toggle {
             float: right;
             font-size: 12px;
             margin-left: -15px;
-            color: #fce2b4;
+            color: var(--color-accent-light);
         }
     }
 
     .navbar-nav > li > a {
-        color: #6a727a;
+        color: var(--color-text);
     }
 }
 
@@ -113,12 +113,12 @@ body.nav-toggle {
     padding: 9px 10px 8px 25px;
 
     &:hover a {
-        color: $color-accent;
+        color: var(--color-accent);
     }
 
     a {
         font-size: 30px;
-        color: $color-muted;
+        color: var(--color-muted);
 
         &:hover,
         &:focus {
@@ -135,13 +135,13 @@ body.nav-toggle {
 .desktop-search-wrap {
     display: flex;
     align-items: center;
-    background: #f5f5f5;
+    background: var(--color-gray-100);
     border-radius: 6px;
     padding: 0 12px;
     width: 280px;
 
     > i.fa-search {
-        color: #999;
+        color: var(--color-gray-500);
         font-size: 14px;
     }
 
@@ -149,13 +149,13 @@ body.nav-toggle {
         flex: 1;
         background: transparent;
         border: none;
-        color: #333;
+        color: var(--color-gray-900);
         padding: 10px;
         font-size: 14px;
         outline: none;
 
         &::placeholder {
-            color: #999;
+            color: var(--color-gray-500);
         }
     }
 
@@ -171,7 +171,7 @@ body.nav-toggle {
     }
 
     #searchclear {
-        color: #999;
+        color: var(--color-gray-500);
         font-size: 16px;
         cursor: pointer;
         display: none;
@@ -179,7 +179,7 @@ body.nav-toggle {
         @include transition(color 0.2s);
 
         &:hover {
-            color: #666;
+            color: var(--color-gray-700);
         }
 
         &.visible {
@@ -239,13 +239,13 @@ body.nav-toggle {
 
     li {
         > a {
-            color: #848c94;
+            color: var(--color-muted);
             padding: 8px 15px 8px 25px;
             margin: 0 0;
 
             &:hover,
             &:focus {
-                color: #c0c4c8;
+                color: var(--color-gray-300);
                 background-color: rgba(0, 0, 0, .2);
             }
         }
@@ -253,9 +253,9 @@ body.nav-toggle {
         &.active {
             a {
                 margin-left: 2px;
-                border-left: 3px solid $color-accent;
+                border-left: 3px solid var(--color-accent);
                 padding-left: 22px;
-                color: #c0c4c8;
+                color: var(--color-gray-300);
                 background-color: rgba(0, 0, 0, .2);
             }
 
@@ -264,17 +264,17 @@ body.nav-toggle {
                     > a {
                         padding-left: 40px;
                         border-left: none;
-                        color: #848c94;
+                        color: var(--color-muted);
                     }
 
                     &.active a {
                         padding-left: 34px;
-                        border-left: 6px solid #c37e08;
-                        color: #c0c4c8;
+                        border-left: 6px solid var(--color-accent-hover);
+                        color: var(--color-gray-300);
                     }
 
                     a:hover {
-                        color: #c0c4c8;
+                        color: var(--color-gray-300);
                     }
                 }
             }
@@ -284,7 +284,7 @@ body.nav-toggle {
     .nav-category {
         padding: 8px 15px 8px 25px;
         margin: 0 0;
-        color: #FFFFFF;
+        color: var(--color-white);
         margin-top: 10px;
     }
 
@@ -292,7 +292,7 @@ body.nav-toggle {
         margin-top: 50px;
         padding: 20px 25px 25px 25px;
         font-size: 12px;
-        background-color: $color-nav-active;
+        background-color: var(--color-nav-active);
 
         i {
             font-size: 34px;

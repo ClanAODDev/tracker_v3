@@ -23,15 +23,18 @@
                     <div class="panel-heading">
                         Select Tags
                     </div>
-                    <div class="panel-body" id="tags-list">
-                        @forelse ($tags as $tag)
-                            <label class="tag-checkbox">
-                                <input type="checkbox" name="tags[]" value="{{ $tag->id }}" form="bulk-tags-form">
-                                <span class="badge tag-visibility-{{ $tag->visibility->value }}">{{ $tag->name }}</span>
-                            </label>
-                        @empty
-                            <p class="text-muted" id="no-tags-message">No tags have been created for this division yet.</p>
-                        @endforelse
+                    <div class="panel-body">
+                        <div class="bulk-tags-grid" id="tags-list">
+                            @forelse ($tags as $tag)
+                                <label class="bulk-tag-item">
+                                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" form="bulk-tags-form">
+                                    <span class="bulk-tag-visibility visibility-{{ $tag->visibility->value }}"></span>
+                                    <span class="bulk-tag-name">{{ $tag->name }}</span>
+                                </label>
+                            @empty
+                                <p class="text-muted" id="no-tags-message">No tags have been created for this division yet.</p>
+                            @endforelse
+                        </div>
                     </div>
                     <div class="panel-footer">
                         <label class="control-label m-b-sm" style="display: block;">Create New Tag</label>
@@ -114,20 +117,6 @@
 @endsection
 
 @section('footer_scripts')
-<style>
-.tag-checkbox {
-    display: inline-block;
-    margin: 4px 8px 4px 0;
-    cursor: pointer;
-}
-.tag-checkbox input[type="checkbox"] {
-    margin-right: 4px;
-    vertical-align: middle;
-}
-.tag-checkbox .badge {
-    vertical-align: middle;
-}
-</style>
 <script>
 (function($) {
     $('#create-tag-btn').on('click', function() {
@@ -151,9 +140,10 @@
                 _token: $('meta[name=csrf-token]').attr('content')
             },
             success: function(data) {
-                var html = '<label class="tag-checkbox">' +
+                var html = '<label class="bulk-tag-item">' +
                     '<input type="checkbox" name="tags[]" value="' + data.tag.id + '" form="bulk-tags-form" checked>' +
-                    '<span class="badge tag-visibility-' + data.tag.visibility + '">' + data.tag.name + '</span>' +
+                    '<span class="bulk-tag-visibility visibility-' + data.tag.visibility + '"></span>' +
+                    '<span class="bulk-tag-name">' + data.tag.name + '</span>' +
                     '</label>';
                 $('#no-tags-message').hide();
                 $('#tags-list').append(html);
