@@ -9,8 +9,8 @@ var Tracker = Tracker || {};
             Tracker.SearchMembers();
             Tracker.SearchCollection();
             Tracker.InitMobileNav();
+            Tracker.InitRarityFilter();
 
-            // misc functionality, visual
             Tracker.InitRepeater();
             Tracker.InitTabActivate();
         },
@@ -60,10 +60,37 @@ var Tracker = Tracker || {};
                 closeNav();
             });
         },
-        /**
-         * Handle member search
-         * @constructor
-         */
+
+        InitRarityFilter: function () {
+            if (!$('.rarity-filter').length) return;
+
+            $('.rarity-filter').on('click', function () {
+                var $filter = $(this);
+                $filter.toggleClass('active');
+
+                var activeRarities = $('.rarity-filter.active').map(function () {
+                    return $(this).data('rarity');
+                }).get();
+
+                $('.award-card').each(function () {
+                    var $card = $(this);
+                    var cardRarity = null;
+
+                    ['mythic', 'legendary', 'epic', 'rare', 'common'].forEach(function (r) {
+                        if ($card.hasClass('award-card-' + r)) {
+                            cardRarity = r;
+                        }
+                    });
+
+                    if (activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1) {
+                        $card.closest('[class*="col-"]').show();
+                    } else {
+                        $card.closest('[class*="col-"]').hide();
+                    }
+                });
+            });
+        },
+
         SearchMembers: function () {
             this.TriggerFilter(document.getElementById('member-search'), this.GetSearchResults, 1000);
             $('#searchclear').click(function () {

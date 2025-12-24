@@ -56,7 +56,7 @@
                 <p>Stand out as a member of the community by earning one or more of the awards listed below.</p>
                 <div class="rarity-legend">
                     @foreach (config('aod.awards.rarity') as $key => $rarity)
-                        <div class="rarity-legend-item">
+                        <div class="rarity-legend-item rarity-filter active" data-rarity="{{ $key }}">
                             <span class="rarity-dot rarity-{{ $key }}"></span>
                             <span class="rarity-label">{{ $rarity['label'] }}</span>
                             <span class="rarity-range">

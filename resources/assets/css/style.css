@@ -1394,6 +1394,24 @@ a.org-node:hover {
     font-size: 0.85em;
 }
 
+.rarity-filter {
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    user-select: none;
+}
+
+.rarity-filter:hover {
+    transform: translateY(-1px);
+}
+
+.rarity-filter:not(.active) {
+    opacity: 0.4;
+}
+
+.rarity-filter:not(.active) .rarity-label {
+    text-decoration: line-through;
+}
+
 .no-select {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
