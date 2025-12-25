@@ -41,9 +41,9 @@ return [
         ],
 
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'sanctum',
             'provider' => 'users',
-            'hash' => true,
+            'hash' => false,
         ],
     ],
 

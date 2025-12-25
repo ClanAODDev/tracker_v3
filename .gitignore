@@ -30,3 +30,4 @@ database.sqlite
 LAST_REVISION
 /public/storage
 /.vs
+/public/hot

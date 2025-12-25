@@ -19,8 +19,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Overtrue\LaravelVersionable\Versionable;
-use Overtrue\LaravelVersionable\VersionStrategy;
 
 /**
  * Class Division.
@@ -31,11 +29,6 @@ class Division extends Model
     use Notifiable;
     use RecordsActivity;
     use SoftDeletes;
-    use Versionable;
-
-    protected $versionable = ['site_content'];
-
-    protected $versionStrategy = VersionStrategy::SNAPSHOT;
 
     /**
      * Settings to expose to Division API

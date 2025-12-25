@@ -312,7 +312,6 @@ class DivisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'revisions' => Pages\DivisionRevisions::route('/{record}/revisions'),
             'index' => Pages\ListDivisions::route('/'),
             'edit' => Pages\EditDivision::route('/{record}/edit'),
         ];

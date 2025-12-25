@@ -1,55 +1,84 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+use App\Console\Commands\DivisionCensus;
+use App\Console\Commands\FetchApplicationFeeds;
+use App\Console\Commands\MemberSync;
+use App\Http\Middleware\CheckForMaintenanceMode;
+use App\Http\Middleware\DivisionMustBeActive;
+use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\HasPrimaryDivision;
+use App\Http\Middleware\IsBanned;
+use App\Http\Middleware\MustBeAdmin;
+use App\Http\Middleware\MustBeDeveloper;
+use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\TrimStrings;
+use App\Http\Middleware\TrustProxies;
+use App\Http\Middleware\VerifyBotToken;
+use App\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
-$app = new Illuminate\Foundation\Application(
-    realpath(__DIR__ . '/../')
-);
+return Application::configure(basePath: dirname(__DIR__))
+    ->withCommands([
+        __DIR__ . '/../routes/console.php',
+    ])
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->use([
+            CheckForMaintenanceMode::class,
+            ValidatePostSize::class,
+            TrimStrings::class,
+            ConvertEmptyStringsToNull::class,
+            TrustProxies::class,
+        ]);
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
+        $middleware->web(append: [
+            HasPrimaryDivision::class,
+            IsBanned::class,
+        ]);
 
-$app->singleton(
-    Illuminate\Contracts\Http\Kernel::class,
-    App\Http\Kernel::class
-);
+        $middleware->api(append: [
+            'throttle:60,1',
+        ]);
 
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
+        $middleware->alias([
+            'developer' => MustBeDeveloper::class,
+            'admin' => MustBeAdmin::class,
+            'activeDivision' => DivisionMustBeActive::class,
+            'banned' => IsBanned::class,
+            'bot' => VerifyBotToken::class,
+            'guest' => RedirectIfAuthenticated::class,
+            'abilities' => CheckAbilities::class,
+            'ability' => CheckForAnyAbility::class,
+        ]);
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes();
+        $schedule->command(MemberSync::class)->hourly();
+        $schedule->command(DivisionCensus::class)->weekly();
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->dontFlash([
+            'current_password',
+            'password',
+            'password_confirmation',
+        ]);
 
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
+        $exceptions->render(function (InvalidSignatureException $e) {
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([], 403);
+            }
 
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
-
-return $app;
+            return response()->view('errors.link-expired', [], 403);
+        });
+    })
+    ->create();

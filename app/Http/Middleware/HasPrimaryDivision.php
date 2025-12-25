@@ -25,7 +25,6 @@ class HasPrimaryDivision
                     redirect()->to(route('end-impersonation'));
                 }
 
-                // Auth::logout();
                 abort(408, 'You do not have a primary division.');
 
                 return false;

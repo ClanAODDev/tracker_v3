@@ -7,7 +7,6 @@ use App\Notifications\Channel\NotifyDivisionSettingsEdited;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
-use Mansoor\FilamentVersionable\Page\RevisionsAction;
 
 class EditDivision extends EditRecord
 {
@@ -17,7 +16,6 @@ class EditDivision extends EditRecord
     {
         return [
             Actions\DeleteAction::make(),
-            RevisionsAction::make(),
         ];
     }
 

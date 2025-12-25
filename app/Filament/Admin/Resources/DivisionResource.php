@@ -20,7 +20,6 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Mansoor\FilamentVersionable\Table\RevisionsAction;
 use ValentinMorice\FilamentJsonColumn\JsonColumn;
 
 class DivisionResource extends Resource
@@ -206,7 +205,6 @@ class DivisionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                RevisionsAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -227,7 +225,6 @@ class DivisionResource extends Resource
             'index' => Pages\ListDivisions::route('/'),
             'create' => Pages\CreateDivision::route('/create'),
             'edit' => Pages\EditDivision::route('/{record}/edit'),
-            'revisions' => Pages\DivisionRevisions::route('/{record}/revisions'),
         ];
     }
 }
