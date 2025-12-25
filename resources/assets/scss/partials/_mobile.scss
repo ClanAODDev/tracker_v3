@@ -305,20 +305,32 @@ body.mobile-search-open {
 
 @include respond-to(sm) {
     body.mobile-nav-left {
+        .navbar-header {
+            min-height: 60px;
+        }
+
         .mobile-nav-toggle {
             right: auto;
-            left: 10px;
+            left: 15px;
         }
 
         .mobile-search-toggle {
             right: auto;
-            left: 55px;
+            left: 60px;
         }
 
-        .navbar-brand {
+        .navbar-default .navbar-brand {
             position: absolute;
-            right: 10px;
+            right: 0;
             left: auto;
+            width: auto;
+            padding: 20px 15px;
+            text-align: right;
+
+            span {
+                float: none;
+                display: block;
+            }
         }
 
         .mobile-nav-drawer {
