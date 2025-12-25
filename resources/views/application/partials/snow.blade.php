@@ -13,6 +13,10 @@
             snowStorm = new SnowStormEngine(window, document, flakesMax);
             if (document.readyState === 'complete') {
                 snowStorm.start();
+            } else {
+                window.addEventListener('load', function() {
+                    if (snowStorm && snowStorm.start) snowStorm.start();
+                });
             }
         }
         var SnowStormEngine = function (e, t, flakesMaxParam) {
