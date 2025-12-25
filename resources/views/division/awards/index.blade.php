@@ -85,6 +85,14 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="award-filter-group">
+                        <span class="filter-label">Sort</span>
+                        <select id="rarity-sort" class="form-control" style="width: auto;">
+                            <option value="default">Default</option>
+                            <option value="rarity-desc">Rarity (Highest First)</option>
+                            <option value="rarity-asc">Rarity (Lowest First)</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

@@ -47,4 +47,12 @@
     @if ($errors->count())
         <script>$('#create-member-note').modal();</script>
     @endif
+
+    <script>
+        $(function() {
+            if (new URLSearchParams(window.location.search).get('notes') === '1') {
+                $('#notes-modal').modal('show');
+            }
+        });
+    </script>
 @endcan

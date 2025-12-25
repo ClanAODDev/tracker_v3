@@ -34,11 +34,27 @@
             </a>
         @endif
 
+        @if ($pendingActions->clanAwardRequests)
+            <a href="{{ $pendingActions->clanAwardRequestsUrl }}" class="pending-action pending-action--accent">
+                <i class="fa fa-globe"></i>
+                <span class="pending-action-count">{{ $pendingActions->clanAwardRequests }}</span>
+                <span class="pending-action-label">Clan {{ Str::plural('Award', $pendingActions->clanAwardRequests) }}</span>
+            </a>
+        @endif
+
         @if ($pendingActions->pendingTransfers)
             <a href="{{ $pendingActions->pendingTransfersUrl }}" class="pending-action">
                 <i class="fa fa-exchange-alt"></i>
                 <span class="pending-action-count">{{ $pendingActions->pendingTransfers }}</span>
                 <span class="pending-action-label">{{ Str::plural('Transfer', $pendingActions->pendingTransfers) }}</span>
+            </a>
+        @endif
+
+        @if ($pendingActions->pendingLeaves)
+            <a href="{{ $pendingActions->pendingLeavesUrl }}" class="pending-action">
+                <i class="fa fa-calendar-alt"></i>
+                <span class="pending-action-count">{{ $pendingActions->pendingLeaves }}</span>
+                <span class="pending-action-label">{{ Str::plural('LOA', $pendingActions->pendingLeaves) }}</span>
             </a>
         @endif
 

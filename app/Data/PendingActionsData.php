@@ -4,6 +4,8 @@ namespace App\Data;
 
 use App\Enums\Position;
 use App\Models\Division;
+use App\Models\Leave;
+use App\Models\MemberAward;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
 use App\Models\User;
@@ -14,14 +16,18 @@ readonly class PendingActionsData
         public ?int $memberRequests,
         public ?int $inactiveMembers,
         public ?int $awardRequests,
+        public ?int $clanAwardRequests,
         public ?int $pendingTransfers,
+        public ?int $pendingLeaves,
         public ?int $voiceIssues,
         public ?int $unassignedMembers,
         public ?int $unassignedToSquad,
         public ?string $memberRequestsUrl,
         public ?string $inactiveMembersUrl,
         public ?string $awardRequestsUrl,
+        public ?string $clanAwardRequestsUrl,
         public ?string $pendingTransfersUrl,
+        public ?string $pendingLeavesUrl,
         public ?string $voiceIssuesUrl,
         public ?string $unassignedMembersUrl,
         public ?string $unassignedToSquadUrl,
@@ -55,9 +61,22 @@ readonly class PendingActionsData
         $awardRequests = null;
         $awardRequestsUrl = null;
         if ($user->isDivisionLeader()) {
-            $awardRequests = $division->awards()->whereHas('unapprovedRecipients')->count();
+            $awardRequests = MemberAward::needsApproval()
+                ->whereHas('award', fn ($q) => $q->where('division_id', $division->id))
+                ->count();
             if ($awardRequests > 0) {
                 $awardRequestsUrl = route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id);
+            }
+        }
+
+        $clanAwardRequests = null;
+        $clanAwardRequestsUrl = null;
+        if ($user->isRole('admin')) {
+            $clanAwardRequests = MemberAward::needsApproval()
+                ->whereHas('award', fn ($q) => $q->whereNull('division_id'))
+                ->count();
+            if ($clanAwardRequests > 0) {
+                $clanAwardRequestsUrl = route('filament.admin.resources.member-awards.index') . '?tableFilters[pending][isActive]=true&tableFilters[clan_wide][isActive]=true';
             }
         }
 
@@ -67,6 +86,17 @@ readonly class PendingActionsData
             $pendingTransfers = $division->transfers()->pending()->count();
             if ($pendingTransfers > 0) {
                 $pendingTransfersUrl = route('filament.mod.resources.transfers.index') . '?tableFilters[incomplete][isActive]=true&tableFilters[transferring_to][value]=' . $division->id;
+            }
+        }
+
+        $pendingLeaves = null;
+        $pendingLeavesUrl = null;
+        if ($user->isRole(['admin', 'sr_ldr'])) {
+            $pendingLeaves = Leave::whereNull('approver_id')
+                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+                ->count();
+            if ($pendingLeaves > 0) {
+                $pendingLeavesUrl = route('filament.mod.resources.leaves.index') . '?tableFilters[pending][isActive]=true';
             }
         }
 
@@ -105,14 +135,18 @@ readonly class PendingActionsData
             memberRequests: $memberRequests,
             inactiveMembers: $inactiveMembers,
             awardRequests: $awardRequests,
+            clanAwardRequests: $clanAwardRequests,
             pendingTransfers: $pendingTransfers,
+            pendingLeaves: $pendingLeaves,
             voiceIssues: $voiceIssues,
             unassignedMembers: $unassignedMembers,
             unassignedToSquad: $unassignedToSquad,
             memberRequestsUrl: $memberRequestsUrl,
             inactiveMembersUrl: $inactiveMembersUrl,
             awardRequestsUrl: $awardRequestsUrl,
+            clanAwardRequestsUrl: $clanAwardRequestsUrl,
             pendingTransfersUrl: $pendingTransfersUrl,
+            pendingLeavesUrl: $pendingLeavesUrl,
             voiceIssuesUrl: $voiceIssuesUrl,
             unassignedMembersUrl: $unassignedMembersUrl,
             unassignedToSquadUrl: $unassignedToSquadUrl,
@@ -124,7 +158,9 @@ readonly class PendingActionsData
         return ($this->memberRequests ?? 0) > 0
             || ($this->inactiveMembers ?? 0) > 0
             || ($this->awardRequests ?? 0) > 0
+            || ($this->clanAwardRequests ?? 0) > 0
             || ($this->pendingTransfers ?? 0) > 0
+            || ($this->pendingLeaves ?? 0) > 0
             || ($this->voiceIssues ?? 0) > 0
             || ($this->unassignedMembers ?? 0) > 0
             || ($this->unassignedToSquad ?? 0) > 0;
@@ -135,7 +171,9 @@ readonly class PendingActionsData
         return ($this->memberRequests ?? 0)
             + ($this->inactiveMembers ?? 0)
             + ($this->awardRequests ?? 0)
+            + ($this->clanAwardRequests ?? 0)
             + ($this->pendingTransfers ?? 0)
+            + ($this->pendingLeaves ?? 0)
             + ($this->voiceIssues ?? 0)
             + ($this->unassignedMembers ?? 0)
             + ($this->unassignedToSquad ?? 0);

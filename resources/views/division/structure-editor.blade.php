@@ -27,14 +27,6 @@
                 <form action="{{ route('division.update-structure', $division->slug) }}" method="post" id="structure-form">
                     @csrf
                     <textarea name="structure" id="code" class="form-control">{{ $division->structure }}</textarea>
-                    <div class="structure-editor-footer">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-save"></i> Save Template
-                        </button>
-                        <a href="{{ route('division.edit-structure', $division->slug) }}" class="btn btn-default">
-                            <i class="fa fa-eye"></i> View Output
-                        </a>
-                    </div>
                 </form>
             </div>
 
@@ -49,14 +41,28 @@
                 <div class="structure-preview-content">
                     <textarea id="preview-output" class="form-control" readonly></textarea>
                 </div>
-                <div class="structure-preview-footer">
-                    <button type="button" class="btn btn-success copy-to-clipboard" data-clipboard-target="#preview-output">
-                        <i class="fa fa-clone"></i> Copy Output
-                    </button>
-                </div>
             </div>
         </div>
 
+    </div>
+
+    <div class="structure-sticky-footer">
+        <div class="structure-sticky-footer-content">
+            <div class="structure-sticky-status">
+                <span id="save-status"></span>
+            </div>
+            <div class="structure-sticky-actions">
+                <button type="button" class="btn btn-default copy-to-clipboard" data-clipboard-target="#preview-output">
+                    <i class="fa fa-clone"></i> <span class="hidden-xs">Copy Output</span>
+                </button>
+                <a href="{{ route('division.edit-structure', $division->slug) }}" class="btn btn-default">
+                    <i class="fa fa-eye"></i> <span class="hidden-xs">View Output</span>
+                </a>
+                <button type="button" class="btn btn-success" id="save-template-btn">
+                    <i class="fa fa-save"></i> <span class="hidden-xs">Save Template</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="reference-modal" tabindex="-1" role="dialog">
@@ -133,6 +139,8 @@ $(function () {
     var $status = $('#preview-status');
     var $charCount = $('#char-count');
     var $preview = $('#preview-output');
+    var $saveStatus = $('#save-status');
+    var $saveBtn = $('#save-template-btn');
 
     var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
         mode: {name: 'twig', htmlMode: true},
@@ -172,6 +180,31 @@ $(function () {
         if (debounceTimer) clearTimeout(debounceTimer);
         $status.html('<i class="fa fa-circle text-muted"></i> Typing...');
         debounceTimer = setTimeout(updatePreview, 500);
+    });
+
+    $saveBtn.on('click', function() {
+        var $btn = $(this);
+        var originalHtml = $btn.html();
+        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Saving...');
+        $saveStatus.html('');
+
+        $('#code').val(cm.getValue());
+
+        $.ajax({
+            url: $('#structure-form').attr('action'),
+            method: 'POST',
+            data: $('#structure-form').serialize(),
+            success: function() {
+                $saveStatus.html('<i class="fa fa-check text-success"></i> Saved');
+                setTimeout(function() { $saveStatus.html(''); }, 3000);
+            },
+            error: function() {
+                $saveStatus.html('<i class="fa fa-times text-danger"></i> Save failed');
+            },
+            complete: function() {
+                $btn.prop('disabled', false).html(originalHtml);
+            }
+        });
     });
 
     updatePreview();

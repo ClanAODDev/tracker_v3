@@ -403,6 +403,69 @@ var Tracker = Tracker || {};
                 }
                 window.location.href = url.toString();
             });
+
+            var $raritySort = $('#rarity-sort');
+            var rarityOrder = ['mythic', 'legendary', 'epic', 'rare', 'common'];
+
+            function sortAwards(sortType) {
+                $('.award-grid').each(function () {
+                    var $grid = $(this);
+                    var $items = $grid.children('[class*="col-"]').detach().toArray();
+
+                    if (sortType === 'default') {
+                        $items.sort(function (a, b) {
+                            var orderA = parseInt($(a).data('original-order')) || 0;
+                            var orderB = parseInt($(b).data('original-order')) || 0;
+                            return orderA - orderB;
+                        });
+                    } else {
+                        $items.sort(function (a, b) {
+                            var $cardA = $(a).find('.award-card');
+                            var $cardB = $(b).find('.award-card');
+                            var rarityA = 4, rarityB = 4;
+
+                            rarityOrder.forEach(function (r, idx) {
+                                if ($cardA.hasClass('award-card-' + r)) rarityA = idx;
+                                if ($cardB.hasClass('award-card-' + r)) rarityB = idx;
+                            });
+
+                            return sortType === 'rarity-desc' ? rarityA - rarityB : rarityB - rarityA;
+                        });
+                    }
+
+                    $items.forEach(function (item, idx) {
+                        var $item = $(item);
+                        if (!$item.data('original-order')) {
+                            $item.attr('data-original-order', idx);
+                        }
+                        $item.removeClass('filter-visible filter-entering filter-hiding filter-hidden');
+                        $grid.append(item);
+                    });
+
+                    setTimeout(function () {
+                        $grid.children('[class*="col-"]').each(function (idx) {
+                            var $el = $(this);
+                            setTimeout(function () {
+                                $el.addClass('filter-entering');
+                                setTimeout(function () {
+                                    $el.removeClass('filter-entering').addClass('filter-visible');
+                                }, 300);
+                            }, idx * 30);
+                        });
+                    }, 10);
+                });
+            }
+
+            $('.award-grid').each(function () {
+                $(this).children('[class*="col-"]').each(function (idx) {
+                    $(this).attr('data-original-order', idx);
+                });
+            });
+
+            $raritySort.on('change', function () {
+                sortAwards($(this).val());
+                applyRarityFilter();
+            });
         },
 
         InitMemberSearch: function () {

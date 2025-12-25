@@ -74,7 +74,7 @@
 
         <div class="notes-list">
             @forelse ($notes as $note)
-                <a href="{{ route('member', $note->member->getUrlParams()) }}" class="note-card note-{{ $note->type }}">
+                <a href="{{ route('member', $note->member->getUrlParams()) }}?notes=1" class="note-card note-{{ $note->type }}">
                     <div class="note-icon">
                         @if ($note->type === 'positive')
                             <i class="fa fa-thumbs-up"></i>

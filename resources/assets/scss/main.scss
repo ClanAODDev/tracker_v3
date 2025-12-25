@@ -25,6 +25,10 @@
     );
 }
 
+.snowstorm-flake {
+    pointer-events: none;
+}
+
 .select2-container {
     min-width: 180px;
 }
@@ -1017,6 +1021,22 @@ body.no-animations {
             background: rgba(247, 175, 62, 0.25);
         }
     }
+
+    &--accent {
+        background: rgba(155, 89, 182, 0.15);
+
+        i {
+            color: #9b59b6;
+        }
+
+        .pending-action-count {
+            color: #9b59b6;
+        }
+
+        &:hover {
+            background: rgba(155, 89, 182, 0.25);
+        }
+    }
 }
 
 .pending-action-count {
@@ -1294,6 +1314,24 @@ body.no-animations {
     }
 }
 
+.action-badge--accent {
+    background: rgba(155, 89, 182, 0.1);
+    border-left: 3px solid #9b59b6;
+
+    i {
+        color: #9b59b6;
+    }
+
+    .action-badge-count {
+        color: #9b59b6;
+    }
+
+    &:hover {
+        background: rgba(155, 89, 182, 0.2);
+        color: var(--color-white);
+    }
+}
+
 .action-badge--danger {
     background: rgba(219, 82, 75, 0.1);
     border-left: 3px solid var(--color-danger);
@@ -1525,6 +1563,14 @@ body.no-animations {
     display: none;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+
+    &:hover .leaderboard-card {
+        opacity: 0.5;
+    }
+
+    &:hover .leaderboard-card:hover {
+        opacity: 1;
+    }
 }
 
 .leaderboard-card {
@@ -1532,6 +1578,7 @@ body.no-animations {
     border-radius: 8px;
     border: 1px solid var(--overlay-light);
     overflow: hidden;
+    transition: opacity 0.3s ease;
 }
 
 .leaderboard-card-header {
@@ -4113,35 +4160,76 @@ a.org-node:hover {
 
 .award-filters {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 25px;
+    padding: 20px 25px;
+    background: linear-gradient(135deg, rgba(30, 30, 45, 0.6), rgba(20, 20, 35, 0.8));
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .award-filter-group {
     display: flex;
     align-items: flex-start;
-    gap: 15px;
+    gap: 12px;
 }
 
 .award-filter-group .filter-label {
     font-weight: 600;
     color: var(--color-muted-dark);
-    min-width: 60px;
-    padding-top: 6px;
-    font-size: 13px;
+    min-width: 55px;
+    padding-top: 8px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
+.award-filter-group .form-control {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: var(--color-white);
+    padding: 8px 12px;
+    font-size: 13px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.award-filter-group .form-control:focus {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+    outline: none;
+}
+
+@media (max-width: 991px) {
+    .award-filters {
+        flex-direction: column;
+        gap: 18px;
+    }
+}
+
 @media (max-width: 767px) {
+    .award-filters {
+        padding: 15px;
+    }
+
     .award-filter-group {
         flex-direction: column;
         gap: 8px;
+        width: 100%;
     }
 
     .award-filter-group .filter-label {
         min-width: auto;
         padding-top: 0;
+    }
+
+    .award-filter-group .form-control {
+        width: 100%;
+    }
+
+    .award-filter-group .rarity-legend {
+        width: 100%;
     }
 }
 
@@ -8787,6 +8875,7 @@ pre.code-toolbar > .toolbar span:focus {
     display: flex;
     gap: 20px;
     min-height: 500px;
+    padding-bottom: 70px;
 }
 
 .structure-editor-pane,
@@ -8904,6 +8993,38 @@ pre.code-toolbar > .toolbar span:focus {
     .structure-preview-pane {
         min-height: 300px;
     }
+}
+
+.structure-sticky-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1a1f2e 0%, #252a3a 100%);
+    border-top: 1px solid #3a4050;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+    z-index: 1040;
+}
+
+.structure-sticky-footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.structure-sticky-status {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.structure-sticky-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .structure-output {
