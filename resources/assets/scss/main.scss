@@ -8833,6 +8833,11 @@ pre.code-toolbar > .toolbar span:focus {
     transform: rotate(180deg);
 }
 
+.breadcrumb-dropdown:hover .dropdown-menu,
+.breadcrumb-dropdown .dropdown-menu.show {
+    display: block;
+}
+
 .breadcrumb-dropdown .dropdown-menu {
     min-width: 180px;
     background: var(--color-bg-panel);
@@ -8848,7 +8853,7 @@ pre.code-toolbar > .toolbar span:focus {
         top: -12px;
         left: 0;
         right: 0;
-        height: 12px;
+        height: 14px;
     }
 }
 
