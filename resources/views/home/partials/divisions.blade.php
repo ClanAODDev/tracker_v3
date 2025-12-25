@@ -1,22 +1,11 @@
-@foreach($divisions as $division)
-    {{-- style="animation-delay: {{ $loop->index/8 }}s;" --}}
-    <div class="col-lg-4 col-md-6">
-        <a href="{{ route('division', $division->slug) }}"
-           class="panel panel-filled division-header {{ ($division->isShutdown()) ? 'panel-c-danger' : null }}">
-            <div class="panel-body">
-                <h4 class="m-b-none text-uppercase m-t-sm">
-                    <img src="{{ $division->getLogoPath() }}"
-                         class="pull-right division-icon-medium" alt=""/>
-                    @if ($division->isShutDown())
-                        <span title="Division is shut down"
-                              style="text-decoration: line-through;">{{ $division->name }}</span>
-                    @else
-                        {{ $division->name }}
-                    @endif
-
-                </h4>
-                <span class="small">{{ $division->members_count }} MEMBERS</span>
+<div class="divisions-grid">
+    @foreach($divisions as $division)
+        <a href="{{ route('division', $division->slug) }}" class="division-card animate-scale-in animate-stagger {{ $division->isShutdown() ? 'division-card-shutdown' : '' }}" style="animation-delay: calc(0.2s + {{ $loop->index }} * 0.03s)">
+            <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-card-logo">
+            <div class="division-card-info">
+                <span class="division-card-name {{ $division->isShutdown() ? 'shutdown' : '' }}">{{ $division->name }}</span>
+                <span class="division-card-count">{{ $division->members_count }} members</span>
             </div>
         </a>
-    </div>
-@endforeach
+    @endforeach
+</div>

@@ -1,24 +1,25 @@
-<div class="panel panel-filled">
-    <div class="panel-heading">
-        Census History
+<div class="census-chart-container">
+    <div class="census-chart-header">
+        <h4 class="census-chart-title">
+            <i class="fa fa-chart-line"></i> Census History
+        </h4>
+        <div class="census-chart-legend">
+            <span class="census-legend-item">
+                <span class="census-legend-dot census-legend-dot--population"></span>
+                Population
+            </span>
+            <span class="census-legend-item">
+                <span class="census-legend-dot census-legend-dot--voice"></span>
+                Weekly Voice Active
+            </span>
+        </div>
     </div>
-    <div class="panel-body">
+    <div class="census-chart-body">
         <div class="flot-chart">
             <div class="flot-chart-content" id="flot-line-chart"
                  data-populations="{{ $populations }}"
                  data-weekly-discord="{{ $weeklyDiscordActive }}"
             ></div>
-        </div>
-    </div>
-    <div class="panel-footer">
-        <div class="row">
-            <div class="col-md-6 text-center">
-                <i class="fas fa-dot-circle text-success"></i> Division Population
-            </div>
-            <div class="col-md-6 text-center">
-                <i class="fas fa-dot-circle text-info"></i> Discord
-                <p><small class="text-muted"># active VoIP past week</small></p>
-            </div>
         </div>
     </div>
 </div>

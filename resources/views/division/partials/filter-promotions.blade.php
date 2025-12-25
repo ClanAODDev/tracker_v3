@@ -1,29 +1,26 @@
-<form method="GET" action="{{ route('division.promotions', $division) }}" class="form-inline m-b">
-    <div class="form-group">
-        <label for="period" class="m-r-sm">Period</label>
-        <select name="period" id="period" class="form-control">
-            @foreach ($promotionPeriods as $p)
-                <option value="{{ $p['year'] }}-{{ str_pad($p['month'], 2, '0', STR_PAD_LEFT) }}"
-                        @selected(
-                            (request('year') == $p['year'] && request('month') == $p['month'])
-                            || ((int)($year ?? 0) === $p['year'] && (int)($month ?? 0) === $p['month'])
-                        )>
-                    {{ $p['label'] }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+@php
+    $selectedYear = (int)($year ?? $promotionPeriods->first()['year'] ?? now()->year);
+    $selectedMonth = (int)($month ?? $promotionPeriods->first()['month'] ?? now()->month);
+    $selectedKey = sprintf('%04d-%02d', $selectedYear, $selectedMonth);
+@endphp
 
-    <input type="hidden" name="year"  id="yearField"  value="{{ (int)($year ?? 0) }}">
-    <input type="hidden" name="month" id="monthField" value="{{ (int)($month ?? 0) }}">
+<div class="report-filter">
+    <form method="GET" action="{{ route('division.promotions', $division) }}" class="report-filter-form">
+        <div class="report-filter-group">
+            <label for="period">Period</label>
+            <select name="period" id="period" class="form-control" onchange="this.form.submit()">
+                @foreach ($promotionPeriods as $p)
+                    <option value="{{ $p['key'] }}" @selected($p['key'] === $selectedKey)>
+                        {{ $p['label'] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-    <button type="submit" class="btn btn-primary m-l-sm">Apply</button>
-</form>
-
-<script>
-    document.getElementById('period')?.addEventListener('change', function () {
-        const [yr, mo] = this.value.split('-');
-        document.getElementById('yearField').value  = parseInt(yr, 10);
-        document.getElementById('monthField').value = parseInt(mo, 10);
-    });
-</script>
+        <noscript>
+            <button type="submit" class="btn btn-accent">
+                <i class="fa fa-filter"></i> Apply
+            </button>
+        </noscript>
+    </form>
+</div>

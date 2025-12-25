@@ -16,47 +16,93 @@
 
         {!! Breadcrumbs::render('inactive-members', $division) !!}
 
-        <p>Members listed here have activity that has reached or exceeded the number of days defined by the division
-            leadership. Use this page to attempt to communicate with inactive members, and also to process their removal
-            from the clan. Members who have an active leave of absence are omitted.</p>
-
-        <p><strong>{{ $division->name }}</strong> division inactivity set to
-            <code>{{ $division->settings()->inactivity_days }} days</code>
-        </p>
-
-        <hr/>
-
-        <div class="tabs-container">
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a data-toggle="tab" href="#inactive-discord"
-                       aria-expanded="true"><i class="fab fa-lg fa-discord"></i> &nbsp; Discord Inactive
-                        <span class="badge">{{ count($inactiveDiscordMembers)}}</span>
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="tab" href="#flagged"
-                       aria-expanded="false"><i class="fa fa-flag"></i> &nbsp; Flagged <span
-                                class="badge">{{ count($flaggedMembers) }}</span>
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div id="inactive-discord" class="tab-pane active">
-                    <div class="panel-body">
-                        @include('division.partials.filter-inactive')
-                        @include('division.partials.inactive-members', ['type' => 'discord'])
-                    </div>
-                </div>
-                <div id="flagged" class="tab-pane">
-                    <div class="panel-body">
-                        @include('division.partials.flagged-members')
-                    </div>
-                </div>
+        <div class="inactive-stats">
+            <div class="inactive-stat">
+                <div class="inactive-stat-value">{{ $stats['total'] }}</div>
+                <div class="inactive-stat-label">Inactive</div>
+            </div>
+            <div class="inactive-stat inactive-stat--warning">
+                <div class="inactive-stat-value">{{ $stats['flagged'] }}</div>
+                <div class="inactive-stat-label">Flagged</div>
+            </div>
+            <div class="inactive-stat inactive-stat--danger">
+                <div class="inactive-stat-value">{{ $stats['severe'] }}</div>
+                <div class="inactive-stat-label">Severe (2x threshold)</div>
+            </div>
+            <div class="inactive-stat inactive-stat--info">
+                <div class="inactive-stat-value">{{ $division->settings()->inactivity_days }}d</div>
+                <div class="inactive-stat-label">Threshold</div>
             </div>
         </div>
 
-        @include('division.partials.inactivity-log')
+        <div class="inactive-toolbar">
+            <div class="inactive-filters">
+                <div class="inactive-filter-group">
+                    <label class="inactive-filter-label">
+                        <i class="fa fa-filter"></i> {{ $division->locality('platoon') }}
+                    </label>
+                    <select class="inactive-filter-select" onchange="if(this.value) window.location.href=this.value">
+                        <option value="{{ route($requestPath, $division->slug) }}">All {{ $division->locality('platoon') }}s</option>
+                        @foreach ($division->platoons as $platoon)
+                            <option
+                                value="{{ route($requestPath, [$division->slug, $platoon->id]) }}"
+                                {{ request()->platoon && request()->platoon->id == $platoon->id ? 'selected' : '' }}>
+                                {{ $platoon->name }}
+                                @if(isset($stats['byPlatoon'][$platoon->id]))
+                                    ({{ $stats['byPlatoon'][$platoon->id] }})
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="inactive-search-wrapper">
+                <i class="fa fa-search inactive-search-icon"></i>
+                <input type="text"
+                       id="inactive-search"
+                       placeholder="Search members..."
+                       class="inactive-search-input">
+            </div>
+        </div>
+
+        <div class="inactive-tabs">
+            <button class="inactive-tab active" data-tab="inactive">
+                <i class="fab fa-discord"></i>
+                <span>Discord Inactive</span>
+                <span class="inactive-tab-count">{{ count($inactiveDiscordMembers) }}</span>
+            </button>
+            <button class="inactive-tab" data-tab="flagged">
+                <i class="fa fa-flag"></i>
+                <span>Flagged</span>
+                <span class="inactive-tab-count">{{ count($flaggedMembers) }}</span>
+            </button>
+        </div>
+
+        <div class="inactive-content">
+            <div class="inactive-panel active" data-panel="inactive">
+                @include('division.partials.inactive-members', ['type' => 'discord'])
+            </div>
+            <div class="inactive-panel" data-panel="flagged">
+                @include('division.partials.flagged-members')
+            </div>
+        </div>
+
+        @if(count($flagActivity))
+            <div class="inactive-activity-log">
+                <div class="inactive-activity-header">
+                    <i class="fa fa-history"></i>
+                    <span>Recent Activity</span>
+                </div>
+                <div class="inactive-activity-list">
+                    @foreach ($flagActivity as $activity)
+                        @if (isset($activity->subject->name))
+                            @include('division.partials.inactive-activity-log-entry')
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        @endif
     </div>
 
 @endsection

@@ -6,13 +6,13 @@
     "isEntry": true
   },
   "resources/assets/js/division.js": {
-    "file": "assets/division-gOjRVpxk.js",
+    "file": "assets/division-B9Cod7aC.js",
     "name": "division",
     "src": "resources/assets/js/division.js",
     "isEntry": true
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-DSpPQOac.js",
+    "file": "assets/main-Dzx0aaAo.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true
@@ -24,7 +24,7 @@
     "isEntry": true
   },
   "resources/assets/js/platoon.js": {
-    "file": "assets/platoon-DBiUbVzR.js",
+    "file": "assets/platoon-CnBUTPWx.js",
     "name": "platoon",
     "src": "resources/assets/js/platoon.js",
     "isEntry": true
@@ -42,7 +42,7 @@
     "isEntry": true
   },
   "resources/assets/scss/main.scss": {
-    "file": "assets/main-DsWhw6Qp.css",
+    "file": "assets/main-D8Oo8Cpc.css",
     "src": "resources/assets/scss/main.scss",
     "isEntry": true,
     "name": "main",

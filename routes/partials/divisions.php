@@ -14,6 +14,7 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
 
     Route::get('/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
     Route::get('/part-timers', 'DivisionController@partTime')->name('partTimers');
+    Route::post('/part-timers', 'DivisionController@addPartTimer')->name('addPartTimer');
     Route::get('/part-timers/{member}', 'DivisionController@assignPartTime')->name('assignPartTimer');
     Route::get('/part-timers/{member}/remove', 'DivisionController@removePartTime')->name('removePartTimer');
     Route::get('/statistics', 'DivisionController@statistics')->name('divisionStats');
@@ -24,6 +25,7 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     Route::get('/structure/edit', 'DivisionStructureController@modify')->name('division.edit-structure');
     Route::get('/structure', 'DivisionStructureController@show')->name('division.structure');
     Route::post('/structure', 'DivisionStructureController@update')->name('division.update-structure');
+    Route::post('/structure/preview', 'DivisionStructureController@preview')->name('division.preview-structure');
 
     Route::get('/inactive-members/{platoon?}', 'InactiveMemberController@index')
         ->name('division.inactive-members');
@@ -99,4 +101,7 @@ Route::group(['prefix' => 'divisions/{division}'], function () {
     Route::post('member-tags/{member}/add', 'BulkTagController@addTag')->name('member-tags.add');
     Route::post('member-tags/{member}/remove', 'BulkTagController@removeTag')->name('member-tags.remove');
     Route::post('member-tags/{member}/create', 'BulkTagController@createTag')->name('member-tags.create');
+    Route::get('bulk-transfer/platoons', 'BulkTransferController@getPlatoons')->name('bulk-transfer.platoons');
+    Route::post('bulk-transfer', 'BulkTransferController@store')->name('bulk-transfer.store');
+    Route::get('unassigned-to-squad', 'DivisionController@unassignedToSquad')->name('division.unassigned-to-squad');
 });

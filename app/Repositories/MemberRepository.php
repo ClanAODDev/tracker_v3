@@ -56,54 +56,61 @@ class MemberRepository
     public function loadProfileRelations(Member $member): Member
     {
         return $member->load([
-            'division',
+            'division.handle',
             'recruiter',
             'recruits',
             'recruits.division',
-            'awards.award',
+            'awards',
             'leave',
             'handles',
             'user',
             'trainer',
-            'tags',
+            'tags.division',
+            'memberRequest',
+            'platoon',
+            'squad',
+            'transfers.division',
+            'partTimeDivisions' => fn ($q) => $q->whereActive(true),
         ]);
     }
 
     public function getDivisionComparison(Member $member, Division $division): ?object
     {
-        $divisionMembers = $division->members()->whereNotNull('join_date')->get();
-        $divisionCount = $divisionMembers->count();
-
-        if ($divisionCount === 0) {
-            return null;
-        }
-
         $tenureDays = $member->join_date ? (int) $member->join_date->diffInDays() : 0;
         $daysSinceVoice = $member->last_voice_activity
             ? (int) $member->last_voice_activity->diffInDays()
             : null;
 
-        $avgTenureDays = $divisionMembers->avg(fn ($m) => $m->join_date->diffInDays());
-        $avgVoiceDays = $divisionMembers
-            ->filter(fn ($m) => $m->last_voice_activity !== null)
-            ->avg(fn ($m) => $m->last_voice_activity->diffInDays()) ?? 0;
+        $stats = $division->members()
+            ->whereNotNull('join_date')
+            ->selectRaw('
+                COUNT(*) as total_count,
+                AVG(DATEDIFF(NOW(), join_date)) as avg_tenure,
+                AVG(CASE WHEN last_voice_activity IS NOT NULL THEN DATEDIFF(NOW(), last_voice_activity) END) as avg_voice,
+                SUM(CASE WHEN DATEDIFF(NOW(), join_date) <= ? THEN 1 ELSE 0 END) as tenure_rank,
+                SUM(CASE WHEN last_voice_activity IS NOT NULL AND DATEDIFF(NOW(), last_voice_activity) >= ? THEN 1 ELSE 0 END) as activity_rank,
+                SUM(CASE WHEN last_voice_activity IS NOT NULL THEN 1 ELSE 0 END) as voice_count
+            ', [$tenureDays, $daysSinceVoice ?? 999999])
+            ->first();
 
-        $memberTenurePercentile = $divisionMembers
-            ->filter(fn ($m) => $m->join_date->diffInDays() <= $tenureDays)
-            ->count() / $divisionCount * 100;
+        if (! $stats || $stats->total_count === 0) {
+            return null;
+        }
 
-        $memberActivityPercentile = $daysSinceVoice !== null
-            ? $divisionMembers
-                ->filter(fn ($m) => $m->last_voice_activity !== null && $m->last_voice_activity->diffInDays() >= $daysSinceVoice)
-                ->count() / $divisionCount * 100
+        $avgTenureDays = (float) ($stats->avg_tenure ?? 0);
+        $avgVoiceDays = (float) ($stats->avg_voice ?? 0);
+
+        $tenurePercentile = ($stats->tenure_rank / $stats->total_count) * 100;
+        $activityPercentile = $daysSinceVoice !== null && $stats->voice_count > 0
+            ? ($stats->activity_rank / $stats->voice_count) * 100
             : 0;
 
         return (object) [
             'avgTenureDays' => round($avgTenureDays),
             'avgTenureYears' => round($avgTenureDays / 365, 1),
             'avgVoiceDays' => round($avgVoiceDays),
-            'tenurePercentile' => round($memberTenurePercentile),
-            'activityPercentile' => round($memberActivityPercentile),
+            'tenurePercentile' => round($tenurePercentile),
+            'activityPercentile' => round($activityPercentile),
             'tenureBetter' => $tenureDays > $avgTenureDays,
             'activityBetter' => $daysSinceVoice !== null && $daysSinceVoice < $avgVoiceDays,
         ];

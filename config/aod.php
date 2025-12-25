@@ -3,7 +3,7 @@
 use App\Enums\Rank;
 
 return [
-    'logo' => env('LOGO', 'images/logo_v2.png'),
+    'logo' => env('LOGO', 'images/logo_v2.svg'),
 
     'discord_webhook' => env('DISCORD_WEBHOOK'),
     'token' => env('AOD_TOKEN'),

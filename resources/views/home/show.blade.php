@@ -16,25 +16,19 @@
         @endslot
     @endcomponent
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="my-division">
-                    @include('home.partials.my-division')
-                </div>
-            </div>
+    <div class="container-fluid home-container">
+        @include('home.partials.my-division')
+        @include('division.partials.pending-actions', ['division' => $myDivision])
+
+        <div class="leaderboard-section">
+            @include('home.partials.division-leaderboard')
         </div>
 
-        <div class="row m-t-xl">
-            <div class="col-lg-12">
-                <h4 class="m-b-xs text-uppercase">Navigate
-                    <small>All Divisions</small>
-                </h4>
-                <hr>
-            </div>
-        </div>
-
-        <div class="row divisions">
+        <div class="divisions-section">
+            <h4 class="section-title">
+                <i class="fa fa-gamepad"></i>
+                All Divisions
+            </h4>
             @include('home.partials.divisions')
         </div>
     </div>

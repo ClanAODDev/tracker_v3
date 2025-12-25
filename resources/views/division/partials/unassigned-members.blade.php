@@ -1,13 +1,9 @@
-@if ($division->unassigned->count())
-    <div class="panel panel-c-accent panel-filled unassigned-container">
-        <div class="panel-body">
-            <h5>Unassigned members</h5>
-            @foreach ($division->unassigned as $member)
-                <div class="unassigned badge" data-member-id="{{ $member->clan_id }}"
-                     style="cursor: move">
-                    {{ $member->present()->rankName }}
-                </div>
-            @endforeach
-        </div>
-    </div>
-@endif
+<x-unassigned-organizer
+    :count="$division->unassigned->count()"
+    :unit-type="$division->locality('platoon')"
+    :members="$division->unassigned"
+    button-class="organize-platoons-btn"
+    members-class="unassigned-platoon-member"
+    container-class="unassigned-organizer"
+    :can-organize="auth()->user()->can('manageUnassigned', App\Models\User::class)"
+/>

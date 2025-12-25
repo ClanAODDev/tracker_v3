@@ -40,15 +40,15 @@ class MemberController extends Controller
 
     public function show(Member $member)
     {
-        $division = $member->division;
         $canViewSrLdr = auth()->user()->isRole(['sr_ldr', 'admin']);
 
         $this->memberRepository->loadProfileRelations($member);
+        $division = $member->division;
 
         $notes = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
         $rankHistory = $this->memberRepository->getRankHistory($member);
-        $transfers = $this->memberRepository->getTransfers($member);
-        $partTimeDivisions = $this->memberRepository->getPartTimeDivisions($member);
+        $transfers = $member->transfers;
+        $partTimeDivisions = $member->partTimeDivisions;
 
         $memberStats = MemberStatsData::fromMember($member, $division, $this->memberRepository);
         $noteStats = NoteStatsData::fromNotes($notes);

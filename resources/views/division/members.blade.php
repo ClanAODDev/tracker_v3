@@ -26,7 +26,7 @@
                     <div class='panel-body border-bottom'>
                         <div id='playerFilter'></div>
                         @include('member.partials.tag-filter')
-                        @include ('member.partials.members-table-toggle')
+                        @include('member.partials.members-table-toggle', ['includeParttimers' => $includeParttimers])
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover members-table">

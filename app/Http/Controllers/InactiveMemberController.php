@@ -7,10 +7,8 @@ use App\Models\Activity;
 use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\View\View;
 
 class InactiveMemberController extends Controller
 {
@@ -19,14 +17,13 @@ class InactiveMemberController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * @return Factory|View
-     */
     public function index(Division $division)
     {
+        $inactivityDays = $division->settings()->inactivity_days;
+        $inactivityThreshold = now()->today()->subDays($inactivityDays);
+
         $inactiveDiscordMembers = $division->members()
-            ->where(function ($query) use ($division) {
-                $inactivityThreshold = now()->today()->subDays($division->settings()->inactivity_days);
+            ->where(function ($query) use ($inactivityThreshold) {
                 $query->where('last_voice_activity', '<', $inactivityThreshold)
                     ->orWhereNull('last_voice_activity');
             })
@@ -34,9 +31,11 @@ class InactiveMemberController extends Controller
             ->whereDoesntHave('leave', function ($query) {
                 $query->whereDate('end_date', '>', today());
             })
-            ->with('squad')
+            ->with(['squad', 'platoon'])
             ->orderBy('last_voice_activity')
             ->get();
+
+        $allInactiveMembers = $inactiveDiscordMembers;
 
         if (request()->platoon) {
             $inactiveDiscordMembers = $inactiveDiscordMembers->where('platoon_id', request()->platoon->id);
@@ -46,16 +45,19 @@ class InactiveMemberController extends Controller
             ->whereIn('name', ['flagged_member', 'unflagged_member', 'removed_member'])
             ->orderByDesc('created_at')
             ->with(['subject'])
+            ->take(20)
             ->get();
 
         $flaggedMembers = $division->members()->whereFlaggedForInactivity(true)->get();
 
-        /**
-         * Using this to determine the active route, whether filtering
-         * by teamspeak or forum. Used in platoon filter options, reset
-         * filter button.
-         */
         $requestPath = 'division.' . explode('/', request()->path())[2];
+
+        $stats = [
+            'total' => $allInactiveMembers->count(),
+            'flagged' => $flaggedMembers->count(),
+            'byPlatoon' => $allInactiveMembers->groupBy('platoon_id')->map->count(),
+            'severe' => $allInactiveMembers->filter(fn ($m) => $m->last_voice_activity === null || $m->last_voice_activity < now()->subDays($inactivityDays * 2))->count(),
+        ];
 
         return view('division.inactive-members', compact(
             'division',
@@ -63,6 +65,7 @@ class InactiveMemberController extends Controller
             'flaggedMembers',
             'flagActivity',
             'requestPath',
+            'stats',
         ));
     }
 

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Data\UnitStatsData;
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
 use App\Services\MemberQueryService;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -27,19 +29,27 @@ class DivisionController extends Controller
         return view('division.show', $this->divisionShow->getShowData($division)->toArray());
     }
 
-    /**
-     * @return Factory|View
-     */
     public function partTime(Division $division)
     {
-        $members = $division->partTimeMembers()->with('handles')
-            ->get()->each(function ($member) use ($division) {
-                // filter out handles that don't match current division primary handle
-                $member->handle = $member->handles()->wherePivot('primary', true)->get()->filter(fn ($handle
-                ) => $handle->id === $division->handle_id)->first();
+        $members = $division->partTimeMembers()
+            ->with(['handles', 'division', 'leave'])
+            ->get()
+            ->each(function ($member) use ($division) {
+                $member->handle = $member->handles()
+                    ->wherePivot('primary', true)
+                    ->get()
+                    ->filter(fn ($handle) => $handle->id === $division->handle_id)
+                    ->first();
             });
 
-        return view('division.part-time', compact('division', 'members'));
+        $stats = [
+            'total' => $members->count(),
+            'active' => $members->filter(fn ($m) => $m->division_id > 0 && ! $m->leave)->count(),
+            'onLeave' => $members->filter(fn ($m) => $m->leave)->count(),
+            'removed' => $members->filter(fn ($m) => $m->division_id === 0)->count(),
+        ];
+
+        return view('division.part-time', compact('division', 'members', 'stats'));
     }
 
     /**
@@ -94,5 +104,70 @@ class DivisionController extends Controller
         $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
         return view('division.members', compact('division', 'members', 'unitStats', 'includeParttimers'));
+    }
+
+    public function unassignedToSquad(Division $division): JsonResponse
+    {
+        if (! auth()->user()->isRole(['sr_ldr', 'jr_ldr'])) {
+            abort(403);
+        }
+
+        $members = $division->members()
+            ->with('platoon:id,name')
+            ->where('platoon_id', '>', 0)
+            ->where('squad_id', 0)
+            ->where('position', Position::MEMBER)
+            ->get(['id', 'clan_id', 'name', 'rank', 'platoon_id'])
+            ->map(fn ($member) => [
+                'id' => $member->clan_id,
+                'name' => $member->present()->rankName,
+                'platoon' => $member->platoon?->name ?? 'Unknown',
+                'platoon_id' => $member->platoon_id,
+                'manage_url' => route('platoon', [$division, $member->platoon_id]) . '?organize=1',
+            ]);
+
+        return response()->json(['members' => $members]);
+    }
+
+    public function addPartTimer(Division $division): JsonResponse|RedirectResponse
+    {
+        $validated = request()->validate([
+            'member_id' => 'required|exists:members,clan_id',
+            'handle_value' => 'nullable|string|max:255',
+        ]);
+
+        $member = Member::where('clan_id', $validated['member_id'])->firstOrFail();
+
+        $this->authorize('managePartTime', $member);
+
+        if ($division->partTimeMembers()->where('member_id', $member->id)->exists()) {
+            if (request()->expectsJson()) {
+                return response()->json(['error' => 'Member is already a part-timer'], 422);
+            }
+            $this->showErrorToast("{$member->name} is already a part-timer in {$division->name}");
+
+            return redirect()->back();
+        }
+
+        $division->partTimeMembers()->attach($member->id);
+
+        if (! empty($validated['handle_value']) && $division->handle_id) {
+            $member->handles()->syncWithoutDetaching([
+                $division->handle_id => ['value' => $validated['handle_value']],
+            ]);
+        }
+
+        $member->recordActivity('add_part_time');
+
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => "{$member->name} added as part-timer",
+            ]);
+        }
+
+        $this->showSuccessToast("{$member->name} added as part-time member to {$division->name}!");
+
+        return redirect()->back();
     }
 }

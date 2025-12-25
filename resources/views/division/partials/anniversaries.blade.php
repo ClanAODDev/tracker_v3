@@ -1,8 +1,9 @@
 @if($divisionAnniversaries->count())
-    <h3 class="m-b-xs text-uppercase m-t-xxxl">
+<div class="division-section animate-fade-in-up" style="animation-delay: 0.3s">
+    <h3 class="division-section-title">
         {{ now()->monthName }} <span class="text-muted">Milestones</span>
-        <hr/>
     </h3>
+    <hr/>
 
     @foreach($divisionAnniversaries as $anniversary)
         @php $trophy = getAnniversaryTrophy($anniversary->years_since_joined); @endphp
@@ -17,4 +18,5 @@
             </span>
         </a>
     @endforeach
+</div>
 @endif

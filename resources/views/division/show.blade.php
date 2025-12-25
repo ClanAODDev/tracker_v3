@@ -13,12 +13,10 @@
     @endcomponent
 
     <div class="container-fluid">
-        @include ('division.partials.notices')
         @include('division.partials.tools-links')
-        <div class="m-b-xl"></div>
-
+        <hr />
+        @include ('division.partials.pending-actions')
         @include('division.partials.quick-stats')
-
         @include ('division.partials.census-short')
         @include('division.partials.leadership')
         @include('division.partials.anniversaries')

@@ -1,4 +1,4 @@
-<div class="m-t-md">
+<div class="division-section animate-fade-in-up" style="animation-delay: 0.2s">
     <div class="row">
         <div class="col-md-12">
             <div class="census-sparkline-container">

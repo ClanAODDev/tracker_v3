@@ -1,9 +1,10 @@
 <div class="container-fluid">
-    <div class="alert alert-danger slight">
-        Currently impersonating user: <strong>{{ auth()->user()->name }}</strong>.
-        <a href="{{ route('end-impersonation') }}" class="c-white alert-link">
-            End impersonation?
-        </a>
-        <i class="fa fa-user-secret pull-right fa-2x"></i>
-    </div>
+    <x-notice
+        type="danger"
+        icon="fa-user-secret"
+        :cta="route('end-impersonation')"
+        ctaLabel="End Impersonation"
+    >
+        Currently impersonating user: <strong>{{ auth()->user()->name }}</strong>
+    </x-notice>
 </div>

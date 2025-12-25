@@ -1,4 +1,10 @@
-<h3 class="m-b-xs text-uppercase m-t-xxxl" id="platoons">
+<div class="division-section platoon-assignments-section animate-fade-in-up" style="animation-delay: 0.35s" id="platoons">
+
+@can('manageUnassigned', App\Models\User::class)
+    @include('division.partials.unassigned-members')
+@endcan
+
+<div class="division-section-title">
     {{ Str::plural($division->locality('platoon')) }}
 
     @can('create', [App\Models\Platoon::class, $division])
@@ -6,22 +12,17 @@
            class="btn btn-default pull-right"><i class="fa fa-plus text-success"></i> Create {{ $division->locality('platoon') }}
         </a>
     @endcan
-</h3>
-
+</div>
 <hr/>
 
-@can('manageUnassigned', App\Models\User::class)
-    @include('division.partials.unassigned-members')
-@endcan
-
-<div class="row">
+<div class="row platoon-drop-targets">
 
     @forelse ($platoons as $platoon)
         @php
             $voiceRate = $platoon->members_count > 0
                 ? round(($platoon->voice_active_count / $platoon->members_count) * 100)
                 : 0;
-            $voiceClass = $voiceRate >= 30 ? 'text-success' : ($voiceRate >= 15 ? 'text-warning' : 'text-muted');
+            $voiceClass = $voiceRate >= 30 ? 'voice-high' : ($voiceRate >= 15 ? 'voice-mid' : 'voice-low');
         @endphp
         <div class="col-md-6">
             <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
@@ -34,10 +35,10 @@
                                  class="pull-right platoon-icon-xl"/>
                         @endif
                         {{ $platoon->name }}
-                        <label class="badge">{{ $platoon->members_count }} Assigned</label>
-                        <label class="badge {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
+                        <span class="platoon-stat-badge"><i class="fa fa-users"></i> {{ $platoon->members_count }}</span>
+                        <span class="platoon-stat-badge {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
                             <i class="fa fa-headset"></i> {{ $voiceRate }}%
-                        </label>
+                        </span>
                     </h4>
 
                     @if ($platoon->leader)
@@ -72,4 +73,5 @@
             </div>
         </div>
     @endforelse
+</div>
 </div>

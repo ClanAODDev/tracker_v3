@@ -52,15 +52,16 @@ class PlatoonPolicy
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function create(User $user)
+    public function create(User $user, $division = null): bool
     {
-        if ($user->isRole('sr_ldr')) {
-            return true;
+        if (! $user->isRole('sr_ldr')) {
+            return false;
         }
 
-        return false;
+        if ($division && $user->member) {
+            return $user->member->division_id === $division->id;
+        }
+
+        return true;
     }
 }

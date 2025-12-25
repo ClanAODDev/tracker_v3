@@ -17,6 +17,8 @@ class MemberQueryService
             'handles' => $this->primaryHandleConstraint($division),
             'leave',
             'tags.division',
+            'platoon',
+            'squad',
         ]);
     }
 

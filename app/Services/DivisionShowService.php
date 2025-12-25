@@ -5,9 +5,9 @@ namespace App\Services;
 use App\Data\CensusChartData;
 use App\Data\DivisionShowData;
 use App\Data\DivisionStatsData;
+use App\Data\PendingActionsData;
 use App\Models\Division;
 use App\Repositories\DivisionRepository;
-use Carbon\Carbon;
 
 class DivisionShowService
 {
@@ -29,8 +29,7 @@ class DivisionShowService
             generalSergeants: $division->generalSergeants()->get(),
             divisionAnniversaries: $this->divisionRepository->getDivisionAnniversaries($division),
             previousCensus: $this->divisionRepository->censusCounts($division)->first(),
-            outstandingInactives: $this->getOutstandingInactives($division),
-            outstandingAwardRequests: $division->awards()->whereHas('unapprovedRecipients')->count(),
+            pendingActions: PendingActionsData::forDivision($division, auth()->user()),
         );
     }
 
@@ -46,15 +45,5 @@ class DivisionShowService
             ])
             ->orderBy('order')
             ->get();
-    }
-
-    private function getOutstandingInactives(Division $division): int
-    {
-        $maxDays = config('aod.maximum_days_inactive');
-
-        return $division->members()
-            ->whereDoesntHave('leave')
-            ->where('last_voice_activity', '<', Carbon::now()->subDays($maxDays)->format('Y-m-d'))
-            ->count();
     }
 }

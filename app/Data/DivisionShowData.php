@@ -16,8 +16,7 @@ readonly class DivisionShowData
         public Collection $generalSergeants,
         public Collection $divisionAnniversaries,
         public ?object $previousCensus,
-        public int $outstandingInactives,
-        public int $outstandingAwardRequests,
+        public PendingActionsData $pendingActions,
     ) {}
 
     public function toArray(): array
@@ -31,8 +30,7 @@ readonly class DivisionShowData
             'generalSergeants' => $this->generalSergeants,
             'divisionAnniversaries' => $this->divisionAnniversaries,
             'previousCensus' => $this->previousCensus,
-            'outstandingInactives' => $this->outstandingInactives,
-            'outstandingAwardRequests' => $this->outstandingAwardRequests,
+            'pendingActions' => $this->pendingActions,
         ];
     }
 }

@@ -2,7 +2,7 @@
     $visibleMemberTags = $member->tags->filter(fn ($tag) => $tag->isVisibleTo());
 @endphp
 <tr role="row" class="{{ ($member->leave) ? 'text-muted' : null }}">
-    <td class="bulk-select-col"><input type="checkbox" class="member-checkbox" value="{{ $member->clan_id }}"></td>
+    <td class="bulk-select-col"><input type="checkbox" class="member-checkbox" value="{{ $member->clan_id }}" data-parttimer="{{ isset($division) && $member->division_id !== $division->id ? '1' : '0' }}"></td>
     <td class="col-hidden">{{ $member->rank }}</td>
     <td class="col-hidden">{{ $member->last_activity }}</td>
     <td>
@@ -26,6 +26,27 @@
         </span>
     </td>
     <td class="text-center hidden-xs">{{ $member->rank->getAbbreviation() }}</td>
+    @if(isset($platoon))
+        <td class="text-center hidden-xs hidden-sm">
+            @if($member->squad)
+                <a href="{{ route('squad.show', [$division->slug, $platoon, $member->squad]) }}" class="text-muted">
+                    {{ $member->squad->name ?? 'Untitled' }}
+                </a>
+            @else
+                <span class="text-muted">—</span>
+            @endif
+        </td>
+    @else
+        <td class="text-center hidden-xs hidden-sm">
+            @if($member->platoon)
+                <a href="{{ route('platoon', [$division->slug, $member->platoon]) }}" class="text-muted">
+                    {{ $member->platoon->name ?? 'Untitled' }}
+                </a>
+            @else
+                <span class="text-muted">—</span>
+            @endif
+        </td>
+    @endif
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
     <td class="text-center hidden-xs">
                     <span class="{{ getActivityClass($member->last_voice_activity, $division) }}"

@@ -1,43 +1,67 @@
 @if (count(($type === 'discord') ? $inactiveDiscordMembers : $inactiveTSMembers))
     <div class="table-responsive">
-        <table class="table adv-datatable table-hover">
+        <table class="table inactive-table">
             <thead>
             <tr>
-                <th>Member Name</th>
-                <th>Last Discord Voice Activity</th>
-                <th>Discord State</th>
-                <th>Squad</th>
-                <th class="no-sort"></th>
-                <th class="no-sort"></th>
+                <th>Member</th>
+                <th>Last Voice Activity</th>
+                <th>Status</th>
+                <th>{{ $division->locality('platoon') }} / Squad</th>
+                <th class="text-right">Actions</th>
             </tr>
             </thead>
-            <tbody class="sortable">
+            <tbody>
             @foreach (($type === 'discord') ? $inactiveDiscordMembers : $inactiveTSMembers as $member)
-                <tr>
+                @php
+                    $daysSince = $member->last_voice_activity ? $member->last_voice_activity->diffInDays(now()) : null;
+                    $severityClass = '';
+                    if ($daysSince === null || $daysSince >= $division->settings()->inactivity_days * 2) {
+                        $severityClass = 'inactive-row--severe';
+                    } elseif ($daysSince >= $division->settings()->inactivity_days * 1.5) {
+                        $severityClass = 'inactive-row--warning';
+                    }
+                @endphp
+                <tr class="{{ $severityClass }}">
                     <td>
-                        <a href="{{ route('member', $member->getUrlParams()) }}"><i class="fa fa-search"></i></a>
-                        {{ $member->name }}
-                        <span class="text-muted slight">{{ $member->rank->getAbbreviation() }}</span>
+                        <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
+                            <span class="inactive-member-name">{{ $member->name }}</span>
+                            <span class="inactive-member-rank">{{ $member->rank->getAbbreviation() }}</span>
+                        </a>
                     </td>
-                    <td data-order="{{ $member->last_voice_activity->timestamp ?? null }}">
-                        <code>{{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}</code>
+                    <td data-order="{{ $member->last_voice_activity->timestamp ?? 0 }}">
+                        <span class="inactive-time">
+                            {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}
+                        </span>
                     </td>
-                    <td title="{{ $member->last_voice_status?->getDescription() }}">
-                        <code>{{ $member->last_voice_status?->getLabel() ?? 'Unknown' }}</code>
-                    </td>
-                    <td>{{ $member->squad->name ?? "Untitled" }}</td>
                     <td>
-                        <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}" target="_blank"
-                           class="btn btn-default btn-sm">Forum PM</a>
+                        <span class="inactive-status" title="{{ $member->last_voice_status?->getDescription() }}">
+                            {{ $member->last_voice_status?->getLabel() ?? 'Unknown' }}
+                        </span>
                     </td>
-                    <td class="text-center">
-                        @can('flag-inactive', \App\Models\Member::class)
-                            <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
-                               class="btn btn-warning btn-sm">
-                                <i class="fa fa-flag"></i>
-                                Flag
+                    <td>
+                        <span class="inactive-unit">
+                            {{ $member->platoon->name ?? 'Unassigned' }}
+                            @if($member->squad)
+                                / {{ $member->squad->name }}
+                            @endif
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        <div class="inactive-actions">
+                            <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}"
+                               target="_blank"
+                               class="btn btn-sm btn-default"
+                               title="Send Forum PM">
+                                <i class="fa fa-envelope"></i>
                             </a>
-                        @endcan
+                            @can('flag-inactive', \App\Models\Member::class)
+                                <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
+                                   class="btn btn-sm btn-warning"
+                                   title="Flag for Removal">
+                                    <i class="fa fa-flag"></i>
+                                </a>
+                            @endcan
+                        </div>
                     </td>
                 </tr>
             @endforeach
@@ -45,6 +69,9 @@
         </table>
     </div>
 @else
-    <h4><i class="fa fa-times-circle-o text-danger"></i> No Inactive Members</h4>
-    <p>Either there are no inactive members, or no members match the criteria you provided.</p>
+    <div class="inactive-empty">
+        <i class="fa fa-check-circle"></i>
+        <h4>No Inactive Members</h4>
+        <p>All members are within the activity threshold, or no members match the selected filter.</p>
+    </div>
 @endif

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class Platoon extends Model
 {
@@ -72,5 +73,20 @@ class Platoon extends Model
     public function members()
     {
         return $this->hasMany(Member::class);
+    }
+
+    public function getLogoPath()
+    {
+        if ($this->logo) {
+            if (str_starts_with($this->logo, 'http')) {
+                return $this->logo;
+            }
+
+            if (Storage::disk('public')->exists($this->logo)) {
+                return asset(Storage::url($this->logo));
+            }
+        }
+
+        return $this->division->getLogoPath();
     }
 }

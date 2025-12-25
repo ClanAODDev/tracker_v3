@@ -5,7 +5,6 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
-use App\Filament\Mod\Resources\DivisionResource\RelationManagers\TagsRelationManager;
 use App\Models\Division;
 use Filament\Forms;
 use Filament\Forms\Components\Select;

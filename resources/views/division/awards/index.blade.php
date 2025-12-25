@@ -45,7 +45,7 @@
                         <h1 style="margin: 0;">
                             <span class="text-success">{{ $totals->requestable }}</span>
                         </h1>
-                        <div class="text-muted">Requestable</div>
+                        <div class="text-muted"><i class="fa fa-hand-pointer"></i> Requestable</div>
                     </div>
                 </div>
             </div>
@@ -53,22 +53,38 @@
 
         <div class="row m-b-lg">
             <div class="col-md-12">
-                <div class="rarity-legend">
-                    @foreach (config('aod.awards.rarity') as $key => $rarity)
-                        <div class="rarity-legend-item rarity-filter active" data-rarity="{{ $key }}">
-                            <span class="rarity-dot rarity-{{ $key }}"></span>
-                            <span class="rarity-label">{{ $rarity['label'] }}</span>
-                            <span class="rarity-range">
-                                @if ($rarity['max'] === null)
-                                    {{ $rarity['min'] }}+
-                                @elseif ($rarity['min'] === $rarity['max'])
-                                    {{ $rarity['min'] }} {{ Str::plural('recipient', $rarity['min']) }}
-                                @else
-                                    {{ $rarity['min'] }}-{{ $rarity['max'] }}
-                                @endif
-                            </span>
+                <div class="award-filters">
+                    <div class="award-filter-group">
+                        <span class="filter-label">Rarity</span>
+                        <div class="rarity-legend">
+                            @foreach (config('aod.awards.rarity') as $key => $rarity)
+                                <div class="rarity-legend-item rarity-filter active" data-rarity="{{ $key }}">
+                                    <span class="rarity-dot rarity-{{ $key }}"></span>
+                                    <span class="rarity-label">{{ $rarity['label'] }}</span>
+                                    <span class="rarity-range">
+                                        @if ($rarity['max'] === null)
+                                            {{ $rarity['min'] }}+
+                                        @elseif ($rarity['min'] === $rarity['max'])
+                                            {{ $rarity['min'] }} {{ Str::plural('recipient', $rarity['min']) }}
+                                        @else
+                                            {{ $rarity['min'] }}-{{ $rarity['max'] }}
+                                        @endif
+                                    </span>
+                                </div>
+                            @endforeach
                         </div>
-                    @endforeach
+                    </div>
+                    <div class="award-filter-group">
+                        <span class="filter-label">Division</span>
+                        <select id="division-filter" class="form-control" style="width: auto;">
+                            <option value="">All Divisions</option>
+                            @foreach ($divisionsWithAwards as $division)
+                                <option value="{{ $division->slug }}" {{ $divisionSlug === $division->slug ? 'selected' : '' }}>
+                                    {{ $division->name }}{{ !$division->active ? ' (Legacy)' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>

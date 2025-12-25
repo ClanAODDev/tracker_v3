@@ -23,6 +23,11 @@ var Tracker = Tracker || {};
             Tracker.InitSmoothScroll();
             Tracker.InitSettings();
             Tracker.InitProfileModals();
+            Tracker.InitNoSquadModal();
+            Tracker.InitLeaderboardTabs();
+            Tracker.InitInactiveTabs();
+            Tracker.InitParttimerSearch();
+            Tracker.InitAddParttimer();
         },
 
         InitNavToggle: function () {
@@ -341,12 +346,11 @@ var Tracker = Tracker || {};
         },
 
         InitRarityFilter: function () {
-            var $filters = $('.rarity-filter');
-            if (!$filters.length) return;
+            var $rarityFilters = $('.rarity-filter');
+            var $divisionSelect = $('#division-filter');
+            if (!$rarityFilters.length && !$divisionSelect.length) return;
 
-            $filters.on('click', function () {
-                $(this).toggleClass('active');
-
+            function applyRarityFilter() {
                 var activeRarities = $('.rarity-filter.active').map(function () {
                     return $(this).data('rarity');
                 }).get();
@@ -364,6 +368,22 @@ var Tracker = Tracker || {};
                     var show = activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1;
                     $card.closest('[class*="col-"]').toggle(show);
                 });
+            }
+
+            $rarityFilters.on('click', function () {
+                $(this).toggleClass('active');
+                applyRarityFilter();
+            });
+
+            $divisionSelect.on('change', function () {
+                var division = $(this).val();
+                var url = new URL(window.location.href);
+                if (division) {
+                    url.searchParams.set('division', division);
+                } else {
+                    url.searchParams.delete('division');
+                }
+                window.location.href = url.toString();
             });
         },
 
@@ -690,6 +710,167 @@ var Tracker = Tracker || {};
                         $btn.prop('disabled', false);
                     }
                 });
+            });
+        },
+
+        InitNoSquadModal: function () {
+            var $modal = $('#no-squad-modal');
+            if (!$modal.length) return;
+
+            var loaded = false;
+
+            $modal.on('show.bs.modal', function () {
+                if (loaded) return;
+
+                var url = $modal.data('url');
+
+                $.get(url, function (response) {
+                    var $list = $('#no-squad-list');
+                    $list.empty();
+
+                    if (response.members.length === 0) {
+                        $list.html('<p class="text-muted">No members found.</p>');
+                    } else {
+                        var grouped = {};
+                        response.members.forEach(function (member) {
+                            if (!grouped[member.platoon]) {
+                                grouped[member.platoon] = { members: [], manage_url: member.manage_url };
+                            }
+                            grouped[member.platoon].members.push(member);
+                        });
+
+                        Object.keys(grouped).sort().forEach(function (platoon) {
+                            var group = grouped[platoon];
+                            var $group = $('<div class="no-squad-group"></div>');
+                            $group.append(
+                                '<div class="no-squad-platoon-header">' +
+                                '<span>' + platoon + '</span>' +
+                                '<a href="' + group.manage_url + '" class="btn btn-sm btn-accent">' +
+                                '<i class="fa fa-arrows-alt"></i> Assign</a>' +
+                                '</div>'
+                            );
+                            var $members = $('<div class="no-squad-members"></div>');
+                            group.members.forEach(function (member) {
+                                $members.append('<span class="no-squad-member">' + member.name + '</span>');
+                            });
+                            $group.append($members);
+                            $list.append($group);
+                        });
+                    }
+
+                    $('#no-squad-loading').hide();
+                    $list.show();
+                    loaded = true;
+                });
+            });
+        },
+
+        InitLeaderboardTabs: function () {
+            var $tabs = $('.leaderboard-tab');
+            var $panels = $('.leaderboard-panel');
+            if (!$tabs.length) return;
+
+            $tabs.on('click', function () {
+                var tabName = $(this).data('tab');
+
+                $tabs.removeClass('active');
+                $panels.removeClass('active');
+
+                $(this).addClass('active');
+                $('.leaderboard-panel[data-panel="' + tabName + '"]').addClass('active');
+            });
+        },
+
+        InitInactiveTabs: function () {
+            var $tabs = $('.inactive-tab');
+            var $panels = $('.inactive-panel');
+            var $searchInput = $('#inactive-search');
+
+            if (!$tabs.length) return;
+
+            $tabs.on('click', function () {
+                var tabName = $(this).data('tab');
+
+                $tabs.removeClass('active');
+                $panels.removeClass('active');
+
+                $(this).addClass('active');
+                $('.inactive-panel[data-panel="' + tabName + '"]').addClass('active');
+
+                if ($searchInput.val()) {
+                    Tracker.FilterInactiveTable($searchInput.val());
+                }
+            });
+
+            if ($searchInput.length) {
+                $searchInput.on('input', function () {
+                    Tracker.FilterInactiveTable($(this).val());
+                });
+            }
+        },
+
+        FilterInactiveTable: function (filter) {
+            filter = filter.toLowerCase();
+            $('.inactive-panel.active tbody tr').each(function () {
+                var text = $(this).text().toLowerCase();
+                $(this).toggle(text.indexOf(filter) !== -1);
+            });
+        },
+
+        InitParttimerSearch: function () {
+            var $searchInput = $('#parttimer-search');
+            if (!$searchInput.length) return;
+
+            $searchInput.on('input', function () {
+                var filter = $(this).val().toLowerCase();
+                $('.inactive-panel.active tbody tr').each(function () {
+                    var text = $(this).text().toLowerCase();
+                    $(this).toggle(text.indexOf(filter) !== -1);
+                });
+            });
+        },
+
+        InitAddParttimer: function () {
+            var $modal = $('#add-parttimer-modal');
+            if (!$modal.length) return;
+
+            var $searchInput = $('#parttimer-member-search');
+            var $memberIdField = $('#parttimer-member-id');
+            var $selectedDisplay = $('#parttimer-selected-member');
+            var $selectedName = $selectedDisplay.find('.selected-member-name');
+            var $submitBtn = $('#add-parttimer-submit');
+
+            $searchInput.bootcomplete({
+                url: window.Laravel.appPath + '/search-member/',
+                minLength: 3,
+                idField: true,
+                method: 'POST',
+                dataParams: { _token: $('meta[name=csrf-token]').attr('content') }
+            });
+
+            $searchInput.on('bootcomplete.selected', function (e, id, label) {
+                $memberIdField.val(id);
+                $selectedName.text(label);
+                $selectedDisplay.show();
+                $searchInput.hide();
+                $submitBtn.prop('disabled', false);
+            });
+
+            $selectedDisplay.on('click', '.clear-selected-member', function () {
+                $memberIdField.val('');
+                $selectedName.text('');
+                $selectedDisplay.hide();
+                $searchInput.val('').show().focus();
+                $submitBtn.prop('disabled', true);
+            });
+
+            $modal.on('hidden.bs.modal', function () {
+                $memberIdField.val('');
+                $selectedName.text('');
+                $selectedDisplay.hide();
+                $searchInput.val('').show();
+                $submitBtn.prop('disabled', true);
+                $('#parttimer-handle-value').val('');
             });
         }
 

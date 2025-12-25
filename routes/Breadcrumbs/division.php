@@ -1,63 +1,61 @@
 <?php
 
-registerDivisionSubPages();
-
 Breadcrumbs::for('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', route('home'));
 });
 
-// Home > Division
 Breadcrumbs::for('division', function ($breadcrumbs, $division) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push($division->name, route('division', $division->slug));
 });
 
-// Home > Division > Platoon
 Breadcrumbs::for('platoon', function ($breadcrumbs, $division, $platoon) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, route('division', $division->slug));
+    $breadcrumbs->parent('division', $division);
     $breadcrumbs->push($platoon->name);
 });
 
-// Home > Division > Platoon > Squad
 Breadcrumbs::for('squad', function ($breadcrumbs, $division, $platoon, $squad) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push($division->name, route('division', $division->slug));
+    $breadcrumbs->parent('division', $division);
     $breadcrumbs->push($platoon->name, route('platoon', [$division->slug, $platoon->id]));
     $breadcrumbs->push($squad->name ?: 'Untitled');
 });
 
-/**
- * Handle static division sub pages.
- */
-function registerDivisionSubPages()
-{
-    $divisionStaticSubPages = [
-        'squads',
-        'part-timers',
-        'statistics',
-        'create-platoon',
-        'division-census',
-        'manage-division',
-        'division-structure',
-        'leaves-of-absence',
-        'inactive-members',
-        'teamspeak-report',
-        'retention-report',
-        'voice-report',
-        'promotions',
-        'members',
-        'member-requests',
-        'send-private-message',
-    ];
+Breadcrumbs::for('division.reports', function ($breadcrumbs, $division) {
+    $breadcrumbs->parent('division', $division);
+    $breadcrumbs->push('Reports');
+});
 
-    foreach ($divisionStaticSubPages as $page) {
-        Breadcrumbs::for($page, function ($breadcrumbs, $division) use ($page) {
-            $breadcrumbs->parent('home');
-            $breadcrumbs->push($division->name, route('division', $division->slug));
-            $breadcrumbs->push(ucwords(
-                str_replace('-', ' ', $page)
-            ));
-        });
-    }
+$reportPages = [
+    'division-census' => 'Census',
+    'retention-report' => 'Retention',
+    'voice-report' => 'Voice',
+    'promotions' => 'Promotions',
+];
+
+foreach ($reportPages as $route => $label) {
+    Breadcrumbs::for($route, function ($breadcrumbs, $division) use ($label) {
+        $breadcrumbs->parent('division.reports', $division);
+        $breadcrumbs->push($label);
+    });
+}
+
+$divisionPages = [
+    'squads' => 'Squads',
+    'part-timers' => 'Part Timers',
+    'statistics' => 'Statistics',
+    'create-platoon' => 'Create Platoon',
+    'manage-division' => 'Manage Division',
+    'division-structure' => 'Division Structure',
+    'leaves-of-absence' => 'Leaves of Absence',
+    'inactive-members' => 'Inactive Members',
+    'members' => 'Members',
+    'member-requests' => 'Member Requests',
+    'send-private-message' => 'Send Private Message',
+];
+
+foreach ($divisionPages as $route => $label) {
+    Breadcrumbs::for($route, function ($breadcrumbs, $division) use ($label) {
+        $breadcrumbs->parent('division', $division);
+        $breadcrumbs->push($label);
+    });
 }

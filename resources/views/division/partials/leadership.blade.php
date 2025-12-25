@@ -1,4 +1,5 @@
-<h3 class="m-b-xs text-uppercase m-t-xxxl">Leadership</h3>
+<div class="division-section animate-fade-in-up" style="animation-delay: 0.25s">
+<h3 class="division-section-title">Leadership</h3>
 <hr />
 
 <div class="row">
@@ -26,4 +27,5 @@
             </div>
         </div>
     @endforelse
+</div>
 </div>

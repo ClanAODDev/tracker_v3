@@ -46,7 +46,7 @@ Route::post('settings', function (\Illuminate\Http\Request $request) {
 
 Route::post('settings/part-time-divisions', function (\Illuminate\Http\Request $request) {
     $member = auth()->user()->member;
-    if (!$member) {
+    if (! $member) {
         return response()->json(['error' => 'No member record'], 400);
     }
 
@@ -60,7 +60,7 @@ Route::post('settings/part-time-divisions', function (\Illuminate\Http\Request $
 
 Route::post('settings/ingame-handles', function (\Illuminate\Http\Request $request) {
     $member = auth()->user()->member;
-    if (!$member) {
+    if (! $member) {
         return response()->json(['error' => 'No member record'], 400);
     }
 

@@ -11,7 +11,7 @@
             <div class="award-card-name">
                 {{ $award->division ? Str::replace($award->division->name . ' - ', '', $award->name) : $award->name }}
                 @if ($award->allow_request && empty($legacy))
-                    <i class="fa fa-hand-paper-o text-success" title="Requestable"></i>
+                    <i class="fa fa-hand-pointer text-success" title="Requestable"></i>
                 @endif
             </div>
             <span class="award-pill pill-{{ $award->rarity }}">

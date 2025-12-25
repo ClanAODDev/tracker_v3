@@ -4,11 +4,10 @@
 
     @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
-            <span class="hidden-xs">Promotions Report</span>
-            <span class="visible-xs">Promotions</span>
+            Promotions Report
         @endslot
         @slot ('subheading')
-            {{ $division->name }}
+            {{ $division->name }} Division
         @endslot
     @endcomponent
 
@@ -16,20 +15,18 @@
 
         {!! Breadcrumbs::render('promotions', $division) !!}
 
-        @include ('division.partials.filter-promotions')
+        @include('division.partials.select-panel')
 
-        @if ($year && $month && $promotions->count())
-            <h4>{{ \Carbon\Carbon::createFromDate((int)$year, (int)$month, 1)->format('F Y') }} Promotions</h4>
-            <hr />
-        @elseif ($promotions->count())
-            <h4>{{ \Carbon\Carbon::now()->format('F Y') }} Promotions</h4>
-            <hr />
-        @endif
+        @include('division.partials.filter-promotions')
 
         @if ($promotions->count())
-            @include ('division.partials.member-promotions', ['promotions' => $promotions])
+            @include('division.partials.member-promotions')
         @else
-            <p>No promotions found.</p>
+            <div class="report-empty">
+                <i class="fa fa-medal"></i>
+                <h4>No Promotions Found</h4>
+                <p>No promotions were recorded for {{ $periodLabel }}.</p>
+            </div>
         @endif
 
     </div>

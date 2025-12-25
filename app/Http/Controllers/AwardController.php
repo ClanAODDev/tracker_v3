@@ -57,12 +57,12 @@ class AwardController extends Controller
 
         $activeAwards = $awards
             ->whereNotNull('division_id')
-            ->filter(fn ($award) => $award->division?->active)
+            ->filter(fn ($award) => $award->division?->active || $award->division?->slug === $divisionSlug)
             ->groupBy('division.name');
 
         $legacyAwards = $awards
             ->whereNotNull('division_id')
-            ->filter(fn ($award) => ! $award->division?->active && $award->recipients_count > 0)
+            ->filter(fn ($award) => ! $award->division?->active && $award->recipients_count > 0 && $award->division?->slug !== $divisionSlug)
             ->groupBy('division.name');
 
         $activeAndClanAwards = $awards->filter(fn ($a) => $a->division_id === null || $a->division?->active);
@@ -72,13 +72,25 @@ class AwardController extends Controller
             'requestable' => $activeAndClanAwards->where('allow_request', true)->count(),
         ];
 
+        $divisionsWithAwards = Award::active()
+            ->whereNotNull('division_id')
+            ->withCount('recipients')
+            ->with('division:id,name,slug,active')
+            ->get()
+            ->filter(fn ($award) => $award->division?->active || $award->recipients_count > 0)
+            ->pluck('division')
+            ->unique('id')
+            ->sortBy([['active', 'desc'], ['name', 'asc']])
+            ->values();
+
         return view('division.awards.index', compact(
             'awards',
             'clanAwards',
             'activeAwards',
             'legacyAwards',
             'totals',
-            'divisionSlug'
+            'divisionSlug',
+            'divisionsWithAwards'
         ));
     }
 

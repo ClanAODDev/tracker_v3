@@ -53,16 +53,13 @@ class DivisionStructureController extends Controller
             $env->addFunction(new \Twig\TwigFunction('ordSuffix', fn ($value) => ordSuffix($value)));
 
             $env->addFunction(new \Twig\TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
-                // Are they using the standard Twig syntax?
                 if (\is_array($search) && $replace === null) {
                     return strtr($str, $search);
                 }
-                // Is this a regular expression?
                 if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
                     return preg_replace($search, $replace, $str);
                 }
 
-                // Otherwise use str_replace
                 return str_replace($search, $replace, $str);
             }));
 
@@ -71,7 +68,19 @@ class DivisionStructureController extends Controller
             $this->handleTwigError($error);
         }
 
-        return view('division.structure', compact('data', 'division'));
+        $stats = (object) [
+            'members' => $division->members()->count(),
+            'platoons' => $division->platoons()->count(),
+            'squads' => $division->squads()->count(),
+            'leaders' => $division->leaders()->count(),
+        ];
+
+        $lastUpdated = $division->activity()
+            ->where('name', 'updated_structure')
+            ->latest()
+            ->first();
+
+        return view('division.structure', compact('data', 'division', 'stats', 'lastUpdated'));
     }
 
     /**
@@ -98,6 +107,49 @@ class DivisionStructureController extends Controller
         $this->showSuccessToast('Division structure was successfully updated!');
 
         return redirect(route('division.structure', $division->slug));
+    }
+
+    public function preview(Request $request, Division $division)
+    {
+        $this->authorize('editDivisionStructure', auth()->user());
+
+        $template = $request->input('template', '');
+
+        try {
+            $compiledData = $this->compileDivisionData($division);
+
+            $templates = ['structure' => $template];
+
+            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader($templates), [
+                'autoescape' => false,
+            ]);
+
+            $env->addFunction(new \Twig\TwigFunction('ordSuffix', fn ($value) => ordSuffix($value)));
+
+            $env->addFunction(new \Twig\TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
+                if (\is_array($search) && $replace === null) {
+                    return strtr($str, $search);
+                }
+                if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
+                    return preg_replace($search, $replace, $str);
+                }
+
+                return str_replace($search, $replace, $str);
+            }));
+
+            $output = $env->render('structure', ['division' => $compiledData]);
+
+            return response()->json([
+                'success' => true,
+                'output' => $output,
+                'characters' => strlen($output),
+            ]);
+        } catch (\Exception $error) {
+            return response()->json([
+                'success' => false,
+                'error' => $error->getMessage(),
+            ]);
+        }
     }
 
     /**

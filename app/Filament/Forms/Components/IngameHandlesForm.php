@@ -26,6 +26,7 @@ class IngameHandlesForm
                 if (! empty($state['handle_id'])) {
                     $handle = Handle::find($state['handle_id']);
                 }
+
                 return $handle?->label ?? 'New Handle';
             })
             ->schema([

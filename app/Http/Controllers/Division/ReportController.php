@@ -74,17 +74,58 @@ class ReportController extends \App\Http\Controllers\Controller
 
         $totalRecruitCount = (int) $activityCounts->sum('recruits');
 
-        $recruits = $this->division
-            ->recruitsLast6Months($division->id, $range['start'], $range['end'] ?? null)
-            ->map(fn ($r) => [$r->date, $r->recruits]);
+        $recruitsRaw = $this->division
+            ->recruitsLast6Months($division->id, $range['start'], $range['end'] ?? null);
 
-        $removals = $this->division
-            ->removalsLast6Months($division->id, $range['start'], $range['end'] ?? null)
-            ->map(fn ($r) => [$r->date, $r->removals]);
+        $removalsRaw = $this->division
+            ->removalsLast6Months($division->id, $range['start'], $range['end'] ?? null);
 
-        $population = $this->division
-            ->populationLast6Months($division->id, $range['start'], $range['end'] ?? null)
-            ->map(fn ($r) => [$r->date, $r->count]);
+        $populationRaw = $this->division
+            ->populationLast6Months($division->id, $range['start'], $range['end'] ?? null);
+
+        $totalRemovals = $removalsRaw->sum('removals');
+
+        $allMonths = collect();
+        $current = Carbon::parse($range['start'])->startOfMonth();
+        $endMonth = Carbon::parse($range['end'])->startOfMonth();
+        while ($current->lte($endMonth)) {
+            $allMonths->push([
+                'bucket' => $current->format('Y-m'),
+                'date' => $current->format('M y'),
+            ]);
+            $current->addMonth();
+        }
+
+        $recruitsKeyed = $recruitsRaw->keyBy('bucket');
+        $removalsKeyed = $removalsRaw->keyBy('bucket');
+        $populationKeyed = $populationRaw->keyBy('bucket');
+
+        $recruits = $allMonths->map(fn ($m) => [
+            $m['date'],
+            $recruitsKeyed->has($m['bucket']) ? $recruitsKeyed->get($m['bucket'])->recruits : 0,
+        ]);
+
+        $removals = $allMonths->map(fn ($m) => [
+            $m['date'],
+            $removalsKeyed->has($m['bucket']) ? $removalsKeyed->get($m['bucket'])->removals : 0,
+        ]);
+
+        $population = $allMonths->map(fn ($m) => [
+            $m['date'],
+            $populationKeyed->has($m['bucket']) ? $populationKeyed->get($m['bucket'])->count : 0,
+        ]);
+
+        $netChange = $totalRecruitCount - $totalRemovals;
+        $retentionRate = $totalRecruitCount > 0
+            ? round((($totalRecruitCount - $totalRemovals) / $totalRecruitCount) * 100, 1)
+            : 0;
+
+        $stats = [
+            'recruits' => $totalRecruitCount,
+            'removals' => $totalRemovals,
+            'netChange' => $netChange,
+            'retentionRate' => $retentionRate,
+        ];
 
         return view('division.reports.retention-report', compact(
             'division',
@@ -93,17 +134,34 @@ class ReportController extends \App\Http\Controllers\Controller
             'population',
             'range',
             'recruits',
-            'removals'
+            'removals',
+            'stats'
         ));
     }
 
     public function voiceReport(Division $division)
     {
-        $discordIssues = $division->members()->misconfiguredDiscord()->get();
+        $discordIssues = $division->members()
+            ->misconfiguredDiscord()
+            ->with('platoon')
+            ->orderBy('last_voice_status')
+            ->orderBy('name')
+            ->get();
+
+        $groupedByStatus = $discordIssues->groupBy(fn ($m) => $m->last_voice_status->value);
+
+        $stats = [
+            'total' => $discordIssues->count(),
+            'disconnected' => $groupedByStatus->get('disconnected')?->count() ?? 0,
+            'neverConnected' => $groupedByStatus->get('never_connected')?->count() ?? 0,
+            'neverConfigured' => $groupedByStatus->get('never_configured')?->count() ?? 0,
+        ];
 
         return view('division.reports.voice-report', compact(
             'division',
             'discordIssues',
+            'groupedByStatus',
+            'stats',
         ));
     }
 
@@ -112,7 +170,7 @@ class ReportController extends \App\Http\Controllers\Controller
      */
     public function censusReport(Division $division)
     {
-        $censuses = $division->census->sortByDesc('created_at')->take(52);
+        $censuses = $division->census->sortByDesc('created_at')->take(52)->values();
 
         $populations = $censuses->values()->map(fn ($census, $key) => [
             $census->javascriptTimestamp, $census->count,
@@ -134,6 +192,29 @@ class ReportController extends \App\Http\Controllers\Controller
             'x' => $key, 'y' => $censuses->values()->pluck('count'), 'contents' => $census->notes,
         ])->values();
 
+        $latest = $censuses->first();
+        $previous = $censuses->skip(1)->first();
+
+        $stats = [
+            'population' => $latest?->count ?? 0,
+            'voicePercent' => $latest && $latest->count > 0
+                ? round($latest->weekly_voice_count / $latest->count * 100, 1)
+                : 0,
+            'popChange' => $latest && $previous ? $latest->count - $previous->count : 0,
+            'voiceChange' => 0,
+            'avgVoice' => 0,
+        ];
+
+        if ($previous && $previous->count > 0 && $latest) {
+            $prevVoice = round($previous->weekly_voice_count / $previous->count * 100, 1);
+            $stats['voiceChange'] = round($stats['voicePercent'] - $prevVoice, 1);
+        }
+
+        $recentWithPop = $censuses->take(4)->filter(fn ($c) => $c->count > 0);
+        if ($recentWithPop->count() > 0) {
+            $stats['avgVoice'] = round($recentWithPop->avg(fn ($c) => $c->weekly_voice_count / $c->count * 100), 1);
+        }
+
         return view('division.reports.census', compact(
             'division',
             'populations',
@@ -142,6 +223,7 @@ class ReportController extends \App\Http\Controllers\Controller
             'censuses',
             'weeklyTsActive',
             'weeklyDiscordActive',
+            'stats',
         ));
     }
 
@@ -152,8 +234,22 @@ class ReportController extends \App\Http\Controllers\Controller
         $month = null,
         $year = null
     ) {
-        $month = $month ?? $request->query('month');
-        $year = $year ?? $request->query('year');
+        if ($period = $request->query('period')) {
+            [$year, $month] = explode('-', $period);
+            $year = (int) $year;
+            $month = (int) $month;
+        } else {
+            $month = $month ? (int) $month : null;
+            $year = $year ? (int) $year : null;
+        }
+
+        $promotionPeriods = $this->promotionPeriodsFromActions($division);
+
+        if ((! $month || ! $year) && $promotionPeriods->isNotEmpty()) {
+            $firstPeriod = $promotionPeriods->first();
+            $year = $firstPeriod['year'];
+            $month = $firstPeriod['month'];
+        }
 
         try {
             $promotions = $this->getDivisionPromotions($division, $month, $year);
@@ -172,7 +268,9 @@ class ReportController extends \App\Http\Controllers\Controller
 
         $counts = $promotions->groupBy('rank')->map->count()->values();
 
-        $promotionPeriods = $this->promotionPeriodsFromActions($division);
+        $periodLabel = $year && $month
+            ? Carbon::createFromDate((int) $year, (int) $month, 1)->format('F Y')
+            : now()->format('F Y');
 
         return view('division.reports.promotions', [
             'promotions' => $promotions,
@@ -182,6 +280,7 @@ class ReportController extends \App\Http\Controllers\Controller
             'month' => $month,
             'ranks' => $ranks,
             'counts' => $counts,
+            'periodLabel' => $periodLabel,
         ]);
     }
 
@@ -222,6 +321,7 @@ class ReportController extends \App\Http\Controllers\Controller
             ->whereNotNull('approved_at')
             ->whereBetween('approved_at', [$start, $end])
             ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+            ->orderByDesc('rank')
             ->orderByDesc('approved_at')
             ->get();
     }

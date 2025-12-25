@@ -191,3 +191,21 @@
     @include('division.awards.partials.award-form')
 
 @endsection
+
+@if($award->allow_request && ($award->division?->active ?? true))
+@section('footer_scripts')
+<script>
+$(function() {
+    $('#request-for-self').on('click', function() {
+        $('#member').val('{{ auth()->user()->member->name ?? '' }}');
+        $('#member_id').val('{{ auth()->user()->member->clan_id ?? '' }}');
+    });
+
+    $('#award-request-form').on('submit', function() {
+        var $btn = $('#award-submit-btn');
+        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
+    });
+});
+</script>
+@endsection
+@endif

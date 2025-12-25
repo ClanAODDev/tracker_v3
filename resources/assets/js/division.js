@@ -5,45 +5,116 @@ var Division = Division || {};
   Division = {
 
     initUnassigned: function () {
+      var self = this;
 
-      $(function () {
+      $('.organize-platoons-btn').on('click', function() {
+        var $btn = $(this);
+        var isOrganizing = $('.platoon-assignments-section').hasClass('organize-mode');
 
-        $('.unassigned').draggable({
-          revert: true,
-        });
+        if (!isOrganizing) {
+          $btn.html('<i class="fa fa-check"></i> Done');
+          $btn.removeClass('btn-accent').addClass('btn-success');
+          $('.unassigned-organizer-members').slideDown(200);
+          $('.platoon-assignments-section').addClass('organize-mode');
+          self.enablePlatoonDragDrop();
+        } else {
+          $btn.html('<i class="fa fa-arrows-alt"></i> Organize');
+          $btn.removeClass('btn-success').addClass('btn-accent');
+          $('.unassigned-organizer-members').slideUp(200);
+          $('.platoon-assignments-section').removeClass('organize-mode');
+        }
+      });
 
-        $('.platoon').droppable({
-          hoverClass: 'panel-c-success',
-          drop: function (event, ui) {
+      $('.platoon').on('click', function(e) {
+        if ($('.platoon-assignments-section').hasClass('organize-mode')) {
+          e.preventDefault();
+        }
+      });
+    },
 
-            let platoon = $(this),
-              base_url = window.Laravel.appPath,
-              draggableId = ui.draggable.attr('data-member-id'),
-              droppableId = platoon.attr('data-platoon-id');
+    initScrollToOrganize: function () {
+      var self = this;
 
-            $.ajax({
-              type: 'POST',
-              url: base_url + '/members/' + draggableId + '/assign-platoon',
-              data: {
-                platoon_id: droppableId,
-                _token: $('meta[name=csrf-token]').attr('content')
-              },
-              success: function (response) {
-                toastr.success('Member was assigned to platoon #' + droppableId);
-                $(ui.draggable).remove();
-                if ($('.unassigned').length < 1) {
-                  $('.unassigned-container').slideUp();
-                }
-              },
-            });
+      $(document).on('click', '.scroll-to-organize', function(e) {
+        var $target = $('#platoons');
+        if (!$target.length) return;
+
+        e.preventDefault();
+
+        $('html, body').animate({
+          scrollTop: $target.offset().top - 20
+        }, 400, function() {
+          var $organizeBtn = $('.organize-platoons-btn');
+          var isOrganizing = $('.platoon-assignments-section').hasClass('organize-mode');
+
+          if (!isOrganizing && $organizeBtn.length) {
+            $organizeBtn.trigger('click');
           }
+
+          $target.addClass('highlight-section');
+          setTimeout(function() {
+            $target.removeClass('highlight-section');
+          }, 1500);
         });
+      });
+    },
+
+    enablePlatoonDragDrop: function () {
+      var self = this;
+
+      if ($('.unassigned-platoon-member').data('ui-draggable')) {
+        return;
+      }
+
+      $('.unassigned-platoon-member').draggable({
+        revert: true,
+        revertDuration: 200,
+        zIndex: 1000,
+        cursor: 'grabbing',
+        helper: 'clone',
+        appendTo: 'body'
+      });
+
+      $('.platoon').droppable({
+        hoverClass: 'panel-c-success',
+        drop: function (event, ui) {
+          var $platoon = $(this);
+          var base_url = window.Laravel.appPath;
+          var draggableId = ui.draggable.attr('data-member-id');
+          var droppableId = $platoon.attr('data-platoon-id');
+
+          $.ajax({
+            type: 'POST',
+            url: base_url + '/members/' + draggableId + '/assign-platoon',
+            data: {
+              platoon_id: droppableId,
+              _token: $('meta[name=csrf-token]').attr('content')
+            },
+            success: function (response) {
+              toastr.success('Member assigned to platoon!');
+              $(ui.draggable).fadeOut(200, function() {
+                $(this).remove();
+                if ($('.unassigned-platoon-member').length < 1) {
+                  $('.unassigned-organizer').slideUp();
+                  $('.platoon-assignments-section').removeClass('organize-mode');
+                }
+              });
+              var $count = $platoon.find('.platoon-stat-badge .fa-users').parent();
+              var currentCount = parseInt($count.text().trim()) || 0;
+              $count.html('<i class="fa fa-users"></i> ' + (currentCount + 1));
+            },
+            error: function () {
+              toastr.error('Failed to assign member to platoon');
+            }
+          });
+        }
       });
     },
     setup: function () {
       this.initAutocomplete();
       this.initSetup();
       this.initUnassigned();
+      this.initScrollToOrganize();
       this.initPopulationChart();
     },
 
