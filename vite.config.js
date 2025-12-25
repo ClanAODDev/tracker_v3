@@ -14,6 +14,7 @@ export default defineConfig({
                 'resources/assets/js/voice.js',
                 'resources/assets/js/census-graph.js',
                 'resources/assets/js/member-tags.js',
+                'resources/assets/js/retention-graph.js',
             ],
             refresh: true,
         }),

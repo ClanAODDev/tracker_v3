@@ -35,6 +35,12 @@
     "src": "resources/assets/js/recruiting.js",
     "isEntry": true
   },
+  "resources/assets/js/retention-graph.js": {
+    "file": "assets/retention-graph-NVLQzyHr.js",
+    "name": "retention-graph",
+    "src": "resources/assets/js/retention-graph.js",
+    "isEntry": true
+  },
   "resources/assets/js/voice.js": {
     "file": "assets/voice-CwTlL-xb.js",
     "name": "voice",
