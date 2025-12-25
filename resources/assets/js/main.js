@@ -601,6 +601,16 @@ var Tracker = Tracker || {};
             } else {
                 $('body').removeClass('mobile-nav-left');
             }
+
+            if (typeof initSnowStorm === 'function') {
+                var flakesMax = 0;
+                if (settings.snow === 'some_snow') {
+                    flakesMax = 32;
+                } else if (settings.snow === 'all_the_snow') {
+                    flakesMax = 160;
+                }
+                initSnowStorm(flakesMax);
+            }
         },
 
         InitProfileModals: function () {

@@ -1,9 +1,20 @@
 @auth
-    @if(getSnowSetting() && getSnowSetting() != 'no_snow')
-        <script>
-            var snowStorm = function (e, t) {
+    <script>
+        var snowStorm = null;
+        function initSnowStorm(flakesMax) {
+            if (snowStorm && snowStorm.stop) {
+                snowStorm.stop();
+            }
+            document.querySelectorAll('.snowstorm-flake').forEach(function(el) { el.remove(); });
+            snowStorm = null;
+            if (!flakesMax || flakesMax <= 0) {
+                return;
+            }
+            snowStorm = new SnowStormEngine(window, document, flakesMax);
+        }
+        var SnowStormEngine = function (e, t, flakesMaxParam) {
                 this.autoStart = !0, this.excludeMobile = !0,
-                    this.flakesMax = {{ getSnowSetting() === 'some_snow' ? 32 : 160 }},
+                    this.flakesMax = flakesMaxParam || 160,
                     this.flakesMaxActive = this.flakesMax / 2,
                     this.animationInterval = 33, this.useGPU = 0, this.className = null, this.flakeBottom = null,
                     this.followMouse = !0, this.snowColor = "#fff", this.snowCharacter = "&bull;", this.snowStick =
@@ -109,7 +120,7 @@
                     for (e = 0; e < this.flakes.length; e++) this.flakes[e].o.style.display = "block"
                 }, this.SnowFlake = function (e, n, l) {
                     var o = this;
-                    this.type = e, this.x = n || parseInt(w(r - 20), 10), this.y = isNaN(l) ? -w(m) - 12 : l, this.vX = null, this.vY = null, this.vAmpTypes = [1, 1.2, 1.4, 1.6, 1.8], this.vAmp = this.vAmpTypes[this.type] || 1, this.melting = !1, this.meltFrameCount = s.meltFrameCount, this.meltFrames = s.meltFrames, this.meltFrame = 0, this.twinkleFrame = 0, this.active = 1, this.fontSize = 10 + this.type / 5 * 10, this.o = t.createElement("div"), this.o.innerHTML = s.snowCharacter, s.className && this.o.setAttribute("class", s.className), this.o.style.color = s.snowColor, this.o.style.position = p ? "fixed" : "absolute", s.useGPU && i.transform.prop && (this.o.style[i.transform.prop] = "translate3d(0px, 0px, 0px)"), this.o.style.width = s.flakeWidth + "px", this.o.style.height = s.flakeHeight + "px", this.o.style.fontFamily = "arial,verdana", this.o.style.cursor = "default", this.o.style.overflow = "hidden", this.o.style.fontWeight = "normal", this.o.style.zIndex = s.zIndex, x.appendChild(this.o), this.refresh = function () {
+                    this.type = e, this.x = n || parseInt(w(r - 20), 10), this.y = isNaN(l) ? -w(m) - 12 : l, this.vX = null, this.vY = null, this.vAmpTypes = [1, 1.2, 1.4, 1.6, 1.8], this.vAmp = this.vAmpTypes[this.type] || 1, this.melting = !1, this.meltFrameCount = s.meltFrameCount, this.meltFrames = s.meltFrames, this.meltFrame = 0, this.twinkleFrame = 0, this.active = 1, this.fontSize = 10 + this.type / 5 * 10, this.o = t.createElement("div"), this.o.innerHTML = s.snowCharacter, this.o.className = 'snowstorm-flake' + (s.className ? ' ' + s.className : ''), this.o.style.color = s.snowColor, this.o.style.position = p ? "fixed" : "absolute", s.useGPU && i.transform.prop && (this.o.style[i.transform.prop] = "translate3d(0px, 0px, 0px)"), this.o.style.width = s.flakeWidth + "px", this.o.style.height = s.flakeHeight + "px", this.o.style.fontFamily = "arial,verdana", this.o.style.cursor = "default", this.o.style.overflow = "hidden", this.o.style.fontWeight = "normal", this.o.style.zIndex = s.zIndex, x.appendChild(this.o), this.refresh = function () {
                         if (isNaN(o.x) || isNaN(o.y)) return !1;
                         s.setXY(o.o, o.x, o.y)
                     }, this.stick = function () {
@@ -166,7 +177,18 @@
                 }, s.autoStart && s.events.add(e, "load", function t() {
                     s.excludeMobile && o || F(), s.events.remove(e, "load", t)
                 }, !1), this
-            }(window, document);
-        </script>
-    @endif
+            };
+
+        @php
+            $snowSetting = getSnowSetting();
+            $flakesMax = match($snowSetting) {
+                'some_snow' => 32,
+                'all_the_snow' => 160,
+                default => 0,
+            };
+        @endphp
+        document.addEventListener('DOMContentLoaded', function() {
+            initSnowStorm({{ $flakesMax }});
+        });
+    </script>
 @endauth
