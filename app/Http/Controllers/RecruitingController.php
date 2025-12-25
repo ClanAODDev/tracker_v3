@@ -215,12 +215,15 @@ class RecruitingController extends Controller
         }
 
         $name = request('name');
+        $memberId = request('member_id', 0);
 
-        $memberId = request('member_id');
+        try {
+            $result = DB::connection('aod_forums')->select("CALL user_exists(?, ?)", [$name, $memberId]);
 
-        $result = DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
-
-        return response()->json(['memberExists' => ! empty($result)]);
+            return response()->json(['memberExists' => ! empty($result)]);
+        } catch (\Exception $e) {
+            return response()->json(['memberExists' => false]);
+        }
     }
 
     /**
