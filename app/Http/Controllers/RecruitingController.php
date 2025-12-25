@@ -83,6 +83,43 @@ class RecruitingController extends Controller
         return view('recruit.form', compact('division'));
     }
 
+    public function getDivisionRecruitData(Division $division): JsonResponse
+    {
+        $this->authorize('recruit', Member::class);
+
+        $settings = $division->settings();
+        $threads = $settings->get('recruiting_threads', []);
+        $tasks = $settings->get('recruiting_tasks', []);
+
+        return response()->json([
+            'platoons' => $division->platoons->map(fn ($p) => [
+                'id' => $p->id,
+                'name' => $p->name,
+                'squads' => $p->squads->map(fn ($s) => [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                ]),
+            ]),
+            'threads' => collect($threads)->map(fn ($t) => [
+                'name' => $t['thread_name'] ?? '',
+                'id' => $t['thread_id'] ?? '',
+                'comments' => $t['comments'] ?? '',
+                'read' => false,
+            ]),
+            'tasks' => collect($tasks)->map(fn ($t) => [
+                'description' => $t['task_description'] ?? '',
+                'complete' => false,
+            ]),
+            'welcome_area' => $settings->get('welcome_area', ''),
+            'welcome_pm' => $settings->get('welcome_pm', ''),
+            'use_welcome_thread' => $settings->get('use_welcome_thread', false),
+            'locality' => [
+                'platoon' => $division->locality('platoon'),
+                'squad' => $division->locality('squad'),
+            ],
+        ]);
+    }
+
     /**
      * @return array
      */
@@ -141,20 +178,28 @@ class RecruitingController extends Controller
      */
     public function validateMemberId($member_id)
     {
+        $existsInTracker = Member::where('clan_id', $member_id)->exists();
+
         if (app()->environment() === 'local') {
-            return ['is_member' => true, 'valid_group' => true];
+            return [
+                'is_member' => true,
+                'valid_group' => true,
+                'username' => 'LocalTestUser',
+                'exists_in_tracker' => $existsInTracker,
+            ];
         }
 
         $result = $this->callProcedure('get_user', $member_id);
 
         if (! property_exists($result, 'usergroupid')) {
-            return ['is_member' => false, 'valid_group' => false];
+            return ['is_member' => false, 'valid_group' => false, 'exists_in_tracker' => $existsInTracker];
         }
 
         return [
             'is_member' => true,
             'username' => $result->username,
             'valid_group' => $result->usergroupid === Member::REGISTERED_USER,
+            'exists_in_tracker' => $existsInTracker,
         ];
     }
 
@@ -190,7 +235,7 @@ class RecruitingController extends Controller
         $member->name = $request->forum_name;
         $member->join_date = now();
         $member->last_activity = now();
-        $member->recruiter_id = auth()->user()->member->clan_id;
+        $member->recruiter_id = auth()->user()->member?->clan_id ?? auth()->user()->id;
         $member->rank = $request->rank;
         $member->position = Position::MEMBER;
         $member->division_id = $division->id;
@@ -237,7 +282,8 @@ class RecruitingController extends Controller
         }
 
         MemberRequest::create([
-            'requester_id' => auth()->user()->member->clan_id, 'member_id' => $member->clan_id,
+            'requester_id' => auth()->user()->member?->clan_id ?? auth()->user()->id,
+            'member_id' => $member->clan_id,
             'division_id' => $division->id,
         ]);
     }

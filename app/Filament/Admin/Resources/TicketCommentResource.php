@@ -25,7 +25,7 @@ class TicketCommentResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
-    protected static ?string $navigationParentItem = 'Tickets';
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Schema $schema): Schema
     {

@@ -111,41 +111,6 @@
     </li>
 
 
-    <li class="{{ set_active(['help/tickets/*', 'help/tickets']) }}">
-        <a href="#{{ $idPrefix }}tickets" data-toggle="collapse" aria-expanded="false">
-            Help Tickets
-            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
-        </a>
-
-        <ul id="{{ $idPrefix }}tickets"
-            class="nav nav-second {{ request()->is(['help/tickets/*', 'help/tickets']) ? 'expanded' : 'collapse' }}">
-            <li class="{{ set_active(['help/tickets/create', 'help/tickets/setup']) }}">
-                <a href="{{ route('help.tickets.setup') }}">Create New Ticket</a>
-            </li>
-
-            <li>
-                <a href="{{ route('help.tickets.index') . '?filter[caller.name]=' . auth()->user()->name }}">
-                    My Tickets
-                </a>
-            </li>
-
-            @can('manage', \App\Models\Ticket::class)
-                <li>
-                    <a href="{{ route('help.tickets.index') . '?filter[state]=assigned&filter[owner.name]=' . auth()->user()->name }}">
-                        Assigned To Me
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('help.tickets.index') . '?filter[state]=new,assigned' }}">
-                        All Tickets
-                    </a>
-                </li>
-
-            @endcan
-        </ul>
-    </li>
-
-
     @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
         <li class="nav-category">
             Admin

@@ -88,14 +88,6 @@
 
                     <div class="hidden-xs hidden-sm text-center">
                         <h3>{{ $award->name }}</h3>
-                        @if ($award->division)
-                            <span class="label label-default">{{ $award->division->name }}</span>
-                            @unless($award->division->active)
-                                <span class="label label-warning">Legacy</span>
-                            @endunless
-                        @else
-                            <span class="label label-warning">Clan-Wide</span>
-                        @endif
                         <span class="award-pill pill-{{ $stats->rarity }}" style="margin-left: 5px;">{{ ucfirst($stats->rarity) }}</span>
                         <p style="max-width:500px; margin-top: 15px;">{{ $award->description }}</p>
                     </div>

@@ -11,6 +11,10 @@
             TRACKER
             <span>{{ config('app.version') }}</span>
         </a>
+        <button class="mobile-help-toggle visible-xs" title="Help Center" onclick="window.openTicketModal && window.openTicketModal()">
+            Help
+            <span class="help-badge" style="display: none;"></span>
+        </button>
         <button class="mobile-settings-toggle visible-xs" title="Settings">
             <i class="fa fa-cog"></i>
         </button>
@@ -38,6 +42,10 @@
                 <span id="searchclear" class="fa fa-times-circle"></span>
             </div>
         </div>
+        <button class="help-toggle hidden-xs" title="Help Center" onclick="window.openTicketModal && window.openTicketModal()">
+            <i class="fa fa-life-ring"></i>
+            <span class="help-badge" style="display: none;"></span>
+        </button>
         <button class="settings-toggle hidden-xs" title="Settings">
             <i class="fa fa-cog"></i>
         </button>

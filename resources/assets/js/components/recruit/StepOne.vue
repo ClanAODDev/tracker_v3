@@ -1,327 +1,342 @@
 <template>
-  <form @submit.prevent="validateStep">
+  <form @submit.prevent="submitForm" class="recruit-form">
 
-    <h3>Getting Started</h3>
-
-    <p>
-      <a class="btn btn-default m-l-sm" target="_blank"
-         href="https://www.clanaod.net/forums/showthread.php?t=208233">Discord Info</a>
-      <a class="btn btn-default m-l-sm" target="_blank"
-         href="https://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate&pp=30">New Forum Members</a>
-    </p>
-
-    <p class="m-t-lg">Additionally, you should mention the clan-wide membership requirements as part of your
-      recruitment:</p>
-
-    <ul class="c-white">
-      <li>Engage on Discord VoIP when playing a game AOD supports</li>
-      <li>Strive to be a contributing member of your division</li>
-      <li>Always be respectful of other clan members and leadership</li>
-    </ul>
-
-    <h3 class="m-t-xl"><i class="fa fa-address-card text-accent" aria-hidden="true"></i> Step 1: Member Data</h3>
-    <hr/>
-
-    <div class="alert text-center">
-      <i class="fa fa-question-circle text-accent"></i>
-      Training, or just want to look around?
-      <button type="button" name="trngMode" @click="toggleDemoMode" class="btn btn-rounded btn-default">
-        <i class="fa text-success fa-check" v-show="store.inDemoMode"></i>
-        <i class="fa text-danger fa-times" v-show="!store.inDemoMode"></i>
-        Enable Demo Mode
+    <div class="recruit-form-header">
+      <h3>Add New Recruit</h3>
+      <button type="button" class="btn btn-sm" :class="store.inDemoMode ? 'btn-success' : 'btn-default'" @click="toggleDemoMode">
+        <i class="fa" :class="store.inDemoMode ? 'fa-check' : 'fa-flask'"></i>
+        Demo Mode
       </button>
     </div>
 
-    <div class="panel panel-filled">
-      <div class="panel-heading">
-        <strong class="text-uppercase">Information</strong>
-      </div>
-      <div class="panel-body">
-
-        <p>Please be careful and ensure member information is entered accurately. Forum names can be changed
-          when the member status request is submitted, and changed names will sync with the tracker
-          automatically.</p>
-
-        <div class="row">
-
-          <div class="col-md-4 form-group"
-               :class="{'input': true, 'has-warning': !store.validMemberId || !store.verifiedEmail }">
-            <label for="member_id">Forum Member Id</label>
-            <input type="number" class="form-control" name="member_id"
-                   v-model="store.member_id"
-                   id="member_id" v-validate="'required|max:5'"
-                   :disabled="store.inDemoMode"
-                   @blur="validateMemberId"/>
-          </div>
-
-          <div class="col-md-4 form-group"
-               :class="{'input': true, 'has-warning': !store.nameDoesNotExist || errors.has('forum_name') }">
-            <label for="forum_name">Desired Forum Name</label>
-            <input type="text" class="form-control" name="forum_name" v-model="store.forum_name"
-                   id="forum_name" v-validate="{ required: true, regex: /^[\w\s.-]+$/}"
-                   @blur="validateMemberDoesNotExist"
-                   :disabled="store.inDemoMode"/>
-          </div>
-
-          <div class="col-md-4 form-group"
-               :class="{'input': true, 'has-warning': errors.has('ingame_name') }">
-            <label for="ingame_name">{{ store.handleName }}</label>
-            <input type="text" class="form-control" name="ingame_name" v-model="store.ingame_name"
-                   id="ingame_name" :disabled="store.inDemoMode"/>
-          </div>
-
-        </div>
-
-        <div class="row">
-
-          <div class="col-md-4 form-group"
-               :class="{'input': true, 'has-warning': errors.has('rank') }">
-            <label for="rank">Rank</label>
-            <select name="rank" id="rank" class="form-control" v-model="store.rank"
-                    v-validate="{ required: true }">
-              <option :value="id"
-                      :selected="id === 1 ? 'selected' : null"
-                      v-for="(rank,id) in this.ranks"
-              >{{ rank }}
-              </option>
-            </select>
-            <span v-show="errors.has('rank')"
-                  class="help-block">{{ errors.first('rank') }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="panel-footer">
-                   <span v-show="store.validating">
-                       <span class="small">VALIDATING</span> <i class="fa fa-cog fa-spin fa-fw"></i>
-                   </span>
-        <div class="alert alert-danger" v-if="errors.any()">
-          <strong>Some errors were found:</strong>
-          <ul>
-            <li v-for="error in errors">
-              {{ error.msg }}
-            </li>
-          </ul>
-        </div>
-      </div>
+    <div v-if="store.inDemoMode" class="demo-notice">
+      <i class="fa fa-info-circle"></i>
+      Demo mode is active. No data will be saved.
     </div>
 
+    <div v-if="store.loading.divisionData" class="recruit-loading">
+      <i class="fa fa-spinner fa-spin"></i> Loading division data...
+    </div>
 
-    <div class="m-t-xl">
-      <div class="panel panel-filled" v-if="store.division.platoons">
-        <div class="panel-heading text-uppercase">
-          <strong>Assignment</strong>
+    <div v-else-if="store.errors.divisionData" class="recruit-error">
+      <i class="fa fa-exclamation-triangle"></i>
+      {{ store.errors.divisionData }}
+      <button type="button" class="btn btn-sm btn-default" @click="retryLoad">Retry</button>
+    </div>
+
+    <template v-else>
+      <!-- Member Verification Section -->
+      <div class="recruit-section">
+        <div class="recruit-section-header">
+          <i class="fa fa-user-check"></i> Member Verification
         </div>
-        <div class="panel-body">
-          <p>Depending on your division's configuration, a {{ store.locality.platoon }} and {{
-              store.locality.squad
-            }} assignment may be required.</p>
-
+        <div class="recruit-section-body">
           <div class="row">
-            <div class="col-sm-6 form-group">
-              <label for="platoon">{{ store.locality.platoons }}</label>
-              <select name="platoon" id="platoon" class="form-control" v-model="store.platoon"
-                      @change="store.getPlatoonSquads(store.platoon)">
-                <option value="">Select a platoon...</option>
-                <option :value="id" v-for="(name, id, index) in store.division.platoons">
-                  {{ name }}
-                </option>
-              </select>
+            <div class="col-md-4">
+              <div class="form-group" :class="memberIdValidationClass">
+                <label for="member_id">Forum Member ID</label>
+                <div class="input-with-status">
+                  <input type="number" class="form-control" id="member_id"
+                         v-model="store.member.id"
+                         @input="onMemberIdChange"
+                         :disabled="store.inDemoMode"
+                         placeholder="e.g. 12345" />
+                  <span class="input-status" v-if="store.member.id">
+                    <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
+                    <i class="fa fa-check text-success" v-else-if="store.validation.memberId.valid && store.validation.memberId.verifiedEmail"></i>
+                    <i class="fa fa-times text-danger" v-else-if="store.member.id.length > 0"></i>
+                  </span>
+                </div>
+                <span class="help-block text-danger" v-if="store.member.id && !store.validation.memberId.valid && !store.validation.loading">
+                  Member ID not found on forums
+                </span>
+                <span class="help-block text-warning" v-else-if="store.member.id && store.validation.memberId.valid && !store.validation.memberId.verifiedEmail && !store.validation.loading">
+                  Member has not verified their email
+                </span>
+              </div>
             </div>
-            <div class="col-sm-6 form-group">
-              <label for="squad">{{ store.locality.squads }}</label>
-              <select name="squad" id="squad" class="form-control" v-model="store.squad"
-                      :disabled="! store.division.squads.length">
-                <option value="" v-if="! store.division.squads.length" selected>No squads available
-                </option>
-                <option value="" selected v-else>Select a squad...</option>
-                <option :value="squad.id" v-for="squad in store.division.squads">
-                  {{ (squad.name) ? squad.name : 'Squad #' + squad.id }} - {{
-                    (squad.leader) ?
-                        squad.leader.name : 'TBA'
-                  }}
-                  ({{ squad.members.length }} members)
-                </option>
-              </select>
+            <div class="col-md-8" v-if="store.validation.memberId.currentUsername">
+              <div class="form-group">
+                <label>Current Forum Username</label>
+                <div class="current-username">
+                  <i class="fa fa-user"></i> {{ store.validation.memberId.currentUsername }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="panel panel-filled panel-c-danger" v-else>
-        <div class="panel-heading text-uppercase">
-          <strong>Assignment</strong>
+      <!-- Recruit Details Section -->
+      <div class="recruit-section">
+        <div class="recruit-section-header">
+          <i class="fa fa-id-card"></i> Recruit Details
         </div>
-        <div class="panel-body">
-          <p>
-            <i class="fa fa-exclamation-triangle text-danger"></i> Your division has no {{
-              store.locality.platoons
-            }}, so assignment is not unavailable. A division leader will need to
-            create one.
-          </p>
+        <div class="recruit-section-body">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group" :class="forumNameValidationClass">
+                <label for="forum_name">Forum Name</label>
+                <div class="input-with-status">
+                  <input type="text" class="form-control" id="forum_name"
+                         v-model="store.member.forum_name"
+                         @input="onForumNameChange"
+                         :disabled="store.inDemoMode"
+                         placeholder="Desired forum name" />
+                  <span class="input-status" v-if="store.member.forum_name">
+                    <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
+                    <i class="fa fa-check text-success" v-else-if="store.validation.forumName.valid"></i>
+                    <i class="fa fa-times text-danger" v-else></i>
+                  </span>
+                </div>
+                <span class="help-block" v-if="store.member.forum_name && store.validation.forumName.valid">
+                  Will become: <strong>{{ store.getFormattedName() }}</strong>
+                </span>
+                <span class="help-block text-danger" v-else-if="store.member.forum_name && store.member.forum_name.toLowerCase().startsWith('aod_')">
+                  Do not include "AOD_" prefix
+                </span>
+                <span class="help-block text-danger" v-else-if="store.member.forum_name && !store.validation.forumName.available && !store.validation.loading">
+                  This name is already taken
+                </span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="ingame_name">In-Game Handle <span class="text-muted">(optional)</span></label>
+                <input type="text" class="form-control" id="ingame_name"
+                       v-model="store.member.ingame_name"
+                       :disabled="store.inDemoMode"
+                       placeholder="In-game name" />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group" :class="{ 'has-error': !store.member.rank && submitted }">
+                <label for="rank">Rank</label>
+                <select id="rank" class="form-control" v-model="store.member.rank">
+                  <option value="">Select rank...</option>
+                  <option v-for="(name, id) in ranks" :key="id" :value="id">{{ name }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <button type="submit" class="btn btn-success pull-right">
-      Continue <i class="fa fa-arrow-right"></i>
-    </button>
+      <!-- Assignment Section -->
+      <div class="recruit-section" v-if="store.division.platoons.length">
+        <div class="recruit-section-header">
+          <i class="fa fa-users"></i> Assignment
+        </div>
+        <div class="recruit-section-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="platoon">{{ store.division.locality.platoon }}</label>
+                <select id="platoon" class="form-control" v-model="store.member.platoon" @change="onPlatoonChange">
+                  <option value="">Select {{ store.division.locality.platoon.toLowerCase() }}...</option>
+                  <option v-for="platoon in store.division.platoons" :key="platoon.id" :value="platoon.id">
+                    {{ platoon.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="squad">{{ store.division.locality.squad }} <span class="text-muted">(optional)</span></label>
+                <select id="squad" class="form-control" v-model="store.member.squad" :disabled="!selectedPlatoonSquads.length">
+                  <option value="">{{ selectedPlatoonSquads.length ? 'Select ' + store.division.locality.squad.toLowerCase() + '...' : 'No ' + store.division.locality.squad.toLowerCase() + 's available' }}</option>
+                  <option v-for="squad in selectedPlatoonSquads" :key="squad.id" :value="squad.id">
+                    {{ squad.name || 'Squad #' + squad.id }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agreements Section (Collapsible) -->
+      <div class="recruit-section recruit-section-collapsible" v-if="store.division.threads.length">
+        <div class="recruit-section-header" @click="toggleSection('agreements')">
+          <i class="fa fa-file-contract"></i> Agreements
+          <span class="section-toggle">
+            <i class="fa" :class="sections.agreements ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+          </span>
+        </div>
+        <div class="recruit-section-body" v-show="sections.agreements">
+          <p class="text-muted">Confirm the recruit has read the following:</p>
+          <div class="agreement-list">
+            <div v-for="(thread, index) in store.division.threads" :key="index" class="agreement-item">
+              <label class="agreement-item-content">
+                <input type="checkbox" v-model="thread.read" />
+                <span class="agreement-name">
+                  <a :href="getThreadUrl(thread.id)" target="_blank">
+                    {{ thread.name }}
+                  </a>
+                </span>
+                <span class="agreement-comment text-muted" v-if="thread.comments">{{ thread.comments }}</span>
+              </label>
+              <button type="button" class="btn btn-xs btn-default agreement-copy" @click="copyThreadUrl(thread.id)" title="Copy URL">
+                <i class="fa fa-clone"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tasks Section (Collapsible) -->
+      <div class="recruit-section recruit-section-collapsible" v-if="store.division.tasks.length">
+        <div class="recruit-section-header" @click="toggleSection('tasks')">
+          <i class="fa fa-tasks"></i> In-Processing Tasks
+          <span class="section-toggle">
+            <i class="fa" :class="sections.tasks ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+          </span>
+        </div>
+        <div class="recruit-section-body" v-show="sections.tasks">
+          <p class="text-muted">Checklist for onboarding the new recruit:</p>
+          <div class="task-list">
+            <label v-for="(task, index) in store.division.tasks" :key="index" class="task-item">
+              <input type="checkbox" v-model="task.complete" />
+              <span class="task-description" v-html="linkifyUrls(task.description)"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Display -->
+      <div class="recruit-error" v-if="store.errors.submission">
+        <i class="fa fa-exclamation-triangle"></i>
+        {{ store.errors.submission }}
+      </div>
+
+      <!-- Form Actions -->
+      <div class="recruit-form-actions">
+        <a :href="cancelUrl" class="btn btn-default">Cancel</a>
+        <button type="submit" class="btn btn-success" :disabled="!store.isFormValid() || store.submitting">
+          <span v-if="store.submitting">
+            <i class="fa fa-spinner fa-spin"></i> Adding Recruit...
+          </span>
+          <span v-else>
+            Add Recruit <i class="fa fa-arrow-right"></i>
+          </span>
+        </button>
+      </div>
+    </template>
   </form>
 </template>
 
 <script>
 import store from './store.js';
-import toastr from 'toastr';
-import ProgressBar from './ProgressBar.vue';
-import {focus} from 'vue-focus';
 
 export default {
-  directives: {focus: focus},
-  props: ['ranks', 'recruiter-id'],
+  props: ['ranks', 'recruiterId', 'divisionSlug', 'cancelUrl'],
 
-  methods: {
-    validateStep: function () {
-
-      this.$validator.validateAll().then((result) => {
-
-        if (!result || this.$validator.errors.any()) {
-          toastr.error('Something is wrong with your member information', 'Error');
-          return false;
-        }
-
-        if (store.validating) {
-          // don't allow progress if validating
-          toastr.error('Not ready yet...', 'Error');
-          return false;
-        }
-
-        store.getDivisionThreads(store.division.slug);
-        store.currentStep = 'step-two';
-        store.progress = 50;
-      }).catch(() => {
-        toastr.error('Something is wrong with your member information', 'Error');
-        return false;
-      });
-
-    },
-
-    validateMemberDoesNotExist: function () {
-
-      if ((store.forum_name.includes('AOD_') || store.forum_name.includes('aod_')) && !this.$validator.errors.has('forum_name_aod')) {
-        this.$validator.errors.add({
-          field: 'forum_name_aod',
-          msg: 'Do not include "AOD_" in the desired forum name'
-        });
-      } else {
-        this.$validator.errors.remove('forum_name_aod');
-      }
-
-      // don't attempt to query a badly formatted name
-      if (store.forum_name && store.member_id && !this.$validator.errors.has('forum_name')) {
-        store.validating = true;
-        axios.post(window.Laravel.appPath + '/validate-name/', {
-          name: store.forum_name.toLowerCase(),
-          member_id: store.member_id
-        }).then((response) => {
-          if (response.data.memberExists) {
-            if (!this.$validator.errors.has('forum_name_exists')) {
-              this.$validator.errors.add({
-                field: 'forum_name_exists',
-                msg: 'The desired forum name is already taken'
-              });
-            }
-            store.nameDoesNotExist = false;
-          } else {
-            this.$validator.errors.remove('forum_name_exists');
-            store.nameDoesNotExist = true;
-          }
-          store.validating = false;
-        });
-      }
-
-    },
-
-    validateMemberId: function () {
-      if (store.member_id) {
-
-        if (store.member_id === store.recruiter_id) {
-          this.$validator.errors.add({
-            field: 'member_id',
-            msg: "You can't recruit yourself, dummy!"
-          });
-          return false;
-        }
-
-        store.validating = true;
-        axios.post(window.Laravel.appPath + '/validate-id/' + store.member_id)
-            .then((response) => {
-              if (!response.data.is_member) {
-                store.validMemberId = false;
-                if (!this.$validator.errors.has('member_id')) {
-                  this.$validator.errors.add({
-                    field: 'member_id',
-                    msg: 'The provided member id is invalid'
-                  });
-                }
-              } else {
-                this.$validator.errors.remove('member_id');
-                store.validMemberId = true;
-                // force update to form field
-                store.forum_name = response.data.username;
-              }
-
-              if (!response.data.valid_group) {
-                if (!this.$validator.errors.has('member_id_email')) {
-                  this.$validator.errors.add({
-                    field: 'member_id_email',
-                    msg: 'The provided member is not in the registered users group. Did they verify their email? Authlink?'
-                  });
-                }
-                store.verifiedEmail = false;
-              } else {
-                this.$validator.errors.remove('member_id_email')
-                store.verifiedEmail = true;
-              }
-              store.validating = false;
-            });
-      }
-    },
-
-    forumNameToIngameName: () => {
-      store.ingame_name = store.forum_name;
-    },
-
-    /**
-     * Provide dummy data for training
-     */
-    toggleDemoMode: () => {
-      store.inDemoMode = !store.inDemoMode;
-
-      if (store.inDemoMode) {
-        store.member_id = 99999;
-        store.rank = 1;
-        store.forum_name = 'test-user';
-        store.ingame_name = 'test-user';
-
-        toastr.success('Demo mode enabled!', 'Success!');
-      } else {
-        store.member_id = '';
-        store.forum_name = '';
-        store.ingame_name = '';
-
-        toastr.success('Demo mode disabled!', 'Success!');
-      }
-    },
-  },
-
-  components: {
-    'progress-bar': ProgressBar
-  },
-
-  data: function () {
+  data() {
     return {
-      store
+      store,
+      submitted: false,
+      sections: {
+        agreements: false,
+        tasks: false,
+      },
     };
   },
-};
 
+  computed: {
+    memberIdValidationClass() {
+      if (!store.member.id) return {};
+      if (store.validation.loading) return {};
+      if (store.validation.memberId.valid && store.validation.memberId.verifiedEmail) {
+        return { 'has-success': true };
+      }
+      return { 'has-error': true };
+    },
+
+    forumNameValidationClass() {
+      if (!store.member.forum_name) return {};
+      if (store.validation.loading) return {};
+      if (store.validation.forumName.valid) {
+        return { 'has-success': true };
+      }
+      return { 'has-error': true };
+    },
+
+    selectedPlatoonSquads() {
+      return store.getSquadsForPlatoon(store.member.platoon);
+    },
+
+    isNewMember() {
+      return store.validation.memberId.valid && !store.validation.memberId.existsInTracker;
+    },
+  },
+
+  watch: {
+    isNewMember(isNew) {
+      if (isNew) {
+        this.sections.agreements = true;
+        this.sections.tasks = true;
+      }
+    },
+  },
+
+  methods: {
+    toggleDemoMode() {
+      store.toggleDemoMode();
+    },
+
+    toggleSection(section) {
+      this.sections[section] = !this.sections[section];
+    },
+
+    onMemberIdChange() {
+      store.validateMemberId(store.member.id);
+    },
+
+    onForumNameChange() {
+      store.validateForumName(store.member.forum_name, store.member.id);
+    },
+
+    onPlatoonChange() {
+      store.member.squad = '';
+    },
+
+    retryLoad() {
+      store.loadDivisionData(this.divisionSlug);
+    },
+
+    getThreadUrl(threadId) {
+      return `https://www.clanaod.net/forums/showthread.php?t=${threadId}`;
+    },
+
+    copyThreadUrl(threadId) {
+      const url = this.getThreadUrl(threadId);
+      navigator.clipboard.writeText(url).then(() => {
+        toastr.success('URL copied to clipboard');
+      });
+    },
+
+    linkifyUrls(text) {
+      if (!text) return '';
+      const urlPattern = /(https?:\/\/[^\s<]+)/g;
+      return text.replace(urlPattern, '<a href="$1" target="_blank">$1</a>');
+    },
+
+    submitForm() {
+      this.submitted = true;
+
+      if (!store.isFormValid()) {
+        return;
+      }
+
+      store.submitRecruitment().catch(() => {
+        // Error is handled in store
+      });
+    },
+  },
+
+  mounted() {
+    store.recruiter_id = this.recruiterId;
+    store.loadDivisionData(this.divisionSlug);
+  },
+};
 </script>

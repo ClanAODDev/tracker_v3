@@ -1,165 +1,256 @@
-/**
- * JS Store
- * Using a single source of truth to act as a DTO between
- * Vue components. This allows us to simplify the process
- * of maintaining application state
- */
+import { reactive } from 'vue';
 
-let store = {};
+const store = reactive({
+    base_url: window.Laravel.appPath,
+    currentStep: 'form',
+    inDemoMode: false,
+    submitting: false,
+    submitted: false,
+    recruiter_id: null,
 
-export default store;
+    member: {
+        id: '',
+        forum_name: '',
+        ingame_name: '',
+        rank: '',
+        platoon: '',
+        squad: '',
+    },
 
-store.base_url = window.Laravel.appPath;
+    validation: {
+        loading: false,
+        memberId: {
+            valid: false,
+            verifiedEmail: false,
+            currentUsername: '',
+            existsInTracker: false,
+        },
+        forumName: {
+            valid: false,
+            available: false,
+        },
+    },
 
-/**
- * =====================
- * Recruiting handlers
- * =====================
- */
+    division: {
+        slug: '',
+        platoons: [],
+        threads: [],
+        tasks: [],
+        welcome_area: '',
+        welcome_pm: '',
+        use_welcome_thread: false,
+        locality: {
+            platoon: 'Platoon',
+            squad: 'Squad',
+        },
+    },
 
-// are we in test mode?
-store.inDemoMode = false;
-store.loadingThreads = false;
-store.validating = null;
+    loading: {
+        divisionData: false,
+    },
 
-// so recruiters don't try to recruit themselves...
-store.recruiter_id = null;
-store.currentName = "";
+    errors: {
+        divisionData: null,
+        submission: null,
+    },
+});
 
-// application states
-store.currentStep = "step-one";
-store.progress = 25;
+let debounceTimers = {};
 
-// member data
-store.member_id = "";
-store.ingame_name = "";
-store.rank = "";
-store.forum_name = "";
-store.platoon = "";
-store.squad = "";
-store.validMemberId = false;
-store.verifiedEmail = false;
-store.nameDoesNotExist = false;
+function debounce(key, fn, delay = 300) {
+    if (debounceTimers[key]) {
+        clearTimeout(debounceTimers[key]);
+    }
+    debounceTimers[key] = setTimeout(fn, delay);
+}
 
-// division data
-store.handleName = '';
-store.division = {
-    slug: '',
-    settings: [],
-    platoons: [],
-    squads: [],
-    threads: [],
-    tasks: []
-};
+store.loadDivisionData = (divisionSlug) => {
+    store.loading.divisionData = true;
+    store.errors.divisionData = null;
+    store.division.slug = divisionSlug;
 
-// locality data
-store.locality = {
-    platoon: "Platoon",
-    platoons: "Platoons",
-    squad: "Squad",
-    squads: "Squads",
-};
-
-/**
- * fetches platoons for recruiting
- *
- * @param division
- */
-store.getPlatoons = (division) => {
-    axios.get(store.base_url + '/division-platoons/' + division)
-        .then(function (response) {
-            store.division.platoons = response.data.data.platoons;
-            store.division.settings = response.data.data.settings;
+    return axios.get(`${store.base_url}/divisions/${divisionSlug}/recruit/data`)
+        .then((response) => {
+            const data = response.data;
+            store.division.platoons = data.platoons || [];
+            store.division.threads = data.threads || [];
+            store.division.tasks = data.tasks || [];
+            store.division.welcome_area = data.welcome_area || '';
+            store.division.welcome_pm = data.welcome_pm || '';
+            store.division.use_welcome_thread = data.use_welcome_thread || false;
+            store.division.locality = data.locality || { platoon: 'Platoon', squad: 'Squad' };
+            store.loading.divisionData = false;
         })
-        .catch(function (error) {
-            toastr.error(error, 'Something went wrong while fetching division platoons');
+        .catch((error) => {
+            store.loading.divisionData = false;
+            store.errors.divisionData = 'Failed to load division data. Please refresh and try again.';
+            console.error('Division data load error:', error);
         });
 };
 
-/**
- * fetches a division's required agreement threads
- *
- * @param division
- */
-store.getDivisionThreads = (division) => {
-    store.loadingThreads = true;
-    axios.post(store.base_url + '/search-division-threads', {
-        division: division,
-        string: store.member_id,
-        isTesting: store.inDemoMode,
-    }).then(function (response) {
-        store.loadingThreads = false;
-        store.division.threads = response.data;
-    }).catch(function (error) {
-        toastr.error(error, 'Something went wrong while fetching division threads');
-    });
+store.getSquadsForPlatoon = (platoonId) => {
+    const platoon = store.division.platoons.find(p => p.id === parseInt(platoonId));
+    return platoon ? platoon.squads : [];
 };
 
-/**
- * fetches a platoon's squads
- *
- * @param platoon
- */
-store.getPlatoonSquads = (platoon) => {
-    if (store.platoon == '') {
+store.validateMemberId = (memberId) => {
+    if (!memberId || memberId.length < 1) {
+        store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false };
         return;
     }
 
-    axios.post(store.base_url + '/platoon-squads/', {
-        platoon: platoon
-    }).then(function (response) {
-        store.division.squads = response.data;
-    }).catch(function (error) {
-        toastr.error(error, 'Something went wrong while fetching platoon squads');
-    });
+    store.validation.loading = true;
+
+    debounce('memberId', () => {
+        if (store.inDemoMode) {
+            store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'DemoUser', existsInTracker: false };
+            store.validation.loading = false;
+            return;
+        }
+
+        axios.post(`${store.base_url}/validate-id/${memberId}`)
+            .then((response) => {
+                const data = response.data;
+                store.validation.memberId = {
+                    valid: data.is_member || false,
+                    verifiedEmail: data.valid_group || false,
+                    currentUsername: data.username || '',
+                    existsInTracker: data.exists_in_tracker || false,
+                };
+                store.validation.loading = false;
+            })
+            .catch(() => {
+                store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false };
+                store.validation.loading = false;
+            });
+    }, 300);
 };
 
-/**
- * fetch a division's recruiting tasks
- *
- * @param division
- */
-store.getTasks = (division) => {
-    axios.post(store.base_url + '/division-tasks/', {
-        division: division
-    }).then(function (response) {
-        store.division.tasks = response.data;
-    }).catch(function (error) {
-        toastr.error(error, 'Division tasks could not be retrieved');
-    });
+store.validateForumName = (name, memberId) => {
+    if (!name || name.length < 1) {
+        store.validation.forumName = { valid: false, available: false };
+        return;
+    }
+
+    const hasAodPrefix = name.toLowerCase().startsWith('aod_');
+    if (hasAodPrefix) {
+        store.validation.forumName = { valid: false, available: false };
+        return;
+    }
+
+    store.validation.loading = true;
+
+    debounce('forumName', () => {
+        if (store.inDemoMode) {
+            store.validation.forumName = { valid: true, available: true };
+            store.validation.loading = false;
+            return;
+        }
+
+        axios.post(`${store.base_url}/validate-name`, { name, member_id: memberId })
+            .then((response) => {
+                const available = !response.data.memberExists;
+                store.validation.forumName = { valid: available, available };
+                store.validation.loading = false;
+            })
+            .catch(() => {
+                store.validation.forumName = { valid: false, available: false };
+                store.validation.loading = false;
+            });
+    }, 300);
 };
 
-/**
- * pushes a request to create a new member
- */
-store.createMember = () => {
-    if (!store.inDemoMode) {
-        axios.post(store.base_url + '/add-member/', {
-            division: store.division.slug,
-            member_id: store.member_id,
-            forum_name: store.forum_name,
-            ingame_name: store.ingame_name,
-            platoon: store.platoon,
-            rank: store.rank,
-            squad: store.squad
-        }).then(function (response) {
-            toastr.success('Your recruit has been added to the tracker and a member status has been submitted!');
-        }).catch(function (error) {
-            toastr.error(error, 'The creation process could not be completed...');
+store.isFormValid = () => {
+    return store.member.id &&
+           store.member.forum_name &&
+           store.member.rank &&
+           store.validation.memberId.valid &&
+           store.validation.memberId.verifiedEmail &&
+           store.validation.forumName.valid;
+};
+
+store.submitRecruitment = () => {
+    if (!store.isFormValid() || store.submitting) {
+        return Promise.reject('Form is not valid');
+    }
+
+    store.submitting = true;
+    store.errors.submission = null;
+
+    if (store.inDemoMode) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                store.submitting = false;
+                store.submitted = true;
+                store.currentStep = 'confirmation';
+                resolve();
+            }, 500);
         });
+    }
+
+    return axios.post(`${store.base_url}/add-member/`, {
+        division: store.division.slug,
+        member_id: store.member.id,
+        forum_name: store.member.forum_name,
+        ingame_name: store.member.ingame_name,
+        platoon: store.member.platoon,
+        rank: store.member.rank,
+        squad: store.member.squad,
+    })
+    .then(() => {
+        store.submitting = false;
+        store.submitted = true;
+        store.currentStep = 'confirmation';
+    })
+    .catch((error) => {
+        store.submitting = false;
+        store.errors.submission = error.response?.data?.message || 'Failed to add recruit. Please try again.';
+        throw error;
+    });
+};
+
+store.resetForNewRecruit = () => {
+    store.currentStep = 'form';
+    store.submitting = false;
+    store.submitted = false;
+    store.errors.submission = null;
+
+    store.member.id = '';
+    store.member.forum_name = '';
+    store.member.ingame_name = '';
+    store.member.rank = '';
+    store.member.platoon = '';
+    store.member.squad = '';
+
+    store.validation.loading = false;
+    store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false };
+    store.validation.forumName = { valid: false, available: false };
+};
+
+store.toggleDemoMode = () => {
+    store.inDemoMode = !store.inDemoMode;
+    if (store.inDemoMode) {
+        store.member.id = '99999';
+        store.member.forum_name = 'TestRecruit';
+        store.member.rank = '1';
+        store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'TestUser', existsInTracker: false };
+        store.validation.forumName = { valid: true, available: true };
+    } else {
+        store.resetForNewRecruit();
     }
 };
 
-window.onbeforeunload = function (e) {
-    if (store.currentStep !== 'step-four') {
-        let dialogText = 'You are about to leave the recruiting process. Are you sure?';
+store.getFormattedName = () => {
+    if (!store.member.forum_name) return '';
+    return `AOD_${store.member.forum_name}`;
+};
+
+window.onbeforeunload = (e) => {
+    if (store.currentStep === 'form' && (store.member.id || store.member.forum_name)) {
+        const dialogText = 'You are about to leave the recruiting process. Are you sure?';
         e.returnValue = dialogText;
         return dialogText;
     }
 };
 
-/**
- * =====================
- * End Recruiting
- * =====================
- */
+export default store;

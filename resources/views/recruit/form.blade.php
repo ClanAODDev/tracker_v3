@@ -11,11 +11,12 @@
         @endslot
     @endcomponent
 
-    <div class="container-fluid" id="recruiting-container">
-        <recruiting-process division="{{ $division->slug }}"
-                            recruiter_id="{{ auth()->user()->member->clan_id }}"
-                            :ranks="{{ json_encode(\App\Enums\Rank::getAllRanks()) }}"
-                            handle-name="{{ $division->handle->label ?? 'Ingame Name' }}"></recruiting-process>
+    <div class="container-fluid">
+        <div id="recruiting-container"
+             data-division="{{ $division->slug }}"
+             data-recruiter-id="{{ auth()->user()->member?->clan_id ?? auth()->user()->id }}"
+             data-ranks="{{ json_encode(\App\Enums\Rank::getAllRanks()) }}">
+        </div>
     </div>
 @endsection
 

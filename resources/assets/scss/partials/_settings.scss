@@ -1,6 +1,83 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 
+.help-toggle {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    font-size: 20px;
+    padding: 10px;
+    cursor: pointer;
+    @include transition(color 0.2s);
+
+    &:hover,
+    &:focus {
+        color: var(--color-accent);
+        outline: none;
+    }
+}
+
+.mobile-help-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 12px;
+    cursor: pointer;
+    position: absolute;
+    right: 140px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    &:hover,
+    &:focus {
+        color: var(--color-accent);
+        outline: none;
+    }
+}
+
+@include respond-to(sm) {
+    .mobile-help-toggle {
+        display: block;
+    }
+
+    body.mobile-nav-left .mobile-help-toggle {
+        right: auto;
+        left: 145px;
+    }
+}
+
+.help-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 16px;
+    height: 16px;
+    background: var(--color-danger);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+.mobile-help-toggle .help-badge {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-left: 6px;
+    display: inline-flex;
+}
+
 .settings-toggle {
     position: absolute;
     right: 20px;

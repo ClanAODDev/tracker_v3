@@ -1,6 +1,17 @@
 var Platoon = Platoon || {};
 
-(function ($) {
+function initPlatoon() {
+    var $ = window.jQuery;
+
+    if (!$ || typeof $.fn.DataTable !== 'function') {
+        setTimeout(initPlatoon, 50);
+        return;
+    }
+
+    if (document.readyState !== 'complete' && document.readyState !== 'interactive') {
+        setTimeout(initPlatoon, 50);
+        return;
+    }
 
     Platoon = {
 
@@ -759,6 +770,8 @@ var Platoon = Platoon || {};
             });
         },
     };
-})(window.jQuery);
 
-Platoon.setup();
+    Platoon.setup();
+}
+
+initPlatoon();

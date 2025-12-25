@@ -1,10 +1,13 @@
 import './bootstrap';
+import { createApp } from 'vue';
 import RecruitNewMember from './components/recruit/RecruitNewMember.vue';
-import VeeValidate from 'vee-validate';
 
-Vue.component('recruiting-process', RecruitNewMember);
-Vue.use(VeeValidate);
-
-const app = new Vue({
-    el: '#recruiting-container'
-});
+const container = document.getElementById('recruiting-container');
+if (container) {
+    const app = createApp(RecruitNewMember, {
+        division: container.getAttribute('data-division'),
+        recruiterId: container.getAttribute('data-recruiter-id'),
+        ranks: JSON.parse(container.getAttribute('data-ranks') || '{}'),
+    });
+    app.mount('#recruiting-container');
+}

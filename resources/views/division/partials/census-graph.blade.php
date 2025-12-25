@@ -23,7 +23,3 @@
         </div>
     </div>
 </div>
-
-@section('footer_scripts')
-    @vite(['resources/assets/js/census-graph.js'])
-@endsection

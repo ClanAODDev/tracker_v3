@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\TicketApiController;
 use App\Http\Controllers\API\v1\ClanController;
 use App\Http\Controllers\API\v1\DivisionController;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +20,12 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
         Route::post('{slug}', 'update')->middleware('abilities:division:write')->name('update');
     });
+});
+
+Route::prefix('tickets')->middleware(['web', 'auth'])->name('tickets.')->group(function () {
+    Route::get('/', [TicketApiController::class, 'index'])->name('index');
+    Route::get('/types', [TicketApiController::class, 'types'])->name('types');
+    Route::post('/', [TicketApiController::class, 'store'])->name('store');
+    Route::get('/{ticket}', [TicketApiController::class, 'show'])->name('show');
+    Route::post('/{ticket}/comments', [TicketApiController::class, 'addComment'])->name('comments.store');
 });

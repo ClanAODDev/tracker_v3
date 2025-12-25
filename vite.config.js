@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import vue2 from '@vitejs/plugin-vue2';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
@@ -15,14 +15,10 @@ export default defineConfig({
                 'resources/assets/js/census-graph.js',
                 'resources/assets/js/member-tags.js',
                 'resources/assets/js/retention-graph.js',
+                'resources/assets/js/tickets.js',
             ],
             refresh: true,
         }),
-        vue2(),
+        vue(),
     ],
-    resolve: {
-        alias: {
-            'vue': 'vue/dist/vue.esm.js',
-        },
-    },
 });

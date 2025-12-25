@@ -18,4 +18,5 @@ Route::controller(RecruitingController::class)->group(function () {
     Route::post('search-division-threads', 'doThreadCheck')->name('divisionThreadCheck');
     Route::get('recruit', 'index')->name('recruiting.initial');
     Route::post('add-member', 'submitRecruitment')->name('recruiting.addMember');
+    Route::get('divisions/{division}/recruit/data', 'getDivisionRecruitData')->name('recruiting.divisionData');
 });
