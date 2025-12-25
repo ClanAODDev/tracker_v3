@@ -28,7 +28,7 @@ class DivisionStructureController extends Controller
         $data = null;
 
         try {
-            $data = $this->renderTemplate($division, $division->structure);
+            $data = $this->renderTemplate($division, $division->structure ?? '');
         } catch (Exception $error) {
             $this->showErrorToast($error instanceof SyntaxError
                 ? $error->getMessage()
@@ -75,7 +75,7 @@ class DivisionStructureController extends Controller
         $this->authorize('editDivisionStructure', auth()->user());
 
         try {
-            $output = $this->renderTemplate($division, $request->input('template', ''));
+            $output = $this->renderTemplate($division, $request->input('template') ?? '');
 
             return response()->json([
                 'success' => true,
