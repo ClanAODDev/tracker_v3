@@ -2166,6 +2166,10 @@ body.no-animations {
     padding: 6px 12px;
     font-size: 12px;
     cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: none;
     @include transition(all 0.2s);
 
     &:hover {
@@ -2393,6 +2397,9 @@ a.squad-drop-target {
     align-items: center;
     justify-content: space-between;
     user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: none;
     @include transition(all 0.15s);
 
     &:hover {
@@ -4304,6 +4311,13 @@ tr.selected:hover {
 ul.sortable {
     min-height: 50px;
     padding-left: 0;
+
+    li {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        touch-action: none;
+    }
 }
 
 ul.sortable li:hover {
