@@ -2,37 +2,44 @@
 
 namespace Database\Factories;
 
+use App\Models\Division;
 use App\Models\Ticket;
+use App\Models\TicketType;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Ramsey\Uuid\Uuid;
 
 class TicketFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = Ticket::class;
 
-    /**
-     * Define the model's default state.
-     */
     public function definition(): array
     {
-        $states = ['new', 'assigned', 'resolved'];
-        $randomState = array_rand($states);
-
         return [
-            'state' => $states[$randomState],
-            'ticket_type_id' => \App\Models\TicketType::inRandomOrder()->first()->id,
-            'caller_id' => \App\Models\User::inRandomOrder()->first()->id,
-            'division_id' => \App\Models\Division::inRandomOrder()->active()->get()->first()->id,
+            'state' => 'new',
+            'ticket_type_id' => TicketType::factory(),
+            'caller_id' => User::factory(),
+            'division_id' => Division::factory(),
             'description' => $this->faker->paragraph,
-            'message_id' => Uuid::uuid4()->toString(),
-            'owner_id' => $states[$randomState] === 'assigned'
-                ? \App\Models\User::whereRoleId(5)->inRandomOrder()->first()->id
-                : null,
+            'external_message_id' => Uuid::uuid4()->toString(),
+            'owner_id' => null,
         ];
+    }
+
+    public function assigned(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'state' => 'assigned',
+            'owner_id' => User::factory(),
+        ]);
+    }
+
+    public function resolved(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'state' => 'resolved',
+            'resolved_at' => now(),
+            'owner_id' => User::factory(),
+        ]);
     }
 }

@@ -54,6 +54,7 @@
         <div class="row m-b-lg">
             <div class="col-md-12">
                 <div class="award-filters">
+
                     <div class="award-filter-group">
                         <span class="filter-label">Rarity</span>
                         <div class="rarity-legend">
@@ -74,6 +75,7 @@
                             @endforeach
                         </div>
                     </div>
+
                     <div class="award-filter-group">
                         <span class="filter-label">Division</span>
                         <select id="division-filter" class="form-control" style="width: auto;">
@@ -85,6 +87,7 @@
                             @endforeach
                         </select>
                     </div>
+
                     <div class="award-filter-group">
                         <span class="filter-label">Sort</span>
                         <select id="rarity-sort" class="form-control" style="width: auto;">
