@@ -4,8 +4,7 @@
 
     @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
-            <span class="hidden-xs">{{ $division->name }}</span>
-            <span class="visible-xs">{{ $division->abbreviation }}</span>
+{{ $division->name }}
             @include('division.partials.edit-division-button', ['division' => $division])
         @endslot
         @slot ('subheading')
