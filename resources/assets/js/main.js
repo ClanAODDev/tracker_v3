@@ -583,7 +583,7 @@ var Tracker = Tracker || {};
 
                 $btn.siblings('.settings-btn').removeClass('active');
                 $btn.addClass('active');
-                $('#setting-' + setting.replace('_', '-')).val(value);
+                $('#setting-' + setting.split('_').join('-')).val(value);
 
                 saveSettings();
             });
