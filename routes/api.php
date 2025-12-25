@@ -1,25 +1,22 @@
 <?php
 
-Route::prefix('v1')->group(function () {
-    Route::middleware(['abilities:clan:read'])->group(function () {
-        Route::get('ts-count', 'API\v1\ClanController@teamspeakPopulationCount')->name('v1.ts_population');
-        Route::get('discord-count', 'API\v1\ClanController@discordPopulationCount')->name('v1.discord_population');
-        Route::get('stream-events', 'API\v1\ClanController@streamEvents')->name('v1.stream_events');
+use App\Http\Controllers\API\v1\ClanController;
+use App\Http\Controllers\API\v1\DivisionController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('v1')->name('v1.')->group(function () {
+    Route::controller(ClanController::class)->middleware('abilities:clan:read')->group(function () {
+        Route::get('ts-count', 'teamspeakPopulationCount')->name('ts_population');
+        Route::get('discord-count', 'discordPopulationCount')->name('discord_population');
+        Route::get('stream-events', 'streamEvents')->name('stream_events');
     });
 
-    Route::middleware(['abilities:division:read'])->group(function () {
-        Route::get('divisions', 'API\v1\DivisionController@index')->name('v1.divisions.index');
-        Route::get('divisions/{slug}', 'API\v1\DivisionController@show')->name('v1.divisions.show');
-    });
+    Route::controller(DivisionController::class)->prefix('divisions')->name('divisions.')->group(function () {
+        Route::middleware('abilities:division:read')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('{slug}', 'show')->name('show');
+        });
 
-    Route::middleware(['abilities:division:write'])->group(function () {
-        Route::post('divisions/{slug}', 'API\v1\DivisionController@update')->name('v1.divisions.update');
+        Route::post('{slug}', 'update')->middleware('abilities:division:write')->name('update');
     });
 });
-
-// basic
-// squads
-// platoons
-// members
-// division-level only
-// msgt+ gets clan-wide

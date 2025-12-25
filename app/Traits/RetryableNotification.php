@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Log;
+
 trait RetryableNotification
 {
     public $tries = 4;
@@ -18,6 +20,6 @@ trait RetryableNotification
 
     public function handleFailure($exception)
     {
-        \Log::error('Notification failed:', ['error' => $exception->getMessage()]);
+        Log::error('Notification failed:', ['error' => $exception->getMessage()]);
     }
 }

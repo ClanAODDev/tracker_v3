@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Widgets;
 use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Facades\DB;
@@ -33,24 +33,24 @@ class DivisionPerformanceWidget extends BaseWidget
                     ->orderByDesc('members_count')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Division')
                     ->searchable()
                     ->sortable()
                     ->url(fn (Division $record) => route('division', $record->slug)),
 
-                Tables\Columns\TextColumn::make('latestCensus.count')
+                TextColumn::make('latestCensus.count')
                     ->label('Members')
                     ->sortable()
                     ->alignCenter()
                     ->default(fn (Division $record) => $record->members_count),
 
-                Tables\Columns\TextColumn::make('latestCensus.weekly_voice_count')
+                TextColumn::make('latestCensus.weekly_voice_count')
                     ->label('Weekly Voice')
                     ->alignCenter()
                     ->default(0),
 
-                Tables\Columns\TextColumn::make('voice_rate')
+                TextColumn::make('voice_rate')
                     ->label('Voice %')
                     ->alignCenter()
                     ->state(function (Division $record) {
@@ -72,7 +72,7 @@ class DivisionPerformanceWidget extends BaseWidget
                         return $rate >= 30 ? 'success' : ($rate >= 15 ? 'warning' : 'danger');
                     }),
 
-                Tables\Columns\TextColumn::make('recruits_this_month')
+                TextColumn::make('recruits_this_month')
                     ->label('Recruits (30d)')
                     ->alignCenter()
                     ->state(fn (Division $record) => Member::where('division_id', $record->id)

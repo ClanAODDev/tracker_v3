@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\AOD\Traits\Procedureable;
 use App\Enums\Position;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
+use App\Models\Handle;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
+use App\Models\RankAction;
+use App\Models\Transfer;
+use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
+use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
+use DB;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -18,8 +27,8 @@ use Illuminate\View\View;
  */
 class RecruitingController extends Controller
 {
-    use \App\AOD\Traits\Procedureable;
-    use \Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+    use AuthorizesRequests;
+    use Procedureable;
 
     /**
      * RecruitingController constructor.
@@ -152,7 +161,7 @@ class RecruitingController extends Controller
     /**
      * @param  string  $name
      * @param  int  $memberId
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function validateMemberName()
     {
@@ -164,7 +173,7 @@ class RecruitingController extends Controller
 
         $memberId = request('member_id');
 
-        $result = \DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
+        $result = DB::connection('aod_forums')->select("CALL user_exists(?, {$memberId})", [$name]);
 
         return response()->json(['memberExists' => ! empty($result)]);
     }
@@ -191,7 +200,7 @@ class RecruitingController extends Controller
 
         // handle ingame name assignment
         if ($request->ingame_name) {
-            $member->handles()->syncWithoutDetaching([\App\Models\Handle::find($division->handle_id)->id => ['value' => $request->ingame_name]]);
+            $member->handles()->syncWithoutDetaching([Handle::find($division->handle_id)->id => ['value' => $request->ingame_name]]);
         }
 
         // handle assignments
@@ -201,14 +210,14 @@ class RecruitingController extends Controller
         $member->recordActivity('recruited');
 
         // track division assignment, rank change
-        \App\Models\RankAction::create([
+        RankAction::create([
             'member_id' => $member->id,
             'rank' => $request->rank,
             'justification' => 'New recruit',
             'requester_id' => auth()->user()->member_id,
         ])->approveAndAccept();
 
-        \App\Models\Transfer::create([
+        Transfer::create([
             'member_id' => $member->id,
             'division_id' => $division->id,
             'approved_at' => now(),
@@ -236,10 +245,10 @@ class RecruitingController extends Controller
     private function handleNotification(Request $request, $member, $division)
     {
         if ($division->id !== auth()->user()->member->division_id) {
-            return $division->notify(new \App\Notifications\Channel\NotifyDivisionNewExternalRecruit($member, auth()->user()));
+            return $division->notify(new NotifyDivisionNewExternalRecruit($member, auth()->user()));
         }
 
-        return $division->notify(new \App\Notifications\Channel\NotifyDivisionNewMemberRecruited($member, auth()->user()));
+        return $division->notify(new NotifyDivisionNewMemberRecruited($member, auth()->user()));
     }
 
     /**

@@ -38,12 +38,16 @@ trait Settable
     /**
      * Get a setting.
      */
-    public function get($key): mixed
+    public function get($key, $default = null): mixed
     {
         $settings = is_string($this->settings) ? json_decode($this->settings, true) : $this->settings;
 
         if (Arr::has($settings, $key)) {
             return Arr::get($settings, $key);
+        }
+
+        if (func_num_args() > 1) {
+            return $default;
         }
 
         throw new Exception("The {$key} setting does not exist");

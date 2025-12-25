@@ -5,6 +5,7 @@ namespace App\Notifications\DM;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -27,7 +28,7 @@ class NotifyUserTicketCreated extends Notification implements ShouldQueue
     /**
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($ticket)
     {

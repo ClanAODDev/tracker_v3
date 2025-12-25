@@ -6,14 +6,22 @@ use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
-use App\Filament\Admin\Resources\MemberResource\Pages;
+use App\Filament\Admin\Resources\MemberResource\Pages\EditMember;
+use App\Filament\Admin\Resources\MemberResource\Pages\ListMembers;
 use App\Models\Member;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -23,28 +31,28 @@ class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     public static function canCreate(): bool
     {
         return false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                Forms\Components\Section::make('Clan Data')->schema([
+                Section::make('Clan Data')->schema([
                     TextInput::make('clan_id')
                         ->required()
                         ->numeric(),
-                    Forms\Components\Select::make('rank')
+                    Select::make('rank')
                         ->options(Rank::class)
                         ->required(),
                     Select::make('position')
@@ -58,7 +66,7 @@ class MemberResource extends Resource
                         ->label('Division')
                         ->required(),
                 ])->columns(2),
-                Forms\Components\Section::make('Communications')->schema([
+                Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
                         ->maxLength(255)
                         ->default(null),
@@ -72,38 +80,38 @@ class MemberResource extends Resource
                         ->readOnly()
                         ->default(null),
                 ])->columns(2),
-                Forms\Components\Section::make('Activity')->schema([
-                    Forms\Components\DateTimePicker::make('last_voice_activity'),
-                    Forms\Components\DateTimePicker::make('last_activity'),
-                    Forms\Components\DateTimePicker::make('last_ts_activity'),
+                Section::make('Activity')->schema([
+                    DateTimePicker::make('last_voice_activity'),
+                    DateTimePicker::make('last_activity'),
+                    DateTimePicker::make('last_ts_activity'),
                 ])->columns(3),
 
-                Forms\Components\Section::make('Dates')->schema([
-                    Forms\Components\DateTimePicker::make('join_date'),
-                    Forms\Components\DateTimePicker::make('last_promoted_at'),
-                    Forms\Components\DateTimePicker::make('last_trained_at'),
+                Section::make('Dates')->schema([
+                    DateTimePicker::make('join_date'),
+                    DateTimePicker::make('last_promoted_at'),
+                    DateTimePicker::make('last_trained_at'),
                     TextInput::make('last_trained_by')
                         ->numeric()
                         ->default(null),
-                    Forms\Components\DateTimePicker::make('xo_at'),
-                    Forms\Components\DateTimePicker::make('co_at'),
+                    DateTimePicker::make('xo_at'),
+                    DateTimePicker::make('co_at'),
                 ]),
 
-                Forms\Components\Section::make('Forum Metadata')->schema([
-                    Forms\Components\Section::make('Flags')->schema([
-                        Forms\Components\Toggle::make('flagged_for_inactivity')->required(),
-                        Forms\Components\Toggle::make('privacy_flag')
+                Section::make('Forum Metadata')->schema([
+                    Section::make('Flags')->schema([
+                        Toggle::make('flagged_for_inactivity')->required(),
+                        Toggle::make('privacy_flag')
                             ->required(),
-                        Forms\Components\Toggle::make('allow_pm')
+                        Toggle::make('allow_pm')
                             ->required(),
                     ])->columns(3),
 
-                    Forms\Components\Section::make('Misc')->schema([
+                    Section::make('Misc')->schema([
                         TextInput::make('posts')
                             ->required()
                             ->numeric()
                             ->default(0),
-                        Forms\Components\Textarea::make('groups')
+                        Textarea::make('groups')
                             ->readOnly(),
                     ]),
                 ]),
@@ -114,87 +122,87 @@ class MemberResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('clan_id')
+                TextColumn::make('clan_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('platoon.name'),
-                Tables\Columns\TextColumn::make('squad.name')
+                TextColumn::make('platoon.name'),
+                TextColumn::make('squad.name')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('position')
+                TextColumn::make('position')
                     ->toggleable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ts_unique_id')
+                TextColumn::make('ts_unique_id')
                     ->toggleable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('discord')
+                TextColumn::make('discord')
                     ->toggleable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('last_voice_status')
+                TextColumn::make('last_voice_status')
                     ->toggleable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('discord_id')
+                TextColumn::make('discord_id')
                     ->toggleable()
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('flagged_for_inactivity')
+                IconColumn::make('flagged_for_inactivity')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('posts')
+                TextColumn::make('posts')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('privacy_flag')
+                IconColumn::make('privacy_flag')
                     ->boolean(),
-                Tables\Columns\IconColumn::make('allow_pm')
+                IconColumn::make('allow_pm')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('join_date')
+                TextColumn::make('join_date')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_activity')
+                TextColumn::make('last_activity')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_voice_activity')
+                TextColumn::make('last_voice_activity')
                     ->toggleable()
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_ts_activity')
+                TextColumn::make('last_ts_activity')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_promoted_at')
+                TextColumn::make('last_promoted_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_trained_at')
+                TextColumn::make('last_trained_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('last_trained_by')
+                TextColumn::make('last_trained_by')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('xo_at')
+                TextColumn::make('xo_at')
                     ->label('Assigned XO')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('co_at')
+                TextColumn::make('co_at')
                     ->label('Assigned CO')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('recruiter.name')
+                TextColumn::make('recruiter.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -214,7 +222,7 @@ class MemberResource extends Resource
                 Filter::make('rank_id')
                     ->label('Rank')
                     ->indicator('Rank')
-                    ->form([
+                    ->schema([
                         Select::make('rank')
                             ->options(Rank::class),
                     ])->query(function (Builder $query, array $data): Builder {
@@ -227,12 +235,12 @@ class MemberResource extends Resource
                         return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -247,8 +255,8 @@ class MemberResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMembers::route('/'),
-            'edit' => Pages\EditMember::route('/{record}/edit'),
+            'index' => ListMembers::route('/'),
+            'edit' => EditMember::route('/{record}/edit'),
         ];
     }
 }

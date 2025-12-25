@@ -1,46 +1,46 @@
 <?php
 
+use App\Http\Controllers\InactiveMemberController;
+use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\SquadController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'members'], function () {
-    Route::get('/{member}/promotion/{action}', 'PromotionController@confirm')->name('promotion.confirm');
-    Route::post('/{member}/promotion/{action}', 'PromotionController@accept')->name('promotion.accept');
-    Route::post('/{member}/promotion/{action}/decline', 'PromotionController@decline')->name('promotion.decline');
-
-    // reset assignments
-    Route::get('{member}/confirm-reset', 'MemberController@confirmUnassign')->name('member.confirm-reset');
-    Route::post('{member}/unassign', 'MemberController@unassignMember')->name('member.unassign');
-    Route::post('{member}/assign-platoon', 'MemberController@assignPlatoon')->name('member.assign-platoon');
-    Route::post('assign-squad', 'SquadController@assignMember');
-
-    Route::get('{member}/remove-member', 'MemberController@remove')->name('removeMember');
-    Route::get('{member}/edit-part-time', 'MemberController@editPartTime')->name('member.edit-part-time');
-    Route::get('{member}/edit-handles', 'MemberController@editHandles')->name('member.edit-handles');
-    Route::post('search/{name}', 'MemberController@search');
-    Route::delete('{member}', 'MemberController@destroy')->name('deleteMember');
-
-    // member leave
-    Route::get('{member}/leave/{leave}/edit', 'LeaveController@edit')->name('leave.edit');
-    Route::put('{member}/leave', 'LeaveController@update')->name('leave.update');
-    Route::patch('{member}/leave', 'LeaveController@update');
-    Route::delete('{member}/leave/{leave}', 'LeaveController@delete')->name('leave.delete');
-
-    // member notes
-    Route::group(['prefix' => '{member}/notes'], function () {
-        Route::post('', 'NoteController@store')->name('storeNote');
-        Route::get('{note}/edit', 'NoteController@edit')->name('editNote');
-        Route::post('{note}', 'NoteController@update')->name('updateNote');
-        Route::patch('{note}', 'NoteController@update');
-        Route::delete('{note}', 'NoteController@delete')->name('deleteNote');
+Route::prefix('members')->group(function () {
+    Route::controller(PromotionController::class)->prefix('{member}/promotion/{action}')->name('promotion.')->group(function () {
+        Route::get('/', 'confirm')->name('confirm');
+        Route::post('/', 'accept')->name('accept');
+        Route::post('decline', 'decline')->name('decline');
     });
 
-    Route::get('{member}-{slug?}', 'MemberController@show')->name('member');
+    Route::controller(MemberController::class)->group(function () {
+        Route::get('{member}/confirm-reset', 'confirmUnassign')->name('member.confirm-reset');
+        Route::post('{member}/unassign', 'unassignMember')->name('member.unassign');
+        Route::post('{member}/assign-platoon', 'assignPlatoon')->name('member.assign-platoon');
+        Route::post('search/{name}', 'search');
+        Route::get('{member}-{slug?}', 'show')->name('member');
+    });
+
+    Route::post('assign-squad', [SquadController::class, 'assignMember']);
+
+    Route::controller(LeaveController::class)->group(function () {
+        Route::get('{member}/leave/{leave}/edit', 'edit')->name('leave.edit');
+        Route::match(['put', 'patch'], '{member}/leave', 'update')->name('leave.update');
+        Route::delete('{member}/leave/{leave}', 'delete')->name('leave.delete');
+    });
+
+    Route::controller(NoteController::class)->prefix('{member}/notes')->group(function () {
+        Route::post('/', 'store')->name('storeNote');
+        Route::get('{note}/edit', 'edit')->name('editNote');
+        Route::match(['post', 'patch'], '{note}', 'update')->name('updateNote');
+        Route::delete('{note}', 'delete')->name('deleteNote');
+    });
 });
 
-Route::group(['prefix' => 'inactive-members'], function () {
-    Route::get('{member}/flag-inactive', 'InactiveMemberController@create')->name('member.flag-inactive');
-    Route::get('{member}/unflag-inactive', 'InactiveMemberController@destroy')->name('member.unflag-inactive');
-    Route::delete('{member}', 'InactiveMemberController@removeMember')->name('member.drop-for-inactivity');
+Route::controller(InactiveMemberController::class)->prefix('inactive-members')->group(function () {
+    Route::get('{member}/flag-inactive', 'create')->name('member.flag-inactive');
+    Route::get('{member}/unflag-inactive', 'destroy')->name('member.unflag-inactive');
+    Route::delete('{member}', 'removeMember')->name('member.drop-for-inactivity');
 });
-
-// initial recruiting screen

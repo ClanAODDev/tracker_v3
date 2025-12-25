@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\MemberAwardResource\Pages;
 
 use App\Filament\Admin\Resources\MemberAwardResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMemberAward extends EditRecord
@@ -13,7 +13,7 @@ class EditMemberAward extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -4,68 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\Division;
 use Closure;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use stdClass;
-use Twig_Error_Syntax;
-use Twig_Sandbox_SecurityError;
+use Twig\Environment;
+use Twig\Error\SyntaxError;
+use Twig\Loader\ArrayLoader;
+use Twig\TwigFunction;
 
-/**
- * Class DivisionStructureController.
- */
 class DivisionStructureController extends Controller
 {
-    use AuthorizesRequests;
-
-    /**
-     * DivisionStructureController constructor.
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    /**
-     * @return string
-     *
-     * @throws AuthorizationException
-     */
-    public function show(Division $division)
+    public function show(Division $division): View
     {
         $this->authorize('viewDivisionStructure', auth()->user());
 
         $data = null;
 
         try {
-            $compiledData = $this->compileDivisionData($division);
-
-            $templates = ['structure' => $division->structure];
-
-            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader($templates), [
-                'autoescape' => false,
-            ]);
-
-            $env->addFunction(new \Twig\TwigFunction('ordSuffix', fn ($value) => ordSuffix($value)));
-
-            $env->addFunction(new \Twig\TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
-                if (\is_array($search) && $replace === null) {
-                    return strtr($str, $search);
-                }
-                if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
-                    return preg_replace($search, $replace, $str);
-                }
-
-                return str_replace($search, $replace, $str);
-            }));
-
-            $data = $env->render('structure', ['division' => $compiledData]);
-        } catch (\Exception $error) {
-            $this->handleTwigError($error);
+            $data = $this->renderTemplate($division, $division->structure);
+        } catch (Exception $error) {
+            $this->showErrorToast($error instanceof SyntaxError
+                ? $error->getMessage()
+                : 'An error occurred rendering the template');
         }
 
         $stats = (object) [
@@ -83,20 +50,14 @@ class DivisionStructureController extends Controller
         return view('division.structure', compact('data', 'division', 'stats', 'lastUpdated'));
     }
 
-    /**
-     * @return Factory|View
-     */
-    public function modify(Division $division)
+    public function modify(Division $division): View
     {
         $this->authorize('editDivisionStructure', auth()->user());
 
         return view('division.structure-editor', compact('division'));
     }
 
-    /**
-     * @return Redirector|RedirectResponse
-     */
-    public function update(Request $request, Division $division)
+    public function update(Request $request, Division $division): RedirectResponse
     {
         $this->authorize('viewDivisionStructure', auth()->user());
 
@@ -106,45 +67,22 @@ class DivisionStructureController extends Controller
         $division->recordActivity('updated_structure');
         $this->showSuccessToast('Division structure was successfully updated!');
 
-        return redirect(route('division.structure', $division->slug));
+        return redirect(route('division.edit-structure', $division->slug));
     }
 
     public function preview(Request $request, Division $division)
     {
         $this->authorize('editDivisionStructure', auth()->user());
 
-        $template = $request->input('template', '');
-
         try {
-            $compiledData = $this->compileDivisionData($division);
-
-            $templates = ['structure' => $template];
-
-            $env = new \Twig\Environment(new \Twig\Loader\ArrayLoader($templates), [
-                'autoescape' => false,
-            ]);
-
-            $env->addFunction(new \Twig\TwigFunction('ordSuffix', fn ($value) => ordSuffix($value)));
-
-            $env->addFunction(new \Twig\TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
-                if (\is_array($search) && $replace === null) {
-                    return strtr($str, $search);
-                }
-                if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
-                    return preg_replace($search, $replace, $str);
-                }
-
-                return str_replace($search, $replace, $str);
-            }));
-
-            $output = $env->render('structure', ['division' => $compiledData]);
+            $output = $this->renderTemplate($division, $request->input('template', ''));
 
             return response()->json([
                 'success' => true,
                 'output' => $output,
                 'characters' => strlen($output),
             ]);
-        } catch (\Exception $error) {
+        } catch (Exception $error) {
             return response()->json([
                 'success' => false,
                 'error' => $error->getMessage(),
@@ -152,84 +90,80 @@ class DivisionStructureController extends Controller
         }
     }
 
-    /**
-     * @return string
-     */
-    public function twigfiddleJson(Division $division)
+    private function renderTemplate(Division $division, string $template): string
     {
-        return json_encode([
-            'division' => [
-                'name' => $division->name,
-                'leaders' => $division->leaders,
-                'generalSergeants' => $division->generalSergeants,
-                'platoons' => $division->platoons()->with(
-                    [
-                        'squads.members.handles' => function ($query) use ($division) {
-                            $query->where('handles.id', $division->handle_id)
-                                ->wherePivot('primary', true);
-                        },
-                    ],
-                    'squads',
-                    'squads.members',
-                )->sortBy('order', 'asc')->get(),
-            ],
-        ]);
+        $compiledData = $this->compileDivisionData($division);
+        $env = $this->createTwigEnvironment($template);
+        $output = $env->render('structure', ['division' => $compiledData]);
+
+        return $this->normalizeOutput($output);
     }
 
-    /**
-     * @return stdClass
-     */
-    private function compileDivisionData(Division $division)
+    private function createTwigEnvironment(string $template): Environment
+    {
+        $env = new Environment(new ArrayLoader(['structure' => $template]), [
+            'autoescape' => false,
+        ]);
+
+        $env->addFunction(new TwigFunction('ordSuffix', fn ($value) => ordSuffix($value)));
+
+        $env->addFunction(new TwigFunction('replaceRegex', function ($str, $search, $replace = null) {
+            if (\is_array($search) && $replace === null) {
+                return strtr($str, $search);
+            }
+
+            if (preg_match('/^\/.+\/[a-zA-Z]*$/', $search)) {
+                return preg_replace($search, $replace, $str);
+            }
+
+            return str_replace($search, $replace, $str);
+        }));
+
+        return $env;
+    }
+
+    private function compileDivisionData(Division $division): stdClass
     {
         $data = new stdClass;
         $data->structure = $division->structure;
         $data->name = $division->name;
         $data->memberCount = $division->members->count();
-
         $data->leave = $this->getLeave($division);
-
         $data->locality = $this->getLocality($division);
-        $data->generalSergeants = $division->generalSergeants()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division),
-        ])->orderBy('rank', 'DESC')->orderBy('name', 'ASC')->get();
 
-        $data->leaders = $division->leaders()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division),
-        ])->get();
+        $handleFilter = $this->filterHandlesToPrimaryHandle($division);
 
-        $data->partTimeMembers = $division->partTimeMembers()->with([
-            'handles' => $this->filterHandlesToPrimaryHandle($division),
-        ])->get();
+        $data->generalSergeants = $division->generalSergeants()
+            ->with(['handles' => $handleFilter])
+            ->orderBy('rank', 'DESC')
+            ->orderBy('name', 'ASC')
+            ->get();
+
+        $data->leaders = $division->leaders()
+            ->with(['handles' => $handleFilter])
+            ->get();
+
+        $data->partTimeMembers = $division->partTimeMembers()
+            ->with(['handles' => $handleFilter])
+            ->get();
 
         $data->platoons = $division->platoons()->with([
-            'squads.members.handles' => $this->filterHandlesToPrimaryHandle($division),
-            'leader.handles' => $this->filterHandlesToPrimaryHandle($division),
-            'squads.leader.handles' => $this->filterHandlesToPrimaryHandle($division),
+            'squads.members.handles' => $handleFilter,
+            'leader.handles' => $handleFilter,
+            'squads.leader.handles' => $handleFilter,
         ])->get();
 
-        /*
-         * ensure squad leaders don't appear in squads.
-         */
         $data->platoons = $this->filterSquadLeads($data);
 
-        /*
-         * have to do some funky things to get handles organized:
-         * divisions only need the primary handle for a member.
-         */
         $data->leaders = $data->leaders->each($this->getMemberHandle());
         $data->partTimeMembers = $data->partTimeMembers->each($this->getMemberHandle());
         $data->generalSergeants = $data->generalSergeants->each($this->getMemberHandle());
 
-        // platoon->leader->handle
         $data->platoons = $data->platoons->each(function ($platoon) {
             if ($platoon->leader) {
                 $platoon->leader->handle = $platoon->leader->handles->first();
             }
-        });
 
-        // squad->leader->handle
-        // squad->member->handle
-        $data->platoons = $data->platoons->each(function ($platoon) {
             $platoon->squads = $platoon->squads->each(function ($squad) {
                 if ($squad->leader) {
                     $squad->leader->handle = $squad->leader->handles->first();
@@ -241,20 +175,16 @@ class DivisionStructureController extends Controller
         return $data;
     }
 
-    /**
-     * Filters leave, omitting unapproved leave.
-     *
-     * @return mixed
-     */
-    private function getLeave($division)
+    private function getLeave(Division $division)
     {
-        $leave = $division->members()->whereHas('leave')
-            ->with('leave')->get();
-
-        return $leave->filter(fn ($member) => $member->leave->approver);
+        return $division->members()
+            ->whereHas('leave')
+            ->with('leave')
+            ->get()
+            ->filter(fn ($member) => $member->leave->approver);
     }
 
-    private function getLocality(Division $division)
+    private function getLocality(Division $division): array
     {
         return [
             'squad' => $division->locality('squad'),
@@ -264,59 +194,44 @@ class DivisionStructureController extends Controller
         ];
     }
 
-    /**
-     * Eager loading filter.
-     *
-     * @return Closure
-     */
-    private function filterHandlesToPrimaryHandle($division)
+    private function filterHandlesToPrimaryHandle(Division $division): Closure
     {
-        return function ($query) use ($division) {
-            $query
-                ->where('handles.id', $division->handle_id)
-                ->wherePivot('primary', true);
-        };
+        return fn ($query) => $query
+            ->where('handles.id', $division->handle_id)
+            ->wherePivot('primary', true);
     }
 
-    /**
-     * @return mixed
-     */
-    private function filterSquadLeads($data)
+    private function filterSquadLeads(stdClass $data)
     {
         return $data->platoons->each(function ($platoon) {
             $platoon->squads = $platoon->squads->each(function ($squad) {
-                $squad->members = $squad->members->filter(fn ($member) => $member->clan_id !== $squad->leader_id);
+                $squad->members = $squad->members->filter(
+                    fn ($member) => $member->clan_id !== $squad->leader_id
+                );
             });
         });
     }
 
-    /**
-     * @return Closure
-     */
-    private function getMemberHandle()
+    private function getMemberHandle(): Closure
     {
-        return function ($member) {
-            $member->handle = $member->handles->first();
-        };
+        return fn ($member) => $member->handle = $member->handles->first();
     }
 
-    /**
-     * @return string
-     */
-    private function handleTwigError($error)
+    private function normalizeOutput(string $output): string
     {
-        if ($error instanceof Twig_Error_Syntax) {
-            $this->showErrorToast($error->getMessage());
+        $lines = explode("\n", $output);
+        $normalized = [];
 
-            return;
+        foreach ($lines as $line) {
+            $trimmed = ltrim($line);
+            $leadingSpaces = strlen($line) - strlen($trimmed);
+            $reducedIndent = (int) floor($leadingSpaces / 2);
+            $normalized[] = str_repeat(' ', $reducedIndent) . $trimmed;
         }
 
-        if ($error instanceof Twig_Sandbox_SecurityError) {
-            $this->showErrorToast('You attempted to use an unauthorized tag, filter, or method');
+        $output = implode("\n", $normalized);
+        $output = preg_replace("/\n{3,}/", "\n\n", $output);
 
-            return;
-        }
-
-        $this->showErrorToast($error->getMessage());
+        return trim($output);
     }
 }

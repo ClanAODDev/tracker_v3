@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Division;
 use Carbon\CarbonImmutable;
 
 trait HasActivityGraph
@@ -12,7 +13,7 @@ trait HasActivityGraph
 
     public function getActivity(string $field, $unit, int $buckets = 3): array
     {
-        $division = $unit instanceof \App\Models\Division
+        $division = $unit instanceof Division
             ? $unit
             : $unit->division;
 

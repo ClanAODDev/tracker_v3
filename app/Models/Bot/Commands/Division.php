@@ -4,6 +4,7 @@ namespace App\Models\Bot\Commands;
 
 use App\Models\Bot\Base;
 use App\Models\Bot\Command;
+use Str;
 
 /**
  * Class Search.
@@ -40,7 +41,7 @@ class Division extends Base implements Command
                     'author' => [
                         'name' => $division->name,
                         'icon_url' => $division->getLogoPath(),
-                        'url' => 'https://clanaod.net/divisions/' . \Str::slug($division->name),
+                        'url' => 'https://clanaod.net/divisions/' . Str::slug($division->name),
                     ],
                     'fields' => [
                         [

@@ -2,37 +2,47 @@
 
 namespace App\Filament\Admin\Resources\MemberAwardResource\RelationManagers;
 
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class MemberAwardsRelationManager extends RelationManager
 {
     protected static string $relationship = 'recipients';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('award_id')
+        return $schema
+            ->components([
+                Select::make('award_id')
                     ->relationship('award', 'name'),
 
-                Forms\Components\Select::make('member_id')
+                Select::make('member_id')
                     ->searchable()
                     ->relationship('member', 'name'),
 
-                Forms\Components\Textarea::make('reason')
+                Textarea::make('reason')
                     ->columnSpanFull()
                     ->maxLength(191)
                     ->default(null),
 
-                Forms\Components\Toggle::make('approved')->hiddenOn('create'),
+                Toggle::make('approved')->hiddenOn('create'),
 
-                Forms\Components\Section::make('Metadata')->schema([
-                    Forms\Components\DateTimePicker::make('created_at')->default(now()),
-                    Forms\Components\DateTimePicker::make('updated_at')->default(now()),
+                Section::make('Metadata')->schema([
+                    DateTimePicker::make('created_at')->default(now()),
+                    DateTimePicker::make('updated_at')->default(now()),
                 ])->columns(),
             ]);
     }
@@ -42,23 +52,23 @@ class MemberAwardsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('member.name')
             ->columns([
-                Tables\Columns\TextColumn::make('member.name'),
-                Tables\Columns\ToggleColumn::make('approved')->label('Approved'),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->label('Given At'),
+                TextColumn::make('member.name'),
+                ToggleColumn::make('approved')->label('Approved'),
+                TextColumn::make('created_at')->dateTime()->label('Given At'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

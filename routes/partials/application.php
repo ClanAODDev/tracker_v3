@@ -1,79 +1,80 @@
 <?php
 
-/**
- * Application endpoints.
- */
-Route::get('/home', 'AppController@index')->name('home');
-Route::get('/', 'AppController@index')->name('index');
-Route::get('/impersonate-end/', 'ImpersonationController@endImpersonation')->name('end-impersonation');
-Route::get('/impersonate/{user}', 'ImpersonationController@impersonate')->name('impersonate');
+use App\Http\Controllers\AppController;
+use App\Http\Controllers\Bot\BotCommandController;
+use App\Http\Controllers\DeveloperController;
+use App\Http\Controllers\ImpersonationController;
+use App\Http\Controllers\TrainingController;
+use App\Models\Division;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'training'], function () {
-    Route::get('sgt', 'TrainingController@sgtTraining')->name('training.sgt');
-    Route::get('ssgt', 'TrainingController@index')->name('training.ssgt');
-    Route::get('msgt', 'TrainingController@index')->name('training.msgt');
-    Route::post('', 'TrainingController@update')->name('training.update');
+Route::get('/', [AppController::class, 'index'])->name('index');
+Route::get('home', [AppController::class, 'index'])->name('home');
+
+Route::controller(ImpersonationController::class)->group(function () {
+    Route::get('impersonate/{user}', 'impersonate')->name('impersonate');
+    Route::get('impersonate-end', 'endImpersonation')->name('end-impersonation');
 });
 
-Route::get('developers', 'DeveloperController@index')->name('developer');
-Route::post('developers/tokens', 'DeveloperController@generateToken')->name('developer.token.store');
-Route::delete('developers/tokens', 'DeveloperController@destroyToken')->name('developer.token.delete');
-
-/*
- * Application UI.
- */
-Route::group(['prefix' => 'primary-nav'], function () {
-    Route::get('collapse', function () {
-        session(['primary_nav_collapsed' => true]);
-    });
-    Route::get('decollapse', function () {
-        session(['primary_nav_collapsed' => false]);
-    });
+Route::controller(TrainingController::class)->prefix('training')->name('training.')->group(function () {
+    Route::get('sgt', 'sgtTraining')->name('sgt');
+    Route::get('ssgt', 'index')->name('ssgt');
+    Route::get('msgt', 'index')->name('msgt');
+    Route::post('/', 'update')->name('update');
 });
 
-Route::post('settings', function (\Illuminate\Http\Request $request) {
-    $user = auth()->user();
-    $user->settings = array_merge($user->settings, [
-        'disable_animations' => filter_var($request->input('disable_animations'), FILTER_VALIDATE_BOOLEAN),
-        'mobile_nav_side' => $request->input('mobile_nav_side', 'right'),
-        'snow' => $request->input('snow', 'no_snow'),
-        'ticket_notifications' => filter_var($request->input('ticket_notifications'), FILTER_VALIDATE_BOOLEAN),
-    ]);
-    $user->save();
+Route::controller(DeveloperController::class)->prefix('developers')->name('developer')->group(function () {
+    Route::get('/', 'index');
+    Route::post('tokens', 'generateToken')->name('.token.store');
+    Route::delete('tokens', 'destroyToken')->name('.token.delete');
+});
 
-    return response()->json(['success' => true]);
-})->middleware('auth')->name('settings.update');
+Route::prefix('primary-nav')->group(function () {
+    Route::get('collapse', fn () => session(['primary_nav_collapsed' => true]));
+    Route::get('decollapse', fn () => session(['primary_nav_collapsed' => false]));
+});
 
-Route::post('settings/part-time-divisions', function (\Illuminate\Http\Request $request) {
-    $member = auth()->user()->member;
-    if (! $member) {
-        return response()->json(['error' => 'No member record'], 400);
-    }
+Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
+    Route::post('/', function (Request $request) {
+        $user = auth()->user();
+        $user->settings = array_merge($user->settings, [
+            'disable_animations' => filter_var($request->input('disable_animations'), FILTER_VALIDATE_BOOLEAN),
+            'mobile_nav_side' => $request->input('mobile_nav_side', 'right'),
+            'snow' => $request->input('snow', 'no_snow'),
+            'ticket_notifications' => filter_var($request->input('ticket_notifications'), FILTER_VALIDATE_BOOLEAN),
+        ]);
+        $user->save();
 
-    $divisionIds = $request->input('divisions', []);
-    $activeIds = \App\Models\Division::active()->pluck('id')->all();
-    $validIds = array_values(array_intersect($divisionIds, $activeIds));
-    $member->partTimeDivisions()->sync($validIds);
+        return response()->json(['success' => true]);
+    })->name('update');
 
-    return response()->json(['success' => true, 'count' => count($validIds)]);
-})->middleware('auth')->name('settings.part-time-divisions');
+    Route::post('part-time-divisions', function (Request $request) {
+        $member = auth()->user()->member;
+        if (! $member) {
+            return response()->json(['error' => 'No member record'], 400);
+        }
 
-Route::post('settings/ingame-handles', function (\Illuminate\Http\Request $request) {
-    $member = auth()->user()->member;
-    if (! $member) {
-        return response()->json(['error' => 'No member record'], 400);
-    }
+        $divisionIds = $request->input('divisions', []);
+        $activeIds = Division::active()->pluck('id')->all();
+        $validIds = array_values(array_intersect($divisionIds, $activeIds));
+        $member->partTimeDivisions()->sync($validIds);
 
-    $handles = $request->input('handles', []);
-    \App\Filament\Forms\Components\IngameHandlesForm::saveHandles($member, $handles);
+        return response()->json(['success' => true, 'count' => count($validIds)]);
+    })->name('part-time-divisions');
 
-    return response()->json(['success' => true, 'count' => $member->memberHandles()->count()]);
-})->middleware('auth')->name('settings.ingame-handles');
+    Route::post('ingame-handles', function (Request $request) {
+        $member = auth()->user()->member;
+        if (! $member) {
+            return response()->json(['error' => 'No member record'], 400);
+        }
 
-/*
- * Discord command handler.
- */
-Route::get('bot/commands/{command}', 'Bot\BotCommandController@index')->name('bot.commands')->middleware('bot');
+        $handles = $request->input('handles', []);
+        \App\Filament\Forms\Components\IngameHandlesForm::saveHandles($member, $handles);
 
-// force admin login to use existing auth
-Route::get('/admin/login', fn () => redirect('login'))->name('filament.admin.auth.login');
+        return response()->json(['success' => true, 'count' => $member->memberHandles()->count()]);
+    })->name('ingame-handles');
+});
+
+Route::get('bot/commands/{command}', [BotCommandController::class, 'index'])->name('bot.commands')->middleware('bot');
+Route::get('admin/login', fn () => redirect('login'))->name('filament.admin.auth.login');

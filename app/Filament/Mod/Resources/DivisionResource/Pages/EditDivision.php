@@ -4,7 +4,7 @@ namespace App\Filament\Mod\Resources\DivisionResource\Pages;
 
 use App\Filament\Mod\Resources\DivisionResource;
 use App\Notifications\Channel\NotifyDivisionSettingsEdited;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,7 @@ class EditDivision extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

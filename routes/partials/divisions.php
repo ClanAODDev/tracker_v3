@@ -1,107 +1,84 @@
 <?php
 
-Route::group(['prefix' => 'divisions/{division}'], function () {
-    /*
-     * division.
-     */
-    Route::get('/', 'DivisionController@show')->name('division');
-    Route::get('/edit', 'DivisionController@edit')->name('editDivision');
+use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\BulkTagController;
+use App\Http\Controllers\BulkTransferController;
+use App\Http\Controllers\Division\ReportController;
+use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\DivisionNoteController;
+use App\Http\Controllers\DivisionStructureController;
+use App\Http\Controllers\InactiveMemberController;
+use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\PlatoonController;
+use App\Http\Controllers\PmController;
+use App\Http\Controllers\RecruitingController;
+use App\Http\Controllers\SquadController;
+use Illuminate\Support\Facades\Route;
 
-    Route::post('/', 'DivisionController@store')->name('storeDivision');
-    Route::put('/', 'DivisionController@update')->name('updateDivision');
-    Route::patch('/', 'DivisionController@update');
-    Route::delete('/', 'DivisionController@destroy')->name('deleteDivision');
+Route::prefix('divisions/{division}')->group(function () {
+    Route::get('/', [DivisionController::class, 'show'])->name('division');
+    Route::get('activity', [ActivitiesController::class, 'byDivision'])->name('divisionActivity');
+    Route::get('members', [DivisionController::class, 'members'])->name('division.members');
+    Route::get('notes', [DivisionNoteController::class, 'index'])->name('division.notes');
+    Route::get('unassigned-to-squad', [DivisionController::class, 'unassignedToSquad'])->name('division.unassigned-to-squad');
 
-    Route::get('/activity', 'ActivitiesController@byDivision')->name('divisionActivity');
-    Route::get('/part-timers', 'DivisionController@partTime')->name('partTimers');
-    Route::post('/part-timers', 'DivisionController@addPartTimer')->name('addPartTimer');
-    Route::get('/part-timers/{member}', 'DivisionController@assignPartTime')->name('assignPartTimer');
-    Route::get('/part-timers/{member}/remove', 'DivisionController@removePartTime')->name('removePartTimer');
-    Route::get('/statistics', 'DivisionController@statistics')->name('divisionStats');
-
-    Route::get('/leave', 'LeaveController@index')->name('leave.index');
-    Route::post('/leave', 'LeaveController@store')->name('leave.store');
-
-    Route::get('/structure/edit', 'DivisionStructureController@modify')->name('division.edit-structure');
-    Route::get('/structure', 'DivisionStructureController@show')->name('division.structure');
-    Route::post('/structure', 'DivisionStructureController@update')->name('division.update-structure');
-    Route::post('/structure/preview', 'DivisionStructureController@preview')->name('division.preview-structure');
-
-    Route::get('/inactive-members/{platoon?}', 'InactiveMemberController@index')
-        ->name('division.inactive-members');
-    Route::get('/inactive-members-ts/{platoon?}', 'InactiveMemberController@index')
-        ->name('division.inactive-members-ts');
-    Route::get('/inactive-ts-forums/{platoon?}', 'InactiveMemberController@index')
-        ->name('division.inactive-ts-forums');
-
-    Route::get('/members', 'DivisionController@members')->name('division.members');
-
-    Route::get('/notes', 'DivisionNoteController@index')->name('division.notes');
-
-    /*
-     * Recruiting Process.
-     */
-    Route::group(['prefix' => '/recruit'], function () {
-        Route::get('form', 'RecruitingController@form')->name('recruiting.form');
+    Route::prefix('part-timers')->group(function () {
+        Route::get('/', [DivisionController::class, 'partTime'])->name('partTimers');
+        Route::post('/', [DivisionController::class, 'addPartTimer'])->name('addPartTimer');
+        Route::get('{member}', [DivisionController::class, 'assignPartTime'])->name('assignPartTimer');
+        Route::get('{member}/remove', [DivisionController::class, 'removePartTime'])->name('removePartTimer');
     });
 
-    /*
-     * Division Reports.
-     */
-    Route::get('/voice-report', 'Division\ReportController@voiceReport')->name('division.voice-report');
-    Route::get('/retention', 'Division\ReportController@retentionReport')
-        ->name('division.retention-report');
-    Route::get('/census', 'Division\ReportController@censusReport')
-        ->name('division.census');
-    Route::get(
-        '/promotions/{month?}/{year?}',
-        'Division\ReportController@promotionsReport'
-    )->middleware(['auth'])
-        ->name('division.promotions');
-    /*
-     * member requests.
-     */
-    //    Route::
+    Route::controller(LeaveController::class)->prefix('leave')->group(function () {
+        Route::get('/', 'index')->name('leave.index');
+        Route::post('/', 'store')->name('leave.store');
+    });
 
-    /*
-     * platoons.
-     */
-    Route::group(['prefix' => '/platoons/'], function () {
-        Route::get('/create', 'PlatoonController@create')->name('createPlatoon');
-        Route::get('{platoon}', 'PlatoonController@show')->name('platoon');
-        Route::get('{platoon}/edit', 'PlatoonController@edit')->name('editPlatoon');
-        Route::get('{platoon}/manage-assignments', 'PlatoonController@manageSquads')->name('platoon.manage-squads');
+    Route::controller(DivisionStructureController::class)->prefix('structure')->group(function () {
+        Route::get('edit', 'modify')->name('division.edit-structure');
+        Route::post('/', 'update')->name('division.update-structure');
+        Route::post('preview', 'preview')->name('division.preview-structure');
+    });
 
-        Route::post('', 'PlatoonController@store')->name('savePlatoon');
-        Route::put('{platoon}', 'PlatoonController@update')->name('updatePlatoon');
-        Route::patch('{platoon}', 'PlatoonController@update');
-        Route::delete('{platoon}', 'PlatoonController@destroy')->name('deletePlatoon');
+    Route::controller(InactiveMemberController::class)->group(function () {
+        Route::get('inactive-members/{platoon?}', 'index')->name('division.inactive-members');
+        Route::get('inactive-members-ts/{platoon?}', 'index')->name('division.inactive-members-ts');
+        Route::get('inactive-ts-forums/{platoon?}', 'index')->name('division.inactive-ts-forums');
+    });
 
-        /*
-         * squads.
-         */
-        Route::group(['prefix' => '{platoon}/squads/'], function () {
-            Route::get('/create', 'SquadController@create')->name('createSquad');
-            Route::get('{squad}/edit', 'SquadController@edit')->name('editSquad');
-            Route::get('{squad}', 'SquadController@show')->name('squad.show');
+    Route::get('recruit/form', [RecruitingController::class, 'form'])->name('recruiting.form');
 
-            Route::post('', 'SquadController@store')->name('storeSquad');
-            Route::put('{squad}', 'SquadController@update')->name('updateSquad');
-            Route::patch('{squad}', 'SquadController@update');
-            Route::delete('{squad}', 'SquadController@destroy')->name('deleteSquad');
+    Route::controller(ReportController::class)->group(function () {
+        Route::get('voice-report', 'voiceReport')->name('division.voice-report');
+        Route::get('retention', 'retentionReport')->name('division.retention-report');
+        Route::get('census', 'censusReport')->name('division.census');
+        Route::get('promotions/{month?}/{year?}', 'promotionsReport')->middleware('auth')->name('division.promotions');
+    });
+
+    Route::prefix('platoons')->group(function () {
+        Route::get('{platoon}', [PlatoonController::class, 'show'])->name('platoon');
+        Route::get('{platoon}/manage-assignments', [PlatoonController::class, 'manageSquads'])->name('platoon.manage-squads');
+        Route::get('{platoon}/squads/{squad}', [SquadController::class, 'show'])->name('squad.show');
+    });
+
+    Route::post('private-message', [PmController::class, 'create'])->name('private-message.create');
+
+    Route::controller(BulkTagController::class)->group(function () {
+        Route::post('bulk-tags', 'create')->name('bulk-tags.create');
+        Route::post('bulk-tags/store', 'store')->name('bulk-tags.store');
+        Route::post('bulk-tags/create-tag', 'createDivisionTag')->name('bulk-tags.create-tag');
+
+        Route::prefix('member-tags/{member}')->name('member-tags.')->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::get('json', 'getTags')->name('get');
+            Route::post('add', 'addTag')->name('add');
+            Route::post('remove', 'removeTag')->name('remove');
+            Route::post('create', 'createTag')->name('create');
         });
     });
 
-    Route::post('private-message', 'PmController@create')->name('private-message.create');
-    Route::post('bulk-tags', 'BulkTagController@create')->name('bulk-tags.create');
-    Route::post('bulk-tags/store', 'BulkTagController@store')->name('bulk-tags.store');
-    Route::post('bulk-tags/create-tag', 'BulkTagController@createDivisionTag')->name('bulk-tags.create-tag');
-    Route::get('member-tags/{member}', 'BulkTagController@edit')->name('member-tags.edit');
-    Route::get('member-tags/{member}/json', 'BulkTagController@getTags')->name('member-tags.get');
-    Route::post('member-tags/{member}/add', 'BulkTagController@addTag')->name('member-tags.add');
-    Route::post('member-tags/{member}/remove', 'BulkTagController@removeTag')->name('member-tags.remove');
-    Route::post('member-tags/{member}/create', 'BulkTagController@createTag')->name('member-tags.create');
-    Route::get('bulk-transfer/platoons', 'BulkTransferController@getPlatoons')->name('bulk-transfer.platoons');
-    Route::post('bulk-transfer', 'BulkTransferController@store')->name('bulk-transfer.store');
-    Route::get('unassigned-to-squad', 'DivisionController@unassignedToSquad')->name('division.unassigned-to-squad');
+    Route::controller(BulkTransferController::class)->prefix('bulk-transfer')->name('bulk-transfer.')->group(function () {
+        Route::get('platoons', 'getPlatoons')->name('platoons');
+        Route::post('/', 'store')->name('store');
+    });
 });

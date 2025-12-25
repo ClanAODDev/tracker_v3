@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\GlobalTagResource\Pages;
 
 use App\Filament\Admin\Resources\GlobalTagResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditGlobalTag extends EditRecord
@@ -13,7 +13,7 @@ class EditGlobalTag extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -32,7 +32,7 @@ class EditMember extends EditRecord
     public function mutateFormDataBeforeFill(array $data): array
     {
         if (isset($data['id'])) {
-            $member = \App\Models\Member::find($data['id']);
+            $member = Member::find($data['id']);
             if ($member) {
                 $data['handleGroups'] = IngameHandlesForm::getGroupedHandles($member);
             }
@@ -76,7 +76,7 @@ class EditMember extends EditRecord
                 ->icon('heroicon-o-trash')
                 ->color('danger')
                 ->modalDescription('This will remove the member from the clan and reset their position and assignments. This action cannot be undone.')
-                ->form([
+                ->schema([
                     Textarea::make('removal_reason')
                         ->label('Reason for Removal')
                         ->required(),

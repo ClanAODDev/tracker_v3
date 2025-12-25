@@ -2,13 +2,22 @@
 
 namespace App\AOD;
 
+use App\AOD\Traits\GeneratesAwardImages;
 use App\Models\Member;
 use App\Models\MemberAward;
-use Illuminate\Support\Facades\Storage;
+use GdImage;
 
 class MemberAwardImage
 {
-    protected array $fonts;
+    use GeneratesAwardImages;
+
+    private const AWARD_SIZE = 60;
+
+    private const MAX_AWARDS = 4;
+
+    private array $fonts;
+
+    private array $options;
 
     public function __construct()
     {
@@ -19,212 +28,165 @@ class MemberAwardImage
         ];
     }
 
-    public function generateAwardsImage(Member $member)
+    public function generateAwardsImage(Member $member): string
     {
         $baseImagePath = public_path('images/dynamic-images/bgs/awards_base_image.png');
         abort_unless(file_exists($baseImagePath), 404, 'Base image not found.');
 
+        $awardsData = $this->fetchAwardsData($member);
+
+        if (empty($awardsData)) {
+            return $this->loadFallbackImage(public_path('images/dynamic-images/bgs/no-awards-base-image.png'))
+                ?? $this->renderToPng($this->createPlaceholderImage(self::AWARD_SIZE, self::AWARD_SIZE));
+        }
+
         $baseImage = @imagecreatefrompng($baseImagePath);
         imagesavealpha($baseImage, true);
 
-        $awardsData = $this->fetchAwardsData($member);
+        $this->options = $this->parseOptions(count($awardsData));
+        $awards = array_slice($awardsData, 0, $this->options['count']);
 
-        $awardCount = request()->get('award_count', count($awardsData));
-        $awardCount = min(max((int) $awardCount, 1), 4);
+        $this->placeAwards($baseImage, $awards);
 
-        if (count($awardsData) < $awardCount) {
-            $noAwardsImage = public_path('images/dynamic-images/bgs/no-awards-base-image.png');
-            if (file_exists($noAwardsImage)) {
-                $brokenImage = @imagecreatefrompng($noAwardsImage);
-                header('Content-Type: image/png');
-                imagepng($brokenImage);
-                imagedestroy($brokenImage);
-
-                exit;
-            }
-        }
-
-        $awards = array_slice($awardsData, 0, $awardCount);
-        $this->placeAwardsOnImage($baseImage, $awards, $awardCount);
-
-        header('Content-Type: image/png');
-
-        ob_start();
-        imagepng($baseImage);
-        $imageContent = ob_get_clean();
-
-        imagedestroy($baseImage);
-
-        return $imageContent;
+        return $this->renderToPng($baseImage);
     }
 
-    protected function fetchAwardsData(Member $member): array
+    private function parseOptions(int $availableCount): array
+    {
+        $requestedCount = (int) request('award_count', $availableCount);
+        $count = min(max($requestedCount, 1), min(self::MAX_AWARDS, $availableCount));
+
+        $fontType = in_array(request('font'), ['ttf', 'bitmap'], true) ? request('font') : 'ttf';
+
+        return [
+            'count' => $count,
+            'textOffset' => $this->clampInt(request('text_offset'), 1, 45, 20),
+            'imageOffset' => $this->clampInt(request('image_offset'), 1, 45, 20),
+            'textWidth' => $this->clampInt(request('text_container_width'), 1, 200, 100),
+            'fontType' => $fontType,
+            'fontSize' => $this->parseFontSize($fontType),
+            'textTransform' => request('text_transform'),
+            'showDivision' => (bool) request('division_abbreviation'),
+        ];
+    }
+
+    private function clampInt($value, int $min, int $max, int $default): int
+    {
+        $int = filter_var($value, FILTER_VALIDATE_INT);
+
+        return $int !== false ? max($min, min($max, $int)) : $default;
+    }
+
+    private function parseFontSize(string $fontType): int
+    {
+        $ranges = $fontType === 'ttf' ? [7, 12, 8] : [1, 5, 1];
+
+        return $this->clampInt(request('font_size'), $ranges[0], $ranges[1], $ranges[2]);
+    }
+
+    private function fetchAwardsData(Member $member): array
     {
         return MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
             ->leftJoin('divisions', 'awards.division_id', '=', 'divisions.id')
             ->where('approved', true)
             ->orderBy('awards.display_order')
-            ->get([
-                'awards.image as award_image',
-                'awards.name as award_name',
-                'divisions.abbreviation as division',
+            ->get(['awards.image', 'awards.name', 'divisions.abbreviation'])
+            ->map(fn ($item) => [
+                'image' => $item->image,
+                'name' => $item->name,
+                'division' => $item->abbreviation ? strtoupper($item->abbreviation) : null,
             ])
-            ->map(function ($item) {
-                return [
-                    'award_image' => $item->award_image,
-                    'award_name' => $item->award_name,
-                    'division' => $item->division ? strtoupper($item->division) : null,
-                ];
-            })
             ->toArray();
     }
 
-    protected function placeAwardsOnImage($baseImage, $awards, $awardCount): void
+    private function placeAwards(GdImage $canvas, array $awards): void
     {
-        $imageWidth = 60;
-        $imageHeight = 60;
-        $baseWidth = imagesx($baseImage);
-        $baseHeight = imagesy($baseImage);
+        $baseWidth = imagesx($canvas);
+        $baseHeight = imagesy($canvas);
+        $count = count($awards);
 
-        $textOffset = $this->filterInt(request('text_offset'), 1, 45, 20);
-        $imageOffset = $this->filterInt(request('image_offset'), 1, 45, 20);
-        $font = in_array(request('font'), ['ttf', 'bitmap'], true) ? request('font') : 'ttf';
-        $fontSize = $this->filterFontSize($font);
-        $textContainerWidth = $this->filterInt(request('text_container_width'), 1, null, 100);
-
-        $spacing = ($baseWidth - ($awardCount * $imageWidth)) / ($awardCount + 1);
+        $spacing = ($baseWidth - ($count * self::AWARD_SIZE)) / ($count + 1);
         $x = $spacing;
 
-        foreach ($awards as $fileData) {
-            $x = $this->placeImageAndText(
-                $baseImage,
-                $fileData,
-                $x,
-                $imageWidth,
-                $imageHeight,
-                $textOffset,
-                $baseHeight,
-                $font,
-                $spacing,
-                $textContainerWidth,
-                $imageOffset,
-                $fontSize
-            );
+        foreach ($awards as $award) {
+            $x = $this->placeAward($canvas, $award, $x, $baseHeight, $spacing);
         }
     }
 
-    protected function placeImageAndText($baseImage, $fileData, $x, $imageWidth, $imageHeight, $textOffset, $baseHeight, $font, $spacing, $maxTextWidth, $imageVerticalShift, $fontSize): mixed
+    private function placeAward(GdImage $canvas, array $award, float $x, int $baseHeight, float $spacing): float
     {
-        $filePath = Storage::path('public/' . $fileData['award_image']);
-        $awardName = $fileData['award_name'];
-        $division = $fileData['division'];
+        $awardImage = $this->loadAwardImage($award['image'], self::AWARD_SIZE, self::AWARD_SIZE);
+        $resized = $this->resizeImage($awardImage, self::AWARD_SIZE, self::AWARD_SIZE);
 
-        $originalImage = @imagecreatefrompng($filePath);
-        $resizedImage = imagecreatetruecolor($imageWidth, $imageHeight);
-        imagesavealpha($resizedImage, true);
-        $transparentColor = imagecolorallocatealpha($resizedImage, 0, 0, 0, 127);
-        imagefill($resizedImage, 0, 0, $transparentColor);
+        $y = ($baseHeight - self::AWARD_SIZE) / 2 - $this->options['imageOffset'];
+        imagecopy($canvas, $resized, (int) $x, (int) $y, 0, 0, self::AWARD_SIZE, self::AWARD_SIZE);
 
-        imagecopyresampled(
-            $resizedImage,
-            $originalImage,
-            0, 0,
-            0, 0,
-            $imageWidth,
-            $imageHeight,
-            imagesx($originalImage),
-            imagesy($originalImage)
-        );
+        imagedestroy($awardImage);
+        imagedestroy($resized);
 
-        $yCenter = ($baseHeight - $imageHeight) / 2 - $imageVerticalShift;
-        imagecopy($baseImage, $resizedImage, $x, $yCenter, 0, 0, $imageWidth, $imageHeight);
+        $this->renderLabel($canvas, $award, $x, $y);
 
-        $textColor = imagecolorallocate($baseImage, 255, 255, 255);
-        $textY = $yCenter + $imageHeight + $textOffset;
-
-        $textX = $x + ($imageWidth / 2) - ($maxTextWidth / 2);
-        $label = request('division_abbreviation') && $division
-            ? sprintf('[%s] %s', $division, $awardName)
-            : $awardName;
-
-        $this->renderText($baseImage, $font, $label, $textX, $textY, $textColor, $maxTextWidth, $fontSize);
-
-        imagedestroy($originalImage);
-        imagedestroy($resizedImage);
-
-        return $x + $imageWidth + $spacing;
+        return $x + self::AWARD_SIZE + $spacing;
     }
 
-    protected function renderText($image, $mode, $text, $x, $y, $color, $maxWidth, $fontSize): void
+    private function renderLabel(GdImage $canvas, array $award, float $x, float $y): void
     {
-        $text = request('text_transform') === 'upper' ? strtoupper($text) : $text;
+        $textColor = imagecolorallocate($canvas, 255, 255, 255);
+        $textY = $y + self::AWARD_SIZE + $this->options['textOffset'];
+        $textX = $x + (self::AWARD_SIZE / 2) - ($this->options['textWidth'] / 2);
 
-        if ($mode === 'bitmap') {
-            $this->wrapText($image, $fontSize, $text, $x, $y, $color, $maxWidth);
-        } elseif ($mode === 'ttf') {
-            $this->wrapTextTtf($image, $this->fonts['tiny'], $text, $x, $y, $color, $maxWidth, $fontSize);
+        $label = $this->options['showDivision'] && $award['division']
+            ? sprintf('[%s] %s', $award['division'], $award['name'])
+            : $award['name'];
+
+        if ($this->options['textTransform'] === 'upper') {
+            $label = strtoupper($label);
         }
-    }
 
-    protected function filterInt($value, $min, $max, $default)
-    {
-        return filter_var($value, FILTER_VALIDATE_INT, ['options' => compact('min', 'max')]) ?: $default;
-    }
-
-    protected function filterFontSize($font): mixed
-    {
-        return filter_var(request('font_size'), FILTER_VALIDATE_INT, [
-            'options' => [
-                'min_range' => $font === 'ttf' ? 7 : 1,
-                'max_range' => $font === 'ttf' ? 12 : 5,
-            ],
-        ]) ?: ($font === 'ttf' ? 8 : 1);
-    }
-
-    protected function gracefulFail(): void
-    {
-        $brokenImagePath = public_path('images/dynamic-images/bgs/awards_broke_image.png');
-        if (file_exists($brokenImagePath)) {
-            $brokenImage = @imagecreatefrompng($brokenImagePath);
-            header('Content-Type: image/png');
-            imagepng($brokenImage);
-            imagedestroy($brokenImage);
+        if ($this->options['fontType'] === 'bitmap') {
+            $this->wrapBitmapText($canvas, $label, $textX, $textY, $textColor);
         } else {
-            abort(500, 'Broken image not found.');
+            $this->wrapTtfText($canvas, $label, $textX, $textY, $textColor);
         }
     }
 
-    protected function wrapText($image, $font, $text, $x, $y, $color, $maxWidth): void
+    private function wrapBitmapText(GdImage $image, string $text, float $x, float $y, int $color): void
     {
+        $font = $this->options['fontSize'];
         $charWidth = imagefontwidth($font);
+        $maxWidth = $this->options['textWidth'];
 
-        $lines = [];
-        $words = explode(' ', $text);
-        $currentLine = '';
-
-        foreach ($words as $word) {
-            if (strlen($currentLine . ' ' . $word) * $charWidth <= $maxWidth) {
-                $currentLine .= ($currentLine ? ' ' : '') . $word;
-            } else {
-                $lines[] = $currentLine;
-                $currentLine = $word;
-            }
-        }
-
-        if ($currentLine) {
-            $lines[] = $currentLine;
-        }
+        $lines = $this->wrapText($text, fn ($line) => strlen($line) * $charWidth, $maxWidth);
 
         foreach ($lines as $line) {
             $lineWidth = strlen($line) * $charWidth;
             $centeredX = $x + ($maxWidth / 2) - ($lineWidth / 2);
-            imagestring($image, $font, $centeredX, $y, $line, $color);
+            imagestring($image, $font, (int) $centeredX, (int) $y, $line, $color);
             $y += imagefontheight($font);
         }
     }
 
-    protected function wrapTextTtf($image, $fontPath, $text, $x, $y, $color, $maxWidth, $fontSize): void
+    private function wrapTtfText(GdImage $image, string $text, float $x, float $y, int $color): void
+    {
+        $fontSize = $this->options['fontSize'];
+        $fontPath = $this->fonts['tiny'];
+        $maxWidth = $this->options['textWidth'];
+
+        $measureWidth = fn ($line) => abs(imagettfbbox($fontSize, 0, $fontPath, $line)[2] ?? 0);
+        $lines = $this->wrapText($text, $measureWidth, $maxWidth);
+
+        foreach ($lines as $line) {
+            $box = imagettfbbox($fontSize, 0, $fontPath, $line);
+            $lineWidth = abs($box[2] - $box[0]);
+            $centeredX = $x + ($maxWidth / 2) - ($lineWidth / 2);
+
+            imagettftext($image, $fontSize, 0, (int) $centeredX, (int) $y, $color, $fontPath, $line);
+            $y += abs($box[1] - $box[7]) + 5;
+        }
+    }
+
+    private function wrapText(string $text, callable $measureWidth, int $maxWidth): array
     {
         $words = explode(' ', $text);
         $lines = [];
@@ -232,14 +194,13 @@ class MemberAwardImage
 
         foreach ($words as $word) {
             $testLine = $currentLine ? "$currentLine $word" : $word;
-            $testBox = imagettfbbox($fontSize, 0, $fontPath, $testLine);
 
-            $testWidth = abs($testBox[2] - $testBox[0]);
-
-            if ($testWidth <= $maxWidth) {
+            if ($measureWidth($testLine) <= $maxWidth) {
                 $currentLine = $testLine;
             } else {
-                $lines[] = $currentLine;
+                if ($currentLine) {
+                    $lines[] = $currentLine;
+                }
                 $currentLine = $word;
             }
         }
@@ -248,15 +209,6 @@ class MemberAwardImage
             $lines[] = $currentLine;
         }
 
-        foreach ($lines as $line) {
-            $lineBox = imagettfbbox($fontSize, 0, $fontPath, $line);
-            $lineWidth = abs($lineBox[2] - $lineBox[0]);
-
-            $centeredX = $x + ($maxWidth / 2) - ($lineWidth / 2);
-
-            imagettftext($image, $fontSize, 0, $centeredX, $y, $color, $fontPath, $line);
-
-            $y += abs($lineBox[1] - $lineBox[7]) + 5;
-        }
+        return $lines;
     }
 }

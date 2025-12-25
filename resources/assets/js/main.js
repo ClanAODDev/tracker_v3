@@ -357,6 +357,7 @@ var Tracker = Tracker || {};
 
                 $('.award-card').each(function () {
                     var $card = $(this);
+                    var $col = $card.closest('[class*="col-"]');
                     var cardRarity = null;
 
                     ['mythic', 'legendary', 'epic', 'rare', 'common'].forEach(function (r) {
@@ -366,7 +367,24 @@ var Tracker = Tracker || {};
                     });
 
                     var show = activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1;
-                    $card.closest('[class*="col-"]').toggle(show);
+                    var wasHidden = $col.hasClass('filter-hidden');
+
+                    if (show) {
+                        $col.removeClass('filter-hidden filter-hiding');
+                        if (wasHidden) {
+                            $col.addClass('filter-entering');
+                            setTimeout(function() {
+                                $col.removeClass('filter-entering').addClass('filter-visible');
+                            }, 300);
+                        } else {
+                            $col.addClass('filter-visible');
+                        }
+                    } else if (!$col.hasClass('filter-hidden') && !$col.hasClass('filter-hiding')) {
+                        $col.removeClass('filter-visible filter-entering').addClass('filter-hiding');
+                        setTimeout(function() {
+                            $col.removeClass('filter-hiding').addClass('filter-hidden');
+                        }, 250);
+                    }
                 });
             }
 

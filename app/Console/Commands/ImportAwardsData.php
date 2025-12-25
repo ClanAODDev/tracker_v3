@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Award;
 use App\Models\MemberAward;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -125,7 +126,7 @@ class ImportAwardsData extends Command
 
                 $model::create($data);
                 $rowCount++;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->error('Error processing row: ' . implode(',', $row));
                 $this->error($e->getMessage());
             }

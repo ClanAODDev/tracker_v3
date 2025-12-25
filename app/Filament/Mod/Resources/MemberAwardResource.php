@@ -2,15 +2,25 @@
 
 namespace App\Filament\Mod\Resources;
 
-use App\Filament\Mod\Resources\MemberAwardResource\Pages;
+use App\Filament\Mod\Resources\MemberAwardResource\Pages\CreateMemberAward;
+use App\Filament\Mod\Resources\MemberAwardResource\Pages\EditMemberAward;
+use App\Filament\Mod\Resources\MemberAwardResource\Pages\ListMemberAwards;
 use App\Filament\Mod\Resources\MemberAwardResource\RelationManagers\AwardRelationManager;
 use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
 use App\Models\MemberAward;
 use App\Notifications\Channel\NotifyDivisionMemberAwarded;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,9 +31,9 @@ class MemberAwardResource extends Resource
 {
     protected static ?string $model = MemberAward::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-trophy';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     public static function getNavigationBadge(): ?string
     {
@@ -45,16 +55,16 @@ class MemberAwardResource extends Resource
         return auth()->user()->isRole(['admin', 'sr_ldr']);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('award_id')
+        return $schema
+            ->components([
+                Select::make('award_id')
                     ->relationship('award', 'name')
                     ->required()
                     ->hiddenOn('edit'),
 
-                Forms\Components\Select::make('member_id')
+                Select::make('member_id')
                     ->relationship('member', 'name', function (Builder $query) {
                         $query->whereHas('division', function (Builder $subQuery) {
                             $subQuery->where('active', true);
@@ -64,14 +74,14 @@ class MemberAwardResource extends Resource
                     ->searchable()
                     ->required(),
 
-                Forms\Components\Textarea::make('reason')
+                Textarea::make('reason')
                     ->required()
                     ->columnSpanFull()
                     ->rows(5),
 
-                Forms\Components\Section::make('Metadata')->schema([
-                    Forms\Components\DateTimePicker::make('created_at')->default(now()),
-                    Forms\Components\DateTimePicker::make('updated_at')->default(now()),
+                Section::make('Metadata')->schema([
+                    DateTimePicker::make('created_at')->default(now()),
+                    DateTimePicker::make('updated_at')->default(now()),
                 ])->columns()->hiddenOn(['edit', 'create']),
 
             ]);
@@ -81,47 +91,47 @@ class MemberAwardResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('award.name')
+                TextColumn::make('award.name')
                     ->numeric()
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member.name')
+                TextColumn::make('member.name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('reason')
+                TextColumn::make('reason')
                     ->label('Justification')
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('division.name'),
+                TextColumn::make('division.name'),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters(filters: [
-                Tables\Filters\Filter::make('needs approval')
+                Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
                 SelectFilter::make('by division')->relationship('division', 'name'),
                 SelectFilter::make('award')->relationship('award', 'name'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
 
-                    Tables\Actions\BulkAction::make('approve')
+                    BulkAction::make('approve')
                         ->label('Approve')
                         ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true])),
 
-                    Tables\Actions\BulkAction::make('approve_and_notify')
+                    BulkAction::make('approve_and_notify')
                         ->label('Approve and Notify')
                         ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true]))
@@ -153,9 +163,9 @@ class MemberAwardResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMemberAwards::route('/'),
-            'create' => Pages\CreateMemberAward::route('/create'),
-            'edit' => Pages\EditMemberAward::route('/{record}/edit'),
+            'index' => ListMemberAwards::route('/'),
+            'create' => CreateMemberAward::route('/create'),
+            'edit' => EditMemberAward::route('/{record}/edit'),
         ];
     }
 }

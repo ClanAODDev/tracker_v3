@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\NoteResource\Pages;
 
 use App\Filament\Admin\Resources\NoteResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditNote extends EditRecord
@@ -13,7 +13,7 @@ class EditNote extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

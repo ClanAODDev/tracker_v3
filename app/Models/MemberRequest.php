@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MemberRequest extends \Illuminate\Database\Eloquent\Model
+class MemberRequest extends Model
 {
     protected $appends = ['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'];
 

@@ -4,8 +4,8 @@ namespace App\Filament\Admin\Resources\LeaveResource\Pages;
 
 use App\Filament\Admin\Resources\LeaveResource;
 use App\Models\Leave;
-use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditLeave extends EditRecord
@@ -15,7 +15,7 @@ class EditLeave extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
             Action::make('approve')
                 ->label('Approve Leave')
                 ->action(fn (Leave $leave) => $leave->update(['approver_id' => auth()->id()]))

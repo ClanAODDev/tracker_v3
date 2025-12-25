@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\MemberRequestResource\Pages;
 
 use App\Filament\Admin\Resources\MemberRequestResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditMemberRequest extends EditRecord
@@ -13,7 +13,7 @@ class EditMemberRequest extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

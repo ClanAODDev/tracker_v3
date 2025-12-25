@@ -2,8 +2,11 @@
 
 namespace App\Filament\Admin\Resources\GlobalTagResource\RelationManagers;
 
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DetachAction;
+use Filament\Actions\DetachBulkAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class MembersRelationManager extends RelationManager
@@ -14,30 +17,30 @@ class MembersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->badge()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->label('Division')
                     ->default('None')
                     ->badge()
                     ->color(fn ($record) => $record->division_id ? 'info' : 'gray')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('pivot.created_at')
+                TextColumn::make('pivot.created_at')
                     ->label('Tagged At')
                     ->dateTime()
                     ->sortable(query: fn ($query, $direction) => $query->orderBy('member_tag.created_at', $direction)),
             ])
             ->defaultSort('member_tag.created_at', 'desc')
-            ->actions([
-                Tables\Actions\DetachAction::make()->label('Remove'),
+            ->recordActions([
+                DetachAction::make()->label('Remove'),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make()->label('Remove'),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DetachBulkAction::make()->label('Remove'),
                 ]),
             ]);
     }

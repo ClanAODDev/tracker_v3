@@ -2,17 +2,27 @@
 
 namespace App\Filament\Mod\Resources;
 
-use App\Filament\Mod\Resources\PlatoonResource\Pages;
+use App\Filament\Mod\Resources\PlatoonResource\Pages\EditPlatoon;
+use App\Filament\Mod\Resources\PlatoonResource\Pages\ListPlatoons;
 use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\MembersRelationManager;
 use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationManager;
 use App\Models\Division;
+use App\Models\Member;
 use App\Models\Platoon;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\RestoreAction;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -21,30 +31,30 @@ class PlatoonResource extends Resource
 {
     protected static ?string $model = Platoon::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-square-2-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-square-2-stack';
 
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $divisionId = Division::whereSlug(request('division'))->first()->id ?? auth()->user()->member->division_id;
 
-        return $form
-            ->schema(fn (?Platoon $record) => [
+        return $schema
+            ->components(fn (?Platoon $record) => [
 
                 Hidden::make('division_id')->default($divisionId),
 
-                Forms\Components\Section::make('Basic Info')->schema([
-                    Forms\Components\TextInput::make('name')
+                Section::make('Basic Info')->schema([
+                    TextInput::make('name')
                         ->required()
                         ->maxLength(255),
-                    Forms\Components\TextInput::make('logo')
+                    TextInput::make('logo')
                         ->placeholder('https://')
                         ->maxLength(255)
                         ->default(null),
                 ])->columns(),
 
-                Forms\Components\Section::make('Leadership')
+                Section::make('Leadership')
                     ->hiddenOn('create')
                     ->schema([
                         Select::make('leader_id')
@@ -55,7 +65,7 @@ class PlatoonResource extends Resource
                             ->getSearchResultsUsing(function (string $search) use ($record) {
                                 $divisionId = $record->division_id;
 
-                                return \App\Models\Member::query()
+                                return Member::query()
                                     ->where('division_id', $divisionId)
                                     ->where(function ($query) use ($search) {
                                         $query->where('name', 'like', "%{$search}%")
@@ -65,7 +75,7 @@ class PlatoonResource extends Resource
                                     ->limit(50)
                                     ->pluck('name', 'clan_id');
                             })
-                            ->getOptionLabelUsing(fn ($value) => \App\Models\Member::where('clan_id',
+                            ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
                                 $value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the platoon being assigned.')
                             ->nullable(),
@@ -75,7 +85,7 @@ class PlatoonResource extends Resource
                             ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id',
                                 $record?->leader_id)
                             ),
-                        Forms\Components\Placeholder::make('Note: Changing Leadership')
+                        Placeholder::make('Note: Changing Leadership')
                             ->content("This change will update the new leader's position to Platoon Leader and the previous leader's position to Member. Will also reassign the new leader to this platoon")
                             ->visible(fn (callable $get
                             ) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
@@ -87,26 +97,26 @@ class PlatoonResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextInputColumn::make('order')
+                TextInputColumn::make('order')
                     ->width('10px')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('leader.name')
+                TextColumn::make('leader.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -114,14 +124,14 @@ class PlatoonResource extends Resource
                 $query->where('division_id', auth()->user()->member->division_id);
             })
             ->filters([
-                Tables\Filters\TrashedFilter::make(),
+                TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\RestoreAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                RestoreAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -138,8 +148,8 @@ class PlatoonResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPlatoons::route('/'),
-            'edit' => Pages\EditPlatoon::route('/{record}/edit'),
+            'index' => ListPlatoons::route('/'),
+            'edit' => EditPlatoon::route('/{record}/edit'),
         ];
     }
 

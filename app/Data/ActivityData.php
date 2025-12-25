@@ -2,6 +2,9 @@
 
 namespace App\Data;
 
+use App\Models\Division;
+use App\Models\Member;
+
 readonly class ActivityData
 {
     public function __construct(
@@ -11,7 +14,7 @@ readonly class ActivityData
         public int $divisionMax,
     ) {}
 
-    public static function fromMember(\App\Models\Member $member, ?\App\Models\Division $division): self
+    public static function fromMember(Member $member, ?Division $division): self
     {
         $daysSinceVoice = $member->last_voice_activity
             ? (int) $member->last_voice_activity->diffInDays()

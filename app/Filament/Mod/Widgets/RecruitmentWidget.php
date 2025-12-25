@@ -4,7 +4,9 @@ namespace App\Filament\Mod\Widgets;
 
 use App\Models\Division;
 use App\Models\Member;
-use Filament\Tables;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,39 +57,39 @@ class RecruitmentWidget extends BaseWidget
                     ->orderByDesc('join_date')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Member')
                     ->searchable()
                     ->url(fn (Member $record) => $record->clan_id ? route('member', $record->clan_id) : null),
 
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('Rank')
                     ->badge()
                     ->formatStateUsing(fn ($state) => $state?->getAbbreviation()),
 
-                Tables\Columns\TextColumn::make('recruiter.name')
+                TextColumn::make('recruiter.name')
                     ->label('Recruited By')
                     ->default('Unknown')
                     ->url(fn (Member $record) => $record->recruiter ? route('member', $record->recruiter->clan_id) : null),
 
-                Tables\Columns\TextColumn::make('join_date')
+                TextColumn::make('join_date')
                     ->label('Joined')
                     ->date()
                     ->sortable(),
             ])
             ->headerActions([
-                Tables\Actions\Action::make('viewRecruiters')
+                Action::make('viewRecruiters')
                     ->label('Top Recruiters')
                     ->icon('heroicon-o-trophy')
                     ->action(fn () => $this->tableView = 'recruiters'),
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\Action::make('30days')
+                ActionGroup::make([
+                    Action::make('30days')
                         ->label('30 Days')
                         ->action(fn () => $this->days = 30),
-                    Tables\Actions\Action::make('90days')
+                    Action::make('90days')
                         ->label('90 Days')
                         ->action(fn () => $this->days = 90),
-                    Tables\Actions\Action::make('365days')
+                    Action::make('365days')
                         ->label('1 Year')
                         ->action(fn () => $this->days = 365),
                 ])->label('Time Range')->icon('heroicon-o-calendar')->button(),
@@ -119,17 +121,17 @@ class RecruitmentWidget extends BaseWidget
                     ->orderByDesc('recruits_count')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Recruiter')
                     ->searchable()
                     ->url(fn (Member $record) => route('member', $record->clan_id)),
 
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('Rank')
                     ->badge()
                     ->formatStateUsing(fn ($state) => $state?->getAbbreviation()),
 
-                Tables\Columns\TextColumn::make('recruits_count')
+                TextColumn::make('recruits_count')
                     ->label('Recruits')
                     ->sortable()
                     ->alignCenter()
@@ -137,18 +139,18 @@ class RecruitmentWidget extends BaseWidget
                     ->color('success'),
             ])
             ->headerActions([
-                Tables\Actions\Action::make('viewRecent')
+                Action::make('viewRecent')
                     ->label('Recent Recruits')
                     ->icon('heroicon-o-user-plus')
                     ->action(fn () => $this->tableView = 'recent'),
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\Action::make('30days')
+                ActionGroup::make([
+                    Action::make('30days')
                         ->label('30 Days')
                         ->action(fn () => $this->days = 30),
-                    Tables\Actions\Action::make('90days')
+                    Action::make('90days')
                         ->label('90 Days')
                         ->action(fn () => $this->days = 90),
-                    Tables\Actions\Action::make('365days')
+                    Action::make('365days')
                         ->label('1 Year')
                         ->action(fn () => $this->days = 365),
                 ])->label('Time Range')->icon('heroicon-o-calendar')->button(),

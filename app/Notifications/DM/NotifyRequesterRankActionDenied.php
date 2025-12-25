@@ -6,6 +6,7 @@ use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Models\RankAction;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -33,7 +34,7 @@ class NotifyRequesterRankActionDenied extends Notification implements ShouldQueu
     /**
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($notifiable)
     {

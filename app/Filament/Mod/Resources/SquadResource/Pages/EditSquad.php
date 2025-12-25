@@ -2,11 +2,12 @@
 
 namespace App\Filament\Mod\Resources\SquadResource\Pages;
 
+use App\Enums\Position;
 use App\Filament\Mod\Resources\SquadResource;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
@@ -41,8 +42,8 @@ class EditSquad extends EditRecord
 
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
-                \App\Models\Member::where('clan_id', $newLeaderId)->update([
-                    'position' => \App\Enums\Position::SQUAD_LEADER,
+                Member::where('clan_id', $newLeaderId)->update([
+                    'position' => Position::SQUAD_LEADER,
                     'platoon_id' => $this->record->platoon_id,
                     'squad_id' => $this->record->id,
                 ]);
@@ -54,8 +55,8 @@ class EditSquad extends EditRecord
             }
 
             if ($originalLeaderId) {
-                \App\Models\Member::where('clan_id', $originalLeaderId)->update([
-                    'position' => \App\Enums\Position::MEMBER,
+                Member::where('clan_id', $originalLeaderId)->update([
+                    'position' => Position::MEMBER,
                     'platoon_id' => null,
                     'squad_id' => null,
                 ]);
@@ -76,7 +77,7 @@ class EditSquad extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->modalDescription('Assigned members will be removed from this squad. Are you sure?')
                 ->action(function ($record) {
                     Member::where('squad_id', $record->id)->update([

@@ -7,7 +7,7 @@ use App\Filament\Mod\Resources\PlatoonResource;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
@@ -45,7 +45,7 @@ class EditPlatoon extends EditRecord
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
-                    'position' => \App\Enums\Position::PLATOON_LEADER,
+                    'position' => Position::PLATOON_LEADER,
                     'platoon_id' => $this->record->id,
                     'squad_id' => 0,
                 ]);
@@ -76,7 +76,7 @@ class EditPlatoon extends EditRecord
     {
         return [
 
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->modalDescription('Assigned members will be removed from this platoon and any squads within. Are you sure?')
                 ->action(function ($record) {
                     Member::where('platoon_id', $record->id)->update([

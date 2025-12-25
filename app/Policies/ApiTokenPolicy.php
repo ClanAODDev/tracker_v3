@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Rank;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -18,7 +19,7 @@ class ApiTokenPolicy
 
     public function create(User $user): bool
     {
-        return $user->member->rank->value > \App\Enums\Rank::TRAINER->value
+        return $user->member->rank->value > Rank::TRAINER->value
             && \in_array($user->role_id, [2, 3, 4, 5], true);
     }
 

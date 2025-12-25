@@ -5,7 +5,9 @@ namespace App\Filament\Admin\Resources\RankActionResource\Pages;
 use App\Filament\Admin\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
+use Exception;
 use Filament\Resources\Pages\CreateRecord;
+use Log;
 
 class CreateRankAction extends CreateRecord
 {
@@ -26,8 +28,8 @@ class CreateRankAction extends CreateRecord
 
         try {
             UpdateRankForMember::dispatch($record);
-        } catch (\Exception $exception) {
-            \Log::error($exception->getMessage());
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Config\Repository;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -108,7 +109,7 @@ class Ticket extends Model
         return $this->stateColors[$this->state];
     }
 
-    public function ownTo(\Illuminate\Contracts\Auth\Authenticatable $user)
+    public function ownTo(Authenticatable $user)
     {
         $this->owner()->associate($user);
         $this->state = 'assigned';

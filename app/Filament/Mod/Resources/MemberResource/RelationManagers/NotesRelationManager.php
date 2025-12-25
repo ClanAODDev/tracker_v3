@@ -3,27 +3,33 @@
 namespace App\Filament\Mod\Resources\MemberResource\RelationManagers;
 
 use App\Models\Note;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('body')
+        return $schema
+            ->components([
+                Textarea::make('body')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('forum_thread_id')
+                TextInput::make('forum_thread_id')
                     ->numeric()
                     ->default(null),
-                Forms\Components\Select::make('type')
+                Select::make('type')
                     ->options(collect(Note::allNoteTypes()))
                     ->native(false)
                     ->required(),
@@ -35,20 +41,20 @@ class NotesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('body')
             ->columns([
-                Tables\Columns\TextColumn::make('body')
+                TextColumn::make('body')
                     ->limit(60),
-                Tables\Columns\TextColumn::make('author.name')
+                TextColumn::make('author.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('type'),
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -59,13 +65,13 @@ class NotesRelationManager extends RelationManager
             ->headerActions([
                 //                Tables\Actions\CreateAction::make(),
             ])
-            ->actions([
+            ->recordActions([
                 //                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

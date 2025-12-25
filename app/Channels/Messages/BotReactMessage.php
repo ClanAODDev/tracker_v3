@@ -26,7 +26,7 @@ class BotReactMessage
     public function status(string $status)
     {
         if (! isset($this->states[$status])) {
-            throw new \Exception('Invalid status provided to BotReactMessage');
+            throw new Exception('Invalid status provided to BotReactMessage');
         }
 
         $this->emote = $this->states[$status];

@@ -4,9 +4,11 @@ namespace App\Jobs;
 
 use App\Models\Member;
 use App\Services\AODBotService;
+use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Log;
 
 class SyncDiscordMember implements ShouldQueue
 {
@@ -25,8 +27,8 @@ class SyncDiscordMember implements ShouldQueue
         try {
             $botAPIResponse = (new AODBotService)->getForumMember($this->member->clan_id);
             $botAPIResponse = json_decode($botAPIResponse->getBody())[0];
-        } catch (\Exception $exception) {
-            \Log::error($exception->getMessage());
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
 
             return;
         }
@@ -37,7 +39,7 @@ class SyncDiscordMember implements ShouldQueue
             try {
                 (new AODBotService)->updateDiscordMember($this->member->discord_id);
             } catch (GuzzleException $exception) {
-                \Log::error($exception->getMessage());
+                Log::error($exception->getMessage());
             }
         }
 

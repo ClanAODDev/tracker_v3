@@ -5,8 +5,12 @@ namespace App\Filament\Mod\Resources\MemberRequestResource\Pages;
 use App\Filament\Mod\Resources\MemberRequestResource;
 use App\Jobs\AddClanMember;
 use App\Models\MemberRequest;
-use Filament\Actions;
-use Filament\Forms;
+use App\Notifications\Channel\NotifyDivisionMemberRequestApproved;
+use App\Notifications\Channel\NotifyDivisionMemberRequestHoldLifted;
+use App\Notifications\Channel\NotifyDivisionMemberRequestPutOnHold;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
@@ -14,7 +18,7 @@ class EditMemberRequest extends EditRecord
 {
     protected static string $resource = MemberRequestResource::class;
 
-    protected function getSaveFormAction(): Actions\Action
+    protected function getSaveFormAction(): Action
     {
         return parent::getSaveFormAction()->hidden();
     }
@@ -25,7 +29,7 @@ class EditMemberRequest extends EditRecord
         $record = $this->getRecord();
 
         return [
-            Actions\Action::make('approve')
+            Action::make('approve')
                 ->label('Approve')
                 ->icon('heroicon-o-check-circle')
                 ->visible(function (): bool {
@@ -40,7 +44,7 @@ class EditMemberRequest extends EditRecord
                     $rec = $this->getRecord();
                     $user = auth()->user();
 
-                    $rec->division->notify(new \App\Notifications\Channel\NotifyDivisionMemberRequestApproved(
+                    $rec->division->notify(new NotifyDivisionMemberRequestApproved(
                         $user,
                         $rec->member
                     ));
@@ -53,7 +57,7 @@ class EditMemberRequest extends EditRecord
                     $this->redirect($indexUrl, navigate: true);
                 }),
 
-            Actions\Action::make('placeOnHold')
+            Action::make('placeOnHold')
                 ->label('Place on Hold')
                 ->color('warning')
                 ->icon('heroicon-o-pause-circle')
@@ -64,8 +68,8 @@ class EditMemberRequest extends EditRecord
 
                     return ! $onHold && ! $isApproved;
                 })
-                ->form([
-                    Forms\Components\Textarea::make('notes')
+                ->schema([
+                    Textarea::make('notes')
                         ->label('Reason for placing on hold')
                         ->helperText('Division officers will be notified of the hold status.')
                         ->required()
@@ -77,7 +81,7 @@ class EditMemberRequest extends EditRecord
 
                     $rec->placeOnHold($data['notes']);
 
-                    $rec->division->notify(new \App\Notifications\Channel\NotifyDivisionMemberRequestPutOnHold(
+                    $rec->division->notify(new NotifyDivisionMemberRequestPutOnHold(
                         $rec,
                         $user,
                         $rec->member
@@ -87,7 +91,7 @@ class EditMemberRequest extends EditRecord
                     $this->redirect($indexUrl, navigate: true);
                 }),
 
-            Actions\Action::make('removeHold')
+            Action::make('removeHold')
                 ->label('Remove Hold')
                 ->icon('heroicon-o-play')
                 ->visible(function (): bool {
@@ -101,7 +105,7 @@ class EditMemberRequest extends EditRecord
 
                     $rec->removeHold();
 
-                    $rec->division->notify(new \App\Notifications\Channel\NotifyDivisionMemberRequestHoldLifted(
+                    $rec->division->notify(new NotifyDivisionMemberRequestHoldLifted(
                         $rec,
                         $rec->member
                     ));
@@ -109,9 +113,9 @@ class EditMemberRequest extends EditRecord
                     $this->redirect(static::getResource()::getUrl('index'), navigate: true);
                 }),
 
-            Actions\DeleteAction::make()->visible(fn () => ! $record->isApproved()),
+            DeleteAction::make()->visible(fn () => ! $record->isApproved()),
 
-            Actions\Action::make('reprocess')
+            Action::make('reprocess')
                 ->label('Re-Process')
                 ->icon('heroicon-o-arrow-path')
                 ->color('info')

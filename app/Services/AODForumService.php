@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
+use Log;
+use RuntimeException;
 
 class AODForumService
 {
@@ -41,8 +44,8 @@ class AODForumService
             $parts = explode(' ', trim($clean));
             $last = end($parts);
 
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
 
             return 'Error: Invalid user context';
         }
@@ -70,7 +73,7 @@ class AODForumService
         ]);
 
         if (! is_string($response) || ! str_contains($response, self::SUCCESS)) {
-            throw new \RuntimeException("Failed to add member $name - $response");
+            throw new RuntimeException("Failed to add member $name - $response");
         }
 
         return true;
@@ -88,7 +91,7 @@ class AODForumService
         ]);
 
         if (! is_string($response) || ! str_contains($response, self::SUCCESS)) {
-            throw new \RuntimeException("Failed to remove member $memberIdBeingRemoved - $response");
+            throw new RuntimeException("Failed to remove member $memberIdBeingRemoved - $response");
         }
 
         return true;

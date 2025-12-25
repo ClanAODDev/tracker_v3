@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\TicketResource\Pages;
 
 use App\Filament\Admin\Resources\TicketResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditTicket extends EditRecord
@@ -13,7 +13,7 @@ class EditTicket extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

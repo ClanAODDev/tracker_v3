@@ -3,7 +3,7 @@
 namespace App\Filament\Mod\Resources\DivisionTagResource\Pages;
 
 use App\Filament\Mod\Resources\DivisionTagResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListDivisionTags extends ListRecords
@@ -13,7 +13,7 @@ class ListDivisionTags extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

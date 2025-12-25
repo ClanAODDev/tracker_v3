@@ -3,13 +3,19 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Enums\Position;
-use App\Filament\Mod\Resources\MemberRequestResource\Pages;
+use App\Filament\Mod\Resources\MemberRequestResource\Pages\EditMemberRequest;
+use App\Filament\Mod\Resources\MemberRequestResource\Pages\ListMemberRequests;
 use App\Models\MemberRequest;
 use Carbon\Carbon;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Wizard;
+use Filament\Schemas\Components\Wizard\Step;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,13 +25,13 @@ class MemberRequestResource extends Resource
 {
     protected static ?string $model = MemberRequest::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-inbox';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-inbox';
 
     protected static ?string $navigationLabel = 'Member Requests';
 
     protected static ?string $pluralLabel = 'Member Requests';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     public static function getNavigationBadge(): ?string
     {
@@ -71,28 +77,28 @@ class MemberRequestResource extends Resource
         return auth()->user()?->can('manage', MemberRequest::class) ?? false;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\Wizard::make([
+        return $schema->components([
+            Wizard::make([
 
-                Forms\Components\Wizard\Step::make('Pending Approval')
+                Step::make('Pending Approval')
                     ->icon('heroicon-o-clock')
                     ->schema([
-                        Forms\Components\Section::make('Request Details')
+                        Section::make('Request Details')
                             ->description('Review the request before acting.')
                             ->columns(3)
                             ->schema([
-                                Forms\Components\Placeholder::make('Division')
+                                Placeholder::make('Division')
                                     ->content(fn (?Model $record): string => $record ? $record->division->name : ''),
-                                Forms\Components\Placeholder::make('Member')
+                                Placeholder::make('Member')
                                     ->content(fn (?Model $record): string => $record ? $record->member->name : ''),
-                                Forms\Components\Placeholder::make('Requester')
+                                Placeholder::make('Requester')
                                     ->content(fn (?Model $record): string => $record
                                         ? $record->requester->present()->rankName
                                         : ''
                                     ),
-                                Forms\Components\Placeholder::make('Created At')
+                                Placeholder::make('Created At')
                                     ->content(fn (?Model $record): string => $record
                                         ? $record->created_at?->toDayDateTimeString() . ' - ' . $record->created_at?->diffForHumans()
                                         : ''
@@ -100,7 +106,7 @@ class MemberRequestResource extends Resource
                             ]),
                     ]),
 
-                Forms\Components\Wizard\Step::make('On Hold')
+                Step::make('On Hold')
                     ->icon('heroicon-o-pause-circle')
                     ->label(fn (?Model $record): string => 'On Hold' . ($record && $record->holder ? ' - 
                     ' . $record->holder->name : ''))
@@ -110,11 +116,11 @@ class MemberRequestResource extends Resource
                     ): bool => $record && $record->isOnHold()
                     )
                     ->schema([
-                        Forms\Components\Section::make('On Hold Details')
+                        Section::make('On Hold Details')
                             ->description('Request placed on hold for the following reason:')
                             ->columns(3)
                             ->schema([
-                                Forms\Components\Textarea::make('notes')
+                                Textarea::make('notes')
                                     ->hiddenLabel()
                                     ->rows(3)
                                     ->columnSpanFull()
@@ -122,7 +128,7 @@ class MemberRequestResource extends Resource
                             ]),
                     ]),
 
-                Forms\Components\Wizard\Step::make('Approved')
+                Step::make('Approved')
                     ->visible(fn (
                         string $operation,
                         ?MemberRequest $record
@@ -130,15 +136,15 @@ class MemberRequestResource extends Resource
                     )
                     ->icon('heroicon-o-check-circle')
                     ->schema([
-                        Forms\Components\Section::make('Approval Details')
+                        Section::make('Approval Details')
                             ->columns(2)
                             ->schema([
-                                Forms\Components\Placeholder::make('Approved')
+                                Placeholder::make('Approved')
                                     ->label('Approved At')
                                     ->content(fn (?Model $record): string => $record->approved_at?->toDayDateTimeString()
                                         . ' - '
                                         . $record->approved_at?->diffForHumans()),
-                                Forms\Components\Placeholder::make('Approver')
+                                Placeholder::make('Approver')
                                     ->content(fn (?Model $record): string => $record
                                         ? $record->approver->present()->rankName
                                         : ''
@@ -168,30 +174,30 @@ class MemberRequestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('member.name')
+                TextColumn::make('member.name')
                     ->label('Member')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->label('Division')
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('requester.name')
+                TextColumn::make('requester.name')
                     ->label('Requester')
                     ->toggleable()
                     ->toggledHiddenByDefault()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('approver.name')
+                TextColumn::make('approver.name')
                     ->label('Approver')
                     ->toggleable()
                     ->toggledHiddenByDefault()
                     ->default('-'),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
                     ->badge()
                     ->label('Status')
                     ->getStateUsing(function (MemberRequest $record): string {
@@ -212,13 +218,13 @@ class MemberRequestResource extends Resource
                         'success' => 'Approved',
                         'danger' => 'On Hold',
                     ]),
-                Tables\Columns\TextColumn::make('approved_at')
+                TextColumn::make('approved_at')
                     ->label('Approved')
                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->diffForHumans())
                     ->sortable()
                     ->toggleable()
                     ->tooltip(fn ($state) => Carbon::parse($state)->toDayDateTimeString()),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Created')
                     ->sortable()
                     ->toggleable()
@@ -252,17 +258,17 @@ class MemberRequestResource extends Resource
                         };
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([]);
+            ->toolbarActions([]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMemberRequests::route('/'),
-            'edit' => Pages\EditMemberRequest::route('/{record}/edit'),
+            'index' => ListMemberRequests::route('/'),
+            'edit' => EditMemberRequest::route('/{record}/edit'),
         ];
     }
 

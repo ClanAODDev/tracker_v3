@@ -5,6 +5,7 @@ namespace App\Notifications\Channel;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -37,7 +38,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
     /**
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($ticket)
     {
@@ -46,7 +47,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
             return [];
         }
         if (! $ticket->owner->member->discord) {
-            throw new \Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
+            throw new Exception(auth()->user()->name . ' could not be notified because they do not have a valid discord.');
         }
 
         if (! $ticket->owner->settings()->get('ticket_notifications')) {

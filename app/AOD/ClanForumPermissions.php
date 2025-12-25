@@ -3,6 +3,8 @@
 namespace App\AOD;
 
 use App\AOD\Traits\Procedureable;
+use DB;
+use Log;
 
 class ClanForumPermissions
 {
@@ -25,7 +27,7 @@ class ClanForumPermissions
         $user = auth()->user();
         $user->member()->update(['groups' => $groupIds]);
 
-        $officerRoleIds = \DB::table('divisions')
+        $officerRoleIds = DB::table('divisions')
             ->select('officer_role_id')
             ->where('active', true)
             ->whereNotNull('officer_role_id')
@@ -74,7 +76,7 @@ class ClanForumPermissions
 
     private function assignRole(string $role)
     {
-        \Log::info("Role {$role} granted to user " . auth()->id());
+        Log::info("Role {$role} granted to user " . auth()->id());
 
         return auth()->user()->assignRole($role);
     }

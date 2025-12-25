@@ -4,10 +4,12 @@ namespace App\Console\Commands;
 
 use App\Models\Division;
 use App\Notifications\Channel\NotifyDivisionNewApplication;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Log;
 use SimpleXMLElement;
 
 class FetchApplicationFeeds extends Command
@@ -36,14 +38,14 @@ class FetchApplicationFeeds extends Command
                 $rssContent = $this->fetchRssContent($feedUrl);
 
                 if (! $rssContent) {
-                    \Log::error("Failed to fetch RSS content for division: {$division->name}");
+                    Log::error("Failed to fetch RSS content for division: {$division->name}");
 
                     continue;
                 }
 
                 $this->processRssFeed($division, $rssContent);
-            } catch (\Exception $exception) {
-                \Log::error($exception->getMessage());
+            } catch (Exception $exception) {
+                Log::error($exception->getMessage());
             }
         }
 
@@ -58,8 +60,8 @@ class FetchApplicationFeeds extends Command
             if ($response->ok()) {
                 return new SimpleXMLElement($response->body());
             }
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
         }
 
         return false;

@@ -4,7 +4,8 @@ namespace App\Filament\Mod\Widgets;
 
 use App\Models\Division;
 use App\Models\Member;
-use Filament\Tables;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Support\Facades\Auth;
@@ -32,20 +33,20 @@ class RankDistributionTableWidget extends BaseWidget
                     ->orderByDesc('member_count')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('Rank')
                     ->badge()
                     ->formatStateUsing(fn ($state) => $state->getLabel())
                     ->color(fn ($state) => $state->getColor()),
 
-                Tables\Columns\TextColumn::make('member_count')
+                TextColumn::make('member_count')
                     ->label('Members')
                     ->alignCenter()
                     ->badge()
                     ->color('primary'),
             ])
-            ->actions([
-                Tables\Actions\Action::make('viewMembers')
+            ->recordActions([
+                Action::make('viewMembers')
                     ->label('View')
                     ->icon('heroicon-o-users')
                     ->modalHeading(fn ($record) => 'Members with rank: ' . $record->rank->getLabel())

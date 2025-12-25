@@ -1,18 +1,21 @@
 <?php
 
-/**
- * ajax endpoints.
- */
-Route::get('search/members/{name?}', 'MemberController@search')->name('memberSearch');
-Route::get('division-platoons/{abbreviation}', 'RecruitingController@searchPlatoons')->name('divisionPlatoons');
-Route::post('validate-id/{memberId}', 'RecruitingController@validateMemberId')
-    ->name('validate-id');
-Route::post('validate-name', 'RecruitingController@validateMemberName')->name('validate-name');
-Route::post('division-tasks', 'RecruitingController@getTasks')->name('divisionTasks');
-Route::post('search-member', 'MemberController@searchAutoComplete')->name('memberSearchAjax');
-Route::post('platoon-squads', 'RecruitingController@searchPlatoonForSquads')->name('getPlatoonSquads');
-Route::post('search-division-threads', 'RecruitingController@doThreadCheck')->name('divisionThreadCheck');
-Route::post('update-position', 'MemberController@updatePosition')->name('member.position.update');
-Route::post('update-handles', 'MemberController@updateHandles')->name('updateMemberHandles');
-Route::get('recruit', 'RecruitingController@index')->name('recruiting.initial');
-Route::post('add-member', 'RecruitingController@submitRecruitment')->name('recruiting.addMember');
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\RecruitingController;
+use Illuminate\Support\Facades\Route;
+
+Route::controller(MemberController::class)->group(function () {
+    Route::get('search/members/{name?}', 'search')->name('memberSearch');
+    Route::post('search-member', 'searchAutoComplete')->name('memberSearchAjax');
+});
+
+Route::controller(RecruitingController::class)->group(function () {
+    Route::get('division-platoons/{abbreviation}', 'searchPlatoons')->name('divisionPlatoons');
+    Route::post('validate-id/{memberId}', 'validateMemberId')->name('validate-id');
+    Route::post('validate-name', 'validateMemberName')->name('validate-name');
+    Route::post('division-tasks', 'getTasks')->name('divisionTasks');
+    Route::post('platoon-squads', 'searchPlatoonForSquads')->name('getPlatoonSquads');
+    Route::post('search-division-threads', 'doThreadCheck')->name('divisionThreadCheck');
+    Route::get('recruit', 'index')->name('recruiting.initial');
+    Route::post('add-member', 'submitRecruitment')->name('recruiting.addMember');
+});

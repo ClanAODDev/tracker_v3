@@ -3,10 +3,18 @@
 namespace App\Filament\Mod\Resources\MemberResource\RelationManagers;
 
 use App\Enums\Rank;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class RankActionsRelationManager extends RelationManager
@@ -18,16 +26,16 @@ class RankActionsRelationManager extends RelationManager
         return true;
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('rank')
+        return $schema
+            ->components([
+                Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
-                Forms\Components\DateTimePicker::make('created_at')
+                DateTimePicker::make('created_at')
                     ->label('Effective'),
-                Forms\Components\RichEditor::make('justification')
+                RichEditor::make('justification')
                     ->hidden(fn ($record) => $record->justification === null),
             ]);
 
@@ -39,8 +47,8 @@ class RankActionsRelationManager extends RelationManager
             ->recordTitleAttribute('rank')
             ->modifyQueryUsing(fn ($query) => $query->approvedAndAccepted())
             ->columns([
-                Tables\Columns\TextColumn::make('rank'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('rank'),
+                TextColumn::make('created_at')
                     ->label('Effective')
                     ->date(),
             ])
@@ -48,16 +56,16 @@ class RankActionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                ViewAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

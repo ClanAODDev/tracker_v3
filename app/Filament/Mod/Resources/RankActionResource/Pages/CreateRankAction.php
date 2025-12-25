@@ -10,13 +10,16 @@ use App\Models\RankAction;
 use App\Models\User;
 use App\Notifications\Channel\NotifyAdminSgtRequestPending;
 use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
+use Exception;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Wizard\Step;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
+use Filament\Schemas\Components\Wizard\Step;
+use ValueError;
 
 class CreateRankAction extends CreateRecord
 {
-    use CreateRecord\Concerns\HasWizard;
+    use HasWizard;
 
     protected static string $resource = RankActionResource::class;
 
@@ -26,7 +29,7 @@ class CreateRankAction extends CreateRecord
 
         $member = Member::find($data['member_id']);
         if (! $member) {
-            throw new \Exception('Member not found.');
+            throw new Exception('Member not found.');
         }
 
         if ($data['action'] === 'promotion') {
@@ -36,7 +39,7 @@ class CreateRankAction extends CreateRecord
                 $newRankValue = $member->rank->value + 1;
                 try {
                     $newRank = Rank::from($newRankValue);
-                } catch (\ValueError $e) {
+                } catch (ValueError $e) {
                     $newRank = $member->rank;
                 }
                 $data['rank'] = $newRank->value;

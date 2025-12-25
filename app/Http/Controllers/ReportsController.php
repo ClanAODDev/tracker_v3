@@ -6,7 +6,9 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Exceptions\FactoryMissingException;
 use App\Models\Division;
+use App\Models\Member;
 use App\Repositories\ClanRepository;
+use Illuminate\Support\Arr;
 
 class ReportsController extends Controller
 {
@@ -106,7 +108,7 @@ class ReportsController extends Controller
      */
     public function usersWithoutDiscordReport()
     {
-        $divisions = \App\Models\Division::active()->get();
+        $divisions = Division::active()->get();
         $data = [];
         foreach ($divisions as $division) {
             foreach ($division->members->where('discord', '') as $member) {
@@ -119,12 +121,12 @@ class ReportsController extends Controller
 
     public function divisionUsersWithAccess()
     {
-        foreach (\App\Models\Division::active()->get() as $division) {
+        foreach (Division::active()->get() as $division) {
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
                 $query->where('role_id', '>', 2);
             })->get();
-            $sortedMembers = collect(\Illuminate\Support\Arr::sort($members, fn ($member) => $member->rank_id));
+            $sortedMembers = collect(Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
                 echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
             });
@@ -165,7 +167,7 @@ class ReportsController extends Controller
      */
     public function leadership()
     {
-        $divisions = \App\Models\Division::active()
+        $divisions = Division::active()
             ->with([
                 'sergeants' => function ($query) {
                     $query
@@ -181,7 +183,7 @@ class ReportsController extends Controller
             ->withCount('sgtAndSsgt')
             ->get();
 
-        $leadership = \App\Models\Member::query()
+        $leadership = Member::query()
             ->where('rank', '>', Rank::STAFF_SERGEANT)
             ->where('division_id', '!=', 0)
             ->orderByDesc('rank')

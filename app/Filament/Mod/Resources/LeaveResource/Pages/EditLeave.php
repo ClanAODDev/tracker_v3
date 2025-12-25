@@ -4,8 +4,8 @@ namespace App\Filament\Mod\Resources\LeaveResource\Pages;
 
 use App\Filament\Mod\Resources\LeaveResource;
 use App\Models\Leave;
-use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditLeave extends EditRecord
@@ -15,7 +15,7 @@ class EditLeave extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->label('Revoke'),
+            DeleteAction::make()->label('Revoke'),
 
             Action::make('approve')
                 ->label('Approve Leave')

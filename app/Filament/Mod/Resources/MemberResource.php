@@ -7,7 +7,8 @@ use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
-use App\Filament\Mod\Resources\MemberResource\Pages;
+use App\Filament\Mod\Resources\MemberResource\Pages\EditMember;
+use App\Filament\Mod\Resources\MemberResource\Pages\ListMembers;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\NotesRelationManager;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\RankActionsRelationManager;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\TransfersRelationManager;
@@ -17,17 +18,25 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Policies\DivisionTagPolicy;
-use Filament\Forms;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -36,15 +45,15 @@ class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Clan Data')->schema([
+        return $schema
+            ->components([
+                Section::make('Clan Data')->schema([
                     TextInput::make('clan_id')
                         ->readOnly()
                         ->required()
@@ -66,7 +75,7 @@ class MemberResource extends Resource
                         ->formatStateUsing(fn ($state) => Position::from($state)->getLabel()),
                 ])->columns(),
 
-                Forms\Components\Section::make('Communications')->schema([
+                Section::make('Communications')->schema([
                     TextInput::make('ts_unique_id')
                         ->disabled(),
                     TextInput::make('discord')
@@ -74,20 +83,20 @@ class MemberResource extends Resource
                     TextInput::make('discord_id')
                         ->disabled(),
                 ])->columns(3),
-                Forms\Components\Section::make('Activity')->schema([
-                    Forms\Components\DateTimePicker::make('last_voice_activity')->readOnly(),
-                    Forms\Components\DateTimePicker::make('last_activity')->readOnly(),
+                Section::make('Activity')->schema([
+                    DateTimePicker::make('last_voice_activity')->readOnly(),
+                    DateTimePicker::make('last_activity')->readOnly(),
                 ])->columns(),
 
-                Forms\Components\Section::make('Dates')->schema([
-                    Forms\Components\DateTimePicker::make('join_date')->disabled(),
-                    Forms\Components\DateTimePicker::make('last_promoted_at')->disabled(),
-                    Forms\Components\DateTimePicker::make('last_trained_at')->disabled(),
+                Section::make('Dates')->schema([
+                    DateTimePicker::make('join_date')->disabled(),
+                    DateTimePicker::make('last_promoted_at')->disabled(),
+                    DateTimePicker::make('last_trained_at')->disabled(),
                 ])->columns(3),
 
-                Forms\Components\Section::make('Division Assignment')
+                Section::make('Division Assignment')
                     ->schema([
-                        Forms\Components\Placeholder::make('Division')
+                        Placeholder::make('Division')
                             ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
                         Select::make('platoon_id')
                             ->nullable(true)
@@ -131,7 +140,7 @@ class MemberResource extends Resource
                             }),
                     ])->columns(3),
 
-                Forms\Components\Section::make('Part-time Divisions')
+                Section::make('Part-time Divisions')
                     ->id('part-time-divisions')
                     ->collapsible()
                     ->collapsed()
@@ -140,7 +149,7 @@ class MemberResource extends Resource
                         PartTimeDivisionsForm::makeUsingFormModel(),
                     ]),
 
-                Forms\Components\Section::make('Member Tags')
+                Section::make('Member Tags')
                     ->id('member-tags')
                     ->collapsible()
                     ->collapsed()
@@ -153,7 +162,7 @@ class MemberResource extends Resource
                         return auth()->user()->can('assign', [DivisionTag::class, $record]);
                     })
                     ->schema([
-                        Forms\Components\CheckboxList::make('tags')
+                        CheckboxList::make('tags')
                             ->relationship('tags', 'name')
                             ->options(function (?Member $record) {
                                 if (! $record) {
@@ -172,7 +181,7 @@ class MemberResource extends Resource
                             ->extraAttributes(['class' => 'max-h-64 overflow-y-auto']),
                     ]),
 
-                Forms\Components\Section::make('In-game Handles')
+                Section::make('In-game Handles')
                     ->id('ingame-handles')
                     ->description('In-game handles and alts for this member.')
                     ->collapsed()
@@ -185,26 +194,26 @@ class MemberResource extends Resource
                             ),
                     ]),
 
-                Forms\Components\Section::make('Forum Metadata')
+                Section::make('Forum Metadata')
                     ->description('Forum settings and metadata for this member.')
                     ->collapsible()
                     ->collapsed()
                     ->schema([
-                        Forms\Components\Section::make('Flags')->schema([
-                            Forms\Components\Toggle::make('flagged_for_inactivity')
+                        Section::make('Flags')->schema([
+                            Toggle::make('flagged_for_inactivity')
                                 ->disabled(),
-                            Forms\Components\Toggle::make('privacy_flag')
+                            Toggle::make('privacy_flag')
                                 ->disabled(),
-                            Forms\Components\Toggle::make('allow_pm')
+                            Toggle::make('allow_pm')
                                 ->disabled(),
                         ])->columns(3),
 
-                        Forms\Components\Section::make('Misc')->schema([
+                        Section::make('Misc')->schema([
                             TextInput::make('posts')
                                 ->disabled()
                                 ->numeric()
                                 ->default(0),
-                            Forms\Components\Textarea::make('groups')
+                            Textarea::make('groups')
                                 ->disabled(),
                         ])->columns(),
                     ]),
@@ -215,33 +224,33 @@ class MemberResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('clan_id')
+                TextColumn::make('clan_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('platoon.name')
+                TextColumn::make('platoon.name')
                     ->searchable()
                     ->toggleable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('squad.name')
+                TextColumn::make('squad.name')
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('position')
+                TextColumn::make('position')
                     ->toggleable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
             ])
             ->filters([
 
                 Filter::make('position')
-                    ->form([
+                    ->schema([
                         Select::make('position')
                             ->options(Position::class),
                     ])->query(function (Builder $query, array $data): Builder {
@@ -255,7 +264,7 @@ class MemberResource extends Resource
                 Filter::make('unit')
                     ->label('Unit')
                     ->indicator('Unit')
-                    ->form([
+                    ->schema([
 
                         Select::make('division')
                             ->label('Division')
@@ -347,7 +356,7 @@ class MemberResource extends Resource
                 Filter::make('rank_id')
                     ->label('Rank')
                     ->indicator('Rank')
-                    ->form([
+                    ->schema([
                         Select::make('rank')
                             ->options(Rank::class)
                             ->multiple()
@@ -379,7 +388,7 @@ class MemberResource extends Resource
                     ->label('Has Active Division')
                     ->default(),
 
-                Tables\Filters\SelectFilter::make('member_scope')
+                SelectFilter::make('member_scope')
                     ->label('Show Members')
                     ->options([
                         'division' => 'My Division Only',
@@ -412,11 +421,11 @@ class MemberResource extends Resource
                         }
                     }),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     BulkAction::make('member_transfer')
                         ->label('Transfer member(s)')
                         ->modalWidth('lg')
@@ -573,8 +582,8 @@ class MemberResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMembers::route('/'),
-            'edit' => Pages\EditMember::route('/{record}/edit'),
+            'index' => ListMembers::route('/'),
+            'edit' => EditMember::route('/{record}/edit'),
         ];
     }
 }

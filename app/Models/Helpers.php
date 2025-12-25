@@ -205,10 +205,15 @@ function carbon_date_or_null_if_zero($value)
  */
 function getActivityClass($date, $division)
 {
-    $limits = $division->settings()
-        ->get('activity_threshold');
+    $defaultThresholds = [
+        ['days' => 30, 'class' => 'text-danger'],
+        ['days' => 14, 'class' => 'text-warning'],
+    ];
 
-    if (! $date instanceof \Carbon\Carbon) {
+    $limits = $division->settings()
+        ->get('activity_threshold', $defaultThresholds);
+
+    if (! $date instanceof Carbon) {
         return 'text-danger';
     }
 
@@ -231,7 +236,7 @@ function getActivityClass($date, $division)
  */
 function getMemberProfileActivityClass($date)
 {
-    if (! $date instanceof \Carbon\Carbon) {
+    if (! $date instanceof Carbon) {
         return 'text-muted';
     } else {
         return '';

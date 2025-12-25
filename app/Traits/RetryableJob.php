@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 
+use Log;
+
 trait RetryableJob
 {
     public $tries = 4;
@@ -18,6 +20,6 @@ trait RetryableJob
 
     public function handleFailure($exception)
     {
-        \Log::error('Job failed:', ['error' => $exception->getMessage()]);
+        Log::error('Job failed:', ['error' => $exception->getMessage()]);
     }
 }

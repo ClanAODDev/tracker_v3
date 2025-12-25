@@ -3,6 +3,7 @@
 namespace App\AOD\MemberSync;
 
 use App\Services\AODForumService;
+use Exception;
 use Log;
 
 class GetDivisionInfo
@@ -24,7 +25,7 @@ class GetDivisionInfo
     public function __construct()
     {
         if (! config('aod.token')) {
-            throw new \Exception('ERROR: AOD Token not defined in configuration.');
+            throw new Exception('ERROR: AOD Token not defined in configuration.');
             exit;
         }
 

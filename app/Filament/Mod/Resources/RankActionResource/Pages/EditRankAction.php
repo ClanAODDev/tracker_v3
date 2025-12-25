@@ -10,13 +10,17 @@ use App\Notifications\DM\NotifyMemberOfficerPromotionPendingAcceptance;
 use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use App\Notifications\DM\NotifyRequesterOfficerRankActionApproved;
 use App\Notifications\DM\NotifyRequesterRankActionDenied;
-use Filament\Actions;
+use Carbon\Carbon;
+use Exception;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Get;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Components\Utilities\Get;
+use Log;
 use Parallax\FilamentComments\Actions\CommentsAction;
 
 class EditRankAction extends EditRecord
@@ -36,9 +40,9 @@ class EditRankAction extends EditRecord
         $commentsAction = [CommentsAction::make()->label('Comments')];
 
         $actions = [
-            Actions\ActionGroup::make([
+            ActionGroup::make([
 
-                Actions\DeleteAction::make('delete')
+                DeleteAction::make('delete')
                     ->label('Cancel Action')
                     ->hidden(fn (RankAction $action) => $action->member->division_id === 0)
                     ->visible(fn (RankAction $action) => auth()->user()->isDivisionLeader()
@@ -46,14 +50,14 @@ class EditRankAction extends EditRecord
                         || auth()->user()->member_id == $action->requester_id
                     )
                     ->requiresConfirmation(),
-                Actions\Action::make('deny')->label('Deny change')
+                Action::make('deny')->label('Deny change')
                     ->color('warning')
                     ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                     ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                     ->requiresConfirmation()
                     ->modalHeading('Deny Rank Action')
                     ->modalDescription('Are you sure you want to deny this rank action? The requester will be notified.')
-                    ->form([
+                    ->schema([
                         Textarea::make('deny_reason')
                             ->label('Reason')
                             ->required(),
@@ -102,8 +106,8 @@ class EditRankAction extends EditRecord
                             if ($action->rank->isPromotion($action->member->rank)) {
                                 $action->member->notify(new NotifyMemberPromotionPendingAcceptance($action));
                             }
-                        } catch (\Exception $e) {
-                            \Log::error($e->getMessage());
+                        } catch (Exception $e) {
+                            Log::error($e->getMessage());
                         }
                     }),
 
@@ -112,7 +116,7 @@ class EditRankAction extends EditRecord
                     ->color('success')
                     ->label('Award Rank Change')
                     ->closeModalByClickingAway(false)
-                    ->form([
+                    ->schema([
                         Radio::make('notification_type')
                             ->label('Rank Acceptance Notification')
                             ->options([
@@ -132,7 +136,7 @@ class EditRankAction extends EditRecord
                         $action->award();
                         $notification = new NotifyMemberOfficerPromotionPendingAcceptance($action);
                         if ($data['notification_type'] === 'later') {
-                            $scheduledTime = \Carbon\Carbon::parse($data['scheduled_at']);
+                            $scheduledTime = Carbon::parse($data['scheduled_at']);
                             $action->member->notify($notification->delay($scheduledTime));
                         } else {
                             $action->member->notify($notification);
@@ -152,7 +156,7 @@ class EditRankAction extends EditRecord
                 Action::make('approve')
                     ->label('Approve change')
                     ->closeModalByClickingAway(false)
-                    ->form(function (Get $get, $record) {
+                    ->schema(function (Get $get, $record) {
                         if ($record->rank->isOfficer()) {
                             return [];
                         }
@@ -187,7 +191,7 @@ class EditRankAction extends EditRecord
 
                             $notification = new NotifyMemberPromotionPendingAcceptance($action);
                             if ($data['notification_type'] === 'later') {
-                                $scheduledTime = \Carbon\Carbon::parse($data['scheduled_at']);
+                                $scheduledTime = Carbon::parse($data['scheduled_at']);
                                 $action->member->notify($notification->delay($scheduledTime));
                             } else {
                                 $action->member->notify($notification);

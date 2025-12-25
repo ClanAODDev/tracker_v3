@@ -2,13 +2,20 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\TicketResource\Pages;
+use App\Filament\Admin\Resources\TicketResource\Pages\CreateTicket;
+use App\Filament\Admin\Resources\TicketResource\Pages\EditTicket;
+use App\Filament\Admin\Resources\TicketResource\Pages\ListTickets;
 use App\Models\Ticket;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,24 +24,24 @@ class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('state')
+        return $schema
+            ->components([
+                TextInput::make('state')
                     ->required()
                     ->default('unassigned'),
                 Select::make('ticket_type_id')
                     ->relationship('type', 'name')
                     ->label('Ticket Type'),
-                Forms\Components\TextInput::make('external_message_id')
+                TextInput::make('external_message_id')
                     ->readOnly()
                     ->maxLength(36),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
                 Select::make('caller_id')
@@ -49,7 +56,7 @@ class TicketResource extends Resource
                     ->label('Division')
                     ->searchable()
                     ->relationship('division', 'name'),
-                Forms\Components\DateTimePicker::make('resolved_at'),
+                DateTimePicker::make('resolved_at'),
             ]);
     }
 
@@ -57,29 +64,29 @@ class TicketResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('state'),
-                Tables\Columns\TextColumn::make('type.name')
+                TextColumn::make('state'),
+                TextColumn::make('type.name')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('caller.name')
+                TextColumn::make('caller.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('owner.name')
+                TextColumn::make('owner.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('division_id')
+                TextColumn::make('division_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('resolved_at')
+                TextColumn::make('resolved_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -90,12 +97,12 @@ class TicketResource extends Resource
                     ->label('Hide resolved')
                     ->default(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -110,9 +117,9 @@ class TicketResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTickets::route('/'),
-            'create' => Pages\CreateTicket::route('/create'),
-            'edit' => Pages\EditTicket::route('/{record}/edit'),
+            'index' => ListTickets::route('/'),
+            'create' => CreateTicket::route('/create'),
+            'edit' => EditTicket::route('/{record}/edit'),
         ];
     }
 }

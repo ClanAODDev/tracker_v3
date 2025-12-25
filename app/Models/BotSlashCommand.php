@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BotSlashCommand
 {
@@ -14,7 +15,7 @@ class BotSlashCommand
      */
     public static function handle($command, Request $request)
     {
-        $command = sprintf('App\Models\Bot\Commands\%s', \Illuminate\Support\Str::studly($command));
+        $command = sprintf('App\Models\Bot\Commands\%s', Str::studly($command));
 
         if (class_exists($command)) {
             $command = new $command($request);

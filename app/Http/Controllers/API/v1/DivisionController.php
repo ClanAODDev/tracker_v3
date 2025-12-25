@@ -18,7 +18,7 @@ class DivisionController extends ApiController
 
     public function update($division, UpdateDivision $request): JsonResponse
     {
-        $division = \App\Models\Division::where('slug', $division)->first();
+        $division = Division::where('slug', $division)->first();
 
         if (! $division) {
             return $this->setStatusCode(404)->respondWithError('Invalid division provided');

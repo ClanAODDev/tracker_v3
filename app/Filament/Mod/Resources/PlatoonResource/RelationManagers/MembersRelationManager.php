@@ -2,12 +2,16 @@
 
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
-use Filament\Forms;
+use App\Models\Squad;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
 
@@ -15,11 +19,11 @@ class MembersRelationManager extends RelationManager
 {
     protected static string $relationship = 'members';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -30,14 +34,14 @@ class MembersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('position'),
-                Tables\Columns\TextColumn::make('squad.name')
+                TextColumn::make('position'),
+                TextColumn::make('squad.name')
                     ->toggleable(),
             ])
             ->filters([
@@ -46,12 +50,12 @@ class MembersRelationManager extends RelationManager
             ->headerActions([
                 //                Tables\Actions\CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
                 //                Tables\Actions\DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     //                    Tables\Actions\DeleteBulkAction::make(),
                     BulkAction::make('member_transfer')
                         ->label('Transfer member(s)')
@@ -65,7 +69,7 @@ class MembersRelationManager extends RelationManager
                         ->form([
                             Select::make('squad_id')
                                 ->label('Squad')
-                                ->options(fn () => \App\Models\Squad::where('platoon_id', $this->ownerRecord->id)
+                                ->options(fn () => Squad::where('platoon_id', $this->ownerRecord->id)
                                     ->pluck('name', 'id'))
                                 ->searchable()
                                 ->required(),

@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Member;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
+
 class TrainingController extends Controller
 {
     public function __construct()
@@ -24,15 +29,15 @@ class TrainingController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse|Redirector
      */
-    public function update(\Illuminate\Http\Request $request)
+    public function update(Request $request)
     {
         $request->validate(['clan_id' => 'exists:members,clan_id'], [
             'clan_id.exists' => 'That member id appears to be invalid',
         ]);
 
-        \App\Models\Member::whereClanId($request->clan_id)->update([
+        Member::whereClanId($request->clan_id)->update([
             'last_trained_at' => now(),
             'last_trained_by' => auth()->user()->member->clan_id,
         ]);

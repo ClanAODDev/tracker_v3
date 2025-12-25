@@ -6,7 +6,6 @@ use App\Http\Responses\LogoutResponse;
 use App\Models\Observers\TicketTypeObserver;
 use App\Models\TicketType;
 use App\Settings\UserSettings;
-use Filament\Http\Responses\Auth\Contracts\LogoutResponse as LogoutResponseContract;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -33,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());
 
-        $this->app->bind(LogoutResponseContract::class, LogoutResponse::class);
+        $this->app->bind(\Filament\Auth\Http\Responses\Contracts\LogoutResponse::class, LogoutResponse::class);
 
         if ($this->app->environment('local', 'testing')) {
             $this->app->register(FakerServiceProvider::class);

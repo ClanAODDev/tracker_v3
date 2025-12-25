@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Census;
 use App\Models\Division;
+use Illuminate\Console\Command;
 
-class DivisionCensus extends \Illuminate\Console\Command
+class DivisionCensus extends Command
 {
     /**
      * The name and signature of the console command.
@@ -51,7 +53,7 @@ class DivisionCensus extends \Illuminate\Console\Command
 
     protected function recordEntry(Division $division)
     {
-        $census = new \App\Models\Census;
+        $census = new Census;
         $census->division()->associate($division);
         $census->count = $division->members->count();
         $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();
@@ -65,7 +67,7 @@ class DivisionCensus extends \Illuminate\Console\Command
      */
     private function censusAlreadyPerformed()
     {
-        $census = \App\Models\Census::latest()->first();
+        $census = Census::latest()->first();
 
         return $census->created_at->format('Y-m-d') === now()->format('Y-m-d');
     }

@@ -2,7 +2,9 @@
 
 namespace App\Faker;
 
-class GameProvider extends \Faker\Provider\Base
+use Faker\Provider\Base;
+
+class GameProvider extends Base
 {
     protected static array $games = [
         ['name' => 'iRacing', 'abbreviation' => 'ir'],

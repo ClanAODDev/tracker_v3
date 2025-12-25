@@ -103,7 +103,7 @@ class BotChannelMessage
     {
         foreach ($fields as $field) {
             if (! array_key_exists('name', $field) || (! array_key_exists('value', $field))) {
-                throw new \Exception('Fields must include a name and value pair');
+                throw new Exception('Fields must include a name and value pair');
             }
         }
 

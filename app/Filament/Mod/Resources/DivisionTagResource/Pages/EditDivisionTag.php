@@ -3,7 +3,7 @@
 namespace App\Filament\Mod\Resources\DivisionTagResource\Pages;
 
 use App\Filament\Mod\Resources\DivisionTagResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditDivisionTag extends EditRecord
@@ -13,7 +13,7 @@ class EditDivisionTag extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -3,31 +3,42 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Enums\Rank;
-use App\Filament\Mod\Resources\DivisionResource\Pages;
+use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
+use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
-use Filament\Forms;
+use Closure;
+use Exception;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Tabs;
-use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Http;
 
 class DivisionResource extends Resource
 {
     protected static ?string $model = Division::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-cog';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-s-cog';
 
     protected static ?string $label = 'Settings';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $channelOptions = [
             'officers' => 'Officers',
@@ -35,16 +46,17 @@ class DivisionResource extends Resource
             false => 'Disabled',
         ];
 
-        return $form
-            ->schema([
-
-                Forms\Components\Section::make('General')
-                    ->description('Basic division settings')
-                    ->aside()
-                    ->schema([
-                        Tabs::make('Settings')
-                            ->tabs([
-                                Tabs\Tab::make('General')
+        return $schema
+            ->components([
+                Tabs::make('Division Settings')
+                    ->persistTabInQueryString()
+                    ->columnSpanFull()
+                    ->tabs([
+                        Tab::make('General')
+                            ->icon('heroicon-o-cog-6-tooth')
+                            ->schema([
+                                Section::make('Division Info')
+                                    ->columns(2)
                                     ->schema([
                                         TextInput::make('name')
                                             ->label('Division Name')
@@ -53,32 +65,27 @@ class DivisionResource extends Resource
                                         TextInput::make('description')
                                             ->label('Sub‑header Text')
                                             ->helperText('Division sub‑header (*DEPRECATING*)'),
-                                    ])
-                                    ->columns(2),
+                                    ]),
 
-                                Tabs\Tab::make('Welcome Area')
+                                Section::make('Welcome Area')
+                                    ->columns(2)
                                     ->schema([
                                         TextInput::make('settings.welcome_area')
                                             ->label('Welcome Area ID')
                                             ->numeric()
                                             ->helperText('Division welcome area ID'),
-
-                                        Forms\Components\Toggle::make('settings.use_welcome_thread')
+                                        Toggle::make('settings.use_welcome_thread')
                                             ->label('Use Welcome Thread')
                                             ->helperText('Recruit welcome area is a thread instead of a forum'),
-                                    ])
-                                    ->columns(),
+                                    ]),
 
-                                Tabs\Tab::make('Behavior')
+                                Section::make('Behavior')
+                                    ->columns(2)
                                     ->schema([
                                         TextInput::make('settings.inactivity_days')
                                             ->label('Inactivity Threshold')
                                             ->numeric()
                                             ->helperText('Days without VoIP before marking inactive'),
-                                    ]),
-
-                                Tabs\Tab::make('Promotion')
-                                    ->schema([
                                         Select::make('settings.max_platoon_leader_rank')
                                             ->label('PL Promotion Cap')
                                             ->options([
@@ -89,104 +96,117 @@ class DivisionResource extends Resource
                                             ->helperText('Highest rank PLs can promote to without approval'),
                                     ]),
 
-                                Tab::make('Locality')->schema([
-                                    Forms\Components\Section::make()
-                                        ->description('Update common vernacular to match division needs')
-                                        ->statePath('settings')->schema([
-                                            Forms\Components\Repeater::make('locality')->schema([
-                                                Forms\Components\TextInput::make('old-string')
+                                Section::make('Locality')
+                                    ->description('Update common vernacular to match division needs')
+                                    ->collapsible()
+                                    ->statePath('settings')
+                                    ->schema([
+                                        Repeater::make('locality')
+                                            ->schema([
+                                                TextInput::make('old-string')
                                                     ->label('Replace')
                                                     ->readOnly(),
-                                                Forms\Components\TextInput::make('new-string')
+                                                TextInput::make('new-string')
                                                     ->required()
                                                     ->label('With'),
-                                            ])->reorderable(false)->columns()
-                                                ->addable(false)
-                                                ->deletable(false),
-                                        ]),
-                                ]),
+                                            ])
+                                            ->reorderable(false)
+                                            ->columns(2)
+                                            ->addable(false)
+                                            ->deletable(false),
+                                    ]),
                             ]),
-                    ]),
 
-                Forms\Components\Section::make('Recruiting')
-                    ->description('Settings related to division recruitment process')
-                    ->aside()
-                    ->statePath('settings')->schema([
-
-                        Forms\Components\TextInput::make('Applications Feed')
-                            ->label('Recruit Applications RSS URL')
-                            ->statePath('recruitment_rss_feed')
-                            ->url()
-                            ->rules([
-                                fn (): \Closure => function (string $attribute, $value, \Closure $fail) {
-                                    if (empty($value)) {
-                                        return;
-                                    }
-
-                                    try {
-                                        $response = \Illuminate\Support\Facades\Http::withUserAgent('Tracker - RSS Validator')
-                                            ->timeout(10)
-                                            ->get($value);
-
-                                        if (! $response->ok()) {
-                                            $fail('The URL returned an error (HTTP ' . $response->status() . ')');
-
-                                            return;
-                                        }
-
-                                        $content = $response->body();
-                                        $xml = @simplexml_load_string($content);
-
-                                        if ($xml === false) {
-                                            $fail('The URL does not return valid XML');
-
-                                            return;
-                                        }
-
-                                        if (! isset($xml->channel) && ! isset($xml->entry)) {
-                                            $fail('The URL does not appear to be a valid RSS or Atom feed');
-                                        }
-                                    } catch (\Exception $e) {
-                                        $fail('Could not fetch URL: ' . $e->getMessage());
-                                    }
-                                },
-                            ])
-                            ->helperText('RSS feed URL where new division applications are posted'),
-
-                        Forms\Components\Section::make('Tasks')->collapsible()->collapsed()
-                            ->description('Critical steps to perform during recruitment')
+                        Tab::make('Recruiting')
+                            ->icon('heroicon-o-user-plus')
+                            ->statePath('settings')
                             ->schema([
-                                Forms\Components\Repeater::make('recruiting_tasks')->schema([
-                                    Forms\Components\Textarea::make('task_description')->hiddenLabel(),
-                                ]),
-                            ]),
-                        Forms\Components\Section::make('Informational threads')->collapsible()->collapsed()
-                            ->description('Important forum threads for new recruits to be aware of')
-                            ->schema([
-                                Forms\Components\Repeater::make('recruiting_threads')->schema([
-                                    Forms\Components\TextInput::make('thread_name')->columnSpanFull(),
-                                    Forms\Components\TextInput::make('thread_url')
-                                        ->label('Thread URL')
-                                        ->url()
-                                        ->columnSpanFull(),
-                                    Forms\Components\Textarea::make('comments')->columnSpanFull(),
-                                ]),
-                            ]),
-                        Forms\Components\Textarea::make('welcome dm')
-                            ->rows(6)
-                            ->columnSpanFull()
-                            ->helperText('Available replacement tags (wrap with {{ tag }}): ingame_name, name')
-                            ->statePath('welcome_pm'),
-                    ]),
+                                Section::make('Applications Feed')
+                                    ->schema([
+                                        TextInput::make('recruitment_rss_feed')
+                                            ->label('Recruit Applications RSS URL')
+                                            ->url()
+                                            ->columnSpanFull()
+                                            ->rules([
+                                                fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                                                    if (empty($value)) {
+                                                        return;
+                                                    }
 
-                Forms\Components\Section::make('Chat Notifications')
-                    ->description('Specify which events should notify and where.')
-                    ->aside()
-                    ->statePath('settings.chat_alerts')
-                    ->schema([
-                        Forms\Components\Tabs::make('Chat Notifications')
-                            ->tabs([
-                                Tab::make('Recruitment')
+                                                    try {
+                                                        $response = Http::withUserAgent('Tracker - RSS Validator')
+                                                            ->timeout(10)
+                                                            ->get($value);
+
+                                                        if (! $response->ok()) {
+                                                            $fail('The URL returned an error (HTTP ' . $response->status() . ')');
+
+                                                            return;
+                                                        }
+
+                                                        $content = $response->body();
+                                                        $xml = @simplexml_load_string($content);
+
+                                                        if ($xml === false) {
+                                                            $fail('The URL does not return valid XML');
+
+                                                            return;
+                                                        }
+
+                                                        if (! isset($xml->channel) && ! isset($xml->entry)) {
+                                                            $fail('The URL does not appear to be a valid RSS or Atom feed');
+                                                        }
+                                                    } catch (Exception $e) {
+                                                        $fail('Could not fetch URL: ' . $e->getMessage());
+                                                    }
+                                                },
+                                            ])
+                                            ->helperText('RSS feed URL where new division applications are posted'),
+                                    ]),
+
+                                Section::make('Recruiting Tasks')
+                                    ->description('Critical steps to perform during recruitment')
+                                    ->collapsible()
+                                    ->schema([
+                                        Repeater::make('recruiting_tasks')
+                                            ->hiddenLabel()
+                                            ->schema([
+                                                Textarea::make('task_description')->hiddenLabel(),
+                                            ]),
+                                    ]),
+
+                                Section::make('Informational Threads')
+                                    ->description('Important forum threads for new recruits to be aware of')
+                                    ->collapsible()
+                                    ->schema([
+                                        Repeater::make('recruiting_threads')
+                                            ->hiddenLabel()
+                                            ->schema([
+                                                TextInput::make('thread_name')->columnSpanFull(),
+                                                TextInput::make('thread_url')
+                                                    ->label('Thread URL')
+                                                    ->url()
+                                                    ->columnSpanFull(),
+                                                Textarea::make('comments')->columnSpanFull(),
+                                            ]),
+                                    ]),
+
+                                Section::make('Welcome Message')
+                                    ->schema([
+                                        Textarea::make('welcome_pm')
+                                            ->label('Welcome DM')
+                                            ->rows(6)
+                                            ->columnSpanFull()
+                                            ->helperText('Available replacement tags (wrap with {{ tag }}): ingame_name, name'),
+                                    ]),
+                            ]),
+
+                        Tab::make('Notifications')
+                            ->icon('heroicon-o-bell')
+                            ->statePath('settings.chat_alerts')
+                            ->schema([
+                                Section::make('Recruitment Notifications')
+                                    ->columns(3)
                                     ->schema([
                                         Select::make('member_applied')
                                             ->options($channelOptions)
@@ -200,10 +220,10 @@ class DivisionResource extends Resource
                                             ->options($channelOptions)
                                             ->default(false)
                                             ->label('New Recruit Approval'),
-                                    ])
-                                    ->columns(3),
+                                    ]),
 
-                                Tab::make('Membership Changes')
+                                Section::make('Membership Changes')
+                                    ->columns(3)
                                     ->schema([
                                         Select::make('member_removed')
                                             ->options($channelOptions)
@@ -217,10 +237,10 @@ class DivisionResource extends Resource
                                             ->options($channelOptions)
                                             ->default(false)
                                             ->label('Part‑Time Member Removal'),
-                                    ])
-                                    ->columns(3),
+                                    ]),
 
-                                Tab::make('Administrative Updates')
+                                Section::make('Administrative Updates')
+                                    ->columns(3)
                                     ->schema([
                                         Select::make('division_edited')
                                             ->options($channelOptions)
@@ -234,53 +254,67 @@ class DivisionResource extends Resource
                                             ->options($channelOptions)
                                             ->default(false)
                                             ->label('Member Awarded'),
-                                    ])
-                                    ->columns(3),
+                                    ]),
                             ]),
-                    ]),
-                Forms\Components\Section::make('Website')
-                    ->description('Divisional website settings')
-                    ->aside()
-                    ->schema([
-                        Forms\Components\MarkdownEditor::make('site_content')
-                            ->helperText('Changes will prompt an admin review before being published')
-                            ->toolbarButtons([
-                                'blockquote',
-                                'bold',
-                                'bulletList',
-                                'codeBlock',
-                                'heading',
-                                'italic',
-                                'link',
-                                'orderedList',
-                                'redo',
-                                'strike',
-                                'undo',
-                            ])
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('meta_description')
-                            ->maxLength(100)
-                            ->statePath('settings.meta_description')
-                            ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
-                        Forms\Components\Section::make('Screenshot Gallery')
-                            ->description('Upload screenshots to display on your division page')
-                            ->collapsible()
-                            ->collapsed()
-                            ->schema([
-                                Forms\Components\FileUpload::make('screenshots')
-                                    ->label('Screenshots')
-                                    ->multiple()
-                                    ->disk('public')
-                                    ->directory('division-screenshots')
-                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-                                    ->maxSize(5120)
-                                    ->maxFiles(20)
-                                    ->reorderable()
-                                    ->appendFiles()
-                                    ->helperText('Drag and drop to reorder. Max 20 images, 5MB each.'),
-                            ]),
-                    ]),
 
+                        Tab::make('Website')
+                            ->icon('heroicon-o-globe-alt')
+                            ->schema([
+                                Section::make('Page Content')
+                                    ->schema([
+                                        MarkdownEditor::make('site_content')
+                                            ->helperText('Changes will prompt an admin review before being published')
+                                            ->toolbarButtons([
+                                                'blockquote',
+                                                'bold',
+                                                'bulletList',
+                                                'codeBlock',
+                                                'heading',
+                                                'italic',
+                                                'link',
+                                                'orderedList',
+                                                'redo',
+                                                'strike',
+                                                'undo',
+                                            ])
+                                            ->columnSpanFull(),
+                                    ]),
+
+                                Section::make('SEO')
+                                    ->schema([
+                                        Textarea::make('settings.meta_description')
+                                            ->label('Meta Description')
+                                            ->maxLength(100)
+                                            ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
+                                    ]),
+
+                                Section::make('Screenshot Gallery')
+                                    ->description('Upload screenshots to display on your division page')
+                                    ->schema([
+                                        FileUpload::make('screenshots')
+                                            ->hiddenLabel()
+                                            ->multiple()
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('division-screenshots')
+                                            ->maxSize(5120)
+                                            ->maxFiles(20)
+                                            ->panelLayout('grid')
+                                            ->imagePreviewHeight('150')
+                                            ->reorderable()
+                                            ->appendFiles()
+                                            ->openable()
+                                            ->downloadable()
+                                            ->imageEditor()
+                                            ->imageEditorAspectRatios([
+                                                '16:9',
+                                                '4:3',
+                                                '1:1',
+                                            ])
+                                            ->helperText('Drag to reorder. Click pencil to crop/edit. Max 20 images, 5MB each.'),
+                                    ]),
+                            ]),
+                    ]),
             ]);
     }
 
@@ -288,16 +322,16 @@ class DivisionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable(),
+                TextColumn::make('name')->sortable(),
             ])
             ->filters([
-                Tables\Filters\Filter::make('active')
+                Filter::make('active')
                     ->query(fn (Builder $query): Builder => $query->where('active', true))->default(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }
@@ -312,8 +346,8 @@ class DivisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDivisions::route('/'),
-            'edit' => Pages\EditDivision::route('/{record}/edit'),
+            'index' => ListDivisions::route('/'),
+            'edit' => EditDivision::route('/{record}/edit'),
         ];
     }
 }

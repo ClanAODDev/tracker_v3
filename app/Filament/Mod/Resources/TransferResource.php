@@ -2,14 +2,18 @@
 
 namespace App\Filament\Mod\Resources;
 
-use App\Filament\Mod\Resources\TransferResource\Pages;
+use App\Filament\Mod\Resources\TransferResource\Pages\CreateTransfer;
+use App\Filament\Mod\Resources\TransferResource\Pages\ListTransfers;
 use App\Jobs\UpdateDivisionForMember;
 use App\Models\Division;
 use App\Models\Transfer;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
-use Filament\Tables;
-use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -20,28 +24,28 @@ class TransferResource extends Resource
 {
     protected static ?string $model = Transfer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrows-right-left';
 
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member.name')
+                TextColumn::make('member.name')
                     ->sortable()
                     ->icon(fn ($record) => $record->hold_placed_at ? 'heroicon-s-stop' : null)
                     ->iconColor('warning')
                     ->iconPosition(IconPosition::Before),
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->label('To')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('member.rank')
+                TextColumn::make('member.rank')
                     ->label('Rank')
                     ->sortable()
                     ->toggleable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Requested')
                     ->dateTime()
                     ->sortable(),
@@ -86,7 +90,7 @@ class TransferResource extends Resource
                     ->default(),
 
             ])
-            ->actions([
+            ->recordActions([
                 CommentsAction::make()
                     ->button()
                     ->color('info')
@@ -95,7 +99,7 @@ class TransferResource extends Resource
                         Transfer $transfer
                     ) => auth()->user()->canManageTransferCommentsFor($transfer)),
 
-                Tables\Actions\BulkActionGroup::make([
+                BulkActionGroup::make([
 
                     Action::make('Hold')
                         ->label('Place Hold')
@@ -130,15 +134,15 @@ class TransferResource extends Resource
                             UpdateDivisionForMember::dispatch($record);
                         })
                         ->visible(fn (Transfer $record) => ! $record->approved_at && ! $record->hold_placed_at),
-                    Tables\Actions\DeleteAction::make()->hidden(fn (Transfer $record) => $record->hold_placed_at),
+                    DeleteAction::make()->hidden(fn (Transfer $record) => $record->hold_placed_at),
                 ])
                     ->visible(fn (Transfer $record) => $record->canApprove())
                     ->label('Manage'),
 
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -153,8 +157,8 @@ class TransferResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTransfers::route('/'),
-            'create' => Pages\CreateTransfer::route('/create'),
+            'index' => ListTransfers::route('/'),
+            'create' => CreateTransfer::route('/create'),
         ];
     }
 }

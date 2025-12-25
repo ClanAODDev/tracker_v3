@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 
 use App\Filament\Admin\Resources\DivisionResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListDivisions extends ListRecords
@@ -13,7 +13,7 @@ class ListDivisions extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

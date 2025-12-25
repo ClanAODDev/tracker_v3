@@ -3,30 +3,34 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\Rank;
-use App\Filament\Admin\Resources\RankActionResource\Pages;
+use App\Filament\Admin\Resources\RankActionResource\Pages\CreateRankAction;
+use App\Filament\Admin\Resources\RankActionResource\Pages\EditRankAction;
+use App\Filament\Admin\Resources\RankActionResource\Pages\ListRankActions;
 use App\Models\Member;
 use App\Models\RankAction;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class RankActionResource extends Resource
 {
     protected static ?string $model = RankAction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     protected static ?string $navigationParentItem = 'Divisions';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('member_id')
                     ->searchable()
                     ->getSearchResultsUsing(function (string $search): array {
@@ -43,7 +47,7 @@ class RankActionResource extends Resource
                     })
                     ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName()),
 
-                Forms\Components\Select::make('rank')
+                Select::make('rank')
                     ->options(Rank::class)
                     ->required(),
             ]);
@@ -53,15 +57,15 @@ class RankActionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member.name'),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('member.name'),
+                TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -69,12 +73,12 @@ class RankActionResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -89,9 +93,9 @@ class RankActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRankActions::route('/'),
-            'create' => Pages\CreateRankAction::route('/create'),
-            'edit' => Pages\EditRankAction::route('/{record}/edit'),
+            'index' => ListRankActions::route('/'),
+            'create' => CreateRankAction::route('/create'),
+            'edit' => EditRankAction::route('/{record}/edit'),
         ];
     }
 }

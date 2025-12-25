@@ -10,6 +10,7 @@ use App\Models\Squad;
 use App\Models\User;
 use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -44,7 +45,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
      * @param  mixed  $notifiable
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot(Division $notifiable)
     {

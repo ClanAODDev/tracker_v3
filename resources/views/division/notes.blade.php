@@ -13,6 +13,8 @@
     @endcomponent
 
     <div class="container-fluid">
+        {!! Breadcrumbs::render('division-notes', $division) !!}
+
         <div class="notes-toolbar">
             <div class="notes-filters">
                 <a href="{{ route('division.notes', $division->slug) }}"

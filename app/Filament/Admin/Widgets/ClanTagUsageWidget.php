@@ -5,7 +5,9 @@ namespace App\Filament\Admin\Widgets;
 use App\Enums\TagVisibility;
 use App\Models\Division;
 use App\Models\DivisionTag;
-use Filament\Tables;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
@@ -26,7 +28,7 @@ class ClanTagUsageWidget extends BaseWidget
                     ->orderByDesc('members_count')
             )
             ->filters([
-                Tables\Filters\SelectFilter::make('division_id')
+                SelectFilter::make('division_id')
                     ->label('Division')
                     ->options(
                         Division::whereHas('members')
@@ -45,7 +47,7 @@ class ClanTagUsageWidget extends BaseWidget
                         return $query;
                     }),
 
-                Tables\Filters\SelectFilter::make('visibility')
+                SelectFilter::make('visibility')
                     ->label('Visibility')
                     ->options([
                         TagVisibility::PUBLIC->value => TagVisibility::PUBLIC->label(),
@@ -54,7 +56,7 @@ class ClanTagUsageWidget extends BaseWidget
                     ]),
             ])
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Tag')
                     ->badge()
                     ->color(fn (DivisionTag $record) => match ($record->visibility) {
@@ -65,13 +67,13 @@ class ClanTagUsageWidget extends BaseWidget
                     })
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->label('Division')
                     ->default('Global')
                     ->badge()
                     ->color(fn (DivisionTag $record) => $record->division_id ? 'info' : 'gray'),
 
-                Tables\Columns\TextColumn::make('visibility')
+                TextColumn::make('visibility')
                     ->label('Visibility')
                     ->formatStateUsing(fn ($state) => $state->label())
                     ->badge()
@@ -82,15 +84,15 @@ class ClanTagUsageWidget extends BaseWidget
                         default => 'gray',
                     }),
 
-                Tables\Columns\TextColumn::make('members_count')
+                TextColumn::make('members_count')
                     ->label('Members')
                     ->sortable()
                     ->alignCenter()
                     ->badge()
                     ->color('primary'),
             ])
-            ->actions([
-                Tables\Actions\Action::make('viewMembers')
+            ->recordActions([
+                Action::make('viewMembers')
                     ->label('View Members')
                     ->icon('heroicon-o-users')
                     ->modalHeading(fn (DivisionTag $record) => "Members with \"{$record->name}\" tag")

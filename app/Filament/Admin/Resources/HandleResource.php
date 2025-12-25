@@ -2,37 +2,43 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\HandleResource\Pages;
+use App\Filament\Admin\Resources\HandleResource\Pages\CreateHandle;
+use App\Filament\Admin\Resources\HandleResource\Pages\EditHandle;
+use App\Filament\Admin\Resources\HandleResource\Pages\ListHandles;
 use App\Models\Handle;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class HandleResource extends Resource
 {
     protected static ?string $model = Handle::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('label')
+        return $schema
+            ->components([
+                Textarea::make('label')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('type')
+                TextInput::make('type')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('comments')
+                Textarea::make('comments')
                     ->maxLength(255)
                     ->columnSpanFull()
                     ->default(null),
-                Forms\Components\TextInput::make('url')
+                TextInput::make('url')
                     ->columnSpanFull(),
             ]);
     }
@@ -41,15 +47,15 @@ class HandleResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('label')
+                TextColumn::make('label')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('comments')
+                TextColumn::make('comments')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -57,12 +63,12 @@ class HandleResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -77,9 +83,9 @@ class HandleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListHandles::route('/'),
-            'create' => Pages\CreateHandle::route('/create'),
-            'edit' => Pages\EditHandle::route('/{record}/edit'),
+            'index' => ListHandles::route('/'),
+            'create' => CreateHandle::route('/create'),
+            'edit' => EditHandle::route('/{record}/edit'),
         ];
     }
 }

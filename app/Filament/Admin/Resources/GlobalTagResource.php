@@ -3,13 +3,20 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\TagVisibility;
-use App\Filament\Admin\Resources\GlobalTagResource\Pages;
+use App\Filament\Admin\Resources\GlobalTagResource\Pages\CreateGlobalTag;
+use App\Filament\Admin\Resources\GlobalTagResource\Pages\EditGlobalTag;
+use App\Filament\Admin\Resources\GlobalTagResource\Pages\ListGlobalTags;
 use App\Filament\Admin\Resources\GlobalTagResource\RelationManagers\MembersRelationManager;
 use App\Models\DivisionTag;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -17,9 +24,9 @@ class GlobalTagResource extends Resource
 {
     protected static ?string $model = DivisionTag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
     protected static ?string $modelLabel = 'Global Tag';
 
@@ -32,14 +39,14 @@ class GlobalTagResource extends Resource
         return parent::getEloquentQuery()->whereNull('division_id');
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(25),
-                Forms\Components\Select::make('visibility')
+                Select::make('visibility')
                     ->options(collect(TagVisibility::cases())
                         ->mapWithKeys(fn ($v) => [$v->value => $v->label()]))
                     ->default(TagVisibility::PUBLIC->value)
@@ -51,10 +58,10 @@ class GlobalTagResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('visibility')
+                TextColumn::make('visibility')
                     ->badge()
                     ->formatStateUsing(fn (TagVisibility $state) => $state->label())
                     ->color(fn (TagVisibility $state) => match ($state) {
@@ -62,21 +69,21 @@ class GlobalTagResource extends Resource
                         TagVisibility::OFFICERS => 'warning',
                         TagVisibility::SENIOR_LEADERS => 'danger',
                     }),
-                Tables\Columns\TextColumn::make('members_count')
+                TextColumn::make('members_count')
                     ->counts('members')
                     ->label('Members'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -91,9 +98,9 @@ class GlobalTagResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGlobalTags::route('/'),
-            'create' => Pages\CreateGlobalTag::route('/create'),
-            'edit' => Pages\EditGlobalTag::route('/{record}/edit'),
+            'index' => ListGlobalTags::route('/'),
+            'create' => CreateGlobalTag::route('/create'),
+            'edit' => EditGlobalTag::route('/{record}/edit'),
         ];
     }
 }

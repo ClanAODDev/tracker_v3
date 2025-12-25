@@ -7,6 +7,7 @@ use App\Enums\Rank;
 use App\Models\Member;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Exception;
 
 class MemberPresenter extends Presenter
 {
@@ -29,7 +30,7 @@ class MemberPresenter extends Presenter
      * @param  array  $skipUnits  Array of difference units to skip. Ex. weeks, months, etc.
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function lastActive($activityType, array $skipUnits = [])
     {
@@ -37,7 +38,7 @@ class MemberPresenter extends Presenter
             'last_ts_activity',
             'last_voice_activity',
         ])) {
-            throw new \Exception('Invalid activity type provided to `lastActive()`');
+            throw new Exception('Invalid activity type provided to `lastActive()`');
         }
 
         $value = $this->member->$activityType;
@@ -46,9 +47,9 @@ class MemberPresenter extends Presenter
             return 'Never';
         }
 
-        $value = $value instanceof \Carbon\Carbon
+        $value = $value instanceof Carbon
             ? $value
-            : \Carbon\Carbon::parse($value);
+            : Carbon::parse($value);
 
         $epochStart = Carbon::createFromTimestamp(0);
 

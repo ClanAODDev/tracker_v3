@@ -3,7 +3,8 @@
 namespace App\Filament\Admin\Widgets;
 
 use App\Models\Division;
-use Filament\Tables;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,26 +36,26 @@ class DivisionLeaderboardWidget extends BaseWidget
                     ->with('latestCensus')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('#')
                     ->rowIndex()
                     ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Division')
                     ->url(fn (Division $record) => route('division', $record->slug)),
 
-                Tables\Columns\TextColumn::make('latestCensus.count')
+                TextColumn::make('latestCensus.count')
                     ->label('Members')
                     ->alignCenter()
                     ->default(0),
 
-                Tables\Columns\TextColumn::make('latestCensus.weekly_voice_count')
+                TextColumn::make('latestCensus.weekly_voice_count')
                     ->label('Weekly Voice')
                     ->alignCenter()
                     ->default(0),
 
-                Tables\Columns\TextColumn::make('voice_rate')
+                TextColumn::make('voice_rate')
                     ->label('Voice Rate')
                     ->alignCenter()
                     ->state(function (Division $record) {
@@ -78,7 +79,7 @@ class DivisionLeaderboardWidget extends BaseWidget
             ])
             ->defaultSort('voice_rate', 'desc')
             ->headerActions([
-                Tables\Actions\Action::make('viewRecruiting')
+                Action::make('viewRecruiting')
                     ->label('Top Recruiters')
                     ->icon('heroicon-o-user-plus')
                     ->action(fn () => $this->leaderboardType = 'recruiting'),
@@ -99,30 +100,30 @@ class DivisionLeaderboardWidget extends BaseWidget
                     ->orderByDesc('recruits_count')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('#')
                     ->rowIndex()
                     ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Division')
                     ->url(fn (Division $record) => route('division', $record->slug)),
 
-                Tables\Columns\TextColumn::make('recruits_count')
+                TextColumn::make('recruits_count')
                     ->label('Recruits (30 days)')
                     ->alignCenter()
                     ->badge()
                     ->color('success')
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('members_count')
+                TextColumn::make('members_count')
                     ->label('Total Members')
                     ->alignCenter()
                     ->state(fn (Division $record) => $record->members()->count()),
             ])
             ->defaultSort('recruits_count', 'desc')
             ->headerActions([
-                Tables\Actions\Action::make('viewVoice')
+                Action::make('viewVoice')
                     ->label('Voice Leaders')
                     ->icon('heroicon-o-speaker-wave')
                     ->action(fn () => $this->leaderboardType = 'voice'),

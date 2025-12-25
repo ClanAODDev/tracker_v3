@@ -8,6 +8,7 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -44,7 +45,7 @@ class NotifydDivisionPartTimeMemberRemoved extends Notification implements Shoul
     /**
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($notifiable)
     {

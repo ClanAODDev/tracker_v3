@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\NoteResource\Pages;
 
 use App\Filament\Admin\Resources\NoteResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListNotes extends ListRecords
@@ -13,7 +13,7 @@ class ListNotes extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

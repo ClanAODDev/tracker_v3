@@ -1,18 +1,16 @@
 <?php
 
-Route::group(['prefix' => 'clan'], function () {
-    Route::middleware('admin')->get('division-turnover', 'ReportsController@divisionTurnoverReport')
-        ->name('reports.division-turnover');
+use App\Http\Controllers\ReportsController;
+use Illuminate\Support\Facades\Route;
 
-    Route::middleware('admin')->get('division-roles', 'ReportsController@divisionUsersWithAccess')
-        ->name('reports.division-roles');
+Route::controller(ReportsController::class)->prefix('clan')->group(function () {
+    Route::middleware('admin')->group(function () {
+        Route::get('division-turnover', 'divisionTurnoverReport')->name('reports.division-turnover');
+        Route::get('division-roles', 'divisionUsersWithAccess')->name('reports.division-roles');
+    });
 
-    Route::get('no-discord', 'ReportsController@usersWithoutDiscordReport')
-        ->name('reports.discord');
-    Route::get('outstanding-inactives',
-        'ReportsController@outstandingMembersReport')->name('reports.outstanding-inactives');
-    Route::get('/census', 'ReportsController@clanCensusReport')->name('reports.clan-census');
-
-    // other reporty things
-    Route::get('leadership', 'ReportsController@leadership')->name('leadership');
+    Route::get('no-discord', 'usersWithoutDiscordReport')->name('reports.discord');
+    Route::get('outstanding-inactives', 'outstandingMembersReport')->name('reports.outstanding-inactives');
+    Route::get('census', 'clanCensusReport')->name('reports.clan-census');
+    Route::get('leadership', 'leadership')->name('leadership');
 });

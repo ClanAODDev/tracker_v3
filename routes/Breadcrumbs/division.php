@@ -51,6 +51,7 @@ $divisionPages = [
     'members' => 'Members',
     'member-requests' => 'Member Requests',
     'send-private-message' => 'Send Private Message',
+    'division-notes' => 'Notes',
 ];
 
 foreach ($divisionPages as $route => $label) {

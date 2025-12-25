@@ -34,12 +34,12 @@
                 <div class="inactive-stat-value">{{ $stats['removed'] }}</div>
                 <div class="inactive-stat-label">Removed</div>
             </div>
-            @if(auth()->user()->isRole(['officer', 'sr_ldr']))
+            @can('recruit', App\Models\Member::class)
                 <button type="button" class="inactive-stat inactive-stat--action" data-toggle="modal" data-target="#add-parttimer-modal">
                     <div class="inactive-stat-value"><i class="fa fa-plus"></i></div>
                     <div class="inactive-stat-label">Add Part-Timer</div>
                 </button>
-            @endif
+            @endcan
         </div>
 
         @if (count($members))
@@ -155,7 +155,7 @@
         @endif
     </div>
 
-    @if(auth()->user()->isRole(['officer', 'sr_ldr']))
+    @can('recruit', App\Models\Member::class)
         <div class="modal fade" id="add-parttimer-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -209,6 +209,6 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endcan
 
 @endsection

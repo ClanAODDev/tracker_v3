@@ -14,7 +14,6 @@
 
     <div class="container-fluid">
         @include('division.partials.tools-links')
-        <hr />
         @include ('division.partials.pending-actions')
         @include('division.partials.quick-stats')
         @include ('division.partials.census-short')

@@ -2,95 +2,71 @@
 
 namespace App\AOD;
 
+use App\AOD\Traits\GeneratesAwardImages;
 use App\Models\Member;
 use App\Models\MemberAward;
-use Illuminate\Support\Facades\Storage;
 
 class MemberAwardCluster
 {
-    public function generateClusterImage(Member $member): false|string
+    use GeneratesAwardImages;
+
+    private const AWARD_SIZE = 60;
+
+    private const COLUMNS = 3;
+
+    private const PADDING = 10;
+
+    private const MAX_AWARDS = 6;
+
+    public function generateClusterImage(Member $member): string
     {
-        $awards = MemberAward::where('member_id', $member->clan_id)
+        $awards = $this->fetchAwardImages($member);
+
+        if (empty($awards)) {
+            return $this->loadFallbackImage(public_path('images/dynamic-images/bgs/no-awards-base-image.png'))
+                ?? $this->renderToPng($this->createPlaceholderImage(self::AWARD_SIZE, self::AWARD_SIZE));
+        }
+
+        $rows = (int) ceil(count($awards) / self::COLUMNS);
+        $baseWidth = (self::COLUMNS * self::AWARD_SIZE) + ((self::COLUMNS - 1) * self::PADDING);
+        $baseHeight = ($rows * self::AWARD_SIZE) + (($rows - 1) * self::PADDING);
+
+        $canvas = $this->createTransparentCanvas($baseWidth, $baseHeight);
+        $this->placeAwards($canvas, $awards);
+
+        return $this->renderToPng($canvas);
+    }
+
+    private function fetchAwardImages(Member $member): array
+    {
+        return MemberAward::where('member_id', $member->clan_id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
             ->where('approved', true)
             ->orderBy('awards.display_order')
-            ->select('awards.image')
-            ->take(6)
-            ->get()
-            ->pluck('image')
+            ->take(self::MAX_AWARDS)
+            ->pluck('awards.image')
             ->toArray();
-
-        if (count($awards) === 0) {
-            $noAwardsImage = public_path('images/dynamic-images/bgs/no-awards-base-image.png');
-            if (file_exists($noAwardsImage)) {
-                $brokenImage = imagecreatefrompng($noAwardsImage);
-                header('Content-Type: image/png');
-                imagepng($brokenImage);
-                imagedestroy($brokenImage);
-
-                exit;
-            }
-        }
-
-        $awardWidth = 60;
-        $awardHeight = 60;
-        $columns = 3;
-        $rows = ceil(count($awards) / $columns);
-        $padding = 10;
-
-        $baseWidth = ($columns * $awardWidth) + (($columns - 1) * $padding);
-        $baseHeight = ($rows * $awardHeight) + (($rows - 1) * $padding);
-
-        $baseImage = imagecreatetruecolor($baseWidth, $baseHeight);
-        imagesavealpha($baseImage, true);
-        $transparentColor = imagecolorallocatealpha($baseImage, 0, 0, 0, 127);
-        imagefill($baseImage, 0, 0, $transparentColor);
-
-        $this->placeAwardsOnImage($baseImage, $awards, $awardWidth, $awardHeight, $columns, $padding);
-
-        ob_start();
-        imagepng($baseImage);
-        imagedestroy($baseImage);
-
-        return ob_get_clean();
     }
 
-    protected function placeAwardsOnImage($baseImage, $awards, $awardWidth, $awardHeight, $columns, $padding): void
+    private function placeAwards(\GdImage $canvas, array $awards): void
     {
         $x = 0;
         $y = 0;
-        $counter = 0;
 
-        foreach ($awards as $awardPath) {
-            $awardImagePath = Storage::path('public/' . $awardPath);
+        foreach ($awards as $index => $imagePath) {
+            $awardImage = $this->loadAwardImage($imagePath, self::AWARD_SIZE, self::AWARD_SIZE);
+            $resized = $this->resizeImage($awardImage, self::AWARD_SIZE, self::AWARD_SIZE);
 
-            if (file_exists($awardImagePath)) {
-                $awardImage = @imagecreatefrompng($awardImagePath);
+            imagecopy($canvas, $resized, $x, $y, 0, 0, self::AWARD_SIZE, self::AWARD_SIZE);
 
-                imagesavealpha($awardImage, true);
+            imagedestroy($awardImage);
+            imagedestroy($resized);
 
-                imagecopyresampled(
-                    $baseImage,
-                    $awardImage,
-                    $x,
-                    $y,
-                    0,
-                    0,
-                    $awardWidth,
-                    $awardHeight,
-                    imagesx($awardImage),
-                    imagesy($awardImage)
-                );
+            $x += self::AWARD_SIZE + self::PADDING;
 
-                imagedestroy($awardImage);
-            }
-
-            $x += $awardWidth + $padding;
-            $counter++;
-
-            if ($counter % $columns == 0) {
+            if (($index + 1) % self::COLUMNS === 0) {
                 $x = 0;
-                $y += $awardHeight + $padding;
+                $y += self::AWARD_SIZE + self::PADDING;
             }
         }
     }

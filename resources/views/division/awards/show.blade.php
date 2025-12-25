@@ -65,15 +65,26 @@
             </div>
         </div>
 
-        <div class="panel panel-filled award-detail" style="position: relative; overflow: hidden;">
+        <div class="panel panel-filled award-detail award-detail-{{ $stats->rarity }}" style="position: relative; overflow: hidden;">
             <div class="rarity-indicator rarity-{{ $stats->rarity }}"></div>
             <div class="panel-body">
                 <div style="display:flex;align-items: center;justify-content: center;">
-                    <img src="{{ $award->getImagePath() }}"
-                         class="clan-award clan-award-zoom hidden-xs hidden-sm"
-                         style="margin-right:50px;"
-                         alt="{{ $award->name }}"
-                    />
+                    <div class="award-image-wrapper-lg hidden-xs hidden-sm" style="margin-right:50px;">
+                        @if($award->image && Storage::disk('public')->exists($award->image))
+                            <img src="{{ $award->getImagePath() }}"
+                                 class="clan-award clan-award-zoom"
+                                 alt="{{ $award->name }}"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+                            />
+                            <div class="award-placeholder-lg" style="display:none">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        @else
+                            <div class="award-placeholder-lg">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        @endif
+                    </div>
 
                     <div class="hidden-xs hidden-sm text-center">
                         <h3>{{ $award->name }}</h3>
@@ -98,10 +109,22 @@
                 </div>
 
                 <div class="visible-xs visible-sm text-center">
-                    <img src="{{ $award->getImagePath() }}"
-                         class="clan-award"
-                         alt="{{ $award->name }}"
-                    />
+                    <div class="award-image-wrapper-lg" style="display:inline-flex;margin-bottom:15px;">
+                        @if($award->image && Storage::disk('public')->exists($award->image))
+                            <img src="{{ $award->getImagePath() }}"
+                                 class="clan-award"
+                                 alt="{{ $award->name }}"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+                            />
+                            <div class="award-placeholder-lg" style="display:none">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        @else
+                            <div class="award-placeholder-lg">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        @endif
+                    </div>
                     <h3>{{ $award->name }}</h3>
                     @if ($award->division)
                         <span class="label label-default">{{ $award->division->name }}</span>

@@ -10,6 +10,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
+use Log;
 
 class NotifyMemberOfficerPromotionPendingAcceptance extends Notification implements ShouldQueue
 {
@@ -44,7 +45,7 @@ class NotifyMemberOfficerPromotionPendingAcceptance extends Notification impleme
             $this->action,
         ]);
 
-        \Log::info($route);
+        Log::info($route);
 
         return (new BotDMMessage)
             ->to($notifiable->discord_id)

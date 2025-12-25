@@ -2,36 +2,43 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\TicketCommentResource\Pages;
+use App\Filament\Admin\Resources\TicketCommentResource\Pages\CreateTicketComment;
+use App\Filament\Admin\Resources\TicketCommentResource\Pages\EditTicketComment;
+use App\Filament\Admin\Resources\TicketCommentResource\Pages\ListTicketComments;
 use App\Models\TicketComment;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class TicketCommentResource extends Resource
 {
     protected static ?string $model = TicketComment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
     protected static ?string $navigationParentItem = 'Tickets';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('body')
+        return $schema
+            ->components([
+                Textarea::make('body')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Select::make('user_id')
+                Select::make('user_id')
                     ->relationship(name: 'user', titleAttribute: 'name')
                     ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('ticket_id')
+                TextInput::make('ticket_id')
                     ->required()
                     ->numeric(),
             ]);
@@ -41,17 +48,17 @@ class TicketCommentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                TextColumn::make('user_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ticket_id')
+                TextColumn::make('ticket_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -59,12 +66,12 @@ class TicketCommentResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -79,9 +86,9 @@ class TicketCommentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTicketComments::route('/'),
-            'create' => Pages\CreateTicketComment::route('/create'),
-            'edit' => Pages\EditTicketComment::route('/{record}/edit'),
+            'index' => ListTicketComments::route('/'),
+            'create' => CreateTicketComment::route('/create'),
+            'edit' => EditTicketComment::route('/{record}/edit'),
         ];
     }
 }

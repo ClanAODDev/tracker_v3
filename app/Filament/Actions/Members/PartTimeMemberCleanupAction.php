@@ -18,7 +18,7 @@ class PartTimeMemberCleanupAction
             ->label('Cleanup Part-Time')
             ->modalHeading('Cleanup Part-Time Division Assignments')
             ->modalDescription('Removes part-time division entries that match a member’s full-time division. Applies to the current filtered list.')
-            ->form([
+            ->schema([
                 Toggle::make('persist')
                     ->label('Persist changes')
                     ->helperText('Off = dry run (just shows counts).')

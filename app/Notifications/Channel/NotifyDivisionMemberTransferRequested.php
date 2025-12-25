@@ -7,6 +7,7 @@ use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
 use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -66,7 +67,7 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
     /**
      * @return array[]
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($notifiable)
     {

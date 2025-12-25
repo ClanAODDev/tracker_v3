@@ -241,7 +241,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function canRemoveUsers()
     {
-        return $this->member->rank->value >= \App\Enums\Rank::SERGEANT->value;
+        return $this->member->rank->value >= Rank::SERGEANT->value;
     }
 
     /**

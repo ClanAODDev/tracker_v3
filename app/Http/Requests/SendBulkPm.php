@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
 use Spatie\ValidationRules\Rules\Delimited;
 
@@ -9,7 +10,7 @@ class SendBulkPm extends FormRequest
 {
     public function authorize()
     {
-        return $this->user()->can('recruit', \App\Models\Member::class);
+        return $this->user()->can('recruit', Member::class);
     }
 
     public function rules(): array

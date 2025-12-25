@@ -6,8 +6,8 @@ use App\Models\Member;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Get;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
 
@@ -19,7 +19,7 @@ class CleanupUnassignedLeadersAction extends Action
 
         $this->label('Unassigned leaders')
             ->requiresConfirmation()
-            ->form([
+            ->schema([
 
                 Placeholder::make('preview')
                     ->label('Preview Change')
@@ -27,11 +27,11 @@ class CleanupUnassignedLeadersAction extends Action
                         $rule = $get('rule');
 
                         $c2 = in_array($rule, ['squad_pos2', 'both'], true)
-                            ? \App\Models\Member::unassignedSquadLeaders()->count()
+                            ? Member::unassignedSquadLeaders()->count()
                             : 0;
 
                         $c3 = in_array($rule, ['platoon_pos3', 'both'], true)
-                            ? \App\Models\Member::unassignedPlatoonLeaders()->count()
+                            ? Member::unassignedPlatoonLeaders()->count()
                             : 0;
 
                         if (max($c2, $c3) === 0 && $rule !== null) {

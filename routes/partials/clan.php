@@ -1,10 +1,10 @@
 <?php
 
-/**
- * Admin / Member Request routes.
- */
-Route::group(['prefix' => 'clan'], function () {
-    Route::get('awards', 'AwardController@index')->name('awards.index');
-    Route::get('awards/{award}', 'AwardController@show')->name('awards.show');
-    Route::post('awards/{award}', 'AwardController@storeRecommendation')->name('awards.store-recommendation');
+use App\Http\Controllers\AwardController;
+use Illuminate\Support\Facades\Route;
+
+Route::controller(AwardController::class)->prefix('clan/awards')->name('awards.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('{award}', 'show')->name('show');
+    Route::post('{award}', 'storeRecommendation')->name('store-recommendation');
 });

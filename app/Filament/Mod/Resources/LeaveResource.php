@@ -2,15 +2,23 @@
 
 namespace App\Filament\Mod\Resources;
 
-use App\Filament\Mod\Resources\LeaveResource\Pages;
+use App\Filament\Mod\Resources\LeaveResource\Pages\CreateLeave;
+use App\Filament\Mod\Resources\LeaveResource\Pages\EditLeave;
+use App\Filament\Mod\Resources\LeaveResource\Pages\ListLeaves;
 use App\Filament\Mod\Resources\LeaveResource\RelationManagers\MemberRelationManager;
 use App\Filament\Mod\Resources\LeaveResource\RelationManagers\NoteRelationManager;
 use App\Models\Leave;
 use App\Models\Note;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -19,11 +27,11 @@ class LeaveResource extends Resource
 {
     protected static ?string $model = Leave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar';
 
     protected static ?string $label = 'Leave Request';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     protected static ?string $pluralLabel = 'Leaves of Absence';
 
@@ -49,11 +57,11 @@ class LeaveResource extends Resource
         return null;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('member_id')
+        return $schema
+            ->components([
+                Select::make('member_id')
                     ->required()
                     ->exists('members', 'clan_id')
                     ->unique('leaves', 'member_id')
@@ -66,12 +74,12 @@ class LeaveResource extends Resource
                     ->hiddenOn('edit')
                     ->searchable(),
 
-                Forms\Components\Select::make('reason')
+                Select::make('reason')
                     ->label('Reason for leave')
                     ->required()
                     ->options(Leave::$reasons),
 
-                Forms\Components\DateTimePicker::make('end_date')
+                DateTimePicker::make('end_date')
                     ->after(now()->addDays(29))
                     ->default(now()->addDays(30))
                     ->validationMessages([
@@ -79,7 +87,7 @@ class LeaveResource extends Resource
                     ])
                     ->required(),
 
-                Forms\Components\Textarea::make('note.body')
+                Textarea::make('note.body')
                     ->hiddenOn('edit')
                     ->label('Justification')
                     ->columnSpanFull()
@@ -96,14 +104,14 @@ class LeaveResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member.name')
+                TextColumn::make('member.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('approver.name'),
-                Tables\Columns\TextColumn::make('requester.name'),
-                Tables\Columns\TextColumn::make('member.division.name'),
-                Tables\Columns\TextColumn::make('reason'),
-                Tables\Columns\TextColumn::make('end_date')
+                TextColumn::make('approver.name'),
+                TextColumn::make('requester.name'),
+                TextColumn::make('member.division.name'),
+                TextColumn::make('reason'),
+                TextColumn::make('end_date')
                     ->extraAttributes(fn (?Model $record) => $record->end_date < now()
                         ? ['style' => 'background-color: #ff1111; border-radius: 10px;']
                         : []
@@ -111,11 +119,11 @@ class LeaveResource extends Resource
                     ->dateTime()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -126,15 +134,15 @@ class LeaveResource extends Resource
                 });
             })
             ->filters([
-                Tables\Filters\Filter::make('needs approval')
+                Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->whereNull('approver_id'))->default(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()->label('Revoke')->requiresConfirmation(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()->label('Revoke')->requiresConfirmation(),
                 ]),
             ]);
     }
@@ -150,9 +158,9 @@ class LeaveResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLeaves::route('/'),
-            'create' => Pages\CreateLeave::route('/create'),
-            'edit' => Pages\EditLeave::route('/{record}/edit'),
+            'index' => ListLeaves::route('/'),
+            'create' => CreateLeave::route('/create'),
+            'edit' => EditLeave::route('/{record}/edit'),
         ];
     }
 }

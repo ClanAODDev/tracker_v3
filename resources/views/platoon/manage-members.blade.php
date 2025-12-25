@@ -23,9 +23,11 @@
                     <a href="{{ route('platoon', [$division->slug, $platoon]) }}" class="btn btn-default">
                         <i class="fa fa-arrow-left"></i> Back to {{ $division->locality('platoon') }}
                     </a>
-                    <a class="btn btn-success" href="{{ route('createSquad', [$division->slug, $platoon]) }}">
-                        <i class="fa fa-plus"></i> Create {{ $division->locality('squad') }}
-                    </a>
+                    @can('update', $platoon)
+                        <a href="{{ route('filament.mod.resources.platoons.edit', [$platoon]) }}" class="btn btn-sm btn-default">
+                            <i class="fa fa-plus text-success"></i> Create {{ $division->locality('squad') }}
+                        </a>
+                    @endcan
                 </div>
             </div>
 

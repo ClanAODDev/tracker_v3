@@ -3,24 +3,31 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Enums\Rank;
-use App\Filament\Mod\Resources\RankActionResource\Pages;
+use App\Filament\Mod\Resources\RankActionResource\Pages\CreateRankAction;
+use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
+use App\Filament\Mod\Resources\RankActionResource\Pages\ListRankActions;
 use App\Models\Member;
 use App\Models\RankAction;
 use Carbon\Carbon;
+use Closure;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,9 +37,9 @@ class RankActionResource extends Resource
 {
     protected static ?string $model = RankAction::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-plus';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-user-plus';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     public static function getNavigationBadge(): ?string
     {
@@ -46,10 +53,10 @@ class RankActionResource extends Resource
         return $pendingCount ? (string) $pendingCount : null;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
 
                 Grid::make()
                     ->schema([
@@ -112,22 +119,22 @@ class RankActionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member.name'),
-                Tables\Columns\TextColumn::make('member.division.name')
+                TextColumn::make('member.name'),
+                TextColumn::make('member.division.name')
                     ->sortable()
                     ->visible(fn () => auth()->user()->isRole('admin')),
-                Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                Tables\Columns\ViewColumn::make('status')
+                ViewColumn::make('status')
                     ->toggleable()
                     ->view('filament.forms.components.status-badge'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('requester.name'),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('requester.name'),
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -139,7 +146,7 @@ class RankActionResource extends Resource
             ->filters(
                 [
                     Filter::make('rank_filter')
-                        ->form([
+                        ->schema([
                             Select::make('rank')
                                 ->label('Rank')
                                 ->options(function () {
@@ -161,7 +168,7 @@ class RankActionResource extends Resource
                             : null),
 
                     Filter::make('requester_name')
-                        ->form([
+                        ->schema([
                             TextInput::make('requester_name')
                                 ->label('Requester Name')
                                 ->placeholder('Enter requester name'),
@@ -181,7 +188,7 @@ class RankActionResource extends Resource
                                 : null;
                         }),
 
-                    Tables\Filters\Filter::make('Incomplete')
+                    Filter::make('Incomplete')
                         ->query(function (Builder $query, array $data): Builder {
                             return empty($data) ? $query : $query
                                 ->where('denied_at', null)
@@ -194,14 +201,14 @@ class RankActionResource extends Resource
                 ]
 
             )
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
                 CommentsAction::make()->visible(fn (
                     RankAction $action
                 ) => auth()->user()->canManageRankActionCommentsFor($action)),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
@@ -217,9 +224,9 @@ class RankActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRankActions::route('/'),
-            'create' => Pages\CreateRankAction::route('/create'),
-            'edit' => Pages\EditRankAction::route('/{record}/edit'),
+            'index' => ListRankActions::route('/'),
+            'create' => CreateRankAction::route('/create'),
+            'edit' => EditRankAction::route('/{record}/edit'),
         ];
     }
 
@@ -260,7 +267,7 @@ class RankActionResource extends Resource
                 })
                 ->rules([
                     'required',
-                    fn (callable $get): \Closure => function (string $attribute, $value, \Closure $fail) use (
+                    fn (callable $get): Closure => function (string $attribute, $value, Closure $fail) use (
                         $get,
                         $min_days_rank_action
                     ) {

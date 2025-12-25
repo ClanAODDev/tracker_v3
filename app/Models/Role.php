@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Presenters\RolePresenter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
@@ -14,7 +15,7 @@ class Role extends Model
         return new RolePresenter($this);
     }
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }

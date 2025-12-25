@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\CensusResource\Pages;
 
 use App\Filament\Admin\Resources\CensusResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditCensus extends EditRecord
@@ -13,7 +13,7 @@ class EditCensus extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

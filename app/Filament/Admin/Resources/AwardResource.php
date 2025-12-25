@@ -2,14 +2,28 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\AwardResource\Pages;
+use App\Filament\Admin\Resources\AwardResource\Pages\CreateAward;
+use App\Filament\Admin\Resources\AwardResource\Pages\EditAward;
+use App\Filament\Admin\Resources\AwardResource\Pages\ListAwards;
 use App\Filament\Admin\Resources\MemberAwardResource\RelationManagers\MemberAwardsRelationManager;
 use App\Models\Award;
-use Filament\Forms;
+use Filament\Actions\BulkAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextInputColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,15 +33,15 @@ class AwardResource extends Resource
 {
     protected static ?string $model = Award::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-trophy';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\FileUpload::make('image')
+        return $schema
+            ->components([
+                FileUpload::make('image')
                     ->directory('awards')
                     ->rules(['dimensions:width=60,height=60'])
                     ->validationMessages([
@@ -37,15 +51,15 @@ class AwardResource extends Resource
                     ->columnSpanFull()
                     ->alignCenter()
                     ->image(),
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(191),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
                     ->columnSpanFull()
                     ->required()
                     ->maxLength(191),
-                Forms\Components\Textarea::make('instructions')
+                Textarea::make('instructions')
                     ->placeholder('Ex. include a imgur link to screenshot, or link to game profile')
                     ->columnSpanFull()
                     ->nullable()
@@ -54,15 +68,15 @@ class AwardResource extends Resource
                     ->relationship('division', 'name')
                     ->label('Division')
                     ->nullable(),
-                Forms\Components\TextInput::make('display_order')
+                TextInput::make('display_order')
                     ->required()
                     ->numeric()
                     ->default(100),
-                Forms\Components\Section::make('Metadata')->schema([
-                    Forms\Components\Toggle::make('active')
+                Section::make('Metadata')->schema([
+                    Toggle::make('active')
                         ->default(true)
                         ->required(),
-                    Forms\Components\Toggle::make('allow_request')
+                    Toggle::make('allow_request')
                         ->default(false)
                         ->required(),
                 ])->columns(2),
@@ -74,47 +88,47 @@ class AwardResource extends Resource
         return $table
             ->query(fn (Award $record) => $record->withCount('recipients'))
             ->columns([
-                Tables\Columns\ImageColumn::make('image'),
-                Tables\Columns\TextColumn::make('name')
+                ImageColumn::make('image'),
+                TextColumn::make('name')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->searchable()
                     ->limit(45)
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('recipients_count')
+                TextColumn::make('recipients_count')
                     ->label('Recipients')
                     ->sortable(),
-                Tables\Columns\TextInputColumn::make('display_order')
+                TextInputColumn::make('display_order')
                     ->rules(['required', 'numeric'])
                     ->sortable(),
-                Tables\Columns\ToggleColumn::make('allow_request'),
-                Tables\Columns\TextColumn::make('created_at')
+                ToggleColumn::make('allow_request'),
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])->defaultSort('display_order')
             ->filters([
-                Tables\Filters\Filter::make('is_active')
+                Filter::make('is_active')
                     ->query(fn (Builder $query): Builder => $query->where('active', true)),
-                Tables\Filters\SelectFilter::make('division')
+                SelectFilter::make('division')
                     ->relationship('division', 'name')
                     ->multiple(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\BulkAction::make('update_division_id')
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    BulkAction::make('update_division_id')
                         ->label('Mass assign to division')
                         ->form([
-                            Forms\Components\Select::make('division_id')
+                            Select::make('division_id')
                                 ->relationship('division', 'name')
                                 ->required(),
                         ])
@@ -126,7 +140,7 @@ class AwardResource extends Resource
                         ->deselectRecordsAfterCompletion(),
                 ]),
             ])->filters([
-                Tables\Filters\Filter::make('is_active_division')
+                Filter::make('is_active_division')
                     ->query(fn ($query) => $query->active()),
                 SelectFilter::make('by division')->relationship('division', 'name'),
 
@@ -143,9 +157,9 @@ class AwardResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAwards::route('/'),
-            'create' => Pages\CreateAward::route('/create'),
-            'edit' => Pages\EditAward::route('/{record}/edit'),
+            'index' => ListAwards::route('/'),
+            'create' => CreateAward::route('/create'),
+            'edit' => EditAward::route('/{record}/edit'),
         ];
     }
 }

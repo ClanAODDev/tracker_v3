@@ -3,19 +3,29 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\Position;
-use App\Filament\Admin\Resources\DivisionResource\Pages;
+use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
+use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
+use App\Filament\Admin\Resources\DivisionResource\Pages\ListDivisions;
 use App\Models\Division;
 use App\Models\Member;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -26,9 +36,9 @@ class DivisionResource extends Resource
 {
     protected static ?string $model = Division::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     private static string $becy = 'https://jarlpenguin.github.io/BeCyIconGrabberPortable/';
 
@@ -36,13 +46,13 @@ class DivisionResource extends Resource
 
     private static string $usergroup_mod = 'https://www.clanaod.net/forums/admincp/usergroup.php?do=modify';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Tracker Details')
                     ->schema([
-                        Forms\Components\FileUpload::make('logo')
+                        FileUpload::make('logo')
                             ->label('Logo (48x48)')
                             ->hint(str(sprintf('[Icon Extraction Tool >](%s)',
                                 self::$becy
@@ -52,7 +62,7 @@ class DivisionResource extends Resource
                             ->avatar()
                             ->directory('logos'),
 
-                        Forms\Components\Fieldset::make()->schema([
+                        Fieldset::make()->schema([
                             TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
@@ -77,19 +87,19 @@ class DivisionResource extends Resource
                             ->hiddenOn('create'),
                     ]),
 
-                Forms\Components\Section::make('Leadership Management')
+                Section::make('Leadership Management')
                     ->description('Manage division leaders')
                     ->hiddenOn('create')
                     ->schema([
-                        Forms\Components\Section::make()->schema([
+                        Section::make()->schema([
                             TextInput::make('current_co_name')
                                 ->label('Current CO')
                                 ->disabled()
                                 ->dehydrated(false)
-                                ->afterStateHydrated(function ($state, Set $set) use ($form) {
-                                    $coName = \App\Models\Member::query()
-                                        ->where('division_id', $form->getRecord()?->id)
-                                        ->where('position', \App\Enums\Position::COMMANDING_OFFICER)
+                                ->afterStateHydrated(function ($state, Set $set) use ($schema) {
+                                    $coName = Member::query()
+                                        ->where('division_id', $schema->getRecord()?->id)
+                                        ->where('position', Position::COMMANDING_OFFICER)
                                         ->value('name');
                                     $set('current_co_name', $coName);
                                 }),
@@ -97,7 +107,7 @@ class DivisionResource extends Resource
                             Select::make('new_co')
                                 ->label('New CO')
                                 ->searchable()
-                                ->options(fn () => Member::where('division_id', $form->getRecord()?->id)
+                                ->options(fn () => Member::where('division_id', $schema->getRecord()?->id)
                                     ->pluck('name', 'id')),
                         ])->columns(),
 
@@ -107,18 +117,18 @@ class DivisionResource extends Resource
                                 Select::make('xo')
                                     ->label('Executive Officer')
                                     ->searchable()
-                                    ->options(fn () => Member::where('division_id', $form->getRecord()?->id)
+                                    ->options(fn () => Member::where('division_id', $schema->getRecord()?->id)
                                         ->pluck('name', 'id')),
                             ])
                             ->minItems(0)
                             ->maxItems(3)
                             ->addActionLabel('Add XO')
-                            ->afterStateHydrated(function ($state, Set $set) use ($form) {
+                            ->afterStateHydrated(function ($state, Set $set) use ($schema) {
                                 if (! empty($state)) {
                                     return;
                                 }
 
-                                $rows = Member::where('division_id', $form->getRecord()->id)
+                                $rows = Member::where('division_id', $schema->getRecord()->id)
                                     ->where('position', Position::EXECUTIVE_OFFICER)
                                     ->pluck('id')
                                     ->map(fn ($id) => ['xo' => $id])
@@ -132,10 +142,10 @@ class DivisionResource extends Resource
                 Section::make('Website')
                     ->hiddenOn('create')
                     ->schema([
-                        Forms\Components\Section::make('Website')
+                        Section::make('Website')
                             ->description('Divisional website settings')
                             ->schema([
-                                Forms\Components\MarkdownEditor::make('site_content')
+                                MarkdownEditor::make('site_content')
                                     ->helperText('Changes will prompt an admin review before being published')
                                     ->columnSpanFull(),
                             ])->collapsible()->collapsed(),
@@ -163,7 +173,7 @@ class DivisionResource extends Resource
 
                 Section::make('Extra settings')->schema([
 
-                    Forms\Components\DateTimePicker::make('shutdown_at'),
+                    DateTimePicker::make('shutdown_at'),
 
                     Toggle::make('show_on_site')
                         ->label('Show on site')
@@ -183,16 +193,16 @@ class DivisionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('logo'),
-                Tables\Columns\TextColumn::make('name')
+                ImageColumn::make('logo'),
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
+                TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('abbreviation')
+                TextColumn::make('abbreviation')
                     ->searchable()
                     ->badge(),
-                Tables\Columns\IconColumn::make('active')
+                IconColumn::make('active')
                     ->boolean(),
             ])
             ->filters([
@@ -203,12 +213,12 @@ class DivisionResource extends Resource
 
                 TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -222,9 +232,9 @@ class DivisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDivisions::route('/'),
-            'create' => Pages\CreateDivision::route('/create'),
-            'edit' => Pages\EditDivision::route('/{record}/edit'),
+            'index' => ListDivisions::route('/'),
+            'create' => CreateDivision::route('/create'),
+            'edit' => EditDivision::route('/{record}/edit'),
         ];
     }
 }

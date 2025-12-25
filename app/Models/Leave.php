@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Leave.
  */
-class Leave extends \Illuminate\Database\Eloquent\Model
+class Leave extends Model
 {
     /**
      * @var array
@@ -72,7 +74,7 @@ class Leave extends \Illuminate\Database\Eloquent\Model
      */
     public function getExpiredAttribute()
     {
-        return \Carbon\Carbon::today() > $this->end_date->format('Y-m-d');
+        return Carbon::today() > $this->end_date->format('Y-m-d');
     }
 
     /**

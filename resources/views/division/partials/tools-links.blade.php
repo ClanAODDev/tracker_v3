@@ -1,91 +1,80 @@
-<div class="dropdown m-b-sm" style="display: inline-block;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="tools" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="true">
-        <i class="fa fa-wrench text-accent"></i> Tools
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="tools">
-
-        @can('recruit', App\Models\Member::class)
-            @if (!$division->isShutdown())
-                <li>
-                    <a href="{{ route('recruiting.form', $division) }}">Add Recruit</a>
-                </li>
-                <li role="separator" class="divider"></li>
-            @endif
-        @endcan
-
-        <li>
-            <a href="{{ route('partTimers', $division) }}">
-                Manage Part Timers
-            </a>
-        </li>
-        <li>
-            @can ('viewDivisionStructure', auth()->user())
-                <a href="{{ route('division.structure', $division) }}">
-                    Generate Structure
-                </a>
-            @endcan
-        </li>
-        <li>
-            <a href="{{ route('division.inactive-members', $division) }}">Manage Inactives</a>
-        </li>
-        @can('create', \App\Models\Leave::class)
-            <li>
-                <a href="{{ route('filament.mod.resources.leaves.index') }}">
-                    Manage Leaves of Absence
-                </a>
-            </li>
-        @endcan
-
-        @can ('show', App\Models\Note::class)
-            <li>
-                <a href="{{ route('division.notes', $division) }}">View Notes</a>
-            </li>
-        @endcan
-
-    </ul>
-</div>
-
-<div class="dropdown" style="display: inline-block;">
-    <button class="btn btn-default dropdown-toggle" type="button" id="reports" data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true">
-        <i class="fa fa-paperclip text-accent"></i> Reports
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="reports">
-        <li>
-            <a href="{{ route('division.census', $division) }}">
-                Census
-            </a>
-        </li>
-
-        <li>
-            <a href="{{ route('division.retention-report', $division) }}">Member Retention</a>
-        </li>
-
-
-        <li>
-            <a href="{{ route('division.promotions', $division) }}">Promotions</a>
-        </li>
-
-        <li>
-            <a href="{{ route('division.voice-report', $division) }}">Voice Comms Issues</a>
-        </li>
-    </ul>
-</div>
-
-<a href="{{ route('division.members', $division) }}" class="btn btn-default">
-    <i class="fa fa-users text-accent"></i> Members
-</a>
-
-@can('manage', \App\Models\MemberRequest::class)
-    <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="btn btn-default">
-        <i class="fa fa-users text-accent"></i> Member Requests
+<div class="division-tools">
+    <a href="{{ route('division.members', $division) }}" class="tool-card">
+        <i class="fa fa-users"></i>
+        <span>Members</span>
     </a>
-@endcan
 
-<a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="btn btn-default">
-    <i class="fa fa-trophy text-accent"></i> Awards
-</a>
+    @can('recruit', App\Models\Member::class)
+        @if (!$division->isShutdown())
+            <a href="{{ route('recruiting.form', $division) }}" class="tool-card tool-card-accent">
+                <i class="fa fa-user-plus"></i>
+                <span>Add Recruit</span>
+            </a>
+        @endif
+    @endcan
+
+    <div class="tool-card-dropdown">
+        <div class="tool-card tool-card-trigger">
+            <i class="fa fa-chart-bar"></i>
+            <span>Reports</span>
+            <i class="fa fa-chevron-down tool-card-arrow"></i>
+        </div>
+        <div class="tool-card-menu">
+            <a href="{{ route('division.census', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-chart-line"></i> Census
+            </a>
+            <a href="{{ route('division.retention-report', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-chart-area"></i> Retention
+            </a>
+            <a href="{{ route('division.promotions', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-medal"></i> Promotions
+            </a>
+            <a href="{{ route('division.voice-report', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-headset"></i> Voice
+            </a>
+        </div>
+    </div>
+
+    <a href="{{ route('division.inactive-members', $division) }}" class="tool-card">
+        <i class="fa fa-user-clock"></i>
+        <span>Inactives</span>
+    </a>
+
+    <a href="{{ route('partTimers', $division) }}" class="tool-card">
+        <i class="fa fa-user-tag"></i>
+        <span>Part Timers</span>
+    </a>
+
+    @can ('viewDivisionStructure', auth()->user())
+        <a href="{{ route('division.edit-structure', $division) }}" class="tool-card">
+            <i class="fa fa-sitemap"></i>
+            <span>Structure</span>
+        </a>
+    @endcan
+
+    <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card">
+        <i class="fa fa-trophy"></i>
+        <span>Awards</span>
+    </a>
+
+    @can('create', \App\Models\Leave::class)
+        <a href="{{ route('filament.mod.resources.leaves.index') }}" class="tool-card">
+            <i class="fa fa-calendar-alt"></i>
+            <span>LOAs</span>
+        </a>
+    @endcan
+
+    @can ('show', App\Models\Note::class)
+        <a href="{{ route('division.notes', $division) }}" class="tool-card">
+            <i class="fa fa-sticky-note"></i>
+            <span>Notes</span>
+        </a>
+    @endcan
+
+    @can('manage', \App\Models\MemberRequest::class)
+        <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="tool-card">
+            <i class="fa fa-inbox"></i>
+            <span>Requests</span>
+        </a>
+    @endcan
+</div>

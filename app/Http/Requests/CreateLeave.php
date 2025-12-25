@@ -2,7 +2,13 @@
 
 namespace App\Http\Requests;
 
-class CreateLeave extends \Illuminate\Foundation\Http\FormRequest
+use App\Models\Leave;
+use App\Models\Member;
+use App\Models\Note;
+use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
+
+class CreateLeave extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -38,16 +44,16 @@ class CreateLeave extends \Illuminate\Foundation\Http\FormRequest
     public function persist()
     {
         // search is by clan id, but we want member id (tracker id)
-        $memberRequestingLeave = \App\Models\Member::whereClanId($this->member_id)->firstOrFail();
+        $memberRequestingLeave = Member::whereClanId($this->member_id)->firstOrFail();
 
-        $note = \App\Models\Note::create([
+        $note = Note::create([
             'body' => "Leave of absence requested. Reason: {$this->note_body}",
             'forum_thread_id' => $this->note_thread_id, 'type' => 'misc',
             'author_id' => auth()->id(), 'member_id' => $memberRequestingLeave->id,
         ]);
 
-        $leave = \App\Models\Leave::create([
-            'reason' => $this->leave_type, 'end_date' => \Carbon\Carbon::parse($this->end_date), 'extended' => false,
+        $leave = Leave::create([
+            'reason' => $this->leave_type, 'end_date' => Carbon::parse($this->end_date), 'extended' => false,
         ]);
 
         $leave->member()->associate($this->member_id);

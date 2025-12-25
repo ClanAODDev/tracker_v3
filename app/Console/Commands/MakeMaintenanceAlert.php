@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 
 class MakeMaintenanceAlert extends Command
@@ -56,7 +57,7 @@ class MakeMaintenanceAlert extends Command
                 $alert = fopen(base_path(self::MAINTENANCE_ALERT), 'w');
                 fwrite($alert, $message);
                 fclose($alert);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $this->error('Could not set alert file! - ' . $exception->getMessage());
             }
 

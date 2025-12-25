@@ -3,13 +3,20 @@
 namespace App\Filament\Mod\Resources;
 
 use App\Enums\TagVisibility;
-use App\Filament\Mod\Resources\DivisionTagResource\Pages;
+use App\Filament\Mod\Resources\DivisionTagResource\Pages\CreateDivisionTag;
+use App\Filament\Mod\Resources\DivisionTagResource\Pages\EditDivisionTag;
+use App\Filament\Mod\Resources\DivisionTagResource\Pages\ListDivisionTags;
 use App\Filament\Mod\Resources\DivisionTagResource\RelationManagers\MembersRelationManager;
 use App\Models\DivisionTag;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -17,9 +24,9 @@ class DivisionTagResource extends Resource
 {
     protected static ?string $model = DivisionTag::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     public static function getEloquentQuery(): Builder
     {
@@ -34,7 +41,7 @@ class DivisionTagResource extends Resource
         return auth()->user()->can('viewAny', DivisionTag::class);
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $user = auth()->user();
         $isSeniorLeader = $user?->isRole(['admin', 'sr_ldr']) ?? false;
@@ -45,12 +52,12 @@ class DivisionTagResource extends Resource
             ))
             ->mapWithKeys(fn ($visibility) => [$visibility->value => $visibility->label()]);
 
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(25),
-                Forms\Components\Select::make('visibility')
+                Select::make('visibility')
                     ->options($visibilityOptions)
                     ->default(TagVisibility::PUBLIC->value)
                     ->required(),
@@ -61,10 +68,10 @@ class DivisionTagResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('visibility')
+                TextColumn::make('visibility')
                     ->badge()
                     ->formatStateUsing(fn (TagVisibility $state) => $state->label())
                     ->color(fn (TagVisibility $state) => match ($state) {
@@ -72,21 +79,21 @@ class DivisionTagResource extends Resource
                         TagVisibility::OFFICERS => 'warning',
                         TagVisibility::SENIOR_LEADERS => 'danger',
                     }),
-                Tables\Columns\TextColumn::make('members_count')
+                TextColumn::make('members_count')
                     ->counts('members')
                     ->label('Members'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -101,9 +108,9 @@ class DivisionTagResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDivisionTags::route('/'),
-            'create' => Pages\CreateDivisionTag::route('/create'),
-            'edit' => Pages\EditDivisionTag::route('/{record}/edit'),
+            'index' => ListDivisionTags::route('/'),
+            'create' => CreateDivisionTag::route('/create'),
+            'edit' => EditDivisionTag::route('/{record}/edit'),
         ];
     }
 }

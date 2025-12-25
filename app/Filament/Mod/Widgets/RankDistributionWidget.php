@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class RankDistributionWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Rank Distribution';
+    protected ?string $heading = 'Rank Distribution';
 
     protected static ?int $sort = 5;
 
     protected int|string|array $columnSpan = 1;
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     protected function getData(): array
     {

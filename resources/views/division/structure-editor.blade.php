@@ -31,7 +31,7 @@
                         <button type="submit" class="btn btn-success">
                             <i class="fa fa-save"></i> Save Template
                         </button>
-                        <a href="{{ route('division.structure', $division->slug) }}" class="btn btn-default">
+                        <a href="{{ route('division.edit-structure', $division->slug) }}" class="btn btn-default">
                             <i class="fa fa-eye"></i> View Output
                         </a>
                     </div>

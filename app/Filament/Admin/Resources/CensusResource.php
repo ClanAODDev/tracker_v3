@@ -2,47 +2,53 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\CensusResource\Pages;
+use App\Filament\Admin\Resources\CensusResource\Pages\CreateCensus;
+use App\Filament\Admin\Resources\CensusResource\Pages\EditCensus;
+use App\Filament\Admin\Resources\CensusResource\Pages\ListCensuses;
 use App\Models\Census;
-use Filament\Forms;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class CensusResource extends Resource
 {
     protected static ?string $model = Census::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Data';
+    protected static string|\UnitEnum|null $navigationGroup = 'Data';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('division_id')
                     ->relationship('division', 'name')
                     ->label('Division')
                     ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('count')
+                TextInput::make('count')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('weekly_active_count')
+                TextInput::make('weekly_active_count')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('weekly_ts_count')
+                TextInput::make('weekly_ts_count')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\TextInput::make('weekly_voice_count')
+                TextInput::make('weekly_voice_count')
                     ->required()
                     ->numeric()
                     ->default(0),
-                Forms\Components\Textarea::make('notes')
+                Textarea::make('notes')
                     ->columnSpanFull(),
             ]);
     }
@@ -51,26 +57,26 @@ class CensusResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('count')
+                TextColumn::make('count')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('weekly_active_count')
+                TextColumn::make('weekly_active_count')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('weekly_ts_count')
+                TextColumn::make('weekly_ts_count')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('weekly_voice_count')
+                TextColumn::make('weekly_voice_count')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -78,12 +84,12 @@ class CensusResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -98,9 +104,9 @@ class CensusResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCensuses::route('/'),
-            'create' => Pages\CreateCensus::route('/create'),
-            'edit' => Pages\EditCensus::route('/{record}/edit'),
+            'index' => ListCensuses::route('/'),
+            'create' => CreateCensus::route('/create'),
+            'edit' => EditCensus::route('/{record}/edit'),
         ];
     }
 }

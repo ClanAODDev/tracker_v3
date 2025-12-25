@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Models\Census;
 use App\Models\Division;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,7 @@ class ClanActivityTrendsWidget extends ChartWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $maxHeight = '300px';
+    protected ?string $maxHeight = '300px';
 
     public ?string $filter = '30';
 
@@ -55,7 +56,7 @@ class ClanActivityTrendsWidget extends ChartWidget
             ->reverse()
             ->values();
 
-        $labels = $trends->map(fn ($t) => \Carbon\Carbon::parse($t->date)->format('M j'))->toArray();
+        $labels = $trends->map(fn ($t) => Carbon::parse($t->date)->format('M j'))->toArray();
         $population = $trends->pluck('total_population')->toArray();
         $weeklyVoice = $trends->pluck('total_voice')->toArray();
 

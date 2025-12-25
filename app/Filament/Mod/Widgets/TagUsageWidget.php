@@ -5,7 +5,8 @@ namespace App\Filament\Mod\Widgets;
 use App\Enums\TagVisibility;
 use App\Models\Division;
 use App\Models\DivisionTag;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,7 +36,7 @@ class TagUsageWidget extends BaseWidget
                     ->orderByDesc('members_count')
             )
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Tag')
                     ->badge()
                     ->color(fn (DivisionTag $record) => match ($record->visibility->value) {
@@ -46,7 +47,7 @@ class TagUsageWidget extends BaseWidget
                     })
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('visibility')
+                TextColumn::make('visibility')
                     ->label('Visibility')
                     ->formatStateUsing(fn ($state) => $state->label())
                     ->badge()
@@ -57,19 +58,19 @@ class TagUsageWidget extends BaseWidget
                         default => 'gray',
                     }),
 
-                Tables\Columns\TextColumn::make('members_count')
+                TextColumn::make('members_count')
                     ->label('Members')
                     ->sortable()
                     ->alignCenter(),
 
-                Tables\Columns\TextColumn::make('division.name')
+                TextColumn::make('division.name')
                     ->label('Scope')
                     ->default('Global')
                     ->badge()
                     ->color(fn (DivisionTag $record) => $record->division_id ? 'info' : 'gray'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('id')
+                SelectFilter::make('id')
                     ->label('Tag')
                     ->options(fn () => DivisionTag::forDivision($this->getDivision()?->id)
                         ->visibleTo()
@@ -78,7 +79,7 @@ class TagUsageWidget extends BaseWidget
                     ->searchable()
                     ->preload(),
 
-                Tables\Filters\SelectFilter::make('visibility')
+                SelectFilter::make('visibility')
                     ->label('Visibility')
                     ->options([
                         TagVisibility::PUBLIC->value => TagVisibility::PUBLIC->label(),

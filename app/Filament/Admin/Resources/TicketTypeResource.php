@@ -2,47 +2,54 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\TicketTypeResource\Pages;
+use App\Filament\Admin\Resources\TicketTypeResource\Pages\CreateTicketType;
+use App\Filament\Admin\Resources\TicketTypeResource\Pages\EditTicketType;
+use App\Filament\Admin\Resources\TicketTypeResource\Pages\ListTicketTypes;
 use App\Models\Role;
 use App\Models\TicketType;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class TicketTypeResource extends Resource
 {
     protected static ?string $model = TicketType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('slug')
+                TextInput::make('slug')
                     ->required()
                     ->maxLength(191),
-                Forms\Components\TextInput::make('description')
+                TextInput::make('description')
                     ->required()
                     ->maxLength(191),
-                Forms\Components\Select::make('auto_assign_to_id')
+                Select::make('auto_assign_to_id')
                     ->label('Auto-assign to admin user')
                     ->relationship('auto_assign_to', 'name')
                     ->searchable(),
-                Forms\Components\Textarea::make('boilerplate')
+                Textarea::make('boilerplate')
                     ->columnSpanFull(),
-                Forms\Components\Select::make('role_access')
+                Select::make('role_access')
                     ->multiple()
                     ->getSearchResultsUsing(fn (string $search): array => Role::all()->pluck('label', 'id')->toArray())
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('display_order')
+                TextInput::make('display_order')
                     ->required()
                     ->numeric()
                     ->default(100),
@@ -53,23 +60,23 @@ class TicketTypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
+                TextColumn::make('slug')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
+                TextColumn::make('description')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('auto_assign_to_id')
+                TextColumn::make('auto_assign_to_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('display_order')
+                TextColumn::make('display_order')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -77,12 +84,12 @@ class TicketTypeResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -97,9 +104,9 @@ class TicketTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTicketTypes::route('/'),
-            'create' => Pages\CreateTicketType::route('/create'),
-            'edit' => Pages\EditTicketType::route('/{record}/edit'),
+            'index' => ListTicketTypes::route('/'),
+            'create' => CreateTicketType::route('/create'),
+            'edit' => EditTicketType::route('/{record}/edit'),
         ];
     }
 }

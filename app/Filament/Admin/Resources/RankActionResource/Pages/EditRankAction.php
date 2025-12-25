@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\RankActionResource\Pages;
 
 use App\Filament\Admin\Resources\RankActionResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditRankAction extends EditRecord
@@ -13,7 +13,7 @@ class EditRankAction extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

@@ -6,7 +6,8 @@ use App\Filament\Actions\Members\CleanupTenureAwards;
 use App\Filament\Actions\Members\CleanupUnassignedLeadersAction;
 use App\Filament\Actions\Members\PartTimeMemberCleanupAction;
 use App\Filament\Admin\Resources\MemberResource;
-use Filament\Actions;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListMembers extends ListRecords
@@ -16,9 +17,9 @@ class ListMembers extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
 
-            Actions\ActionGroup::make([
+            ActionGroup::make([
                 CleanupTenureAwards::make(),
                 CleanupUnassignedLeadersAction::make(),
                 PartTimeMemberCleanupAction::make(),

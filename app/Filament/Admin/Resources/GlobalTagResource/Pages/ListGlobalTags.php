@@ -3,7 +3,7 @@
 namespace App\Filament\Admin\Resources\GlobalTagResource\Pages;
 
 use App\Filament\Admin\Resources\GlobalTagResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListGlobalTags extends ListRecords
@@ -13,7 +13,7 @@ class ListGlobalTags extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

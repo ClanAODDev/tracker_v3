@@ -10,10 +10,13 @@ use App\Models\Platoon;
 use App\Models\Squad;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use Carbon\Carbon;
+use DB;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Schema;
+use Log;
 
 class MemberSync extends Command
 {
@@ -41,7 +44,7 @@ class MemberSync extends Command
     public function handle()
     {
         if (! $syncData = collect((new GetDivisionInfo)->data)) {
-            \Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
+            Log::critical(date('Y-m-d H:i:s') . ' - MEMBER SYNC - No data available');
 
             exit;
         }
@@ -56,7 +59,7 @@ class MemberSync extends Command
 
         $this->buildSyncTable();
 
-        $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
+        $syncTable = DB::connection('sqlite')->table('aod_member_sync');
 
         $syncTable->truncate();
 
@@ -70,7 +73,7 @@ class MemberSync extends Command
             ->whereNotIn('clan_id', $requestIds)
             ->get();
 
-        $syncTable = collect(\DB::connection('sqlite')->table('aod_member_sync')->get());
+        $syncTable = collect(DB::connection('sqlite')->table('aod_member_sync')->get());
 
         $syncTableMap = $syncTable->keyBy('userid');
 
@@ -126,13 +129,13 @@ class MemberSync extends Command
                     'rank' => ($newData->aodrankval - 2 <= 0) ? 1 : $newData->aodrankval - 2,
                 ]);
 
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 if ($newData->aoddivision === 'None') {
                     // ignore these because they're dumb
                     continue;
                 }
 
-                \Log::error('sync error detected. exiting!');
+                Log::error('sync error detected. exiting!');
 
                 exit;
             }
@@ -154,7 +157,7 @@ class MemberSync extends Command
                     $updates[$key] = $newData[$key];
 
                     if ($key === 'name' && $user = $member->user) {
-                        \Log::debug(sprintf('Saw a username change for %s to %s', $oldData[$key], $newData[$key]));
+                        Log::debug(sprintf('Saw a username change for %s to %s', $oldData[$key], $newData[$key]));
                         $user->update(['name' => $newData[$key]]);
                     }
                 }
@@ -164,7 +167,7 @@ class MemberSync extends Command
         }
 
         // handle new members not in the tracker
-        $syncTable = \DB::connection('sqlite')->table('aod_member_sync');
+        $syncTable = DB::connection('sqlite')->table('aod_member_sync');
         $activeIds = Member::where('division_id', '!=', 0)->pluck('clan_id');
 
         $membersToAdd = $syncTable->where('aoddivision', '!=', 'None')
@@ -188,19 +191,19 @@ class MemberSync extends Command
                     'last_activity' => $member->lastactivity,
                     'last_voice_activity' => $member->lastdiscord_connect,
                 ]);
-            } catch (\Exception $exception) {
-                \Log::error('Exception thrown when creating member - %d - %s', [
+            } catch (Exception $exception) {
+                Log::error('Exception thrown when creating member - %d - %s', [
                     'user' => $member->userid,
                     'exception' => $exception->getMessage(),
                 ]);
             }
 
-            \Log::info(sprintf('Added %s - %s', $member->username, $member->userid));
+            Log::info(sprintf('Added %s - %s', $member->username, $member->userid));
         }
 
         if ($syncErrors) {
             foreach ($syncErrors as $division => $errorCount) {
-                \Log::error(sprintf('%d sync errors for %s', $errorCount, $division));
+                Log::error(sprintf('%d sync errors for %s', $errorCount, $division));
             }
         }
 

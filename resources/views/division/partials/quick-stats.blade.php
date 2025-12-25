@@ -29,6 +29,11 @@
                                 <i class="fa fa-caret-{{ $isDecline ? 'down' : 'up' }}"></i>
                                 {{ $percentChange }}%
                             </small>
+                        @elseif($previousCensus)
+                            <small class="text-muted">
+                                <i class="fa fa-minus"></i>
+                                0%
+                            </small>
                         @endif
                     </span>
                     <span class="stat-label">Total Members</span>

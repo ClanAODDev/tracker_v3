@@ -8,8 +8,8 @@ use App\Notifications\Channel\NotifyDivisionMemberAwarded;
 use App\Notifications\DM\NotifyMemberAwardReceived;
 use App\Notifications\DM\NotifyRequesterAwardApproved;
 use App\Notifications\DM\NotifyRequesterAwardDenied;
-use Filament\Actions;
 use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
 
@@ -20,11 +20,11 @@ class EditMemberAward extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->requiresConfirmation()
                 ->modalHeading('Deny Award')
                 ->modalDescription('Are you sure you want to deny this award? The member will be notified.')
-                ->form([
+                ->schema([
                     Textarea::make('reason')
                         ->label('Reason')
                         ->required(),

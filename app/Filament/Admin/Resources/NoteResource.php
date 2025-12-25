@@ -2,41 +2,48 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\NoteResource\Pages;
+use App\Filament\Admin\Resources\NoteResource\Pages\CreateNote;
+use App\Filament\Admin\Resources\NoteResource\Pages\EditNote;
+use App\Filament\Admin\Resources\NoteResource\Pages\ListNotes;
 use App\Models\Note;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class NoteResource extends Resource
 {
     protected static ?string $model = Note::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
     protected static ?string $navigationParentItem = 'Members';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Textarea::make('body')
+        return $schema
+            ->components([
+                Textarea::make('body')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('forum_thread_id')
+                TextInput::make('forum_thread_id')
                     ->numeric()
                     ->default(null),
-                Forms\Components\Select::make('member')
+                Select::make('member')
                     ->relationship('member', 'name')
                     ->searchable(),
-                Forms\Components\Select::make('author')
+                Select::make('author')
                     ->relationship('author', 'name')
                     ->searchable(),
-                Forms\Components\Select::make('type')
+                Select::make('type')
                     ->options(collect(Note::allNoteTypes()))
                     ->required(),
             ]);
@@ -46,24 +53,24 @@ class NoteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('body')
+                TextColumn::make('body')
                     ->limit(60),
-                Tables\Columns\TextColumn::make('member.name')
+                TextColumn::make('member.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('author.name')
+                TextColumn::make('author.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('type'),
+                TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -71,12 +78,12 @@ class NoteResource extends Resource
             ->filters([
                 TrashedFilter::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -91,9 +98,9 @@ class NoteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNotes::route('/'),
-            'create' => Pages\CreateNote::route('/create'),
-            'edit' => Pages\EditNote::route('/{record}/edit'),
+            'index' => ListNotes::route('/'),
+            'create' => CreateNote::route('/create'),
+            'edit' => EditNote::route('/{record}/edit'),
         ];
     }
 }

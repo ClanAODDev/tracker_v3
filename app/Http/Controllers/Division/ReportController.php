@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Division;
 
+use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Division;
 use App\Models\RankAction;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Repositories\MemberRepository;
+use DB;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
+use Throwable;
 
-class ReportController extends \App\Http\Controllers\Controller
+class ReportController extends Controller
 {
     public function __construct(DivisionRepository $division)
     {
@@ -42,11 +46,11 @@ class ReportController extends \App\Http\Controllers\Controller
             'end' => request('end') ?? now()->endOfMonth()->format('Y-m-d'),
         ];
 
-        $activityCounts = \App\Models\Activity::query()
+        $activityCounts = Activity::query()
             ->where('name', 'recruited_member')
             ->where('division_id', $division->id)
             ->whereBetween('created_at', [$start, $end])
-            ->select('user_id', \DB::raw('COUNT(*) as recruits'))
+            ->select('user_id', DB::raw('COUNT(*) as recruits'))
             ->groupBy('user_id')
             ->get();
 
@@ -253,7 +257,7 @@ class ReportController extends \App\Http\Controllers\Controller
 
         try {
             $promotions = $this->getDivisionPromotions($division, $month, $year);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $promotions = collect();
         }
 
@@ -333,7 +337,7 @@ class ReportController extends \App\Http\Controllers\Controller
                 $start = \ctype_digit((string) $month)
                     ? Carbon::createFromDate((int) $year, (int) $month, 1)->startOfMonth()
                     : Carbon::parse("first day of {$month} {$year}")->startOfDay()->startOfMonth();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $start = now()->startOfMonth();
             }
         } else {

@@ -5,6 +5,7 @@ namespace App\Notifications\Channel;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -37,12 +38,12 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
     /**
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($ticket)
     {
         if (! $ticket->caller->member->discord) {
-            throw new \Exception(sprintf(
+            throw new Exception(sprintf(
                 'Ticket %d caller could not be notified because they do not have a valid discord tag.',
                 $ticket->id
             ));

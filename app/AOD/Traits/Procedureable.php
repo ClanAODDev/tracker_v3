@@ -2,6 +2,10 @@
 
 namespace App\AOD\Traits;
 
+use DB;
+use Exception;
+use Log;
+
 trait Procedureable
 {
     /**
@@ -21,10 +25,10 @@ trait Procedureable
         try {
             if (\is_array($data)) {
                 $stringKeys = implode(',', array_map(fn ($key) => ':' . $key, array_keys($data)));
-                $results = collect(\DB::connection($connection)
+                $results = collect(DB::connection($connection)
                     ->select("CALL {$procedure}({$stringKeys})", $data))->first();
             } elseif (\is_string($data) || \is_int($data)) {
-                $results = collect(\DB::connection($connection)
+                $results = collect(DB::connection($connection)
                     ->select("CALL {$procedure}('{$data}')"))->first();
             }
 
@@ -33,8 +37,8 @@ trait Procedureable
             }
 
             return $results;
-        } catch (\Exception $exception) {
-            \Log::error("Could not call procedure: {$procedure}", [
+        } catch (Exception $exception) {
+            Log::error("Could not call procedure: {$procedure}", [
                 'exception' => $exception->getMessage(),
             ]);
 

@@ -27,12 +27,12 @@
         "graham-campbell/markdown": "^16.0",
         "laravel/ui": "^4.0",
         "spatie/laravel-ignition": "^2.0",
-        "filament/filament": "^3.2",
-        "valentin-morice/filament-json-column": "^2.0.1",
+        "filament/filament": "^4.0",
+        "valentin-morice/filament-json-column": "^3.0",
         "opcodesio/log-viewer": "^3.10",
         "embed/embed": "^4.4",
         "ext-simplexml": "*",
-        "parallax/filament-comments": "^1.4"
+        "parallax/filament-comments": "^2.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
@@ -43,7 +43,8 @@
         "barryvdh/laravel-ide-helper": "^3.0",
         "nunomaduro/collision": "^8.1",
         "laravel/sail": "^1.18",
-        "friendsofphp/php-cs-fixer": "^3.9"
+        "friendsofphp/php-cs-fixer": "^3.9",
+        "filament/upgrade": "^4.0"
     },
     "autoload": {
         "classmap": [

@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Models\Member;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditDivision extends EditRecord
@@ -15,7 +15,7 @@ class EditDivision extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

@@ -2,48 +2,55 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\MemberRequestResource\Pages;
+use App\Filament\Admin\Resources\MemberRequestResource\Pages\CreateMemberRequest;
+use App\Filament\Admin\Resources\MemberRequestResource\Pages\EditMemberRequest;
+use App\Filament\Admin\Resources\MemberRequestResource\Pages\ListMemberRequests;
 use App\Models\MemberRequest;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class MemberRequestResource extends Resource
 {
     protected static ?string $model = MemberRequest::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('requester_id')
+        return $schema
+            ->components([
+                TextInput::make('requester_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('member_id')
+                TextInput::make('member_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('division_id')
+                TextInput::make('division_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('approver_id')
+                TextInput::make('approver_id')
                     ->numeric()
                     ->default(null),
-                Forms\Components\DateTimePicker::make('approved_at'),
-                Forms\Components\DateTimePicker::make('cancelled_at'),
-                Forms\Components\TextInput::make('canceller_id')
+                DateTimePicker::make('approved_at'),
+                DateTimePicker::make('cancelled_at'),
+                TextInput::make('canceller_id')
                     ->numeric()
                     ->default(null),
-                Forms\Components\Textarea::make('notes')
+                Textarea::make('notes')
                     ->maxLength(255)
                     ->default(null),
-                Forms\Components\DateTimePicker::make('hold_placed_at'),
-                Forms\Components\DateTimePicker::make('processed_at'),
+                DateTimePicker::make('hold_placed_at'),
+                DateTimePicker::make('processed_at'),
             ]);
     }
 
@@ -51,32 +58,32 @@ class MemberRequestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('member.name'),
-                Tables\Columns\TextColumn::make('division.name'),
-                Tables\Columns\TextColumn::make('requester.name'),
-                Tables\Columns\TextColumn::make('approver.name'),
-                Tables\Columns\TextColumn::make('approved_at')
+                TextColumn::make('member.name'),
+                TextColumn::make('division.name'),
+                TextColumn::make('requester.name'),
+                TextColumn::make('approver.name'),
+                TextColumn::make('approved_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('cancelled_at')
+                TextColumn::make('cancelled_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('canceller_id')
+                TextColumn::make('canceller_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('notes')
+                TextColumn::make('notes')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('hold_placed_at')
+                TextColumn::make('hold_placed_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('processed_at')
+                TextColumn::make('processed_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -84,12 +91,12 @@ class MemberRequestResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -104,9 +111,9 @@ class MemberRequestResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMemberRequests::route('/'),
-            'create' => Pages\CreateMemberRequest::route('/create'),
-            'edit' => Pages\EditMemberRequest::route('/{record}/edit'),
+            'index' => ListMemberRequests::route('/'),
+            'create' => CreateMemberRequest::route('/create'),
+            'edit' => EditMemberRequest::route('/{record}/edit'),
         ];
     }
 }

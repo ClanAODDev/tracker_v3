@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ListRecords;
 use Illuminate\Support\Facades\DB;
 
 class CleanupTenureAwards
@@ -26,7 +27,7 @@ class CleanupTenureAwards
     {
         return Action::make($name)
             ->label('Fix Tenure Awards')
-            ->form([
+            ->schema([
                 Toggle::make('persist')
                     ->label('Persist changes')
                     ->helperText('If off, runs a dry-run and only reports the counts.')
@@ -34,7 +35,7 @@ class CleanupTenureAwards
             ])
             ->requiresConfirmation()
             ->action(function (array $data, $livewire) {
-                /** @var \Filament\Resources\Pages\ListRecords $livewire */
+                /** @var ListRecords $livewire */
                 $query = method_exists($livewire, 'getFilteredTableQuery')
                     ? $livewire->getFilteredTableQuery()
                     : Member::query();

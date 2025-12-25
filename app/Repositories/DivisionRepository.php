@@ -6,6 +6,7 @@ use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
 use App\Traits\HasActivityGraph;
+use DB;
 use Illuminate\Support\Collection;
 
 class DivisionRepository
@@ -41,7 +42,7 @@ class DivisionRepository
 
     public function recruitsLast6Months(int $divisionId, string $startDate, ?string $endDate = null): Collection
     {
-        return \DB::table('activities')
+        return DB::table('activities')
             ->where('name', 'recruited_member')
             ->where('division_id', $divisionId)
             ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
@@ -55,7 +56,7 @@ class DivisionRepository
 
     public function removalsLast6Months(int $divisionId, string $startDate, ?string $endDate = null): Collection
     {
-        return \DB::table('activities')
+        return DB::table('activities')
             ->where('name', 'removed_member')
             ->where('division_id', $divisionId)
             ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
@@ -69,12 +70,12 @@ class DivisionRepository
 
     public function populationLast6Months(int $divisionId, string $startDate, ?string $endDate = null): Collection
     {
-        $sub = \DB::table('censuses')
+        $sub = DB::table('censuses')
             ->where('division_id', $divisionId)
             ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket, `count`');
 
-        return \DB::query()
+        return DB::query()
             ->fromSub($sub, 'c')
             ->selectRaw('bucket')
             ->selectRaw('MAX(`count`) as count')

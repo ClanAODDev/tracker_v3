@@ -5,6 +5,7 @@ namespace App\Notifications\React;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotReactMessage;
 use App\Traits\RetryableNotification;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -34,7 +35,7 @@ class TicketReaction extends Notification implements ShouldQueue
     /**
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function toBot($notifiable)
     {

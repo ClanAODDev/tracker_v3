@@ -6,6 +6,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Database\Eloquent\Builder;
 
 class DivisionTagPolicy
 {
@@ -94,7 +95,7 @@ class DivisionTagPolicy
             ->exists();
     }
 
-    public function getAssignableTags(User $user, Member $member): \Illuminate\Database\Eloquent\Builder
+    public function getAssignableTags(User $user, Member $member): Builder
     {
         if ($user->isRole('admin')) {
             return DivisionTag::query()

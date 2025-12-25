@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Note;
 use Illuminate\Console\Command;
 
 class ConvertActivityReminders extends Command
@@ -76,7 +77,7 @@ class ConvertActivityReminders extends Command
             'raging',
         ];
 
-        $query = \App\Models\Note::query();
+        $query = Note::query();
 
         $query->select('body')->whereHas('member.division')->where(function ($query) use ($inactivity_keywords) {
             foreach ($inactivity_keywords as $keyword) {
