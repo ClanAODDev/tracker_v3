@@ -104,7 +104,8 @@ class MemberAwardResource extends Resource
                     ->label('Justification')
                     ->toggleable(),
 
-                TextColumn::make('division.name'),
+                TextColumn::make('award.division.name')
+                    ->label('Division'),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -119,7 +120,7 @@ class MemberAwardResource extends Resource
             ->filters(filters: [
                 Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
-                SelectFilter::make('by division')->relationship('division', 'name'),
+                SelectFilter::make('by division')->relationship('award.division', 'name'),
                 SelectFilter::make('award')->relationship('award', 'name'),
             ])
             ->recordActions([
