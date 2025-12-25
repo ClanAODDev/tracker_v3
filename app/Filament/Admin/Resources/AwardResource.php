@@ -86,7 +86,7 @@ class AwardResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(fn (Award $record) => $record->withCount('recipients'))
+            ->modifyQueryUsing(fn (Builder $query) => $query->withCount('recipients'))
             ->columns([
                 ImageColumn::make('image'),
                 TextColumn::make('name')
@@ -115,6 +115,8 @@ class AwardResource extends Resource
             ->filters([
                 Filter::make('is_active')
                     ->query(fn (Builder $query): Builder => $query->where('active', true)),
+                Filter::make('is_active_division')
+                    ->query(fn (Builder $query): Builder => $query->active()),
                 SelectFilter::make('division')
                     ->relationship('division', 'name')
                     ->multiple(),
@@ -139,11 +141,6 @@ class AwardResource extends Resource
                         ->icon('heroicon-o-circle-stack')
                         ->deselectRecordsAfterCompletion(),
                 ]),
-            ])->filters([
-                Filter::make('is_active_division')
-                    ->query(fn ($query) => $query->active()),
-                SelectFilter::make('by division')->relationship('division', 'name'),
-
             ]);
     }
 
