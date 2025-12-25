@@ -221,113 +221,37 @@ var Platoon = Platoon || {};
             $('.squad-drop-target').droppable({
                 hoverClass: 'squad-drop-target--active',
                 drop: function (event, ui) {
-                    self.handleSquadDrop($(this), ui.draggable);
-                }
-            });
+                    var $target = $(this);
+                    var memberId = ui.draggable.attr('data-member-id');
+                    var squadId = $target.attr('data-squad-id');
 
-            this.initTouchDragDrop();
-        },
-
-        handleSquadDrop: function($target, $draggable) {
-            var memberId = $draggable.attr('data-member-id');
-            var squadId = $target.attr('data-squad-id');
-
-            $.ajax({
-                type: 'POST',
-                url: window.Laravel.appPath + '/members/assign-squad',
-                data: {
-                    member_id: memberId,
-                    squad_id: squadId,
-                    _token: $('meta[name=csrf-token]').attr('content')
-                },
-                dataType: 'json',
-                success: function () {
-                    toastr.success('Member assigned to squad!');
-                    $draggable.fadeOut(200, function() {
-                        $(this).remove();
-                        if ($('.unassigned-squad-member').length < 1) {
-                            $('.unassigned-organizer').slideUp();
-                            $('.squad-assignments-section').removeClass('organize-mode');
+                    $.ajax({
+                        type: 'POST',
+                        url: window.Laravel.appPath + '/members/assign-squad',
+                        data: {
+                            member_id: memberId,
+                            squad_id: squadId,
+                            _token: $('meta[name=csrf-token]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function () {
+                            toastr.success('Member assigned to squad!');
+                            $(ui.draggable).fadeOut(200, function() {
+                                $(this).remove();
+                                if ($('.unassigned-squad-member').length < 1) {
+                                    $('.unassigned-organizer').slideUp();
+                                    $('.squad-assignments-section').removeClass('organize-mode');
+                                }
+                            });
+                            var $count = $target.find('.squad-stat-badge .fa-users').parent();
+                            var currentCount = parseInt($count.text().trim()) || 0;
+                            $count.html('<i class="fa fa-users"></i> ' + (currentCount + 1));
+                        },
+                        error: function () {
+                            toastr.error('Failed to assign member to squad');
                         }
                     });
-                    var $count = $target.find('.squad-stat-badge .fa-users').parent();
-                    var currentCount = parseInt($count.text().trim()) || 0;
-                    $count.html('<i class="fa fa-users"></i> ' + (currentCount + 1));
-                },
-                error: function () {
-                    toastr.error('Failed to assign member to squad');
                 }
-            });
-        },
-
-        initTouchDragDrop: function() {
-            var self = this;
-            var $dragItem = null;
-            var $clone = null;
-            var startX, startY;
-
-            $('.unassigned-squad-member').each(function() {
-                var el = this;
-
-                el.addEventListener('touchstart', function(e) {
-                    if (e.touches.length !== 1) return;
-
-                    $dragItem = $(this);
-                    var touch = e.touches[0];
-                    startX = touch.clientX;
-                    startY = touch.clientY;
-
-                    $clone = $dragItem.clone()
-                        .addClass('touch-drag-clone')
-                        .css({
-                            position: 'fixed',
-                            zIndex: 10000,
-                            pointerEvents: 'none',
-                            opacity: 0.9,
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-                            left: touch.clientX - 50,
-                            top: touch.clientY - 20
-                        })
-                        .appendTo('body');
-
-                    $dragItem.addClass('touch-dragging');
-                }, { passive: true });
-
-                el.addEventListener('touchmove', function(e) {
-                    if (!$clone) return;
-                    e.preventDefault();
-
-                    var touch = e.touches[0];
-                    $clone.css({
-                        left: touch.clientX - 50,
-                        top: touch.clientY - 20
-                    });
-
-                    $('.squad-drop-target').removeClass('squad-drop-target--active');
-                    var targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
-                    var $dropTarget = $(targetEl).closest('.squad-drop-target');
-                    if ($dropTarget.length) {
-                        $dropTarget.addClass('squad-drop-target--active');
-                    }
-                }, { passive: false });
-
-                el.addEventListener('touchend', function(e) {
-                    if (!$clone || !$dragItem) return;
-
-                    var touch = e.changedTouches[0];
-                    var targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
-                    var $dropTarget = $(targetEl).closest('.squad-drop-target');
-
-                    if ($dropTarget.length) {
-                        self.handleSquadDrop($dropTarget, $dragItem);
-                    }
-
-                    $clone.remove();
-                    $clone = null;
-                    $dragItem.removeClass('touch-dragging');
-                    $dragItem = null;
-                    $('.squad-drop-target').removeClass('squad-drop-target--active');
-                }, { passive: true });
             });
         },
         initAutocomplete: function () {

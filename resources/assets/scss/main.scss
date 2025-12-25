@@ -2180,15 +2180,6 @@ body.no-animations {
         cursor: grabbing;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-
-    &.touch-dragging {
-        opacity: 0.4;
-    }
-}
-
-.touch-drag-clone {
-    border-color: var(--color-accent) !important;
-    background: var(--color-bg-panel) !important;
 }
 
 .squad-drop-targets {
