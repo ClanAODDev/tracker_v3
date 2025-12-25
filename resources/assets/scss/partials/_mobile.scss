@@ -40,10 +40,10 @@
 .mobile-nav-drawer {
     display: none;
     position: fixed;
-    top: 0;
+    top: 60px;
     right: -330px;
     width: 300px;
-    height: 100%;
+    height: calc(100% - 60px);
     background: linear-gradient(180deg, var(--color-bg-darker) 0%, var(--color-nav-active) 100%);
     z-index: 1001;
     overflow-y: auto;
@@ -89,7 +89,6 @@
 }
 
 .mobile-nav-content {
-    padding: 10px 0;
 
     .luna-nav {
         padding: 0;
@@ -336,6 +335,8 @@ body.mobile-search-open {
         .mobile-nav-drawer {
             right: auto;
             left: -330px;
+            top: 60px;
+            height: calc(100% - 60px);
             box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
 
             &.active {

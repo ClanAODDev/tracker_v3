@@ -26,7 +26,7 @@
                         : 0;
                 @endphp
                 <tr>
-                    <td>
+                    <td data-order="{{ $census->created_at->timestamp }}">
                         <span class="census-date">{{ $census->created_at->format('M j, Y') }}</span>
                     </td>
                     <td class="text-center">
