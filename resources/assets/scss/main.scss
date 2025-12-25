@@ -2169,7 +2169,6 @@ body.no-animations {
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
-    touch-action: none;
     @include transition(all 0.2s);
 
     &:hover {
@@ -2181,6 +2180,15 @@ body.no-animations {
         cursor: grabbing;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
+
+    &.touch-dragging {
+        opacity: 0.4;
+    }
+}
+
+.touch-drag-clone {
+    border-color: var(--color-accent) !important;
+    background: var(--color-bg-panel) !important;
 }
 
 .squad-drop-targets {
@@ -2399,7 +2407,6 @@ a.squad-drop-target {
     user-select: none;
     -webkit-user-select: none;
     -webkit-touch-callout: none;
-    touch-action: none;
     @include transition(all 0.15s);
 
     &:hover {
@@ -4316,7 +4323,6 @@ ul.sortable {
         user-select: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
-        touch-action: none;
     }
 }
 
