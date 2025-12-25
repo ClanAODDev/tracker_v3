@@ -60,12 +60,6 @@
                         <span class="squad-stat-badge {{ $voiceClass }}"><i class="fa fa-headset"></i> {{ $voiceRate }}%</span>
                     </div>
                 </div>
-                @if($canOrganize)
-                    <div class="squad-drop-target-zone">
-                        <i class="fa fa-arrow-down"></i>
-                        <span>Drop here</span>
-                    </div>
-                @endif
             </a>
         @endforeach
     </div>
