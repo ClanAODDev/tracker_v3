@@ -10,7 +10,7 @@
     border: none;
     color: var(--color-muted);
     font-size: 20px;
-    padding: 10px;
+    padding: 15px;
     cursor: pointer;
     @include transition(color 0.2s);
 
@@ -21,35 +21,14 @@
     }
 }
 
-.mobile-help-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--color-muted);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 12px;
-    cursor: pointer;
-    position: absolute;
-    right: 140px;
-    top: 50%;
-    transform: translateY(-50%);
-
-    &:hover,
-    &:focus {
-        color: var(--color-accent);
-        outline: none;
-    }
-}
-
 @include respond-to(sm) {
-    .mobile-help-toggle {
-        display: block;
+    .help-toggle {
+        right: 155px;
     }
 
-    body.mobile-nav-left .mobile-help-toggle {
+    body.mobile-nav-left .help-toggle {
         right: auto;
-        left: 145px;
+        left: 160px;
     }
 }
 
@@ -68,14 +47,6 @@
     align-items: center;
     justify-content: center;
     padding: 0 4px;
-}
-
-.mobile-help-toggle .help-badge {
-    position: relative;
-    top: auto;
-    right: auto;
-    margin-left: 6px;
-    display: inline-flex;
 }
 
 .settings-toggle {
@@ -112,7 +83,7 @@
     padding: 15px;
     cursor: pointer;
     position: absolute;
-    right: 100px;
+    right: 105px;
     top: 50%;
     transform: translateY(-50%);
 
@@ -135,7 +106,7 @@
 
     body.mobile-nav-left .mobile-settings-toggle {
         right: auto;
-        left: 105px;
+        left: 110px;
     }
 }
 
