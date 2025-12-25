@@ -11,6 +11,9 @@
                 return;
             }
             snowStorm = new SnowStormEngine(window, document, flakesMax);
+            if (document.readyState === 'complete') {
+                snowStorm.start();
+            }
         }
         var SnowStormEngine = function (e, t, flakesMaxParam) {
                 this.autoStart = !0, this.excludeMobile = !0,

@@ -315,14 +315,10 @@ body.mobile-search-open {
             left: 55px;
         }
 
-        .navbar-header {
-            display: flex;
-            flex-direction: row-reverse;
-        }
-
         .navbar-brand {
-            margin-left: auto;
-            margin-right: 0;
+            position: absolute;
+            right: 10px;
+            left: auto;
         }
 
         .mobile-nav-drawer {
