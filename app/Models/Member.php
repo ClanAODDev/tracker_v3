@@ -36,8 +36,6 @@ class Member extends Model
         return $this->discord;
     }
 
-    public const REGISTERED_USER = 2;
-
     protected static array $recordEvents = [];
 
     protected $casts = [

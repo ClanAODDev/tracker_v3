@@ -51,7 +51,15 @@
                   Member ID not found on forums
                 </span>
                 <span class="help-block text-warning" v-else-if="store.member.id && store.validation.memberId.valid && !store.validation.memberId.verifiedEmail && !store.validation.loading">
-                  Member has not verified their email
+                  <template v-if="store.validation.memberId.groupId === 3">
+                    Member needs to validate their email address before they can be recruited.
+                  </template>
+                  <template v-else-if="store.validation.memberId.groupId === 4">
+                    Member needs to complete the AuthLink process before they can be recruited.
+                  </template>
+                  <template v-else>
+                    Member is not in the <code>Registered Users</code> group.
+                  </template>
                 </span>
               </div>
             </div>
@@ -143,7 +151,7 @@
                 <select id="platoon" class="form-control" v-model="store.member.platoon" @change="onPlatoonChange">
                   <option value="">Select {{ store.division.locality.platoon.toLowerCase() }}...</option>
                   <option v-for="platoon in store.division.platoons" :key="platoon.id" :value="platoon.id">
-                    {{ platoon.name }}
+                    {{ platoon.name }} ({{ platoon.members_count }})
                   </option>
                 </select>
               </div>
@@ -154,7 +162,7 @@
                 <select id="squad" class="form-control" v-model="store.member.squad" :disabled="!selectedPlatoonSquads.length">
                   <option value="">{{ selectedPlatoonSquads.length ? 'Select ' + store.division.locality.squad.toLowerCase() + '...' : 'No ' + store.division.locality.squad.toLowerCase() + 's available' }}</option>
                   <option v-for="squad in selectedPlatoonSquads" :key="squad.id" :value="squad.id">
-                    {{ squad.name || 'Squad #' + squad.id }}
+                    {{ squad.name || 'Squad #' + squad.id }} ({{ squad.members_count }})
                   </option>
                 </select>
               </div>

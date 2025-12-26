@@ -22,6 +22,7 @@ const store = reactive({
         memberId: {
             valid: false,
             verifiedEmail: false,
+            groupId: null,
             currentUsername: '',
             existsInTracker: false,
             tags: [],
@@ -97,7 +98,7 @@ store.getSquadsForPlatoon = (platoonId) => {
 
 store.validateMemberId = (memberId) => {
     if (!memberId || memberId.length < 1) {
-        store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false, tags: [], division: null };
+        store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null };
         return;
     }
 
@@ -105,7 +106,7 @@ store.validateMemberId = (memberId) => {
 
     debounce('memberId', () => {
         if (store.inDemoMode) {
-            store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'DemoUser', existsInTracker: false, tags: [], division: null };
+            store.validation.memberId = { valid: true, verifiedEmail: true, groupId: null, currentUsername: 'DemoUser', existsInTracker: false, tags: [], division: null };
             store.validation.loading = false;
             return;
         }
@@ -116,6 +117,7 @@ store.validateMemberId = (memberId) => {
                 store.validation.memberId = {
                     valid: data.is_member || false,
                     verifiedEmail: data.valid_group || false,
+                    groupId: data.group_id || null,
                     currentUsername: data.username || '',
                     existsInTracker: data.exists_in_tracker || false,
                     tags: data.tags || [],
@@ -124,7 +126,7 @@ store.validateMemberId = (memberId) => {
                 store.validation.loading = false;
             })
             .catch(() => {
-                store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false, tags: [], division: null };
+                store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null };
                 store.validation.loading = false;
             });
     }, 300);
@@ -234,7 +236,7 @@ store.resetForNewRecruit = () => {
     store.member.squad = '';
 
     store.validation.loading = false;
-    store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false, tags: [], division: null };
+    store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null };
     store.validation.forumName = { valid: false, available: false };
 };
 
@@ -245,7 +247,7 @@ store.toggleDemoMode = () => {
         store.member.forum_name = 'TestRecruit';
         store.member.ingame_name = 'TestHandle';
         store.member.rank = '1';
-        store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'TestUser', existsInTracker: false, tags: [], division: null };
+        store.validation.memberId = { valid: true, verifiedEmail: true, groupId: null, currentUsername: 'TestUser', existsInTracker: false, tags: [], division: null };
         store.validation.forumName = { valid: true, available: true };
     } else {
         store.resetForNewRecruit();

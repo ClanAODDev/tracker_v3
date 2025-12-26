@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ForumGroup;
 use App\Enums\Position;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
@@ -85,13 +86,20 @@ class RecruitingController extends Controller
         $threads = $settings->get('recruiting_threads', []);
         $tasks = $settings->get('recruiting_tasks', []);
 
+        $platoons = $division->platoons()
+            ->withCount('members')
+            ->with(['squads' => fn ($q) => $q->withCount('members')])
+            ->get();
+
         return response()->json([
-            'platoons' => $division->platoons->map(fn ($p) => [
+            'platoons' => $platoons->map(fn ($p) => [
                 'id' => $p->id,
                 'name' => $p->name,
+                'members_count' => $p->members_count,
                 'squads' => $p->squads->map(fn ($s) => [
                     'id' => $s->id,
                     'name' => $s->name,
+                    'members_count' => $s->members_count,
                 ]),
             ]),
             'threads' => collect($threads)->map(fn ($t) => [
@@ -205,6 +213,7 @@ class RecruitingController extends Controller
             return [
                 'is_member' => false,
                 'valid_group' => false,
+                'group_id' => null,
                 'exists_in_tracker' => $existsInTracker,
                 'tags' => $tags,
                 'division' => $division,
@@ -214,7 +223,8 @@ class RecruitingController extends Controller
         return [
             'is_member' => true,
             'username' => $result->username,
-            'valid_group' => $result->usergroupid === Member::REGISTERED_USER,
+            'valid_group' => $result->usergroupid === ForumGroup::REGISTERED_USER->value,
+            'group_id' => (int) $result->usergroupid,
             'exists_in_tracker' => $existsInTracker,
             'tags' => $tags,
             'division' => $division,
