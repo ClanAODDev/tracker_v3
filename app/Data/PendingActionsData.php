@@ -3,11 +3,13 @@
 namespace App\Data;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Leave;
 use App\Models\MemberAward;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
+use App\Models\RankAction;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -33,6 +35,30 @@ readonly class PendingActionsData
                     icon: 'fa-user-plus',
                     label: 'Request',
                     style: 'warning',
+                ));
+            }
+        }
+
+        if ($user->member && $user->member->rank->value >= Rank::SERGEANT->value) {
+            $query = RankAction::forUser($user)
+                ->pending()
+                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id));
+
+            $url = route('filament.mod.resources.rank-actions.index');
+
+            if ($user->isRole('admin')) {
+                $query->where('rank', '>=', Rank::SERGEANT->value);
+                $url .= '?tableFilters[sgt_plus][isActive]=true';
+            }
+
+            $count = $query->count();
+            if ($count > 0) {
+                $actions->push(new PendingAction(
+                    key: 'pending-rank-actions',
+                    count: $count,
+                    url: $url,
+                    icon: 'fa-arrow-up',
+                    label: 'Rank Action',
                 ));
             }
         }

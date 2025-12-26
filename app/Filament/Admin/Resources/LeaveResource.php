@@ -18,6 +18,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -102,6 +103,7 @@ class LeaveResource extends Resource
                 Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->whereNull('approver_id'))->default(),
             ])
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 EditAction::make(),
             ])

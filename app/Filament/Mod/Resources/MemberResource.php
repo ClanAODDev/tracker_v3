@@ -35,6 +35,7 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -436,6 +437,7 @@ class MemberResource extends Resource
                         }
                     }),
             ])
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 EditAction::make(),
             ])

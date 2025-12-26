@@ -16,6 +16,7 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -258,6 +259,7 @@ class MemberRequestResource extends Resource
                         };
                     }),
             ])
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 EditAction::make(),
             ])

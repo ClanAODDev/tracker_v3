@@ -14,6 +14,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -90,6 +91,7 @@ class TransferResource extends Resource
                     ->default(),
 
             ])
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 CommentsAction::make()
                     ->button()
