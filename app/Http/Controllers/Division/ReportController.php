@@ -92,6 +92,10 @@ class ReportController extends Controller
         $allMonths = collect();
         $current = Carbon::parse($range['start'])->startOfMonth();
         $endMonth = Carbon::parse($range['end'])->startOfMonth();
+        $currentMonth = now()->startOfMonth();
+        if ($endMonth->gt($currentMonth)) {
+            $endMonth = $currentMonth;
+        }
         while ($current->lte($endMonth)) {
             $allMonths->push([
                 'bucket' => $current->format('Y-m'),

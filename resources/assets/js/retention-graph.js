@@ -1,5 +1,23 @@
 const $ = window.jQuery;
 
+$('#preset-select').on('change', function () {
+    var months = parseInt($(this).val());
+    if (!months) return;
+
+    var end = new Date();
+    var start = new Date();
+    start.setMonth(start.getMonth() - months);
+    start.setDate(1);
+
+    end.setMonth(end.getMonth() + 1);
+    end.setDate(0);
+
+    $('#start').val(start.toISOString().split('T')[0]);
+    $('#end').val(end.toISOString().split('T')[0]);
+
+    $(this).closest('form').submit();
+});
+
 !function (r) {
     function o(r, o, e, i) {
         var s = 'categories' == o.xaxis.options.mode, n = 'categories' == o.yaxis.options.mode;

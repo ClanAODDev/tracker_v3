@@ -11,6 +11,7 @@ readonly class PendingAction
         public string $icon,
         public string $label,
         public string $style = 'default',
+        public bool $adminOnly = false,
         public ?string $modalTarget = null,
     ) {}
 }

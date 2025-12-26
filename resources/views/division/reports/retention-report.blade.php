@@ -51,6 +51,15 @@
                 <button type="submit" class="btn btn-accent">
                     <i class="fa fa-filter"></i> Apply
                 </button>
+                <div class="report-filter-presets">
+                    <select id="preset-select" class="form-control">
+                        <option value="">Quick Select...</option>
+                        <option value="3">Last 3 Months</option>
+                        <option value="6">Last 6 Months</option>
+                        <option value="12">Last Year</option>
+                        <option value="24">Last 2 Years</option>
+                    </select>
+                </div>
             </form>
         </div>
 
