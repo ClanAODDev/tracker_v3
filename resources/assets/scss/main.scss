@@ -9594,10 +9594,39 @@ pre.code-toolbar > .toolbar span:focus {
     background: linear-gradient(180deg, rgba(46, 204, 113, 0.1) 0%, transparent 100%);
 }
 
+@keyframes recruit-success-bounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes recruit-success-fade-up {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 .recruit-success-icon {
     font-size: 64px;
     color: #2ecc71;
     margin-bottom: 16px;
+    animation: recruit-success-bounce 0.6s ease-out forwards;
 
     i {
         filter: drop-shadow(0 4px 12px rgba(46, 204, 113, 0.4));
@@ -9609,12 +9638,16 @@ pre.code-toolbar > .toolbar span:focus {
     font-size: 24px;
     font-weight: 600;
     color: var(--color-white);
+    opacity: 0;
+    animation: recruit-success-fade-up 0.5s ease-out 0.3s forwards;
 }
 
 .recruit-success-details {
     color: var(--color-muted);
     font-size: 14px;
     margin: 0;
+    opacity: 0;
+    animation: recruit-success-fade-up 0.5s ease-out 0.5s forwards;
 
     strong {
         color: var(--color-white);
