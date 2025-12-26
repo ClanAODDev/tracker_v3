@@ -15,12 +15,12 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -165,20 +165,22 @@ class TicketResource extends Resource
                     ->relationship('type', 'name')
                     ->label('Type'),
 
-                TernaryFilter::make('assigned')
+                SelectFilter::make('assignment')
                     ->label('Assignment')
-                    ->placeholder('All tickets')
-                    ->trueLabel('Assigned only')
-                    ->falseLabel('Unassigned only')
-                    ->queries(
-                        true: fn (Builder $query) => $query->whereNotNull('owner_id'),
-                        false: fn (Builder $query) => $query->whereNull('owner_id'),
-                    ),
+                    ->options([
+                        'mine' => 'My Assigned',
+                        'unassigned' => 'Unassigned',
+                    ])
+                    ->query(fn (Builder $query, array $data) => match ($data['value'] ?? null) {
+                        'mine' => $query->where('owner_id', auth()->id()),
+                        'unassigned' => $query->whereNull('owner_id'),
+                        default => $query,
+                    }),
 
                 SelectFilter::make('division_id')
-                    ->relationship('division', 'name')
+                    ->relationship('division', 'name', fn ($query) => $query->active())
                     ->label('Division'),
-            ])
+            ], layout: FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 EditAction::make(),
             ])

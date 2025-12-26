@@ -10,81 +10,23 @@
 
 @if ($pendingActions->hasAnyActions())
     <div class="pending-actions">
-        @if ($pendingActions->memberRequests)
-            <a href="{{ $pendingActions->memberRequestsUrl }}" class="pending-action pending-action--warning">
-                <i class="fa fa-user-plus"></i>
-                <span class="pending-action-count">{{ $pendingActions->memberRequests }}</span>
-                <span class="pending-action-label">{{ Str::plural('Request', $pendingActions->memberRequests) }}</span>
+        @foreach ($pendingActions->actions as $action)
+            @if ($action->modalTarget)
+                <a href="#" class="pending-action pending-action--{{ $action->style }}" data-toggle="modal" data-target="#{{ $action->modalTarget }}">
+            @elseif ($action->key === 'unassigned-members')
+                <a href="{{ $action->url }}" class="pending-action pending-action--{{ $action->style }} scroll-to-organize">
+            @else
+                <a href="{{ $action->url }}" class="pending-action pending-action--{{ $action->style }}">
+            @endif
+                <i class="fa {{ $action->icon }}"></i>
+                <span class="pending-action-count">{{ $action->count }}</span>
+                <span class="pending-action-label">{{ Str::plural($action->label, $action->count) }}</span>
             </a>
-        @endif
-
-        @if ($pendingActions->inactiveMembers)
-            <a href="{{ $pendingActions->inactiveMembersUrl }}" class="pending-action pending-action--warning">
-                <i class="fa fa-user-clock"></i>
-                <span class="pending-action-count">{{ $pendingActions->inactiveMembers }}</span>
-                <span class="pending-action-label">Outstanding Inactive</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->awardRequests)
-            <a href="{{ $pendingActions->awardRequestsUrl }}" class="pending-action">
-                <i class="fa fa-trophy"></i>
-                <span class="pending-action-count">{{ $pendingActions->awardRequests }}</span>
-                <span class="pending-action-label">{{ Str::plural('Award', $pendingActions->awardRequests) }}</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->clanAwardRequests)
-            <a href="{{ $pendingActions->clanAwardRequestsUrl }}" class="pending-action pending-action--accent">
-                <i class="fa fa-globe"></i>
-                <span class="pending-action-count">{{ $pendingActions->clanAwardRequests }}</span>
-                <span class="pending-action-label">Clan {{ Str::plural('Award', $pendingActions->clanAwardRequests) }}</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->pendingTransfers)
-            <a href="{{ $pendingActions->pendingTransfersUrl }}" class="pending-action">
-                <i class="fa fa-exchange-alt"></i>
-                <span class="pending-action-count">{{ $pendingActions->pendingTransfers }}</span>
-                <span class="pending-action-label">{{ Str::plural('Transfer', $pendingActions->pendingTransfers) }}</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->pendingLeaves)
-            <a href="{{ $pendingActions->pendingLeavesUrl }}" class="pending-action">
-                <i class="fa fa-calendar-alt"></i>
-                <span class="pending-action-count">{{ $pendingActions->pendingLeaves }}</span>
-                <span class="pending-action-label">{{ Str::plural('LOA', $pendingActions->pendingLeaves) }}</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->voiceIssues)
-            <a href="{{ $pendingActions->voiceIssuesUrl }}" class="pending-action">
-                <i class="fa fa-headset"></i>
-                <span class="pending-action-count">{{ $pendingActions->voiceIssues }}</span>
-                <span class="pending-action-label">Voice {{ Str::plural('Issue', $pendingActions->voiceIssues) }}</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->unassignedMembers)
-            <a href="{{ $pendingActions->unassignedMembersUrl }}" class="pending-action scroll-to-organize">
-                <i class="fa fa-user-slash"></i>
-                <span class="pending-action-count">{{ $pendingActions->unassignedMembers }}</span>
-                <span class="pending-action-label">No Platoon</span>
-            </a>
-        @endif
-
-        @if ($pendingActions->unassignedToSquad)
-            <a href="#" class="pending-action" data-toggle="modal" data-target="#no-squad-modal">
-                <i class="fa fa-users-slash"></i>
-                <span class="pending-action-count">{{ $pendingActions->unassignedToSquad }}</span>
-                <span class="pending-action-label">No Squad</span>
-            </a>
-        @endif
+        @endforeach
     </div>
 @endif
 
-@if ($pendingActions->unassignedToSquad)
+@if ($pendingActions->has('unassigned-to-squad'))
     <div class="modal fade" id="no-squad-modal" tabindex="-1" role="dialog"
          data-url="{{ route('division.unassigned-to-squad', $division) }}">
         <div class="modal-dialog" role="document">
