@@ -12,7 +12,7 @@ class ConvertActivityReminders extends Command
      *
      * @var string
      */
-    protected $signature = 'app:convert-activity-notes';
+    protected $signature = 'tracker:convert-activity-notes';
 
     /**
      * The console command description.

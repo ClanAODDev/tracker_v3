@@ -3,67 +3,86 @@
 namespace App\Console\Commands;
 
 use Exception;
-use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
-class MakeMaintenanceAlert extends Command
+class MakeMaintenanceAlert extends BaseCommand
 {
-    private const MAINTENANCE_ALERT = 'maintenance.alert';
+    protected const ALERT_FILE = 'maintenance.alert';
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'maintenance:alert {--clear }
-                                              {--set }';
+    protected $signature = 'tracker:maintenance-alert
+                            {--clear : Clear the current maintenance alert}
+                            {--set : Set a new maintenance alert}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Show a maintenance alert (done before a maintenance period)';
+    protected $description = 'Manage maintenance alert display';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle(): int
     {
+        $alertPath = base_path(self::ALERT_FILE);
+
         if ($this->option('clear')) {
-            if (! file_exists(base_path(self::MAINTENANCE_ALERT))) {
-                $this->info('No alert to clear!');
-
-                return $this::SUCCESS;
-            }
-
-            $this->info('Alert has been cleared!');
-            unlink(base_path(self::MAINTENANCE_ALERT));
+            return $this->clearAlert($alertPath);
         }
 
         if ($this->option('set')) {
-            if (file_exists(base_path(self::MAINTENANCE_ALERT))) {
-                if (! $this->confirm('Alert already exists! Replace it?')) {
-                    return $this::SUCCESS;
-                }
-
-                unlink(base_path(self::MAINTENANCE_ALERT));
-            }
-
-            $message = $this->ask('What would you like the alert set to? (basic HTML allowed)');
-
-            try {
-                $alert = fopen(base_path(self::MAINTENANCE_ALERT), 'w');
-                fwrite($alert, $message);
-                fclose($alert);
-            } catch (Exception $exception) {
-                $this->error('Could not set alert file! - ' . $exception->getMessage());
-            }
-
-            $this->info(sprintf('Alert file set to: %s', $message));
+            return $this->setAlert($alertPath);
         }
 
-        return $this::SUCCESS;
+        $this->showCurrentStatus($alertPath);
+
+        return self::SUCCESS;
+    }
+
+    protected function clearAlert(string $alertPath): int
+    {
+        if (! File::exists($alertPath)) {
+            $this->info('No alert to clear.');
+
+            return self::SUCCESS;
+        }
+
+        File::delete($alertPath);
+        $this->info('Alert has been cleared.');
+
+        return self::SUCCESS;
+    }
+
+    protected function setAlert(string $alertPath): int
+    {
+        if (File::exists($alertPath)) {
+            if (! $this->confirm('Alert already exists. Replace it?')) {
+                return self::SUCCESS;
+            }
+
+            File::delete($alertPath);
+        }
+
+        $message = $this->ask('What would you like the alert set to? (basic HTML allowed)');
+
+        if (! $message) {
+            $this->warn('No message provided. Alert not set.');
+
+            return self::SUCCESS;
+        }
+
+        try {
+            File::put($alertPath, $message);
+            $this->info(sprintf('Alert set to: %s', $message));
+        } catch (Exception $exception) {
+            return $this->failWithError('Could not set alert file', $exception);
+        }
+
+        return self::SUCCESS;
+    }
+
+    protected function showCurrentStatus(string $alertPath): void
+    {
+        if (File::exists($alertPath)) {
+            $this->info('Current alert: ' . File::get($alertPath));
+        } else {
+            $this->info('No maintenance alert is currently set.');
+        }
+
+        $this->newLine();
+        $this->info('Use --set to create an alert or --clear to remove it.');
     }
 }

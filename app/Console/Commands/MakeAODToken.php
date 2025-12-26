@@ -2,43 +2,27 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-
-class MakeAODToken extends Command
+class MakeAODToken extends BaseCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'make:aodtoken';
+    protected $signature = 'tracker:make-token';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Create a new token for interfacing with AOD API. Valid for one minute.';
 
-    /**
-     * Create a new command instance.
-     */
-    public function __construct()
+    public function handle(): int
     {
-        parent::__construct();
+        $token = $this->generateToken();
+
+        $this->info('Token generated (valid for 1 minute):');
+        $this->newLine();
+        $this->line($token);
+        $this->newLine();
+        $this->comment('Example usage:');
+        $this->line('curl "http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode=' . $token . '"');
+
+        return self::SUCCESS;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
-    {
-        $this->comment('curl http://clanaod.net/forums/aodinfo.php?division=battlefront&type=json&authcode=' . $this->generateToken());
-    }
-
-    protected function generateToken()
+    protected function generateToken(): string
     {
         $currentMinute = floor(time() / 60) * 60;
 

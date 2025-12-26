@@ -4,71 +4,86 @@ namespace App\Console\Commands;
 
 use App\Models\Census;
 use App\Models\Division;
-use Illuminate\Console\Command;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
-class DivisionCensus extends Command
+class DivisionCensus extends BaseCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'do:divisioncensus';
+    protected $signature = 'tracker:census
+                            {--force : Run census even if already performed today}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Collect division census data across all active divisions';
 
-    /**
-     * Create a new command instance.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected array $stats = [
+        'recorded' => 0,
+        'errors' => 0,
+    ];
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function handle()
+    public function handle(): int
     {
-        if ($this->censusAlreadyPerformed()) {
-            $this->alert('Census already performed. No action taken.');
+        if (! $this->option('force') && $this->censusAlreadyPerformed()) {
+            $this->warn('Census already performed today. Use --force to run anyway.');
 
-            exit;
+            return self::SUCCESS;
         }
+
         $divisions = Division::active()->get();
-        $this->comment('Beginning division census...');
+
+        if ($divisions->isEmpty()) {
+            $this->info('No active divisions found.');
+
+            return self::SUCCESS;
+        }
+
+        $this->info("Beginning division census for {$divisions->count()} divisions...");
+
         foreach ($divisions as $division) {
-            $this->comment("Recording data for {$division->name}...");
             $this->recordEntry($division);
         }
-        $this->comment('Census complete.');
+
+        $this->logStats();
+
+        return self::SUCCESS;
     }
 
-    protected function recordEntry(Division $division)
+    protected function recordEntry(Division $division): void
     {
-        $census = new Census;
-        $census->division()->associate($division);
-        $census->count = $division->members->count();
-        $census->weekly_active_count = $division->membersActiveSinceDaysAgo(8)->count();
-        $census->weekly_ts_count = $division->membersActiveOnTsSinceDaysAgo(8)->count();
-        $census->weekly_voice_count = $division->membersActiveOnDiscordSinceDaysAgo(8)->count();
-        $census->save();
+        try {
+            Census::create([
+                'division_id' => $division->id,
+                'count' => $division->members()->count(),
+                'weekly_active_count' => $division->membersActiveSinceDaysAgo(8)->count(),
+                'weekly_ts_count' => $division->membersActiveOnTsSinceDaysAgo(8)->count(),
+                'weekly_voice_count' => $division->membersActiveOnDiscordSinceDaysAgo(8)->count(),
+            ]);
+
+            $this->stats['recorded']++;
+
+            if ($this->getOutput()->isVerbose()) {
+                $this->line("  Recorded: {$division->name}");
+            }
+        } catch (Exception $exception) {
+            $this->stats['errors']++;
+            $this->logError("Failed to record census for {$division->name}", $exception);
+        }
     }
 
-    /**
-     * @return bool
-     */
-    private function censusAlreadyPerformed()
+    protected function censusAlreadyPerformed(): bool
     {
-        $census = Census::latest()->first();
+        return Census::whereDate('created_at', today())->exists();
+    }
 
-        return $census->created_at->format('Y-m-d') === now()->format('Y-m-d');
+    protected function logStats(): void
+    {
+        $message = "Census complete. Recorded: {$this->stats['recorded']}";
+
+        if ($this->stats['errors'] > 0) {
+            $message .= ", Errors: {$this->stats['errors']}";
+            $this->warn($message);
+        } else {
+            $this->info($message);
+        }
+
+        Log::info('Division census completed', $this->stats);
     }
 }
