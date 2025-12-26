@@ -155,8 +155,17 @@ class BotChannelMessage
 
         $routeTarget = $this->notifiable->routeNotificationFor($this->target);
 
-        if (! isset($routeTarget) && ! isset($this->target)) {
+        if (! isset($this->target)) {
             throw new Exception('A channel target must be defined');
+        }
+
+        if (empty($routeTarget)) {
+            \Log::debug('Notification skipped - no channel configured', [
+                'target' => $this->target,
+                'notifiable' => get_class($this->notifiable) . ':' . $this->notifiable->getKey(),
+            ]);
+
+            return null;
         }
 
         $message = [

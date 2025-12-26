@@ -155,11 +155,20 @@ class MemberSyncService
             ($this->onRemove)($member->name, $member->clan_id);
         }
 
-        $member->division->notify(new NotifyDivisionMemberRemoved(
-            member: $member,
-            remover: null,
-            removalReason: null
-        ));
+        try {
+            $member->division->notify(new NotifyDivisionMemberRemoved(
+                member: $member,
+                remover: null,
+                removalReason: null
+            ));
+        } catch (Exception $exception) {
+            Log::error('Failed to send removal notification', [
+                'division' => $member->division->name,
+                'member' => $member->name,
+                'notification' => NotifyDivisionMemberRemoved::class,
+                'error' => $exception->getMessage(),
+            ]);
+        }
 
         $member->reset();
 

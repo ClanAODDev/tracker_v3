@@ -157,8 +157,17 @@ class FetchApplicationFeeds extends BaseCommand
 
             if ($this->option('notify')) {
                 $link = $this->normalizeUrl((string) $item->link);
-                $division->notify(new NotifyDivisionNewApplication((string) $item->title, $link));
-                $this->stats['notifications_sent']++;
+
+                try {
+                    $division->notify(new NotifyDivisionNewApplication((string) $item->title, $link));
+                    $this->stats['notifications_sent']++;
+                } catch (Exception $exception) {
+                    $this->logError(
+                        "Failed to notify {$division->name} about new application",
+                        $exception
+                    );
+                    $this->stats['errors']++;
+                }
             }
         }
     }

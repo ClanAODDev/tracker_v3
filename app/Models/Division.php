@@ -189,14 +189,14 @@ class Division extends Model
         return $this->hasManyThrough(Squad::class, Platoon::class);
     }
 
-    public function routeNotificationForMembers()
+    public function routeNotificationForMembers(): ?string
     {
-        return $this->settings()->get('member_channel');
+        return $this->settings()->get('member_channel', null);
     }
 
-    public function routeNotificationForOfficers()
+    public function routeNotificationForOfficers(): ?string
     {
-        return $this->settings()->get('officer_channel');
+        return $this->settings()->get('officer_channel', null);
     }
 
     /**
