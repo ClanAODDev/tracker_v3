@@ -93,7 +93,8 @@ class FetchApplicationFeeds extends BaseCommand
                 return false;
             }
 
-            $xml = new SimpleXMLElement($response->body());
+            $body = $this->sanitizeRssContent($response->body());
+            $xml = new SimpleXMLElement($body);
 
             if (! $this->isValidRssFeed($xml)) {
                 $this->logError("Invalid RSS feed structure for {$url}");
@@ -109,13 +110,29 @@ class FetchApplicationFeeds extends BaseCommand
         return false;
     }
 
+    protected function sanitizeRssContent(string $content): string
+    {
+        $endTag = '</rss>';
+        $position = stripos($content, $endTag);
+
+        if ($position !== false) {
+            return substr($content, 0, $position + strlen($endTag));
+        }
+
+        return $content;
+    }
+
     protected function isValidRssFeed(SimpleXMLElement $xml): bool
     {
-        return isset($xml->channel) && isset($xml->channel->item);
+        return isset($xml->channel);
     }
 
     protected function processRssFeed(Division $division, SimpleXMLElement $rssContent): void
     {
+        if (! isset($rssContent->channel->item)) {
+            return;
+        }
+
         foreach ($rssContent->channel->item as $item) {
             $threadId = $this->extractThreadId((string) $item->guid);
 

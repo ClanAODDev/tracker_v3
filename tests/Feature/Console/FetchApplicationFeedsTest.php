@@ -105,6 +105,36 @@ class FetchApplicationFeedsTest extends TestCase
         $this->assertFalse(Cache::has('application_item_12345'));
     }
 
+    public function test_command_handles_empty_rss_feeds(): void
+    {
+        Http::fake([
+            '*' => Http::response($this->emptyRssFeed(), 200),
+        ]);
+
+        $division = Division::factory()->create();
+        $division->settings()->set('recruitment_rss_feed', 'https://example.com/empty-rss.xml');
+
+        $this->artisan('tracker:fetch-applications')
+            ->assertSuccessful();
+    }
+
+    public function test_command_sanitizes_rss_with_trailing_content(): void
+    {
+        $rssWithTrailingContent = $this->sampleRssFeed() . "\n\nSome trailing garbage content";
+
+        Http::fake([
+            '*' => Http::response($rssWithTrailingContent, 200),
+        ]);
+
+        $division = Division::factory()->create();
+        $division->settings()->set('recruitment_rss_feed', 'https://example.com/rss.xml');
+
+        $this->artisan('tracker:fetch-applications')
+            ->assertSuccessful();
+
+        $this->assertTrue(Cache::has('application_item_12345'));
+    }
+
     protected function sampleRssFeed(): string
     {
         return <<<'XML'
@@ -117,6 +147,19 @@ class FetchApplicationFeedsTest extends TestCase
             <link>https://example.com/forum/thread.php?t=12345</link>
             <guid>https://example.com/forum/thread.php?t=12345</guid>
         </item>
+    </channel>
+</rss>
+XML;
+    }
+
+    protected function emptyRssFeed(): string
+    {
+        return <<<'XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>Empty Feed</title>
+        <description>No applications yet</description>
     </channel>
 </rss>
 XML;
