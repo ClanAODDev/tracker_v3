@@ -5,7 +5,11 @@
             <span>Action Items</span>
         </div>
         @foreach ($pendingActions->actions as $action)
-            <a href="{{ $action->url }}" class="pending-action pending-action--{{ $action->style }}">
+            @if ($action->modalTarget)
+                <a href="#" class="pending-action pending-action--{{ $action->style }}" data-toggle="modal" data-target="#{{ $action->modalTarget }}">
+            @else
+                <a href="{{ $action->url }}" class="pending-action pending-action--{{ $action->style }}">
+            @endif
                 <i class="fa {{ $action->icon }}"></i>
                 <span class="pending-action-count">{{ $action->count }}</span>
                 <span class="pending-action-label">{{ Str::plural($action->label, $action->count) }}</span>
@@ -27,7 +31,11 @@
             <ul class="dropdown-menu pending-actions-dropdown">
                 @foreach ($pendingActions->actions as $action)
                     <li>
-                        <a href="{{ $action->url }}">
+                        @if ($action->modalTarget)
+                            <a href="#" data-toggle="modal" data-target="#{{ $action->modalTarget }}">
+                        @else
+                            <a href="{{ $action->url }}">
+                        @endif
                             <i class="fa {{ $action->icon }}"></i>
                             <span class="pending-actions-dropdown-label">{{ Str::plural($action->label, $action->count) }}</span>
                             <span class="pending-actions-dropdown-count">{{ $action->count }}</span>
@@ -38,3 +46,5 @@
         </div>
     </div>
 @endif
+
+@include('partials.no-squad-modal', ['division' => $myDivision])
