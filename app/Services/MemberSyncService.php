@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\AOD\MemberSync\GetDivisionInfo;
+use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -175,7 +176,7 @@ class MemberSyncService
         $this->clearLeadershipAssignments($member);
 
         if ($user = $member->user) {
-            $user->update(['role_id' => 1]);
+            $user->update(['role_id' => Role::MEMBER->value]);
         }
 
         $this->stats['removed']++;

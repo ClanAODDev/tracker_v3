@@ -56,7 +56,7 @@ services:
 networks:
     sail:
         name: tracker_site_bridge
-        driver: bridge
+        external: true
 volumes:
     sailmariadb:
         driver: local

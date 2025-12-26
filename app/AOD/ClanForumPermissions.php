@@ -2,6 +2,8 @@
 
 namespace App\AOD;
 
+use App\Enums\ForumGroup;
+use App\Enums\Role;
 use App\Services\ForumProcedureService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -31,55 +33,34 @@ class ClanForumPermissions
             ->select('officer_role_id')
             ->where('active', true)
             ->whereNotNull('officer_role_id')
-            ->where('officer_role_id', '!=', 0) // never pull floater
+            ->where('officer_role_id', '!=', 0)
             ->pluck('officer_role_id')
             ->toArray();
 
-        /*
-         * Update role unless the current role matches the new role.
-         */
-        switch (true) {
-            /*
-             * Banned Users.
-             */
-            case ! empty(array_intersect($groupIds, [49])):
-                return ($user->role_id !== 6) ? $this->assignRole('banned') : null;
+        $newRole = match (true) {
+            $this->inGroup($groupIds, [ForumGroup::BANNED->value]) => Role::BANNED,
+            $this->inGroup($groupIds, [ForumGroup::ADMIN->value]) => Role::ADMIN,
+            $this->inGroup($groupIds, ForumGroup::seniorLeaderGroups()) => Role::SENIOR_LEADER,
+            $this->inGroup($groupIds, $officerRoleIds) => Role::OFFICER,
+            default => Role::MEMBER,
+        };
 
-                /*
-                 * 6 - Administrators.
-                 */
-            case ! empty(array_intersect($groupIds, [6])):
-                return ($user->role_id !== 5) ? $this->assignRole('admin') : null;
-
-                /*
-                 * 52 - AOD Sergeants
-                 * 66 - AOD Staff Sergeants
-                 * 80 - Division CO
-                 * 79 - Division XO.
-                 */
-            case ! empty(array_intersect($groupIds, [52, 66, 80, 79])):
-                return ($user->role_id !== 4) ? $this->assignRole('sr_ldr') : null;
-
-                /*
-                 * Division officer usergroup.
-                 */
-            case ! empty(array_intersect($groupIds, $officerRoleIds)):
-                return ($user->role_id !== 2) ? $this->assignRole('officer') : null;
-
-                /*
-                 * Default case: no matches, set as member.
-                 */
-            default:
-                return ($user->role_id !== 1) ? $this->assignRole('member') : null;
+        if ($user->role_id !== $newRole->value) {
+            $this->assignRole($newRole);
         }
     }
 
-    private function assignRole(string $role)
+    private function inGroup(array $userGroups, array $targetGroups): bool
+    {
+        return ! empty(array_intersect($userGroups, $targetGroups));
+    }
+
+    private function assignRole(Role $role): void
     {
         $user = auth()->user();
 
-        Log::info("Role {$role} granted to {$user->name} ({$user->id})");
+        Log::info("Role {$role->slug()} granted to {$user->name} ({$user->id})");
 
-        return $user->assignRole($role);
+        $user->assignRole($role);
     }
 }

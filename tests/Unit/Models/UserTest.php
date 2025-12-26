@@ -4,7 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Enums\Position;
 use App\Enums\Rank;
-use App\Models\Role;
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -60,6 +60,25 @@ class UserTest extends TestCase
 
         $this->assertTrue($adminUser->isRole(['admin', 'sr_ldr']));
         $this->assertFalse($adminUser->isRole(['officer', 'jr_ldr']));
+    }
+
+    public function test_is_role_with_enum_returns_correct_value()
+    {
+        $adminUser = $this->createAdmin();
+        $officerUser = $this->createOfficer();
+
+        $this->assertTrue($adminUser->isRole(Role::ADMIN));
+        $this->assertFalse($adminUser->isRole(Role::OFFICER));
+        $this->assertTrue($officerUser->isRole(Role::OFFICER));
+    }
+
+    public function test_get_role_returns_role_enum()
+    {
+        $adminUser = $this->createAdmin();
+        $officerUser = $this->createOfficer();
+
+        $this->assertEquals(Role::ADMIN, $adminUser->getRole());
+        $this->assertEquals(Role::OFFICER, $officerUser->getRole());
     }
 
     public function test_is_member_returns_true_for_member_position()
@@ -168,36 +187,34 @@ class UserTest extends TestCase
         $this->assertFalse($corporalUser->canRemoveUsers());
     }
 
-    public function test_assign_role_with_role_model()
+    public function test_assign_role_with_role_enum()
     {
-        $user = User::factory()->create(['role_id' => 1]);
-        $adminRole = Role::whereName('admin')->first();
+        $user = User::factory()->create(['role_id' => Role::MEMBER->value]);
 
-        $user->assignRole($adminRole);
+        $user->assignRole(Role::ADMIN);
         $user->refresh();
 
-        $this->assertEquals($adminRole->id, $user->role_id);
+        $this->assertEquals(Role::ADMIN->value, $user->role_id);
     }
 
     public function test_assign_role_with_string()
     {
-        $user = User::factory()->create(['role_id' => 1]);
+        $user = User::factory()->create(['role_id' => Role::MEMBER->value]);
 
         $user->assignRole('admin');
         $user->refresh();
 
-        $this->assertEquals('admin', $user->role->name);
+        $this->assertEquals(Role::ADMIN, $user->getRole());
     }
 
     public function test_assign_role_with_integer()
     {
-        $user = User::factory()->create(['role_id' => 1]);
-        $adminRole = Role::whereName('admin')->first();
+        $user = User::factory()->create(['role_id' => Role::MEMBER->value]);
 
-        $user->assignRole($adminRole->id);
+        $user->assignRole(Role::ADMIN->value);
         $user->refresh();
 
-        $this->assertEquals($adminRole->id, $user->role_id);
+        $this->assertEquals(Role::ADMIN->value, $user->role_id);
     }
 
     public function test_scope_admins_returns_only_admin_users()

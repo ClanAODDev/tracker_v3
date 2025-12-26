@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\Role;
 use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
 use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
@@ -41,7 +42,7 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Select::make('role_id')
                     ->label('Role')
-                    ->relationship('role', 'label'),
+                    ->options(Role::class),
                 Select::make('member_id')
                     ->label('Member')
                     ->required()

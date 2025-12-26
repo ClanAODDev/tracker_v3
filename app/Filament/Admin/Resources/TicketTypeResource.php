@@ -2,10 +2,10 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\Role;
 use App\Filament\Admin\Resources\TicketTypeResource\Pages\CreateTicketType;
 use App\Filament\Admin\Resources\TicketTypeResource\Pages\EditTicketType;
 use App\Filament\Admin\Resources\TicketTypeResource\Pages\ListTicketTypes;
-use App\Models\Role;
 use App\Models\TicketType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -47,7 +47,7 @@ class TicketTypeResource extends Resource
                     ->columnSpanFull(),
                 Select::make('role_access')
                     ->multiple()
-                    ->getSearchResultsUsing(fn (string $search): array => Role::all()->pluck('label', 'id')->toArray())
+                    ->options(Role::class)
                     ->columnSpanFull(),
                 TextInput::make('display_order')
                     ->required()

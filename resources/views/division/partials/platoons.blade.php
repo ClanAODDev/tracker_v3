@@ -35,10 +35,6 @@
                                  class="pull-right platoon-icon-xl"/>
                         @endif
                         {{ $platoon->name }}
-                        <span class="platoon-stat-badge"><i class="fa fa-users"></i> {{ $platoon->members_count }}</span>
-                        <span class="platoon-stat-badge {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
-                            <i class="fa fa-headset"></i> {{ $voiceRate }}%
-                        </span>
                     </h4>
 
                     @if ($platoon->leader)
@@ -58,6 +54,15 @@
                                 {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
                             </div>
                         @endforeach
+                    </div>
+
+                    <div class="platoon-card-footer">
+                        <div class="platoon-card-stats">
+                            <span class="platoon-stat-badge"><i class="fa fa-users"></i> {{ $platoon->members_count }}</span>
+                            <span class="platoon-stat-badge {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
+                                <i class="fa fa-headset"></i> {{ $voiceRate }}%
+                            </span>
+                        </div>
                     </div>
                 </div>
             </a>

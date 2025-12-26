@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\TicketResource\Pages;
 
+use App\Enums\Role;
 use App\Filament\Admin\Resources\TicketResource;
 use App\Models\User;
 use App\Notifications\Channel\NotifyCallerTicketUpdated;
@@ -45,7 +46,7 @@ class EditTicket extends EditRecord
                 ->form([
                     Select::make('owner_id')
                         ->label('Assign to')
-                        ->options(fn () => User::whereHas('role', fn ($q) => $q->where('name', 'admin'))->pluck('name', 'id'))
+                        ->options(fn () => User::where('role_id', Role::ADMIN->value)->pluck('name', 'id'))
                         ->required()
                         ->searchable(),
                 ])

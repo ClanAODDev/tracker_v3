@@ -2,21 +2,16 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
+use App\Enums\Role;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IsBanned
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  Request  $request
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
-        if (Auth::check() && $request->user()->role_id === 6) {
+        if (Auth::check() && $request->user()->isRole(Role::BANNED)) {
             abort(403, 'You are banned.');
         }
 

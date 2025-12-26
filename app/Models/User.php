@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Settings\UserSettings;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
@@ -134,20 +135,26 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Note::class);
     }
 
-    /**
-     * Check to see if user is a certain role.
-     */
-    public function isRole(string|array $role): bool
+    public function isRole(string|array|Role $role): bool
     {
-        if (! $this->role instanceof Role) {
+        $userRole = Role::tryFrom($this->role_id);
+
+        if (! $userRole) {
             return false;
         }
 
-        $roleName = $this->role->name;
+        if ($role instanceof Role) {
+            return $userRole === $role;
+        }
 
-        return is_array($role)
-            ? in_array($roleName, $role, true)
-            : $roleName === $role;
+        $slugs = is_array($role) ? $role : [$role];
+
+        return in_array($userRole->slug(), $slugs, true);
+    }
+
+    public function getRole(): ?Role
+    {
+        return Role::tryFrom($this->role_id);
     }
 
     public function isMember(): bool
@@ -204,34 +211,29 @@ class User extends Authenticatable implements FilamentUser
         return $this->developer;
     }
 
-    /**
-     * Assign a role to a user.
-     */
-    public function assignRole($role)
+    public function assignRole(Role|string|int $role): void
     {
         if ($role instanceof Role) {
-            $this->role()->associate($role)->save();
+            $this->role_id = $role->value;
+            $this->save();
 
             return;
         }
 
-        if (\is_string($role)) {
-            $role = Role::whereName(strtolower($role))->firstOrFail();
+        if (is_string($role)) {
+            $roleEnum = Role::fromSlug($role);
+            if ($roleEnum) {
+                $this->role_id = $roleEnum->value;
+                $this->save();
+
+                return;
+            }
         }
 
-        if (\is_int($role)) {
-            $role = Role::find($role);
+        if (is_int($role)) {
+            $this->role_id = $role;
+            $this->save();
         }
-
-        $this->role()->associate($role)->save();
-    }
-
-    /**
-     * relationship - user belongs to a role.
-     */
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
     }
 
     /**

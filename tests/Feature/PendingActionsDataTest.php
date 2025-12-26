@@ -4,13 +4,13 @@ namespace Tests\Feature;
 
 use App\Data\PendingActionsData;
 use App\Enums\Position;
+use App\Enums\Role;
 use App\Models\Award;
 use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberAward;
 use App\Models\Platoon;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,7 +30,6 @@ final class PendingActionsDataTest extends TestCase
 
         $this->registerMockFilamentRoutes();
 
-        $this->seed(\Database\Seeders\RoleSeeder::class);
         $this->division = Division::factory()->create();
     }
 
@@ -366,8 +365,8 @@ final class PendingActionsDataTest extends TestCase
 
     protected function createUserWithRole(string $roleName, ?Position $position = null): User
     {
-        $role = Role::where('name', $roleName)->first();
-        $user = User::factory()->create(['role_id' => $role->id]);
+        $role = Role::fromSlug($roleName);
+        $user = User::factory()->create(['role_id' => $role->value]);
         $user->member->update([
             'division_id' => $this->division->id,
             'position' => $position ?? Position::MEMBER,

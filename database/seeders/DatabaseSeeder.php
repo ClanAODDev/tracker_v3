@@ -19,9 +19,6 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call([
-            PositionSeeder::class,
-            RankSeeder::class,
-            RoleSeeder::class,
             TicketTypeSeeder::class,
         ]);
     }

@@ -1396,6 +1396,7 @@ body.no-animations {
 .pending-actions-header {
     display: flex;
     align-items: center;
+    margin-top: 10px;
     gap: 10px;
     color: var(--color-muted);
     font-size: 12px;
@@ -3162,8 +3163,6 @@ a.squad-drop-target {
     border-radius: 4px;
     background: rgba(255,255,255,0.1);
     color: rgba(255,255,255,0.7);
-    margin-left: 6px;
-    vertical-align: middle;
 }
 
 .platoon-stat-badge.voice-high {
@@ -3179,6 +3178,17 @@ a.squad-drop-target {
 .platoon-stat-badge.voice-low {
     background: rgba(219, 82, 75, 0.2);
     color: var(--color-danger);
+}
+
+.platoon-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.platoon-card-stats {
+    display: flex;
+    gap: 6px;
 }
 
 .member-stat-card .panel-footer.milestone-badges {
