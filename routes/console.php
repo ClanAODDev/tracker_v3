@@ -1,18 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+use App\Console\Commands\DivisionCensus;
+use App\Console\Commands\FetchApplicationFeeds;
+use App\Console\Commands\MemberSync;
+use Illuminate\Support\Facades\Schedule;
 
-/*
-|--------------------------------------------------------------------------
-| Console Routes
-|--------------------------------------------------------------------------
-|
-| This file is where you may define all of your Closure based console
-| commands. Each Closure is bound to a command instance allowing a
-| simple approach to interacting with each command's IO methods.
-|
-*/
-
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->describe('Display an inspiring quote');
+Schedule::command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes();
+Schedule::command(MemberSync::class)->hourly();
+Schedule::command(DivisionCensus::class)->weekly();

@@ -1,8 +1,5 @@
 <?php
 
-use App\Console\Commands\DivisionCensus;
-use App\Console\Commands\FetchApplicationFeeds;
-use App\Console\Commands\MemberSync;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\HasPrimaryDivision;
@@ -13,7 +10,6 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyBotToken;
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -55,11 +51,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
         ]);
-    })
-    ->withSchedule(function (Schedule $schedule) {
-        $schedule->command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes();
-        $schedule->command(MemberSync::class)->hourly();
-        $schedule->command(DivisionCensus::class)->weekly();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->dontFlash([
