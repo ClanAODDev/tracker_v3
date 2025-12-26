@@ -170,8 +170,7 @@ class LoginController extends Controller
                 Auth::login($user);
             }
 
-            // sync roles
-            (new ClanForumPermissions)->handleAccountRoles(
+            app(ClanForumPermissions::class)->handleAccountRoles(
                 $user->member->clan_id,
                 $this->roles
             );
