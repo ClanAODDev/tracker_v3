@@ -38,7 +38,10 @@ class MemberQueryService
     public function loadSortedMembers(Builder|BelongsToMany|HasMany $query, Division $division): Collection
     {
         return $this->extractHandles(
-            $this->withStandardRelations($query, $division)->get()->sortByDesc('rank')
+            $this->withStandardRelations($query, $division)
+                ->where('division_id', '>', 0)
+                ->get()
+                ->sortByDesc('rank')
         );
     }
 }
