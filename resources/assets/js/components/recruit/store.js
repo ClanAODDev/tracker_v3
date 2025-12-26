@@ -165,9 +165,16 @@ store.validateForumName = (name, memberId) => {
 };
 
 store.isFormValid = () => {
+    const platoon = store.division.platoons.find(p => p.id === parseInt(store.member.platoon));
+    const hasSquads = platoon ? platoon.squads.length > 0 : false;
+    const squadValid = !hasSquads || store.member.squad;
+
     return store.member.id &&
            store.member.forum_name &&
+           store.member.ingame_name &&
            store.member.rank &&
+           store.member.platoon &&
+           squadValid &&
            store.validation.memberId.valid &&
            store.validation.memberId.verifiedEmail &&
            store.validation.forumName.valid;
@@ -236,6 +243,7 @@ store.toggleDemoMode = () => {
     if (store.inDemoMode) {
         store.member.id = '99999';
         store.member.forum_name = 'TestRecruit';
+        store.member.ingame_name = 'TestHandle';
         store.member.rank = '1';
         store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'TestUser', existsInTracker: false, tags: [], division: null };
         store.validation.forumName = { valid: true, available: true };

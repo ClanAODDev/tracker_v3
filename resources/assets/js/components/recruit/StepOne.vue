@@ -32,9 +32,9 @@
         </div>
         <div class="recruit-section-body">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="form-group" :class="memberIdValidationClass">
-                <label for="member_id">Forum Member ID</label>
+                <label for="member_id">Forum Member ID <span class="text-danger">*</span></label>
                 <div class="input-with-status">
                   <input type="number" class="form-control" id="member_id"
                          v-model="store.member.id"
@@ -55,7 +55,7 @@
                 </span>
               </div>
             </div>
-            <div class="col-md-8" v-if="store.validation.memberId.currentUsername">
+            <div class="col-md-6" v-if="store.validation.memberId.currentUsername">
               <div class="form-group">
                 <label>Current Forum Username</label>
                 <div class="current-username">
@@ -84,7 +84,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group" :class="forumNameValidationClass">
-                <label for="forum_name">Forum Name</label>
+                <label for="forum_name">Forum Name <span class="text-danger">*</span></label>
                 <div class="input-with-status">
                   <input type="text" class="form-control" id="forum_name"
                          v-model="store.member.forum_name"
@@ -109,8 +109,8 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="form-group">
-                <label for="ingame_name">In-Game Handle <span class="text-muted">(optional)</span></label>
+              <div class="form-group" :class="{ 'has-error': !store.member.ingame_name && submitted }">
+                <label for="ingame_name">In-Game Handle <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="ingame_name"
                        v-model="store.member.ingame_name"
                        :disabled="store.inDemoMode"
@@ -119,7 +119,7 @@
             </div>
             <div class="col-md-4">
               <div class="form-group" :class="{ 'has-error': !store.member.rank && submitted }">
-                <label for="rank">Rank</label>
+                <label for="rank">Rank <span class="text-danger">*</span></label>
                 <select id="rank" class="form-control" v-model="store.member.rank">
                   <option value="">Select rank...</option>
                   <option v-for="(name, id) in ranks" :key="id" :value="id">{{ name }}</option>
@@ -138,8 +138,8 @@
         <div class="recruit-section-body">
           <div class="row">
             <div class="col-md-6">
-              <div class="form-group">
-                <label for="platoon">{{ store.division.locality.platoon }}</label>
+              <div class="form-group" :class="{ 'has-error': !store.member.platoon && submitted }">
+                <label for="platoon">{{ store.division.locality.platoon }} <span class="text-danger">*</span></label>
                 <select id="platoon" class="form-control" v-model="store.member.platoon" @change="onPlatoonChange">
                   <option value="">Select {{ store.division.locality.platoon.toLowerCase() }}...</option>
                   <option v-for="platoon in store.division.platoons" :key="platoon.id" :value="platoon.id">
@@ -149,8 +149,8 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="form-group">
-                <label for="squad">{{ store.division.locality.squad }} <span class="text-muted">(optional)</span></label>
+              <div class="form-group" :class="{ 'has-error': !store.member.squad && selectedPlatoonSquads.length && submitted }">
+                <label for="squad">{{ store.division.locality.squad }} <span class="text-danger" v-if="selectedPlatoonSquads.length">*</span></label>
                 <select id="squad" class="form-control" v-model="store.member.squad" :disabled="!selectedPlatoonSquads.length">
                   <option value="">{{ selectedPlatoonSquads.length ? 'Select ' + store.division.locality.squad.toLowerCase() + '...' : 'No ' + store.division.locality.squad.toLowerCase() + 's available' }}</option>
                   <option v-for="squad in selectedPlatoonSquads" :key="squad.id" :value="squad.id">

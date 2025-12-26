@@ -27,6 +27,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -142,25 +143,34 @@ class RankActionResource extends Resource
                 [
                     Filter::make('rank_filter')
                         ->schema([
-                            Select::make('rank')
+                            Select::make('ranks')
                                 ->label('Rank')
+                                ->multiple()
                                 ->options(function () {
                                     return collect(Rank::cases())
                                         ->mapWithKeys(fn (Rank $rank) => [$rank->value => $rank->getLabel()])
                                         ->toArray();
                                 })
-                                ->placeholder('Select a rank'),
+                                ->placeholder('Select ranks'),
                         ])
                         ->query(function (Builder $query, array $data): Builder {
-                            if (! empty($data['rank'])) {
-                                $query->where('rank', $data['rank']);
+                            if (! empty($data['ranks'])) {
+                                $query->whereIn('rank', $data['ranks']);
                             }
 
                             return $query;
                         })
-                        ->indicateUsing(fn (array $data): ?string => isset($data['rank']) && $data['rank'] !== ''
-                            ? 'Rank: ' . Rank::from($data['rank'])->getLabel()
-                            : null),
+                        ->indicateUsing(function (array $data): ?string {
+                            if (empty($data['ranks'])) {
+                                return null;
+                            }
+
+                            $labels = collect($data['ranks'])
+                                ->map(fn ($value) => Rank::from((int) $value)->getLabel())
+                                ->join(', ');
+
+                            return 'Rank: ' . $labels;
+                        }),
 
                     Filter::make('requester_name')
                         ->schema([
@@ -193,9 +203,13 @@ class RankActionResource extends Resource
                                 });
                         })
                         ->default(),
-                ]
 
+                    Filter::make('sgt_plus')
+                        ->label('SGT+ Only')
+                        ->query(fn (Builder $query): Builder => $query->where('rank', '>=', Rank::SERGEANT->value)),
+                ]
             )
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 ViewAction::make(),
                 CommentsAction::make()->visible(fn (
