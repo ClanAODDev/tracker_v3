@@ -229,7 +229,7 @@ class MemberSyncService
         return [
             'allow_pm' => $member->allow_pm,
             'discord' => $member->discord,
-            'discord_id' => $member->discord_id,
+            'discord_id' => (int) $member->discord_id,
             'division_id' => $member->division_id,
             'name' => $member->name,
             'posts' => $member->posts,
@@ -237,9 +237,24 @@ class MemberSyncService
             'ts_unique_id' => $member->ts_unique_id,
             'last_voice_status' => $member->last_voice_status?->value,
             'rank' => $member->rank->value,
-            'last_activity' => $member->last_activity?->timestamp,
-            'last_voice_activity' => $member->last_voice_activity?->timestamp,
+            'last_activity' => $this->extractTimestamp($member->last_activity),
+            'last_voice_activity' => $this->extractTimestamp($member->last_voice_activity),
         ];
+    }
+
+    protected function extractTimestamp($datetime): ?int
+    {
+        if (! $datetime) {
+            return null;
+        }
+
+        $timestamp = $datetime->timestamp;
+
+        if ($timestamp < 0) {
+            return null;
+        }
+
+        return $timestamp;
     }
 
     protected function transformForumData(object $forumData): array
@@ -247,7 +262,7 @@ class MemberSyncService
         return [
             'allow_pm' => $forumData->allow_pm,
             'discord' => $forumData->discordtag,
-            'discord_id' => $forumData->discordid,
+            'discord_id' => $this->normalizeDiscordId($forumData->discordid),
             'division_id' => $this->divisionIds[$forumData->aoddivision],
             'join_date' => $forumData->joindate,
             'name' => str_replace('AOD_', '', $forumData->username),
@@ -255,8 +270,8 @@ class MemberSyncService
             'privacy_flag' => $forumData->allow_export === 'yes' ? 1 : 0,
             'ts_unique_id' => $forumData->tsid,
             'last_voice_status' => $this->normalizeDiscordStatus($forumData->lastdiscord_status),
-            'last_activity' => $forumData->lastactivity,
-            'last_voice_activity' => $forumData->lastdiscord_connect,
+            'last_activity' => $this->normalizeTimestamp($forumData->lastactivity),
+            'last_voice_activity' => $this->normalizeTimestamp($forumData->lastdiscord_connect),
             'rank' => $this->calculateRank($forumData->aodrankval),
         ];
     }
@@ -275,6 +290,24 @@ class MemberSyncService
         }
 
         return $status;
+    }
+
+    protected function normalizeDiscordId($discordId): int
+    {
+        if (empty($discordId)) {
+            return 0;
+        }
+
+        return (int) $discordId;
+    }
+
+    protected function normalizeTimestamp($timestamp): ?int
+    {
+        if (empty($timestamp) || $timestamp === '0') {
+            return null;
+        }
+
+        return (int) $timestamp;
     }
 
     protected function calculateUpdates(array $oldData, array $newData): array
