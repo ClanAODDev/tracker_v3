@@ -4,18 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class ApiTokenGenerationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function a_user_can_have_tokens_generated()
     {
         $this->signIn();
@@ -27,7 +23,7 @@ final class ApiTokenGenerationTest extends TestCase
         $this->assertCount(1, auth()->user()->refresh()->tokens);
     }
 
-    /** @test */
+    #[Test]
     public function a_user_can_have_tokens_revoked()
     {
         $this->signIn();
@@ -41,7 +37,7 @@ final class ApiTokenGenerationTest extends TestCase
         $this->assertCount(0, auth()->user()->refresh()->tokens);
     }
 
-    /** @test */
+    #[Test]
     public function an_officer_can_create_api_tokens()
     {
         $this->markTestSkipped('Temporary ACL change');
@@ -59,7 +55,7 @@ final class ApiTokenGenerationTest extends TestCase
         $this->assertCount(1, $user->refresh()->tokens);
     }
 
-    /** @test */
+    #[Test]
     public function a_non_officer_cannot_create_api_tokens()
     {
         $this->markTestSkipped('Temporary ACL change');
@@ -73,7 +69,7 @@ final class ApiTokenGenerationTest extends TestCase
             ->assertForbidden();
     }
 
-    /** @test */
+    #[Test]
     public function a_token_name_is_required_when_generating_an_api_token()
     {
         $this->markTestSkipped('Temporary ACL change');
@@ -86,7 +82,7 @@ final class ApiTokenGenerationTest extends TestCase
             ->assertSessionHasErrors('token_name');
     }
 
-    /** @test */
+    #[Test]
     public function an_officer_can_revoke_their_own_token()
     {
         $this->markTestSkipped('Temporary ACL change');

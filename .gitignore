@@ -31,3 +31,4 @@ LAST_REVISION
 /public/storage
 /.vs
 /public/hot
+.phpunit.cache

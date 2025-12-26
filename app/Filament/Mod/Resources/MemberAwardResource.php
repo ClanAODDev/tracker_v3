@@ -120,7 +120,10 @@ class MemberAwardResource extends Resource
             ->filters(filters: [
                 Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
-                SelectFilter::make('by division')->relationship('award.division', 'name'),
+                Filter::make('clan_wide')
+                    ->label('Clan-Wide Only')
+                    ->query(fn (Builder $query): Builder => $query->whereHas('award', fn ($q) => $q->whereNull('division_id'))),
+                SelectFilter::make('byDivision')->relationship('award.division', 'name')->label('By Division'),
                 SelectFilter::make('award')->relationship('award', 'name'),
             ])
             ->recordActions([

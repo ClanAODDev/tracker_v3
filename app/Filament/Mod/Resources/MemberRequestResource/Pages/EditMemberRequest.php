@@ -53,7 +53,7 @@ class EditMemberRequest extends EditRecord
 
                     AddClanMember::dispatch(member: $rec->member, admin_id: $user->member->clan_id);
 
-                    $indexUrl = static::getResource()::getUrl('index') . '?tableFilters[status][value]=approved';
+                    $indexUrl = static::getResource()::getUrl('index') . '?filters[status][value]=approved';
                     $this->redirect($indexUrl, navigate: true);
                 }),
 
@@ -87,7 +87,7 @@ class EditMemberRequest extends EditRecord
                         $rec->member
                     ));
 
-                    $indexUrl = static::getResource()::getUrl('index') . '?tableFilters[status][value]=on_hold';
+                    $indexUrl = static::getResource()::getUrl('index') . '?filters[status][value]=on_hold';
                     $this->redirect($indexUrl, navigate: true);
                 }),
 
@@ -138,7 +138,7 @@ class EditMemberRequest extends EditRecord
                         ->success()
                         ->send();
 
-                    $indexUrl = static::getResource()::getUrl('index') . '?tableFilters[status][value]=approved';
+                    $indexUrl = static::getResource()::getUrl('index') . '?filters[status][value]=approved';
                     $this->redirect($indexUrl, navigate: true);
                 }),
 

@@ -3,16 +3,12 @@
 namespace Tests\Unit;
 
 use App\Models\Division;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class DivisionTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_has_a_lowercase_abbreviation()
     {
         $division = Division::factory(['abbreviation' => 'UPPERCASE'])->make();

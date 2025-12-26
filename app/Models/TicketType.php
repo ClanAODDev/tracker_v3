@@ -2,20 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TicketType extends Model
 {
+    use HasFactory;
+
     public $guarded = [];
 
     protected $casts = [
         'role_access' => 'json',
     ];
-
-    /**
-     * @var mixed
-     */
-    private $title;
 
     public function ticket()
     {

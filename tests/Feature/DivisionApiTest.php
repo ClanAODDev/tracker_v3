@@ -7,13 +7,9 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-/**
- * @internal
- *
- * @coversNothing
- */
 final class DivisionApiTest extends TestCase
 {
     use RefreshDatabase;
@@ -32,7 +28,7 @@ final class DivisionApiTest extends TestCase
             ->assertStatus(200);
     }
 
-    /** @test */
+    #[Test]
     public function an_inactive_division_should_return_404_not_found()
     {
         $activeDivision = Division::factory(['abbreviation' => 'unique'])
@@ -50,12 +46,11 @@ final class DivisionApiTest extends TestCase
         $this->json('get', route('v1.divisions.show', $inactiveDivision->slug))->assertNotFound();
     }
 
-    /** @test */
+    #[Test]
     public function a_division_with_a_shutdown_date_should_not_appear_in_the_divisions_endpoint()
     {
         $response = $this->json('get', route('v1.divisions.index'));
 
-        // we should have one division, per setUp
         $response->assertJson(fn (AssertableJson $json) => $json->has('data', 1));
 
         $divisionShuttingDown = Division::factory(['shutdown_at' => now()->addDays(45)])->create();
