@@ -9,8 +9,8 @@ use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Note;
-use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
+use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -135,7 +135,7 @@ class EditMember extends EditRecord
         $divisions = $member->partTimeDivisions()->active()->get();
 
         foreach ($divisions as $division) {
-            $division->notify(new NotifydDivisionPartTimeMemberRemoved($member, $reason));
+            $division->notify(new NotifyDivisionPartTimeMemberRemoved($member, $reason));
         }
     }
 }

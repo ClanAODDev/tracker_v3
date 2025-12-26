@@ -5,13 +5,14 @@ namespace App\Notifications\Channel;
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\Member;
+use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
 class NotifyDivisionFailedPromotionAcceptance extends Notification implements ShouldQueue
 {
-    use Queueable;
+    use Queueable, RetryableNotification;
 
     public function __construct(private readonly Member $member) {}
 
@@ -36,6 +37,7 @@ class NotifyDivisionFailedPromotionAcceptance extends Notification implements Sh
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->target('officers')
+            ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
                     'name' => sprintf(

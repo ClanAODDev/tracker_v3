@@ -165,7 +165,7 @@ class BotChannelMessage
                 'notifiable' => get_class($this->notifiable) . ':' . $this->notifiable->getKey(),
             ]);
 
-            return null;
+            return [];
         }
 
         $message = [

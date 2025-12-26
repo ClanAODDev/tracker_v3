@@ -19,6 +19,7 @@ class NotifyDivisionFailedAwardApprovalNotice extends BaseNotification
         return (new BotChannelMessage($notifiable))
             ->title($notifiable->name . ' Division')
             ->target('officers')
+            ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
                     'name' => sprintf(

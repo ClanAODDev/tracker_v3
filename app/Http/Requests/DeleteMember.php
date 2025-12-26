@@ -5,8 +5,8 @@ namespace App\Http\Requests;
 use App\Jobs\RemoveClanMember;
 use App\Models\Member;
 use App\Models\Note;
-use App\Notifications\Channel\NotifydDivisionPartTimeMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
+use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
@@ -72,7 +72,7 @@ class DeleteMember extends FormRequest
         $divisions = $member->partTimeDivisions()->active()->get();
 
         foreach ($divisions as $division) {
-            $division->notify(new NotifydDivisionPartTimeMemberRemoved($member, $this->removal_reason));
+            $division->notify(new NotifyDivisionPartTimeMemberRemoved($member, $this->removal_reason));
         }
     }
 }

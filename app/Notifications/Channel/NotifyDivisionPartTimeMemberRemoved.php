@@ -13,7 +13,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class NotifydDivisionPartTimeMemberRemoved extends Notification implements ShouldQueue
+class NotifyDivisionPartTimeMemberRemoved extends Notification implements ShouldQueue
 {
     use DivisionSettableNotification, Queueable, RetryableNotification;
 
