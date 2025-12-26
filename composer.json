@@ -32,7 +32,8 @@
         "opcodesio/log-viewer": "^3.10",
         "embed/embed": "^4.4",
         "ext-simplexml": "*",
-        "parallax/filament-comments": "^2.0"
+        "parallax/filament-comments": "^2.0",
+      "ext-gd": "*"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
