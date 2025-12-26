@@ -75,7 +75,7 @@
 
     {{-- Desktop: Grid of all three --}}
     <div class="leaderboard-grid">
-        <div class="leaderboard-card">
+        <div class="leaderboard-card animate-fade-in-up" style="animation-delay: 0.1s">
             <div class="leaderboard-card-header">
                 <i class="fa fa-user-plus"></i>
                 <span>Recruits</span>
@@ -95,7 +95,7 @@
             <div class="leaderboard-card-footer">Since {{ now()->startOfMonth()->format('M j') }}</div>
         </div>
 
-        <div class="leaderboard-card">
+        <div class="leaderboard-card animate-fade-in-up" style="animation-delay: 0.2s">
             <div class="leaderboard-card-header">
                 <i class="fa fa-headset"></i>
                 <span>Voice %</span>
@@ -118,7 +118,7 @@
             <div class="leaderboard-card-footer">Voice active / total members</div>
         </div>
 
-        <div class="leaderboard-card">
+        <div class="leaderboard-card animate-fade-in-up" style="animation-delay: 0.3s">
             <div class="leaderboard-card-header">
                 <i class="fa fa-chart-line"></i>
                 <span>Growth</span>

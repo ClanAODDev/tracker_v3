@@ -320,11 +320,13 @@ store.calculateUnreadCount = () => {
     let count = 0;
 
     store.tickets.forEach(ticket => {
+        if (ticket.state === 'resolved' || ticket.state === 'rejected') {
+            return;
+        }
+
         const ticketLastSeen = lastSeen[ticket.id];
         if (!ticketLastSeen) {
-            if (ticket.state !== 'resolved' && ticket.state !== 'rejected') {
-                count++;
-            }
+            count++;
         } else {
             const seenDate = new Date(ticketLastSeen);
             const updatedDate = new Date(ticket.updated_at);

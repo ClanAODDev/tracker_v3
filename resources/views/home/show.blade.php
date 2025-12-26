@@ -24,7 +24,7 @@
             @include('home.partials.division-leaderboard')
         </div>
 
-        <div class="divisions-section">
+        <div class="divisions-section animate-fade-in-up" style="animation-delay: 0.4s">
             <h4 class="section-title">
                 <i class="fa fa-gamepad"></i>
                 All Divisions
