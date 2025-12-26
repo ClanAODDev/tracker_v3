@@ -21,16 +21,29 @@ final class DivisionApiTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->officer()->create();
+    }
 
-        Sanctum::actingAs($this->user, ['*']);
+    #[Test]
+    public function unauthenticated_requests_are_rejected()
+    {
+        $this->json('get', route('v1.divisions.index'))
+            ->assertUnauthorized();
+    }
+
+    #[Test]
+    public function authenticated_requests_succeed()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
 
         $this->json('get', route('v1.divisions.index'))
-            ->assertStatus(200);
+            ->assertOk();
     }
 
     #[Test]
     public function an_inactive_division_should_return_404_not_found()
     {
+        Sanctum::actingAs($this->user, ['division:read']);
+
         $activeDivision = Division::factory(['abbreviation' => 'unique'])
             ->create();
 
@@ -49,6 +62,8 @@ final class DivisionApiTest extends TestCase
     #[Test]
     public function a_division_with_a_shutdown_date_should_not_appear_in_the_divisions_endpoint()
     {
+        Sanctum::actingAs($this->user, ['division:read']);
+
         $response = $this->json('get', route('v1.divisions.index'));
 
         $response->assertJson(fn (AssertableJson $json) => $json->has('data', 1));

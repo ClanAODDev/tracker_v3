@@ -38,8 +38,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->api(append: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
-        ]);
+        ])->appendToGroup('api', 'auth:sanctum');
 
         $middleware->alias([
             'developer' => MustBeDeveloper::class,
