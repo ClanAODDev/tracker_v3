@@ -24,6 +24,8 @@ const store = reactive({
             verifiedEmail: false,
             currentUsername: '',
             existsInTracker: false,
+            tags: [],
+            division: null,
         },
         forumName: {
             valid: false,
@@ -95,7 +97,7 @@ store.getSquadsForPlatoon = (platoonId) => {
 
 store.validateMemberId = (memberId) => {
     if (!memberId || memberId.length < 1) {
-        store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false };
+        store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false, tags: [], division: null };
         return;
     }
 
@@ -103,7 +105,7 @@ store.validateMemberId = (memberId) => {
 
     debounce('memberId', () => {
         if (store.inDemoMode) {
-            store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'DemoUser', existsInTracker: false };
+            store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'DemoUser', existsInTracker: false, tags: [], division: null };
             store.validation.loading = false;
             return;
         }
@@ -116,11 +118,13 @@ store.validateMemberId = (memberId) => {
                     verifiedEmail: data.valid_group || false,
                     currentUsername: data.username || '',
                     existsInTracker: data.exists_in_tracker || false,
+                    tags: data.tags || [],
+                    division: data.division || null,
                 };
                 store.validation.loading = false;
             })
             .catch(() => {
-                store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false };
+                store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false, tags: [], division: null };
                 store.validation.loading = false;
             });
     }, 300);
@@ -223,7 +227,7 @@ store.resetForNewRecruit = () => {
     store.member.squad = '';
 
     store.validation.loading = false;
-    store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false };
+    store.validation.memberId = { valid: false, verifiedEmail: false, currentUsername: '', existsInTracker: false, tags: [], division: null };
     store.validation.forumName = { valid: false, available: false };
 };
 
@@ -233,7 +237,7 @@ store.toggleDemoMode = () => {
         store.member.id = '99999';
         store.member.forum_name = 'TestRecruit';
         store.member.rank = '1';
-        store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'TestUser', existsInTracker: false };
+        store.validation.memberId = { valid: true, verifiedEmail: true, currentUsername: 'TestUser', existsInTracker: false, tags: [], division: null };
         store.validation.forumName = { valid: true, available: true };
     } else {
         store.resetForNewRecruit();

@@ -178,7 +178,21 @@ class RecruitingController extends Controller
      */
     public function validateMemberId($member_id)
     {
-        $existsInTracker = Member::where('clan_id', $member_id)->exists();
+        $member = Member::where('clan_id', $member_id)->first();
+        $existsInTracker = $member !== null;
+
+        $tags = [];
+        $division = null;
+        if ($member) {
+            $tags = $member->tags()
+                ->get()
+                ->map(fn ($tag) => [
+                    'name' => $tag->name,
+                    'division' => $tag->division?->abbreviation ?? 'Global',
+                ])
+                ->toArray();
+            $division = $member->division?->abbreviation;
+        }
 
         if (app()->environment() === 'local') {
             return [
@@ -186,13 +200,21 @@ class RecruitingController extends Controller
                 'valid_group' => true,
                 'username' => 'LocalTestUser',
                 'exists_in_tracker' => $existsInTracker,
+                'tags' => $tags,
+                'division' => $division,
             ];
         }
 
         $result = $this->callProcedure('get_user', $member_id);
 
         if (! property_exists($result, 'usergroupid')) {
-            return ['is_member' => false, 'valid_group' => false, 'exists_in_tracker' => $existsInTracker];
+            return [
+                'is_member' => false,
+                'valid_group' => false,
+                'exists_in_tracker' => $existsInTracker,
+                'tags' => $tags,
+                'division' => $division,
+            ];
         }
 
         return [
@@ -200,6 +222,8 @@ class RecruitingController extends Controller
             'username' => $result->username,
             'valid_group' => $result->usergroupid === Member::REGISTERED_USER,
             'exists_in_tracker' => $existsInTracker,
+            'tags' => $tags,
+            'division' => $division,
         ];
     }
 

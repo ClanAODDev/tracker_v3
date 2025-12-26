@@ -9214,6 +9214,42 @@ pre.code-toolbar > .toolbar span:focus {
     }
 }
 
+.existing-member-badge {
+    margin-left: auto;
+    padding: 3px 10px;
+    background: rgba(241, 196, 15, 0.15);
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    color: #f1c40f;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    i {
+        margin-right: 4px;
+        color: #f1c40f;
+    }
+}
+
+.member-tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+
+    .badge-tag {
+        padding: 4px 10px;
+        background: var(--overlay-light);
+        border-radius: 4px;
+        font-size: 9px;
+        font-weight: 600;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+}
+
 .agreement-list,
 .task-list {
     display: flex;

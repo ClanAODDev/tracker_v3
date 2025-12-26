@@ -55,7 +55,7 @@
               <div class="welcome-pm-container">
                 <textarea id="welcome_pm" class="form-control" rows="4" readonly>{{ formattedWelcomePM }}</textarea>
                 <div class="welcome-pm-actions">
-                  <button type="button" class="btn btn-sm btn-success copy-to-clipboard" data-clipboard-target="#welcome_pm">
+                  <button type="button" class="btn btn-sm btn-success" @click="copyWelcomePM">
                     <i class="fa fa-clone"></i> Copy
                   </button>
                   <a :href="forumPMUrl" target="_blank" class="btn btn-sm btn-accent">
@@ -151,6 +151,12 @@ export default {
   methods: {
     addAnother() {
       store.resetForNewRecruit();
+    },
+
+    copyWelcomePM() {
+      navigator.clipboard.writeText(this.formattedWelcomePM).then(() => {
+        toastr.success('Copied!');
+      });
     },
   },
 };

@@ -60,6 +60,14 @@
                 <label>Current Forum Username</label>
                 <div class="current-username">
                   <i class="fa fa-user"></i> {{ store.validation.memberId.currentUsername }}
+                  <span v-if="store.validation.memberId.existsInTracker" class="existing-member-badge">
+                    <i class="fa fa-history"></i> Previous Member
+                  </span>
+                </div>
+                <div class="member-tags-display" v-if="store.validation.memberId.tags.length">
+                  <span v-for="(tag, index) in store.validation.memberId.tags" :key="index" class="badge badge-tag" :title="tag.division">
+                    {{ tag.name }}
+                  </span>
                 </div>
               </div>
             </div>
