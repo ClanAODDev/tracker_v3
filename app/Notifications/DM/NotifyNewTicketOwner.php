@@ -2,51 +2,24 @@
 
 namespace App\Notifications\DM;
 
-use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Models\User;
+use App\Notifications\BaseNotification;
 use App\Traits\RetryableNotification;
-use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 
-class NotifyNewTicketOwner extends Notification implements ShouldQueue
+class NotifyNewTicketOwner extends BaseNotification
 {
-    use Queueable, RetryableNotification;
+    use RetryableNotification;
 
-    private User $assignedOwner;
+    public function __construct(
+        private readonly User $assignedOwner,
+        private readonly User $oldUser
+    ) {}
 
-    private User $oldUser;
-
-    public function __construct(User $assignedOwner, User $oldUser)
+    public function toBot($ticket): array
     {
-        $this->assignedOwner = $assignedOwner;
-        $this->oldUser = $oldUser;
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function via($notifiable)
-    {
-        return [BotChannel::class];
-    }
-
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
-    public function toBot($ticket)
-    {
-        $target = $this->assignedOwner->member->discord;
-
         return (new BotDMMessage)
-            ->to($target)
+            ->to($this->assignedOwner->member->discord)
             ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
             ->send();
     }

@@ -2,21 +2,14 @@
 
 namespace App\Notifications\Channel;
 
-use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Notifications\BaseNotification;
 use App\Traits\RetryableNotification;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 
-class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
+class NotifyAdminSgtRequestPending extends BaseNotification
 {
-    use Queueable;
     use RetryableNotification;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct(
         private readonly string $requester,
         private readonly string $member,
@@ -24,22 +17,19 @@ class NotifyAdminSgtRequestPending extends Notification implements ShouldQueue
         private readonly int $rankActionId,
     ) {}
 
-    public function via()
+    public function toBot($notifiable): array
     {
-        return [BotChannel::class];
-    }
+        $url = route('filament.admin.resources.rank-actions.edit', $this->rankActionId);
 
-    public function toBot($notifiable)
-    {
         return (new BotChannelMessage($notifiable))
             ->title('SGT+ Request')
             ->target('admin')
             ->message(sprintf(
-                '%s submitted a `%s` request for %s. [View Rank Action](https://tracker.clanaod.net/operations/rank-actions/%d/edit)',
+                '%s submitted a `%s` request for %s. [View Rank Action](%s)',
                 $this->requester,
                 $this->rank,
                 $this->member,
-                $this->rankActionId
+                $url
             ))
             ->warning()
             ->send();
