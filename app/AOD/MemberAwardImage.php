@@ -54,7 +54,7 @@ class MemberAwardImage
     private function parseOptions(int $availableCount): array
     {
         $requestedCount = (int) request('award_count', $availableCount);
-        $count = min(max($requestedCount, 1), min(self::MAX_AWARDS, $availableCount));
+        $count = min(max($requestedCount, 1), self::MAX_AWARDS, $availableCount);
 
         $fontType = in_array(request('font'), ['ttf', 'bitmap'], true) ? request('font') : 'ttf';
 
