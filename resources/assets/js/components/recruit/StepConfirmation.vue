@@ -28,7 +28,7 @@
         <div class="housekeeping-actions">
           <div class="housekeeping-action" v-if="store.division.welcome_area">
             <div class="housekeeping-action-icon">
-              <i class="fa fa-mail-reply-all"></i>
+              <i class="fa fa-reply-all"></i>
             </div>
             <div class="housekeeping-action-content">
               <h5>Create Welcome Post</h5>
