@@ -29,7 +29,7 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'member-requests',
                     count: $count,
-                    url: route('filament.mod.resources.member-requests.index') . '?tableFilters[status][value]=pending',
+                    url: route('filament.mod.resources.member-requests.index') . '?filters[status][value]=pending',
                     icon: 'fa-user-plus',
                     label: 'Request',
                     style: 'warning',
@@ -77,10 +77,11 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'clan-award-requests',
                     count: $count,
-                    url: route('filament.admin.resources.member-awards.index') . '?tableFilters[pending][isActive]=true&tableFilters[clan_wide][isActive]=true',
+                    url: route('filament.mod.resources.member-awards.index') . '?filters[needs approval][isActive]=true&filters[clan_wide][isActive]=true',
                     icon: 'fa-globe',
                     label: 'Clan Award',
                     style: 'accent',
+                    adminOnly: true,
                 ));
             }
         }
@@ -91,7 +92,7 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'pending-transfers',
                     count: $count,
-                    url: route('filament.mod.resources.transfers.index') . '?tableFilters[incomplete][isActive]=true&tableFilters[transferring_to][value]=' . $division->id,
+                    url: route('filament.mod.resources.transfers.index') . '?filters[incomplete][isActive]=true&filters[transferring_to][value]=' . $division->id,
                     icon: 'fa-exchange-alt',
                     label: 'Transfer',
                 ));
@@ -106,7 +107,7 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'pending-leaves',
                     count: $count,
-                    url: route('filament.mod.resources.leaves.index') . '?tableFilters[pending][isActive]=true',
+                    url: route('filament.mod.resources.leaves.index') . '?filters[pending][isActive]=true',
                     icon: 'fa-calendar-alt',
                     label: 'LOA',
                 ));
@@ -171,6 +172,7 @@ readonly class PendingActionsData
                     icon: 'fa-ticket-alt',
                     label: 'Open Ticket',
                     style: 'warning',
+                    adminOnly: true,
                 ));
             }
         }
@@ -196,5 +198,10 @@ readonly class PendingActionsData
     public function has(string $key): bool
     {
         return $this->get($key) !== null;
+    }
+
+    public function divisionActions(): Collection
+    {
+        return $this->actions->filter(fn (PendingAction $action) => ! $action->adminOnly);
     }
 }

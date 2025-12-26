@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Rank;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -42,7 +43,7 @@ class UserFactory extends Factory
                 'role_id' => 5,
                 'developer' => true,
                 'member_id' => Member::factory([
-                    'rank_id' => 11,
+                    'rank' => Rank::MASTER_SERGEANT,
                 ]),
             ];
         });
@@ -57,7 +58,7 @@ class UserFactory extends Factory
             return [
                 'role_id' => 2,
                 'member_id' => Member::factory([
-                    'rank_id' => 7,
+                    'rank' => Rank::LANCE_CORPORAL,
                 ]),
             ];
         });

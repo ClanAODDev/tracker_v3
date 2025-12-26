@@ -292,11 +292,11 @@ function percent($old_member_count, $new_member_count)
 function reviewDivisionAwardsQuery($division_id): string
 {
     $params = [
-        'tableFilters' => [
+        'filters' => [
             'needs approval' => [
                 'isActive' => true,
             ],
-            'by division' => [
+            'byDivision' => [
                 'value' => $division_id,
             ],
         ],
@@ -304,7 +304,7 @@ function reviewDivisionAwardsQuery($division_id): string
 
     $queryString = Arr::query($params);
 
-    $queryString = str_replace(['%5B', '%5D', '%20'], ['[', ']', ' '], $queryString);
+    $queryString = str_replace(['%5B', '%5D'], ['[', ']'], $queryString);
 
     return '?' . $queryString;
 }

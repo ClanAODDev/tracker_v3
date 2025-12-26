@@ -66,7 +66,7 @@
 
     @if(Auth::user()->can('manage', \App\Models\MemberRequest::class))
         <li>
-            <a href="{{ route('filament.mod.resources.member-requests.index'). '?tableFilters[status][value]=pending'}}">
+            <a href="{{ route('filament.mod.resources.member-requests.index'). '?filters[status][value]=pending'}}">
                 Member Requests
             </a>
         </li>

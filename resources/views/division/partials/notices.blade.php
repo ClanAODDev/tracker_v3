@@ -16,7 +16,7 @@
         <x-notice
             type="warning"
             icon="fa-user-plus"
-            :cta="route('filament.mod.resources.member-requests.index') . '?tableFilters[status][value]=pending'"
+            :cta="route('filament.mod.resources.member-requests.index') . '?filters[status][value]=pending'"
             ctaLabel="Manage Requests"
         >
             There {{ $pendingCount === 1 ? 'is' : 'are' }} <code>{{ $pendingCount }}</code> pending {{ Str::plural('member request', $pendingCount) }}.
@@ -80,7 +80,7 @@
     <x-notice
         type="info"
         icon="fa-exchange-alt"
-        :cta="route('filament.mod.resources.transfers.index') . '?tableFilters[incomplete][isActive]=true&tableFilters[transferring_to][value]=' . $division->id"
+        :cta="route('filament.mod.resources.transfers.index') . '?filters[incomplete][isActive]=true&filters[transferring_to][value]=' . $division->id"
         ctaLabel="Manage Transfers"
     >
         There {{ count($pendingTransfers) === 1 ? 'is' : 'are' }} <code>{{ count($pendingTransfers) }}</code> pending incoming {{ Str::plural('transfer', count($pendingTransfers)) }}.

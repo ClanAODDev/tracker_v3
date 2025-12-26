@@ -15,9 +15,11 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Tests\Traits\CreatesPendingActionItems;
 
 final class PendingActionsDataTest extends TestCase
 {
+    use CreatesPendingActionItems;
     use RefreshDatabase;
 
     protected Division $division;
@@ -37,6 +39,9 @@ final class PendingActionsDataTest extends TestCase
         $router = app('router');
         $router->get('/mod/member-awards', fn () => null)
             ->name('filament.mod.resources.member-awards.index');
+        $router->get('/admin/tickets', fn () => null)
+            ->name('filament.admin.resources.tickets.index');
+        $router->getRoutes()->refreshNameLookups();
     }
 
     #[Test]
@@ -51,7 +56,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $clanAwardAction = $pendingActions->get('clan_award_requests');
+        $clanAwardAction = $pendingActions->get('clan-award-requests');
         $this->assertNotNull($clanAwardAction);
         $this->assertTrue($clanAwardAction->adminOnly);
     }
@@ -76,9 +81,9 @@ final class PendingActionsDataTest extends TestCase
         $allActions = $pendingActions->actions;
         $divisionActions = $pendingActions->divisionActions();
 
-        $this->assertTrue($allActions->contains(fn ($a) => $a->key === 'clan_award_requests'));
-        $this->assertFalse($divisionActions->contains(fn ($a) => $a->key === 'clan_award_requests'));
-        $this->assertTrue($divisionActions->contains(fn ($a) => $a->key === 'award_requests'));
+        $this->assertTrue($allActions->contains(fn ($a) => $a->key === 'clan-award-requests'));
+        $this->assertFalse($divisionActions->contains(fn ($a) => $a->key === 'clan-award-requests'));
+        $this->assertTrue($divisionActions->contains(fn ($a) => $a->key === 'award-requests'));
     }
 
     #[Test]
@@ -93,7 +98,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $this->assertNull($pendingActions->get('clan_award_requests'));
+        $this->assertNull($pendingActions->get('clan-award-requests'));
     }
 
     #[Test]
@@ -108,7 +113,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $awardAction = $pendingActions->get('award_requests');
+        $awardAction = $pendingActions->get('award-requests');
         $this->assertNotNull($awardAction);
         $this->assertEquals(1, $awardAction->count);
         $this->assertFalse($awardAction->adminOnly);
@@ -126,7 +131,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $this->assertNull($pendingActions->get('award_requests'));
+        $this->assertNull($pendingActions->get('award-requests'));
     }
 
     #[Test]
@@ -142,7 +147,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $leaveAction = $pendingActions->get('pending_leaves');
+        $leaveAction = $pendingActions->get('pending-leaves');
         $this->assertNotNull($leaveAction);
         $this->assertEquals(1, $leaveAction->count);
     }
@@ -160,7 +165,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $this->assertNull($pendingActions->get('pending_leaves'));
+        $this->assertNull($pendingActions->get('pending-leaves'));
     }
 
     #[Test]
@@ -175,7 +180,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $voiceAction = $pendingActions->get('voice_issues');
+        $voiceAction = $pendingActions->get('voice-issues');
         $this->assertNotNull($voiceAction);
         $this->assertEquals(1, $voiceAction->count);
     }
@@ -194,7 +199,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $unassignedAction = $pendingActions->get('unassigned_members');
+        $unassignedAction = $pendingActions->get('unassigned-members');
         $this->assertNotNull($unassignedAction);
         $this->assertStringContainsString('#platoons', $unassignedAction->url);
     }
@@ -214,7 +219,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $noSquadAction = $pendingActions->get('unassigned_to_squad');
+        $noSquadAction = $pendingActions->get('unassigned-to-squad');
         $this->assertNotNull($noSquadAction);
         $this->assertEquals('no-squad-modal', $noSquadAction->modalTarget);
     }
@@ -248,6 +253,115 @@ final class PendingActionsDataTest extends TestCase
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
         $this->assertEquals(5, $pendingActions->total());
+    }
+
+    #[Test]
+    public function admin_sees_admin_only_action_types(): void
+    {
+        $user = $this->createUserWithRole('admin', Position::COMMANDING_OFFICER);
+
+        $this->createClanAwardRequests();
+        $this->createOpenTickets();
+
+        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+
+        $this->assertTrue($pendingActions->hasAnyActions());
+        $this->assertNotNull($pendingActions->get('clan-award-requests'));
+        $this->assertNotNull($pendingActions->get('open-tickets'));
+    }
+
+    #[Test]
+    public function senior_leader_sees_division_action_types(): void
+    {
+        $user = $this->createUserWithRole('sr_ldr', Position::COMMANDING_OFFICER);
+
+        $this->createAllPendingActionItems($this->division);
+
+        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+
+        $this->assertTrue($pendingActions->hasAnyActions());
+        $this->assertNotNull($pendingActions->get('inactive-members'));
+        $this->assertNotNull($pendingActions->get('award-requests'));
+        $this->assertNotNull($pendingActions->get('pending-transfers'));
+        $this->assertNotNull($pendingActions->get('pending-leaves'));
+        $this->assertNotNull($pendingActions->get('voice-issues'));
+        $this->assertNotNull($pendingActions->get('unassigned-members'));
+        $this->assertNotNull($pendingActions->get('unassigned-to-squad'));
+    }
+
+    #[Test]
+    public function division_actions_excludes_all_admin_only_items(): void
+    {
+        $user = $this->createUserWithRole('admin', Position::COMMANDING_OFFICER);
+
+        $this->createClanAwardRequests();
+        $this->createOpenTickets();
+
+        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+        $divisionActions = $pendingActions->divisionActions();
+
+        $this->assertFalse($divisionActions->contains(fn ($a) => $a->key === 'clan-award-requests'));
+        $this->assertFalse($divisionActions->contains(fn ($a) => $a->key === 'open-tickets'));
+    }
+
+    #[Test]
+    public function home_page_shows_admin_only_actions_for_admin(): void
+    {
+        $user = $this->createUserWithRole('admin', Position::COMMANDING_OFFICER);
+
+        $this->createClanAwardRequests();
+        $this->createOpenTickets();
+
+        $response = $this->actingAs($user)->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Clan Award');
+        $response->assertSee('Open Ticket');
+    }
+
+    #[Test]
+    public function home_page_shows_division_actions_for_senior_leader(): void
+    {
+        $user = $this->createUserWithRole('sr_ldr', Position::COMMANDING_OFFICER);
+
+        $this->createDivisionAwardRequests($this->division);
+        $this->createVoiceIssues($this->division);
+
+        $response = $this->actingAs($user)->get(route('home'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Award');
+        $response->assertSee('Voice Issue');
+    }
+
+    #[Test]
+    public function division_page_excludes_admin_only_actions_for_admin(): void
+    {
+        $user = $this->createUserWithRole('admin', Position::COMMANDING_OFFICER);
+
+        $this->createClanAwardRequests();
+        $this->createOpenTickets();
+
+        $response = $this->actingAs($user)->get(route('division', $this->division));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('Clan Award');
+        $response->assertDontSee('Open Ticket');
+    }
+
+    #[Test]
+    public function division_page_shows_division_actions_for_senior_leader(): void
+    {
+        $user = $this->createUserWithRole('sr_ldr', Position::COMMANDING_OFFICER);
+
+        $this->createDivisionAwardRequests($this->division);
+        $this->createVoiceIssues($this->division);
+
+        $response = $this->actingAs($user)->get(route('division', $this->division));
+
+        $response->assertStatus(200);
+        $response->assertSee('Award');
+        $response->assertSee('Voice Issue');
     }
 
     protected function createUserWithRole(string $roleName, ?Position $position = null): User

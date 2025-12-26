@@ -6,8 +6,6 @@ use App\Data\DivisionShowData;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Census;
-use App\Models\Division;
-use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;

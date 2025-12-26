@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Enums\Position;
 use App\Models\DivisionTag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

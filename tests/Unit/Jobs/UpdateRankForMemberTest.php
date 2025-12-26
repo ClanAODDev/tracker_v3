@@ -7,7 +7,6 @@ use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
 use App\Notifications\Channel\NotifyDivisionMemberPromotion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;

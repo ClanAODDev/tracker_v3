@@ -5,7 +5,6 @@ namespace Tests\Unit\Jobs;
 use App\Jobs\UpdateDivisionForMember;
 use App\Models\Transfer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;

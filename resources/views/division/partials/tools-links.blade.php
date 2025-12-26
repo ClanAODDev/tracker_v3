@@ -60,7 +60,7 @@
     @can('create', \App\Models\Leave::class)
         <a href="{{ route('filament.mod.resources.leaves.index') }}" class="tool-card">
             <i class="fa fa-calendar-alt"></i>
-            <span>LOAs</span>
+            <span>Leave</span>
         </a>
     @endcan
 

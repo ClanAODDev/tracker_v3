@@ -3,7 +3,6 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\AddClanMember;
-use App\Services\AODForumService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;

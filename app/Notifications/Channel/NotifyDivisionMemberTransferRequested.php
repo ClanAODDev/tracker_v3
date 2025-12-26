@@ -74,11 +74,11 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
         $divisionId = $notifiable->id;
 
         $filters = [
-            'tableFilters[incomplete][isActive]' => 'true',
+            'filters[incomplete][isActive]' => 'true',
         ];
 
         $direction = ($this->type === 'INCOMING') ? 'to' : 'from';
-        $filters["tableFilters[transferring_{$direction}][value]"] = $divisionId;
+        $filters["filters[transferring_{$direction}][value]"] = $divisionId;
 
         $label = strtolower($this->type);
 

@@ -18,7 +18,7 @@
 
     <div class="container-fluid home-container">
         @include('home.partials.my-division')
-        @include('division.partials.pending-actions', ['division' => $myDivision])
+        @include('home.partials.pending-actions')
 
         <div class="leaderboard-section">
             @include('home.partials.division-leaderboard')

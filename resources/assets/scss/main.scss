@@ -725,8 +725,8 @@ body.no-animations {
 
 .division-tools {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2px;
     background: var(--color-bg-dark);
     border-radius: 8px;
     overflow: visible;
@@ -964,27 +964,45 @@ body.no-animations {
 .pending-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 20px;
-    background-color: var(--color-bg-panel);
-    background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 4px,
-        rgba(0, 0, 0, 0.08) 4px,
-        rgba(0, 0, 0, 0.08) 16px
-    );
+    background: linear-gradient(135deg, rgba(247, 175, 62, 0.08) 0%, var(--color-bg-panel) 50%, var(--color-bg-dark) 100%);
+    border: 1px solid rgba(247, 175, 62, 0.25);
+    border-left: 3px solid var(--color-accent);
     border-radius: 8px;
-    padding: 12px 16px;
+    padding: 14px 18px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(247, 175, 62, 0.1);
+}
+
+.pending-actions-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-accent);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding-right: 14px;
+    border-right: 1px solid rgba(247, 175, 62, 0.3);
+    margin-right: 2px;
+    text-shadow: 0 0 20px rgba(247, 175, 62, 0.3);
+
+    i {
+        font-size: 13px;
+        filter: drop-shadow(0 0 4px rgba(247, 175, 62, 0.4));
+    }
 }
 
 .pending-action {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 8px 14px;
     background: var(--color-bg-dark);
-    border-radius: 6px;
+    border: 1px solid transparent;
+    border-radius: 20px;
     color: var(--color-gray-300);
     text-decoration: none;
     font-size: 13px;
@@ -992,7 +1010,7 @@ body.no-animations {
 
     i {
         color: var(--color-muted);
-        font-size: 14px;
+        font-size: 13px;
     }
 
     &:visited {
@@ -1002,28 +1020,47 @@ body.no-animations {
 
     &:hover {
         background: var(--color-bg-darker);
+        border-color: var(--color-border);
         color: var(--color-white);
         text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 
         i {
             color: var(--color-accent);
+        }
+    }
+
+    &--default {
+        .pending-action-count {
+            background: var(--color-bg-darker);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
         }
     }
 
     &--warning {
-        background: rgba(247, 175, 62, 0.15);
+        background: rgba(247, 175, 62, 0.12);
+        border-color: rgba(247, 175, 62, 0.3);
 
         i {
             color: var(--color-accent);
         }
 
+        .pending-action-count {
+            color: var(--color-accent);
+        }
+
         &:hover {
-            background: rgba(247, 175, 62, 0.25);
+            background: rgba(247, 175, 62, 0.2);
+            border-color: rgba(247, 175, 62, 0.5);
         }
     }
 
     &--accent {
-        background: rgba(155, 89, 182, 0.15);
+        background: rgba(155, 89, 182, 0.12);
+        border-color: rgba(155, 89, 182, 0.3);
 
         i {
             color: #9b59b6;
@@ -1034,18 +1071,149 @@ body.no-animations {
         }
 
         &:hover {
-            background: rgba(155, 89, 182, 0.25);
+            background: rgba(155, 89, 182, 0.2);
+            border-color: rgba(155, 89, 182, 0.5);
         }
     }
 }
 
 .pending-action-count {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-white);
 }
 
 .pending-action-label {
     color: var(--color-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pending-actions--desktop {
+    display: flex;
+}
+
+.pending-actions--mobile {
+    display: none;
+}
+
+.pending-actions-total {
+    background: var(--color-accent);
+    color: var(--color-bg-dark);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 4px;
+}
+
+.pending-actions-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--color-bg-dark);
+    border: 1px solid rgba(247, 175, 62, 0.3);
+    border-radius: 20px;
+    color: var(--color-gray-300);
+    font-size: 13px;
+    cursor: pointer;
+    @include transition(all 0.2s);
+
+    &:hover {
+        background: var(--color-bg-darker);
+        border-color: rgba(247, 175, 62, 0.5);
+    }
+
+    i {
+        font-size: 10px;
+        color: var(--color-accent);
+    }
+}
+
+.pending-actions-dropdown {
+    background: var(--color-bg-panel);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 8px 0;
+    min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    right: 0;
+    left: auto;
+    z-index: 1050;
+
+    li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        color: var(--color-gray-300);
+        text-decoration: none;
+        @include transition(background 0.15s);
+
+        &:hover {
+            background: var(--color-bg-dark);
+            color: var(--color-white);
+        }
+
+        i {
+            color: var(--color-accent);
+            width: 16px;
+            text-align: center;
+        }
+    }
+}
+
+.pending-actions-dropdown-label {
+    flex: 1;
+    font-size: 13px;
+}
+
+.pending-actions-dropdown-count {
+    background: var(--color-bg-darker);
+    color: var(--color-white);
+    font-weight: 600;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .pending-actions--desktop {
+        display: none;
+    }
+
+    .pending-actions--mobile {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        border-left: none;
+
+        .pending-actions-header {
+            justify-content: center;
+            border-right: none;
+            padding-right: 0;
+            margin-right: 0;
+
+            > i {
+                display: none;
+            }
+        }
+
+        .dropdown {
+            width: 100%;
+
+            .pending-actions-dropdown {
+                width: 100%;
+            }
+        }
+
+        .pending-actions-dropdown-toggle {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 }
 
 .no-squad-group {

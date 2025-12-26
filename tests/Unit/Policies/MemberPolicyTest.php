@@ -2,9 +2,7 @@
 
 namespace Tests\Unit\Policies;
 
-use App\Enums\Position;
 use App\Enums\Rank;
-use App\Models\Member;
 use App\Policies\MemberPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
