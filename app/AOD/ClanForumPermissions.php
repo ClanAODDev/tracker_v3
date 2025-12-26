@@ -76,8 +76,10 @@ class ClanForumPermissions
 
     private function assignRole(string $role)
     {
-        Log::info("Role {$role} granted to user " . auth()->id());
+        $user = auth()->user();
 
-        return auth()->user()->assignRole($role);
+        Log::info("Role {$role} granted to {$user->name} ({$user->id})");
+
+        return $user->assignRole($role);
     }
 }
