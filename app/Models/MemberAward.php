@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MemberAward extends Model
 {
+    use HasFactory;
+
     protected $table = 'award_member';
 
     protected $guarded = [];
@@ -19,11 +22,6 @@ class MemberAward extends Model
     public function requester()
     {
         return $this->belongsTo(Member::class);
-    }
-
-    public function division()
-    {
-        return $this->hasManyThrough(Division::class, Award::class, 'id', 'id', 'award_id', 'division_id');
     }
 
     public function award()

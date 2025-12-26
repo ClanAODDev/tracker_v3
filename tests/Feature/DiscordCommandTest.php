@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Division;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -12,12 +14,20 @@ use Tests\TestCase;
  */
 final class DiscordCommandTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function a_discord_command_with_a_valid_token_returns_successful()
     {
+        Division::factory()->create([
+            'name' => 'Planetside',
+            'abbreviation' => 'ps2',
+            'active' => true,
+        ]);
+
         $token = 'a-test-token';
 
-        config()->set('app.aod.bot_cmd_tokens', $token);
+        config()->set('aod.bot_cmd_tokens', $token);
 
         $response = $this->json('GET', '/bot/commands/division?value=ps2', [
             'token' => $token,
@@ -36,7 +46,7 @@ final class DiscordCommandTest extends TestCase
     {
         $token = 'a-test-token';
 
-        config()->set('app.aod.bot_cmd_tokens', $token);
+        config()->set('aod.bot_cmd_tokens', $token);
 
         $response = $this->json('GET', '/bot/commands/foo', [
             'token' => $token,

@@ -21,13 +21,14 @@ class DivisionFactory extends Factory
      */
     public function definition(): array
     {
-        $game = $this->faker->game;
+        $uniqueId = $this->faker->unique()->numberBetween(1000, 9999);
+        $name = 'Test Division ' . $uniqueId;
 
         return [
-            'name' => $game['name'],
-            'slug' => Str::slug($game['name']),
+            'name' => $name,
+            'slug' => Str::slug($name),
             'handle_id' => Handle::factory(),
-            'abbreviation' => strtolower($game['abbreviation']),
+            'abbreviation' => 'td' . $uniqueId,
             'description' => $this->faker->sentence,
             'forum_app_id' => rand(100, 999),
             'active' => true,
