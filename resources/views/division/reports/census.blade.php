@@ -44,6 +44,11 @@
             </div>
         </div>
 
+        <div class="census-schedule-note">
+            <i class="fa fa-info-circle"></i>
+            Census data is collected automatically every Sunday at midnight (server time).
+        </div>
+
         @include('division.partials.census-graph')
 
         @include('division.forms.census')

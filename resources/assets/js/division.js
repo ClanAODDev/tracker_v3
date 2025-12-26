@@ -227,29 +227,61 @@ var Division = Division || {};
       var ctx = $('.promotions-chart');
 
       if (ctx.length) {
-        var myDoughnutChart = new Chart(ctx, {
-          type: 'doughnut',
+        var colors = ['#949ba2', '#0f83c9', '#1bbf89', '#f7af3e', '#56c0e0', '#db524b'];
+        var values = ctx.data('values');
+        var labels = ctx.data('labels');
+
+        new Chart(ctx, {
+          type: 'bar',
           data: {
-            datasets: [
-              {
-                data: ctx.data('values'),
-                borderWidth: 0,
-                backgroundColor: [
-                  '#949ba2', '#0f83c9', '#1bbf89', '#f7af3e', '#56c0e0', '#db524b'
-                ]
-              }],
-            labels: ctx.data('labels'),
+            labels: labels,
+            datasets: [{
+              label: 'Promotions',
+              data: values,
+              backgroundColor: labels.map(function(_, i) {
+                return colors[i % colors.length];
+              }),
+              borderWidth: 0,
+              borderRadius: 4,
+              barThickness: 24
+            }]
           },
           options: {
-
-            legend: {
-              position: 'bottom',
-              labels: {
-                boxWidth: 5,
-                fontColor: '#949ba2'
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
               },
-              label: {
-                fullWidth: true
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                padding: 10,
+                callbacks: {
+                  label: function(context) {
+                    return context.parsed.x + ' promotions';
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                ticks: {
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  font: { size: 11 },
+                  stepSize: 1
+                }
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  font: { size: 12 }
+                }
               }
             }
           }

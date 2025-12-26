@@ -17,11 +17,10 @@
 
         @include('division.partials.select-panel')
 
-        @include('division.partials.filter-promotions')
-
         @if ($promotions->count())
             @include('division.partials.member-promotions')
         @else
+            @include('division.partials.filter-promotions')
             <div class="report-empty">
                 <i class="fa fa-medal"></i>
                 <h4>No Promotions Found</h4>

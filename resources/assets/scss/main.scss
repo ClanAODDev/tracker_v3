@@ -8092,6 +8092,19 @@ pre.code-toolbar > .toolbar span:focus {
     color: var(--color-danger);
 }
 
+.census-schedule-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-bottom: 16px;
+
+    i {
+        color: var(--color-info);
+    }
+}
+
 .report-filter {
     display: flex;
     align-items: flex-end;
@@ -8125,6 +8138,12 @@ pre.code-toolbar > .toolbar span:focus {
 
 .report-filter-group .form-control {
     min-width: 160px;
+}
+
+.report-filter-presets {
+    display: flex;
+    gap: 8px;
+    margin-left: 8px;
 }
 
 .report-empty {
@@ -8536,15 +8555,23 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 .promotions-content {
-    display: grid;
-    grid-template-columns: 1fr 300px;
+    display: flex;
+    flex-direction: column;
     gap: 24px;
 }
 
-.promotions-main {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.promotions-period-form {
+    margin: 0;
+}
+
+.promotions-period-form .form-control {
+    min-width: 160px;
+}
+
+.promotions-main-row {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
 }
 
 .promotions-table-container {
@@ -8613,6 +8640,50 @@ pre.code-toolbar > .toolbar span:focus {
     color: var(--color-accent);
 }
 
+.promotions-rank-group {
+    border-bottom: 1px solid var(--overlay-light);
+}
+
+.promotions-rank-group:last-child {
+    border-bottom: none;
+}
+
+.promotions-rank-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: var(--overlay-light);
+}
+
+.promotions-rank-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.promotions-rank-count {
+    font-size: 12px;
+    color: var(--color-muted);
+    background: var(--color-bg-main);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.promotions-rank-group .promotions-table {
+    margin-bottom: 0;
+}
+
+.promotions-rank-group .promotions-table tbody td {
+    padding: 10px 20px;
+}
+
+.promotions-rank-group .promotions-table tbody td:last-child {
+    text-align: right;
+    color: var(--color-muted);
+    font-size: 13px;
+}
+
 .promotions-sidebar {
     display: flex;
     flex-direction: column;
@@ -8629,6 +8700,9 @@ pre.code-toolbar > .toolbar span:focus {
 
 .promotions-chart-header,
 .promotions-share-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 14px 20px;
     border-bottom: 1px solid var(--overlay-light);
 }
@@ -8667,23 +8741,8 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 @media (max-width: 992px) {
-    .promotions-content {
+    .promotions-main-row {
         grid-template-columns: 1fr;
-    }
-
-    .promotions-sidebar {
-        flex-direction: row;
-    }
-
-    .promotions-chart-container,
-    .promotions-share-container {
-        flex: 1;
-    }
-}
-
-@media (max-width: 768px) {
-    .promotions-sidebar {
-        flex-direction: column;
     }
 }
 
