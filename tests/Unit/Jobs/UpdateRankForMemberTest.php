@@ -6,8 +6,10 @@ use App\Enums\Rank;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
 use App\Notifications\Channel\NotifyDivisionMemberPromotion;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Mockery;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -18,11 +20,16 @@ class UpdateRankForMemberTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
+    protected ForumProcedureService $procedureService;
+
     protected function setUp(): void
     {
         parent::setUp();
         config(['aod.rank.update_forums' => false]);
         Notification::fake();
+
+        $this->procedureService = Mockery::mock(ForumProcedureService::class);
+        $this->procedureService->shouldReceive('setUserRank')->andReturn(null);
     }
 
     public function test_job_can_be_instantiated()
@@ -57,7 +64,7 @@ class UpdateRankForMemberTest extends TestCase
         ]);
 
         $job = new UpdateRankForMember($action);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         $member->refresh();
         $this->assertEquals(Rank::CORPORAL, $member->rank);
@@ -78,7 +85,7 @@ class UpdateRankForMemberTest extends TestCase
         ]);
 
         $job = new UpdateRankForMember($action);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         $member->refresh();
         $this->assertNotNull($member->last_promoted_at);
@@ -100,7 +107,7 @@ class UpdateRankForMemberTest extends TestCase
         ]);
 
         $job = new UpdateRankForMember($action);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         $member->refresh();
         $this->assertEquals(
@@ -123,7 +130,7 @@ class UpdateRankForMemberTest extends TestCase
         ]);
 
         $job = new UpdateRankForMember($action);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         Notification::assertSentTo($division, NotifyDivisionMemberPromotion::class);
     }
@@ -142,7 +149,7 @@ class UpdateRankForMemberTest extends TestCase
         ]);
 
         $job = new UpdateRankForMember($action);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         Notification::assertNotSentTo($division, NotifyDivisionMemberPromotion::class);
     }

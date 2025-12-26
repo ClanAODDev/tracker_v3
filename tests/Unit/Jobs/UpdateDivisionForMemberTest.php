@@ -31,11 +31,6 @@ class UpdateDivisionForMemberTest extends TestCase
         $this->assertInstanceOf(UpdateDivisionForMember::class, $job);
     }
 
-    public function test_job_has_correct_procedure_constant()
-    {
-        $this->assertEquals('set_user_division', UpdateDivisionForMember::PROCEDURE_SET_DIVISION);
-    }
-
     public function test_job_stores_transfer_reference()
     {
         $fromDivision = $this->createActiveDivision();

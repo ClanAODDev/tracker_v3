@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\AOD\Traits\Procedureable;
 use App\Enums\Position;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
@@ -14,27 +13,22 @@ use App\Models\RankAction;
 use App\Models\Transfer;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
-use DB;
+use App\Services\ForumProcedureService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
-/**
- * Class RecruitingController.
- */
 class RecruitingController extends Controller
 {
     use AuthorizesRequests;
-    use Procedureable;
 
-    /**
-     * RecruitingController constructor.
-     */
-    public function __construct()
-    {
+    public function __construct(
+        protected ForumProcedureService $procedureService
+    ) {
         $this->middleware('auth');
     }
 
@@ -205,9 +199,9 @@ class RecruitingController extends Controller
             ];
         }
 
-        $result = $this->callProcedure('get_user', $member_id);
+        $result = $this->procedureService->getUser($member_id);
 
-        if (! property_exists($result, 'usergroupid')) {
+        if (! $result || ! property_exists($result, 'usergroupid')) {
             return [
                 'is_member' => false,
                 'valid_group' => false,

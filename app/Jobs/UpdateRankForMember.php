@@ -2,39 +2,31 @@
 
 namespace App\Jobs;
 
-use App\AOD\Traits\Procedureable;
 use App\Enums\Rank;
 use App\Models\RankAction;
 use App\Notifications\Channel\NotifyAdminSgtRequestComplete;
 use App\Notifications\Channel\NotifyDivisionMemberPromotion;
+use App\Services\ForumProcedureService;
 use App\Traits\RetryableJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
 class UpdateRankForMember implements ShouldQueue
 {
-    use Procedureable;
     use Queueable;
     use RetryableJob;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct(
         public RankAction $action
     ) {}
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function handle(ForumProcedureService $procedureService): void
     {
-        // update the forums
         if (config('aod.rank.update_forums')) {
-            $this->callProcedure('set_user_rank', [
+            $procedureService->setUserRank(
                 $this->action->member->clan_id,
-                $this->action->rank->getLabel(),
-            ]);
+                $this->action->rank->getLabel()
+            );
         }
 
         if ($this->action->rank->value >= Rank::SERGEANT->value) {

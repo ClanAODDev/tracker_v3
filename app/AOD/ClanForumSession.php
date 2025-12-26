@@ -2,22 +2,19 @@
 
 namespace App\AOD;
 
-use App\AOD\Traits\Procedureable;
 use App\Models\Member;
 use App\Models\User;
+use App\Services\ForumProcedureService;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class ClanForumSession
 {
-    use Procedureable;
+    protected string $sessionKey = 'aod_sessionhash';
 
-    /**
-     * Key containing AOD forum session data.
-     *
-     * @var string
-     */
-    public $sessionKey = 'aod_sessionhash';
+    public function __construct(
+        protected ForumProcedureService $procedureService
+    ) {}
 
     public function exists(): bool
     {
@@ -52,7 +49,7 @@ class ClanForumSession
 
         $memberGroupIds = array_map('intval', explode(',', $sessionData->membergroupids));
         $roles = array_merge($memberGroupIds, [$sessionData->usergroupid]);
-        (new ClanForumPermissions)->handleAccountRoles($member->clan_id, $roles);
+        app(ClanForumPermissions::class)->handleAccountRoles($member->clan_id, $roles);
 
         return true;
     }
@@ -96,21 +93,14 @@ class ClanForumSession
         return $user;
     }
 
-    /**
-     * @return bool
-     */
-    private function getAODSession()
+    private function getAODSession(): ?object
     {
-        if (! isset($_COOKIE[$this->sessionKey])) {
-            return false;
+        $sessionHash = request()->cookie($this->sessionKey);
+
+        if (! $sessionHash) {
+            return null;
         }
 
-        try {
-            return $this->callProcedure('check_session', [
-                'session' => $_COOKIE[$this->sessionKey],
-            ]);
-        } catch (Exception $exception) {
-            return false;
-        }
+        return $this->procedureService->checkSession($sessionHash);
     }
 }

@@ -2,33 +2,26 @@
 
 namespace App\Jobs;
 
-use App\AOD\Traits\Procedureable;
 use App\Models\Transfer;
+use App\Services\ForumProcedureService;
 use App\Traits\RetryableJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
 class UpdateDivisionForMember implements ShouldQueue
 {
-    use Procedureable;
     use Queueable;
     use RetryableJob;
 
-    const PROCEDURE_SET_DIVISION = 'set_user_division';
+    public function __construct(
+        public Transfer $transfer
+    ) {}
 
-    /**
-     * Create a new job instance.
-     */
-    public function __construct(public Transfer $transfer) {}
-
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function handle(ForumProcedureService $procedureService): void
     {
-        $this->callProcedure(self::PROCEDURE_SET_DIVISION, [
+        $procedureService->setUserDivision(
             $this->transfer->member->clan_id,
-            $this->transfer->division->name,
-        ]);
+            $this->transfer->division->name
+        );
     }
 }

@@ -2,24 +2,24 @@
 
 namespace App\AOD;
 
-use App\AOD\Traits\Procedureable;
-use DB;
-use Log;
+use App\Services\ForumProcedureService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ClanForumPermissions
 {
-    use Procedureable;
+    public function __construct(
+        protected ForumProcedureService $procedureService
+    ) {}
 
-    /**
-     * Provision account role based on forum groups.
-     *
-     * @param  null  $groupIds
-     * @return null|void
-     */
-    public function handleAccountRoles($clanForumId, $groupIds = null)
+    public function handleAccountRoles(int $clanForumId, ?array $groupIds = null): void
     {
         if (empty($groupIds)) {
-            $data = $this->callProcedure('get_user', $clanForumId);
+            $data = $this->procedureService->getUser($clanForumId);
+
+            if (! $data) {
+                return;
+            }
 
             $groupIds = array_merge([$data->usergroupid], explode(',', $data->membergroupids));
         }
