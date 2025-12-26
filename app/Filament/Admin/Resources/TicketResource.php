@@ -43,62 +43,69 @@ class TicketResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
-                Section::make('Ticket Information')->schema([
-                    Select::make('ticket_type_id')
-                        ->relationship('type', 'name')
-                        ->label('Ticket Type')
-                        ->required()
-                        ->disabled(fn ($operation) => $operation === 'edit'),
+                Section::make('Ticket Information')
+                    ->columnSpanFull()
+                    ->schema([
+                        Select::make('ticket_type_id')
+                            ->relationship('type', 'name')
+                            ->label('Ticket Type')
+                            ->required()
+                            ->disabled(fn ($operation) => $operation === 'edit'),
 
-                    Select::make('state')
-                        ->options([
-                            'new' => 'New',
-                            'assigned' => 'Assigned',
-                            'resolved' => 'Resolved',
-                            'rejected' => 'Rejected',
-                        ])
-                        ->required()
-                        ->default('new')
-                        ->native(false),
+                        Select::make('state')
+                            ->options([
+                                'new' => 'New',
+                                'assigned' => 'Assigned',
+                                'resolved' => 'Resolved',
+                                'rejected' => 'Rejected',
+                            ])
+                            ->required()
+                            ->default('new')
+                            ->native(false),
 
-                    Select::make('division_id')
-                        ->label('Division')
-                        ->searchable()
-                        ->relationship('division', 'name')
-                        ->disabled(fn ($operation) => $operation === 'edit'),
+                        Select::make('division_id')
+                            ->label('Division')
+                            ->searchable()
+                            ->relationship('division', 'name')
+                            ->disabled(fn ($operation) => $operation === 'edit'),
 
-                    Textarea::make('description')
-                        ->required()
-                        ->minLength(25)
-                        ->rows(6)
-                        ->columnSpanFull(),
-                ])->columns(3),
+                        Textarea::make('description')
+                            ->required()
+                            ->minLength(25)
+                            ->rows(6)
+                            ->columnSpanFull(),
+                    ])->columns(3),
 
-                Section::make('Assignment')->schema([
-                    Select::make('caller_id')
-                        ->label('Caller')
-                        ->searchable()
-                        ->relationship('caller', 'name')
-                        ->disabled(fn ($operation) => $operation === 'edit'),
+                Section::make('Assignment')
+                    ->columnSpanFull()
+                    ->schema([
+                        Select::make('caller_id')
+                            ->label('Caller')
+                            ->searchable()
+                            ->relationship('caller', 'name')
+                            ->disabled(fn ($operation) => $operation === 'edit'),
 
-                    Select::make('owner_id')
-                        ->label('Assigned To')
-                        ->searchable()
-                        ->options(fn () => User::where('role_id', Role::ADMIN->value)->pluck('name', 'id'))
-                        ->placeholder('Unassigned'),
+                        Select::make('owner_id')
+                            ->label('Assigned To')
+                            ->searchable()
+                            ->options(fn () => User::where('role_id', Role::ADMIN->value)->pluck('name', 'id'))
+                            ->placeholder('Unassigned'),
 
-                    DateTimePicker::make('resolved_at')
-                        ->label('Resolved At')
-                        ->visible(fn ($record) => $record?->state === 'resolved' || $record?->state === 'rejected'),
-                ])->columns(3),
+                        DateTimePicker::make('resolved_at')
+                            ->label('Resolved At')
+                            ->visible(fn ($record) => $record?->state === 'resolved' || $record?->state === 'rejected'),
+                    ])->columns(3),
 
-                Section::make('Discord Integration')->schema([
-                    TextInput::make('external_message_id')
-                        ->label('Discord Message ID')
-                        ->readOnly()
-                        ->maxLength(36),
-                ])->collapsed(),
+                Section::make('Discord Integration')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('external_message_id')
+                            ->label('Discord Message ID')
+                            ->readOnly()
+                            ->maxLength(36),
+                    ])->collapsed(),
             ]);
     }
 

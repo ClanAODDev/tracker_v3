@@ -15,7 +15,6 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -36,55 +35,56 @@ class SquadResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components(fn (?Squad $record) => [
-                Grid::make()
+                Section::make('Basic Info')
+                    ->columnSpanFull()
                     ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('logo')
+                            ->maxLength(191)
+                            ->default(null),
+                    ])->columns(),
 
-                        Section::make('Basic Info')->schema([
-                            TextInput::make('name')
-                                ->required()
-                                ->maxLength(255),
-                            TextInput::make('logo')
-                                ->maxLength(191)
-                                ->default(null),
-                        ])->columns(),
+                Section::make('Leadership')
+                    ->columnSpanFull()
+                    ->schema([
+                        Select::make('leader_id')
+                            ->label('Leader')
+                            ->searchable()
+                            ->reactive()
+                            ->getSearchResultsUsing(function (string $search) use ($record) {
+                                $divisionId = $record->platoon->division_id;
+                                if (! $divisionId) {
+                                    return [];
+                                }
 
-                        Section::make('Leadership')->schema([
-                            Select::make('leader_id')
-                                ->label('Leader')
-                                ->searchable()
-                                ->reactive()
-                                ->getSearchResultsUsing(function (string $search) use ($record) {
-                                    $divisionId = $record->platoon->division_id;
-                                    if (! $divisionId) {
-                                        return [];
-                                    }
+                                return Member::query()
+                                    ->where('division_id', $divisionId)
+                                    ->where(function ($query) use ($search) {
+                                        $query->where('name', 'like', "%{$search}%")
+                                            ->orWhere('clan_id', 'like', "%{$search}%");
+                                    })
+                                    ->orderBy('name')
+                                    ->limit(50)
+                                    ->pluck('name', 'clan_id');
+                            })
+                            ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
+                                $value)->value('name'))
+                            ->helperText('Leave blank if position not yet assigned. Must be from the same division as the squad being assigned.')
+                            ->nullable(),
 
-                                    return Member::query()
-                                        ->where('division_id', $divisionId)
-                                        ->where(function ($query) use ($search) {
-                                            $query->where('name', 'like', "%{$search}%")
-                                                ->orWhere('clan_id', 'like', "%{$search}%");
-                                        })
-                                        ->orderBy('name')
-                                        ->limit(50)
-                                        ->pluck('name', 'clan_id');
-                                })
-                                ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
-                                    $value)->value('name'))
-                                ->helperText('Leave blank if position not yet assigned. Must be from the same division as the squad being assigned.')
-                                ->nullable(),
+                        Hidden::make('original_leader_id')
+                            ->reactive()
+                            ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id',
+                                $record?->leader_id)),
 
-                            Hidden::make('original_leader_id')
-                                ->reactive()
-                                ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id',
-                                    $record?->leader_id)),
-
-                            Placeholder::make('Note: Changing Leadership')
-                                ->content("This change will update the new leader's position to Squad Leader and the previous leader's position to Member. Will also reassign the new leader to this platoon and squad")
-                                ->visible(fn (callable $get
-                                ) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
-                        ]),
+                        Placeholder::make('Note: Changing Leadership')
+                            ->content("This change will update the new leader's position to Squad Leader and the previous leader's position to Member. Will also reassign the new leader to this platoon and squad")
+                            ->visible(fn (callable $get
+                            ) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
                     ]),
             ]);
     }

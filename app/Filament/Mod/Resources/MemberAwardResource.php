@@ -61,6 +61,7 @@ class MemberAwardResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Select::make('award_id')
                     ->relationship('award', 'name')
@@ -82,10 +83,12 @@ class MemberAwardResource extends Resource
                     ->columnSpanFull()
                     ->rows(5),
 
-                Section::make('Metadata')->schema([
-                    DateTimePicker::make('created_at')->default(now()),
-                    DateTimePicker::make('updated_at')->default(now()),
-                ])->columns()->hiddenOn(['edit', 'create']),
+                Section::make('Metadata')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('created_at')->default(now()),
+                        DateTimePicker::make('updated_at')->default(now()),
+                    ])->columns()->hiddenOn(['edit', 'create']),
 
             ]);
     }

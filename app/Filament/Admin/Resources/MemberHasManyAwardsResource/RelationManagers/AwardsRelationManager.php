@@ -25,6 +25,7 @@ class AwardsRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Select::make('award_id')
                     ->relationship('award', 'name'),
@@ -36,10 +37,12 @@ class AwardsRelationManager extends RelationManager
 
                 Toggle::make('approved')->hiddenOn('create'),
 
-                Section::make('Metadata')->schema([
-                    DateTimePicker::make('created_at')->default(now()),
-                    DateTimePicker::make('updated_at')->default(now()),
-                ])->columns(),
+                Section::make('Metadata')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('created_at')->default(now()),
+                        DateTimePicker::make('updated_at')->default(now()),
+                    ])->columns(),
             ]);
     }
 

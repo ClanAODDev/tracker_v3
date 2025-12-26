@@ -58,12 +58,16 @@ class ImpersonationController extends Controller
      */
     private function canImpersonate($user)
     {
-        // only admins can impersonate
-        if (! auth()->user()->isRole('admin')) {
+        $currentUser = auth()->user();
+
+        if ($currentUser->isDeveloper()) {
+            return true;
+        }
+
+        if (! $currentUser->isRole('admin')) {
             return false;
         }
 
-        // can't impersonate developers
         if ($user->isDeveloper()) {
             return false;
         }

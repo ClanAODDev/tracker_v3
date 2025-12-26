@@ -40,21 +40,25 @@ class PlatoonResource extends Resource
         $divisionId = Division::whereSlug(request('division'))->first()->id ?? auth()->user()->member->division_id;
 
         return $schema
+            ->columns(1)
             ->components(fn (?Platoon $record) => [
 
                 Hidden::make('division_id')->default($divisionId),
 
-                Section::make('Basic Info')->schema([
-                    TextInput::make('name')
-                        ->required()
-                        ->maxLength(255),
-                    TextInput::make('logo')
-                        ->placeholder('https://')
-                        ->maxLength(255)
-                        ->default(null),
-                ])->columns(),
+                Section::make('Basic Info')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('logo')
+                            ->placeholder('https://')
+                            ->maxLength(255)
+                            ->default(null),
+                    ])->columns(),
 
                 Section::make('Leadership')
+                    ->columnSpanFull()
                     ->hiddenOn('create')
                     ->schema([
                         Select::make('leader_id')

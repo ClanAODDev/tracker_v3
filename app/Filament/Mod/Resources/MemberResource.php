@@ -52,49 +52,60 @@ class MemberResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
-                Section::make('Clan Data')->schema([
-                    TextInput::make('clan_id')
-                        ->readOnly()
-                        ->required()
-                        ->numeric(),
-                    Select::make('recruiter_id')
-                        ->relationship('recruiter', 'name')
-                        ->searchable()
-                        ->nullable(),
-                    Select::make('last_trained_by')
-                        ->label('Last Trained By')
-                        ->helperText('Update when NCO training occurs')
-                        ->searchable()
-                        ->relationship('trainer', 'name'),
-                    TextInput::make('position')
-                        ->label('Position')
-                        ->disabled()
-                        ->dehydrated(false)
-                        ->helperText('Manage by editing division, platoon, or squad')
-                        ->formatStateUsing(fn ($state) => Position::from($state)->getLabel()),
-                ])->columns(),
+                Section::make('Clan Data')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('clan_id')
+                            ->readOnly()
+                            ->required()
+                            ->numeric(),
+                        Select::make('recruiter_id')
+                            ->relationship('recruiter', 'name')
+                            ->searchable()
+                            ->nullable(),
+                        Select::make('last_trained_by')
+                            ->label('Last Trained By')
+                            ->helperText('Update when NCO training occurs')
+                            ->searchable()
+                            ->relationship('trainer', 'name'),
+                        TextInput::make('position')
+                            ->label('Position')
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->helperText('Manage by editing division, platoon, or squad')
+                            ->formatStateUsing(fn ($state) => Position::from($state)->getLabel()),
+                    ])->columns(),
 
-                Section::make('Communications')->schema([
-                    TextInput::make('ts_unique_id')
-                        ->disabled(),
-                    TextInput::make('discord')
-                        ->disabled(),
-                    TextInput::make('discord_id')
-                        ->disabled(),
-                ])->columns(3),
-                Section::make('Activity')->schema([
-                    DateTimePicker::make('last_voice_activity')->readOnly(),
-                    DateTimePicker::make('last_activity')->readOnly(),
-                ])->columns(),
+                Section::make('Communications')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('ts_unique_id')
+                            ->disabled(),
+                        TextInput::make('discord')
+                            ->disabled(),
+                        TextInput::make('discord_id')
+                            ->disabled(),
+                    ])->columns(3),
 
-                Section::make('Dates')->schema([
-                    DateTimePicker::make('join_date')->disabled(),
-                    DateTimePicker::make('last_promoted_at')->disabled(),
-                    DateTimePicker::make('last_trained_at')->disabled(),
-                ])->columns(3),
+                Section::make('Activity')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('last_voice_activity')->readOnly(),
+                        DateTimePicker::make('last_activity')->readOnly(),
+                    ])->columns(),
+
+                Section::make('Dates')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('join_date')->disabled(),
+                        DateTimePicker::make('last_promoted_at')->disabled(),
+                        DateTimePicker::make('last_trained_at')->disabled(),
+                    ])->columns(3),
 
                 Section::make('Division Assignment')
+                    ->columnSpanFull()
                     ->schema([
                         Placeholder::make('Division')
                             ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
@@ -142,6 +153,7 @@ class MemberResource extends Resource
 
                 Section::make('Part-time Divisions')
                     ->id('part-time-divisions')
+                    ->columnSpanFull()
                     ->collapsible()
                     ->collapsed()
                     ->description('Select any additional divisions this member is part-time in.')
@@ -151,6 +163,7 @@ class MemberResource extends Resource
 
                 Section::make('Member Tags')
                     ->id('member-tags')
+                    ->columnSpanFull()
                     ->collapsible()
                     ->collapsed()
                     ->description('Assign tags to this member for tracking and organization.')
@@ -183,6 +196,7 @@ class MemberResource extends Resource
 
                 Section::make('In-game Handles')
                     ->id('ingame-handles')
+                    ->columnSpanFull()
                     ->description('In-game handles and alts for this member.')
                     ->collapsed()
                     ->collapsible()
@@ -195,6 +209,7 @@ class MemberResource extends Resource
                     ]),
 
                 Section::make('Forum Metadata')
+                    ->columnSpanFull()
                     ->description('Forum settings and metadata for this member.')
                     ->collapsible()
                     ->collapsed()

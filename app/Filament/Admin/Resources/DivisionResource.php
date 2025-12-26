@@ -49,8 +49,10 @@ class DivisionResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 Section::make('Tracker Details')
+                    ->columnSpanFull()
                     ->schema([
                         FileUpload::make('logo')
                             ->label('Logo (48x48)')
@@ -88,6 +90,7 @@ class DivisionResource extends Resource
                     ]),
 
                 Section::make('Leadership Management')
+                    ->columnSpanFull()
                     ->description('Manage division leaders')
                     ->hiddenOn('create')
                     ->schema([
@@ -140,6 +143,7 @@ class DivisionResource extends Resource
                     ]),
 
                 Section::make('Website')
+                    ->columnSpanFull()
                     ->hiddenOn('create')
                     ->schema([
                         Section::make('Website')
@@ -152,6 +156,7 @@ class DivisionResource extends Resource
                     ]),
 
                 Section::make('Forum Details')
+                    ->columnSpanFull()
                     ->description('Division must already have been created in the forums in order to populate these values')
                     ->schema([
                         TextInput::make('officer_role_id')
@@ -171,20 +176,19 @@ class DivisionResource extends Resource
                             ->numeric(),
                     ])->columns(),
 
-                Section::make('Extra settings')->schema([
-
-                    DateTimePicker::make('shutdown_at'),
-
-                    Toggle::make('show_on_site')
-                        ->label('Show on site')
-                        ->hint('Toggle on if division should be visible on the website')
-                        ->default(true),
-
-                    Toggle::make('active')
-                        ->label('Division Enabled')
-                        ->hint('Disabled divisions are not listed on the tracker or website')
-                        ->default(true),
-                ]),
+                Section::make('Extra settings')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('shutdown_at'),
+                        Toggle::make('show_on_site')
+                            ->label('Show on site')
+                            ->hint('Toggle on if division should be visible on the website')
+                            ->default(true),
+                        Toggle::make('active')
+                            ->label('Division Enabled')
+                            ->hint('Disabled divisions are not listed on the tracker or website')
+                            ->default(true),
+                    ])->columns(3),
 
             ]);
     }

@@ -43,78 +43,91 @@ class MemberResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                Section::make('Clan Data')->schema([
-                    TextInput::make('clan_id')
-                        ->required()
-                        ->numeric(),
-                    Select::make('rank')
-                        ->options(Rank::class)
-                        ->required(),
-                    Select::make('position')
-                        ->required()
-                        ->options(Position::class),
-                    TextInput::make('recruiter_id')
-                        ->numeric()
-                        ->default(null),
-                    Select::make('division_id')
-                        ->relationship('division', 'name')
-                        ->label('Division')
-                        ->required(),
-                ])->columns(2),
-                Section::make('Communications')->schema([
-                    TextInput::make('ts_unique_id')
-                        ->maxLength(255)
-                        ->default(null),
-                    TextInput::make('discord')
-                        ->maxLength(191)
-                        ->default(null),
-                    Select::make('last_voice_status')
-                        ->options(DiscordStatus::class)
-                        ->default(null),
-                    TextInput::make('discord_id')
-                        ->readOnly()
-                        ->default(null),
-                ])->columns(2),
-                Section::make('Activity')->schema([
-                    DateTimePicker::make('last_voice_activity'),
-                    DateTimePicker::make('last_activity'),
-                    DateTimePicker::make('last_ts_activity'),
-                ])->columns(3),
-
-                Section::make('Dates')->schema([
-                    DateTimePicker::make('join_date'),
-                    DateTimePicker::make('last_promoted_at'),
-                    DateTimePicker::make('last_trained_at'),
-                    TextInput::make('last_trained_by')
-                        ->numeric()
-                        ->default(null),
-                    DateTimePicker::make('xo_at'),
-                    DateTimePicker::make('co_at'),
-                ]),
-
-                Section::make('Forum Metadata')->schema([
-                    Section::make('Flags')->schema([
-                        Toggle::make('flagged_for_inactivity')->required(),
-                        Toggle::make('privacy_flag')
+                Section::make('Clan Data')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('clan_id')
+                            ->required()
+                            ->numeric(),
+                        Select::make('rank')
+                            ->options(Rank::class)
                             ->required(),
-                        Toggle::make('allow_pm')
+                        Select::make('position')
+                            ->required()
+                            ->options(Position::class),
+                        TextInput::make('recruiter_id')
+                            ->numeric()
+                            ->default(null),
+                        Select::make('division_id')
+                            ->relationship('division', 'name')
+                            ->label('Division')
                             ->required(),
+                    ])->columns(),
+
+                Section::make('Communications')
+                    ->columnSpanFull()
+                    ->schema([
+                        TextInput::make('ts_unique_id')
+                            ->maxLength(255)
+                            ->default(null),
+                        TextInput::make('discord')
+                            ->maxLength(191)
+                            ->default(null),
+                        Select::make('last_voice_status')
+                            ->options(DiscordStatus::class)
+                            ->default(null),
+                        TextInput::make('discord_id')
+                            ->readOnly()
+                            ->default(null),
+                    ])->columns(),
+
+                Section::make('Activity')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('last_voice_activity'),
+                        DateTimePicker::make('last_activity'),
+                        DateTimePicker::make('last_ts_activity'),
                     ])->columns(3),
 
-                    Section::make('Misc')->schema([
-                        TextInput::make('posts')
-                            ->required()
+                Section::make('Dates')
+                    ->columnSpanFull()
+                    ->schema([
+                        DateTimePicker::make('join_date'),
+                        DateTimePicker::make('last_promoted_at'),
+                        DateTimePicker::make('last_trained_at'),
+                        TextInput::make('last_trained_by')
                             ->numeric()
-                            ->default(0),
-                        Textarea::make('groups')
-                            ->readOnly(),
+                            ->default(null),
+                        DateTimePicker::make('xo_at'),
+                        DateTimePicker::make('co_at'),
+                    ])->columns(3),
+
+                Section::make('Forum Metadata')
+                    ->columnSpanFull()
+                    ->schema([
+                        Section::make('Flags')->schema([
+                            Toggle::make('flagged_for_inactivity')->required(),
+                            Toggle::make('privacy_flag')
+                                ->required(),
+                            Toggle::make('allow_pm')
+                                ->required(),
+                        ])->columns(3),
+
+                        Section::make('Misc')->schema([
+                            TextInput::make('posts')
+                                ->required()
+                                ->numeric()
+                                ->default(0),
+                            Textarea::make('groups')
+                                ->readOnly(),
+                        ])->columns(),
                     ]),
-                ]),
             ]);
     }
 

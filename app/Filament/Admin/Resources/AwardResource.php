@@ -40,6 +40,7 @@ class AwardResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 FileUpload::make('image')
                     ->directory('awards')
@@ -72,14 +73,16 @@ class AwardResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(100),
-                Section::make('Metadata')->schema([
-                    Toggle::make('active')
-                        ->default(true)
-                        ->required(),
-                    Toggle::make('allow_request')
-                        ->default(false)
-                        ->required(),
-                ])->columns(2),
+                Section::make('Metadata')
+                    ->columnSpanFull()
+                    ->schema([
+                        Toggle::make('active')
+                            ->default(true)
+                            ->required(),
+                        Toggle::make('allow_request')
+                            ->default(false)
+                            ->required(),
+                    ])->columns(2),
             ]);
     }
 

@@ -22,7 +22,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables;
@@ -56,61 +55,57 @@ class RankActionResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
 
-                Grid::make()
+                Section::make()
+                    ->columnSpanFull()
+                    ->hiddenOn('create')
                     ->schema([
+                        ViewField::make('status')
+                            ->view('filament.forms.components.status-badge')
+                            ->viewData(['record']),
+                        Fieldset::make('')->schema([
+                            Placeholder::make('member_name')
+                                ->label('Member Affected')
+                                ->hiddenOn('create')
+                                ->content(fn ($record) => $record->member->name),
 
-                        Section::make()
-                            ->hiddenOn('create')
-                            ->schema([
-                                ViewField::make('status')
-                                    ->view('filament.forms.components.status-badge')
-                                    ->viewData(['record']),
-                                Fieldset::make('')->schema([
-                                    Placeholder::make('member_name')
-                                        ->label('Member Affected')
-                                        ->hiddenOn('create')
-                                        ->content(fn ($record) => $record->member->name),
+                            Placeholder::make('requester_name')
+                                ->label('Recommended By')
+                                ->hiddenOn('create')
+                                ->content(fn ($record) => $record->requester->name),
 
-                                    Placeholder::make('requester_name')
-                                        ->label('Recommended By')
-                                        ->hiddenOn('create')
-                                        ->content(fn ($record) => $record->requester->name),
-
-                                    Placeholder::make('requester_name')
-                                        ->label('Approved By')
-                                        ->visible(fn ($record) => $record->approved_at && $record->approver)
-                                        ->hiddenOn('create')
-                                        ->content(fn ($record) => $record->approver->name),
-                                ])->columns(3),
-                                Select::make('rank')
-                                    ->options(Rank::class)
-                                    ->label('Recommended Rank')
-                                    ->disabledOn('edit'),
-                                Fieldset::make('Dates')->schema([
-                                    DateTimePicker::make('awarded_at')
-                                        ->visible(fn ($record
-                                        ) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
-                                        ->label('Awarded At')
-                                        ->readOnly(),
-                                    DateTimePicker::make('approved_at')
-                                        ->visible(fn ($record) => $record->approved_at)
-                                        ->readOnly(),
-                                    DateTimePicker::make('created_at')
-                                        ->label('Requested At')
-                                        ->readOnly(),
-                                ])->columns(3),
-                                RichEditor::make('justification')
-                                    ->required()
-                                    ->disabled(function ($record) {
-                                        return $record->requester_id !== auth()->user()->member_id;
-                                    })
-                                    ->columnSpanFull(),
-                            ])
-                            ->columnSpan(2),
-                    ])
-                    ->columns(),
+                            Placeholder::make('requester_name')
+                                ->label('Approved By')
+                                ->visible(fn ($record) => $record->approved_at && $record->approver)
+                                ->hiddenOn('create')
+                                ->content(fn ($record) => $record->approver->name),
+                        ])->columns(3),
+                        Select::make('rank')
+                            ->options(Rank::class)
+                            ->label('Recommended Rank')
+                            ->disabledOn('edit'),
+                        Fieldset::make('Dates')->schema([
+                            DateTimePicker::make('awarded_at')
+                                ->visible(fn ($record
+                                ) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
+                                ->label('Awarded At')
+                                ->readOnly(),
+                            DateTimePicker::make('approved_at')
+                                ->visible(fn ($record) => $record->approved_at)
+                                ->readOnly(),
+                            DateTimePicker::make('created_at')
+                                ->label('Requested At')
+                                ->readOnly(),
+                        ])->columns(3),
+                        RichEditor::make('justification')
+                            ->required()
+                            ->disabled(function ($record) {
+                                return $record->requester_id !== auth()->user()->member_id;
+                            })
+                            ->columnSpanFull(),
+                    ]),
 
             ]);
     }

@@ -32,6 +32,7 @@ class UserResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(1)
             ->components([
                 TextInput::make('name')
                     ->required()
@@ -49,6 +50,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->relationship('member', 'name'),
                 Section::make('Settings')
+                    ->columnSpanFull()
                     ->columns()
                     ->statePath('settings')
                     ->schema([
