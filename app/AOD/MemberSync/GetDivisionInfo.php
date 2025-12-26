@@ -25,16 +25,12 @@ class GetDivisionInfo
     public function __construct()
     {
         if (! config('aod.token')) {
-            throw new Exception('ERROR: AOD Token not defined in configuration.');
-            exit;
+            throw new Exception('AOD Token not defined in configuration.');
         }
 
         $this->data = $this->fetchData();
     }
 
-    /**
-     * Fetches member data per division.
-     */
     protected function fetchData(): array
     {
         $data = AODForumService::fetchInfo([
@@ -43,10 +39,14 @@ class GetDivisionInfo
             'type' => 'json',
         ]);
 
-        if (array_key_exists('error', $data)) {
-            Log::critical("ERROR: Member sync returned error: {$data['error']}");
+        if (! is_array($data)) {
+            Log::critical("Member sync returned invalid response: {$data}");
+            throw new Exception("Member sync failed: {$data}");
+        }
 
-            exit;
+        if (array_key_exists('error', $data)) {
+            Log::critical("Member sync returned error: {$data['error']}");
+            throw new Exception("Member sync failed: {$data['error']}");
         }
 
         return $this->prepareData($data);

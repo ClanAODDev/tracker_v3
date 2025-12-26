@@ -48,6 +48,8 @@ class MemberSyncService
         'errors' => 0,
     ];
 
+    protected ?string $lastError = null;
+
     public function __construct(
         protected ?GetDivisionInfo $divisionInfo = null
     ) {}
@@ -100,11 +102,23 @@ class MemberSyncService
         return $this->stats;
     }
 
+    public function getLastError(): ?string
+    {
+        return $this->lastError;
+    }
+
     protected function fetchSyncData(): Collection
     {
-        $info = $this->divisionInfo ?? new GetDivisionInfo;
+        try {
+            $info = $this->divisionInfo ?? new GetDivisionInfo;
 
-        return collect($info->data ?? []);
+            return collect($info->data ?? []);
+        } catch (Exception $exception) {
+            $this->lastError = $exception->getMessage();
+            Log::critical('MEMBER SYNC - Failed to fetch data: ' . $this->lastError);
+
+            return collect();
+        }
     }
 
     protected function getDivisionIds(): Collection
@@ -230,7 +244,7 @@ class MemberSyncService
             'posts' => $forumData->postcount,
             'privacy_flag' => $forumData->allow_export === 'yes' ? 1 : 0,
             'ts_unique_id' => $forumData->tsid,
-            'last_voice_status' => $forumData->lastdiscord_status,
+            'last_voice_status' => $this->normalizeDiscordStatus($forumData->lastdiscord_status),
             'last_activity' => $forumData->lastactivity,
             'last_voice_activity' => $forumData->lastdiscord_connect,
             'rank' => $this->calculateRank($forumData->aodrankval),
@@ -242,6 +256,15 @@ class MemberSyncService
         $rank = $forumRank - self::FORUM_RANK_OFFSET;
 
         return max(1, $rank);
+    }
+
+    protected function normalizeDiscordStatus(?string $status): string
+    {
+        if (empty($status)) {
+            return 'never_configured';
+        }
+
+        return $status;
     }
 
     protected function calculateUpdates(array $oldData, array $newData): array
