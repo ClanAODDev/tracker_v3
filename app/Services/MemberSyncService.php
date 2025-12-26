@@ -235,7 +235,7 @@ class MemberSyncService
             'posts' => $member->posts,
             'privacy_flag' => $member->privacy_flag,
             'ts_unique_id' => $member->ts_unique_id,
-            'last_voice_status' => $member->last_voice_status,
+            'last_voice_status' => $member->last_voice_status?->value,
             'rank' => $member->rank->value,
             'last_activity' => $member->last_activity?->timestamp,
             'last_voice_activity' => $member->last_voice_activity?->timestamp,
