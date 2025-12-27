@@ -15,7 +15,7 @@
     </div>
 
     <div v-if="store.loading.divisionData" class="recruit-loading">
-      <i class="fa fa-spinner fa-spin"></i> Loading division data...
+      <span class="themed-spinner"></span> Loading division data...
     </div>
 
     <div v-else-if="store.errors.divisionData" class="recruit-error">
@@ -230,7 +230,7 @@
         <a :href="cancelUrl" class="btn btn-default">Cancel</a>
         <button type="submit" class="btn btn-success" :disabled="!store.isFormValid() || store.submitting">
           <span v-if="store.submitting">
-            <i class="fa fa-spinner fa-spin"></i> Adding Recruit...
+            <span class="themed-spinner spinner-sm"></span> Adding Recruit...
           </span>
           <span v-else>
             Add Recruit <i class="fa fa-arrow-right"></i>

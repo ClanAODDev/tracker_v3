@@ -634,7 +634,9 @@ var Tracker = Tracker || {};
                     disable_animations: $('#setting-disable-animations').is(':checked'),
                     mobile_nav_side: $('#setting-mobile-nav-side').val(),
                     snow: $('#setting-snow').val(),
-                    ticket_notifications: $('#setting-ticket-notifications').is(':checked')
+                    snow_ignore_mouse: $('#setting-snow-ignore-mouse').is(':checked'),
+                    ticket_notifications: $('#setting-ticket-notifications').is(':checked'),
+                    theme: $('#setting-theme').val()
                 };
 
                 $.ajax({
@@ -655,7 +657,7 @@ var Tracker = Tracker || {};
                 });
             }
 
-            $('#setting-disable-animations, #setting-ticket-notifications').on('change', saveSettings);
+            $('#setting-disable-animations, #setting-ticket-notifications, #setting-snow-ignore-mouse').on('change', saveSettings);
 
             $('.settings-btn[data-setting]').on('click', function () {
                 var $btn = $(this);
@@ -683,6 +685,10 @@ var Tracker = Tracker || {};
                 $('body').removeClass('mobile-nav-left');
             }
 
+            if (settings.theme) {
+                document.documentElement.setAttribute('data-theme', settings.theme);
+            }
+
             if (typeof initSnowStorm === 'function') {
                 var flakesMax = 0;
                 if (settings.snow === 'some_snow') {
@@ -690,7 +696,7 @@ var Tracker = Tracker || {};
                 } else if (settings.snow === 'all_the_snow') {
                     flakesMax = 160;
                 }
-                initSnowStorm(flakesMax);
+                initSnowStorm(flakesMax, settings.snow_ignore_mouse);
             }
         },
 

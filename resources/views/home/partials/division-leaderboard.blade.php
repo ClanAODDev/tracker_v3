@@ -29,7 +29,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        <img src="{{ $division['logo'] }}" class="leaderboard-logo" alt="">
+                        <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         <span class="leaderboard-value">{{ $division['formatted'] }}</span>
                     </a>
@@ -42,7 +42,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        <img src="{{ $division['logo'] }}" class="leaderboard-logo" alt="">
+                        <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
@@ -58,7 +58,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        <img src="{{ $division['logo'] }}" class="leaderboard-logo" alt="">
+                        <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['value'] >= 0 ? 'up' : 'down'" />
@@ -86,7 +86,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        <img src="{{ $division['logo'] }}" class="leaderboard-logo" alt="">
+                        <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         <span class="leaderboard-value">{{ $division['formatted'] }}</span>
                     </a>
@@ -106,7 +106,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        <img src="{{ $division['logo'] }}" class="leaderboard-logo" alt="">
+                        <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
@@ -129,7 +129,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        <img src="{{ $division['logo'] }}" class="leaderboard-logo" alt="">
+                        <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['value'] >= 0 ? 'up' : 'down'" />

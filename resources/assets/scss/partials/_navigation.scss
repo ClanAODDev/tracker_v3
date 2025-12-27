@@ -79,6 +79,8 @@ body.nav-toggle {
         padding: 20px 25px;
         font-weight: 400;
         color: var(--color-white);
+        display: flex;
+        align-items: center;
 
         &:focus {
             width: 200px;
@@ -96,9 +98,8 @@ body.nav-toggle {
 
         span {
             letter-spacing: normal;
-            float: right;
+            margin-left: auto;
             font-size: 12px;
-            margin-left: -15px;
             color: var(--color-accent-light);
         }
     }
@@ -106,6 +107,16 @@ body.nav-toggle {
     .navbar-nav > li > a {
         color: var(--color-text);
     }
+}
+
+.navbar-logo {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+    object-fit: contain;
 }
 
 .left-nav-toggle {
@@ -160,14 +171,21 @@ body.nav-toggle {
     }
 
     .desktop-search-loader {
-        width: 20px;
-        height: 20px;
-        opacity: 0.5;
+        width: 16px;
+        height: 16px;
+        border: 2px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+        border-top-color: var(--color-accent);
+        border-radius: 50%;
         display: none;
 
         &.active {
             display: block;
+            animation: search-spin 0.28s linear infinite;
         }
+    }
+
+    @keyframes search-spin {
+        to { transform: rotate(360deg); }
     }
 
     #searchclear {

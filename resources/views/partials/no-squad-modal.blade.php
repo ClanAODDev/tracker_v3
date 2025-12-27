@@ -9,7 +9,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="no-squad-loading" class="text-center text-muted">
-                        <i class="fa fa-spinner fa-spin"></i> Loading...
+                        <span class="themed-spinner"></span> Loading...
                     </div>
                     <div id="no-squad-list" style="display: none;"></div>
                 </div>

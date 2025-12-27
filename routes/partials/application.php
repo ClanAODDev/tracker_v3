@@ -42,7 +42,9 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
             'disable_animations' => filter_var($request->input('disable_animations'), FILTER_VALIDATE_BOOLEAN),
             'mobile_nav_side' => $request->input('mobile_nav_side', 'right'),
             'snow' => $request->input('snow', 'no_snow'),
+            'snow_ignore_mouse' => filter_var($request->input('snow_ignore_mouse'), FILTER_VALIDATE_BOOLEAN),
             'ticket_notifications' => filter_var($request->input('ticket_notifications'), FILTER_VALIDATE_BOOLEAN),
+            'theme' => $request->input('theme', 'traditional'),
         ]);
         $user->save();
 

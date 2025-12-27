@@ -8,6 +8,7 @@
             </div>
         </div>
         <a class="navbar-brand" href="{{ route('home') }}">
+            <img src="{{ getThemedLogoPath() }}" alt="" class="navbar-logo">
             TRACKER
             <span>{{ config('app.version') }}</span>
         </a>
@@ -37,8 +38,7 @@
                 <i class="fa fa-search"></i>
                 <input type="text" id="member-search" name="search"
                        placeholder="Search for a player..." autocomplete="off" />
-                <img src="{{ asset('images/loading_2.gif') }}" alt="Loading..."
-                     class="desktop-search-loader" />
+                <span class="desktop-search-loader"></span>
                 <span id="searchclear" class="fa fa-times-circle"></span>
             </div>
         </div>

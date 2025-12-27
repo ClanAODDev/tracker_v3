@@ -83,19 +83,19 @@
                         <td>{{ $division->name }}</td>
                         <td class="text-center text-muted">{{ $division->members_count }}</td>
                         <td class="text-center" data-order="{{ $division->new_members_last30_count }}">
-                            <div class="progress" style="margin-bottom: 0; min-width: 80px; background-color: #404652;">
+                            <div class="progress" style="margin-bottom: 0; min-width: 80px; background-color: var(--color-bg-panel);">
                                 <div class="progress-bar progress-bar-info" style="width: {{ min($division->pct30, 100) }}%"></div>
                             </div>
                             <small>{{ $division->new_members_last30_count }} <span class="text-muted">({{ $division->pct30 }}%)</span></small>
                         </td>
                         <td class="text-center" data-order="{{ $division->new_members_last60_count }}">
-                            <div class="progress" style="margin-bottom: 0; min-width: 80px; background-color: #404652;">
+                            <div class="progress" style="margin-bottom: 0; min-width: 80px; background-color: var(--color-bg-panel);">
                                 <div class="progress-bar progress-bar-warning" style="width: {{ min($division->pct60, 100) }}%"></div>
                             </div>
                             <small>{{ $division->new_members_last60_count }} <span class="text-muted">({{ $division->pct60 }}%)</span></small>
                         </td>
                         <td class="text-center" data-order="{{ $division->new_members_last90_count }}">
-                            <div class="progress" style="margin-bottom: 0; min-width: 80px; background-color: #404652;">
+                            <div class="progress" style="margin-bottom: 0; min-width: 80px; background-color: var(--color-bg-panel);">
                                 <div class="progress-bar progress-bar-success" style="width: {{ min($division->pct90, 100) }}%"></div>
                             </div>
                             <small>{{ $division->new_members_last90_count }} <span class="text-muted">({{ $division->pct90 }}%)</span></small>

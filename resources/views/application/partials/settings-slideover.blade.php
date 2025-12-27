@@ -50,6 +50,36 @@
                     </div>
                     <input type="hidden" name="snow" id="setting-snow" value="{{ auth()->user()->settings['snow'] ?? 'no_snow' }}">
                 </div>
+
+                <div class="settings-field">
+                    <label class="settings-toggle-label">
+                        <span>Snow ignores mouse</span>
+                        <label class="settings-switch">
+                            <input type="checkbox" name="snow_ignore_mouse" id="setting-snow-ignore-mouse"
+                                   {{ (auth()->user()->settings['snow_ignore_mouse'] ?? false) ? 'checked' : '' }}>
+                            <span class="settings-switch-slider"></span>
+                        </label>
+                    </label>
+                    <p class="settings-help">Prevents snow from following mouse cursor</p>
+                </div>
+
+                <div class="settings-field">
+                    <label class="settings-label">Theme</label>
+                    <div class="settings-button-group">
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'traditional' ? 'active' : '' }}" data-value="traditional" data-setting="theme">
+                            <span class="theme-swatch theme-traditional"></span> Traditional
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'shattrath' ? 'active' : '' }}" data-value="shattrath" data-setting="theme">
+                            <span class="theme-swatch theme-shattrath"></span> Shattrath
+                        </button>
+                        {{-- Light theme hidden until ready
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'light' ? 'active' : '' }}" data-value="light" data-setting="theme">
+                            <span class="theme-swatch theme-light"></span> Light
+                        </button>
+                        --}}
+                    </div>
+                    <input type="hidden" name="theme" id="setting-theme" value="{{ auth()->user()->settings['theme'] ?? 'traditional' }}">
+                </div>
             </div>
 
             <div class="settings-section">

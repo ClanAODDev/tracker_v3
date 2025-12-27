@@ -150,7 +150,7 @@ $(function () {
     });
 
     function updatePreview() {
-        $status.html('<i class="fa fa-spinner fa-spin"></i> Updating...');
+        $status.html('<span class="themed-spinner spinner-sm"></span> Updating...');
 
         $.ajax({
             url: previewUrl,
@@ -185,7 +185,7 @@ $(function () {
     $saveBtn.on('click', function() {
         var $btn = $(this);
         var originalHtml = $btn.html();
-        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Saving...');
+        $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span> Saving...');
         $saveStatus.html('');
 
         $('#code').val(cm.getValue());

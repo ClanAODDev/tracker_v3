@@ -26,6 +26,23 @@ function getSnowSetting()
     return false;
 }
 
+function getThemedLogoPath()
+{
+    $theme = 'traditional';
+
+    if (auth()->check()) {
+        $theme = auth()->user()->settings['theme'] ?? 'traditional';
+    }
+
+    $logos = [
+        'traditional' => 'images/logo_v2.svg',
+        'shattrath' => 'images/logo-shattrath.svg',
+        'light' => 'images/logo-light.svg',
+    ];
+
+    return asset($logos[$theme] ?? $logos['traditional']);
+}
+
 function sanitize_filter_attribute($attribute)
 {
     // replace dots

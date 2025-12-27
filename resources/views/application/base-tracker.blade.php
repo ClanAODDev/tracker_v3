@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="{{ auth()->check() ? (auth()->user()->settings['theme'] ?? 'traditional') : 'traditional' }}">
 <head>
     @yield('metadata')
     <title>AOD | Tracker v3</title>
+    <script>
+        (function() {
+            var theme = document.documentElement.getAttribute('data-theme') || 'traditional';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     @include('application.header')
     @include('application.partials.console')
 </head>

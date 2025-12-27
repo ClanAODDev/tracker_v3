@@ -23,38 +23,87 @@
 
 .btn-accent {
     @include btn-variant($color-accent);
+    border-color: var(--color-accent);
+
+    &:focus,
+    &.focus,
+    &:hover,
+    &:active,
+    &.active {
+        border-color: var(--color-accent);
+        background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    }
+
+    &:active:hover,
+    &.active:hover,
+    &:active:focus,
+    &.active:focus {
+        border-color: var(--color-accent-hover);
+    }
 }
 
 .btn-default {
     @include btn-variant(#616779);
+    border-color: var(--color-muted);
 
     &:hover,
     &:active,
     &:active:focus,
     &:focus,
     &.active {
-        background-color: $color-bg-panel;
+        background-color: var(--color-bg-panel);
+        border-color: var(--color-muted);
     }
 }
 
 .btn-primary {
     @include btn-variant($color-primary);
+    border-color: var(--color-primary);
+
+    &:focus, &.focus, &:hover, &:active, &.active {
+        border-color: var(--color-primary);
+        background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    }
 }
 
 .btn-success {
     @include btn-variant($color-success);
+    border-color: var(--color-success);
+
+    &:focus, &.focus, &:hover, &:active, &.active {
+        border-color: var(--color-success);
+        background-color: color-mix(in srgb, var(--color-success) 10%, transparent);
+    }
 }
 
 .btn-info {
     @include btn-variant($color-info);
+    border-color: var(--color-info);
+
+    &:focus, &.focus, &:hover, &:active, &.active {
+        border-color: var(--color-info);
+        background-color: color-mix(in srgb, var(--color-info) 10%, transparent);
+    }
 }
 
 .btn-warning {
     @include btn-variant($color-accent-light);
+    border-color: var(--color-accent-light);
+
+    &:focus, &.focus, &:hover, &:active, &.active {
+        border-color: var(--color-accent-light);
+        background-color: color-mix(in srgb, var(--color-accent-light) 10%, transparent);
+    }
 }
 
 .btn-danger {
     @include btn-variant($color-danger);
+    border-color: var(--color-danger);
+
+    &:focus, &.focus, &:hover, &:active, &.active {
+        border-color: var(--color-danger);
+        background-color: color-mix(in srgb, var(--color-danger) 10%, transparent);
+    }
 }
 
 .btn-link {
@@ -63,7 +112,7 @@
     &:active:focus,
     &:focus,
     &.active {
-        color: $color-accent;
+        color: var(--color-accent);
         text-decoration: none;
     }
 }

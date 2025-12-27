@@ -218,7 +218,7 @@ $(function() {
 
     $('#award-request-form').on('submit', function() {
         var $btn = $('#award-submit-btn');
-        $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
+        $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span> Submitting...');
     });
 });
 </script>

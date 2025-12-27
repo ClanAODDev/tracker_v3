@@ -30,6 +30,7 @@ class User extends Authenticatable implements FilamentUser
         'ticket_notifications' => true,
         'disable_animations' => false,
         'mobile_nav_side' => 'right',
+        'theme' => 'traditional',
     ];
 
     /**

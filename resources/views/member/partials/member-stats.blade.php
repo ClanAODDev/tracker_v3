@@ -180,7 +180,7 @@
     @if(!auth()->user()->isRole('member'))
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-filled">
+                <div class="panel panel-filled animate-fade-in-up" style="animation-delay: 0.4s">
                     <div class="panel-heading">
                         <i class="fa fa-line-chart text-accent"></i> Rank Progression
                         @if($rankTimeline->historyItems->count() > 1)
@@ -200,7 +200,7 @@
     @if($memberStats->divisionComparison)
         <div class="row">
             <div class="col-md-12">
-                <div class="panel panel-filled division-comparison-panel">
+                <div class="panel panel-filled division-comparison-panel animate-fade-in-up" style="animation-delay: 0.5s">
                     <div class="panel-heading">
                         <i class="fa fa-bar-chart text-accent"></i> Division Comparison
                         <span class="text-muted pull-right">vs {{ $division->name }} average</span>

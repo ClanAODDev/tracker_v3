@@ -64,7 +64,7 @@
           :disabled="store.loading.submitting || store.newTicket.description.length < 25"
         >
           <span v-if="store.loading.submitting">
-            <i class="fa fa-spinner fa-spin m-r-sm"></i>
+            <span class="themed-spinner spinner-sm"></span>
             Creating Ticket...
           </span>
           <span v-else>

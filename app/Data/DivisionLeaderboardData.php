@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 readonly class DivisionLeaderboardData
 {
@@ -88,7 +89,7 @@ readonly class DivisionLeaderboardData
                     'id' => $division->id,
                     'name' => $division->name,
                     'slug' => $division->slug,
-                    'logo' => $division->getLogoPath(),
+                    'logo' => self::getDivisionLogo($division),
                     'value' => (int) $voiceRate,
                     'formatted' => $voiceRate . '%',
                     'trend' => $trend,
@@ -120,7 +121,7 @@ readonly class DivisionLeaderboardData
                     'id' => $division->id,
                     'name' => $division->name,
                     'slug' => $division->slug,
-                    'logo' => $division->getLogoPath(),
+                    'logo' => self::getDivisionLogo($division),
                     'value' => $growthRate,
                     'formatted' => ($growthRate >= 0 ? '+' : '') . $growthRate . '%',
                     'trend' => $trend,
@@ -138,12 +139,21 @@ readonly class DivisionLeaderboardData
                     'id' => $division->id,
                     'name' => $division->name,
                     'slug' => $division->slug,
-                    'logo' => $division->getLogoPath(),
+                    'logo' => self::getDivisionLogo($division),
                     'value' => $division->recruits_count,
                     'formatted' => $division->recruits_count,
                 ];
             })
             ->sortByDesc('value')
             ->values();
+    }
+
+    private static function getDivisionLogo(Division $division): ?string
+    {
+        if ($division->logo && Storage::disk('public')->exists($division->logo)) {
+            return asset(Storage::url($division->logo));
+        }
+
+        return null;
     }
 }

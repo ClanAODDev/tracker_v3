@@ -236,6 +236,13 @@ body.mobile-nav-open {
 
 .mobile-spinner {
     @include spinner(32px, 3px, $color-accent);
+    border-color: color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-top-color: var(--color-accent);
+    animation: search-spin 0.28s linear infinite;
+}
+
+@keyframes search-spin {
+    to { transform: rotate(360deg); }
 }
 
 .mobile-search-results {

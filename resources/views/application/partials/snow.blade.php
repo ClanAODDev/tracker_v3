@@ -1,7 +1,7 @@
 @auth
     <script>
         var snowStorm = null;
-        function initSnowStorm(flakesMax) {
+        function initSnowStorm(flakesMax, ignoreMouse) {
             if (snowStorm && snowStorm.stop) {
                 snowStorm.stop();
             }
@@ -10,7 +10,7 @@
             if (!flakesMax || flakesMax <= 0) {
                 return;
             }
-            snowStorm = new SnowStormEngine(window, document, flakesMax);
+            snowStorm = new SnowStormEngine(window, document, flakesMax, ignoreMouse);
             if (document.readyState === 'complete') {
                 snowStorm.start();
             } else {
@@ -19,12 +19,12 @@
                 });
             }
         }
-        var SnowStormEngine = function (e, t, flakesMaxParam) {
+        var SnowStormEngine = function (e, t, flakesMaxParam, ignoreMouseParam) {
                 this.autoStart = !0, this.excludeMobile = !0,
                     this.flakesMax = flakesMaxParam || 160,
                     this.flakesMaxActive = this.flakesMax / 2,
                     this.animationInterval = 33, this.useGPU = 0, this.className = null, this.flakeBottom = null,
-                    this.followMouse = !0, this.snowColor = "#fff", this.snowCharacter = "&bull;", this.snowStick =
+                    this.followMouse = !ignoreMouseParam, this.snowColor = "#fff", this.snowCharacter = "&bull;", this.snowStick =
                     1, this.targetElement = null, this.useMeltEffect = !0, this.useTwinkleEffect = 1, this.usePositionFixed = !1, this.usePixelPosition = !1, this.freezeOnBlur = !0, this.flakeLeftOffset = 0, this.flakeRightOffset = 0, this.flakeWidth = 8, this.flakeHeight = 8, this.vMaxX = 5, this.vMaxY = 4, this.zIndex = 0;
                 var i, s = this, n = navigator.userAgent.match(/msie/i), l = navigator.userAgent.match(/msie 6/i),
                     o = navigator.userAgent.match(/mobile|opera m(ob|in)/i),
@@ -193,9 +193,10 @@
                 'all_the_snow' => 160,
                 default => 0,
             };
+            $ignoreMouse = auth()->user()->settings['snow_ignore_mouse'] ?? false;
         @endphp
         document.addEventListener('DOMContentLoaded', function() {
-            initSnowStorm({{ $flakesMax }});
+            initSnowStorm({{ $flakesMax }}, {{ $ignoreMouse ? 'true' : 'false' }});
         });
     </script>
 @endauth

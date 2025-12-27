@@ -743,7 +743,7 @@ function initPlatoon() {
                 }
 
                 var $btn = $(this);
-                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Transferring...');
+                $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span> Transferring...');
 
                 $.ajax({
                     url: url,

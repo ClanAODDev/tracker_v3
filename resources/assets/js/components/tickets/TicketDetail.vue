@@ -135,7 +135,7 @@
                   @click="submitComment"
                 >
                   <span v-if="store.loading.commenting">
-                    <i class="fa fa-spinner fa-spin m-r-xs"></i> Sending...
+                    <span class="themed-spinner spinner-sm"></span> Sending...
                   </span>
                   <span v-else>
                     <i class="fa fa-paper-plane m-r-xs"></i> Send Reply
