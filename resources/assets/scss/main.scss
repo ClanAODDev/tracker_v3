@@ -8452,12 +8452,37 @@ pre.code-toolbar > .toolbar span:focus {
         min-width: 100%;
     }
 
+    .report-filter {
+        padding: 16px;
+    }
+
     .report-filter-form {
         flex-direction: column;
         align-items: stretch;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .report-filter-group {
+        width: 100%;
     }
 
     .report-filter-group .form-control {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .report-filter-form > .btn {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .report-filter-presets {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .report-filter-presets .form-control {
         width: 100%;
     }
 }
