@@ -19,8 +19,9 @@ Route::controller(ImpersonationController::class)->group(function () {
 
 Route::controller(TrainingController::class)->prefix('training')->name('training.')->group(function () {
     Route::get('sgt', 'sgtTraining')->name('sgt');
-    Route::get('ssgt', 'index')->name('ssgt');
-    Route::get('msgt', 'index')->name('msgt');
+    # Route::get('ssgt', 'ssgtTraining')->name('ssgt');
+    # Route::get('msgt', 'msgtTraining')->name('msgt');
+    Route::get('{slug}', 'show')->name('show');
     Route::post('/', 'update')->name('update');
 });
 

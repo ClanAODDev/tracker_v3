@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Member;
+use App\Models\TrainingModule;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 
 class TrainingController extends Controller
 {
@@ -21,20 +21,33 @@ class TrainingController extends Controller
         return view('training.index');
     }
 
-    public function sgtTraining()
+    public function show(string $slug, Request $request)
     {
         $this->authorize('train', auth()->user());
 
-        return view('training.sgt-training');
+        $module = TrainingModule::where('slug', $slug)
+            ->where('is_active', true)
+            ->with(['sections.checkpoints'])
+            ->firstOrFail();
+
+        $trainee = null;
+        if ($request->has('clan_id')) {
+            $trainee = Member::where('clan_id', $request->clan_id)->first();
+        }
+
+        return view('training.module', compact('module', 'trainee'));
     }
 
-    /**
-     * @return RedirectResponse|Redirector
-     */
-    public function update(Request $request)
+    public function sgtTraining(Request $request)
     {
-        $request->validate(['clan_id' => 'exists:members,clan_id'], [
-            'clan_id.exists' => 'That member id appears to be invalid',
+        return $this->show('sgt', $request);
+    }
+
+    public function update(Request $request): RedirectResponse
+    {
+        $request->validate(['clan_id' => 'required|exists:members,clan_id'], [
+            'clan_id.required' => 'Please select a member',
+            'clan_id.exists' => 'That member appears to be invalid',
         ]);
 
         Member::whereClanId($request->clan_id)->update([
