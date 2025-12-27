@@ -36,31 +36,35 @@
                 </div>
 
                 <div class="settings-field">
-                    <label class="settings-label">Snow effect (holiday season)</label>
-                    <div class="settings-button-group settings-button-group-3">
+                    <label class="settings-label">Particle effects</label>
+                    <div class="settings-button-group settings-button-group-4">
                         <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'no_snow' ? 'active' : '' }}" data-value="no_snow" data-setting="snow">
                             None
                         </button>
                         <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'some_snow' ? 'active' : '' }}" data-value="some_snow" data-setting="snow">
-                            Some
+                            Snow
                         </button>
                         <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'all_the_snow' ? 'active' : '' }}" data-value="all_the_snow" data-setting="snow">
-                            All
+                            Blizzard
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'motes' ? 'active' : '' }}" data-value="motes" data-setting="snow">
+                            <i class="fa fa-star-o"></i> Motes
                         </button>
                     </div>
                     <input type="hidden" name="snow" id="setting-snow" value="{{ auth()->user()->settings['snow'] ?? 'no_snow' }}">
+                    <p class="settings-help">Motes of Light - ethereal particles inspired by Shattrath City</p>
                 </div>
 
-                <div class="settings-field">
+                <div class="settings-field" id="snow-mouse-setting">
                     <label class="settings-toggle-label">
-                        <span>Snow ignores mouse</span>
+                        <span>Particles ignore mouse</span>
                         <label class="settings-switch">
                             <input type="checkbox" name="snow_ignore_mouse" id="setting-snow-ignore-mouse"
                                    {{ (auth()->user()->settings['snow_ignore_mouse'] ?? false) ? 'checked' : '' }}>
                             <span class="settings-switch-slider"></span>
                         </label>
                     </label>
-                    <p class="settings-help">Prevents snow from following mouse cursor</p>
+                    <p class="settings-help">Prevents particles from following mouse cursor</p>
                 </div>
 
                 <div class="settings-field">

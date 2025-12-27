@@ -67,6 +67,66 @@
     color: var(--color-accent);
 }
 
+::selection {
+    background: var(--selection-bg);
+    color: var(--color-white);
+}
+
+::-moz-selection {
+    background: var(--selection-bg);
+    color: var(--color-white);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+
+    &:hover {
+        background: var(--color-accent);
+    }
+}
+
+[data-theme="shattrath"] {
+    .btn-accent {
+        box-shadow: var(--accent-glow-subtle);
+
+        &:hover, &:focus {
+            box-shadow: var(--accent-glow);
+        }
+    }
+
+    .badge-accent, .label-accent {
+        box-shadow: var(--accent-glow-subtle);
+    }
+
+    a:hover {
+        text-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+    }
+
+    .nav-pills > li.active > a {
+        box-shadow: var(--accent-glow-subtle);
+    }
+
+    .panel-c-accent {
+        box-shadow: var(--accent-glow-subtle);
+    }
+
+    input:focus, select:focus, textarea:focus,
+    .form-control:focus {
+        box-shadow: var(--focus-ring);
+        border-color: var(--color-accent);
+    }
+}
+
 .select2-container {
     min-width: 180px;
 }

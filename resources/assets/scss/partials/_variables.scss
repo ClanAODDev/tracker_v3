@@ -124,6 +124,13 @@ $rarity-unclaimed: #4a4a4a;
 
     --panel-filled-bg: rgba(68, 70, 79, 0.5);
     --brand-text: #1a1a1a;
+
+    --accent-glow: none;
+    --accent-glow-subtle: none;
+    --selection-bg: rgba(246, 168, 33, 0.4);
+    --focus-ring: 0 0 0 3px rgba(246, 168, 33, 0.3);
+    --scrollbar-thumb: #555;
+    --scrollbar-track: #2f323b;
 }
 
 [data-theme="shattrath"] {
@@ -168,6 +175,13 @@ $rarity-unclaimed: #4a4a4a;
 
     --panel-filled-bg: rgba(59, 48, 84, 0.6);
     --brand-text: #f0e6ff;
+
+    --accent-glow: 0 0 20px rgba(139, 92, 246, 0.4);
+    --accent-glow-subtle: 0 0 10px rgba(139, 92, 246, 0.25);
+    --selection-bg: rgba(139, 92, 246, 0.4);
+    --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.3);
+    --scrollbar-thumb: #6d28d9;
+    --scrollbar-track: #1a1625;
 }
 
 [data-theme="light"] {

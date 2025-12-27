@@ -97,6 +97,12 @@ if ($chart.length) {
         removalsData = $chart.data('removals'),
         populationData = $chart.data('population');
 
+    var styles = getComputedStyle(document.documentElement);
+    var gridColor = styles.getPropertyValue('--color-bg-panel').trim() || '#404652';
+    var successColor = styles.getPropertyValue('--color-success').trim() || '#1bbf89';
+    var accentColor = styles.getPropertyValue('--color-accent').trim() || '#f7af3e';
+    var primaryColor = styles.getPropertyValue('--color-primary').trim() || '#0F83C9';
+
     var chartOptions = {
         series: {
             points: {
@@ -112,17 +118,17 @@ if ($chart.length) {
             }
         },
         grid: {
-            tickColor: '#404652',
+            tickColor: gridColor,
             borderWidth: 1,
             color: '#000',
-            borderColor: '#404652',
+            borderColor: gridColor,
         },
         tooltip: false,
         xaxis: {
             mode: 'categories',
             tickLength: 0,
         },
-        colors: ['#1bbf89', '#f7af3e', '#0F83C9']
+        colors: [successColor, accentColor, primaryColor]
     };
 
     $.plot($chart, [recruitsData, removalsData, populationData], chartOptions);

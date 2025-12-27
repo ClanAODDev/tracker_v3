@@ -668,8 +668,25 @@ var Tracker = Tracker || {};
                 $btn.addClass('active');
                 $('#setting-' + setting.split('_').join('-')).val(value);
 
+                if (setting === 'theme') {
+                    updateThemeSettings(value);
+                }
+
                 saveSettings();
             });
+
+            function updateThemeSettings(theme) {
+                var isShattrath = theme === 'shattrath';
+                $('.settings-btn[data-value="motes"]').toggle(isShattrath);
+
+                if (!isShattrath && $('#setting-snow').val() === 'motes') {
+                    $('#setting-snow').val('no_snow');
+                    $('.settings-btn[data-setting="snow"]').removeClass('active');
+                    $('.settings-btn[data-value="no_snow"]').addClass('active');
+                }
+            }
+
+            updateThemeSettings($('#setting-theme').val());
         },
 
         ApplySettings: function (settings) {
@@ -697,6 +714,14 @@ var Tracker = Tracker || {};
                     flakesMax = 160;
                 }
                 initSnowStorm(flakesMax, settings.snow_ignore_mouse);
+            }
+
+            if (typeof initMotesOfLight === 'function') {
+                var motesCount = 0;
+                if (settings.snow === 'motes') {
+                    motesCount = 35;
+                }
+                initMotesOfLight(motesCount, settings.snow_ignore_mouse);
             }
         },
 

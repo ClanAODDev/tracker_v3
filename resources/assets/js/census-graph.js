@@ -18,6 +18,12 @@ function initCensusGraph() {
         return;
     }
 
+    var styles = getComputedStyle(document.documentElement);
+    var gridColor = styles.getPropertyValue('--color-bg-panel').trim() || '#404652';
+    var successColor = styles.getPropertyValue('--color-success').trim() || '#1bbf89';
+    var primaryColor = styles.getPropertyValue('--color-primary').trim() || '#0F83C9';
+    var accentColor = styles.getPropertyValue('--color-accent').trim() || '#f7af3e';
+
     var chartUsersOptions = {
         series: {
             points: {
@@ -33,10 +39,10 @@ function initCensusGraph() {
             }
         },
         grid: {
-            tickColor: "#404652",
+            tickColor: gridColor,
             borderWidth: 1,
             color: "#000",
-            borderColor: "#404652"
+            borderColor: gridColor
         },
         tooltip: false,
         tooltippage: {
@@ -47,7 +53,7 @@ function initCensusGraph() {
             mode: "time",
             timeformat: "%m/%d/%y"
         },
-        colors: ["#1bbf89", "#0F83C9", "#f7af3e"]
+        colors: [successColor, primaryColor, accentColor]
     };
 
     $.plot($("#flot-line-chart"), [populationData, discordData], chartUsersOptions);

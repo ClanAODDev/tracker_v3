@@ -132,6 +132,10 @@ var Division = Division || {};
       var maxPop = Math.max(...population);
       var minPop = Math.min(...population);
 
+      var styles = getComputedStyle(document.documentElement);
+      var infoColor = styles.getPropertyValue('--color-info').trim() || '#5bc0de';
+      var successColor = styles.getPropertyValue('--color-success').trim() || '#1bbf89';
+
       new Chart(ctx, {
         type: 'line',
         data: {
@@ -140,28 +144,28 @@ var Division = Division || {};
             {
               label: 'Members',
               data: population,
-              borderColor: '#5bc0de',
-              backgroundColor: 'rgba(91, 192, 222, 0.1)',
+              borderColor: infoColor,
+              backgroundColor: infoColor + '1a',
               borderWidth: 2,
               fill: true,
               tension: 0.3,
               pointRadius: 3,
               pointHoverRadius: 6,
-              pointBackgroundColor: '#5bc0de',
+              pointBackgroundColor: infoColor,
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
             },
             {
               label: 'Voice Active',
               data: voice,
-              borderColor: '#1bbf89',
-              backgroundColor: 'rgba(27, 191, 137, 0.1)',
+              borderColor: successColor,
+              backgroundColor: successColor + '1a',
               borderWidth: 2,
               fill: true,
               tension: 0.3,
               pointRadius: 2,
               pointHoverRadius: 5,
-              pointBackgroundColor: '#1bbf89',
+              pointBackgroundColor: successColor,
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
             }

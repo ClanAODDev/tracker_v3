@@ -45,6 +45,8 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
             'snow_ignore_mouse' => filter_var($request->input('snow_ignore_mouse'), FILTER_VALIDATE_BOOLEAN),
             'ticket_notifications' => filter_var($request->input('ticket_notifications'), FILTER_VALIDATE_BOOLEAN),
             'theme' => $request->input('theme', 'traditional'),
+            'ambient_sound' => filter_var($request->input('ambient_sound'), FILTER_VALIDATE_BOOLEAN),
+            'ambient_volume' => (float) $request->input('ambient_volume', 0.3),
         ]);
         $user->save();
 
