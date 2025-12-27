@@ -1,7 +1,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
-<link href="{{ asset(config('app.favicon')) }}" type="image/x-icon" rel="Shortcut Icon"/>
+@php
+    $theme = auth()->check() ? (auth()->user()->settings['theme'] ?? 'traditional') : 'traditional';
+    $faviconPath = $theme === 'shattrath' ? 'images/logo-shattrath.svg' : 'images/logo_v2.svg';
+@endphp
+<link id="favicon" href="{{ asset($faviconPath) }}" type="image/svg+xml" rel="icon"/>
 
 <!-- vendor styles -->
 <!-- @TODO: bundle CSS resources -->

@@ -684,6 +684,11 @@ var Tracker = Tracker || {};
                     $('.settings-btn[data-setting="snow"]').removeClass('active');
                     $('.settings-btn[data-value="no_snow"]').addClass('active');
                 }
+
+                var favicon = document.getElementById('favicon');
+                if (favicon) {
+                    favicon.href = theme === 'shattrath' ? '/images/logo-shattrath.svg' : '/images/logo_v2.svg';
+                }
             }
 
             updateThemeSettings($('#setting-theme').val());
