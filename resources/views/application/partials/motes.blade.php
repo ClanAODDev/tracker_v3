@@ -1,13 +1,13 @@
 @auth
 <style>
 .motes-container {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    overflow: hidden;
+    overflow: visible;
     z-index: 0;
 }
 
@@ -42,9 +42,10 @@ function MotesEngine(count, ignoreMouse) {
     this.motes = [];
     this.container = null;
     this.animationId = null;
-    this.mouseX = window.innerWidth / 2;
-    this.mouseY = window.innerHeight / 2;
+    this.mouseX = window.innerWidth / 2 + window.scrollX;
+    this.mouseY = window.innerHeight / 2 + window.scrollY;
     this.running = false;
+    this.docHeight = 0;
 
     this.colors = [
         { bg: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 40%, transparent 70%)',
@@ -64,20 +65,34 @@ MotesEngine.prototype.start = function() {
     this.container.id = 'motes-of-light';
     document.body.appendChild(this.container);
 
+    this.updateContainerHeight();
+
     for (var i = 0; i < this.count; i++) {
         this.createMote(i);
     }
 
     if (!this.ignoreMouse) {
         this.mouseMoveHandler = function(e) {
-            self.mouseX = e.clientX;
-            self.mouseY = e.clientY;
+            self.mouseX = e.clientX + window.scrollX;
+            self.mouseY = e.clientY + window.scrollY;
         };
         document.addEventListener('mousemove', this.mouseMoveHandler);
     }
 
     this.running = true;
     this.animate();
+};
+
+MotesEngine.prototype.updateContainerHeight = function() {
+    var docHeight = Math.max(
+        document.body.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.clientHeight,
+        document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+    );
+    this.container.style.height = docHeight + 'px';
+    this.docHeight = docHeight;
 };
 
 MotesEngine.prototype.createMote = function(index) {
@@ -95,7 +110,7 @@ MotesEngine.prototype.createMote = function(index) {
     var mote = {
         el: el,
         x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+        y: Math.random() * (this.docHeight || window.innerHeight),
         baseX: 0,
         baseY: 0,
         vx: 0,
