@@ -480,7 +480,7 @@ export default {
 }
 
 .comment-admin .comment-avatar {
-  background: rgba(246, 168, 33, 0.3);
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
   color: var(--color-accent);
 }
 
@@ -493,8 +493,8 @@ export default {
 }
 
 .comment-admin .comment-bubble {
-  background: rgba(246, 168, 33, 0.1);
-  border: 1px solid rgba(246, 168, 33, 0.2);
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
 }
 
 .comment-header {

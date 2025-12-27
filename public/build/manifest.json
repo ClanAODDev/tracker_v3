@@ -49,7 +49,7 @@
     "isEntry": true
   },
   "resources/assets/js/tickets.js": {
-    "file": "assets/tickets-DtGg37UO.js",
+    "file": "assets/tickets-Bq6uvQWl.js",
     "name": "tickets",
     "src": "resources/assets/js/tickets.js",
     "isEntry": true,
@@ -57,7 +57,7 @@
       "__plugin-vue_export-helper-BNacxbSu.js"
     ],
     "css": [
-      "assets/tickets-BiIbu7u5.css"
+      "assets/tickets-tzPOxMf7.css"
     ]
   },
   "resources/assets/js/voice.js": {
