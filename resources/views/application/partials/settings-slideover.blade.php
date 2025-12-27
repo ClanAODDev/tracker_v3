@@ -52,7 +52,6 @@
                         </button>
                     </div>
                     <input type="hidden" name="snow" id="setting-snow" value="{{ auth()->user()->settings['snow'] ?? 'no_snow' }}">
-                    <p class="settings-help">Motes of Light - ethereal particles inspired by Shattrath City</p>
                 </div>
 
                 <div class="settings-field" id="snow-mouse-setting">
