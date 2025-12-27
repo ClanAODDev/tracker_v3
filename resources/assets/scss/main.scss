@@ -3510,6 +3510,19 @@ a.org-node:hover {
     color: var(--color-red);
 }
 
+#rank-history-modal {
+    z-index: 1060;
+}
+
+#rank-history-modal .modal-dialog {
+    max-height: 80vh;
+}
+
+#rank-history-modal .modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
 @keyframes timeline-node-enter {
     0% {
         opacity: 0;

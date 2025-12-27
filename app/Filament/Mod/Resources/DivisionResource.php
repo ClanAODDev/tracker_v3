@@ -10,8 +10,6 @@ use App\Models\Division;
 use Closure;
 use Exception;
 use Filament\Actions\EditAction;
-use Filament\Schemas\Components\Actions;
-use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
@@ -20,7 +18,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -209,7 +206,7 @@ class DivisionResource extends Resource
                             ->icon('heroicon-o-bell')
                             ->schema([
                                 Section::make('Channel Configuration')
-                                    ->description('Test that notification channels are correctly configured')
+                                    ->description('Test notification channels from the page header actions')
                                     ->schema([
                                         Placeholder::make('channel_info')
                                             ->hiddenLabel()
@@ -218,50 +215,6 @@ class DivisionResource extends Resource
                                                 $record->routeNotificationForOfficers() ?? 'Not configured',
                                                 $record->routeNotificationForMembers() ?? 'Not configured'
                                             )),
-                                        Actions::make([
-                                            Action::make('test_officers')
-                                                ->label('Test Officers Channel')
-                                                ->icon('heroicon-o-megaphone')
-                                                ->color('warning')
-                                                ->action(function (Division $record) {
-                                                    $channel = $record->routeNotificationForOfficers();
-                                                    if (! $channel) {
-                                                        Notification::make()
-                                                            ->title('No officers channel configured')
-                                                            ->danger()
-                                                            ->send();
-
-                                                        return;
-                                                    }
-
-                                                    $record->notify(new \App\Notifications\Channel\TestChannelNotification('officers'));
-                                                    Notification::make()
-                                                        ->title('Test sent to ' . $channel)
-                                                        ->success()
-                                                        ->send();
-                                                }),
-                                            Action::make('test_members')
-                                                ->label('Test Members Channel')
-                                                ->icon('heroicon-o-megaphone')
-                                                ->color('info')
-                                                ->action(function (Division $record) {
-                                                    $channel = $record->routeNotificationForMembers();
-                                                    if (! $channel) {
-                                                        Notification::make()
-                                                            ->title('No members channel configured')
-                                                            ->danger()
-                                                            ->send();
-
-                                                        return;
-                                                    }
-
-                                                    $record->notify(new \App\Notifications\Channel\TestChannelNotification('members'));
-                                                    Notification::make()
-                                                        ->title('Test sent to ' . $channel)
-                                                        ->success()
-                                                        ->send();
-                                                }),
-                                        ]),
                                     ]),
 
                                 Section::make('Recruitment Notifications')

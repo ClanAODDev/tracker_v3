@@ -315,4 +315,39 @@
             </div>
         </div>
     </div>
+
+    @if(isset($rankTimeline) && $rankTimeline->historyItems->count() > 1)
+        <div class="modal fade" id="rank-history-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h4 class="modal-title">Rank History</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="rank-history-list">
+                            @foreach($rankTimeline->historyItems as $item)
+                                @if($item->type === 'join')
+                                    <li class="rank-history-item rank-history-join">
+                                        <span class="rank-history-date">{{ $item->date }}</span>
+                                        <span class="rank-history-label">{{ $item->label }}</span>
+                                    </li>
+                                @else
+                                    <li class="rank-history-item {{ $item->type === 'demotion' ? 'rank-history-demotion' : 'rank-history-promotion' }}">
+                                        <span class="rank-history-date">{{ $item->date }}</span>
+                                        <span class="rank-history-rank">{{ $item->rank }}</span>
+                                        @if($item->type === 'demotion')
+                                            <i class="fa fa-arrow-down text-danger" title="Demotion"></i>
+                                        @else
+                                            <i class="fa fa-arrow-up text-success" title="Promotion"></i>
+                                        @endif
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

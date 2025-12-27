@@ -191,13 +191,13 @@ class Division extends Model
 
     public function routeNotificationForMembers(): ?string
     {
-        return $this->settings()->get('member_channel')
+        return $this->settings()->get('member_channel', '')
             ?: ($this->abbreviation ? $this->abbreviation . '-members' : null);
     }
 
     public function routeNotificationForOfficers(): ?string
     {
-        return $this->settings()->get('officer_channel')
+        return $this->settings()->get('officer_channel', '')
             ?: ($this->abbreviation ? $this->abbreviation . '-officers' : null);
     }
 
