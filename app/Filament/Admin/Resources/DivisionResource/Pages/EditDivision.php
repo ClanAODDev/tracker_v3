@@ -29,7 +29,27 @@ class EditDivision extends EditRecord
 
         $data = $this->handleXOs($divisionId, $data);
 
+        $data = $this->preserveProtectedSettings($data);
+
         unset($data['executive_officers'], $data['new_co']);
+
+        return $data;
+    }
+
+    protected function preserveProtectedSettings(array $data): array
+    {
+        $protectedSettings = ['officer_channel', 'member_channel'];
+
+        if (isset($data['settings'])) {
+            $existingSettings = $this->record->getRawOriginal('settings');
+            $existingSettings = is_string($existingSettings) ? json_decode($existingSettings, true) : ($existingSettings ?? []);
+
+            foreach ($protectedSettings as $key) {
+                if (isset($existingSettings[$key]) && ! isset($data['settings'][$key])) {
+                    $data['settings'][$key] = $existingSettings[$key];
+                }
+            }
+        }
 
         return $data;
     }

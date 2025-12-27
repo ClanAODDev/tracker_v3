@@ -21,6 +21,19 @@ class EditDivision extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        $protectedSettings = ['officer_channel', 'member_channel'];
+
+        if (isset($data['settings'])) {
+            $existingSettings = $record->getRawOriginal('settings');
+            $existingSettings = is_string($existingSettings) ? json_decode($existingSettings, true) : ($existingSettings ?? []);
+
+            foreach ($protectedSettings as $key) {
+                if (isset($existingSettings[$key]) && ! isset($data['settings'][$key])) {
+                    $data['settings'][$key] = $existingSettings[$key];
+                }
+            }
+        }
+
         $record->update($data);
         $record->notify(new NotifyDivisionSettingsEdited(auth()->user()));
 
