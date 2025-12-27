@@ -19,7 +19,6 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Schemas\Components\Utilities\Get;
 use Log;
 use Parallax\FilamentComments\Actions\CommentsAction;
 
@@ -148,7 +147,7 @@ class EditRankAction extends EditRecord
                         && ! $action->awarded_at
                     )
                     ->requiresConfirmation()
-                    ->modalHeading(fn (Get $get, $record) => $record->rank->isOfficer()
+                    ->modalHeading(fn ($record) => $record->rank->isOfficer()
                         ? 'Award Officer Rank Change'
                         : 'Award Rank Change')
                     ->modalDescription('Member will receive a notification prompting them to accept or decline the rank change'),
@@ -156,7 +155,7 @@ class EditRankAction extends EditRecord
                 Action::make('approve')
                     ->label('Approve change')
                     ->closeModalByClickingAway(false)
-                    ->schema(function (Get $get, $record) {
+                    ->schema(function ($record) {
                         if ($record->rank->isOfficer()) {
                             return [];
                         }
@@ -204,10 +203,10 @@ class EditRankAction extends EditRecord
                     ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
                     ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                     ->requiresConfirmation()
-                    ->modalHeading(fn (Get $get, $record) => $record->rank->isOfficer()
+                    ->modalHeading(fn ($record) => $record->rank->isOfficer()
                         ? 'Approve Officer Rank Change'
                         : 'Approve Rank Change')
-                    ->modalDescription(function (Get $get, $record) {
+                    ->modalDescription(function ($record) {
                         if ($record->rank->isOfficer()) {
                             return 'The requester will be notified that the officer promotion was approved. They will need to coordinate with the member to award the promotion.';
                         }
