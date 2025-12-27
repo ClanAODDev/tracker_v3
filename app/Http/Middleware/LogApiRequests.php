@@ -34,11 +34,13 @@ class LogApiRequests
             $context['payload'] = $request->except(['password', 'password_confirmation', 'token']);
         }
 
+        $uri = $request->method() . ' ' . $request->path();
+
         if ($response->getStatusCode() >= 400) {
             $context['response'] = substr($response->getContent(), 0, 500);
-            Log::channel('api')->error('API Request Failed', $context);
+            Log::channel('api')->error($uri, $context);
         } else {
-            Log::channel('api')->info('API Request', $context);
+            Log::channel('api')->info($uri, $context);
         }
 
         return $response;
