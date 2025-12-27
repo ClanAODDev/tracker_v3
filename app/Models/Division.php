@@ -191,12 +191,14 @@ class Division extends Model
 
     public function routeNotificationForMembers(): ?string
     {
-        return $this->settings()->get('member_channel', null);
+        return $this->settings()->get('member_channel')
+            ?: ($this->abbreviation ? $this->abbreviation . '-members' : null);
     }
 
     public function routeNotificationForOfficers(): ?string
     {
-        return $this->settings()->get('officer_channel', null);
+        return $this->settings()->get('officer_channel')
+            ?: ($this->abbreviation ? $this->abbreviation . '-officers' : null);
     }
 
     /**
@@ -359,7 +361,9 @@ class Division extends Model
     {
         $this->fireCustomModelEvent('settingsRead', true);
 
-        return new DivisionSettings($this->settings, $this);
+        $mergedSettings = array_merge($this->defaultSettings, $this->settings ?? []);
+
+        return new DivisionSettings($mergedSettings, $this);
     }
 
     /**

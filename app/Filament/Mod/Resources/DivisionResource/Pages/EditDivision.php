@@ -22,7 +22,7 @@ class EditDivision extends EditRecord
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $record->update($data);
-        $record->notify(new NotifyDivisionSettingsEdited(auth()->user()->name));
+        $record->notify(new NotifyDivisionSettingsEdited(auth()->user()));
 
         return $record;
     }
