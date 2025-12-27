@@ -8,9 +8,7 @@
             </div>
         </div>
         <a class="navbar-brand" href="{{ route('home') }}">
-            <img src="{{ getThemedLogoPath() }}" alt="" class="navbar-logo">
             TRACKER
-            <span>{{ config('app.version') }}</span>
         </a>
         <button class="help-toggle" title="Help Center" onclick="window.openTicketModal && window.openTicketModal()">
             <i class="fa fa-life-ring"></i>
