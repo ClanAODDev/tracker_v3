@@ -91,5 +91,12 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'api' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/api.log'),
+            'level' => 'debug',
+            'days' => 30,
+        ],
     ],
 ];

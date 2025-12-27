@@ -4,6 +4,7 @@ use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\HasPrimaryDivision;
 use App\Http\Middleware\IsBanned;
+use App\Http\Middleware\LogApiRequests;
 use App\Http\Middleware\MustBeAdmin;
 use App\Http\Middleware\MustBeDeveloper;
 use App\Http\Middleware\RedirectIfAuthenticated;
@@ -40,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(append: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
+            LogApiRequests::class,
         ])->appendToGroup('api', 'auth:sanctum');
 
         $middleware->alias([
