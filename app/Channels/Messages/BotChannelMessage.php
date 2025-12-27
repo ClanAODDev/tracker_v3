@@ -176,7 +176,7 @@ class BotChannelMessage
                     'description' => $this->message ?? '',
                     'author' => [
                         'name' => $this->title,
-                        'icon_url' => asset(config('aod.logo')),
+                        'icon_url' => asset('images/logo_v2.png'),
                         'url' => $this->url ?? config('app.url'),
                     ],
                     'fields' => $this->fields ?? [],
