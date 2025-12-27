@@ -168,13 +168,14 @@ class ReportsController extends Controller
     public function leadership()
     {
         $divisions = Division::active()
+            ->withoutFloaters()
             ->with([
                 'sergeants' => function ($query) {
                     $query
                         ->orderByRaw('
-                    CASE 
+                    CASE
                         WHEN position = ? THEN 9999
-                        ELSE -position 
+                        ELSE -position
                     END ASC
                 ', [Position::CLAN_ADMIN->value])
                         ->orderByDesc('rank');
@@ -184,6 +185,7 @@ class ReportsController extends Controller
             ->get();
 
         $leadership = Member::query()
+            ->with('division')
             ->where('rank', '>', Rank::STAFF_SERGEANT)
             ->where('division_id', '!=', 0)
             ->orderByDesc('rank')

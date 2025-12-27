@@ -16,7 +16,7 @@
     "isEntry": true
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-BMOzFptJ.js",
+    "file": "assets/main-B1GdqTHg.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true
@@ -60,6 +60,12 @@
       "assets/tickets-tzPOxMf7.css"
     ]
   },
+  "resources/assets/js/training.js": {
+    "file": "assets/training-BSJ6xIJW.js",
+    "name": "training",
+    "src": "resources/assets/js/training.js",
+    "isEntry": true
+  },
   "resources/assets/js/voice.js": {
     "file": "assets/voice-CwTlL-xb.js",
     "name": "voice",
@@ -67,7 +73,7 @@
     "isEntry": true
   },
   "resources/assets/scss/main.scss": {
-    "file": "assets/main-CG6uEJE5.css",
+    "file": "assets/main-Cfk7I1C6.css",
     "src": "resources/assets/scss/main.scss",
     "isEntry": true,
     "name": "main",

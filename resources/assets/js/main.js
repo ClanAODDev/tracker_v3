@@ -51,7 +51,6 @@ var Tracker = Tracker || {};
         InitBackToTop: function () {
             var $btn = $('#top-link-block');
             if (!$btn.length) return;
-            if (($(window).height() + 100) >= $(document).height()) return;
 
             $(window).on('scroll', function () {
                 if ($(this).scrollTop() > 100) {
@@ -64,14 +63,18 @@ var Tracker = Tracker || {};
 
         InitSmoothScroll: function () {
             $('.smooth-scroll').on('click', function (e) {
-                e.preventDefault();
                 var targetId = $(this).attr('href');
+                if (!targetId || !targetId.startsWith('#')) return;
+
+                e.preventDefault();
                 var $target = $(targetId);
                 if (!$target.length) return;
 
                 var top = $target.offset().top - 90;
-                $('html, body').stop().animate({ scrollTop: top }, 750);
-                window.location.hash = targetId.substr(1);
+                $('html, body').stop().animate({ scrollTop: top }, 750, function () {
+                    history.replaceState(null, null, targetId);
+                    $(window).trigger('hashchange');
+                });
             });
         },
 
