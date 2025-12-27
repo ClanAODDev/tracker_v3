@@ -572,7 +572,7 @@ body.no-animations {
     background: var(--color-bg-panel);
     border-radius: 8px;
     position: relative;
-    z-index: 10;
+    z-index: 101;
 
     + .notice {
         margin-top: 20px;
@@ -1193,6 +1193,8 @@ body.no-animations {
 
 .pending-actions--mobile {
     display: none;
+    position: relative;
+    z-index: 100;
 }
 
 .pending-actions-total {
@@ -7420,16 +7422,25 @@ pre.code-toolbar > .toolbar span:focus {
     margin: 0 130px;
 }
 
-#top-link-block.affix-top {
-    position: absolute; /* allows it to "slide" up into view */
-    bottom: -82px; /* negative of the offset - height of link element */
-    left: 10px; /* padding from the left side of the window */
-}
+#top-link-block {
+    position: fixed;
+    bottom: 18px;
+    left: 10px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
 
-#top-link-block.affix {
-    position: fixed; /* keeps it on the bottom once in view */
-    bottom: 18px; /* height of link element */
-    left: 10px; /* padding from the left side of the window */
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .btn {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
 }
 
 .ld-loading .panel-body {
@@ -9199,6 +9210,8 @@ pre.code-toolbar > .toolbar span:focus {
 
 .breadcrumb-dropdown {
     display: inline-block;
+    position: relative;
+    z-index: 1050;
 }
 
 .breadcrumb-dropdown .dropdown-toggle {
@@ -9240,6 +9253,7 @@ pre.code-toolbar > .toolbar span:focus {
     padding: 6px;
     margin-top: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 1051;
 
     &::before {
         content: '';

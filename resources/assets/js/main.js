@@ -49,10 +49,16 @@ var Tracker = Tracker || {};
         },
 
         InitBackToTop: function () {
+            var $btn = $('#top-link-block');
+            if (!$btn.length) return;
             if (($(window).height() + 100) >= $(document).height()) return;
 
-            $('#top-link-block').removeClass('hidden').affix({
-                offset: { top: 100 }
+            $(window).on('scroll', function () {
+                if ($(this).scrollTop() > 100) {
+                    $btn.addClass('visible');
+                } else {
+                    $btn.removeClass('visible');
+                }
             });
         },
 

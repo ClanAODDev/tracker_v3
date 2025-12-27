@@ -186,11 +186,9 @@ fa-lg
 fa-github"></i></span></a></li>
 </ul>
 
-@unless($isMobile)
-<span id="top-link-block" class="hidden">
-<a href="#top" class="btn btn-default smooth-scroll"
+<span id="top-link-block">
+<a href="#top" class="btn btn-default"
    onclick="$('html,body').animate({scrollTop:0},'slow'); return false;">
-    <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
+    <i class="fa fa-chevron-up"></i><span class="back-to-top-text"> Back to Top</span>
 </a>
 </span>
-@endunless
