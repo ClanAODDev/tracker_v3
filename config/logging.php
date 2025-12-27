@@ -97,6 +97,11 @@ return [
             'path' => storage_path('logs/api.log'),
             'level' => 'debug',
             'days' => 30,
+            'ignore' => [
+                'api/tickets',
+                'api/tickets/*',
+                'api/v1/discord-count',
+            ],
         ],
     ],
 ];

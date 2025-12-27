@@ -15,6 +15,10 @@ class LogApiRequests
 
         $response = $next($request);
 
+        if ($this->shouldIgnore($request)) {
+            return $response;
+        }
+
         $duration = round((microtime(true) - $startTime) * 1000, 2);
 
         $token = $request->user()?->currentAccessToken();
@@ -44,5 +48,18 @@ class LogApiRequests
         }
 
         return $response;
+    }
+
+    protected function shouldIgnore(Request $request): bool
+    {
+        $patterns = config('logging.channels.api.ignore', []);
+
+        foreach ($patterns as $pattern) {
+            if ($request->is($pattern)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
