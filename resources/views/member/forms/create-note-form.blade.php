@@ -32,8 +32,22 @@
 
         <div class="form-group {{ $errors->has('body') ? ' has-error' : null }}">
             <label for="body" class="control-label">Note Content</label>
-            <textarea name="body" id="body" rows="4" class="form-control"
+            <textarea name="body" id="body" rows="4" class="form-control note-body-input"
                       placeholder="Enter your note here..." style="resize: vertical;">{{ old('body') }}</textarea>
+            <div class="reminder-note-suggestion" style="display: none;">
+                <div class="reminder-suggestion-content">
+                    <i class="fa fa-lightbulb-o"></i>
+                    <span>Tracking an inactivity reminder? Mark them as reminded instead of leaving a note.</span>
+                </div>
+                <div class="reminder-suggestion-actions">
+                    @if(auth()->user()->member?->clan_id !== $member->clan_id)
+                        <button type="button" class="btn btn-sm btn-success set-activity-reminder-btn" data-url="{{ route('member.set-activity-reminder', $member->clan_id) }}">
+                            <i class="fa fa-bell"></i> Mark Reminded
+                        </button>
+                    @endif
+                    <button type="button" class="btn btn-sm btn-link dismiss-suggestion">Dismiss</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer">

@@ -49,6 +49,7 @@ class Member extends Model
         'last_trained_at' => 'datetime',
         'xo_at' => 'datetime',
         'co_at' => 'datetime',
+        'last_activity_reminder_at' => 'datetime',
 
         'position' => Position::class,
         'rank' => Rank::class,
@@ -72,6 +73,23 @@ class Member extends Model
     public function user()
     {
         return $this->hasOne(User::class);
+    }
+
+    public function activityRemindedBy()
+    {
+        return $this->belongsTo(User::class, 'activity_reminded_by_id');
+    }
+
+    public function activityReminders()
+    {
+        return $this->hasMany(ActivityReminder::class, 'member_id', 'clan_id')
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function latestActivityReminder()
+    {
+        return $this->hasOne(ActivityReminder::class, 'member_id', 'clan_id')
+            ->latestOfMany();
     }
 
     public function transfers()

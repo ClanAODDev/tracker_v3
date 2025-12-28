@@ -89,4 +89,38 @@ class NoteController extends Controller
 
         return redirect()->route('member', $member->getUrlParams());
     }
+
+    public function restore(Member $member, int $noteId)
+    {
+        if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $note = Note::onlyTrashed()->where('id', $noteId)->where('member_id', $member->id)->first();
+
+        if (! $note) {
+            return response()->json(['success' => false, 'message' => 'Note not found'], 404);
+        }
+
+        $note->restore();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function forceDelete(Member $member, int $noteId)
+    {
+        if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $note = Note::onlyTrashed()->where('id', $noteId)->where('member_id', $member->id)->first();
+
+        if (! $note) {
+            return response()->json(['success' => false, 'message' => 'Note not found'], 404);
+        }
+
+        $note->forceDelete();
+
+        return response()->json(['success' => true]);
+    }
 }

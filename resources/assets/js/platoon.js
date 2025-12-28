@@ -27,6 +27,7 @@ function initPlatoon() {
             this.initBulkTags();
             this.initBulkTransfer();
             this.initSquadAssignments();
+            this.initBulkReminder();
         },
 
         handleForumActivityChart: function () {
@@ -306,11 +307,13 @@ function initPlatoon() {
                 columnDefs: [
                     { targets: cols['checkbox'], visible: false, orderable: false, searchable: false },
                     { targets: cols['tags'], visible: false },
+                    { targets: cols['inactivity-reminder'], visible: false },
                     { targets: 'no-sort', orderable: false },
                     { targets: 'no-search', searchable: false },
                     { targets: 'col-hidden', visible: false },
                     { targets: cols['rank'], orderData: cols['rank-id'] },
-                    { targets: cols['discord-activity'], orderData: cols['discord-activity-date'] }
+                    { targets: cols['discord-activity'], orderData: cols['discord-activity-date'] },
+                    { targets: cols['inactivity-reminder'], orderData: cols['reminder-date'] }
                 ],
                 stateSaveParams: function(settings, data) {
                     data.columns[cols['checkbox']].visible = false;
@@ -343,10 +346,14 @@ function initPlatoon() {
             }
 
             function updateToggleState(link, column) {
+                var $link = $(link);
+                var $icon = $link.find('i.fa');
                 if (column.visible()) {
-                    $(link).addClass('active');
+                    $link.addClass('active');
+                    $icon.removeClass('fa-square-o').addClass('fa-check');
                 } else {
-                    $(link).removeClass('active');
+                    $link.removeClass('active');
+                    $icon.removeClass('fa-check').addClass('fa-square-o');
                 }
             }
 
@@ -361,6 +368,7 @@ function initPlatoon() {
 
             $('a.toggle-vis').on('click', function (e) {
                 e.preventDefault();
+                e.stopPropagation();
                 var colName = $(this).data('column');
                 var colIndex = getColumnIndex(colName);
                 if (colIndex !== undefined) {
@@ -765,6 +773,62 @@ function initPlatoon() {
                     complete: function() {
                         $btn.prop('disabled', false).html('<i class="fa fa-exchange-alt"></i> Transfer');
                         updateSubmitState();
+                    }
+                });
+            });
+        },
+
+        initBulkReminder: function () {
+            var $btn = $('#bulk-reminder-btn');
+            if (!$btn.length) return;
+
+            var csrfToken = $('meta[name=csrf-token]').attr('content');
+            var self = this;
+
+            $btn.on('click', function() {
+                var memberIds = $('#pm-member-data').val();
+                if (!memberIds) {
+                    toastr.warning('No members selected');
+                    return;
+                }
+
+                var memberIdArray = memberIds.split(',');
+                var url = $btn.data('url');
+
+                $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span>');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        _token: csrfToken,
+                        member_ids: memberIdArray
+                    },
+                    success: function(response) {
+                        var message = response.count + ' member' + (response.count !== 1 ? 's' : '') + ' marked as reminded';
+                        if (response.skipped > 0) {
+                            message += ' (' + response.skipped + ' skipped - already reminded today)';
+                        }
+                        toastr.success(message);
+
+                        response.updatedIds.forEach(function(memberId) {
+                            var $toggleBtn = $('.activity-reminder-toggle[data-member-id="' + memberId + '"]');
+                            if ($toggleBtn.length) {
+                                $toggleBtn.removeClass('btn-success').addClass('btn-default');
+                                $toggleBtn.html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>');
+                                $toggleBtn.attr('title', 'Reminded just now');
+                                $toggleBtn.prop('disabled', true);
+                            }
+                        });
+
+                        $('.bulk-action-close').click();
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON?.message || 'Failed to set reminders';
+                        toastr.error(message);
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>');
                     }
                 });
             });

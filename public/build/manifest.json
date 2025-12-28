@@ -16,7 +16,7 @@
     "isEntry": true
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-B1GdqTHg.js",
+    "file": "assets/main-BQKBz5kc.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true
@@ -28,7 +28,7 @@
     "isEntry": true
   },
   "resources/assets/js/platoon.js": {
-    "file": "assets/platoon-ljMcYkTt.js",
+    "file": "assets/platoon-DLqCgPRx.js",
     "name": "platoon",
     "src": "resources/assets/js/platoon.js",
     "isEntry": true
@@ -73,7 +73,7 @@
     "isEntry": true
   },
   "resources/assets/scss/main.scss": {
-    "file": "assets/main-D5gDMaLI.css",
+    "file": "assets/main-BzxktvRE.css",
     "src": "resources/assets/scss/main.scss",
     "isEntry": true,
     "name": "main",

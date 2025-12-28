@@ -152,9 +152,15 @@
         box-shadow: 0 2px 4px color-mix(in srgb, var(--color-info) 30%, transparent);
     }
 
-    &--tl {
-        background: linear-gradient(135deg, color-mix(in srgb, var(--color-info) 70%, var(--color-success)), var(--color-info));
-        box-shadow: 0 2px 4px color-mix(in srgb, var(--color-info) 20%, transparent);
+    &--tl,
+    &--pl {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        box-shadow: 0 2px 4px color-mix(in srgb, #6366f1 30%, transparent);
+    }
+
+    &--sl {
+        background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+        box-shadow: 0 2px 4px color-mix(in srgb, #0ea5e9 30%, transparent);
     }
 
     &--sgt {

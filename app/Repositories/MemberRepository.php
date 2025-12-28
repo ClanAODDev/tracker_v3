@@ -38,6 +38,15 @@ class MemberRepository
             ->filter(fn ($note) => $note->type !== 'sr_ldr' || $canViewSrLdr);
     }
 
+    public function getTrashedNotesForMember(Member $member): Collection
+    {
+        return $member->notes()
+            ->onlyTrashed()
+            ->with('author.member')
+            ->orderByDesc('deleted_at')
+            ->get();
+    }
+
     public function getRankHistory(Member $member): Collection
     {
         return $member->rankActions()->approvedAndAccepted()->get();
@@ -71,6 +80,8 @@ class MemberRepository
             'squad',
             'transfers.division',
             'partTimeDivisions' => fn ($q) => $q->whereActive(true),
+            'activityRemindedBy',
+            'activityReminders.remindedBy',
         ]);
     }
 

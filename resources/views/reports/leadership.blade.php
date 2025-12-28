@@ -91,8 +91,8 @@
                                         $badgeClass = match($member->position) {
                                             \App\Enums\Position::COMMANDING_OFFICER => 'position-badge--co',
                                             \App\Enums\Position::EXECUTIVE_OFFICER => 'position-badge--xo',
-                                            \App\Enums\Position::PLATOON_LEADER => 'position-badge--tl',
-                                            \App\Enums\Position::SQUAD_LEADER => 'position-badge--tl',
+                                            \App\Enums\Position::PLATOON_LEADER => 'position-badge--pl',
+                                            \App\Enums\Position::SQUAD_LEADER => 'position-badge--sl',
                                             \App\Enums\Position::CLAN_ADMIN => 'position-badge--admin',
                                             default => 'position-badge--member'
                                         };

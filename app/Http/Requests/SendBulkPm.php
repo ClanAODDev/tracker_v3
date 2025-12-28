@@ -17,6 +17,7 @@ class SendBulkPm extends FormRequest
     {
         return [
             'pm-member-data' => [(new Delimited('numeric', $this->messages()))->min(2)],
+            'set_reminder' => ['nullable', 'boolean'],
         ];
     }
 

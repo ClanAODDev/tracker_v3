@@ -28,6 +28,10 @@ var Tracker = Tracker || {};
             Tracker.InitInactiveTabs();
             Tracker.InitParttimerSearch();
             Tracker.InitAddParttimer();
+            Tracker.InitNoteReminderDetection();
+            Tracker.InitActivityReminderToggle();
+            Tracker.InitInactiveBulkMode();
+            Tracker.InitTrashedNotes();
         },
 
         InitNavToggle: function () {
@@ -1007,6 +1011,368 @@ var Tracker = Tracker || {};
                 $searchInput.val('').show();
                 $submitBtn.prop('disabled', true);
                 $('#parttimer-handle-value').val('');
+            });
+        },
+
+        InitNoteReminderDetection: function () {
+            var reminderPatterns = [
+                /\bpm\s*sent\b/i,
+                /\bpm'?d\b/i,
+                /\bsent\s*(a\s+)?pm\b/i,
+                /\binactivity\s+(notice|reminder|warning|msg|message|pm)\b/i,
+                /\bactivity\s+(reminder|notice|pm|msg|message\s+sent)\b/i,
+                /\b(reminder|notice)\s+sent\b/i,
+                /\bwellness\s+check\b/i,
+                /\bforum\s+(notice|reminder|activity\s+pm|inactivity)\b/i,
+                /\bdiscord\s+(message|dm|pm)\s+sent\b/i,
+                /\bfinal\s+(notice|reminder)\s+sent\b/i,
+                /\b(14|30|45|60)\s*day\b/i,
+                /\b[23]\s*week\b/i,
+                /\bmessaged\s+(regarding|about)\s+(in)?activity\b/i,
+                /\bcontacted\s+(regarding|about)\s+(in)?activity\b/i
+            ];
+
+            $(document).on('input', '.note-body-input', function () {
+                var $input = $(this);
+                var $suggestion = $input.siblings('.reminder-note-suggestion');
+                var text = $input.val();
+
+                if ($suggestion.data('dismissed')) return;
+
+                var isReminderNote = text.length < 100 && reminderPatterns.some(function (pattern) {
+                    return pattern.test(text);
+                });
+
+                $suggestion.toggle(isReminderNote);
+            });
+
+            $(document).on('click', '.dismiss-suggestion', function () {
+                var $suggestion = $(this).closest('.reminder-note-suggestion');
+                $suggestion.data('dismissed', true).hide();
+            });
+
+            $('#create-member-note').on('hidden.bs.modal', function () {
+                $(this).find('.reminder-note-suggestion').removeData('dismissed').hide();
+            });
+        },
+
+        InitActivityReminderToggle: function () {
+            var csrfToken = $('meta[name=csrf-token]').attr('content');
+
+            $(document).on('click', '.activity-reminder-toggle', function(e) {
+                e.preventDefault();
+                var $btn = $(this);
+                var memberId = $btn.data('member-id');
+
+                if ($btn.prop('disabled')) {
+                    return;
+                }
+
+                $btn.prop('disabled', true);
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/members/' + memberId + '/set-activity-reminder',
+                    method: 'POST',
+                    data: { _token: csrfToken },
+                    success: function(response) {
+                        $btn.removeClass('btn-success').addClass('btn-default');
+                        $btn.html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>');
+                        $btn.attr('title', response.title);
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON?.message || 'Failed to set reminder';
+                        toastr.error(message);
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+
+            $(document).on('click', '.set-activity-reminder-btn', function(e) {
+                e.preventDefault();
+                var $btn = $(this);
+                var url = $btn.data('url');
+
+                if ($btn.prop('disabled') || $btn.hasClass('reminder-sent')) {
+                    return;
+                }
+
+                $btn.prop('disabled', true);
+                var originalHtml = $btn.html();
+                $btn.html('<i class="fa fa-spinner fa-spin"></i> Sending...');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: { _token: csrfToken },
+                    success: function(response) {
+                        $btn.addClass('reminder-sent');
+                        $btn.html('<i class="fa fa-check"></i> Reminded ' + response.date);
+                        toastr.success('Activity reminder marked');
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON?.message || 'Failed to set reminder';
+                        toastr.error(message);
+                        $btn.prop('disabled', false);
+                        $btn.html(originalHtml);
+                    }
+                });
+            });
+
+            $(document).on('click', '.clear-reminders-btn', function(e) {
+                e.preventDefault();
+                var $btn = $(this);
+                var url = $btn.data('url');
+
+                if ($btn.prop('disabled')) {
+                    return;
+                }
+
+                if (!confirm('Clear all activity reminders for this member?')) {
+                    return;
+                }
+
+                $btn.prop('disabled', true);
+                $btn.html('<i class="fa fa-spinner fa-spin"></i> Clearing...');
+
+                $.ajax({
+                    url: url,
+                    method: 'DELETE',
+                    data: { _token: csrfToken },
+                    success: function(response) {
+                        toastr.success(response.count + ' reminder(s) cleared');
+                        $('#member-reminder-history-modal').modal('hide');
+                        $('.stat-reminder-badge').fadeOut();
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON?.message || 'Failed to clear reminders';
+                        toastr.error(message);
+                        $btn.prop('disabled', false);
+                        $btn.html('<i class="fa fa-trash"></i> Clear Reminders');
+                    }
+                });
+            });
+        },
+
+        InitTrashedNotes: function () {
+            var $toggleBtn = $('.toggle-trashed-notes');
+            if (!$toggleBtn.length) return;
+
+            var csrfToken = $('meta[name=csrf-token]').attr('content');
+            var trashedCount = $toggleBtn.data('count');
+
+            $toggleBtn.on('click', function() {
+                var $btn = $(this);
+                var $active = $('.notes-active-list');
+                var $trashed = $('.notes-trashed-list');
+
+                if ($trashed.is(':visible')) {
+                    $trashed.hide();
+                    $active.show();
+                    $btn.removeClass('btn-warning').addClass('btn-default');
+                    $btn.html('<i class="fa fa-trash"></i> Deleted (' + trashedCount + ')');
+                } else {
+                    $active.hide();
+                    $trashed.show();
+                    $btn.removeClass('btn-default').addClass('btn-warning');
+                    $btn.html('<i class="fa fa-sticky-note"></i> Active Notes');
+                }
+            });
+
+            $(document).on('click', '.restore-note-btn', function() {
+                var $btn = $(this);
+                var url = $btn.data('url');
+                var $card = $btn.closest('.note-card');
+
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: { _token: csrfToken },
+                    success: function() {
+                        $card.fadeOut(300, function() { $(this).remove(); });
+                        toastr.success('Note restored');
+                    },
+                    error: function(xhr) {
+                        toastr.error(xhr.responseJSON?.message || 'Failed to restore note');
+                        $btn.prop('disabled', false).html('<i class="fa fa-undo"></i> Restore');
+                    }
+                });
+            });
+
+            $(document).on('click', '.force-delete-note-btn', function() {
+                var $btn = $(this);
+                var url = $btn.data('url');
+                var $card = $btn.closest('.note-card');
+
+                if (!confirm('Permanently delete this note? This cannot be undone.')) {
+                    return;
+                }
+
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                $.ajax({
+                    url: url,
+                    method: 'DELETE',
+                    data: { _token: csrfToken },
+                    success: function() {
+                        $card.fadeOut(300, function() { $(this).remove(); });
+                        toastr.success('Note permanently deleted');
+                    },
+                    error: function(xhr) {
+                        toastr.error(xhr.responseJSON?.message || 'Failed to delete note');
+                        $btn.prop('disabled', false).html('<i class="fa fa-trash"></i> Delete Forever');
+                    }
+                });
+            });
+        },
+
+        InitInactiveBulkMode: function () {
+            var $bulkToggle = $('.inactive-bulk-toggle');
+            if (!$bulkToggle.length) return;
+
+            var $bulkBar = $('#inactive-bulk-bar');
+            var $pmData = $('#inactive-pm-member-data');
+            var csrfToken = $('meta[name=csrf-token]').attr('content');
+            var bulkMode = false;
+
+            function updateSelection() {
+                var selected = $('.inactive-member-checkbox:checked').map(function() {
+                    return $(this).val();
+                }).get();
+
+                $pmData.val(selected.join(','));
+
+                if (selected.length > 0) {
+                    $bulkBar.find('.status-text').text(selected.length + ' selected');
+                    $bulkBar.slideDown(200);
+                } else {
+                    $bulkBar.slideUp(200);
+                }
+
+                var total = $('.inactive-member-checkbox').length;
+                var checked = selected.length;
+                $('.inactive-select-all').prop('checked', checked > 0 && checked === total);
+                $('.inactive-select-all').prop('indeterminate', checked > 0 && checked < total);
+            }
+
+            $bulkToggle.on('click', function() {
+                bulkMode = !bulkMode;
+                var $btn = $(this);
+                $btn.toggleClass('active', bulkMode);
+                $('.inactive-bulk-col').toggle(bulkMode);
+                $('.inactive-table').toggleClass('bulk-mode', bulkMode);
+
+                if (bulkMode) {
+                    $btn.html('<i class="fa fa-times"></i> Exit Bulk Mode');
+                } else {
+                    $btn.html('<i class="fa fa-check-square"></i> Bulk Mode');
+                    $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
+                    $bulkBar.slideUp(200);
+                }
+            });
+
+            $(document).on('change', '.inactive-member-checkbox', updateSelection);
+
+            var isDragging = false;
+            var dragSelectState = true;
+            var dragStartRow = null;
+
+            $(document).on('mousedown', '.inactive-table tbody tr', function(e) {
+                if (!bulkMode) return;
+                if ($(e.target).is('a, button, input, .fa')) return;
+                if (e.which !== 1) return;
+
+                e.preventDefault();
+                isDragging = true;
+                dragStartRow = this;
+
+                var $checkbox = $(this).find('.inactive-member-checkbox');
+                if ($checkbox.length) {
+                    dragSelectState = !$checkbox.prop('checked');
+                    $checkbox.prop('checked', dragSelectState);
+                    $(this).toggleClass('drag-selected', dragSelectState);
+                }
+            });
+
+            $(document).on('mouseenter', '.inactive-table tbody tr', function() {
+                if (!isDragging || !bulkMode) return;
+
+                var $checkbox = $(this).find('.inactive-member-checkbox');
+                if ($checkbox.length) {
+                    $checkbox.prop('checked', dragSelectState);
+                    $(this).toggleClass('drag-selected', dragSelectState);
+                }
+            });
+
+            $(document).on('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    dragStartRow = null;
+                    $('.inactive-table tbody tr').removeClass('drag-selected');
+                    updateSelection();
+                }
+            });
+
+            $(document).on('change', '.inactive-select-all', function() {
+                var panel = $(this).closest('.inactive-panel');
+                panel.find('.inactive-member-checkbox').prop('checked', $(this).prop('checked'));
+                updateSelection();
+            });
+
+            $(document).on('click', '.inactive-bulk-close', function() {
+                $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
+                updateSelection();
+            });
+
+            $('#inactive-bulk-reminder-btn').on('click', function() {
+                var memberIds = $pmData.val();
+                if (!memberIds) {
+                    toastr.warning('No members selected');
+                    return;
+                }
+
+                var $btn = $(this);
+                var memberIdArray = memberIds.split(',');
+                var url = $btn.data('url');
+
+                $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span>');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        _token: csrfToken,
+                        member_ids: memberIdArray
+                    },
+                    success: function(response) {
+                        var message = response.count + ' member' + (response.count !== 1 ? 's' : '') + ' marked as reminded';
+                        if (response.skipped > 0) {
+                            message += ' (' + response.skipped + ' skipped - already reminded today)';
+                        }
+                        toastr.success(message);
+
+                        response.updatedIds.forEach(function(memberId) {
+                            var $toggleBtn = $('.activity-reminder-toggle[data-member-id="' + memberId + '"]');
+                            if ($toggleBtn.length) {
+                                $toggleBtn.removeClass('btn-success').addClass('btn-default');
+                                $toggleBtn.html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>');
+                                $toggleBtn.attr('title', 'Reminded just now');
+                                $toggleBtn.prop('disabled', true);
+                            }
+                        });
+
+                        $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
+                        updateSelection();
+                    },
+                    error: function(xhr) {
+                        var message = xhr.responseJSON?.message || 'Failed to set reminders';
+                        toastr.error(message);
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html('<i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>');
+                    }
+                });
             });
         }
 

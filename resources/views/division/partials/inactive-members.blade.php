@@ -3,8 +3,10 @@
         <table class="table inactive-table">
             <thead>
             <tr>
+                <th class="inactive-bulk-col" style="display: none;"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
                 <th>Member</th>
                 <th>Last Voice Activity</th>
+                <th>Reminded</th>
                 <th>Status</th>
                 <th>{{ $division->locality('platoon') }} / Squad</th>
                 <th class="text-right">Actions</th>
@@ -20,8 +22,10 @@
                     } elseif ($daysSince >= $division->settings()->inactivity_days * 1.5) {
                         $severityClass = 'inactive-row--warning';
                     }
+                    $remindedToday = $member->last_activity_reminder_at?->isToday();
                 @endphp
                 <tr class="{{ $severityClass }}">
+                    <td class="inactive-bulk-col" style="display: none;"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
                             <span class="inactive-member-name">{{ $member->name }}</span>
@@ -32,6 +36,18 @@
                         <span class="inactive-time">
                             {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}
                         </span>
+                    </td>
+                    <td data-order="{{ $member->last_activity_reminder_at?->format('Y-m-d') ?? '0000-00-00' }}">
+                        <button type="button"
+                                class="btn btn-sm activity-reminder-toggle {{ $remindedToday ? 'btn-default' : 'btn-success' }}"
+                                data-member-id="{{ $member->clan_id }}"
+                                title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
+                                {{ $remindedToday ? 'disabled' : '' }}>
+                            <i class="fa fa-bell"></i>
+                            @if($member->last_activity_reminder_at)
+                                <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j') }}</span>
+                            @endif
+                        </button>
                     </td>
                     <td>
                         <span class="inactive-status" title="{{ $member->last_voice_status?->getDescription() }}">

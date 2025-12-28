@@ -44,11 +44,15 @@
         @can('update', $member)
             <li class="divider"></li>
             <li>
-                <a href="{{ route('member.confirm-reset', $member->clan_id) }}"> Reset Assignments</a>
+                <a href="{{ route('member.flag-inactive', $member->clan_id) }}">Flag For Inactivity</a>
             </li>
-            <li>
-                <a href="{{ route('member.flag-inactive', $member->clan_id) }}">Flag For Inactivity </a>
-            </li>
+            @unless(auth()->user()->member?->clan_id === $member->clan_id)
+                <li>
+                    <a href="#" class="set-activity-reminder-btn" data-url="{{ route('member.set-activity-reminder', $member->clan_id) }}">
+                        Mark Sent Reminder
+                    </a>
+                </li>
+            @endunless
         @endcan
     </ul>
 </div>

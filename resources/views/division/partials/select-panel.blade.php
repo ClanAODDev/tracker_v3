@@ -4,7 +4,7 @@
     <div class="bulk-action-bar-content">
         <span class="status-text"></span>
         <div class="actions">
-            <form action="{{ route('private-message.create', compact('division')) }}" method="POST">
+            <form action="{{ route('private-message.create', compact('division')) }}" method="POST" class="bulk-pm-form">
                 <input type="hidden" id="pm-member-data" name="pm-member-data">
                 <input type="hidden" id="tag-member-data" name="tag-member-data">
                 <input type="hidden" id="transfer-member-data" name="transfer-member-data">
@@ -23,6 +23,11 @@
                     <i class="fa fa-exchange-alt text-accent"></i> <span class="hidden-xs hidden-sm">Transfer</span>...
                 </button>
             @endcan
+            <button type="button" id="bulk-reminder-btn" class="btn btn-default"
+                    data-url="{{ route('bulk-reminder.store', $division) }}"
+                    title="Mark as reminded">
+                <i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>
+            </button>
             <button type="button" class="btn btn-link bulk-action-close" title="Clear selection">
                 <i class="fa fa-times"></i>
             </button>

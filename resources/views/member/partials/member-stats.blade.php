@@ -50,6 +50,14 @@
                                 <span class="text-muted">Never connected</span>
                             @endif
                         </div>
+                        @php
+                            $reminderCount = $member->activityReminders->count();
+                        @endphp
+                        @if($reminderCount > 0)
+                            <button type="button" class="stat-reminder-badge" data-toggle="modal" data-target="#member-reminder-history-modal">
+                                <i class="fa fa-bell"></i> {{ $reminderCount }}
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -346,6 +354,36 @@
                             @endforeach
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if($member->activityReminders->count() > 0)
+        <div class="modal fade" id="member-reminder-history-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        <h4 class="modal-title"><i class="fa fa-bell"></i> Reminder History</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="reminder-history-list">
+                            @foreach($member->activityReminders as $reminder)
+                                <li class="reminder-history-item">
+                                    <span class="reminder-history-date">{{ $reminder->created_at->format('M j, Y') }}</span>
+                                    <span class="reminder-history-by">{{ $reminder->remindedBy?->name ?? 'Unknown' }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @if(auth()->user()->isRole(['sr_ldr', 'admin']) && auth()->user()->member?->clan_id !== $member->clan_id)
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-sm clear-reminders-btn" data-url="{{ route('member.clear-activity-reminders', $member->clan_id) }}">
+                                <i class="fa fa-trash"></i> Clear Reminders
+                            </button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

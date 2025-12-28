@@ -19,6 +19,8 @@ Route::prefix('members')->group(function () {
         Route::get('{member}/confirm-reset', 'confirmUnassign')->name('member.confirm-reset');
         Route::post('{member}/unassign', 'unassignMember')->name('member.unassign');
         Route::post('{member}/assign-platoon', 'assignPlatoon')->name('member.assign-platoon');
+        Route::post('{member}/set-activity-reminder', 'setActivityReminder')->name('member.set-activity-reminder');
+        Route::delete('{member}/activity-reminders', 'clearActivityReminders')->name('member.clear-activity-reminders');
         Route::post('search/{name}', 'search');
         Route::get('{member}-{slug?}', 'show')->name('member');
     });
@@ -36,6 +38,8 @@ Route::prefix('members')->group(function () {
         Route::get('{note}/edit', 'edit')->name('editNote');
         Route::match(['post', 'patch'], '{note}', 'update')->name('updateNote');
         Route::delete('{note}', 'delete')->name('deleteNote');
+        Route::post('{noteId}/restore', 'restore')->name('restoreNote');
+        Route::delete('{noteId}/force', 'forceDelete')->name('forceDeleteNote');
     });
 });
 

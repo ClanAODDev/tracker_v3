@@ -10,18 +10,38 @@
                             <span class="badge">{{ count($notes) }}</span>
                         @endif
                     </h4>
+                    @if(auth()->user()->isRole(['sr_ldr', 'admin']) && $trashedNotes->count() > 0)
+                        <button type="button" class="btn btn-xs btn-default pull-right m-t-xs toggle-trashed-notes" data-count="{{ $trashedNotes->count() }}">
+                            <i class="fa fa-trash"></i> Deleted ({{ $trashedNotes->count() }})
+                        </button>
+                    @endif
                 </div>
                 <div class="modal-body">
-                    @if (count($notes))
-                        <div class="notes-list">
-                            @foreach ($notes as $note)
-                                @include ('member.partials.note')
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center p-lg">
-                            <i class="fa fa-sticky-note fa-3x text-muted m-b-md" style="opacity: 0.3;"></i>
-                            <p class="text-muted">No notes recorded for this member.</p>
+                    <div class="notes-active-list">
+                        @if (count($notes))
+                            <div class="notes-list">
+                                @foreach ($notes as $note)
+                                    @include ('member.partials.note')
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center p-lg">
+                                <i class="fa fa-sticky-note fa-3x text-muted m-b-md" style="opacity: 0.3;"></i>
+                                <p class="text-muted">No notes recorded for this member.</p>
+                            </div>
+                        @endif
+                    </div>
+                    @if(auth()->user()->isRole(['sr_ldr', 'admin']) && $trashedNotes->count() > 0)
+                        <div class="notes-trashed-list" style="display: none;">
+                            <div class="alert alert-warning m-b-md">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                These notes have been deleted and are only visible to senior leaders.
+                            </div>
+                            <div class="notes-list">
+                                @foreach ($trashedNotes as $note)
+                                    @include ('member.partials.note', ['trashed' => true])
+                                @endforeach
+                            </div>
                         </div>
                     @endif
                 </div>

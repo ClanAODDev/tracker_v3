@@ -9,6 +9,7 @@ use App\Http\Controllers\DivisionNoteController;
 use App\Http\Controllers\DivisionStructureController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PlatoonController;
 use App\Http\Controllers\PmController;
 use App\Http\Controllers\RecruitingController;
@@ -81,4 +82,6 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::get('platoons', 'getPlatoons')->name('platoons');
         Route::post('/', 'store')->name('store');
     });
+
+    Route::post('bulk-reminder', [MemberController::class, 'bulkReminder'])->name('bulk-reminder.store');
 });

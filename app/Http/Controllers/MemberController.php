@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Data\MemberStatsData;
 use App\Data\NoteStatsData;
+use App\Models\ActivityReminder;
+use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\MemberRepository;
@@ -46,6 +48,7 @@ class MemberController extends Controller
         $division = $member->division;
 
         $notes = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
+        $trashedNotes = $canViewSrLdr ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
         $rankHistory = $this->memberRepository->getRankHistory($member);
         $transfers = $member->transfers;
         $partTimeDivisions = $member->partTimeDivisions;
@@ -58,6 +61,7 @@ class MemberController extends Controller
             'member' => $member,
             'division' => $division,
             'notes' => $notes,
+            'trashedNotes' => $trashedNotes,
             'noteStats' => $noteStats,
             'partTimeDivisions' => $partTimeDivisions,
             'rankHistory' => $rankHistory,
@@ -95,5 +99,150 @@ class MemberController extends Controller
         $this->showSuccessToast('Member assignments reset successfully');
 
         return redirect()->route('member', $member->getUrlParams());
+    }
+
+    public function setActivityReminder(Member $member): JsonResponse
+    {
+        if (auth()->user()->member?->clan_id === $member->clan_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot remind yourself',
+            ], 403);
+        }
+
+        $alreadyRemindedToday = ActivityReminder::where('member_id', $member->clan_id)
+            ->whereDate('created_at', today())
+            ->exists();
+
+        if ($alreadyRemindedToday) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Already reminded today',
+            ], 400);
+        }
+
+        $reminder = ActivityReminder::create([
+            'member_id' => $member->clan_id,
+            'division_id' => $member->division_id,
+            'reminded_by_id' => auth()->id(),
+        ]);
+
+        $member->last_activity_reminder_at = $reminder->created_at;
+        $member->activity_reminded_by_id = auth()->id();
+        $member->save();
+
+        return response()->json([
+            'success' => true,
+            'date' => $reminder->created_at->format('n/j'),
+            'title' => 'Reminded ' . $reminder->created_at->diffForHumans(),
+        ]);
+    }
+
+    public function clearActivityReminders(Member $member): JsonResponse
+    {
+        if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized',
+            ], 403);
+        }
+
+        if (auth()->user()->member?->clan_id === $member->clan_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Cannot clear your own reminders',
+            ], 403);
+        }
+
+        $count = ActivityReminder::where('member_id', $member->clan_id)->delete();
+
+        $member->last_activity_reminder_at = null;
+        $member->activity_reminded_by_id = null;
+        $member->save();
+
+        return response()->json([
+            'success' => true,
+            'count' => $count,
+        ]);
+    }
+
+    public function bulkReminder(Division $division, Request $request): JsonResponse|RedirectResponse
+    {
+        $memberIds = $request->input('member_ids', []);
+
+        if (is_string($memberIds)) {
+            $memberIds = array_filter(explode(',', $memberIds));
+        }
+
+        if (empty($memberIds)) {
+            if ($request->has('redirect')) {
+                return redirect($request->input('redirect'))->with('error', 'No members selected');
+            }
+
+            return response()->json(['success' => false, 'message' => 'No members selected'], 400);
+        }
+
+        $alreadyRemindedToday = ActivityReminder::whereIn('member_id', $memberIds)
+            ->whereDate('created_at', today())
+            ->pluck('member_id')
+            ->toArray();
+
+        $toUpdate = array_diff($memberIds, $alreadyRemindedToday);
+
+        if (empty($toUpdate)) {
+            if ($request->has('redirect')) {
+                return redirect($request->input('redirect'))->with('reminder_result', [
+                    'count' => 0,
+                    'skipped' => count($alreadyRemindedToday),
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'All selected members were already reminded today',
+            ], 400);
+        }
+
+        $now = now();
+        $userId = auth()->id();
+        $reminders = [];
+
+        foreach ($toUpdate as $memberId) {
+            $member = Member::where('clan_id', $memberId)->first();
+            if ($member) {
+                $reminders[] = [
+                    'member_id' => $memberId,
+                    'division_id' => $member->division_id,
+                    'reminded_by_id' => $userId,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+        }
+
+        ActivityReminder::insert($reminders);
+
+        $count = Member::whereIn('clan_id', $toUpdate)
+            ->update([
+                'last_activity_reminder_at' => $now,
+                'activity_reminded_by_id' => $userId,
+            ]);
+
+        $skippedCount = count($alreadyRemindedToday);
+
+        if ($request->has('redirect')) {
+            return redirect($request->input('redirect'))->with('reminder_result', [
+                'count' => $count,
+                'skipped' => $skippedCount,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'count' => $count,
+            'skipped' => $skippedCount,
+            'updatedIds' => $toUpdate,
+            'date' => $now->format('n/j'),
+        ]);
     }
 }

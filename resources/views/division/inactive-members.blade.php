@@ -57,14 +57,21 @@
                 </div>
             </div>
 
-            <div class="inactive-search-wrapper">
-                <i class="fa fa-search inactive-search-icon"></i>
-                <input type="text"
-                       id="inactive-search"
-                       placeholder="Search members..."
-                       class="inactive-search-input">
+            <div class="inactive-toolbar-right">
+                <button type="button" class="btn btn-default inactive-bulk-toggle">
+                    Bulk Mode
+                </button>
+                <div class="inactive-search-wrapper">
+                    <i class="fa fa-search inactive-search-icon"></i>
+                    <input type="text"
+                           id="inactive-search"
+                           placeholder="Search members..."
+                           class="inactive-search-input">
+                </div>
             </div>
         </div>
+
+        @include('division.partials.inactive-bulk-bar')
 
         <div class="inactive-tabs">
             <button class="inactive-tab active" data-tab="inactive">

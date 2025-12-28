@@ -3,6 +3,10 @@
     'icon' => null,
     'cta' => null,
     'ctaLabel' => null,
+    'secondaryCta' => null,
+    'secondaryCtaLabel' => null,
+    'secondaryCtaClass' => '',
+    'secondaryCtaData' => [],
 ])
 
 @php
@@ -20,10 +24,24 @@
     <div class="notice-content">
         {{ $slot }}
     </div>
-    @if($cta)
-        <a href="{{ $cta }}" class="notice-cta">
-            {{ $ctaLabel ?? 'View' }}
-            <i class="fa fa-chevron-right"></i>
-        </a>
-    @endif
+    <div class="notice-actions">
+        @if($secondaryCta)
+            <button
+                type="button"
+                class="notice-cta notice-cta--secondary {{ $secondaryCtaClass }}"
+                data-url="{{ $secondaryCta }}"
+                @foreach($secondaryCtaData as $key => $value)
+                    data-{{ $key }}="{{ $value }}"
+                @endforeach
+            >
+                {{ $secondaryCtaLabel ?? 'Action' }}
+            </button>
+        @endif
+        @if($cta)
+            <a href="{{ $cta }}" class="notice-cta">
+                {{ $ctaLabel ?? 'View' }}
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        @endif
+    </div>
 </div>
