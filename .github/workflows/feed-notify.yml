@@ -19,5 +19,4 @@ jobs:
         include-commits: |
           ^fix:
           ^feat:
-          ^
           
