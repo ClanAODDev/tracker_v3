@@ -16,3 +16,8 @@ jobs:
         webhook: ${{ secrets.IT_FEED_WEBHOOK }}
         template: "avatar-with-link"
         include-extras: false
+        include-commits: |
+          ^fix:
+          ^feat:
+          ^
+          
