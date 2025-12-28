@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Discord Commits
-      uses: flashadvocate/discord-commits@develop
+      uses: Sniddl/discord-commits@latest
       with:
         webhook: ${{ secrets.IT_FEED_WEBHOOK }}
         template: "avatar-with-link"
