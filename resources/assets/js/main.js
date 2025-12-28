@@ -1266,7 +1266,7 @@ var Tracker = Tracker || {};
                 if (bulkMode) {
                     $btn.html('<i class="fa fa-times"></i> Exit Bulk Mode');
                 } else {
-                    $btn.html('<i class="fa fa-check-square"></i> Bulk Mode');
+                    $btn.html('Bulk Mode');
                     $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
                     $bulkBar.slideUp(200);
                 }

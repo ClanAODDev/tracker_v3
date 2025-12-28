@@ -394,7 +394,7 @@ function initPlatoon() {
                 $('#playerFilter').append($tagWrapper);
             }
 
-            var $bulkToggle = $('<button type="button" class="btn btn-default bulk-mode-toggle"><i class="fa fa-check-square-o"></i> Bulk Mode</button>');
+            var $bulkToggle = $('<button type="button" class="btn btn-default bulk-mode-toggle">Bulk Mode</button>');
             $('#playerFilter').append($bulkToggle);
 
             $('.no-sort').removeClass('sorting');
@@ -412,7 +412,7 @@ function initPlatoon() {
                     $('.members-table').addClass('bulk-mode');
                 } else {
                     $bulkToggle.removeClass('active btn-accent').addClass('btn-default');
-                    $bulkToggle.html('<i class="fa fa-check-square-o"></i> Bulk Mode');
+                    $bulkToggle.html('Bulk Mode');
                     $('.members-table').removeClass('bulk-mode');
                     $('.member-checkbox, #select-all-members').prop('checked', false);
                     updateBulkSelection();
