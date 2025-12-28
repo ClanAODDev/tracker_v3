@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "laravel/framework": "^12.0",
         "laracasts/flash": "^3.1",
         "doctrine/dbal": "^3.0",
@@ -33,7 +33,14 @@
         "embed/embed": "^4.4",
         "ext-simplexml": "*",
         "parallax/filament-comments": "^2.0",
-      "ext-gd": "*"
+      "ext-gd": "*",
+        "symfony/clock": "^7.0",
+        "symfony/event-dispatcher": "^7.0",
+        "symfony/filesystem": "^7.0",
+        "symfony/options-resolver": "^7.0",
+        "symfony/stopwatch": "^7.0",
+        "symfony/string": "^7.0",
+        "symfony/translation": "^7.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
