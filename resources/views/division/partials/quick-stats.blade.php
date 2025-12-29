@@ -86,6 +86,9 @@
     </div>
 
     @if(!auth()->user()->isRole('member') && $recentActivity->count())
+        @php
+            $totalEvents = $recentActivity->sum(fn($group) => $group['events']->count());
+        @endphp
         <div class="col-md-3 col-sm-6 animate-fade-in-up" style="animation-delay: 0.2s">
             <a href="#" class="panel panel-filled panel-clickable" data-toggle="modal" data-target="#activityFeedModal">
                 <div class="panel-body">
@@ -94,7 +97,7 @@
                         <i class="fa fa-history text-accent"></i>
                     </div>
                     <div class="stat-content">
-                        <span class="stat-value">{{ $recentActivity->count() }}</span>
+                        <span class="stat-value">{{ $totalEvents }}</span>
                         <span class="stat-label">Recent Actions</span>
                     </div>
                 </div>

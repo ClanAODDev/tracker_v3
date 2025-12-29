@@ -9,21 +9,48 @@
             </div>
             <div class="modal-body">
                 <div class="activity-feed">
-                    @foreach($recentActivity as $event)
+                    @foreach($recentActivity as $group)
                         @php
-                            $member = $event->subject;
-                            $memberLink = $member
-                                ? '<a href="' . route('member', $member->getUrlParams()) . '">' . e($member->name) . '</a>'
-                                : '<span class="text-muted">Unknown</span>';
+                            $type = $group['type'];
+                            $events = $group['events'];
+                            $count = $events->count();
+                            $isGrouped = $count > 1;
                         @endphp
                         <div class="activity-feed-item">
                             <span class="activity-feed-icon">
-                                <i class="{{ $event->name->feedIcon() }}"></i>
+                                <i class="{{ $type->feedIcon() }}"></i>
                             </span>
                             <span class="activity-feed-content">
-                                {!! $memberLink !!} {{ $event->name->feedDescription() }}
+                                @if($isGrouped)
+                                    <a href="#" class="activity-group-toggle" data-toggle="collapse" data-target="#activity-group-{{ $loop->index }}">
+                                        <strong>{{ $count }}</strong> members {{ $type->feedDescription() }}
+                                        <i class="fa fa-chevron-down fa-xs"></i>
+                                    </a>
+                                    <div id="activity-group-{{ $loop->index }}" class="collapse activity-group-members">
+                                        @foreach($events as $event)
+                                            @php
+                                                $member = $event->subject;
+                                            @endphp
+                                            <div class="activity-group-member">
+                                                @if($member)
+                                                    <a href="{{ route('member', $member->getUrlParams()) }}">{{ $member->name }}</a>
+                                                @else
+                                                    <span class="text-muted">Unknown</span>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    @php
+                                        $member = $events->first()->subject;
+                                        $memberLink = $member
+                                            ? '<a href="' . route('member', $member->getUrlParams()) . '">' . e($member->name) . '</a>'
+                                            : '<span class="text-muted">Unknown</span>';
+                                    @endphp
+                                    {!! $memberLink !!} {{ $type->feedDescription() }}
+                                @endif
                             </span>
-                            <span class="activity-feed-time">{{ $event->created_at->diffForHumans(short: true) }}</span>
+                            <span class="activity-feed-time">{{ $group['created_at']->diffForHumans(short: true) }}</span>
                         </div>
                     @endforeach
                 </div>

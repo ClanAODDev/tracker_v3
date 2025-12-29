@@ -51,11 +51,44 @@ class DivisionShowService
 
     private function getRecentActivity(Division $division)
     {
-        return $division->activity()
+        $activities = $division->activity()
             ->whereIn('name', ActivityType::feedTypes())
             ->with(['subject' => fn ($q) => $q->withTrashed(), 'user'])
             ->orderByDesc('created_at')
-            ->limit(10)
+            ->limit(30)
             ->get();
+
+        return $this->groupConsecutiveActivities($activities);
+    }
+
+    private function groupConsecutiveActivities($activities)
+    {
+        if ($activities->isEmpty()) {
+            return collect();
+        }
+
+        $grouped = collect();
+        $currentGroup = null;
+
+        foreach ($activities as $activity) {
+            if ($currentGroup === null || $currentGroup['type'] !== $activity->name) {
+                if ($currentGroup !== null) {
+                    $grouped->push($currentGroup);
+                }
+                $currentGroup = [
+                    'type' => $activity->name,
+                    'events' => collect([$activity]),
+                    'created_at' => $activity->created_at,
+                ];
+            } else {
+                $currentGroup['events']->push($activity);
+            }
+        }
+
+        if ($currentGroup !== null) {
+            $grouped->push($currentGroup);
+        }
+
+        return $grouped->take(10);
     }
 }

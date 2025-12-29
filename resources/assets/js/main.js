@@ -1034,19 +1034,41 @@ var Tracker = Tracker || {};
         InitNoteReminderDetection: function () {
             var reminderPatterns = [
                 /\bpm\s*sent\b/i,
-                /\bpm'?d\b/i,
-                /\bsent\s*(a\s+)?pm\b/i,
-                /\binactivity\s+(notice|reminder|warning|msg|message|pm)\b/i,
-                /\bactivity\s+(reminder|notice|pm|msg|message\s+sent)\b/i,
+                /\bdm\s*sent\b/i,
+                /\bmsg\s*sent\b/i,
+                /\bpm'?e?d\b/i,
+                /\bsent\s*(a\s+)?(pm|dm|msg|message|notice|reminder)\b/i,
+                /\binactiv(ity|e)?\s+(notice|reminder|warning|msg|message|pm|dm|check)\b/i,
+                /\bactivity\s+(reminder|notice|pm|dm|msg|message)\b/i,
                 /\b(reminder|notice)\s+sent\b/i,
-                /\bwellness\s+check\b/i,
-                /\bforum\s+(notice|reminder|activity\s+pm|inactivity)\b/i,
-                /\bdiscord\s+(message|dm|pm)\s+sent\b/i,
-                /\bfinal\s+(notice|reminder)\s+sent\b/i,
-                /\b(14|30|45|60)\s*day\b/i,
-                /\b[23]\s*week\b/i,
-                /\bmessaged\s+(regarding|about)\s+(in)?activity\b/i,
-                /\bcontacted\s+(regarding|about)\s+(in)?activity\b/i
+                /\b(wellness|welfare)\s+(check|message)\b/i,
+                /\bforum\s+(notice|reminder|pm|dm|inactiv)/i,
+                /\bdiscord\s+(message|dm|pm|notice|reminder)/i,
+                /\bfinal\s+(notice|reminder|warning)\b/i,
+                /\b(1[04]|2[18]|30|35|4[05]|50|60|70|80|85|90)\s*[\-\+]*\s*day/i,
+                /\b[1234]\s*week/i,
+                /\b[123]\s*month/i,
+                /\bmessaged\s+(regarding|about|for|on|via|through|re:?)/i,
+                /\bcontacted\s+(regarding|about|for)/i,
+                /\breached\s+out\s+(about|regarding|for|in|to)/i,
+                /\b(days?|weeks?)\s+(inactive|inactiv|reminder|over|behind)\b/i,
+                /\bno\s+(activity|response|reply)\b/i,
+                /\binactive\s+(for|on|in|warning)\b/i,
+                /\breminder\s+(to|about|for|sent|pm)\b/i,
+                /\bpinged\s+for\s+inactiv/i
+            ];
+
+            var excludePatterns = [
+                /\bremoved\s+(for|due\s+to)\s+inactiv/i,
+                /\bflagged\s+(for|member|notice)\b/i,
+                /\bloa\b/i,
+                /\bleave\s+(of\s+absence|request|expired)\b/i,
+                /\bpromot(ed|ion)\b/i,
+                /\brecruit/i,
+                /\bwelcome\b/i,
+                /\bremoval\b/i,
+                /\bresign/i,
+                /\bviolation\b/i
             ];
 
             $(document).on('input', '.note-body-input', function () {
@@ -1056,11 +1078,15 @@ var Tracker = Tracker || {};
 
                 if ($suggestion.data('dismissed')) return;
 
-                var isReminderNote = text.length < 100 && reminderPatterns.some(function (pattern) {
+                var matchesReminder = text.length < 100 && reminderPatterns.some(function (pattern) {
                     return pattern.test(text);
                 });
 
-                $suggestion.toggle(isReminderNote);
+                var matchesExclude = excludePatterns.some(function (pattern) {
+                    return pattern.test(text);
+                });
+
+                $suggestion.toggle(matchesReminder && !matchesExclude);
             });
 
             $(document).on('click', '.dismiss-suggestion', function () {
