@@ -51,13 +51,15 @@
                                 <span class="text-muted">Never connected</span>
                             @endif
                         </div>
-                        @php
-                            $reminderCount = $member->activityReminders->count();
-                        @endphp
-                        @if($reminderCount > 0)
-                            <button type="button" class="stat-reminder-badge" data-toggle="modal" data-target="#member-reminder-history-modal">
-                                <i class="fa fa-bell"></i> {{ $reminderCount }}
-                            </button>
+                        @if(!auth()->user()->isRole('member'))
+                            @php
+                                $reminderCount = $member->activityReminders->count();
+                            @endphp
+                            @if($reminderCount > 0)
+                                <button type="button" class="stat-reminder-badge" data-toggle="modal" data-target="#member-reminder-history-modal">
+                                    <i class="fa fa-bell"></i> {{ $reminderCount }}
+                                </button>
+                            @endif
                         @endif
                     </div>
                 </div>
@@ -187,25 +189,27 @@
         </div>
     @endif
 
-    @if(!auth()->user()->isRole('member'))
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-filled animate-fade-in-up" style="animation-delay: 0.4s">
-                    <div class="panel-heading">
-                        <i class="fa fa-line-chart text-accent"></i> Rank Progression
-                        @if($rankTimeline->historyItems->count() > 1)
-                            <button class="btn btn-xs btn-default pull-right" data-toggle="modal" data-target="#rank-history-modal">
-                                <i class="fa fa-list"></i> Full History
-                            </button>
-                        @endif
-                    </div>
-                    <div class="panel-body">
-                        @include('member.partials.rank-timeline')
-                    </div>
+    @php
+        $isOwnProfile = auth()->user()->member?->id === $member->id;
+        $canViewFullHistory = !auth()->user()->isRole('member') || $isOwnProfile;
+    @endphp
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-filled animate-fade-in-up" style="animation-delay: 0.4s">
+                <div class="panel-heading">
+                    <i class="fa fa-line-chart text-accent"></i> Rank Progression
+                    @if($canViewFullHistory && $rankTimeline->historyItems->count() > 1)
+                        <button class="btn btn-xs btn-default pull-right" data-toggle="modal" data-target="#rank-history-modal">
+                            <i class="fa fa-list"></i> Full History
+                        </button>
+                    @endif
+                </div>
+                <div class="panel-body">
+                    @include('member.partials.rank-timeline')
                 </div>
             </div>
         </div>
-    @endif
+    </div>
 
     @if($memberStats->divisionComparison)
         <div class="row">
@@ -326,7 +330,7 @@
         </div>
     </div>
 
-    @if(isset($rankTimeline) && $rankTimeline->historyItems->count() > 1)
+    @if($canViewFullHistory && isset($rankTimeline) && $rankTimeline->historyItems->count() > 1)
         <div class="modal fade" id="rank-history-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
@@ -361,7 +365,7 @@
         </div>
     @endif
 
-    @if($member->activityReminders->count() > 0)
+    @if(!auth()->user()->isRole('member') && $member->activityReminders->count() > 0)
         <div class="modal fade" id="member-reminder-history-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm" role="document">
                 <div class="modal-content">
