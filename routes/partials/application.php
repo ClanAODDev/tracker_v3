@@ -15,12 +15,14 @@ Route::get('home', [AppController::class, 'index'])->name('home');
 Route::controller(ImpersonationController::class)->group(function () {
     Route::get('impersonate/{user}', 'impersonate')->name('impersonate');
     Route::get('impersonate-end', 'endImpersonation')->name('end-impersonation');
+    Route::get('impersonate-role/{role}', 'impersonateRole')->name('impersonate-role');
+    Route::get('impersonate-role-end', 'endRoleImpersonation')->name('end-role-impersonation');
 });
 
 Route::controller(TrainingController::class)->prefix('training')->name('training.')->group(function () {
     Route::get('sgt', 'sgtTraining')->name('sgt');
-    # Route::get('ssgt', 'ssgtTraining')->name('ssgt');
-    # Route::get('msgt', 'msgtTraining')->name('msgt');
+    // Route::get('ssgt', 'ssgtTraining')->name('ssgt');
+    // Route::get('msgt', 'msgtTraining')->name('msgt');
     Route::get('{slug}', 'show')->name('show');
     Route::post('/', 'update')->name('update');
 });

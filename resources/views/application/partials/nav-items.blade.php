@@ -25,7 +25,10 @@
             <li class="no-select">
                 <a href="#">
                     <small class="text-muted text-uppercase slight">
-                        Role: <strong>{{ auth()->user()->getRole()?->getLabel() }}</strong>
+                        Role: <strong>{{ auth()->user()->getEffectiveRole()?->getLabel() }}</strong>
+                        @if(auth()->user()->isImpersonatingRole())
+                            <i class="fa fa-mask text-warning" title="Role Impersonation Active"></i>
+                        @endif
                     </small>
                 </a>
             </li>
@@ -34,7 +37,16 @@
                 <li>
                     <a href="{{ route('end-impersonation') }}">
                         <strong class="text-danger">End Impersonation</strong>
-                        <i class="fa fa-user-secret "></i>
+                        <i class="fa fa-user-secret"></i>
+                    </a>
+                </li>
+            @endif
+
+            @if(auth()->user()->isImpersonatingRole())
+                <li>
+                    <a href="{{ route('end-role-impersonation') }}">
+                        <strong class="text-warning">End Role View</strong>
+                        <i class="fa fa-mask"></i>
                     </a>
                 </li>
             @endif

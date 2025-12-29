@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
@@ -102,22 +103,13 @@ class User extends Authenticatable implements FilamentUser
         $query->whereRoleId(5)->orderBy('name', 'ASC');
     }
 
-    /**
-     * Record new activity for the user.
-     *
-     * @param  string  $name
-     * @param  mixed  $related
-     * @return mixed
-     *
-     * @throws Exception
-     */
-    public function recordActivity($name, $related)
+    public function recordActivity(ActivityType $type, $related, array $properties = [])
     {
         if (! method_exists($related, 'recordActivity')) {
             throw new Exception('..');
         }
 
-        return $related->recordActivity($name);
+        return $related->recordActivity($type, $properties);
     }
 
     /**
@@ -138,7 +130,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function isRole(string|array|Role $role): bool
     {
-        $userRole = Role::tryFrom($this->role_id);
+        $userRole = $this->getEffectiveRole();
 
         if (! $userRole) {
             return false;
@@ -156,6 +148,20 @@ class User extends Authenticatable implements FilamentUser
     public function getRole(): ?Role
     {
         return Role::tryFrom($this->role_id);
+    }
+
+    public function getEffectiveRole(): ?Role
+    {
+        if (session('impersonatingRole')) {
+            return Role::tryFrom(session('impersonatingRole'));
+        }
+
+        return $this->getRole();
+    }
+
+    public function isImpersonatingRole(): bool
+    {
+        return session('impersonatingRole') !== null;
     }
 
     public function isMember(): bool

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
@@ -12,19 +13,12 @@ class ImpersonationController extends Controller
 {
     use AuthorizesRequests;
 
-    /**
-     * Impersonate a given user.
-     *
-     * @return Redirector|RedirectResponse
-     */
-    public function impersonate(User $user)
+    public function impersonate(User $user): Redirector|RedirectResponse
     {
         $this->authorize('impersonate', $user);
 
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
-
-        auth()->user()->recordActivity('start_impersonation', $user->member);
 
         $this->showSuccessToast('You are now impersonating ' . $user->name);
 
@@ -33,20 +27,44 @@ class ImpersonationController extends Controller
         return redirect('/');
     }
 
-    /**
-     * End an impersonation.
-     *
-     * @return Redirector|RedirectResponse
-     */
-    public function endImpersonation()
+    public function endImpersonation(): Redirector|RedirectResponse
     {
         if (session('impersonating') && session('impersonatingUser')) {
             $user = User::find(session('impersonatingUser'));
-            // need to log end of impersonation
             Auth::login($user);
             session()->forget(['impersonating', 'impersonatingUser']);
             $this->showSuccessToast('Impersonation ended');
         }
+
+        return redirect()->back();
+    }
+
+    public function impersonateRole(string $role): RedirectResponse
+    {
+        if (! auth()->user()->isRole('admin') && ! auth()->user()->isDeveloper()) {
+            abort(403);
+        }
+
+        $roleEnum = Role::fromSlug($role);
+
+        if (! $roleEnum) {
+            $this->showErrorToast('Invalid role');
+
+            return redirect()->back();
+        }
+
+        session(['impersonatingRole' => $roleEnum->value]);
+        session(['originalRole' => auth()->user()->role_id]);
+
+        $this->showSuccessToast('Now viewing as ' . $roleEnum->getLabel());
+
+        return redirect()->back();
+    }
+
+    public function endRoleImpersonation(): RedirectResponse
+    {
+        session()->forget(['impersonatingRole', 'originalRole']);
+        $this->showSuccessToast('Role impersonation ended');
 
         return redirect()->back();
     }
