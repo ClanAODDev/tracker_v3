@@ -84,7 +84,8 @@
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
-        <ul id="{{ $idPrefix }}clan-information" class="nav nav-second {{ request()->is('clan/*') ? 'expanded' : 'collapse' }}">
+        <ul id="{{ $idPrefix }}clan-information"
+            class="nav nav-second {{ request()->is('clan/*') ? 'expanded' : 'collapse' }}">
 
             <li class="{{ set_active(['clan/awards', 'clan/awards/*']) }}">
                 <a href="{{ route('awards.index') }}">Achievements</a>
@@ -115,10 +116,13 @@
         <li class="nav-category">
             Admin
         </li>
-        @if(Auth::user()->isRole('admin'))
+        @if(Auth::user()->isDeveloper())
             <li>
                 <a href="{{ url('/log-viewer') }}">Log Viewer</a>
             </li>
+
+        @endif
+        @if(Auth::user()->isRole(('admin')))
             <li>
                 <a href="/admin">Admin</a>
             </li>

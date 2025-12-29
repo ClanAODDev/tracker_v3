@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\HasPrimaryDivision;
 use App\Http\Middleware\IsBanned;
@@ -8,14 +7,11 @@ use App\Http\Middleware\LogApiRequests;
 use App\Http\Middleware\MustBeAdmin;
 use App\Http\Middleware\MustBeDeveloper;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\TrimStrings;
-use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\VerifyBotToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
-use Illuminate\Foundation\Http\Middleware\ValidatePostSize;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
@@ -25,13 +21,22 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__ . '/../routes/console.php',
     ])
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->use([
-            CheckForMaintenanceMode::class,
-            ValidatePostSize::class,
-            TrimStrings::class,
-            ConvertEmptyStringsToNull::class,
-            TrustProxies::class,
+        $middleware->trustProxies(
+            at: '*',
+            headers: Request::HEADER_X_FORWARDED_FOR
+                | Request::HEADER_X_FORWARDED_HOST
+                | Request::HEADER_X_FORWARDED_PORT
+                | Request::HEADER_X_FORWARDED_PROTO
+                | Request::HEADER_X_FORWARDED_AWS_ELB
+        );
+
+        $middleware->validateCsrfTokens(except: [
+            'bot/commands',
+            'oauth/authorize',
+            'oauth/clients',
         ]);
+
+        $middleware->redirectGuestsTo('/login');
 
         $middleware->web(append: [
             HasPrimaryDivision::class,

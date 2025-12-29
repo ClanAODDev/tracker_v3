@@ -57,13 +57,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-
-        Gate::define('viewLogViewer', function (?User $user) {
-            if (auth()->check()) {
-                return $user->isRole('admin');
-            }
-
-            return false;
-        });
     }
 }
