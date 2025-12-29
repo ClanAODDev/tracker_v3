@@ -10,7 +10,7 @@
             </div>
         </div>
         @can('update', $myDivision)
-            <a href="{{ route('filament.mod.resources.divisions.edit', $myDivision) }}" class="my-division-manage-btn">
+            <a href="{{ route('filament.mod.resources.divisions.edit', $myDivision) }}" class="btn btn-accent">
                 <i class="fa fa-cog"></i>
                 <span>Manage</span>
             </a>
