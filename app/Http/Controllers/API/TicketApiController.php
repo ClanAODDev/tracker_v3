@@ -134,10 +134,10 @@ class TicketApiController extends Controller
             'state' => $ticket->state,
             'state_color' => $ticket->stateColors[$ticket->state] ?? 'gray',
             'description' => $ticket->description,
-            'type' => [
+            'type' => $ticket->type ? [
                 'id' => $ticket->type->id,
                 'name' => $ticket->type->name,
-            ],
+            ] : null,
             'division' => $ticket->division ? [
                 'id' => $ticket->division->id,
                 'name' => $ticket->division->name,
