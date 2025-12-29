@@ -25,10 +25,20 @@
     if ($trend === null) {
         $first = $points->first();
         $last = $points->last();
-        $trend = $last >= $first ? 'up' : 'down';
+        if ($last > $first) {
+            $trend = 'up';
+        } elseif ($last < $first) {
+            $trend = 'down';
+        } else {
+            $trend = 'neutral';
+        }
     }
 
-    $strokeColor = $color ?? ($trend === 'up' ? 'var(--color-success)' : 'var(--color-danger)');
+    $strokeColor = $color ?? match($trend) {
+        'up' => 'var(--color-success)',
+        'down' => 'var(--color-danger)',
+        default => 'var(--color-gray-400)',
+    };
 @endphp
 
 <svg class="sparkline" width="{{ $width }}" height="{{ $height }}" viewBox="0 0 {{ $width }} {{ $height }}">

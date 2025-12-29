@@ -61,9 +61,9 @@
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
-                            <x-sparkline :data="$division['trend']" :trend="$division['value'] >= 0 ? 'up' : 'down'" />
+                            <x-sparkline :data="$division['trend']" :trend="$division['value'] > 0 ? 'up' : ($division['value'] < 0 ? 'down' : 'neutral')" />
                         @endif
-                        <span class="leaderboard-value {{ $division['value'] >= 0 ? 'leaderboard-value--positive' : 'leaderboard-value--negative' }}">
+                        <span class="leaderboard-value {{ $division['value'] > 0 ? 'leaderboard-value--positive' : ($division['value'] < 0 ? 'leaderboard-value--negative' : '') }}">
                             {{ $division['formatted'] }}
                         </span>
                     </a>
@@ -132,9 +132,9 @@
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
-                            <x-sparkline :data="$division['trend']" :trend="$division['value'] >= 0 ? 'up' : 'down'" />
+                            <x-sparkline :data="$division['trend']" :trend="$division['value'] > 0 ? 'up' : ($division['value'] < 0 ? 'down' : 'neutral')" />
                         @endif
-                        <span class="leaderboard-value {{ $division['value'] >= 0 ? 'leaderboard-value--positive' : 'leaderboard-value--negative' }}">
+                        <span class="leaderboard-value {{ $division['value'] > 0 ? 'leaderboard-value--positive' : ($division['value'] < 0 ? 'leaderboard-value--negative' : '') }}">
                             {{ $division['formatted'] }}
                         </span>
                     </a>
