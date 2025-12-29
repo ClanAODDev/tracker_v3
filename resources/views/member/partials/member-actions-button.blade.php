@@ -17,14 +17,11 @@
             @endcan
 
             @if ($member->user)
-                @if (auth()->user()->isRole('admin') && !(session('impersonating')))
-                    @unless($member->user->id === auth()->user()->id)
-                        <li>
-                            <a href="{{ route('impersonate', $member->user) }}"> Impersonate User</a>
-                        </li>
-                    @endunless
-                @endif
-
+                @can('impersonate', $member->user)
+                    <li>
+                        <a href="{{ route('impersonate', $member->user) }}"> Impersonate User</a>
+                    </li>
+                @endcan
             @else
                 <li class="disabled">
                     <a href="#" class="text-muted" disabled> No account</a>

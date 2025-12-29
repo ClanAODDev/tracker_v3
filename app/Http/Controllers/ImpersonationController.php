@@ -19,9 +19,7 @@ class ImpersonationController extends Controller
      */
     public function impersonate(User $user)
     {
-        if (! $this->canImpersonate($user)) {
-            abort(403);
-        }
+        $this->authorize('impersonate', $user);
 
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
@@ -51,27 +49,5 @@ class ImpersonationController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * @return bool
-     */
-    private function canImpersonate($user)
-    {
-        $currentUser = auth()->user();
-
-        if ($currentUser->isDeveloper()) {
-            return true;
-        }
-
-        if (! $currentUser->isRole('admin')) {
-            return false;
-        }
-
-        if ($user->isDeveloper()) {
-            return false;
-        }
-
-        return true;
     }
 }

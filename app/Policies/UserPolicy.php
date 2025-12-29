@@ -13,11 +13,12 @@ class UserPolicy
 {
     use AuthorizesRequests;
 
-    /**
-     * @return bool
-     */
-    public function before(User $user)
+    public function before(User $user, string $ability)
     {
+        if ($ability === 'impersonate') {
+            return null;
+        }
+
         if ($user->isDeveloper() || $user->isRole('admin')) {
             return true;
         }
@@ -62,9 +63,29 @@ class UserPolicy
         return false;
     }
 
-    public function canImpersonate()
+    public function impersonate(User $user, User $target)
     {
-        return false;
+        if ($user->id === $target->id) {
+            return false;
+        }
+
+        if (session('impersonating')) {
+            return false;
+        }
+
+        if ($user->isDeveloper() && app()->environment('local', 'testing')) {
+            return true;
+        }
+
+        if (! $user->isRole('admin')) {
+            return false;
+        }
+
+        if ($target->isDeveloper()) {
+            return false;
+        }
+
+        return true;
     }
 
     public function viewDivisionStructure(User $user)
