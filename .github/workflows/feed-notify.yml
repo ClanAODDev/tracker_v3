@@ -17,5 +17,5 @@ jobs:
         template: "avatar-with-link"
         include-extras: false
         include-commits: |
-          ^fix:
-          ^feat:
+          ^(?i)fix:
+          ^(?i)feat:
