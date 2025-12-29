@@ -47,4 +47,6 @@ Route::controller(InactiveMemberController::class)->prefix('inactive-members')->
     Route::get('{member}/flag-inactive', 'create')->name('member.flag-inactive');
     Route::get('{member}/unflag-inactive', 'destroy')->name('member.unflag-inactive');
     Route::delete('{member}', 'removeMember')->name('member.drop-for-inactivity');
+    Route::post('bulk-flag/{division}', 'bulkFlag')->name('inactive.bulk-flag');
+    Route::post('bulk-unflag/{division}', 'bulkUnflag')->name('inactive.bulk-unflag');
 });

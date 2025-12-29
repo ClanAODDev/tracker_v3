@@ -928,19 +928,36 @@ var Tracker = Tracker || {};
 
             if (!$tabs.length) return;
 
-            $tabs.on('click', function () {
-                var tabName = $(this).data('tab');
+            Tracker.pendingTabRefresh = { inactive: false, flagged: false };
+
+            function activateTab(tabName, skipRefreshCheck) {
+                if (!skipRefreshCheck && Tracker.pendingTabRefresh[tabName]) {
+                    window.location.href = window.location.pathname + '#' + tabName;
+                    window.location.reload();
+                    return;
+                }
 
                 $tabs.removeClass('active');
                 $panels.removeClass('active');
 
-                $(this).addClass('active');
+                $('.inactive-tab[data-tab="' + tabName + '"]').addClass('active');
                 $('.inactive-panel[data-panel="' + tabName + '"]').addClass('active');
 
                 if ($searchInput.val()) {
                     Tracker.FilterInactiveTable($searchInput.val());
                 }
+            }
+
+            $tabs.on('click', function () {
+                var tabName = $(this).data('tab');
+                activateTab(tabName);
+                history.replaceState(null, null, '#' + tabName);
             });
+
+            var hash = window.location.hash.replace('#', '');
+            if (hash && $tabs.filter('[data-tab="' + hash + '"]').length) {
+                activateTab(hash, true);
+            }
 
             if ($searchInput.length) {
                 $searchInput.on('input', function () {
@@ -1231,29 +1248,91 @@ var Tracker = Tracker || {};
             var $bulkToggle = $('.inactive-bulk-toggle');
             if (!$bulkToggle.length) return;
 
-            var $bulkBar = $('#inactive-bulk-bar');
-            var $pmData = $('#inactive-pm-member-data');
             var csrfToken = $('meta[name=csrf-token]').attr('content');
             var bulkMode = false;
+            var isDragging = false;
+            var dragSelectState = true;
+            var dragStartRow = null;
 
-            function updateSelection() {
-                var selected = $('.inactive-member-checkbox:checked').map(function() {
-                    return $(this).val();
-                }).get();
+            var tables = {
+                inactive: {
+                    bar: $('#inactive-bulk-bar'),
+                    data: $('#inactive-pm-member-data'),
+                    checkboxClass: 'inactive-member-checkbox',
+                    selectAllClass: 'inactive-select-all',
+                    tableClass: 'inactive-table:not(.flagged-table)'
+                },
+                flagged: {
+                    bar: $('#flagged-bulk-bar'),
+                    data: $('<input type="hidden" id="flagged-pm-member-data">'),
+                    checkboxClass: 'flagged-member-checkbox',
+                    selectAllClass: 'flagged-select-all',
+                    tableClass: 'flagged-table'
+                }
+            };
+            tables.flagged.bar.append(tables.flagged.data);
 
-                $pmData.val(selected.join(','));
+            function updateTabCount(tab, delta) {
+                var $count = $('.inactive-tab[data-tab="' + tab + '"] .inactive-tab-count');
+                var current = parseInt($count.text()) || 0;
+                $count.text(Math.max(0, current + delta));
+            }
 
-                if (selected.length > 0) {
-                    $bulkBar.find('.status-text').text(selected.length + ' selected');
-                    $bulkBar.slideDown(200);
-                } else {
-                    $bulkBar.slideUp(200);
+            function createSelectionUpdater(config) {
+                return function() {
+                    var selected = $('.' + config.checkboxClass + ':checked').map(function() {
+                        return $(this).val();
+                    }).get();
+
+                    config.data.val(selected.join(','));
+
+                    if (selected.length > 0) {
+                        config.bar.find('.status-text').text(selected.length + ' selected');
+                        config.bar.slideDown(200);
+                    } else {
+                        config.bar.slideUp(200);
+                    }
+
+                    var total = $('.' + config.checkboxClass).length;
+                    var checked = selected.length;
+                    $('.' + config.selectAllClass).prop('checked', checked > 0 && checked === total);
+                    $('.' + config.selectAllClass).prop('indeterminate', checked > 0 && checked < total);
+                };
+            }
+
+            var updateSelection = createSelectionUpdater(tables.inactive);
+            var updateFlaggedSelection = createSelectionUpdater(tables.flagged);
+
+            function clearSelection(config, updateFn) {
+                $('.' + config.checkboxClass + ', .' + config.selectAllClass).prop('checked', false);
+                updateFn();
+            }
+
+            function bulkAction(options) {
+                var memberIds = options.data.val();
+                if (!memberIds) {
+                    toastr.warning('No members selected');
+                    return;
                 }
 
-                var total = $('.inactive-member-checkbox').length;
-                var checked = selected.length;
-                $('.inactive-select-all').prop('checked', checked > 0 && checked === total);
-                $('.inactive-select-all').prop('indeterminate', checked > 0 && checked < total);
+                var $btn = options.btn;
+                $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span>');
+
+                $.ajax({
+                    url: options.url,
+                    method: 'POST',
+                    data: {
+                        _token: csrfToken,
+                        member_ids: memberIds.split(',')
+                    },
+                    success: options.onSuccess,
+                    error: function(xhr) {
+                        toastr.error(xhr.responseJSON?.message || options.errorMessage);
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).html(options.buttonHtml);
+                    }
+                });
             }
 
             $bulkToggle.on('click', function() {
@@ -1267,16 +1346,13 @@ var Tracker = Tracker || {};
                     $btn.html('<i class="fa fa-times"></i> Exit Bulk Mode');
                 } else {
                     $btn.html('Bulk Mode');
-                    $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
-                    $bulkBar.slideUp(200);
+                    clearSelection(tables.inactive, updateSelection);
+                    clearSelection(tables.flagged, updateFlaggedSelection);
                 }
             });
 
-            $(document).on('change', '.inactive-member-checkbox', updateSelection);
-
-            var isDragging = false;
-            var dragSelectState = true;
-            var dragStartRow = null;
+            $(document).on('change', '.' + tables.inactive.checkboxClass, updateSelection);
+            $(document).on('change', '.' + tables.flagged.checkboxClass, updateFlaggedSelection);
 
             $(document).on('mousedown', '.inactive-table tbody tr', function(e) {
                 if (!bulkMode) return;
@@ -1287,7 +1363,10 @@ var Tracker = Tracker || {};
                 isDragging = true;
                 dragStartRow = this;
 
-                var $checkbox = $(this).find('.inactive-member-checkbox');
+                var isFlagged = $(this).closest('.flagged-table').length > 0;
+                var checkboxClass = isFlagged ? tables.flagged.checkboxClass : tables.inactive.checkboxClass;
+                var $checkbox = $(this).find('.' + checkboxClass);
+
                 if ($checkbox.length) {
                     dragSelectState = !$checkbox.prop('checked');
                     $checkbox.prop('checked', dragSelectState);
@@ -1298,7 +1377,10 @@ var Tracker = Tracker || {};
             $(document).on('mouseenter', '.inactive-table tbody tr', function() {
                 if (!isDragging || !bulkMode) return;
 
-                var $checkbox = $(this).find('.inactive-member-checkbox');
+                var isFlagged = $(this).closest('.flagged-table').length > 0;
+                var checkboxClass = isFlagged ? tables.flagged.checkboxClass : tables.inactive.checkboxClass;
+                var $checkbox = $(this).find('.' + checkboxClass);
+
                 if ($checkbox.length) {
                     $checkbox.prop('checked', dragSelectState);
                     $(this).toggleClass('drag-selected', dragSelectState);
@@ -1307,45 +1389,36 @@ var Tracker = Tracker || {};
 
             $(document).on('mouseup', function() {
                 if (isDragging) {
+                    var wasFlagged = dragStartRow && $(dragStartRow).closest('.flagged-table').length > 0;
                     isDragging = false;
                     dragStartRow = null;
                     $('.inactive-table tbody tr').removeClass('drag-selected');
-                    updateSelection();
+                    (wasFlagged ? updateFlaggedSelection : updateSelection)();
                 }
             });
 
-            $(document).on('change', '.inactive-select-all', function() {
-                var panel = $(this).closest('.inactive-panel');
-                panel.find('.inactive-member-checkbox').prop('checked', $(this).prop('checked'));
-                updateSelection();
+            $(document).on('change', '.inactive-select-all, .flagged-select-all', function() {
+                var isFlagged = $(this).hasClass('flagged-select-all');
+                var config = isFlagged ? tables.flagged : tables.inactive;
+                var updateFn = isFlagged ? updateFlaggedSelection : updateSelection;
+
+                $(this).closest('.inactive-panel').find('.' + config.checkboxClass).prop('checked', $(this).prop('checked'));
+                updateFn();
             });
 
             $(document).on('click', '.inactive-bulk-close', function() {
-                $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
-                updateSelection();
+                var isFlagged = $(this).closest('.bulk-action-bar').attr('id') === 'flagged-bulk-bar';
+                clearSelection(isFlagged ? tables.flagged : tables.inactive, isFlagged ? updateFlaggedSelection : updateSelection);
             });
 
             $('#inactive-bulk-reminder-btn').on('click', function() {
-                var memberIds = $pmData.val();
-                if (!memberIds) {
-                    toastr.warning('No members selected');
-                    return;
-                }
-
-                var $btn = $(this);
-                var memberIdArray = memberIds.split(',');
-                var url = $btn.data('url');
-
-                $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span>');
-
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: {
-                        _token: csrfToken,
-                        member_ids: memberIdArray
-                    },
-                    success: function(response) {
+                bulkAction({
+                    btn: $(this),
+                    data: tables.inactive.data,
+                    url: $(this).data('url'),
+                    errorMessage: 'Failed to set reminders',
+                    buttonHtml: '<i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>',
+                    onSuccess: function(response) {
                         var message = response.count + ' member' + (response.count !== 1 ? 's' : '') + ' marked as reminded';
                         if (response.skipped > 0) {
                             message += ' (' + response.skipped + ' skipped - already reminded today)';
@@ -1355,22 +1428,77 @@ var Tracker = Tracker || {};
                         response.updatedIds.forEach(function(memberId) {
                             var $toggleBtn = $('.activity-reminder-toggle[data-member-id="' + memberId + '"]');
                             if ($toggleBtn.length) {
-                                $toggleBtn.removeClass('btn-success').addClass('btn-default');
-                                $toggleBtn.html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>');
-                                $toggleBtn.attr('title', 'Reminded just now');
-                                $toggleBtn.prop('disabled', true);
+                                $toggleBtn.removeClass('btn-success').addClass('btn-default')
+                                    .html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>')
+                                    .attr('title', 'Reminded just now')
+                                    .prop('disabled', true);
                             }
                         });
 
-                        $('.inactive-member-checkbox, .inactive-select-all').prop('checked', false);
-                        updateSelection();
-                    },
-                    error: function(xhr) {
-                        var message = xhr.responseJSON?.message || 'Failed to set reminders';
-                        toastr.error(message);
-                    },
-                    complete: function() {
-                        $btn.prop('disabled', false).html('<i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>');
+                        clearSelection(tables.inactive, updateSelection);
+                    }
+                });
+            });
+
+            $('#inactive-bulk-flag-btn').on('click', function() {
+                bulkAction({
+                    btn: $(this),
+                    data: tables.inactive.data,
+                    url: $(this).data('url'),
+                    errorMessage: 'Failed to flag members',
+                    buttonHtml: '<i class="fa fa-flag"></i> <span class="hidden-xs hidden-sm">Flag</span>',
+                    onSuccess: function(response) {
+                        toastr.success(response.message);
+
+                        response.flaggedIds.forEach(function(memberId) {
+                            $('.inactive-member-checkbox[value="' + memberId + '"]').closest('tr').fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                        });
+
+                        clearSelection(tables.inactive, updateSelection);
+                        updateTabCount('inactive', -response.count);
+                        updateTabCount('flagged', response.count);
+
+                        if (Tracker.pendingTabRefresh) {
+                            Tracker.pendingTabRefresh.flagged = true;
+                        }
+                    }
+                });
+            });
+
+            $('#flagged-bulk-unflag-btn').on('click', function() {
+                bulkAction({
+                    btn: $(this),
+                    data: tables.flagged.data,
+                    url: $(this).data('url'),
+                    errorMessage: 'Failed to unflag members',
+                    buttonHtml: '<i class="fa fa-flag"></i> <span class="hidden-xs hidden-sm">Unflag</span>',
+                    onSuccess: function(response) {
+                        toastr.success(response.message);
+
+                        response.unflaggedIds.forEach(function(memberId) {
+                            $('.flagged-member-checkbox[value="' + memberId + '"]').closest('tr').fadeOut(300, function() {
+                                $(this).remove();
+                                if ($('.flagged-member-checkbox').length === 0) {
+                                    $('.flagged-table').closest('.table-responsive').replaceWith(
+                                        '<div class="inactive-empty">' +
+                                        '<i class="fa fa-flag-o"></i>' +
+                                        '<h4>No Flagged Members</h4>' +
+                                        '<p>There are currently no members flagged for removal.</p>' +
+                                        '</div>'
+                                    );
+                                }
+                            });
+                        });
+
+                        clearSelection(tables.flagged, updateFlaggedSelection);
+                        updateTabCount('flagged', -response.count);
+                        updateTabCount('inactive', response.count);
+
+                        if (Tracker.pendingTabRefresh) {
+                            Tracker.pendingTabRefresh.inactive = true;
+                        }
                     }
                 });
             });

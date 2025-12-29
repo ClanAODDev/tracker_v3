@@ -2711,6 +2711,20 @@ body.no-animations {
     background: rgba(255,255,255,0.05);
 }
 
+.stat-clickable-hint {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.member-stat-card:hover .stat-clickable-hint {
+    color: rgba(255,255,255,0.5);
+    transform: scale(1.1);
+}
+
 .tenure-detail-list {
     display: flex;
     flex-direction: column;
