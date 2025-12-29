@@ -3,6 +3,7 @@
         <div class="col-lg-3 col-xs-6 ">
             <div class="panel panel-filled member-stat-card stat-tenure" data-toggle="modal" data-target="#tenure-modal" style="cursor: pointer; --i: 0">
                 <div class="stat-indicator"></div>
+                <span class="stat-clickable-hint"><i class="fa fa-expand"></i></span>
                 <div class="panel-body">
                     <div class="stat-icon">
                         <i class="fa fa-calendar"></i>
@@ -98,6 +99,7 @@
                 <div class="panel panel-filled member-stat-card stat-notes {{ $noteStats->latestType ? 'latest-' . $noteStats->latestType : '' }}"
                      data-toggle="modal" data-target="#notes-modal" style="cursor: pointer; --i: 3">
                     <div class="stat-indicator"></div>
+                    <span class="stat-clickable-hint"><i class="fa fa-expand"></i></span>
                     <div class="panel-body">
                         <div class="stat-icon">
                             <i class="fa fa-sticky-note"></i>
