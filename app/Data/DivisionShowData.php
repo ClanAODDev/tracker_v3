@@ -17,6 +17,7 @@ readonly class DivisionShowData
         public Collection $divisionAnniversaries,
         public ?object $previousCensus,
         public PendingActionsData $pendingActions,
+        public Collection $recentActivity,
     ) {}
 
     public function toArray(): array
@@ -31,6 +32,7 @@ readonly class DivisionShowData
             'divisionAnniversaries' => $this->divisionAnniversaries,
             'previousCensus' => $this->previousCensus,
             'pendingActions' => $this->pendingActions,
+            'recentActivity' => $this->recentActivity,
         ];
     }
 }

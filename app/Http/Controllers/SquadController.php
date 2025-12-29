@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\UnitStatsData;
+use App\Enums\ActivityType;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -39,13 +40,18 @@ class SquadController extends Controller
         if ((int) $request->squad_id === 0) {
             $member->platoon()->dissociate();
             $member->squad()->dissociate();
+            $member->save();
+            $member->recordActivity(ActivityType::UNASSIGNED);
         } else {
             $squad = Squad::find($request->squad_id);
             $member->platoon()->associate($squad->platoon);
             $member->squad()->associate($squad);
+            $member->save();
+            $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
+                'platoon' => $squad->platoon->name,
+                'squad' => $squad->name,
+            ]);
         }
-
-        $member->save();
 
         return response()->json(['success' => true]);
     }

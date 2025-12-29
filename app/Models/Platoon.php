@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\ActivityType;
 use App\Enums\Position;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,13 @@ class Platoon extends Model
     protected $with = [
         'leader',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(fn (Platoon $platoon) => $platoon->recordActivity(ActivityType::CREATED_PLATOON));
+        static::updated(fn (Platoon $platoon) => $platoon->recordActivity(ActivityType::UPDATED_PLATOON));
+        static::deleted(fn (Platoon $platoon) => $platoon->recordActivity(ActivityType::DELETED_PLATOON));
+    }
 
     /**
      * relationship - platoon belongs to a division.

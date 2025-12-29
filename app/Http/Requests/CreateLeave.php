@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ActivityType;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\Note;
@@ -60,5 +61,7 @@ class CreateLeave extends FormRequest
         $leave->requester()->associate(auth()->user());
         $leave->note()->associate($note);
         $leave->save();
+
+        $memberRequestingLeave->recordActivity(ActivityType::REQUESTED_LEAVE);
     }
 }

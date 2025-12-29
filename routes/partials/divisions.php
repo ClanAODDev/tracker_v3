@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\BulkTagController;
 use App\Http\Controllers\BulkTransferController;
 use App\Http\Controllers\Division\ReportController;
@@ -18,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('divisions/{division}')->group(function () {
     Route::get('/', [DivisionController::class, 'show'])->name('division');
-    Route::get('activity', [ActivitiesController::class, 'byDivision'])->name('divisionActivity');
     Route::get('members', [DivisionController::class, 'members'])->name('division.members');
     Route::get('notes', [DivisionNoteController::class, 'index'])->name('division.notes');
     Route::get('unassigned-to-squad', [DivisionController::class, 'unassignedToSquad'])->name('division.unassigned-to-squad');

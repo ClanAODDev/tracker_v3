@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityType;
 use App\Models\Division;
 use Closure;
 use Exception;
@@ -64,7 +65,7 @@ class DivisionStructureController extends Controller
         $division->structure = $request->structure;
         $division->save();
 
-        $division->recordActivity('updated_structure');
+        $division->recordActivity(ActivityType::UPDATED_STRUCTURE);
         $this->showSuccessToast('Division structure was successfully updated!');
 
         return redirect(route('division.edit-structure', $division->slug));

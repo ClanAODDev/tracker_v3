@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityType;
 use App\Http\Requests\DeleteMember;
 use App\Models\Activity;
 use App\Models\Division;
@@ -69,7 +70,7 @@ class InactiveMemberController extends Controller
         $division = $member->division;
         $form->persist();
         $this->showSuccessToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
-        $member->recordActivity('removed');
+        $member->recordActivity(ActivityType::REMOVED);
 
         return redirect(route('division.inactive-members', [$division->slug]) . '#flagged');
     }

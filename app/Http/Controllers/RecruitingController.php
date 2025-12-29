@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityType;
 use App\Enums\ForumGroup;
 use App\Enums\Position;
 use App\Jobs\SyncDiscordMember;
@@ -283,7 +284,7 @@ class RecruitingController extends Controller
         $member->platoon_id = $request->platoon;
         $member->squad_id = $request->squad;
         $member->save();
-        $member->recordActivity('recruited');
+        $member->recordActivity(ActivityType::RECRUITED);
 
         // track division assignment, rank change
         RankAction::create([

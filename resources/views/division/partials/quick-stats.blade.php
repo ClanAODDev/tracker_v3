@@ -15,7 +15,7 @@
     }
 @endphp
 <div class="row quick-stats">
-    <div class="col-md-4 col-sm-6 animate-fade-in-up" style="animation-delay: 0.05s">
+    <div class="col-md-3 col-sm-6 animate-fade-in-up" style="animation-delay: 0.05s">
         <div class="panel panel-filled">
             <div class="panel-body">
                 <div class="stat-icon">
@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <div class="col-md-4 col-sm-6 animate-fade-in-up" style="animation-delay: 0.1s">
+    <div class="col-md-3 col-sm-6 animate-fade-in-up" style="animation-delay: 0.1s">
         <div class="panel panel-filled">
             <div class="panel-body">
                 <div class="stat-icon">
@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <div class="col-md-4 col-sm-6 animate-fade-in-up" style="animation-delay: 0.15s">
+    <div class="col-md-3 col-sm-6 animate-fade-in-up" style="animation-delay: 0.15s">
         <div class="panel panel-filled">
             <div class="panel-body">
                 <div class="stat-icon">
@@ -84,4 +84,25 @@
             </div>
         </div>
     </div>
+
+    @if(!auth()->user()->isRole('member') && $recentActivity->count())
+        <div class="col-md-3 col-sm-6 animate-fade-in-up" style="animation-delay: 0.2s">
+            <a href="#" class="panel panel-filled panel-clickable" data-toggle="modal" data-target="#activityFeedModal">
+                <div class="panel-body">
+                    <i class="fa fa-expand panel-expand-icon"></i>
+                    <div class="stat-icon">
+                        <i class="fa fa-history text-accent"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value">{{ $recentActivity->count() }}</span>
+                        <span class="stat-label">Recent Actions</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    @endif
 </div>
+
+@if(!auth()->user()->isRole('member') && $recentActivity->count())
+    @include('division.partials.activity-feed-modal')
+@endif

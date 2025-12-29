@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityType;
 use App\Http\Requests\CreateLeave;
 use App\Http\Requests\UpdateLeave;
 use App\Models\Division;
@@ -55,6 +56,7 @@ class LeaveController extends Controller
         $this->authorize('update', $member);
 
         $leave->delete();
+        $member->recordActivity(ActivityType::ENDED_LEAVE);
 
         $this->showSuccessToast('Leave successfully deleted!');
 

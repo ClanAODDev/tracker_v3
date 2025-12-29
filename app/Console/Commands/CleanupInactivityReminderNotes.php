@@ -448,15 +448,20 @@ class CleanupInactivityReminderNotes extends Command
         $membersUpdated = 0;
         $remindersCreated = 0;
 
+        $notesForceDeleted = 0;
+
         foreach (array_chunk($memberIds, 100) as $memberIdBatch) {
             foreach ($memberIdBatch as $memberId) {
-                $member = Member::where('id', $memberId)->first();
+                $member = Member::withTrashed()->find($memberId);
 
                 if (! $member) {
                     $bar->advance();
 
                     continue;
                 }
+
+                $lastRemovalDate = $this->getLastRemovalDate($memberId);
+                $memberIsRemoved = $member->division_id === 0 || $member->trashed();
 
                 $reminderNotes = $this->buildQuery($maxLength)
                     ->where('member_id', $memberId)
@@ -466,6 +471,16 @@ class CleanupInactivityReminderNotes extends Command
 
                 if (! $dryRun) {
                     foreach ($reminderNotes as $note) {
+                        $shouldForceDelete = $memberIsRemoved
+                            || ($lastRemovalDate && $note->created_at < $lastRemovalDate);
+
+                        if ($shouldForceDelete) {
+                            $note->forceDelete();
+                            $notesForceDeleted++;
+
+                            continue;
+                        }
+
                         $exists = ActivityReminder::where('member_id', $member->clan_id)
                             ->whereDate('created_at', $note->created_at->toDateString())
                             ->exists();
@@ -480,27 +495,35 @@ class CleanupInactivityReminderNotes extends Command
                             ]);
                             $remindersCreated++;
                         }
+
+                        $note->delete();
+                        $notesDeleted++;
                     }
 
-                    $latestReminder = ActivityReminder::where('member_id', $member->clan_id)
-                        ->orderByDesc('created_at')
-                        ->first();
+                    if (! $memberIsRemoved) {
+                        $latestReminder = ActivityReminder::where('member_id', $member->clan_id)
+                            ->orderByDesc('created_at')
+                            ->first();
 
-                    if ($latestReminder) {
-                        $member->update([
-                            'last_activity_reminder_at' => $latestReminder->created_at,
-                            'activity_reminded_by_id' => $latestReminder->reminded_by_id,
-                        ]);
+                        if ($latestReminder) {
+                            $member->update([
+                                'last_activity_reminder_at' => $latestReminder->created_at,
+                                'activity_reminded_by_id' => $latestReminder->reminded_by_id,
+                            ]);
+                        }
                     }
-
-                    $deleted = $this->buildQuery($maxLength)
-                        ->where('member_id', $memberId)
-                        ->delete();
-
-                    $notesDeleted += $deleted;
                 } else {
-                    $notesDeleted += $reminderNotes->count();
-                    $remindersCreated += $reminderNotes->count();
+                    foreach ($reminderNotes as $note) {
+                        $shouldForceDelete = $memberIsRemoved
+                            || ($lastRemovalDate && $note->created_at < $lastRemovalDate);
+
+                        if ($shouldForceDelete) {
+                            $notesForceDeleted++;
+                        } else {
+                            $notesDeleted++;
+                            $remindersCreated++;
+                        }
+                    }
                 }
 
                 $membersUpdated++;
@@ -517,7 +540,8 @@ class CleanupInactivityReminderNotes extends Command
         $this->table(
             ['Metric', 'Count'],
             [
-                ['Notes soft-deleted', $notesDeleted],
+                ['Notes soft-deleted (converted to reminders)', $notesDeleted],
+                ['Notes permanently deleted (pre-removal)', $notesForceDeleted],
                 ['Members updated', $membersUpdated],
                 ['Removal notes reclassified', $removalNotesReclassified],
             ]
@@ -650,5 +674,20 @@ class CleanupInactivityReminderNotes extends Command
         }
 
         return $count;
+    }
+
+    protected function getLastRemovalDate(int $memberId): ?\Carbon\Carbon
+    {
+        $removalNote = Note::withTrashed()
+            ->where('member_id', $memberId)
+            ->where(function ($q) {
+                $q->whereRaw("LOWER(body) LIKE '%removed for inactivity%'")
+                    ->orWhereRaw("LOWER(body) LIKE '%removed due to inactivity%'")
+                    ->orWhereRaw("LOWER(body) LIKE 'member removal:%'");
+            })
+            ->orderByDesc('created_at')
+            ->first();
+
+        return $removalNote?->created_at;
     }
 }

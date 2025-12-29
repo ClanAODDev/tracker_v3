@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Activities\RecordsActivity;
+use App\Enums\ActivityType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,14 +11,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Note extends Model
 {
     use HasFactory;
-    use RecordsActivity;
     use SoftDeletes;
 
-    protected static $recordEvents = [
-        'created',
-        'updated',
-        'deleted',
-    ];
+    protected static function booted(): void
+    {
+        static::created(function (Note $note) {
+            $note->member?->recordActivity(ActivityType::CREATED_NOTE, [
+                'type' => $note->type,
+            ]);
+        });
+
+        static::updated(function (Note $note) {
+            $note->member?->recordActivity(ActivityType::UPDATED_NOTE, [
+                'type' => $note->type,
+            ]);
+        });
+
+        static::deleted(function (Note $note) {
+            $note->member?->recordActivity(ActivityType::DELETED_NOTE, [
+                'type' => $note->type,
+            ]);
+        });
+    }
 
     protected static $noteTypes = [
         'misc' => 'Misc',

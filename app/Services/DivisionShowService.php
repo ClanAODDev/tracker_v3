@@ -6,6 +6,7 @@ use App\Data\CensusChartData;
 use App\Data\DivisionShowData;
 use App\Data\DivisionStatsData;
 use App\Data\PendingActionsData;
+use App\Enums\ActivityType;
 use App\Models\Division;
 use App\Repositories\DivisionRepository;
 
@@ -30,6 +31,7 @@ class DivisionShowService
             divisionAnniversaries: $this->divisionRepository->getDivisionAnniversaries($division),
             previousCensus: $this->divisionRepository->censusCounts($division)->first(),
             pendingActions: PendingActionsData::forDivision($division, auth()->user()),
+            recentActivity: $this->getRecentActivity($division),
         );
     }
 
@@ -44,6 +46,16 @@ class DivisionShowService
                 },
             ])
             ->orderBy('order')
+            ->get();
+    }
+
+    private function getRecentActivity(Division $division)
+    {
+        return $division->activity()
+            ->whereIn('name', ActivityType::feedTypes())
+            ->with(['subject' => fn ($q) => $q->withTrashed(), 'user'])
+            ->orderByDesc('created_at')
+            ->limit(10)
             ->get();
     }
 }

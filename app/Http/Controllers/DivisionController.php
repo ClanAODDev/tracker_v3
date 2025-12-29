@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Data\UnitStatsData;
+use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
@@ -64,22 +65,21 @@ class DivisionController extends Controller
         $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->attach($member->id);
         $this->showSuccessToast("{$member->name} added as part-time member to {$division->name}!");
-        $member->recordActivity('add_part_time');
+        $member->recordActivity(ActivityType::ADD_PART_TIME, [
+            'division' => $division->name,
+        ]);
 
         return redirect()->back();
     }
 
-    /**
-     * @return RedirectResponse|string
-     *
-     * @throws AuthorizationException
-     */
     public function removePartTime(Division $division, Member $member)
     {
         $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->detach($member);
         $this->showSuccessToast("{$member->name} removed from {$division->name} part-timers!");
-        $member->recordActivity('remove_part_time');
+        $member->recordActivity(ActivityType::REMOVE_PART_TIME, [
+            'division' => $division->name,
+        ]);
 
         return redirect()->back();
     }
@@ -157,7 +157,9 @@ class DivisionController extends Controller
             ]);
         }
 
-        $member->recordActivity('add_part_time');
+        $member->recordActivity(ActivityType::ADD_PART_TIME, [
+            'division' => $division->name,
+        ]);
 
         if (request()->expectsJson()) {
             return response()->json([

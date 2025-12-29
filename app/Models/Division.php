@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Presenters\DivisionPresenter;
@@ -96,11 +97,6 @@ class Division extends Model
         ],
     ];
 
-    protected static array $recordEvents = ['created', 'deleted'];
-
-    /**
-     * @var array
-     */
     protected $casts = [
         'active' => 'boolean',
         'show_on_site' => 'boolean',
@@ -121,14 +117,15 @@ class Division extends Model
      */
     protected $guarded = [];
 
-    public static function boot()
+    protected static function booted(): void
     {
-        parent::boot();
-
         static::creating(function (self $division) {
             $division->settings = $division->defaultSettings;
             $division->slug = Str::slug($division->name);
         });
+
+        static::created(fn (Division $division) => $division->recordActivity(ActivityType::CREATED_DIVISION));
+        static::deleted(fn (Division $division) => $division->recordActivity(ActivityType::DELETED_DIVISION));
     }
 
     public function getRouteKeyName(): string

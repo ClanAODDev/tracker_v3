@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ActivityType;
 use App\Models\Leave;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -38,5 +39,11 @@ class UpdateLeave extends FormRequest
         }
 
         $leave->update($this->all());
+
+        if ($this->approve_leave) {
+            $leave->member->recordActivity(ActivityType::APPROVED_LEAVE);
+        } else {
+            $leave->member->recordActivity(ActivityType::EXTENDED_LEAVE);
+        }
     }
 }

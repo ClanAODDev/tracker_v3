@@ -32,15 +32,4 @@ class DivisionControllerTest extends TestCase
 
         $response->assertRedirect('/login');
     }
-
-    public function test_activity_page_displays()
-    {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
-
-        $response = $this->actingAs($officer)
-            ->get(route('divisionActivity', $division->slug));
-
-        $response->assertOk();
-    }
 }

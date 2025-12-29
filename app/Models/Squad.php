@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\ActivityType;
 use App\Presenters\SquadPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,21 +16,19 @@ class Squad extends Model
     use RecordsActivity;
     use SoftDeletes;
 
-    protected static $recordEvents = [
-        'created',
-        'updated',
-        'deleted',
-    ];
-
     protected $fillable = [
         'leader_id',
         'name',
         'logo',
     ];
 
-    /**
-     * @return SquadPresenter
-     */
+    protected static function booted(): void
+    {
+        static::created(fn (Squad $squad) => $squad->recordActivity(ActivityType::CREATED_SQUAD));
+        static::updated(fn (Squad $squad) => $squad->recordActivity(ActivityType::UPDATED_SQUAD));
+        static::deleted(fn (Squad $squad) => $squad->recordActivity(ActivityType::DELETED_SQUAD));
+    }
+
     public function present()
     {
         return new SquadPresenter($this);

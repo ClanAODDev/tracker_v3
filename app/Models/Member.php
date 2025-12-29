@@ -36,8 +36,6 @@ class Member extends Model
         return $this->discord;
     }
 
-    protected static array $recordEvents = [];
-
     protected $casts = [
         'pending_member' => 'boolean',
         'flagged_for_inactivity' => 'boolean',

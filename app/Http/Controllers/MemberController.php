@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Data\MemberStatsData;
 use App\Data\NoteStatsData;
+use App\Enums\ActivityType;
 use App\Models\ActivityReminder;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Note;
 use App\Models\Platoon;
 use App\Repositories\MemberRepository;
 use App\Services\RankTimelineService;
@@ -42,13 +44,15 @@ class MemberController extends Controller
 
     public function show(Member $member)
     {
-        $canViewSrLdr = auth()->user()->isRole(['sr_ldr', 'admin']);
+        $user = auth()->user();
+        $canViewSrLdr = $user->isRole(['sr_ldr', 'admin']);
+        $canViewTrashed = $user->can('viewTrashed', Note::class);
 
         $this->memberRepository->loadProfileRelations($member);
         $division = $member->division;
 
         $notes = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
-        $trashedNotes = $canViewSrLdr ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
+        $trashedNotes = $canViewTrashed ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
         $rankHistory = $this->memberRepository->getRankHistory($member);
         $transfers = $member->transfers;
         $partTimeDivisions = $member->partTimeDivisions;
@@ -76,6 +80,9 @@ class MemberController extends Controller
         $platoon = Platoon::find(request()->platoon_id);
         $member->platoon_id = $platoon->id;
         $member->save();
+        $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
+            'platoon' => $platoon->name,
+        ]);
 
         return response()->json(['success' => true]);
     }
@@ -95,6 +102,7 @@ class MemberController extends Controller
         $member->squad_id = 0;
         $member->platoon_id = 0;
         $member->save();
+        $member->recordActivity(ActivityType::UNASSIGNED);
 
         $this->showSuccessToast('Member assignments reset successfully');
 

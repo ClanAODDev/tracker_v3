@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActivityType;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -63,6 +64,10 @@ class BulkTransferController extends Controller
             $member->platoon_id = $platoon->id;
             $member->squad_id = $squad ? $squad->id : 0;
             $member->save();
+            $member->recordActivity(ActivityType::TRANSFERRED, [
+                'platoon' => $platoon->name,
+                'squad' => $squad?->name,
+            ]);
             $transferredCount++;
         }
 
