@@ -149,9 +149,17 @@ body.nav-toggle {
     display: flex;
     align-items: center;
     background: var(--color-gray-100);
+    border: none;
     border-radius: 6px;
     padding: 0 12px;
     width: 280px;
+    outline: none;
+
+    &:focus-within {
+        border: none;
+        outline: none;
+        box-shadow: none;
+    }
 
     > i.fa-search {
         color: var(--color-gray-500);
@@ -161,11 +169,18 @@ body.nav-toggle {
     input {
         flex: 1;
         background: transparent;
-        border: none;
+        border: none !important;
         color: var(--color-gray-900);
         padding: 10px;
         font-size: 14px;
-        outline: none;
+        outline: none !important;
+        box-shadow: none !important;
+
+        &:focus {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+        }
 
         &::placeholder {
             color: var(--color-gray-500);
