@@ -10,9 +10,6 @@ class NotePolicy
 {
     use HandlesAuthorization;
 
-    /**
-     * Create a new policy instance.
-     */
     public function __construct() {}
 
     public function before(User $user)
@@ -22,9 +19,6 @@ class NotePolicy
         }
     }
 
-    /**
-     * Officers and above can see notes.
-     */
     public function show(User $user): bool
     {
         if ($user->isRole('member')) {
@@ -36,16 +30,9 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
-        if ($user->isDivisionLeader()) {
-            return true;
-        }
-
-        return false;
+        return $user->isDivisionLeader();
     }
 
-    /**
-     * Only officers and above can create notes.
-     */
     public function create(User $user): bool
     {
         if ($user->isRole('member')) {
@@ -57,10 +44,21 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
-        if ($user->isDivisionLeader()) {
-            return true;
-        }
+        return $user->isDivisionLeader();
+    }
 
-        return false;
+    public function viewTrashed(User $user): bool
+    {
+        return $user->isDivisionLeader();
+    }
+
+    public function restore(User $user, Note $note): bool
+    {
+        return $user->isDivisionLeader();
+    }
+
+    public function forceDelete(User $user, Note $note): bool
+    {
+        return $user->isDivisionLeader();
     }
 }

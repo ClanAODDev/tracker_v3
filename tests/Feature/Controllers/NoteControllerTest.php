@@ -61,7 +61,7 @@ class NoteControllerTest extends TestCase
         $this->assertDatabaseMissing('notes', ['id' => $note->id]);
     }
 
-    public function test_officer_cannot_restore_soft_deleted_note()
+    public function test_division_leader_can_restore_soft_deleted_note()
     {
         $officer = $this->createOfficer();
         $division = $officer->member->division;
@@ -76,10 +76,11 @@ class NoteControllerTest extends TestCase
         $response = $this->actingAs($officer)
             ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
 
-        $response->assertForbidden();
+        $response->assertOk();
+        $response->assertJson(['success' => true]);
     }
 
-    public function test_officer_cannot_force_delete_soft_deleted_note()
+    public function test_division_leader_can_force_delete_soft_deleted_note()
     {
         $officer = $this->createOfficer();
         $division = $officer->member->division;
@@ -92,6 +93,43 @@ class NoteControllerTest extends TestCase
         $note->delete();
 
         $response = $this->actingAs($officer)
+            ->deleteJson(route('forceDeleteNote', [$member->clan_id, $note->id]));
+
+        $response->assertOk();
+        $response->assertJson(['success' => true]);
+    }
+
+    public function test_junior_leader_cannot_restore_soft_deleted_note()
+    {
+        $jrLdr = $this->createJuniorLeader();
+        $division = $jrLdr->member->division;
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $note = Note::factory()->create([
+            'member_id' => $member->id,
+            'author_id' => $jrLdr->id,
+        ]);
+        $note->delete();
+
+        $response = $this->actingAs($jrLdr)
+            ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
+
+        $response->assertForbidden();
+    }
+
+    public function test_junior_leader_cannot_force_delete_soft_deleted_note()
+    {
+        $jrLdr = $this->createJuniorLeader();
+        $division = $jrLdr->member->division;
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $note = Note::factory()->create([
+            'member_id' => $member->id,
+            'author_id' => $jrLdr->id,
+        ]);
+        $note->delete();
+
+        $response = $this->actingAs($jrLdr)
             ->deleteJson(route('forceDeleteNote', [$member->clan_id, $note->id]));
 
         $response->assertForbidden();
