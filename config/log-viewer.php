@@ -38,6 +38,8 @@ return [
 
     'middleware' => ['web', 'developer'],
 
+    'api_middleware' => ['web', 'developer'],
+
     /*
     |--------------------------------------------------------------------------
     | Include file patterns
