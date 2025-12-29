@@ -129,22 +129,26 @@ class TicketApiController extends Controller
 
     protected function transformTicket(Ticket $ticket, bool $includeComments = false): array
     {
+        $type = $ticket->type;
+        $division = $ticket->division;
+        $owner = $ticket->owner;
+
         $data = [
             'id' => $ticket->id,
             'state' => $ticket->state,
             'state_color' => $ticket->stateColors[$ticket->state] ?? 'gray',
             'description' => $ticket->description,
-            'type' => $ticket->type ? [
-                'id' => $ticket->type->id,
-                'name' => $ticket->type->name,
+            'type' => $type ? [
+                'id' => $type->id,
+                'name' => $type->name,
             ] : null,
-            'division' => $ticket->division ? [
-                'id' => $ticket->division->id,
-                'name' => $ticket->division->name,
+            'division' => $division ? [
+                'id' => $division->id,
+                'name' => $division->name,
             ] : null,
-            'owner' => $ticket->owner ? [
-                'id' => $ticket->owner->id,
-                'name' => $ticket->owner->name,
+            'owner' => $owner ? [
+                'id' => $owner->id,
+                'name' => $owner->name,
             ] : null,
             'created_at' => $ticket->created_at->toIso8601String(),
             'updated_at' => $ticket->updated_at->toIso8601String(),
