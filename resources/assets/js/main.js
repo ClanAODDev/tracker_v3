@@ -32,6 +32,7 @@ var Tracker = Tracker || {};
             Tracker.InitActivityReminderToggle();
             Tracker.InitInactiveBulkMode();
             Tracker.InitTrashedNotes();
+            Tracker.InitActivityFeedToggle();
         },
 
         InitNavToggle: function () {
@@ -1527,6 +1528,24 @@ var Tracker = Tracker || {};
                         }
                     }
                 });
+            });
+        },
+
+        InitActivityFeedToggle: function () {
+            $(document).on('show.bs.collapse', '.activity-group-members', function() {
+                $('.activity-group-members.in').not(this).collapse('hide');
+            });
+
+            $(document).on('click', '.activity-feed-item', function(e) {
+                if ($(e.target).closest('a').length) {
+                    return;
+                }
+
+                var $toggle = $(this).find('.activity-group-toggle');
+                if ($toggle.length) {
+                    var $target = $($toggle.data('target'));
+                    $target.collapse('toggle');
+                }
             });
         }
 

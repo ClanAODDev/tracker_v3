@@ -3000,6 +3000,10 @@ body.no-animations {
     border-radius: 6px;
     background-color: rgba(255, 255, 255, 0.02);
 
+    &:has(.activity-group-toggle) {
+        cursor: pointer;
+    }
+
     &:hover {
         background-color: rgba(255, 255, 255, 0.04);
     }
@@ -3042,10 +3046,9 @@ body.no-animations {
     border-radius: 50%;
     font-size: 10px;
     z-index: 1;
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    transition: border-color 0.15s ease;
 
     .activity-feed-item:hover & {
-        transform: scale(1.1);
         border-color: var(--color-gray-600);
     }
 }
@@ -3067,19 +3070,24 @@ body.no-animations {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
+    text-decoration: none !important;
     color: var(--color-gray-300);
+
+    &:hover,
+    &:focus,
+    &:active,
+    &:visited {
+        text-decoration: none !important;
+    }
 
     &:hover,
     &:focus {
         color: var(--color-accent);
-        text-decoration: none;
     }
 
     &:active,
     &:visited {
         color: var(--color-gray-300);
-        text-decoration: none;
     }
 
     .fa-chevron-down {
@@ -3099,8 +3107,12 @@ body.no-animations {
 }
 
 .activity-group-members {
-    margin-top: 8px;
-    padding: 8px 0 4px 0;
+    padding: 12px 0 4px 0;
+    overflow: hidden;
+
+    &.collapsing {
+        transition: height 0.2s ease-out;
+    }
 }
 
 .activity-group-member {
@@ -3119,11 +3131,18 @@ body.no-animations {
     }
 
     a {
-        color: var(--color-gray-300);
+        color: var(--color-accent);
         font-weight: 400;
+        text-decoration: none;
 
         &:hover {
+            text-decoration: underline;
+        }
+
+        &:visited,
+        &:active {
             color: var(--color-accent);
+            text-decoration: none;
         }
     }
 }

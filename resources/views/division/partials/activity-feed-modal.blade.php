@@ -23,7 +23,7 @@
                             <span class="activity-feed-content">
                                 @if($isGrouped)
                                     <a href="#" class="activity-group-toggle" data-toggle="collapse" data-target="#activity-group-{{ $loop->index }}">
-                                        <strong>{{ $count }}</strong> members {{ $type->feedDescription() }}
+                                        <strong>{{ $count }}</strong>&nbsp;members {{ $type->feedDescription() }}
                                         <i class="fa fa-chevron-down fa-xs"></i>
                                     </a>
                                     <div id="activity-group-{{ $loop->index }}" class="collapse activity-group-members">
