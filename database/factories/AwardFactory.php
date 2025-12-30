@@ -18,8 +18,16 @@ class AwardFactory extends Factory
             'division_id' => Division::factory(),
             'active' => true,
             'allow_request' => true,
+            'repeatable' => false,
             'display_order' => $this->faker->numberBetween(1, 100),
         ];
+    }
+
+    public function repeatable(): self
+    {
+        return $this->state(fn (array $attributes) => [
+            'repeatable' => true,
+        ]);
     }
 
     public function inactive(): self

@@ -100,14 +100,21 @@
             </div>
         </div>
 
-        @if ($clanAwards->isNotEmpty() && !$divisionSlug)
+        @php
+            $clanTieredGroups = collect($tieredGroups)->whereNull('division_id');
+        @endphp
+
+        @if (($clanAwards->isNotEmpty() || $clanTieredGroups->isNotEmpty()) && !$divisionSlug)
             <div class="panel panel-filled">
                 <div class="panel-heading">
                     <i class="fa fa-globe"></i> Clan-Wide Awards
-                    <span class="badge pull-right">{{ $clanAwards->count() }}</span>
+                    <span class="badge pull-right">{{ $clanAwards->count() + $clanTieredGroups->count() }}</span>
                 </div>
                 <div class="panel-body">
                     <div class="row award-grid">
+                        @foreach($clanTieredGroups as $group)
+                            @include('division.awards.partials.tiered-card', ['group' => $group])
+                        @endforeach
                         @foreach ($clanAwards as $award)
                             @include('division.awards.partials.award-card', ['award' => $award])
                         @endforeach
@@ -117,15 +124,21 @@
         @endif
 
         @forelse ($activeAwards as $divisionName => $awards)
-            @php $division = $awards->first()->division; @endphp
+            @php
+                $division = $awards->first()->division;
+                $divisionTieredGroups = collect($tieredGroups)->where('division_id', $division->id);
+            @endphp
             <div class="panel panel-filled">
                 <div class="panel-heading">
                     <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
                     {{ $divisionName }}
-                    <span class="badge pull-right">{{ $awards->count() }}</span>
+                    <span class="badge pull-right">{{ $awards->count() + $divisionTieredGroups->count() }}</span>
                 </div>
                 <div class="panel-body">
                     <div class="row award-grid">
+                        @foreach($divisionTieredGroups as $group)
+                            @include('division.awards.partials.tiered-card', ['group' => $group])
+                        @endforeach
                         @foreach ($awards as $award)
                             @include('division.awards.partials.award-card', ['award' => $award])
                         @endforeach

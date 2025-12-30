@@ -70,6 +70,26 @@ class AwardResource extends Resource
                     ->relationship('division', 'name')
                     ->label('Division')
                     ->nullable(),
+                Select::make('prerequisite_award_id')
+                    ->relationship('prerequisite', 'name')
+                    ->label('Prerequisite Award')
+                    ->helperText('For tiered awards, select the lower tier that must be earned first')
+                    ->searchable()
+                    ->nullable()
+                    ->live(),
+                TextInput::make('tiered_group_name')
+                    ->label('Tiered Group Name')
+                    ->helperText('Custom name for the tiered award group (e.g., "AOD Tenure"). Only set on the base tier.')
+                    ->maxLength(100)
+                    ->nullable()
+                    ->visible(fn ($get) => $get('prerequisite_award_id') === null),
+                Textarea::make('tiered_group_description')
+                    ->label('Tiered Group Description')
+                    ->helperText('Description shown on the tiered award progression page. Only set on the base tier.')
+                    ->maxLength(500)
+                    ->rows(3)
+                    ->nullable()
+                    ->visible(fn ($get) => $get('prerequisite_award_id') === null),
                 TextInput::make('display_order')
                     ->required()
                     ->numeric()
@@ -83,7 +103,11 @@ class AwardResource extends Resource
                         Toggle::make('allow_request')
                             ->default(false)
                             ->required(),
-                    ])->columns(2),
+                        Toggle::make('repeatable')
+                            ->label('Can be earned multiple times')
+                            ->default(false)
+                            ->required(),
+                    ])->columns(3),
             ]);
     }
 
@@ -99,14 +123,22 @@ class AwardResource extends Resource
                 TextColumn::make('description')
                     ->searchable()
                     ->limit(45)
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('recipients_count')
                     ->label('Recipients')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextInputColumn::make('display_order')
                     ->rules(['required', 'numeric'])
-                    ->sortable(),
+                    ->sortable()
+                    ->width('80px')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 ToggleColumn::make('allow_request'),
+                ToggleColumn::make('repeatable')
+                    ->label('Multi'),
+                TextColumn::make('prerequisite.name')
+                    ->label('Prerequisite')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

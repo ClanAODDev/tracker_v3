@@ -89,15 +89,21 @@
                     <div class="hidden-xs hidden-sm text-center">
                         <h3>{{ $award->name }}</h3>
                         <span class="award-pill pill-{{ $stats->rarity }}" style="margin-left: 5px;">{{ ucfirst($stats->rarity) }}</span>
+                        @if($award->repeatable)
+                            <span class="label label-info" style="margin-left: 5px;"><i class="fa fa-repeat"></i> Repeatable</span>
+                        @endif
                         <p style="max-width:500px; margin-top: 15px;">{{ $award->description }}</p>
                     </div>
 
-                    @if ($award->allow_request && ($award->division?->active ?? true))
-                        <a href="#" data-toggle="modal" data-target="#award_modal"
-                           title="Request this award for yourself or someone else"
-                           style="margin-left:50px;"
-                           class="btn btn-default hidden-xs hidden-sm">Request Award</a>
-                    @endif
+                    <div class="hidden-xs hidden-sm" style="margin-left:50px;">
+                        @if ($userHasAward && !$award->repeatable)
+                            <span class="label label-success" style="font-size: 14px; padding: 8px 12px;"><i class="fa fa-check"></i> Already Received</span>
+                        @elseif ($award->allow_request && ($award->division?->active ?? true))
+                            <a href="#" data-toggle="modal" data-target="#award_modal"
+                               title="Request this award for yourself or someone else"
+                               class="btn btn-default">Request Award</a>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="visible-xs visible-sm text-center">
@@ -127,8 +133,13 @@
                         <span class="label label-warning">Clan-Wide</span>
                     @endif
                     <span class="award-pill pill-{{ $stats->rarity }}">{{ ucfirst($stats->rarity) }}</span>
+                    @if($award->repeatable)
+                        <span class="label label-info"><i class="fa fa-repeat"></i> Repeatable</span>
+                    @endif
                     <p>{{ $award->description }}</p>
-                    @if ($award->allow_request && ($award->division?->active ?? true))
+                    @if ($userHasAward && !$award->repeatable)
+                        <span class="label label-success m-t-md" style="font-size: 14px; padding: 8px 12px; display: inline-block;"><i class="fa fa-check"></i> Already Received</span>
+                    @elseif ($award->allow_request && ($award->division?->active ?? true))
                         <a href="#" data-toggle="modal" data-target="#award_modal"
                            title="Request this award for yourself or someone else"
                            class="btn btn-default m-t-md">Request Award</a>

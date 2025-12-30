@@ -100,33 +100,101 @@
             });
         });
     </script>
+    @php
+        $memberAwardIds = $member->awards->pluck('award_id')->unique();
+
+        $groupedAwards = $member->awards
+            ->groupBy('award_id')
+            ->map(function ($records) {
+                return [
+                    'award' => $records->first()->award,
+                    'records' => $records->sortBy('created_at'),
+                    'count' => $records->count(),
+                    'latest' => $records->sortByDesc('created_at')->first(),
+                ];
+            });
+
+        $skipAwardIds = collect();
+        $tieredGroups = [];
+
+        foreach ($groupedAwards as $awardId => $group) {
+            $award = $group['award'];
+            $chain = $award->getPrerequisiteChain();
+
+            if (count($chain) > 0) {
+                $earnedInChain = collect([$award])
+                    ->merge($chain)
+                    ->filter(fn($a) => $memberAwardIds->contains($a->id))
+                    ->sortByDesc(fn($a) => count($a->getPrerequisiteChain()));
+
+                $highest = $earnedInChain->first();
+                if ($highest && $highest->id === $award->id) {
+                    $tieredGroups[$awardId] = $earnedInChain->values()->all();
+                    $skipAwardIds = $skipAwardIds->merge($earnedInChain->skip(1)->pluck('id'));
+                }
+            }
+        }
+
+        $displayAwards = $groupedAwards
+            ->reject(fn($g, $id) => $skipAwardIds->contains($id))
+            ->sortBy('award.display_order');
+    @endphp
     <div class="row award-grid">
-        @foreach ($member->awards->sortBy('award.display_order') as $record)
-            @php $rarity = $record->award->getRarity(); @endphp
+        @foreach ($displayAwards as $awardId => $group)
+            @php
+                $award = $group['award'];
+                $count = $group['count'];
+                $latestRecord = $group['latest'];
+                $rarity = $award->getRarity();
+                $dates = $group['records']->map(fn($r) => $r->created_at->format('M d, Y'))->join("\n");
+                $tieredAwards = $tieredGroups[$awardId] ?? [];
+                $isTiered = count($tieredAwards) > 1;
+                $tieredSlug = $isTiered ? $award->getTieredGroupSlug() : null;
+                $awardLink = $tieredSlug ? route('awards.tiered', $tieredSlug) : route('awards.show', $award);
+            @endphp
             <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
-                <a href="{{ route('awards.show', $record->award) }}"
+                <a href="{{ $awardLink }}"
                    class="member-award-card member-award-card-{{ $rarity }}"
-                   title="{{ $record->reason ?? $record->award->description }}">
+                   title="{{ $latestRecord->reason ?? $award->description }}">
+                    @if($count > 1)
+                        <span class="award-count-badge" data-toggle="tooltip" data-placement="top" data-html="true" title="Earned {{ $count }} times:<br>{{ nl2br(e($dates)) }}">
+                            x{{ $count }}
+                        </span>
+                    @endif
                     <div class="rarity-indicator rarity-{{ $rarity }}"></div>
                     <div class="panel-body text-center">
-                        <div class="award-image-wrapper">
-                            @if($record->award->image && Storage::disk('public')->exists($record->award->image))
-                                <img src="{{ $record->award->getImagePath() }}"
-                                     alt="{{ $record->award->name }}"
-                                     class="clan-award" loading="lazy"
-                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
-                                />
-                                <div class="award-placeholder" style="display:none">
-                                    <i class="fas fa-trophy"></i>
-                                </div>
-                            @else
-                                <div class="award-placeholder">
-                                    <i class="fas fa-trophy"></i>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="award-card-name">{{ $record->award->name }}</div>
-                        <span class="award-pill pill-{{ $rarity }}">{{ $record->created_at->format('M d, Y') }}</span>
+                        @if($isTiered)
+                            <div class="award-tier-stack" data-toggle="tooltip" data-placement="top" title="{{ collect($tieredAwards)->pluck('name')->join(', ') }}">
+                                @foreach(array_reverse($tieredAwards) as $index => $tierAward)
+                                    <div class="award-tier-item" style="z-index: {{ $index + 1 }};">
+                                        @if($tierAward->image && Storage::disk('public')->exists($tierAward->image))
+                                            <img src="{{ $tierAward->getImagePath() }}" alt="{{ $tierAward->name }}" loading="lazy" />
+                                        @else
+                                            <div class="award-tier-placeholder"><i class="fas fa-trophy"></i></div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="award-image-wrapper">
+                                @if($award->image && Storage::disk('public')->exists($award->image))
+                                    <img src="{{ $award->getImagePath() }}"
+                                         alt="{{ $award->name }}"
+                                         class="clan-award" loading="lazy"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+                                    />
+                                    <div class="award-placeholder" style="display:none">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                @else
+                                    <div class="award-placeholder">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                        <div class="award-card-name">{{ $award->name }}</div>
+                        <span class="award-pill pill-{{ $rarity }}">{{ $latestRecord->created_at->format('M d, Y') }}</span>
                     </div>
                 </a>
             </div>

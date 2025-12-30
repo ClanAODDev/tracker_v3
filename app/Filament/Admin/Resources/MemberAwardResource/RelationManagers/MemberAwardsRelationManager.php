@@ -2,6 +2,8 @@
 
 namespace App\Filament\Admin\Resources\MemberAwardResource\RelationManagers;
 
+use App\Models\MemberAward;
+use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -32,7 +34,18 @@ class MemberAwardsRelationManager extends RelationManager
 
                 Select::make('member_id')
                     ->searchable()
-                    ->relationship('member', 'name'),
+                    ->relationship('member', 'name')
+                    ->rules([
+                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                            $award = $this->ownerRecord;
+                            if ($award->repeatable) {
+                                return;
+                            }
+                            if (MemberAward::where('member_id', $value)->where('award_id', $award->id)->exists()) {
+                                $fail('This member already has this award.');
+                            }
+                        },
+                    ]),
 
                 Textarea::make('reason')
                     ->columnSpanFull()

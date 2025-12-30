@@ -7,8 +7,10 @@ use App\Filament\Mod\Resources\MemberAwardResource\Pages\EditMemberAward;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\ListMemberAwards;
 use App\Filament\Mod\Resources\MemberAwardResource\RelationManagers\AwardRelationManager;
 use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
+use App\Models\Award;
 use App\Models\MemberAward;
 use App\Notifications\Channel\NotifyDivisionMemberAwarded;
+use Closure;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -18,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -77,7 +80,22 @@ class MemberAwardResource extends Resource
                     })
                     ->columnSpanFull()
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->rules([
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            $awardId = $get('award_id');
+                            if (! $awardId) {
+                                return;
+                            }
+                            $award = Award::find($awardId);
+                            if (! $award || $award->repeatable) {
+                                return;
+                            }
+                            if (MemberAward::where('member_id', $value)->where('award_id', $awardId)->exists()) {
+                                $fail('This member already has this award.');
+                            }
+                        },
+                    ]),
 
                 Textarea::make('reason')
                     ->required()

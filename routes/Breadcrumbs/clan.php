@@ -23,3 +23,9 @@ Breadcrumbs::for('awards.index', function ($breadcrumbs) {
         $breadcrumbs->push(ucwords(str_replace('-', ' ', request('division'))));
     }
 });
+
+Breadcrumbs::for('awards.tiered', function ($breadcrumbs, $group) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Achievements', route('awards.index'));
+    $breadcrumbs->push($group['name']);
+});

@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Models\Award;
 use App\Models\MemberAward;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -23,6 +24,12 @@ class UniqueAwardForMember implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        $award = Award::find($this->awardId);
+
+        if ($award?->repeatable && ! $award->isPartOfTieredGroup()) {
+            return;
+        }
+
         if (MemberAward::where('member_id', $value)
             ->where('award_id', $this->awardId)
             ->exists()) {
