@@ -151,7 +151,7 @@
                 <select id="platoon" class="form-control" v-model="store.member.platoon" @change="onPlatoonChange">
                   <option value="">Select {{ store.division.locality.platoon.toLowerCase() }}...</option>
                   <option v-for="platoon in store.division.platoons" :key="platoon.id" :value="platoon.id">
-                    {{ platoon.name }} ({{ platoon.members_count }})
+                    {{ platoon.name }} ({{ platoon.members_count }}){{ platoon.leader_name ? ' - ' + platoon.leader_name : '' }}
                   </option>
                 </select>
               </div>
@@ -162,7 +162,7 @@
                 <select id="squad" class="form-control" v-model="store.member.squad" :disabled="!selectedPlatoonSquads.length">
                   <option value="">{{ selectedPlatoonSquads.length ? 'Select ' + store.division.locality.squad.toLowerCase() + '...' : 'No ' + store.division.locality.squad.toLowerCase() + 's available' }}</option>
                   <option v-for="squad in selectedPlatoonSquads" :key="squad.id" :value="squad.id">
-                    {{ squad.name || 'Squad #' + squad.id }} ({{ squad.members_count }})
+                    {{ squad.name || 'Squad #' + squad.id }} ({{ squad.members_count }}){{ squad.leader_name ? ' - ' + squad.leader_name : '' }}
                   </option>
                 </select>
               </div>

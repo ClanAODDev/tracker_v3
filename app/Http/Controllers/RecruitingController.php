@@ -89,7 +89,10 @@ class RecruitingController extends Controller
 
         $platoons = $division->platoons()
             ->withCount('members')
-            ->with(['squads' => fn ($q) => $q->withCount('members')])
+            ->with([
+                'leader:clan_id,name',
+                'squads' => fn ($q) => $q->withCount('members')->with('leader:clan_id,name'),
+            ])
             ->get();
 
         return response()->json([
@@ -97,10 +100,12 @@ class RecruitingController extends Controller
                 'id' => $p->id,
                 'name' => $p->name,
                 'members_count' => $p->members_count,
+                'leader_name' => $p->leader?->name,
                 'squads' => $p->squads->map(fn ($s) => [
                     'id' => $s->id,
                     'name' => $s->name,
                     'members_count' => $s->members_count,
+                    'leader_name' => $s->leader?->name,
                 ]),
             ]),
             'threads' => collect($threads)->map(fn ($t) => [
