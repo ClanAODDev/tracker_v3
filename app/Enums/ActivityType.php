@@ -114,21 +114,23 @@ enum ActivityType: int
         };
     }
 
-    public function feedDescription(): string
+    public function feedDescription(int $count = 1): string
     {
+        $wasWere = $count === 1 ? 'was' : 'were';
+
         return match ($this) {
-            self::RECRUITED => 'was recruited',
-            self::REMOVED => 'was removed',
-            self::TRANSFERRED => 'transferred',
-            self::FLAGGED => 'flagged for inactivity',
-            self::UNFLAGGED => 'unflagged',
-            self::REQUESTED_LEAVE => 'requested leave',
-            self::APPROVED_LEAVE => 'leave approved',
-            self::EXTENDED_LEAVE => 'leave extended',
-            self::ENDED_LEAVE => 'returned from leave',
-            self::ADD_PART_TIME => 'added as part-time',
-            self::REMOVE_PART_TIME => 'removed from part-time',
-            self::ROLE_GRANTED => 'granted a role',
+            self::RECRUITED => "{$wasWere} recruited",
+            self::REMOVED => "{$wasWere} removed",
+            self::TRANSFERRED => "transferred",
+            self::FLAGGED => "{$wasWere} flagged for inactivity",
+            self::UNFLAGGED => "{$wasWere} unflagged",
+            self::REQUESTED_LEAVE => "requested leave",
+            self::APPROVED_LEAVE => "{$wasWere} approved for leave",
+            self::EXTENDED_LEAVE => "had leave extended",
+            self::ENDED_LEAVE => "returned from leave",
+            self::ADD_PART_TIME => "{$wasWere} added as part-time",
+            self::REMOVE_PART_TIME => "{$wasWere} removed from part-time",
+            self::ROLE_GRANTED => "{$wasWere} granted " . ($count === 1 ? 'a role' : 'roles'),
             default => $this->label(),
         };
     }
