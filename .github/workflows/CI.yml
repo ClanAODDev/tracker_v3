@@ -83,3 +83,8 @@ jobs:
 
       - name: Execute Unit and Feature tests via PHPUnit
         run: php artisan test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USERNAME: sail
+          DB_PASSWORD: password

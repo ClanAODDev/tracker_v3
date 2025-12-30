@@ -10,9 +10,10 @@ class MemberRepository
 {
     public function search(string $name): Collection
     {
-        $byName = Member::where('name', 'LIKE', "%{$name}%")->with('division');
+        $escaped = $this->escapeLike($name);
+        $byName = Member::where('name', 'LIKE', "%{$escaped}%")->with('division');
 
-        return Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$name}%"))
+        return Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$escaped}%"))
             ->with('division')
             ->union($byName)
             ->orderBy('name')
@@ -21,13 +22,20 @@ class MemberRepository
 
     public function searchAutocomplete(string $query, int $limit = 5): Collection
     {
-        return Member::where('name', 'LIKE', "%{$query}%")
+        $escaped = $this->escapeLike($query);
+
+        return Member::where('name', 'LIKE', "%{$escaped}%")
             ->take($limit)
             ->get()
             ->map(fn ($member) => [
                 'id' => $member->clan_id,
                 'label' => $member->name,
             ]);
+    }
+
+    private function escapeLike(string $value): string
+    {
+        return str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $value);
     }
 
     public function getNotesForMember(Member $member, bool $canViewSrLdr = false): Collection
