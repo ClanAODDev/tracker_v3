@@ -40,7 +40,7 @@
                 </div>
                 @if(count($populationTrend) > 1)
                     <div class="stat-sparkline">
-                        <x-sparkline :data="$populationTrend" :width="80" :height="24" :trend="$isDecline ? 'down' : 'up'" />
+                        <x-sparkline :data="$populationTrend" :width="50" :height="20" :trend="$isDecline ? 'down' : 'up'" />
                     </div>
                 @endif
             </div>
@@ -64,7 +64,7 @@
                 </div>
                 @if(count($voiceRateTrend) > 1)
                     <div class="stat-sparkline">
-                        <x-sparkline :data="$voiceRateTrend" :width="80" :height="24" />
+                        <x-sparkline :data="$voiceRateTrend" :width="50" :height="20" />
                     </div>
                 @endif
             </div>

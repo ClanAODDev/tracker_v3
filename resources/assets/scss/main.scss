@@ -1929,6 +1929,8 @@ body.no-animations {
 .sparkline {
     flex-shrink: 0;
     opacity: 0.8;
+    mask-image: linear-gradient(to right, transparent 0%, black 30%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 30%);
 }
 
 .leaderboard-value {
@@ -3320,13 +3322,16 @@ body.no-animations {
 
 .stat-sparkline {
     position: absolute;
-    right: 15px;
-    bottom: 12px;
-    opacity: 0.8;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .panel-filled .panel-body {
     position: relative;
+    overflow: hidden;
 }
 
 .quick-stats {
