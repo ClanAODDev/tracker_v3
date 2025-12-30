@@ -41,18 +41,20 @@ class LeaveResource extends Resource
         static $badge = null;
 
         if ($badge !== null) {
-            return $badge;
+            return $badge ?: null;
         }
 
         if (auth()->user()->isRole(['admin', 'sr_ldr'])) {
             $divisionId = auth()->user()->member->division_id;
 
-            $badge = (string) static::$model::where('approver_id', null)
+            $count = static::$model::where('approver_id', null)
                 ->whereHas('member', function ($memberQuery) use ($divisionId) {
                     $memberQuery->where('division_id', $divisionId);
                 })->count();
 
-            return $badge;
+            $badge = $count > 0 ? (string) $count : '';
+
+            return $badge ?: null;
         }
 
         return null;
