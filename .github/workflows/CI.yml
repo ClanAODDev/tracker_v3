@@ -16,7 +16,7 @@ concurrency:
 jobs:
   laravel-tests:
 
-    runs-on: [ ncstate-university ]
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
