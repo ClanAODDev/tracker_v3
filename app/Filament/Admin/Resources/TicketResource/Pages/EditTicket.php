@@ -5,7 +5,7 @@ namespace App\Filament\Admin\Resources\TicketResource\Pages;
 use App\Enums\Role;
 use App\Filament\Admin\Resources\TicketResource;
 use App\Models\User;
-use App\Notifications\Channel\NotifyCallerTicketUpdated;
+use App\Notifications\DM\NotifyCallerTicketUpdated;
 use App\Notifications\React\TicketReaction;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;

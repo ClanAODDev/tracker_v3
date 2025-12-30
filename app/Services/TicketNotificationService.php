@@ -7,7 +7,7 @@ use App\Models\TicketComment;
 use App\Models\User;
 use App\Notifications\Channel\NotifyAdminTicketCreated;
 use App\Notifications\Channel\NotifyAdminTicketUpdated;
-use App\Notifications\Channel\NotifyCallerTicketUpdated;
+use App\Notifications\DM\NotifyCallerTicketUpdated;
 use App\Notifications\DM\NotifyNewTicketOwner;
 use App\Notifications\DM\NotifyUserTicketCreated;
 use App\Notifications\React\TicketReaction;

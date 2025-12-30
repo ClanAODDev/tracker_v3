@@ -2,20 +2,12 @@
 
 namespace App\Channels\Messages;
 
-use Exception;
-
-/**
- * Class DiscordMessage.
- */
 class BotDMMessage
 {
     private $target;
 
     private $message;
 
-    /**
-     * @return BotDMMessage
-     */
     public function to($target)
     {
         $this->target = $target;
@@ -23,9 +15,6 @@ class BotDMMessage
         return $this;
     }
 
-    /**
-     * @return $this
-     */
     public function message($message)
     {
         $this->message = addslashes($message);
@@ -33,19 +22,10 @@ class BotDMMessage
         return $this;
     }
 
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
-    public function send()
+    public function send(): array
     {
-        if (! $this->target) {
-            throw new Exception('A target user (snowflake, tag) must be defined');
-        }
-
-        if (! isset($this->message) && empty($this->fields)) {
-            throw new Exception('A message must be defined');
+        if (! $this->target || ! $this->message) {
+            return [];
         }
 
         return [

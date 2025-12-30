@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Notifications\Channel;
+namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
 use App\Traits\RetryableNotification;
-use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -35,28 +34,14 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
         return [BotChannel::class];
     }
 
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
     public function toBot($ticket)
     {
-        if (! $ticket->caller->member->discord) {
-            throw new Exception(sprintf(
-                'Ticket %d caller could not be notified because they do not have a valid discord tag.',
-                $ticket->id
-            ));
-        }
-
-        if (! $ticket->caller->settings()->get('ticket_notifications')) {
+        if (! $ticket->caller?->settings()?->get('ticket_notifications')) {
             return [];
         }
 
-        $target = $ticket->caller->member->discord;
-
         return (new BotDMMessage)
-            ->to($target)
+            ->to($ticket->caller?->member?->discord)
             ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();
     }
