@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use BinaryBuilds\FilamentFailedJobs\FilamentFailedJobsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -30,6 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#f6a821',
             ])
+            ->plugin(FilamentFailedJobsPlugin::make()->navigationGroup('Admin'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([

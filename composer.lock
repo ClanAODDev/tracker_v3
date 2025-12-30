@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2a34dae7230a15264c97f9fd5087a77e",
+    "content-hash": "c06a9c53716425aca0c5c06c0df06e7d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -156,6 +156,78 @@
                 }
             ],
             "time": "2025-12-23T17:37:00+00:00"
+        },
+        {
+            "name": "binarybuilds/filament-failed-jobs",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/binarybuilds/filament-failed-jobs.git",
+                "reference": "ad013fd343d3cfb6489216972b581d0b5fccead7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/binarybuilds/filament-failed-jobs/zipball/ad013fd343d3cfb6489216972b581d0b5fccead7",
+                "reference": "ad013fd343d3cfb6489216972b581d0b5fccead7",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^8.0",
+                "nunomaduro/larastan": "^3.7",
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^3.0|^4.1",
+                "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BinaryBuilds\\FilamentFailedJobs\\FilamentFailedJobsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BinaryBuilds\\FilamentFailedJobs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Srinath Reddy Dudi",
+                    "email": "srinathreddydudi@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A filament package to easily retry and prune failed jobs",
+            "homepage": "https://github.com/binarybuilds/filament-failed-jobs",
+            "keywords": [
+                "binarybuilds",
+                "failed jobs",
+                "filament",
+                "laravel",
+                "queued jobs"
+            ],
+            "support": {
+                "issues": "https://github.com/binarybuilds/filament-failed-jobs/issues",
+                "source": "https://github.com/binarybuilds/filament-failed-jobs"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/srinathreddydudi",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-12-28T17:04:17+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -15090,5 +15162,5 @@
         "ext-gd": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

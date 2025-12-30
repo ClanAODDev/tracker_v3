@@ -40,7 +40,8 @@
         "symfony/options-resolver": "^7.0",
         "symfony/stopwatch": "^7.0",
         "symfony/string": "^7.0",
-        "symfony/translation": "^7.0"
+        "symfony/translation": "^7.0",
+        "binarybuilds/filament-failed-jobs": "^2.0"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
