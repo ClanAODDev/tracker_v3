@@ -67,8 +67,12 @@
         </div>
 
         <div class="col-lg-3 col-xs-6">
-            <div class="panel panel-filled member-stat-card stat-recruiting" style="--i: 2">
+            <div class="panel panel-filled member-stat-card stat-recruiting"
+                 @if($memberStats->recruiting->total > 0) data-toggle="modal" data-target="#recruits-modal" style="cursor: pointer; --i: 2" @else style="--i: 2" @endif>
                 <div class="stat-indicator"></div>
+                @if($memberStats->recruiting->total > 0)
+                    <span class="stat-clickable-hint"><i class="fa fa-expand"></i></span>
+                @endif
                 <div class="panel-body">
                     <div class="stat-icon">
                         <i class="fa fa-user-plus"></i>
@@ -86,11 +90,6 @@
                                 <span class="text-muted">No recruits yet</span>
                             @endif
                         </div>
-                        @if($memberStats->recruiting->total > 0)
-                            <button class="btn btn-xs btn-default stat-view-all" data-toggle="modal" data-target="#recruits-modal">
-                                View all
-                            </button>
-                        @endif
                     </div>
                 </div>
             </div>
