@@ -18,6 +18,18 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mariadb:
+        image: mariadb:10
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: tracker_test
+          MYSQL_USER: sail
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     strategy:
       matrix:
         php_version: [ 8.4 ]
@@ -30,7 +42,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_version }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, ldap
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_mysql, ldap
           coverage: none
 
       - name: Get Composer Cache Directory
