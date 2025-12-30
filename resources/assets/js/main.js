@@ -314,8 +314,9 @@ var Tracker = Tracker || {};
                 }
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/search/members/' + query,
+                    url: window.Laravel.appPath + '/search/members',
                     type: 'GET',
+                    data: { q: query },
                     success: function (response) {
                         $loader.removeClass('active');
                         $results.html(response);
@@ -545,8 +546,9 @@ var Tracker = Tracker || {};
             if (!name) return;
 
             $.ajax({
-                url: window.Laravel.appPath + '/search/members/' + name,
+                url: window.Laravel.appPath + '/search/members',
                 type: 'GET',
+                data: { q: name },
                 success: function (response) {
                     window.scrollTo(0, 0);
                     $('.desktop-search-loader').removeClass('active');

@@ -25,9 +25,9 @@ class MemberController extends Controller
         $this->middleware('auth');
     }
 
-    public function search($name = null)
+    public function search(Request $request)
     {
-        $name = $name ?: request()->name;
+        $name = $request->query('q');
         $members = $name ? $this->memberRepository->search($name) : collect();
 
         if (request()->ajax()) {

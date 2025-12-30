@@ -5,7 +5,7 @@ use App\Http\Controllers\RecruitingController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(MemberController::class)->group(function () {
-    Route::get('search/members/{name?}', 'search')->name('memberSearch');
+    Route::get('search/members', 'search')->name('memberSearch');
     Route::post('search-member', 'searchAutoComplete')->name('memberSearchAjax');
 });
 
