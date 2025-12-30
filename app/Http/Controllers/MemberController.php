@@ -111,12 +111,7 @@ class MemberController extends Controller
 
     public function setActivityReminder(Member $member): JsonResponse
     {
-        if (auth()->user()->member?->clan_id === $member->clan_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot remind yourself',
-            ], 403);
-        }
+        $this->authorize('remindActivity', $member);
 
         $alreadyRemindedToday = ActivityReminder::where('member_id', $member->clan_id)
             ->whereDate('created_at', today())
@@ -176,6 +171,8 @@ class MemberController extends Controller
 
     public function bulkReminder(Division $division, Request $request): JsonResponse|RedirectResponse
     {
+        $this->authorize('remindActivity', Member::class);
+
         $memberIds = $request->input('member_ids', []);
 
         if (is_string($memberIds)) {

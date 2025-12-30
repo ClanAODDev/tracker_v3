@@ -45,7 +45,6 @@ class ActivityReminderTest extends TestCase
             ->postJson(route('member.set-activity-reminder', $officer->member->clan_id));
 
         $response->assertForbidden();
-        $response->assertJson(['message' => 'Cannot remind yourself']);
     }
 
     public function test_cannot_remind_same_member_twice_in_one_day()
@@ -195,5 +194,17 @@ class ActivityReminderTest extends TestCase
         $response = $this->postJson(route('member.set-activity-reminder', $member->clan_id));
 
         $response->assertUnauthorized();
+    }
+
+    public function test_regular_member_cannot_set_activity_reminder()
+    {
+        $division = $this->createActiveDivision();
+        $user = $this->createMemberWithUser(['division_id' => $division->id], ['role_id' => 1]);
+        $targetMember = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($user)
+            ->postJson(route('member.set-activity-reminder', $targetMember->clan_id));
+
+        $response->assertForbidden();
     }
 }

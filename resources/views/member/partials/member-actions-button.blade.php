@@ -38,18 +38,18 @@
             <a href="{{ doForumFunction([$member->clan_id], 'forumProfile') }}" target="_blank">View forum profile</a>
         </li>
 
-        @can('update', $member)
+        @can('flagInactive', \App\Models\Member::class)
             <li class="divider"></li>
             <li>
                 <a href="{{ route('member.flag-inactive', $member->clan_id) }}">Flag For Inactivity</a>
             </li>
-            @unless(auth()->user()->member?->clan_id === $member->clan_id)
-                <li>
-                    <a href="#" class="set-activity-reminder-btn" data-url="{{ route('member.set-activity-reminder', $member->clan_id) }}">
-                        Mark Sent Reminder
-                    </a>
-                </li>
-            @endunless
+        @endcan
+        @can('remindActivity', $member)
+            <li>
+                <a href="#" class="set-activity-reminder-btn" data-url="{{ route('member.set-activity-reminder', $member->clan_id) }}">
+                    Mark Sent Reminder
+                </a>
+            </li>
         @endcan
     </ul>
 </div>

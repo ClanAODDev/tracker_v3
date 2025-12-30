@@ -23,11 +23,13 @@
                     <i class="fa fa-exchange-alt text-accent"></i> <span class="hidden-xs hidden-sm">Transfer</span>...
                 </button>
             @endcan
-            <button type="button" id="bulk-reminder-btn" class="btn btn-default"
-                    data-url="{{ route('bulk-reminder.store', $division) }}"
-                    title="Mark as reminded">
-                <i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>
-            </button>
+            @can('remindActivity', \App\Models\Member::class)
+                <button type="button" id="bulk-reminder-btn" class="btn btn-default"
+                        data-url="{{ route('bulk-reminder.store', $division) }}"
+                        title="Mark as reminded">
+                    <i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>
+                </button>
+            @endcan
             <button type="button" class="btn btn-link bulk-action-close" title="Clear selection">
                 <i class="fa fa-times"></i>
             </button>

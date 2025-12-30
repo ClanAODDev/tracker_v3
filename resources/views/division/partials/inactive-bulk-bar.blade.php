@@ -9,11 +9,13 @@
                     <i class="fa fa-bullhorn text-accent"></i> <span class="hidden-xs hidden-sm">Send PM</span>...
                 </button>
             </form>
-            <button type="button" id="inactive-bulk-reminder-btn" class="btn btn-default"
-                    data-url="{{ route('bulk-reminder.store', $division) }}"
-                    title="Mark as reminded">
-                <i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>
-            </button>
+            @can('remindActivity', \App\Models\Member::class)
+                <button type="button" id="inactive-bulk-reminder-btn" class="btn btn-default"
+                        data-url="{{ route('bulk-reminder.store', $division) }}"
+                        title="Mark as reminded">
+                    <i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>
+                </button>
+            @endcan
             @can('flag-inactive', \App\Models\Member::class)
                 <button type="button" id="inactive-bulk-flag-btn" class="btn btn-warning"
                         data-url="{{ route('inactive.bulk-flag', $division) }}"

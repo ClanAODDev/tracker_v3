@@ -40,6 +40,7 @@
             </div>
         </div>
 
+        @can('remindActivity', \App\Models\Member::class)
         <div class="panel panel-filled m-t-md">
             <div class="panel-heading">
                 <i class="fa fa-bell"></i> Inactivity Reminder Tracking
@@ -73,6 +74,7 @@
                 </div>
             @endif
         </div>
+        @endcan
 
         <a href="{{ url()->previous() }}" class="btn btn-default"><i class="fa fa-arrow-left"></i> Go back</a>
 

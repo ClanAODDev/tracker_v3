@@ -53,6 +53,15 @@ class MemberPolicy
         return $user->isRole(['officer', 'sr_ldr']);
     }
 
+    public function remindActivity(User $user, ?Member $member = null): bool
+    {
+        if ($member && $member->id === $user->member_id) {
+            return false;
+        }
+
+        return $user->isRole(['officer', 'sr_ldr']);
+    }
+
     public function updateLeave(User $user, Member $member)
     {
         // can't edit yourself

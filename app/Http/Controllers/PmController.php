@@ -22,7 +22,7 @@ class PmController extends Controller
 
         $remindedCount = 0;
         $skippedCount = 0;
-        if ($request->boolean('set_reminder')) {
+        if ($request->boolean('set_reminder') && $request->user()->can('remindActivity', Member::class)) {
             $alreadyRemindedToday = Member::whereIn('clan_id', $memberIds)
                 ->whereDate('last_activity_reminder_at', today())
                 ->count();
