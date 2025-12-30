@@ -119,10 +119,12 @@ var Tracker = Tracker || {};
                         var selected = basicDatatable.rows($('.selected')).data().toArray().map(function (row) {
                             return row[4];
                         });
-                        if (selected.length >= 2) {
+                        if (selected.length >= 1) {
                             $('#selected-data').show();
-                            $('#selected-data .status-text').text('With selected (' + selected.length + ')');
+                            $('#selected-data .status-text').text(selected.length + ' member' + (selected.length === 1 ? '' : 's') + ' selected');
                             $('#pm-member-data').val(selected);
+                        } else {
+                            $('#selected-data').hide();
                         }
                     });
                 }

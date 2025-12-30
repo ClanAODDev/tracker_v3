@@ -440,9 +440,9 @@ function initPlatoon() {
                     $transferBtn.removeAttr('title');
                 }
 
-                if (selected.length >= 2) {
+                if (selected.length >= 1) {
                     $("#selected-data").css('display', 'block');
-                    $("#selected-data .status-text").text(selected.length + " members selected");
+                    $("#selected-data .status-text").text(selected.length + " member" + (selected.length === 1 ? "" : "s") + " selected");
                     $("#pm-member-data").val(selected);
                     $("#tag-member-data").val(selected);
                     $("#transfer-member-data").val(selected);
