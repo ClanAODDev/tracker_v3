@@ -63,16 +63,6 @@ class LogViewerAccessTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_junior_leader_cannot_access_log_viewer()
-    {
-        $juniorLeader = $this->createJuniorLeader();
-
-        $response = $this->actingAs($juniorLeader)
-            ->get('/log-viewer');
-
-        $response->assertForbidden();
-    }
-
     public function test_regular_member_cannot_access_log_viewer()
     {
         $member = $this->createMemberWithUser();

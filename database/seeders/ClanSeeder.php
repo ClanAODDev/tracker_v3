@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
 use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
@@ -41,7 +42,7 @@ class ClanSeeder extends Seeder
                 $adminUser = User::factory()->create([
                     'name' => $adminMember->name,
                     'member_id' => $adminMember->id,
-                    'role_id' => 5,
+                    'role_id' => Role::ADMIN->value,
                 ]);
                 $this->command->info("Created Admin user: {$adminUser->name} (Member ID: {$adminUser->member_id})");
             }
@@ -52,7 +53,7 @@ class ClanSeeder extends Seeder
                 $srLdrDivisionUser = User::factory()->create([
                     'name' => $leadershipMember->name,
                     'member_id' => $leadershipMember->id,
-                    'role_id' => 4,
+                    'role_id' => Role::SENIOR_LEADER->value,
                 ]);
                 $this->command->info("Created Senior Leader (Division CO/XO) user: {$srLdrDivisionUser->name} (Member ID: {$srLdrDivisionUser->member_id}, Position: {$leadershipMember->position})");
             }
@@ -66,7 +67,7 @@ class ClanSeeder extends Seeder
                 $srLdrPlatoonUser = User::factory()->create([
                     'name' => $platoonLeader->name,
                     'member_id' => $platoonLeader->id,
-                    'role_id' => 4,
+                    'role_id' => Role::SENIOR_LEADER->value,
                 ]);
                 $this->command->info("Created Senior Leader (Platoon Leader) user: {$srLdrPlatoonUser->name} (Member ID: {$srLdrPlatoonUser->member_id})");
             }
@@ -85,7 +86,7 @@ class ClanSeeder extends Seeder
                 $officerUser = User::factory()->create([
                     'name' => $squadLeader->name,
                     'member_id' => $squadLeader->id,
-                    'role_id' => 2,
+                    'role_id' => Role::OFFICER->value,
                 ]);
                 $this->command->info("Created Officer (Squad Leader) user: {$officerUser->name} (Member ID: {$officerUser->member_id})");
                 $this->command->info("Created Admin user: {$adminUser->name} (Member ID: {$adminUser->member_id})");
@@ -97,7 +98,7 @@ class ClanSeeder extends Seeder
                 $srLdrDivisionUser = User::factory()->create([
                     'name' => $leadershipMember->name,
                     'member_id' => $leadershipMember->id,
-                    'role_id' => 4,
+                    'role_id' => Role::SENIOR_LEADER->value,
                 ]);
                 $this->command->info("Created Senior Leader (Division CO/XO) user: {$srLdrDivisionUser->name} (Member ID: {$srLdrDivisionUser->member_id}, Position: {$leadershipMember->position})");
             }
@@ -111,7 +112,7 @@ class ClanSeeder extends Seeder
                 $srLdrPlatoonUser = User::factory()->create([
                     'name' => $platoonLeader->name,
                     'member_id' => $platoonLeader->id,
-                    'role_id' => 4,
+                    'role_id' => Role::SENIOR_LEADER->value,
                 ]);
                 $this->command->info("Created Senior Leader (Platoon Leader) user: {$srLdrPlatoonUser->name} (Member ID: {$srLdrPlatoonUser->member_id})");
             }
@@ -130,7 +131,7 @@ class ClanSeeder extends Seeder
                 $officerUser = User::factory()->create([
                     'name' => $squadLeader->name,
                     'member_id' => $squadLeader->id,
-                    'role_id' => 2,
+                    'role_id' => Role::OFFICER->value,
                 ]);
                 $this->command->info("Created Officer (Squad Leader) user: {$officerUser->name} (Member ID: {$officerUser->member_id})");
             }

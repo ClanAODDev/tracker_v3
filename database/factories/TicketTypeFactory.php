@@ -34,7 +34,7 @@ class TicketTypeFactory extends Factory
     public function restrictedToOfficers(): self
     {
         return $this->state(fn (array $attributes) => [
-            'role_access' => ['admin', 'sr_ldr', 'jr_ldr', 'officer'],
+            'role_access' => ['admin', 'sr_ldr', 'officer'],
         ]);
     }
 }

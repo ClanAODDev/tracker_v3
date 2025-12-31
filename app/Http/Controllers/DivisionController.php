@@ -108,7 +108,7 @@ class DivisionController extends Controller
 
     public function unassignedToSquad(Division $division): JsonResponse
     {
-        if (! auth()->user()->isRole(['sr_ldr', 'jr_ldr'])) {
+        if (! auth()->user()->isRole('sr_ldr')) {
             abort(403);
         }
 

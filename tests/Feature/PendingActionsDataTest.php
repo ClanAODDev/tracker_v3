@@ -152,9 +152,9 @@ final class PendingActionsDataTest extends TestCase
     }
 
     #[Test]
-    public function junior_leaders_do_not_see_pending_leaves(): void
+    public function officers_do_not_see_pending_leaves(): void
     {
-        $user = $this->createUserWithRole('jr_ldr');
+        $user = $this->createUserWithRole('officer');
 
         $member = Member::factory()->create(['division_id' => $this->division->id]);
         Leave::factory()->create([
@@ -168,9 +168,9 @@ final class PendingActionsDataTest extends TestCase
     }
 
     #[Test]
-    public function leaders_see_voice_issues(): void
+    public function senior_leaders_see_voice_issues(): void
     {
-        $user = $this->createUserWithRole('jr_ldr');
+        $user = $this->createUserWithRole('sr_ldr');
 
         Member::factory()->create([
             'division_id' => $this->division->id,
