@@ -1,4 +1,5 @@
 # ![logo](https://clanaod.net/tracker/images/logo_v2.png) AOD Tracker v3
+
 The AOD Tracker is a member and organizational unit management system. It is specifically built to support AOD
 processes, and as such makes some assumptions about the characteristics of an organization:
 
@@ -15,16 +16,21 @@ historical purposes.
 
 ## Contributing
 
-The Tracker is a large project that has been in development since 2015 and is the result of quite a few contributors over the years. If you have an interest in helping develop a feature, fix bugs, or even just provide general feedback, we welcome you! 
+The Tracker is a large project that has been in development since 2015 and is the result of quite a few contributors
+over the years. If you have an interest in helping develop a feature, fix bugs, or even just provide general feedback,
+we welcome you!
 
-The best way to contribute code changes is by way of a PR. First, make a fork of this repo, clone the fork to your local development environment, and follow the steps for local installation. Then, when you are ready, submit a pull request of the changes from your fork. Please ensure you pay attention to the code style section, and explain any significant alterations your PR may make.
+The best way to contribute code changes is by way of a PR. First, make a fork of this repo, clone the fork to your local
+development environment, and follow the steps for local installation. Then, when you are ready, submit a pull request of
+the changes from your fork. Please ensure you pay attention to the code style section, and explain any significant
+alterations your PR may make.
 
 ## Local Installation
 
 #### Building the laravel environment
 
 You will need to ensure, at a minimum, you have [Docker](https://www.docker.com/) or Docker Desktop
-installed. If you don't have PHP installed (or don't want to), you can use the following `docker run` command to get 
+installed. If you don't have PHP installed (or don't want to), you can use the following `docker run` command to get
 things built.
 
 ```shell script
@@ -33,7 +39,7 @@ docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v "$(pwd):/var/www/html" \
     -w /var/www/html \
-    laravelsail/php83-composer:latest \
+    laravelsail/php84-composer:latest \
     composer install --ignore-platform-reqs
 ```
 
@@ -50,29 +56,32 @@ php artisan key:generate
 
 #### Building the docker images
 
-Laravel comes baked with `Sail`, an opinionated Docker configuration for Laravel applications. I have swapped out my custom Dockerfiles/compose files in place of this.
+Laravel comes baked with
+`Sail`, an opinionated Docker configuration for Laravel applications. I have swapped out my custom Dockerfiles/compose
+files in place of this.
 
 The tracker and website should not use conflicting database and web server ports.
 
 ```bash
-sail up -d
+./vendor/bin/sail up -d
 
-sail artisan migrate:fresh \
-&& sail artisan db:seed \
-&& sail artisan db:seed --class=ClanSeeder
+./vendor/bin/sail artisan migrate:fresh \
+&& ./vendor/bin/sail artisan db:seed \
+&& ./vendor/bin/sail artisan db:seed --class=ClanSeeder
 ```
 
-Since we are using Sail for docker configuration, we can use it to interact with the container rather than exec'ing into it manually.
+Since we are using Sail for docker configuration, we can use it to interact with the container rather than exec'ing into
+it manually.
 
 ```shell
-sail tinker
+./vendor/bin/sail tinker
 ```
 
-The Tracker will automatically log into the first (and only) user, which has been created as part of the seeding 
+The Tracker will automatically log into the first (and only) user, which has been created as part of the seeding
 process. Additional users will be created for testing purposes.
 
-
 ### Enforcing code style
+
 Everyone has their own preferences for how code should look. For cases where there are wild differences, we use `.
 ./vendor/bin/pint` to make things consistent throughout the repo. Feel free to run this before committing!
 
