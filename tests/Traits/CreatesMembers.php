@@ -4,6 +4,7 @@ namespace Tests\Traits;
 
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -37,7 +38,7 @@ trait CreatesMembers
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
             'name' => $member->name,
-            'role_id' => 5,
+            'role_id' => Role::ADMIN->value,
             'developer' => true,
         ], $userAttributes));
     }
@@ -55,24 +56,7 @@ trait CreatesMembers
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
             'name' => $member->name,
-            'role_id' => 4,
-        ], $userAttributes));
-    }
-
-    protected function createJuniorLeader(?Division $division = null, array $memberAttributes = [], array $userAttributes = []): User
-    {
-        $division = $division ?? Division::factory()->create();
-
-        $member = Member::factory()->create(array_merge([
-            'rank' => Rank::CORPORAL,
-            'position' => Position::PLATOON_LEADER,
-            'division_id' => $division->id,
-        ], $memberAttributes));
-
-        return User::factory()->create(array_merge([
-            'member_id' => $member->id,
-            'name' => $member->name,
-            'role_id' => 3,
+            'role_id' => Role::SENIOR_LEADER->value,
         ], $userAttributes));
     }
 
@@ -89,7 +73,7 @@ trait CreatesMembers
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
             'name' => $member->name,
-            'role_id' => 2,
+            'role_id' => Role::OFFICER->value,
         ], $userAttributes));
     }
 

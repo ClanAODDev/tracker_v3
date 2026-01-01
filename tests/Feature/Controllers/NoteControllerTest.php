@@ -99,37 +99,37 @@ class NoteControllerTest extends TestCase
         $response->assertJson(['success' => true]);
     }
 
-    public function test_junior_leader_cannot_restore_soft_deleted_note()
+    public function test_regular_user_cannot_restore_soft_deleted_note()
     {
-        $jrLdr = $this->createJuniorLeader();
-        $division = $jrLdr->member->division;
+        $division = $this->createActiveDivision();
+        $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $member = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
-            'author_id' => $jrLdr->id,
+            'author_id' => $user->id,
         ]);
         $note->delete();
 
-        $response = $this->actingAs($jrLdr)
+        $response = $this->actingAs($user)
             ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
 
         $response->assertForbidden();
     }
 
-    public function test_junior_leader_cannot_force_delete_soft_deleted_note()
+    public function test_regular_user_cannot_force_delete_soft_deleted_note()
     {
-        $jrLdr = $this->createJuniorLeader();
-        $division = $jrLdr->member->division;
+        $division = $this->createActiveDivision();
+        $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $member = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
-            'author_id' => $jrLdr->id,
+            'author_id' => $user->id,
         ]);
         $note->delete();
 
-        $response = $this->actingAs($jrLdr)
+        $response = $this->actingAs($user)
             ->deleteJson(route('forceDeleteNote', [$member->clan_id, $note->id]));
 
         $response->assertForbidden();

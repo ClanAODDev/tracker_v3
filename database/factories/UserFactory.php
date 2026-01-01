@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -40,7 +41,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id' => 5,
+                'role_id' => Role::ADMIN->value,
                 'developer' => true,
                 'member_id' => Member::factory([
                     'rank' => Rank::MASTER_SERGEANT,

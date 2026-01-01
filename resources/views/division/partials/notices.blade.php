@@ -46,7 +46,7 @@
     </x-notice>
 @endif
 
-@if (auth()->user()->isRole(['sr_ldr', 'jr_ldr']))
+@if (auth()->user()->isRole('sr_ldr'))
     @php
         $misconfiguredCount = $division->members()->misconfiguredDiscord()->count();
     @endphp

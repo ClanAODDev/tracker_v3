@@ -140,7 +140,7 @@ readonly class PendingActionsData
             }
         }
 
-        if ($user->isRole(['sr_ldr', 'jr_ldr'])) {
+        if ($user->isRole('sr_ldr')) {
             $count = $division->members()->misconfiguredDiscord()->count();
             if ($count > 0) {
                 $actions->push(new PendingAction(
@@ -166,7 +166,7 @@ readonly class PendingActionsData
             }
         }
 
-        if ($user->isRole(['sr_ldr', 'jr_ldr'])) {
+        if ($user->isRole('sr_ldr')) {
             $count = $division->members()
                 ->where('platoon_id', '>', 0)
                 ->where('squad_id', 0)

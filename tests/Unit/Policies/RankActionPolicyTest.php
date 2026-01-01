@@ -4,6 +4,7 @@ namespace Tests\Unit\Policies;
 
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Models\RankAction;
 use App\Policies\RankActionPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,7 +38,7 @@ class RankActionPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 5;
+        $user->role_id = Role::ADMIN->value;
         $user->save();
 
         $action = RankAction::factory()->create([

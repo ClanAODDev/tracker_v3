@@ -59,7 +59,7 @@ class UserTest extends TestCase
         $adminUser = $this->createAdmin();
 
         $this->assertTrue($adminUser->isRole(['admin', 'sr_ldr']));
-        $this->assertFalse($adminUser->isRole(['officer', 'jr_ldr']));
+        $this->assertFalse($adminUser->isRole(['officer', 'member']));
     }
 
     public function test_is_role_with_enum_returns_correct_value()
