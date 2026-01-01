@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -54,15 +55,15 @@ class NoteResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('body')
-                    ->limit(60),
                 TextColumn::make('member.name')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('body')
+                    ->limit(60),
+                TextColumn::make('type'),
                 TextColumn::make('author.name')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('type'),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -78,6 +79,14 @@ class NoteResource extends Resource
             ])
             ->filters([
                 TrashedFilter::make(),
+                SelectFilter::make('member')
+                    ->searchable()
+                    ->relationship('member', 'name'),
+                SelectFilter::make('type')
+                    ->options(collect(Note::allNoteTypes())),
+                SelectFilter::make('division')
+                    ->searchable()
+                    ->relationship('member.division', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),
