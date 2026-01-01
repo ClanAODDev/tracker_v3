@@ -46,7 +46,7 @@ class EditTicket extends EditRecord
                 ->form([
                     Select::make('owner_id')
                         ->label('Assign to')
-                        ->options(fn () => User::where('role_id', Role::ADMIN->value)->pluck('name', 'id'))
+                        ->options(fn () => User::where('role', Role::ADMIN->value)->pluck('name', 'id'))
                         ->required()
                         ->searchable(),
                 ])

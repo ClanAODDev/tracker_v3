@@ -366,7 +366,7 @@ final class PendingActionsDataTest extends TestCase
     protected function createUserWithRole(string $roleName, ?Position $position = null): User
     {
         $role = Role::fromSlug($roleName);
-        $user = User::factory()->create(['role_id' => $role->value]);
+        $user = User::factory()->create(['role' => $role]);
         $user->member->update([
             'division_id' => $this->division->id,
             'position' => $position ?? Position::MEMBER,

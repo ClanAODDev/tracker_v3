@@ -54,7 +54,7 @@ class ImpersonationController extends Controller
         }
 
         session(['impersonatingRole' => $roleEnum->value]);
-        session(['originalRole' => auth()->user()->role_id]);
+        session(['originalRole' => auth()->user()->role->value]);
 
         $this->showSuccessToast('Now viewing as ' . $roleEnum->getLabel());
 

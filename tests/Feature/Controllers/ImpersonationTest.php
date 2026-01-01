@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -103,7 +104,7 @@ class ImpersonationTest extends TestCase
     {
         $this->app->detectEnvironment(fn () => 'production');
 
-        $developer = $this->createMemberWithUser([], ['developer' => true, 'role_id' => 1]);
+        $developer = $this->createMemberWithUser([], ['developer' => true, 'role' => Role::MEMBER]);
         $officer = $this->createOfficer();
 
         $response = $this->actingAs($developer)

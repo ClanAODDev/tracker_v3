@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
@@ -23,7 +24,7 @@ class MemberPolicy
     public function recruit(User $user): bool
     {
         // member role cannot recruit members
-        if ($user->role_id > 1) {
+        if ($user->role->value > Role::MEMBER->value) {
             return true;
         }
 

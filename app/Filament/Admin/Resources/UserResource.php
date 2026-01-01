@@ -41,7 +41,7 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Select::make('role_id')
+                Select::make('role')
                     ->label('Role')
                     ->options(Role::class),
                 Select::make('member_id')
@@ -79,8 +79,8 @@ class UserResource extends Resource
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
-                TextColumn::make('role_id')
-                    ->numeric()
+                TextColumn::make('role')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('member_id')
                     ->numeric()

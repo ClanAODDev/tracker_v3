@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Role;
 use App\Models\ActivityReminder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -199,7 +200,7 @@ class ActivityReminderTest extends TestCase
     public function test_regular_member_cannot_set_activity_reminder()
     {
         $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser(['division_id' => $division->id], ['role_id' => 1]);
+        $user = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
         $targetMember = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($user)

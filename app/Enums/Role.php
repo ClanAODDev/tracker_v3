@@ -2,9 +2,10 @@
 
 namespace App\Enums;
 
+use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum Role: int implements HasLabel
+enum Role: int implements HasColor, HasLabel
 {
     case MEMBER = 1;
     case OFFICER = 2;
@@ -43,6 +44,17 @@ enum Role: int implements HasLabel
             'admin' => self::ADMIN,
             'banned' => self::BANNED,
             default => null,
+        };
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::MEMBER => 'gray',
+            self::OFFICER => 'info',
+            self::SENIOR_LEADER => 'success',
+            self::ADMIN => 'danger',
+            self::BANNED => 'gray',
         };
     }
 }

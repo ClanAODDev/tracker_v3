@@ -66,6 +66,8 @@ class User extends Authenticatable implements FilamentUser
         'developer' => 'boolean',
         'settings' => 'json',
         'last_login_at' => 'datetime',
+
+        'role' => Role::class,
     ];
 
     public function getSettingsAttribute($value): array
@@ -147,7 +149,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function getRole(): ?Role
     {
-        return Role::tryFrom($this->role_id);
+        return Role::tryFrom($this->role->value);
     }
 
     public function getEffectiveRole(): ?Role
@@ -221,7 +223,7 @@ class User extends Authenticatable implements FilamentUser
     public function assignRole(Role|string|int $role): void
     {
         if ($role instanceof Role) {
-            $this->role_id = $role->value;
+            $this->role = $role;
             $this->save();
 
             return;
@@ -230,7 +232,7 @@ class User extends Authenticatable implements FilamentUser
         if (is_string($role)) {
             $roleEnum = Role::fromSlug($role);
             if ($roleEnum) {
-                $this->role_id = $roleEnum->value;
+                $this->role = $roleEnum;
                 $this->save();
 
                 return;
@@ -238,7 +240,7 @@ class User extends Authenticatable implements FilamentUser
         }
 
         if (is_int($role)) {
-            $this->role_id = $role;
+            $this->role = $role;
             $this->save();
         }
     }

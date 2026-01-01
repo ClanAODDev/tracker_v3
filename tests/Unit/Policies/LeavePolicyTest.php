@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Policies;
 
+use App\Enums\Role;
 use App\Policies\LeavePolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -52,7 +53,7 @@ class LeavePolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
         $this->actingAs($user);
 
@@ -89,7 +90,7 @@ class LeavePolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
         $this->actingAs($user);
 
@@ -126,7 +127,7 @@ class LeavePolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
         $this->actingAs($user);
 

@@ -176,7 +176,7 @@ class MemberSyncService
         $this->clearLeadershipAssignments($member);
 
         if ($user = $member->user) {
-            $user->update(['role_id' => Role::MEMBER->value]);
+            $user->update(['role' => Role::MEMBER]);
         }
 
         $this->stats['removed']++;
