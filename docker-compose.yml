@@ -29,6 +29,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         volumes:
             - 'sailmariadb:/var/lib/mysql'
+            - '.docker/mariadb:/docker-entrypoint-initdb.d'
         networks:
             - sail
         healthcheck:
