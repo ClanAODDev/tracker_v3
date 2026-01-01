@@ -15,6 +15,7 @@ use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class RankActionResource extends Resource
@@ -62,16 +63,19 @@ class RankActionResource extends Resource
                     ->sortable()
                     ->badge(),
                 TextColumn::make('created_at')
+                    ->label('Rank Changed At')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('member_id')
+                    ->label('Member')
+                    ->searchable()
+                    ->relationship('member', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),
