@@ -102,7 +102,7 @@ class User extends Authenticatable implements FilamentUser
      */
     public function scopeAdmins($query)
     {
-        $query->whereRoleId(Role::ADMIN->value)->orderBy('name', 'ASC');
+        $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
     }
 
     public function recordActivity(ActivityType $type, $related, array $properties = [])
