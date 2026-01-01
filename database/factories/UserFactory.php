@@ -27,7 +27,7 @@ class UserFactory extends Factory
         return [
             'name' => $name,
             'email' => $this->faker->email,
-            'role' => Role::MEMBER->value,
+            'role' => Role::MEMBER,
             'member_id' => Member::factory([
                 'name' => $name,
             ]),
