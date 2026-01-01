@@ -7,7 +7,6 @@ use App\Notifications\Channel\NotifyDivisionSettingsEdited;
 use App\Notifications\Channel\TestChannelNotification;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +14,23 @@ use Illuminate\Database\Eloquent\Model;
 class EditDivision extends EditRecord
 {
     protected static string $resource = DivisionResource::class;
+
+    public function mount(int|string $record): void
+    {
+        parent::mount($record);
+
+        $user = auth()->user();
+
+        if ($user?->isRole('admin')) {
+            return;
+        }
+
+        $userDivisionId = $user?->member?->division_id;
+
+        if ($this->getRecord()->id !== $userDivisionId) {
+            abort(403, 'You can only manage settings for your own division.');
+        }
+    }
 
     protected function getHeaderActions(): array
     {
@@ -65,7 +81,6 @@ class EditDivision extends EditRecord
                             ->send();
                     }),
             ])->label('Test Channels')->icon('heroicon-o-bell')->button(),
-            DeleteAction::make(),
         ];
     }
 

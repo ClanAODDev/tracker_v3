@@ -39,6 +39,34 @@ class DivisionResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Division';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        $user = auth()->user();
+
+        if ($user?->isRole('admin')) {
+            return true;
+        }
+
+        return $user?->member?->division_id !== null && $user->isRole('sr_ldr');
+    }
+
+    public static function getNavigationUrl(): string
+    {
+        $user = auth()->user();
+
+        if ($user?->isRole('admin')) {
+            return static::getUrl('index');
+        }
+
+        $division = $user?->member?->division;
+
+        if ($division) {
+            return static::getUrl('edit', ['record' => $division]);
+        }
+
+        return static::getUrl('index');
+    }
+
     public static function form(Schema $schema): Schema
     {
         $channelOptions = [
