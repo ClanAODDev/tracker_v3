@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -44,7 +45,7 @@ class RecruitingControllerTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $response = $this->actingAs($user)

@@ -27,7 +27,7 @@ class UserFactory extends Factory
         return [
             'name' => $name,
             'email' => $this->faker->email,
-            'role_id' => 1,
+            'role' => Role::MEMBER,
             'member_id' => Member::factory([
                 'name' => $name,
             ]),
@@ -41,7 +41,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id' => Role::ADMIN->value,
+                'role' => Role::ADMIN,
                 'developer' => true,
                 'member_id' => Member::factory([
                     'rank' => Rank::MASTER_SERGEANT,
@@ -57,7 +57,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role_id' => 2,
+                'role' => Role::OFFICER,
                 'member_id' => Member::factory([
                     'rank' => Rank::LANCE_CORPORAL,
                 ]),

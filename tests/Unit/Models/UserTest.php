@@ -189,17 +189,17 @@ class UserTest extends TestCase
 
     public function test_assign_role_with_role_enum()
     {
-        $user = User::factory()->create(['role_id' => Role::MEMBER->value]);
+        $user = User::factory()->create(['role' => Role::MEMBER]);
 
         $user->assignRole(Role::ADMIN);
         $user->refresh();
 
-        $this->assertEquals(Role::ADMIN->value, $user->role_id);
+        $this->assertEquals(Role::ADMIN, $user->role);
     }
 
     public function test_assign_role_with_string()
     {
-        $user = User::factory()->create(['role_id' => Role::MEMBER->value]);
+        $user = User::factory()->create(['role' => Role::MEMBER]);
 
         $user->assignRole('admin');
         $user->refresh();
@@ -209,12 +209,12 @@ class UserTest extends TestCase
 
     public function test_assign_role_with_integer()
     {
-        $user = User::factory()->create(['role_id' => Role::MEMBER->value]);
+        $user = User::factory()->create(['role' => Role::MEMBER]);
 
         $user->assignRole(Role::ADMIN->value);
         $user->refresh();
 
-        $this->assertEquals(Role::ADMIN->value, $user->role_id);
+        $this->assertEquals(Role::ADMIN, $user->role);
     }
 
     public function test_scope_admins_returns_only_admin_users()

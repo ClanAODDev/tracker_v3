@@ -45,7 +45,7 @@ class ClanForumPermissions
             default => Role::MEMBER,
         };
 
-        if ($user->role_id !== $newRole->value) {
+        if ($user->role !== $newRole) {
             $this->assignRole($newRole);
         }
     }

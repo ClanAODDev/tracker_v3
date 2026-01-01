@@ -38,7 +38,7 @@ class RankActionPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = Role::ADMIN->value;
+        $user->role = Role::ADMIN;
         $user->save();
 
         $action = RankAction::factory()->create([

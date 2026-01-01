@@ -90,7 +90,7 @@ class TicketResource extends Resource
                         Select::make('owner_id')
                             ->label('Assigned To')
                             ->searchable()
-                            ->options(fn () => User::where('role_id', Role::ADMIN->value)->pluck('name', 'id'))
+                            ->options(fn () => User::where('role', Role::ADMIN->value)->pluck('name', 'id'))
                             ->placeholder('Unassigned'),
 
                         DateTimePicker::make('resolved_at')

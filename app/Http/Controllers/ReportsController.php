@@ -124,11 +124,11 @@ class ReportsController extends Controller
         foreach (Division::active()->get() as $division) {
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
-                $query->where('role_id', '>', 2);
+                $query->where('role', '>', 2);
             })->get();
             $sortedMembers = collect(Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
-                echo $member->present()->rankName() . ", {$member->user->role_id}" . PHP_EOL;
+                echo $member->present()->rankName() . ", {$member->user->role->value}" . PHP_EOL;
             });
             echo '---------- END OF DIVISION ----------' . PHP_EOL . PHP_EOL . PHP_EOL;
         }
