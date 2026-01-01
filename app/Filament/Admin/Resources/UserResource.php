@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
 use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -67,7 +69,6 @@ class UserResource extends Resource
                         Toggle::make('ticket_notifications')
                             ->helperText('Get notified about ticket events'),
                     ]),
-
                 DateTimePicker::make('last_login_at')
                     ->readOnly(),
             ]);
@@ -107,6 +108,11 @@ class UserResource extends Resource
                 TernaryFilter::make('developer'),
             ])
             ->recordActions([
+                Action::make('impersonate')
+                    ->label('Impersonate')
+                    ->icon(Heroicon::User)
+                    ->authorize('impersonate')
+                    ->url(fn (User $record): string => route('impersonate', ['user' => $record->id])),
                 EditAction::make(),
             ])
             ->toolbarActions([
