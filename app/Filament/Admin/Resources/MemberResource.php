@@ -139,14 +139,15 @@ class MemberResource extends Resource
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('clan_id')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                TextColumn::make('platoon.name'),
+                TextColumn::make('platoon.name')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('squad.name')
-                    ->toggleable(),
+                    ->toggleable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('position')
                     ->toggleable()
                     ->sortable(),
@@ -155,26 +156,30 @@ class MemberResource extends Resource
                     ->sortable(),
                 TextColumn::make('ts_unique_id')
                     ->toggleable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('discord')
                     ->toggleable()
                     ->searchable(),
                 TextColumn::make('last_voice_status')
                     ->toggleable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('discord_id')
                     ->toggleable()
-                    ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('flagged_for_inactivity')
                     ->boolean(),
                 TextColumn::make('posts')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('privacy_flag')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 IconColumn::make('allow_pm')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('join_date')
                     ->dateTime()
                     ->sortable(),
@@ -187,27 +192,33 @@ class MemberResource extends Resource
                     ->sortable(),
                 TextColumn::make('last_ts_activity')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('last_promoted_at')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('last_trained_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('last_trained_by')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('xo_at')
                     ->label('Assigned XO')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('co_at')
                     ->label('Assigned CO')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('recruiter.name')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
@@ -248,6 +259,8 @@ class MemberResource extends Resource
                     })->indicateUsing(function (array $data) {
                         return $data['rank'] ? 'Rank: ' . Rank::from($data['rank'])->getLabel() : null;
                     }),
+                SelectFilter::make('position')
+                    ->options(Position::class),
             ])
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
