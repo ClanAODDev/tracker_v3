@@ -8,6 +8,7 @@ use Filament\Actions\DetachBulkAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class MembersRelationManager extends RelationManager
 {
@@ -15,7 +16,10 @@ class MembersRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+        $divisionId = auth()->user()->member?->division_id;
+
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->where('members.division_id', $divisionId))
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
