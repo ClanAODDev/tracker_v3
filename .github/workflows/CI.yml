@@ -81,7 +81,7 @@ jobs:
         run: chmod -R 777 storage bootstrap/cache
 
       - name: Execute Unit and Feature tests via PHPUnit
-        run: php artisan test
+        run: php artisan test --parallel --processes=4
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
