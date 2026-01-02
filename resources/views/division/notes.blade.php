@@ -17,13 +17,13 @@
 
         <div class="notes-toolbar">
             <div class="notes-filters">
-                <a href="{{ route('division.notes', $division->slug) }}"
+                <a href="{{ route('division.notes', $division->slug) }}{{ $tagId ? '?tag='.$tagId : '' }}"
                    class="notes-filter-btn {{ !$type ? 'active' : '' }}">
                     <i class="fa fa-list"></i>
                     <span>All</span>
                 </a>
                 @foreach ($noteTypes as $key => $label)
-                    <a href="{{ route('division.notes', $division->slug) }}?type={{ $key }}"
+                    <a href="{{ route('division.notes', $division->slug) }}?type={{ $key }}{{ $tagId ? '&tag='.$tagId : '' }}"
                        class="notes-filter-btn notes-filter-{{ $key }} {{ $type === $key ? 'active' : '' }}">
                         @if ($key === 'positive')
                             <i class="fa fa-thumbs-up"></i>
@@ -39,30 +39,51 @@
                 @endforeach
             </div>
 
-            <form action="{{ route('division.notes', $division->slug) }}" method="GET" class="notes-search-form">
-                @if ($type)
-                    <input type="hidden" name="type" value="{{ $type }}">
+            <div class="notes-toolbar-right">
+                @if($tags->isNotEmpty())
+                    <div class="notes-tag-filter">
+                        <select id="tag-filter" class="form-control form-control-sm" onchange="applyTagFilter(this.value)">
+                            <option value="">All Tags</option>
+                            @foreach($tags as $tag)
+                                <option value="{{ $tag->id }}" {{ $tagId == $tag->id ? 'selected' : '' }}>
+                                    {{ $tag->name }}{{ $tag->isGlobal() ? ' (Clan-wide)' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 @endif
-                <div class="notes-search-wrapper">
-                    <i class="fa fa-search notes-search-icon"></i>
-                    <input type="text"
-                           name="search"
-                           value="{{ $search }}"
-                           placeholder="Search by member or content..."
-                           class="notes-search-input">
-                    @if ($search)
-                        <a href="{{ route('division.notes', $division->slug) }}{{ $type ? '?type='.$type : '' }}"
-                           class="notes-search-clear">
-                            <i class="fa fa-times"></i>
-                        </a>
+
+                <form action="{{ route('division.notes', $division->slug) }}" method="GET" class="notes-search-form">
+                    @if ($type)
+                        <input type="hidden" name="type" value="{{ $type }}">
                     @endif
-                </div>
-            </form>
+                    @if ($tagId)
+                        <input type="hidden" name="tag" value="{{ $tagId }}">
+                    @endif
+                    <div class="notes-search-wrapper">
+                        <i class="fa fa-search notes-search-icon"></i>
+                        <input type="text"
+                               name="search"
+                               value="{{ $search }}"
+                               placeholder="Search by member or content..."
+                               class="notes-search-input">
+                        @if ($search)
+                            <a href="{{ route('division.notes', $division->slug) }}{{ $type ? '?type='.$type : '' }}{{ $tagId ? ($type ? '&' : '?').'tag='.$tagId : '' }}"
+                               class="notes-search-clear">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        @endif
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div class="notes-header">
             <h3 class="notes-title">
                 {{ $type ? ($noteTypes[$type] ?? ucfirst($type)) : 'All Notes' }}
+                @if ($tagId && $tags->firstWhere('id', $tagId))
+                    <span class="badge badge-info">{{ $tags->firstWhere('id', $tagId)->name }}</span>
+                @endif
                 <span class="notes-count">({{ count($notes) }})</span>
             </h3>
             @if ($search)
@@ -122,4 +143,15 @@
 
 @section('footer_scripts')
     @vite(['resources/assets/js/division.js'])
+    <script>
+        function applyTagFilter(tagId) {
+            const url = new URL(window.location.href);
+            if (tagId) {
+                url.searchParams.set('tag', tagId);
+            } else {
+                url.searchParams.delete('tag');
+            }
+            window.location.href = url.toString();
+        }
+    </script>
 @endsection

@@ -176,6 +176,13 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->assign($user, null));
     }
 
+    public function test_officer_can_assign_tags()
+    {
+        $officer = $this->createOfficer();
+
+        $this->assertTrue($this->policy->assign($officer, null));
+    }
+
     public function test_member_cannot_assign_tags()
     {
         $division = $this->createActiveDivision();

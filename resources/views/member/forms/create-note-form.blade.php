@@ -1,4 +1,10 @@
 @include('application.partials.errors')
+@php
+    $canAssignTags = auth()->user()->can('assign', [\App\Models\DivisionTag::class, $member]);
+    $assignableTags = $canAssignTags
+        ? (new \App\Policies\DivisionTagPolicy)->getAssignableTags(auth()->user(), $member)->get()
+        : collect();
+@endphp
 <div class="modal-content">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
@@ -49,6 +55,22 @@
                 </div>
             </div>
         </div>
+
+        @if($canAssignTags && $assignableTags->isNotEmpty())
+            <div class="form-group">
+                <label for="tag_id" class="control-label">
+                    <i class="fa fa-tag"></i> Add Tag <span class="text-muted">(optional)</span>
+                </label>
+                <select name="tag_id" id="tag_id" class="form-control">
+                    <option value="">No tag</option>
+                    @foreach($assignableTags as $tag)
+                        <option value="{{ $tag->id }}" {{ old('tag_id') == $tag->id ? 'selected' : '' }}>
+                            {{ $tag->name }}{{ $tag->isGlobal() ? ' (Clan-wide)' : '' }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

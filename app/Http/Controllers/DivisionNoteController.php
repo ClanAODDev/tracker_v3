@@ -3,23 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
+use App\Models\DivisionTag;
 use App\Models\Note;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 
 class DivisionNoteController extends Controller
 {
-    /**
-     * DivisionNoteController constructor.
-     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
     /**
-     * Display a listing of the resource.
-     *
      * @return Factory|View
      */
     public function index(Division $division)
@@ -28,6 +24,7 @@ class DivisionNoteController extends Controller
 
         $type = request('type');
         $search = request('search');
+        $tagId = request('tag');
 
         $notes = $type
             ? $division->notes()->whereType($type)
@@ -44,6 +41,10 @@ class DivisionNoteController extends Controller
             });
         }
 
+        if ($tagId) {
+            $notes = $notes->whereHas('member.tags', fn ($q) => $q->where('division_tags.id', $tagId));
+        }
+
         $notes = $notes
             ->orderByDesc('created_at')
             ->get()
@@ -57,6 +58,11 @@ class DivisionNoteController extends Controller
 
         $noteTypes = Note::allNoteTypes();
 
-        return view('division.notes', compact('division', 'notes', 'type', 'search', 'noteTypes'));
+        $tags = DivisionTag::forDivision($division->id)
+            ->visibleTo()
+            ->orderBy('name')
+            ->get();
+
+        return view('division.notes', compact('division', 'notes', 'type', 'search', 'noteTypes', 'tags', 'tagId'));
     }
 }
