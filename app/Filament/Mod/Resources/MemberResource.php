@@ -262,6 +262,11 @@ class MemberResource extends Resource
                 TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('Tags')
+                    ->state(fn (Member $record) => $record->tags->filter(fn ($tag) => $tag->isVisibleTo())->pluck('name'))
+                    ->badge()
+                    ->wrap()
+                    ->toggleable(),
             ])
             ->filters([
 
