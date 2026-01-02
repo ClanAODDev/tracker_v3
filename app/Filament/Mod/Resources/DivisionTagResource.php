@@ -6,12 +6,14 @@ use App\Enums\TagVisibility;
 use App\Filament\Mod\Resources\DivisionTagResource\Pages\CreateDivisionTag;
 use App\Filament\Mod\Resources\DivisionTagResource\Pages\EditDivisionTag;
 use App\Filament\Mod\Resources\DivisionTagResource\Pages\ListDivisionTags;
+use App\Filament\Mod\Resources\DivisionTagResource\Pages\ViewDivisionTag;
 use App\Filament\Mod\Resources\DivisionTagResource\RelationManagers\MembersRelationManager;
 use App\Models\DivisionTag;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -33,7 +35,7 @@ class DivisionTagResource extends Resource
         $divisionId = auth()->user()->member?->division_id;
 
         return parent::getEloquentQuery()
-            ->where('division_id', $divisionId);
+            ->forDivision($divisionId);
     }
 
     public static function canAccess(): bool
@@ -71,6 +73,11 @@ class DivisionTagResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('scope')
+                    ->label('Scope')
+                    ->badge()
+                    ->getStateUsing(fn (DivisionTag $record) => $record->isGlobal() ? 'Clan-wide' : 'Division')
+                    ->color(fn (DivisionTag $record) => $record->isGlobal() ? 'info' : 'gray'),
                 TextColumn::make('visibility')
                     ->badge()
                     ->formatStateUsing(fn (TagVisibility $state) => $state->label())
@@ -80,16 +87,23 @@ class DivisionTagResource extends Resource
                         TagVisibility::SENIOR_LEADERS => 'danger',
                     }),
                 TextColumn::make('members_count')
-                    ->counts('members')
-                    ->label('Members'),
+                    ->label('Members')
+                    ->getStateUsing(function (DivisionTag $record) {
+                        $divisionId = auth()->user()->member?->division_id;
+
+                        return $record->members()->where('members.division_id', $divisionId)->count();
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                ViewAction::make(),
+                EditAction::make()
+                    ->visible(fn (DivisionTag $record) => ! $record->isGlobal()),
+                DeleteAction::make()
+                    ->visible(fn (DivisionTag $record) => ! $record->isGlobal() || auth()->user()->isRole('admin')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -110,6 +124,7 @@ class DivisionTagResource extends Resource
         return [
             'index' => ListDivisionTags::route('/'),
             'create' => CreateDivisionTag::route('/create'),
+            'view' => ViewDivisionTag::route('/{record}'),
             'edit' => EditDivisionTag::route('/{record}/edit'),
         ];
     }
