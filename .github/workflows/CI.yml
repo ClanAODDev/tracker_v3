@@ -27,7 +27,11 @@ jobs:
           MYSQL_PASSWORD: password
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     strategy:
       matrix:
@@ -36,6 +40,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Initialize MariaDB for parallel testing
+        run: mysql -h 127.0.0.1 -u root -ppassword < .docker/mariadb/init-test-db.sql
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
