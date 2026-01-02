@@ -3,6 +3,7 @@
 namespace Tests\Unit\Policies;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Policies\MemberPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -64,7 +65,7 @@ class MemberPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $this->assertFalse($this->policy->recruit($user));
@@ -125,7 +126,7 @@ class MemberPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $this->assertFalse($this->policy->flagInactive($user));
@@ -210,7 +211,7 @@ class MemberPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $member = $this->createMember(['division_id' => $division->id]);
@@ -268,7 +269,7 @@ class MemberPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $member = $this->createMember([

@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class CensusResource extends Resource
@@ -60,6 +61,9 @@ class CensusResource extends Resource
                 TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable(),
                 TextColumn::make('count')
                     ->numeric()
                     ->sortable(),
@@ -72,17 +76,14 @@ class CensusResource extends Resource
                 TextColumn::make('weekly_voice_count')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('division')
+                    ->relationship('division', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),

@@ -2,7 +2,7 @@ name: Tracker v3 CI
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths-ignore:
       - '**.md'
       - 'docs/**'
@@ -15,7 +15,6 @@ concurrency:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
 
     services:
@@ -32,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        php_version: [ 8.4 ]
+        php_version: [8.4]
 
     steps:
       - name: Checkout code
@@ -88,3 +87,77 @@ jobs:
           DB_PORT: 3306
           DB_USERNAME: sail
           DB_PASSWORD: password
+
+      - name: Notify Discord
+        if: always()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.IT_FEED_WEBHOOK_DEV }}
+          status: ${{ job.status }}
+          title: "Test Results"
+          description: "Test suite completed for PHP ${{ matrix.php_version }}"
+          color: ${{ job.status == 'success' && '0x00ff00' || job.status == 'failure' && '0xff0000' || '0xffff00' }}
+          username: "GitHub Actions"
+          avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+
+  code-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: dom, curl, libxml, mbstring, zip, pcntl
+          coverage: none
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code || echo "has_changes=true" >> $GITHUB_OUTPUT
+
+      - name: Configure Git
+        if: steps.git-check.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and Push changes
+        if: steps.git-check.outputs.has_changes == 'true'
+        run: |
+          git add .
+          git commit -m "Fix code style with Laravel Pint"
+          git push
+
+      - name: Notify Discord
+        if: always()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.IT_FEED_WEBHOOK_DEV }}
+          status: ${{ job.status }}
+          title: "Code Quality Check"
+          description: "${{ steps.git-check.outputs.has_changes == 'true' && 'Code style issues fixed and committed' || 'No code style issues found' }}"
+          color: ${{ job.status == 'success' && '0x00ff00' || job.status == 'failure' && '0xff0000' || '0xffff00' }}
+          username: "GitHub Actions"
+          avatar_url: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"

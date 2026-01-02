@@ -38,7 +38,7 @@ trait CreatesMembers
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
             'name' => $member->name,
-            'role_id' => Role::ADMIN->value,
+            'role' => Role::ADMIN,
             'developer' => true,
         ], $userAttributes));
     }
@@ -56,7 +56,7 @@ trait CreatesMembers
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
             'name' => $member->name,
-            'role_id' => Role::SENIOR_LEADER->value,
+            'role' => Role::SENIOR_LEADER,
         ], $userAttributes));
     }
 
@@ -73,7 +73,7 @@ trait CreatesMembers
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
             'name' => $member->name,
-            'role_id' => Role::OFFICER->value,
+            'role' => Role::OFFICER,
         ], $userAttributes));
     }
 

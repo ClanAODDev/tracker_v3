@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
 use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,8 +18,11 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class UserResource extends Resource
@@ -41,7 +45,7 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
-                Select::make('role_id')
+                Select::make('role')
                     ->label('Role')
                     ->options(Role::class),
                 Select::make('member_id')
@@ -65,7 +69,6 @@ class UserResource extends Resource
                         Toggle::make('ticket_notifications')
                             ->helperText('Get notified about ticket events'),
                     ]),
-
                 DateTimePicker::make('last_login_at')
                     ->readOnly(),
             ]);
@@ -79,8 +82,8 @@ class UserResource extends Resource
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
-                TextColumn::make('role_id')
-                    ->numeric()
+                TextColumn::make('role')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('member_id')
                     ->numeric()
@@ -100,9 +103,16 @@ class UserResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('role')
+                    ->options(Role::class),
+                TernaryFilter::make('developer'),
             ])
             ->recordActions([
+                Action::make('impersonate')
+                    ->label('Impersonate')
+                    ->icon(Heroicon::User)
+                    ->authorize('impersonate')
+                    ->url(fn (User $record): string => route('impersonate', ['user' => $record->id])),
                 EditAction::make(),
             ])
             ->toolbarActions([

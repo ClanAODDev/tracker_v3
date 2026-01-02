@@ -31,7 +31,7 @@ class TicketApiController extends Controller
     public function types(): JsonResponse
     {
         $user = auth()->user();
-        $userRoleId = $user->role_id ? (string) $user->role_id : null;
+        $userRoleId = $user->role->value ? (string) $user->role->value : null;
 
         $types = TicketType::orderBy('display_order')
             ->get()

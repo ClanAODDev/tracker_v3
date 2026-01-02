@@ -3,6 +3,7 @@
 namespace Tests\Unit\Policies;
 
 use App\Enums\Position;
+use App\Enums\Role;
 use App\Models\DivisionTag;
 use App\Policies\DivisionTagPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -76,7 +77,7 @@ class DivisionTagPolicyTest extends TestCase
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $this->assertFalse($this->policy->create($user));
@@ -182,7 +183,7 @@ class DivisionTagPolicyTest extends TestCase
             'division_id' => $division->id,
             'position' => Position::MEMBER,
         ]);
-        $user->role_id = 1;
+        $user->role = Role::MEMBER;
         $user->save();
 
         $this->assertFalse($this->policy->assign($user, null));

@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -105,6 +106,6 @@ class UserPolicy
 
     public function train(User $user)
     {
-        return $user->member->rank->value > Rank::SERGEANT->value && \in_array($user->role_id, [4, 5], true);
+        return $user->member->rank->value > Rank::SERGEANT->value && \in_array($user->role, [Role::ADMIN, Role::SENIOR_LEADER], true);
     }
 }
