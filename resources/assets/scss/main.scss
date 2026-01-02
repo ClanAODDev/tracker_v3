@@ -391,6 +391,15 @@ input[type="checkbox"] {
     border-bottom: 1px solid var(--overlay-light-hover);
 }
 
+.panel-filled .panel-body.border-bottom {
+    overflow: visible;
+}
+
+.panel-body + .table-responsive {
+    position: relative;
+    z-index: 1;
+}
+
 .members-table {
     width: 100% !important;
 
@@ -405,6 +414,8 @@ input[type="checkbox"] {
     justify-content: center;
     flex-wrap: wrap;
     gap: 15px;
+    position: relative;
+    z-index: 10;
 
     .btn-group {
         display: flex;
@@ -438,6 +449,9 @@ input[type="checkbox"] {
         border: 1px solid var(--border-color);
         min-width: 180px;
         padding: 0;
+        z-index: 1050;
+        max-height: 200px;
+        overflow-y: auto;
 
         li a {
             display: flex;

@@ -1,6 +1,6 @@
 <div class="members-table-toggle text-center">
     <div class="btn-group column-toggles">
-        <div class="dropdown">
+        <div class="dropup">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                 <i class="fa fa-columns"></i> Columns <span class="caret"></span>
             </button>

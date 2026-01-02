@@ -378,6 +378,11 @@ function initPlatoon() {
                 }
             });
 
+            $('.column-toggles .dropup').on('shown.bs.dropdown', function () {
+                var $menu = $(this).find('.column-toggle-menu');
+                $menu.scrollTop($menu[0].scrollHeight);
+            });
+
             var $searchInput = $('.dataTables_filter input').removeClass('input-sm');
             $searchInput.attr({
                 'placeholder': 'Search Players',
