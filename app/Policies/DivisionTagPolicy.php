@@ -62,7 +62,7 @@ class DivisionTagPolicy
 
     public function assign(User $user, ?Member $member = null): bool
     {
-        if (! $user->isRole('sr_ldr') && ! $user->isPlatoonLeader() && ! $user->isSquadLeader()) {
+        if (! $user->isRole(['sr_ldr', 'officer']) && ! $user->isPlatoonLeader() && ! $user->isSquadLeader()) {
             return false;
         }
 

@@ -2,32 +2,24 @@
 
 namespace App\Http\Requests;
 
+use App\Models\DivisionTag;
 use App\Models\Note;
+use App\Policies\DivisionTagPolicy;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateNote extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
-        // anyone can create a note
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
             'body' => 'required',
             'forum_thread_id' => 'nullable|numeric',
+            'tag_id' => 'nullable|integer|exists:division_tags,id',
         ];
     }
 
@@ -41,9 +33,22 @@ class CreateNote extends FormRequest
 
     public function persist()
     {
-        $note = new Note($this->all());
-        $note->member_id = $this->route('member')->id;
-        $note->author_id = auth()->id();
+        $member = $this->route('member');
+        $user = auth()->user();
+
+        $note = new Note($this->only(['body', 'type', 'forum_thread_id']));
+        $note->member_id = $member->id;
+        $note->author_id = $user->id;
         $note->save();
+
+        if ($this->filled('tag_id') && $user->can('assign', [DivisionTag::class, $member])) {
+            $policy = new DivisionTagPolicy;
+            $tag = $policy->getAssignableTags($user, $member)->find($this->input('tag_id'));
+
+            if ($tag) {
+                $assignerId = $user->member?->id;
+                $member->tags()->syncWithoutDetaching([$tag->id => ['assigned_by' => $assignerId]]);
+            }
+        }
     }
 }

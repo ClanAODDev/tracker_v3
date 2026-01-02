@@ -32,10 +32,12 @@ class DivisionTagResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $divisionId = auth()->user()->member?->division_id;
+        $user = auth()->user();
+        $divisionId = $user->member?->division_id;
 
         return parent::getEloquentQuery()
-            ->forDivision($divisionId);
+            ->forDivision($divisionId)
+            ->visibleTo($user);
     }
 
     public static function canAccess(): bool

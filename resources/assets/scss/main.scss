@@ -6857,6 +6857,43 @@ h6 .small,
     border-color: var(--color-indigo);
 }
 
+.notes-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.notes-tag-filter select {
+    padding: 10px 12px;
+    padding-right: 28px;
+    font-size: 13px;
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    min-width: 180px;
+    max-width: 250px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23999' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    text-overflow: ellipsis;
+}
+
+.notes-tag-filter select:focus {
+    outline: none;
+    background-color: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+}
+
+.notes-tag-filter select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
 .notes-search-form {
     flex: 1;
     max-width: 320px;

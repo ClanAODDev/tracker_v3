@@ -37,6 +37,15 @@
                             <i class="fas fa-external-link-alt"></i> Discussion
                         </a>
                     @endif
+                    @can('delete', $note)
+                        <form action="{{ route('deleteNote', [$member->clan_id, $note->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Are you sure you want to delete this note?')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    @endcan
                 @endif
             </div>
         </div>
