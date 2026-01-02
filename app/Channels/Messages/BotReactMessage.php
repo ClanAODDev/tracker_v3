@@ -48,6 +48,10 @@ class BotReactMessage
             throw new Exception('A channel target must be defined');
         }
 
+        if (empty($this->notifiable->external_message_id)) {
+            throw new Exception('Cannot react to message: external_message_id is not set');
+        }
+
         return [
             'api_uri' => sprintf('channels/%s/messages/%s/react', $routeTarget, $this->notifiable->external_message_id),
             'body' => [

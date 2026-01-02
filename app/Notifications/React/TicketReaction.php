@@ -29,6 +29,10 @@ class TicketReaction extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
+        if (empty($notifiable->external_message_id)) {
+            return [];
+        }
+
         return [BotChannel::class];
     }
 
