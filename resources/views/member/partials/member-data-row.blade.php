@@ -21,8 +21,8 @@
                         class="fa fa-clock"></i></span>
         @endif
         <span class="pull-right" title="View Profile">
-            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-default btn-xs"><i
-                        class="fa fa-search text-accent"></i></a>
+            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-accent btn-xs"><i
+                        class="fa fa-search"></i></a>
         </span>
     </td>
     <td class="text-center hidden-xs">{{ $member->rank->getAbbreviation() }}</td>
