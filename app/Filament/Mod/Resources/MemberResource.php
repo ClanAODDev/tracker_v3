@@ -441,6 +441,24 @@ class MemberResource extends Resource
                             $query->where('division_id', $userDivisionId);
                         }
                     }),
+
+                SelectFilter::make('tags')
+                    ->multiple()
+                    ->options(function () {
+                        return DivisionTag::forDivision(auth()->user()->member?->division_id)
+                            ->visibleTo()
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
+                    ->query(function (Builder $query, array $data) {
+                        if (empty($data['values'])) {
+                            return;
+                        }
+
+                        $query->whereHas('tags', function (Builder $subQuery) use ($data) {
+                            $subQuery->whereIn('division_tags.id', $data['values']);
+                        });
+                    }),
             ])
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
