@@ -18,7 +18,8 @@
 
         @include('application.partials.errors')
 
-        <div class="panel panel-filled">
+        <div class="panel panel-filled auth__panel">
+            <div class="auth__pattern"></div>
             <div class="panel-body">
                 <form method="POST" action="{{ url('/login') }}">
                     {!! csrf_field() !!}
@@ -45,6 +46,17 @@
                 </form>
             </div>
         </div>
+
+        @if(config('services.discord.client_id'))
+            <hr class="auth__divider-hr m-t-lg m-b-lg">
+
+            <div class="text-center">
+                <p class="auth__intro m-b-md">Or sign in with:</p>
+                <a href="{{ route('auth.discord') }}" class="btn btn-primary auth__discord-btn">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+            </div>
+        @endif
     </div>
 
 @endsection

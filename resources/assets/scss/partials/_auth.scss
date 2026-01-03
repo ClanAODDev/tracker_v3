@@ -1,0 +1,133 @@
+.auth {
+    &__panel {
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    &__pattern {
+        position: absolute;
+        inset: 0;
+        background-image: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 15px,
+            rgba(255, 255, 255, 0.02) 15px,
+            rgba(255, 255, 255, 0.02) 35px
+        );
+        mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%);
+        pointer-events: none;
+    }
+
+    &__header {
+        letter-spacing: 0.5px;
+    }
+
+    &__logo-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    &__discord-icon {
+        font-size: 3rem;
+        color: #5865F2;
+    }
+
+    &__plus {
+        font-size: 2rem;
+        color: #6c757d;
+    }
+
+    &__aod-logo {
+        height: 3rem;
+    }
+
+    &__intro {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    &__steps {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    &__step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__step-badge {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.75rem;
+    }
+
+    &__step-number {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    &__step-text {
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.5;
+    }
+
+    &__divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__divider-line {
+        width: 1px;
+        height: 60px;
+        background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.15), transparent);
+    }
+
+    &__channel {
+        background: linear-gradient(135deg, #5865F2 0%, #4752c4 100%);
+        color: #fff;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.9em;
+
+        i {
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+    }
+
+    &__discord-btn {
+        padding: 10px 24px;
+        box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+        transition: all 0.2s ease;
+
+        &:hover {
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5);
+        }
+    }
+
+    &__footer {
+        animation-delay: 0.2s;
+    }
+
+    &__subtle-btn {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    &__divider-hr {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
