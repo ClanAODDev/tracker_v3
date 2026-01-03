@@ -159,4 +159,65 @@ class TransferPolicyTest extends TestCase
 
         $this->assertTrue($this->policy->approve($xo, $transfer));
     }
+
+    public function test_division_leader_can_delete_pending_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $toDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertTrue($this->policy->delete($leader, $transfer));
+    }
+
+    public function test_division_leader_cannot_delete_approved_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $toDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->approved()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertFalse($this->policy->delete($leader, $transfer));
+    }
+
+    public function test_division_leader_cannot_delete_transfer_to_other_division()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+        $leaderDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $leaderDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertFalse($this->policy->delete($leader, $transfer));
+    }
 }

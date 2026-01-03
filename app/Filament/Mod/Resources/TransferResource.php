@@ -6,6 +6,7 @@ use App\Filament\Mod\Resources\TransferResource\Pages\CreateTransfer;
 use App\Filament\Mod\Resources\TransferResource\Pages\ListTransfers;
 use App\Jobs\UpdateDivisionForMember;
 use App\Models\Division;
+use App\Models\Member;
 use App\Models\Transfer;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -50,11 +51,28 @@ class TransferResource extends Resource
                     ->label('Requested')
                     ->dateTime()
                     ->sortable(),
+                TextColumn::make('approver.name')
+                    ->label('Approved By')
+                    ->sortable()
+                    ->toggleable()
+                    ->placeholder('-'),
             ])
             ->filters([
+                SelectFilter::make('member')
+                    ->label('Member')
+                    ->searchable()
+                    ->options(fn () => Member::whereHas('transfers')->pluck('name', 'id'))
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (! empty($data['value'])) {
+                            return $query->where('member_id', $data['value']);
+                        }
+
+                        return $query;
+                    }),
 
                 SelectFilter::make('transferring_to')
                     ->label('Xfers To')
+                    ->searchable()
                     ->options(Division::active()->pluck('name', 'id'))
                     ->query(function (Builder $query, array $data): Builder {
                         if (! empty($data['value'])) {
@@ -64,22 +82,6 @@ class TransferResource extends Resource
                         return $query;
                     })
                     ->default(auth()->user()->division->id),
-
-                SelectFilter::make('transferring_from')
-                    ->label('Xfers From')
-                    ->options(Division::active()->pluck('name', 'id'))
-                    ->query(function (Builder $query, array $data): Builder {
-                        if (! empty($data['value'])) {
-                            $divisionId = $data['value'];
-
-                            return $query->whereHas('member', function (Builder $memberQuery) use ($divisionId) {
-                                $memberQuery->where('division_id', $divisionId);
-                            });
-                        }
-
-                        return $query;
-                    })
-                    ->default(false),
 
                 Filter::make('incomplete')
                     ->label('Incomplete')
@@ -136,7 +138,7 @@ class TransferResource extends Resource
                             UpdateDivisionForMember::dispatch($record);
                         })
                         ->visible(fn (Transfer $record) => ! $record->approved_at && ! $record->hold_placed_at),
-                    DeleteAction::make()->hidden(fn (Transfer $record) => $record->hold_placed_at),
+                    DeleteAction::make()->hidden(fn (Transfer $record) => $record->hold_placed_at || $record->approved_at),
                 ])
                     ->visible(fn (Transfer $record) => $record->canApprove())
                     ->label('Manage'),

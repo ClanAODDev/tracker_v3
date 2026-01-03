@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Position;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,11 @@ class Transfer extends Model
         return $this->belongsTo(Division::class);
     }
 
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
     public function canApprove(): bool
     {
         return auth()->user()->can('approve', $this);
@@ -45,7 +51,10 @@ class Transfer extends Model
 
     public function approve(): void
     {
-        $this->update(['approved_at' => now()]);
+        $this->update([
+            'approved_at' => now(),
+            'approved_by' => auth()->id(),
+        ]);
 
         $this->removeFromLeadershipAssignments();
         $this->resetTransferringMemberDetails();

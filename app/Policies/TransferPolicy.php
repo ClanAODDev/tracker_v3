@@ -21,7 +21,15 @@ class TransferPolicy
 
     public function approve(User $user, Transfer $transfer): bool
     {
-        // must be leader of target division
+        return $user->division->id === $transfer->division_id && $user->isDivisionLeader();
+    }
+
+    public function delete(User $user, Transfer $transfer): bool
+    {
+        if ($transfer->approved_at) {
+            return false;
+        }
+
         return $user->division->id === $transfer->division_id && $user->isDivisionLeader();
     }
 }

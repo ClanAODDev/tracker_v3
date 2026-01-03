@@ -35,6 +35,48 @@ class TransferTest extends TestCase
         $this->assertNotNull($transfer->approved_at);
     }
 
+    public function test_approve_sets_approved_by_to_authenticated_user()
+    {
+        $approver = $this->createSeniorLeader();
+        $this->actingAs($approver);
+
+        $sourceDivision = $this->createActiveDivision();
+        $targetDivision = $approver->member->division;
+
+        $member = $this->createMember([
+            'division_id' => $sourceDivision->id,
+            'position' => Position::MEMBER,
+        ]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $targetDivision->id,
+        ]);
+
+        $transfer->approve();
+
+        $this->assertEquals($approver->id, $transfer->approved_by);
+    }
+
+    public function test_approver_relationship_returns_user_who_approved()
+    {
+        $approver = $this->createSeniorLeader();
+        $this->actingAs($approver);
+
+        $targetDivision = $approver->member->division;
+        $member = $this->createMember();
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $targetDivision->id,
+        ]);
+
+        $transfer->approve();
+        $transfer->refresh();
+
+        $this->assertTrue($transfer->approver->is($approver));
+    }
+
     public function test_approve_transfers_member_to_new_division()
     {
         $sourceDivision = $this->createActiveDivision();
