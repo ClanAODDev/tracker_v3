@@ -46,7 +46,10 @@ const store = reactive({
             platoon: 'Platoon',
             squad: 'Squad',
         },
+        pending_discord: [],
     },
+
+    selectedPendingUser: null,
 
     loading: {
         divisionData: false,
@@ -82,6 +85,7 @@ store.loadDivisionData = (divisionSlug) => {
             store.division.welcome_pm = data.welcome_pm || '';
             store.division.use_welcome_thread = data.use_welcome_thread || false;
             store.division.locality = data.locality || { platoon: 'Platoon', squad: 'Squad' };
+            store.division.pending_discord = data.pending_discord || [];
             store.loading.divisionData = false;
         })
         .catch((error) => {
@@ -89,6 +93,26 @@ store.loadDivisionData = (divisionSlug) => {
             store.errors.divisionData = 'Failed to load division data. Please refresh and try again.';
             console.error('Division data load error:', error);
         });
+};
+
+store.selectPendingUser = (userId) => {
+    if (!userId) {
+        store.selectedPendingUser = null;
+        return;
+    }
+
+    const user = store.division.pending_discord.find(u => u.id === parseInt(userId));
+    if (user) {
+        store.selectedPendingUser = user;
+        store.member.forum_name = user.discord_username;
+        store.member.rank = '1';
+        store.validation.forumName = { valid: false, available: false };
+        store.validateForumName(user.discord_username, store.member.id);
+    }
+};
+
+store.clearPendingUser = () => {
+    store.selectedPendingUser = null;
 };
 
 store.getSquadsForPlatoon = (platoonId) => {
@@ -107,6 +131,8 @@ store.validateMemberId = (memberId) => {
     debounce('memberId', () => {
         if (store.inDemoMode) {
             store.validation.memberId = { valid: true, verifiedEmail: true, groupId: null, currentUsername: 'DemoUser', existsInTracker: false, tags: [], division: null };
+            store.member.forum_name = 'DemoUser';
+            store.validation.forumName = { valid: true, available: true };
             store.validation.loading = false;
             return;
         }
@@ -123,6 +149,13 @@ store.validateMemberId = (memberId) => {
                     tags: data.tags || [],
                     division: data.division || null,
                 };
+
+                if (data.is_member && data.valid_group && data.username) {
+                    const forumName = data.username.replace(/^AOD_/i, '');
+                    store.member.forum_name = forumName;
+                    store.validateForumName(forumName, memberId);
+                }
+
                 store.validation.loading = false;
             })
             .catch(() => {
@@ -171,14 +204,15 @@ store.isFormValid = () => {
     const hasSquads = platoon ? platoon.squads.length > 0 : false;
     const squadValid = !hasSquads || store.member.squad;
 
-    return store.member.id &&
+    const hasPendingUser = store.selectedPendingUser !== null;
+    const memberIdValid = hasPendingUser || (store.member.id && store.validation.memberId.valid && store.validation.memberId.verifiedEmail);
+
+    return memberIdValid &&
            store.member.forum_name &&
            store.member.ingame_name &&
            store.member.rank &&
            store.member.platoon &&
            squadValid &&
-           store.validation.memberId.valid &&
-           store.validation.memberId.verifiedEmail &&
            store.validation.forumName.valid;
 };
 
@@ -209,6 +243,7 @@ store.submitRecruitment = () => {
         platoon: store.member.platoon,
         rank: store.member.rank,
         squad: store.member.squad,
+        pending_user_id: store.selectedPendingUser?.id || null,
     })
     .then(() => {
         store.submitting = false;
@@ -227,6 +262,7 @@ store.resetForNewRecruit = () => {
     store.submitting = false;
     store.submitted = false;
     store.errors.submission = null;
+    store.selectedPendingUser = null;
 
     store.member.id = '';
     store.member.forum_name = '';
