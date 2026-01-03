@@ -47,6 +47,8 @@ class User extends Authenticatable implements FilamentUser
         'settings',
         'developer',
         'member_id',
+        'discord_id',
+        'discord_username',
     ];
 
     /**
@@ -97,12 +99,27 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Member::class);
     }
 
+    public function hasMember(): bool
+    {
+        return $this->member_id !== null;
+    }
+
+    public function isPendingRegistration(): bool
+    {
+        return $this->discord_id !== null && $this->member_id === null;
+    }
+
     /**
      * @return mixed
      */
     public function scopeAdmins($query)
     {
         $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
+    }
+
+    public function scopePendingDiscord($query)
+    {
+        return $query->whereNotNull('discord_id')->whereNull('member_id');
     }
 
     public function recordActivity(ActivityType $type, $related, array $properties = [])
@@ -386,5 +403,29 @@ class User extends Authenticatable implements FilamentUser
 
         // For ranks below Sergeant, only Division Leaders or Admins can approve/deny
         return $this->isAdminOrDivisionLeader();
+    }
+
+    public static function findOrCreateForMember(Member $member, ?string $email = null): self
+    {
+        $user = self::where('member_id', $member->id)->first();
+
+        if ($user) {
+            if ($email && $user->email !== $email && ! self::where('email', $email)->exists()) {
+                $user->update(['email' => $email]);
+            }
+
+            return $user;
+        }
+
+        if (! $email || self::where('email', $email)->exists()) {
+            $email = $member->id . '@placeholder.local';
+        }
+
+        return self::create([
+            'name' => strtolower($member->name),
+            'email' => $email,
+            'member_id' => $member->id,
+            'role' => Role::MEMBER,
+        ]);
     }
 }

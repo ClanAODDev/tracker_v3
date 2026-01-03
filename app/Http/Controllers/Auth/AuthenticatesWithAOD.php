@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Exception;
+use App\Services\AODForumService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 trait AuthenticatesWithAOD
 {
@@ -16,44 +13,21 @@ trait AuthenticatesWithAOD
 
     protected array $roles = [];
 
-    protected function setMemberAttributes(object $member): void
-    {
-        $this->clanId = (int) $member->userid;
-        $this->email = $member->email;
-        $this->roles = array_merge(
-            array_map('intval', explode(',', $member->membergroupids)),
-            [(int) $member->usergroupid]
-        );
-    }
-
-    /**
-     * Authenticates with AOD Community Service.
-     */
     protected function validatesCredentials(Request $request): bool
     {
-        try {
-            $results = DB::connection('aod_forums')
-                ->select(
-                    'CALL check_user(:username, :password)',
-                    [
-                        'username' => $request->input('username'),
-                        'password' => md5($request->input('password')),
-                    ]
-                );
-        } catch (Exception $exception) {
-            Log::error('AOD Authentication failed: ' . $exception->getMessage());
+        $result = AODForumService::authenticate(
+            $request->input('username'),
+            $request->input('password')
+        );
 
+        if (! $result) {
             return false;
         }
 
-        if (! empty($results)) {
+        $this->clanId = $result['clan_id'];
+        $this->email = $result['email'];
+        $this->roles = $result['roles'];
 
-            $member = Arr::first($results);
-            $this->setMemberAttributes($member);
-
-            return ($member->valid ?? false) ? true : false;
-        }
-
-        return false;
+        return true;
     }
 }

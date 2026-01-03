@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Exception;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Log;
 use RuntimeException;
@@ -100,6 +102,43 @@ class AODForumService
     public static function fetchInfo(array $params = []): array|string
     {
         return self::request(self::INFO_URL, $params);
+    }
+
+    public static function authenticate(string $username, string $password): ?array
+    {
+        try {
+            $results = DB::connection('aod_forums')
+                ->select(
+                    'CALL check_user(:username, :password)',
+                    [
+                        'username' => $username,
+                        'password' => md5($password),
+                    ]
+                );
+        } catch (Exception $exception) {
+            Log::error('AOD Authentication failed: ' . $exception->getMessage());
+
+            return null;
+        }
+
+        if (empty($results)) {
+            return null;
+        }
+
+        $member = Arr::first($results);
+
+        if (! ($member->valid ?? false)) {
+            return null;
+        }
+
+        return [
+            'clan_id' => (int) $member->userid,
+            'email' => $member->email,
+            'roles' => array_merge(
+                array_map('intval', explode(',', $member->membergroupids)),
+                [(int) $member->usergroupid]
+            ),
+        ];
     }
 
     private static function generateToken(): string

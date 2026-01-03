@@ -64,4 +64,15 @@ class UserFactory extends Factory
             ];
         });
     }
+
+    public function pending(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'member_id' => null,
+                'discord_id' => $this->faker->numerify('#########'),
+                'discord_username' => $this->faker->userName,
+            ];
+        });
+    }
 }
