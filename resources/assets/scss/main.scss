@@ -6,6 +6,7 @@
 @use 'partials/settings';
 @use 'partials/training';
 @use 'partials/leadership';
+@use 'partials/auth';
 
 .diagonal-pattern {
     background-image: repeating-linear-gradient(
@@ -10615,10 +10616,39 @@ pre.code-toolbar > .toolbar span:focus {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 
-    i {
+    > i {
         color: var(--color-accent);
         width: 18px;
         text-align: center;
+    }
+
+    .step-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        font-size: 11px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.5);
+        flex-shrink: 0;
+        margin-left: auto;
+        transition: all 0.2s ease;
+
+        &.complete {
+            background: rgba(46, 204, 113, 0.2);
+            border-color: #2ecc71;
+            color: #2ecc71;
+
+            i {
+                width: auto;
+                font-size: 10px;
+                color: #2ecc71;
+            }
+        }
     }
 }
 
@@ -10633,9 +10663,13 @@ pre.code-toolbar > .toolbar span:focus {
     }
 
     .section-toggle {
-        margin-left: auto;
         color: var(--color-muted);
         font-size: 12px;
+        margin-left: auto;
+    }
+
+    .step-indicator ~ .section-toggle {
+        margin-left: 10px;
     }
 }
 
@@ -10743,6 +10777,16 @@ pre.code-toolbar > .toolbar span:focus {
     input[type="checkbox"] {
         margin-top: 3px;
         flex-shrink: 0;
+    }
+}
+
+.agreement-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .agreement-comment {
+        font-size: 12px;
     }
 }
 
