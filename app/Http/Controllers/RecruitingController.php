@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ActivityType;
 use App\Enums\ForumGroup;
-use App\Enums\Position;
+use App\Enums\Rank;
+use App\Jobs\RecruitDiscordMember;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
-use App\Models\Handle;
 use App\Models\Member;
-use App\Models\MemberRequest;
-use App\Models\Platoon;
-use App\Models\RankAction;
-use App\Models\Transfer;
+use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use App\Services\ForumProcedureService;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\View\Factory;
+use App\Services\RecruitmentService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +24,8 @@ class RecruitingController extends Controller
     use AuthorizesRequests;
 
     public function __construct(
-        protected ForumProcedureService $procedureService
+        protected ForumProcedureService $procedureService,
+        protected RecruitmentService $recruitmentService
     ) {
         $this->middleware('auth');
     }
@@ -55,11 +51,43 @@ class RecruitingController extends Controller
 
         $division = Division::whereSlug($request->division)->first();
 
-        $member = $this->createMember($request);
+        if ($request->pending_user_id) {
+            $pendingUser = User::pendingDiscord()->find($request->pending_user_id);
 
-        $this->createRequest($member, $division);
+            if ($pendingUser) {
+                RecruitDiscordMember::dispatch(
+                    $pendingUser,
+                    $request->forum_name,
+                    $division->name,
+                    Rank::from((int) $request->rank),
+                    (int) $request->platoon,
+                    $request->squad ? (int) $request->squad : null,
+                    $request->ingame_name,
+                    auth()->user()->member?->clan_id ?? auth()->user()->id
+                );
 
-        $this->handleNotification($request, $member, $division);
+                $this->showSuccessToast('Your recruitment has been queued. A forum account will be created for this user.');
+
+                return;
+            }
+        }
+
+        $recruiterId = auth()->user()->member?->clan_id ?? auth()->user()->id;
+
+        $member = $this->recruitmentService->createMember(
+            (int) $request->member_id,
+            $request->forum_name,
+            $division,
+            (int) $request->rank,
+            (int) $request->platoon,
+            $request->squad ? (int) $request->squad : null,
+            $request->ingame_name,
+            $recruiterId
+        );
+
+        $this->recruitmentService->createMemberRequest($member, $division, $recruiterId);
+
+        $this->handleNotification($member, $division);
 
         SyncDiscordMember::dispatch($member);
 
@@ -95,6 +123,17 @@ class RecruitingController extends Controller
             ])
             ->get();
 
+        $pendingDiscord = User::pendingDiscord()
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn ($u) => [
+                'id' => $u->id,
+                'discord_username' => $u->discord_username,
+                'discord_id' => $u->discord_id,
+                'email' => $u->email,
+                'created_at' => $u->created_at->diffForHumans(),
+            ]);
+
         return response()->json([
             'platoons' => $platoons->map(fn ($p) => [
                 'id' => $p->id,
@@ -125,6 +164,7 @@ class RecruitingController extends Controller
                 'platoon' => $division->locality('platoon'),
                 'squad' => $division->locality('squad'),
             ],
+            'pending_discord' => $pendingDiscord,
         ]);
     }
 
@@ -260,72 +300,7 @@ class RecruitingController extends Controller
         }
     }
 
-    /**
-     * Handle member creation on recruitment.
-     */
-    private function createMember($request)
-    {
-        $division = Division::whereSlug($request->division)->first();
-        $member = Member::firstOrNew(['clan_id' => $request->member_id]);
-
-        // update member properties
-        $member->name = $request->forum_name;
-        $member->join_date = now();
-        $member->last_activity = now();
-        $member->recruiter_id = auth()->user()->member?->clan_id ?? auth()->user()->id;
-        $member->rank = $request->rank;
-        $member->position = Position::MEMBER;
-        $member->division_id = $division->id;
-        $member->flagged_for_inactivity = false;
-        $member->last_promoted_at = now();
-        $member->save();
-
-        // handle ingame name assignment
-        if ($request->ingame_name) {
-            $member->handles()->syncWithoutDetaching([Handle::find($division->handle_id)->id => ['value' => $request->ingame_name]]);
-        }
-
-        // handle assignments
-        $member->platoon_id = $request->platoon;
-        $member->squad_id = $request->squad;
-        $member->save();
-        $member->recordActivity(ActivityType::RECRUITED);
-
-        // track division assignment, rank change
-        RankAction::create([
-            'member_id' => $member->id,
-            'rank' => $request->rank,
-            'justification' => 'New recruit',
-            'requester_id' => auth()->user()->member_id,
-        ])->approveAndAccept();
-
-        Transfer::create([
-            'member_id' => $member->id,
-            'division_id' => $division->id,
-            'approved_at' => now(),
-        ]);
-
-        return $member;
-    }
-
-    /**
-     * Create a member status request.
-     */
-    private function createRequest($member, $division)
-    {
-        // don't allow duplicate pending requests
-        if (MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
-            return;
-        }
-
-        MemberRequest::create([
-            'requester_id' => auth()->user()->member?->clan_id ?? auth()->user()->id,
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
-        ]);
-    }
-
-    private function handleNotification(Request $request, $member, $division)
+    private function handleNotification($member, $division)
     {
         if ($division->id !== auth()->user()->member->division_id) {
             return $division->notify(new NotifyDivisionNewExternalRecruit($member, auth()->user()));
