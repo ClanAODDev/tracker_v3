@@ -29,18 +29,19 @@
       <div class="recruit-section">
         <div class="recruit-section-header">
           <i class="fa fa-user-check"></i> Member Verification
+          <StepIndicator :step="1" :complete="isMemberVerificationComplete" />
         </div>
         <div class="recruit-section-body">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group" :class="memberIdValidationClass">
-                <label for="member_id">Forum Member ID <span class="text-danger">*</span></label>
+                <label for="member_id">Forum Member ID <span class="text-danger" v-if="!store.selectedPendingUser">*</span></label>
                 <div class="input-with-status">
                   <input type="number" class="form-control" id="member_id"
                          v-model="store.member.id"
                          @input="onMemberIdChange"
-                         :disabled="store.inDemoMode"
-                         placeholder="e.g. 12345" />
+                         :disabled="store.inDemoMode || store.selectedPendingUser"
+                         :placeholder="store.selectedPendingUser ? 'Will be created' : 'e.g. 12345'" />
                   <span class="input-status" v-if="store.member.id">
                     <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
                     <i class="fa fa-check text-success" v-else-if="store.validation.memberId.valid && store.validation.memberId.verifiedEmail"></i>
@@ -61,9 +62,26 @@
                     Member is not in the <code>Registered Users</code> group.
                   </template>
                 </span>
+                <span class="help-block text-muted" v-else-if="store.selectedPendingUser">
+                  <i class="fab fa-discord" style="color: #5865F2;"></i> Forum account will be created for <strong>{{ store.selectedPendingUser.discord_username }}</strong>
+                  <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: 0.5rem;"><i class="fa fa-times"></i></a>
+                </span>
               </div>
             </div>
-            <div class="col-md-6" v-if="store.validation.memberId.currentUsername">
+            <div class="col-md-6" v-if="store.division.pending_discord.length && !store.validation.memberId.currentUsername">
+              <div class="form-group">
+                <label for="pending_user">
+                  <i class="fab fa-discord" style="color: #5865F2;"></i> Pending Discord Registrations
+                </label>
+                <select id="pending_user" class="form-control" @change="onPendingUserSelect" :disabled="store.inDemoMode">
+                  <option value="">Select from pending...</option>
+                  <option v-for="user in store.division.pending_discord" :key="user.id" :value="user.id">
+                    {{ user.discord_username }} ({{ user.created_at }})
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6" v-else-if="store.validation.memberId.currentUsername">
               <div class="form-group">
                 <label>Current Forum Username</label>
                 <div class="current-username">
@@ -87,6 +105,7 @@
       <div class="recruit-section">
         <div class="recruit-section-header">
           <i class="fa fa-id-card"></i> Recruit Details
+          <StepIndicator :step="2" :complete="isRecruitDetailsComplete" />
         </div>
         <div class="recruit-section-body">
           <div class="row">
@@ -142,6 +161,7 @@
       <div class="recruit-section" v-if="store.division.platoons.length">
         <div class="recruit-section-header">
           <i class="fa fa-users"></i> Assignment
+          <StepIndicator :step="3" :complete="isAssignmentComplete" />
         </div>
         <div class="recruit-section-body">
           <div class="row">
@@ -175,6 +195,7 @@
       <div class="recruit-section recruit-section-collapsible" v-if="store.division.threads.length">
         <div class="recruit-section-header" @click="toggleSection('agreements')">
           <i class="fa fa-file-contract"></i> Agreements
+          <StepIndicator :step="4" :complete="isAgreementsComplete" :visible="sections.agreements" />
           <span class="section-toggle">
             <i class="fa" :class="sections.agreements ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
           </span>
@@ -185,14 +206,16 @@
             <div v-for="(thread, index) in store.division.threads" :key="index" class="agreement-item">
               <label class="agreement-item-content">
                 <input type="checkbox" v-model="thread.read" />
-                <span class="agreement-name">
-                  <a :href="getThreadUrl(thread.id)" target="_blank">
-                    {{ thread.name }}
-                  </a>
-                </span>
-                <span class="agreement-comment text-muted" v-if="thread.comments">{{ thread.comments }}</span>
+                <div class="agreement-details">
+                  <span class="agreement-name">
+                    <a :href="getThreadUrl(thread.id)" target="_blank">
+                      {{ thread.name }}
+                    </a>
+                  </span>
+                  <span class="agreement-comment text-muted" v-if="thread.comments">{{ thread.comments }}</span>
+                </div>
               </label>
-              <button type="button" class="btn btn-xs btn-default agreement-copy" @click="copyThreadUrl(thread.id)" title="Copy URL">
+              <button type="button" class="btn btn-xs btn-default agreement-copy" @click="copyThreadUrl(thread)" title="Copy URL">
                 <i class="fa fa-clone"></i>
               </button>
             </div>
@@ -204,6 +227,7 @@
       <div class="recruit-section recruit-section-collapsible" v-if="store.division.tasks.length">
         <div class="recruit-section-header" @click="toggleSection('tasks')">
           <i class="fa fa-tasks"></i> In-Processing Tasks
+          <StepIndicator :step="5" :complete="isTasksComplete" :visible="sections.tasks" />
           <span class="section-toggle">
             <i class="fa" :class="sections.tasks ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
           </span>
@@ -243,8 +267,10 @@
 
 <script>
 import store from './store.js';
+import StepIndicator from './StepIndicator.vue';
 
 export default {
+  components: { StepIndicator },
   props: ['ranks', 'recruiterId', 'divisionSlug', 'cancelUrl'],
 
   data() {
@@ -284,11 +310,48 @@ export default {
     isNewMember() {
       return store.validation.memberId.valid && !store.validation.memberId.existsInTracker;
     },
+
+    isMemberVerificationComplete() {
+      if (store.selectedPendingUser) return true;
+      return store.validation.memberId.valid && store.validation.memberId.verifiedEmail;
+    },
+
+    isRecruitDetailsComplete() {
+      return !!(store.member.forum_name &&
+             store.validation.forumName.valid &&
+             store.member.ingame_name &&
+             store.member.rank);
+    },
+
+    isAssignmentComplete() {
+      if (store.loading.divisionData) return false;
+      if (!store.division.platoons.length) return true;
+      const hasSquads = this.selectedPlatoonSquads.length > 0;
+      return !!(store.member.platoon && (!hasSquads || store.member.squad));
+    },
+
+    isAgreementsComplete() {
+      if (store.loading.divisionData) return false;
+      if (!store.division.threads.length) return true;
+      return store.division.threads.every(t => t.read);
+    },
+
+    isTasksComplete() {
+      if (store.loading.divisionData) return false;
+      if (!store.division.tasks.length) return true;
+      return store.division.tasks.every(t => t.complete);
+    },
   },
 
   watch: {
     isNewMember(isNew) {
       if (isNew) {
+        this.sections.agreements = true;
+        this.sections.tasks = true;
+      }
+    },
+    'store.selectedPendingUser'(user) {
+      if (user) {
         this.sections.agreements = true;
         this.sections.tasks = true;
       }
@@ -316,6 +379,17 @@ export default {
       store.member.squad = '';
     },
 
+    onPendingUserSelect(event) {
+      store.selectPendingUser(event.target.value);
+    },
+
+    clearPendingUser() {
+      store.clearPendingUser();
+      store.member.forum_name = '';
+      store.member.rank = '';
+      document.getElementById('pending_user').value = '';
+    },
+
     retryLoad() {
       store.loadDivisionData(this.divisionSlug);
     },
@@ -324,9 +398,10 @@ export default {
       return `https://www.clanaod.net/forums/showthread.php?t=${threadId}`;
     },
 
-    copyThreadUrl(threadId) {
-      const url = this.getThreadUrl(threadId);
+    copyThreadUrl(thread) {
+      const url = this.getThreadUrl(thread.id);
       navigator.clipboard.writeText(url).then(() => {
+        thread.read = true;
         toastr.success('URL copied to clipboard');
       });
     },
