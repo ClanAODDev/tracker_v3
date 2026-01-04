@@ -924,6 +924,10 @@ var Tracker = Tracker || {};
                 $(this).addClass('active');
                 $('.leaderboard-panel[data-panel="' + tabName + '"]').addClass('active');
             });
+
+            $('.leaderboard-card.animate-fade-in-up').on('animationend', function () {
+                $(this).removeClass('animate-fade-in-up').css('opacity', '');
+            });
         },
 
         InitInactiveTabs: function () {
