@@ -104,7 +104,7 @@ class InactiveMemberController extends Controller
     private function getRecentFlagActivity(Division $division): Collection
     {
         return Activity::where('division_id', $division->id)
-            ->whereIn('name', ['removed_member'])
+            ->whereIn('name', [ActivityType::REMOVED])
             ->orderByDesc('created_at')
             ->with(['subject'])
             ->take(20)
