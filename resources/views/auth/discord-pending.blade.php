@@ -10,7 +10,7 @@
                 <span class="auth__plus">+</span>
                 <img src="{{ asset('images/aod-logo.png') }}" alt="AOD" class="auth__aod-logo">
             </div>
-            <h2 class="auth__header m-b-xs">Complete Registration</h2>
+            <h2 class="auth__header m-b-xs">ClanAOD Registration</h2>
             <p class="text-muted">Welcome, <strong class="c-white">{{ auth()->user()->discord_username }}</strong></p>
         </div>
 
@@ -36,7 +36,7 @@
                             <span class="auth__step-number">2</span>
                         </div>
                         <p class="auth__step-text m-b-none">
-                            Post in <code class="auth__channel"><i class="fas fa-hashtag"></i> aod-lobby</code>
+                            Post in <code class="auth__channel">#recruiting</code>
                         </p>
                     </div>
                 </div>
