@@ -7,10 +7,11 @@
 @endphp
 <link id="favicon" href="{{ asset($faviconPath) }}" type="image/svg+xml" rel="icon"/>
 
-<!-- vendor styles -->
-<!-- @TODO: bundle CSS resources -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"/>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://use.fontawesome.com" crossorigin>
 
+<!-- vendor styles -->
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" crossorigin="anonymous">
 
 <link rel="stylesheet" href="{{ asset('vendor/animate.css/animate.css') }}"/>
@@ -23,13 +24,36 @@
 <link rel="stylesheet" href="{{ asset('css/pe-icons/helper.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/stroke-icons/style.css') }}"/>
 <link rel="stylesheet" href="{{ asset('vendor/datatables/datatables.min.css') }}"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
 @vite(['resources/assets/scss/main.scss'])
 
-<script src="{{ asset('js/libs.js?v=2.1') }}"></script>
-<script type="text/javascript" src="https://datatables-cdn.com/v/bs/jszip-2.5.0/dt-1.11.3/b-2.1.1/b-html5-2.1.1/b-print-2.1.1/r-2.2.9/sl-1.3.4/datatables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@php
+    $cdnPackages = [
+        'core' => [
+            'jquery@3.7.1/dist/jquery.min.js',
+            'jquery-ui-dist@1.13.2/jquery-ui.min.js',
+            'popper.js@1.16.1/dist/umd/popper.min.js',
+            'bootstrap@4.6.2/dist/js/bootstrap.min.js',
+            'select2@4.0.13/dist/js/select2.min.js',
+            'jquery-sparkline@2.4.0/jquery.sparkline.min.js',
+        ],
+        'datatables' => [
+            'datatables.net@1.13.6/js/jquery.dataTables.min.js',
+            'datatables.net-bs4@1.13.6/js/dataTables.bootstrap4.min.js',
+            'datatables.net-buttons@2.4.1/js/dataTables.buttons.min.js',
+            'datatables.net-buttons-bs4@2.4.1/js/buttons.bootstrap4.min.js',
+            'datatables.net-responsive@2.5.0/js/dataTables.responsive.min.js',
+            'datatables.net-select@1.7.0/js/dataTables.select.min.js',
+        ],
+    ];
+
+    $buildCdnUrl = fn($packages) => 'https://cdn.jsdelivr.net/combine/' . collect($packages)->map(fn($p) => 'npm/' . $p)->implode(',');
+@endphp
+
+<script src="{{ $buildCdnUrl($cdnPackages['core']) }}"></script>
+<script src="{{ $buildCdnUrl($cdnPackages['datatables']) }}"></script>
+
+@vite(['resources/assets/js/libs-bundle.js'])
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 

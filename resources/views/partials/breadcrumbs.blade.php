@@ -4,8 +4,8 @@
             @foreach ($breadcrumbs as $breadcrumb)
                 @if ($breadcrumb->title === 'Reports' && !$loop->last)
                     <li class="breadcrumb-item">
-                        <div class="breadcrumb-dropdown dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <div class="breadcrumb-dropdown">
+                            <a href="#" class="dropdown-toggle">
                                 Reports <i class="fa fa-caret-down"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-dark">

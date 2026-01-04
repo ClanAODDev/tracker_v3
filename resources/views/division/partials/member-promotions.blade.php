@@ -21,10 +21,12 @@
             </form>
         </div>
         <div class="promotions-chart-body">
-            <canvas class="promotions-chart"
-                    data-labels="{{ json_encode($ranks) }}"
-                    data-values="{{ json_encode($counts) }}"
-            ></canvas>
+            <div class="chart-wrapper" style="height: 200px;">
+                <canvas id="promotions-chart"
+                     data-labels="{{ json_encode($ranks) }}"
+                     data-values="{{ json_encode($counts) }}"
+                ></canvas>
+            </div>
         </div>
     </div>
 

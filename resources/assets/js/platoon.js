@@ -3,7 +3,7 @@ var Platoon = Platoon || {};
 function initPlatoon() {
     var $ = window.jQuery;
 
-    if (!$ || typeof $.fn.DataTable !== 'function') {
+    if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function' || typeof $.fn.select2 !== 'function') {
         setTimeout(initPlatoon, 50);
         return;
     }
@@ -20,7 +20,6 @@ function initPlatoon() {
         setup: function () {
             this.handleMembers();
             this.handleSquadMembers();
-            this.handleForumActivityChart();
             this.handleVoiceActivityChart();
             this.initAutocomplete();
             this.initTagFilter();
@@ -30,72 +29,75 @@ function initPlatoon() {
             this.initBulkReminder();
         },
 
-        handleForumActivityChart: function () {
-
-            var ctx = $('.forum-activity-chart');
-
-            if (ctx.length) {
-                var myDoughnutChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        datasets: [
-                            {
-                                data: ctx.data('values'),
-                                backgroundColor: ctx.data('colors'),
-                                borderWidth: 0,
-                            }],
-                        labels: ctx.data('labels'),
-                    },
-                    options: {
-                        rotation: 1 * Math.PI,
-                        circumference: 1 * Math.PI,
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 5,
-                                fontColor: '#949ba2'
-                            },
-                            label: {
-                                fullWidth: false
-                            }
-                        }
-                    }
-                });
-            }
-        },
-
         handleVoiceActivityChart: function () {
+            var canvas = document.getElementById('voice-activity-chart');
 
-            var ctx = $('.voice-activity-chart');
+            if (!canvas || typeof Chart === 'undefined') {
+                return;
+            }
 
-            if (ctx.length) {
-                var myDoughnutChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        datasets: [
-                            {
-                                data: ctx.data('values'),
-                                backgroundColor: ctx.data('colors'),
-                                borderWidth: 0,
-                            }],
-                        labels: ctx.data('labels'),
-                    },
-                    options: {
-                        rotation: 1 * Math.PI,
-                        circumference: 1 * Math.PI,
+            var values = JSON.parse(canvas.dataset.values || '[]');
+            var labels = JSON.parse(canvas.dataset.labels || '[]');
+            var colors = JSON.parse(canvas.dataset.colors || '[]');
+
+            if (!values || !labels || values.length === 0) {
+                return;
+            }
+
+            var styles = getComputedStyle(document.documentElement);
+            var textColor = styles.getPropertyValue('--color-text-light').trim() || '#949ba2';
+            var bgColor = styles.getPropertyValue('--color-bg-panel').trim() || '#1a1d21';
+            var total = values.reduce(function(a, b) { return a + b; }, 0);
+
+            new Chart(canvas, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderColor: bgColor,
+                        borderWidth: 1,
+                        hoverBorderColor: bgColor,
+                        hoverOffset: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
                         legend: {
+                            display: true,
                             position: 'bottom',
                             labels: {
-                                boxWidth: 5,
-                                fontColor: '#949ba2'
-                            },
-                            label: {
-                                fullWidth: false
+                                color: textColor,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                },
+                                padding: 12,
+                                boxWidth: 8,
+                                boxHeight: 8
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleFont: { size: 12 },
+                            bodyFont: { size: 11 },
+                            padding: 10,
+                            cornerRadius: 6,
+                            callbacks: {
+                                label: function(context) {
+                                    var pct = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
+                                    return context.label + ': ' + context.parsed + ' (' + pct + '%)';
+                                }
                             }
                         }
                     }
-                });
-            }
+                }
+            });
         },
         handleSquadMembers: function () {
             if (!$('.manage-squads-grid').length) {
@@ -378,9 +380,29 @@ function initPlatoon() {
                 }
             });
 
-            $('.column-toggles .dropup').on('shown.bs.dropdown', function () {
-                var $menu = $(this).find('.column-toggle-menu');
-                $menu.scrollTop($menu[0].scrollHeight);
+            var $columnDropdown = $('.column-dropdown');
+            var $columnToggle = $columnDropdown.find('.dropdown-toggle');
+            var $columnMenu = $columnDropdown.find('.column-toggle-menu');
+
+            $columnToggle.on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var isOpen = $columnDropdown.hasClass('show');
+                if (isOpen) {
+                    $columnDropdown.removeClass('show');
+                    $columnMenu.removeClass('show');
+                } else {
+                    $columnDropdown.addClass('show');
+                    $columnMenu.addClass('show');
+                    $columnMenu.scrollTop(0);
+                }
+            });
+
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.column-dropdown').length) {
+                    $columnDropdown.removeClass('show');
+                    $columnMenu.removeClass('show');
+                }
             });
 
             var $searchInput = $('.dataTables_filter input').removeClass('input-sm');
