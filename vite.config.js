@@ -7,6 +7,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/assets/scss/main.scss',
+                'resources/assets/js/libs-bundle.js',
                 'resources/assets/js/main.js',
                 'resources/assets/js/platoon.js',
                 'resources/assets/js/division.js',
