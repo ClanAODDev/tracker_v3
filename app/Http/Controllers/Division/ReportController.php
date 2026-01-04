@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Division;
 
+use App\Enums\ActivityType;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Division;
@@ -47,7 +48,7 @@ class ReportController extends Controller
         ];
 
         $activityCounts = Activity::query()
-            ->where('name', 'recruited_member')
+            ->where('name', ActivityType::RECRUITED)
             ->where('division_id', $division->id)
             ->whereBetween('created_at', [$start, $end])
             ->select('user_id', DB::raw('COUNT(*) as recruits'))

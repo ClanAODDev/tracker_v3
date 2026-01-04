@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\ActivityType;
 use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
@@ -43,7 +44,7 @@ class DivisionRepository
     public function recruitsLast6Months(int $divisionId, string $startDate, ?string $endDate = null): Collection
     {
         return DB::table('activities')
-            ->where('name', 'recruited_member')
+            ->where('name', ActivityType::RECRUITED->value)
             ->where('division_id', $divisionId)
             ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket')
@@ -57,7 +58,7 @@ class DivisionRepository
     public function removalsLast6Months(int $divisionId, string $startDate, ?string $endDate = null): Collection
     {
         return DB::table('activities')
-            ->where('name', 'removed_member')
+            ->where('name', ActivityType::REMOVED->value)
             ->where('division_id', $divisionId)
             ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket')
