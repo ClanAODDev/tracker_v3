@@ -112,185 +112,92 @@ var Division = Division || {};
     },
     setup: function () {
       this.initAutocomplete();
-      this.initSetup();
+      this.initPromotionsChart();
       this.initUnassigned();
       this.initScrollToOrganize();
-      this.initPopulationChart();
     },
 
-    initPopulationChart: function () {
-      var canvas = document.getElementById('population-chart');
-      if (!canvas) return;
+    initPromotionsChart: function () {
+      var canvas = document.getElementById('promotions-chart');
 
-      var ctx = canvas.getContext('2d');
+      if (!canvas || typeof Chart === 'undefined') {
+        return;
+      }
+
+      var values = JSON.parse(canvas.dataset.values || '[]');
       var labels = JSON.parse(canvas.dataset.labels || '[]');
-      var population = JSON.parse(canvas.dataset.population || '[]');
-      var voice = JSON.parse(canvas.dataset.voice || '[]');
 
-      if (labels.length === 0) return;
-
-      var maxPop = Math.max(...population);
-      var minPop = Math.min(...population);
+      if (!values || !labels || values.length === 0) {
+        return;
+      }
 
       var styles = getComputedStyle(document.documentElement);
-      var infoColor = styles.getPropertyValue('--color-info').trim() || '#5bc0de';
-      var successColor = styles.getPropertyValue('--color-success').trim() || '#1bbf89';
+      var themeColors = [
+        styles.getPropertyValue('--color-muted').trim() || '#949ba2',
+        styles.getPropertyValue('--color-primary').trim() || '#0f83c9',
+        styles.getPropertyValue('--color-success').trim() || '#1bbf89',
+        styles.getPropertyValue('--color-accent').trim() || '#f7af3e',
+        styles.getPropertyValue('--color-info').trim() || '#56c0e0',
+        styles.getPropertyValue('--color-danger').trim() || '#db524b'
+      ];
+      var backgroundColors = values.map(function(_, i) {
+        return themeColors[i % themeColors.length];
+      });
 
-      new Chart(ctx, {
-        type: 'line',
+      var gridColor = 'rgba(255,255,255,0.04)';
+      var textColor = styles.getPropertyValue('--color-text-light').trim() || '#949ba2';
+
+      new Chart(canvas, {
+        type: 'bar',
         data: {
           labels: labels,
-          datasets: [
-            {
-              label: 'Members',
-              data: population,
-              borderColor: infoColor,
-              backgroundColor: infoColor + '1a',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.3,
-              pointRadius: 3,
-              pointHoverRadius: 6,
-              pointBackgroundColor: infoColor,
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-            },
-            {
-              label: 'Voice Active',
-              data: voice,
-              borderColor: successColor,
-              backgroundColor: successColor + '1a',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.3,
-              pointRadius: 2,
-              pointHoverRadius: 5,
-              pointBackgroundColor: successColor,
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-            }
-          ]
+          datasets: [{
+            data: values,
+            backgroundColor: backgroundColors,
+            borderWidth: 0,
+            barThickness: 20
+          }]
         },
         options: {
+          indexAxis: 'y',
           responsive: true,
           maintainAspectRatio: false,
-          interaction: {
-            intersect: false,
-            mode: 'index'
-          },
           plugins: {
             legend: {
-              display: true,
-              position: 'top',
-              align: 'end',
-              labels: {
-                boxWidth: 12,
-                padding: 15,
-                color: 'rgba(255, 255, 255, 0.7)',
-                font: { size: 11 }
-              }
+              display: false
             },
             tooltip: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleColor: '#fff',
-              bodyColor: '#fff',
-              padding: 12,
-              displayColors: true,
+              usePointStyle: true,
+              boxPadding: 6,
               callbacks: {
                 label: function(context) {
-                  return context.dataset.label + ': ' + context.parsed.y;
+                  return context.parsed.x + ' promotions';
                 }
               }
             }
           },
           scales: {
             x: {
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              beginAtZero: true,
+              grid: {
+                color: gridColor
+              },
               ticks: {
-                color: 'rgba(255, 255, 255, 0.5)',
-                font: { size: 10 },
-                maxRotation: 45,
-                minRotation: 0
+                stepSize: 1,
+                color: textColor
               }
             },
             y: {
-              beginAtZero: false,
-              suggestedMin: minPop - Math.round(minPop * 0.1),
-              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              grid: {
+                display: false
+              },
               ticks: {
-                color: 'rgba(255, 255, 255, 0.5)',
-                font: { size: 10 }
+                color: textColor
               }
             }
           }
         }
       });
-    },
-
-    initSetup: function () {
-      var ctx = $('.promotions-chart');
-
-      if (ctx.length) {
-        var colors = ['#949ba2', '#0f83c9', '#1bbf89', '#f7af3e', '#56c0e0', '#db524b'];
-        var values = ctx.data('values');
-        var labels = ctx.data('labels');
-
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Promotions',
-              data: values,
-              backgroundColor: labels.map(function(_, i) {
-                return colors[i % colors.length];
-              }),
-              borderWidth: 0,
-              borderRadius: 4,
-              barThickness: 24
-            }]
-          },
-          options: {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                titleColor: '#fff',
-                bodyColor: '#fff',
-                padding: 10,
-                callbacks: {
-                  label: function(context) {
-                    return context.parsed.x + ' promotions';
-                  }
-                }
-              }
-            },
-            scales: {
-              x: {
-                beginAtZero: true,
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: {
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  font: { size: 11 },
-                  stepSize: 1
-                }
-              },
-              y: {
-                grid: { display: false },
-                ticks: {
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  font: { size: 12 }
-                }
-              }
-            }
-          }
-        });
-      }
     },
 
     initAutocomplete: function () {
@@ -307,4 +214,13 @@ var Division = Division || {};
   };
 })(window.jQuery);
 
-Division.setup();
+function initDivision() {
+    var $ = window.jQuery;
+    if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function') {
+        setTimeout(initDivision, 50);
+        return;
+    }
+    Division.setup();
+}
+
+initDivision();

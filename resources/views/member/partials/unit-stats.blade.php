@@ -48,9 +48,11 @@
         Discord Activity
     </div>
     <div class="panel-body">
-        <canvas class="voice-activity-chart"
-                data-labels="{{ json_encode($unitStats->voiceActivityGraph['labels']) }}"
-                data-values="{{ json_encode($unitStats->voiceActivityGraph['values']) }}"
-                data-colors="{{ json_encode($unitStats->voiceActivityGraph['colors']) }}"></canvas>
+        <div class="chart-wrapper" style="height: 180px;">
+            <canvas id="voice-activity-chart"
+                 data-labels="{{ json_encode($unitStats->voiceActivityGraph['labels']) }}"
+                 data-values="{{ json_encode($unitStats->voiceActivityGraph['values']) }}"
+                 data-colors="{{ json_encode($unitStats->voiceActivityGraph['colors']) }}"></canvas>
+        </div>
     </div>
 </div>

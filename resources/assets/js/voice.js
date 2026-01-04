@@ -1,5 +1,14 @@
-const $ = window.jQuery;
-if ($('.members-table').length) {
+function initVoice() {
+    const $ = window.jQuery;
+
+    if (!$ || typeof $.fn.DataTable !== 'function') {
+        setTimeout(initVoice, 50);
+        return;
+    }
+
+    if (!$('.members-table').length) {
+        return;
+    }
     var dataTable = $('table.members-table').DataTable({
         oLanguage: {
             sLengthMenu: '' // _MENU_
@@ -23,3 +32,5 @@ if ($('.members-table').length) {
         }
     });
 }
+
+initVoice();

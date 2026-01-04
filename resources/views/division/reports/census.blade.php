@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <div class="census-schedule-note">
+        <div class="census-schedule-note text-muted">
             <i class="fa fa-info-circle"></i>
             Census data is collected automatically every Sunday at midnight (server time).
         </div>

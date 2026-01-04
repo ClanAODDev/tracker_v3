@@ -1,139 +1,138 @@
-const $ = window.jQuery;
+import { getThemeColors, getBaseChartOptions, getGridScaleConfig, registerChartForThemeUpdates } from './chart-utils.js';
 
-$('#preset-select').on('change', function () {
-    var months = parseInt($(this).val());
-    if (!months) return;
+function initRetentionGraph() {
+    var $ = window.jQuery;
 
-    var end = new Date();
-    var start = new Date();
-    start.setMonth(start.getMonth() - months);
-    start.setDate(1);
-
-    end.setMonth(end.getMonth() + 1);
-    end.setDate(0);
-
-    $('#start').val(start.toISOString().split('T')[0]);
-    $('#end').val(end.toISOString().split('T')[0]);
-
-    $(this).closest('form').submit();
-});
-
-!function (r) {
-    function o(r, o, e, i) {
-        var s = 'categories' == o.xaxis.options.mode, n = 'categories' == o.yaxis.options.mode;
-        if (s || n) {
-            var a = i.format;
-            if (!a) {
-                var t = o;
-                if ((a = []).push({x: !0, number: !0, required: !0}), a.push({
-                    y: !0,
-                    number: !0,
-                    required: !0
-                }), t.bars.show || t.lines.show && t.lines.fill) {
-                    var u = !!(t.bars.show && t.bars.zero || t.lines.show && t.lines.zero);
-                    a.push({
-                        y: !0,
-                        number: !0,
-                        required: !1,
-                        defaultValue: 0,
-                        autoscale: u
-                    }), t.bars.horizontal && (delete a[a.length - 1].y, a[a.length - 1].x = !0);
-                }
-                i.format = a;
-            }
-            for (var f = 0; f < a.length; ++f) a[f].x && s && (a[f].number = !1), a[f].y && n && (a[f].number = !1);
-        }
+    if (!$ || typeof Chart === 'undefined') {
+        setTimeout(initRetentionGraph, 50);
+        return;
     }
 
-    function e(r) {
-        var o = [];
-        for (var e in r.categories) {
-            var i = r.categories[e];
-            i >= r.min && i <= r.max && o.push([i, e]);
-        }
-        return o.sort(function (r, o) {
-            return r[0] - o[0];
-        }), o;
-    }
+    $('#preset-select').on('change', function () {
+        var months = parseInt($(this).val());
+        if (!months) return;
 
-    function i(o, i, s) {
-        if ('categories' == o[i].options.mode) {
-            if (!o[i].categories) {
-                var n = {}, a = o[i].options.categories || {};
-                if (r.isArray(a)) for (var t = 0; t < a.length; ++t) n[a[t]] = t; else for (var u in a) n[u] = a[u];
-                o[i].categories = n;
-            }
-            o[i].options.ticks || (o[i].options.ticks = e), function (r, o, e) {
-                for (var i = r.points, s = r.pointsize, n = r.format, a = o.charAt(0), t = function (r) {
-                    var o = -1;
-                    for (var e in r) r[e] > o && (o = r[e]);
-                    return o + 1;
-                }(e), u = 0; u < i.length; u += s) if (null != i[u]) for (var f = 0; f < s; ++f) {
-                    var c = i[u + f];
-                    null != c && n[f][a] && (c in e || (e[c] = t, ++t), i[u + f] = e[c]);
-                }
-            }(s, i, o[i].categories);
-        }
-    }
+        var end = new Date();
+        var start = new Date();
+        start.setMonth(start.getMonth() - months);
+        start.setDate(1);
 
-    function s(r, o, e) {
-        i(o, 'xaxis', e), i(o, 'yaxis', e);
-    }
+        end.setMonth(end.getMonth() + 1);
+        end.setDate(0);
 
-    r.plot.plugins.push({
-        init: function (r) {
-            r.hooks.processRawData.push(o), r.hooks.processDatapoints.push(s);
-        },
-        options: {xaxis: {categories: null}, yaxis: {categories: null}},
-        name: 'categories',
-        version: '1.0'
+        $('#start').val(start.toISOString().split('T')[0]);
+        $('#end').val(end.toISOString().split('T')[0]);
+
+        $(this).closest('form').submit();
     });
-}(jQuery);
 
-var $chart = $('#retention-chart');
+    var canvas = document.getElementById('retention-chart');
+    if (!canvas) {
+        return;
+    }
 
-if ($chart.length) {
-    var recruitsData = $chart.data('recruits'),
-        removalsData = $chart.data('removals'),
-        populationData = $chart.data('population');
+    var recruitsData = JSON.parse(canvas.dataset.recruits || '[]');
+    var removalsData = JSON.parse(canvas.dataset.removals || '[]');
+    var populationData = JSON.parse(canvas.dataset.population || '[]');
 
-    var styles = getComputedStyle(document.documentElement);
-    var gridColor = styles.getPropertyValue('--color-bg-panel').trim() || '#404652';
-    var successColor = styles.getPropertyValue('--color-success').trim() || '#1bbf89';
-    var accentColor = styles.getPropertyValue('--color-accent').trim() || '#f7af3e';
-    var primaryColor = styles.getPropertyValue('--color-primary').trim() || '#0F83C9';
+    if (!recruitsData.length) {
+        return;
+    }
 
-    var chartOptions = {
-        series: {
-            points: {
-                show: true,
-                radius: 2,
-                symbol: 'circle'
+    var colors = getThemeColors();
+    var baseOptions = getBaseChartOptions(colors);
+    var scaleConfig = getGridScaleConfig(colors);
+
+    var labels = recruitsData.map(function(point) {
+        return point[0];
+    });
+
+    var recruitsValues = recruitsData.map(function(point) {
+        return point[1];
+    });
+
+    var removalsValues = removalsData.map(function(point) {
+        return point[1];
+    });
+
+    var populationValues = populationData.map(function(point) {
+        return point[1];
+    });
+
+    var chart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Recruited',
+                    data: recruitsValues,
+                    borderColor: colors.success,
+                    backgroundColor: colors.success + '1A',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 2,
+                    pointHoverRadius: 4
+                },
+                {
+                    label: 'Removed',
+                    data: removalsValues,
+                    borderColor: colors.danger,
+                    backgroundColor: colors.danger + '1A',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 2,
+                    pointHoverRadius: 4
+                },
+                {
+                    label: 'Population',
+                    data: populationValues,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primary + '1A',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 2,
+                    pointHoverRadius: 4
+                }
+            ]
+        },
+        options: {
+            ...baseOptions,
+            plugins: {
+                ...baseOptions.plugins,
+                tooltip: {
+                    ...baseOptions.plugins.tooltip,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.y;
+                        }
+                    }
+                }
             },
-            splines: {
-                show: true,
-                tension: 0.4,
-                lineWidth: 1,
-                fill: .10,
+            scales: {
+                x: scaleConfig,
+                y: {
+                    ...scaleConfig,
+                    beginAtZero: true
+                }
             }
-        },
-        grid: {
-            tickColor: gridColor,
-            borderWidth: 1,
-            color: '#000',
-            borderColor: gridColor,
-        },
-        tooltip: false,
-        xaxis: {
-            mode: 'categories',
-            tickLength: 0,
-        },
-        colors: [successColor, accentColor, primaryColor]
-    };
+        }
+    });
 
-    $.plot($chart, [recruitsData, removalsData, populationData], chartOptions);
-
-    $(window).resize(function () {
-        $.plot($chart, [recruitsData, removalsData, populationData], chartOptions);
+    registerChartForThemeUpdates(chart, function(c, newColors) {
+        c.data.datasets[0].borderColor = newColors.success;
+        c.data.datasets[0].backgroundColor = newColors.success + '1A';
+        c.data.datasets[1].borderColor = newColors.danger;
+        c.data.datasets[1].backgroundColor = newColors.danger + '1A';
+        c.data.datasets[2].borderColor = newColors.primary;
+        c.data.datasets[2].backgroundColor = newColors.primary + '1A';
+        c.options.plugins.legend.labels.color = newColors.text;
+        c.options.scales.x.grid.color = newColors.grid;
+        c.options.scales.x.ticks.color = newColors.text;
+        c.options.scales.y.grid.color = newColors.grid;
+        c.options.scales.y.ticks.color = newColors.text;
+        c.update();
     });
 }
+
+initRetentionGraph();

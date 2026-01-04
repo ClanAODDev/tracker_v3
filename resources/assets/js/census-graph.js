@@ -1,65 +1,113 @@
-function initCensusGraph() {
-    const $ = window.jQuery;
+import { getThemeColors, getBaseChartOptions, getGridScaleConfig, registerChartForThemeUpdates } from './chart-utils.js';
 
-    if (!$ || typeof $.plot !== 'function') {
+function initCensusGraph() {
+    if (typeof Chart === 'undefined') {
         setTimeout(initCensusGraph, 50);
         return;
     }
 
-    var $chart = $("#flot-line-chart");
-    if (!$chart.length) {
+    var canvas = document.getElementById('census-chart');
+    if (!canvas) {
         return;
     }
 
-    var populationData = $chart.data("populations"),
-        discordData = $chart.data("weekly-discord");
+    var populationData = JSON.parse(canvas.dataset.populations || '[]');
+    var discordData = JSON.parse(canvas.dataset.weeklyDiscord || '[]');
 
-    if (!populationData || !discordData) {
+    if (!populationData.length || !discordData.length) {
         return;
     }
 
-    var styles = getComputedStyle(document.documentElement);
-    var gridColor = styles.getPropertyValue('--color-bg-panel').trim() || '#404652';
-    var successColor = styles.getPropertyValue('--color-success').trim() || '#1bbf89';
-    var primaryColor = styles.getPropertyValue('--color-primary').trim() || '#0F83C9';
-    var accentColor = styles.getPropertyValue('--color-accent').trim() || '#f7af3e';
+    var colors = getThemeColors();
+    var baseOptions = getBaseChartOptions(colors);
+    var scaleConfig = getGridScaleConfig(colors);
 
-    var chartUsersOptions = {
-        series: {
-            points: {
-                show: true,
-                radius: 2,
-                symbol: "circle"
+    var labels = populationData.map(function(point) {
+        return new Date(point[0]);
+    });
+
+    var populationValues = populationData.map(function(point) {
+        return point[1];
+    });
+
+    var discordValues = discordData.map(function(point) {
+        return point[1];
+    });
+
+    var chart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Population',
+                    data: populationValues,
+                    borderColor: colors.success,
+                    backgroundColor: colors.success + '1A',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 2,
+                    pointHoverRadius: 4
+                },
+                {
+                    label: 'Discord Active',
+                    data: discordValues,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primary + '1A',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 2,
+                    pointHoverRadius: 4
+                }
+            ]
+        },
+        options: {
+            ...baseOptions,
+            plugins: {
+                ...baseOptions.plugins,
+                tooltip: {
+                    ...baseOptions.plugins.tooltip,
+                    callbacks: {
+                        title: function(context) {
+                            var date = context[0].parsed.x;
+                            return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+                        },
+                        label: function(context) {
+                            return context.dataset.label + ': ' + context.parsed.y + ' members';
+                        }
+                    }
+                }
             },
-            splines: {
-                show: true,
-                tension: 0.4,
-                lineWidth: 1,
-                fill: 0.10
+            scales: {
+                x: {
+                    ...scaleConfig,
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'MM/dd/yy'
+                        }
+                    }
+                },
+                y: {
+                    ...scaleConfig,
+                    beginAtZero: false
+                }
             }
-        },
-        grid: {
-            tickColor: gridColor,
-            borderWidth: 1,
-            color: "#000",
-            borderColor: gridColor
-        },
-        tooltip: false,
-        tooltippage: {
-            show: true,
-            content: "%x - %y members"
-        },
-        xaxis: {
-            mode: "time",
-            timeformat: "%m/%d/%y"
-        },
-        colors: [successColor, primaryColor, accentColor]
-    };
+        }
+    });
 
-    $.plot($("#flot-line-chart"), [populationData, discordData], chartUsersOptions);
-
-    $(window).resize(function () {
-        $.plot($("#flot-line-chart"), [populationData, discordData], chartUsersOptions);
+    registerChartForThemeUpdates(chart, function(c, newColors) {
+        c.data.datasets[0].borderColor = newColors.success;
+        c.data.datasets[0].backgroundColor = newColors.success + '1A';
+        c.data.datasets[1].borderColor = newColors.primary;
+        c.data.datasets[1].backgroundColor = newColors.primary + '1A';
+        c.options.plugins.legend.labels.color = newColors.text;
+        c.options.scales.x.grid.color = newColors.grid;
+        c.options.scales.x.ticks.color = newColors.text;
+        c.options.scales.y.grid.color = newColors.grid;
+        c.options.scales.y.ticks.color = newColors.text;
+        c.update();
     });
 }
 

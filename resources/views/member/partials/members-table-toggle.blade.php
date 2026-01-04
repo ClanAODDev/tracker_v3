@@ -1,7 +1,7 @@
 <div class="members-table-toggle text-center">
     <div class="btn-group column-toggles">
-        <div class="dropup">
-            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <div class="dropup column-dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button">
                 <i class="fa fa-columns"></i> Columns <span class="caret"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-right column-toggle-menu">
