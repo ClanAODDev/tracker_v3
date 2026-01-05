@@ -23,4 +23,18 @@ export default defineConfig({
         }),
         vue(),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                globals: {
+                    jquery: 'jQuery'
+                }
+            }
+        }
+    },
+    resolve: {
+        alias: {
+            jquery: '/resources/assets/js/jquery-global.js'
+        }
+    }
 });

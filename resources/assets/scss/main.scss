@@ -6693,8 +6693,8 @@ h6:hover .heading-permalink,
     }
 }
 
-.modal-backdrop.in {
-    filter: alpha(opacity=75);
+.modal-backdrop.in,
+.modal-backdrop.show {
     opacity: .75;
 }
 
