@@ -46,28 +46,33 @@ class DiscordController extends Controller
             return redirect()->intended('/');
         }
 
-        if (! $email) {
-            return redirect()->route('login')->withErrors([
-                'discord' => 'Your Discord account was created with a phone number. Please add an email to your Discord account to sign in.',
-            ]);
-        }
-
-        if (User::where('email', $email)->exists()) {
-            return redirect()->route('login')->withErrors([
-                'discord' => 'An account with this email already exists. Please sign in with your forum credentials.',
-            ]);
-        }
-
-        $user = User::create([
-            'name' => $this->sanitizeName($discordUsername),
-            'email' => $email,
-            'discord_id' => $discordId,
-            'discord_username' => $discordUsername,
+        return redirect()->route('login')->withErrors([
+            'discord' => 'Your Discord account is not linked to an AOD member. Please ensure your Discord is linked on the AOD forums, then try again.',
         ]);
 
-        Auth::login($user, true);
-
-        return redirect()->route('auth.discord.pending');
+        // @todo Re-enable new account creation when ready for recruitment flow
+        // if (! $email) {
+        //     return redirect()->route('login')->withErrors([
+        //         'discord' => 'Your Discord account was created with a phone number. Please add an email to your Discord account to sign in.',
+        //     ]);
+        // }
+        //
+        // if (User::where('email', $email)->exists()) {
+        //     return redirect()->route('login')->withErrors([
+        //         'discord' => 'An account with this email already exists. Please sign in with your forum credentials.',
+        //     ]);
+        // }
+        //
+        // $user = User::create([
+        //     'name' => $this->sanitizeName($discordUsername),
+        //     'email' => $email,
+        //     'discord_id' => $discordId,
+        //     'discord_username' => $discordUsername,
+        // ]);
+        //
+        // Auth::login($user, true);
+        //
+        // return redirect()->route('auth.discord.pending');
     }
 
     public function pending()

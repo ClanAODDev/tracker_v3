@@ -54,7 +54,7 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect();
     }
 
-    public function test_discord_callback_creates_pending_user_when_no_member_exists(): void
+    public function test_discord_callback_rejects_unknown_discord_id(): void
     {
         $this->mockDiscordUser([
             'id' => '999888777',
@@ -64,16 +64,11 @@ class DiscordAuthTest extends TestCase
 
         $response = $this->get(route('auth.discord.callback'));
 
-        $this->assertDatabaseHas('users', [
-            'discord_id' => '999888777',
-            'discord_username' => 'NewUser',
-            'email' => 'new@discord.com',
-            'member_id' => null,
-        ]);
-
+        $this->assertDatabaseMissing('users', ['discord_id' => '999888777']);
         $this->assertDatabaseMissing('members', ['discord_id' => '999888777']);
 
-        $response->assertRedirect(route('auth.discord.pending'));
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors('discord');
     }
 
     public function test_discord_callback_finds_existing_member_by_discord_id(): void
@@ -134,72 +129,76 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect(route('auth.discord.pending'));
     }
 
-    public function test_discord_callback_rejects_new_user_without_email(): void
-    {
-        $this->mockDiscordUser([
-            'id' => '123123123',
-            'nickname' => 'NoEmail',
-            'email' => null,
-        ]);
+    // @todo Re-enable when new account creation is enabled
+    // These tests previously validated email requirements for new user creation.
+    // With account creation disabled, unknown discord IDs are rejected before email validation.
+    // public function test_discord_callback_rejects_new_user_without_email(): void
+    // {
+    //     $this->mockDiscordUser([
+    //         'id' => '123123123',
+    //         'nickname' => 'NoEmail',
+    //         'email' => null,
+    //     ]);
+    //
+    //     $response = $this->get(route('auth.discord.callback'));
+    //
+    //     $response->assertRedirect(route('login'));
+    //     $response->assertSessionHasErrors('discord');
+    //
+    //     $this->assertDatabaseMissing('users', ['discord_id' => '123123123']);
+    // }
+    //
+    // public function test_discord_callback_rejects_duplicate_email(): void
+    // {
+    //     User::factory()->create(['email' => 'taken@example.com']);
+    //
+    //     $this->mockDiscordUser([
+    //         'id' => '321321321',
+    //         'nickname' => 'DupeEmail',
+    //         'email' => 'taken@example.com',
+    //     ]);
+    //
+    //     $response = $this->get(route('auth.discord.callback'));
+    //
+    //     $response->assertRedirect(route('login'));
+    //     $response->assertSessionHasErrors('discord');
+    //
+    //     $this->assertDatabaseMissing('users', ['discord_id' => '321321321']);
+    // }
 
-        $response = $this->get(route('auth.discord.callback'));
-
-        $response->assertRedirect(route('login'));
-        $response->assertSessionHasErrors('discord');
-
-        $this->assertDatabaseMissing('users', ['discord_id' => '123123123']);
-    }
-
-    public function test_discord_callback_rejects_duplicate_email(): void
-    {
-        User::factory()->create(['email' => 'taken@example.com']);
-
-        $this->mockDiscordUser([
-            'id' => '321321321',
-            'nickname' => 'DupeEmail',
-            'email' => 'taken@example.com',
-        ]);
-
-        $response = $this->get(route('auth.discord.callback'));
-
-        $response->assertRedirect(route('login'));
-        $response->assertSessionHasErrors('discord');
-
-        $this->assertDatabaseMissing('users', ['discord_id' => '321321321']);
-    }
-
-    public function test_discord_callback_sanitizes_username(): void
-    {
-        $this->mockDiscordUser([
-            'id' => '444555666',
-            'nickname' => 'Test@User#123!',
-            'email' => 'test@example.com',
-        ]);
-
-        $response = $this->get(route('auth.discord.callback'));
-
-        $user = User::where('discord_id', '444555666')->first();
-        $this->assertEquals('TestUser123', $user->name);
-
-        $response->assertRedirect(route('auth.discord.pending'));
-    }
-
-    public function test_discord_callback_uses_name_when_nickname_null(): void
-    {
-        $this->mockDiscordUser([
-            'id' => '666777888',
-            'nickname' => null,
-            'name' => 'DiscordName',
-            'email' => 'name@example.com',
-        ]);
-
-        $response = $this->get(route('auth.discord.callback'));
-
-        $user = User::where('discord_id', '666777888')->first();
-        $this->assertEquals('DiscordName', $user->discord_username);
-
-        $response->assertRedirect(route('auth.discord.pending'));
-    }
+    // @todo Re-enable when new account creation is enabled
+    // public function test_discord_callback_sanitizes_username(): void
+    // {
+    //     $this->mockDiscordUser([
+    //         'id' => '444555666',
+    //         'nickname' => 'Test@User#123!',
+    //         'email' => 'test@example.com',
+    //     ]);
+    //
+    //     $response = $this->get(route('auth.discord.callback'));
+    //
+    //     $user = User::where('discord_id', '444555666')->first();
+    //     $this->assertEquals('TestUser123', $user->name);
+    //
+    //     $response->assertRedirect(route('auth.discord.pending'));
+    // }
+    //
+    // public function test_discord_callback_uses_name_when_nickname_null(): void
+    // {
+    //     $this->mockDiscordUser([
+    //         'id' => '666777888',
+    //         'nickname' => null,
+    //         'name' => 'DiscordName',
+    //         'email' => 'name@example.com',
+    //     ]);
+    //
+    //     $response = $this->get(route('auth.discord.callback'));
+    //
+    //     $user = User::where('discord_id', '666777888')->first();
+    //     $this->assertEquals('DiscordName', $user->discord_username);
+    //
+    //     $response->assertRedirect(route('auth.discord.pending'));
+    // }
 
     public function test_discord_callback_links_discord_to_existing_member_user(): void
     {
@@ -253,7 +252,7 @@ class DiscordAuthTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('PendingUser');
-        $response->assertSee('Complete Registration');
+        $response->assertSee('ClanAOD Registration');
     }
 
     public function test_user_is_pending_registration_returns_true_for_discord_only(): void

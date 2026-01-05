@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
-use App\Enums\Rank;
-use App\Jobs\RecruitDiscordMember;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
@@ -50,29 +48,52 @@ class RecruitingController extends Controller
         $this->authorize('recruit', Member::class);
 
         $division = Division::whereSlug($request->division)->first();
-
-        if ($request->pending_user_id) {
-            $pendingUser = User::pendingDiscord()->find($request->pending_user_id);
-
-            if ($pendingUser) {
-                RecruitDiscordMember::dispatch(
-                    $pendingUser,
-                    $request->forum_name,
-                    $division->name,
-                    Rank::from((int) $request->rank),
-                    (int) $request->platoon,
-                    $request->squad ? (int) $request->squad : null,
-                    $request->ingame_name,
-                    auth()->user()->member?->clan_id ?? auth()->user()->id
-                );
-
-                $this->showSuccessToast('Your recruitment has been queued. A forum account will be created for this user.');
-
-                return;
-            }
-        }
-
         $recruiterId = auth()->user()->member?->clan_id ?? auth()->user()->id;
+
+        // @todo Re-enable when ready for Discord recruitment flow
+        // if ($request->pending_user_id) {
+        //     $pendingUser = User::pendingDiscord()->find($request->pending_user_id);
+        //
+        //     if (! $pendingUser) {
+        //         return response()->json([
+        //             'message' => 'Pending Discord user not found.',
+        //         ], 422);
+        //     }
+        //
+        //     $forumResult = $this->recruitmentService->createForumAccountForDiscordUser(
+        //         $pendingUser,
+        //         $request->forum_name
+        //     );
+        //
+        //     if (! $forumResult['success']) {
+        //         return response()->json([
+        //             'message' => $forumResult['error'],
+        //         ], 422);
+        //     }
+        //
+        //     $member = $this->recruitmentService->createMember(
+        //         $forumResult['clan_id'],
+        //         $request->forum_name,
+        //         $division,
+        //         (int) $request->rank,
+        //         (int) $request->platoon,
+        //         $request->squad ? (int) $request->squad : null,
+        //         $request->ingame_name,
+        //         $recruiterId
+        //     );
+        //
+        //     $this->recruitmentService->createMemberRequest($member, $division, $recruiterId);
+        //
+        //     $pendingUser->update(['member_id' => $member->id]);
+        //
+        //     $this->handleNotification($member, $division);
+        //
+        //     SyncDiscordMember::dispatch($member);
+        //
+        //     $this->showSuccessToast('Recruitment completed! Forum account created for Discord user.');
+        //
+        //     return;
+        // }
 
         $member = $this->recruitmentService->createMember(
             (int) $request->member_id,
@@ -123,16 +144,18 @@ class RecruitingController extends Controller
             ])
             ->get();
 
-        $pendingDiscord = User::pendingDiscord()
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(fn ($u) => [
-                'id' => $u->id,
-                'discord_username' => $u->discord_username,
-                'discord_id' => $u->discord_id,
-                'email' => $u->email,
-                'created_at' => $u->created_at->diffForHumans(),
-            ]);
+        // @todo Re-enable when ready for Discord recruitment flow
+        // $pendingDiscord = User::pendingDiscord()
+        //     ->orderBy('created_at', 'desc')
+        //     ->get()
+        //     ->map(fn ($u) => [
+        //         'id' => $u->id,
+        //         'discord_username' => $u->discord_username,
+        //         'discord_id' => $u->discord_id,
+        //         'email' => $u->email,
+        //         'created_at' => $u->created_at->diffForHumans(),
+        //     ]);
+        $pendingDiscord = collect();
 
         return response()->json([
             'platoons' => $platoons->map(fn ($p) => [
