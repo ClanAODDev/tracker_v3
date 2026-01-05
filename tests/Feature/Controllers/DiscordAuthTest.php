@@ -2,8 +2,11 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\ForumGroup;
+use App\Enums\Role;
 use App\Models\Member;
 use App\Models\User;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -317,5 +320,67 @@ class DiscordAuthTest extends TestCase
         $this->assertCount(2, $pendingUsers);
         $this->assertTrue($pendingUsers->contains($pendingUser1));
         $this->assertTrue($pendingUsers->contains($pendingUser2));
+    }
+
+    public function test_discord_callback_syncs_forum_roles_for_new_user(): void
+    {
+        $member = Member::factory()->create([
+            'discord_id' => '123456789',
+            'clan_id' => 99999,
+        ]);
+
+        $this->mockDiscordUser([
+            'id' => '123456789',
+            'nickname' => 'SeniorLeader',
+            'email' => 'leader@example.com',
+        ]);
+
+        $this->mock(ForumProcedureService::class, function ($mock) {
+            $mock->shouldReceive('getUser')
+                ->with(99999)
+                ->andReturn((object) [
+                    'usergroupid' => ForumGroup::SERGEANT->value,
+                    'membergroupids' => '',
+                ]);
+        });
+
+        $this->get(route('auth.discord.callback'));
+
+        $user = User::where('member_id', $member->id)->first();
+        $this->assertNotNull($user);
+        $this->assertEquals(Role::SENIOR_LEADER, $user->role);
+    }
+
+    public function test_discord_callback_syncs_forum_roles_for_existing_user(): void
+    {
+        $member = Member::factory()->create([
+            'discord_id' => '987654321',
+            'clan_id' => 88888,
+        ]);
+        $user = User::factory()->create([
+            'member_id' => $member->id,
+            'discord_id' => '987654321',
+            'role' => Role::MEMBER,
+        ]);
+
+        $this->mockDiscordUser([
+            'id' => '987654321',
+            'nickname' => 'PromotedOfficer',
+            'email' => 'officer@example.com',
+        ]);
+
+        $this->mock(ForumProcedureService::class, function ($mock) {
+            $mock->shouldReceive('getUser')
+                ->with(88888)
+                ->andReturn((object) [
+                    'usergroupid' => ForumGroup::ADMIN->value,
+                    'membergroupids' => '',
+                ]);
+        });
+
+        $this->get(route('auth.discord.callback'));
+
+        $user->refresh();
+        $this->assertEquals(Role::ADMIN, $user->role);
     }
 }
