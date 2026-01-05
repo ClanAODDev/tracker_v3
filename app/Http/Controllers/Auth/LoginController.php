@@ -150,25 +150,14 @@ class LoginController extends Controller
         if ($this->validatesCredentials($request)) {
             $username = str_replace('aod_', '', strtolower($request->username));
 
-            if ($user = User::whereName($username)->first()) {
-                // login existing account, look for superficial changes
-                $this->checkForUpdates($user);
-                Auth::login($user);
-            } else {
-                // ensure this is an active member
-                $member = Member::where('name', $username)->first();
-                if (! $member) {
-                    return false;
-                }
-
-                $user = User::create([
-                    'email' => $this->email,
-                    'name' => $username,
-                    'member_id' => $member->id,
-                ]);
-
-                Auth::login($user);
+            $member = Member::where('name', $username)->first();
+            if (! $member) {
+                return false;
             }
+
+            $user = User::findOrCreateForMember($member, $this->email);
+
+            Auth::login($user);
 
             app(ClanForumPermissions::class)->handleAccountRoles(
                 $user->member->clan_id,
@@ -179,15 +168,5 @@ class LoginController extends Controller
         }
 
         return false;
-    }
-
-    /**
-     * Update user's email if updated.
-     */
-    private function checkForUpdates($user)
-    {
-        if ($user->email !== $this->email) {
-            $user->update(['email' => $this->email]);
-        }
     }
 }

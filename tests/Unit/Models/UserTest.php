@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -226,5 +227,90 @@ class UserTest extends TestCase
 
         $this->assertTrue($results->contains($adminUser));
         $this->assertFalse($results->contains($regularUser));
+    }
+
+    public function test_find_or_create_for_member_creates_new_user()
+    {
+        $member = Member::factory()->create();
+
+        $user = User::findOrCreateForMember($member, 'test@example.com');
+
+        $this->assertNotNull($user);
+        $this->assertEquals($member->id, $user->member_id);
+        $this->assertEquals('test@example.com', $user->email);
+        $this->assertEquals(Role::MEMBER, $user->role);
+    }
+
+    public function test_find_or_create_for_member_returns_existing_user()
+    {
+        $member = Member::factory()->create();
+        $existingUser = User::factory()->create([
+            'member_id' => $member->id,
+            'email' => 'existing@example.com',
+        ]);
+
+        $user = User::findOrCreateForMember($member, 'new@example.com');
+
+        $this->assertEquals($existingUser->id, $user->id);
+    }
+
+    public function test_find_or_create_for_member_updates_email_if_changed_and_available()
+    {
+        $member = Member::factory()->create();
+        $existingUser = User::factory()->create([
+            'member_id' => $member->id,
+            'email' => 'old@example.com',
+        ]);
+
+        $user = User::findOrCreateForMember($member, 'new@example.com');
+
+        $this->assertEquals('new@example.com', $user->fresh()->email);
+    }
+
+    public function test_find_or_create_for_member_does_not_update_email_if_taken()
+    {
+        User::factory()->create(['email' => 'taken@example.com']);
+
+        $member = Member::factory()->create();
+        $existingUser = User::factory()->create([
+            'member_id' => $member->id,
+            'email' => 'original@example.com',
+        ]);
+
+        $user = User::findOrCreateForMember($member, 'taken@example.com');
+
+        $this->assertEquals('original@example.com', $user->fresh()->email);
+    }
+
+    public function test_find_or_create_for_member_generates_placeholder_email_when_null()
+    {
+        $member = Member::factory()->create();
+
+        $user = User::findOrCreateForMember($member, null);
+
+        $this->assertStringContainsString('@placeholder.local', $user->email);
+    }
+
+    public function test_find_or_create_for_member_generates_placeholder_email_when_duplicate()
+    {
+        User::factory()->create(['email' => 'duplicate@example.com']);
+        $member = Member::factory()->create();
+
+        $user = User::findOrCreateForMember($member, 'duplicate@example.com');
+
+        $this->assertStringContainsString('@placeholder.local', $user->email);
+    }
+
+    public function test_find_or_create_for_member_does_not_update_email_when_null()
+    {
+        $member = Member::factory()->create();
+        $existingUser = User::factory()->create([
+            'member_id' => $member->id,
+            'email' => 'existing@example.com',
+        ]);
+
+        $user = User::findOrCreateForMember($member, null);
+
+        $this->assertEquals('existing@example.com', $user->fresh()->email);
     }
 }
