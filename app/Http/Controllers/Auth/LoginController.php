@@ -148,9 +148,7 @@ class LoginController extends Controller
     private function attemptLogin($request)
     {
         if ($this->validatesCredentials($request)) {
-            $username = str_replace('aod_', '', strtolower($request->username));
-
-            $member = Member::where('name', $username)->first();
+            $member = Member::where('clan_id', $this->clanId)->first();
             if (! $member) {
                 return false;
             }

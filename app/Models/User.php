@@ -421,8 +421,13 @@ class User extends Authenticatable implements FilamentUser
             $email = $member->id . '@placeholder.local';
         }
 
+        $name = strtolower($member->name);
+        if (self::where('name', $name)->exists()) {
+            $name = $name . '_' . $member->clan_id;
+        }
+
         return self::create([
-            'name' => strtolower($member->name),
+            'name' => $name,
             'email' => $email,
             'member_id' => $member->id,
             'role' => Role::MEMBER,
