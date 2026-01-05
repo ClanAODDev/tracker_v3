@@ -2,10 +2,7 @@ import JSZip from 'jszip';
 window.JSZip = JSZip;
 
 import ClipboardJS from 'clipboard';
-window.ClipboardJS = ClipboardJS;
-
-import toastr from 'toastr';
-window.toastr = toastr;
+window.Clipboard = ClipboardJS;
 
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-date-fns';
