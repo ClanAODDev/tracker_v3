@@ -4,6 +4,7 @@ namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Filament\Admin\Resources\TicketResource;
 use App\Notifications\Exception;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
@@ -14,34 +15,28 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via()
     {
         return [BotChannel::class];
     }
 
     /**
-     * @param  mixed  $notifiable
-     * @return array
-     *
      * @throws Exception
      */
     public function toBot($notifiable)
     {
-        $authoringUser = $notifiable->caller ? $notifiable->caller->name : 'UNK';
-
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title('ClanAOD Tracker')
             ->target('help')
             ->fields([
                 [
-                    'name' => "Ticket: {$notifiable->type->name} - {$authoringUser}",
-                    'value' => sprintf('[Open Ticket](%s)', route('help.tickets.show', $notifiable)),
+                    'name' => "Ticket: {$notifiable->type->name} - " . ($notifiable->caller
+                            ? $notifiable->caller->name
+                            : 'UNK'
+                        ),
+                    'value' => sprintf('[Open Ticket](%s)', TicketResource::getUrl('edit', [
+                        'record' => $notifiable
+                    ])),
                 ],
             ])
             ->info()
