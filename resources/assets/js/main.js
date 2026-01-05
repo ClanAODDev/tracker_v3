@@ -924,6 +924,10 @@ var Tracker = Tracker || {};
                 $(this).addClass('active');
                 $('.leaderboard-panel[data-panel="' + tabName + '"]').addClass('active');
             });
+
+            $('.leaderboard-card.animate-fade-in-up').on('animationend', function () {
+                $(this).removeClass('animate-fade-in-up').css('opacity', '');
+            });
         },
 
         InitInactiveTabs: function () {
@@ -1557,4 +1561,13 @@ var Tracker = Tracker || {};
 
 })(window.jQuery);
 
-Tracker.Setup();
+function initTracker() {
+    var $ = window.jQuery;
+    if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function') {
+        setTimeout(initTracker, 50);
+        return;
+    }
+    Tracker.Setup();
+}
+
+initTracker();

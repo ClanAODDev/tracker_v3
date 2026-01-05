@@ -1,9 +1,7 @@
 import _ from 'lodash';
-import toastr from 'toastr';
 import axios from 'axios';
 
 window._ = _;
-window.toastr = toastr;
 window.axios = axios;
 
 if (axios.defaults && axios.defaults.headers && axios.defaults.headers.common) {
@@ -18,8 +16,10 @@ if (axios.defaults && axios.defaults.headers && axios.defaults.headers.common) {
     };
 }
 
-toastr.options = {
-    'preventDuplicates': true,
-    'progressBar': true,
-    'positionClass': 'toast-top-right',
-};
+if (window.toastr) {
+    window.toastr.options = {
+        'preventDuplicates': true,
+        'progressBar': true,
+        'positionClass': 'toast-top-right',
+    };
+}

@@ -14,13 +14,6 @@ class TrainingController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        $this->authorize('train', auth()->user());
-
-        return view('training.index');
-    }
-
     public function show(string $slug, Request $request)
     {
         $this->authorize('train', auth()->user());

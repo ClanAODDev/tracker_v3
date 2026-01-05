@@ -68,28 +68,14 @@
                 <h4 class="retention-chart-title">
                     <i class="fa fa-chart-area"></i> Retention Trends
                 </h4>
-                <div class="retention-chart-legend">
-                    <span class="retention-legend-item">
-                        <span class="retention-legend-dot retention-legend-dot--recruits"></span>
-                        Recruited
-                    </span>
-                    <span class="retention-legend-item">
-                        <span class="retention-legend-dot retention-legend-dot--removals"></span>
-                        Removed
-                    </span>
-                    <span class="retention-legend-item">
-                        <span class="retention-legend-dot retention-legend-dot--population"></span>
-                        Population
-                    </span>
-                </div>
             </div>
             <div class="retention-chart-body">
-                <div class="flot-chart">
-                    <div class="flot-chart-content" id="retention-chart"
+                <div class="chart-wrapper" style="height: 300px;">
+                    <canvas id="retention-chart"
                          data-recruits="{{ $recruits }}"
                          data-removals="{{ $removals }}"
                          data-population="{{ $population }}"
-                    ></div>
+                    ></canvas>
                 </div>
             </div>
         </div>
