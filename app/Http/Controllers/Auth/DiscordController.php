@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
@@ -27,6 +28,10 @@ class DiscordController extends Controller
         if ($user) {
             Auth::login($user, true);
 
+            if ($user->member) {
+                app(ClanForumPermissions::class)->handleAccountRoles($user->member->clan_id);
+            }
+
             return $user->isPendingRegistration()
                 ? redirect()->route('auth.discord.pending')
                 : redirect()->intended('/');
@@ -42,6 +47,8 @@ class DiscordController extends Controller
             ]);
 
             Auth::login($user, true);
+
+            app(ClanForumPermissions::class)->handleAccountRoles($member->clan_id);
 
             return redirect()->intended('/');
         }
