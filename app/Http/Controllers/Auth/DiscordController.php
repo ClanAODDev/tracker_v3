@@ -47,7 +47,7 @@ class DiscordController extends Controller
         }
 
         return redirect()->route('login')->withErrors([
-            'discord' => 'Your Discord account is not linked to an AOD member. Please ensure your Discord is linked on the AOD forums, then try again.',
+            'discord' => 'Your Discord account is not linked to an AOD member. Please ensure you have completed the auth link process, and try again..',
         ]);
 
         // @todo Re-enable new account creation when ready for recruitment flow
