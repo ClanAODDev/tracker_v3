@@ -8,8 +8,11 @@ use App\Models\TicketType;
 use App\Settings\UserSettings;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use SocialiteProviders\Discord\DiscordExtendSocialite;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         TicketType::observe(TicketTypeObserver::class);
 
         Paginator::useBootstrap();
+
+        Event::listen(SocialiteWasCalled::class, DiscordExtendSocialite::class . '@handle');
     }
 
     /**

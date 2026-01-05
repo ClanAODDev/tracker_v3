@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -165,5 +166,133 @@ class RecruitingControllerTest extends TestCase
             'rank' => Rank::RECRUIT->value,
             'justification' => 'New recruit',
         ]);
+    }
+
+    public function test_get_division_recruit_data_excludes_pending_discord_users(): void
+    {
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+
+        User::factory()->pending()->create([
+            'discord_username' => 'PendingUser1',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->getJson(route('recruiting.divisionData', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonPath('pending_discord', []);
+    }
+
+    /**
+     * @todo Enable when Discord recruitment is implemented
+     */
+    public function test_submit_discord_recruitment_creates_member(): void
+    {
+        $this->markTestSkipped('Discord recruitment is currently disabled');
+
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create();
+
+        $response = $this->actingAs($officer)
+            ->post(route('recruiting.addMember'), [
+                'division' => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name' => 'DiscordRecruit',
+                'rank' => Rank::RECRUIT->value,
+                'platoon' => $platoon->id,
+                'ingame_name' => 'GameHandle',
+            ]);
+
+        $this->assertDatabaseHas('members', [
+            'name' => 'DiscordRecruit',
+            'division_id' => $division->id,
+        ]);
+
+        $pendingUser->refresh();
+        $this->assertNotNull($pendingUser->member_id);
+    }
+
+    /**
+     * @todo Enable when Discord recruitment is implemented
+     */
+    public function test_submit_discord_recruitment_returns_error_on_forum_creation_failure(): void
+    {
+        $this->markTestSkipped('Discord recruitment is currently disabled');
+
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create();
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division' => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name' => 'TakenName',
+                'rank' => Rank::RECRUIT->value,
+                'platoon' => $platoon->id,
+                'ingame_name' => 'GameHandle',
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('message', 'Forum account creation is not yet implemented.');
+    }
+
+    /**
+     * @todo Enable when Discord recruitment is implemented
+     */
+    public function test_submit_discord_recruitment_rejects_invalid_pending_user(): void
+    {
+        $this->markTestSkipped('Discord recruitment is currently disabled');
+
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon = $this->createPlatoon($division);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division' => $division->slug,
+                'pending_user_id' => 99999,
+                'forum_name' => 'TestRecruit',
+                'rank' => Rank::RECRUIT->value,
+                'platoon' => $platoon->id,
+                'ingame_name' => 'GameHandle',
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('message', 'Pending Discord user not found.');
+    }
+
+    /**
+     * @todo Enable when Discord recruitment is implemented
+     */
+    public function test_submit_discord_recruitment_links_user_to_member(): void
+    {
+        $this->markTestSkipped('Discord recruitment is currently disabled');
+
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create([
+            'discord_id' => '123456789',
+            'discord_username' => 'TestDiscord',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->post(route('recruiting.addMember'), [
+                'division' => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name' => 'LinkedRecruit',
+                'rank' => Rank::RECRUIT->value,
+                'platoon' => $platoon->id,
+                'ingame_name' => 'GameHandle',
+            ]);
+
+        $pendingUser->refresh();
+        $this->assertNotNull($pendingUser->member_id);
+        $this->assertFalse($pendingUser->isPendingRegistration());
     }
 }
