@@ -104,7 +104,7 @@ class AODForumService
         return self::request(self::INFO_URL, $params);
     }
 
-    public static function authenticate(string $username, string $password): ?array
+    public function authenticate(string $username, string $password): ?array
     {
         try {
             $results = DB::connection('aod_forums')
