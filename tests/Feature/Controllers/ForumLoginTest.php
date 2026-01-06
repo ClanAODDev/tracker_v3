@@ -9,11 +9,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tests\TestCase;
 
-/**
- * @runTestsInSeparateProcesses
- *
- * @preserveGlobalState disabled
- */
 class ForumLoginTest extends TestCase
 {
     use RefreshDatabase;
