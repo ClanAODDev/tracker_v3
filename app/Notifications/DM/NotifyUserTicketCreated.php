@@ -22,7 +22,7 @@ class NotifyUserTicketCreated extends Notification implements ShouldQueue
     {
         $ticketUrl = route('help.tickets.show', $ticket);
 
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($ticket->caller?->member?->discord)
             ->message("Your ticket ({$ticketUrl}) has been created. Any future updates to your ticket will be sent here.")
             ->send();

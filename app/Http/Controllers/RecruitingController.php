@@ -172,7 +172,7 @@ class RecruitingController extends Controller
             ]),
             'threads' => collect($threads)->map(fn ($t) => [
                 'name' => $t['thread_name'] ?? '',
-                'id' => $t['thread_id'] ?? '',
+                'url' => $t['thread_url'] ?? '',
                 'comments' => $t['comments'] ?? '',
                 'read' => false,
             ]),

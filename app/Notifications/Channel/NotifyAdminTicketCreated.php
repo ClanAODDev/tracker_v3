@@ -33,9 +33,9 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
                     'name' => "Ticket: {$notifiable->type->name} - " . ($notifiable->caller
                             ? $notifiable->caller->name
                             : 'UNK'
-                        ),
+                    ),
                     'value' => sprintf('[Open Ticket](%s)', TicketResource::getUrl('edit', [
-                        'record' => $notifiable
+                        'record' => $notifiable,
                     ])),
                 ],
             ])

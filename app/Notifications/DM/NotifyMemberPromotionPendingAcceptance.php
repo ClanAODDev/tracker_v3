@@ -47,7 +47,7 @@ class NotifyMemberPromotionPendingAcceptance extends Notification implements Sho
 
         Log::info($route);
 
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($notifiable->discord_id)
             ->message(sprintf(
                 "**Congratulations!** You have received a promotion! Visit the following URL to accept or decline this promotion!\r\n\r\n[View Promotion](%s)",

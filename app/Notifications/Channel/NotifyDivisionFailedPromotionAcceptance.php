@@ -34,7 +34,7 @@ class NotifyDivisionFailedPromotionAcceptance extends Notification implements Sh
      */
     public function toBot($notifiable)
     {
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title($notifiable->name . ' Division')
             ->target('officers')
             ->thumbnail($notifiable->getLogoPath())

@@ -15,7 +15,7 @@ trait AuthenticatesWithAOD
 
     protected function validatesCredentials(Request $request): bool
     {
-        $result = AODForumService::authenticate(
+        $result = app(AODForumService::class)->authenticate(
             $request->input('username'),
             $request->input('password')
         );

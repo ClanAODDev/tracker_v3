@@ -39,7 +39,7 @@ class NotifyDivisionMemberAwarded extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail(asset(Storage::url($this->award->image)))->fields([

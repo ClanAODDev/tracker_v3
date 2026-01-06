@@ -87,7 +87,7 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
         $baseUrl = route('filament.mod.resources.transfers.index');
         $manageUrl = $baseUrl . $queryString;
 
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title("{$notifiable->name} Division")
             ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())

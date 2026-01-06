@@ -38,7 +38,7 @@ class NotifyRequesterAwardDenied extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($notifiable->discord_id)
             ->message(sprintf(
                 'Unfortunately the award [%s] you requested for %s was denied - . The reason for the denial was: %s',

@@ -56,7 +56,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
             ? ['name' => 'Reason', 'value' => $this->removalReason]
             : null;
 
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())->fields(array_values(array_filter([

@@ -18,7 +18,7 @@ class NotifyNewTicketOwner extends BaseNotification
 
     public function toBot($ticket): array
     {
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($this->assignedOwner->member?->discord)
             ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . ") by {$this->oldUser->name}")
             ->send();

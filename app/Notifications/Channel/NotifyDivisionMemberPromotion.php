@@ -33,7 +33,7 @@ class NotifyDivisionMemberPromotion extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title($notifiable->name . ' Division')
             ->target($notifiable->settings()->get('chat_alerts.member_promoted'))
             ->thumbnail($notifiable->getLogoPath())
