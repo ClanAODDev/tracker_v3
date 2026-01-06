@@ -208,7 +208,7 @@
                 <input type="checkbox" v-model="thread.read" />
                 <div class="agreement-details">
                   <span class="agreement-name">
-                    <a :href="getThreadUrl(thread.id)" target="_blank">
+                    <a :href="thread.url" target="_blank">
                       {{ thread.name }}
                     </a>
                   </span>
@@ -394,13 +394,8 @@ export default {
       store.loadDivisionData(this.divisionSlug);
     },
 
-    getThreadUrl(threadId) {
-      return `https://www.clanaod.net/forums/showthread.php?t=${threadId}`;
-    },
-
     copyThreadUrl(thread) {
-      const url = this.getThreadUrl(thread.id);
-      navigator.clipboard.writeText(url).then(() => {
+      navigator.clipboard.writeText(thread.url).then(() => {
         thread.read = true;
         toastr.success('URL copied to clipboard');
       });

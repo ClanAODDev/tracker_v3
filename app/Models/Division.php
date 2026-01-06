@@ -77,8 +77,8 @@ class Division extends Model
         ],
 
         'recruiting_threads' => [
-            ['thread_name' => 'AOD Code of Conduct', 'thread_id' => 3327, 'comments' => ''],
-            ['thread_name' => 'AOD Ranking Structure', 'thread_id' => 3326, 'comments' => ''],
+            ['thread_name' => 'AOD Code of Conduct', 'thread_url' => "https://www.clanaod.net/forums/showthread.php?t=3327", 'comments' => ''],
+            ['thread_name' => 'AOD Ranking Structure', 'thread_url' => "https://www.clanaod.net/forums/showthread.php?t=3326", 'comments' => ''],
         ],
 
         'recruiting_tasks' => [
