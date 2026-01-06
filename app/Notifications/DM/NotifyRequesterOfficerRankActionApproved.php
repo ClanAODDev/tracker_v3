@@ -37,7 +37,7 @@ class NotifyRequesterOfficerRankActionApproved extends Notification implements S
      */
     public function toBot($notifiable)
     {
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($notifiable->discord_id)
             ->message(sprintf(
                 '*Action required*: An officer rank action you requested [%s to %s] was approved. Please coordinate with the member to award the promotion.',

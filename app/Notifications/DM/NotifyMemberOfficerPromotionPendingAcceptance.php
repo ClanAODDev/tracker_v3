@@ -47,7 +47,7 @@ class NotifyMemberOfficerPromotionPendingAcceptance extends Notification impleme
 
         Log::info($route);
 
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($notifiable->discord_id)
             ->message(sprintf(
                 "**Congratulations on your promotion!**! Visit the following URL to accept or decline this promotion!\r\n\r\n[View Promotion](%s)",

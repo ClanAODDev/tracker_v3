@@ -13,7 +13,7 @@ class TestChannelNotification extends BaseNotification
 
     public function toBot($notifiable): array
     {
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title('Channel Test')
             ->target($this->target)
             ->thumbnail($notifiable->getLogoPath())

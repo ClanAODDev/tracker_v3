@@ -38,7 +38,7 @@ class NotifyRequesterRankActionDenied extends Notification implements ShouldQueu
      */
     public function toBot($notifiable)
     {
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($notifiable->discord_id)
             ->message(sprintf(
                 'A rank action you requested [%s to %s] was denied. The reason for the denial was: %s',

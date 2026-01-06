@@ -43,7 +43,7 @@ class TicketReaction extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotReactMessage($notifiable))
+        return new BotReactMessage($notifiable)
             ->status($this->status)
             ->send();
     }

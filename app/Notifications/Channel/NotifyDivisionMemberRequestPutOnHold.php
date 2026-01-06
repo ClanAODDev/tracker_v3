@@ -18,7 +18,7 @@ class NotifyDivisionMemberRequestPutOnHold extends BaseNotification
 
     public function toBot($notifiable): array
     {
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title($notifiable->name . ' Division')
             ->target('officers')
             ->thumbnail($notifiable->getLogoPath())

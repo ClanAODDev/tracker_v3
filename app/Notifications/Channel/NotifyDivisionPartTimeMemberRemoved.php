@@ -51,7 +51,7 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
     {
         $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
 
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title($this->primaryDivision->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($this->primaryDivision->getLogoPath())

@@ -31,7 +31,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
             return [];
         }
 
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($ticket->owner?->member?->discord)
             ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
             ->send();

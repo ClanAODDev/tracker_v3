@@ -21,7 +21,7 @@ class NotifyAdminSgtRequestPending extends BaseNotification
     {
         $url = route('filament.admin.resources.rank-actions.edit', $this->rankActionId);
 
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title('SGT+ Request')
             ->target('admin')
             ->message(sprintf(

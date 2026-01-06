@@ -33,7 +33,7 @@ class NotifyAdminSgtRequestComplete extends Notification
 
     public function toBot($notifiable)
     {
-        return (new BotChannelMessage($notifiable))
+        return new BotChannelMessage($notifiable)
             ->title('SGT+ Request')
             ->target('admin')
             ->message(sprintf(

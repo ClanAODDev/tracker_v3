@@ -36,7 +36,7 @@ class NotifyMemberAwardReceived extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
-        return (new BotDMMessage)
+        return new BotDMMessage()
             ->to($notifiable->discord_id)
             ->message(sprintf(
                 'Congratulations - you received an award! %s. This award has been added to [your profile](%s)',
