@@ -6,7 +6,6 @@ use App\Models\Member;
 use App\Models\User;
 use App\Services\AODForumService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
 use Tests\TestCase;
 
 class ForumLoginTest extends TestCase
@@ -27,7 +26,7 @@ class ForumLoginTest extends TestCase
         $user1 = User::factory()->create(['member_id' => $member1->id]);
         $user2 = User::factory()->create(['member_id' => $member2->id]);
 
-        Mockery::mock('alias:' . AODForumService::class)
+        $this->mock(AODForumService::class)
             ->shouldReceive('authenticate')
             ->andReturn([
                 'clan_id' => 22222,
