@@ -40,9 +40,11 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
             return [];
         }
 
+        $ticketUrl = url('/?ticket=' . $ticket->id);
+
         return new BotDMMessage()
             ->to($ticket->caller?->member?->discord)
-            ->message('Your ticket (' . route('help.tickets.show', $ticket) . ") has been updated: {$this->update}")
+            ->message("Your ticket ({$ticketUrl}) has been updated: {$this->update}")
             ->send();
     }
 }

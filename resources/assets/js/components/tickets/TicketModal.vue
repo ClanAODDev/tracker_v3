@@ -40,9 +40,12 @@ export default {
 
   mounted() {
     window.openTicketModal = this.open;
+    window.openTicketModalWithTicket = this.openWithTicket;
     window.closeTicketModal = this.close;
 
     document.addEventListener('keydown', this.handleEscape);
+
+    this.checkUrlForTicket();
   },
 
   beforeUnmount() {
@@ -59,16 +62,41 @@ export default {
       store.loadTicketTypes();
     },
 
+    openWithTicket(ticketId) {
+      this.isOpen = true;
+      document.body.classList.add('ticket-modal-open');
+      store.loadTickets();
+      store.loadTicketTypes();
+      store.setView('detail', ticketId);
+    },
+
     close() {
       this.isOpen = false;
       document.body.classList.remove('ticket-modal-open');
       store.stopPolling();
       store.markAllSeen();
+      this.clearUrlTicket();
     },
 
     handleEscape(e) {
       if (e.key === 'Escape' && this.isOpen) {
         this.close();
+      }
+    },
+
+    checkUrlForTicket() {
+      const params = new URLSearchParams(window.location.search);
+      const ticketId = params.get('ticket');
+      if (ticketId) {
+        this.openWithTicket(parseInt(ticketId, 10));
+      }
+    },
+
+    clearUrlTicket() {
+      const url = new URL(window.location);
+      if (url.searchParams.has('ticket')) {
+        url.searchParams.delete('ticket');
+        window.history.replaceState({}, '', url);
       }
     },
   },
