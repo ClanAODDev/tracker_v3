@@ -45,7 +45,7 @@
                                 {{ $remindedToday ? 'disabled' : '' }}>
                             <i class="fa fa-bell"></i>
                             @if($member->last_activity_reminder_at)
-                                <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j') }}</span>
+                                <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j/y') }}</span>
                             @endif
                         </button>
                     </td>
