@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\TicketType;
 use App\Notifications\Channel\NotifyAdminTicketCreated;
+use App\Notifications\Channel\NotifyAdminTicketUpdated;
 use App\Notifications\DM\NotifyCallerTicketUpdated;
 use App\Notifications\DM\NotifyNewTicketOwner;
 use App\Notifications\DM\NotifyUserTicketCreated;
@@ -159,7 +160,7 @@ class TicketNotificationServiceTest extends TestCase
 
         $this->service->notifyTicketResolved($ticket);
 
-        Notification::assertSentTo($caller, NotifyCallerTicketUpdated::class);
+        Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
     public function test_notify_ticket_rejected_sends_reaction()
@@ -187,7 +188,7 @@ class TicketNotificationServiceTest extends TestCase
 
         $this->service->notifyTicketRejected($ticket, 'Duplicate request');
 
-        Notification::assertSentTo($caller, NotifyCallerTicketUpdated::class);
+        Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
     public function test_notify_comment_added_does_not_notify_when_commenter_is_caller()
@@ -207,6 +208,71 @@ class TicketNotificationServiceTest extends TestCase
 
         $this->service->notifyCommentAdded($ticket, $comment);
 
-        Notification::assertNotSentTo($caller, NotifyCallerTicketUpdated::class);
+        Notification::assertNotSentTo($ticket, NotifyCallerTicketUpdated::class);
+    }
+
+    public function test_notify_comment_added_notifies_caller_when_admin_comments()
+    {
+        $caller = $this->createMemberWithUser();
+        $admin = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'caller_id' => $caller->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $comment = TicketComment::factory()->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $admin->id,
+            'body' => 'Admin response',
+        ]);
+
+        $this->service->notifyCommentAdded($ticket, $comment);
+
+        Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
+    }
+
+    public function test_notify_comment_added_notifies_owner_when_caller_comments()
+    {
+        $caller = $this->createMemberWithUser();
+        $owner = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'caller_id' => $caller->id,
+            'owner_id' => $owner->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $comment = TicketComment::factory()->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $caller->id,
+            'body' => 'Caller follow-up',
+        ]);
+
+        $this->service->notifyCommentAdded($ticket, $comment);
+
+        Notification::assertSentTo($ticket, NotifyAdminTicketUpdated::class);
+    }
+
+    public function test_notify_comment_added_does_not_notify_owner_when_owner_comments()
+    {
+        $caller = $this->createMemberWithUser();
+        $owner = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'caller_id' => $caller->id,
+            'owner_id' => $owner->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $comment = TicketComment::factory()->create([
+            'ticket_id' => $ticket->id,
+            'user_id' => $owner->id,
+            'body' => 'Owner comment',
+        ]);
+
+        $this->service->notifyCommentAdded($ticket, $comment);
+
+        Notification::assertNotSentTo($ticket, NotifyAdminTicketUpdated::class);
     }
 }
