@@ -39,7 +39,7 @@
     ]
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-DaZoQsah.js",
+    "file": "assets/main-BnFRR4V5.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true
@@ -76,7 +76,7 @@
     ]
   },
   "resources/assets/js/tickets.js": {
-    "file": "assets/tickets-Iv9rTRcW.js",
+    "file": "assets/tickets-C1Q4KLT1.js",
     "name": "tickets",
     "src": "resources/assets/js/tickets.js",
     "isEntry": true,
@@ -85,7 +85,7 @@
       "__commonjsHelpers-Cpj98o6Y.js"
     ],
     "css": [
-      "assets/tickets-tzPOxMf7.css"
+      "assets/tickets-C6BaQFOF.css"
     ]
   },
   "resources/assets/js/training.js": {

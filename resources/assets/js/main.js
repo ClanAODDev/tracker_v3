@@ -938,6 +938,24 @@ var Tracker = Tracker || {};
             if (!$tabs.length) return;
 
             Tracker.pendingTabRefresh = { inactive: false, flagged: false };
+            Tracker.inactiveTables = {};
+
+            $('.inactive-table').each(function () {
+                var $table = $(this);
+                var tableId = $table.closest('.inactive-panel').data('panel') || 'default';
+
+                Tracker.inactiveTables[tableId] = $table.DataTable({
+                    paging: false,
+                    info: false,
+                    searching: true,
+                    order: [[2, 'asc']],
+                    columnDefs: [
+                        { targets: 0, orderable: false, visible: false },
+                        { targets: -1, orderable: false }
+                    ],
+                    dom: 't'
+                });
+            });
 
             function activateTab(tabName, skipRefreshCheck) {
                 if (!skipRefreshCheck && Tracker.pendingTabRefresh[tabName]) {
@@ -954,6 +972,10 @@ var Tracker = Tracker || {};
 
                 if ($searchInput.val()) {
                     Tracker.FilterInactiveTable($searchInput.val());
+                }
+
+                if (Tracker.inactiveTables[tabName]) {
+                    Tracker.inactiveTables[tabName].columns.adjust();
                 }
             }
 
@@ -976,11 +998,11 @@ var Tracker = Tracker || {};
         },
 
         FilterInactiveTable: function (filter) {
-            filter = filter.toLowerCase();
-            $('.inactive-panel.active tbody tr').each(function () {
-                var text = $(this).text().toLowerCase();
-                $(this).toggle(text.indexOf(filter) !== -1);
-            });
+            var activePanel = $('.inactive-panel.active').data('panel');
+            var table = Tracker.inactiveTables && Tracker.inactiveTables[activePanel];
+            if (table) {
+                table.search(filter).draw();
+            }
         },
 
         InitParttimerSearch: function () {
@@ -1374,8 +1396,13 @@ var Tracker = Tracker || {};
                 bulkMode = !bulkMode;
                 var $btn = $(this);
                 $btn.toggleClass('active', bulkMode);
-                $('.inactive-bulk-col').toggle(bulkMode);
                 $('.inactive-table').toggleClass('bulk-mode', bulkMode);
+
+                if (Tracker.inactiveTables) {
+                    Object.values(Tracker.inactiveTables).forEach(function(table) {
+                        table.column(0).visible(bulkMode);
+                    });
+                }
 
                 if (bulkMode) {
                     $btn.html('<i class="fa fa-times"></i> Exit Bulk Mode');
