@@ -28,23 +28,48 @@
     </div>
 
     <div v-if="inModal" class="modal-actions m-b-md">
-      <button
-        v-if="store.currentView !== 'list'"
-        class="btn btn-default btn-sm"
-        @click="store.setView('list')"
-      >
-        <i class="fa fa-arrow-left"></i> Back
-      </button>
-      <button
-        v-else
-        class="btn btn-primary btn-sm"
-        @click="showTypeSelector"
-      >
-        <i class="fa fa-plus"></i> New Ticket
-      </button>
+      <div class="actions-row">
+        <button
+          v-if="store.currentView !== 'list'"
+          class="btn btn-default btn-sm"
+          @click="store.setView('list')"
+        >
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+
+        <div v-else-if="store.isAdmin" class="view-toggle">
+          <div class="toggle-track" :class="{ 'admin-active': store.viewMode === 'admin' }">
+            <div class="toggle-indicator"></div>
+            <button
+              class="toggle-btn"
+              :class="{ active: store.viewMode === 'user' }"
+              @click="store.setViewMode('user')"
+            >
+              <i class="fa fa-user m-r-xs"></i>
+              <span class="toggle-label">My Tickets</span>
+            </button>
+            <button
+              class="toggle-btn"
+              :class="{ active: store.viewMode === 'admin' }"
+              @click="store.setViewMode('admin')"
+            >
+              <i class="fa fa-shield m-r-xs"></i>
+              <span class="toggle-label">Admin Queue</span>
+            </button>
+          </div>
+        </div>
+
+        <button
+          v-if="store.currentView === 'list' && store.viewMode === 'user'"
+          class="btn btn-primary btn-sm ml-auto"
+          @click="showTypeSelector"
+        >
+          <i class="fa fa-plus"></i> New Ticket
+        </button>
+      </div>
     </div>
 
-    <div v-if="store.currentView === 'list' && store.tickets.length > 0" class="row quick-stats m-b-md">
+    <div v-if="store.currentView === 'list' && displayTickets.length > 0" class="row quick-stats m-b-md">
       <div class="col-md-3 col-sm-6">
         <div class="panel panel-filled">
           <div class="panel-body">
@@ -52,7 +77,7 @@
               <i class="fa fa-life-ring text-info"></i>
             </div>
             <div class="stat-content">
-              <span class="stat-value">{{ store.tickets.length }}</span>
+              <span class="stat-value">{{ displayTickets.length }}</span>
               <span class="stat-label">Total</span>
             </div>
           </div>
@@ -156,14 +181,17 @@ export default {
   },
 
   computed: {
+    displayTickets() {
+      return store.viewMode === 'admin' ? store.adminTickets : store.tickets;
+    },
     openCount() {
-      return store.tickets.filter(t => t.state === 'new').length;
+      return this.displayTickets.filter(t => t.state === 'new').length;
     },
     assignedCount() {
-      return store.tickets.filter(t => t.state === 'assigned').length;
+      return this.displayTickets.filter(t => t.state === 'assigned').length;
     },
     resolvedCount() {
-      return store.tickets.filter(t => t.state === 'resolved' || t.state === 'rejected').length;
+      return this.displayTickets.filter(t => t.state === 'resolved' || t.state === 'rejected').length;
     },
   },
 
@@ -268,5 +296,97 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.view-toggle {
+  display: flex;
+}
+
+.toggle-track {
+  display: flex;
+  position: relative;
+  background: var(--overlay-dark);
+  border-radius: 8px;
+  padding: 4px;
+  border: 1px solid var(--overlay-light);
+}
+
+.toggle-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 80%, #000));
+  border-radius: 6px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-track.admin-active .toggle-indicator {
+  transform: translateX(100%);
+}
+
+.toggle-btn {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.toggle-btn:hover {
+  color: var(--color-gray-300);
+}
+
+.toggle-btn.active {
+  color: var(--color-white);
+}
+
+.toggle-btn i {
+  font-size: 11px;
+}
+
+.toggle-label {
+  display: inline;
+}
+
+@media (max-width: 480px) {
+  .toggle-label {
+    display: none;
+  }
+
+  .toggle-btn {
+    padding: 8px 14px;
+  }
+
+  .toggle-btn i {
+    margin-right: 0 !important;
+  }
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.ml-auto {
+  margin-left: auto;
 }
 </style>

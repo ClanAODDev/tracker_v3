@@ -49,6 +49,82 @@
         </div>
       </div>
 
+      <div v-if="showAdminActions" class="admin-actions m-b-md">
+        <div v-if="store.errors.action" class="alert alert-danger m-b-sm">
+          <i class="fa fa-exclamation-circle m-r-xs"></i>
+          {{ store.errors.action }}
+        </div>
+        <div class="action-buttons">
+          <button
+            v-if="canAssign"
+            class="btn btn-info btn-sm"
+            :disabled="store.loading.action"
+            @click="assignToMe"
+          >
+            <i class="fa fa-hand-paper-o m-r-xs"></i> Assign to Me
+          </button>
+          <button
+            v-if="canResolve"
+            class="btn btn-success btn-sm"
+            :disabled="store.loading.action"
+            @click="resolveTicket"
+          >
+            <i class="fa fa-check m-r-xs"></i> Resolve
+          </button>
+          <button
+            v-if="canReject"
+            class="btn btn-danger btn-sm"
+            :disabled="store.loading.action"
+            @click="showRejectModal = true"
+          >
+            <i class="fa fa-times m-r-xs"></i> Reject
+          </button>
+          <button
+            v-if="canReopen"
+            class="btn btn-warning btn-sm"
+            :disabled="store.loading.action"
+            @click="reopenTicket"
+          >
+            <i class="fa fa-undo m-r-xs"></i> Reopen
+          </button>
+        </div>
+      </div>
+
+      <div v-if="showRejectModal" class="reject-modal-overlay" @click.self="showRejectModal = false">
+        <div class="reject-modal">
+          <div class="reject-modal-header">
+            <h5>Reject Ticket</h5>
+            <button type="button" class="close-btn" @click="showRejectModal = false">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="reject-modal-body">
+            <div class="form-group">
+              <label>Reason for rejection</label>
+              <textarea
+                v-model="rejectReason"
+                class="form-control"
+                rows="3"
+                placeholder="Explain why this ticket is being rejected..."
+              ></textarea>
+            </div>
+          </div>
+          <div class="reject-modal-footer">
+            <button class="btn btn-default btn-sm" @click="showRejectModal = false">Cancel</button>
+            <button
+              class="btn btn-danger btn-sm"
+              :disabled="rejectReason.length < 5 || store.loading.action"
+              @click="rejectTicket"
+            >
+              <span v-if="store.loading.action">
+                <span class="themed-spinner spinner-sm"></span> Rejecting...
+              </span>
+              <span v-else>Reject Ticket</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="ticket-sections">
         <div class="section-card">
           <div class="section-header">
@@ -170,6 +246,8 @@ export default {
   data() {
     return {
       store,
+      showRejectModal: false,
+      rejectReason: '',
     };
   },
 
@@ -189,6 +267,38 @@ export default {
       if (!store.currentTicket?.comments) return 0;
       return store.currentTicket.comments.filter(c => !this.isSystemMessage(c)).length;
     },
+
+    showAdminActions() {
+      return store.isAdmin && store.viewMode === 'admin';
+    },
+
+    currentUserId() {
+      return store.getCurrentUserId();
+    },
+
+    canAssign() {
+      const ticket = store.currentTicket;
+      if (!ticket) return false;
+      return ticket.state === 'new' || (ticket.state === 'assigned' && ticket.owner?.id !== this.currentUserId);
+    },
+
+    canResolve() {
+      const ticket = store.currentTicket;
+      if (!ticket) return false;
+      return ticket.state === 'new' || ticket.state === 'assigned';
+    },
+
+    canReject() {
+      const ticket = store.currentTicket;
+      if (!ticket) return false;
+      return ticket.state === 'new' || ticket.state === 'assigned';
+    },
+
+    canReopen() {
+      const ticket = store.currentTicket;
+      if (!ticket) return false;
+      return ticket.state === 'resolved' || ticket.state === 'rejected';
+    },
   },
 
   methods: {
@@ -200,6 +310,30 @@ export default {
 
     submitComment() {
       store.submitComment()
+        .catch(() => {});
+    },
+
+    assignToMe() {
+      store.ownTicket(store.currentTicket.id)
+        .catch(() => {});
+    },
+
+    resolveTicket() {
+      store.resolveTicket(store.currentTicket.id)
+        .catch(() => {});
+    },
+
+    rejectTicket() {
+      store.rejectTicket(store.currentTicket.id, this.rejectReason)
+        .then(() => {
+          this.showRejectModal = false;
+          this.rejectReason = '';
+        })
+        .catch(() => {});
+    },
+
+    reopenTicket() {
+      store.reopenTicket(store.currentTicket.id)
         .catch(() => {});
     },
 
@@ -598,5 +732,101 @@ export default {
 
 .p-md {
   padding: 30px;
+}
+
+.admin-actions {
+  background: var(--overlay-dark);
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.reject-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1060;
+}
+
+.reject-modal {
+  background: var(--color-bg-secondary);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.reject-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--overlay-light);
+}
+
+.reject-modal-header h5 {
+  margin: 0;
+  color: var(--color-white);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.close-btn:hover {
+  color: var(--color-white);
+}
+
+.reject-modal-body {
+  padding: 20px;
+}
+
+.reject-modal-body textarea {
+  background: var(--color-bg-input);
+  border: 1px solid var(--overlay-light);
+  color: var(--color-white);
+  resize: none;
+}
+
+.reject-modal-body textarea:focus {
+  background: var(--color-bg-input);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: none;
+}
+
+.reject-modal-body textarea::placeholder {
+  color: var(--color-muted);
+}
+
+.reject-modal-body label {
+  color: var(--color-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.reject-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid var(--overlay-light);
 }
 </style>
