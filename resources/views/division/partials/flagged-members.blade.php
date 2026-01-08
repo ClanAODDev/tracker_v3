@@ -3,7 +3,7 @@
         <table class="table inactive-table flagged-table">
             <thead>
             <tr>
-                <th class="inactive-bulk-col" style="display: none;"><input type="checkbox" class="flagged-select-all" title="Select All"></th>
+                <th class="inactive-bulk-col"><input type="checkbox" class="flagged-select-all" title="Select All"></th>
                 <th>Member</th>
                 <th>Last Voice Activity</th>
                 <th>Reminded</th>
@@ -14,7 +14,7 @@
             <tbody>
             @foreach ($flaggedMembers as $member)
                 <tr>
-                    <td class="inactive-bulk-col" style="display: none;"><input type="checkbox" class="flagged-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    <td class="inactive-bulk-col"><input type="checkbox" class="flagged-member-checkbox" value="{{ $member->clan_id }}"></td>
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
                             <span class="inactive-member-name">{{ $member->name }}</span>

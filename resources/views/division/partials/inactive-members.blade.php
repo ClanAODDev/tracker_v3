@@ -3,7 +3,7 @@
         <table class="table inactive-table">
             <thead>
             <tr>
-                <th class="inactive-bulk-col" style="display: none;"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
+                <th class="inactive-bulk-col"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
                 <th>Member</th>
                 <th>Last Voice Activity</th>
                 <th>Reminded</th>
@@ -25,7 +25,7 @@
                     $remindedToday = $member->last_activity_reminder_at?->isToday();
                 @endphp
                 <tr class="{{ $severityClass }}">
-                    <td class="inactive-bulk-col" style="display: none;"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    <td class="inactive-bulk-col"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
                             <span class="inactive-member-name">{{ $member->name }}</span>
