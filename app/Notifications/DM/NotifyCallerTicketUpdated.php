@@ -4,6 +4,7 @@ namespace App\Notifications\DM;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
+use App\Models\Ticket;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,37 +14,26 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
 {
     use Queueable, RetryableNotification;
 
-    private string $update;
+    public function __construct(
+        private Ticket $ticket,
+        private string $update
+    ) {}
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct($update)
-    {
-        $this->update = $update;
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function via()
     {
         return [BotChannel::class];
     }
 
-    public function toBot($ticket)
+    public function toBot($notifiable)
     {
-        if (! $ticket->caller?->settings()?->get('ticket_notifications')) {
+        if (! $this->ticket->caller?->settings()?->get('ticket_notifications')) {
             return [];
         }
 
-        $ticketUrl = url('/?ticket=' . $ticket->id);
+        $ticketUrl = url('/?ticket=' . $this->ticket->id);
 
         return new BotDMMessage()
-            ->to($ticket->caller?->member?->discord)
+            ->to($this->ticket->caller?->member?->discord)
             ->message("Your ticket ({$ticketUrl}) has been updated: {$this->update}")
             ->send();
     }

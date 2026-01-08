@@ -37,13 +37,13 @@ class TicketNotificationService
     public function notifyTicketResolved(Ticket $ticket): void
     {
         $ticket->notify(new TicketReaction('resolved'));
-        $ticket->caller->notify(new NotifyCallerTicketUpdated($ticket, 'Your ticket has been resolved.'));
+        $ticket->notify(new NotifyCallerTicketUpdated($ticket, 'Your ticket has been resolved.'));
     }
 
     public function notifyTicketRejected(Ticket $ticket, string $reason): void
     {
         $ticket->notify(new TicketReaction('rejected'));
-        $ticket->caller->notify(new NotifyCallerTicketUpdated($ticket, "Your ticket was rejected: {$reason}"));
+        $ticket->notify(new NotifyCallerTicketUpdated($ticket, "Your ticket was rejected: {$reason}"));
     }
 
     public function notifyCommentAdded(Ticket $ticket, TicketComment $comment): void
@@ -51,13 +51,9 @@ class TicketNotificationService
         $isAdminComment = $comment->user?->isRole('admin');
 
         if ($isAdminComment && $ticket->caller_id !== $comment->user_id) {
-            if ($ticket->caller?->ticket_notifications) {
-                $ticket->caller->notify(new NotifyCallerTicketUpdated($ticket, $comment->body));
-            }
+            $ticket->notify(new NotifyCallerTicketUpdated($ticket, $comment->body));
         } elseif (! $isAdminComment && $ticket->owner_id && $ticket->owner_id !== $comment->user_id) {
-            if ($ticket->owner?->ticket_notifications) {
-                $ticket->owner->notify(new NotifyAdminTicketUpdated($ticket, $comment->body));
-            }
+            $ticket->notify(new NotifyAdminTicketUpdated($ticket, $comment->body));
         }
     }
 }
