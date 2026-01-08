@@ -12,12 +12,22 @@ const store = reactive({
     soundEnabled: true,
     unreadCount: 0,
 
+    isAdmin: window.Laravel?.isAdmin || false,
+    viewMode: 'user',
+    adminTickets: [],
+    adminFilters: {
+        state: null,
+        search: '',
+    },
+
     loading: {
         tickets: false,
         ticketTypes: false,
         ticket: false,
         submitting: false,
         commenting: false,
+        adminTickets: false,
+        action: false,
     },
 
     errors: {
@@ -26,6 +36,8 @@ const store = reactive({
         ticket: null,
         submission: null,
         comment: null,
+        adminTickets: null,
+        action: null,
     },
 
     tickets: [],
@@ -373,6 +385,155 @@ store.checkUnread = () => {
             store.calculateUnreadCount();
         })
         .catch(() => {});
+};
+
+store.setViewMode = (mode) => {
+    store.viewMode = mode;
+    if (mode === 'admin') {
+        store.loadAdminTickets();
+    } else {
+        store.loadTickets();
+    }
+    store.setView('list');
+};
+
+store.loadAdminTickets = () => {
+    store.loading.adminTickets = true;
+    store.errors.adminTickets = null;
+
+    return axios.get(`${store.base_url}/api/tickets/admin`)
+        .then((response) => {
+            store.adminTickets = response.data.tickets || [];
+            store.loading.adminTickets = false;
+        })
+        .catch((error) => {
+            store.loading.adminTickets = false;
+            store.errors.adminTickets = 'Failed to load admin tickets. Please try again.';
+            console.error('Admin tickets load error:', error);
+        });
+};
+
+store.getFilteredAdminTickets = () => {
+    let tickets = store.adminTickets;
+
+    if (store.adminFilters.state) {
+        tickets = tickets.filter(t => t.state === store.adminFilters.state);
+    }
+
+    if (store.adminFilters.search) {
+        const search = store.adminFilters.search.toLowerCase();
+        tickets = tickets.filter(t =>
+            t.description?.toLowerCase().includes(search) ||
+            t.caller?.name?.toLowerCase().includes(search) ||
+            t.type?.name?.toLowerCase().includes(search)
+        );
+    }
+
+    return tickets;
+};
+
+store.ownTicket = (ticketId) => {
+    if (store.loading.action) return Promise.reject('Action in progress');
+
+    store.loading.action = true;
+    store.errors.action = null;
+
+    return axios.post(`${store.base_url}/api/tickets/${ticketId}/own`)
+        .then((response) => {
+            store.loading.action = false;
+            store.updateTicketInLists(response.data.ticket);
+            if (store.currentTicket?.id === ticketId) {
+                store.currentTicket = response.data.ticket;
+            }
+            return response.data;
+        })
+        .catch((error) => {
+            store.loading.action = false;
+            store.errors.action = error.response?.data?.message || 'Failed to assign ticket.';
+            throw error;
+        });
+};
+
+store.resolveTicket = (ticketId) => {
+    if (store.loading.action) return Promise.reject('Action in progress');
+
+    store.loading.action = true;
+    store.errors.action = null;
+
+    return axios.post(`${store.base_url}/api/tickets/${ticketId}/resolve`)
+        .then((response) => {
+            store.loading.action = false;
+            store.updateTicketInLists(response.data.ticket);
+            if (store.currentTicket?.id === ticketId) {
+                store.currentTicket = response.data.ticket;
+            }
+            return response.data;
+        })
+        .catch((error) => {
+            store.loading.action = false;
+            store.errors.action = error.response?.data?.message || 'Failed to resolve ticket.';
+            throw error;
+        });
+};
+
+store.rejectTicket = (ticketId, reason) => {
+    if (store.loading.action) return Promise.reject('Action in progress');
+
+    store.loading.action = true;
+    store.errors.action = null;
+
+    return axios.post(`${store.base_url}/api/tickets/${ticketId}/reject`, { reason })
+        .then((response) => {
+            store.loading.action = false;
+            store.updateTicketInLists(response.data.ticket);
+            if (store.currentTicket?.id === ticketId) {
+                store.currentTicket = response.data.ticket;
+            }
+            return response.data;
+        })
+        .catch((error) => {
+            store.loading.action = false;
+            store.errors.action = error.response?.data?.message || 'Failed to reject ticket.';
+            throw error;
+        });
+};
+
+store.reopenTicket = (ticketId) => {
+    if (store.loading.action) return Promise.reject('Action in progress');
+
+    store.loading.action = true;
+    store.errors.action = null;
+
+    return axios.post(`${store.base_url}/api/tickets/${ticketId}/reopen`)
+        .then((response) => {
+            store.loading.action = false;
+            store.updateTicketInLists(response.data.ticket);
+            if (store.currentTicket?.id === ticketId) {
+                store.currentTicket = response.data.ticket;
+            }
+            return response.data;
+        })
+        .catch((error) => {
+            store.loading.action = false;
+            store.errors.action = error.response?.data?.message || 'Failed to reopen ticket.';
+            throw error;
+        });
+};
+
+store.updateTicketInLists = (ticket) => {
+    const userIndex = store.tickets.findIndex(t => t.id === ticket.id);
+    if (userIndex !== -1) {
+        store.tickets[userIndex] = ticket;
+    }
+
+    const adminIndex = store.adminTickets.findIndex(t => t.id === ticket.id);
+    if (adminIndex !== -1) {
+        store.adminTickets[adminIndex] = ticket;
+    }
+};
+
+store.getCurrentUserId = () => {
+    return window.Laravel?.userId || null;
 };
 
 export default store;

@@ -1,21 +1,21 @@
 <template>
   <div class="ticket-list">
-    <div v-if="store.loading.tickets" class="text-center p-lg">
+    <div v-if="isLoading" class="text-center p-lg">
       <div class="spinner-border text-primary" role="status">
         <span class="sr-only">Loading...</span>
       </div>
-      <p class="m-t-md text-muted">Loading your tickets...</p>
+      <p class="m-t-md text-muted">{{ loadingMessage }}</p>
     </div>
 
-    <div v-else-if="store.errors.tickets" class="alert alert-danger">
+    <div v-else-if="hasError" class="alert alert-danger">
       <i class="fa fa-exclamation-circle m-r-sm"></i>
-      {{ store.errors.tickets }}
-      <button class="btn btn-sm btn-outline-danger pull-right" @click="store.loadTickets()">
+      {{ errorMessage }}
+      <button class="btn btn-sm btn-outline-danger pull-right" @click="retry">
         <i class="fa fa-refresh"></i> Retry
       </button>
     </div>
 
-    <div v-else-if="store.tickets.length === 0" class="text-center p-lg">
+    <div v-else-if="displayTickets.length === 0 && !isAdminView" class="text-center p-lg">
       <div class="empty-icon">
         <i class="fa fa-inbox"></i>
       </div>
@@ -27,11 +27,40 @@
     </div>
 
     <div v-else>
-      <h5 class="text-white m-b-md">Your Tickets</h5>
+      <div v-if="isAdminView" class="admin-filters m-b-md">
+        <div class="filter-row">
+          <select
+            v-model="store.adminFilters.state"
+            class="form-control filter-select"
+          >
+            <option :value="null">All States</option>
+            <option value="new">Open</option>
+            <option value="assigned">In Progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <input
+            v-model="store.adminFilters.search"
+            type="text"
+            class="form-control filter-search"
+            placeholder="Search tickets..."
+          />
+        </div>
+      </div>
 
-      <div class="ticket-cards">
+      <h5 class="text-white m-b-md">{{ listTitle }}</h5>
+
+      <div v-if="displayTickets.length === 0 && isAdminView" class="text-center p-lg empty-results">
+        <div class="empty-icon">
+          <i class="fa fa-filter"></i>
+        </div>
+        <h4 class="text-white">No Matching Tickets</h4>
+        <p class="text-muted m-b-none">Try adjusting your filters above.</p>
+      </div>
+
+      <div v-else class="ticket-cards">
         <a
-          v-for="ticket in store.tickets"
+          v-for="ticket in displayTickets"
           :key="ticket.id"
           href="#"
           class="panel panel-filled ticket-card"
@@ -49,6 +78,10 @@
                 <span class="status-badge" :class="'badge-' + ticket.state">
                   <i :class="getStatusIcon(ticket.state)"></i>
                   {{ formatStatus(ticket.state) }}
+                </span>
+                <span v-if="isAdminView && ticket.caller" class="meta-item">
+                  <i class="fa fa-user text-muted m-r-xs"></i>
+                  {{ ticket.caller.name }}
                 </span>
                 <span v-if="ticket.owner" class="meta-item">
                   <i class="fa fa-user-circle text-muted m-r-xs"></i>
@@ -80,9 +113,50 @@ export default {
     };
   },
 
+  computed: {
+    isAdminView() {
+      return store.viewMode === 'admin';
+    },
+
+    isLoading() {
+      return this.isAdminView ? store.loading.adminTickets : store.loading.tickets;
+    },
+
+    hasError() {
+      return this.isAdminView ? store.errors.adminTickets : store.errors.tickets;
+    },
+
+    errorMessage() {
+      return this.isAdminView ? store.errors.adminTickets : store.errors.tickets;
+    },
+
+    loadingMessage() {
+      return this.isAdminView ? 'Loading admin queue...' : 'Loading your tickets...';
+    },
+
+    listTitle() {
+      return this.isAdminView ? 'Admin Queue' : 'Your Tickets';
+    },
+
+    displayTickets() {
+      if (this.isAdminView) {
+        return store.getFilteredAdminTickets();
+      }
+      return store.tickets;
+    },
+  },
+
   methods: {
     viewTicket(ticket) {
       store.setView('detail', ticket.id);
+    },
+
+    retry() {
+      if (this.isAdminView) {
+        store.loadAdminTickets();
+      } else {
+        store.loadTickets();
+      }
     },
 
     truncateDescription(desc) {
@@ -260,5 +334,58 @@ export default {
 
 .p-lg {
   padding: 40px;
+}
+
+.admin-filters {
+  background: var(--overlay-dark);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-select {
+  flex: 0 0 150px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--overlay-light);
+  color: var(--color-white);
+  font-size: 13px;
+}
+
+.filter-search {
+  flex: 1;
+  background: var(--color-bg-input);
+  border: 1px solid var(--overlay-light);
+  color: var(--color-white);
+  font-size: 13px;
+}
+
+.filter-select:focus,
+.filter-search:focus {
+  background: var(--color-bg-input);
+  border-color: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: none;
+}
+
+.filter-search::placeholder {
+  color: var(--color-muted);
+}
+
+.empty-results {
+  background: var(--overlay-dark);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.empty-results .empty-icon {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.empty-results .empty-icon i {
+  color: var(--color-accent);
 }
 </style>

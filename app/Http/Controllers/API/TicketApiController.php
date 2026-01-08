@@ -28,6 +28,91 @@ class TicketApiController extends Controller
         return response()->json(['tickets' => $tickets]);
     }
 
+    public function adminIndex(): JsonResponse
+    {
+        if (! auth()->user()->isRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $tickets = Ticket::with(['type', 'owner', 'division', 'caller'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn ($ticket) => $this->transformTicket($ticket, false, true));
+
+        return response()->json(['tickets' => $tickets]);
+    }
+
+    public function own(Ticket $ticket): JsonResponse
+    {
+        if (! auth()->user()->isRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $ticket->ownTo(auth()->user());
+        $this->notificationService->notifyTicketAssigned($ticket, auth()->user());
+
+        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
+
+        return response()->json([
+            'message' => 'Ticket assigned to you',
+            'ticket' => $this->transformTicket($ticket, true, true),
+        ]);
+    }
+
+    public function resolve(Ticket $ticket): JsonResponse
+    {
+        if (! auth()->user()->isRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $ticket->resolve();
+        $this->notificationService->notifyTicketResolved($ticket);
+
+        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
+
+        return response()->json([
+            'message' => 'Ticket resolved',
+            'ticket' => $this->transformTicket($ticket, true, true),
+        ]);
+    }
+
+    public function reject(Request $request, Ticket $ticket): JsonResponse
+    {
+        if (! auth()->user()->isRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate([
+            'reason' => 'required|string|min:5',
+        ]);
+
+        $ticket->reject();
+        $this->notificationService->notifyTicketRejected($ticket, $validated['reason']);
+
+        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
+
+        return response()->json([
+            'message' => 'Ticket rejected',
+            'ticket' => $this->transformTicket($ticket, true, true),
+        ]);
+    }
+
+    public function reopen(Ticket $ticket): JsonResponse
+    {
+        if (! auth()->user()->isRole('admin')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $ticket->reopen();
+
+        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
+
+        return response()->json([
+            'message' => 'Ticket reopened',
+            'ticket' => $this->transformTicket($ticket, true, true),
+        ]);
+    }
+
     public function types(): JsonResponse
     {
         $user = auth()->user();
@@ -57,14 +142,16 @@ class TicketApiController extends Controller
 
     public function show(Ticket $ticket): JsonResponse
     {
-        if ($ticket->caller_id !== auth()->id() && ! auth()->user()->isRole('admin')) {
+        $isAdmin = auth()->user()->isRole('admin');
+
+        if ($ticket->caller_id !== auth()->id() && ! $isAdmin) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $ticket->load(['type', 'owner', 'division', 'comments.user']);
+        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
 
         return response()->json([
-            'ticket' => $this->transformTicket($ticket, true),
+            'ticket' => $this->transformTicket($ticket, true, $isAdmin),
         ]);
     }
 
@@ -127,11 +214,12 @@ class TicketApiController extends Controller
         ], 201);
     }
 
-    protected function transformTicket(Ticket $ticket, bool $includeComments = false): array
+    protected function transformTicket(Ticket $ticket, bool $includeComments = false, bool $includeCaller = false): array
     {
         $type = $ticket->type;
         $division = $ticket->division;
         $owner = $ticket->owner;
+        $caller = $ticket->caller;
 
         $data = [
             'id' => $ticket->id,
@@ -155,15 +243,22 @@ class TicketApiController extends Controller
             'resolved_at' => $ticket->resolved_at?->toIso8601String(),
         ];
 
+        if ($includeCaller) {
+            $data['caller'] = $caller ? [
+                'id' => $caller->id,
+                'name' => $caller->name,
+            ] : null;
+        }
+
         if ($includeComments) {
             $data['comments'] = $ticket->comments->map(fn ($comment) => [
                 'id' => $comment->id,
                 'body' => $comment->body,
-                'user' => [
+                'user' => $comment->user ? [
                     'id' => $comment->user->id,
                     'name' => $comment->user->name,
                     'is_admin' => $comment->user->isRole('admin'),
-                ],
+                ] : null,
                 'created_at' => $comment->created_at->toIso8601String(),
             ]);
         }
