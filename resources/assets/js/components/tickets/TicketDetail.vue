@@ -25,7 +25,7 @@
               {{ formatStatus(store.currentTicket.state) }}
             </span>
           </div>
-          <div class="ticket-type">{{ store.currentTicket.type.name }}</div>
+          <div class="ticket-type">{{ store.currentTicket.type?.name ?? 'Unknown Type' }}</div>
         </div>
         <div class="header-meta">
           <div class="meta-block" v-if="store.currentTicket.owner">
@@ -88,21 +88,21 @@
                   <div class="event-content">
                     <i :class="getSystemIcon(comment.body)"></i>
                     <span class="event-text">
-                      <strong>{{ comment.user.name }}</strong> {{ formatSystemMessage(comment.body) }}
+                      <strong>{{ comment.user?.name ?? 'Unknown' }}</strong> {{ formatSystemMessage(comment.body) }}
                     </span>
                     <span class="event-time">{{ store.formatRelativeDate(comment.created_at) }}</span>
                   </div>
                 </div>
 
-                <div v-else class="comment-item" :class="{ 'comment-admin': comment.user.is_admin }">
+                <div v-else class="comment-item" :class="{ 'comment-admin': comment.user?.is_admin }">
                   <div class="comment-avatar">
                     <i class="fa fa-user"></i>
                   </div>
                   <div class="comment-bubble">
                     <div class="comment-header">
                       <span class="comment-author">
-                        {{ comment.user.name }}
-                        <span v-if="comment.user.is_admin" class="admin-badge">Admin</span>
+                        {{ comment.user?.name ?? 'Unknown' }}
+                        <span v-if="comment.user?.is_admin" class="admin-badge">Admin</span>
                       </span>
                       <span class="comment-time">{{ store.formatRelativeDate(comment.created_at) }}</span>
                     </div>

@@ -42,7 +42,7 @@
             <div class="ticket-main">
               <div class="ticket-header-row">
                 <span class="ticket-id">#{{ ticket.id }}</span>
-                <span class="ticket-type-badge">{{ ticket.type.name }}</span>
+                <span class="ticket-type-badge">{{ ticket.type?.name ?? 'Unknown' }}</span>
               </div>
               <p class="ticket-preview">{{ truncateDescription(ticket.description) }}</p>
               <div class="ticket-meta">
