@@ -211,4 +211,39 @@ class MemberSyncServiceTest extends TestCase
             'clan_id' => 88888,
         ]);
     }
+
+    public function test_handles_zero_date_values(): void
+    {
+        $division = Division::factory()->create();
+
+        $mockInfo = Mockery::mock(GetDivisionInfo::class);
+        $mockInfo->data = [
+            [
+                'userid' => 11111,
+                'username' => 'AOD_ZeroDate',
+                'joindate' => '2024-01-01',
+                'aoddivision' => $division->name,
+                'aodrankval' => 3,
+                'discordtag' => 'zerodate#1234',
+                'discordid' => '111111111',
+                'postcount' => 5,
+                'allow_pm' => 1,
+                'allow_export' => 'yes',
+                'tsid' => 'zero123',
+                'lastdiscord_status' => 'never_configured',
+                'lastactivity' => '0000-00-00 00:00:00',
+                'lastdiscord_connect' => '0000-00-00 00:00:00',
+            ],
+        ];
+
+        $service = new MemberSyncService($mockInfo);
+        $service->sync();
+
+        $this->assertDatabaseHas('members', [
+            'clan_id' => 11111,
+            'name' => 'ZeroDate',
+            'last_activity' => null,
+            'last_voice_activity' => null,
+        ]);
+    }
 }

@@ -303,7 +303,7 @@ class MemberSyncService
 
     protected function normalizeTimestamp($timestamp): ?int
     {
-        if (empty($timestamp) || $timestamp === '0') {
+        if (empty($timestamp) || $timestamp === '0' || $timestamp === '0000-00-00 00:00:00') {
             return null;
         }
 
