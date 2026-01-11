@@ -8,6 +8,7 @@ use App\Filament\Mod\Resources\MemberAwardResource\Pages\ListMemberAwards;
 use App\Filament\Mod\Resources\MemberAwardResource\RelationManagers\AwardRelationManager;
 use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRelationManager;
 use App\Models\Award;
+use App\Models\Division;
 use App\Models\MemberAward;
 use App\Notifications\Channel\NotifyDivisionMemberAwarded;
 use Closure;
@@ -18,6 +19,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -67,48 +69,90 @@ class MemberAwardResource extends Resource
         return $schema
             ->columns(1)
             ->components([
-                Select::make('award_id')
-                    ->relationship('award', 'name')
-                    ->required()
-                    ->hiddenOn('edit'),
+                Section::make('Award Selection')
+                    ->columns(2)
+                    ->hiddenOn('edit')
+                    ->schema([
+                        Select::make('division_filter')
+                            ->label('Division')
+                            ->options(
+                                Division::where('active', true)
+                                    ->orderBy('name')
+                                    ->pluck('name', 'id')
+                                    ->prepend('Clan-Wide', 'clan-wide')
+                            )
+                            ->placeholder('All divisions')
+                            ->live()
+                            ->dehydrated(false),
 
-                Select::make('member_id')
-                    ->relationship('member', 'name', function (Builder $query) {
-                        $query->whereHas('division', function (Builder $subQuery) {
-                            $subQuery->where('active', true);
-                        });
-                    })
-                    ->columnSpanFull()
-                    ->searchable()
-                    ->required()
-                    ->rules([
-                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                            $awardId = $get('award_id');
-                            if (! $awardId) {
-                                return;
-                            }
-                            $award = Award::find($awardId);
-                            if (! $award || $award->repeatable) {
-                                return;
-                            }
-                            if (MemberAward::where('member_id', $value)->where('award_id', $awardId)->exists()) {
-                                $fail('This member already has this award.');
-                            }
-                        },
+                        Select::make('award_id')
+                            ->label('Award')
+                            ->relationship('award', 'name', function (Builder $query, Get $get) {
+                                $divisionFilter = $get('division_filter');
+                                if ($divisionFilter === 'clan-wide') {
+                                    $query->whereNull('division_id');
+                                } elseif ($divisionFilter) {
+                                    $query->where('division_id', $divisionFilter);
+                                }
+                                $query->orderBy('name');
+                            })
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                     ]),
 
-                Textarea::make('reason')
-                    ->required()
-                    ->columnSpanFull()
-                    ->rows(5),
+                Section::make('Recipient')
+                    ->schema([
+                        Select::make('member_id')
+                            ->label('Member')
+                            ->relationship('member', 'name', function (Builder $query) {
+                                $query->whereHas('division', fn (Builder $q) => $q->where('active', true))
+                                    ->orderBy('name');
+                            })
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->name} ({$record->division?->name})")
+                            ->searchable()
+                            ->required()
+                            ->helperText('Search by member name')
+                            ->rules([
+                                fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                    $awardId = $get('award_id');
+                                    if (! $awardId) {
+                                        return;
+                                    }
+                                    $award = Award::find($awardId);
+                                    if (! $award || $award->repeatable) {
+                                        return;
+                                    }
+                                    if (MemberAward::where('member_id', $value)->where('award_id', $awardId)->exists()) {
+                                        $fail('This member already has this award.');
+                                    }
+                                },
+                            ]),
+
+                        Textarea::make('reason')
+                            ->label('Justification')
+                            ->required()
+                            ->rows(3)
+                            ->helperText('Explain why this member should receive this award'),
+                    ]),
+
+                Section::make('Options')
+                    ->hiddenOn('edit')
+                    ->schema([
+                        Toggle::make('approved')
+                            ->label('Auto-approve')
+                            ->helperText('Skip the approval queue and grant immediately')
+                            ->default(false)
+                            ->visible(fn () => auth()->user()->isRole(['admin', 'sr_ldr'])),
+                    ]),
 
                 Section::make('Metadata')
-                    ->columnSpanFull()
+                    ->columns(2)
+                    ->hiddenOn(['edit', 'create'])
                     ->schema([
                         DateTimePicker::make('created_at')->default(now()),
                         DateTimePicker::make('updated_at')->default(now()),
-                    ])->columns()->hiddenOn(['edit', 'create']),
-
+                    ]),
             ]);
     }
 

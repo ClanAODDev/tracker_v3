@@ -1,4 +1,4 @@
-@if($award->allow_request)
+@if($award->canBeRequestedBy())
     <div class="modal fade" id="award_modal" tabindex="-1" role="dialog" aria-labelledby="award_modal_title">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

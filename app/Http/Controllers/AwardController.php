@@ -283,12 +283,8 @@ class AwardController extends Controller
 
     public function storeRecommendation(Request $request, Award $award)
     {
-        if (! $award->allow_request) {
-            return redirect()->back()->withErrors(['award' => 'Award requests are not allowed for this award.']);
-        }
-
-        if ($award->division && ! $award->division->active) {
-            return redirect()->back()->withErrors(['award' => 'This is a legacy award and cannot be requested.']);
+        if (! $award->canBeRequestedBy()) {
+            return redirect()->back()->withErrors(['award' => 'You cannot request this award.']);
         }
 
         $validatedData = $request->validate([
