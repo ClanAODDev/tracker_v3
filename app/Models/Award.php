@@ -104,6 +104,21 @@ class Award extends Model
         return asset(config('aod.logo'));
     }
 
+    public function canBeRequestedBy(?User $user = null): bool
+    {
+        $user ??= auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        $isOfficerOrAbove = $user->isRole(['officer', 'sr_ldr', 'admin']);
+        $isRequestable = $this->allow_request || $isOfficerOrAbove;
+        $isDivisionActive = $this->division?->active ?? true;
+
+        return $isRequestable && $isDivisionActive;
+    }
+
     public function getTieredGroupSlug(): ?string
     {
         if (! $this->isPartOfTieredGroup()) {
