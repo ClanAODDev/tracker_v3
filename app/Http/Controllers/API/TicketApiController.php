@@ -30,25 +30,33 @@ class TicketApiController extends Controller
 
     public function adminIndex(): JsonResponse
     {
-        if (! auth()->user()->isRole('admin')) {
+        $user = auth()->user();
+
+        $canWorkAnyType = TicketType::get()->contains(fn ($type) => $type->userCanWork($user));
+
+        if (! $canWorkAnyType) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $tickets = Ticket::with(['type', 'owner', 'division', 'caller'])
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(fn ($ticket) => $this->transformTicket($ticket, false, true));
+            ->filter(fn ($ticket) => $ticket->type?->userCanWork($user) ?? $user->isRole('admin'))
+            ->map(fn ($ticket) => $this->transformTicket($ticket, false, true))
+            ->values();
 
         return response()->json(['tickets' => $tickets]);
     }
 
     public function own(Ticket $ticket): JsonResponse
     {
-        if (! auth()->user()->isRole('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        $user = auth()->user();
+
+        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+            return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
-        $ticket->ownTo(auth()->user());
+        $ticket->ownTo($user);
         $this->notificationService->notifyTicketAssigned($ticket, auth()->user());
 
         $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
@@ -61,8 +69,10 @@ class TicketApiController extends Controller
 
     public function resolve(Ticket $ticket): JsonResponse
     {
-        if (! auth()->user()->isRole('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        $user = auth()->user();
+
+        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+            return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
         $ticket->resolve();
@@ -78,8 +88,10 @@ class TicketApiController extends Controller
 
     public function reject(Request $request, Ticket $ticket): JsonResponse
     {
-        if (! auth()->user()->isRole('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        $user = auth()->user();
+
+        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+            return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
         $validated = $request->validate([
@@ -99,8 +111,10 @@ class TicketApiController extends Controller
 
     public function reopen(Ticket $ticket): JsonResponse
     {
-        if (! auth()->user()->isRole('admin')) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        $user = auth()->user();
+
+        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+            return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
         $ticket->reopen();
@@ -142,16 +156,17 @@ class TicketApiController extends Controller
 
     public function show(Ticket $ticket): JsonResponse
     {
-        $isAdmin = auth()->user()->isRole('admin');
+        $user = auth()->user();
+        $canWork = $ticket->type?->userCanWork($user) ?? $user->isRole('admin');
 
-        if ($ticket->caller_id !== auth()->id() && ! $isAdmin) {
+        if ($ticket->caller_id !== $user->id && ! $canWork) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
 
         return response()->json([
-            'ticket' => $this->transformTicket($ticket, true, $isAdmin),
+            'ticket' => $this->transformTicket($ticket, true, $canWork),
         ]);
     }
 
@@ -182,7 +197,9 @@ class TicketApiController extends Controller
 
     public function addComment(Request $request, Ticket $ticket): JsonResponse
     {
-        if ($ticket->caller_id !== auth()->id() && ! auth()->user()->isRole('admin')) {
+        $user = auth()->user();
+
+        if ($ticket->caller_id !== $user->id && ! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

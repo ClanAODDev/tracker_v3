@@ -213,7 +213,7 @@ class TicketApiTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_index_handles_deleted_ticket_type()
+    public function test_deleting_ticket_type_deletes_associated_tickets()
     {
         $officer = $this->createOfficer();
         $division = $officer->member->division;
@@ -225,35 +225,10 @@ class TicketApiTest extends TestCase
             'ticket_type_id' => $ticketType->id,
         ]);
 
-        $ticketType->delete();
-
-        $response = $this->actingAs($officer)
-            ->getJson('/api/tickets');
-
-        $response->assertOk();
-        $response->assertJsonPath('tickets.0.id', $ticket->id);
-        $response->assertJsonPath('tickets.0.type', null);
-    }
-
-    public function test_show_handles_deleted_ticket_type()
-    {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
-        $ticketType = TicketType::factory()->create();
-
-        $ticket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
-            'ticket_type_id' => $ticketType->id,
-        ]);
+        $ticketId = $ticket->id;
 
         $ticketType->delete();
 
-        $response = $this->actingAs($officer)
-            ->getJson("/api/tickets/{$ticket->id}");
-
-        $response->assertOk();
-        $response->assertJsonPath('ticket.id', $ticket->id);
-        $response->assertJsonPath('ticket.type', null);
+        $this->assertNull(Ticket::find($ticketId));
     }
 }

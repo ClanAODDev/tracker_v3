@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Config\Repository;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -72,12 +71,9 @@ class Ticket extends Model
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return mixed|Repository
-     */
-    public function routeNotificationForHelp()
+    public function routeNotificationForHelp(): string
     {
-        return config('aod.admin-ticketing-channel');
+        return $this->type->notification_channel ?? config('aod.admin-ticketing-channel');
     }
 
     /**

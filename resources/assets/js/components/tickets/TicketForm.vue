@@ -36,7 +36,7 @@
           v-model="store.newTicket.description"
           class="form-control"
           rows="10"
-          :placeholder="store.selectedType?.boilerplate || 'Describe your issue or request in detail...'"
+          placeholder="Describe your issue or request in detail..."
           :disabled="store.loading.submitting"
           required
           minlength="25"

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Rank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,7 @@ class TicketType extends Model
 
     protected $casts = [
         'role_access' => 'json',
+        'minimum_rank' => Rank::class,
     ];
 
     public function ticket()
@@ -23,5 +25,23 @@ class TicketType extends Model
     public function auto_assign_to()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function userCanWork(User $user): bool
+    {
+        if ($user->isRole('admin')) {
+            return true;
+        }
+
+        if (! $this->minimum_rank) {
+            return false;
+        }
+
+        $member = $user->member;
+        if (! $member) {
+            return false;
+        }
+
+        return $member->rank_id >= $this->minimum_rank->value;
     }
 }
