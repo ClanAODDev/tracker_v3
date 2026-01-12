@@ -28,6 +28,16 @@
           <div class="ticket-type">{{ store.currentTicket.type?.name ?? 'Unknown Type' }}</div>
         </div>
         <div class="header-meta">
+          <div class="meta-block" v-if="store.currentTicket.caller">
+            <div class="meta-label">Submitted By</div>
+            <div class="meta-value">
+              <i class="fa fa-user m-r-xs"></i>
+              {{ store.currentTicket.caller.name }}
+              <span v-if="store.currentTicket.division" class="division-tag">
+                {{ store.currentTicket.division.name }}
+              </span>
+            </div>
+          </div>
           <div class="meta-block" v-if="store.currentTicket.owner">
             <div class="meta-label">Assigned To</div>
             <div class="meta-value">
@@ -269,7 +279,7 @@ export default {
     },
 
     showAdminActions() {
-      return store.canWorkTickets && store.viewMode === 'admin';
+      return store.canWorkTickets;
     },
 
     currentUserId() {
@@ -414,11 +424,17 @@ export default {
   padding: 20px;
   margin-bottom: 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 15px;
   border-left: 4px solid var(--color-info);
+}
+
+@media (min-width: 768px) {
+  .ticket-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 }
 
 .header-new { border-left-color: var(--color-info); }
@@ -463,12 +479,22 @@ export default {
 
 .header-meta {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .meta-block {
-  text-align: right;
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+  .meta-block {
+    text-align: right;
+  }
+
+  .header-meta {
+    gap: 30px;
+  }
 }
 
 .meta-label {
@@ -483,6 +509,20 @@ export default {
   font-size: 14px;
   font-weight: 500;
   color: var(--color-white);
+}
+
+.division-tag {
+  display: inline-block;
+  background: var(--overlay-light);
+  color: var(--color-muted);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
 }
 
 .ticket-sections {
