@@ -90,7 +90,11 @@ class TicketResource extends Resource
                         Select::make('owner_id')
                             ->label('Assigned To')
                             ->searchable()
-                            ->options(fn () => User::whereHas('member', fn ($q) => $q->where('rank', '>=', Rank::SERGEANT->value))->pluck('name', 'id'))
+                            ->getSearchResultsUsing(fn (string $search) => User::whereHas('member', fn ($q) => $q->where('rank', '>=', Rank::SERGEANT->value))
+                                ->where('name', 'like', "%{$search}%")
+                                ->limit(50)
+                                ->pluck('name', 'id'))
+                            ->getOptionLabelUsing(fn ($value) => User::find($value)?->name)
                             ->placeholder('Unassigned'),
 
                         DateTimePicker::make('resolved_at')
