@@ -23,26 +23,32 @@
           <i class="fa fa-arrow-left"></i> Back
         </button>
 
-        <div v-else-if="store.canWorkTickets" class="view-toggle">
-          <div class="toggle-track" :class="{ 'admin-active': store.viewMode === 'admin' }">
-            <div class="toggle-indicator"></div>
-            <button
-              class="toggle-btn"
-              :class="{ active: store.viewMode === 'user' }"
-              @click="store.setViewMode('user')"
-            >
-              <i class="fa fa-user m-r-xs"></i>
-              <span class="toggle-label">My Tickets</span>
-            </button>
-            <button
-              class="toggle-btn"
-              :class="{ active: store.viewMode === 'admin' }"
-              @click="store.setViewMode('admin')"
-            >
-              <i class="fa fa-list m-r-xs"></i>
-              <span class="toggle-label">All Tickets</span>
-            </button>
-          </div>
+        <div v-else-if="store.canWorkTickets" class="view-tabs" ref="tabsContainer">
+          <div class="tab-indicator" :style="indicatorStyle"></div>
+          <button
+            class="tab-btn"
+            ref="tabUser"
+            :class="{ active: store.viewMode === 'user' }"
+            @click="store.setViewMode('user')"
+          >
+            My Requests
+          </button>
+          <button
+            class="tab-btn"
+            ref="tabAssigned"
+            :class="{ active: store.viewMode === 'assigned' }"
+            @click="store.setViewMode('assigned')"
+          >
+            Assigned to Me
+          </button>
+          <button
+            class="tab-btn"
+            ref="tabAll"
+            :class="{ active: store.viewMode === 'all' }"
+            @click="store.setViewMode('all')"
+          >
+            All
+          </button>
         </div>
 
         <button
@@ -161,7 +167,9 @@ export default {
 
   computed: {
     displayTickets() {
-      return store.viewMode === 'admin' ? store.adminTickets : store.tickets;
+      if (store.viewMode === 'all') return store.allTickets;
+      if (store.viewMode === 'assigned') return store.assignedTickets;
+      return store.tickets;
     },
     openCount() {
       return this.displayTickets.filter(t => t.state === 'new').length;
@@ -172,6 +180,28 @@ export default {
     resolvedCount() {
       return this.displayTickets.filter(t => t.state === 'resolved' || t.state === 'rejected').length;
     },
+    indicatorStyle() {
+      const tabRefs = {
+        user: this.$refs.tabUser,
+        assigned: this.$refs.tabAssigned,
+        all: this.$refs.tabAll,
+      };
+      const activeTab = tabRefs[store.viewMode];
+      if (!activeTab || !this.$refs.tabsContainer) {
+        return { opacity: 0 };
+      }
+      const containerRect = this.$refs.tabsContainer.getBoundingClientRect();
+      const tabRect = activeTab.getBoundingClientRect();
+      return {
+        width: `${tabRect.width}px`,
+        transform: `translateX(${tabRect.left - containerRect.left - 3}px)`,
+        opacity: 1,
+      };
+    },
+  },
+
+  mounted() {
+    this.$nextTick(() => this.$forceUpdate());
   },
 
   methods: {
@@ -281,82 +311,56 @@ export default {
   width: 100%;
 }
 
-.view-toggle {
+.view-tabs {
   display: flex;
-}
-
-.toggle-track {
-  display: flex;
-  position: relative;
   background: var(--overlay-dark);
-  border-radius: 8px;
-  padding: 4px;
-  border: 1px solid var(--overlay-light);
-}
-
-.toggle-indicator {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  height: calc(100% - 8px);
-  background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 80%, #000));
   border-radius: 6px;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.toggle-track.admin-active .toggle-indicator {
-  transform: translateX(100%);
-}
-
-.toggle-btn {
+  padding: 3px;
+  gap: 2px;
   position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+}
+
+.tab-indicator {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  height: calc(100% - 6px);
+  background: var(--color-accent);
+  border-radius: 4px;
+  transition: transform 0.25s ease, width 0.25s ease, opacity 0.15s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tab-btn {
   background: transparent;
   border: none;
   color: var(--color-muted);
-  padding: 8px 16px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
   cursor: pointer;
   transition: color 0.2s;
   white-space: nowrap;
-  line-height: 1;
+  position: relative;
+  z-index: 1;
 }
 
-.toggle-btn:hover {
+.tab-btn:hover {
   color: var(--color-gray-300);
 }
 
-.toggle-btn.active {
+.tab-btn.active {
   color: var(--color-white);
 }
 
-.toggle-btn i {
-  font-size: 11px;
-  line-height: 1;
-}
-
-.toggle-label {
-  display: inline;
-}
-
 @media (max-width: 480px) {
-  .toggle-label {
-    display: none;
-  }
-
-  .toggle-btn {
-    padding: 8px 14px;
-  }
-
-  .toggle-btn i {
-    margin-right: 0 !important;
+  .tab-btn {
+    padding: 8px 10px;
+    font-size: 10px;
   }
 }
 

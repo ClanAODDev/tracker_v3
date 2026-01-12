@@ -25,7 +25,7 @@ Route::prefix('v1')->name('v1.')->group(function () {
 Route::prefix('tickets')->middleware(['web', 'auth'])->name('tickets.')->group(function () {
     Route::get('/', [TicketApiController::class, 'index'])->name('index');
     Route::get('/types', [TicketApiController::class, 'types'])->name('types');
-    Route::get('/admin', [TicketApiController::class, 'adminIndex'])->name('admin');
+    Route::get('/workable', [TicketApiController::class, 'workableIndex'])->name('workable');
     Route::post('/', [TicketApiController::class, 'store'])->name('store');
     Route::get('/{ticket}', [TicketApiController::class, 'show'])->name('show');
     Route::post('/{ticket}/comments', [TicketApiController::class, 'addComment'])->name('comments.store');

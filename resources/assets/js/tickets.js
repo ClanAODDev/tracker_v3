@@ -8,13 +8,20 @@ if (widgetContainer) {
     const initialTicketId = widgetContainer.dataset.ticketId;
     const initialView = widgetContainer.dataset.initialView;
 
-    store.loadTickets();
     store.loadTicketTypes();
+    store.initPopstateHandler();
 
     if (initialTicketId) {
-        store.setView('detail', parseInt(initialTicketId, 10));
+        store.loadTickets();
+        store.setView('detail', parseInt(initialTicketId, 10), false);
     } else if (initialView) {
-        store.setView(initialView);
+        store.loadTickets();
+        store.setView(initialView, null, false);
+    } else {
+        store.initFromUrl();
+        if (store.viewMode === 'user') {
+            store.loadTickets();
+        }
     }
 
     const app = createApp(TicketWidget);

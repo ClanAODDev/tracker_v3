@@ -8,11 +8,11 @@ const store = reactive({
     pollInterval: null,
     soundEnabled: true,
 
-    isAdmin: window.Laravel?.isAdmin || false,
     canWorkTickets: window.Laravel?.canWorkTickets || false,
     viewMode: 'user',
-    adminTickets: [],
-    adminFilters: {
+    allTickets: [],
+    assignedTickets: [],
+    filters: {
         state: null,
         search: '',
     },
@@ -23,7 +23,7 @@ const store = reactive({
         ticket: false,
         submitting: false,
         commenting: false,
-        adminTickets: false,
+        allTickets: false,
         action: false,
     },
 
@@ -33,7 +33,7 @@ const store = reactive({
         ticket: null,
         submission: null,
         comment: null,
-        adminTickets: null,
+        allTickets: null,
         action: null,
     },
 
@@ -159,18 +159,28 @@ store.submitComment = () => {
         });
 };
 
-store.setView = (view, data = null) => {
+store.setView = (view, data = null, updateUrl = true) => {
     store.stopPolling();
     store.currentView = view;
     if (view === 'detail' && data) {
         store.selectedTicketId = data;
         store.loadTicket(data);
         store.startPolling();
+        if (updateUrl) {
+            window.history.pushState({ view: 'detail', ticketId: data }, '', `${store.base_url}/help/tickets/${data}`);
+        }
     } else if (view === 'create' && data) {
         store.selectType(data);
     } else if (view === 'list') {
         store.currentTicket = null;
         store.selectedTicketId = null;
+        if (updateUrl) {
+            const url = new URL(store.base_url + '/help/tickets', window.location.origin);
+            if (store.viewMode !== 'user') {
+                url.searchParams.set('view', store.viewMode);
+            }
+            window.history.pushState({ view: 'list', viewMode: store.viewMode }, '', url);
+        }
     }
 };
 
@@ -295,41 +305,76 @@ store.formatRelativeDate = (dateString) => {
     return store.formatDate(dateString);
 };
 
-store.setViewMode = (mode) => {
+store.setViewMode = (mode, updateUrl = true) => {
     store.viewMode = mode;
-    if (mode === 'admin') {
-        store.loadAdminTickets();
+    if (mode === 'all' || mode === 'assigned') {
+        store.loadAllTickets();
     } else {
         store.loadTickets();
     }
     store.setView('list');
+
+    if (updateUrl) {
+        const url = new URL(window.location);
+        if (mode === 'user') {
+            url.searchParams.delete('view');
+        } else {
+            url.searchParams.set('view', mode);
+        }
+        window.history.replaceState({}, '', url);
+    }
 };
 
-store.loadAdminTickets = () => {
-    store.loading.adminTickets = true;
-    store.errors.adminTickets = null;
+store.initFromUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    const view = params.get('view');
+    if (view && ['assigned', 'all'].includes(view) && store.canWorkTickets) {
+        store.setViewMode(view, false);
+    }
+};
 
-    return axios.get(`${store.base_url}/api/tickets/admin`)
+store.initPopstateHandler = () => {
+    window.addEventListener('popstate', (event) => {
+        if (event.state?.view === 'detail' && event.state?.ticketId) {
+            store.setView('detail', event.state.ticketId, false);
+        } else if (event.state?.view === 'list') {
+            if (event.state.viewMode && store.canWorkTickets) {
+                store.viewMode = event.state.viewMode;
+            }
+            store.setView('list', null, false);
+        } else {
+            store.setView('list', null, false);
+        }
+    });
+};
+
+store.loadAllTickets = () => {
+    store.loading.allTickets = true;
+    store.errors.allTickets = null;
+
+    return axios.get(`${store.base_url}/api/tickets/workable`)
         .then((response) => {
-            store.adminTickets = response.data.tickets || [];
-            store.loading.adminTickets = false;
+            const tickets = response.data.tickets || [];
+            store.allTickets = tickets;
+            store.assignedTickets = tickets.filter(t => t.owner?.id === store.getCurrentUserId());
+            store.loading.allTickets = false;
         })
         .catch((error) => {
-            store.loading.adminTickets = false;
-            store.errors.adminTickets = 'Failed to load admin tickets. Please try again.';
-            console.error('Admin tickets load error:', error);
+            store.loading.allTickets = false;
+            store.errors.allTickets = 'Failed to load tickets. Please try again.';
+            console.error('All tickets load error:', error);
         });
 };
 
-store.getFilteredAdminTickets = () => {
-    let tickets = store.adminTickets;
+store.getFilteredTickets = () => {
+    let tickets = store.viewMode === 'assigned' ? store.assignedTickets : store.allTickets;
 
-    if (store.adminFilters.state) {
-        tickets = tickets.filter(t => t.state === store.adminFilters.state);
+    if (store.filters.state) {
+        tickets = tickets.filter(t => t.state === store.filters.state);
     }
 
-    if (store.adminFilters.search) {
-        const search = store.adminFilters.search.toLowerCase();
+    if (store.filters.search) {
+        const search = store.filters.search.toLowerCase();
         tickets = tickets.filter(t =>
             t.description?.toLowerCase().includes(search) ||
             t.caller?.name?.toLowerCase().includes(search) ||
@@ -340,13 +385,13 @@ store.getFilteredAdminTickets = () => {
     return tickets;
 };
 
-store.ownTicket = (ticketId) => {
+store.performAction = (ticketId, action, data = {}, errorMessage = 'Action failed.') => {
     if (store.loading.action) return Promise.reject('Action in progress');
 
     store.loading.action = true;
     store.errors.action = null;
 
-    return axios.post(`${store.base_url}/api/tickets/${ticketId}/own`)
+    return axios.post(`${store.base_url}/api/tickets/${ticketId}/${action}`, data)
         .then((response) => {
             store.loading.action = false;
             store.updateTicketInLists(response.data.ticket);
@@ -357,76 +402,15 @@ store.ownTicket = (ticketId) => {
         })
         .catch((error) => {
             store.loading.action = false;
-            store.errors.action = error.response?.data?.message || 'Failed to assign ticket.';
+            store.errors.action = error.response?.data?.message || errorMessage;
             throw error;
         });
 };
 
-store.resolveTicket = (ticketId) => {
-    if (store.loading.action) return Promise.reject('Action in progress');
-
-    store.loading.action = true;
-    store.errors.action = null;
-
-    return axios.post(`${store.base_url}/api/tickets/${ticketId}/resolve`)
-        .then((response) => {
-            store.loading.action = false;
-            store.updateTicketInLists(response.data.ticket);
-            if (store.currentTicket?.id === ticketId) {
-                store.currentTicket = response.data.ticket;
-            }
-            return response.data;
-        })
-        .catch((error) => {
-            store.loading.action = false;
-            store.errors.action = error.response?.data?.message || 'Failed to resolve ticket.';
-            throw error;
-        });
-};
-
-store.rejectTicket = (ticketId, reason) => {
-    if (store.loading.action) return Promise.reject('Action in progress');
-
-    store.loading.action = true;
-    store.errors.action = null;
-
-    return axios.post(`${store.base_url}/api/tickets/${ticketId}/reject`, { reason })
-        .then((response) => {
-            store.loading.action = false;
-            store.updateTicketInLists(response.data.ticket);
-            if (store.currentTicket?.id === ticketId) {
-                store.currentTicket = response.data.ticket;
-            }
-            return response.data;
-        })
-        .catch((error) => {
-            store.loading.action = false;
-            store.errors.action = error.response?.data?.message || 'Failed to reject ticket.';
-            throw error;
-        });
-};
-
-store.reopenTicket = (ticketId) => {
-    if (store.loading.action) return Promise.reject('Action in progress');
-
-    store.loading.action = true;
-    store.errors.action = null;
-
-    return axios.post(`${store.base_url}/api/tickets/${ticketId}/reopen`)
-        .then((response) => {
-            store.loading.action = false;
-            store.updateTicketInLists(response.data.ticket);
-            if (store.currentTicket?.id === ticketId) {
-                store.currentTicket = response.data.ticket;
-            }
-            return response.data;
-        })
-        .catch((error) => {
-            store.loading.action = false;
-            store.errors.action = error.response?.data?.message || 'Failed to reopen ticket.';
-            throw error;
-        });
-};
+store.ownTicket = (ticketId) => store.performAction(ticketId, 'own', {}, 'Failed to assign ticket.');
+store.resolveTicket = (ticketId) => store.performAction(ticketId, 'resolve', {}, 'Failed to resolve ticket.');
+store.rejectTicket = (ticketId, reason) => store.performAction(ticketId, 'reject', { reason }, 'Failed to reject ticket.');
+store.reopenTicket = (ticketId) => store.performAction(ticketId, 'reopen', {}, 'Failed to reopen ticket.');
 
 store.updateTicketInLists = (ticket) => {
     const userIndex = store.tickets.findIndex(t => t.id === ticket.id);
@@ -434,9 +418,21 @@ store.updateTicketInLists = (ticket) => {
         store.tickets[userIndex] = ticket;
     }
 
-    const adminIndex = store.adminTickets.findIndex(t => t.id === ticket.id);
-    if (adminIndex !== -1) {
-        store.adminTickets[adminIndex] = ticket;
+    const allIndex = store.allTickets.findIndex(t => t.id === ticket.id);
+    if (allIndex !== -1) {
+        store.allTickets[allIndex] = ticket;
+    }
+
+    const currentUserId = store.getCurrentUserId();
+    if (ticket.owner?.id === currentUserId) {
+        const assignedIndex = store.assignedTickets.findIndex(t => t.id === ticket.id);
+        if (assignedIndex === -1) {
+            store.assignedTickets.push(ticket);
+        } else {
+            store.assignedTickets[assignedIndex] = ticket;
+        }
+    } else {
+        store.assignedTickets = store.assignedTickets.filter(t => t.id !== ticket.id);
     }
 };
 
