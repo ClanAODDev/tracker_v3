@@ -39,8 +39,8 @@
               :class="{ active: store.viewMode === 'admin' }"
               @click="store.setViewMode('admin')"
             >
-              <i class="fa fa-shield m-r-xs"></i>
-              <span class="toggle-label">Admin Queue</span>
+              <i class="fa fa-list m-r-xs"></i>
+              <span class="toggle-label">All Tickets</span>
             </button>
           </div>
         </div>
@@ -313,7 +313,7 @@ export default {
 .toggle-btn {
   position: relative;
   z-index: 1;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   background: transparent;
@@ -326,6 +326,7 @@ export default {
   cursor: pointer;
   transition: color 0.2s;
   white-space: nowrap;
+  line-height: 1;
 }
 
 .toggle-btn:hover {
@@ -338,6 +339,7 @@ export default {
 
 .toggle-btn i {
   font-size: 11px;
+  line-height: 1;
 }
 
 .toggle-label {
