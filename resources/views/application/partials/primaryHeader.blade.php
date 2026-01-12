@@ -10,10 +10,9 @@
         <a class="navbar-brand" href="{{ route('home') }}">
             TRACKER
         </a>
-        <button class="help-toggle" title="Help Center" onclick="window.openTicketModal && window.openTicketModal()">
+        <a href="{{ route('help.tickets.widget') }}" class="help-toggle" title="Help Center">
             <i class="fa fa-life-ring"></i>
-            <span class="help-badge" style="display: none;"></span>
-        </button>
+        </a>
         <button class="mobile-settings-toggle visible-xs" title="Settings">
             <i class="fa fa-cog"></i>
         </button>

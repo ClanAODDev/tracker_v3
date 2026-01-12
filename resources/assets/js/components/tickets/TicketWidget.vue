@@ -1,33 +1,19 @@
 <template>
   <div class="ticket-widget">
-    <div v-if="!inModal" class="view-header">
+    <div class="view-header">
       <div class="header-icon">
         <i class="pe pe-7s-help1"></i>
       </div>
       <div class="header-title">
         <h3 class="m-b-xs">
           Help Center
-          <button
-            v-if="store.currentView !== 'list'"
-            class="btn btn-default btn-sm pull-right"
-            @click="store.setView('list')"
-          >
-            <i class="fa fa-arrow-left"></i> Back
-          </button>
-          <button
-            v-else
-            class="btn btn-primary btn-sm pull-right"
-            @click="showTypeSelector"
-          >
-            <i class="fa fa-plus"></i> New Ticket
-          </button>
         </h3>
         <small class="slight">Submit and track your support requests</small>
       </div>
       <hr/>
     </div>
 
-    <div v-if="inModal" class="modal-actions m-b-md">
+    <div class="actions-bar m-b-md">
       <div class="actions-row">
         <button
           v-if="store.currentView !== 'list'"
@@ -167,13 +153,6 @@ export default {
     TicketDetail,
   },
 
-  props: {
-    inModal: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
   data() {
     return {
       store,
@@ -193,13 +172,6 @@ export default {
     resolvedCount() {
       return this.displayTickets.filter(t => t.state === 'resolved' || t.state === 'rejected').length;
     },
-  },
-
-  mounted() {
-    if (!this.inModal) {
-      store.loadTickets();
-      store.loadTicketTypes();
-    }
   },
 
   methods: {
@@ -298,6 +270,17 @@ export default {
   opacity: 0;
 }
 
+.actions-bar {
+  margin-bottom: 15px;
+}
+
+.actions-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
 .view-toggle {
   display: flex;
 }
@@ -373,17 +356,6 @@ export default {
   .toggle-btn i {
     margin-right: 0 !important;
   }
-}
-
-.w-100 {
-  width: 100%;
-}
-
-.actions-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
 }
 
 .ml-auto {

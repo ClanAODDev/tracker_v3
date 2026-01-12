@@ -1,16 +1,12 @@
 import { reactive } from 'vue';
 
-const LAST_SEEN_KEY = 'ticket_last_seen';
-
 const store = reactive({
     base_url: window.Laravel.appPath,
 
     currentView: 'list',
     selectedTicketId: null,
     pollInterval: null,
-    unreadPollInterval: null,
     soundEnabled: true,
-    unreadCount: 0,
 
     isAdmin: window.Laravel?.isAdmin || false,
     canWorkTickets: window.Laravel?.canWorkTickets || false,
@@ -297,95 +293,6 @@ store.formatRelativeDate = (dateString) => {
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
     return store.formatDate(dateString);
-};
-
-store.getLastSeen = () => {
-    try {
-        const data = localStorage.getItem(LAST_SEEN_KEY);
-        return data ? JSON.parse(data) : {};
-    } catch {
-        return {};
-    }
-};
-
-store.setLastSeen = (ticketId) => {
-    const lastSeen = store.getLastSeen();
-    lastSeen[ticketId] = new Date().toISOString();
-    try {
-        localStorage.setItem(LAST_SEEN_KEY, JSON.stringify(lastSeen));
-    } catch {}
-};
-
-store.markAllSeen = () => {
-    const lastSeen = store.getLastSeen();
-    store.tickets.forEach(ticket => {
-        lastSeen[ticket.id] = new Date().toISOString();
-    });
-    try {
-        localStorage.setItem(LAST_SEEN_KEY, JSON.stringify(lastSeen));
-    } catch {}
-    store.unreadCount = 0;
-    store.updateBadge();
-};
-
-store.calculateUnreadCount = () => {
-    const lastSeen = store.getLastSeen();
-    let count = 0;
-
-    store.tickets.forEach(ticket => {
-        if (ticket.state === 'resolved' || ticket.state === 'rejected') {
-            return;
-        }
-
-        const ticketLastSeen = lastSeen[ticket.id];
-        if (!ticketLastSeen) {
-            count++;
-        } else {
-            const seenDate = new Date(ticketLastSeen);
-            const updatedDate = new Date(ticket.updated_at);
-            if (updatedDate > seenDate) {
-                count++;
-            }
-        }
-    });
-
-    store.unreadCount = count;
-    store.updateBadge();
-};
-
-store.updateBadge = () => {
-    const badges = document.querySelectorAll('.help-badge');
-    badges.forEach(badge => {
-        if (store.unreadCount > 0) {
-            badge.textContent = store.unreadCount > 9 ? '9+' : store.unreadCount;
-            badge.style.display = 'flex';
-        } else {
-            badge.style.display = 'none';
-        }
-    });
-};
-
-store.startUnreadPolling = () => {
-    store.checkUnread();
-    store.unreadPollInterval = setInterval(() => {
-        store.checkUnread();
-    }, 60000);
-};
-
-store.stopUnreadPolling = () => {
-    if (store.unreadPollInterval) {
-        clearInterval(store.unreadPollInterval);
-        store.unreadPollInterval = null;
-    }
-};
-
-store.checkUnread = () => {
-    axios.get(`${store.base_url}/api/tickets`)
-        .then((response) => {
-            store.tickets = response.data.tickets || [];
-            store.calculateUnreadCount();
-        })
-        .catch(() => {});
 };
 
 store.setViewMode = (mode) => {

@@ -20,7 +20,7 @@ class NotifyUserTicketCreated extends Notification implements ShouldQueue
 
     public function toBot($ticket)
     {
-        $ticketUrl = url('/?ticket=' . $ticket->id);
+        $ticketUrl = route('help.tickets.show', $ticket);
 
         return new BotDMMessage()
             ->to($ticket->caller?->member?->discord)

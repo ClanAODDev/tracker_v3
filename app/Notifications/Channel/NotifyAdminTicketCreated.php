@@ -4,7 +4,6 @@ namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
-use App\Filament\Admin\Resources\TicketResource;
 use App\Notifications\Exception;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
@@ -34,9 +33,7 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
                             ? $notifiable->caller->name
                             : 'UNK'
                     ),
-                    'value' => sprintf('[Open Ticket](%s)', TicketResource::getUrl('edit', [
-                        'record' => $notifiable,
-                    ])),
+                    'value' => sprintf('[Open Ticket](%s)', route('help.tickets.show', $notifiable)),
                 ],
             ])
             ->info()
