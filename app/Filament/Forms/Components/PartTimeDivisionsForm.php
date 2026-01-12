@@ -19,28 +19,47 @@ class PartTimeDivisionsForm
                     return [];
                 }
 
-                $excluded = Division::whereIn('name', ['Floater', "Bluntz' Reserves"])
-                    ->pluck('id')->toArray();
-
-                return Division::active()
-                    ->whereNotIn('id', $excluded)
-                    ->when($member->division_id, fn ($q) => $q->where('id', '!=', $member->division_id))
-                    ->orderBy('name')
-                    ->pluck('name', 'id')
-                    ->toArray();
+                return self::getValidOptions($member);
             })
             ->default(function ($livewire) {
                 $member = ($livewire->record ?? null) ?: (auth()->user()->member ?? null);
+                if (! $member) {
+                    return [];
+                }
 
-                return $member?->partTimeDivisions()->pluck('divisions.id')->all() ?? [];
+                $validOptionIds = array_keys(self::getValidOptions($member));
+                $memberPartTimeIds = $member->partTimeDivisions()->pluck('divisions.id')->all();
+
+                return array_values(array_intersect($memberPartTimeIds, $validOptionIds));
             })
             ->afterStateHydrated(function (callable $set, $state, $livewire) {
                 $member = ($livewire->record ?? null) ?: (auth()->user()->member ?? null);
-                $set(self::FIELD, $member?->partTimeDivisions()->pluck('divisions.id')->all() ?? []);
+                if (! $member) {
+                    $set(self::FIELD, []);
+                    return;
+                }
+
+                $validOptionIds = array_keys(self::getValidOptions($member));
+                $memberPartTimeIds = $member->partTimeDivisions()->pluck('divisions.id')->all();
+
+                $set(self::FIELD, array_values(array_intersect($memberPartTimeIds, $validOptionIds)));
             })
             ->columns(3)
             ->bulkToggleable()
             ->dehydrated(false);
+    }
+
+    protected static function getValidOptions($member): array
+    {
+        $excluded = Division::whereIn('name', ['Floater', "Bluntz' Reserves"])
+            ->pluck('id')->toArray();
+
+        return Division::active()
+            ->whereNotIn('id', $excluded)
+            ->when($member->division_id, fn ($q) => $q->where('id', '!=', $member->division_id))
+            ->orderBy('name')
+            ->pluck('name', 'id')
+            ->toArray();
     }
 
     public static function selectedFrom(array $formState): array
