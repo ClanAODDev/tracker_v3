@@ -2,7 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Enums\Role;
+use App\Enums\Rank;
 use App\Filament\Admin\Resources\TicketResource\Pages\CreateTicket;
 use App\Filament\Admin\Resources\TicketResource\Pages\EditTicket;
 use App\Filament\Admin\Resources\TicketResource\Pages\ListTickets;
@@ -90,7 +90,7 @@ class TicketResource extends Resource
                         Select::make('owner_id')
                             ->label('Assigned To')
                             ->searchable()
-                            ->options(fn () => User::where('role', Role::ADMIN->value)->pluck('name', 'id'))
+                            ->options(fn () => User::whereHas('member', fn ($q) => $q->where('rank', '>=', Rank::SERGEANT->value))->pluck('name', 'id'))
                             ->placeholder('Unassigned'),
 
                         DateTimePicker::make('resolved_at')
