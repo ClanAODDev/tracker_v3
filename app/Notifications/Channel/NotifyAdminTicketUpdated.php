@@ -4,7 +4,6 @@ namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotDMMessage;
-use App\Filament\Admin\Resources\TicketResource;
 use App\Models\Ticket;
 use App\Traits\RetryableNotification;
 use Illuminate\Bus\Queueable;
@@ -31,7 +30,7 @@ class NotifyAdminTicketUpdated extends Notification implements ShouldQueue
             return [];
         }
 
-        $ticketUrl = TicketResource::getUrl('edit', ['record' => $this->ticket]);
+        $ticketUrl = route('help.tickets.show', $this->ticket);
 
         return new BotDMMessage()
             ->to($this->ticket->owner?->member?->discord)

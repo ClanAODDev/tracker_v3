@@ -2,9 +2,7 @@
     @csrf
 </form>
 
-<div id="ticket-modal-container"></div>
-
-@vite(['resources/assets/js/main.js', 'resources/assets/js/tickets.js'])
+@vite(['resources/assets/js/main.js'])
 
 @include('application.partials.snow')
 @include('application.partials.motes')

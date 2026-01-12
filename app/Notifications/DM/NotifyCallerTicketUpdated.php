@@ -30,7 +30,7 @@ class NotifyCallerTicketUpdated extends Notification implements ShouldQueue
             return [];
         }
 
-        $ticketUrl = url('/?ticket=' . $this->ticket->id);
+        $ticketUrl = route('help.tickets.show', $this->ticket);
 
         return new BotDMMessage()
             ->to($this->ticket->caller?->member?->discord)
