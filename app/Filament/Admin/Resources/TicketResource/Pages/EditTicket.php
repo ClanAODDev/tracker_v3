@@ -38,31 +38,6 @@ class EditTicket extends EditRecord
                     $this->refreshFormData(['state', 'owner_id']);
                 }),
 
-            Action::make('assign')
-                ->label('Assign To...')
-                ->icon('heroicon-o-user-plus')
-                ->color('gray')
-                ->visible(fn () => ! $this->record->isResolved())
-                ->form([
-                    Select::make('owner_id')
-                        ->label('Assign to')
-                        ->options(fn () => User::where('role', Role::ADMIN->value)->pluck('name', 'id'))
-                        ->required()
-                        ->searchable(),
-                ])
-                ->action(function (array $data) {
-                    $user = User::find($data['owner_id']);
-                    $this->record->ownTo($user);
-                    $this->record->notify(new TicketReaction('assigned'));
-
-                    Notification::make()
-                        ->title("Ticket assigned to {$user->name}")
-                        ->success()
-                        ->send();
-
-                    $this->refreshFormData(['state', 'owner_id']);
-                }),
-
             Action::make('resolve')
                 ->label('Resolve')
                 ->icon('heroicon-o-check-circle')
