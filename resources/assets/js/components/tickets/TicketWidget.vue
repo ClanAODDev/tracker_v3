@@ -37,7 +37,7 @@
           <i class="fa fa-arrow-left"></i> Back
         </button>
 
-        <div v-else-if="store.isAdmin" class="view-toggle">
+        <div v-else-if="store.canWorkTickets" class="view-toggle">
           <div class="toggle-track" :class="{ 'admin-active': store.viewMode === 'admin' }">
             <div class="toggle-indicator"></div>
             <button
