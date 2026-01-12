@@ -15,7 +15,7 @@
       </button>
     </div>
 
-    <div v-else-if="displayTickets.length === 0 && !isAdminView" class="text-center p-lg">
+    <div v-else-if="displayTickets.length === 0 && store.viewMode === 'user'" class="text-center p-lg">
       <div class="empty-icon">
         <i class="fa fa-inbox"></i>
       </div>
@@ -27,10 +27,10 @@
     </div>
 
     <div v-else>
-      <div v-if="isAdminView" class="admin-filters m-b-md">
+      <div v-if="isWorkView" class="filters m-b-md">
         <div class="filter-row">
           <select
-            v-model="store.adminFilters.state"
+            v-model="store.filters.state"
             class="form-control filter-select"
           >
             <option :value="null">All States</option>
@@ -40,7 +40,7 @@
             <option value="rejected">Rejected</option>
           </select>
           <input
-            v-model="store.adminFilters.search"
+            v-model="store.filters.search"
             type="text"
             class="form-control filter-search"
             placeholder="Search tickets..."
@@ -48,9 +48,7 @@
         </div>
       </div>
 
-      <h5 class="text-white m-b-md">{{ listTitle }}</h5>
-
-      <div v-if="displayTickets.length === 0 && isAdminView" class="text-center p-lg empty-results">
+      <div v-if="displayTickets.length === 0 && isWorkView" class="text-center p-lg empty-results">
         <div class="empty-icon">
           <i class="fa fa-filter"></i>
         </div>
@@ -114,33 +112,34 @@ export default {
   },
 
   computed: {
-    isAdminView() {
-      return store.viewMode === 'admin';
+    isWorkView() {
+      return store.viewMode === 'all' || store.viewMode === 'assigned';
     },
 
     isLoading() {
-      return this.isAdminView ? store.loading.adminTickets : store.loading.tickets;
+      return this.isWorkView ? store.loading.allTickets : store.loading.tickets;
     },
 
     hasError() {
-      return this.isAdminView ? store.errors.adminTickets : store.errors.tickets;
+      return this.isWorkView ? store.errors.allTickets : store.errors.tickets;
     },
 
     errorMessage() {
-      return this.isAdminView ? store.errors.adminTickets : store.errors.tickets;
+      return this.isWorkView ? store.errors.allTickets : store.errors.tickets;
     },
 
     loadingMessage() {
-      return this.isAdminView ? 'Loading admin queue...' : 'Loading your tickets...';
-    },
-
-    listTitle() {
-      return this.isAdminView ? 'Admin Queue' : 'Your Tickets';
+      const messages = {
+        user: 'Loading your requests...',
+        assigned: 'Loading assigned tickets...',
+        all: 'Loading all tickets...',
+      };
+      return messages[store.viewMode] || 'Loading...';
     },
 
     displayTickets() {
-      if (this.isAdminView) {
-        return store.getFilteredAdminTickets();
+      if (this.isWorkView) {
+        return store.getFilteredTickets();
       }
       return store.tickets;
     },
@@ -152,8 +151,8 @@ export default {
     },
 
     retry() {
-      if (this.isAdminView) {
-        store.loadAdminTickets();
+      if (this.isWorkView) {
+        store.loadAllTickets();
       } else {
         store.loadTickets();
       }

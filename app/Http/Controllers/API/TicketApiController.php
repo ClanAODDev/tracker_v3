@@ -28,7 +28,7 @@ class TicketApiController extends Controller
         return response()->json(['tickets' => $tickets]);
     }
 
-    public function adminIndex(): JsonResponse
+    public function workableIndex(): JsonResponse
     {
         $user = auth()->user();
 

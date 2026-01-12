@@ -90,6 +90,12 @@
         </li>
     @endunless
 
+    @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
+        <li class="{{ set_active('help/tickets*') }}">
+            <a href="{{ route('help.tickets.widget') }}">Get Help</a>
+        </li>
+    @endif
+
     <li class="{{ set_active('clan/*') }}">
         <a href="#{{ $idPrefix }}clan-information" data-toggle="collapse" aria-expanded="false">
             Clan Information

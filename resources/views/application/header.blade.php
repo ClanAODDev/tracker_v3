@@ -61,7 +61,6 @@
     window.Laravel = <?php echo json_encode([
         'csrfToken' => csrf_token(),
         'appPath' => route('index'),
-        'isAdmin' => auth()->check() && auth()->user()->isRole('admin'),
         'canWorkTickets' => auth()->check() && \App\Models\TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user())),
         'userId' => auth()->id(),
     ]); ?>
