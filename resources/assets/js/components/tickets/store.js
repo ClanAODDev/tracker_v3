@@ -13,6 +13,7 @@ const store = reactive({
     unreadCount: 0,
 
     isAdmin: window.Laravel?.isAdmin || false,
+    canWorkTickets: window.Laravel?.canWorkTickets || false,
     viewMode: 'user',
     adminTickets: [],
     adminFilters: {

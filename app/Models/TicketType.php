@@ -42,6 +42,6 @@ class TicketType extends Model
             return false;
         }
 
-        return $member->rank_id >= $this->minimum_rank->value;
+        return $member->rank->value >= $this->minimum_rank->value;
     }
 }

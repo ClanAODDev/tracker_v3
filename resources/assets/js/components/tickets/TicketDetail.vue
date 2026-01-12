@@ -269,7 +269,7 @@ export default {
     },
 
     showAdminActions() {
-      return store.isAdmin && store.viewMode === 'admin';
+      return store.canWorkTickets && store.viewMode === 'admin';
     },
 
     currentUserId() {
