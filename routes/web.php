@@ -7,7 +7,7 @@ include_once 'extra/requests.php';
 include_once 'extra/awards.php';
 
 Route::view('unauthorized', 'errors.403')->name('errors.unauthorized');
-Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('auth/discord', [DiscordController::class, 'redirect'])->name('auth.discord');
