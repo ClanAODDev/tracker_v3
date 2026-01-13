@@ -12,12 +12,16 @@ trait RecordsActivity
         if (auth()->check()) {
             $actor = auth()->user();
 
+            $divisionId = property_exists($this, 'division_id') && $this->division_id
+                ? $this->division_id
+                : $actor->member?->division_id;
+
             $this->activity()->create([
                 'name' => $type,
                 'user_id' => $actor->id,
                 'subject_id' => $this->id,
                 'subject_type' => static::class,
-                'division_id' => $actor->member?->division_id,
+                'division_id' => $divisionId,
                 'properties' => $properties ?: null,
             ]);
         }

@@ -9095,6 +9095,10 @@ pre.code-toolbar > .toolbar span:focus {
 .inactive-panel {
     display: none;
     padding: 20px;
+
+    .table-responsive {
+        width: 100%;
+    }
 }
 
 .inactive-panel.active {
@@ -9103,6 +9107,7 @@ pre.code-toolbar > .toolbar span:focus {
 
 .inactive-table {
     margin: 0;
+    width: 100% !important;
 }
 
 .inactive-table thead th {
