@@ -51,7 +51,7 @@ class RankTimelineService
             $enlistedRanks = $progressionOnly->filter(fn ($e) => ! $e->rank->isOfficer());
             $officerRanks = $progressionOnly->filter(fn ($e) => $e->rank->isOfficer())->values();
 
-            if ($enlistedRanks->count() > 0) {
+            if ($enlistedRanks->count() > 0 && $officerRanks->count() > 0) {
                 $nodes = $this->addEnlistedConsolidatedNode($nodes, $member, $enlistedRanks, $officerRanks, $nodeIndex);
                 $nodeIndex++;
 
