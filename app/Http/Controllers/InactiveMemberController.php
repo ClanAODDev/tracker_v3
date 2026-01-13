@@ -104,7 +104,7 @@ class InactiveMemberController extends Controller
     private function getRecentFlagActivity(Division $division): Collection
     {
         return Activity::where('division_id', $division->id)
-            ->whereIn('name', [ActivityType::REMOVED])
+            ->whereIn('name', [ActivityType::FLAGGED, ActivityType::UNFLAGGED, ActivityType::REMOVED])
             ->orderByDesc('created_at')
             ->with(['subject'])
             ->take(20)
@@ -129,6 +129,7 @@ class InactiveMemberController extends Controller
     {
         $member->flagged_for_inactivity = $flagged;
         $member->save();
+        $member->recordActivity($flagged ? ActivityType::FLAGGED : ActivityType::UNFLAGGED);
     }
 
     private function bulkUpdateFlag(Request $request, Division $division, bool $flag): JsonResponse
