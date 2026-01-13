@@ -164,7 +164,7 @@
                     <div class="rarity-indicator rarity-{{ $rarity }}"></div>
                     <div class="panel-body text-center">
                         @if($isTiered)
-                            <div class="award-tier-stack" data-toggle="tooltip" data-placement="top" title="{{ collect($tieredAwards)->pluck('name')->join(', ') }}">
+                            <div class="award-tier-stack" data-tier-count="{{ count($tieredAwards) }}" data-toggle="tooltip" data-placement="top" title="{{ collect($tieredAwards)->pluck('name')->join(', ') }}">
                                 @foreach(array_reverse($tieredAwards) as $index => $tierAward)
                                     <div class="award-tier-item" style="z-index: {{ $index + 1 }};">
                                         @if($tierAward->image && Storage::disk('public')->exists($tierAward->image))
