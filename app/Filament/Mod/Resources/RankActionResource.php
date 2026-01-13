@@ -29,6 +29,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Parallax\FilamentComments\Tables\Actions\CommentsAction;
@@ -141,6 +142,11 @@ class RankActionResource extends Resource
             })
             ->filters(
                 [
+                    SelectFilter::make('member_id')
+                        ->label('Member')
+                        ->searchable()
+                        ->relationship('member', 'name'),
+
                     Filter::make('rank_filter')
                         ->schema([
                             Select::make('ranks')
