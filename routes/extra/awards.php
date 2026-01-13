@@ -4,17 +4,17 @@ use App\Models\Member;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
-Route::get('members/{member}-{slug?}/my-awards.png', function (Member $member, \App\AOD\MemberAwardImage $service) {
+Route::get('members/{member}{slug?}/my-awards.png', function (Member $member, \App\AOD\MemberAwardImage $service) {
     return handleImageGeneration($member, 'member_awards', function ($member) use ($service) {
         return $service->generateAwardsImage($member);
     });
-});
+})->where('slug', '-[^/]*');
 
-Route::get('members/{member}-{slug?}/my-awards-cluster.png', function (Member $member, \App\AOD\MemberAwardCluster $service) {
+Route::get('members/{member}{slug?}/my-awards-cluster.png', function (Member $member, \App\AOD\MemberAwardCluster $service) {
     return handleImageGeneration($member, 'member_awards_cluster', function ($member) use ($service) {
         return $service->generateClusterImage($member);
     });
-});
+})->where('slug', '-[^/]*');
 
 function handleImageGeneration(Member $member, string $cachePrefix, callable $generateImageCallback)
 {
