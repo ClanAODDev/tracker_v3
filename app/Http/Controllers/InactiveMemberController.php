@@ -61,7 +61,7 @@ class InactiveMemberController extends Controller
         $this->setFlagStatus($member, false);
         $this->showSuccessToast($member->name . ' successfully unflagged');
 
-        return redirect(route('division.inactive-members', $member->division->slug));
+        return redirect(route('division.inactive-members', $member->division->slug) . '#flagged');
     }
 
     public function removeMember(Member $member, DeleteMember $form): RedirectResponse

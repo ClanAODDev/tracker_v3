@@ -12,9 +12,7 @@ trait RecordsActivity
         if (auth()->check()) {
             $actor = auth()->user();
 
-            $divisionId = property_exists($this, 'division_id') && $this->division_id
-                ? $this->division_id
-                : $actor->member?->division_id;
+            $divisionId = $this->getAttribute('division_id') ?? $actor->member?->division_id;
 
             $this->activity()->create([
                 'name' => $type,
