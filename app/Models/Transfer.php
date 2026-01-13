@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActivityType;
 use App\Enums\Position;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -53,6 +54,10 @@ class Transfer extends Model
         $this->update([
             'approved_at' => now(),
             'approved_by' => auth()->id(),
+        ]);
+
+        $this->member->recordActivity(ActivityType::TRANSFERRED, [
+            'to_division' => $this->division->name,
         ]);
 
         $this->removeFromLeadershipAssignments();
