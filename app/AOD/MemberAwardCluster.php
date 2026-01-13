@@ -4,13 +4,10 @@ namespace App\AOD;
 
 use App\AOD\Traits\GeneratesAwardImages;
 use App\Models\Member;
-use App\Models\MemberAward;
 
 class MemberAwardCluster
 {
     use GeneratesAwardImages;
-
-    private const AWARD_SIZE = 60;
 
     private const COLUMNS = 3;
 
@@ -23,13 +20,12 @@ class MemberAwardCluster
         $awards = $this->fetchAwardImages($member);
 
         if (empty($awards)) {
-            return $this->loadFallbackImage(public_path('images/dynamic-images/bgs/no-awards-base-image.png'))
-                ?? $this->renderToPng($this->createPlaceholderImage(self::AWARD_SIZE, self::AWARD_SIZE));
+            return $this->getEmptyAwardsFallback();
         }
 
         $rows = (int) ceil(count($awards) / self::COLUMNS);
-        $baseWidth = (self::COLUMNS * self::AWARD_SIZE) + ((self::COLUMNS - 1) * self::PADDING);
-        $baseHeight = ($rows * self::AWARD_SIZE) + (($rows - 1) * self::PADDING);
+        $baseWidth = (self::COLUMNS * $this->awardSize) + ((self::COLUMNS - 1) * self::PADDING);
+        $baseHeight = ($rows * $this->awardSize) + (($rows - 1) * self::PADDING);
 
         $canvas = $this->createTransparentCanvas($baseWidth, $baseHeight);
         $this->placeAwards($canvas, $awards);
@@ -39,12 +35,9 @@ class MemberAwardCluster
 
     private function fetchAwardImages(Member $member): array
     {
-        return MemberAward::where('member_id', $member->clan_id)
-            ->join('awards', 'award_member.award_id', '=', 'awards.id')
-            ->where('approved', true)
-            ->orderBy('awards.display_order')
+        return $this->fetchMemberAwardsCollapseTiered($member, ['awards.image'])
             ->take(self::MAX_AWARDS)
-            ->pluck('awards.image')
+            ->pluck('image')
             ->toArray();
     }
 
@@ -54,19 +47,13 @@ class MemberAwardCluster
         $y = 0;
 
         foreach ($awards as $index => $imagePath) {
-            $awardImage = $this->loadAwardImage($imagePath, self::AWARD_SIZE, self::AWARD_SIZE);
-            $resized = $this->resizeImage($awardImage, self::AWARD_SIZE, self::AWARD_SIZE);
+            $this->placeAwardOnCanvas($canvas, $imagePath, $x, $y);
 
-            imagecopy($canvas, $resized, $x, $y, 0, 0, self::AWARD_SIZE, self::AWARD_SIZE);
-
-            imagedestroy($awardImage);
-            imagedestroy($resized);
-
-            $x += self::AWARD_SIZE + self::PADDING;
+            $x += $this->awardSize + self::PADDING;
 
             if (($index + 1) % self::COLUMNS === 0) {
                 $x = 0;
-                $y += self::AWARD_SIZE + self::PADDING;
+                $y += $this->awardSize + self::PADDING;
             }
         }
     }

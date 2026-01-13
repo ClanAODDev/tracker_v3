@@ -4,14 +4,11 @@ namespace App\AOD;
 
 use App\AOD\Traits\GeneratesAwardImages;
 use App\Models\Member;
-use App\Models\MemberAward;
 use GdImage;
 
 class MemberAwardImage
 {
     use GeneratesAwardImages;
-
-    private const AWARD_SIZE = 60;
 
     private const MAX_AWARDS = 4;
 
@@ -36,8 +33,7 @@ class MemberAwardImage
         $awardsData = $this->fetchAwardsData($member);
 
         if (empty($awardsData)) {
-            return $this->loadFallbackImage(public_path('images/dynamic-images/bgs/no-awards-base-image.png'))
-                ?? $this->renderToPng($this->createPlaceholderImage(self::AWARD_SIZE, self::AWARD_SIZE));
+            return $this->getEmptyAwardsFallback();
         }
 
         $baseImage = @imagecreatefrompng($baseImagePath);
@@ -86,17 +82,13 @@ class MemberAwardImage
 
     private function fetchAwardsData(Member $member): array
     {
-        return MemberAward::where('member_id', $member->clan_id)
-            ->join('awards', 'award_member.award_id', '=', 'awards.id')
-            ->leftJoin('divisions', 'awards.division_id', '=', 'divisions.id')
-            ->where('approved', true)
-            ->orderBy('awards.display_order')
-            ->get(['awards.image', 'awards.name', 'divisions.abbreviation'])
+        return $this->fetchMemberAwardsCollapseTiered($member, ['awards.image', 'awards.name', 'divisions.abbreviation'])
             ->map(fn ($item) => [
                 'image' => $item->image,
                 'name' => $item->name,
                 'division' => $item->abbreviation ? strtoupper($item->abbreviation) : null,
             ])
+            ->values()
             ->toArray();
     }
 
@@ -106,35 +98,22 @@ class MemberAwardImage
         $baseHeight = imagesy($canvas);
         $count = count($awards);
 
-        $spacing = ($baseWidth - ($count * self::AWARD_SIZE)) / ($count + 1);
+        $spacing = ($baseWidth - ($count * $this->awardSize)) / ($count + 1);
         $x = $spacing;
 
         foreach ($awards as $award) {
-            $x = $this->placeAward($canvas, $award, $x, $baseHeight, $spacing);
+            $y = ($baseHeight - $this->awardSize) / 2 - $this->options['imageOffset'];
+            $this->placeAwardOnCanvas($canvas, $award['image'], (int) $x, (int) $y);
+            $this->renderLabel($canvas, $award, $x, $y);
+            $x += $this->awardSize + $spacing;
         }
-    }
-
-    private function placeAward(GdImage $canvas, array $award, float $x, int $baseHeight, float $spacing): float
-    {
-        $awardImage = $this->loadAwardImage($award['image'], self::AWARD_SIZE, self::AWARD_SIZE);
-        $resized = $this->resizeImage($awardImage, self::AWARD_SIZE, self::AWARD_SIZE);
-
-        $y = ($baseHeight - self::AWARD_SIZE) / 2 - $this->options['imageOffset'];
-        imagecopy($canvas, $resized, (int) $x, (int) $y, 0, 0, self::AWARD_SIZE, self::AWARD_SIZE);
-
-        imagedestroy($awardImage);
-        imagedestroy($resized);
-
-        $this->renderLabel($canvas, $award, $x, $y);
-
-        return $x + self::AWARD_SIZE + $spacing;
     }
 
     private function renderLabel(GdImage $canvas, array $award, float $x, float $y): void
     {
         $textColor = imagecolorallocate($canvas, 255, 255, 255);
-        $textY = $y + self::AWARD_SIZE + $this->options['textOffset'];
-        $textX = $x + (self::AWARD_SIZE / 2) - ($this->options['textWidth'] / 2);
+        $textY = $y + $this->awardSize + $this->options['textOffset'];
+        $textX = $x + ($this->awardSize / 2) - ($this->options['textWidth'] / 2);
 
         $label = $this->options['showDivision'] && $award['division']
             ? sprintf('[%s] %s', $award['division'], $award['name'])

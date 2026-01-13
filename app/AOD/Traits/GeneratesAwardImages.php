@@ -2,11 +2,53 @@
 
 namespace App\AOD\Traits;
 
+use App\Models\Member;
+use App\Models\MemberAward;
 use GdImage;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 trait GeneratesAwardImages
 {
+    protected int $awardSize = 60;
+
+    protected function getEmptyAwardsFallback(): string
+    {
+        return $this->loadFallbackImage(public_path('images/dynamic-images/bgs/no-awards-base-image.png'))
+            ?? $this->renderToPng($this->createPlaceholderImage($this->awardSize, $this->awardSize));
+    }
+
+    protected function placeAwardOnCanvas(GdImage $canvas, string $imagePath, int $x, int $y): void
+    {
+        $awardImage = $this->loadAwardImage($imagePath, $this->awardSize, $this->awardSize);
+        $resized = $this->resizeImage($awardImage, $this->awardSize, $this->awardSize);
+
+        imagecopy($canvas, $resized, $x, $y, 0, 0, $this->awardSize, $this->awardSize);
+
+        imagedestroy($awardImage);
+        imagedestroy($resized);
+    }
+
+    protected function fetchMemberAwardsCollapseTiered(Member $member, array $columns = ['awards.id', 'awards.image', 'awards.prerequisite_award_id']): Collection
+    {
+        $memberAwards = MemberAward::where('member_id', $member->clan_id)
+            ->join('awards', 'award_member.award_id', '=', 'awards.id')
+            ->leftJoin('divisions', 'awards.division_id', '=', 'divisions.id')
+            ->where('approved', true)
+            ->orderBy('awards.display_order')
+            ->get(array_unique(array_merge($columns, ['awards.id', 'awards.prerequisite_award_id'])));
+
+        $memberAwardIds = $memberAwards->pluck('id')->unique();
+        $skipIds = collect();
+
+        foreach ($memberAwards as $item) {
+            if ($item->prerequisite_award_id && $memberAwardIds->contains($item->prerequisite_award_id)) {
+                $skipIds->push($item->prerequisite_award_id);
+            }
+        }
+
+        return $memberAwards->reject(fn ($item) => $skipIds->contains($item->id));
+    }
     protected function loadAwardImage(string $imagePath, int $width, int $height): GdImage
     {
         $filePath = Storage::path('public/' . $imagePath);
