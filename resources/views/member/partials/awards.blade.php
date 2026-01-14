@@ -45,7 +45,7 @@
                             </span>
                         </div>
                         <p class="help-block">
-                            Options: <code>?award_count=1-4</code>, <code>&font=ttf|bitmap</code>, <code>&font_size=7-12</code>
+                            Options: <code>?award_count=1-4</code>, <code>&font_size=8-14</code>
                         </p>
                     </div>
 
