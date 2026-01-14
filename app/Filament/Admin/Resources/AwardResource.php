@@ -44,11 +44,11 @@ class AwardResource extends Resource
             ->columns(1)
             ->components([
                 FileUpload::make('image')
+                    ->disk('public')
                     ->directory('awards')
-                    ->rules(['dimensions:width=60,height=60'])
-                    ->validationMessages([
-                        'dimensions' => 'Award image size must be 60x60.',
-                    ])
+                    ->imageResizeMode('force')
+                    ->imageResizeTargetWidth(60)
+                    ->imageResizeTargetHeight(60)
                     ->avatar()
                     ->columnSpanFull()
                     ->alignCenter()

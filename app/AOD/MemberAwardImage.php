@@ -4,47 +4,89 @@ namespace App\AOD;
 
 use App\AOD\Traits\GeneratesAwardImages;
 use App\Models\Member;
-use GdImage;
 
 class MemberAwardImage
 {
     use GeneratesAwardImages;
 
     private const MAX_AWARDS = 4;
+    private const CANVAS_WIDTH = 500;
+    private const CANVAS_HEIGHT = 131;
 
     private array $fonts;
-
     private array $options;
 
     public function __construct()
     {
         $this->fonts = [
-            'tiny' => public_path('fonts/copy0855.ttf'),
-            'tinyBold' => public_path('fonts/copy0866.ttf'),
             'big' => public_path('fonts/din-black.otf'),
         ];
     }
 
     public function generateAwardsImage(Member $member): string
     {
-        $baseImagePath = public_path('images/dynamic-images/bgs/awards_base_image.png');
-        abort_unless(file_exists($baseImagePath), 404, 'Base image not found.');
+        return $this->generateSvgContent($member);
+    }
 
+    public function generateAwardsImagePng(Member $member, bool $withBackground = false): string
+    {
+        $svg = $this->generateSvgContent($member);
+
+        $process = proc_open(
+            'rsvg-convert -f png',
+            [
+                0 => ['pipe', 'r'],
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w'],
+            ],
+            $pipes
+        );
+
+        fwrite($pipes[0], $svg);
+        fclose($pipes[0]);
+
+        $png = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($process);
+
+        if ($withBackground) {
+            $png = $this->compositeOnBackground($png);
+        }
+
+        return $png;
+    }
+
+    private function compositeOnBackground(string $overlayPng): string
+    {
+        $backgroundPath = public_path('images/dynamic-images/bgs/awards_base_image.png');
+
+        $background = new \Imagick($backgroundPath);
+        $overlay = new \Imagick();
+        $overlay->readImageBlob($overlayPng);
+
+        $background->compositeImage($overlay, \Imagick::COMPOSITE_OVER, 0, 0);
+
+        $result = $background->getImageBlob();
+
+        $background->destroy();
+        $overlay->destroy();
+
+        return $result;
+    }
+
+    private function generateSvgContent(Member $member): string
+    {
         $awardsData = $this->fetchAwardsData($member);
 
         if (empty($awardsData)) {
-            return $this->getEmptyAwardsFallback();
+            return $this->generateEmptySvg();
         }
-
-        $baseImage = @imagecreatefrompng($baseImagePath);
-        imagesavealpha($baseImage, true);
 
         $this->options = $this->parseOptions(count($awardsData));
         $awards = array_slice($awardsData, 0, $this->options['count']);
 
-        $this->placeAwards($baseImage, $awards);
-
-        return $this->renderToPng($baseImage);
+        return $this->generateSvg($awards);
     }
 
     private function parseOptions(int $availableCount): array
@@ -52,129 +94,210 @@ class MemberAwardImage
         $requestedCount = (int) request('award_count', $availableCount);
         $count = min(max($requestedCount, 1), self::MAX_AWARDS, $availableCount);
 
-        $fontType = in_array(request('font'), ['ttf', 'bitmap'], true) ? request('font') : 'ttf';
+        $defaultFontSize = $count >= 4 ? 10 : 11;
 
         return [
             'count' => $count,
-            'textOffset' => $this->clampInt(request('text_offset'), 1, 45, 20),
-            'imageOffset' => $this->clampInt(request('image_offset'), 1, 45, 20),
-            'textWidth' => $this->clampInt(request('text_container_width'), 1, 200, 100),
-            'fontType' => $fontType,
-            'fontSize' => $this->parseFontSize($fontType),
-            'textTransform' => request('text_transform'),
-            'showDivision' => (bool) request('division_abbreviation'),
+            'textOffset' => 25,
+            'imageOffset' => 20,
+            'fontSize' => $this->clampInt(request('font_size'), 8, 14, $defaultFontSize),
+            'maxLines' => $count >= 4 ? 2 : 3,
         ];
     }
 
     private function clampInt($value, int $min, int $max, int $default): int
     {
         $int = filter_var($value, FILTER_VALIDATE_INT);
-
         return $int !== false ? max($min, min($max, $int)) : $default;
-    }
-
-    private function parseFontSize(string $fontType): int
-    {
-        $ranges = $fontType === 'ttf' ? [7, 12, 8] : [1, 5, 1];
-
-        return $this->clampInt(request('font_size'), $ranges[0], $ranges[1], $ranges[2]);
     }
 
     private function fetchAwardsData(Member $member): array
     {
+        $memberAwardCounts = \App\Models\MemberAward::where('member_id', $member->clan_id)
+            ->where('approved', true)
+            ->selectRaw('award_id, COUNT(*) as count')
+            ->groupBy('award_id')
+            ->pluck('count', 'award_id');
+
         return $this->fetchMemberAwardsCollapseTiered($member, ['awards.image', 'awards.name', 'divisions.abbreviation'])
-            ->map(fn ($item) => [
-                'image' => $item->image,
-                'name' => $item->name,
-                'division' => $item->abbreviation ? strtoupper($item->abbreviation) : null,
-            ])
+            ->map(function ($item) use ($memberAwardCounts) {
+                $recipientCount = \App\Models\MemberAward::where('award_id', $item->id)
+                    ->where('approved', true)
+                    ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
+                    ->count();
+
+                return [
+                    'image' => $item->image,
+                    'name' => $item->name,
+                    'division' => $item->abbreviation ? strtoupper($item->abbreviation) : null,
+                    'rarity' => $this->calculateRarity($recipientCount),
+                    'count' => $memberAwardCounts->get($item->id, 1),
+                ];
+            })
             ->values()
             ->toArray();
     }
 
-    private function placeAwards(GdImage $canvas, array $awards): void
+    private function generateSvg(array $awards): string
     {
-        $baseWidth = imagesx($canvas);
-        $baseHeight = imagesy($canvas);
         $count = count($awards);
+        $spacing = (self::CANVAS_WIDTH - ($count * $this->awardSize)) / ($count + 1);
 
-        $spacing = ($baseWidth - ($count * $this->awardSize)) / ($count + 1);
+        $defs = $this->generateDefs();
+        $awardsContent = '';
         $x = $spacing;
 
         foreach ($awards as $award) {
-            $y = ($baseHeight - $this->awardSize) / 2 - $this->options['imageOffset'];
-            $this->placeAwardOnCanvas($canvas, $award['image'], (int) $x, (int) $y);
-            $this->renderLabel($canvas, $award, $x, $y);
+            $centerX = $x + ($this->awardSize / 2);
+            $y = (self::CANVAS_HEIGHT - $this->awardSize) / 2 - $this->options['imageOffset'];
+            $awardsContent .= $this->renderAward($award, $x, $y, $centerX);
             $x += $this->awardSize + $spacing;
         }
+
+        $width = self::CANVAS_WIDTH;
+        $height = self::CANVAS_HEIGHT;
+
+        return <<<SVG
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="{$width}" height="{$height}" viewBox="0 0 {$width} {$height}"
+     overflow="visible">
+    <defs>
+        {$defs}
+        <style>
+            @font-face {
+                font-family: 'DIN Black';
+                src: url('data:font/opentype;base64,{$this->getFontBase64()}') format('opentype');
+            }
+            .award-text {
+                font-family: 'DIN Black', Arial Black, sans-serif;
+                font-size: {$this->options['fontSize']}px;
+                text-anchor: middle;
+                font-weight: bold;
+                letter-spacing: -0.5px;
+            }
+            .award-shadow {
+                fill: black;
+                opacity: 0.8;
+            }
+            .badge-text {
+                font-family: 'DIN Black', Arial Black, sans-serif;
+                font-size: 9px;
+                fill: white;
+                text-anchor: middle;
+                dominant-baseline: middle;
+            }
+        </style>
+    </defs>
+    <rect width="100%" height="100%" fill="transparent"/>
+    {$awardsContent}
+</svg>
+SVG;
     }
 
-    private function renderLabel(GdImage $canvas, array $award, float $x, float $y): void
+    private function generateDefs(): string
     {
-        $textColor = imagecolorallocate($canvas, 255, 255, 255);
+        $filters = '';
+        foreach (['mythic', 'legendary', 'epic', 'rare', 'common'] as $rarity) {
+            $rgb = config("aod.awards.rarity.{$rarity}.color", [128, 128, 128]);
+            $filters .= <<<FILTER
+        <filter id="glow-{$rarity}" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+            <feFlood flood-color="rgb({$rgb[0]},{$rgb[1]},{$rgb[2]})" flood-opacity="0.5"/>
+            <feComposite in2="blur" operator="in"/>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+FILTER;
+        }
+
+        return <<<DEFS
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+        </linearGradient>
+        {$filters}
+DEFS;
+    }
+
+    private function renderAward(array $award, float $x, float $y, float $slotCenterX): string
+    {
+        $rgb = config("aod.awards.rarity.{$award['rarity']}.color", [128, 128, 128]);
+        $textColor = "rgb({$rgb[0]},{$rgb[1]},{$rgb[2]})";
+        $rarity = $award['rarity'];
+
+        $imageBase64 = $this->getAwardImageBase64($award['image']);
+        $centerX = $slotCenterX;
         $textY = $y + $this->awardSize + $this->options['textOffset'];
-        $textX = $x + ($this->awardSize / 2) - ($this->options['textWidth'] / 2);
 
-        $label = $this->options['showDivision'] && $award['division']
-            ? sprintf('[%s] %s', $award['division'], $award['name'])
-            : $award['name'];
-
-        if ($this->options['textTransform'] === 'upper') {
-            $label = strtoupper($label);
+        $label = strtoupper($award['name']);
+        $lines = $this->wrapText($label, 100);
+        if (count($lines) > $this->options['maxLines']) {
+            $lines = array_slice($lines, 0, $this->options['maxLines']);
+            $lines[count($lines) - 1] = rtrim($lines[count($lines) - 1]) . '...';
         }
 
-        if ($this->options['fontType'] === 'bitmap') {
-            $this->wrapBitmapText($canvas, $label, $textX, $textY, $textColor);
-        } else {
-            $this->wrapTtfText($canvas, $label, $textX, $textY, $textColor);
+        $textElements = '';
+        foreach ($lines as $i => $line) {
+            $lineY = $textY + ($i * ($this->options['fontSize'] + 2));
+            $line = htmlspecialchars($line, ENT_XML1);
+            $textElements .= <<<TEXT
+        <text x="{$centerX}" y="{$lineY}" class="award-text award-shadow" dx="1" dy="1">{$line}</text>
+        <text x="{$centerX}" y="{$lineY}" class="award-text" fill="{$textColor}">{$line}</text>
+TEXT;
         }
+
+        $badge = '';
+        if ($award['count'] > 1) {
+            $badgeX = $x + $this->awardSize - 8;
+            $badgeY = $y + $this->awardSize - 8;
+            $badge = <<<BADGE
+        <circle cx="{$badgeX}" cy="{$badgeY}" r="9" fill="rgb(40,40,50)" stroke="gold" stroke-width="1"/>
+        <text x="{$badgeX}" y="{$badgeY}" class="badge-text">x{$award['count']}</text>
+BADGE;
+        }
+
+        return <<<AWARD
+    <g class="award-group" filter="url(#glow-{$rarity})">
+        <image x="{$x}" y="{$y}" width="{$this->awardSize}" height="{$this->awardSize}"
+               xlink:href="data:image/png;base64,{$imageBase64}" />
+    </g>
+    {$badge}
+    {$textElements}
+AWARD;
     }
 
-    private function wrapBitmapText(GdImage $image, string $text, float $x, float $y, int $color): void
+    private function getAwardImageBase64(string $imagePath): string
     {
-        $font = $this->options['fontSize'];
-        $charWidth = imagefontwidth($font);
-        $maxWidth = $this->options['textWidth'];
-
-        $lines = $this->wrapText($text, fn ($line) => strlen($line) * $charWidth, $maxWidth);
-
-        foreach ($lines as $line) {
-            $lineWidth = strlen($line) * $charWidth;
-            $centeredX = $x + ($maxWidth / 2) - ($lineWidth / 2);
-            imagestring($image, $font, (int) $centeredX, (int) $y, $line, $color);
-            $y += imagefontheight($font);
+        $filePath = storage_path('app/public/' . $imagePath);
+        if (file_exists($filePath)) {
+            return base64_encode(file_get_contents($filePath));
         }
+        return '';
     }
 
-    private function wrapTtfText(GdImage $image, string $text, float $x, float $y, int $color): void
+    private function getFontBase64(): string
     {
-        $fontSize = $this->options['fontSize'];
-        $fontPath = $this->fonts['tiny'];
-        $maxWidth = $this->options['textWidth'];
-
-        $measureWidth = fn ($line) => abs(imagettfbbox($fontSize, 0, $fontPath, $line)[2] ?? 0);
-        $lines = $this->wrapText($text, $measureWidth, $maxWidth);
-
-        foreach ($lines as $line) {
-            $box = imagettfbbox($fontSize, 0, $fontPath, $line);
-            $lineWidth = abs($box[2] - $box[0]);
-            $centeredX = $x + ($maxWidth / 2) - ($lineWidth / 2);
-
-            imagettftext($image, $fontSize, 0, (int) $centeredX, (int) $y, $color, $fontPath, $line);
-            $y += abs($box[1] - $box[7]) + 5;
+        if (file_exists($this->fonts['big'])) {
+            return base64_encode(file_get_contents($this->fonts['big']));
         }
+        return '';
     }
 
-    private function wrapText(string $text, callable $measureWidth, int $maxWidth): array
+    private function wrapText(string $text, int $maxWidth): array
     {
         $words = explode(' ', $text);
         $lines = [];
         $currentLine = '';
+        $charWidth = $this->options['fontSize'] * 0.6;
 
         foreach ($words as $word) {
             $testLine = $currentLine ? "$currentLine $word" : $word;
+            $width = strlen($testLine) * $charWidth;
 
-            if ($measureWidth($testLine) <= $maxWidth) {
+            if ($width <= $maxWidth) {
                 $currentLine = $testLine;
             } else {
                 if ($currentLine) {
@@ -189,5 +312,16 @@ class MemberAwardImage
         }
 
         return $lines;
+    }
+
+    private function generateEmptySvg(): string
+    {
+        return <<<SVG
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="{self::CANVAS_WIDTH}" height="{self::CANVAS_HEIGHT}">
+    <rect width="100%" height="100%" fill="#1a1a2e"/>
+    <text x="50%" y="50%" text-anchor="middle" fill="#666" font-family="Arial" font-size="14">No Awards</text>
+</svg>
+SVG;
     }
 }

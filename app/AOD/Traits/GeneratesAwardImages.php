@@ -12,6 +12,24 @@ trait GeneratesAwardImages
 {
     protected int $awardSize = 60;
 
+    protected function getRarityColor(GdImage $canvas, string $rarity): int
+    {
+        $rgb = config("aod.awards.rarity.{$rarity}.color", config('aod.awards.rarity.common.color'));
+
+        return imagecolorallocate($canvas, $rgb[0], $rgb[1], $rgb[2]);
+    }
+
+    protected function calculateRarity(int $recipientCount): string
+    {
+        foreach (config('aod.awards.rarity') as $key => $thresholds) {
+            if ($recipientCount >= $thresholds['min'] && ($thresholds['max'] === null || $recipientCount <= $thresholds['max'])) {
+                return $key;
+            }
+        }
+
+        return 'common';
+    }
+
     protected function getEmptyAwardsFallback(): string
     {
         return $this->loadFallbackImage(public_path('images/dynamic-images/bgs/no-awards-base-image.png'))
@@ -49,6 +67,7 @@ trait GeneratesAwardImages
 
         return $memberAwards->reject(fn ($item) => $skipIds->contains($item->id));
     }
+
     protected function loadAwardImage(string $imagePath, int $width, int $height): GdImage
     {
         $filePath = Storage::path('public/' . $imagePath);
