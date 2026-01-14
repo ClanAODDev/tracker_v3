@@ -1,7 +1,9 @@
 @if ($member->awards->count())
     @php
-        $awardsImageUrl = url("members/{$member->clan_id}-{$member->rank->getAbbreviation()}-{$member->name}/my-awards.png");
-        $clusterImageUrl = url("members/{$member->clan_id}-{$member->rank->getAbbreviation()}-{$member->name}/my-awards-cluster.png");
+        $memberSlug = "{$member->clan_id}-{$member->rank->getAbbreviation()}-{$member->name}";
+        $awardsImageUrl = url("members/{$memberSlug}/my-awards.png");
+        $transparentImageUrl = url("members/{$memberSlug}/my-awards-transparent.png");
+        $clusterImageUrl = url("members/{$memberSlug}/my-awards-cluster.png");
     @endphp
     <div class="achievements-header m-t-xl" id="achievements">
         <h4>
@@ -40,6 +42,24 @@
                             <input type="text" class="form-control" readonly value="{{ $awardsImageUrl }}" id="awards-banner-url">
                             <span class="input-group-btn">
                                 <button class="btn btn-default copy-url-btn" type="button" data-target="awards-banner-url" title="Copy URL">
+                                    <i class="fa fa-copy"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <p class="help-block">
+                            Options: <code>?award_count=1-4</code>, <code>&font_size=8-14</code>
+                        </p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Banner Style - Transparent (up to 4 awards)</label>
+                        <div class="share-preview text-center" style="background: repeating-conic-gradient(#808080 0% 25%, #606060 0% 50%) 50% / 16px 16px; padding: 10px; border-radius: 4px; margin-bottom: 8px;">
+                            <img src="{{ $transparentImageUrl }}?award_count=4" alt="Awards Banner Transparent" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" readonly value="{{ $transparentImageUrl }}" id="awards-transparent-url">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default copy-url-btn" type="button" data-target="awards-transparent-url" title="Copy URL">
                                     <i class="fa fa-copy"></i>
                                 </button>
                             </span>
