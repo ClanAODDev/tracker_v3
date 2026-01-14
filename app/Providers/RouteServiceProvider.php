@@ -79,14 +79,7 @@ class RouteServiceProvider extends ServiceProvider
         /*
          * Show member by clan member id (forum id).
          */
-        \Route::bind('member', function ($member) {
-            $model = Member::whereClanId($member)
-                ->first();
-
-            if ($model instanceof Member) {
-                return $model;
-            }
-        });
+        \Route::bind('member', fn ($member) => Member::whereClanId($member)->firstOrFail());
     }
 
     /**
