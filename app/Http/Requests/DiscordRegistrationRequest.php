@@ -14,7 +14,7 @@ class DiscordRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date_of_birth' => ['required', 'date', 'before:'.now()->subYears(18)->format('Y-m-d')],
+            'date_of_birth' => ['required', 'date', 'before:'.now()->subYears(13)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
@@ -22,7 +22,7 @@ class DiscordRegistrationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date_of_birth.before' => 'You must be at least 18 years old to join.',
+            'date_of_birth.before' => 'You must be at least 13 years old to join.',
         ];
     }
 
