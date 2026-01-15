@@ -126,35 +126,24 @@ class RecruitmentServiceTest extends TestCase
         $this->assertDatabaseCount('member_requests', 1);
     }
 
-    public function test_create_forum_account_returns_not_implemented(): void
+    public function test_create_forum_account_requires_date_of_birth(): void
     {
-        $user = User::factory()->pending()->create();
+        $user = User::factory()->pending()->create(['date_of_birth' => null]);
 
         $result = $this->service->createForumAccountForDiscordUser($user, 'TestName');
 
         $this->assertFalse($result['success']);
-        $this->assertEquals('Forum account creation is not yet implemented.', $result['error']);
+        $this->assertEquals('Date of birth is required to create a forum account.', $result['error']);
     }
 
-    /**
-     * @todo Enable when forum account creation is implemented
-     */
-    public function test_create_forum_account_returns_clan_id_on_success(): void
+    public function test_create_forum_account_requires_forum_password(): void
     {
-        $this->markTestSkipped('Forum account creation not yet implemented');
+        $user = User::factory()->pending()->create(['forum_password' => null]);
 
-        $forumService = Mockery::mock(ForumProcedureService::class);
-        $forumService->shouldReceive('createUser')
-            ->with('test@example.com', 'AOD_TestName')
-            ->andReturn((object) ['userid' => 12345, 'error' => null]);
+        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName');
 
-        $service = new RecruitmentService($forumService);
-        $user = User::factory()->pending()->create(['email' => 'test@example.com']);
-
-        $result = $service->createForumAccountForDiscordUser($user, 'TestName');
-
-        $this->assertTrue($result['success']);
-        $this->assertEquals(12345, $result['clan_id']);
+        $this->assertFalse($result['success']);
+        $this->assertEquals('Password is required to create a forum account.', $result['error']);
     }
 
     /**

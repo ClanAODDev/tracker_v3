@@ -25,6 +25,8 @@ class AODForumService
 
     const ADD_TO_AOD = 'addaod';
 
+    const CREATE_USER = 'newuser';
+
     public static function request(string $url, array $options = []): array|string
     {
         $tokenParam = $options['_token_param'] ?? self::DEFAULT_TOKEN_PARAM;
@@ -97,6 +99,65 @@ class AODForumService
         }
 
         return true;
+    }
+
+    public static function createForumUser(
+        string $username,
+        string $email,
+        string $dateOfBirth,
+        string $password,
+    ): array {
+        $response = self::postRequest(self::MODCP_URL, [
+            'do' => self::CREATE_USER,
+            'username' => $username,
+            'email' => $email,
+            'dob' => $dateOfBirth,
+            'password' => $password,
+        ]);
+
+        if (is_array($response) && isset($response['userid'])) {
+            return [
+                'success' => true,
+                'clan_id' => (int) $response['userid'],
+            ];
+        }
+
+        $error = is_array($response) ? ($response['error'] ?? 'Unknown error') : $response;
+
+        return [
+            'success' => false,
+            'error' => $error,
+        ];
+    }
+
+    public static function postRequest(string $url, array $options = []): array|string
+    {
+        $params = array_merge($options, [
+            'authcode' => self::generateToken(),
+        ]);
+
+        try {
+            $resp = Http::withUserAgent(self::AGENT)
+                ->timeout(10)
+                ->connectTimeout(5)
+                ->retry(2, 200)
+                ->post($url, $params);
+
+            $json = $resp->json();
+
+            if ($json !== null) {
+                return $json;
+            }
+
+            $clean = strip_tags($resp->body());
+            $clean = preg_replace('/\s+/', ' ', $clean);
+
+            return trim($clean);
+        } catch (Exception $e) {
+            Log::error('Forum POST request failed: ' . $e->getMessage());
+
+            return ['error' => $e->getMessage()];
+        }
     }
 
     public static function fetchInfo(array $params = []): array|string

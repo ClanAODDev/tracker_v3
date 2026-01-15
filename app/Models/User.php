@@ -49,6 +49,8 @@ class User extends Authenticatable implements FilamentUser
         'member_id',
         'discord_id',
         'discord_username',
+        'date_of_birth',
+        'forum_password',
     ];
 
     /**
@@ -59,6 +61,7 @@ class User extends Authenticatable implements FilamentUser
     protected $hidden = [
         'password',
         'remember_token',
+        'forum_password',
     ];
 
     /**
@@ -68,7 +71,8 @@ class User extends Authenticatable implements FilamentUser
         'developer' => 'boolean',
         'settings' => 'json',
         'last_login_at' => 'datetime',
-
+        'date_of_birth' => 'date',
+        'forum_password' => 'encrypted',
         'role' => Role::class,
     ];
 

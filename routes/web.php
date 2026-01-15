@@ -13,6 +13,7 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('auth/discord', [DiscordController::class, 'redirect'])->name('auth.discord');
 Route::get('auth/discord/callback', [DiscordController::class, 'callback'])->name('auth.discord.callback');
 Route::get('auth/discord/pending', [DiscordController::class, 'pending'])->name('auth.discord.pending')->middleware('auth');
+Route::post('auth/discord/register', [DiscordController::class, 'register'])->name('auth.discord.register')->middleware('auth');
 
 require 'partials/application.php';
 require 'partials/tickets.php';

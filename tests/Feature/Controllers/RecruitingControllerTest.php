@@ -5,8 +5,10 @@ namespace Tests\Feature\Controllers;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\User;
+use App\Services\AODForumService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Mockery;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -21,6 +23,20 @@ class RecruitingControllerTest extends TestCase
     {
         parent::setUp();
         Notification::fake();
+    }
+
+    protected function mockForumUserCreation(int $clanId): void
+    {
+        $mock = Mockery::mock('alias:' . AODForumService::class);
+        $mock->shouldReceive('createForumUser')
+            ->andReturn(['success' => true, 'clan_id' => $clanId]);
+    }
+
+    protected function mockForumUserCreationFailure(string $error): void
+    {
+        $mock = Mockery::mock('alias:' . AODForumService::class);
+        $mock->shouldReceive('createForumUser')
+            ->andReturn(['success' => false, 'error' => $error]);
     }
 
     public function test_index_displays_recruit_page()
@@ -168,13 +184,14 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_get_division_recruit_data_excludes_pending_discord_users(): void
+    public function test_get_division_recruit_data_excludes_pending_users_without_dob(): void
     {
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
 
         User::factory()->pending()->create([
             'discord_username' => 'PendingUser1',
+            'date_of_birth' => null,
         ]);
 
         $response = $this->actingAs($officer)
@@ -184,19 +201,35 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('pending_discord', []);
     }
 
-    /**
-     * @todo Enable when Discord recruitment is implemented
-     */
+    public function test_get_division_recruit_data_includes_pending_users_with_dob(): void
+    {
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+
+        $pendingUser = User::factory()->pending()->create([
+            'discord_username' => 'ReadyUser',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->getJson(route('recruiting.divisionData', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonCount(1, 'pending_discord');
+        $response->assertJsonPath('pending_discord.0.discord_username', 'ReadyUser');
+    }
+
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_submit_discord_recruitment_creates_member(): void
     {
-        $this->markTestSkipped('Discord recruitment is currently disabled');
+        $this->mockForumUserCreation(12345);
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
         $platoon = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create();
 
-        $response = $this->actingAs($officer)
+        $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
                 'division' => $division->slug,
                 'pending_user_id' => $pendingUser->id,
@@ -207,6 +240,7 @@ class RecruitingControllerTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('members', [
+            'clan_id' => 12345,
             'name' => 'DiscordRecruit',
             'division_id' => $division->id,
         ]);
@@ -215,12 +249,11 @@ class RecruitingControllerTest extends TestCase
         $this->assertNotNull($pendingUser->member_id);
     }
 
-    /**
-     * @todo Enable when Discord recruitment is implemented
-     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_submit_discord_recruitment_returns_error_on_forum_creation_failure(): void
     {
-        $this->markTestSkipped('Discord recruitment is currently disabled');
+        $this->mockForumUserCreationFailure('Username already taken');
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -238,16 +271,11 @@ class RecruitingControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('message', 'Forum account creation is not yet implemented.');
+        $response->assertJsonPath('message', 'Username already taken');
     }
 
-    /**
-     * @todo Enable when Discord recruitment is implemented
-     */
     public function test_submit_discord_recruitment_rejects_invalid_pending_user(): void
     {
-        $this->markTestSkipped('Discord recruitment is currently disabled');
-
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
         $platoon = $this->createPlatoon($division);
@@ -266,12 +294,11 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('message', 'Pending Discord user not found.');
     }
 
-    /**
-     * @todo Enable when Discord recruitment is implemented
-     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_submit_discord_recruitment_links_user_to_member(): void
     {
-        $this->markTestSkipped('Discord recruitment is currently disabled');
+        $this->mockForumUserCreation(67890);
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -281,7 +308,7 @@ class RecruitingControllerTest extends TestCase
             'discord_username' => 'TestDiscord',
         ]);
 
-        $response = $this->actingAs($officer)
+        $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
                 'division' => $division->slug,
                 'pending_user_id' => $pendingUser->id,

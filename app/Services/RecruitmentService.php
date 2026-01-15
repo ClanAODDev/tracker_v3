@@ -14,13 +14,23 @@ use Illuminate\Support\Facades\Log;
 
 class RecruitmentService
 {
-    public function __construct(
-        protected ForumProcedureService $forumService
-    ) {}
-
     public function createForumAccountForDiscordUser(User $user, string $forumName): array
     {
         $formattedName = 'AOD_' . $forumName;
+
+        if (! $user->date_of_birth) {
+            return [
+                'success' => false,
+                'error' => 'Date of birth is required to create a forum account.',
+            ];
+        }
+
+        if (! $user->forum_password) {
+            return [
+                'success' => false,
+                'error' => 'Password is required to create a forum account.',
+            ];
+        }
 
         Log::info('RecruitmentService: Creating forum account for Discord user', [
             'user_id' => $user->id,
@@ -30,29 +40,18 @@ class RecruitmentService
             'forum_name' => $formattedName,
         ]);
 
-        // @todo Implement actual forum account creation via stored procedure
-        // Expected procedure: create_user(email, username) returns { userid, error }
-        //
-        // $result = $this->forumService->createUser($user->email, $formattedName);
-        //
-        // if ($result && $result->error) {
-        //     return [
-        //         'success' => false,
-        //         'error' => $result->error,
-        //     ];
-        // }
-        //
-        // if ($result && $result->userid) {
-        //     return [
-        //         'success' => true,
-        //         'clan_id' => (int) $result->userid,
-        //     ];
-        // }
+        $result = AODForumService::createForumUser(
+            $formattedName,
+            $user->email,
+            $user->date_of_birth->format('Y-m-d'),
+            $user->forum_password,
+        );
 
-        return [
-            'success' => false,
-            'error' => 'Forum account creation is not yet implemented.',
-        ];
+        if ($result['success']) {
+            $user->update(['forum_password' => null]);
+        }
+
+        return $result;
     }
 
     public function createMember(

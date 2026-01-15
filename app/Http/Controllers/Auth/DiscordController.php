@@ -6,83 +6,51 @@ use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
+use App\Http\Requests\DiscordRegistrationRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
 
 class DiscordController extends Controller
 {
+    public function __construct(
+        protected ClanForumPermissions $forumPermissions
+    ) {}
+
     public function redirect()
     {
         return Socialite::driver('discord')->redirect();
     }
 
-    public function callback()
+    public function callback(): RedirectResponse
     {
         $discordUser = Socialite::driver('discord')->user();
         $discordId = $discordUser->getId();
         $discordUsername = $discordUser->getNickname() ?? $discordUser->getName();
         $email = $discordUser->getEmail();
 
-        $user = User::where('discord_id', $discordId)->first();
-
-        if ($user) {
-            Auth::login($user, true);
-
-            if ($user->member) {
-                app(ClanForumPermissions::class)->handleAccountRoles($user->member->clan_id);
-            }
-
-            return $user->isPendingRegistration()
-                ? redirect()->route('auth.discord.pending')
-                : redirect()->intended('/');
+        if ($user = User::where('discord_id', $discordId)->first()) {
+            return $this->loginExistingUser($user);
         }
 
-        $member = Member::where('discord_id', $discordId)->first();
-
-        if ($member) {
-            $user = User::findOrCreateForMember($member, $email);
-            $user->update([
-                'discord_id' => $discordId,
-                'discord_username' => $discordUsername,
-            ]);
-
-            Auth::login($user, true);
-
-            app(ClanForumPermissions::class)->handleAccountRoles($member->clan_id);
-
-            return redirect()->intended('/');
+        if ($member = Member::where('discord_id', $discordId)->first()) {
+            return $this->loginExistingMember(
+                member: $member,
+                discordId: $discordId,
+                discordUsername: $discordUsername,
+                email: $email
+            );
         }
 
-        return redirect()->route('login')->withErrors([
-            'discord' => 'Your Discord account is not linked to an AOD member. Please ensure you have completed the auth link process, and try again..',
-        ]);
-
-        // @todo Re-enable new account creation when ready for recruitment flow
-        // if (! $email) {
-        //     return redirect()->route('login')->withErrors([
-        //         'discord' => 'Your Discord account was created with a phone number. Please add an email to your Discord account to sign in.',
-        //     ]);
-        // }
-        //
-        // if (User::where('email', $email)->exists()) {
-        //     return redirect()->route('login')->withErrors([
-        //         'discord' => 'An account with this email already exists. Please sign in with your forum credentials.',
-        //     ]);
-        // }
-        //
-        // $user = User::create([
-        //     'name' => $this->sanitizeName($discordUsername),
-        //     'email' => $email,
-        //     'discord_id' => $discordId,
-        //     'discord_username' => $discordUsername,
-        // ]);
-        //
-        // Auth::login($user, true);
-        //
-        // return redirect()->route('auth.discord.pending');
+        return $this->createPendingUser(
+            discordId: $discordId,
+            discordUsername: $discordUsername,
+            email: $email
+        );
     }
 
-    public function pending()
+    public function pending(): RedirectResponse|View
     {
         if (! auth()->user()->isPendingRegistration()) {
             return redirect('/');
@@ -91,10 +59,78 @@ class DiscordController extends Controller
         return view('auth.discord-pending');
     }
 
+    public function register(DiscordRegistrationRequest $request): RedirectResponse
+    {
+        $request->persist();
+
+        return redirect()->route('auth.discord.pending');
+    }
+
+    protected function loginExistingUser(User $user): RedirectResponse
+    {
+        Auth::login(user: $user, remember: true);
+
+        if ($user->member) {
+            $this->forumPermissions->handleAccountRoles($user->member->clan_id);
+        }
+
+        return $user->isPendingRegistration()
+            ? redirect()->route('auth.discord.pending')
+            : redirect()->intended('/');
+    }
+
+    protected function loginExistingMember(
+        Member $member,
+        string $discordId,
+        string $discordUsername,
+        ?string $email
+    ): RedirectResponse {
+        $user = User::findOrCreateForMember($member, $email);
+        $user->update([
+            'discord_id' => $discordId,
+            'discord_username' => $discordUsername,
+        ]);
+
+        Auth::login(user: $user, remember: true);
+
+        $this->forumPermissions->handleAccountRoles($member->clan_id);
+
+        return redirect()->intended('/');
+    }
+
+    protected function createPendingUser(
+        string $discordId,
+        string $discordUsername,
+        ?string $email
+    ): RedirectResponse {
+        if (! $email) {
+            return redirect()->route('login')->withErrors([
+                'discord' => 'Your Discord account was created with a phone number. Please add an email to your Discord account to sign in.',
+            ]);
+        }
+
+        if (User::where('email', $email)->exists()) {
+            return redirect()->route('login')->withErrors([
+                'discord' => 'An account with this email already exists. Please sign in with your forum credentials.',
+            ]);
+        }
+
+        $user = User::create([
+            'name' => $this->sanitizeName($discordUsername),
+            'email' => $email,
+            'discord_id' => $discordId,
+            'discord_username' => $discordUsername,
+        ]);
+
+        Auth::login(user: $user, remember: true);
+
+        return redirect()->route('auth.discord.pending');
+    }
+
     protected function sanitizeName(string $name): string
     {
-        $name = preg_replace('/[^a-zA-Z0-9_]/', '', $name);
+        $name = preg_replace(pattern: '/[^a-zA-Z0-9_]/', replacement: '', subject: $name);
 
-        return substr($name, 0, 50) ?: 'discord_user';
+        return substr($name, offset: 0, length: 50) ?: 'discord_user';
     }
 }
