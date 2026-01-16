@@ -346,9 +346,7 @@ function renderNode(nodeGroup, d, colors) {
     const type = d.data.type;
     const isHighlighted = isNodeHighlighted(d.data);
 
-    if (isHighlighted) {
-        nodeGroup.classed('highlighted', true);
-    }
+    nodeGroup.classed('highlighted', isHighlighted);
 
     if (type === 'division') {
         renderDivisionNode(nodeGroup, d.data, colors);
@@ -791,6 +789,7 @@ function setupControls() {
 
 function setupSearch() {
     const searchInput = d3.select('#org-chart-search');
+    const resultsContainer = d3.select('#search-results');
     if (searchInput.empty()) return;
 
     let debounceTimer;
@@ -801,24 +800,141 @@ function setupSearch() {
             if (root) {
                 if (searchTerm) {
                     expandToHighlighted();
+                    const results = findMatchingNodes();
+                    showSearchResults(results);
+                } else {
+                    hideSearchResults();
                 }
                 update(root);
-                if (searchTerm) {
-                    centerOnHighlighted();
-                }
             }
         }, 300);
+    });
+
+    searchInput.on('focus', function() {
+        if (searchTerm && root) {
+            const results = findMatchingNodes();
+            showSearchResults(results);
+        }
     });
 
     d3.select('#clear-search').on('click', function() {
         searchInput.property('value', '');
         searchTerm = '';
+        hideSearchResults();
         if (root) {
             collapseAll();
             update(root);
             centerTree();
         }
     });
+
+    document.addEventListener('click', function(e) {
+        const searchWrapper = document.querySelector('.org-chart-search-wrapper');
+        if (searchWrapper && !searchWrapper.contains(e.target)) {
+            hideSearchResults();
+        }
+    });
+}
+
+function findMatchingNodes() {
+    if (!searchTerm || !root) return [];
+
+    const results = [];
+    const term = searchTerm.toLowerCase();
+
+    root.descendants().forEach(d => {
+        const data = d.data;
+
+        if (data.type === 'member' || data.type === 'co' || data.type === 'xo') {
+            if (data.name?.toLowerCase().includes(term) ||
+                data.handle?.toLowerCase().includes(term) ||
+                data.rankName?.toLowerCase().includes(term)) {
+                results.push({ node: d, data: data });
+            }
+        }
+
+        if ((data.type === 'platoon' || data.type === 'squad') && data.leader) {
+            if (data.leader.name?.toLowerCase().includes(term) ||
+                data.leader.handle?.toLowerCase().includes(term)) {
+                results.push({ node: d, data: data.leader });
+            }
+        }
+    });
+
+    return results;
+}
+
+function showSearchResults(results) {
+    const container = d3.select('#search-results');
+    container.html('');
+
+    if (results.length === 0) {
+        container.append('div')
+            .attr('class', 'search-no-results')
+            .text('No members found');
+        container.classed('show', true);
+        return;
+    }
+
+    results.forEach(result => {
+        const item = container.append('div')
+            .attr('class', 'search-result-item')
+            .on('click', () => {
+                centerOnNode(result.node);
+                hideSearchResults();
+            });
+
+        item.append('span')
+            .attr('class', 'result-rank')
+            .style('color', result.data.rankColor)
+            .text(result.data.rank || '');
+
+        item.append('span')
+            .attr('class', 'result-name')
+            .text(result.data.name);
+
+        if (result.data.handle) {
+            item.append('span')
+                .attr('class', 'result-handle')
+                .text(result.data.handle);
+        }
+    });
+
+    container.classed('show', true);
+}
+
+function hideSearchResults() {
+    d3.select('#search-results').classed('show', false);
+}
+
+function centerOnNode(node) {
+    if (!node) return;
+
+    let parent = node.parent;
+    while (parent) {
+        collapsed.delete(parent.data.id);
+        parent = parent.parent;
+    }
+    update(root);
+
+    setTimeout(() => {
+        const targetNodeGroup = g.selectAll('.node').filter(d => d.data.id === node.data.id);
+
+        if (!targetNodeGroup.empty()) {
+            const targetData = targetNodeGroup.datum();
+            if (targetData && typeof targetData.x === 'number' && typeof targetData.y === 'number') {
+                const containerWidth = svg.node().getBoundingClientRect().width;
+                const containerHeight = svg.node().getBoundingClientRect().height;
+                const scale = 1;
+                const x = containerWidth / 2 - targetData.x * scale;
+                const y = containerHeight / 2 - targetData.y * scale;
+
+                svg.transition()
+                    .duration(500)
+                    .call(zoom.transform, d3.zoomIdentity.translate(x, y).scale(scale));
+            }
+        }
+    }, 350);
 }
 
 function expandToHighlighted() {

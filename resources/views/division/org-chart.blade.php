@@ -21,6 +21,7 @@
                 <button type="button" class="btn btn-link btn-sm org-chart-clear-search" id="clear-search">
                     <i class="fa fa-times"></i>
                 </button>
+                <div class="org-chart-search-results" id="search-results"></div>
             </div>
 
             <div class="org-chart-controls">
