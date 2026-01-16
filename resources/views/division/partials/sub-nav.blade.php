@@ -6,8 +6,8 @@
         <a href="{{ route('division.census', $division->slug) }}" class="btn btn-default ">
             Census Data
         </a>
-        <a href="{{ route('division.edit-structure', $division->slug) }}" class="btn btn-default ">
-            Structure
+        <a href="{{ route('division.org-chart', $division->slug) }}" class="btn btn-default ">
+            Org Chart
         </a>
         <a href="{{ route('leave.index', $division->slug) }}" class="btn btn-default ">
             Leave

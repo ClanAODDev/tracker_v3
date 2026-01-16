@@ -5,7 +5,7 @@ use App\Http\Controllers\BulkTransferController;
 use App\Http\Controllers\Division\ReportController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DivisionNoteController;
-use App\Http\Controllers\DivisionStructureController;
+use App\Http\Controllers\DivisionOrgChartController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\MemberController;
@@ -33,10 +33,9 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::post('/', 'store')->name('leave.store');
     });
 
-    Route::controller(DivisionStructureController::class)->prefix('structure')->group(function () {
-        Route::get('edit', 'modify')->name('division.edit-structure');
-        Route::post('/', 'update')->name('division.update-structure');
-        Route::post('preview', 'preview')->name('division.preview-structure');
+    Route::controller(DivisionOrgChartController::class)->prefix('org-chart')->group(function () {
+        Route::get('/', 'show')->name('division.org-chart');
+        Route::get('data', 'data')->name('division.org-chart.data');
     });
 
     Route::controller(InactiveMemberController::class)->group(function () {

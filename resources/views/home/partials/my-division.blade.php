@@ -26,6 +26,10 @@
             <i class="fa fa-users"></i>
             <span>Members</span>
         </a>
+        <a href="{{ route('division.org-chart', $myDivision) }}" class="action-card">
+            <i class="fa fa-sitemap"></i>
+            <span>Org Chart</span>
+        </a>
         @can('recruit', App\Models\Member::class)
             @if (!$myDivision->isShutdown())
                 <a href="{{ route('recruiting.form', $myDivision) }}" class="action-card action-card-accent">

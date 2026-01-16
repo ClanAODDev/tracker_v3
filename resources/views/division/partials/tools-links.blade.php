@@ -45,12 +45,10 @@
         <span>Part Timers</span>
     </a>
 
-    @can ('viewDivisionStructure', auth()->user())
-        <a href="{{ route('division.edit-structure', $division) }}" class="tool-card">
-            <i class="fa fa-sitemap"></i>
-            <span>Structure</span>
-        </a>
-    @endcan
+    <a href="{{ route('division.org-chart', $division) }}" class="tool-card">
+        <i class="fa fa-sitemap"></i>
+        <span>Org Chart</span>
+    </a>
 
     <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card">
         <i class="fa fa-trophy"></i>

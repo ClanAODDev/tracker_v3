@@ -22,11 +22,11 @@ class ClanForumSession
             throw new Exception('No users exist. Have you created an account?');
         }
 
-//        if (str_contains(app()->environment(), 'local')) {
-//            $this->loginLocalUser();
-//
-//            return true;
-//        }
+        if (str_contains(app()->environment(), 'local')) {
+            $this->loginLocalUser();
+
+            return true;
+        }
 
         if (! Auth::guest()) {
             return true;

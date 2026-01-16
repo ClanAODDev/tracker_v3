@@ -50,6 +50,12 @@
     "src": "resources/assets/js/member-tags.js",
     "isEntry": true
   },
+  "resources/assets/js/org-chart.js": {
+    "file": "assets/org-chart-4GL4oGov.js",
+    "name": "org-chart",
+    "src": "resources/assets/js/org-chart.js",
+    "isEntry": true
+  },
   "resources/assets/js/platoon.js": {
     "file": "assets/platoon-D2oZdJaM.js",
     "name": "platoon",
@@ -101,7 +107,7 @@
     "isEntry": true
   },
   "resources/assets/scss/main.scss": {
-    "file": "assets/main-C-urE9tn.css",
+    "file": "assets/main-_VvKIYLa.css",
     "src": "resources/assets/scss/main.scss",
     "isEntry": true,
     "name": "main",

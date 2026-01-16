@@ -45,7 +45,7 @@ enum Rank: int implements HasColor, HasLabel
             self::SPECIALIST,
             self::TRAINER,
             self::LANCE_CORPORAL,
-            self::CORPORAL => '#c80909',
+            self::CORPORAL => '#B8C0C8',
             self::SERGEANT => '#00FF00',
             self::STAFF_SERGEANT => '#2E2EFE',
             self::MASTER_SERGEANT => '#CC00FF',

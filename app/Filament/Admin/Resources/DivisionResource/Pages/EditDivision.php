@@ -44,11 +44,15 @@ class EditDivision extends EditRecord
             $existingSettings = $this->record->getRawOriginal('settings');
             $existingSettings = is_string($existingSettings) ? json_decode($existingSettings, true) : ($existingSettings ?? []);
 
+            $newSettings = is_string($data['settings']) ? json_decode($data['settings'], true) : ($data['settings'] ?? []);
+
             foreach ($protectedSettings as $key) {
-                if (isset($existingSettings[$key]) && ! isset($data['settings'][$key])) {
-                    $data['settings'][$key] = $existingSettings[$key];
+                if (isset($existingSettings[$key]) && ! isset($newSettings[$key])) {
+                    $newSettings[$key] = $existingSettings[$key];
                 }
             }
+
+            $data['settings'] = $newSettings;
         }
 
         return $data;
