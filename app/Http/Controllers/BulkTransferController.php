@@ -64,10 +64,17 @@ class BulkTransferController extends Controller
             $member->platoon_id = $platoon->id;
             $member->squad_id = $squad ? $squad->id : 0;
             $member->save();
-            $member->recordActivity(ActivityType::TRANSFERRED, [
+
+            $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
                 'platoon' => $platoon->name,
-                'squad' => $squad?->name,
             ]);
+
+            if ($squad) {
+                $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
+                    'squad' => $squad->name,
+                ]);
+            }
+
             $transferredCount++;
         }
 
