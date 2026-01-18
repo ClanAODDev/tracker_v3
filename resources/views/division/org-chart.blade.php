@@ -12,7 +12,7 @@
     @endcomponent
 
     <div class="container-fluid">
-        {!! Breadcrumbs::render('division-org-chart', $division) !!}
+        {!! Breadcrumbs::render('division-structure', $division) !!}
 
         <div class="org-chart-toolbar">
             <div class="org-chart-search-wrapper">
@@ -77,7 +77,7 @@
     @vite('resources/assets/js/org-chart.js')
     <script>
         window.orgChartConfig = {
-            dataUrl: "{{ route('division.org-chart.data', $division->slug) }}",
+            dataUrl: "{{ route('division.structure.data', $division->slug) }}",
             memberBaseUrl: "{{ url('/members') }}"
         };
     </script>

@@ -33,9 +33,9 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::post('/', 'store')->name('leave.store');
     });
 
-    Route::controller(DivisionOrgChartController::class)->prefix('org-chart')->group(function () {
-        Route::get('/', 'show')->name('division.org-chart');
-        Route::get('data', 'data')->name('division.org-chart.data');
+    Route::controller(DivisionOrgChartController::class)->prefix('structure')->group(function () {
+        Route::get('/', 'show')->name('division.structure');
+        Route::get('data', 'data')->name('division.structure.data');
     });
 
     Route::controller(InactiveMemberController::class)->group(function () {

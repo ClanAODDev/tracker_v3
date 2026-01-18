@@ -45,9 +45,9 @@
         <span>Part Timers</span>
     </a>
 
-    <a href="{{ route('division.org-chart', $division) }}" class="tool-card">
+    <a href="{{ route('division.structure', $division) }}" class="tool-card">
         <i class="fa fa-sitemap"></i>
-        <span>Org Chart</span>
+        <span>Structure</span>
     </a>
 
     <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card">
