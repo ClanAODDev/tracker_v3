@@ -119,11 +119,8 @@ class AODForumService
             'discord_id' => $discordId,
         ]);
 
-        if (is_string($response) && preg_match('/saved_user_(\d+)_successfully/', $response, $matches)) {
-            return [
-                'success' => true,
-                'clan_id' => (int) $matches[1],
-            ];
+        if (is_string($response) && str_contains($response, 'saved_user') && str_contains($response, 'successfully')) {
+            return ['success' => true];
         }
 
         return [
