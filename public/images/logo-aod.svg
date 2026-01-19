@@ -1,0 +1,48 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+<title>logo_aod</title>
+<!-- Row 0 -->
+<rect fill="#7f1d1d" x="0" y="0" width="4" height="4"/>
+<rect fill="#991b1b" x="4" y="0" width="4" height="4"/>
+<rect fill="#b91c1c" x="8" y="0" width="4" height="4"/>
+<rect fill="#dc2626" x="12" y="0" width="4" height="4"/>
+<!-- Row 1 -->
+<rect fill="#a1a1aa" x="0" y="4" width="4" height="4"/>
+<rect fill="#7f1d1d" x="4" y="4" width="4" height="4"/>
+<rect fill="#991b1b" x="8" y="4" width="4" height="4"/>
+<rect fill="#b91c1c" x="12" y="4" width="4" height="4"/>
+<!-- Row 2 -->
+<rect fill="#d4d4d8" x="0" y="8" width="4" height="4"/>
+<rect fill="#a1a1aa" x="4" y="8" width="4" height="4"/>
+<rect fill="#7f1d1d" x="8" y="8" width="4" height="4"/>
+<rect fill="#991b1b" x="12" y="8" width="4" height="4"/>
+<!-- Row 3 -->
+<rect fill="#f4f4f5" x="0" y="12" width="4" height="4"/>
+<rect fill="#d4d4d8" x="4" y="12" width="4" height="4"/>
+<rect fill="#a1a1aa" x="8" y="12" width="4" height="4"/>
+<rect fill="#7f1d1d" x="12" y="12" width="4" height="4"/>
+<!-- Accent highlights -->
+<rect fill="#ef4444" x="3" y="0" width="1" height="1"/>
+<rect fill="#ef4444" x="7" y="0" width="1" height="1"/>
+<rect fill="#f87171" x="11" y="0" width="1" height="1"/>
+<rect fill="#fca5a5" x="15" y="0" width="1" height="1"/>
+<rect fill="#ef4444" x="7" y="4" width="1" height="1"/>
+<rect fill="#ef4444" x="11" y="4" width="1" height="1"/>
+<rect fill="#f87171" x="15" y="4" width="1" height="1"/>
+<rect fill="#ef4444" x="11" y="8" width="1" height="1"/>
+<rect fill="#ef4444" x="15" y="8" width="1" height="1"/>
+<rect fill="#ef4444" x="15" y="12" width="1" height="1"/>
+<!-- Silver shine accents -->
+<rect fill="#e4e4e7" x="0" y="7" width="1" height="1"/>
+<rect fill="#f4f4f5" x="0" y="11" width="1" height="1"/>
+<rect fill="#e4e4e7" x="4" y="11" width="1" height="1"/>
+<rect fill="#ffffff" x="0" y="15" width="1" height="1"/>
+<rect fill="#e4e4e7" x="4" y="15" width="1" height="1"/>
+<!-- Dark depth accents -->
+<rect fill="#450a0a" x="3" y="3" width="1" height="1"/>
+<rect fill="#450a0a" x="7" y="7" width="1" height="1"/>
+<rect fill="#450a0a" x="11" y="11" width="1" height="1"/>
+<rect fill="#450a0a" x="15" y="15" width="1" height="1"/>
+<rect fill="#71717a" x="3" y="7" width="1" height="1"/>
+<rect fill="#71717a" x="7" y="11" width="1" height="1"/>
+<rect fill="#52525b" x="11" y="15" width="1" height="1"/>
+</svg>
