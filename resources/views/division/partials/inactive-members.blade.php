@@ -3,7 +3,9 @@
         <table class="table inactive-table">
             <thead>
             <tr>
-                <th class="inactive-bulk-col"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
+                @can('remindActivity', \App\Models\Member::class)
+                    <th class="inactive-bulk-col"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
+                @endcan
                 <th>Member</th>
                 <th>Last Voice Activity</th>
                 @can('remindActivity', \App\Models\Member::class)
@@ -27,7 +29,9 @@
                     $remindedToday = $member->last_activity_reminder_at?->isToday();
                 @endphp
                 <tr class="{{ $severityClass }}">
-                    <td class="inactive-bulk-col"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    @can('remindActivity', \App\Models\Member::class)
+                        <td class="inactive-bulk-col"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    @endcan
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
                             <span class="inactive-member-name">{{ $member->name }}</span>

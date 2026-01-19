@@ -3,10 +3,14 @@
         <table class="table inactive-table flagged-table">
             <thead>
             <tr>
-                <th class="inactive-bulk-col"><input type="checkbox" class="flagged-select-all" title="Select All"></th>
+                @can('remindActivity', \App\Models\Member::class)
+                    <th class="inactive-bulk-col"><input type="checkbox" class="flagged-select-all" title="Select All"></th>
+                @endcan
                 <th>Member</th>
                 <th>Last Voice Activity</th>
-                <th>Reminded</th>
+                @can('remindActivity', \App\Models\Member::class)
+                    <th>Reminded</th>
+                @endcan
                 <th>{{ $division->locality('platoon') }} / Squad</th>
                 <th class="text-right">Actions</th>
             </tr>
@@ -14,7 +18,9 @@
             <tbody>
             @foreach ($flaggedMembers as $member)
                 <tr>
-                    <td class="inactive-bulk-col"><input type="checkbox" class="flagged-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    @can('remindActivity', \App\Models\Member::class)
+                        <td class="inactive-bulk-col"><input type="checkbox" class="flagged-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    @endcan
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
                             <span class="inactive-member-name">{{ $member->name }}</span>
@@ -26,15 +32,17 @@
                             {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}
                         </span>
                     </td>
-                    <td data-order="{{ $member->last_activity_reminder_at?->timestamp ?? 0 }}">
-                        @if($member->last_activity_reminder_at)
-                            <span class="inactive-time" title="{{ $member->last_activity_reminder_at->format('M j, Y') }}">
-                                {{ $member->last_activity_reminder_at->diffForHumans(short: true) }}
-                            </span>
-                        @else
-                            <span class="text-muted">—</span>
-                        @endif
-                    </td>
+                    @can('remindActivity', \App\Models\Member::class)
+                        <td data-order="{{ $member->last_activity_reminder_at?->timestamp ?? 0 }}">
+                            @if($member->last_activity_reminder_at)
+                                <span class="inactive-time" title="{{ $member->last_activity_reminder_at->format('M j, Y') }}">
+                                    {{ $member->last_activity_reminder_at->diffForHumans(short: true) }}
+                                </span>
+                            @else
+                                <span class="text-muted">—</span>
+                            @endif
+                        </td>
+                    @endcan
                     <td>
                         <span class="inactive-unit">
                             {{ $member->platoon->name ?? 'Unassigned' }}

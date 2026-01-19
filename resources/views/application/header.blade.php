@@ -62,6 +62,7 @@
         'csrfToken' => csrf_token(),
         'appPath' => route('index'),
         'canWorkTickets' => auth()->check() && \App\Models\TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user())),
+        'canUseBulkMode' => auth()->check() && auth()->user()->isRole(['officer', 'sr_ldr']),
         'userId' => auth()->id(),
     ]); ?>
 </script>

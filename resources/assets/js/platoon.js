@@ -421,14 +421,23 @@ function initPlatoon() {
                 $('#playerFilter').append($tagWrapper);
             }
 
-            var $bulkToggle = $('<button type="button" class="btn btn-default bulk-mode-toggle">Bulk Mode</button>');
-            $('#playerFilter').append($bulkToggle);
+            var $bulkToggle = null;
+            var bulkModeActive = false;
+
+            if (window.Laravel && window.Laravel.canUseBulkMode) {
+                $bulkToggle = $('<button type="button" class="btn btn-default bulk-mode-toggle">Bulk Mode</button>');
+                $('#playerFilter').append($bulkToggle);
+
+                $bulkToggle.on('click', function() {
+                    toggleBulkMode();
+                });
+            }
 
             $('.no-sort').removeClass('sorting');
 
-            var bulkModeActive = false;
-
             function toggleBulkMode() {
+                if (!$bulkToggle) return;
+
                 bulkModeActive = !bulkModeActive;
                 var checkboxCol = self.dataTable.column(cols['checkbox']);
                 checkboxCol.visible(bulkModeActive);
@@ -445,10 +454,6 @@ function initPlatoon() {
                     updateBulkSelection();
                 }
             }
-
-            $bulkToggle.on('click', function() {
-                toggleBulkMode();
-            });
 
             function updateBulkSelection() {
                 var selected = [];
