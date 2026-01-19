@@ -107,29 +107,28 @@ class AODForumService
         string $email,
         string $dateOfBirth,
         string $password,
+        string $discordId,
     ): array {
-        $response = self::request(self::MODCP_URL, [
-            '_token_param' => 'authcode',
+        $response = self::postRequest(self::MODCP_URL, [
             'aod_userid' => $impersonatingMemberId,
             'do' => self::CREATE_USER,
             'username' => $username,
             'email' => $email,
             'dob' => $dateOfBirth,
             'password' => $password,
+            'discord_id' => $discordId,
         ]);
 
-        if (is_array($response) && isset($response['userid'])) {
+        if (is_string($response) && preg_match('/saved_user_(\d+)_successfully/', $response, $matches)) {
             return [
                 'success' => true,
-                'clan_id' => (int) $response['userid'],
+                'clan_id' => (int) $matches[1],
             ];
         }
 
-        $error = is_array($response) ? ($response['error'] ?? 'Unknown error') : $response;
-
         return [
             'success' => false,
-            'error' => $error,
+            'error' => is_string($response) ? $response : 'Unknown error',
         ];
     }
 

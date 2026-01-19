@@ -44,6 +44,7 @@ class RecruitmentService
             $user->email,
             $user->date_of_birth->format('Y-m-d'),
             $user->forum_password,
+            $user->discord_id,
         );
 
         if ($result['success']) {
