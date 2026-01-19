@@ -8745,35 +8745,74 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 #available-tags-dropdown {
-    min-width: 200px;
-    background-color: #2a2a2a;
-    border-color: #3a3a3a;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    min-width: 220px;
+    background-color: var(--color-bg-panel);
+    border: 1px solid var(--overlay-light);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    padding: 0;
 }
 
-#available-tags-dropdown li a {
-    padding: 8px 12px;
-    color: var(--color-gray-400);
+#available-tags-dropdown > li > a {
+    padding: 10px 12px;
+    color: var(--color-text);
     display: block;
 }
 
+#available-tags-dropdown > li > a:hover,
+#available-tags-dropdown > li > a:focus {
+    background-color: var(--overlay-light);
+    color: var(--color-white);
+}
+
 #available-tags-dropdown .dropdown-header {
-    color: var(--color-gray-700);
-    padding: 8px 12px;
+    color: var(--color-text-muted);
+    padding: 10px 12px 8px;
     font-size: 11px;
     text-transform: uppercase;
+    background: transparent;
+}
+
+#available-tags-dropdown .dropdown-header input {
+    background: var(--color-bg-input);
+    border: 1px solid var(--overlay-light);
+    color: var(--color-text);
+}
+
+#available-tags-dropdown .dropdown-header input::placeholder {
+    color: var(--color-text-muted);
+}
+
+#available-tags-dropdown .tag-options-wrapper {
+    padding: 0;
+}
+
+#available-tags-dropdown .tag-options-wrapper:hover {
+    background: transparent;
+}
+
+#available-tags-dropdown .tag-options-scroll {
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 #available-tags-dropdown .tag-option {
     cursor: pointer;
     transition: background-color 0.1s ease;
+    padding: 6px 12px;
 }
 
-#available-tags-dropdown li:not(.divider):hover,
-#available-tags-dropdown li:not(.divider):hover > a,
-#available-tags-dropdown li:not(.divider) > a:hover,
-#available-tags-dropdown li:not(.divider) > a:focus {
-    background-color: #383838 !important;
+#available-tags-dropdown .tag-option:hover {
+    background-color: var(--overlay-light);
+}
+
+#available-tags-dropdown .tag-option a {
+    padding: 0;
+    display: block;
+}
+
+#available-tags-dropdown .tag-option a:hover,
+#available-tags-dropdown .tag-option a:focus {
+    background: transparent;
 }
 
 #available-tags-dropdown .badge {
@@ -8786,8 +8825,9 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 #available-tags-dropdown .divider {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--overlay-light);
     margin: 5px 0;
+    height: 1px;
 }
 
 .member-tags .dropdown > a.badge {
