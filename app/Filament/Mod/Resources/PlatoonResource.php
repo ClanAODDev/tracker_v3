@@ -51,6 +51,10 @@ class PlatoonResource extends Resource
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('description')
+                            ->placeholder('Optional tagline or description')
+                            ->maxLength(255)
+                            ->default(null),
                         TextInput::make('logo')
                             ->placeholder('https://')
                             ->maxLength(255)

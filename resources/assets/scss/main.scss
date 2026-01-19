@@ -4130,38 +4130,64 @@ a.squad-drop-target {
     }
 }
 
-.platoon-stat-badge {
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.7);
-}
-
-.platoon-stat-badge.voice-high {
-    background: rgba(27, 191, 137, 0.2);
-    color: var(--color-success);
-}
-
-.platoon-stat-badge.voice-mid {
-    background: color-mix(in srgb, var(--color-accent) 20%, transparent);
-    color: var(--color-accent-light);
-}
-
-.platoon-stat-badge.voice-low {
-    background: rgba(219, 82, 75, 0.2);
-    color: var(--color-danger);
-}
-
-.platoon-card-footer {
+.platoon-card-layout {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 15px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.platoon-card-info {
+    flex: 1;
+    min-width: 0;
 }
 
 .platoon-card-stats {
     display: flex;
-    gap: 6px;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-end;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.platoon-stat {
+    text-align: right;
+}
+
+.platoon-stat-value {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-text);
+}
+
+.platoon-stat-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+    margin-top: 4px;
+}
+
+.platoon-stat.voice-high .platoon-stat-value {
+    color: var(--color-success);
+}
+
+.platoon-stat.voice-mid .platoon-stat-value {
+    color: var(--color-accent-light);
+}
+
+.platoon-stat.voice-low .platoon-stat-value {
+    color: var(--color-danger);
+}
+
+.platoon-description {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.8;
 }
 
 .member-stat-card .panel-footer.milestone-badges {
@@ -7874,6 +7900,13 @@ div.dt-button-info h2 {
     background-color: var(--color-bg-hover);
 }
 
+textarea.form-control {
+    &::-webkit-resizer {
+        background-color: var(--color-accent);
+        border-radius: 2px;
+    }
+}
+
 .form-control:focus {
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -10583,6 +10616,13 @@ pre.code-toolbar > .toolbar span:focus {
         transform: translateY(-50%);
         font-size: 16px;
     }
+}
+
+.input-group-status {
+    background: var(--color-accent);
+    border: none;
+    padding: 6px 10px;
+    font-size: 16px;
 }
 
 .current-username {

@@ -4,7 +4,7 @@ const config = window.orgChartConfig || {};
 
 const LAYOUT = {
     NODE_WIDTH: 180,
-    NODE_HEIGHT: 48,
+    NODE_HEIGHT: 38,
     LEADER_BOX_HEIGHT: 70,
     PLATOON_EXTRA_HEIGHT: 115,
     SQUAD_EXTRA_HEIGHT: 18,
@@ -519,14 +519,26 @@ function renderPlatoonNode(nodeGroup, d, colors) {
             .style('pointer-events', 'none');
     }
 
+    const hasDescription = !!data.description;
+    const descriptionOffset = hasDescription ? 14 : 0;
+
     nodeGroup.append('text')
-        .attr('y', -height / 2 - (data.logo ? 6 : 14))
+        .attr('y', -height / 2 - (data.logo ? 6 : 14) - descriptionOffset)
         .attr('text-anchor', 'middle')
         .attr('fill', colors.accent)
         .attr('font-size', FONT.PLATOON_NAME)
         .attr('font-weight', '700')
         .attr('letter-spacing', '1px')
         .text(data.name.toUpperCase());
+
+    if (hasDescription) {
+        nodeGroup.append('text')
+            .attr('y', -height / 2 - (data.logo ? 6 : 14) + 2)
+            .attr('text-anchor', 'middle')
+            .attr('fill', colors.textMuted)
+            .attr('font-size', FONT.SQUAD_NAME)
+            .text(truncate(data.description, 30));
+    }
 
     const leaderColor = hasLeader ? data.leader.rankColor : null;
     const bgColor = leaderColor ? getRankBackground(leaderColor, 0.15) : colors.bg;
@@ -667,7 +679,7 @@ function renderMemberNode(nodeGroup, data, colors) {
     const width = getNodeWidth();
     const height = LAYOUT.NODE_HEIGHT;
     const rankColor = data.rankColor;
-    const bgColor = getRankBackground(rankColor, 0.12);
+    const bgColor = getRankBackground(rankColor, 0.25);
     const displayHandle = shouldShowHandle(data.handle);
 
     nodeGroup.append('rect')

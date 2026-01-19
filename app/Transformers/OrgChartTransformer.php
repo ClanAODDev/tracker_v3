@@ -63,6 +63,7 @@ class OrgChartTransformer
         $node = [
             'id' => "platoon-{$platoon->id}",
             'name' => $platoon->name,
+            'description' => $platoon->description,
             'type' => 'platoon',
             'logo' => $platoon->logo ? $platoon->getLogoPath() : null,
             'children' => $children,

@@ -27,41 +27,48 @@
         <div class="col-md-6">
             <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
                class="panel panel-filled platoon" data-platoon-id="{{ $platoon->id }}">
-                <div class="panel-body">
+                <div class="panel-body platoon-card-layout">
+                    <div class="platoon-card-info">
+                        <h4 class="m-b-none">
+                            @if ($platoon->logo)
+                                <img src="{{ $platoon->logo }}"
+                                     class="pull-right platoon-icon-xl"/>
+                            @endif
+                            {{ $platoon->name }}
+                        </h4>
 
-                    <h4 class="m-b-none m-t-sm">
-                        @if ($platoon->logo)
-                            <img src="{{ $platoon->logo }}"
-                                 class="pull-right platoon-icon-xl"/>
+                        @if ($platoon->description)
+                            <p class="platoon-description text-muted m-b-sm">{{ $platoon->description }}</p>
                         @endif
-                        {{ $platoon->name }}
-                    </h4>
 
-                    @if ($platoon->leader)
-                        <p class="list-group-item-text">
-                            {{ $platoon->leader->present()->rankName }}
-                        </p>
-                    @else
-                        <p class="list-group-item-text">TBA</p>
-                    @endif
+                        @if ($platoon->leader)
+                            <p class="list-group-item-text">
+                                {{ $platoon->leader->present()->rankName }}
+                            </p>
+                        @else
+                            <p class="list-group-item-text">TBA</p>
+                        @endif
 
-                    <div class="m-t-lg">
-                        @foreach ($platoon->squads as $squad)
-                            <div class="squad label label-default m-2"
-                                 style="margin-right:15px;"
-                                 data-squad-id="{{ $squad->id }}"
-                            >
-                                {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
-                            </div>
-                        @endforeach
+                        <div class="m-t-lg">
+                            @foreach ($platoon->squads as $squad)
+                                <div class="squad label label-default m-2"
+                                     style="margin-right:15px;"
+                                     data-squad-id="{{ $squad->id }}"
+                                >
+                                    {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
 
-                    <div class="platoon-card-footer">
-                        <div class="platoon-card-stats">
-                            <span class="platoon-stat-badge"><i class="fa fa-users"></i> {{ $platoon->members_count }}</span>
-                            <span class="platoon-stat-badge {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
-                                <i class="fa fa-headset"></i> {{ $voiceRate }}%
-                            </span>
+                    <div class="platoon-card-stats">
+                        <div class="platoon-stat {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
+                            <span class="platoon-stat-value">{{ $voiceRate }}%</span>
+                            <span class="platoon-stat-label">Voice</span>
+                        </div>
+                        <div class="platoon-stat">
+                            <span class="platoon-stat-value">{{ $platoon->members_count }}</span>
+                            <span class="platoon-stat-label">Members</span>
                         </div>
                     </div>
                 </div>
