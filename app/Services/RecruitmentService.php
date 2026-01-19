@@ -34,14 +34,6 @@ class RecruitmentService
             ];
         }
 
-        Log::info('RecruitmentService: Creating forum account for Discord user', [
-            'user_id' => $user->id,
-            'discord_id' => $user->discord_id,
-            'discord_username' => $user->discord_username,
-            'email' => $user->email,
-            'forum_name' => $forumName,
-        ]);
-
         $result = AODForumService::createForumUser(
             $recruiterId,
             $forumName,
