@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Log;
 
 class RecruitmentService
 {
+    public function __construct(
+        protected ForumProcedureService $forumProcedureService
+    ) {}
+
     public function createForumAccountForDiscordUser(User $user, string $forumName, int $recruiterId): array
     {
         if (! $user->date_of_birth) {
@@ -47,11 +51,25 @@ class RecruitmentService
             $user->discord_id,
         );
 
-        if ($result['success']) {
-            $user->update(['forum_password' => null]);
+        if (! $result['success']) {
+            return $result;
         }
 
-        return $result;
+        $forumUser = $this->forumProcedureService->checkUser($forumName, $user->forum_password);
+
+        $user->update(['forum_password' => null]);
+
+        if (! $forumUser?->userid) {
+            return [
+                'success' => false,
+                'error' => 'Forum account created but failed to retrieve user ID.',
+            ];
+        }
+
+        return [
+            'success' => true,
+            'clan_id' => (int) $forumUser->userid,
+        ];
     }
 
     public function createMember(
