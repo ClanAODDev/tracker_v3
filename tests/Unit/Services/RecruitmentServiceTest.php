@@ -130,7 +130,7 @@ class RecruitmentServiceTest extends TestCase
     {
         $user = User::factory()->pending()->create(['date_of_birth' => null]);
 
-        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName');
+        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName', 12345);
 
         $this->assertFalse($result['success']);
         $this->assertEquals('Date of birth is required to create a forum account.', $result['error']);
@@ -140,7 +140,7 @@ class RecruitmentServiceTest extends TestCase
     {
         $user = User::factory()->pending()->create(['forum_password' => null]);
 
-        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName');
+        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName', 12345);
 
         $this->assertFalse($result['success']);
         $this->assertEquals('Password is required to create a forum account.', $result['error']);
@@ -161,7 +161,7 @@ class RecruitmentServiceTest extends TestCase
         $service = new RecruitmentService($forumService);
         $user = User::factory()->pending()->create(['email' => 'test@example.com']);
 
-        $result = $service->createForumAccountForDiscordUser($user, 'TakenName');
+        $result = $service->createForumAccountForDiscordUser($user, 'TakenName', 12345);
 
         $this->assertFalse($result['success']);
         $this->assertEquals('Username already exists', $result['error']);

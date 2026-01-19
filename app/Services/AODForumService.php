@@ -102,6 +102,7 @@ class AODForumService
     }
 
     public static function createForumUser(
+        int $impersonatingMemberId,
         string $username,
         string $email,
         string $dateOfBirth,
@@ -109,6 +110,7 @@ class AODForumService
     ): array {
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
+            'aod_userid' => $impersonatingMemberId,
             'do' => self::CREATE_USER,
             'username' => $username,
             'email' => $email,
@@ -136,8 +138,6 @@ class AODForumService
         $params = array_merge($options, [
             'authcode' => self::generateToken(),
         ]);
-
-        Log::info('Forum POST request', ['url' => $url, 'params' => $params]);
 
         try {
             $resp = Http::withUserAgent(self::AGENT)

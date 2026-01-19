@@ -48,7 +48,7 @@ class RecruitingController extends Controller
         $this->authorize('recruit', Member::class);
 
         $division = Division::whereSlug($request->division)->first();
-        $recruiterId = auth()->user()->member?->clan_id ?? auth()->user()->id;
+        $recruiterId = auth()->user()->member->clan_id;
 
         if ($request->pending_user_id) {
             $pendingUser = User::pendingDiscord()->find($request->pending_user_id);
@@ -61,7 +61,8 @@ class RecruitingController extends Controller
 
             $forumResult = $this->recruitmentService->createForumAccountForDiscordUser(
                 $pendingUser,
-                $request->forum_name
+                $request->forum_name,
+                $recruiterId
             );
 
             if (! $forumResult['success']) {

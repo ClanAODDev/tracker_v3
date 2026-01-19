@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Log;
 
 class RecruitmentService
 {
-    public function createForumAccountForDiscordUser(User $user, string $forumName): array
+    public function createForumAccountForDiscordUser(User $user, string $forumName, int $recruiterId): array
     {
         if (! $user->date_of_birth) {
             return [
@@ -39,6 +39,7 @@ class RecruitmentService
         ]);
 
         $result = AODForumService::createForumUser(
+            $recruiterId,
             $forumName,
             $user->email,
             $user->date_of_birth->format('Y-m-d'),
