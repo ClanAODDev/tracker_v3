@@ -107,7 +107,8 @@ class AODForumService
         string $dateOfBirth,
         string $password,
     ): array {
-        $response = self::postRequest(self::MODCP_URL, [
+        $response = self::request(self::MODCP_URL, [
+            '_token_param' => 'authcode',
             'do' => self::CREATE_USER,
             'username' => $username,
             'email' => $email,
@@ -136,11 +137,14 @@ class AODForumService
             'authcode' => self::generateToken(),
         ]);
 
+        Log::info('Forum POST request', ['url' => $url, 'params' => $params]);
+
         try {
             $resp = Http::withUserAgent(self::AGENT)
                 ->timeout(10)
                 ->connectTimeout(5)
                 ->retry(2, 200)
+                ->asForm()
                 ->post($url, $params);
 
             $json = $resp->json();
