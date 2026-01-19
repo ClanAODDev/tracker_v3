@@ -112,6 +112,16 @@ enum Rank: int implements HasColor, HasLabel
         return $ranks;
     }
 
+    public static function getAllRanksWithLabels(): array
+    {
+        $ranks = [];
+        foreach (self::cases() as $rank) {
+            $ranks[$rank->getId()] = $rank->getLabel();
+        }
+
+        return $ranks;
+    }
+
     public function isPromotion(Rank $previousRank): bool
     {
         return $this->value > $previousRank->value;

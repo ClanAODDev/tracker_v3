@@ -157,6 +157,7 @@ class RecruitingController extends Controller
             ]);
 
         return response()->json([
+            'name' => $division->name,
             'platoons' => $platoons->map(fn ($p) => [
                 'id' => $p->id,
                 'name' => $p->name,

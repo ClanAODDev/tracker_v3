@@ -16,8 +16,6 @@ class RecruitmentService
 {
     public function createForumAccountForDiscordUser(User $user, string $forumName): array
     {
-        $formattedName = 'AOD_' . $forumName;
-
         if (! $user->date_of_birth) {
             return [
                 'success' => false,
@@ -37,11 +35,11 @@ class RecruitmentService
             'discord_id' => $user->discord_id,
             'discord_username' => $user->discord_username,
             'email' => $user->email,
-            'forum_name' => $formattedName,
+            'forum_name' => $forumName,
         ]);
 
         $result = AODForumService::createForumUser(
-            $formattedName,
+            $forumName,
             $user->email,
             $user->date_of_birth->format('Y-m-d'),
             $user->forum_password,

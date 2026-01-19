@@ -8,6 +8,7 @@ if (container) {
         division: container.getAttribute('data-division'),
         recruiterId: container.getAttribute('data-recruiter-id'),
         ranks: JSON.parse(container.getAttribute('data-ranks') || '{}'),
+        rankLabels: JSON.parse(container.getAttribute('data-rank-labels') || '{}'),
     });
     app.mount('#recruiting-container');
 }

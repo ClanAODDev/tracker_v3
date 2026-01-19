@@ -3,6 +3,7 @@
     <step-one
       v-if="store.currentStep === 'form'"
       :ranks="ranks"
+      :rank-labels="rankLabels"
       :recruiter-id="recruiterId"
       :division-slug="division"
       :cancel-url="cancelUrl"
@@ -26,7 +27,7 @@ export default {
     StepConfirmation,
   },
 
-  props: ['division', 'ranks', 'recruiterId'],
+  props: ['division', 'ranks', 'rankLabels', 'recruiterId'],
 
   data() {
     return {

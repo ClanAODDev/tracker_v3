@@ -7,6 +7,7 @@ const store = reactive({
     submitting: false,
     submitted: false,
     recruiter_id: null,
+    rankLabels: {},
 
     member: {
         id: '',
@@ -36,6 +37,7 @@ const store = reactive({
 
     division: {
         slug: '',
+        name: '',
         platoons: [],
         threads: [],
         tasks: [],
@@ -78,6 +80,7 @@ store.loadDivisionData = (divisionSlug) => {
     return axios.get(`${store.base_url}/divisions/${divisionSlug}/recruit/data`)
         .then((response) => {
             const data = response.data;
+            store.division.name = data.name || '';
             store.division.platoons = data.platoons || [];
             store.division.threads = data.threads || [];
             store.division.tasks = data.tasks || [];
@@ -235,7 +238,7 @@ store.submitRecruitment = () => {
         });
     }
 
-    return axios.post(`${store.base_url}/add-member/`, {
+    const payload = {
         division: store.division.slug,
         member_id: store.member.id,
         forum_name: store.member.forum_name,
@@ -244,7 +247,9 @@ store.submitRecruitment = () => {
         rank: store.member.rank,
         squad: store.member.squad,
         pending_user_id: store.selectedPendingUser?.id || null,
-    })
+    };
+
+    return axios.post(`${store.base_url}/add-member/`, payload)
     .then(() => {
         store.submitting = false;
         store.submitted = true;
