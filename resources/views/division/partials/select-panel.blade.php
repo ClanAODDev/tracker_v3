@@ -4,15 +4,17 @@
     <div class="bulk-action-bar-content">
         <span class="status-text"></span>
         <div class="actions">
-            <form action="{{ route('private-message.create', compact('division')) }}" method="POST" class="bulk-pm-form">
-                <input type="hidden" id="pm-member-data" name="pm-member-data">
-                <input type="hidden" id="tag-member-data" name="tag-member-data">
-                <input type="hidden" id="transfer-member-data" name="transfer-member-data">
-                @csrf
-                <button type="submit" class="btn btn-default">
-                    <i class="fa fa-bullhorn text-accent"></i> <span class="hidden-xs hidden-sm">Send PM</span>...
-                </button>
-            </form>
+            @can('remindActivity', \App\Models\Member::class)
+                <form action="{{ route('private-message.create', compact('division')) }}" method="POST" class="bulk-pm-form">
+                    <input type="hidden" id="pm-member-data" name="pm-member-data">
+                    <input type="hidden" id="tag-member-data" name="tag-member-data">
+                    <input type="hidden" id="transfer-member-data" name="transfer-member-data">
+                    @csrf
+                    <button type="submit" class="btn btn-default">
+                        <i class="fa fa-bullhorn text-accent"></i> <span class="hidden-xs hidden-sm">Send PM</span>...
+                    </button>
+                </form>
+            @endcan
             @can('assign', App\Models\DivisionTag::class)
                 <button type="button" class="btn btn-default" data-toggle="modal" data-target="#bulk-tags-modal">
                     <i class="fa fa-tags text-accent"></i> <span class="hidden-xs hidden-sm">Tags</span>...
