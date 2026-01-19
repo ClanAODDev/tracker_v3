@@ -64,12 +64,14 @@
                     </td>
                     <td class="text-right">
                         <div class="inactive-actions">
-                            <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}"
-                               target="_blank"
-                               class="btn btn-sm btn-default"
-                               title="Send Forum PM">
-                                <i class="fa fa-envelope"></i>
-                            </a>
+                            @can('remindActivity', \App\Models\Member::class)
+                                <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}"
+                                   target="_blank"
+                                   class="btn btn-sm btn-default"
+                                   title="Send Forum PM">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            @endcan
                             @can('flag-inactive', \App\Models\Member::class)
                                 <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
                                    class="btn btn-sm btn-warning"

@@ -2,13 +2,15 @@
     <div class="bulk-action-bar-content">
         <span class="status-text"></span>
         <div class="actions">
-            <form action="{{ route('private-message.create', compact('division')) }}" method="POST" class="bulk-pm-form">
-                <input type="hidden" id="inactive-pm-member-data" name="pm-member-data">
-                @csrf
-                <button type="submit" class="btn btn-default">
-                    <i class="fa fa-bullhorn text-accent"></i> <span class="hidden-xs hidden-sm">Send PM</span>...
-                </button>
-            </form>
+            @can('remindActivity', \App\Models\Member::class)
+                <form action="{{ route('private-message.create', compact('division')) }}" method="POST" class="bulk-pm-form">
+                    <input type="hidden" id="inactive-pm-member-data" name="pm-member-data">
+                    @csrf
+                    <button type="submit" class="btn btn-default">
+                        <i class="fa fa-bullhorn text-accent"></i> <span class="hidden-xs hidden-sm">Send PM</span>...
+                    </button>
+                </form>
+            @endcan
             @can('remindActivity', \App\Models\Member::class)
                 <button type="button" id="inactive-bulk-reminder-btn" class="btn btn-default"
                         data-url="{{ route('bulk-reminder.store', $division) }}"
