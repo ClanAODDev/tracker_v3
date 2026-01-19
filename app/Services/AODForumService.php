@@ -138,6 +138,8 @@ class AODForumService
             'authcode' => self::generateToken(),
         ]);
 
+        Log::info('AODForumService POST', ['url' => $url, 'params' => $params]);
+
         try {
             $resp = Http::withUserAgent(self::AGENT)
                 ->timeout(10)
@@ -149,11 +151,14 @@ class AODForumService
             $json = $resp->json();
 
             if ($json !== null) {
+                Log::info('AODForumService POST response (JSON)', ['response' => $json]);
                 return $json;
             }
 
             $clean = strip_tags($resp->body());
             $clean = preg_replace('/\s+/', ' ', $clean);
+
+            Log::info('AODForumService POST response', ['response' => trim($clean)]);
 
             return trim($clean);
         } catch (Exception $e) {
