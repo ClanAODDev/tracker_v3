@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->date('date_of_birth')->nullable()->after('discord_username');
-            $table->text('forum_password')->nullable()->after('date_of_birth');
+            if (! Schema::hasColumn('users', 'date_of_birth')) {
+                $table->date('date_of_birth')->nullable()->after('discord_username');
+            }
+            if (! Schema::hasColumn('users', 'forum_password')) {
+                $table->text('forum_password')->nullable()->after('date_of_birth');
+            }
         });
     }
 
