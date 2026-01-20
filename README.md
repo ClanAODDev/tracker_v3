@@ -6,14 +6,15 @@ A member and organizational unit management system for the AOD gaming community.
 
 ```mermaid
 graph TD
-    D[Division] --> P1[Platoon]
-    D --> P2[Platoon]
+    AOD[AOD Clan] --> D1[Division]
+    AOD --> D2[Division]
+    AOD --> D3[Division]
+    D1 --> P1[Platoon]
+    D1 --> P2[Platoon]
     P1 --> S1[Squad]
-    P1 --> S2[Squad]
     S1 --> M1[Member]
-    S1 --> M2[Member]
-    S2 --> M3[Member]
-    P2 --> M4[Member]
+    P1 -.-> M2[Member]
+    D1 -.-> M3[Member]
 ```
 
 The Tracker consumes member data from external systems (AOD forums, Discord bot) and provides analytics for recruiting, retention, and activity.
