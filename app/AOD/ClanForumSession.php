@@ -40,7 +40,7 @@ class ClanForumSession
 
     protected function handleLocalEnvironment(): bool
     {
-        if (request()->cookie('local_logged_out')) {
+        if (request()->cookie('tracker_logged_out')) {
             return false;
         }
 
