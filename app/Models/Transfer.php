@@ -79,9 +79,13 @@ class Transfer extends Model
 
     protected function resetTransferringMemberDetails(): void
     {
+        $newPosition = $this->member->position === Position::CLAN_ADMIN
+            ? Position::CLAN_ADMIN
+            : Position::MEMBER;
+
         $this->member->update([
             'division_id' => $this->division_id,
-            'position' => Position::MEMBER,
+            'position' => $newPosition,
             'platoon_id' => 0,
             'squad_id' => 0,
         ]);
