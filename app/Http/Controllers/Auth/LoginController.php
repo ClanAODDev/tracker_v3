@@ -92,7 +92,13 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        return response()->redirectTo('/');
+        $response = response()->redirectTo('/login');
+
+        if (str_contains(app()->environment(), 'local')) {
+            $response->cookie('local_logged_out', true, 60);
+        }
+
+        return $response;
     }
 
     /**
@@ -106,8 +112,14 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        return $this->authenticated($request, $this->guard()->user())
+        $response = $this->authenticated($request, $this->guard()->user())
             ?: redirect()->intended($this->redirectPath());
+
+        if (str_contains(app()->environment(), 'local')) {
+            $response->withoutCookie('local_logged_out');
+        }
+
+        return $response;
     }
 
     /**

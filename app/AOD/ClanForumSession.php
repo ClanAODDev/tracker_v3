@@ -23,6 +23,10 @@ class ClanForumSession
         }
 
         if (str_contains(app()->environment(), 'local')) {
+            if (request()->cookie('local_logged_out')) {
+                return false;
+            }
+
             $this->loginLocalUser();
 
             return true;
