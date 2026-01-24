@@ -26,6 +26,10 @@
                 @if(session('impersonating'))
                     <p class="text-muted">You appear to be impersonating. Try refreshing the page.</p>
                 @endif
+
+                <a href="#" class="btn btn-default m-t-md" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <i class="fa fa-sign-out"></i> Log Out
+                </a>
             </div>
 
         </div>
