@@ -28,6 +28,10 @@ class HasPrimaryDivision
             }
 
             if (! $user->member || ! $user->member->division) {
+                if ($request->routeIs('logout')) {
+                    return $next($request);
+                }
+
                 if (session('impersonating')) {
                     auth()->logout();
                     redirect()->to(route('end-impersonation'));
