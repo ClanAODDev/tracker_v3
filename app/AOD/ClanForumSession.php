@@ -22,38 +22,29 @@ class ClanForumSession
             throw new Exception('No users exist. Have you created an account?');
         }
 
-        if (str_contains(app()->environment(), 'local')) {
-            if (request()->cookie('local_logged_out')) {
-                return false;
-            }
+        if ($this->isLocalEnvironment()) {
+            return $this->handleLocalEnvironment();
+        }
 
-            $this->loginLocalUser();
-
+        if (Auth::check()) {
             return true;
         }
 
-        if (! Auth::guest()) {
-            return true;
-        }
+        return $this->authenticateFromForumSession();
+    }
 
-        $sessionData = $this->getAODSession();
-        if (! $this->isValidSessionData($sessionData)) {
+    protected function isLocalEnvironment(): bool
+    {
+        return str_contains(app()->environment(), 'local');
+    }
+
+    protected function handleLocalEnvironment(): bool
+    {
+        if (request()->cookie('local_logged_out')) {
             return false;
         }
 
-        $username = $this->normalizeUsername($sessionData->username);
-
-        $member = Member::whereClanId($sessionData->userid)->first();
-        if (! $member) {
-            abort(403, 'Not authorized');
-        }
-
-        $user = $this->registerNewUser($username, $sessionData->email, $member->id);
-        Auth::login($user);
-
-        $memberGroupIds = array_map('intval', explode(',', $sessionData->membergroupids));
-        $roles = array_merge($memberGroupIds, [$sessionData->usergroupid]);
-        app(ClanForumPermissions::class)->handleAccountRoles($member->clan_id, $roles);
+        $this->loginLocalUser();
 
         return true;
     }
@@ -65,9 +56,29 @@ class ClanForumSession
         Auth::login($user);
     }
 
-    protected function normalizeUsername(string $username): string
+    protected function authenticateFromForumSession(): bool
     {
-        return str_replace('aod_', '', strtolower($username));
+        $sessionHash = request()->cookie($this->sessionKey);
+        if (! $sessionHash) {
+            return false;
+        }
+
+        $sessionData = $this->procedureService->checkSession($sessionHash);
+        if (! $this->isValidSessionData($sessionData)) {
+            return false;
+        }
+
+        $member = Member::whereClanId($sessionData->userid)->first();
+        if (! $member) {
+            abort(403, 'Not authorized');
+        }
+
+        $user = $this->findOrCreateUser($sessionData, $member);
+        Auth::login($user);
+
+        $this->syncForumPermissions($member->clan_id, $sessionData);
+
+        return true;
     }
 
     protected function isValidSessionData($sessionData): bool
@@ -79,32 +90,33 @@ class ClanForumSession
         return in_array($sessionData->loggedin, [1, 2], true);
     }
 
-    /**
-     * @return User||void
-     */
-    public function registerNewUser(string $username, string $email, int $clanId): User
+    protected function findOrCreateUser(object $sessionData, Member $member): User
     {
+        $username = $this->normalizeUsername($sessionData->username);
+
         if ($existingUser = User::whereName($username)->first()) {
             return $existingUser;
         }
 
         $user = new User;
         $user->name = $username;
-        $user->email = $email;
-        $user->member_id = $clanId;
+        $user->email = $sessionData->email;
+        $user->member_id = $member->clan_id;
         $user->save();
 
         return $user;
     }
 
-    private function getAODSession(): ?object
+    protected function normalizeUsername(string $username): string
     {
-        $sessionHash = request()->cookie($this->sessionKey);
+        return str_replace('aod_', '', strtolower($username));
+    }
 
-        if (! $sessionHash) {
-            return null;
-        }
+    protected function syncForumPermissions(int $clanId, object $sessionData): void
+    {
+        $memberGroupIds = array_map('intval', explode(',', $sessionData->membergroupids));
+        $roles = array_merge($memberGroupIds, [$sessionData->usergroupid]);
 
-        return $this->procedureService->checkSession($sessionHash);
+        app(ClanForumPermissions::class)->handleAccountRoles($clanId, $roles);
     }
 }

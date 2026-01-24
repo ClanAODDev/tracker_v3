@@ -36,6 +36,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'oauth/clients',
         ]);
 
+        $middleware->encryptCookies(except: [
+            'aod_sessionhash',
+        ]);
+
         $middleware->redirectGuestsTo('/login');
 
         $middleware->web(append: [
