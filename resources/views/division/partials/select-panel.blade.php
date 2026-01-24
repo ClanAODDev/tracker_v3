@@ -22,7 +22,7 @@
             @endcan
             @can('manageUnassigned', App\Models\User::class)
                 <button type="button" id="bulk-transfer-btn" class="btn btn-default" data-toggle="modal" data-target="#bulk-transfer-modal">
-                    <i class="fa fa-exchange-alt text-accent"></i> <span class="hidden-xs hidden-sm">Transfer</span>...
+                    <i class="fa fa-exchange-alt text-accent"></i> <span class="hidden-xs hidden-sm">Move</span>...
                 </button>
             @endcan
             @can('remindActivity', \App\Models\Member::class)
@@ -92,7 +92,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                <h4 class="modal-title">Transfer Members</h4>
+                <h4 class="modal-title">Move Members</h4>
             </div>
             <div class="modal-body">
                 <div id="bulk-transfer-parttimer-warning" class="alert alert-danger" style="display: none;">
@@ -122,7 +122,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" id="bulk-transfer-submit" class="btn btn-accent" disabled>
-                    <i class="fa fa-exchange-alt"></i> Transfer
+                    <i class="fa fa-exchange-alt"></i> Move
                 </button>
             </div>
         </div>

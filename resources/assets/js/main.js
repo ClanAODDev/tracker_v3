@@ -653,7 +653,6 @@ var Tracker = Tracker || {};
                     mobile_nav_side: $('#setting-mobile-nav-side').val(),
                     snow: $('#setting-snow').val(),
                     snow_ignore_mouse: $('#setting-snow-ignore-mouse').is(':checked'),
-                    ticket_notifications: $('#setting-ticket-notifications').is(':checked'),
                     theme: $('#setting-theme').val()
                 };
 
@@ -675,7 +674,7 @@ var Tracker = Tracker || {};
                 });
             }
 
-            $('#setting-disable-animations, #setting-ticket-notifications, #setting-snow-ignore-mouse').on('change', saveSettings);
+            $('#setting-disable-animations, #setting-snow-ignore-mouse').on('change', saveSettings);
 
             $('.settings-btn[data-setting]').on('click', function () {
                 var $btn = $(this);
@@ -751,10 +750,11 @@ var Tracker = Tracker || {};
         InitProfileModals: function () {
             var $partTimeModal = $('#part-time-divisions-modal');
             var $handlesModal = $('#ingame-handles-modal');
+            var $transferModal = $('#transfer-request-modal');
 
-            if (!$partTimeModal.length && !$handlesModal.length) return;
+            if (!$partTimeModal.length && !$handlesModal.length && !$transferModal.length) return;
 
-            $partTimeModal.add($handlesModal).on('show.bs.modal', function () {
+            $partTimeModal.add($handlesModal).add($transferModal).on('show.bs.modal', function () {
                 $('.settings-overlay').removeClass('active');
                 $('.settings-slideover').removeClass('active');
                 $('.settings-toggle, .mobile-settings-toggle').removeClass('active');
@@ -855,6 +855,47 @@ var Tracker = Tracker || {};
                         $btn.prop('disabled', false);
                     }
                 });
+            });
+
+            $('#save-transfer-request').on('click', function () {
+                var $btn = $(this);
+                var $status = $transferModal.find('.modal-save-status');
+                var divisionId = $('#transfer-division-select').val();
+
+                if (!divisionId) {
+                    $status.text('Please select a division').removeClass('saving saved').addClass('error');
+                    return;
+                }
+
+                $btn.prop('disabled', true);
+                $status.text('Submitting...').removeClass('saved error').addClass('saving');
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/settings/transfer-request',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name=csrf-token]').attr('content'),
+                        division_id: divisionId
+                    },
+                    success: function (response) {
+                        $status.text(response.message).removeClass('saving error').addClass('saved');
+                        setTimeout(function () {
+                            $transferModal.modal('hide');
+                            window.location.reload();
+                        }, 1500);
+                    },
+                    error: function (xhr) {
+                        var message = xhr.responseJSON?.error || 'Error submitting request';
+                        $status.text(message).removeClass('saving saved').addClass('error');
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+
+            $transferModal.on('hidden.bs.modal', function () {
+                $('#transfer-division-select').val('');
+                $transferModal.find('.modal-save-status').text('').removeClass('saving saved error');
+                $('#save-transfer-request').prop('disabled', false);
             });
         },
 

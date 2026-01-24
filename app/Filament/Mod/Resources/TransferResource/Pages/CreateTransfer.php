@@ -65,7 +65,16 @@ class CreateTransfer extends CreateRecord
                             function () {
                                 return function (string $attribute, $value, Closure $fail) {
                                     if (Transfer::where('member_id', $value)->pending()->exists()) {
-                                        $fail('This :attribute already has a pending transfer request.');
+                                        $fail('This member already has a pending transfer request.');
+                                    }
+
+                                    $recentTransfer = Transfer::where('member_id', $value)
+                                        ->where('created_at', '>=', now()->subWeek())
+                                        ->first();
+
+                                    if ($recentTransfer) {
+                                        $nextAllowed = $recentTransfer->created_at->addWeek()->format('M j, Y');
+                                        $fail("Transfer requests can only be made once per week. Next allowed: {$nextAllowed}.");
                                     }
                                 };
                             },
@@ -112,6 +121,7 @@ class CreateTransfer extends CreateRecord
                             modifyQueryUsing: fn (Builder $query, Get $get) => $query
                                 ->active()
                                 ->withoutFloaters()
+                                ->where('id', '!=', auth()->user()->member?->division_id)
                                 ->when(
                                     $get('member_id'),
                                     fn ($query) => $query->where('id', '!=',

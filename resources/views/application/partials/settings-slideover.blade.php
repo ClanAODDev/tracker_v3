@@ -85,22 +85,6 @@
                 </div>
             </div>
 
-            <div class="settings-section">
-                <h4 class="settings-section-title">Notifications</h4>
-
-                <div class="settings-field">
-                    <label class="settings-toggle-label">
-                        <span>Ticket notifications</span>
-                        <div class="settings-switch">
-                            <input type="checkbox" name="ticket_notifications" id="setting-ticket-notifications"
-                                {{ (auth()->user()->settings['ticket_notifications'] ?? false) ? 'checked' : '' }}>
-                            <span class="settings-switch-slider"></span>
-                        </div>
-                    </label>
-                    <p class="settings-help">Receive Discord notifications when your ticket is updated</p>
-                </div>
-            </div>
-
             @if(auth()->user()->member)
                 <div class="settings-section">
                     <h4 class="settings-section-title">Profile</h4>
@@ -127,6 +111,48 @@
                         </button>
                     </div>
                 </div>
+
+                @php
+                    $settingsMember = auth()->user()->member;
+                    $pendingTransfer = $settingsMember->transfers()->pending()->first();
+                    $canRequestTransfer = $settingsMember->division_id
+                        && $settingsMember->division?->name !== 'Floater';
+                @endphp
+
+                @if($settingsMember->division && $canRequestTransfer)
+                    <div class="settings-section">
+                        <h4 class="settings-section-title">Division</h4>
+
+                        <div class="settings-field">
+                            <div class="settings-division-info">
+                                <span class="settings-division-label">Primary Division</span>
+                                <div class="settings-division-display">
+                                    <img src="{{ $settingsMember->division->getLogoPath() }}" alt="" class="settings-division-logo">
+                                    <span class="settings-division-name">{{ $settingsMember->division->name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if($pendingTransfer)
+                            <div class="settings-field">
+                                <div class="settings-transfer-pending">
+                                    <i class="fa fa-clock-o"></i>
+                                    <div>
+                                        <div>Transfer to {{ $pendingTransfer->division->name }} pending</div>
+                                        <small class="text-muted">Awaiting {{ $pendingTransfer->division->name }} leadership approval</small>
+                                    </div>
+                                </div>
+                            </div>
+                        @else
+                            <div class="settings-field">
+                                <button type="button" class="settings-link-btn" data-toggle="modal" data-target="#transfer-request-modal">
+                                    <span><i class="fa fa-exchange"></i> Request Division Transfer</span>
+                                    <i class="fa fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+                @endif
             @endif
         </form>
     </div>
@@ -147,6 +173,12 @@
         $selectedPartTime = $member->partTimeDivisions()->pluck('divisions.id')->toArray();
         $handles = \App\Models\Handle::orderBy('label')->get();
         $memberHandles = $member->memberHandles()->with('handle')->get();
+        $transferableDivisions = \App\Models\Division::active()
+            ->whereNull('shutdown_at')
+            ->whereNotIn('id', $excludedDivisions)
+            ->where('id', '!=', $member->division_id)
+            ->orderBy('name')
+            ->get();
     @endphp
 
     <div class="modal fade" id="part-time-divisions-modal" tabindex="-1" role="dialog">
@@ -222,6 +254,44 @@
                     <span class="modal-save-status"></span>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-accent" id="save-ingame-handles">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transfer-request-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title"><i class="fa fa-exchange text-accent"></i> Request Division Transfer</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">
+                        Select the division you would like to transfer to.
+                        @if($member->rank->isOfficer())
+                            As an officer, your request will require approval from the gaining division's leadership.
+                        @else
+                            Your transfer will be processed automatically.
+                        @endif
+                    </p>
+                    <form id="transfer-request-form">
+                        @csrf
+                        <div class="form-group">
+                            <label for="transfer-division-select">Transfer to Division</label>
+                            <select id="transfer-division-select" name="division_id" class="form-control" required>
+                                <option value="">Select a division...</option>
+                                @foreach($transferableDivisions as $division)
+                                    <option value="{{ $division->id }}">{{ $division->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <span class="modal-save-status"></span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-accent" id="save-transfer-request">Submit Request</button>
                 </div>
             </div>
         </div>

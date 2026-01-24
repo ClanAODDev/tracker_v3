@@ -9,6 +9,7 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\Transfer;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -30,6 +31,35 @@ class TransferResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
+    public static function getNavigationBadge(): ?string
+    {
+        $user = auth()->user();
+        if (! $user || ! $user->isDivisionLeader()) {
+            return null;
+        }
+
+        $divisionId = $user->member?->division_id;
+
+        $count = Transfer::pending()
+            ->where(function ($query) use ($divisionId) {
+                $query->where('division_id', $divisionId)
+                    ->orWhereHas('member', fn ($q) => $q->where('division_id', $divisionId));
+            })
+            ->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Pending transfers involving your division';
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -49,8 +79,26 @@ class TransferResource extends Resource
                     ->badge(),
                 TextColumn::make('created_at')
                     ->label('Requested')
-                    ->dateTime()
+                    ->date('Y-m-d')
                     ->sortable(),
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->state(function (Transfer $record): string {
+                        if ($record->approved_at) {
+                            return 'Approved';
+                        }
+                        if ($record->hold_placed_at) {
+                            return 'On Hold';
+                        }
+
+                        return 'Awaiting ' . strtoupper($record->division->abbreviation) . ' approval';
+                    })
+                    ->badge()
+                    ->color(fn (string $state): string => match (true) {
+                        str_contains($state, 'Approved') => 'success',
+                        str_contains($state, 'Hold') => 'warning',
+                        default => 'info',
+                    }),
                 TextColumn::make('approver.name')
                     ->label('Approved By')
                     ->sortable()
@@ -103,8 +151,7 @@ class TransferResource extends Resource
                         Transfer $transfer
                     ) => auth()->user()->canManageTransferCommentsFor($transfer)),
 
-                BulkActionGroup::make([
-
+                ActionGroup::make([
                     Action::make('Hold')
                         ->label('Place Hold')
                         ->color('warning')
@@ -113,8 +160,7 @@ class TransferResource extends Resource
                         ->action(function (Transfer $record) {
                             $record->update(['hold_placed_at' => now()]);
                         })
-                        ->visible(fn (Transfer $record) => ! $record->hold_placed_at && ! $record->approved_at)
-                        ->hidden(fn (Transfer $record) => $record->approved_at),
+                        ->visible(fn (Transfer $record) => ! $record->hold_placed_at && ! $record->approved_at),
 
                     Action::make('Remove Hold')
                         ->label('Remove Hold')
@@ -124,8 +170,7 @@ class TransferResource extends Resource
                         ->action(function (Transfer $record) {
                             $record->update(['hold_placed_at' => null]);
                         })
-                        ->visible(fn (Transfer $record) => $record->hold_placed_at)
-                        ->hidden(fn (Transfer $record) => $record->approved_at),
+                        ->visible(fn (Transfer $record) => $record->hold_placed_at && ! $record->approved_at),
 
                     Action::make('Approve')
                         ->label('Approve')
@@ -137,16 +182,20 @@ class TransferResource extends Resource
                             $record->approve();
                             UpdateDivisionForMember::dispatch($record);
                         })
-                        ->visible(fn (Transfer $record) => ! $record->approved_at && ! $record->hold_placed_at),
-                    DeleteAction::make()->hidden(fn (Transfer $record) => $record->hold_placed_at || $record->approved_at),
-                ])
-                    ->visible(fn (Transfer $record) => $record->canApprove())
-                    ->label('Manage'),
+                        ->visible(fn (Transfer $record) => $record->canApprove() && ! $record->approved_at && ! $record->hold_placed_at),
 
+                    DeleteAction::make()
+                        ->visible(fn (Transfer $record) => ! $record->hold_placed_at && ! $record->approved_at),
+                ])
+                    ->visible(fn (Transfer $record) => auth()->user()->can('hold', $record) || $record->canApprove())
+                    ->label('Manage')
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->button(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()->isRole('admin')),
                 ]),
             ]);
     }

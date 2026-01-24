@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\BulkTagController;
-use App\Http\Controllers\BulkTransferController;
+use App\Http\Controllers\BulkMoveController;
 use App\Http\Controllers\Division\ReportController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DivisionNoteController;
@@ -75,7 +75,7 @@ Route::prefix('divisions/{division}')->group(function () {
         });
     });
 
-    Route::controller(BulkTransferController::class)->prefix('bulk-transfer')->name('bulk-transfer.')->group(function () {
+    Route::controller(BulkMoveController::class)->prefix('bulk-transfer')->name('bulk-transfer.')->group(function () {
         Route::get('platoons', 'getPlatoons')->name('platoons');
         Route::post('/', 'store')->name('store');
     });

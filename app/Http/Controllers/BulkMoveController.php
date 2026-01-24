@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class BulkTransferController extends Controller
+class BulkMoveController extends Controller
 {
     public function getPlatoons(Division $division): JsonResponse
     {
