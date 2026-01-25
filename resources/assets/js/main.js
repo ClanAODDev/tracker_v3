@@ -713,7 +713,11 @@ var Tracker = Tracker || {};
 
                 var favicon = document.getElementById('favicon');
                 if (favicon) {
-                    favicon.href = theme === 'shattrath' ? '/images/logo-shattrath.svg' : '/images/logo_v2.svg';
+                    var logoMap = {
+                        'shattrath': '/images/logo-shattrath.svg',
+                        'aod': '/images/logo-aod.svg'
+                    };
+                    favicon.href = logoMap[theme] || '/images/logo_v2.svg';
                 }
             }
 

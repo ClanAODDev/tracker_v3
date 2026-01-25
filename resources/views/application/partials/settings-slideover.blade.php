@@ -106,18 +106,19 @@
 
                 <div class="settings-field">
                     <label class="settings-label">Theme</label>
-                    <div class="settings-button-group">
+                    <div class="settings-button-group settings-button-group-themes">
                         <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'traditional' ? 'active' : '' }}" data-value="traditional" data-setting="theme">
-                            <span class="theme-swatch theme-traditional"></span> Traditional
+                            <span class="theme-swatch theme-traditional"></span>
+                            <span>Traditional</span>
                         </button>
                         <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'shattrath' ? 'active' : '' }}" data-value="shattrath" data-setting="theme">
-                            <span class="theme-swatch theme-shattrath"></span> Shattrath
+                            <span class="theme-swatch theme-shattrath"></span>
+                            <span>Shattrath</span>
                         </button>
-                        {{-- Light theme hidden until ready
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'light' ? 'active' : '' }}" data-value="light" data-setting="theme">
-                            <span class="theme-swatch theme-light"></span> Light
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'aod' ? 'active' : '' }}" data-value="aod" data-setting="theme">
+                            <span class="theme-swatch theme-aod"></span>
+                            <span>AOD</span>
                         </button>
-                        --}}
                     </div>
                     <input type="hidden" name="theme" id="setting-theme" value="{{ auth()->user()->settings['theme'] ?? 'traditional' }}">
                 </div>

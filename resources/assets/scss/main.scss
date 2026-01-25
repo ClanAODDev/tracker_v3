@@ -6243,7 +6243,7 @@ ul.sortable li:hover {
 
 .navbar-default {
     border-bottom: none;
-    background-color: var(--color-white);
+    background-color: var(--color-topbar-bg, var(--color-white));
 }
 
 .left-nav-toggle {

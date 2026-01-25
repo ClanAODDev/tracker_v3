@@ -340,6 +340,20 @@ body.mobile-nav-left .settings-slideover {
     }
 }
 
+.settings-button-group-themes {
+    .settings-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 8px;
+    }
+
+    .theme-swatch {
+        margin-right: 0;
+    }
+}
+
 .theme-swatch {
     display: inline-block;
     width: 14px;
@@ -358,9 +372,8 @@ body.mobile-nav-left .settings-slideover {
     background: linear-gradient(135deg, #1a1625 50%, #8b5cf6 50%);
 }
 
-.theme-light {
-    background: linear-gradient(135deg, #ffffff 50%, #22AF48 50%);
-    border-color: rgba(0, 0, 0, 0.2);
+.theme-aod {
+    background: linear-gradient(135deg, #080606 50%, #CC0009 50%);
 }
 
 .settings-footer {

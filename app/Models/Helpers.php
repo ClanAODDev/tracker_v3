@@ -37,7 +37,7 @@ function getThemedLogoPath()
     $logos = [
         'traditional' => 'images/logo_v2.svg',
         'shattrath' => 'images/logo-shattrath.svg',
-        'light' => 'images/logo-light.svg',
+        'aod' => 'images/logo-aod.svg',
     ];
 
     return asset($logos[$theme] ?? $logos['traditional']);
