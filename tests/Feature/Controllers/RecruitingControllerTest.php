@@ -6,6 +6,7 @@ use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\User;
 use App\Services\AODForumService;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -30,6 +31,11 @@ class RecruitingControllerTest extends TestCase
         $mock = Mockery::mock('alias:' . AODForumService::class);
         $mock->shouldReceive('createForumUser')
             ->andReturn(['success' => true, 'clan_id' => $clanId]);
+
+        $forumUser = (object) ['userid' => $clanId];
+        $procedureMock = Mockery::mock(ForumProcedureService::class);
+        $procedureMock->shouldReceive('checkUser')->andReturn($forumUser);
+        $this->app->instance(ForumProcedureService::class, $procedureMock);
     }
 
     protected function mockForumUserCreationFailure(string $error): void
