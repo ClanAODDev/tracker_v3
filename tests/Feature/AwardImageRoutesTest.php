@@ -12,6 +12,7 @@ class AwardImageRoutesTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_award_image_routes_return_png_images()
     {
         $member = $this->createMember();

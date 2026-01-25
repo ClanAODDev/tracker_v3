@@ -302,7 +302,7 @@ class DiscordAuthTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('logout'));
 
-        $response->assertRedirect('/');
+        $response->assertRedirect('/login');
         $this->assertGuest();
     }
 
