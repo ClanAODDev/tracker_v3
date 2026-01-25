@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Member;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;

@@ -36,6 +36,7 @@ class PartTimeDivisionsForm
                 $member = ($livewire->record ?? null) ?: (auth()->user()->member ?? null);
                 if (! $member) {
                     $set(self::FIELD, []);
+
                     return;
                 }
 

@@ -14,7 +14,7 @@ class DiscordRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date_of_birth' => ['required', 'date', 'before:'.now()->subYears(13)->format('Y-m-d')],
+            'date_of_birth' => ['required', 'date', 'before:' . now()->subYears(13)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }

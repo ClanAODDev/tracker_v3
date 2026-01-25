@@ -10,7 +10,6 @@ use App\Models\MemberRequest;
 use App\Models\RankAction;
 use App\Models\Transfer;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 
 class RecruitmentService
 {

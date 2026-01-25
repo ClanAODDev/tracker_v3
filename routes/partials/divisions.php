@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\BulkTagController;
 use App\Http\Controllers\BulkMoveController;
+use App\Http\Controllers\BulkTagController;
 use App\Http\Controllers\Division\ReportController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DivisionNoteController;

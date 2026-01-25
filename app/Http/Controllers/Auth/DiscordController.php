@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DiscordRegistrationRequest;
 use App\Models\Member;
 use App\Models\User;
-use App\Http\Requests\DiscordRegistrationRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;

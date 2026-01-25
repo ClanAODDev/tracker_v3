@@ -15,7 +15,5 @@ return new class extends Migration
             ->delete();
     }
 
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 };

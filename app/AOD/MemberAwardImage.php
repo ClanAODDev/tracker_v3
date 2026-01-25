@@ -10,10 +10,13 @@ class MemberAwardImage
     use GeneratesAwardImages;
 
     private const MAX_AWARDS = 4;
+
     private const CANVAS_WIDTH = 500;
+
     private const CANVAS_HEIGHT = 131;
 
     private array $fonts;
+
     private array $options;
 
     public function __construct()
@@ -68,7 +71,7 @@ class MemberAwardImage
         $backgroundPath = public_path('images/dynamic-images/bgs/awards_base_image.png');
 
         $background = new \Imagick($backgroundPath);
-        $overlay = new \Imagick();
+        $overlay = new \Imagick;
         $overlay->readImageBlob($overlayPng);
 
         $background->compositeImage($overlay, \Imagick::COMPOSITE_OVER, 0, 0);
@@ -117,6 +120,7 @@ class MemberAwardImage
     private function clampInt($value, int $min, int $max, int $default): int
     {
         $int = filter_var($value, FILTER_VALIDATE_INT);
+
         return $int !== false ? max($min, min($max, $int)) : $default;
     }
 
@@ -284,6 +288,7 @@ AWARD;
         if (file_exists($filePath)) {
             return base64_encode(file_get_contents($filePath));
         }
+
         return '';
     }
 
@@ -292,6 +297,7 @@ AWARD;
         if (file_exists($this->fonts['big'])) {
             return base64_encode(file_get_contents($this->fonts['big']));
         }
+
         return '';
     }
 
@@ -325,7 +331,7 @@ AWARD;
 
     private function generateEmptySvg(): string
     {
-        return <<<SVG
+        return <<<'SVG'
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="{self::CANVAS_WIDTH}" height="{self::CANVAS_HEIGHT}">
     <rect width="100%" height="100%" fill="#1a1a2e"/>
