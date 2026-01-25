@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-center">
+    <div class="login-wrapper">
 
         <div class="view-header m-b-md">
             <div class="header-icon">

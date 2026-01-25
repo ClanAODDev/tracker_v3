@@ -24,6 +24,7 @@ var Tracker = Tracker || {};
             Tracker.InitSettings();
             Tracker.InitProfileModals();
             Tracker.InitNoSquadModal();
+            Tracker.InitWelcomeModal();
             Tracker.InitLeaderboardTabs();
             Tracker.InitInactiveTabs();
             Tracker.InitParttimerSearch();
@@ -957,6 +958,24 @@ var Tracker = Tracker || {};
                     $('#no-squad-loading').hide();
                     $list.show();
                     loaded = true;
+                });
+            });
+        },
+
+        InitWelcomeModal: function () {
+            var $modal = $('#welcome-modal');
+            if (!$modal.length) return;
+
+            $modal.modal('show');
+
+            $modal.on('hidden.bs.modal', function () {
+                $.ajax({
+                    url: window.Laravel.appPath + '/settings',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name=csrf-token]').attr('content'),
+                        welcomed: true
+                    }
                 });
             });
         },
