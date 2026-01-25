@@ -54,7 +54,7 @@
                     <input type="hidden" name="snow" id="setting-snow" value="{{ auth()->user()->settings['snow'] ?? 'no_snow' }}">
                 </div>
 
-                <div class="settings-field" id="snow-mouse-setting">
+                <div class="settings-field" id="snow-mouse-setting" style="{{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'no_snow' ? 'display: none;' : '' }}">
                     <label class="settings-toggle-label">
                         <span>Particles ignore mouse</span>
                         <label class="settings-switch">
@@ -121,11 +121,10 @@
 
                 @if($settingsMember->division && $canRequestTransfer)
                     <div class="settings-section">
-                        <h4 class="settings-section-title">Division</h4>
+                        <h4 class="settings-section-title">Primary Division</h4>
 
                         <div class="settings-field">
                             <div class="settings-division-info">
-                                <span class="settings-division-label">Primary Division</span>
                                 <div class="settings-division-display">
                                     <img src="{{ $settingsMember->division->getLogoPath() }}" alt="" class="settings-division-logo">
                                     <span class="settings-division-name">{{ $settingsMember->division->name }}</span>
