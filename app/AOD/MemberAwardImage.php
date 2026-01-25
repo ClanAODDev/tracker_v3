@@ -30,7 +30,13 @@ class MemberAwardImage
 
     public function generateAwardsImagePng(Member $member, bool $withBackground = false): string
     {
-        $svg = $this->generateSvgContent($member);
+        $awardsData = $this->fetchAwardsData($member);
+
+        if (empty($awardsData) && $withBackground) {
+            return file_get_contents(public_path('images/dynamic-images/bgs/no-awards-base-image.png'));
+        }
+
+        $svg = $this->generateSvgContentFromData($awardsData);
 
         $process = proc_open(
             'rsvg-convert -f png',
@@ -77,8 +83,11 @@ class MemberAwardImage
 
     private function generateSvgContent(Member $member): string
     {
-        $awardsData = $this->fetchAwardsData($member);
+        return $this->generateSvgContentFromData($this->fetchAwardsData($member));
+    }
 
+    private function generateSvgContentFromData(array $awardsData): string
+    {
         if (empty($awardsData)) {
             return $this->generateEmptySvg();
         }
