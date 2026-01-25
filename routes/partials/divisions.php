@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\BulkMoveController;
 use App\Http\Controllers\BulkTagController;
-use App\Http\Controllers\BulkTransferController;
 use App\Http\Controllers\Division\ReportController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DivisionNoteController;
-use App\Http\Controllers\DivisionStructureController;
+use App\Http\Controllers\DivisionOrgChartController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\MemberController;
@@ -33,10 +33,9 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::post('/', 'store')->name('leave.store');
     });
 
-    Route::controller(DivisionStructureController::class)->prefix('structure')->group(function () {
-        Route::get('edit', 'modify')->name('division.edit-structure');
-        Route::post('/', 'update')->name('division.update-structure');
-        Route::post('preview', 'preview')->name('division.preview-structure');
+    Route::controller(DivisionOrgChartController::class)->prefix('structure')->group(function () {
+        Route::get('/', 'show')->name('division.structure');
+        Route::get('data', 'data')->name('division.structure.data');
     });
 
     Route::controller(InactiveMemberController::class)->group(function () {
@@ -76,7 +75,7 @@ Route::prefix('divisions/{division}')->group(function () {
         });
     });
 
-    Route::controller(BulkTransferController::class)->prefix('bulk-transfer')->name('bulk-transfer.')->group(function () {
+    Route::controller(BulkMoveController::class)->prefix('bulk-transfer')->name('bulk-transfer.')->group(function () {
         Route::get('platoons', 'getPlatoons')->name('platoons');
         Route::post('/', 'store')->name('store');
     });

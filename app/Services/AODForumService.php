@@ -25,6 +25,8 @@ class AODForumService
 
     const ADD_TO_AOD = 'addaod';
 
+    const CREATE_USER = 'newuser';
+
     public static function request(string $url, array $options = []): array|string
     {
         $tokenParam = $options['_token_param'] ?? self::DEFAULT_TOKEN_PARAM;
@@ -97,6 +99,65 @@ class AODForumService
         }
 
         return true;
+    }
+
+    public static function createForumUser(
+        int $impersonatingMemberId,
+        string $username,
+        string $email,
+        string $dateOfBirth,
+        string $password,
+        string $discordId,
+    ): array {
+        $response = self::postRequest(self::MODCP_URL, [
+            'aod_userid' => $impersonatingMemberId,
+            'do' => self::CREATE_USER,
+            'username' => $username,
+            'email' => $email,
+            'dob' => $dateOfBirth,
+            'password' => $password,
+            'discord_id' => $discordId,
+        ]);
+
+        if (is_string($response) && str_contains($response, 'saved_user') && str_contains($response, 'successfully')) {
+            return ['success' => true];
+        }
+
+        return [
+            'success' => false,
+            'error' => is_string($response) ? $response : 'Unknown error',
+        ];
+    }
+
+    public static function postRequest(string $url, array $options = []): array|string
+    {
+        $params = array_merge($options, [
+            'authcode' => self::generateToken(),
+        ]);
+
+        try {
+            $resp = Http::withUserAgent(self::AGENT)
+                ->timeout(10)
+                ->connectTimeout(5)
+                ->retry(2, 200)
+                ->asForm()
+                ->post($url, $params);
+
+            $json = $resp->json();
+
+            if ($json !== null) {
+                return $json;
+            }
+
+            $clean = strip_tags($resp->body());
+            $clean = preg_replace('/\s+/', ' ', $clean);
+
+            return trim($clean);
+        } catch (Exception $e) {
+            Log::error('Forum POST request failed: ' . $e->getMessage());
+
+            return ['error' => $e->getMessage()];
+        }
     }
 
     public static function fetchInfo(array $params = []): array|string

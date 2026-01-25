@@ -10,7 +10,9 @@ class MemberAwardCluster
     use GeneratesAwardImages;
 
     private const COLUMNS = 3;
+
     private const PADDING = 10;
+
     private const MAX_AWARDS = 6;
 
     public function generateClusterImage(Member $member): string
@@ -88,6 +90,7 @@ SVG;
         if (file_exists($filePath)) {
             return base64_encode(file_get_contents($filePath));
         }
+
         return '';
     }
 

@@ -104,11 +104,11 @@ const MemberTags = {
                     html += '<li><a href="#" class="text-muted" style="pointer-events: none;">No tags available</a></li>';
                 } else {
                     const tagItems = unassigned.map(tag => `
-                        <li class="tag-option" data-tag-id="${tag.id}" data-tag-name="${tag.name}" data-tag-visibility="${tag.visibility}">
+                        <div class="tag-option" data-tag-id="${tag.id}" data-tag-name="${tag.name}" data-tag-visibility="${tag.visibility}">
                             <a href="#"><span class="badge tag-visibility-${tag.visibility}">${tag.name}</span></a>
-                        </li>`).join('');
+                        </div>`).join('');
 
-                    html += `<li><div class="tag-options-scroll" style="max-height: 200px; overflow-y: auto;"><ul class="list-unstyled" style="margin: 0; padding: 0;">${tagItems}</ul></div></li>`;
+                    html += `<li class="tag-options-wrapper"><div class="tag-options-scroll">${tagItems}</div></li>`;
                 }
 
                 if (canCreate) {

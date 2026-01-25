@@ -34,5 +34,7 @@ class AddClanMember implements ShouldQueue
             name: 'AOD_' . $this->member->name,
             division: $this->member->division->name
         );
+
+        SyncDiscordMember::dispatch($this->member);
     }
 }

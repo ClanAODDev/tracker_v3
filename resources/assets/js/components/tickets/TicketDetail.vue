@@ -467,10 +467,10 @@ export default {
   color: var(--color-white);
 }
 
-.pill-new { background: rgba(86, 192, 224, 0.3); color: var(--color-info); }
-.pill-assigned { background: rgba(246, 168, 33, 0.3); color: var(--color-accent); }
-.pill-resolved { background: rgba(27, 191, 137, 0.3); color: var(--color-success); }
-.pill-rejected { background: rgba(219, 82, 75, 0.3); color: var(--color-danger); }
+.pill-new { background: color-mix(in srgb, var(--color-info) 30%, transparent); color: var(--color-info); }
+.pill-assigned { background: color-mix(in srgb, var(--color-accent) 30%, transparent); color: var(--color-accent); }
+.pill-resolved { background: color-mix(in srgb, var(--color-success) 30%, transparent); color: var(--color-success); }
+.pill-rejected { background: color-mix(in srgb, var(--color-danger) 30%, transparent); color: var(--color-danger); }
 
 .ticket-type {
   font-size: 14px;

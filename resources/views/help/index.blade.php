@@ -20,7 +20,6 @@
     <div class="container-fluid">
 
         @include('help.partials.general')
-        @include('help.partials.division-structures')
 
         <div class="panel m-t-xl">
             @include('help.partials.access-roles')

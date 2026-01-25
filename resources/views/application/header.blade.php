@@ -3,7 +3,11 @@
 <meta charset="UTF-8">
 @php
     $theme = auth()->check() ? (auth()->user()->settings['theme'] ?? 'traditional') : 'traditional';
-    $faviconPath = $theme === 'shattrath' ? 'images/logo-shattrath.svg' : 'images/logo_v2.svg';
+    $faviconPaths = [
+        'shattrath' => 'images/logo-shattrath.svg',
+        'aod' => 'images/logo-aod.svg',
+    ];
+    $faviconPath = $faviconPaths[$theme] ?? 'images/logo_v2.svg';
 @endphp
 <link id="favicon" href="{{ asset($faviconPath) }}" type="image/svg+xml" rel="icon"/>
 
@@ -62,6 +66,7 @@
         'csrfToken' => csrf_token(),
         'appPath' => route('index'),
         'canWorkTickets' => auth()->check() && \App\Models\TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user())),
+        'canUseBulkMode' => auth()->check() && auth()->user()->isRole(['officer', 'sr_ldr']),
         'userId' => auth()->id(),
     ]); ?>
 </script>

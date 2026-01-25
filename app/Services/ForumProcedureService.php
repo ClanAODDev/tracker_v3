@@ -9,19 +9,29 @@ class ForumProcedureService
 {
     protected string $connection = 'aod_forums';
 
+    private const CHECK_SESSION = 'check_session';
+
+    private const CHECK_USER = 'check_user';
+
+    private const GET_USER = 'get_user';
+
+    private const SET_USER_RANK = 'set_user_rank';
+
+    private const SET_USER_DIVISION = 'set_user_division';
+
     public function checkSession(string $sessionHash): ?object
     {
-        return $this->call('check_session', ['session' => $sessionHash]);
+        return $this->call(self::CHECK_SESSION, ['session' => $sessionHash]);
     }
 
     public function getUser(int $userId): ?object
     {
-        return $this->call('get_user', ['userid' => $userId]);
+        return $this->call(self::GET_USER, ['userid' => $userId]);
     }
 
     public function setUserRank(int $userId, string $rank): ?object
     {
-        return $this->call('set_user_rank', [
+        return $this->call(self::SET_USER_RANK, [
             'userid' => $userId,
             'rank' => $rank,
         ]);
@@ -29,9 +39,17 @@ class ForumProcedureService
 
     public function setUserDivision(int $userId, string $division): ?object
     {
-        return $this->call('set_user_division', [
+        return $this->call(self::SET_USER_DIVISION, [
             'userid' => $userId,
             'division' => $division,
+        ]);
+    }
+
+    public function checkUser(string $username, string $password): ?object
+    {
+        return $this->call(self::CHECK_USER, [
+            'username' => $username,
+            'password' => md5($password),
         ]);
     }
 

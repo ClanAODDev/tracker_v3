@@ -340,6 +340,20 @@ body.mobile-nav-left .settings-slideover {
     }
 }
 
+.settings-button-group-themes {
+    .settings-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 8px;
+    }
+
+    .theme-swatch {
+        margin-right: 0;
+    }
+}
+
 .theme-swatch {
     display: inline-block;
     width: 14px;
@@ -358,9 +372,8 @@ body.mobile-nav-left .settings-slideover {
     background: linear-gradient(135deg, #1a1625 50%, #8b5cf6 50%);
 }
 
-.theme-light {
-    background: linear-gradient(135deg, #ffffff 50%, #22AF48 50%);
-    border-color: rgba(0, 0, 0, 0.2);
+.theme-aod {
+    background: linear-gradient(135deg, #080606 50%, #CC0009 50%);
 }
 
 .settings-footer {
@@ -634,6 +647,98 @@ body.settings-open {
         cursor: pointer;
         border: none;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.settings-division-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.settings-division-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.settings-division-display {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.settings-division-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.settings-division-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-white);
+}
+
+.settings-transfer-pending {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+    border-radius: 6px;
+    color: var(--color-warning);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 8px,
+            color-mix(in srgb, var(--color-warning) 2%, transparent) 8px,
+            color-mix(in srgb, var(--color-warning) 2%, transparent) 16px
+        );
+        animation: transfer-pending-stripes 20s linear infinite;
+        pointer-events: none;
+    }
+
+    > i {
+        font-size: 18px;
+        margin-top: 2px;
+        position: relative;
+    }
+
+    > div {
+        font-size: 14px;
+        font-weight: 500;
+        position: relative;
+
+        small {
+            display: block;
+            margin-top: 4px;
+            font-weight: 400;
+            opacity: 0.7;
+        }
+    }
+}
+
+@keyframes transfer-pending-stripes {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 400px 0;
     }
 }
 

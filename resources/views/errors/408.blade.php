@@ -26,6 +26,10 @@
                 @if(session('impersonating'))
                     <p class="text-muted">You appear to be impersonating. Try refreshing the page.</p>
                 @endif
+
+                <a href="{{ route('logout') }}" class="btn btn-default m-t-md">
+                    <i class="fa fa-sign-out"></i> Log Out
+                </a>
             </div>
 
         </div>

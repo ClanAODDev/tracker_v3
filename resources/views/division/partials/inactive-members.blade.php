@@ -3,10 +3,14 @@
         <table class="table inactive-table">
             <thead>
             <tr>
-                <th class="inactive-bulk-col"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
+                @can('remindActivity', \App\Models\Member::class)
+                    <th class="inactive-bulk-col"><input type="checkbox" class="inactive-select-all" title="Select All"></th>
+                @endcan
                 <th>Member</th>
                 <th>Last Voice Activity</th>
-                <th>Reminded</th>
+                @can('remindActivity', \App\Models\Member::class)
+                    <th>Reminded</th>
+                @endcan
                 <th>Status</th>
                 <th>{{ $division->locality('platoon') }} / Squad</th>
                 <th class="text-right">Actions</th>
@@ -25,7 +29,9 @@
                     $remindedToday = $member->last_activity_reminder_at?->isToday();
                 @endphp
                 <tr class="{{ $severityClass }}">
-                    <td class="inactive-bulk-col"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    @can('remindActivity', \App\Models\Member::class)
+                        <td class="inactive-bulk-col"><input type="checkbox" class="inactive-member-checkbox" value="{{ $member->clan_id }}"></td>
+                    @endcan
                     <td>
                         <a href="{{ route('member', $member->getUrlParams()) }}" class="inactive-member-link">
                             <span class="inactive-member-name">{{ $member->name }}</span>
@@ -37,18 +43,20 @@
                             {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks','months']) }}
                         </span>
                     </td>
-                    <td data-order="{{ $member->last_activity_reminder_at?->format('Y-m-d') ?? '0000-00-00' }}">
-                        <button type="button"
-                                class="btn btn-sm activity-reminder-toggle {{ $remindedToday ? 'btn-default' : 'btn-success' }}"
-                                data-member-id="{{ $member->clan_id }}"
-                                title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
-                                {{ $remindedToday ? 'disabled' : '' }}>
-                            <i class="fa fa-bell"></i>
-                            @if($member->last_activity_reminder_at)
-                                <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j/y') }}</span>
-                            @endif
-                        </button>
-                    </td>
+                    @can('remindActivity', \App\Models\Member::class)
+                        <td data-order="{{ $member->last_activity_reminder_at?->format('Y-m-d') ?? '0000-00-00' }}">
+                            <button type="button"
+                                    class="btn btn-sm activity-reminder-toggle {{ $remindedToday ? 'btn-default' : 'btn-success' }}"
+                                    data-member-id="{{ $member->clan_id }}"
+                                    title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
+                                    {{ $remindedToday ? 'disabled' : '' }}>
+                                <i class="fa fa-bell"></i>
+                                @if($member->last_activity_reminder_at)
+                                    <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j/y') }}</span>
+                                @endif
+                            </button>
+                        </td>
+                    @endcan
                     <td>
                         <span class="inactive-status" title="{{ $member->last_voice_status?->getDescription() }}">
                             {{ $member->last_voice_status?->getLabel() ?? 'Unknown' }}
@@ -64,12 +72,14 @@
                     </td>
                     <td class="text-right">
                         <div class="inactive-actions">
-                            <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}"
-                               target="_blank"
-                               class="btn btn-sm btn-default"
-                               title="Send Forum PM">
-                                <i class="fa fa-envelope"></i>
-                            </a>
+                            @can('remindActivity', \App\Models\Member::class)
+                                <a href="{{ doForumFunction([$member->clan_id,], 'pm') }}"
+                                   target="_blank"
+                                   class="btn btn-sm btn-default"
+                                   title="Send Forum PM">
+                                    <i class="fa fa-envelope"></i>
+                                </a>
+                            @endcan
                             @can('flag-inactive', \App\Models\Member::class)
                                 <a href="{{ route('member.flag-inactive', $member->clan_id) }}"
                                    class="btn btn-sm btn-warning"

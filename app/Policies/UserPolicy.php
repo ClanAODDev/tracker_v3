@@ -89,16 +89,6 @@ class UserPolicy
         return true;
     }
 
-    public function viewDivisionStructure(User $user)
-    {
-        return $user->isRole(['officer', 'sr_ldr']);
-    }
-
-    public function editDivisionStructure(User $user)
-    {
-        return $user->isRole('sr_ldr');
-    }
-
     public function manageUnassigned(User $user)
     {
         return $user->isRole('sr_ldr');

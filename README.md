@@ -1,88 +1,69 @@
 # ![logo](https://clanaod.net/tracker/images/logo_v2.png) AOD Tracker v3
 
-The AOD Tracker is a member and organizational unit management system. It is specifically built to support AOD
-processes, and as such makes some assumptions about the characteristics of an organization:
+A member and organizational unit management system for the AOD gaming community.
 
-- Games are divided into *divisions*
-- Divisions consist of *platoons*, *Commanders* and *Executive officers*
-- Platoons consist of *squads* and *platoon leaders*
-- Squads consist of *members* and *squad leaders*
+**Tech Stack:** Laravel 12 · PHP 8.4 · Vue.js 3 · MariaDB · Filament v4
 
-There are many other analytical tools built into the tracker to provide basic statistics about recruiting, retention,
-and activity that derive from outside data.
+```mermaid
+graph TD
+    AOD[AOD Clan] --> D1[Division]
+    AOD --> D2[Division]
+    AOD --> D3[Division]
+    D1 --> P1[Platoon]
+    D1 --> P2[Platoon]
+    P1 --> S1[Squad]
+    S1 --> M1[Member]
+    P1 -.-> M2[Member]
+    D1 -.-> M3[Member]
+```
 
-The Tracker is considered a consumer of member data. The only concrete data it generates on its own are member notes for
-historical purposes.
+The Tracker consumes member data from external systems (AOD forums, Discord bot) and provides analytics for recruiting, retention, and activity.
 
-## Contributing
+## Local Development
 
-The Tracker is a large project that has been in development since 2015 and is the result of quite a few contributors
-over the years. If you have an interest in helping develop a feature, fix bugs, or even just provide general feedback,
-we welcome you!
+Requires [Docker](https://www.docker.com/) or Docker Desktop.
 
-The best way to contribute code changes is by way of a PR. First, make a fork of this repo, clone the fork to your local
-development environment, and follow the steps for local installation. Then, when you are ready, submit a pull request of
-the changes from your fork. Please ensure you pay attention to the code style section, and explain any significant
-alterations your PR may make.
+### Quick Start
 
-## Local Installation
-
-#### Building the laravel environment
-
-You will need to ensure, at a minimum, you have [Docker](https://www.docker.com/) or Docker Desktop
-installed. If you don't have PHP installed (or don't want to), you can use the following `docker run` command to get
-things built.
-
-```shell script
-# installs application dependencies to allow you to run Sail
+```bash
+# Install dependencies (if PHP not installed locally)
 docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v "$(pwd):/var/www/html" \
     -w /var/www/html \
     laravelsail/php84-composer:latest \
     composer install --ignore-platform-reqs
-```
 
-If you have the correct version of PHP installed, and you have composer, you can skip the `docker run` command, and
-simply build it with Composer using `composer install`
+# Or with local PHP/Composer
+composer install
 
-```
-# the example should contain enough to do local development
+# Setup environment
 cp .env.example .env
-
-# generate framework key
 php artisan key:generate
-```
 
-#### Building the docker images
-
-Laravel comes baked with
-`Sail`, an opinionated Docker configuration for Laravel applications. I have swapped out my custom Dockerfiles/compose
-files in place of this.
-
-The tracker and website should not use conflicting database and web server ports.
-
-```bash
+# Start containers
 ./vendor/bin/sail up -d
 
+# Setup database
 ./vendor/bin/sail artisan migrate:fresh \
-&& ./vendor/bin/sail artisan db:seed \
-&& ./vendor/bin/sail artisan db:seed --class=ClanSeeder
+    && ./vendor/bin/sail artisan db:seed \
+    && ./vendor/bin/sail artisan db:seed --class=ClanSeeder
+
+# Build frontend assets
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run build
 ```
 
-Since we are using Sail for docker configuration, we can use it to interact with the container rather than exec'ing into
-it manually.
+The app auto-logs into a seeded user for local development.
 
-```shell
-./vendor/bin/sail tinker
+### Common Commands
+
+```bash
+./vendor/bin/sail artisan test          # Run tests
+./vendor/bin/sail tinker                # Laravel REPL
+./vendor/bin/pint                       # Format code
 ```
 
-The Tracker will automatically log into the first (and only) user, which has been created as part of the seeding
-process. Additional users will be created for testing purposes.
+## Contributing
 
-### Enforcing code style
-
-Everyone has their own preferences for how code should look. For cases where there are wild differences, we use `.
-./vendor/bin/pint` to make things consistent throughout the repo. Feel free to run this before committing!
-
-Eventually we'll add this to a GitHub Action so it happens automatically...
+Fork the repo, follow the setup steps above, then submit a PR. Run `./vendor/bin/pint` before committing to maintain consistent code style.

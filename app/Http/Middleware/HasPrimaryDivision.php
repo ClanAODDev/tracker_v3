@@ -20,7 +20,7 @@ class HasPrimaryDivision
             $user = Auth::user();
 
             if ($user->isPendingRegistration()) {
-                if (! $request->routeIs('auth.discord.pending', 'logout')) {
+                if (! $request->routeIs('auth.discord.pending', 'auth.discord.register', 'logout')) {
                     return redirect()->route('auth.discord.pending');
                 }
 
@@ -28,6 +28,10 @@ class HasPrimaryDivision
             }
 
             if (! $user->member || ! $user->member->division) {
+                if ($request->routeIs('logout')) {
+                    return $next($request);
+                }
+
                 if (session('impersonating')) {
                     auth()->logout();
                     redirect()->to(route('end-impersonation'));

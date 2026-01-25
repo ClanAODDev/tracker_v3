@@ -18,6 +18,7 @@ export default defineConfig({
                 'resources/assets/js/retention-graph.js',
                 'resources/assets/js/tickets.js',
                 'resources/assets/js/training.js',
+                'resources/assets/js/org-chart.js',
             ],
             refresh: true,
         }),

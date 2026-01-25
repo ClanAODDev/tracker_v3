@@ -70,7 +70,7 @@ body.nav-toggle {
 
 .navbar-default {
     border-bottom: none;
-    background-color: var(--color-white);
+    background-color: var(--color-topbar-bg, var(--color-white));
 
     .navbar-brand {
         width: 200px;

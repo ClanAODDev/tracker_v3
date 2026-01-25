@@ -58,9 +58,11 @@
             </div>
 
             <div class="inactive-toolbar-right">
-                <button type="button" class="btn btn-default inactive-bulk-toggle">
-                    Bulk Mode
-                </button>
+                @can('remindActivity', \App\Models\Member::class)
+                    <button type="button" class="btn btn-default inactive-bulk-toggle">
+                        Bulk Mode
+                    </button>
+                @endcan
                 <div class="inactive-search-wrapper">
                     <i class="fa fa-search inactive-search-icon"></i>
                     <input type="text"

@@ -16,7 +16,6 @@
         "doctrine/annotations": "^1.10.4",
         "google/apiclient": "^2.0",
         "brian2694/laravel-toastr": "^5.53",
-        "rcrowe/twigbridge": "^0.14.0",
         "spatie/laravel-query-builder": "^6.0",
         "osiemsiedem/laravel-autolink": "^9.0",
         "ext-curl": "*",

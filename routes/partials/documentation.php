@@ -8,7 +8,6 @@ Route::get('changelog', [AppController::class, 'changelog'])->name('changelog');
 
 Route::prefix('help/docs')->group(function () {
     Route::get('/', [HelpController::class, 'index'])->name('help');
-    Route::view('division-structures', 'help.division-structures')->name('divisionStructures');
     Route::view('member-awards', 'help.member-awards')->name('help.member-awards');
     Route::view('managing-rank', 'help.managing-rank')->name('help.managing-rank');
 

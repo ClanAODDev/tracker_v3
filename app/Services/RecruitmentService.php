@@ -10,48 +10,56 @@ use App\Models\MemberRequest;
 use App\Models\RankAction;
 use App\Models\Transfer;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 
 class RecruitmentService
 {
     public function __construct(
-        protected ForumProcedureService $forumService
+        protected ForumProcedureService $forumProcedureService
     ) {}
 
-    public function createForumAccountForDiscordUser(User $user, string $forumName): array
+    public function createForumAccountForDiscordUser(User $user, string $forumName, int $recruiterId): array
     {
-        $formattedName = 'AOD_' . $forumName;
+        if (! $user->date_of_birth) {
+            return [
+                'success' => false,
+                'error' => 'Date of birth is required to create a forum account.',
+            ];
+        }
 
-        Log::info('RecruitmentService: Creating forum account for Discord user', [
-            'user_id' => $user->id,
-            'discord_id' => $user->discord_id,
-            'discord_username' => $user->discord_username,
-            'email' => $user->email,
-            'forum_name' => $formattedName,
-        ]);
+        if (! $user->forum_password) {
+            return [
+                'success' => false,
+                'error' => 'Password is required to create a forum account.',
+            ];
+        }
 
-        // @todo Implement actual forum account creation via stored procedure
-        // Expected procedure: create_user(email, username) returns { userid, error }
-        //
-        // $result = $this->forumService->createUser($user->email, $formattedName);
-        //
-        // if ($result && $result->error) {
-        //     return [
-        //         'success' => false,
-        //         'error' => $result->error,
-        //     ];
-        // }
-        //
-        // if ($result && $result->userid) {
-        //     return [
-        //         'success' => true,
-        //         'clan_id' => (int) $result->userid,
-        //     ];
-        // }
+        $result = AODForumService::createForumUser(
+            $recruiterId,
+            $forumName,
+            $user->email,
+            $user->date_of_birth->format('Y-m-d'),
+            $user->forum_password,
+            $user->discord_id,
+        );
+
+        if (! $result['success']) {
+            return $result;
+        }
+
+        $forumUser = $this->forumProcedureService->checkUser($forumName, $user->forum_password);
+
+        $user->update(['forum_password' => null]);
+
+        if (! $forumUser?->userid) {
+            return [
+                'success' => false,
+                'error' => 'Forum account created but failed to retrieve user ID.',
+            ];
+        }
 
         return [
-            'success' => false,
-            'error' => 'Forum account creation is not yet implemented.',
+            'success' => true,
+            'clan_id' => (int) $forumUser->userid,
         ];
     }
 

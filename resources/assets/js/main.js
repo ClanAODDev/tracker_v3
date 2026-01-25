@@ -653,7 +653,6 @@ var Tracker = Tracker || {};
                     mobile_nav_side: $('#setting-mobile-nav-side').val(),
                     snow: $('#setting-snow').val(),
                     snow_ignore_mouse: $('#setting-snow-ignore-mouse').is(':checked'),
-                    ticket_notifications: $('#setting-ticket-notifications').is(':checked'),
                     theme: $('#setting-theme').val()
                 };
 
@@ -675,7 +674,7 @@ var Tracker = Tracker || {};
                 });
             }
 
-            $('#setting-disable-animations, #setting-ticket-notifications, #setting-snow-ignore-mouse').on('change', saveSettings);
+            $('#setting-disable-animations, #setting-snow-ignore-mouse').on('change', saveSettings);
 
             $('.settings-btn[data-setting]').on('click', function () {
                 var $btn = $(this);
@@ -690,8 +689,16 @@ var Tracker = Tracker || {};
                     updateThemeSettings(value);
                 }
 
+                if (setting === 'snow') {
+                    updateSnowMouseSetting(value);
+                }
+
                 saveSettings();
             });
+
+            function updateSnowMouseSetting(snowValue) {
+                $('#snow-mouse-setting').toggle(snowValue !== 'no_snow');
+            }
 
             function updateThemeSettings(theme) {
                 var isShattrath = theme === 'shattrath';
@@ -701,11 +708,16 @@ var Tracker = Tracker || {};
                     $('#setting-snow').val('no_snow');
                     $('.settings-btn[data-setting="snow"]').removeClass('active');
                     $('.settings-btn[data-value="no_snow"]').addClass('active');
+                    updateSnowMouseSetting('no_snow');
                 }
 
                 var favicon = document.getElementById('favicon');
                 if (favicon) {
-                    favicon.href = theme === 'shattrath' ? '/images/logo-shattrath.svg' : '/images/logo_v2.svg';
+                    var logoMap = {
+                        'shattrath': '/images/logo-shattrath.svg',
+                        'aod': '/images/logo-aod.svg'
+                    };
+                    favicon.href = logoMap[theme] || '/images/logo_v2.svg';
                 }
             }
 
@@ -751,10 +763,11 @@ var Tracker = Tracker || {};
         InitProfileModals: function () {
             var $partTimeModal = $('#part-time-divisions-modal');
             var $handlesModal = $('#ingame-handles-modal');
+            var $transferModal = $('#transfer-request-modal');
 
-            if (!$partTimeModal.length && !$handlesModal.length) return;
+            if (!$partTimeModal.length && !$handlesModal.length && !$transferModal.length) return;
 
-            $partTimeModal.add($handlesModal).on('show.bs.modal', function () {
+            $partTimeModal.add($handlesModal).add($transferModal).on('show.bs.modal', function () {
                 $('.settings-overlay').removeClass('active');
                 $('.settings-slideover').removeClass('active');
                 $('.settings-toggle, .mobile-settings-toggle').removeClass('active');
@@ -855,6 +868,44 @@ var Tracker = Tracker || {};
                         $btn.prop('disabled', false);
                     }
                 });
+            });
+
+            $('#save-transfer-request').on('click', function () {
+                var $btn = $(this);
+                var divisionId = $('#transfer-division-select').val();
+
+                if (!divisionId) {
+                    toastr.warning('Please select a division');
+                    return;
+                }
+
+                $btn.prop('disabled', true);
+
+                $.ajax({
+                    url: window.Laravel.appPath + '/settings/transfer-request',
+                    type: 'POST',
+                    data: {
+                        _token: $('meta[name=csrf-token]').attr('content'),
+                        division_id: divisionId
+                    },
+                    success: function (response) {
+                        $transferModal.modal('hide');
+                        toastr.success(response.message);
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
+                    },
+                    error: function (xhr) {
+                        var message = xhr.responseJSON?.error || 'Error submitting request';
+                        toastr.error(message);
+                        $btn.prop('disabled', false);
+                    }
+                });
+            });
+
+            $transferModal.on('hidden.bs.modal', function () {
+                $('#transfer-division-select').val('');
+                $('#save-transfer-request').prop('disabled', false);
             });
         },
 

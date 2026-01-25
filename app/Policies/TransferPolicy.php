@@ -21,7 +21,17 @@ class TransferPolicy
 
     public function approve(User $user, Transfer $transfer): bool
     {
-        return $user->division->id === $transfer->division_id && $user->isDivisionLeader();
+        return $this->isGainingDivisionLeader($user, $transfer);
+    }
+
+    public function hold(User $user, Transfer $transfer): bool
+    {
+        if ($transfer->approved_at) {
+            return false;
+        }
+
+        return $this->isGainingDivisionLeader($user, $transfer)
+            || $this->isLosingDivisionLeader($user, $transfer);
     }
 
     public function delete(User $user, Transfer $transfer): bool
@@ -30,6 +40,17 @@ class TransferPolicy
             return false;
         }
 
+        return $this->isGainingDivisionLeader($user, $transfer)
+            || $this->isLosingDivisionLeader($user, $transfer);
+    }
+
+    private function isGainingDivisionLeader(User $user, Transfer $transfer): bool
+    {
         return $user->division->id === $transfer->division_id && $user->isDivisionLeader();
+    }
+
+    private function isLosingDivisionLeader(User $user, Transfer $transfer): bool
+    {
+        return $user->division->id === $transfer->member->division_id && $user->isDivisionLeader();
     }
 }

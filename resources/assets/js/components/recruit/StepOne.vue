@@ -112,16 +112,21 @@
             <div class="col-md-4">
               <div class="form-group" :class="forumNameValidationClass">
                 <label for="forum_name">Forum Name <span class="text-danger">*</span></label>
-                <div class="input-with-status">
+                <div class="input-group">
                   <input type="text" class="form-control" id="forum_name"
                          v-model="store.member.forum_name"
                          @input="onForumNameChange"
                          :disabled="store.inDemoMode"
                          placeholder="Desired forum name" />
-                  <span class="input-status" v-if="store.member.forum_name">
+                  <span class="input-group-addon input-group-status" v-if="store.member.forum_name">
                     <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
                     <i class="fa fa-check text-success" v-else-if="store.validation.forumName.valid"></i>
                     <i class="fa fa-times text-danger" v-else></i>
+                  </span>
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" @click="copyForumNameToHandle" :disabled="!store.member.forum_name || store.inDemoMode" title="Copy to in-game handle">
+                      <i class="fa fa-arrow-right"></i>
+                    </button>
                   </span>
                 </div>
                 <span class="help-block" v-if="store.member.forum_name && store.validation.forumName.valid">
@@ -271,7 +276,7 @@ import StepIndicator from './StepIndicator.vue';
 
 export default {
   components: { StepIndicator },
-  props: ['ranks', 'recruiterId', 'divisionSlug', 'cancelUrl'],
+  props: ['ranks', 'rankLabels', 'recruiterId', 'divisionSlug', 'cancelUrl'],
 
   data() {
     return {
@@ -401,6 +406,12 @@ export default {
       });
     },
 
+    copyForumNameToHandle() {
+      if (store.member.forum_name) {
+        store.member.ingame_name = store.member.forum_name;
+      }
+    },
+
     linkifyUrls(text) {
       if (!text) return '';
       const urlPattern = /(https?:\/\/[^\s<]+)/g;
@@ -422,6 +433,7 @@ export default {
 
   mounted() {
     store.recruiter_id = this.recruiterId;
+    store.rankLabels = this.rankLabels;
     store.loadDivisionData(this.divisionSlug);
   },
 };

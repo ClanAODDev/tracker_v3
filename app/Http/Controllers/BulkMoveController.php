@@ -11,7 +11,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class BulkTransferController extends Controller
+class BulkMoveController extends Controller
 {
     public function getPlatoons(Division $division): JsonResponse
     {
@@ -64,10 +64,17 @@ class BulkTransferController extends Controller
             $member->platoon_id = $platoon->id;
             $member->squad_id = $squad ? $squad->id : 0;
             $member->save();
-            $member->recordActivity(ActivityType::TRANSFERRED, [
+
+            $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
                 'platoon' => $platoon->name,
-                'squad' => $squad?->name,
             ]);
+
+            if ($squad) {
+                $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
+                    'squad' => $squad->name,
+                ]);
+            }
+
             $transferredCount++;
         }
 
