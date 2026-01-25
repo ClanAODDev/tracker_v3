@@ -135,8 +135,6 @@ class AODForumService
             'authcode' => self::generateToken(),
         ]);
 
-        Log::info('AODForumService POST', ['url' => $url, 'params' => $params]);
-
         try {
             $resp = Http::withUserAgent(self::AGENT)
                 ->timeout(10)
