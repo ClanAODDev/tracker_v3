@@ -10508,9 +10508,9 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 .recruit-form {
-    background: var(--color-bg-panel);
-    border-radius: 8px;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .recruit-form-header {
@@ -10518,8 +10518,9 @@ pre.code-toolbar > .toolbar span:focus {
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--color-bg-panel);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
 
     h3 {
         margin: 0;
@@ -10562,10 +10563,14 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 .recruit-section {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--color-bg-panel);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
 
-    &:last-of-type {
-        border-bottom: none;
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.15);
     }
 }
 
@@ -10818,8 +10823,9 @@ pre.code-toolbar > .toolbar span:focus {
     justify-content: flex-end;
     gap: 10px;
     padding: 16px 20px;
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--color-bg-panel);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
 }
 
 .recruit-confirmation {
