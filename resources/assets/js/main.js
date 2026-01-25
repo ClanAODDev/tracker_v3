@@ -859,16 +859,14 @@ var Tracker = Tracker || {};
 
             $('#save-transfer-request').on('click', function () {
                 var $btn = $(this);
-                var $status = $transferModal.find('.modal-save-status');
                 var divisionId = $('#transfer-division-select').val();
 
                 if (!divisionId) {
-                    $status.text('Please select a division').removeClass('saving saved').addClass('error');
+                    toastr.warning('Please select a division');
                     return;
                 }
 
                 $btn.prop('disabled', true);
-                $status.text('Submitting...').removeClass('saved error').addClass('saving');
 
                 $.ajax({
                     url: window.Laravel.appPath + '/settings/transfer-request',
@@ -878,15 +876,15 @@ var Tracker = Tracker || {};
                         division_id: divisionId
                     },
                     success: function (response) {
-                        $status.text(response.message).removeClass('saving error').addClass('saved');
+                        $transferModal.modal('hide');
+                        toastr.success(response.message);
                         setTimeout(function () {
-                            $transferModal.modal('hide');
                             window.location.reload();
                         }, 1500);
                     },
                     error: function (xhr) {
                         var message = xhr.responseJSON?.error || 'Error submitting request';
-                        $status.text(message).removeClass('saving saved').addClass('error');
+                        toastr.error(message);
                         $btn.prop('disabled', false);
                     }
                 });
@@ -894,7 +892,6 @@ var Tracker = Tracker || {};
 
             $transferModal.on('hidden.bs.modal', function () {
                 $('#transfer-division-select').val('');
-                $transferModal.find('.modal-save-status').text('').removeClass('saving saved error');
                 $('#save-transfer-request').prop('disabled', false);
             });
         },

@@ -289,7 +289,6 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <span class="modal-save-status"></span>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-accent" id="save-transfer-request">Submit Request</button>
                 </div>
