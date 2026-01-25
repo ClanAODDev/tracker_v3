@@ -196,4 +196,26 @@ class TransferTest extends TestCase
 
         $this->assertTrue($transfer->division->is($division));
     }
+
+    public function test_approve_preserves_clan_admin_position()
+    {
+        $sourceDivision = $this->createActiveDivision();
+        $targetDivision = $this->createActiveDivision();
+
+        $member = $this->createMember([
+            'division_id' => $sourceDivision->id,
+            'position' => Position::CLAN_ADMIN,
+        ]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $targetDivision->id,
+        ]);
+
+        $transfer->approve();
+        $member->refresh();
+
+        $this->assertEquals($targetDivision->id, $member->division_id);
+        $this->assertEquals(Position::CLAN_ADMIN, $member->position);
+    }
 }

@@ -7,111 +7,7 @@
     <div class="settings-content">
         <form id="user-settings-form">
             @csrf
-            <div class="settings-section">
-                <h4 class="settings-section-title">Appearance</h4>
-
-                <div class="settings-field">
-                    <label class="settings-toggle-label">
-                        <span>Disable animations</span>
-                        <div class="settings-switch">
-                            <input type="checkbox" name="disable_animations" id="setting-disable-animations"
-                                {{ (auth()->user()->settings['disable_animations'] ?? false) ? 'checked' : '' }}>
-                            <span class="settings-switch-slider"></span>
-                        </div>
-                    </label>
-                    <p class="settings-help">Disable page animations for a simpler experience</p>
-                </div>
-
-                <div class="settings-field">
-                    <label class="settings-label">Mobile navigation position</label>
-                    <div class="settings-button-group">
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['mobile_nav_side'] ?? 'right') === 'left' ? 'active' : '' }}" data-value="left" data-setting="mobile_nav_side">
-                            <i class="fa fa-arrow-left"></i> Left
-                        </button>
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['mobile_nav_side'] ?? 'right') === 'right' ? 'active' : '' }}" data-value="right" data-setting="mobile_nav_side">
-                            Right <i class="fa fa-arrow-right"></i>
-                        </button>
-                    </div>
-                    <input type="hidden" name="mobile_nav_side" id="setting-mobile-nav-side" value="{{ auth()->user()->settings['mobile_nav_side'] ?? 'right' }}">
-                </div>
-
-                <div class="settings-field">
-                    <label class="settings-label">Particle effects</label>
-                    <div class="settings-button-group settings-button-group-4">
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'no_snow' ? 'active' : '' }}" data-value="no_snow" data-setting="snow">
-                            None
-                        </button>
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'some_snow' ? 'active' : '' }}" data-value="some_snow" data-setting="snow">
-                            Snow
-                        </button>
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'all_the_snow' ? 'active' : '' }}" data-value="all_the_snow" data-setting="snow">
-                            Blizzard
-                        </button>
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'motes' ? 'active' : '' }}" data-value="motes" data-setting="snow">
-                            <i class="fa fa-star-o"></i> Motes
-                        </button>
-                    </div>
-                    <input type="hidden" name="snow" id="setting-snow" value="{{ auth()->user()->settings['snow'] ?? 'no_snow' }}">
-                </div>
-
-                <div class="settings-field" id="snow-mouse-setting" style="{{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'no_snow' ? 'display: none;' : '' }}">
-                    <label class="settings-toggle-label">
-                        <span>Particles ignore mouse</span>
-                        <label class="settings-switch">
-                            <input type="checkbox" name="snow_ignore_mouse" id="setting-snow-ignore-mouse"
-                                   {{ (auth()->user()->settings['snow_ignore_mouse'] ?? false) ? 'checked' : '' }}>
-                            <span class="settings-switch-slider"></span>
-                        </label>
-                    </label>
-                    <p class="settings-help">Prevents particles from following mouse cursor</p>
-                </div>
-
-                <div class="settings-field">
-                    <label class="settings-label">Theme</label>
-                    <div class="settings-button-group">
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'traditional' ? 'active' : '' }}" data-value="traditional" data-setting="theme">
-                            <span class="theme-swatch theme-traditional"></span> Traditional
-                        </button>
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'shattrath' ? 'active' : '' }}" data-value="shattrath" data-setting="theme">
-                            <span class="theme-swatch theme-shattrath"></span> Shattrath
-                        </button>
-                        {{-- Light theme hidden until ready
-                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'light' ? 'active' : '' }}" data-value="light" data-setting="theme">
-                            <span class="theme-swatch theme-light"></span> Light
-                        </button>
-                        --}}
-                    </div>
-                    <input type="hidden" name="theme" id="setting-theme" value="{{ auth()->user()->settings['theme'] ?? 'traditional' }}">
-                </div>
-            </div>
-
             @if(auth()->user()->member)
-                <div class="settings-section">
-                    <h4 class="settings-section-title">Profile</h4>
-
-                    <div class="settings-field">
-                        <button type="button" class="settings-link-btn" data-toggle="modal" data-target="#part-time-divisions-modal">
-                            <span>
-                                <i class="fa fa-puzzle-piece"></i>
-                                Part-Time Divisions
-                            </span>
-                            <span class="settings-link-count">{{ auth()->user()->member->partTimeDivisions()->count() }}</span>
-                            <i class="fa fa-chevron-right"></i>
-                        </button>
-                    </div>
-
-                    <div class="settings-field">
-                        <button type="button" class="settings-link-btn" data-toggle="modal" data-target="#ingame-handles-modal">
-                            <span>
-                                <i class="fa fa-gamepad"></i>
-                                In-Game Handles
-                            </span>
-                            <span class="settings-link-count">{{ auth()->user()->member->memberHandles()->count() }}</span>
-                            <i class="fa fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-
                 @php
                     $settingsMember = auth()->user()->member;
                     $pendingTransfer = $settingsMember->transfers()->pending()->first();
@@ -152,7 +48,111 @@
                         @endif
                     </div>
                 @endif
+
+                <div class="settings-section">
+                    <h4 class="settings-section-title">Profile</h4>
+
+                    <div class="settings-field">
+                        <button type="button" class="settings-link-btn" data-toggle="modal" data-target="#part-time-divisions-modal">
+                            <span>
+                                <i class="fa fa-puzzle-piece"></i>
+                                Part-Time Divisions
+                            </span>
+                            <span class="settings-link-count">{{ auth()->user()->member->partTimeDivisions()->count() }}</span>
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="settings-field">
+                        <button type="button" class="settings-link-btn" data-toggle="modal" data-target="#ingame-handles-modal">
+                            <span>
+                                <i class="fa fa-gamepad"></i>
+                                In-Game Handles
+                            </span>
+                            <span class="settings-link-count">{{ auth()->user()->member->memberHandles()->count() }}</span>
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
             @endif
+
+            <div class="settings-section">
+                <h4 class="settings-section-title">Appearance</h4>
+
+                <div class="settings-field">
+                    <label class="settings-toggle-label">
+                        <span>Disable animations</span>
+                        <div class="settings-switch">
+                            <input type="checkbox" name="disable_animations" id="setting-disable-animations"
+                                {{ (auth()->user()->settings['disable_animations'] ?? false) ? 'checked' : '' }}>
+                            <span class="settings-switch-slider"></span>
+                        </div>
+                    </label>
+                    <p class="settings-help">Disable page animations for a simpler experience</p>
+                </div>
+
+                <div class="settings-field">
+                    <label class="settings-label">Mobile navigation position</label>
+                    <div class="settings-button-group">
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['mobile_nav_side'] ?? 'right') === 'left' ? 'active' : '' }}" data-value="left" data-setting="mobile_nav_side">
+                            <i class="fa fa-arrow-left"></i> Left
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['mobile_nav_side'] ?? 'right') === 'right' ? 'active' : '' }}" data-value="right" data-setting="mobile_nav_side">
+                            Right <i class="fa fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <input type="hidden" name="mobile_nav_side" id="setting-mobile-nav-side" value="{{ auth()->user()->settings['mobile_nav_side'] ?? 'right' }}">
+                </div>
+
+                <div class="settings-field">
+                    <label class="settings-label">Theme</label>
+                    <div class="settings-button-group">
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'traditional' ? 'active' : '' }}" data-value="traditional" data-setting="theme">
+                            <span class="theme-swatch theme-traditional"></span> Traditional
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'shattrath' ? 'active' : '' }}" data-value="shattrath" data-setting="theme">
+                            <span class="theme-swatch theme-shattrath"></span> Shattrath
+                        </button>
+                        {{-- Light theme hidden until ready
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['theme'] ?? 'traditional') === 'light' ? 'active' : '' }}" data-value="light" data-setting="theme">
+                            <span class="theme-swatch theme-light"></span> Light
+                        </button>
+                        --}}
+                    </div>
+                    <input type="hidden" name="theme" id="setting-theme" value="{{ auth()->user()->settings['theme'] ?? 'traditional' }}">
+                </div>
+
+                <div class="settings-field">
+                    <label class="settings-label">Particle effects</label>
+                    <div class="settings-button-group settings-button-group-4">
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'no_snow' ? 'active' : '' }}" data-value="no_snow" data-setting="snow">
+                            None
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'some_snow' ? 'active' : '' }}" data-value="some_snow" data-setting="snow">
+                            Snow
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'all_the_snow' ? 'active' : '' }}" data-value="all_the_snow" data-setting="snow">
+                            Blizzard
+                        </button>
+                        <button type="button" class="settings-btn {{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'motes' ? 'active' : '' }}" data-value="motes" data-setting="snow">
+                            <i class="fa fa-star-o"></i> Motes
+                        </button>
+                    </div>
+                    <input type="hidden" name="snow" id="setting-snow" value="{{ auth()->user()->settings['snow'] ?? 'no_snow' }}">
+                </div>
+
+                <div class="settings-field" id="snow-mouse-setting" style="{{ (auth()->user()->settings['snow'] ?? 'no_snow') === 'no_snow' ? 'display: none;' : '' }}">
+                    <label class="settings-toggle-label">
+                        <span>Particles ignore mouse</span>
+                        <label class="settings-switch">
+                            <input type="checkbox" name="snow_ignore_mouse" id="setting-snow-ignore-mouse"
+                                   {{ (auth()->user()->settings['snow_ignore_mouse'] ?? false) ? 'checked' : '' }}>
+                            <span class="settings-switch-slider"></span>
+                        </label>
+                    </label>
+                    <p class="settings-help">Prevents particles from following mouse cursor</p>
+                </div>
+            </div>
         </form>
     </div>
     <div class="settings-footer">

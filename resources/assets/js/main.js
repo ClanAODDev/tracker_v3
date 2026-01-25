@@ -689,8 +689,16 @@ var Tracker = Tracker || {};
                     updateThemeSettings(value);
                 }
 
+                if (setting === 'snow') {
+                    updateSnowMouseSetting(value);
+                }
+
                 saveSettings();
             });
+
+            function updateSnowMouseSetting(snowValue) {
+                $('#snow-mouse-setting').toggle(snowValue !== 'no_snow');
+            }
 
             function updateThemeSettings(theme) {
                 var isShattrath = theme === 'shattrath';
@@ -700,6 +708,7 @@ var Tracker = Tracker || {};
                     $('#setting-snow').val('no_snow');
                     $('.settings-btn[data-setting="snow"]').removeClass('active');
                     $('.settings-btn[data-value="no_snow"]').addClass('active');
+                    updateSnowMouseSetting('no_snow');
                 }
 
                 var favicon = document.getElementById('favicon');

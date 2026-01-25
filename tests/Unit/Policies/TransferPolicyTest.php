@@ -220,4 +220,105 @@ class TransferPolicyTest extends TestCase
 
         $this->assertFalse($this->policy->delete($leader, $transfer));
     }
+
+    public function test_losing_division_leader_can_hold_pending_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $fromDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertTrue($this->policy->hold($leader, $transfer));
+    }
+
+    public function test_losing_division_leader_can_delete_pending_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $fromDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertTrue($this->policy->delete($leader, $transfer));
+    }
+
+    public function test_gaining_division_leader_can_hold_pending_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $toDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertTrue($this->policy->hold($leader, $transfer));
+    }
+
+    public function test_cannot_hold_approved_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $fromDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->approved()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertFalse($this->policy->hold($leader, $transfer));
+    }
+
+    public function test_unrelated_division_leader_cannot_hold_transfer()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $otherDivision->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id' => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertFalse($this->policy->hold($leader, $transfer));
+    }
 }
