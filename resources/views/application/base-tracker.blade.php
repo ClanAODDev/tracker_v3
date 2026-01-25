@@ -47,6 +47,10 @@
 
         @include('application.partials.settings-slideover')
 
+        @if(!($userSettings['welcomed'] ?? false))
+            @include('application.partials.welcome-modal')
+        @endif
+
         <section class="search-results closed text-center"></section>
         <section class="content">
             @include('application.partials.alert')

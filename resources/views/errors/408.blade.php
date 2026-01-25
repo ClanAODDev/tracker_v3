@@ -2,36 +2,60 @@
 
 @section('content')
 
-    <div class="container-center md">
-        @component('application.components.view-heading')
-            @slot('heading')
-                He's dead, Jim!
-            @endslot
-            @slot('subheading')
-                No Primary Division
-            @endslot
-            @slot('icon')
-                <i class="pe page-header-icon pe-7s-close-circle"></i>
-            @endslot
-            @slot('currentPage')
-                v3
-            @endslot
-        @endcomponent
+    <div class="error-page-wrapper">
+        <div class="error-page">
+            <div class="error-page__header">
+                <div class="error-page__icon">
+                    <img src="/images/logo_v2.svg" alt="AOD">
+                </div>
+                <h1 class="error-page__title">No Primary Division</h1>
+                <p class="error-page__subtitle">You are no longer associated with a primary division</p>
+            </div>
 
-        <div class="panel panel-filled">
-            <div class="panel-body">
-                <p>You are no longer associated with a primary division, and cannot access the tracker. Please speak
-                    with your intended division leadership to resolve this issue.</p>
+            <div class="error-page__body">
+                <p class="error-page__intro">
+                    <strong>Returning to AOD?</strong><br>
+                    If you're a former member looking to rejoin, please reach out to us:
+                </p>
+
+                <div class="error-page__options">
+                    <a href="https://discord.gg/clanaod" class="error-page__option" target="_blank">
+                        <div class="error-page__option-icon error-page__option-icon--discord">
+                            <i class="fab fa-discord"></i>
+                        </div>
+                        <div class="error-page__option-text">
+                            <strong>Join Discord</strong>
+                            <span>Get with one of our recruiters</span>
+                        </div>
+                        <i class="fa fa-external-link error-page__option-arrow"></i>
+                    </a>
+
+                    <a href="https://clanaod.net/forums" class="error-page__option" target="_blank">
+                        <div class="error-page__option-icon error-page__option-icon--forums">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <div class="error-page__option-text">
+                            <strong>Visit Forums</strong>
+                            <span>Browse division discussions</span>
+                        </div>
+                        <i class="fa fa-external-link error-page__option-arrow"></i>
+                    </a>
+                </div>
+
+                <p class="error-page__note">
+                    If you believe this is an error, please speak with your intended division leadership.
+                </p>
 
                 @if(session('impersonating'))
-                    <p class="text-muted">You appear to be impersonating. Try refreshing the page.</p>
+                    <p class="error-page__note">You appear to be impersonating. Try refreshing the page.</p>
                 @endif
+            </div>
 
-                <a href="{{ route('logout') }}" class="btn btn-default m-t-md">
+            <div class="error-page__footer">
+                <a href="{{ route('logout') }}" class="btn btn-default btn-block">
                     <i class="fa fa-sign-out"></i> Log Out
                 </a>
             </div>
-
         </div>
     </div>
 

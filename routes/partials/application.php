@@ -42,7 +42,8 @@ Route::prefix('primary-nav')->group(function () {
 Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
     Route::post('/', function (Request $request) {
         $user = auth()->user();
-        $user->settings = array_merge($user->settings, [
+
+        $settings = [
             'disable_animations' => filter_var($request->input('disable_animations'), FILTER_VALIDATE_BOOLEAN),
             'mobile_nav_side' => $request->input('mobile_nav_side', 'right'),
             'snow' => $request->input('snow', 'no_snow'),
@@ -50,7 +51,13 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
             'theme' => $request->input('theme', 'traditional'),
             'ambient_sound' => filter_var($request->input('ambient_sound'), FILTER_VALIDATE_BOOLEAN),
             'ambient_volume' => (float) $request->input('ambient_volume', 0.3),
-        ]);
+        ];
+
+        if ($request->has('welcomed')) {
+            $settings['welcomed'] = filter_var($request->input('welcomed'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        $user->settings = array_merge($user->settings, $settings);
         $user->save();
 
         return response()->json(['success' => true]);
