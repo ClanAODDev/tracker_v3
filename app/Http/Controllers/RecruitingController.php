@@ -250,6 +250,18 @@ class RecruitingController extends Controller
      */
     public function validateMemberId($member_id)
     {
+        if (! is_numeric($member_id) || (int) $member_id < 1) {
+            return [
+                'is_member' => false,
+                'valid_group' => false,
+                'group_id' => null,
+                'exists_in_tracker' => false,
+                'tags' => [],
+                'division' => null,
+            ];
+        }
+
+        $member_id = (int) $member_id;
         $member = Member::where('clan_id', $member_id)->first();
         $existsInTracker = $member !== null;
 
