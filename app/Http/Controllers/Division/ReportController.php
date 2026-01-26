@@ -239,7 +239,7 @@ class ReportController extends Controller
     public function promotionsReport(
         Request $request,
         MemberRepository $repository,
-        $division,
+        Division $division,
         $month = null,
         $year = null
     ) {
