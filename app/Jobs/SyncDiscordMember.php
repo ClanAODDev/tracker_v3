@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Member;
+use App\Models\User;
 use App\Services\AODBotService;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
@@ -50,5 +51,19 @@ class SyncDiscordMember implements ShouldQueue
         if ($this->member->isDirty()) {
             $this->member->save();
         }
+
+        $this->linkPendingDiscordUser();
+    }
+
+    private function linkPendingDiscordUser(): void
+    {
+        if (! $this->member->discord_id) {
+            return;
+        }
+
+        User::query()
+            ->whereNull('member_id')
+            ->where('discord_id', $this->member->discord_id)
+            ->update(['member_id' => $this->member->id]);
     }
 }
