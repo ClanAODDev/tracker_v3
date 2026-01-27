@@ -9,6 +9,9 @@ use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use App\Services\ForumProcedureService;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Socialite\Facades\Socialite;
@@ -426,5 +429,25 @@ class DiscordAuthTest extends TestCase
             ->assertRedirect();
 
         Notification::assertNothingSent();
+    }
+
+    public function test_discord_callback_handles_oauth_failure_gracefully(): void
+    {
+        $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
+        $provider->shouldReceive('user')
+            ->andThrow(new ClientException(
+                'Client error',
+                new Request('POST', 'https://discord.com/api/oauth2/token'),
+                new Response(400, [], '{"message": "400: Bad Request", "code": 0}')
+            ));
+
+        Socialite::shouldReceive('driver')
+            ->with('discord')
+            ->andReturn($provider);
+
+        $response = $this->get(route('auth.discord.callback'));
+
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors('discord');
     }
 }

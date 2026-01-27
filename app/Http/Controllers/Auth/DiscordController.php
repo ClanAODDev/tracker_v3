@@ -8,6 +8,7 @@ use App\Http\Requests\DiscordRegistrationRequest;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -26,7 +27,14 @@ class DiscordController extends Controller
 
     public function callback(): RedirectResponse
     {
-        $discordUser = Socialite::driver('discord')->user();
+        try {
+            $discordUser = Socialite::driver('discord')->user();
+        } catch (ClientException) {
+            return redirect()->route('login')->withErrors([
+                'discord' => 'Discord authentication failed. Please try again.',
+            ]);
+        }
+
         $discordId = $discordUser->getId();
         $discordUsername = $discordUser->getNickname() ?? $discordUser->getName();
         $email = $discordUser->getEmail();
