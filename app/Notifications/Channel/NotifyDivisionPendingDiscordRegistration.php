@@ -14,6 +14,8 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
 {
     use Queueable, RetryableNotification;
 
+    const RECRUITING_CHANNEL = 'https://discord.com/channels/507758143774916609/508656360028766219';
+
     public function __construct(
         private readonly User $user
     ) {}
@@ -33,9 +35,10 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
                 [
                     'name' => '**NEW DISCORD REGISTRATION**',
                     'value' => sprintf(
-                        ':wave: **%s** has registered via Discord and is interested in joining %s.',
+                        ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s',
                         $this->user->discord_username,
-                        $notifiable->name
+                        $notifiable->name,
+                        self::RECRUITING_CHANNEL
                     ),
                 ],
             ])
