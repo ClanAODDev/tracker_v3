@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Division;
+use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DiscordRegistrationRequest extends FormRequest
@@ -16,6 +18,7 @@ class DiscordRegistrationRequest extends FormRequest
         return [
             'date_of_birth' => ['required', 'date', 'before:' . now()->subYears(13)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'division_id' => ['nullable', 'exists:divisions,id'],
         ];
     }
 
@@ -32,5 +35,22 @@ class DiscordRegistrationRequest extends FormRequest
             'date_of_birth' => $this->validated('date_of_birth'),
             'forum_password' => $this->validated('password'),
         ]);
+
+        $this->notifyDivision();
+    }
+
+    private function notifyDivision(): void
+    {
+        $divisionId = $this->validated('division_id');
+
+        if (! $divisionId) {
+            return;
+        }
+
+        $division = Division::find($divisionId);
+
+        if ($division) {
+            $division->notify(new NotifyDivisionPendingDiscordRegistration(auth()->user()));
+        }
     }
 }

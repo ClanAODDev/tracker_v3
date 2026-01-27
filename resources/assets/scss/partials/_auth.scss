@@ -136,3 +136,77 @@
         border-color: rgba(255, 255, 255, 0.1);
     }
 }
+
+.division-select-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    padding: 4px;
+}
+
+.division-select-item {
+    cursor: pointer;
+    margin: 0;
+
+    input[type="radio"] {
+        display: none;
+
+        &:checked + .division-select-card {
+            border-color: var(--color-accent);
+            background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+
+            .division-select-name {
+                color: var(--color-white);
+            }
+        }
+    }
+}
+
+.division-select-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.08);
+    }
+}
+
+.division-select-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.division-select-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-align: center;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.discord-pending-wrapper {
+    min-height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+
+    > * {
+        width: 100%;
+    }
+}

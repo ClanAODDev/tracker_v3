@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <div class="container-center md">
+    <div class="discord-pending-wrapper">
 
         <div class="text-center m-b-lg animate-fade-in-up">
             <div class="auth__logo-row m-b-md">
@@ -33,19 +33,40 @@
                     <form action="{{ route('auth.discord.register') }}" method="POST" id="dob-form">
                         @csrf
                         <div class="form-group">
+                            <label>What game are you interested in playing?</label>
+                            <p class="help-block text-muted m-b-sm">Optional - helps us connect you with the right division</p>
+                            <div class="division-select-grid">
+                                @foreach($divisions as $division)
+                                    <label class="division-select-item">
+                                        <input type="radio" name="division_id" value="{{ $division->id }}">
+                                        <div class="division-select-card">
+                                            <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-select-logo">
+                                            <span class="division-select-name">{{ $division->name }}</span>
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label for="date_of_birth">Date of Birth</label>
                             <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}" required>
                             <p class="help-block text-muted">You must be at least 13 years old to join.</p>
                         </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required minlength="8">
-                            <p class="help-block text-muted">This will be your forum account password.</p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required minlength="8">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="password_confirmation">Confirm Password</label>
+                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" autocomplete="new-password" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="password_confirmation">Confirm Password</label>
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" autocomplete="new-password" required>
-                        </div>
+                        <p class="help-block text-muted m-t-none">This will be your forum account password.</p>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">
                                 Continue <i class="fa fa-arrow-right"></i>

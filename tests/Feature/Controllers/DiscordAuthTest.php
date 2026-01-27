@@ -4,10 +4,13 @@ namespace Tests\Feature\Controllers;
 
 use App\Enums\ForumGroup;
 use App\Enums\Role;
+use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
+use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
@@ -381,5 +384,47 @@ class DiscordAuthTest extends TestCase
 
         $user->refresh();
         $this->assertEquals(Role::ADMIN, $user->role);
+    }
+
+    public function test_discord_registration_queues_notification_when_division_selected(): void
+    {
+        Notification::fake();
+
+        $division = Division::factory()->create(['active' => true]);
+        $user = User::factory()->pending()->create([
+            'discord_id' => '123456789',
+            'discord_username' => 'TestRecruit',
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'date_of_birth' => '2000-01-15',
+                'password' => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id' => $division->id,
+            ])
+            ->assertRedirect();
+
+        Notification::assertSentTo($division, NotifyDivisionPendingDiscordRegistration::class);
+    }
+
+    public function test_discord_registration_does_not_queue_notification_without_division(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->pending()->create([
+            'discord_id' => '123456789',
+            'discord_username' => 'TestRecruit',
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'date_of_birth' => '2000-01-15',
+                'password' => 'password123',
+                'password_confirmation' => 'password123',
+            ])
+            ->assertRedirect();
+
+        Notification::assertNothingSent();
     }
 }

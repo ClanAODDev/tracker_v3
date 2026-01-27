@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DiscordRegistrationRequest;
+use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -56,7 +57,12 @@ class DiscordController extends Controller
             return redirect('/');
         }
 
-        return view('auth.discord-pending');
+        $divisions = Division::active()
+            ->withoutFloaters()
+            ->orderBy('name')
+            ->get(['id', 'name', 'abbreviation']);
+
+        return view('auth.discord-pending', compact('divisions'));
     }
 
     public function register(DiscordRegistrationRequest $request): RedirectResponse
