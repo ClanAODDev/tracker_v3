@@ -26,9 +26,14 @@ class RankTimelineService
 
     private function filterToProgression(Collection $history): Collection
     {
-        $highWaterMark = 0;
+        if ($history->isEmpty()) {
+            return collect();
+        }
 
-        return $history->filter(function ($entry) use (&$highWaterMark) {
+        $highWaterMark = 0;
+        $lastEntry = $history->last();
+
+        $progression = $history->filter(function ($entry) use (&$highWaterMark) {
             if ($entry->rank->value > $highWaterMark) {
                 $highWaterMark = $entry->rank->value;
 
@@ -37,6 +42,12 @@ class RankTimelineService
 
             return false;
         })->values();
+
+        if ($progression->isEmpty() || $progression->last()->rank->value !== $lastEntry->rank->value) {
+            $progression->push($lastEntry);
+        }
+
+        return $progression;
     }
 
     private function buildNodes(Member $member, Collection $progressionOnly, bool $isOfficer): Collection
@@ -149,17 +160,20 @@ class RankTimelineService
     private function buildHistoryItems(Member $member, Collection $chronologicalHistory): Collection
     {
         $items = collect();
-
-        if ($member->join_date) {
-            $items->push((object) [
-                'type' => 'join',
-                'date' => $member->join_date->format('M j, Y'),
-                'label' => 'Joined AOD',
-            ]);
-        }
+        $joinDate = $member->join_date;
+        $joinInserted = false;
 
         $prevRank = null;
         foreach ($chronologicalHistory as $entry) {
+            if ($joinDate && ! $joinInserted && $joinDate->lte($entry->created_at)) {
+                $items->push((object) [
+                    'type' => 'join',
+                    'date' => $joinDate->format('M j, Y'),
+                    'label' => 'Joined AOD',
+                ]);
+                $joinInserted = true;
+            }
+
             $isDemotion = $prevRank && $entry->rank->value < $prevRank->value;
 
             $items->push((object) [
@@ -169,6 +183,14 @@ class RankTimelineService
             ]);
 
             $prevRank = $entry->rank;
+        }
+
+        if ($joinDate && ! $joinInserted) {
+            $items->push((object) [
+                'type' => 'join',
+                'date' => $joinDate->format('M j, Y'),
+                'label' => 'Joined AOD',
+            ]);
         }
 
         return $items;
