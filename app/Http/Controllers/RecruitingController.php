@@ -340,6 +340,7 @@ class RecruitingController extends Controller
                     return response()->json([
                         'memberExists' => false,
                         'existingAccount' => true,
+                        'existingUserId' => (int) $existingUser->userid,
                     ]);
                 }
             }

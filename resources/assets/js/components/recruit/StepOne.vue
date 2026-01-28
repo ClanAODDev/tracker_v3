@@ -40,7 +40,7 @@
                   <input type="number" class="form-control" id="member_id"
                          v-model="store.member.id"
                          @input="onMemberIdChange"
-                         :disabled="store.inDemoMode || store.selectedPendingUser"
+                         :disabled="store.inDemoMode || store.selectedPendingUser || store.validation.forumName.existingAccount"
                          :placeholder="store.selectedPendingUser ? 'Will be created' : 'e.g. 12345'" />
                   <span class="input-status" v-if="store.member.id">
                     <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
@@ -61,6 +61,9 @@
                   <template v-else>
                     Member is not in the <code>Registered Users</code> group.
                   </template>
+                </span>
+                <span class="help-block text-success" v-else-if="store.validation.forumName.existingAccount">
+                  <i class="fa fa-check"></i> Existing forum account found
                 </span>
                 <span class="help-block text-muted" v-else-if="store.selectedPendingUser">
                   <i class="fab fa-discord" style="color: #5865F2;"></i> Forum account will be created for <strong>{{ store.selectedPendingUser.discord_username }}</strong>
@@ -129,7 +132,7 @@
                     </button>
                   </span>
                 </div>
-                <span class="help-block" v-if="store.member.forum_name && store.validation.forumName.valid">
+                <span class="help-block" v-if="store.member.forum_name && store.validation.forumName.valid && !store.validation.forumName.existingAccount">
                   Will become: <strong>{{ store.getFormattedName() }}</strong>
                 </span>
                 <span class="help-block text-danger" v-else-if="store.member.forum_name && store.member.forum_name.toLowerCase().startsWith('aod_')">

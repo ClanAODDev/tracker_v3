@@ -199,6 +199,21 @@ store.validateForumName = (name, memberId) => {
                 const available = !response.data.memberExists;
                 const existingAccount = response.data.existingAccount || false;
                 store.validation.forumName = { valid: available, available, existingAccount };
+
+                if (existingAccount && response.data.existingUserId) {
+                    store.member.id = String(response.data.existingUserId);
+                    store.selectedPendingUser = null;
+                    store.validation.memberId = {
+                        valid: true,
+                        verifiedEmail: true,
+                        groupId: null,
+                        currentUsername: name,
+                        existsInTracker: false,
+                        tags: [],
+                        division: null,
+                    };
+                }
+
                 store.validation.loading = false;
             })
             .catch(() => {
