@@ -208,6 +208,20 @@ class AODForumService
         ];
     }
 
+    public function getUserByEmail(string $email): ?object
+    {
+        try {
+            $results = DB::connection('aod_forums')
+                ->select('CALL get_user_by_email(:email)', ['email' => $email]);
+        } catch (Exception $exception) {
+            Log::error('getUserByEmail failed: ' . $exception->getMessage());
+
+            return null;
+        }
+
+        return Arr::first($results);
+    }
+
     private static function generateToken(): string
     {
         $currentMinute = (int) floor(time() / 60) * 60;

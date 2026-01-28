@@ -33,6 +33,19 @@ class RecruitmentService
             ];
         }
 
+        $forumService = app(AODForumService::class);
+        $existingUser = $forumService->getUserByEmail($user->email);
+
+        if ($existingUser) {
+            $user->update(['forum_password' => null]);
+
+            return [
+                'success' => true,
+                'clan_id' => (int) $existingUser->userid,
+                'existing_account' => true,
+            ];
+        }
+
         $result = AODForumService::createForumUser(
             $recruiterId,
             $forumName,

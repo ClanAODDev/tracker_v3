@@ -129,8 +129,16 @@ class DiscordController extends Controller
             ]);
         }
 
+        $sanitizedName = $this->sanitizeName($discordUsername);
+
+        if (User::where('name', $sanitizedName)->exists()) {
+            return redirect()->route('login')->withErrors([
+                'discord' => 'An account with this username already exists. Please sign in with your forum credentials or contact an administrator.',
+            ]);
+        }
+
         $user = User::create([
-            'name' => $this->sanitizeName($discordUsername),
+            'name' => $sanitizedName,
             'email' => $email,
             'discord_id' => $discordId,
             'discord_username' => $discordUsername,

@@ -28,7 +28,8 @@ class RecruitingControllerTest extends TestCase
 
     protected function mockForumUserCreation(int $clanId): void
     {
-        $mock = Mockery::mock('alias:' . AODForumService::class);
+        $mock = Mockery::mock('overload:' . AODForumService::class);
+        $mock->shouldReceive('getUserByEmail')->andReturn(null);
         $mock->shouldReceive('createForumUser')
             ->andReturn(['success' => true, 'clan_id' => $clanId]);
 
@@ -40,7 +41,8 @@ class RecruitingControllerTest extends TestCase
 
     protected function mockForumUserCreationFailure(string $error): void
     {
-        $mock = Mockery::mock('alias:' . AODForumService::class);
+        $mock = Mockery::mock('overload:' . AODForumService::class);
+        $mock->shouldReceive('getUserByEmail')->andReturn(null);
         $mock->shouldReceive('createForumUser')
             ->andReturn(['success' => false, 'error' => $error]);
     }
@@ -327,5 +329,49 @@ class RecruitingControllerTest extends TestCase
         $pendingUser->refresh();
         $this->assertNotNull($pendingUser->member_id);
         $this->assertFalse($pendingUser->isPendingRegistration());
+    }
+
+    public function test_submit_discord_recruitment_uses_existing_forum_account(): void
+    {
+        $existingForumUser = (object) [
+            'userid' => 54321,
+            'username' => 'ExistingForumUser',
+            'email' => 'existing@example.com',
+        ];
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('getUserByEmail')
+            ->once()
+            ->andReturn($existingForumUser);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $procedureMock = Mockery::mock(ForumProcedureService::class);
+        $this->app->instance(ForumProcedureService::class, $procedureMock);
+
+        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create([
+            'email' => 'existing@example.com',
+        ]);
+
+        $this->actingAs($officer)
+            ->post(route('recruiting.addMember'), [
+                'division' => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name' => 'NewForumName',
+                'rank' => Rank::RECRUIT->value,
+                'platoon' => $platoon->id,
+            ]);
+
+        $this->assertDatabaseHas('members', [
+            'clan_id' => 54321,
+            'name' => 'NewForumName',
+            'division_id' => $division->id,
+        ]);
+
+        $pendingUser->refresh();
+        $this->assertNull($pendingUser->forum_password);
+        $this->assertNotNull($pendingUser->member_id);
     }
 }
