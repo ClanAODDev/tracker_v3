@@ -326,11 +326,25 @@ class RecruitingController extends Controller
 
         $name = request('name');
         $memberId = request('member_id', 0);
+        $email = request('email');
 
         try {
             $result = DB::connection('aod_forums')->select('CALL user_exists(?, ?)', [$name, $memberId]);
+            $nameIsTaken = ! empty($result);
 
-            return response()->json(['memberExists' => ! empty($result)]);
+            if ($nameIsTaken && $email) {
+                $forumService = app(\App\Services\AODForumService::class);
+                $existingUser = $forumService->getUserByEmail($email);
+
+                if ($existingUser && strcasecmp($existingUser->username, $name) === 0) {
+                    return response()->json([
+                        'memberExists' => false,
+                        'existingAccount' => true,
+                    ]);
+                }
+            }
+
+            return response()->json(['memberExists' => $nameIsTaken]);
         } catch (\Exception $e) {
             return response()->json(['memberExists' => false]);
         }

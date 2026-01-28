@@ -189,10 +189,16 @@ store.validateForumName = (name, memberId) => {
             return;
         }
 
-        axios.post(`${store.base_url}/validate-name`, { name, member_id: memberId })
+        const params = { name, member_id: memberId };
+        if (store.selectedPendingUser?.email) {
+            params.email = store.selectedPendingUser.email;
+        }
+
+        axios.post(`${store.base_url}/validate-name`, params)
             .then((response) => {
                 const available = !response.data.memberExists;
-                store.validation.forumName = { valid: available, available };
+                const existingAccount = response.data.existingAccount || false;
+                store.validation.forumName = { valid: available, available, existingAccount };
                 store.validation.loading = false;
             })
             .catch(() => {
