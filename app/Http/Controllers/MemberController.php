@@ -55,7 +55,7 @@ class MemberController extends Controller
         $trashedNotes = $canViewTrashed ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
         $rankHistory = $this->memberRepository->getRankHistory($member);
         $transfers = $member->transfers;
-        $partTimeDivisions = $member->partTimeDivisions;
+        $partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
 
         $memberStats = MemberStatsData::fromMember($member, $division, $this->memberRepository);
         $noteStats = NoteStatsData::fromNotes($notes);
