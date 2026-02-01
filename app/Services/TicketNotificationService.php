@@ -30,7 +30,11 @@ class TicketNotificationService
         $assigner = $assigner ?? auth()->user();
 
         $ticket->notify(new NotifyCallerTicketUpdated($ticket, "Ticket has been assigned to {$assignee->name}"));
-        $ticket->notify(new NotifyNewTicketOwner($assignee, $assigner));
+
+        if ($assignee->id !== $assigner->id) {
+            $ticket->notify(new NotifyNewTicketOwner($assignee, $assigner));
+        }
+
         $ticket->notify(new TicketReaction('assigned'));
     }
 

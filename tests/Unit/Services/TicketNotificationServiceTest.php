@@ -101,7 +101,25 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_ticket_assigned_sends_owner_notification()
+    public function test_notify_ticket_assigned_sends_owner_notification_when_assigned_by_another()
+    {
+        $caller = $this->createMemberWithUser();
+        $assigner = $this->createAdmin();
+        $assignee = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+        $ticket = Ticket::factory()->create([
+            'caller_id' => $caller->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $this->actingAs($assigner);
+
+        $this->service->notifyTicketAssigned($ticket, $assignee);
+
+        Notification::assertSentTo($ticket, NotifyNewTicketOwner::class);
+    }
+
+    public function test_notify_ticket_assigned_does_not_notify_owner_when_self_assigned()
     {
         $caller = $this->createMemberWithUser();
         $assignee = $this->createAdmin();
@@ -115,7 +133,7 @@ class TicketNotificationServiceTest extends TestCase
 
         $this->service->notifyTicketAssigned($ticket, $assignee);
 
-        Notification::assertSentTo($ticket, NotifyNewTicketOwner::class);
+        Notification::assertNotSentTo($ticket, NotifyNewTicketOwner::class);
     }
 
     public function test_notify_ticket_assigned_sends_reaction()
