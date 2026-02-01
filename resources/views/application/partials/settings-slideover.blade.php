@@ -58,7 +58,7 @@
                                 <i class="fa fa-puzzle-piece"></i>
                                 Part-Time Divisions
                             </span>
-                            <span class="settings-link-count">{{ auth()->user()->member->partTimeDivisions()->count() }}</span>
+                            <span class="settings-link-count">{{ auth()->user()->member->partTimeDivisions()->whereActive(true)->count() }}</span>
                             <i class="fa fa-chevron-right"></i>
                         </button>
                     </div>
