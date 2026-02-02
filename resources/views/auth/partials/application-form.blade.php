@@ -36,6 +36,7 @@
                             id="field_{{ $field->id }}"
                             class="form-control"
                             value="{{ old("field_{$field->id}") }}"
+                            maxlength="{{ $field->max_length ?? 500 }}"
                             {{ $field->required ? 'required' : '' }}
                         >
                     @elseif ($field->type === 'textarea')
@@ -45,6 +46,7 @@
                             class="form-control"
                             style="resize: vertical"
                             rows="4"
+                            maxlength="{{ $field->max_length ?? 500 }}"
                             {{ $field->required ? 'required' : '' }}
                         >{{ old("field_{$field->id}") }}</textarea>
                     @elseif ($field->type === 'radio')

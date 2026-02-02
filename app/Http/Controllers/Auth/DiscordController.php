@@ -115,10 +115,28 @@ class DiscordController extends Controller
         $rules = [];
         foreach ($fields as $field) {
             $key = "field_{$field->id}";
-            if ($field->type === 'checkbox') {
-                $rules[$key] = $field->required ? ['required', 'array', 'min:1'] : ['nullable', 'array'];
-            } else {
-                $rules[$key] = $field->required ? ['required', 'string'] : ['nullable', 'string'];
+            $allowedOptions = collect($field->options ?? [])->pluck('label')->all();
+
+            $rules[$key] = match ($field->type) {
+                'checkbox' => array_filter([
+                    $field->required ? 'required' : 'nullable',
+                    'array',
+                    $field->required ? 'min:1' : null,
+                ]),
+                'radio' => array_filter([
+                    $field->required ? 'required' : 'nullable',
+                    'string',
+                    $allowedOptions ? 'in:' . implode(',', $allowedOptions) : null,
+                ]),
+                default => [
+                    $field->required ? 'required' : 'nullable',
+                    'string',
+                    'max:' . ($field->max_length ?? 500),
+                ],
+            };
+
+            if ($field->type === 'checkbox' && $allowedOptions) {
+                $rules["{$key}.*"] = ['string', 'in:' . implode(',', $allowedOptions)];
             }
         }
 
