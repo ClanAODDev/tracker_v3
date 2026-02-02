@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -18,7 +19,7 @@ class DiscordRegistrationRequest extends FormRequest
         return [
             'date_of_birth' => ['required', 'date', 'before:' . now()->subYears(13)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'division_id' => ['nullable', 'exists:divisions,id'],
+            'division_id' => ['required', 'exists:divisions,id'],
         ];
     }
 
@@ -31,27 +32,21 @@ class DiscordRegistrationRequest extends FormRequest
 
     public function persist(): void
     {
-        auth()->user()->update([
+        $user = auth()->user();
+
+        $user->update([
             'date_of_birth' => $this->validated('date_of_birth'),
             'forum_password' => $this->validated('password'),
-            'division_id' => $this->validated('division_id'),
         ]);
 
-        $this->notifyDivision();
-    }
+        $division = Division::findOrFail($this->validated('division_id'));
 
-    private function notifyDivision(): void
-    {
-        $divisionId = $this->validated('division_id');
+        DivisionApplication::create([
+            'user_id' => $user->id,
+            'division_id' => $division->id,
+            'responses' => [],
+        ]);
 
-        if (! $divisionId) {
-            return;
-        }
-
-        $division = Division::find($divisionId);
-
-        if ($division) {
-            $division->notify(new NotifyDivisionPendingDiscordRegistration(auth()->user()));
-        }
+        $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
     }
 }

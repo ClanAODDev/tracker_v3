@@ -51,7 +51,6 @@ class User extends Authenticatable implements FilamentUser
         'discord_username',
         'date_of_birth',
         'forum_password',
-        'division_id',
     ];
 
     /**
@@ -101,11 +100,6 @@ class User extends Authenticatable implements FilamentUser
     public function divisionApplication()
     {
         return $this->hasOne(DivisionApplication::class);
-    }
-
-    public function selectedDivision()
-    {
-        return $this->belongsTo(Division::class, 'division_id');
     }
 
     public function hasMember(): bool

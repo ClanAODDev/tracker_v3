@@ -20,7 +20,7 @@ class HasPrimaryDivision
             $user = Auth::user();
 
             if ($user->isPendingRegistration()) {
-                if (! $request->routeIs('auth.discord.pending', 'auth.discord.register', 'logout')) {
+                if (! $request->routeIs('auth.discord.*', 'logout')) {
                     return redirect()->route('auth.discord.pending');
                 }
 

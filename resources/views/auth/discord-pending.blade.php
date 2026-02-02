@@ -33,12 +33,11 @@
                     <form action="{{ route('auth.discord.register') }}" method="POST" id="dob-form">
                         @csrf
                         <div class="form-group">
-                            <label>What game are you interested in playing?</label>
-                            <p class="help-block text-muted m-b-sm">Optional - helps us connect you with the right division</p>
+                            <label>What game are you interested in playing? <span class="text-danger">*</span></label>
                             <div class="division-select-grid">
                                 @foreach($divisions as $division)
                                     <label class="division-select-item">
-                                        <input type="radio" name="division_id" value="{{ $division->id }}">
+                                        <input type="radio" name="division_id" value="{{ $division->id }}" {{ (int) old('division_id') === $division->id ? 'checked' : '' }} required>
                                         <div class="division-select-card">
                                             <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-select-logo">
                                             <span class="division-select-name">{{ $division->name }}</span>
