@@ -13,7 +13,6 @@ class DivisionApplicationField extends Model
         'options' => 'array',
         'required' => 'boolean',
         'display_order' => 'integer',
-        'max_length' => 'integer',
     ];
 
     public const array DEFAULTS = [

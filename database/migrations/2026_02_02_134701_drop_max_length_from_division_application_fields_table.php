@@ -9,14 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('division_application_fields', function (Blueprint $table) {
-            $table->unsignedSmallInteger('max_length')->nullable()->after('required');
+            $table->dropColumn('max_length');
         });
     }
 
     public function down(): void
     {
         Schema::table('division_application_fields', function (Blueprint $table) {
-            $table->dropColumn('max_length');
+            $table->unsignedSmallInteger('max_length')->nullable()->after('required');
         });
     }
 };

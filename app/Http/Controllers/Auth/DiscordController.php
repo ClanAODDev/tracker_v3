@@ -131,7 +131,7 @@ class DiscordController extends Controller
                 default => [
                     $field->required ? 'required' : 'nullable',
                     'string',
-                    'max:' . ($field->max_length ?? 500),
+                    'max:500',
                 ],
             };
 

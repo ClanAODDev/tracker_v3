@@ -175,13 +175,6 @@ class DivisionResource extends Resource
                                                 TextInput::make('helper_text')
                                                     ->label('Helper Text')
                                                     ->live(onBlur: true),
-                                                TextInput::make('max_length')
-                                                    ->label('Max Length')
-                                                    ->numeric()
-                                                    ->default(500)
-                                                    ->minValue(1)
-                                                    ->maxValue(5000)
-                                                    ->visible(fn ($get) => in_array($get('type'), ['text', 'textarea'])),
                                                 Toggle::make('required')
                                                     ->default(true)
                                                     ->live(),
