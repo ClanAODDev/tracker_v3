@@ -368,19 +368,16 @@ class RecruitingController extends Controller
         }
 
         return $query
-            ->with('divisionApplication.division.applicationFields')
+            ->with('divisionApplication.division')
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($u) {
                 $application = null;
                 if ($u->divisionApplication) {
-                    $fields = $u->divisionApplication->division->applicationFields->keyBy('id');
-                    $application = collect($u->divisionApplication->responses)->map(function ($value, $fieldId) use ($fields) {
-                        $field = $fields->get($fieldId);
-
+                    $application = collect($u->divisionApplication->responses)->map(function ($response) {
                         return [
-                            'label' => $field?->label ?? "Field #{$fieldId}",
-                            'value' => is_array($value) ? implode(', ', $value) : $value,
+                            'label' => $response['label'] ?? 'Unknown',
+                            'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?? '—'),
                         ];
                     })->values();
                 }

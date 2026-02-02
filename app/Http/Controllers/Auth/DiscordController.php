@@ -127,7 +127,10 @@ class DiscordController extends Controller
         $responses = [];
         foreach ($fields as $field) {
             $key = "field_{$field->id}";
-            $responses[$field->id] = $validated[$key] ?? null;
+            $responses[$field->id] = [
+                'label' => $field->label,
+                'value' => $validated[$key] ?? null,
+            ];
         }
 
         DivisionApplication::create([

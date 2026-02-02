@@ -15,6 +15,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     use Queueable, RetryableNotification;
 
     const RECRUITING_CHANNEL = 'https://discord.com/channels/507758143774916609/508656360028766219';
+    const INTRODUCTIONS_CHANNEL = 'https://discord.com/channels/507758143774916609/1137896866286157834';
 
     public function __construct(
         private readonly User $user,
@@ -29,8 +30,8 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     public function toBot($notifiable)
     {
         $message = $this->hasApplication
-            ? ':clipboard: **%s** has submitted an application to join %s. Check %s'
-            : ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s';
+            ? ':clipboard: **%s** has submitted an application to join %s. Check %s and %s'
+            : ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s and %s';
 
         $heading = $this->hasApplication
             ? '**APPLICATION SUBMITTED**'
@@ -47,7 +48,8 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
                         $message,
                         $this->user->discord_username,
                         $notifiable->name,
-                        self::RECRUITING_CHANNEL
+                        self::RECRUITING_CHANNEL,
+                        self::INTRODUCTIONS_CHANNEL
                     ),
                 ],
             ])

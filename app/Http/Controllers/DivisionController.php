@@ -39,8 +39,6 @@ class DivisionController extends Controller
             return response()->json(['applications' => []]);
         }
 
-        $fields = $division->applicationFields->keyBy('id');
-
         $applications = DivisionApplication::pending()
             ->where('division_id', $division->id)
             ->with('user')
@@ -50,9 +48,9 @@ class DivisionController extends Controller
                 'id' => $app->id,
                 'discord_username' => $app->user->discord_username,
                 'created_at' => $app->created_at->diffForHumans(),
-                'responses' => collect($app->responses)->map(fn ($value, $fieldId) => [
-                    'label' => $fields->get($fieldId)?->label ?? "Field #{$fieldId}",
-                    'value' => is_array($value) ? implode(', ', $value) : ($value ?: '—'),
+                'responses' => collect($app->responses)->map(fn ($response) => [
+                    'label' => $response['label'] ?? 'Unknown',
+                    'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?: '—'),
                 ])->values(),
             ]);
 
