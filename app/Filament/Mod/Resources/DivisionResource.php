@@ -162,8 +162,8 @@ class DivisionResource extends Resource
                                             ->schema([
                                                 Select::make('type')
                                                     ->options([
-                                                        'text' => 'Short Text',
-                                                        'textarea' => 'Long Text',
+                                                        'text' => 'Single Line',
+                                                        'textarea' => 'Multi-Line',
                                                         'checkbox' => 'Checkbox Group',
                                                         'radio' => 'Radio Buttons',
                                                     ])
