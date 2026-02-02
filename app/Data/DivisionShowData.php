@@ -18,6 +18,7 @@ readonly class DivisionShowData
         public ?object $previousCensus,
         public PendingActionsData $pendingActions,
         public Collection $recentActivity,
+        public int $pendingApplicationCount,
     ) {}
 
     public function toArray(): array
@@ -33,6 +34,7 @@ readonly class DivisionShowData
             'previousCensus' => $this->previousCensus,
             'pendingActions' => $this->pendingActions,
             'recentActivity' => $this->recentActivity,
+            'pendingApplicationCount' => $this->pendingApplicationCount,
         ];
     }
 }

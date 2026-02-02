@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ForumGroup;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
@@ -86,6 +87,10 @@ class RecruitingController extends Controller
 
             $pendingUser->update(['member_id' => $member->id]);
 
+            DivisionApplication::where('user_id', $pendingUser->id)
+                ->pending()
+                ->update(['recruited_at' => now()]);
+
             $this->handleNotification($member, $division);
 
             SyncDiscordMember::dispatch($member);
@@ -144,18 +149,7 @@ class RecruitingController extends Controller
             ])
             ->get();
 
-        $pendingDiscord = User::pendingDiscord()
-            ->whereNotNull('date_of_birth')
-            ->whereNotNull('forum_password')
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(fn ($u) => [
-                'id' => $u->id,
-                'discord_username' => $u->discord_username,
-                'discord_id' => $u->discord_id,
-                'email' => $u->email,
-                'created_at' => $u->created_at->diffForHumans(),
-            ]);
+        $pendingDiscord = $this->getPendingDiscordUsers($division, request()->boolean('all_pending'));
 
         return response()->json([
             'name' => $division->name,
@@ -349,6 +343,58 @@ class RecruitingController extends Controller
         } catch (\Exception $e) {
             return response()->json(['memberExists' => false]);
         }
+    }
+
+    public function pendingDiscord(Division $division): JsonResponse
+    {
+        $this->authorize('recruit', Member::class);
+
+        return response()->json([
+            'pending_discord' => $this->getPendingDiscordUsers($division, request()->boolean('all_pending')),
+        ]);
+    }
+
+    private function getPendingDiscordUsers(Division $division, bool $allPending = false)
+    {
+        $query = User::pendingDiscord()
+            ->whereNotNull('date_of_birth')
+            ->whereNotNull('forum_password');
+
+        if (! $allPending) {
+            $query->where(function ($q) use ($division) {
+                $q->whereHas('divisionApplication', fn ($a) => $a->where('division_id', $division->id))
+                    ->orWhereDoesntHave('divisionApplication');
+            });
+        }
+
+        return $query
+            ->with('divisionApplication.division.applicationFields')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($u) {
+                $application = null;
+                if ($u->divisionApplication) {
+                    $fields = $u->divisionApplication->division->applicationFields->keyBy('id');
+                    $application = collect($u->divisionApplication->responses)->map(function ($value, $fieldId) use ($fields) {
+                        $field = $fields->get($fieldId);
+
+                        return [
+                            'label' => $field?->label ?? "Field #{$fieldId}",
+                            'value' => is_array($value) ? implode(', ', $value) : $value,
+                        ];
+                    })->values();
+                }
+
+                return [
+                    'id' => $u->id,
+                    'discord_username' => $u->discord_username,
+                    'discord_id' => $u->discord_id,
+                    'email' => $u->email,
+                    'created_at' => $u->created_at->diffForHumans(),
+                    'application' => $application,
+                    'application_division' => $u->divisionApplication?->division?->name,
+                ];
+            });
     }
 
     private function handleNotification($member, $division)

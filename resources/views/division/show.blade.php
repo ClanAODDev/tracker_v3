@@ -23,6 +23,12 @@
 
     </div>
 
+    @can('recruit', App\Models\Member::class)
+        @if($division->settings()->get('application_required', false))
+            @include('division.partials.applications-modal')
+        @endif
+    @endcan
+
 @endsection
 
 @section('footer_scripts')

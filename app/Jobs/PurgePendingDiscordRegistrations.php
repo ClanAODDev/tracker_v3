@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\DivisionApplication;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -12,17 +13,24 @@ class PurgePendingDiscordRegistrations implements ShouldQueue
     use Queueable;
 
     public function __construct(
-        public int $daysOld = 60
+        public int $daysOld = 30
     ) {}
 
     public function handle(): void
     {
-        $count = User::pendingDiscord()
-            ->where('created_at', '<', now()->subDays($this->daysOld))
+        $cutoff = now()->subDays($this->daysOld);
+
+        $applicationCount = DivisionApplication::pending()
+            ->where('created_at', '<', $cutoff)
+            ->delete();
+
+        $userCount = User::pendingDiscord()
+            ->where('created_at', '<', $cutoff)
             ->delete();
 
         Log::info('Purged old pending Discord registrations', [
-            'count' => $count,
+            'users' => $userCount,
+            'applications' => $applicationCount,
             'days_old' => $this->daysOld,
         ]);
     }

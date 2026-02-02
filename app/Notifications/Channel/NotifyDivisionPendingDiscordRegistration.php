@@ -17,7 +17,8 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     const RECRUITING_CHANNEL = 'https://discord.com/channels/507758143774916609/508656360028766219';
 
     public function __construct(
-        private readonly User $user
+        private readonly User $user,
+        private readonly bool $hasApplication = false,
     ) {}
 
     public function via(): array
@@ -27,15 +28,23 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
 
     public function toBot($notifiable)
     {
+        $message = $this->hasApplication
+            ? ':clipboard: **%s** has submitted an application to join %s. Check %s'
+            : ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s';
+
+        $heading = $this->hasApplication
+            ? '**APPLICATION SUBMITTED**'
+            : '**NEW DISCORD REGISTRATION**';
+
         return new BotChannelMessage($notifiable)
             ->title("{$notifiable->name} Division")
             ->target('officers')
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name' => '**NEW DISCORD REGISTRATION**',
+                    'name' => $heading,
                     'value' => sprintf(
-                        ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s',
+                        $message,
                         $this->user->discord_username,
                         $notifiable->name,
                         self::RECRUITING_CHANNEL

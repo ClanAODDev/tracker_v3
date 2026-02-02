@@ -71,17 +71,22 @@
                 </span>
               </div>
             </div>
-            <div class="col-md-6" v-if="store.division.pending_discord.length && !store.validation.memberId.currentUsername">
+            <div class="col-md-6" v-if="(store.division.pending_discord.length || store.loading.pendingDiscord) && !store.validation.memberId.currentUsername">
               <div class="form-group">
                 <label for="pending_user">
                   <i class="fab fa-discord" style="color: #5865F2;"></i> Pending Discord Registrations
+                  <span class="text-muted" style="font-weight: normal;">({{ store.division.pending_discord.length }})</span>
                 </label>
-                <select id="pending_user" class="form-control" @change="onPendingUserSelect" :disabled="store.inDemoMode">
-                  <option value="">Select from pending...</option>
+                <select id="pending_user" class="form-control" @change="onPendingUserSelect" :disabled="store.inDemoMode || store.loading.pendingDiscord">
+                  <option value="" style="color: #888;">{{ store.loading.pendingDiscord ? 'Loading...' : 'Select from pending...' }}</option>
                   <option v-for="user in store.division.pending_discord" :key="user.id" :value="user.id">
-                    {{ user.discord_username }} ({{ user.created_at }})
+                    {{ user.discord_username }} ({{ user.created_at }}){{ user.application_division ? ' — ' + user.application_division : '' }}
                   </option>
                 </select>
+                <label class="text-muted" style="display: inline-flex; align-items: center; gap: 5px; font-weight: normal; font-size: 12px; margin-top: 12px; cursor: pointer; line-height: 1;">
+                  <input type="checkbox" v-model="showAllPending" @change="onShowAllPendingChange" :disabled="store.loading.pendingDiscord" style="margin: 0; vertical-align: middle;">
+                  <span style="line-height: 1;">Show all pending registrations</span>
+                </label>
               </div>
             </div>
             <div class="col-md-6" v-else-if="store.validation.memberId.currentUsername">
@@ -97,6 +102,23 @@
                   <span v-for="(tag, index) in store.validation.memberId.tags" :key="index" class="badge badge-tag" :title="tag.division">
                     {{ tag.name }}
                   </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="store.selectedPendingUser?.application" class="application-responses" style="margin-top: 8px;">
+            <div class="application-responses-header" @click="sections.application = !sections.application">
+              <i class="fa fa-file-alt"></i> Application Submitted
+              <span v-if="store.selectedPendingUser.application_division" class="text-muted" style="font-size: 12px; font-weight: normal; margin-left: 6px;">
+                ({{ store.selectedPendingUser.application_division }})
+              </span>
+              <i class="fa" :class="sections.application ? 'fa-chevron-up' : 'fa-chevron-down'" style="margin-left: auto;"></i>
+            </div>
+            <div v-show="sections.application" class="application-responses-body">
+              <div class="row">
+                <div v-for="(item, index) in store.selectedPendingUser.application" :key="index" class="col-md-4 application-field">
+                  <div class="application-field-label">{{ item.label }}</div>
+                  <div class="application-field-value">{{ item.value || '—' }}</div>
                 </div>
               </div>
             </div>
@@ -285,9 +307,11 @@ export default {
     return {
       store,
       submitted: false,
+      showAllPending: false,
       sections: {
         agreements: false,
         tasks: false,
+        application: false,
       },
     };
   },
@@ -388,7 +412,12 @@ export default {
     },
 
     onPendingUserSelect(event) {
-      store.selectPendingUser(event.target.value);
+      const value = event.target.value;
+      if (value) {
+        store.selectPendingUser(value);
+      } else {
+        this.clearPendingUser();
+      }
     },
 
     clearPendingUser() {
@@ -396,6 +425,11 @@ export default {
       store.member.forum_name = '';
       store.member.rank = '';
       document.getElementById('pending_user').value = '';
+    },
+
+    onShowAllPendingChange() {
+      this.clearPendingUser();
+      store.reloadPendingDiscord(this.showAllPending);
     },
 
     retryLoad() {

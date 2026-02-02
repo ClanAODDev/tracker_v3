@@ -55,6 +55,7 @@ const store = reactive({
 
     loading: {
         divisionData: false,
+        pendingDiscord: false,
     },
 
     errors: {
@@ -95,6 +96,20 @@ store.loadDivisionData = (divisionSlug) => {
             store.loading.divisionData = false;
             store.errors.divisionData = 'Failed to load division data. Please refresh and try again.';
             console.error('Division data load error:', error);
+        });
+};
+
+store.reloadPendingDiscord = (allPending) => {
+    store.loading.pendingDiscord = true;
+    const params = allPending ? '?all_pending=1' : '';
+
+    return axios.get(`${store.base_url}/divisions/${store.division.slug}/recruit/pending-discord${params}`)
+        .then((response) => {
+            store.division.pending_discord = response.data.pending_discord || [];
+            store.loading.pendingDiscord = false;
+        })
+        .catch(() => {
+            store.loading.pendingDiscord = false;
         });
 };
 

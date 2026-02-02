@@ -75,6 +75,8 @@
                     </form>
                 </div>
             </div>
+        @elseif ($needsApplication)
+            @include('auth.partials.application-form')
         @else
             <div class="panel panel-filled animate-fade-in-up auth__panel">
                 <div class="auth__pattern"></div>

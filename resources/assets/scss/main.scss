@@ -10704,6 +10704,61 @@ pre.code-toolbar > .toolbar span:focus {
     }
 }
 
+#pending_user option {
+    padding: 6px 8px;
+}
+
+.application-responses {
+    margin-top: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.application-responses-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(88, 101, 242, 0.15);
+    color: #8b9aff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        background: rgba(88, 101, 242, 0.25);
+    }
+}
+
+.application-responses-body {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 0 0 6px 6px;
+}
+
+.application-field {
+    padding: 8px 10px;
+}
+
+.application-field-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-muted);
+    margin-bottom: 4px;
+}
+
+.application-field-value {
+    font-size: 13px;
+    color: var(--color-white);
+}
+
 .member-tags-display {
     display: flex;
     flex-wrap: wrap;

@@ -21,7 +21,7 @@ class ListPendingDiscord extends ListRecords
                 ->color('danger')
                 ->requiresConfirmation()
                 ->modalHeading('Purge Old Pending Registrations')
-                ->modalDescription('This will permanently delete all pending Discord registrations older than 60 days. This action cannot be undone.')
+                ->modalDescription('This will permanently delete all pending Discord registrations and their applications older than 30 days. This action cannot be undone.')
                 ->action(function () {
                     PurgePendingDiscordRegistrations::dispatch();
 

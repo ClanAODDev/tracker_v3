@@ -6,10 +6,13 @@ use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DiscordRegistrationRequest;
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
+use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
@@ -61,7 +64,9 @@ class DiscordController extends Controller
 
     public function pending(): RedirectResponse|View
     {
-        if (! auth()->user()->isPendingRegistration()) {
+        $user = auth()->user();
+
+        if (! $user->isPendingRegistration()) {
             return redirect('/');
         }
 
@@ -70,12 +75,64 @@ class DiscordController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'abbreviation']);
 
-        return view('auth.discord-pending', compact('divisions'));
+        $applicationFields = null;
+        $needsApplication = false;
+
+        if ($user->date_of_birth && $user->forum_password && $user->division_id) {
+            $division = Division::find($user->division_id);
+
+            if ($division && $division->settings()->get('application_required') && ! $user->divisionApplication) {
+                $applicationFields = $division->applicationFields;
+                $needsApplication = $applicationFields->isNotEmpty();
+            }
+        }
+
+        return view('auth.discord-pending', compact('divisions', 'applicationFields', 'needsApplication'));
     }
 
     public function register(DiscordRegistrationRequest $request): RedirectResponse
     {
         $request->persist();
+
+        return redirect()->route('auth.discord.pending');
+    }
+
+    public function submitApplication(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if (! $user->isPendingRegistration() || ! $user->division_id) {
+            return redirect()->route('auth.discord.pending');
+        }
+
+        $division = Division::findOrFail($user->division_id);
+        $fields = $division->applicationFields;
+
+        $rules = [];
+        foreach ($fields as $field) {
+            $key = "field_{$field->id}";
+            if ($field->type === 'checkbox') {
+                $rules[$key] = $field->required ? ['required', 'array', 'min:1'] : ['nullable', 'array'];
+            } else {
+                $rules[$key] = $field->required ? ['required', 'string'] : ['nullable', 'string'];
+            }
+        }
+
+        $validated = $request->validate($rules);
+
+        $responses = [];
+        foreach ($fields as $field) {
+            $key = "field_{$field->id}";
+            $responses[$field->id] = $validated[$key] ?? null;
+        }
+
+        DivisionApplication::create([
+            'user_id' => $user->id,
+            'division_id' => $division->id,
+            'responses' => $responses,
+        ]);
+
+        $division->notify(new NotifyDivisionPendingDiscordRegistration($user, hasApplication: true));
 
         return redirect()->route('auth.discord.pending');
     }

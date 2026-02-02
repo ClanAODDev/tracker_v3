@@ -11,6 +11,16 @@
                 <span>Add Recruit</span>
             </a>
         @endif
+        @if($division->settings()->get('application_required', false))
+            <a href="#" class="tool-card" id="open-applications-modal"
+               data-url="{{ route('division.applications', $division) }}">
+                <i class="fab fa-discord"></i>
+                <span>Applications</span>
+                @if($pendingApplicationCount > 0)
+                    <span class="label label-info">{{ $pendingApplicationCount }}</span>
+                @endif
+            </a>
+        @endif
     @endcan
 
     <div class="tool-card-dropdown">

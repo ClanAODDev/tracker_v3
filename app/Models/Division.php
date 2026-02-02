@@ -124,7 +124,10 @@ class Division extends Model
             $division->slug = Str::slug($division->name);
         });
 
-        static::created(fn (Division $division) => $division->recordActivity(ActivityType::CREATED_DIVISION));
+        static::created(function (Division $division) {
+            $division->recordActivity(ActivityType::CREATED_DIVISION);
+            $division->applicationFields()->createMany(DivisionApplicationField::DEFAULTS);
+        });
         static::deleted(fn (Division $division) => $division->recordActivity(ActivityType::DELETED_DIVISION));
     }
 
@@ -424,6 +427,16 @@ class Division extends Model
     public function tags(): HasMany
     {
         return $this->hasMany(DivisionTag::class)->orderBy('name');
+    }
+
+    public function applicationFields(): HasMany
+    {
+        return $this->hasMany(DivisionApplicationField::class)->orderBy('display_order');
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(DivisionApplication::class);
     }
 
     public function memberAwards(): HasManyThrough

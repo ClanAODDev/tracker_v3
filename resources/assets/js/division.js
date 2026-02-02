@@ -110,11 +110,113 @@ var Division = Division || {};
         }
       });
     },
+    initApplicationsModal: function () {
+      var self = this;
+      var $trigger = $('#open-applications-modal');
+      if (!$trigger.length) return;
+
+      var url = $trigger.data('url');
+      var loaded = false;
+
+      function openModal() {
+        var $modal = $('#applicationsModal');
+        $modal.modal('show');
+
+        if (!loaded) {
+          self.loadApplications(url);
+          loaded = true;
+        }
+      }
+
+      $trigger.on('click', function (e) {
+        e.preventDefault();
+        var params = new URLSearchParams(window.location.search);
+        params.set('applications', '1');
+        window.history.replaceState(null, '', '?' + params.toString());
+        openModal();
+      });
+
+      $('#applicationsModal').on('hidden.bs.modal', function () {
+        var params = new URLSearchParams(window.location.search);
+        params.delete('applications');
+        var qs = params.toString();
+        window.history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+      });
+
+      if (new URLSearchParams(window.location.search).has('applications')) {
+        openModal();
+      }
+    },
+
+    loadApplications: function (url) {
+      var $loading = $('#applications-loading');
+      var $content = $('#applications-content');
+      var $empty = $('#applications-empty');
+      var $list = $('#applications-list');
+      var $detail = $('#applications-detail');
+
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+          $loading.addClass('hidden');
+
+          if (!data.applications || !data.applications.length) {
+            $empty.removeClass('hidden');
+            return;
+          }
+
+          var apps = data.applications;
+
+          apps.forEach(function (app, index) {
+            $list.append(
+              '<a href="#" class="list-group-item application-item' + (index === 0 ? ' active' : '') + '" data-index="' + index + '">' +
+                '<strong>' + $('<span>').text(app.discord_username).html() + '</strong>' +
+                '<span class="text-muted pull-right" style="font-size: 12px;">' + $('<span>').text(app.created_at).html() + '</span>' +
+              '</a>'
+            );
+
+            var html = '<div class="panel panel-filled application-modal-detail' + (index !== 0 ? ' hidden' : '') + '" data-index="' + index + '" style="border-radius: 8px;">' +
+              '<div class="panel-body">' +
+                '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">' +
+                  '<strong style="font-size: 16px;">' + $('<span>').text(app.discord_username).html() + '</strong>' +
+                  '<span class="text-muted" style="font-size: 12px;">' + $('<span>').text(app.created_at).html() + '</span>' +
+                '</div>';
+
+            app.responses.forEach(function (r) {
+              html += '<div style="margin-bottom: 14px;">' +
+                '<div class="text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">' + $('<span>').text(r.label).html() + '</div>' +
+                '<div style="margin-top: 2px;">' + $('<span>').text(r.value).html() + '</div>' +
+              '</div>';
+            });
+
+            html += '</div></div>';
+            $detail.append(html);
+          });
+
+          $list.on('click', '.application-item', function (e) {
+            e.preventDefault();
+            var idx = $(this).data('index');
+            $list.find('.application-item').removeClass('active');
+            $(this).addClass('active');
+            $detail.find('.application-modal-detail').addClass('hidden');
+            $detail.find('.application-modal-detail[data-index="' + idx + '"]').removeClass('hidden');
+          });
+
+          $content.removeClass('hidden');
+        },
+        error: function () {
+          $loading.html('<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> Failed to load applications.</span>');
+        }
+      });
+    },
+
     setup: function () {
       this.initAutocomplete();
       this.initPromotionsChart();
       this.initUnassigned();
       this.initScrollToOrganize();
+      this.initApplicationsModal();
     },
 
     initPromotionsChart: function () {

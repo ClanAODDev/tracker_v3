@@ -6,6 +6,7 @@ use App\Data\UnitStatsData;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
@@ -28,6 +29,34 @@ class DivisionController extends Controller
     public function show(Division $division): View
     {
         return view('division.show', $this->divisionShow->getShowData($division)->toArray());
+    }
+
+    public function applications(Division $division): JsonResponse
+    {
+        $this->authorize('recruit', Member::class);
+
+        if (! $division->settings()->get('application_required', false)) {
+            return response()->json(['applications' => []]);
+        }
+
+        $fields = $division->applicationFields->keyBy('id');
+
+        $applications = DivisionApplication::pending()
+            ->where('division_id', $division->id)
+            ->with('user')
+            ->latest()
+            ->get()
+            ->map(fn ($app) => [
+                'id' => $app->id,
+                'discord_username' => $app->user->discord_username,
+                'created_at' => $app->created_at->diffForHumans(),
+                'responses' => collect($app->responses)->map(fn ($value, $fieldId) => [
+                    'label' => $fields->get($fieldId)?->label ?? "Field #{$fieldId}",
+                    'value' => is_array($value) ? implode(', ', $value) : ($value ?: '—'),
+                ])->values(),
+            ]);
+
+        return response()->json(['applications' => $applications]);
     }
 
     public function partTime(Division $division)

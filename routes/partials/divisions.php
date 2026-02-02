@@ -44,6 +44,7 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::get('inactive-ts-forums/{platoon?}', 'index')->name('division.inactive-ts-forums');
     });
 
+    Route::get('applications', [DivisionController::class, 'applications'])->name('division.applications');
     Route::get('recruit/form', [RecruitingController::class, 'form'])->name('recruiting.form');
 
     Route::controller(ReportController::class)->group(function () {

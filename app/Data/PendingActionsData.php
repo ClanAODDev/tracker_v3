@@ -5,7 +5,9 @@ namespace App\Data;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Models\Leave;
+use App\Models\Member;
 use App\Models\MemberAward;
 use App\Models\MemberRequest;
 use App\Models\Platoon;
@@ -35,6 +37,22 @@ readonly class PendingActionsData
                     icon: 'fa-user-plus',
                     label: 'Request',
                     style: 'warning',
+                ));
+            }
+        }
+
+        if ($user->can('recruit', Member::class) && $division->settings()->get('application_required', false)) {
+            $count = DivisionApplication::pending()
+                ->where('division_id', $division->id)
+                ->count();
+            if ($count > 0) {
+                $actions->push(new PendingAction(
+                    key: 'pending-applications',
+                    count: $count,
+                    url: '#',
+                    icon: 'fab fa-discord',
+                    label: 'Application',
+                    modalTarget: 'applicationsModal',
                 ));
             }
         }

@@ -51,6 +51,7 @@ class User extends Authenticatable implements FilamentUser
         'discord_username',
         'date_of_birth',
         'forum_password',
+        'division_id',
     ];
 
     /**
@@ -87,20 +88,24 @@ class User extends Authenticatable implements FilamentUser
     {
         parent::boot();
 
-        /*
-         * Handle default settings population.
-         */
         static::creating(function (self $user) {
             $user->settings = $user->defaultSettings;
         });
     }
 
-    /**
-     * relationship - user belongs to a member.
-     */
     public function member()
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function divisionApplication()
+    {
+        return $this->hasOne(DivisionApplication::class);
+    }
+
+    public function selectedDivision()
+    {
+        return $this->belongsTo(Division::class, 'division_id');
     }
 
     public function hasMember(): bool

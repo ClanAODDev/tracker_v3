@@ -14,4 +14,9 @@ readonly class PendingAction
         public bool $adminOnly = false,
         public ?string $modalTarget = null,
     ) {}
+
+    public function iconClass(): string
+    {
+        return str_contains($this->icon, ' ') ? $this->icon : 'fa ' . $this->icon;
+    }
 }

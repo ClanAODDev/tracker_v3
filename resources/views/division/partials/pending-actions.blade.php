@@ -22,7 +22,7 @@
             @else
                 <a href="{{ $action->url }}" class="pending-action pending-action--{{ $action->style }}">
             @endif
-                <i class="fa {{ $action->icon }}"></i>
+                <i class="{{ $action->iconClass() }}"></i>
                 <span class="pending-action-count">{{ $action->count }}</span>
                 <span class="pending-action-label">{{ Str::plural($action->label, $action->count) }}</span>
             </a>
@@ -50,7 +50,7 @@
                         @else
                             <a href="{{ $action->url }}">
                         @endif
-                            <i class="fa {{ $action->icon }}"></i>
+                            <i class="{{ $action->iconClass() }}"></i>
                             <span class="pending-actions-dropdown-label">{{ Str::plural($action->label, $action->count) }}</span>
                             <span class="pending-actions-dropdown-count">{{ $action->count }}</span>
                         </a>

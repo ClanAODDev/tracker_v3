@@ -8,6 +8,7 @@ use App\Data\DivisionStatsData;
 use App\Data\PendingActionsData;
 use App\Enums\ActivityType;
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Repositories\DivisionRepository;
 
 class DivisionShowService
@@ -32,6 +33,9 @@ class DivisionShowService
             previousCensus: $this->divisionRepository->censusCounts($division)->first(),
             pendingActions: PendingActionsData::forDivision($division, auth()->user()),
             recentActivity: $this->getRecentActivity($division),
+            pendingApplicationCount: $division->settings()->get('application_required', false)
+                ? DivisionApplication::pending()->where('division_id', $division->id)->count()
+                : 0,
         );
     }
 

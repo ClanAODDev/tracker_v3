@@ -34,6 +34,7 @@ class DiscordRegistrationRequest extends FormRequest
         auth()->user()->update([
             'date_of_birth' => $this->validated('date_of_birth'),
             'forum_password' => $this->validated('password'),
+            'division_id' => $this->validated('division_id'),
         ]);
 
         $this->notifyDivision();

@@ -7,8 +7,6 @@ use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
-use Closure;
-use Exception;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -27,7 +25,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Http;
 
 class DivisionResource extends Resource
 {
@@ -146,56 +143,67 @@ class DivisionResource extends Resource
                                     ]),
                             ]),
 
-                        Tab::make('Recruiting')
+                        Tab::make('Applications')
+                            ->icon('heroicon-o-document-text')
+                            ->schema([
+                                Toggle::make('settings.application_required')
+                                    ->label('Required for recruitment')
+                                    ->helperText('New members will be prompted to complete this information during the registration process'),
+
+                                Section::make('Application Fields')
+                                    ->description('Define the fields that applicants must complete. Keep it brief and only request what is necessary before recruitment.')
+                                    ->schema([
+                                        Repeater::make('applicationFields')
+                                            ->relationship()
+                                            ->orderColumn('display_order')
+                                            ->reorderable()
+                                            ->hiddenLabel()
+                                            ->live()
+                                            ->schema([
+                                                Select::make('type')
+                                                    ->options([
+                                                        'text' => 'Short Text',
+                                                        'textarea' => 'Long Text',
+                                                        'checkbox' => 'Checkbox Group',
+                                                        'radio' => 'Radio Buttons',
+                                                    ])
+                                                    ->required()
+                                                    ->live(),
+                                                TextInput::make('label')
+                                                    ->required()
+                                                    ->live(onBlur: true),
+                                                TextInput::make('helper_text')
+                                                    ->label('Helper Text')
+                                                    ->live(onBlur: true),
+                                                Toggle::make('required')
+                                                    ->default(true)
+                                                    ->live(),
+                                                Repeater::make('options')
+                                                    ->schema([
+                                                        TextInput::make('label')
+                                                            ->required()
+                                                            ->hiddenLabel()
+                                                            ->live(onBlur: true),
+                                                    ])
+                                                    ->visible(fn ($get) => in_array($get('type'), ['checkbox', 'radio']))
+                                                    ->live()
+                                                    ->columnSpanFull(),
+                                            ])
+                                            ->columns(2)
+                                            ->collapsible()
+                                            ->itemLabel(fn (array $state): ?string => $state['label'] ?? null),
+                                    ]),
+
+                            ]),
+
+                        Tab::make('Induction')
                             ->icon('heroicon-o-user-plus')
                             ->statePath('settings')
                             ->schema([
-                                Section::make('Applications Feed')
-                                    ->schema([
-                                        TextInput::make('recruitment_rss_feed')
-                                            ->label('Recruit Applications RSS URL')
-                                            ->url()
-                                            ->columnSpanFull()
-                                            ->rules([
-                                                fn (): Closure => function (string $attribute, $value, Closure $fail) {
-                                                    if (empty($value)) {
-                                                        return;
-                                                    }
-
-                                                    try {
-                                                        $response = Http::withUserAgent('Tracker - RSS Validator')
-                                                            ->timeout(10)
-                                                            ->get($value);
-
-                                                        if (! $response->ok()) {
-                                                            $fail('The URL returned an error (HTTP ' . $response->status() . ')');
-
-                                                            return;
-                                                        }
-
-                                                        $content = $response->body();
-                                                        $xml = @simplexml_load_string($content);
-
-                                                        if ($xml === false) {
-                                                            $fail('The URL does not return valid XML');
-
-                                                            return;
-                                                        }
-
-                                                        if (! isset($xml->channel) && ! isset($xml->entry)) {
-                                                            $fail('The URL does not appear to be a valid RSS or Atom feed');
-                                                        }
-                                                    } catch (Exception $e) {
-                                                        $fail('Could not fetch URL: ' . $e->getMessage());
-                                                    }
-                                                },
-                                            ])
-                                            ->helperText('RSS feed URL where new division applications are posted'),
-                                    ]),
-
                                 Section::make('Recruiting Tasks')
                                     ->description('Critical steps to perform during recruitment')
                                     ->collapsible()
+                                    ->collapsed()
                                     ->schema([
                                         Repeater::make('recruiting_tasks')
                                             ->hiddenLabel()
@@ -207,6 +215,7 @@ class DivisionResource extends Resource
                                 Section::make('Informational Threads')
                                     ->description('Important forum threads for new recruits to be aware of')
                                     ->collapsible()
+                                    ->collapsed()
                                     ->schema([
                                         Repeater::make('recruiting_threads')
                                             ->hiddenLabel()
