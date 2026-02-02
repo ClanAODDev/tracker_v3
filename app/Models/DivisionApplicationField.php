@@ -30,10 +30,16 @@ class DivisionApplicationField extends Model
             'display_order' => 3,
         ],
         [
+            'type' => 'text',
+            'label' => 'What is your ingame name?',
+            'required' => true,
+            'display_order' => 4,
+        ],
+        [
             'type' => 'radio',
             'label' => 'AOD is an honor clan. We prefer good sportsmanship over skill. Can you be happy in an environment that doesn\'t reward skill?',
             'required' => true,
-            'display_order' => 4,
+            'display_order' => 5,
             'options' => [
                 ['label' => 'Yes'],
                 ['label' => 'No'],
