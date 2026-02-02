@@ -6,6 +6,7 @@ use App\AOD\ClanForumPermissions;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DiscordRegistrationRequest;
 use App\Models\Division;
+use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
@@ -77,13 +78,12 @@ class DiscordController extends Controller
         $applicationFields = null;
         $needsApplication = false;
 
-        if ($user->date_of_birth && $user->forum_password && $user->divisionApplication) {
-            $application = $user->divisionApplication;
-            $division = $application->division;
+        if ($user->date_of_birth && $user->forum_password && ! $user->divisionApplication) {
+            $divisionId = session('pending_division_id');
+            $division = $divisionId ? Division::find($divisionId) : null;
 
             if ($division
                 && $division->settings()->get('application_required', false)
-                && empty($application->responses)
             ) {
                 $applicationFields = $division->applicationFields;
                 $needsApplication = $applicationFields->isNotEmpty();
@@ -103,13 +103,13 @@ class DiscordController extends Controller
     public function submitApplication(Request $request): RedirectResponse
     {
         $user = auth()->user();
-        $application = $user->divisionApplication;
+        $divisionId = session('pending_division_id');
 
-        if (! $user->isPendingRegistration() || ! $application) {
+        if (! $user->isPendingRegistration() || ! $divisionId) {
             return redirect()->route('auth.discord.pending');
         }
 
-        $division = $application->division;
+        $division = Division::findOrFail($divisionId);
         $fields = $division->applicationFields;
 
         $rules = [];
@@ -130,7 +130,13 @@ class DiscordController extends Controller
             $responses[$field->id] = $validated[$key] ?? null;
         }
 
-        $application->update(['responses' => $responses]);
+        DivisionApplication::create([
+            'user_id' => $user->id,
+            'division_id' => $division->id,
+            'responses' => $responses,
+        ]);
+
+        session()->forget('pending_division_id');
 
         $division->notify(new NotifyDivisionPendingDiscordRegistration($user, hasApplication: true));
 

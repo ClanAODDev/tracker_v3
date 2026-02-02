@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\Division;
-use App\Models\DivisionApplication;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -41,11 +40,7 @@ class DiscordRegistrationRequest extends FormRequest
 
         $division = Division::findOrFail($this->validated('division_id'));
 
-        DivisionApplication::create([
-            'user_id' => $user->id,
-            'division_id' => $division->id,
-            'responses' => [],
-        ]);
+        session(['pending_division_id' => $division->id]);
 
         $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
     }
