@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Role;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -30,7 +31,7 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
-        return $user->isDivisionLeader();
+        return $user->isDivisionLeader() || $user->isRole(Role::SENIOR_LEADER);
     }
 
     public function create(User $user): bool
