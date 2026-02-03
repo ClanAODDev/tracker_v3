@@ -378,7 +378,7 @@ var Tracker = Tracker || {};
                     var $col = $card.closest('[class*="col-"]');
                     var cardRarity = null;
 
-                    ['mythic', 'legendary', 'epic', 'rare', 'common'].forEach(function (r) {
+                    ['unclaimed', 'mythic', 'legendary', 'epic', 'rare', 'common'].forEach(function (r) {
                         if ($card.hasClass('award-card-' + r)) {
                             cardRarity = r;
                         }
@@ -423,7 +423,7 @@ var Tracker = Tracker || {};
             });
 
             var $raritySort = $('#rarity-sort');
-            var rarityOrder = ['mythic', 'legendary', 'epic', 'rare', 'common'];
+            var rarityOrder = ['unclaimed', 'mythic', 'legendary', 'epic', 'rare', 'common'];
 
             function sortAwards(sortType) {
                 $('.award-grid').each(function () {
@@ -440,7 +440,7 @@ var Tracker = Tracker || {};
                         $items.sort(function (a, b) {
                             var $cardA = $(a).find('.award-card');
                             var $cardB = $(b).find('.award-card');
-                            var rarityA = 4, rarityB = 4;
+                            var rarityA = 5, rarityB = 5;
 
                             rarityOrder.forEach(function (r, idx) {
                                 if ($cardA.hasClass('award-card-' + r)) rarityA = idx;
