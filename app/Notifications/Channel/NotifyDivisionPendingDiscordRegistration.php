@@ -15,6 +15,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     use Queueable, RetryableNotification;
 
     const RECRUITING_CHANNEL = 'https://discord.com/channels/507758143774916609/508656360028766219';
+
     const INTRODUCTIONS_CHANNEL = 'https://discord.com/channels/507758143774916609/1137896866286157834';
 
     public function __construct(

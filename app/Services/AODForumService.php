@@ -126,7 +126,7 @@ class AODForumService
         $error = is_string($response) ? $response : 'Unknown error';
 
         if (str_contains($error, 'invalid_user_specified')) {
-            $error = "Invalid user. Email may already be registered on the forums.";
+            $error = 'Invalid user. Email may already be registered on the forums.';
         }
 
         return [
