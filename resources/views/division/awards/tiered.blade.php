@@ -88,6 +88,7 @@
             <div class="panel-body">
                 <p class="text-muted m-b-lg">{{ $group['description'] ?? 'Progress through the tiers by earning each award in sequence.' }}</p>
 
+
                 <div class="tenure-progression">
                     @foreach($tiers as $index => $tier)
                         @php
@@ -135,6 +136,7 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="tier-population-meter hidden-xs hidden-sm" data-pct="{{ $tierPct }}"></div>
                             <div class="tenure-tier-arrow hidden-xs">
                                 <i class="fa fa-chevron-right text-muted"></i>
                             </div>

@@ -34,6 +34,7 @@ var Tracker = Tracker || {};
             Tracker.InitInactiveBulkMode();
             Tracker.InitTrashedNotes();
             Tracker.InitActivityFeedToggle();
+            Tracker.InitPopulationMeter();
         },
 
         InitNavToggle: function () {
@@ -483,6 +484,70 @@ var Tracker = Tracker || {};
             $raritySort.on('change', function () {
                 sortAwards($(this).val());
                 applyRarityFilter();
+            });
+        },
+
+        InitPopulationMeter: function () {
+            var $meters = $('.tier-population-meter');
+            if (!$meters.length) return;
+
+            var hasAnimated = false;
+            var barDelay = 25;
+            var tierDelay = 400;
+
+            function calculateBarCount($meter) {
+                var width = $meter.width();
+                var barWidth = 4;
+                var gap = 4;
+                var count = Math.floor(width / (barWidth + gap));
+                if (count < 5) count = 5;
+                if (count > 80) count = 80;
+                return count;
+            }
+
+            function renderMeter($meter, animate, tierIndex) {
+                var pct = parseInt($meter.data('pct')) || 0;
+                var barCount = calculateBarCount($meter);
+                var activeBars = Math.round((pct / 100) * barCount);
+
+                $meter.empty();
+
+                for (var i = 0; i < barCount; i++) {
+                    var $bar = $('<div class="tier-population-bar"></div>');
+                    var isActive = i < activeBars;
+
+                    if (isActive) {
+                        if (animate) {
+                            $bar.addClass('animate-pending');
+                            (function(bar, barIdx, tIdx) {
+                                var delay = (tIdx * tierDelay) + (barIdx * barDelay);
+                                setTimeout(function() {
+                                    bar.removeClass('animate-pending').addClass('active');
+                                }, delay);
+                            })($bar, i, tierIndex);
+                        } else {
+                            $bar.addClass('active');
+                        }
+                    }
+                    $meter.append($bar);
+                }
+            }
+
+            function renderAll(animate) {
+                $meters.each(function (index) {
+                    renderMeter($(this), animate, index);
+                });
+            }
+
+            renderAll(true);
+            hasAnimated = true;
+
+            var resizeTimer;
+            $(window).on('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    renderAll(false);
+                }, 150);
             });
         },
 

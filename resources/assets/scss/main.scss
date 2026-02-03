@@ -5117,6 +5117,45 @@ a.org-node:hover {
     }
 }
 
+.tier-population-meter {
+    flex: 1;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 20px;
+    min-width: 100px;
+}
+
+.tier-population-bar {
+    width: 4px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    transform: skewX(-12deg);
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tier-population-bar.active {
+    background: var(--color-accent);
+    box-shadow: 0 0 6px rgba(var(--color-accent-rgb), 0.4);
+}
+
+.tier-population-bar.animate-pending {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+}
+
+@media (max-width: 1200px) {
+    .tier-population-meter {
+        padding: 0 10px;
+    }
+    .tier-population-bar {
+        width: 3px;
+        height: 28px;
+        gap: 3px;
+    }
+}
+
 .pill-unclaimed {
     background: rgba(74, 74, 74, 0.3);
     color: var(--color-gray-700);
