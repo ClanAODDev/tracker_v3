@@ -423,7 +423,7 @@ var Tracker = Tracker || {};
             });
 
             var $raritySort = $('#rarity-sort');
-            var rarityOrder = ['unclaimed', 'mythic', 'legendary', 'epic', 'rare', 'common'];
+            var rarityOrder = ['mythic', 'legendary', 'epic', 'rare', 'common', 'unclaimed'];
 
             function sortAwards(sortType) {
                 $('.award-grid').each(function () {
