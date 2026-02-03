@@ -13,9 +13,14 @@
                 {{ $group['name'] }}
                 <i class="fa fa-layer-group text-muted" style="font-size: 11px;" title="Tiered Award"></i>
             </div>
-            <span class="award-pill pill-legendary">
-                {{ $group['tiers']->count() }} tiers
-            </span>
+            <div class="d-flex justify-content-center">
+                <span class="award-pill pill-legendary mr-1">
+                    {{ $group['tiers']->count() }} tiers
+                </span>
+                <span class="award-pill pill-common tiered-recipient-count">
+                    {{ number_format($group['recipientCount']) }} {{ Str::plural('recipient', $group['recipientCount']) }}
+                </span>
+            </div>
         </div>
     </a>
 </div>

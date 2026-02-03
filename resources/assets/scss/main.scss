@@ -2363,41 +2363,41 @@ body.no-animations {
 }
 
 .award-card-epic {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(165, 94, 234, 0.15);
-    border-color: rgba(165, 94, 234, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 15px rgba(165, 94, 234, 0.1);
+    border-color: rgba(165, 94, 234, 0.15);
 }
 .award-card-epic:hover {
-    box-shadow: 0 8px 32px rgba(165, 94, 234, 0.35), 0 0 40px rgba(165, 94, 234, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4);
-    border-color: rgba(165, 94, 234, 0.4);
+    box-shadow: 0 8px 32px rgba(165, 94, 234, 0.2), 0 0 25px rgba(165, 94, 234, 0.12), 0 4px 16px rgba(0, 0, 0, 0.4);
+    border-color: rgba(165, 94, 234, 0.3);
 }
 
 .award-card-legendary {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 159, 67, 0.2);
-    border-color: rgba(255, 159, 67, 0.25);
-    animation: legendary-pulse 3s ease-in-out infinite;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 159, 67, 0.12);
+    border-color: rgba(255, 159, 67, 0.2);
+    animation: legendary-pulse 4s ease-in-out infinite;
 }
 .award-card-legendary:hover {
-    box-shadow: 0 8px 32px rgba(255, 159, 67, 0.4), 0 0 50px rgba(255, 159, 67, 0.25), 0 4px 16px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 159, 67, 0.5);
+    box-shadow: 0 8px 32px rgba(255, 159, 67, 0.25), 0 0 30px rgba(255, 159, 67, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 159, 67, 0.35);
     animation: none;
 }
 
 .award-card-mythic {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 107, 107, 0.25), 0 0 60px rgba(255, 217, 61, 0.1);
-    border-color: rgba(255, 107, 107, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 107, 107, 0.15), 0 0 35px rgba(255, 217, 61, 0.08);
+    border-color: rgba(255, 107, 107, 0.25);
 }
 .award-card-mythic::before {
-    opacity: 1;
+    opacity: 0.8;
     background: linear-gradient(135deg, var(--rarity-mythic), #ffd93d, #6bcb77, #4d96ff, var(--rarity-mythic));
     background-size: 300% 300%;
     animation: mythic-border-flow 4s ease infinite;
 }
 .award-card-mythic:hover {
-    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4), 0 0 60px rgba(255, 217, 61, 0.3), 0 0 80px rgba(107, 203, 119, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 32px rgba(255, 107, 107, 0.25), 0 0 40px rgba(255, 217, 61, 0.15), 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .award-card-mythic .clan-award {
-    animation: mythic-image-glow 2s ease-in-out infinite alternate;
+    animation: mythic-image-glow 3s ease-in-out infinite alternate;
 }
 
 .award-card-rare:hover .award-card-name { color: var(--rarity-rare); }
@@ -3017,8 +3017,8 @@ body.no-animations {
 }
 
 @keyframes legendary-pulse {
-    0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 25px rgba(255, 159, 67, 0.2); }
-    50% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 35px rgba(255, 159, 67, 0.3); }
+    0%, 100% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 159, 67, 0.12); }
+    50% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 22px rgba(255, 159, 67, 0.18); }
 }
 
 .member-award-card-mythic {
@@ -3046,8 +3046,8 @@ body.no-animations {
 }
 
 @keyframes mythic-image-glow {
-    0% { filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 8px rgba(255, 107, 107, 0.3)); }
-    100% { filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 15px rgba(255, 217, 61, 0.4)); }
+    0% { filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 6px rgba(255, 107, 107, 0.2)); }
+    100% { filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 10px rgba(255, 217, 61, 0.25)); }
 }
 
 @keyframes stat-card-enter {
@@ -5108,6 +5108,13 @@ a.org-node:hover {
     letter-spacing: 0.5px;
     border: 1px solid transparent;
     transition: all 0.2s ease;
+}
+
+.tiered-recipient-count {
+    display: none;
+    @media (min-width: 1200px) {
+        display: inline-block;
+    }
 }
 
 .pill-unclaimed {

@@ -59,12 +59,14 @@ class AwardController extends Controller
         $activeAwards = $awards
             ->whereNotNull('division_id')
             ->filter(fn ($award) => $award->division?->active || $award->division?->slug === $divisionSlug)
-            ->groupBy('division.name');
+            ->groupBy('division.name')
+            ->sortKeys();
 
         $legacyAwards = $awards
             ->whereNotNull('division_id')
             ->filter(fn ($award) => ! $award->division?->active && $award->recipients_count > 0 && $award->division?->slug !== $divisionSlug)
-            ->groupBy('division.name');
+            ->groupBy('division.name')
+            ->sortKeys();
 
         $activeAndClanAwards = $awards->filter(fn ($a) => $a->division_id === null || $a->division?->active);
         $totals = (object) [
@@ -85,9 +87,19 @@ class AwardController extends Controller
             ->values();
 
         $tieredGroups = $this->buildTieredGroups();
-        $tieredAwardIds = collect($tieredGroups)->flatten()->pluck('id')->toArray();
+        $tieredAwardIds = collect($tieredGroups)
+            ->flatMap(fn ($group) => $group['tiers']->pluck('id'))
+            ->toArray();
 
         $clanAwards = $clanAwards->reject(fn ($a) => in_array($a->id, $tieredAwardIds));
+
+        $activeAwards = $activeAwards->map(
+            fn ($awards) => $awards->reject(fn ($a) => in_array($a->id, $tieredAwardIds))
+        )->filter(fn ($awards) => $awards->isNotEmpty());
+
+        $legacyAwards = $legacyAwards->map(
+            fn ($awards) => $awards->reject(fn ($a) => in_array($a->id, $tieredAwardIds))
+        )->filter(fn ($awards) => $awards->isNotEmpty());
 
         return view('division.awards.index', compact(
             'awards',
