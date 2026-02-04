@@ -11,6 +11,7 @@ use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use GuzzleHttp\Exception\ClientException;
+use Laravel\Socialite\Two\InvalidStateException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +33,7 @@ class DiscordController extends Controller
     {
         try {
             $discordUser = Socialite::driver('discord')->user();
-        } catch (ClientException) {
+        } catch (ClientException|InvalidStateException) {
             return redirect()->route('login')->withErrors([
                 'discord' => 'Discord authentication failed. Please try again.',
             ]);
