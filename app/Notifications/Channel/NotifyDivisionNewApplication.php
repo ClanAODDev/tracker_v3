@@ -40,7 +40,7 @@ class NotifyDivisionNewApplication extends Notification implements ShouldQueue
                 [
                     'name' => $this->threadTitle,
                     'value' => sprintf(
-                        '[View application](%s)',
+                        'Applying via AOD Forums — [View application](%s)',
                         $this->threadLink
                     ),
                 ],
