@@ -151,7 +151,7 @@ class DiscordController extends Controller
             ];
         }
 
-        DivisionApplication::create([
+        $application = DivisionApplication::create([
             'user_id' => $user->id,
             'division_id' => $division->id,
             'responses' => $responses,
@@ -159,7 +159,7 @@ class DiscordController extends Controller
 
         session()->forget('pending_division_id');
 
-        $division->notify(new NotifyDivisionPendingDiscordRegistration($user, hasApplication: true));
+        $division->notify(new NotifyDivisionPendingDiscordRegistration($user, application: $application));
 
         return redirect()->route('auth.discord.pending');
     }
