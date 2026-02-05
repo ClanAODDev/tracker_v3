@@ -118,33 +118,32 @@ var Division = Division || {};
       var url = $trigger.data('url');
       var loaded = false;
 
-      function openModal() {
-        var $modal = $('#applicationsModal');
-        $modal.modal('show');
-
-        if (!loaded) {
-          self.loadApplications(url);
-          loaded = true;
-        }
-      }
-
       $trigger.on('click', function (e) {
         e.preventDefault();
         var params = new URLSearchParams(window.location.search);
         params.set('applications', '1');
         window.history.replaceState(null, '', '?' + params.toString());
-        openModal();
+        $('#applicationsModal').modal('show');
+      });
+
+      $('#applicationsModal').on('shown.bs.modal', function () {
+        if (!loaded) {
+          self.loadApplications(url);
+          loaded = true;
+        }
       });
 
       $('#applicationsModal').on('hidden.bs.modal', function () {
         var params = new URLSearchParams(window.location.search);
         params.delete('applications');
+        params.delete('application');
         var qs = params.toString();
         window.history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
       });
 
-      if (new URLSearchParams(window.location.search).has('applications')) {
-        openModal();
+      var params = new URLSearchParams(window.location.search);
+      if (params.has('applications') || params.has('application')) {
+        $('#applicationsModal').modal('show');
       }
     },
 
@@ -168,15 +167,27 @@ var Division = Division || {};
 
           var apps = data.applications;
 
+          var targetId = new URLSearchParams(window.location.search).get('application');
+          var selectedIndex = 0;
+
+          if (targetId) {
+            for (var i = 0; i < apps.length; i++) {
+              if (String(apps[i].id) === String(targetId)) {
+                selectedIndex = i;
+                break;
+              }
+            }
+          }
+
           apps.forEach(function (app, index) {
             $list.append(
-              '<a href="#" class="list-group-item application-item' + (index === 0 ? ' active' : '') + '" data-index="' + index + '">' +
+              '<a href="#" class="list-group-item application-item' + (index === selectedIndex ? ' active' : '') + '" data-index="' + index + '">' +
                 '<strong>' + $('<span>').text(app.discord_username).html() + '</strong>' +
                 '<span class="text-muted pull-right" style="font-size: 12px;">' + $('<span>').text(app.created_at).html() + '</span>' +
               '</a>'
             );
 
-            var html = '<div class="panel panel-filled application-modal-detail' + (index !== 0 ? ' hidden' : '') + '" data-index="' + index + '" style="border-radius: 8px;">' +
+            var html = '<div class="panel panel-filled application-modal-detail' + (index !== selectedIndex ? ' hidden' : '') + '" data-index="' + index + '" style="border-radius: 8px;">' +
               '<div class="panel-body">' +
                 '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">' +
                   '<strong style="font-size: 16px;">' + $('<span>').text(app.discord_username).html() + '</strong>' +

@@ -42,6 +42,8 @@ class DiscordRegistrationRequest extends FormRequest
 
         session(['pending_division_id' => $division->id]);
 
-        $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
+        if (! $division->settings()->get('application_required', false)) {
+            $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
+        }
     }
 }
