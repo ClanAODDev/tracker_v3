@@ -16,6 +16,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     use Queueable, RetryableNotification;
 
     const RECRUITING_CHANNEL = 'https://discord.com/channels/507758143774916609/508656360028766219';
+    const INTRODUCTIONS_CHANNEL = 'https://discord.com/channels/507758143774916609/1137896866286157834';
 
     public function __construct(
         private readonly User $user,
@@ -40,10 +41,11 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
             $heading = '**APPLICATION SUBMITTED**';
         } else {
             $message = sprintf(
-                ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s',
+                ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s, %s',
                 $this->user->discord_username,
                 $notifiable->name,
-                self::RECRUITING_CHANNEL
+                self::RECRUITING_CHANNEL,
+                self::INTRODUCTIONS_CHANNEL
             );
             $heading = '**NEW DISCORD REGISTRATION**';
         }
