@@ -21,11 +21,16 @@ class TicketNotificationService
 
         if ($ticket->type->auto_assign_to) {
             $ticket->ownTo($ticket->type->auto_assign_to);
-            $this->notifyTicketAssigned($ticket, $ticket->type->auto_assign_to, auth()->user());
+            $this->notifyTicketAssigned(
+                $ticket,
+                $ticket->type->auto_assign_to,
+                auth()->user(),
+                delayReaction: true
+            );
         }
     }
 
-    public function notifyTicketAssigned(Ticket $ticket, User $assignee, ?User $assigner = null): void
+    public function notifyTicketAssigned(Ticket $ticket, User $assignee, ?User $assigner = null, bool $delayReaction = false): void
     {
         $assigner = $assigner ?? auth()->user();
 
@@ -35,7 +40,13 @@ class TicketNotificationService
             $ticket->notify(new NotifyNewTicketOwner($assignee, $assigner));
         }
 
-        $ticket->notify(new TicketReaction('assigned'));
+        $reaction = new TicketReaction('assigned');
+
+        if ($delayReaction) {
+            $reaction->delay(now()->addSeconds(10));
+        }
+
+        $ticket->notify($reaction);
     }
 
     public function notifyTicketResolved(Ticket $ticket): void

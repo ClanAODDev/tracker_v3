@@ -4,10 +4,9 @@ namespace App\Channels;
 
 use App\Notifications\Channel\NotifyAdminTicketCreated;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 
 class BotChannel
@@ -22,11 +21,6 @@ class BotChannel
         $this->logger = $logger;
     }
 
-    /**
-     * @param  Notifiable  $notifiable
-     *
-     * @throws ServerException
-     */
     public function send($notifiable, Notification $notification)
     {
         if (method_exists($notification, 'toBot')) {
@@ -36,7 +30,6 @@ class BotChannel
         }
 
         if (! $message) {
-            // user settings prevented us from continuing, or there's no one to notify
             return;
         }
 
@@ -53,11 +46,19 @@ class BotChannel
 
         $request = new Request('POST', $url, $headers, json_encode($message['body']));
 
-        $response = $this->client->send($request, ['verify' => false]);
+        try {
+            $response = $this->client->send($request, ['verify' => false]);
+        } catch (GuzzleException $e) {
+            $this->logger->error('BotChannel request failed', [
+                'url' => $url,
+                'notification' => get_class($notification),
+                'error' => $e->getMessage(),
+            ]);
 
-        // kinda gross, let's refactor at some point
+            return;
+        }
+
         if ($notification instanceof NotifyAdminTicketCreated) {
-            // we need the resulting message id for additional actions
             $response = json_decode($response->getBody());
             $notifiable->update(['external_message_id' => $response->id]);
         }
