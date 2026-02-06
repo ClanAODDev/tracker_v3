@@ -535,12 +535,6 @@ function initPlatoon() {
                 dragStartRow = null;
             });
 
-            $('#is_tba').click(() => {
-                toggleTBA();
-            });
-
-            toggleTBA();
-
             const toggleTBA = () => {
                 if ($('#is_tba').is(':checked')) {
                     $('#leader_id, #leader').prop('disabled', true).val('');
@@ -548,6 +542,12 @@ function initPlatoon() {
                     $('#leader_id, #leader').prop('disabled', false);
                 }
             };
+
+            $('#is_tba').click(() => {
+                toggleTBA();
+            });
+
+            toggleTBA();
         },
 
         initTagFilter() {
